@@ -14,35 +14,43 @@
     You should have received a copy of the GNU General Public License
     along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include <iostream>
+#ifndef _ANCH_RESOURCE_RESOURCE_H_
+#define _ANCH_RESOURCE_RESOURCE_H_
 
-#include "resource/section.hpp"
+#include <mutex>
 
+namespace anch {
+  namespace resource {
 
-using std::string;
-using anch::resource::Section;
+    class Ressource {
+    private:
+      /** {@link Resource} unique instance */
+      static Resource* _self;
 
+      /** Mutex */
+      static std::mutex _mutex;
 
-// Static initialization +
-string Section::DEFAULT_VALUE = "";
-// Static initialization -
+    private:
+      /**
+       * {@link Resource} private constructor
+       */
+      Ressource();
 
+      /**
+       * {@link Resource} destructor
+       */
+      virtual ~Ressource();
 
-// Constructors +
-/**
- * Section constructor
- */
-Section::Section() {
-  // Nothing to do
+    public:
+      /**
+       * Get Resource unique instance
+       *
+       * @return The {@link Resource} unique instance
+       */
+      static Resource* getInstance();
+    };
+
+  }
 }
-// Constructors -
 
-// Destructors +
-/**
- * Section destructor
- */
-Section::~Section() {
-  // Nothing to do
-}
-// Destructors -
-
+#endif // _ANCH_RESOURCE_RESOURCE_H_

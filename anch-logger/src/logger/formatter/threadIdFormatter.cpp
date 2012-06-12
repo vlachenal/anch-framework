@@ -14,35 +14,47 @@
     You should have received a copy of the GNU General Public License
     along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include <iostream>
+#include "logger/formatter/threadIdFormatter.hpp"
 
-#include "resource/section.hpp"
-
+#include <thread>
 
 using std::string;
-using anch::resource::Section;
+using std::ostream;
 
+using anch::logger::formatter::ThreadIdFormatter;
+using anch::logger::formatter::FormatterType;
 
-// Static initialization +
-string Section::DEFAULT_VALUE = "";
-// Static initialization -
-
-
-// Constructors +
 /**
- * Section constructor
+ * {@link ThreadIdFormatter} default constructor
  */
-Section::Section() {
+ThreadIdFormatter::ThreadIdFormatter() {
   // Nothing to do
 }
-// Constructors -
 
-// Destructors +
 /**
- * Section destructor
+ * {@link ThreadIdFormatter} destructor
  */
-Section::~Section() {
+ThreadIdFormatter::~ThreadIdFormatter() {
   // Nothing to do
 }
-// Destructors -
 
+/**
+ * Return the input string
+ *
+ * @param value The input string
+ * @param out The output stream to write in
+ */
+void
+ThreadIdFormatter::formatValue(const void* const value, ostream& out) const throw() {
+  out << std::this_thread::get_id();
+}
+
+/**
+ * Get the formatter type
+ *
+ * @return The formatter type
+ */
+FormatterType
+ThreadIdFormatter::getType() const throw() {
+  return FormatterType::THREAD_ID;
+}

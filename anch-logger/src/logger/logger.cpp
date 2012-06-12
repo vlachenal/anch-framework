@@ -14,35 +14,37 @@
     You should have received a copy of the GNU General Public License
     along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include <iostream>
-
-#include "resource/section.hpp"
-
+#include "logger/logger.hpp"
 
 using std::string;
-using anch::resource::Section;
+using std::vector;
+
+using anch::logger::Logger;
+using anch::logger::Level;
+using anch::logger::Writer;
 
 
-// Static initialization +
-string Section::DEFAULT_VALUE = "";
-// Static initialization -
-
-
-// Constructors +
 /**
- * Section constructor
+ * {@link Logger} constructor.
+ *
+ * @param name Logger name
+ * @param level The logging level to set
+ * @param writers The writers list
  */
-Section::Section() {
+Logger::Logger(const string& name,
+	       const Level level,
+	       const vector<Writer*>& writers):
+  _name(name),
+  _level(level),
+  _writers() {
+  for(size_t i = 0 ; i < writers.size() ; i++) {
+    _writers.push_back(writers[i]);
+  }
+}
+
+/**
+ * {@link Logger} destructor
+ */
+Logger::~Logger() {
   // Nothing to do
 }
-// Constructors -
-
-// Destructors +
-/**
- * Section destructor
- */
-Section::~Section() {
-  // Nothing to do
-}
-// Destructors -
-

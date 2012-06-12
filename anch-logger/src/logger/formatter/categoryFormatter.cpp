@@ -14,35 +14,45 @@
     You should have received a copy of the GNU General Public License
     along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include <iostream>
-
-#include "resource/section.hpp"
-
+#include "logger/formatter/categoryFormatter.hpp"
 
 using std::string;
-using anch::resource::Section;
+using std::ostream;
 
+using anch::logger::formatter::CategoryFormatter;
+using anch::logger::formatter::FormatterType;
 
-// Static initialization +
-string Section::DEFAULT_VALUE = "";
-// Static initialization -
-
-
-// Constructors +
 /**
- * Section constructor
+ * {@link CategoryFormatter} default constructor
  */
-Section::Section() {
+CategoryFormatter::CategoryFormatter() {
   // Nothing to do
 }
-// Constructors -
 
-// Destructors +
 /**
- * Section destructor
+ * {@link CategoryFormatter} destructor
  */
-Section::~Section() {
+CategoryFormatter::~CategoryFormatter() {
   // Nothing to do
 }
-// Destructors -
 
+/**
+ * Return the input string
+ *
+ * @param value The input string
+ * @param out The output stream to write in
+ */
+void
+CategoryFormatter::formatValue(const void* const value, ostream& out) const throw() {
+  out << *((string*)value);
+}
+
+/**
+ * Get the formatter type
+ *
+ * @return The formatter type
+ */
+FormatterType
+CategoryFormatter::getType() const throw() {
+  return FormatterType::CATEGORY;
+}

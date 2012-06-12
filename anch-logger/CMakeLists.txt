@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 2.6)
 
-# Project anch resource
-# ANother C++ Harsh/Huge/Hack 
-project(anch-resource)
+# Project anch logger
+# ANother C++ Hack 
+project(anch-logger)
 set(EXECUTABLE_OUTPUT_PATH bin/${CMAKE_BUILD_TYPE})
 
 # Check GCC version +
@@ -23,29 +23,46 @@ endif()
 add_definitions("-Wall")
 
 # Include librairies
-#include(FindThreads)
-#find_package(Threads)
+include(FindThreads)
+find_package(Threads)
 
 # Includes location
 include_directories(inc)
 
 # Retrieve every files in project
 file(
-	GLOB_RECURSE
-	source_files
-	src/*
-	inc/*
+  GLOB_RECURSE
+  source_files
+  src/*
+  inc/*
+)
+
+file(
+  GLOB_RECURSE
+  test_files
+  inc/*
+  test/*
 )
 
 # Declare exec
 add_library(
-	anch-resource
-	SHARED
-	${source_files}
+  anch-logger
+  SHARED
+  ${source_files}
+)
+
+add_executable(
+  anch-logger-test
+  ${test_files}
 )
 
 # Link with libraries
-#target_link_libraries(
-#	anch-resource
-#	${CMAKE_THREAD_LIBS_INIT}
-#)
+target_link_libraries(
+  anch-logger
+  ${CMAKE_THREAD_LIBS_INIT}
+)
+
+target_link_libraries(
+  anch-logger-test
+  anch-logger
+)
