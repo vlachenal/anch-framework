@@ -19,8 +19,8 @@ else()
 endif()
 # Check GCC version -
 
-# Activate C++11
-add_definitions("-Wall")
+# Add GCC definitions
+add_definitions("-Wall -Werror")
 
 # Include librairies
 include(FindThreads)
