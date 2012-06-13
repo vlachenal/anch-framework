@@ -30,11 +30,12 @@ namespace anch {
      */
     class Section {
 
-    private:
+    public:
       // Attributes +
       /** Parameter default value when not found */
       static std::string DEFAULT_VALUE;
 
+    private:
       /** Parameters map */
       std::map<std::string,std::string> _parameters;
       // Attributes -
@@ -61,17 +62,27 @@ namespace anch {
        *
        * @return The parameters
        */
-      inline const std::map<std::string,std::string>& getParameters() {
+      inline const std::map<std::string,std::string>& getParameters() const {
 	return _parameters;
       };
 
       /**
-       * Parameters getter
+       * Parameters setter
        *
        * @param parameters The parameters
        */
       inline void setParameters(const std::map<std::string,std::string>& parameters) {
 	_parameters = parameters;
+      };
+
+      /**
+       * Add parameter to section
+       *
+       * @param param The parameter
+       * @param value The associated value
+       */
+      inline void addParameter(const std::string& param, const std::string& value) {
+	_parameters[param] = value;
       };
 
       /**
@@ -82,8 +93,8 @@ namespace anch {
        *
        * @return The parameter value or empty if not found
        */
-      inline const std::string& getParameter(const std::string& parameterName) {
-	std::map<std::string,std::string>::iterator iter = _parameters.find(parameterName);
+      inline const std::string& getParameter(const std::string& parameterName) const {
+	auto iter = _parameters.find(parameterName);
 	if(iter == _parameters.end()) {
 	  return Section::DEFAULT_VALUE;
 	} else {

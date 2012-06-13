@@ -17,37 +17,72 @@
 #ifndef _ANCH_RESOURCE_RESOURCE_H_
 #define _ANCH_RESOURCE_RESOURCE_H_
 
+#include <iostream>
+#include <map>
 #include <mutex>
+
+#include "resource/section.hpp"
 
 namespace anch {
   namespace resource {
 
-    class Ressource {
+    /**
+     * Resource manager
+     *
+     * @author Vincent Lachenal
+     */
+    class Resource {
     private:
-      /** {@link Resource} unique instance */
-      static Resource* _self;
+      // Attributes +
+      /** Cached resources */
+      static std::map<std::string,Resource> RESOURCES;
 
       /** Mutex */
-      static std::mutex _mutex;
+      static std::mutex MUTEX;
+
+      /** Resources */
+      std::map<std::string,anch::resource::Section> _resources;
+      // Attributes -
 
     private:
+      // Constructors +
       /**
        * {@link Resource} private constructor
        */
-      Ressource();
+      Resource();
+      // Constructors -
 
+    public:
+      // Destructor +
       /**
        * {@link Resource} destructor
        */
-      virtual ~Ressource();
+      virtual ~Resource();
+      // Destructor -
 
     public:
       /**
-       * Get Resource unique instance
+       * Get Resource instance from file
+       *
+       * @param filePath The resource file path
        *
        * @return The {@link Resource} unique instance
        */
-      static Resource* getInstance();
+      static const Resource& getResource(const std::string& filePath);
+
+      /**
+       * Get parameter value from its name and section
+       *
+       * @param value The value to set
+       * @param param The parameter to find
+       * @param section The parameter section (optional)
+       *
+       * @return <code>true</code> if value has been found, <code>false</code> otherwise.
+       */
+      bool getParameter(std::string& value,
+			const std::string& param,
+			const std::string& section = "") const;
+
     };
 
   }

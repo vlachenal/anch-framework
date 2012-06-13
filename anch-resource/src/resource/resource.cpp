@@ -14,30 +14,34 @@
     You should have received a copy of the GNU General Public License
     along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include <mutex>
-
 #include "resource/resource.hpp"
 
+#include "resource/file/configurationFileParser.hpp"
 
 using std::mutex;
+using std::string;
+using std::pair;
+
+using anch::resource::Resource;
+using anch::resource::file::ConfigurationFileParser;
 
 // Static initialization +
-mutex Resource::_mutex;
-Resource* Resource::_self = NULL;
+std::map<std::string,Resource> Resource::RESOURCES;
+mutex Resource::MUTEX;
 // Static initialization -
 
 
 /**
  * {@link Resource} private constructor
  */
-Ressource::Ressource() {
+Resource::Resource(): _resources() {
   // Nothing to do
 }
 
 /**
  * {@link Resource} destructor
  */
-Resource::~Ressource() {
+Resource::~Resource() {
   // Nothing to do
 }
 
@@ -46,12 +50,42 @@ Resource::~Ressource() {
  *
  * @return The {@link Resource} unique instance
  */
-Resource*
-Resource::getInstance() {
-  _mutex.lock();
-  if(_self == NULL) {
-    _self = new Resource();
+const Resource&
+Resource::getResource(const string& filePath) {
+  MUTEX.lock();
+  auto iter = RESOURCES.find(filePath);
+  if(iter == RESOURCES.end()) {
+    Resource res;
+    ConfigurationFileParser configParser(filePath);
+    configParser.getConfiguration(res._resources);
+    //RESOURCES[filePath] = res;
+    iter = RESOURCES.insert(pair<string, Resource>(filePath,res)).first;
+
   }
-  _mutex.unlock();
-  return _self;
+  MUTEX.unlock();
+  return iter->second;
+}
+
+/**
+ * Get parameter value from its name and section
+ *
+ * @param value The value to set
+ * @param param The parameter to find
+ * @param section The parameter section (optional)
+ *
+ * @return <code>true</code> if value has been found, <code>false</code> otherwise.
+ */
+bool
+Resource::getParameter(string& value,
+		       const string& param,
+		       const string& section) const {
+  bool found = false;
+  auto iterSection = _resources.find(section);
+  if(iterSection != _resources.end()) {
+    value = iterSection->second.getParameter(param);
+    if(value != Section::DEFAULT_VALUE) {
+      found = true;
+    }
+  }
+  return found;
 }

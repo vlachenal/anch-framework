@@ -23,29 +23,57 @@ endif()
 add_definitions("-Wall")
 
 # Include librairies
-#include(FindThreads)
-#find_package(Threads)
+include(FindThreads)
+find_package(Threads)
+
+find_package(Boost COMPONENTS regex)
 
 # Includes location
-include_directories(inc)
+include_directories(
+  inc
+  ${Boost_INCLUDE_DIRS}
+)
+
+link_directories(
+  ${Boost_LIBRARY_DIRS}
+)
 
 # Retrieve every files in project
 file(
-	GLOB_RECURSE
-	source_files
-	src/*
-	inc/*
+  GLOB_RECURSE
+  source_files
+  src/*
+  inc/*
+)
+
+# Retrieve every files in project
+file(
+  GLOB_RECURSE
+  test_files
+  inc/*
+  test/*
 )
 
 # Declare exec
 add_library(
-	anch-resource
-	SHARED
-	${source_files}
+  anch-resource
+  SHARED
+  ${source_files}
+)
+
+add_executable(
+  anch-resource-test
+  ${test_files}
 )
 
 # Link with libraries
-#target_link_libraries(
-#	anch-resource
-#	${CMAKE_THREAD_LIBS_INIT}
-#)
+target_link_libraries(
+  anch-resource
+  ${CMAKE_THREAD_LIBS_INIT}
+  ${Boost_LIBRARIES}
+)
+
+target_link_libraries(
+  anch-resource-test
+  anch-resource
+)
