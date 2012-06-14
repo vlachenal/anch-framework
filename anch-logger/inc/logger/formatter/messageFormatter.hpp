@@ -19,7 +19,7 @@
 
 #include <iostream>
 #include <vector>
-#include <regex>
+#include <boost/regex.hpp>
 
 #include "logger/levels.hpp"
 #include "logger/formatter/iFormatter.hpp"
@@ -37,9 +37,9 @@ namespace anch {
        *   <ul>%c: The category (logger name)</ul>
        *   <ul>%p: The logging level</ul>
        *   <ul>%m: The message</ul>
-       *   <ul>%d{C++ time standard}: The date (not imlpemented)</ul>
+       *   <ul>%d{C++ time standard}: The date</ul>
        *   <ul>%t: The current thread ID</ul>
-       *   <ul>%t: The function name (not imlpemented)</ul>
+       *   <ul>%f: The function name (not imlpemented)</ul>
        * </li>
        *
        * @author Vincent Lachenal
@@ -48,7 +48,7 @@ namespace anch {
       private:
 	// Attributes +
 	/** Writter configuration pattern */
-	static std::regex CONFIG_PATTERN;
+	static boost::regex CONFIG_PATTERN;
 
 	/** Formatters list */
 	std::vector<anch::logger::formatter::IFormatter*> _formatters;
@@ -84,6 +84,14 @@ namespace anch {
 	const std::string formatMessage(const std::string& category,
 					const anch::logger::Level& level,
 					const std::string& message) const;
+
+      private:
+	/**
+	 * Add formatter element to message formatter
+	 *
+	 * @param str The formatter string
+	 */
+	void addFormatter(const std::string& strFormatter);
 
       };
 

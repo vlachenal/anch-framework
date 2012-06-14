@@ -85,6 +85,8 @@ ConfigurationFileParser::getConfiguration(map<string, Section>& config)
   } while(!file.eof());
   // Parse file -
 
+  file.close();
+
 }
 
 /**

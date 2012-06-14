@@ -26,8 +26,17 @@ add_definitions("-Wall -Werror")
 include(FindThreads)
 find_package(Threads)
 
+find_package(Boost COMPONENTS regex)
+
 # Includes location
-include_directories(inc)
+include_directories(
+  inc
+  ${Boost_INCLUDE_DIRS}
+)
+
+link_directories(
+  ${Boost_LIBRARY_DIRS}
+)
 
 # Retrieve every files in project
 file(
@@ -60,6 +69,7 @@ add_executable(
 target_link_libraries(
   anch-logger
   ${CMAKE_THREAD_LIBS_INIT}
+  ${Boost_LIBRARIES}
 )
 
 target_link_libraries(

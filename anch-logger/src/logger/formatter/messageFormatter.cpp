@@ -26,9 +26,11 @@
 #include "logger/formatter/dateFormatter.hpp"
 
 using std::string;
-using std::regex;
-using std::cmatch;
 using std::ostringstream;
+
+using boost::regex;
+using boost::smatch;
+using boost::regex_search;
 
 using anch::logger::formatter::MessageFormatter;
 using anch::logger::formatter::IFormatter;
@@ -42,8 +44,7 @@ using anch::logger::formatter::DateFormatter;
 
 
 // Static initialization +
-//regex MessageFormatter::CONFIG_PATTERN = regex(R"((%d\{[^\}]+\})|(%m)|(%l)|([^%]+))");
-regex MessageFormatter::CONFIG_PATTERN = regex("%d");
+regex MessageFormatter::CONFIG_PATTERN = regex(R"(^((\$d\{[^\}]+\})|(\$m)|(\$c)|(\$p)|(\$t)|([^\$]+)))");
 // Static initialization -
 
 /**
@@ -52,26 +53,18 @@ regex MessageFormatter::CONFIG_PATTERN = regex("%d");
  * @param linePattern The message line pattern
  */
 MessageFormatter::MessageFormatter(const string& linePattern): _formatters() {
-  // TODO register data when regex API will work +
-  cmatch match;
-  if(std::regex_search(linePattern.c_str(), match, CONFIG_PATTERN)) {
-    const size_t n = match.size();
-    std::cout << "Found " << n << " matching items" << std::endl;
-    for(size_t i = 0 ; i < n ; i++) {
-      string str(match[i].first, match[i].second);
-      std::cout << str << std::endl;
+  smatch match;
+  string line = linePattern;
+  bool ok = true;
+  while(!line.empty() && ok) {
+    if(regex_search(line, match, CONFIG_PATTERN)) {
+      addFormatter(string(match[0].first, match[0].second));
+      line = string(match.suffix().first, match.suffix().second);
+
+    } else {
+      ok = false;
     }
   }
-  // TODO register data when regex API will work -
-  _formatters.push_back(new DateFormatter("%Y-%m-%d %H:%M:%S"));
-  _formatters.push_back(new ConstFormatter(" - "));
-  _formatters.push_back(new CategoryFormatter());
-  _formatters.push_back(new ConstFormatter(" - [Thread "));
-  _formatters.push_back(new ThreadIdFormatter());
-  _formatters.push_back(new ConstFormatter("] - "));
-  _formatters.push_back(new LevelFormatter());
-  _formatters.push_back(new ConstFormatter(" - "));
-  _formatters.push_back(new StringFormatter());
 }
 
 /**
@@ -79,6 +72,41 @@ MessageFormatter::MessageFormatter(const string& linePattern): _formatters() {
  */
 MessageFormatter::~MessageFormatter() {
   // Nothing to do
+}
+
+
+/**
+ * Add formatter element to message formatter
+ *
+ * @param str The formatter string
+ */
+void
+MessageFormatter::addFormatter(const std::string& strFormatter) {
+  if(strFormatter.length() == 1) {
+    _formatters.push_back(new ConstFormatter(strFormatter));
+
+  } else {
+    const string pattern = strFormatter.substr(0,2);
+    if(pattern == "$d") {
+      _formatters.push_back(new DateFormatter(strFormatter.substr(3, strFormatter.length() - 4)));
+
+    } else if(pattern == "$m") {
+      _formatters.push_back(new StringFormatter());
+
+    } else if(pattern == "$c") {
+      _formatters.push_back(new CategoryFormatter());
+
+    } else if(pattern == "$p") {
+      _formatters.push_back(new LevelFormatter());
+
+    } else if(pattern == "$t") {
+      _formatters.push_back(new ThreadIdFormatter());
+
+    } else {
+      _formatters.push_back(new ConstFormatter(strFormatter));
+
+    }
+  }
 }
 
 /**

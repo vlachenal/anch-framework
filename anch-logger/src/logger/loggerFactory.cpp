@@ -74,7 +74,7 @@ LoggerFactory::getLogger(const string& loggerName) {
   if(iter == LOGGERS.cend()) {
     // TODO manage logger configurations ...
     vector<Writer*> writers;
-    writers.push_back(new Writer((ostream*)(&std::cout), "%d"));
+    writers.push_back(new Writer((ostream*)(&std::cout), "$d{%Y-%m-%d %H:%M:%S} - $c [Thread $t] - $p - $m"));
     logger = new Logger(loggerName, Level::TRACE, writers);
     LOGGERS[loggerName] = logger;
   } else {
