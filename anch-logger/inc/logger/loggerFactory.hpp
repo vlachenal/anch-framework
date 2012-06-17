@@ -21,7 +21,10 @@
 #include <map>
 #include <mutex>
 
+#include "logger/loggerConfiguration.hpp"
 #include "logger/logger.hpp"
+#include "logger/writer.hpp"
+#include "resource/resource.hpp"
 
 
 namespace anch {
@@ -38,11 +41,14 @@ namespace anch {
       /** Mutex for conccurency access */
       static std::mutex MUTEX;
 
-      /** Registered logger */
-      static std::map<std::string,anch::logger::Logger*> LOGGERS;
-
       /** {@link LoggerFactory} unique instance */
       static LoggerFactory* _self;
+
+      /** Loggers configuration */
+      static std::vector<anch::logger::LoggerConfiguration> CONFIG;
+
+      /** Loggers/writters configuration */
+      anch::resource::Resource _config;
 
     private:
       /**
@@ -65,6 +71,27 @@ namespace anch {
        * @return The loggerr instance
        */
       static const anch::logger::Logger& getLogger(const std::string& loggerName);
+
+      /**
+       * Clean every {@link anch::logger::Writer} to flush their output and close files.
+       *
+       * {@link std::atexit} is already map on it. But you can use it if you trap signals.
+       */
+      static void cleanWriters();
+
+    private:
+      /**
+       * Initialize writers
+       */
+      void initializeWriters(std::map<std::string,anch::logger::Writer*>& writers);
+
+      /**
+       * Initialize loggers configuration
+       *
+       * @param writers The configured writers
+       */
+      void initializeLoggersConfiguration(const std::map<std::string,anch::logger::Writer*>& writers);
+
     };
 
   }

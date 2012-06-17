@@ -25,8 +25,12 @@
 using std::string;
 using std::ostream;
 using std::ofstream;
+using std::ifstream;
 using std::ios_base;
 using std::ostringstream;
+using std::cerr;
+using std::endl;
+using std::cout;
 
 using anch::logger::Writer;
 using anch::logger::Level;
@@ -50,7 +54,29 @@ Writer::Writer(const string& fileName,
 			       _fileIndex(0),
 			       _mutex(),
 			       _formatter(linePattern) {
-  _output = new ofstream(fileName,ios_base::app);
+  try {
+    _output = new ofstream(fileName,ios_base::app);
+    // Retrieve current file index +
+    for(int i = 1 ; i < _maxIndex ; i++) {
+      ostringstream ostr;
+      ostr << fileName << '.' << i;
+      ifstream file(ostr.str());
+      if(file) {
+	_fileIndex = i;
+	file.close();
+      } else {
+	break;
+      }
+    }
+    // Retrieve current file index -
+
+  } catch(const std::exception& e) {
+    cerr << "Unable to open file. Use standard output." << endl;
+    _output = (ostream*)(&cout);
+    _fileName = "";
+    _maxSize = 0;
+    _maxIndex = 0;
+  }
 }
 
 /**
@@ -117,15 +143,16 @@ Writer::rotateFiles() {
   }
   // Remove older file if max index file has been reached -
   // Rename every log files +
-  for(int i = _fileIndex ; i >= 1 ; i--) {
+  for(int i = _fileIndex ; i > 0 ; i--) {
     ostr.str("");
-    ostr << _fileName << "." << i;
+    ostr << _fileName << '.' << i;
     string oldName = ostr.str();
     ostr.str("");
     ostr << _fileName << "." << (i + 1);
     string newName = ostr.str();
-    rename(oldName.c_str(), oldName.c_str());
+    rename(oldName.c_str(), newName.c_str());
   }
+  rename(_fileName.c_str(), string(_fileName + ".1").c_str());
   // Rename every log files -
   _output = new ofstream(_fileName);
   _fileIndex++;

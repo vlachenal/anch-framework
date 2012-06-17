@@ -169,7 +169,7 @@ namespace anch {
       void log(const Level& level,
 	       const T& value,
 	       const Q&... values) const throw() {
-	if(level >= _level) {
+	if(level >= _level && !_writers.empty()) {
 	  std::ostringstream out;
 	  log(level, out, value, values...);
 	}

@@ -4,6 +4,9 @@ cmake_minimum_required(VERSION 2.6)
 # ANother C++ Hack 
 project(anch-logger)
 set(EXECUTABLE_OUTPUT_PATH bin/${CMAKE_BUILD_TYPE})
+set(LIBRARY_OUTPUT_PATH lib/${CMAKE_BUILD_TYPE})
+
+include(AnchLogger.cmake.in)
 
 # Check GCC version +
 execute_process(COMMAND ${CMAKE_C_COMPILER} -dumpversion
@@ -32,10 +35,12 @@ find_package(Boost COMPONENTS regex)
 include_directories(
   inc
   ${Boost_INCLUDE_DIRS}
+  ${ANCH_RESOURCE_INCLUDES_DIR}
 )
 
 link_directories(
   ${Boost_LIBRARY_DIRS}
+  ${ANCH_RESOURCE_LIBRARY_DIR}
 )
 
 # Retrieve every files in project
@@ -46,13 +51,6 @@ file(
   inc/*
 )
 
-file(
-  GLOB_RECURSE
-  test_files
-  inc/*
-  test/*
-)
-
 # Declare exec
 add_library(
   anch-logger
@@ -60,19 +58,37 @@ add_library(
   ${source_files}
 )
 
-add_executable(
-  anch-logger-test
-  ${test_files}
-)
-
 # Link with libraries
 target_link_libraries(
   anch-logger
   ${CMAKE_THREAD_LIBS_INIT}
   ${Boost_LIBRARIES}
+  anch-resource
 )
 
-target_link_libraries(
-  anch-logger-test
-  anch-logger
-)
+# Unitary tests
+if(ANCH_LOGGER_UNITARY_TEST)
+
+  # build rotate test +
+  file(
+    GLOB_RECURSE
+    test_rotate
+    inc/*
+    test/testRotate.cpp
+  )
+
+  add_executable(
+    anch-logger-rotate
+    ${test_rotate}
+  )
+
+  target_link_libraries(
+    anch-logger-rotate
+    anch-logger
+  )
+  # build rotate test -
+
+  enable_testing()
+  add_test(anch-logger-rotate ${EXECUTABLE_OUTPUT_PATH}/anch-logger-rotate main)
+
+endif(ANCH_LOGGER_UNITARY_TEST)

@@ -54,11 +54,10 @@ const Resource&
 Resource::getResource(const string& filePath) {
   MUTEX.lock();
   auto iter = RESOURCES.find(filePath);
-  if(iter == RESOURCES.end()) {
+  if(iter == RESOURCES.cend()) {
     Resource res;
     ConfigurationFileParser configParser(filePath);
     configParser.getConfiguration(res._resources);
-    //RESOURCES[filePath] = res;
     iter = RESOURCES.insert(pair<string, Resource>(filePath,res)).first;
 
   }

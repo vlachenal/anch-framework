@@ -48,13 +48,33 @@ namespace anch {
      *
      * @author Vincent Lachenal
      */
-    const std::map<Level,std::string> LEVEL_LABEL = {
+    const std::map<const Level,const std::string> LEVEL_LABEL = {
       {Level::TRACE,"TRACE"},
       {Level::DEBUG,"DEBUG"},
       {Level::INFO,"INFO"},
       {Level::WARN,"WARN"},
       {Level::ERROR,"ERROR"},
       {Level::FATAL,"FATAL"},
+    };
+
+  }
+}
+
+namespace anch {
+  namespace logger {
+
+    /**
+     * Level labels for logging facilities
+     *
+     * @author Vincent Lachenal
+     */
+    const std::map<const std::string,const Level> LABEL_LEVEL = {
+      {"TRACE",Level::TRACE},
+      {"DEBUG",Level::DEBUG},
+      {"INFO",Level::INFO},
+      {"WARN",Level::WARN},
+      {"ERROR",Level::ERROR},
+      {"FATAL",Level::FATAL},
     };
 
   }

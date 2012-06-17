@@ -4,6 +4,9 @@ cmake_minimum_required(VERSION 2.6)
 # ANother C++ Harsh/Huge/Hack 
 project(anch-resource)
 set(EXECUTABLE_OUTPUT_PATH bin/${CMAKE_BUILD_TYPE})
+set(LIBRARY_OUTPUT_PATH lib/${CMAKE_BUILD_TYPE})
+
+include(AnchResource.cmake.in)
 
 # Check GCC version +
 execute_process(COMMAND ${CMAKE_C_COMPILER} -dumpversion
@@ -46,24 +49,11 @@ file(
   inc/*
 )
 
-# Retrieve every files in project
-file(
-  GLOB_RECURSE
-  test_files
-  inc/*
-  test/*
-)
-
 # Declare exec
 add_library(
   anch-resource
   SHARED
   ${source_files}
-)
-
-add_executable(
-  anch-resource-test
-  ${test_files}
 )
 
 # Link with libraries
@@ -73,7 +63,28 @@ target_link_libraries(
   ${Boost_LIBRARIES}
 )
 
-target_link_libraries(
-  anch-resource-test
-  anch-resource
-)
+if(ANCH_RESOURCE_UNITARY_TEST)
+
+  # Build parser unitary test +
+  file(
+    GLOB_RECURSE
+    test_files
+    inc/*
+    test/testResource.cpp
+  )
+
+  add_executable(
+    anch-resource-parse
+    ${test_files}
+  )
+
+  target_link_libraries(
+    anch-resource-parse
+    anch-resource
+  )
+  # Build parser unitary test -
+
+  enable_testing()
+  add_test(anch-resource-parse ${EXECUTABLE_OUTPUT_PATH}/anch-resource-parse main)
+
+endif(ANCH_RESOURCE_UNITARY_TEST)

@@ -36,8 +36,8 @@ using anch::resource::Section;
 
 
 // Static intialization +
-const regex ConfigurationFileParser::_sectionPattern = regex("^\\[([-a-zA-Z0-9_]+)\\]");
-const regex ConfigurationFileParser::_optionPattern = regex("^([-a-zA-Z0-9_]+)( |\t)*=( |\t)*(.+)");
+const regex ConfigurationFileParser::_sectionPattern = regex("^\\[([^# \t]+)\\]");
+const regex ConfigurationFileParser::_optionPattern = regex("^([^# \t]+)( |\t)*=( |\t)*(.+)");
 const regex ConfigurationFileParser::_commentPattern = regex("( |\t)*([^\\\\]#).*");
 // Static intialization -
 

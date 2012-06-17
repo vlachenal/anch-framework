@@ -83,6 +83,15 @@ namespace anch {
 			const std::string& param,
 			const std::string& section = "") const;
 
+      /**
+       * Get resource configuration
+       *
+       * @return The configuration
+       */
+      inline const std::map<std::string,anch::resource::Section>& getConfiguration() const {
+	return _resources;
+      };
+
     };
 
   }

@@ -43,9 +43,14 @@ namespace anch {
     public:
       // Constructors +
       /**
-       * Section constructor
+       * {@link Section} default constructor
        */
       Section();
+
+      /**
+       * {@link Section} copy constructor
+       */
+      Section(const Section& section);
       // Constructors -
 
       // Destructor +

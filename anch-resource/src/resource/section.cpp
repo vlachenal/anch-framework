@@ -33,6 +33,13 @@ string Section::DEFAULT_VALUE = "";
 Section::Section() {
   // Nothing to do
 }
+
+/**
+ * {@link Section} copy constructor
+ */
+Section::Section(const Section& section): _parameters(section._parameters) {
+  // Nothing to do
+}
 // Constructors -
 
 // Destructors +
