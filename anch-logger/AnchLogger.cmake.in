@@ -1,0 +1,11 @@
+## Anch logger configuration +
+# Anch resource path
+set(ANCH_RESOURCE_INCLUDES_DIR "/home/winz/Project/anch-framework/anch-resource/inc")
+set(ANCH_RESOURCE_LIBRARY_DIR "/home/winz/Project/anch-framework/anch-resource/build/lib")
+
+# Anch logger installation configuration
+set(ANCH_LOGGER_LIBRARY_DIR "")
+
+# Unitary tests
+set(ANCH_LOGGER_UNITARY_TEST ON CACHE BOOL "Anch logger unitary tests")
+## Anch logger configuration -
