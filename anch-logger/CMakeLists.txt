@@ -86,6 +86,8 @@ if(ANCH_LOGGER_UNITARY_TEST)
     anch-logger-rotate
     anch-logger
   )
+
+  configure_file(test/anch-logger.conf anch-logger.conf COPYONLY)
   # build rotate test -
 
   # build custom file test +
@@ -101,7 +103,7 @@ if(ANCH_LOGGER_UNITARY_TEST)
     ${test_custom_file}
   )
 
-  list(APPEND custom_file_def "_ANCH_LOGGER_CONFIG_FILE_=\"/home/winz/tmp/customFile.ini\"")
+  list(APPEND custom_file_def "_ANCH_LOGGER_CONFIG_FILE_=\"customFile.ini\"")
   set_target_properties(
     anch-logger-custom-file
     PROPERTIES
@@ -112,7 +114,9 @@ if(ANCH_LOGGER_UNITARY_TEST)
     anch-logger-custom-file
     anch-logger
   )
-  # build rotate test -
+
+  configure_file(test/customFile.ini customFile.ini COPYONLY)
+  # build custom file test -
 
   enable_testing()
   add_test(anch-logger-rotate ${EXECUTABLE_OUTPUT_PATH}/anch-logger-rotate main)
