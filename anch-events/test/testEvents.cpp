@@ -1,35 +1,98 @@
 #include "events/observable.hpp"
 
-#include <iostram>
+#include <iostream>
 
 using std::string;
 using std::cout;
+using std::endl;
 
 using anch::events::Observable;
 using anch::events::Observer;
 
-class Event : public Observer<Event> {
+
+class Event {
 
 private:
   /** Message */
   string _message;
 
 public:
-  Event(const String& message) {
+  Event(const string& message): _message(message) {
     // Nothing to do
   };
 
-  virtual void notify(const Event& event) {
-    cout << "Receive event: " << message << endl;
+  const string& str() const {
+    return _message;
+  }
+
+};
+
+class StrObserver : public Observer<Event> {
+
+public:
+  StrObserver() {
+    // Nothing to do
   };
 
-}
+  virtual ~StrObserver() {
+    // Nothing to do
+  };
+
+public:
+  virtual void notify(const Event& event) const throw() {
+    cout << "Observer " << getIdentifier() << " receive event: " << event.str() << endl;
+  };
+
+};
+
 
 int
 main(void) {
   Observable<Event> handler;
-  Observer<Event> obs;
-  handler.addObserver(obs);
-  handler.notify(Event("TOTOTOTOTOTO"));
+
+  cout << "Add observer" << endl;
+  // Add observers +
+  StrObserver obs1;
+  handler.addObserver(obs1);
+  cout << "Notify" << endl;
+  // Send event +
+  handler.notifyObservers(Event("TUTUTUTUTUTU"));
+  // Send event -
+
+  cout << "Add observer" << endl;
+  // Add observers +
+  StrObserver obs2;
+  handler.addObserver(obs2);
+  StrObserver obs3;
+  handler.addObserver(obs3);
+  StrObserver obs4;
+  handler.addObserver(obs4);
+  StrObserver obs5;
+  handler.addObserver(obs5);
+  StrObserver obs6;
+  handler.addObserver(obs6);
+  // Add observers -
+
+  cout << "Notify" << endl;
+  // Send event +
+  handler.notifyObservers(Event("TOTOTOTOTOTO"));
+  // Send event -
+
+  cout << "Remove observer by reference" << endl;
+  handler.removeObserver(obs3);
+
+  cout << "Notify" << endl;
+  // Send event +
+  handler.notifyObservers(Event("TITITITITITI"));
+  // Send event -
+
+  cout << "Remove observer by identifier" << endl;
+  handler.removeObserver(obs5.getIdentifier());
+
+  cout << "Notify" << endl;
+  // Send event +
+  handler.notifyObservers(Event("TATATATATATA"));
+  // Send event -
+
   return 0;
 }

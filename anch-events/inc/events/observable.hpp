@@ -51,14 +51,18 @@ namespace anch {
       /**
        * {@link Observable} default constructor
        */
-      Observable();
+      Observable(): _observers(), _currentId(0), _mutex() {
+	// Nothing to do
+      };
       // Constructors -
 
       // Destructor +
       /**
        * {@link Observable} destructor
        */
-      virtual ~Observable();
+      virtual ~Observable() {
+	// Nothing to do
+      };
       // Destructor -
 
     public:
@@ -70,26 +74,52 @@ namespace anch {
        *
        * @return <code>true</code> if observer has been added, <code>false</code> otherwise
        */
-      bool addObserver(anch::events::Observer<T>& observer);
+      bool addObserver(anch::events::Observer<T>& observer) {
+	_mutex.lock();
+	bool added = false;
+	uint16_t obsId = observer.getIdentifier();
+	obsId = ++_currentId;
+	if(_observers.find(observer.getIdentifier()) == _observers.cend()) {
+	  _observers.insert(std::pair<uint16_t,const anch::events::Observer<T>&>(obsId, observer));
+	  added = true;
+	  observer.setIdentifier(obsId);
+	}
+	_mutex.unlock();
+	return added;
+      };
 
       /**
        * Remove observer for notifications
        *
        * @param observer The observer to remove
        */
-      void removeObserver(const anch::events::Observer<T>& observer);
+      void removeObserver(const anch::events::Observer<T>& observer) {
+	_mutex.lock();
+	_observers.erase(observer.getIdentifier());
+	_mutex.unlock();
+      };
 
       /**
        * Remove observer for notifications according to its identifier
        *
        * @param observerId The observer identifier to remove
        */
-      void removeObserver(const uint16_t observerId);
+      void removeObserver(const uint16_t observerId) {
+	_mutex.lock();
+	_observers.erase(observerId);
+	_mutex.unlock();
+      };
 
       /**
        * Notify every observer that an event has been fired
        */
-      void notifyObservers(const T& event);
+      void notifyObservers(const T& event) {
+	_mutex.lock();
+	for(auto iter = _observers.begin() ; iter != _observers.end() ; ++iter) {
+	  iter->second.notify(event);
+	}
+	_mutex.unlock();
+      };
       // Methods -
 
     };

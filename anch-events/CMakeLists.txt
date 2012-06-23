@@ -34,26 +34,26 @@ include_directories(
   inc
 )
 
-# Retrieve every files in project
-file(
-  GLOB_RECURSE
-  source_files
-  src/*
-  inc/*
-)
-
-# Declare exec
-add_library(
-  anch-events
-  SHARED
-  ${source_files}
-)
-
-# Link with libraries
-target_link_libraries(
-  anch-events
-  ${CMAKE_THREAD_LIBS_INIT}
-)
+## Retrieve every files in project
+#file(
+#  GLOB_RECURSE
+#  source_files
+#  src/*
+#  inc/*
+#)
+#
+## Declare exec
+#add_library(
+#  anch-events
+#  SHARED
+#  ${source_files}
+#)
+#
+## Link with libraries
+#target_link_libraries(
+#  anch-events
+#  ${CMAKE_THREAD_LIBS_INIT}
+#)
 
 if(ANCH_EVENTS_UNITARY_TEST)
 
@@ -72,7 +72,8 @@ if(ANCH_EVENTS_UNITARY_TEST)
 
   target_link_libraries(
     anch-events-test
-    anch-events
+    ${CMAKE_THREAD_LIBS_INIT}
+    #anch-events
   )
   # Build parser unitary test -
 

@@ -88,7 +88,34 @@ if(ANCH_LOGGER_UNITARY_TEST)
   )
   # build rotate test -
 
+  # build custom file test +
+  file(
+    GLOB_RECURSE
+    test_custom_file
+    inc/*
+    test/testCustomFile.cpp
+  )
+
+  add_executable(
+    anch-logger-custom-file
+    ${test_custom_file}
+  )
+
+  list(APPEND custom_file_def "_ANCH_LOGGER_CONFIG_FILE_=\"/home/winz/tmp/customFile.ini\"")
+  set_target_properties(
+    anch-logger-custom-file
+    PROPERTIES
+    COMPILE_DEFINITIONS "${custom_file_def}"
+  )
+
+  target_link_libraries(
+    anch-logger-custom-file
+    anch-logger
+  )
+  # build rotate test -
+
   enable_testing()
   add_test(anch-logger-rotate ${EXECUTABLE_OUTPUT_PATH}/anch-logger-rotate main)
+  add_test(anch-logger-custom-file ${EXECUTABLE_OUTPUT_PATH}/anch-logger-custom-file main)
 
 endif(ANCH_LOGGER_UNITARY_TEST)

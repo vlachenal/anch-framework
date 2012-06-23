@@ -21,7 +21,7 @@ namespace anch {
   namespace events {
 
     /**
-     * Observer interface.<br>
+     * Observer abstract class.<br>
      * It has to be implemented to handle events correctly.
      *
      * @author Vincent Lachenal
@@ -40,7 +40,7 @@ namespace anch {
        *
        * @param event The event to receive
        */
-      virtual void notify(const T& event) throw() = 0;
+      virtual void notify(const T& event) const throw() = 0;
       // Methods -
 
     public:
@@ -59,7 +59,7 @@ namespace anch {
        *
        * @param identifier The observer identifier to set
        */
-      inline void getIdentifier(uint16_t  identifier) {
+      inline void setIdentifier(uint16_t  identifier) {
 	_identifier = identifier;
       };
       // Accessors -
