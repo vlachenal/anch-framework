@@ -19,6 +19,10 @@
 
 #include <iostream>
 
+#include "events/observable.hpp"
+#include "network/socketEvent.hpp"
+
+
 namespace anch {
   namespace network {
 
@@ -52,32 +56,42 @@ namespace anch {
      *
      * @author Vincent Lachenal
      */
-    class Socket {
+    class Socket : public anch::events::Observable<anch::network::SocketEvent> {
 
     private:
       // Attributes +
-      /** Destination IP address */
-      std::string _destIpAddr;
+      /** IP address */
+      std::string _ipAddress;
 
       /** Destination port */
       uint16_t _port;
 
       /** The socket type */
       SocketType _type;
+
+      /** The socket */
+      int _sock;
+
+      /** The client socket (if current socket is server) */
+      int _csock;
+
+      /** The number of connection in waiting state */
+      int _backlog;
       // Attributes -
 
     public:
       // Constructors +
       /**
-       * {@link Socket} constructor
+       * {@link Socket} constructor.
+       * Backlog is set to 5 by default. You can change it using the setter before call listen method.
        *
-       * @param destIpAddr Destination IP address
+       * @param ipAddress IP address
        * @param port Destination port
        * @param type The socket type
        */
-      Socket(const std::string& destIpAddr,
+      Socket(const std::string& ipAddress,
 	     uint16_t port,
-	     anch::network::SocketType type = anch::network::SocketType.UNKNOWN);
+	     anch::network::SocketType type = anch::network::SocketType::UNKNOWN);
       // Constructors -
 
       // Destructor +
@@ -89,44 +103,83 @@ namespace anch {
 
     public:
       // Methods +
+      /**
+       * Bind socket
+       */
       void bind();
 
+      /**
+       * Connect to remote socket
+       */
       void connect();
 
+      /**
+       * Listen on socket
+       */
       void listen();
 
-      void send();
+      /**
+       * Accept client connection
+       */
+      void accept();
 
+      /**
+       * Send a message on socket
+       */
+      void send(const std::string& message);
+
+      /**
+       * Receive a message on socket
+       *
+       * @param message The string where to write the message
+       */
       void receive(std::string message);
 
+      /**
+       * Close the socket
+       */
       void close();
       // Methods -
 
     public:
       // Accessors +
       /**
-       * Destination IP address getter
+       * Get the socket domain
        *
-       * @return The destination IP address
+       * @return The POSIX socket domain
        */
-      inline const std::string& getDestIpAddr() const {
-	return _destIpAddr;
+      virtual int getDomain() const = 0;
+
+      /**
+       * Get the socket service type
+       *
+       * @return The POSIX socket service type
+       */
+      virtual int getType() const = 0;
+
+      /**
+       * IP address getter
+       *
+       * @return The IP address
+       */
+      inline const std::string& getIpAddress() const {
+	return _ipAddress;
       }
 
       /**
-       * Destination IP address setter
+       * IP address setter
        *
-       * @param destIpAddr The destination IP address to set
+       * @param ipAddress The IP address to set
        */
-      inline void setDestIpAddr(const std::string& destIpAddr) {
-	_destIpAddr = destIpAddr;
+      inline void setIpAddress(const std::string& ipAddress) {
+	_ipAddress = ipAddress;
       }
       /**
        * Destination port getter
        *
        * @return The destination port
        */
-      inline unint16_t getPort() const {
+      inline uint16_t getPort() const {
 	return _port;
       }
 
@@ -135,7 +188,7 @@ namespace anch {
        *
        * @param port The destination port to set
        */
-      inline void setDestIpAddr(unint16_t port) {
+      inline void setIpAddress(uint16_t port) {
 	_port = port;
       }
 
@@ -144,7 +197,7 @@ namespace anch {
        *
        * @return The socket type
        */
-      inline anch::network::SocketType getType() const {
+      inline anch::network::SocketType getSocketType() const {
 	return _type;
       }
 
@@ -153,8 +206,26 @@ namespace anch {
        *
        * @param type The socket type to set
        */
-      inline void setType(SocketType type) {
+      inline void setSocketType(SocketType type) {
 	_type = type;
+      }
+
+      /**
+       * Backlog getter
+       *
+       * @return The backlog
+       */
+      inline int getBacklog() const {
+	return _backlog;
+      }
+
+      /**
+       * Backlog setter
+       *
+       * @param backlog The backlog to set
+       */
+      inline void setBacklog(int backlog) {
+	_backlog = backlog;
       }
       // Accessors -
 

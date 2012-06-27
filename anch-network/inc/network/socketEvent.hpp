@@ -14,58 +14,54 @@
     You should have received a copy of the GNU General Public License
     along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef _ANCH_NETWORK_UDP_SOCKET_H_
-#define _ANCH_NETWORK_UDP_SOCKET_H_
+#ifndef _ANCH_NETWORK_SOCKET_EVENT_H_
+#define _ANCH_NETWORK_SOCKET_EVENT_H_
 
-#include "network/socket.hpp"
+#include <iostream>
 
 namespace anch {
   namespace network {
 
     /**
-     * UDP socket implementation
+     * Socket event
      *
      * @author Vincent Lachenal
      */
-    class UdpSocket: public Socket {
+    class SocketEvent {
 
     private:
       // Attributes +
+      /** The message received on socket */
+      std::string _message;
       // Attributes -
 
     public:
       // Constructors +
       /**
-       * {@link UdpSocket} constructor
+       * {@link SocketEvent} constructor
        *
-       * @param ipAddress The IP address
-       * @param port The port number
+       * @param message The message received on socket
        */
-      UdpSocket(const std::string& ipAddress, uint16_t port);
+      SocketEvent(const std::string& message);
       // Constructors -
 
-      // Destructors +
+      // Destructor +
       /**
-       * {@link UdpSocket} destructor
+       * {@link SocketEvent} destructor
        */
-      virtual ~UdpSocket();
-      // Destructors -
+      virtual ~SocketEvent();
+      // Destructor -
 
     public:
       // Accessors +
       /**
-       * Get the socket domain
+       * Get the event message
        *
-       * @return The POSIX socket domain
+       * @return The message
        */
-      virtual int getDomain() const;
-
-      /**
-       * Get the socket service type
-       *
-       * @return The POSIX socket service type
-       */
-      virtual int getType() const;
+      inline const std::string& getMessage() const {
+	return _message;
+      };
       // Accessors -
 
     };
@@ -73,4 +69,4 @@ namespace anch {
   }
 }
 
-#endif // _ANCH_NETWORK_UDP_SOCKET_H_
+#endif // _ANCH_NETWORK_SOCKET_EVENT_H_

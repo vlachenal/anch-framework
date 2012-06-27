@@ -1,7 +1,10 @@
 ## Anch network configuration +
+# Anch resource path
+set(ANCH_EVENTS_INCLUDES_DIR "/home/cs200/projects/anch-framework/anch-events/inc")
+
 # Anch network installation configuration
 set(ANCH_NETWORK_LIBRARY_DIR "")
 
 # Unitary tests
-set(ANCH_NETWORK_UNITARY_TEST ON CACHE BOOL "Anch network unitary tests")
+set(ANCH_NETWORK_UNITARY_TEST OFF CACHE BOOL "Anch network unitary tests")
 ## Anch network configuration -

@@ -17,8 +17,8 @@
 #ifndef _ANCH_EVENTS_OBSERVABLE_H_
 #define _ANCH_EVENTS_OBSERVABLE_H_
 
+#include <mutex>
 #include <map>
-#include <thread>
 
 #include "events/observer.hpp"
 

@@ -29,6 +29,46 @@ namespace anch {
      */
     class TcpSocket: public Socket {
 
+    private:
+      // Attributes +
+      // Attributes -
+
+    public:
+      // Constructors +
+      /**
+       * {@link TcpSocket} constructor
+       *
+       * @param ipAddress The IP address
+       * @param port The port number
+       */
+      TcpSocket(const std::string& ipAddress, uint16_t port);
+      // Constructors -
+
+      // Destructors +
+      /**
+       * {@link TcpSocket} destructor
+       */
+      virtual ~TcpSocket();
+      // Destructors -
+
+    public:
+      // Accessors +
+      /**
+       * Get the socket domain
+       *
+       * @return The POSIX socket domain
+       */
+      virtual int getDomain() const;
+
+      /**
+       * Get the socket service type
+       *
+       * @return The POSIX socket service type
+       */
+      virtual int getType() const;
+      // Accessors -
+
+
     };
 
   }
