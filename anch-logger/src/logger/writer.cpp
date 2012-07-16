@@ -1,18 +1,18 @@
 /*
-    This file is part of ANCH Framework.
+  This file is part of ANCH Framework.
 
-    ANCH Framework is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+  ANCH Framework is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
 
-    ANCH Framework is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+  ANCH Framework is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
+  You should have received a copy of the GNU General Public License
+  along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include <fstream>
 #include <sstream>
@@ -138,7 +138,7 @@ Writer::rotateFiles() {
   // Remove older file if max index file has been reached +
   if(_fileIndex == _maxIndex) {
     ostr << _fileName << "." << _fileIndex;
-    remove(ostr.str().c_str());
+    remove(ostr.str().data());
     _fileIndex--;
   }
   // Remove older file if max index file has been reached -
@@ -150,9 +150,9 @@ Writer::rotateFiles() {
     ostr.str("");
     ostr << _fileName << "." << (i + 1);
     string newName = ostr.str();
-    rename(oldName.c_str(), newName.c_str());
+    rename(oldName.data(), newName.data());
   }
-  rename(_fileName.c_str(), string(_fileName + ".1").c_str());
+  rename(_fileName.data(), string(_fileName + ".1").data());
   // Rename every log files -
   _output = new ofstream(_fileName);
   _fileIndex++;

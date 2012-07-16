@@ -14,38 +14,55 @@
   You should have received a copy of the GNU General Public License
   along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "resource/file/resourceFileException.hpp"
+#include "network/ioException.hpp"
+
+#include <errno.h>
+#include <netdb.h>
+
 
 using std::string;
+using std::exception;
 
-using anch::resource::file::ResourceFileException;
+using anch::network::IOException;
 
 
+// Constructors +
 /**
- * {@link ResourceFileException} constructor
+ * {@link IOException} constructor
  *
- * @param filePath The file path
- * @param error The error
+ * @param message The error message
  */
-ResourceFileException::ResourceFileException(const std::string& filePath,
-					     const std::string& error) {
-  _message = string("Error while on ") + filePath
-    + string(" treatment: ") + error;
+IOException::IOException(const string& message): _message(message) {
+  _message = message + ": " + sys_errlist[errno];
 }
 
 /**
- * {@link ResourceFileException} destructor
+ * {@link IOException} constructor
+ *
+ * @param message The error message
+ * @param errorCode The error code (from <code>getinfoaddr</code>)
  */
-ResourceFileException::~ResourceFileException() throw() {
+IOException::IOException(const string& message, int errorCode) {
+  _message = message + ": " + gai_strerror(errorCode);
+}
+// Constructors -
+
+// Destructor +
+/**
+ * {@link IOException} destructor
+ */
+IOException::~IOException() throw() {
   // Nothing to do
 }
+// Destructor -
+
 
 /**
- * Retrieve the complete error message
+ * Return the error message
  *
  * @return The error message
  */
 const char*
-ResourceFileException::what() const throw() {
+IOException::what() const throw() {
   return _message.data();
 }

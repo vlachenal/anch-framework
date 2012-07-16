@@ -23,7 +23,12 @@ endif()
 # Check GCC version -
 
 # Add GCC definitions
-add_definitions("-Wall -Werror -O3")
+add_definitions("-Wall -Werror -O2")
+if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+  add_definitions("-D ANCH_WINDOWS")
+else()
+  add_definitions("-D ANCH_POSIX")
+endif()
 
 # Include librairies
 include(FindThreads)
@@ -63,21 +68,21 @@ if(ANCH_NETWORK_UNITARY_TEST)
     GLOB_RECURSE
     test_files
     inc/*
-    test/testNetwork.cpp
+    test/tcpSocketTest.cpp
   )
 
   add_executable(
-    anch-network-test
+    anch-network-test-tcp
     ${test_files}
   )
 
   target_link_libraries(
-    anch-network-test
+    anch-network-test-tcp
     anch-network
   )
   # Build parser unitary test -
 
   enable_testing()
-  add_test(anch-network-test ${EXECUTABLE_OUTPUT_PATH}/anch-network-test main)
+  add_test(anch-network-test-tcp ${EXECUTABLE_OUTPUT_PATH}/anch-network-test-tcp main)
 
 endif(ANCH_NETWORK_UNITARY_TEST)

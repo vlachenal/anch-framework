@@ -1,18 +1,18 @@
 /*
-    This file is part of ANCH Framework.
+  This file is part of ANCH Framework.
 
-    ANCH Framework is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+  ANCH Framework is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
 
-    ANCH Framework is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+  ANCH Framework is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
+  You should have received a copy of the GNU General Public License
+  along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
 #ifndef _ANCH_NETWORK_SOCKET_H_
 #define _ANCH_NETWORK_SOCKET_H_
@@ -21,6 +21,24 @@
 
 #include "events/observable.hpp"
 #include "network/socketEvent.hpp"
+#include "network/ioException.hpp"
+
+
+// Microsoft Windows operating systems defintions +
+#ifdef ANCH_WINDOWS
+typedef int socklen_t;
+// Microsoft Windows operating systems defintions -
+
+// POSIX operating systems definitions +
+#elif defined ANCH_POSIX
+#include <netdb.h>
+#define INVALID_SOCKET -1
+#define SOCKET_ERROR -1
+typedef int SOCKET;
+typedef struct sockaddr_in SOCKADDR_IN;
+typedef struct sockaddr SOCKADDR;
+#endif
+// POSIX operating systems definitions -
 
 
 namespace anch {
@@ -41,8 +59,33 @@ namespace anch {
       /** UDP socket */
       UDP,
 
-      /** POSIX socket (not available for Windows TM operating system) */
+#ifdef ANCH_POSIX
+      /** POSIX socket (not available for Microsoft Windows TM operating system) */
       POSIX,
+#endif
+    };
+
+  }
+}
+
+namespace anch {
+  namespace network {
+
+    /**
+     * Socket direction.<br>
+     * Usefull for shutdown method.
+     *
+     * @author Vincent Lachenal
+     */
+    enum Direction {
+      /** Reception */
+      RECEPTION = 0,
+
+      /** Transmission */
+      TRANSMISSION = 1,
+
+      /** Reception and transmission */
+      BOTH = 2,
     };
 
   }
@@ -69,18 +112,27 @@ namespace anch {
       /** The socket type */
       SocketType _type;
 
+    protected:
       /** The socket */
-      int _sock;
-
-      /** The client socket (if current socket is server) */
-      int _csock;
+      SOCKET _sock;
 
       /** The number of connection in waiting state */
       int _backlog;
+
+      /** The address informations */
+      addrinfo* _address;
       // Attributes -
 
-    public:
       // Constructors +
+    protected:
+      /**
+       * {@link Socket} constructor.
+       *
+       * @param type The socket type
+       */
+      Socket(anch::network::SocketType type);
+
+    public:
       /**
        * {@link Socket} constructor.
        * Backlog is set to 5 by default. You can change it using the setter before call listen method.
@@ -91,14 +143,15 @@ namespace anch {
        */
       Socket(const std::string& ipAddress,
 	     uint16_t port,
-	     anch::network::SocketType type = anch::network::SocketType::UNKNOWN);
+	     anch::network::SocketType type = anch::network::SocketType::UNKNOWN)
+	throw(anch::network::IOException);
       // Constructors -
 
       // Destructor +
       /**
        * {@link Socket} destructor
        */
-      virtual ~Socket();
+      virtual ~Socket() throw();
       // Destructor -
 
     public:
@@ -106,39 +159,52 @@ namespace anch {
       /**
        * Bind socket
        */
-      void bind();
+      virtual void bind() throw(anch::network::IOException);
 
       /**
        * Connect to remote socket
        */
-      void connect();
+      virtual void connect() throw(anch::network::IOException);
 
       /**
        * Listen on socket
        */
-      void listen();
+      virtual void listen() throw(anch::network::IOException);
 
       /**
        * Accept client connection
+       *
+       * @param socket The socket which describes client connection
        */
-      void accept();
+      virtual void accept(Socket& socket) throw(anch::network::IOException);
 
       /**
        * Send a message on socket
+       *
+       * @param message The message to send
        */
-      void send(const std::string& message);
+      virtual void send(const std::string& message) throw(anch::network::IOException) = 0;
 
       /**
        * Receive a message on socket
        *
        * @param message The string where to write the message
        */
-      void receive(std::string message);
+      virtual void receive(std::string& message) throw(anch::network::IOException) = 0;
+
+      /**
+       * Shutdown data flow between client and server.<br>
+       * This method has to be called by server.
+       *
+       * @param how Direction of the data flow which has to be closed
+       */
+      virtual void shutdown(anch::network::Direction how = anch::network::Direction::BOTH)
+	throw(anch::network::IOException);
 
       /**
        * Close the socket
        */
-      void close();
+      virtual void close() throw();
       // Methods -
 
     public:

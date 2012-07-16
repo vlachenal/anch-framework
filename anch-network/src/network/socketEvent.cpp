@@ -14,37 +14,29 @@
   You should have received a copy of the GNU General Public License
   along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "logger/logger.hpp"
+#include "network/socketEvent.hpp"
 
 using std::string;
-using std::vector;
 
-using anch::logger::Logger;
-using anch::logger::Level;
-using anch::logger::Writer;
+using anch::network::SocketEvent;
 
 
+// Constructors +
 /**
- * {@link Logger} constructor.
+ * {@link SocketEvent} constructor
  *
- * @param name Logger name
- * @param level The logging level to set
- * @param writers The writers list
+ * @param message The message received on socket
  */
-Logger::Logger(const string& name,
-	       const Level level,
-	       const vector<Writer*>& writers):
-  _name(name),
-  _level(level),
-  _writers() {
-  for(size_t i = 0 ; i < writers.size() ; i++) {
-    _writers.push_back(writers[i]);
-  }
-}
-
-/**
- * {@link Logger} destructor
- */
-Logger::~Logger() {
+SocketEvent::SocketEvent(const string& message): _message(message) {
   // Nothing to do
 }
+// Constructors -
+
+// Destructor +
+/**
+ * {@link SocketEvent} destructor
+ */
+SocketEvent::~SocketEvent() {
+  // Nothing to do
+}
+// Destructor -

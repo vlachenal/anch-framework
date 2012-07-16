@@ -14,59 +14,61 @@
   You should have received a copy of the GNU General Public License
   along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef _ANCH_NETWORK_SOCKET_EVENT_H_
-#define _ANCH_NETWORK_SOCKET_EVENT_H_
+#ifndef _ANCH_NETWORK_IO_EXCEPTION_H_
+#define _ANCH_NETWORK_IO_EXCEPTION_H_
 
 #include <iostream>
+#include <exception>
 
 namespace anch {
   namespace network {
 
     /**
-     * Socket event
+     * Network input/output error management by exception
      *
      * @author Vincent Lachenal
      */
-    class SocketEvent {
-
+    class IOException : public std::exception {
     private:
-      // Attributes +
-      /** The message received on socket */
+      /** Error message */
       std::string _message;
-      // Attributes -
 
     public:
       // Constructors +
       /**
-       * {@link SocketEvent} constructor
+       * {@link IOException} constructor
        *
-       * @param message The message received on socket
+       * @param message The error message
        */
-      SocketEvent(const std::string& message);
+      IOException(const std::string& message);
+
+      /**
+       * {@link IOException} constructor
+       *
+       * @param message The error message
+       * @param errorCode The error code (from <code>getinfoaddr</code>)
+       */
+      IOException(const std::string& message, int errorCode);
       // Constructors -
 
       // Destructor +
       /**
-       * {@link SocketEvent} destructor
+       * {@link IOException} destructor
        */
-      virtual ~SocketEvent();
+      virtual ~IOException() throw();
       // Destructor -
 
     public:
-      // Accessors +
       /**
-       * Get the event message
+       * Return the error message
        *
-       * @return The message
+       * @return The error message
        */
-      inline const std::string& getMessage() const {
-	return _message;
-      };
-      // Accessors -
+      virtual const char* what() const throw();
 
     };
 
   }
 }
 
-#endif // _ANCH_NETWORK_SOCKET_EVENT_H_
+#endif // _ANCH_NETWORK_IO_EXCEPTION_H_
