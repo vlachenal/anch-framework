@@ -32,14 +32,14 @@ namespace anch {
      * Aims to provide logging facilities.<br>
      * <br>
      * Logging levels are:<br>
-     * <li>
-     *   <ul>TRACE</ul>
-     *   <ul>DEBUG</ul>
-     *   <ul>INFO</ul>
-     *   <ul>WARN</ul>
-     *   <ul>ERROR</ul>
-     *   <ul>FATAL</ul>
-     * </li>
+     * <ul>
+     *   <li>TRACE</li>
+     *   <li>DEBUG</li>
+     *   <li>INFO</li>
+     *   <li>WARN</li>
+     *   <li>ERROR</li>
+     *   <li>FATAL</li>
+     * </ul>
      *
      * @author Vincent Lachenal
      */

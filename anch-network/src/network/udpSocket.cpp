@@ -54,6 +54,8 @@ UdpSocket::~UdpSocket() throw() {
 // Methods +
 /**
  * Listen on socket
+ *
+ * @throw anch::network::IOException Error while listening on the socket
  */
 void
 UdpSocket::listen() throw(IOException) {
@@ -61,12 +63,26 @@ UdpSocket::listen() throw(IOException) {
 }
 
 /**
- * Accept client connection
+ * Accept client connection.<br>
+ * This method do nothing since UDP is not connected
  *
  * @param socket The socket which describes client connection
+ *
+ * @throw anch::network::IOException Never on UDP socket
  */
 void
 UdpSocket::accept(Socket& socket) throw(IOException) {
+  // Nothing to do
+}
+
+/**
+ * Connect to remote socket.<br>
+ * This method do nothing since UDP is not connected.
+ *
+ * @throw anch::network::IOException Never on UDP socket
+ */
+void
+UdpSocket::connect() throw(IOException) {
   // Nothing to do
 }
 
@@ -75,7 +91,7 @@ UdpSocket::accept(Socket& socket) throw(IOException) {
  *
  * @param message The message to send
  *
- * @throws IOException Network error while sending message
+ * @throw anch::network::IOException Network error while sending message
  */
 void
 UdpSocket::send(const string& message) throw(IOException) {
@@ -97,7 +113,7 @@ UdpSocket::send(const string& message) throw(IOException) {
  *
  * @param message The string where to write the message
  *
- * @throws IOException Network error while sending message
+ * @throw anch::network::IOException Network error while receiving message
  */
 void
 UdpSocket::receive(string& message) throw(IOException) {

@@ -140,6 +140,8 @@ namespace anch {
        * @param ipAddress IP address
        * @param port Destination port
        * @param type The socket type
+       *
+       * @throw anch::network::IOException Error while creating the socket
        */
       Socket(const std::string& ipAddress,
 	     uint16_t port,
@@ -158,16 +160,22 @@ namespace anch {
       // Methods +
       /**
        * Bind socket
+       *
+       * @throw anch::network::IOException Error while binding the socket
        */
       virtual void bind() throw(anch::network::IOException);
 
       /**
        * Connect to remote socket
+       *
+       * @throw anch::network::IOException Error while connectin the client socket to the server socket
        */
       virtual void connect() throw(anch::network::IOException);
 
       /**
        * Listen on socket
+       *
+       * @throw anch::network::IOException Error while listening on the socket
        */
       virtual void listen() throw(anch::network::IOException);
 
@@ -175,6 +183,8 @@ namespace anch {
        * Accept client connection
        *
        * @param socket The socket which describes client connection
+       *
+       * @throw anch::network::IOException Error while accepting client connection
        */
       virtual void accept(Socket& socket) throw(anch::network::IOException);
 
@@ -182,13 +192,15 @@ namespace anch {
        * Send a message on socket
        *
        * @param message The message to send
+       *
+       * @throw anch::network::IOException Network error while sending message
        */
       virtual void send(const std::string& message) throw(anch::network::IOException) = 0;
 
       /**
        * Receive a message on socket
        *
-       * @param message The string where to write the message
+       * @throw anch::network::IOException Network error while receiving message
        */
       virtual void receive(std::string& message) throw(anch::network::IOException) = 0;
 
@@ -197,6 +209,8 @@ namespace anch {
        * This method has to be called by server.
        *
        * @param how Direction of the data flow which has to be closed
+       *
+       * @throw anch::network::IOException Network error while shutting down data transfer
        */
       virtual void shutdown(anch::network::Direction how = anch::network::Direction::BOTH)
 	throw(anch::network::IOException);

@@ -41,6 +41,8 @@ namespace anch {
        *
        * @param ipAddress The IP address
        * @param port The port number
+       *
+       * @throw anch::network::IOException Error while creating the socket
        */
       UdpSocket(const std::string& ipAddress, uint16_t port)
 	throw(anch::network::IOException);
@@ -57,13 +59,26 @@ namespace anch {
       // Methods +
       /**
        * Listen on socket
+       *
+       * @throw anch::network::IOException Error while listening on the socket
        */
       virtual void listen() throw(anch::network::IOException);
 
       /**
-       * Accept client connection
+       * Connect to remote socket.<br>
+       * This method do nothing since UDP is not connected.
+       *
+       * @throw anch::network::IOException Never on UDP socket
+       */
+      virtual void connect() throw(anch::network::IOException);
+
+      /**
+       * Accept client connection.<br>
+       * This method do nothing since UDP is not connected
        *
        * @param socket The socket which describes client connection
+       *
+       * @throw anch::network::IOException Never on UDP socket
        */
       virtual void accept(Socket& socket) throw(anch::network::IOException);
 
@@ -72,7 +87,7 @@ namespace anch {
        *
        * @param message The message to send
        *
-       * @throws IOException Network error while sending message
+       * @throw anch::network::IOException Network error while sending message
        */
       virtual void send(const std::string& message) throw(anch::network::IOException);
 
@@ -81,7 +96,7 @@ namespace anch {
        *
        * @param message The string where to write the message
        *
-       * @throws IOException Network error while sending message
+       * @throw anch::network::IOException Network error while receiving message
        */
       virtual void receive(std::string& message) throw(anch::network::IOException);
       // Methods -

@@ -29,11 +29,22 @@ namespace anch {
      * @author Vincent Lachenal
      */
     enum Level {
+      /** Trace logging level */
       TRACE = 0,
+
+      /** Debug logging level */
       DEBUG = 10,
+
+      /** Information logging level */
       INFO = 20,
+
+      /** Warning logging level */
       WARN = 30,
+
+      /** Error logging level */
       ERROR = 40,
+
+      /** Fatal logging level */
       FATAL = 50
     };
 

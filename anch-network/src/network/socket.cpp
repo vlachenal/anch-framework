@@ -73,6 +73,8 @@ Socket::Socket(anch::network::SocketType type):
  * @param ipAddress IP address
  * @param port Destination port
  * @param type The socket type
+ *
+ * @throw anch::network::IOException Error while creating the socket
  */
 Socket::Socket(const string& ipAddress, uint16_t port, SocketType type)
   throw(IOException):
@@ -152,6 +154,8 @@ Socket::~Socket() throw() {
 // Methods +
 /**
  * Bind socket
+ *
+ * @throw anch::network::IOException Error while binding the socket
  */
 void
 Socket::bind() throw(IOException) {
@@ -168,6 +172,8 @@ Socket::bind() throw(IOException) {
 
 /**
  * Connect to remote socket
+ *
+ * @throw anch::network::IOException Error while connectin the client socket to the server socket
  */
 void
 Socket::connect() throw(IOException) {
@@ -179,6 +185,8 @@ Socket::connect() throw(IOException) {
 
 /**
  * Listen on socket
+ *
+ * @throw anch::network::IOException Error while listening on the socket
  */
 void
 Socket::listen() throw(IOException) {
@@ -190,6 +198,8 @@ Socket::listen() throw(IOException) {
 
 /**
  * Accept client connection
+ *
+ * @throw anch::network::IOException Error while accepting client connection
  */
 void
 Socket::accept(Socket& socket) throw(IOException) {
@@ -207,6 +217,8 @@ Socket::accept(Socket& socket) throw(IOException) {
  * This method has to be called by server.
  *
  * @param how Direction of the data flow which has to be closed
+ *
+ * @throw anch::network::IOException Network error while shutting down data transfer
  */
 void
 Socket::shutdown(Direction how) throw(IOException) {

@@ -69,7 +69,7 @@ TcpSocket::~TcpSocket() throw() {
  *
  * @param message The message to send
  *
- * @throws IOException Network error while sending message
+ * @throw anch::network::IOException Network error while sending message
  */
 void
 TcpSocket::send(const string& message) throw(IOException) {
@@ -84,7 +84,7 @@ TcpSocket::send(const string& message) throw(IOException) {
  *
  * @param message The string where to write the message
  *
- * @throws IOException Network error while sending message
+ * @throw anch::network::IOException Network error while receiving message
  */
 void
 TcpSocket::receive(string& message) throw(IOException) {
