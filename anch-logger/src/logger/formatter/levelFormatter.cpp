@@ -1,5 +1,5 @@
 /*
-  ANCH Framework: ANother C++ Hack is a C++ framework based on C++11 standart
+  ANCH Framework: ANother C++ Hack is a C++ framework based on C++11 standard
   Copyright (C) 2012 Vincent Lachenal
 
   This file is part of ANCH Framework.
