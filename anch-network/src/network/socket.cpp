@@ -216,6 +216,17 @@ Socket::accept(Socket& socket) throw(IOException) {
 }
 
 /**
+ * Receive a message on socket
+ *
+ * @throw anch::network::IOException Network error while receiving message
+ */
+void
+Socket::receive() throw(anch::network::IOException) {
+  string message;
+  receive(message);
+}
+
+/**
  * Shutdown data flow between client and server.<br>
  * This method has to be called by server.
  *

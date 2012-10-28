@@ -203,9 +203,18 @@ namespace anch {
       /**
        * Receive a message on socket
        *
+       * @param message The messages which has been received
+       *
        * @throw anch::network::IOException Network error while receiving message
        */
       virtual void receive(std::string& message) throw(anch::network::IOException) = 0;
+
+      /**
+       * Receive a message on socket
+       *
+       * @throw anch::network::IOException Network error while receiving message
+       */
+      virtual void receive() throw(anch::network::IOException);
 
       /**
        * Shutdown data flow between client and server.<br>

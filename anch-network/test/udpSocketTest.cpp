@@ -11,7 +11,7 @@ using std::cerr;
 using std::endl;
 using std::thread;
 
-using anch::network::TcpSocket;
+using anch::network::UdpSocket;
 using anch::network::SocketEvent;
 using anch::network::IOException;
 using anch::network::Direction;
