@@ -22,6 +22,10 @@
 
 #include <iostream>
 
+#ifdef ANCH_POSIX
+#include <netdb.h>
+#endif
+
 namespace anch {
   namespace network {
 
@@ -36,6 +40,9 @@ namespace anch {
       // Attributes +
       /** The message received on socket */
       std::string _message;
+
+      /** Sock address */
+      sockaddr_storage _address;
       // Attributes -
 
     public:
@@ -46,6 +53,14 @@ namespace anch {
        * @param message The message received on socket
        */
       SocketEvent(const std::string& message);
+
+      /**
+       * {@link SocketEvent} constructor
+       *
+       * @param message The message received on socket
+       * @param address The address where the message has been sent
+       */
+      SocketEvent(const std::string& message, const sockaddr_storage& address);
       // Constructors -
 
       // Destructor +
@@ -64,6 +79,15 @@ namespace anch {
        */
       inline const std::string& getMessage() const {
 	return _message;
+      };
+
+      /**
+       * Get the event message
+       *
+       * @return The message
+       */
+      inline const sockaddr_storage& getAddress() const {
+	return _address;
       };
       // Accessors -
 

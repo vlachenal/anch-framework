@@ -76,7 +76,7 @@ TcpSocket::~TcpSocket() throw() {
  */
 void
 TcpSocket::send(const string& message) throw(IOException) {
-  int res = ::send(_sock, message.data(), message.size(), 0);
+  int res = ::send(_sock, message.data(), message.size() + 1, 0);
   if(res == SOCKET_ERROR) {
     throw IOException("Error on send()");
   }

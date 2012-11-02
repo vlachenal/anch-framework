@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.6)
 
 # Project anch network
-# ANother C++ Harsh/Huge/Hack 
+# ANother C++ Harsh/Huge/Hack
 project(anch-network)
 set(EXECUTABLE_OUTPUT_PATH bin/${CMAKE_BUILD_TYPE})
 set(LIBRARY_OUTPUT_PATH lib/${CMAKE_BUILD_TYPE})
@@ -66,23 +66,41 @@ if(ANCH_NETWORK_UNITARY_TEST)
   # Build parser unitary test +
   file(
     GLOB_RECURSE
-    test_files
+    test_tcp_files
     inc/*
     test/tcpSocketTest.cpp
   )
 
   add_executable(
     anch-network-test-tcp
-    ${test_files}
+    ${test_tcp_files}
   )
 
   target_link_libraries(
     anch-network-test-tcp
     anch-network
   )
+
+  file(
+    GLOB_RECURSE
+    test_udp_files
+    inc/*
+    test/udpSocketTest.cpp
+  )
+
+  add_executable(
+    anch-network-test-udp
+    ${test_udp_files}
+  )
+
+  target_link_libraries(
+    anch-network-test-udp
+    anch-network
+  )
   # Build parser unitary test -
 
   enable_testing()
   add_test(anch-network-test-tcp ${EXECUTABLE_OUTPUT_PATH}/anch-network-test-tcp main)
+  add_test(anch-network-test-udp ${EXECUTABLE_OUTPUT_PATH}/anch-network-test-udp main)
 
 endif(ANCH_NETWORK_UNITARY_TEST)

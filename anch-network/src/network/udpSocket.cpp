@@ -33,6 +33,14 @@ using anch::network::IOException;
 
 // Constructors +
 /**
+ * {@link UdpSocket} default constructor
+ */
+UdpSocket::UdpSocket():
+  Socket(SocketType::UDP) {
+  // Nothing to do
+}
+
+/**
  * {@link UdpSocket} constructor
  *
  * @param ipAddress The IP address
@@ -98,14 +106,33 @@ UdpSocket::connect() throw(IOException) {
  */
 void
 UdpSocket::send(const string& message) throw(IOException) {
-  sockaddr_storage peerAddr;
-  socklen_t peerAddrLen = sizeof(sockaddr_storage);
   int res = ::sendto(_sock,
 		     message.data(),
-		     message.size(),
+		     message.size() + 1,
 		     0,
-		     (sockaddr*)&peerAddr,
-		     peerAddrLen);
+		     _address->ai_addr,
+		     sizeof(*(_address->ai_addr)));
+  if(res == SOCKET_ERROR) {
+    throw IOException("Error on sendto()");
+  }
+}
+
+/**
+ * Send a message on socket
+ *
+ * @param message The message to send
+ *
+ * @throw anch::network::IOException Network error while sending message
+ */
+void
+UdpSocket::send(const string& message, const sockaddr_storage& peerAddr)
+  throw(IOException) {
+  int res = ::sendto(_sock,
+		     message.data(),
+		     message.size() + 1,
+		     0,
+		     (SOCKADDR*)&peerAddr,
+		     sizeof(sockaddr_storage));
   if(res == SOCKET_ERROR) {
     throw IOException("Error on sendto()");
   }
@@ -125,7 +152,7 @@ UdpSocket::receive(string& message) throw(IOException) {
   int res = 0;
   sockaddr_storage peerAddr;
   socklen_t peerAddrLen = sizeof(sockaddr_storage);
-  while((res = ::recvfrom(_sock, buffer, sizeof(buffer) - 1, 0, (sockaddr*)&peerAddr, &peerAddrLen)) > 0) {
+  if((res = ::recvfrom(_sock, buffer, sizeof(buffer) - 1, 0, (sockaddr*)&peerAddr, &peerAddrLen)) > 0) {
     message += buffer;
   }
   if(res < 0) {
@@ -135,7 +162,7 @@ UdpSocket::receive(string& message) throw(IOException) {
   // Receive message -
 
   // Notify everybody that a message has been received +
-  notifyObservers(SocketEvent(message));
+  notifyObservers(SocketEvent(message, peerAddr));
   // Notify everybody that a message has been received -
 }
 // Methods -

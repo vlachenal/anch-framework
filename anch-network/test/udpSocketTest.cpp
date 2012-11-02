@@ -1,7 +1,7 @@
 #include <iostream>
 #include <thread>
 
-#include "network/tcpSocket.hpp"
+#include "network/udpSocket.hpp"
 #include "events/observer.hpp"
 
 
@@ -21,13 +21,22 @@ using anch::events::Observer;
 
 class ServerObs : public Observer<SocketEvent> {
 
+private:
+  UdpSocket* _sock;
+
 public:
-  ServerObs() {};
+  ServerObs(UdpSocket* sock): _sock(sock) {};
   ~ServerObs() {};
 
 public:
   virtual void notify(const SocketEvent& evt) const throw() {
     cout << "Server receive " + evt.getMessage() << endl;
+    cout << "Server send response" << endl;
+    try {
+      _sock->send("Bye bye !", evt.getAddress());
+    } catch(const IOException& e) {
+      cerr << "Server " << e.what() << endl;
+    }
   }
 
 };
@@ -48,31 +57,18 @@ public:
 
 void
 runUdpServer(UdpSocket* const serverSock) {
-  cout << "Server: Wait for client connection" << endl;
   // Wait for client
-  UdpSocket csock;
-  serverSock->accept(csock);
-  ServerObs srvObs;
-  csock.addObserver(srvObs);
-
-  std::this_thread::sleep_for(std::chrono::seconds(1));
-
-  cout << "Server send a message" << endl;
-  try {
-    csock.send("You are connected !!");
-  } catch(const IOException& e) {
-    cerr << "Server " << e.what() << endl;
-  }
-  csock.shutdown(Direction::TRANSMISSION);
+  ServerObs srvObs(serverSock);
+  serverSock->addObserver(srvObs);
 
   cout << "Server is waiting for a message" << endl;
   string message;
   try {
-    csock.receive(message);
+    serverSock->receive(message);
+
   } catch(const IOException& e) {
     cerr << "Server " << e.what() << endl;
   }
-  csock.close();
 }
 
 
@@ -89,10 +85,10 @@ main(void) {
   UdpSocket serverSock("",40099);
   cout << "bind()" << endl;
   serverSock.bind();
-  cout << "listen()" << endl;
-  serverSock.listen();
   thread srvTh(runUdpServer, &serverSock);
   // Server socket -
+
+  std::this_thread::sleep_for(std::chrono::seconds(1));
 
   // Client socket +
   // Open the server UDP socket on localhost:40099
@@ -100,22 +96,12 @@ main(void) {
   UdpSocket clientSocket("127.0.0.1",40099);
   ClientObs cliObs;
   clientSocket.addObserver(cliObs);
-  cout << "connect()" << endl;
-  try {
-    clientSocket.connect();
-  } catch(const IOException& e) {
-    cerr << "Client " << e.what() << endl;
-    serverSock.close();
-  }
-  cout << "Client is waiting for message" << endl;
+  cout << "Client send a message" << endl;
+  clientSocket.send("Hello !");
+
+  cout << "Client is waiting for response" << endl;
   string message;
   clientSocket.receive(message);
-
-  std::this_thread::sleep_for(std::chrono::seconds(1));
-
-  cout << "Client send a message" << endl;
-  clientSocket.send("Bye bye !");
-  clientSocket.shutdown();
   // Client socket -
 
   srvTh.join();

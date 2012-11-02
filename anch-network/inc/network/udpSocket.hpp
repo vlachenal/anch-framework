@@ -40,6 +40,11 @@ namespace anch {
     public:
       // Constructors +
       /**
+       * {@link UdpSocket} default constructor
+       */
+      UdpSocket();
+
+      /**
        * {@link UdpSocket} constructor
        *
        * @param ipAddress The IP address
@@ -93,6 +98,18 @@ namespace anch {
        * @throw anch::network::IOException Network error while sending message
        */
       virtual void send(const std::string& message) throw(anch::network::IOException);
+
+      /**
+       * Send a message on socket
+       *
+       * @param message The message to send
+       * @param peerAddr The address where the message has to be sent
+       *
+       * @throw anch::network::IOException Network error while sending message
+       */
+      virtual void send(const std::string& message,
+			const sockaddr_storage& peerAddr)
+	throw(anch::network::IOException);
 
       /**
        * Receive a message on socket

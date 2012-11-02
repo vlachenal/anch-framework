@@ -33,6 +33,19 @@ using anch::network::SocketEvent;
 SocketEvent::SocketEvent(const string& message): _message(message) {
   // Nothing to do
 }
+
+/**
+ * {@link SocketEvent} constructor
+ *
+ * @param message The message received on socket
+ * @param address The address where the message has been sent
+ */
+SocketEvent::SocketEvent(const std::string& message,
+			 const sockaddr_storage& address):
+  _message(message),
+  _address(address) {
+  // Nothing to do
+}
 // Constructors -
 
 // Destructor +
