@@ -1,0 +1,7 @@
+## Anch device configuration +
+# Anch device installation configuration
+set(ANCH_DEVICE_LIBRARY_DIR "")
+
+# Unitary tests
+set(ANCH_DEVICE_UNITARY_TEST ON CACHE BOOL "Anch device unitary tests")
+## Anch device configuration -
