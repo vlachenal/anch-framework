@@ -19,6 +19,9 @@
 */
 #include "device/deviceException.hpp"
 
+#include <errno.h>
+#include <netdb.h>
+
 
 using std::string;
 
@@ -31,9 +34,19 @@ using anch::device::DeviceException;
  *
  * @param message The error message
  */
-DeviceException::DeviceException(const string message) throw() :
+DeviceException::DeviceException(const string& message) throw() :
   _message(message) {
   // Do nothing
+}
+
+/**
+ * {@link DeviceException} constructor
+ *
+ * @param message The error message
+ * @param errorCode The error code
+ */
+DeviceException::DeviceException(const string& message, int errorCode) throw() {
+  _message = message + ": " + gai_strerror(errorCode);
 }
 // Constructors -
 

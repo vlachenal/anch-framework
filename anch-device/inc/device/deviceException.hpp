@@ -38,7 +38,15 @@ namespace anch {
        *
        * @param message The error message
        */
-      DeviceException(const std::string message) throw();
+      DeviceException(const std::string& message) throw();
+
+      /**
+       * {@link DeviceException} constructor
+       *
+       * @param message The error message
+       * @param errorCode The error code
+       */
+      DeviceException(const std::string& message, int errorCode) throw();
       // Constructors -
 
       // Destructor +

@@ -21,7 +21,10 @@
 #define _ANCH_DEVICE_NETWORK_H_
 
 #include <iostream>
+#include <map>
+#include <mutex>
 
+#include "device/networkInterface.hpp"
 #include "device/deviceException.hpp"
 
 
@@ -37,29 +40,22 @@ namespace anch {
 
     private:
       // Attributes +
-      /** Network unique instance */
-      static Network* _self;
+      /** Network interfaces indexed by their names */
+      static std::map<std::string,anch::device::NetworkInterface>* _interfaces;
 
-      /** Network interface name */
-      std::string _ifaceName;
-
-      /** Broadcast address */
-      std::string _broadcastAddr;
+      /** Mutex */
+      static std::mutex MUTEX;
       // Attributes -
 
     private:
       // Constructors +
       /**
        * Network configuration private constructor
-       *
-       * @param ifaceName Network interface name
-       *
-       * @throw anch::device::DeviceException Device initialization error
        */
-      Network(const std::string& ifaceName)
-	throw(anch::device::DeviceException);
+      Network();
       // Constructors -
 
+    public:
       // Destructors +
       /**
        * Network configuration destructor
@@ -70,35 +66,42 @@ namespace anch {
     public:
       // Methods +
       /**
-       * Initialize network configuration
+       * Retrieve network interface by its name.
        *
-       * @param ifaceName Network interface name
+       * @param ifName The interface name
        *
-       * @throw anch::device::DeviceException Device initialization error
+       * @return The interface if found, <code>NULL</code> otherwise
+       *
+       * @throw anch::device::DeviceException Network interfaces error
        */
-      static void initialize(const std::string& ifaceName)
+      static const anch::device::NetworkInterface* const getInterface(const std::string& ifName)
 	throw(anch::device::DeviceException);
+
+      /**
+       * Retrieve all network interfaces.
+       *
+       * @return The network interfaces
+       *
+       * @throw anch::device::DeviceException Network interfaces error
+       */
+      static const std::map<std::string,anch::device::NetworkInterface>& getInterfaces()
+	throw(anch::device::DeviceException);
+
+      /**
+       * Reload network interfaces
+       *
+       * @throw anch::device::DeviceException Network interfaces error
+       */
+      static void reload() throw(anch::device::DeviceException);
+
+    private:
+      /**
+       * Load network interfaces
+       *
+       * @throw anch::device::DeviceException Network interfaces error
+       */
+      static void load() throw(anch::device::DeviceException);
       // Methods -
-
-      // Accessors +
-      /**
-       * Get broadcast address
-       *
-       * @return The broadcast address
-       */
-      static inline const std::string& getBroadcastAddress() {
-	return _self->_broadcastAddr;
-      }
-
-      /**
-       * Get the interface name
-       *
-       * @return The interface name
-       */
-      static inline const std::string& getInterfaceName() {
-	return _self->_ifaceName;
-      }
-      // Accessors -
 
     };
 

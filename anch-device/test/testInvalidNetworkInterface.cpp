@@ -8,6 +8,7 @@ using std::cerr;
 using std::endl;
 
 using anch::device::Network;
+using anch::device::NetworkInterface;
 using anch::device::DeviceException;
 
 
@@ -20,13 +21,17 @@ int
 main(void) {
   string ifName = "toto";
   try {
-    Network::initialize(ifName);
-    cerr << Network::getInterfaceName() << " has broadcast address "
-	 << Network::getBroadcastAddress() << endl;
+    const NetworkInterface* interface = Network::getInterface(ifName);
+    if(interface != NULL) {
+      cerr << interface->getName() << " has broadcast address "
+	   << interface->getBroadcastAddress() << endl;
+      return 2;
+    }
+    cout << "Interface not found" << endl;
 
   } catch(const DeviceException& e) {
-    cout << e.what() << endl;
-    return 0;
+    cerr << e.what() << endl;
+    return 1;
   }
-  return 1;
+  return 0;
 }

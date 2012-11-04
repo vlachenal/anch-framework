@@ -27,48 +27,34 @@
 #include <net/if.h>
 #include <arpa/inet.h>
 
+#ifdef ANCH_POSIX
+#define LOCALHOST "lo"
+#else
+#define LOCALHOST "lo"
+#endif
 
 using std::string;
-using std::cout;
-using std::cerr;
-using std::endl;
+using std::map;
+using std::pair;
+using std::mutex;
 
 using anch::device::Network;
+using anch::device::NetworkInterface;
 using anch::device::DeviceException;
 
 
 // Static members initialization +
-Network* Network::_self = NULL;
+mutex Network::MUTEX;
+map<string,NetworkInterface>* Network::_interfaces = NULL;
 // Static members initialization -
 
 
 // Constructors +
 /**
  * Network configuration private constructor
- *
- * @param ifaceName Network interface name
- *
- * @throw DeviceException Device initialization error
  */
-Network::Network(const string& ifaceName) throw(DeviceException) :
-  _ifaceName(ifaceName) {
-
-  // Open hardware controller to retrieve network informations +
-  struct ifreq request;
-  memset(&request, 0x00, sizeof(request));
-  strcpy(request.ifr_name, _ifaceName.c_str());
-  request.ifr_flags = IFF_UP | IFF_BROADCAST | IFF_RUNNING | IFF_MULTICAST;
-  // TODO IPv6 with PF_INET6
-  int sock = socket(PF_INET, SOCK_DGRAM, IPPROTO_IP);
-  int ret = ioctl(sock, SIOCGIFBRDADDR, &request);
-  close(sock);
-  // Open hardware controller to retrieve network informations -
-  if(ret == 0) {
-    _broadcastAddr = inet_ntoa(((sockaddr_in*)(&request.ifr_broadaddr))->sin_addr);
-  } else {
-    throw DeviceException("Error on retrieving interface");
-  }
-
+Network::Network() {
+  // Nothing to do
 }
 // Constructors -
 
@@ -77,25 +63,116 @@ Network::Network(const string& ifaceName) throw(DeviceException) :
  * Network configuration destructor
  */
 Network::~Network() {
-  // Nothing to do
+  if(_interfaces != NULL) {
+    delete _interfaces;
+  }
 }
 // Destructor -
 
 // Methods +
 /**
- * Initialize network configuration
+ * Retrieve network interface by its name.
  *
- * @param ifaceName Network interface name
+ * @param ifName The interface name
  *
- * @throw DeviceException Interface initialization error
+ * @return The interface if found, <code>NULL</code> otherwise
+ *
+ * @throw DeviceException Network interfaces error
+ */
+const NetworkInterface* const
+Network::getInterface(const string& ifName) throw(DeviceException) {
+  const NetworkInterface* interface = NULL;
+  MUTEX.lock();
+  if(_interfaces == NULL) {
+    load();
+  }
+  map<string,NetworkInterface>::const_iterator iter = _interfaces->find(ifName);
+  if(iter != _interfaces->cend()) {
+    interface = &(iter->second);
+  }
+  MUTEX.unlock();
+  return interface;
+}
+
+/**
+ * Retrieve all network interfaces.
+ *
+ * @return The network interfaces
+ *
+ * @throw DeviceException Network interfaces error
+ */
+const map<string,NetworkInterface>&
+Network::getInterfaces() throw(DeviceException) {
+  MUTEX.lock();
+  if(_interfaces == NULL) {
+    load();
+  }
+  MUTEX.unlock();
+  return *_interfaces;
+}
+
+/**
+ * Reload network interfaces
+ *
+ * @throw DeviceException Network interfaces error
  */
 void
-Network::initialize(const string& ifaceName) throw(DeviceException) {
-  if(_self == NULL) {
-    _self = new Network(ifaceName);
-  } else if(_self->_ifaceName != ifaceName) {
-    delete _self;
-    _self = new Network(ifaceName);
+Network::reload() throw(DeviceException) {
+  MUTEX.lock();
+  if(_interfaces != NULL) {
+    _interfaces->clear();
   }
+  load();
+  MUTEX.unlock();
+}
+
+
+/**
+ * Load network interfaces
+ *
+ * @throw DeviceException Network interfaces error
+ */
+void
+Network::load() throw(DeviceException) {
+  // Initialize interfaces container if needed +
+  if(_interfaces == NULL) {
+    _interfaces = new map<string,NetworkInterface>();
+  }
+  // Initialize interfaces container if needed -
+
+  // Open socket +
+  int sock = ::socket(AF_INET, SOCK_DGRAM, 0);
+  if(sock < 0) {
+    throw DeviceException("Error while opening socket",sock);
+  }
+  // Open socket -
+
+  // Request for interfaces configuration +
+  char buffer[1024];
+  struct ifconf request;
+  request.ifc_len = sizeof(buffer);
+  request.ifc_buf = buffer;
+  int ret = ::ioctl(sock, SIOCGIFCONF, &request);
+  if(ret < 0) {
+    throw DeviceException("Error while retrieving interfaces configuration",ret);
+  }
+  // Request for interfaces configuration -
+
+  struct ifreq* req = request.ifc_req;
+  int nbResult = request.ifc_len / sizeof(struct ifreq);
+  for(int i = 0 ; i < nbResult ; i++) {
+    struct ifreq* interface = &req[i];
+    string ifName = interface->ifr_name;
+    ret = ::ioctl(sock, SIOCGIFHWADDR, interface);
+    if(ret < 0) {
+      throw DeviceException("Error while retrieving hardware address for interface " + ifName,ret);
+    }
+    ret = ::ioctl(sock, SIOCGIFBRDADDR, interface);
+    if(ret < 0) {
+      throw DeviceException("Error while retrieving broadcast address for interface " + ifName,ret);
+    }
+    _interfaces->insert(pair<string,NetworkInterface>(ifName,*interface));
+  }
+  ::close(sock);
 }
 // Methods -
