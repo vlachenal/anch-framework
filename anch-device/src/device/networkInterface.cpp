@@ -30,9 +30,11 @@ using anch::device::NetworkInterface;
  * {@link NetworkInterface} constructor.
  *
  * @param interface Data retrieved through <code>ioctl</code> POSIX call
+ * @param isLocalhost Interface is local loopback
  */
-NetworkInterface::NetworkInterface(const struct ifreq& interface) {
+NetworkInterface::NetworkInterface(const struct ifreq& interface, bool isLocalhost) {
   _name = interface.ifr_name;
+  _localhost = isLocalhost;
   _ipAddress = inet_ntoa(((sockaddr_in *)&(interface.ifr_addr))->sin_addr);
   char buffer[17];
   sprintf(buffer,"%02x:%02x:%02x:%02x:%02x:%02x",

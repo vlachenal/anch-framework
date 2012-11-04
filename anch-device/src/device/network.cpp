@@ -163,6 +163,7 @@ Network::load() throw(DeviceException) {
   for(int i = 0 ; i < nbResult ; i++) {
     struct ifreq* interface = &req[i];
     string ifName = interface->ifr_name;
+    bool isLoopback = (ifName == LOCALHOST);
     ret = ::ioctl(sock, SIOCGIFHWADDR, interface);
     if(ret < 0) {
       throw DeviceException("Error while retrieving hardware address for interface " + ifName,ret);
@@ -171,7 +172,7 @@ Network::load() throw(DeviceException) {
     if(ret < 0) {
       throw DeviceException("Error while retrieving broadcast address for interface " + ifName,ret);
     }
-    _interfaces->insert(pair<string,NetworkInterface>(ifName,*interface));
+    _interfaces->insert(pair<string,NetworkInterface>(ifName,NetworkInterface(*interface,isLoopback)));
   }
   ::close(sock);
 }

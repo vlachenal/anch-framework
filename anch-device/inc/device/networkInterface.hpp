@@ -56,6 +56,9 @@ namespace anch {
 
       /** Interface metric */
       int _metric;
+
+      /** Interface is local loopback */
+      bool _localhost;
       // Attributes -
 
     public:
@@ -64,8 +67,9 @@ namespace anch {
        * {@link NetworkInterface} constructor.
        *
        * @param interface Data retrieved through <code>ioctl</code> POSIX call
+       * @param isLocalhost Interface is local loopback
        */
-      NetworkInterface(const struct ifreq& interface);
+      NetworkInterface(const struct ifreq& interface, bool isLocalhost);
       // Constructor -
 
       // Destructor +
@@ -138,6 +142,15 @@ namespace anch {
        */
       inline int getMetric() const {
 	return _metric;
+      }
+
+      /**
+       * Is interface localhost getter
+       *
+       * @return <code>true</code> if interface is localhost, <code>false</code> otherwise
+       */
+      inline bool isLocalhost() const {
+	return _localhost;
       }
       // Accessors -
 
