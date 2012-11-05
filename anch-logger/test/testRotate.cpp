@@ -11,6 +11,8 @@ using std::thread;
 using anch::logger::LoggerFactory;
 using anch::logger::Logger;
 
+ANCH_LOGGER_INIT
+
 void
 testMultiThread(const Logger& log) {
   for(int i = 0 ; i < 200000 ; i++) {

@@ -8,6 +8,7 @@ using std::endl;
 using anch::logger::LoggerFactory;
 using anch::logger::Logger;
 
+ANCH_LOGGER_INIT
 
 int
 main(void) {

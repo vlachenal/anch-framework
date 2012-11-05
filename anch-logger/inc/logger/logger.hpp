@@ -84,7 +84,7 @@ namespace anch {
       template<typename T, typename... Q>
       void trace(const T& value, const Q&... values) const throw() {
 	log(Level::TRACE, value, values...);
-      };
+      }
 
       /**
        * Concatenate message and log it in DEBUG level
@@ -95,7 +95,7 @@ namespace anch {
       template<typename T, typename... Q>
       void debug(const T& value, const Q&... values) const throw() {
 	log(Level::DEBUG, value, values...);
-      };
+      }
 
       /**
        * Concatenate message and log it in INFO level
@@ -106,7 +106,7 @@ namespace anch {
       template<typename T, typename... Q>
       void info(const T& value, const Q&... values) const throw() {
 	log(Level::INFO, value, values...);
-      };
+      }
 
       /**
        * Concatenate message and log it in WARN level
@@ -117,7 +117,7 @@ namespace anch {
       template<typename T, typename... Q>
       void warn(const T& value, const Q&... values) const throw() {
 	log(Level::WARN, value, values...);
-      };
+      }
 
       /**
        * Concatenate message and log it in ERROR level
@@ -128,7 +128,7 @@ namespace anch {
       template<typename T, typename... Q>
       void error(const T& value, const Q&... values) const throw() {
 	log(Level::ERROR, value, values...);
-      };
+      }
 
       /**
        * Concatenate message and log it in FATAL level
@@ -139,7 +139,7 @@ namespace anch {
       template<typename T, typename... Q>
       void fatal(const T& value, const Q&... values) const throw() {
 	log(Level::FATAL, value, values...);
-      };
+      }
 
     private:
       /**
@@ -148,7 +148,7 @@ namespace anch {
        *
        * @param level The logging level
        * @param out The output stream to concatenate message
-       * @param value The message to log 
+       * @param value The message to log
        */
       template<typename T>
       void log(const Level& level,
@@ -159,7 +159,7 @@ namespace anch {
 	for(size_t i = 0 ; i < _writers.size() ; i++) {
 	  _writers[i]->write(_name, level, message);
 	}
-      };
+      }
 
       /**
        * Concatenate message and log it
@@ -176,7 +176,7 @@ namespace anch {
 	  std::ostringstream out;
 	  log(level, out, value, values...);
 	}
-      };
+      }
 
       /**
        * Concatenate message and log it
@@ -193,7 +193,7 @@ namespace anch {
 	       const Q&... values) const throw() {
 	out << value;
 	log(level, out, values...);
-      };
+      }
 
     };
 

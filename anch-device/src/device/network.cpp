@@ -158,6 +158,7 @@ Network::load() throw(DeviceException) {
   }
   // Request for interfaces configuration -
 
+  // Retrieve all network interfaces configuration +
   struct ifreq* req = request.ifc_req;
   int nbResult = request.ifc_len / sizeof(struct ifreq);
   for(int i = 0 ; i < nbResult ; i++) {
@@ -174,6 +175,10 @@ Network::load() throw(DeviceException) {
     }
     _interfaces->insert(pair<string,NetworkInterface>(ifName,NetworkInterface(*interface,isLoopback)));
   }
+  // Retrieve all network interfaces configuration -
+
+  // Releasee resources +
   ::close(sock);
+  // Releasee resources -
 }
 // Methods -
