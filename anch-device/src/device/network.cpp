@@ -165,20 +165,12 @@ Network::load() throw(DeviceException) {
     struct ifreq* interface = &req[i];
     string ifName = interface->ifr_name;
     bool isLoopback = (ifName == LOCALHOST);
-    ret = ::ioctl(sock, SIOCGIFHWADDR, interface);
-    if(ret < 0) {
-      throw DeviceException("Error while retrieving hardware address for interface " + ifName,ret);
-    }
-    ret = ::ioctl(sock, SIOCGIFBRDADDR, interface);
-    if(ret < 0) {
-      throw DeviceException("Error while retrieving broadcast address for interface " + ifName,ret);
-    }
-    _interfaces->insert(pair<string,NetworkInterface>(ifName,NetworkInterface(*interface,isLoopback)));
+    _interfaces->insert(pair<string,NetworkInterface>(ifName, NetworkInterface(*interface,isLoopback)));
   }
   // Retrieve all network interfaces configuration -
 
-  // Releasee resources +
+  // Release resources +
   ::close(sock);
-  // Releasee resources -
+  // Release resources -
 }
 // Methods -

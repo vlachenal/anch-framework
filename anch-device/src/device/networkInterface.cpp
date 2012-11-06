@@ -19,10 +19,16 @@
 */
 #include "device/networkInterface.hpp"
 
+#include <string.h>
+#include <unistd.h>
+#include <sys/ioctl.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
 #include <arpa/inet.h>
 
 
 using anch::device::NetworkInterface;
+using anch::device::DeviceException;
 
 
 // Constructors +
@@ -31,11 +37,44 @@ using anch::device::NetworkInterface;
  *
  * @param interface Data retrieved through <code>ioctl</code> POSIX call
  * @param isLocalhost Interface is local loopback
+ *
+ * @throw DeviceException Device error
  */
-NetworkInterface::NetworkInterface(const struct ifreq& interface, bool isLocalhost) {
+NetworkInterface::NetworkInterface(const struct ifreq& interface, bool isLocalhost)
+  throw(DeviceException) {
   _name = interface.ifr_name;
   _localhost = isLocalhost;
+
+  // Open socket +
+  int sock = ::socket(AF_INET, SOCK_DGRAM, 0);
+  if(sock < 0) {
+    throw DeviceException("Error while opening socket",sock);
+  }
+  // Open socket -
+
+  int ret = ::ioctl(sock, SIOCGIFFLAGS, &interface);
+  if(ret < 0) {
+    throw DeviceException("Error while retrieving flags for interface " + _name,ret);
+  }
+  // IP address +
+  ret = ::ioctl(sock, SIOCGIFADDR, &interface);
+  if(ret < 0) {
+    throw DeviceException("Error while retrieving IP address for interface " + _name,ret);
+  }
   _ipAddress = inet_ntoa(((sockaddr_in *)&(interface.ifr_addr))->sin_addr);
+  // IP address -
+  // MTU +
+  ret = ::ioctl(sock, SIOCGIFMTU, &interface);
+  if(ret < 0) {
+    throw DeviceException("Error while retrieving MTU for interface " + _name,ret);
+  }
+  _mtu = interface.ifr_mtu;
+  // MTU -
+  // MAC address +
+  ret = ::ioctl(sock, SIOCGIFHWADDR, &interface);
+  if(ret < 0) {
+    throw DeviceException("Error while retrieving hardware address for interface " + _name,ret);
+  }
   char buffer[17];
   sprintf(buffer,"%02x:%02x:%02x:%02x:%02x:%02x",
 	  (unsigned char)interface.ifr_hwaddr.sa_data[0],
@@ -45,10 +84,27 @@ NetworkInterface::NetworkInterface(const struct ifreq& interface, bool isLocalho
 	  (unsigned char)interface.ifr_hwaddr.sa_data[4],
 	  (unsigned char)interface.ifr_hwaddr.sa_data[5]);
   _macAddress = buffer;
+  // MAC address -
+  // Broadcast address +
+  ret = ::ioctl(sock, SIOCGIFBRDADDR, &interface);
+  if(ret < 0) {
+    throw DeviceException("Error while retrieving broadcast address for interface " + _name,ret);
+  }
   _broadcastAddress = inet_ntoa(((sockaddr_in*)&(interface.ifr_broadaddr))->sin_addr);
+  // Broadcast address -
+  // Netmask +
+  ret = ::ioctl(sock, SIOCGIFNETMASK, &interface);
+  if(ret < 0) {
+    throw DeviceException("Error while retrieving netmask for interface " + _name,ret);
+  }
   _netmask = inet_ntoa(((sockaddr_in*)&(interface.ifr_netmask))->sin_addr);
-  _mtu = interface.ifr_mtu;
+  // Netmask -
   _metric = interface.ifr_metric;
+
+
+  // Release resources +
+  ::close(sock);
+  // Release resources -
 }
 // Constructors -
 

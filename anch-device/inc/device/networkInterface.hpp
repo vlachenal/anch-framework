@@ -24,6 +24,8 @@
 
 #include <net/if.h>
 
+#include "device/deviceException.hpp"
+
 
 namespace anch {
   namespace device {
@@ -68,8 +70,11 @@ namespace anch {
        *
        * @param interface Data retrieved through <code>ioctl</code> POSIX call
        * @param isLocalhost Interface is local loopback
+       *
+       * @throw anch::device::DeviceException Device error
        */
-      NetworkInterface(const struct ifreq& interface, bool isLocalhost);
+      NetworkInterface(const struct ifreq& interface, bool isLocalhost)
+	throw(anch::device::DeviceException);
       // Constructor -
 
       // Destructor +

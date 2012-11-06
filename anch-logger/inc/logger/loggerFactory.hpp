@@ -46,7 +46,9 @@ namespace anch {
 
     /**
      * Logger factory.<br>
-     * This class aims to manage logger according to the loggers name and configuration.
+     * This class aims to manage logger according to the loggers name and configuration.<br>
+     * <br>
+     * The macro ANCH_LOGGER_INIT MUST be called by the program only ONCE.
      *
      * @author Vincent Lachenal
      */
@@ -315,7 +317,9 @@ namespace anch {
   }
 }
 
-// This macro has to be called by the programs only once
+/**
+ * This macro MUST be called by the program only ONCE.
+ */
 #define ANCH_LOGGER_INIT std::mutex anch::logger::LoggerFactory::MUTEX;\
 anch::logger::LoggerFactory* anch::logger::LoggerFactory::_self = NULL;
 
