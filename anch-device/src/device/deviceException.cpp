@@ -46,7 +46,7 @@ DeviceException::DeviceException(const string& message) throw() :
  * @param errorCode The error code
  */
 DeviceException::DeviceException(const string& message, int errorCode) throw() {
-  _message = message + ": " + gai_strerror(errorCode);
+  _message = message + ": " + ::gai_strerror(errorCode);
 }
 // Constructors -
 
