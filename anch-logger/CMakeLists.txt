@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.6)
 
 # Project anch logger
-# ANother C++ Hack 
+# ANother C++ Hack
 project(anch-logger)
 set(EXECUTABLE_OUTPUT_PATH bin/${CMAKE_BUILD_TYPE})
 set(LIBRARY_OUTPUT_PATH lib/${CMAKE_BUILD_TYPE})
@@ -61,9 +61,6 @@ add_library(
 # Link with libraries
 target_link_libraries(
   anch-logger
-  ${CMAKE_THREAD_LIBS_INIT}
-  ${Boost_LIBRARIES}
-  anch-resource
 )
 
 # Unitary tests
@@ -84,6 +81,9 @@ if(ANCH_LOGGER_UNITARY_TEST)
 
   target_link_libraries(
     anch-logger-rotate
+    ${CMAKE_THREAD_LIBS_INIT}
+    ${Boost_LIBRARIES}
+    anch-resource
     anch-logger
   )
 
@@ -112,6 +112,9 @@ if(ANCH_LOGGER_UNITARY_TEST)
 
   target_link_libraries(
     anch-logger-custom-file
+    ${CMAKE_THREAD_LIBS_INIT}
+    ${Boost_LIBRARIES}
+    anch-resource
     anch-logger
   )
 

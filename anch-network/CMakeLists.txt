@@ -58,7 +58,6 @@ add_library(
 # Link with libraries
 target_link_libraries(
   anch-network
-  ${CMAKE_THREAD_LIBS_INIT}
 )
 
 if(ANCH_NETWORK_UNITARY_TEST)
@@ -78,6 +77,7 @@ if(ANCH_NETWORK_UNITARY_TEST)
 
   target_link_libraries(
     anch-network-test-tcp
+    ${CMAKE_THREAD_LIBS_INIT}
     anch-network
   )
 
@@ -95,6 +95,7 @@ if(ANCH_NETWORK_UNITARY_TEST)
 
   target_link_libraries(
     anch-network-test-udp
+    ${CMAKE_THREAD_LIBS_INIT}
     anch-network
   )
   # Build parser unitary test -

@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.6)
 
 # Project anch events
-# ANother C++ Harsh/Huge/Hack 
+# ANother C++ Harsh/Huge/Hack
 project(anch-events)
 set(EXECUTABLE_OUTPUT_PATH bin/${CMAKE_BUILD_TYPE})
 set(LIBRARY_OUTPUT_PATH lib/${CMAKE_BUILD_TYPE})
@@ -34,27 +34,6 @@ include_directories(
   inc
 )
 
-## Retrieve every files in project
-#file(
-#  GLOB_RECURSE
-#  source_files
-#  src/*
-#  inc/*
-#)
-#
-## Declare exec
-#add_library(
-#  anch-events
-#  SHARED
-#  ${source_files}
-#)
-#
-## Link with libraries
-#target_link_libraries(
-#  anch-events
-#  ${CMAKE_THREAD_LIBS_INIT}
-#)
-
 if(ANCH_EVENTS_UNITARY_TEST)
 
   # Build parser unitary test +
@@ -73,7 +52,6 @@ if(ANCH_EVENTS_UNITARY_TEST)
   target_link_libraries(
     anch-events-test
     ${CMAKE_THREAD_LIBS_INIT}
-    #anch-events
   )
   # Build parser unitary test -
 

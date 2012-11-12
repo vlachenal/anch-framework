@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.6)
 
 # Project anch resource
-# ANother C++ Harsh/Huge/Hack 
+# ANother C++ Harsh/Huge/Hack
 project(anch-resource)
 set(EXECUTABLE_OUTPUT_PATH bin/${CMAKE_BUILD_TYPE})
 set(LIBRARY_OUTPUT_PATH lib/${CMAKE_BUILD_TYPE})
@@ -59,8 +59,6 @@ add_library(
 # Link with libraries
 target_link_libraries(
   anch-resource
-  ${CMAKE_THREAD_LIBS_INIT}
-  ${Boost_LIBRARIES}
 )
 
 if(ANCH_RESOURCE_UNITARY_TEST)
@@ -81,6 +79,8 @@ if(ANCH_RESOURCE_UNITARY_TEST)
   target_link_libraries(
     anch-resource-parse
     anch-resource
+    ${CMAKE_THREAD_LIBS_INIT}
+    ${Boost_LIBRARIES}
   )
   # Build parser unitary test -
 
