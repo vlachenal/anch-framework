@@ -1,12 +1,12 @@
 cmake_minimum_required(VERSION 2.6)
 
-# Project anch network
+# Project anch date
 # ANother C++ Harsh/Huge/Hack
-project(anch-network)
+project(anch-date)
 set(EXECUTABLE_OUTPUT_PATH bin/${CMAKE_BUILD_TYPE})
 set(LIBRARY_OUTPUT_PATH lib/${CMAKE_BUILD_TYPE})
 
-include(AnchNetwork.cmake.in)
+include(AnchDate.cmake.in)
 
 # Check GCC version +
 execute_process(COMMAND ${CMAKE_C_COMPILER} -dumpversion
@@ -29,15 +29,18 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 else()
   add_definitions("-D ANCH_POSIX")
 endif()
+add_definitions(${ANCH_DATE_COMPILE_FLAGS})
 
 # Include librairies
 include(FindThreads)
 find_package(Threads)
 
+find_package(Boost COMPONENTS regex)
+
 # Includes location
 include_directories(
   inc
-  ${ANCH_EVENTS_INCLUDES_DIR}
+  ${Boost_INCLUDE_DIRS}
 )
 
 # Retrieve every files in project
@@ -50,58 +53,40 @@ file(
 
 # Declare exec
 add_library(
-  anch-network
+  anch-date
   SHARED
   ${source_files}
 )
 
-# Link with libraries
-target_link_libraries(
-  anch-network
-)
+# Unitary tests
+if(ANCH_DATE_UNITARY_TEST)
 
-if(ANCH_NETWORK_UNITARY_TEST)
-
-  # Build parser unitary test +
+  # Build date format unitary test +
   file(
     GLOB_RECURSE
-    test_tcp_files
+    test_date_format
     inc/*
-    test/tcpSocketTest.cpp
+    test/testDateFormat.cpp
   )
 
   add_executable(
-    anch-network-test-tcp
-    ${test_tcp_files}
+    anch-date-format-test
+    ${test_date_format}
+  )
+
+  link_directories(
+    ${Boost_LIBRARY_DIRS}
   )
 
   target_link_libraries(
-    anch-network-test-tcp
+    anch-date-format-test
+    anch-date
     ${CMAKE_THREAD_LIBS_INIT}
-    anch-network
+    ${Boost_LIBRARIES}
   )
-
-  file(
-    GLOB_RECURSE
-    test_udp_files
-    inc/*
-    test/udpSocketTest.cpp
-  )
-
-  add_executable(
-    anch-network-test-udp
-    ${test_udp_files}
-  )
-
-  target_link_libraries(
-    anch-network-test-udp
-    ${CMAKE_THREAD_LIBS_INIT}
-    anch-network
-  )
-  # Build parser unitary test -
+  # Build date format unitary test -
 
   enable_testing()
-  add_test(anch-network-test-tcp ${EXECUTABLE_OUTPUT_PATH}/anch-network-test-tcp main)
-  add_test(anch-network-test-udp ${EXECUTABLE_OUTPUT_PATH}/anch-network-test-udp main)
+  add_test(anch-date-format-test ${EXECUTABLE_OUTPUT_PATH}/anch-date-format-test main)
 
-endif(ANCH_NETWORK_UNITARY_TEST)
+endif(ANCH_DATE_UNITARY_TEST)

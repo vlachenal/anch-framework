@@ -17,42 +17,49 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef _ANCH_LOGGER_FORMATTER_LEVEL_FORMATTER_H_
-#define _ANCH_LOGGER_FORMATTER_LEVEL_FORMATTER_H_
+#ifndef _ANCH_LOGGER_FORMATTER_ANCH_DATE_FORMATTER_H_
+#define _ANCH_LOGGER_FORMATTER_ANCH_DATE_FORMATTER_H_
 
 #include "logger/formatter/iFormatter.hpp"
-#include "logger/levels.hpp"
+
+#include "date/dateFormatter.hpp"
+
 
 namespace anch {
   namespace logger {
     namespace formatter {
 
       /**
-       * Logging level formatter
+       * String formatter
        *
        * @author Vincent Lachenal
        */
-      class LevelFormatter: public anch::logger::formatter::IFormatter {
+      class AnchDateFormatter: public anch::logger::formatter::IFormatter {
+      private:
+	// Attributes +
+	anch::date::DateFormatter _dateFormat;
+	// Attributes -
+
       public:
 	// Constructors +
 	/**
-	 * {@link LevelFormatter} default constructor
+	 * {@link AnchDateFormatter} default constructor
 	 */
-	LevelFormatter();
+	AnchDateFormatter(const std::string& dateFormat);
 	// Constructors -
 
 	// Destructor +
 	/**
-	 * {@link LevelFormatter} destructor
+	 * {@link AnchDateFormatter} destructor
 	 */
-	virtual ~LevelFormatter();
+	~AnchDateFormatter();
 	// Destructor -
 
       public:
 	/**
-	 * Return the level label
+	 * Return the input string
 	 *
-	 * @param value The logging level
+	 * @param value The input string
 	 * @param out The output stream to write in
 	 */
 	virtual void formatValue(const void* const value,
@@ -72,4 +79,4 @@ namespace anch {
   }
 }
 
-#endif // _ANCH_LOGGER_FORMATTER_LEVEL_FORMATTER_H_
+#endif // _ANCH_LOGGER_FORMATTER_ANCH_DATE_FORMATTER_H_

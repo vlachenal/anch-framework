@@ -48,7 +48,7 @@ LevelFormatter::~LevelFormatter() {
  * @param out The output stream to write in
  */
 void
-LevelFormatter::formatValue(const void* const value, ostream& out) const throw() {
+LevelFormatter::formatValue(const void* const value, ostream& out) const noexcept {
   const Level* const level = static_cast<const anch::logger::Level* const>(value);
   out << LEVEL_LABEL.find(*level)->second;
 }
@@ -59,6 +59,6 @@ LevelFormatter::formatValue(const void* const value, ostream& out) const throw()
  * @return The formatter type
  */
 FormatterType
-LevelFormatter::getType() const throw() {
+LevelFormatter::getType() const noexcept {
   return FormatterType::LEVEL;
 }

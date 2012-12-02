@@ -46,7 +46,7 @@ StringFormatter::~StringFormatter() {
  * @param out The output stream to write in
  */
 void
-StringFormatter::formatValue(const void* const value, ostream& out) const throw() {
+StringFormatter::formatValue(const void* const value, ostream& out) const noexcept {
   out << *((const string*)value);
 }
 
@@ -56,6 +56,6 @@ StringFormatter::formatValue(const void* const value, ostream& out) const throw(
  * @return The formatter type
  */
 FormatterType
-StringFormatter::getType() const throw() {
+StringFormatter::getType() const noexcept {
   return FormatterType::STRING;
 }

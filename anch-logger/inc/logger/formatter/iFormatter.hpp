@@ -37,7 +37,8 @@ namespace anch {
 	STRING,
 	CATEGORY,
 	THREAD_ID,
-	DATE
+	DATE,
+	ANCH_DATE
       };
 
     }
@@ -63,14 +64,14 @@ namespace anch {
 	 */
 	virtual void formatValue(const void* const value,
 				 std::ostream& out)
-	  const throw() = 0;
+	  const noexcept = 0;
 
 	/**
 	 * Get the formatter type
 	 *
 	 * @return The formatter type
 	 */
-	virtual anch::logger::formatter::FormatterType getType() const throw() = 0;
+	virtual anch::logger::formatter::FormatterType getType() const noexcept = 0;
 
       };
 

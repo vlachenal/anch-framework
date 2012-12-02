@@ -1,12 +1,12 @@
 cmake_minimum_required(VERSION 2.6)
 
-# Project anch network
+# Project anch file
 # ANother C++ Harsh/Huge/Hack
-project(anch-network)
+project(anch-file)
 set(EXECUTABLE_OUTPUT_PATH bin/${CMAKE_BUILD_TYPE})
 set(LIBRARY_OUTPUT_PATH lib/${CMAKE_BUILD_TYPE})
 
-include(AnchNetwork.cmake.in)
+include(AnchFile.cmake.in)
 
 # Check GCC version +
 execute_process(COMMAND ${CMAKE_C_COMPILER} -dumpversion
@@ -37,7 +37,6 @@ find_package(Threads)
 # Includes location
 include_directories(
   inc
-  ${ANCH_EVENTS_INCLUDES_DIR}
 )
 
 # Retrieve every files in project
@@ -50,58 +49,38 @@ file(
 
 # Declare exec
 add_library(
-  anch-network
+  anch-file
   SHARED
   ${source_files}
 )
 
 # Link with libraries
 target_link_libraries(
-  anch-network
+  anch-file
 )
 
-if(ANCH_NETWORK_UNITARY_TEST)
+if(ANCH_FILE_UNITARY_TEST)
 
   # Build parser unitary test +
   file(
     GLOB_RECURSE
-    test_tcp_files
+    test_files
     inc/*
-    test/tcpSocketTest.cpp
+    test/testFiles.cpp
   )
 
   add_executable(
-    anch-network-test-tcp
-    ${test_tcp_files}
+    anch-file-test
+    ${test_files}
   )
 
   target_link_libraries(
-    anch-network-test-tcp
+    anch-events-file
     ${CMAKE_THREAD_LIBS_INIT}
-    anch-network
-  )
-
-  file(
-    GLOB_RECURSE
-    test_udp_files
-    inc/*
-    test/udpSocketTest.cpp
-  )
-
-  add_executable(
-    anch-network-test-udp
-    ${test_udp_files}
-  )
-
-  target_link_libraries(
-    anch-network-test-udp
-    ${CMAKE_THREAD_LIBS_INIT}
-    anch-network
   )
   # Build parser unitary test -
 
   enable_testing()
-  add_test(anch-network-test-tcp ${EXECUTABLE_OUTPUT_PATH}/anch-network-test-tcp main)
-  add_test(anch-network-test-udp ${EXECUTABLE_OUTPUT_PATH}/anch-network-test-udp main)
+  add_test(anch-file-test ${EXECUTABLE_OUTPUT_PATH}/anch-file-test main)
 
-endif(ANCH_NETWORK_UNITARY_TEST)
+endif()

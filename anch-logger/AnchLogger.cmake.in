@@ -2,9 +2,12 @@
 # Anch resource path
 set(ANCH_RESOURCE_INCLUDES_DIR "$ENV{HOME}/projects/anch-framework/anch-resource/inc")
 set(ANCH_RESOURCE_LIBRARY_DIR "$ENV{HOME}/projects/anch-framework/anch-resource/build/lib")
+set(ANCH_DATE_INCLUDES_DIR "$ENV{HOME}/projects/anch-framework/anch-date/inc")
+set(ANCH_DATE_LIBRARY_DIR "$ENV{HOME}/projects/anch-framework/anch-date/build/lib")
 
 # Anch logger installation configuration
 set(ANCH_LOGGER_LIBRARY_DIR "")
+set(ANCH_LOGGER_COMPILE_FLAGS "-O2")
 
 # Unitary tests
 set(ANCH_LOGGER_UNITARY_TEST ON CACHE BOOL "Anch logger unitary tests")

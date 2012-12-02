@@ -1,0 +1,7 @@
+## Anch file configuration +
+# Anch file installation configuration
+set(ANCH_FILE_LIBRARY_DIR "")
+
+# Unitary tests
+set(ANCH_FILE_UNITARY_TEST OFF CACHE BOOL "Anch file unitary tests")
+## Anch file configuration -

@@ -57,14 +57,14 @@ namespace anch {
 	 */
 	virtual void formatValue(const void* const value,
 				 std::ostream& out)
-	  const throw();
+	  const noexcept;
 
 	/**
 	 * Get the formatter type
 	 *
 	 * @return The formatter type
 	 */
-	virtual anch::logger::formatter::FormatterType getType() const throw();
+	virtual anch::logger::formatter::FormatterType getType() const noexcept;
 
       };
 

@@ -24,12 +24,13 @@
 using std::mutex;
 using std::string;
 using std::pair;
+using std::map;
 
 using anch::resource::Resource;
 using anch::resource::file::ConfigurationFileParser;
 
 // Static initialization +
-std::map<std::string,Resource> Resource::RESOURCES;
+map<string,Resource> Resource::RESOURCES;
 mutex Resource::MUTEX;
 // Static initialization -
 

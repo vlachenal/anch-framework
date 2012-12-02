@@ -51,7 +51,7 @@ namespace anch {
       private:
 	// Attributes +
 	/** Writter configuration pattern */
-	static boost::regex CONFIG_PATTERN;
+	const static boost::regex CONFIG_PATTERN;
 
 	/** Formatters list */
 	std::vector<anch::logger::formatter::IFormatter*> _formatters;

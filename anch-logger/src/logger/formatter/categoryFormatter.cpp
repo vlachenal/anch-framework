@@ -46,7 +46,7 @@ CategoryFormatter::~CategoryFormatter() {
  * @param out The output stream to write in
  */
 void
-CategoryFormatter::formatValue(const void* const value, ostream& out) const throw() {
+CategoryFormatter::formatValue(const void* const value, ostream& out) const noexcept {
   out << *((string*)value);
 }
 
@@ -56,6 +56,6 @@ CategoryFormatter::formatValue(const void* const value, ostream& out) const thro
  * @return The formatter type
  */
 FormatterType
-CategoryFormatter::getType() const throw() {
+CategoryFormatter::getType() const noexcept {
   return FormatterType::CATEGORY;
 }

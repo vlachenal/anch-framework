@@ -17,48 +17,58 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "logger/formatter/constFormatter.hpp"
+#include "file/fileException.hpp"
+
+#include <string.h>
+
 
 using std::string;
-using std::ostream;
 
-using anch::logger::formatter::ConstFormatter;
-using anch::logger::formatter::FormatterType;
+using anch::file::FileException;
 
 
+// Constructors +
 /**
- * {@link ConstFormatter} constructor
+ * {@link FileException} constructor
  *
- * @param strToPrint The string to print
+ * @param message The error message
  */
-ConstFormatter::ConstFormatter(const string strToPrint): _strToPrint(strToPrint) {
-  _strToPrint.shrink_to_fit();
+FileException::FileException(const string& message): _message(message) {
+  _message.shrink_to_fit();
 }
 
 /**
- * {@link ConstFormatter} destructor
+ * {@link FileException} constructor
+ *
+ * @param message The error message
+ * @param errnum System error number
  */
-ConstFormatter::~ConstFormatter() {
+FileException::FileException(const std::string& message, int errnum) {
+  char buffer[1024];
+  ::strerror_r(errnum,buffer,1024);
+  _message = message + ": " + buffer;
+  _message.shrink_to_fit();
+}
+// Constructors -
+
+// Destructor +
+/**
+ * {@link FileException} destructor
+ */
+FileException::~FileException() noexcept {
   // Nothing to do
 }
+// Destructor -
 
-/**
- * Return the constant string
- *
- * @param value Nothing (NULL will be passed every time)
- * @param out The output stream to write in
- */
-void
-ConstFormatter::formatValue(const void* const value, ostream& out) const noexcept {
-  out << _strToPrint;
-}
 
+// Methods +
 /**
- * Get the formatter type
+ * Display message error
  *
- * @return The formatter type
+ * @return The message error
  */
-FormatterType
-ConstFormatter::getType() const noexcept {
-  return anch::logger::formatter::FormatterType::CONST;
+const char*
+FileException::what() const noexcept {
+  return _message.data();
 }
+// Methods -

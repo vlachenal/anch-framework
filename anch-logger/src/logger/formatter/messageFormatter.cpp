@@ -27,6 +27,7 @@
 #include "logger/formatter/categoryFormatter.hpp"
 #include "logger/formatter/threadIdFormatter.hpp"
 #include "logger/formatter/dateFormatter.hpp"
+#include "logger/formatter/anchDateFormatter.hpp"
 
 using std::string;
 using std::ostringstream;
@@ -44,10 +45,11 @@ using anch::logger::formatter::StringFormatter;
 using anch::logger::formatter::CategoryFormatter;
 using anch::logger::formatter::ThreadIdFormatter;
 using anch::logger::formatter::DateFormatter;
+using anch::logger::formatter::AnchDateFormatter;
 
 
 // Static initialization +
-regex MessageFormatter::CONFIG_PATTERN = regex(R"(^((\$d\{[^\}]+\})|(\$m)|(\$c)|(\$p)|(\$t)|([^\$]+)))");
+const regex MessageFormatter::CONFIG_PATTERN = regex(R"(^((\$d\{[^\}]+\})|(\$D\{[^\}]+\})|(\$m)|(\$c)|(\$p)|(\$t)|([^\$]+)))");
 // Static initialization -
 
 /**
@@ -68,6 +70,7 @@ MessageFormatter::MessageFormatter(const string& linePattern): _formatters() {
       ok = false;
     }
   }
+  _formatters.shrink_to_fit();
 }
 
 /**
@@ -84,7 +87,7 @@ MessageFormatter::~MessageFormatter() {
  * @param str The formatter string
  */
 void
-MessageFormatter::addFormatter(const std::string& strFormatter) {
+MessageFormatter::addFormatter(const string& strFormatter) {
   if(strFormatter.length() == 1) {
     _formatters.push_back(new ConstFormatter(strFormatter));
 
@@ -92,6 +95,9 @@ MessageFormatter::addFormatter(const std::string& strFormatter) {
     const string pattern = strFormatter.substr(0,2);
     if(pattern == "$d") {
       _formatters.push_back(new DateFormatter(strFormatter.substr(3, strFormatter.length() - 4)));
+
+    } else if(pattern == "$D") {
+      _formatters.push_back(new AnchDateFormatter(strFormatter.substr(3, strFormatter.length() - 4)));
 
     } else if(pattern == "$m") {
       _formatters.push_back(new StringFormatter());
@@ -129,10 +135,6 @@ MessageFormatter::formatMessage(const string& category,
   for(size_t i = 0 ; i < _formatters.size() ; i++) {
     const IFormatter* formatter = _formatters[i];
     switch(formatter->getType()) {
-    case FormatterType::CONST:
-      formatter->formatValue(NULL, out);
-      break;
-
     case FormatterType::LEVEL:
       formatter->formatValue(&level, out);
       break;
@@ -146,10 +148,9 @@ MessageFormatter::formatMessage(const string& category,
       break;
 
     case FormatterType::THREAD_ID:
-      formatter->formatValue(NULL, out);
-      break;
-
+    case FormatterType::CONST:
     case FormatterType::DATE:
+    case FormatterType::ANCH_DATE:
       formatter->formatValue(NULL, out);
       break;
 

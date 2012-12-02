@@ -17,27 +17,30 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "logger/formatter/threadIdFormatter.hpp"
+#include "logger/formatter/anchDateFormatter.hpp"
 
-#include <thread>
+#include "date/dateFormatter.hpp"
 
 using std::string;
 using std::ostream;
 
-using anch::logger::formatter::ThreadIdFormatter;
+using anch::logger::formatter::AnchDateFormatter;
 using anch::logger::formatter::FormatterType;
 
+using anch::date::Date;
+
+
 /**
- * {@link ThreadIdFormatter} default constructor
+ * {@link AnchDateFormatter} default constructor
  */
-ThreadIdFormatter::ThreadIdFormatter() {
+AnchDateFormatter::AnchDateFormatter(const string& dateFormat): _dateFormat(dateFormat) {
   // Nothing to do
 }
 
 /**
- * {@link ThreadIdFormatter} destructor
+ * {@link AnchDateFormatter} destructor
  */
-ThreadIdFormatter::~ThreadIdFormatter() {
+AnchDateFormatter::~AnchDateFormatter() {
   // Nothing to do
 }
 
@@ -48,8 +51,8 @@ ThreadIdFormatter::~ThreadIdFormatter() {
  * @param out The output stream to write in
  */
 void
-ThreadIdFormatter::formatValue(const void* const value, ostream& out) const noexcept {
-  out << std::this_thread::get_id();
+AnchDateFormatter::formatValue(const void* const value, ostream& out) const noexcept {
+  _dateFormat.format(Date(), out);
 }
 
 /**
@@ -58,6 +61,6 @@ ThreadIdFormatter::formatValue(const void* const value, ostream& out) const noex
  * @return The formatter type
  */
 FormatterType
-ThreadIdFormatter::getType() const noexcept {
-  return FormatterType::THREAD_ID;
+AnchDateFormatter::getType() const noexcept {
+  return FormatterType::ANCH_DATE;
 }

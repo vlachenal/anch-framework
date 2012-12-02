@@ -23,7 +23,8 @@ endif()
 # Check GCC version -
 
 # Add GCC definitions
-add_definitions("-Wall -Werror -O2")
+add_definitions("-Wall -Werror")
+add_definitions(${ANCH_LOGGER_COMPILE_FLAGS})
 
 # Include librairies
 include(FindThreads)
@@ -36,11 +37,7 @@ include_directories(
   inc
   ${Boost_INCLUDE_DIRS}
   ${ANCH_RESOURCE_INCLUDES_DIR}
-)
-
-link_directories(
-  ${Boost_LIBRARY_DIRS}
-  ${ANCH_RESOURCE_LIBRARY_DIR}
+  ${ANCH_DATE_INCLUDES_DIR}
 )
 
 # Retrieve every files in project
@@ -58,13 +55,15 @@ add_library(
   ${source_files}
 )
 
-# Link with libraries
-target_link_libraries(
-  anch-logger
-)
 
 # Unitary tests
 if(ANCH_LOGGER_UNITARY_TEST)
+
+  link_directories(
+    ${Boost_LIBRARY_DIRS}
+    ${ANCH_RESOURCE_LIBRARY_DIR}
+    ${ANCH_DATE_LIBRARY_DIR}
+  )
 
   # build rotate test +
   file(
@@ -81,10 +80,11 @@ if(ANCH_LOGGER_UNITARY_TEST)
 
   target_link_libraries(
     anch-logger-rotate
+    anch-logger
+    anch-resource
+    anch-date
     ${CMAKE_THREAD_LIBS_INIT}
     ${Boost_LIBRARIES}
-    anch-resource
-    anch-logger
   )
 
   configure_file(test/anch-logger.conf anch-logger.conf COPYONLY)
@@ -112,10 +112,11 @@ if(ANCH_LOGGER_UNITARY_TEST)
 
   target_link_libraries(
     anch-logger-custom-file
+    anch-logger
+    anch-resource
+    anch-date
     ${CMAKE_THREAD_LIBS_INIT}
     ${Boost_LIBRARIES}
-    anch-resource
-    anch-logger
   )
 
   configure_file(test/customFile.ini customFile.ini COPYONLY)
