@@ -27,6 +27,7 @@ using std::mktime;
 using std::localtime;
 using std::chrono::time_point;
 using std::chrono::system_clock;
+using std::chrono::high_resolution_clock;
 using std::chrono::duration_cast;
 
 using anch::date::Date;
@@ -45,7 +46,7 @@ mutex Date::_mutex;
  */
 Date::Date(bool init) {
   if(init) {
-    time_point<system_clock> now = system_clock::now();
+    time_point<high_resolution_clock> now = high_resolution_clock::now();
     auto epoch = now.time_since_epoch();
     _timestamp = duration_cast<std::chrono::nanoseconds>(epoch).count();
     initialize(epoch); // Retrieve ms, µs, ns
