@@ -267,10 +267,9 @@ namespace anch {
       }
 
       /**
-       * Cast operator to std::time_t definition.<br>
-       * Calls equals method
+       * Cast operator to std::time_t definition.
        *
-       * @param date The date to compare to
+       * @return The converted std::time_t
        */
       inline operator std::time_t() const noexcept {
 	std::tm time;
@@ -281,7 +280,7 @@ namespace anch {
       /**
        * Cast operator to std::tm definition.
        *
-       * @param date The date to compare to
+       * @return The converted std::tm
        */
       inline operator std::tm() const noexcept {
 	std::tm time;

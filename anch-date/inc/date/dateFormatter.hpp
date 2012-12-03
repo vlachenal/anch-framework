@@ -34,18 +34,18 @@ namespace anch {
      * {@link Date} string formatter.<br>
      * <br>
      * Paterns are:
-     * <li>
-     *   <ul>%Y: 4 digits year</ul>
-     *   <ul>%y: 2 digits year</ul>
-     *   <ul>%M: Month (1-12)</ul>
-     *   <ul>%d: Day in month (1-31)</ul>
-     *   <ul>%H: 00-23 hours</ul>
-     *   <ul>%h: 00-11 hours</ul>
-     *   <ul>%a: AM/PM marker</ul>
-     *   <ul>%m: minutes (00-59)</ul>
-     *   <ul>%s: seconds (00-59)</ul>
-     *   <ul>%S: milliseconds (000-999)</ul>
-     * </li>
+     * <ul>
+     *   <li>%Y: 4 digits year</li>
+     *   <li>%y: 2 digits year</li>
+     *   <li>%m: Month (1-12)</li>
+     *   <li>%d: Day in month (1-31)</li>
+     *   <li>%H: 00-23 hours</li>
+     *   <li>%h: 00-11 hours</li>
+     *   <li>%p: AM/PM marker</li>
+     *   <li>%M: minutes (00-59)</li>
+     *   <li>%S: seconds (00-59)</li>
+     *   <li>%s: milliseconds (000-999)</li>
+     * </ul>
      * <br>
      * Do not use characters '%' in your string pattern.<br>
      * <br>

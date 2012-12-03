@@ -26,6 +26,11 @@
 namespace anch {
   namespace file {
 
+    /**
+     * File exception class.
+     *
+     * @author Vincent Lachenal
+     */
     class FileException: public std::exception {
       // Attributes +
     private:

@@ -27,7 +27,7 @@ namespace anch {
     namespace formatter {
 
       /**
-       * 4 digits year formatter part
+       * Constant string formatter part
        *
        * @author Vincent Lachenal
        */
@@ -39,6 +39,8 @@ namespace anch {
       public:
 	/**
 	 * {@link ConstantFormatter} default constructor
+	 *
+	 * @param message The constant message
 	 */
 	ConstantFormatter(const std::string& message);
 
@@ -51,7 +53,7 @@ namespace anch {
 	 * Format date
 	 *
 	 * @param date The {@link Date} to format
-	 * @param ouput The output stream to write in
+	 * @param output The output stream to write in
 	 */
 	void format(const anch::date::Date& date, std::ostream& output) const noexcept;
 

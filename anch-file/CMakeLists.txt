@@ -29,6 +29,7 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 else()
   add_definitions("-D ANCH_POSIX")
 endif()
+add_definitions(${ANCH_FILE_COMPILE_FLAGS})
 
 # Include librairies
 include(FindThreads)
@@ -37,6 +38,7 @@ find_package(Threads)
 # Includes location
 include_directories(
   inc
+  ${ANCH_DATE_INCLUDES_DIR}
 )
 
 # Retrieve every files in project
@@ -54,19 +56,21 @@ add_library(
   ${source_files}
 )
 
-# Link with libraries
-target_link_libraries(
-  anch-file
-)
-
 if(ANCH_FILE_UNITARY_TEST)
+
+  find_package(Boost COMPONENTS regex)
+
+  link_directories(
+    ${Boost_LIBRARY_DIRS}
+    ${ANCH_DATE_LIBRARY_DIR}
+  )
 
   # Build parser unitary test +
   file(
     GLOB_RECURSE
     test_files
     inc/*
-    test/testFiles.cpp
+    test/testFile.cpp
   )
 
   add_executable(
@@ -75,8 +79,11 @@ if(ANCH_FILE_UNITARY_TEST)
   )
 
   target_link_libraries(
-    anch-events-file
+    anch-file-test
+    anch-file
+    anch-date
     ${CMAKE_THREAD_LIBS_INIT}
+    ${Boost_LIBRARIES}
   )
   # Build parser unitary test -
 

@@ -34,6 +34,8 @@ using anch::date::formatter::ConstantFormatter;
 
 /**
  * {@link ConstantFormatter} default constructor
+ *
+ * @param message The constant message
  */
 ConstantFormatter::ConstantFormatter(const string& message): _message(message) {
   _message.shrink_to_fit();
@@ -50,7 +52,7 @@ ConstantFormatter::~ConstantFormatter() {
  * Format date
  *
  * @param date The {@link Date} to format
- * @param ouput The output stream to write in
+ * @param output The output stream to write in
  */
 void
 ConstantFormatter::format(const Date& date, ostream& output) const noexcept {

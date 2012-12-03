@@ -32,6 +32,7 @@ using std::vector;
 using std::ofstream;
 
 using anch::file::File;
+using anch::date::Date;
 
 
 // Class static members initialization +
@@ -48,20 +49,21 @@ const char File::SEP = '\\';
  * {@link File} constructor
  *
  * @param path The {@link File} path
+ * @param init Initialize file members
  */
-File::File(const string& path) : _path(path) {
-  initialize();
+File::File(const string& path, bool init) : _path(path) {
+  if(init) {
+    initialize();
+  }
   string parentPath;
   size_t pos = path.find_last_of(SEP);
-  if(pos == string::npos) {
+  if(pos == string::npos && init) {
 #ifdef ANCH_POSIX
     char* parent_path = ::get_current_dir_name();
 #elif defined ANCH_WINDOWS
-    // TODO get Windowss implementation
+    // TODO use Windows implementation
 #endif
-    if(parent_path == nullptr) {
-      parentPath = ".";
-    } else {
+    if(parent_path != nullptr) {
       parentPath = parent_path;
       delete parent_path;
     }
@@ -69,7 +71,11 @@ File::File(const string& path) : _path(path) {
   } else {
     parentPath = path.substr(0,pos);
   }
-  _parent = new File(parentPath);
+  if(parentPath != "" && parentPath != _path) {
+    _parent = new File(parentPath, false);
+  } else {
+    _parent = nullptr;
+  }
 }
 
 /**
@@ -80,6 +86,17 @@ File::File(const string& path) : _path(path) {
  */
 File::File(const string& parent, const string& name) : _path(parent + SEP + name) {
   initialize();
+  _parent = new File(parent, false);
+}
+
+/**
+ * {@link File} constructor
+ *
+ * @param parent The parent {@link File}
+ * @param name The {@link File} name
+ */
+File::File(const File& parent, const string& name) : _path(parent._path + SEP + name) {
+  initialize();
   _parent = new File(parent);
 }
 
@@ -89,9 +106,9 @@ File::File(const string& parent, const string& name) : _path(parent + SEP + name
  * @param parent The parent {@link File}
  * @param name The {@link File} name
  */
-File::File(const File& parent, const string& name) : _path(parent.getPath() + SEP + name) {
+File::File(File& parent, const string& name) : _path(parent._path + SEP + name) {
   initialize();
-  _parent = new File(parent);
+  _parent = &parent;
 }
 
 /**
@@ -106,18 +123,22 @@ File::File(const File& file) : _path(file._path),
 			       _readable(file._readable),
 			       _writable(file._writable),
 			       _executable(file._executable) {
-  // Nothing to do mode
+  // Nothing to do more
 }
 // Constructors -
+
 
 // Destructor +
 /**
  * {@link File} destructor
  */
 File::~File() {
-  delete _parent;
+  if(_parent != nullptr) {
+    delete _parent;
+  }
 }
 // Destructor -
+
 
 // Methods +
 /**
@@ -159,7 +180,7 @@ File::createFile(ofstream& out) throw(FileException) {
 void
 File::createDirectory(bool parents) throw(FileException) {
   if(!_exists && _parent->isDirectory()) {
-    int status = mkdir(_path.data(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+    int status = ::mkdir(_path.data(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
     if(status == -1) {
       throw FileException(string("Can not create directory") + _path, errno);
     }
@@ -190,21 +211,22 @@ File::deleteFile() throw(FileException) {
  *
  * @return The files list
  */
-vector<string>
-File::list() throw(FileException) {
+void
+File::list(vector<string>& files) throw(FileException) {
   if(_directory && _readable) {
     DIR* dir;
     struct dirent* entry;
     if((dir = opendir(_path.data())) == nullptr) {
       throw FileException(string("Can not open directory ") + _path, errno);
     }
-    vector<string> files;
     while((entry = ::readdir(dir)) != nullptr) {
-      files.push_back(entry->d_name);
+      string fileName = entry->d_name;
+      if(fileName != "." && fileName != "..") {
+	files.push_back(fileName);
+      }
     }
     files.shrink_to_fit();
     ::closedir(dir);
-    return files;
 
   } else {
     throw FileException(_path + " is not a directory or is not readable.");
@@ -216,15 +238,15 @@ File::list() throw(FileException) {
  *
  * @return The {@link File} list
  */
-vector<File>
-File::listFiles() throw(FileException) {
-  vector<string> res = list();
-  vector<File> files;
-  for(size_t i = 0 ; i < res.size() ; i++) {
-    files.push_back(File(res.at(i)));
+void
+File::list(vector<File>& files) throw(FileException) {
+  vector<string> res;
+  list(res);
+  for(const string& path : res) {
+    std::cout << path << std::endl;
+    files.push_back(File(*this, path));
   }
   files.shrink_to_fit();
-  return files;
 }
 
 /**
@@ -240,9 +262,9 @@ File::initialize() {
     if(res >= 0) {
       _directory = S_ISDIR(file.st_mode);
       _size = file.st_size;
-      _lastAccess = file.st_atime;
-      _lastModification = file.st_mtime;
-      _lastStatusChange =file.st_ctime;
+      _lastAccess = Date(file.st_atime);
+      _lastModification = Date(file.st_mtime);
+      _lastStatusChange = Date(file.st_ctime);
       _readable = (::access(_path.data(), R_OK) == 0);
       _writable = (::access(_path.data(), W_OK) == 0);
       _executable = (::access(_path.data(), X_OK) == 0);

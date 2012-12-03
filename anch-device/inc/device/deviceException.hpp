@@ -26,6 +26,11 @@
 namespace anch {
   namespace device {
 
+    /**
+     * Device exception class.
+     *
+     * @author Vincent Lachenal
+     */
     class DeviceException : public std::exception {
     private:
       /** Exception message */

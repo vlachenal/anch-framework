@@ -36,14 +36,14 @@ namespace anch {
        * Format a message for logging acording writer configuration<br>
        * <br>
        * Paterns are:
-       * <li>
-       *   <ul>%c: The category (logger name)</ul>
-       *   <ul>%p: The logging level</ul>
-       *   <ul>%m: The message</ul>
-       *   <ul>%d{C++ time standard}: The date</ul>
-       *   <ul>%t: The current thread ID</ul>
-       *   <ul>%f: The function name (not imlpemented)</ul>
-       * </li>
+       * <ul>
+       *   <li>%c: The category (logger name)</li>
+       *   <li>%p: The logging level</li>
+       *   <li>%m: The message</li>
+       *   <li>%d{C++ time standard}: The date</li>
+       *   <li>%t: The current thread ID</li>
+       *   <li>%f: The function name (not imlpemented)</li>
+       * </ul>
        *
        * @author Vincent Lachenal
        */

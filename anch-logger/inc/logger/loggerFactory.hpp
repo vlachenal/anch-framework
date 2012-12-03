@@ -147,7 +147,7 @@ namespace anch {
       /**
        * Clean every {@link anch::logger::Writer} to flush their output and close files.
        *
-       * {@link std::atexit} is already map on it. But you can use it if you trap signals.
+       * std::atexit is already map on it. But you can use it if you trap signals.
        */
       static void cleanWriters() {
 	std::set<anch::logger::Writer*> writers;

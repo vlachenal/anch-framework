@@ -48,7 +48,7 @@ namespace anch {
 	 * Format date
 	 *
 	 * @param date The {@link Date} to format
-	 * @param ouput The output stream to write in
+	 * @param output The output stream to write in
 	 */
 	virtual void format(const anch::date::Date& date, std::ostream& output) const noexcept = 0;
 
@@ -76,51 +76,135 @@ namespace anch {
 
 	// Accessors +
       protected:
+	/**
+	 * {@link Date} year getter
+	 *
+	 * @return The year
+	 */
 	inline static int32_t getYear(const anch::date::Date& date) {
 	  return date._years;
 	}
+
+	/**
+	 * {@link Date} year setter
+	 *
+	 * @param date The {@link Date} to modify
+	 * @param year The year value to set
+	 */
 	inline static void setYear(anch::date::Date& date, int32_t year) {
 	  date._years = year;
 	}
 
+	/**
+	 * {@link Date} month getter
+	 *
+	 * @return The month
+	 */
 	inline static uint16_t getMonth(const anch::date::Date& date) {
 	  return date._months;
 	}
+
+	/**
+	 * {@link Date} month setter
+	 *
+	 * @param date The {@link Date} to modify
+	 * @param month The month value to set
+	 */
 	inline static void setMonth(anch::date::Date& date, uint16_t month) {
 	  date._months = month;
 	}
 
+	/**
+	 * {@link Date} day getter
+	 *
+	 * @return The day
+	 */
 	inline static uint16_t getDay(const anch::date::Date& date) {
 	  return date._mdays;
 	}
+
+	/**
+	 * {@link Date} day setter
+	 *
+	 * @param date The {@link Date} to modify
+	 * @param mday The day value to set
+	 */
 	inline static void setDay(anch::date::Date& date, uint16_t mday) {
 	  date._mdays = mday;
 	}
 
+	/**
+	 * {@link Date} hour getter
+	 *
+	 * @return The hour
+	 */
 	inline static uint16_t getHour(const anch::date::Date& date) {
 	  return date._hours;
 	}
+
+	/**
+	 * {@link Date} hour setter
+	 *
+	 * @param date The {@link Date} to modify
+	 * @param hour The hour value to set
+	 */
 	inline static void setHour(anch::date::Date& date, uint16_t hour) {
 	  date._hours = hour;
 	}
 
+	/**
+	 * {@link Date} minute getter
+	 *
+	 * @return The minute
+	 */
 	inline static uint16_t getMinute(const anch::date::Date& date) {
 	  return date._minutes;
 	}
+
+	/**
+	 * {@link Date} minute setter
+	 *
+	 * @param date The {@link Date} to modify
+	 * @param minute The minute value to set
+	 */
 	inline static void setMinute(anch::date::Date& date, uint16_t minute) {
 	  date._minutes = minute;
 	}
 
+	/**
+	 * {@link Date} second getter
+	 *
+	 * @return The second
+	 */
 	inline static uint16_t getSecond(const anch::date::Date& date) {
 	  return date._seconds;
 	}
+
+	/**
+	 * {@link Date} second setter
+	 *
+	 * @param date The {@link Date} to modify
+	 * @param second The second value to set
+	 */
 	inline static void setSecond(anch::date::Date& date, uint16_t second) {
 	  date._seconds = second;
 	}
 
+	/**
+	 * {@link Date} millisecond getter
+	 *
+	 * @return The millisecond
+	 */
 	inline static uint16_t getMillisecond(const anch::date::Date& date) {
 	  return date._milliseconds;
 	}
+
+	/**
+	 * {@link Date} millisecond setter
+	 *
+	 * @param date The {@link Date} to modify
+	 * @param milli The millisecond value to set
+	 */
 	inline static void setMillisecond(anch::date::Date& date, uint16_t milli) {
 	  date._milliseconds = milli;
 	}

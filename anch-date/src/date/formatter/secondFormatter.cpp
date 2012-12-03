@@ -53,7 +53,7 @@ SecondFormatter::~SecondFormatter() {
  * Format date
  *
  * @param date The {@link Date} to format
- * @param ouput The output stream to write in
+ * @param output The output stream to write in
  */
 void
 SecondFormatter::format(const Date& date, ostream& output) const noexcept {

@@ -25,6 +25,7 @@
 #include <fstream>
 
 #include "file/fileException.hpp"
+#include "date/date.hpp"
 
 
 namespace anch {
@@ -67,13 +68,13 @@ namespace anch {
       uint64_t _size;
 
       /** {@link File} last access */
-      time_t _lastAccess;
+      anch::date::Date _lastAccess;
 
       /** {@link File} last modification */
-      time_t _lastModification;
+      anch::date::Date _lastModification;
 
       /** {@link File} last status change */
-      time_t _lastStatusChange;
+      anch::date::Date _lastStatusChange;
       // Attributes -
 
       // Constructors +
@@ -82,8 +83,9 @@ namespace anch {
        * {@link File} constructor
        *
        * @param path The {@link File} path
+       * @param init Initialize file members
        */
-      File(const std::string& path);
+      File(const std::string& path, bool init = true);
 
       /**
        * {@link File} constructor
@@ -100,6 +102,14 @@ namespace anch {
        * @param name The {@link File} name
        */
       File(const File& parent, const std::string& name);
+
+      /**
+       * {@link File} constructor
+       *
+       * @param parent The parent {@link File}
+       * @param name The {@link File} name
+       */
+      File(File& parent, const std::string& name);
 
       /**
        * {@link File} copy constructor
@@ -148,14 +158,14 @@ namespace anch {
        *
        * @return The files list
        */
-      std::vector<std::string> list() throw(anch::file::FileException);
+      void list(std::vector<std::string>& files) throw(anch::file::FileException);
 
       /**
        * List files and directories in current directory.
        *
        * @return The {@link File} list
        */
-      std::vector<File> listFiles() throw(anch::file::FileException);
+      void list(std::vector<File>& files) throw(anch::file::FileException);
 
     private:
       /**
@@ -253,7 +263,7 @@ namespace anch {
        *
        * @return The {@link File} last access
        */
-      inline const time_t& getLastAccess() {
+      inline const anch::date::Date& getLastAccess() {
 	return _lastAccess;
       }
 
@@ -262,7 +272,7 @@ namespace anch {
        *
        * @return The {@link File} last modification
        */
-      inline const time_t& getLastModification() {
+      inline const anch::date::Date& getLastModification() {
 	return _lastModification;
       }
 
@@ -271,7 +281,7 @@ namespace anch {
        *
        * @return The {@link File} last status change
        */
-      inline const time_t& getLastStatusChange() {
+      inline const anch::date::Date& getLastStatusChange() {
 	return _lastStatusChange;
       }
       // Accessors -
