@@ -208,6 +208,44 @@ namespace anch {
 	inline static void setMillisecond(anch::date::Date& date, uint16_t milli) {
 	  date._milliseconds = milli;
 	}
+
+	/**
+	 * {@link Date} microsecond getter
+	 *
+	 * @return The microsecond
+	 */
+	inline static uint16_t getMicrosecond(const anch::date::Date& date) {
+	  return date._microseconds;
+	}
+
+	/**
+	 * {@link Date} microsecond setter
+	 *
+	 * @param date The {@link Date} to modify
+	 * @param micro The microsecond value to set
+	 */
+	inline static void setMicrosecond(anch::date::Date& date, uint16_t micro) {
+	  date._microseconds = micro;
+	}
+
+	/**
+	 * {@link Date} nanosecond getter
+	 *
+	 * @return The nanosecond
+	 */
+	inline static uint16_t getNanosecond(const anch::date::Date& date) {
+	  return date._nanoseconds;
+	}
+
+	/**
+	 * {@link Date} nanosecond setter
+	 *
+	 * @param date The {@link Date} to modify
+	 * @param nano The nanosecond value to set
+	 */
+	inline static void setNanosecond(anch::date::Date& date, uint16_t nano) {
+	  date._nanoseconds = nano;
+	}
 	// Accessors -
       };
 

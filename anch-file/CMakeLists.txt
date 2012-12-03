@@ -23,7 +23,7 @@ endif()
 # Check GCC version -
 
 # Add GCC definitions
-add_definitions("-Wall -Werror")
+add_definitions("-Wall -Werror -ggdb")
 if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
   add_definitions("-D ANCH_WINDOWS")
 else()

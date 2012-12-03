@@ -23,6 +23,7 @@
 #include <iostream>
 #include <vector>
 #include <fstream>
+#include <memory>
 
 #include "file/fileException.hpp"
 #include "date/date.hpp"
@@ -47,7 +48,7 @@ namespace anch {
       std::string _path;
 
       /** The parent {@link File} */
-      File* _parent = nullptr;
+      std::shared_ptr<File> _parent;
 
       /** Is {@link File} exist */
       bool _exists = false;
@@ -109,7 +110,7 @@ namespace anch {
        * @param parent The parent {@link File}
        * @param name The {@link File} name
        */
-      File(File& parent, const std::string& name);
+      File(std::shared_ptr<File> parent, const std::string& name);
 
       /**
        * {@link File} copy constructor
@@ -190,8 +191,8 @@ namespace anch {
        *
        * @return The parent {@link File}
        */
-      inline File& getParent() const {
-	return *_parent;
+      inline std::shared_ptr<File> getParent() const {
+	return _parent;
       }
 
       /**
@@ -263,7 +264,7 @@ namespace anch {
        *
        * @return The {@link File} last access
        */
-      inline const anch::date::Date& getLastAccess() {
+      inline const anch::date::Date& getLastAccess() const {
 	return _lastAccess;
       }
 
@@ -272,7 +273,7 @@ namespace anch {
        *
        * @return The {@link File} last modification
        */
-      inline const anch::date::Date& getLastModification() {
+      inline const anch::date::Date& getLastModification() const {
 	return _lastModification;
       }
 
@@ -281,7 +282,7 @@ namespace anch {
        *
        * @return The {@link File} last status change
        */
-      inline const anch::date::Date& getLastStatusChange() {
+      inline const anch::date::Date& getLastStatusChange() const {
 	return _lastStatusChange;
       }
       // Accessors -

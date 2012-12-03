@@ -1,14 +1,85 @@
 #include <iostream>
+#include <sstream>
+#include <iomanip>
 
 #include "date/dateFormatter.hpp"
+#include "date/formatter/iDatePartFormatter.hpp"
 
 using std::cout;
 using std::cerr;
 using std::endl;
 using std::string;
+using std::ostream;
+using std::istringstream;
+using std::setfill;
+using std::setw;
 
 using anch::date::Date;
 using anch::date::DateFormatter;
+using anch::date::formatter::IDatePartFormatter;
+
+
+class MicroFormatter : public IDatePartFormatter {
+public:
+  static const string PATTERN;
+  MicroFormatter() {}
+  virtual ~MicroFormatter() {}
+  void format(const Date& date, ostream& output) const noexcept {
+    output << setfill('0') << setw(3) << getMicrosecond(date);
+  }
+  size_t getSize() const noexcept {
+    return 3;
+  }
+  bool setValue(Date& date, const string& value) const noexcept {
+    istringstream iss(value);
+    uint16_t val;
+    iss >> std::dec >> val;
+    if(iss.fail()) {
+      return false;
+    } else {
+      setMicrosecond(date, val);
+      return true;
+    }
+  }
+  const string& getPattern() const noexcept {
+    return MicroFormatter::PATTERN;
+  }
+  static IDatePartFormatter* getInstance() {
+    return new MicroFormatter();
+  }
+};
+const string MicroFormatter::PATTERN = "%v";
+
+class NanoFormatter : public IDatePartFormatter {
+public:
+  static const string PATTERN;
+  NanoFormatter() {}
+  virtual ~NanoFormatter() {}
+  void format(const Date& date, ostream& output) const noexcept {
+    output << setfill('0') << setw(3) << getNanosecond(date);
+  }
+  size_t getSize() const noexcept {
+    return 3;
+  }
+  bool setValue(Date& date, const string& value) const noexcept {
+    istringstream iss(value);
+    uint16_t val;
+    iss >> std::dec >> val;
+    if(iss.fail()) {
+      return false;
+    } else {
+      setNanosecond(date, val);
+      return true;
+    }
+  }
+  const string& getPattern() const noexcept {
+    return NanoFormatter::PATTERN;
+  }
+  static IDatePartFormatter* getInstance() {
+    return new NanoFormatter();
+  }
+};
+const string NanoFormatter::PATTERN = "%N";
 
 
 int
@@ -55,6 +126,14 @@ main(void) {
   }
 
   cout << "Exit test comparison" << endl;
+
+  cout << "Enter in new formatter test" << endl;
+  DateFormatter::registerFormatterPart(NanoFormatter::PATTERN, &NanoFormatter::getInstance);
+  DateFormatter::registerFormatterPart(MicroFormatter::PATTERN, &MicroFormatter::getInstance);
+  DateFormatter formatter2("%Y-%m-%d %H:%M:%S.%s.%v.%N");
+  formatter2.format(now, nowStr);
+  cout << "Date from scratch: " << nowStr << endl;
+  cout << "Exit new formatter test" << endl;
 
   return 0;
 }

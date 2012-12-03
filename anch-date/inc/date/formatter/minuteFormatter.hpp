@@ -76,6 +76,14 @@ namespace anch {
 	 * @return The formatter part pattern
 	 */
 	const std::string& getPattern() const noexcept;
+
+	/**
+	 * Return a new instance of {@link MinuteFormatter}
+	 *
+	 * @return A new instance of {@link MinuteFormatter}
+	 */
+	static IDatePartFormatter* getInstance();
+
       };
 
     }

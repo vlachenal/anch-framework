@@ -30,6 +30,7 @@ using std::istringstream;
 
 using anch::date::Date;
 using anch::date::formatter::MillisecondFormatter;
+using anch::date::formatter::IDatePartFormatter;
 
 
 const string MillisecondFormatter::PATTERN = "%s";
@@ -97,4 +98,14 @@ MillisecondFormatter::setValue(Date& date, const string& value) const noexcept {
 const string&
 MillisecondFormatter::getPattern() const noexcept {
   return MillisecondFormatter::PATTERN;
+}
+
+/**
+ * Return a new instance of {@link MillisecondFormatter}
+ *
+ * @return A new instance of {@link MillisecondFormatter}
+ */
+IDatePartFormatter*
+MillisecondFormatter::getInstance() {
+  return new MillisecondFormatter();
 }

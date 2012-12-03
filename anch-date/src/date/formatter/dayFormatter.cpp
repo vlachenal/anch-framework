@@ -30,6 +30,7 @@ using std::istringstream;
 
 using anch::date::Date;
 using anch::date::formatter::DayFormatter;
+using anch::date::formatter::IDatePartFormatter;
 
 
 const string DayFormatter::PATTERN = "%d";
@@ -101,4 +102,14 @@ DayFormatter::setValue(Date& date, const string& value) const noexcept {
 const string&
 DayFormatter::getPattern() const noexcept {
   return DayFormatter::PATTERN;
+}
+
+/**
+ * Return a new instance of {@link DayFormatter}
+ *
+ * @return A new instance of {@link DayFormatter}
+ */
+IDatePartFormatter*
+DayFormatter::getInstance() {
+  return new DayFormatter();
 }

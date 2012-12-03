@@ -30,6 +30,7 @@ using std::istringstream;
 
 using anch::date::Date;
 using anch::date::formatter::MarkerFormatter;
+using anch::date::formatter::IDatePartFormatter;
 
 
 const string MarkerFormatter::PATTERN = "%p";
@@ -100,4 +101,14 @@ MarkerFormatter::setValue(Date& date, const string& value) const noexcept {
 const string&
 MarkerFormatter::getPattern() const noexcept {
   return MarkerFormatter::PATTERN;
+}
+
+/**
+ * Return a new instance of {@link MarkerFormatter}
+ *
+ * @return A new instance of {@link MarkerFormatter}
+ */
+IDatePartFormatter*
+MarkerFormatter::getInstance() {
+  return new MarkerFormatter();
 }

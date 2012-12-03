@@ -42,6 +42,8 @@ using std::setfill;
 using std::setw;
 using std::istringstream;
 using std::ostringstream;
+using std::map;
+using std::pair;
 
 using boost::regex;
 using boost::smatch;
@@ -49,12 +51,26 @@ using boost::regex_search;
 
 using anch::date::Date;
 using anch::date::DateFormatter;
+using anch::date::getInstance;
 
 using namespace anch::date::formatter;
 
 
 // Static initialization +
-const regex DateFormatter::DATE_PATTERN = regex(R"(^((\%Y)|(\%y)|(\%M)|(\%d)|(\%H)|(\%h)|(\%p)|(\%m)|(\%s)|(\%S)|([^%]+)))");
+const regex DateFormatter::DATE_PATTERN = regex(R"(^((%.)|([^%]+)))");
+
+map<string, getInstance> DateFormatter::FORMATTERS = {
+  {Year4DFormatter::PATTERN, &Year4DFormatter::getInstance},
+  {Year2DFormatter::PATTERN, &Year2DFormatter::getInstance},
+  {MonthFormatter::PATTERN, &MonthFormatter::getInstance},
+  {DayFormatter::PATTERN, &DayFormatter::getInstance},
+  {Hour24Formatter::PATTERN, &Hour24Formatter::getInstance},
+  {Hour12Formatter::PATTERN, &Hour12Formatter::getInstance},
+  {MarkerFormatter::PATTERN, &MarkerFormatter::getInstance},
+  {MinuteFormatter::PATTERN, &MinuteFormatter::getInstance},
+  {SecondFormatter::PATTERN, &SecondFormatter::getInstance},
+  {MillisecondFormatter::PATTERN, &MillisecondFormatter::getInstance}
+};
 // Static initialization -
 
 
@@ -87,12 +103,29 @@ DateFormatter::DateFormatter(const string& dateFormat) {
  * {@link DateFormatter} destructor
  */
 DateFormatter::~DateFormatter() {
-  // Nothing to do
+  for(const IDatePartFormatter* part : _formatters) {
+    delete part;
+  }
 }
 // Destructor -
 
 
 // Methods +
+/**
+ * Register a new formatter part
+ *
+ * @param pattern The formatter part pattern
+ * @param instGetter The formatter part new instance getter
+ */
+void
+DateFormatter::registerFormatterPart(const string& pattern,
+				     getInstance instGetter) {
+  if(FORMATTERS.find(pattern) == FORMATTERS.end()) {
+    FORMATTERS.insert(pair<string, getInstance>(pattern, instGetter));
+    FORMATTERS[pattern] = instGetter;
+  }
+}
+
 /**
  * Format date
  *
@@ -173,39 +206,11 @@ DateFormatter::addFormatter(const string& strFormatter) {
 
   } else {
     const string pattern = strFormatter.substr(0,2);
-    if(pattern == Year4DFormatter::PATTERN) {
-      form = new Year4DFormatter();
-
-    } else if(pattern == Year2DFormatter::PATTERN) {
-      form = new Year2DFormatter();
-
-    } else if(pattern == MonthFormatter::PATTERN) {
-      form = new MonthFormatter();
-
-    } else if(pattern == DayFormatter::PATTERN) {
-      form = new DayFormatter();
-
-    } else if(pattern == Hour24Formatter::PATTERN) {
-      form = new Hour24Formatter();
-
-    } else if(pattern == Hour12Formatter::PATTERN) {
-      form = new Hour12Formatter();
-
-    } else if(pattern == MarkerFormatter::PATTERN) {
-      form = new MarkerFormatter();
-
-    } else if(pattern == MinuteFormatter::PATTERN) {
-      form = new MinuteFormatter();
-
-    } else if(pattern == SecondFormatter::PATTERN) {
-      form = new SecondFormatter();
-
-    } else if(pattern == MillisecondFormatter::PATTERN) {
-      form = new MillisecondFormatter();
-
-    } else {
+    auto iter = FORMATTERS.find(pattern);
+    if(iter == FORMATTERS.end()) {
       form = new ConstantFormatter(strFormatter);
-
+    } else {
+      form = (*(iter->second))();
     }
 
   }

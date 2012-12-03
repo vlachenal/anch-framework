@@ -30,6 +30,7 @@ using std::istringstream;
 
 using anch::date::Date;
 using anch::date::formatter::Year2DFormatter;
+using anch::date::formatter::IDatePartFormatter;
 
 
 const string Year2DFormatter::PATTERN = "%y";
@@ -97,4 +98,14 @@ Year2DFormatter::setValue(Date& date, const string& value) const noexcept {
 const string&
 Year2DFormatter::getPattern() const noexcept {
   return Year2DFormatter::PATTERN;
+}
+
+/**
+ * Return a new instance of {@link Year2DFormatter}
+ *
+ * @return A new instance of {@link Year2DFormatter}
+ */
+IDatePartFormatter*
+Year2DFormatter::getInstance() {
+  return new Year2DFormatter();
 }

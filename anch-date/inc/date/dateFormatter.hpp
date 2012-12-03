@@ -21,6 +21,7 @@
 #define _ANCH_DATE_DATE_FORMAT_H_
 
 #include <iostream>
+#include <map>
 #include <vector>
 #include <boost/regex.hpp>
 
@@ -29,6 +30,9 @@
 
 namespace anch {
   namespace date {
+
+    /** {@link IDateFormatter} instance getter function/method prototype */
+    typedef anch::date::formatter::IDatePartFormatter* (*getInstance)();
 
     /**
      * {@link Date} string formatter.<br>
@@ -59,6 +63,9 @@ namespace anch {
       /** Date formatter pattern */
       const static boost::regex DATE_PATTERN;
 
+      /** Formatter registration map */
+      static std::map<std::string, getInstance> FORMATTERS;
+
       /** Formatter list */
       std::vector<anch::date::formatter::IDatePartFormatter*> _formatters;
 
@@ -86,6 +93,15 @@ namespace anch {
 
       // Methods +
     public:
+      /**
+       * Register a new formatter part
+       *
+       * @param pattern The formatter part pattern
+       * @param instGetter The formatter part new instance getter
+       */
+      static void registerFormatterPart(const std::string& pattern,
+					getInstance instGetter);
+
       /**
        * Format date
        *

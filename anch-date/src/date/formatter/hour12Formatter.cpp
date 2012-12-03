@@ -30,6 +30,7 @@ using std::istringstream;
 
 using anch::date::Date;
 using anch::date::formatter::Hour12Formatter;
+using anch::date::formatter::IDatePartFormatter;
 
 
 const string Hour12Formatter::PATTERN = "%h";
@@ -105,4 +106,14 @@ Hour12Formatter::setValue(Date& date, const string& value) const noexcept {
 const string&
 Hour12Formatter::getPattern() const noexcept {
   return Hour12Formatter::PATTERN;
+}
+
+/**
+ * Return a new instance of {@link Hour12Formatter}
+ *
+ * @return A new instance of {@link Hour12Formatter}
+ */
+IDatePartFormatter*
+Hour12Formatter::getInstance() {
+  return new Hour12Formatter();
 }

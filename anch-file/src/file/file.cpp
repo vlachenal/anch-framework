@@ -30,6 +30,8 @@
 using std::string;
 using std::vector;
 using std::ofstream;
+using std::shared_ptr;
+using std::make_shared;
 
 using anch::file::File;
 using anch::date::Date;
@@ -72,9 +74,9 @@ File::File(const string& path, bool init) : _path(path) {
     parentPath = path.substr(0,pos);
   }
   if(parentPath != "" && parentPath != _path) {
-    _parent = new File(parentPath, false);
+    _parent = make_shared<File>(parentPath, false);
   } else {
-    _parent = nullptr;
+    _parent = shared_ptr<File>(nullptr);
   }
 }
 
@@ -86,7 +88,7 @@ File::File(const string& path, bool init) : _path(path) {
  */
 File::File(const string& parent, const string& name) : _path(parent + SEP + name) {
   initialize();
-  _parent = new File(parent, false);
+  _parent = make_shared<File>(parent, false);
 }
 
 /**
@@ -97,7 +99,7 @@ File::File(const string& parent, const string& name) : _path(parent + SEP + name
  */
 File::File(const File& parent, const string& name) : _path(parent._path + SEP + name) {
   initialize();
-  _parent = new File(parent);
+  _parent = make_shared<File>(parent);
 }
 
 /**
@@ -106,9 +108,9 @@ File::File(const File& parent, const string& name) : _path(parent._path + SEP + 
  * @param parent The parent {@link File}
  * @param name The {@link File} name
  */
-File::File(File& parent, const string& name) : _path(parent._path + SEP + name) {
+File::File(shared_ptr<File> parent, const string& name) : _path(parent->_path + SEP + name) {
   initialize();
-  _parent = &parent;
+  _parent = shared_ptr<File>(parent);
 }
 
 /**
@@ -117,13 +119,16 @@ File::File(File& parent, const string& name) : _path(parent._path + SEP + name) 
  * @param file {@link File} to copy
  */
 File::File(const File& file) : _path(file._path),
-			       _parent(file._parent),
 			       _exists(file._exists),
 			       _directory(file._directory),
 			       _readable(file._readable),
 			       _writable(file._writable),
-			       _executable(file._executable) {
-  // Nothing to do more
+			       _executable(file._executable),
+			       _size(file._size),
+			       _lastAccess(file._lastAccess),
+			       _lastModification(file._lastModification),
+			       _lastStatusChange(file._lastStatusChange) {
+  _parent = shared_ptr<File>(file._parent);
 }
 // Constructors -
 
@@ -133,9 +138,7 @@ File::File(const File& file) : _path(file._path),
  * {@link File} destructor
  */
 File::~File() {
-  if(_parent != nullptr) {
-    delete _parent;
-  }
+  // Nothing to do
 }
 // Destructor -
 
@@ -202,7 +205,7 @@ File::deleteFile() throw(FileException) {
     }
 
   } else {
-      throw FileException(_path + " does not exist or is not writable or is a directory");
+    throw FileException(_path + " does not exist or is not writable or is a directory");
   }
 }
 
@@ -242,9 +245,9 @@ void
 File::list(vector<File>& files) throw(FileException) {
   vector<string> res;
   list(res);
+  shared_ptr<File> copy = make_shared<File>(*this);
   for(const string& path : res) {
-    std::cout << path << std::endl;
-    files.push_back(File(*this, path));
+    files.push_back(File(copy, path));
   }
   files.shrink_to_fit();
 }
@@ -261,7 +264,7 @@ File::initialize() {
     int res = ::stat(_path.data(), &file);
     if(res >= 0) {
       _directory = S_ISDIR(file.st_mode);
-      _size = file.st_size;
+      _size = static_cast<uint64_t>(file.st_size);
       _lastAccess = Date(file.st_atime);
       _lastModification = Date(file.st_mtime);
       _lastStatusChange = Date(file.st_ctime);

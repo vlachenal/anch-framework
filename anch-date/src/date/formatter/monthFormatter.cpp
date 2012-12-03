@@ -30,6 +30,7 @@ using std::istringstream;
 
 using anch::date::Date;
 using anch::date::formatter::MonthFormatter;
+using anch::date::formatter::IDatePartFormatter;
 
 
 const string MonthFormatter::PATTERN = "%m";
@@ -101,4 +102,14 @@ MonthFormatter::setValue(Date& date, const string& value) const noexcept {
 const string&
 MonthFormatter::getPattern() const noexcept {
   return MonthFormatter::PATTERN;
+}
+
+/**
+ * Return a new instance of {@link MonthFormatter}
+ *
+ * @return A new instance of {@link MonthFormatter}
+ */
+IDatePartFormatter*
+MonthFormatter::getInstance() {
+  return new MonthFormatter();
 }

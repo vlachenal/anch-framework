@@ -30,6 +30,7 @@ using std::istringstream;
 
 using anch::date::Date;
 using anch::date::formatter::SecondFormatter;
+using anch::date::formatter::IDatePartFormatter;
 
 
 const string SecondFormatter::PATTERN = "%S";
@@ -101,4 +102,14 @@ SecondFormatter::setValue(Date& date, const string& value) const noexcept {
 const string&
 SecondFormatter::getPattern() const noexcept {
   return SecondFormatter::PATTERN;
+}
+
+/**
+ * Return a new instance of {@link SecondFormatter}
+ *
+ * @return A new instance of {@link SecondFormatter}
+ */
+IDatePartFormatter*
+SecondFormatter::getInstance() {
+  return new SecondFormatter();
 }
