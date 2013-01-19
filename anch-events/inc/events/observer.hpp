@@ -55,7 +55,7 @@ namespace anch {
        */
       inline uint16_t getIdentifier() const {
 	return _identifier;
-      };
+      }
 
       /**
        * Observer identifier setter
@@ -64,7 +64,7 @@ namespace anch {
        */
       inline void setIdentifier(uint16_t  identifier) {
 	_identifier = identifier;
-      };
+      }
       // Accessors -
 
     };

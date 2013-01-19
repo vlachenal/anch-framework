@@ -56,7 +56,7 @@ namespace anch {
        */
       Observable(): _observers(), _currentId(0), _mutex() {
 	// Nothing to do
-      };
+      }
       // Constructors -
 
       // Destructor +
@@ -65,7 +65,7 @@ namespace anch {
        */
       virtual ~Observable() {
 	// Nothing to do
-      };
+      }
       // Destructor -
 
     public:
@@ -89,7 +89,7 @@ namespace anch {
 	}
 	_mutex.unlock();
 	return added;
-      };
+      }
 
       /**
        * Remove observer for notifications
@@ -100,7 +100,7 @@ namespace anch {
 	_mutex.lock();
 	_observers.erase(observer.getIdentifier());
 	_mutex.unlock();
-      };
+      }
 
       /**
        * Remove observer for notifications according to its identifier
@@ -111,7 +111,7 @@ namespace anch {
 	_mutex.lock();
 	_observers.erase(observerId);
 	_mutex.unlock();
-      };
+      }
 
       /**
        * Notify every observer that an event has been fired
@@ -122,7 +122,7 @@ namespace anch {
 	  iter->second.notify(event);
 	}
 	_mutex.unlock();
-      };
+      }
       // Methods -
 
     };
