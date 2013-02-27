@@ -1,0 +1,12 @@
+## Anch utils configuration +
+# Anch resource path
+set(ANCH_DEVICE_INCLUDES_DIR "$ENV{HOME}/projects/anch-framework/anch-device/inc")
+set(ANCH_DEVICE_LIBRARY_DIR "$ENV{HOME}/projects/anch-framework/anch-device/build/lib")
+
+# Anch utils installation configuration
+set(ANCH_UTILS_LIBRARY_DIR "")
+set(ANCH_UTILS_COMPILE_FLAGS "-O2")
+
+# Unitary tests
+set(ANCH_UTILS_UNITARY_TEST ON CACHE BOOL "Anch utils unitary tests")
+## Anch utils configuration -
