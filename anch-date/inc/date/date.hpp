@@ -139,7 +139,7 @@ namespace anch {
        */
       template<typename R, typename P>
       void initialize(const std::chrono::duration<R,P>& duration) noexcept {
-	_nanoseconds = static_cast<uint16_t>(_timestamp % 1000);
+	_nanoseconds = static_cast<uint16_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(duration).count() % 1000);
 	_microseconds = static_cast<uint16_t>(std::chrono::duration_cast<std::chrono::microseconds>(duration).count() % 1000);
 	_milliseconds = static_cast<uint16_t>(std::chrono::duration_cast<std::chrono::milliseconds>(duration).count() % 1000);
       }
