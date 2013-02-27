@@ -53,7 +53,7 @@ std::mt19937 engine;
 uniform_int_distribution<uint16_t> distSeq(0, SEQ_HIGH_MASK);
 uniform_int_distribution<uint16_t> dist16;
 uniform_int_distribution<uint32_t> dist32;
-uniform_int_distribution<uint64_t> dist64;
+uniform_int_distribution<uint64_t> dist64(0, 0xFFFFFFFFFFFF); // Max 12 hexadecimal digits
 
 
 // Constructors +
@@ -210,12 +210,15 @@ Uuid::getUtcTimestamp() {
 std::string
 Uuid::toString() const {
   std::ostringstream out;
-  out << std::hex << std::setfill('0')
-      << std::setw(8) << _lowTime << '-'
-      << std::setw(4) << _midTime << '-'
-      << std::setw(1) << _version << std::setw(3) << _highTime << '-'
-      << std::setw(2) << _clockSeqLow
-      << std::setw(2) << _clockSeqHighRes << '-' << std::setw(12) << _node;
+  string node = std::to_string(_node);
+  out << std::hex
+      << std::setfill('0') << std::setw(8) << _lowTime << '-'
+      << std::setfill('0') << std::setw(4) << _midTime << '-'
+      << std::setfill('0') << std::setw(1) << _version
+      << std::setfill('0') << std::setw(3) << _highTime << '-'
+      << std::setfill('0') << std::setw(2) << _clockSeqLow
+      << std::setfill('0') << std::setw(2) << _clockSeqHighRes << '-'
+      << std::setfill('0') << std::setw(12) << _node;
   return out.str();
 }
 // Methods -
