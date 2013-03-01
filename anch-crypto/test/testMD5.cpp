@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <sstream>
+#include <fstream>
 #include <iomanip>
 
 #include <stdio.h>
@@ -183,23 +184,59 @@ int
 main(void) {
   cout << "Enter in MD5 test" << endl;
 
-  string msg("\"Ta mère suce des bites en enfer\" - Linda Blair - L'Exorciste - 1973");
-  cout << "Hash message: " << msg << endl;
-  MD5 hash(msg);
-  std::ostringstream out;
-  out << hash;
-  string res = out.str();
+  // String test
+  {
+    string msg("\"Ta mère suce des bites en enfer\" - Linda Blair - L'Exorciste - 1973");
+    cout << "Hash message: " << msg << endl;
+    MD5 hash(msg);
+    std::ostringstream out;
+    out << hash;
+    string res = out.str();
 
-  string sum;
-  md5(msg.data(), sum);
+    string sum;
+    md5(msg.data(), sum);
 
-  if(res != sum) {
-    cerr << "Hash are differents:" << endl;
-    cerr << "ANcH result: " << res << endl;
-    cerr << "Instead of:  " << sum << endl;
-    return 1;
-  } else {
-    cout << "Found value: " << res << endl;
+    if(res != sum) {
+      cerr << "Hash are differents:" << endl;
+      cerr << "AnCH result: " << res << endl;
+      cerr << "Instead of:  " << sum << endl;
+      return 1;
+    } else {
+      cout << "Found value: " << res << endl << endl;
+    }
+  }
+
+  // File test
+  {
+    cout << "Hash file testMD5.cpp" << endl;
+    std::ifstream file("testMD5.cpp");
+    MD5 hash(file);
+    file.close();
+    std::ostringstream out;
+    out << hash;
+    string res = out.str();
+
+    std::ifstream fileBis("testMD5.cpp");
+    std::ostringstream msg;
+    char buffer[1024];
+    while(!fileBis.eof()) {
+      fileBis.read(buffer, 1024);
+      std::string tmp(buffer);
+      msg << tmp.substr(0,fileBis.gcount());
+    }
+    fileBis.close();
+
+    string sum;
+    md5(msg.str().data(), sum);
+
+    if(res != sum) {
+      cerr << "Hash are differents:" << endl;
+      cerr << "AnCH result: " << res << endl;
+      cerr << "Instead of:  " << sum << endl;
+      return 1;
+    } else {
+      cout << "Found value: " << res << endl << endl;
+    }
   }
 
   cout << "Exit MD5 test" << endl;

@@ -30,7 +30,8 @@ namespace anch {
   namespace crypto {
 
     /**
-     * MD5 hash algorithm implementation
+     * MD5 hash algorithm implementation<br>
+     * This is a copy from Qt framework algorithm for now
      *
      * @author Vincent Lachenal
      */
@@ -84,11 +85,32 @@ namespace anch {
       MD5();
 
       /**
-       * {@link MD5} constructor
+       * {@link MD5} constructor with string
        *
        * @param data The string data to process
        */
-      MD5(const std::string& data);
+      template<class CharT, class Traits, class Allocator>
+      MD5(const std::basic_string<CharT,Traits,Allocator>& data) {
+	addData(reinterpret_cast<const uint8_t*>(data.data()), data.length());
+	finalize();
+      }
+
+      /**
+       * {@link MD5} constructor with input stream.
+       *
+       * @param stream The input stream to process
+       */
+      template<class CharT, class Traits>
+      MD5(std::basic_istream<CharT,Traits>& stream) {
+	if(stream) {
+	  char data[1024];
+	  while(!stream.eof()) {
+	    stream.read(data, 1024);
+	    addData(reinterpret_cast<uint8_t*>(data), stream.gcount());
+	  }
+	  finalize();
+	}
+      }
       // Constructors -
 
       // Destructor +
@@ -100,26 +122,58 @@ namespace anch {
 
       // Methods +
     public:
+      /**
+       * Get the MD5 hash result
+       *
+       * @return the MD5 hash result
+       */
       const std::array<uint8_t,16>& digest() const;
 
     private:
+      /**
+       * Compute hash for data with the current hash
+       *
+       * @param data The data to add
+       * @param len The data length
+       */
       void addData(const uint8_t* data, size_t len);
 
+      /**
+       * Finalize hash
+       */
       void finalize();
 
+      /**
+       * Apply transformation
+       */
       void transform();
 
-      template<class T>
+      /**
+       * Call core function transformation
+       *
+       * @param a The byte to change and the first buffer value
+       * @param b The second buffer value
+       * @param d The third buffer value
+       * @param in The 'offset'
+       * @param bits The number of bits to rotate
+       */
+      template<class Core>
       inline void transform(uint32_t& a,
 			    uint32_t b,
 			    uint32_t c,
 			    uint32_t d,
 			    uint32_t in,
 			    int bits) {
-	a += T::apply(b,c,d) + in;
+	a += Core::apply(b,c,d) + in;
 	a = (a << bits | a >> (32 - bits)) + b;
       }
 
+      /**
+       * Swap byte
+       *
+       * @param buf The bytes to process
+       * @param words The number of operation to do
+       */
       inline void byteSwap(uint32_t* buf, uint8_t words) {
 	const uint32_t byteOrderTest = 0x1;
 	if(((char*)&byteOrderTest)[0] == 0) {
@@ -132,49 +186,60 @@ namespace anch {
       }
       // Methods -
 
-      // Inner classes +
+      // Core functions +
     private:
-      class Step1 {
+      class Core1 {
       public:
 	static uint32_t apply(uint32_t a, uint32_t b, uint32_t c) {
 	  return (c ^ (a & (b ^ c)));
 	}
       };
 
-      class Step2 {
+      class Core2 {
       public:
 	static uint32_t apply(uint32_t a, uint32_t b, uint32_t c) {
-	  return Step1::apply(c,a,b);
+	  return Core1::apply(c,a,b);
 	}
       };
 
-      class Step3 {
+      class Core3 {
       public:
 	static uint32_t apply(uint32_t a, uint32_t b, uint32_t c) {
 	  return (a ^ b ^ c);
 	}
       };
 
-      class Step4 {
+      class Core4 {
       public:
 	static uint32_t apply(uint32_t a, uint32_t b, uint32_t c) {
 	  return (b ^ (a | ~c));
 	}
       };
-      // Inner classes -
+      // Core functions -
 
     };
 
   }
 }
 
-template<typename charT, class traits>
-std::basic_ostream<charT, traits>&
-operator << (std::basic_ostream<charT, traits>& out, const anch::crypto::MD5& hash) {
+/**
+ * Ouput stream operator definition for MD5.<br>
+ * This function preserves the formatting flags.
+ *
+ * @param out The output stream
+ * @param hash The MD5 hash
+ *
+ * @return The output stream
+ */
+template<class CharT, class Traits>
+std::basic_ostream<CharT, Traits>&
+operator << (std::basic_ostream<CharT, Traits>& out, const anch::crypto::MD5& hash) {
+  std::ios_base::fmtflags flags = out.flags(); // Save current flags
   out << std::hex;
   for(const uint8_t& byte : hash.digest()) {
     out << std::setfill('0') << std::setw(2) << static_cast<uint16_t>(byte);
   }
+  out.flags(flags); // Restore flags
   return out;
 }
 
