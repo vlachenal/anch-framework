@@ -208,15 +208,15 @@ main(void) {
 
   // File test
   {
-    cout << "Hash file testMD5.cpp" << endl;
-    std::ifstream file("testMD5.cpp");
+    cout << "Hash file Makefile" << endl;
+    std::ifstream file("Makefile");
     MD5 hash(file);
     file.close();
     std::ostringstream out;
     out << hash;
     string res = out.str();
 
-    std::ifstream fileBis("testMD5.cpp");
+    std::ifstream fileBis("Makefile");
     std::ostringstream msg;
     char buffer[1024];
     while(!fileBis.eof()) {
