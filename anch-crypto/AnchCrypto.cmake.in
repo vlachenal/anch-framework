@@ -1,0 +1,12 @@
+## Anch crypto configuration +
+# Anch resource path
+#set(ANCH_DEVICE_INCLUDES_DIR "$ENV{HOME}/projects/anch-framework/anch-device/inc")
+#set(ANCH_DEVICE_LIBRARY_DIR "$ENV{HOME}/projects/anch-framework/anch-device/build/lib")
+
+# Anch crypto installation configuration
+set(ANCH_CRYPTO_LIBRARY_DIR "")
+set(ANCH_CRYPTO_COMPILE_FLAGS "-O2")
+
+# Unitary tests
+set(ANCH_CRYPTO_UNITARY_TEST ON CACHE BOOL "Anch crypto unitary tests")
+## Anch crypto configuration -
