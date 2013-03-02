@@ -21,6 +21,7 @@
 #define _ANCH_UUID_H_
 
 #include <iostream>
+#include <iomanip>
 
 
 namespace anch {
@@ -99,8 +100,11 @@ namespace anch {
        *
        * @param uuid The UUID to set
        * @param version The UUID algorithm version to use (default to MAC based algorithm)
+       * @param data The data to process (used to SHA1 and MD5 algorithms)
        */
-      static void generateUuid(Uuid& uuid, anch::uuid::Version version = anch::uuid::Version::RANDOM);
+      static void generateUuid(Uuid& uuid,
+			       anch::uuid::Version version = anch::uuid::Version::RANDOM,
+			       const std::string& data = "");
 
       /**
        * Generate a new UUID with version 1 (MAC address based) algorithm
@@ -108,6 +112,14 @@ namespace anch {
        * @param uuid The UUID to set
        */
       static void generateUuidVersion1(Uuid& uuid);
+
+      /**
+       * Generate a new UUID with version 3 (MD5 based) algorithm
+       *
+       * @param uuid The UUID to set
+       * @param data The data to process
+       */
+      static void generateUuidVersion3(Uuid& uuid, const std::string& data);
 
       /**
        * Generate a new UUID with version 4 (random) algorithm
@@ -206,6 +218,31 @@ namespace anch {
     };
 
   }
+}
+
+/**
+ * Ouput stream operator definition for UUID.<br>
+ * This function preserves the formatting flags.
+ *
+ * @param out The output stream
+ * @param uuid The UUID
+ *
+ * @return The output stream
+ */
+template<class CharT, class Traits>
+std::basic_ostream<CharT, Traits>&
+operator << (std::basic_ostream<CharT, Traits>& out, const anch::uuid::Uuid& uuid) {
+  std::ios_base::fmtflags flags = out.flags(); // Save current flags
+  out << std::hex
+      << std::setfill('0') << std::setw(8) << uuid.getLowTime() << '-'
+      << std::setfill('0') << std::setw(4) << uuid.getMidTime() << '-'
+      << std::setfill('0') << std::setw(1) << uuid.getVersion()
+      << std::setfill('0') << std::setw(3) << uuid.getHighTime() << '-'
+      << std::setfill('0') << std::setw(2) << uuid.getClockSeqLow()
+      << std::setfill('0') << std::setw(2) << uuid.getClockSeqHighRes() << '-'
+      << std::setfill('0') << std::setw(12) << uuid.getNode();
+  out.flags(flags); // Restore flags
+  return out;
 }
 
 #endif // _ANCH_UUID_H_

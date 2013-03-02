@@ -19,9 +19,7 @@
 */
 #include "uuid/uuid.hpp"
 
-#include <iostream>
 #include <sstream>
-#include <iomanip>
 #include <ctime>
 #include <chrono>
 #include <limits>
@@ -29,13 +27,16 @@
 #include <functional>
 
 #include "device/network.hpp"
+#include "crypto/hash/md5.hpp"
 
 
 using anch::uuid::Uuid;
 using anch::uuid::Version;
 using anch::device::Network;
 using anch::device::NetworkInterface;
+using anch::crypto::MD5;
 using std::string;
+using std::array;
 using std::numeric_limits;
 using std::uniform_int_distribution;
 
@@ -86,9 +87,10 @@ Uuid::Uuid(const Uuid& uuid): _lowTime(uuid._lowTime),
  *
  * @param uuid The UUID to set
  * @param version The UUID algorithm version to use (default to MAC based algorithm)
+ * @param data The data to process (used to SHA1 and MD5 algorithms)
  */
 void
-Uuid::generateUuid(Uuid& uuid, Version version) {
+  Uuid::generateUuid(Uuid& uuid, Version version, const string& data) {
   // Initialize random seed +
   std::chrono::time_point<std::chrono::high_resolution_clock> now = std::chrono::high_resolution_clock::now();
   auto epoch = now.time_since_epoch();
@@ -106,7 +108,7 @@ Uuid::generateUuid(Uuid& uuid, Version version) {
     // TODO implements this algorithm version
     break;
   case Version::MD5_HASH:
-    // TODO implements this algorithm version
+    generateUuidVersion3(uuid,data);
     break;
   case Version::RANDOM:
     generateUuidVersion4(uuid);
@@ -165,6 +167,45 @@ Uuid::generateUuidVersion1(Uuid& uuid) {
 }
 
 /**
+ * Generate a new UUID with version 3 (MD5 based) algorithm
+ *
+ * @param uuid The UUID to set
+ * @param data The data to process
+ */
+void
+Uuid::generateUuidVersion3(Uuid& uuid, const string& data) {
+  MD5 hash(data);
+  const array<uint8_t,16>& digest = hash.digest();
+
+  // Timestamp +
+  uuid._lowTime = digest[0]
+    + (static_cast<uint32_t>(digest[1]) << 8)
+    + (static_cast<uint32_t>(digest[2]) << 16)
+    + (static_cast<uint32_t>(digest[3]) << 24);
+  uuid._midTime = digest[4]
+    + (static_cast<uint16_t>(digest[5]) << 8);
+  uuid._highTime = digest[6]
+    + (static_cast<uint16_t>(digest[7]) << 8);
+  uuid._highTime = uuid._highTime & TIME_HIGH_MASK;
+  // Timestamp -
+
+  // Sequence +
+  uuid._clockSeqLow = digest[9];
+  uuid._clockSeqHighRes = digest[8];
+  uuid._clockSeqHighRes |= 0x80;
+  // Sequence -
+
+  // Node +
+  uuid._node = digest[10]
+    + (static_cast<uint64_t>(digest[11]) << 8)
+    + (static_cast<uint64_t>(digest[12]) << 16)
+    + (static_cast<uint64_t>(digest[13]) << 24)
+    + (static_cast<uint64_t>(digest[14]) << 32)
+    + (static_cast<uint64_t>(digest[15]) << 40);
+  // Node -
+}
+
+/**
  * Generate a new UUID with version 1 (MAC address based) algorithm
  *
  * @param uuid The UUID to set
@@ -174,7 +215,7 @@ Uuid::generateUuidVersion4(Uuid& uuid) {
   // Timestamp +
   uuid._lowTime = dist32(engine);
   uuid._midTime = dist16(engine);
-  uuid._highTime = dist16(engine);
+  uuid._highTime = dist16(engine) & TIME_HIGH_MASK;
   // Timestamp -
 
   // Sequence +
@@ -210,15 +251,7 @@ Uuid::getUtcTimestamp() {
 std::string
 Uuid::toString() const {
   std::ostringstream out;
-  string node = std::to_string(_node);
-  out << std::hex
-      << std::setfill('0') << std::setw(8) << _lowTime << '-'
-      << std::setfill('0') << std::setw(4) << _midTime << '-'
-      << std::setfill('0') << std::setw(1) << _version
-      << std::setfill('0') << std::setw(3) << _highTime << '-'
-      << std::setfill('0') << std::setw(2) << _clockSeqLow
-      << std::setfill('0') << std::setw(2) << _clockSeqHighRes << '-'
-      << std::setfill('0') << std::setw(12) << _node;
+  out << *this;
   return out.str();
 }
 // Methods -

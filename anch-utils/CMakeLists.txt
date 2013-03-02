@@ -35,6 +35,7 @@ add_definitions(${ANCH_UTILS_COMPILE_FLAGS})
 include_directories(
   inc
   ${ANCH_DEVICE_INCLUDES_DIR}
+  ${ANCH_CRYPTO_INCLUDES_DIR}
 )
 
 # Retrieve every files in project
@@ -57,6 +58,7 @@ if(ANCH_UTILS_UNITARY_TEST)
 
   link_directories(
     ${ANCH_DEVICE_LIBRARY_DIR}
+    ${ANCH_CRYPTO_LIBRARY_DIR}
   )
 
   # Build UUID unitary test +
@@ -76,6 +78,7 @@ if(ANCH_UTILS_UNITARY_TEST)
     anch-uuid-test
     anch-utils
     anch-device
+    anch-crypto
   )
   # Build UUID unitary test -
 

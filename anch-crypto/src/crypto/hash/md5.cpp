@@ -75,27 +75,27 @@ MD5::addData(const uint8_t* data, size_t len) {
 
   word = 64 - (word & 0x3f); // Space available in _context.input (at least 1)
   if(word > len) {
-    std::memcpy(reinterpret_cast<uint8_t*>(&_context.input) + 64 - word, data, len);
+    std::memcpy(_context.input.data() + 64 - word, data, len);
 
   } else {
     // First chunk is an odd size
-    std::memcpy(reinterpret_cast<uint8_t*>(&_context.input) + 64 - word, data, word);
-    byteSwap(reinterpret_cast<uint32_t*>(&_context.input), 16);
+    std::memcpy(reinterpret_cast<uint8_t*>(_context.input.data()) + 64 - word, data, word);
+    byteSwap(_context.input.data(), 16);
     transform();
     data += word;
     len -= word;
 
     // Process data in 64-byte chunks
     while(len >= 64) {
-      std::memcpy(reinterpret_cast<uint8_t*>(&_context.input), data, 64);
-      byteSwap(reinterpret_cast<uint32_t*>(&_context.input), 16);
+      std::memcpy(reinterpret_cast<uint8_t*>(_context.input.data()), data, 64);
+      byteSwap(_context.input.data(), 16);
       transform();
       data += 64;
       len -= 64;
     }
 
     // Handle any remaining bytes of data.
-    std::memcpy(reinterpret_cast<uint8_t*>(&_context.input),
+    std::memcpy(_context.input.data(),
 		reinterpret_cast<const uint32_t*>(data), len);
   }
 }
@@ -106,7 +106,7 @@ MD5::addData(const uint8_t* data, size_t len) {
 void
 MD5::finalize() {
   int count = _context.handle[0] & 0x3f; // Number of bytes in _context.input
-  uint8_t* p = reinterpret_cast<uint8_t*>(&_context.input) + count;
+  uint8_t* p = reinterpret_cast<uint8_t*>(_context.input.data()) + count;
 
   // Set the first char of padding to 0x80.  There is always room.
   *p++ = 0x80;
@@ -116,22 +116,22 @@ MD5::finalize() {
 
   if(count < 0) { // Padding forces an extra block
     std::memset(p, 0, count + 8);
-    byteSwap(reinterpret_cast<uint32_t*>(&_context.input), 16);
+    byteSwap(_context.input.data(), 16);
     transform();
-    p = reinterpret_cast<uint8_t*>(&_context.input);
+    p = reinterpret_cast<uint8_t*>(_context.input.data());
     count = 56;
   }
   std::memset(p, 0, count);
-  byteSwap(reinterpret_cast<uint32_t*>(&_context.input), 14);
+  byteSwap(_context.input.data(), 14);
 
   // Append length in bits and transform
   _context.input[14] = _context.handle[0] << 3;
   _context.input[15] = _context.handle[1] << 3 | _context.handle[0] >> 29;
   transform();
 
-  byteSwap(reinterpret_cast<uint32_t*>(&_context.buffer), 4);
-  std::memcpy(reinterpret_cast<uint8_t*>(&_context.digest),
-	      reinterpret_cast<uint32_t*>(&_context.buffer), 16);
+  byteSwap(_context.buffer.data(), 4);
+  std::memcpy(_context.digest.data(),
+	      _context.buffer.data(), 16);
 }
 
 /**
