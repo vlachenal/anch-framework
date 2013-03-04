@@ -55,7 +55,7 @@ add_library(
 # Unitary tests
 if(ANCH_CRYPTO_UNITARY_TEST)
 
-  # Build UUID unitary test +
+  # Build MD5 unitary test +
   file(
     GLOB_RECURSE
     test_md5
@@ -72,9 +72,29 @@ if(ANCH_CRYPTO_UNITARY_TEST)
     anch-md5-test
     anch-crypto
   )
-  # Build UUID unitary test -
+  # Build MD5 unitary test -
+
+  # Build SHA1 unitary test +
+  file(
+    GLOB_RECURSE
+    test_sha1
+    inc/*
+    test/testSHA1.cpp
+  )
+
+  add_executable(
+    anch-sha1-test
+    ${test_sha1}
+  )
+
+  target_link_libraries(
+    anch-sha1-test
+    anch-crypto
+  )
+  # Build SHA1 unitary test -
 
   enable_testing()
   add_test(anch-md5-test ${EXECUTABLE_OUTPUT_PATH}/anch-md5-test main)
+  add_test(anch-sha1-test ${EXECUTABLE_OUTPUT_PATH}/anch-sha1-test main)
 
 endif(ANCH_CRYPTO_UNITARY_TEST)

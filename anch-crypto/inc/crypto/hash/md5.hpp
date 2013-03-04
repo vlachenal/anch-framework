@@ -31,7 +31,7 @@ namespace anch {
 
     /**
      * MD5 hash algorithm implementation<br>
-     * This is a copy from Qt framework algorithm for now
+     * This algorithm is based on Qt framework algorithm.
      *
      * @author Vincent Lachenal
      */
@@ -158,12 +158,12 @@ namespace anch {
        * @param bits The number of bits to rotate
        */
       template<class Core>
-      inline void transform(uint32_t& a,
-			    uint32_t b,
-			    uint32_t c,
-			    uint32_t d,
-			    uint32_t in,
-			    int bits) {
+      static inline void transform(uint32_t& a,
+				   uint32_t b,
+				   uint32_t c,
+				   uint32_t d,
+				   uint32_t in,
+				   int bits) {
 	a += Core::apply(b,c,d) + in;
 	a = (a << bits | a >> (32 - bits)) + b;
       }
@@ -174,44 +174,35 @@ namespace anch {
        * @param buf The bytes to process
        * @param words The number of operation to do
        */
-      inline void byteSwap(uint32_t* buf, uint8_t words) {
-	const uint32_t byteOrderTest = 0x1;
-	if(((char*)&byteOrderTest)[0] == 0) {
-	  uint8_t* p = (uint8_t*)buf;
-	  do {
-	    *buf++ = (uint32_t)((uint8_t)p[3] << 8 | p[2]) << 16 | ((uint8_t)p[1] << 8 | p[0]);
-	    p += 4;
-	  } while(--words);
-	}
-      }
+      static inline void byteSwap(uint32_t* buf, uint8_t words);
       // Methods -
 
       // Core functions +
     private:
       class Core1 {
       public:
-	static uint32_t apply(uint32_t a, uint32_t b, uint32_t c) {
+	inline static uint32_t apply(uint32_t a, uint32_t b, uint32_t c) {
 	  return (c ^ (a & (b ^ c)));
 	}
       };
 
       class Core2 {
       public:
-	static uint32_t apply(uint32_t a, uint32_t b, uint32_t c) {
+	inline static uint32_t apply(uint32_t a, uint32_t b, uint32_t c) {
 	  return Core1::apply(c,a,b);
 	}
       };
 
       class Core3 {
       public:
-	static uint32_t apply(uint32_t a, uint32_t b, uint32_t c) {
+	inline static uint32_t apply(uint32_t a, uint32_t b, uint32_t c) {
 	  return (a ^ b ^ c);
 	}
       };
 
       class Core4 {
       public:
-	static uint32_t apply(uint32_t a, uint32_t b, uint32_t c) {
+	inline static uint32_t apply(uint32_t a, uint32_t b, uint32_t c) {
 	  return (b ^ (a | ~c));
 	}
       };

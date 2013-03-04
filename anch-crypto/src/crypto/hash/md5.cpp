@@ -217,4 +217,23 @@ MD5::transform() {
   _context.buffer[2] += c;
   _context.buffer[3] += d;
 }
+
+/**
+ * Swap byte for endianness conversion
+ *
+ * @param buf The 4-bytes words to process
+ * @param count The number of operation to do
+ */
+void
+MD5::byteSwap(uint32_t* buf, uint8_t count) {
+  const uint32_t byteOrderTest = 0x1;
+  if(reinterpret_cast<const uint8_t*>(&byteOrderTest)[0] == 0) { // endianess test
+    uint8_t* words = reinterpret_cast<uint8_t*>(buf);
+    do {
+      *buf++ = static_cast<uint32_t>(words[3] << 8 | words[2]) << 16
+	| (words[1] << 8 | words[0]);
+      words += 4;
+    } while(--count);
+  }
+}
 // Methods -
