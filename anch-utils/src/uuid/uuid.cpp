@@ -28,6 +28,7 @@
 
 #include "device/network.hpp"
 #include "crypto/hash/md5.hpp"
+#include "crypto/hash/sha1.hpp"
 
 
 using anch::uuid::Uuid;
@@ -35,6 +36,7 @@ using anch::uuid::Version;
 using anch::device::Network;
 using anch::device::NetworkInterface;
 using anch::crypto::MD5;
+using anch::crypto::SHA1;
 using std::string;
 using std::array;
 using std::numeric_limits;
@@ -102,7 +104,7 @@ void
 
   switch(version) {
   case Version::MAC_ADDRESS:
-    generateUuidVersion1(uuid);
+    generateUuidVersion1(uuid, data);
     break;
   case Version::DCE_SECURITY:
     // TODO implements this algorithm version
@@ -114,7 +116,7 @@ void
     generateUuidVersion4(uuid);
     break;
   case Version::SHA1_HASH:
-    // TODO implements this algorithm version
+    generateUuidVersion5(uuid,data);
     break;
   default:
     // Nothing to do
@@ -126,9 +128,11 @@ void
  * Generate a new UUID with version 1 (MAC address based) algorithm
  *
  * @param uuid The UUID to set
+ * @param macAddress The MAC address to use. If empty, the first MAC address
+ *                   available will be choosen
  */
 void
-Uuid::generateUuidVersion1(Uuid& uuid) {
+Uuid::generateUuidVersion1(Uuid& uuid, const string& macAddress) {
 
   // Timestamp +
   uint64_t timestamp = getUtcTimestamp();
@@ -145,11 +149,13 @@ Uuid::generateUuidVersion1(Uuid& uuid) {
   // Sequence -
 
   // MAC address +
-  string macAddr = "";
-  for(auto iter : Network::getInterfaces()) {
-    const NetworkInterface iface = iter.second;
-    if(!iface.isLocalhost()) {
-      macAddr = iface.getMacAddress();
+  string macAddr = macAddress;
+  if(macAddr == "") {
+    for(auto iter : Network::getInterfaces()) {
+      const NetworkInterface iface = iter.second;
+      if(!iface.isLocalhost()) {
+	macAddr = iface.getMacAddress();
+      }
     }
   }
   size_t pos = 0;
@@ -227,6 +233,45 @@ Uuid::generateUuidVersion4(Uuid& uuid) {
 
   // Node +
   uuid._node = dist64(engine);
+  // Node -
+}
+
+/**
+ * Generate a new UUID with version 3 (MD5 based) algorithm
+ *
+ * @param uuid The UUID to set
+ * @param data The data to process
+ */
+void
+Uuid::generateUuidVersion5(Uuid& uuid, const string& data) {
+  SHA1 hash(data);
+  const array<uint8_t,20>& digest = hash.digest();
+
+  // Timestamp +
+  uuid._lowTime = digest[0]
+    + (static_cast<uint32_t>(digest[1]) << 8)
+    + (static_cast<uint32_t>(digest[2]) << 16)
+    + (static_cast<uint32_t>(digest[3]) << 24);
+  uuid._midTime = digest[4]
+    + (static_cast<uint16_t>(digest[5]) << 8);
+  uuid._highTime = digest[6]
+    + (static_cast<uint16_t>(digest[7]) << 8);
+  uuid._highTime = uuid._highTime & TIME_HIGH_MASK;
+  // Timestamp -
+
+  // Sequence +
+  uuid._clockSeqLow = digest[9];
+  uuid._clockSeqHighRes = digest[8];
+  uuid._clockSeqHighRes |= 0x80;
+  // Sequence -
+
+  // Node +
+  uuid._node = digest[10]
+    + (static_cast<uint64_t>(digest[11]) << 8)
+    + (static_cast<uint64_t>(digest[12]) << 16)
+    + (static_cast<uint64_t>(digest[13]) << 24)
+    + (static_cast<uint64_t>(digest[14]) << 32)
+    + (static_cast<uint64_t>(digest[15]) << 40);
   // Node -
 }
 

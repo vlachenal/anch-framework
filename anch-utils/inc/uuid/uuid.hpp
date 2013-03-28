@@ -110,8 +110,11 @@ namespace anch {
        * Generate a new UUID with version 1 (MAC address based) algorithm
        *
        * @param uuid The UUID to set
+       * @param macAddress The MAC address to use. If empty, the first MAC address
+       *                   available will be choosen
        */
-      static void generateUuidVersion1(Uuid& uuid);
+      static void generateUuidVersion1(Uuid& uuid,
+				       const std::string& macAddress = "");
 
       /**
        * Generate a new UUID with version 3 (MD5 based) algorithm
@@ -127,6 +130,14 @@ namespace anch {
        * @param uuid The UUID to set
        */
       static void generateUuidVersion4(Uuid& uuid);
+
+      /**
+       * Generate a new UUID with version 5 (SHA1 based) algorithm
+       *
+       * @param uuid The UUID to set
+       * @param data The data to process
+       */
+      static void generateUuidVersion5(Uuid& uuid, const std::string& data);
 
     private:
       /**
@@ -238,8 +249,8 @@ operator << (std::basic_ostream<CharT, Traits>& out, const anch::uuid::Uuid& uui
       << std::setfill('0') << std::setw(4) << uuid.getMidTime() << '-'
       << std::setfill('0') << std::setw(1) << uuid.getVersion()
       << std::setfill('0') << std::setw(3) << uuid.getHighTime() << '-'
-      << std::setfill('0') << std::setw(2) << uuid.getClockSeqLow()
-      << std::setfill('0') << std::setw(2) << uuid.getClockSeqHighRes() << '-'
+      << std::setfill('0') << std::setw(2) << uuid.getClockSeqHighRes()
+      << std::setfill('0') << std::setw(2) << uuid.getClockSeqLow() << '-'
       << std::setfill('0') << std::setw(12) << uuid.getNode();
   out.flags(flags); // Restore flags
   return out;
