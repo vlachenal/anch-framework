@@ -26,50 +26,50 @@
 namespace anch {
   namespace file {
 
-    /**
+    /*!
      * File exception class.
      *
-     * @author Vincent Lachenal
+     * \author Vincent Lachenal
      */
     class FileException: public std::exception {
       // Attributes +
     private:
-      /** The error message */
+      /*! The error message */
       std::string _message;
       // Attributes -
 
 
       // Constructors +
     public:
-      /**
-       * {@link FileException} constructor
+      /*!
+       * \ref FileException constructor
        *
-       * @param message The error message
+       * \param message The error message
        */
       FileException(const std::string& message);
 
-      /**
-       * {@link FileException} constructor
+      /*!
+       * \ref FileException constructor
        *
-       * @param message The error message
-       * @param errnum System error number
+       * \param message The error message
+       * \param errnum System error number
        */
       FileException(const std::string& message, int errnum);
       // Constructors -
 
       // Destructor +
-      /**
-       * {@link FileException} destructor
+      /*!
+       * \ref FileException} destructor
        */
       virtual ~FileException() noexcept;
       // Destructor -
 
 
       // Methods +
-      /**
+      /*!
        * Display message error
        *
-       * @return The message error
+       * \return The message error
        */
       virtual const char* what() const noexcept;
       // Methods -

@@ -32,255 +32,266 @@
 namespace anch {
   namespace file {
 
-    /**
+    /*!
      * File class utility
      *
-     * @author Vincent Lachenal
+     * \author Vincent Lachenal
      */
     class File {
       // Attributes +
     public:
-      /** {@link File} separator character */
+      /*! \ref File separator character */
       static const char SEP;
 
     private:
-      /** The {@link File} path */
+      /*! The \ref File path */
       std::string _path;
 
-      /** The parent {@link File} */
+      /*! The parent \ref File */
       std::shared_ptr<File> _parent;
 
-      /** Is {@link File} exist */
+      /*! Is \ref File exist */
       bool _exists = false;
 
-      /** Is {@link File} a directory */
+      /*! Is \ref File a directory */
       bool _directory = false;
 
-      /** Is {@link File} readable */
+      /*! Is \ref File readable */
       bool _readable = false;
 
-      /** Is {@link File} writable */
+      /*! Is \ref File writable */
       bool _writable = false;
 
-      /** Is {@link File} executable */
+      /*! Is \ref File executable */
       bool _executable = false;
 
-      /** The {@link File} size */
+      /*! The \ref File size */
       uint64_t _size;
 
-      /** {@link File} last access */
+      /*! \ref File last access */
       anch::date::Date _lastAccess;
 
-      /** {@link File} last modification */
+      /*! \ref File last modification */
       anch::date::Date _lastModification;
 
-      /** {@link File} last status change */
+      /*! \ref File last status change */
       anch::date::Date _lastStatusChange;
       // Attributes -
 
       // Constructors +
     public:
-      /**
-       * {@link File} constructor
+      /*!
+       * \ref File constructor
        *
-       * @param path The {@link File} path
-       * @param init Initialize file members
+       * \param path The \ref File path
+       * \param init Initialize file members
        */
       File(const std::string& path, bool init = true);
 
-      /**
-       * {@link File} constructor
+      /*!
+       * \ref File constructor
        *
-       * @param parent The parent {@link File} path
-       * @param name The {@link File} name
+       * \param parent The parent \ref File path
+       * \param name The \ref File name
        */
       File(const std::string& parent, const std::string& name);
 
-      /**
-       * {@link File} constructor
+      /*!
+       * \ref File constructor
        *
-       * @param parent The parent {@link File}
-       * @param name The {@link File} name
+       * \param parent The parent \ref File
+       * \param name The \ref File name
        */
       File(const File& parent, const std::string& name);
 
-      /**
-       * {@link File} constructor
+      /*!
+       * \ref File constructor
        *
-       * @param parent The parent {@link File}
-       * @param name The {@link File} name
+       * \param parent The parent \ref File
+       * \param name The \ref File name
        */
       File(std::shared_ptr<File> parent, const std::string& name);
 
-      /**
-       * {@link File} copy constructor
+      /*!
+       * \ref File copy constructor
        *
-       * @param file {@link File} to copy
+       * \param file \ref File to copy
        */
       File(const File& file);
       // Constructors -
 
       // Destructor +
     public:
-      /**
-       * {@link File} destructor
+      /*!
+       * \ref File destructor
        */
       virtual ~File();
       // Destructor -
 
       // Methods +
     public:
-      /**
+      /*!
        * Create a new file
+       *
+       * \throw anch::file::FileException any error on file creation
        */
       void createFile() throw(anch::file::FileException);
 
-      /**
+      /*!
        * Create a new file
        *
        * @param out The output stream on the file
+       *
+       * \throw anch::file::FileException any error on file creation
        */
       void createFile(std::ofstream& out) throw(anch::file::FileException);
 
-      /**
+      /*!
        * Create directory
        *
-       * @param parents Create parent directories if needed
+       * \param parents Create parent directories if needed
+       *
+       * \throw anch::file::FileException any error on directory creation
        */
       void createDirectory(bool parents = false) throw(anch::file::FileException);
 
       /**
-       * Delete this {@link File}
+       * Delete this \ref File
+       *
+       * \throw anch::file::FileException any error on file deletion
        */
       void deleteFile() throw(anch::file::FileException);
 
-      /**
+      /*!
        * List files and directories in current directory.
        *
-       * @return The files list
+       * \param files the files list
+       *
+       * \throw anch::file::FileException any error on directory list
        */
       void list(std::vector<std::string>& files) throw(anch::file::FileException);
 
-      /**
+      /*!
        * List files and directories in current directory.
        *
-       * @return The {@link File} list
+       * \param files The \ref File list
+       *
+       * \throw anch::file::FileException any error on directory list
        */
       void list(std::vector<File>& files) throw(anch::file::FileException);
 
     private:
-      /**
-       * Initialize {@link File} according to its path
+      /*!
+       * Initialize \ref File according to its path
        */
       void initialize();
       // Methods -
 
       // Accessors +
     public:
-      /**
-       * Get the {@link File} path
+      /*!
+       * Get the \ref File path
        *
-       * @return The {@link File} path
+       * \return the \ref File path
        */
       inline const std::string& getPath() const {
 	return _path;
       }
 
-      /**
-       * Get the parent {@link File}
+      /*!
+       * Get the parent \ref File
        *
-       * @return The parent {@link File}
+       * \return the parent \ref File
        */
       inline std::shared_ptr<File> getParent() const {
 	return _parent;
       }
 
-      /**
-       * Check if {@link File} exist.
+      /*!
+       * Check if \ref File exist.
        *
-       * @return <code>true</code> if {@link File} exists, <code>false</code> otherwise.
+       * \return \c true if \ref File exists, \c false otherwise.
        */
       inline bool exists() const {
 	return _exists;
       }
 
-      /**
-       * Check is {@link File} is a directory.
+      /*!
+       * Check is \ref File is a directory.
        *
-       * @return <code>true</code> if {@link File} is a directory, <code>false</code> otherwise.
+       * \return \c true if \ref File is a directory, \c false otherwise.
        */
       inline bool isDirectory() const {
 	return _directory;
       }
 
-
-      /**
-       * Check is {@link File} is a regular file.
+      /*!
+       * Check is \ref File is a regular file.
        *
-       * @return <code>true</code> if {@link File} is a regular file, <code>false</code> otherwise.
+       * \return \c true if \ref File is a regular file, \c false otherwise.
        */
       inline bool isFile() const {
 	return !_directory;
       }
 
-      /**
+      /*!
        * Return the readable state
        *
-       * @return <code>true</code> is the {@link File} can be read, <code>flase</code> otherwise.
+       * \return \c true is the \ref File can be read, \c false otherwise.
        */
       inline bool canRead() const {
 	return _readable;
       }
 
-      /**
+      /*!
        * Return the writable state
        *
-       * @return <code>true</code> is the {@link File} can be written, <code>flase</code> otherwise.
+       * \return \c true is the \ref File can be written, \c false otherwise.
        */
       inline bool canWrite() const {
 	return _writable;
       }
 
-      /**
+      /*!
        * Return the executable state
        *
-       * @return <code>true</code> is the {@link File} can be executed, <code>flase</code> otherwise.
+       * \return \c true is the \ref File can be executed, \c false otherwise.
        */
       inline bool canExecute() const {
 	return _executable;
       }
 
-      /**
-       * {@link File} size getter
+      /*!
+       * \ref File size getter
        *
-       * @return The {@link File} size
+       * \return the \ref File size
        */
       inline uint64_t getSize() const {
 	return _size;
       }
 
-      /**
-       * {@link File} last access getter
+      /*!
+       * \ref File last access getter
        *
-       * @return The {@link File} last access
+       * \return the \ref File last access
        */
       inline const anch::date::Date& getLastAccess() const {
 	return _lastAccess;
       }
 
-      /**
-       * {@link File} last modification getter
+      /*!
+       * \ref File last modification getter
        *
-       * @return The {@link File} last modification
+       * \return the \ref File last modification
        */
       inline const anch::date::Date& getLastModification() const {
 	return _lastModification;
       }
 
-      /**
-       * {@link File} last status change getter
+      /*!
+       * \ref File last status change getter
        *
-       * @return The {@link File} last status change
+       * \return the \ref File last status change
        */
       inline const anch::date::Date& getLastStatusChange() const {
 	return _lastStatusChange;
