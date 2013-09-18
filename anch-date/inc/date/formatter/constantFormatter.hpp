@@ -26,56 +26,56 @@ namespace anch {
   namespace date {
     namespace formatter {
 
-      /**
+      /*!
        * Constant string formatter part
        *
-       * @author Vincent Lachenal
+       * \author Vincent Lachenal
        */
       class ConstantFormatter: public IDatePartFormatter {
       public:
-	/** The message */
+	/*! The message */
 	std::string _message;
 
       public:
-	/**
-	 * {@link ConstantFormatter} default constructor
+	/*!
+	 * \ref ConstantFormatter default constructor
 	 *
-	 * @param message The constant message
+	 * \param message The constant message
 	 */
 	ConstantFormatter(const std::string& message);
 
-	/**
-	 * {@link ConstantFormatter} destructor
+	/*!
+	 * \ref ConstantFormatter destructor
 	 */
 	virtual ~ConstantFormatter();
 
-	/**
+	/*!
 	 * Format date
 	 *
-	 * @param date The {@link Date} to format
-	 * @param output The output stream to write in
+	 * \param date The \ref Date to format
+	 * \param output The output stream to write in
 	 */
 	void format(const anch::date::Date& date, std::ostream& output) const noexcept;
 
-	/**
+	/*!
 	 * Get size of formatter part
 	 *
-	 * @return The size of formatter part
+	 * \return The size of formatter part
 	 */
 	size_t getSize() const noexcept;
 
-	/**
-	 * Set value to {@link Date}
+	/*!
+	 * Set value to \ref Date
 	 *
-	 * @param date The {@link Date} to modify
-	 * @param value The value to set
+	 * \param date The \ref Date to modify
+	 * \param value The value to set
 	 */
 	bool setValue(anch::date::Date& date, const std::string& value) const noexcept;
 
-	/**
+	/*!
 	 * Get formatter part pattern
 	 *
-	 * @return The formatter part pattern
+	 * \return The formatter part pattern
 	 */
 	const std::string& getPattern() const noexcept;
       };

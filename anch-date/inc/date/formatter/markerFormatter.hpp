@@ -26,61 +26,61 @@ namespace anch {
   namespace date {
     namespace formatter {
 
-      /**
+      /*!
        * Hour's marker (a.m. or p.m.) formatter part
        *
-       * @author Vincent Lachenal
+       * \author Vincent Lachenal
        */
       class MarkerFormatter: public IDatePartFormatter {
       public:
-	/** The pattern */
+	/*! The pattern */
 	static const std::string PATTERN;
 
       public:
-	/**
-	 * {@link MarkerFormatter} default constructor
+	/*!
+	 * \ref MarkerFormatter default constructor
 	 */
 	MarkerFormatter();
 
-	/**
-	 * {@link MarkerFormatter} destructor
+	/*!
+	 * \ref MarkerFormatter destructor
 	 */
 	virtual ~MarkerFormatter();
 
-	/**
+	/*!
 	 * Format date
 	 *
-	 * @param date The {@link Date} to format
-	 * @param output The output stream to write in
+	 * \param date The \ref Date to format
+	 * \param output The output stream to write in
 	 */
 	void format(const anch::date::Date& date, std::ostream& output) const noexcept;
 
-	/**
+	/*!
 	 * Get size of formatter part
 	 *
-	 * @return The size of formatter part
+	 * \return The size of formatter part
 	 */
 	size_t getSize() const noexcept;
 
-	/**
-	 * Set value to {@link Date}
+	/*!
+	 * Set value to \ref Date
 	 *
-	 * @param date The {@link Date} to modify
-	 * @param value The value to set
+	 * \param date The \ref Date to modify
+	 * \param value The value to set
 	 */
 	bool setValue(anch::date::Date& date, const std::string& value) const noexcept;
 
-	/**
+	/*!
 	 * Get formatter part pattern
 	 *
-	 * @return The formatter part pattern
+	 * \return The formatter part pattern
 	 */
 	const std::string& getPattern() const noexcept;
 
-	/**
-	 * Return a new instance of {@link MarkerFormatter}
+	/*!
+	 * Return a new instance of \ref MarkerFormatter
 	 *
-	 * @return A new instance of {@link MarkerFormatter}
+	 * \return A new instance of \ref MarkerFormatter
 	 */
 	static IDatePartFormatter* getInstance();
 

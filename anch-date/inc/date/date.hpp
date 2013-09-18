@@ -34,15 +34,15 @@ namespace anch {
       class IDatePartFormatter;
     }
 
-    /**
-     * Date and time utility class.<br>
-     * <br>
-     * The class implementation is thread safe (when using this class).<br>
-     * POSIX time management is not thread safe. This class uses POSIX implementation.
+    /*!
+     * Date and time utility class.
+     *
+     * The class implementation is thread safe (when using this class).\n
+     * POSIX time management is not thread safe. This class uses POSIX implementation.\n
      * Be aware that if you use the POSIX API, you will loose the thread safe support
      * provided in this implementation.
      *
-     * @author Vincent Lachenal
+     * \author Vincent Lachenal
      */
     class Date {
 
@@ -51,91 +51,91 @@ namespace anch {
 
       // Attributes +
     private:
-      /** Mutex for thread-safe implementation */
+      /*! Mutex for thread-safe implementation */
       static std::mutex _mutex;
 
-      /** The timestamp */
+      /*! The timestamp */
       std::int64_t _timestamp;
 
-      /** The years */
+      /*! The years */
       int32_t _years = 0;
 
-      /** The months (0-11 => 4 bits) */
+      /*! The months (0-11 => 4 bits) */
       uint16_t _months = 0;
 
-      /** The days of the year (0-365 => 9 bits) */
+      /*! The days of the year (0-365 => 9 bits) */
       uint16_t _ydays = 0;
 
-      /** The days of the year (1-31 => 5 bits) */
+      /*! The days of the year (1-31 => 5 bits) */
       uint16_t _mdays = 0;
 
-      /** The days of the week (0-6 => 3 bits) */
+      /*! The days of the week (0-6 => 3 bits) */
       uint16_t _wdays = 0;
 
-      /** The minutes (0-23 => 5 bits) */
+      /*! The minutes (0-23 => 5 bits) */
       uint16_t _hours = 0;
 
-      /** The minutes (0-59 => 6 bits) */
+      /*! The minutes (0-59 => 6 bits) */
       uint16_t _minutes = 0;
 
-      /** The seconds (0-60 => 6 bits) */
+      /*! The seconds (0-60 => 6 bits) */
       uint16_t _seconds = 0;
 
-      /** The milliseconds (0-999 => 10 bits) */
+      /*! The milliseconds (0-999 => 10 bits) */
       uint16_t _milliseconds = 0;
 
-      /** The microseconds (0-999 => 10 bits) */
+      /*! The microseconds (0-999 => 10 bits) */
       uint16_t _microseconds = 0;
 
-      /** The nanoseconds (0-999 => 10 bits) */
+      /*! The nanoseconds (0-999 => 10 bits) */
       uint16_t _nanoseconds = 0;
       // Attributes -
 
       // Constructors +
     public:
-      /**
-       * {@link Date} default constructor.
+      /*!
+       * \ref Date default constructor.
        *
-       * @param init Initialize the {@link Date} to now (default true)
+       * \param init Initialize the \ref Date to now (default true)
        */
       Date(bool init = true);
 
-      /**
-       * {@link Date} private copy constructor
+      /*!
+       * \ref Date private copy constructor
        *
-       * @param date The {@link Date} to copy
+       * \param date The \ref Date to copy
        */
       Date(const Date& date);
 
-      /**
-       * {@link Date} constructor.
+      /*!
+       * \ref Date constructor.
        *
-       * @param time The time to set
+       * \param time The time to set
        */
       Date(const std::time_t& time);
 
-      /**
-       * {@link Date} constructor.
+      /*!
+       * \ref Date constructor.
        *
-       * @param time The time to set
+       * \param time The time to set
        */
       Date(const std::tm* const time);
       // Constructors -
 
       // Destructor +
     public:
-      /**
-       * {@link Date} destructor
+      /*!
+       * \ref Date destructor
        */
       virtual ~Date();
       // Destructor -
 
       // Methods +
     private:
-      /**
+      /*!
        * Intialize ms, µs and ns date fields
        *
-       * @param duration The duration
+       * \param duration The duration
        */
       template<typename R, typename P>
       void initialize(const std::chrono::duration<R,P>& duration) noexcept {
@@ -144,19 +144,19 @@ namespace anch {
 	_milliseconds = static_cast<uint16_t>(std::chrono::duration_cast<std::chrono::milliseconds>(duration).count() % 1000);
       }
 
-      /**
+      /*!
        * Initialize date fields
        *
-       * @param time The current time
+       * \param time The current time
        */
       void initialize(const std::tm* const time);
 
-      /**
+      /*!
        * Compute timestamp from internal members
        */
       void computeTimestamp();
 
-      /**
+      /*!
        * Compute std::tm from internal members
        */
       inline void computeTm(std::tm& time) const {
@@ -169,34 +169,34 @@ namespace anch {
       }
 
     public:
-      /**
-       * Check if current {@link Date} is after another one.
+      /*!
+       * Check if current \ref Date is after another one.
        *
-       * @param date The other {@link Date}
+       * \param date The other \ref Date
        *
-       * @return <code>true</code> if current {@link Date} is after the other one, <code>false</code> otherwise.
+       * \return \c true if current \ref Date is after the other one, \c false otherwise.
        */
       inline bool after(const Date& date) const noexcept {
 	return _timestamp > date._timestamp;
       }
 
-      /**
-       * Check if current {@link Date} is before another one.
+      /*!
+       * Check if current \ref Date is before another one.
        *
-       * @param date The other {@link Date}
+       * \param date The other \ref Date
        *
-       * @return <code>true</code> if current {@link Date} is before the other one, <code>false</code> otherwise.
+       * \return \c true if current \ref Date is before the other one, \c false otherwise.
        */
       inline bool before(const Date& date) const noexcept {
 	return _timestamp < date._timestamp;
       }
 
-      /**
-       * Check if current {@link Date} is equals to another one.
+      /*!
+       * Check if current \ref Date is equals to another one.
        *
-       * @param date The other {@link Date}
+       * \param date The other \ref Date
        *
-       * @return <code>true</code> if current {@link Date} is equals to the other one, <code>false</code> otherwise.
+       * \return \c true if current \ref Date is equals to the other one, \c false otherwise.
        */
       inline bool equals(const Date& date) const noexcept {
 	return _timestamp == date._timestamp;
@@ -206,70 +206,70 @@ namespace anch {
 
       // Operators +
     public:
-      /**
-       * '>' operator definition.<br>
+      /*!
+       * '>' operator definition.
        * Calls after method
        *
-       * @param date The date to compare to
+       * \param date The date to compare to
        */
       inline bool operator > (const Date& date) const noexcept {
 	return after(date);
       }
 
-      /**
-       * '>=' operator definition.<br>
+      /*!
+       * '>=' operator definition.
        * Calls after and equals methods
        *
-       * @param date The date to compare to
+       * \param date The date to compare to
        */
       inline bool operator >= (const Date& date) const noexcept {
 	return (after(date) || equals(date));
       }
 
-      /**
-       * '<' operator definition.<br>
+      /*!
+       * '<' operator definition.
        * Calls before method
        *
-       * @param date The date to compare to
+       * \param date The date to compare to
        */
       inline bool operator < (const Date& date) const noexcept {
 	return before(date);
       }
 
-      /**
-       * '<=' operator definition.<br>
+      /*!
+       * '<=' operator definition.
        * Calls before and equals methods
        *
-       * @param date The date to compare to
+       * \param date The date to compare to
        */
       inline bool operator <= (const Date& date) const noexcept {
 	return (before(date) || equals(date));
       }
 
-      /**
-       * '==' operator definition.<br>
+      /*!
+       * '==' operator definition.
        * Calls equals method
        *
-       * @param date The date to compare to
+       * \param date The date to compare to
        */
       inline bool operator == (const Date& date) const noexcept {
 	return equals(date);
       }
 
-      /**
-       * '!=' operator definition.<br>
+      /*!
+       * '!=' operator definition.
        * Calls equals method
        *
-       * @param date The date to compare to
+       * \param date The date to compare to
        */
       inline bool operator != (const Date& date) const noexcept {
 	return !equals(date);
       }
 
-      /**
+      /*!
        * Cast operator to std::time_t definition.
        *
-       * @return The converted std::time_t
+       * \return The converted std::time_t
        */
       inline operator std::time_t() const noexcept {
 	std::tm time;
@@ -277,10 +277,10 @@ namespace anch {
 	return std::mktime(&time);
       }
 
-      /**
+      /*!
        * Cast operator to std::tm definition.
        *
-       * @return The converted std::tm
+       * \return The converted std::tm
        */
       inline operator std::tm() const noexcept {
 	std::tm time;
