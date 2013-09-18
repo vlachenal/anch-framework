@@ -35,24 +35,24 @@ mutex Resource::MUTEX;
 // Static initialization -
 
 
-/**
- * {@link Resource} private constructor
+/*!
+ * \ref Resource private constructor
  */
 Resource::Resource(): _resources() {
   // Nothing to do
 }
 
-/**
- * {@link Resource} destructor
+/*!
+ * \ref Resource destructor
  */
 Resource::~Resource() {
   // Nothing to do
 }
 
-/**
+/*!
  * Get Resource unique instance
  *
- * @return The {@link Resource} unique instance
+ * \return The \ref Resource unique instance
  */
 const Resource&
 Resource::getResource(const string& filePath) {
@@ -63,20 +63,19 @@ Resource::getResource(const string& filePath) {
     ConfigurationFileParser configParser(filePath);
     configParser.getConfiguration(res._resources);
     iter = RESOURCES.insert(pair<string, Resource>(filePath,res)).first;
-
   }
   MUTEX.unlock();
   return iter->second;
 }
 
-/**
+/*!
  * Get parameter value from its name and section
  *
- * @param value The value to set
- * @param param The parameter to find
- * @param section The parameter section (optional)
+ * \param value The value to set
+ * \param param The parameter to find
+ * \param section The parameter section (optional)
  *
- * @return <code>true</code> if value has been found, <code>false</code> otherwise.
+ * \return <code>true</code> if value has been found, <code>false</code> otherwise.
  */
 bool
 Resource::getParameter(string& value,

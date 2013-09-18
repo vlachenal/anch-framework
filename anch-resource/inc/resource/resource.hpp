@@ -29,71 +29,71 @@
 namespace anch {
   namespace resource {
 
-    /**
+    /*!
      * Resource manager
      *
-     * @author Vincent Lachenal
+     * \author Vincent Lachenal
      */
     class Resource {
     private:
       // Attributes +
-      /** Cached resources */
+      /*! Cached resources */
       static std::map<std::string,Resource> RESOURCES;
 
-      /** Mutex */
+      /*! Mutex */
       static std::mutex MUTEX;
 
-      /** Resources */
+      /*! Resources */
       std::map<std::string,anch::resource::Section> _resources;
       // Attributes -
 
     private:
       // Constructors +
-      /**
-       * {@link Resource} private constructor
+      /*!
+       * \ref Resource private constructor
        */
       Resource();
       // Constructors -
 
     public:
       // Destructor +
-      /**
-       * {@link Resource} destructor
+      /*!
+       * \ref Resource destructor
        */
       virtual ~Resource();
       // Destructor -
 
     public:
-      /**
+      /*!
        * Get Resource instance from file
        *
-       * @param filePath The resource file path
+       * \param filePath The resource file path
        *
-       * @return The {@link Resource} unique instance
+       * \return The \ref Resource unique instance
        */
       static const Resource& getResource(const std::string& filePath);
 
-      /**
+      /*!
        * Get parameter value from its name and section
        *
-       * @param value The value to set
-       * @param param The parameter to find
-       * @param section The parameter section (optional)
+       * \param value The value to set
+       * \param param The parameter to find
+       * \param section The parameter section (optional)
        *
-       * @return <code>true</code> if value has been found, <code>false</code> otherwise.
+       * \return <code>true</code> if value has been found, <code>false</code> otherwise.
        */
       bool getParameter(std::string& value,
 			const std::string& param,
 			const std::string& section = "") const;
 
-      /**
+      /*!
        * Get resource configuration
        *
-       * @return The configuration
+       * \return The configuration
        */
       inline const std::map<std::string,anch::resource::Section>& getConfiguration() const {
 	return _resources;
-      };
+      }
 
     };
 

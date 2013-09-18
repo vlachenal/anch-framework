@@ -26,45 +26,45 @@ namespace anch {
   namespace resource {
     namespace file {
 
-      /**
+      /*!
        * File not found exception
        *
-       * @author Vincent Lachenal
+       * \author Vincent Lachenal
        */
       class ResourceFileException: public std::exception {
 
       private:
 	// Attributes +
-	/** Exception message */
+	/*! Exception message */
 	std::string _message;
 	// Attributes -
 
       public:
 	// Constructors +
-	/**
-	 * {@link ResourceFileException} constructor
+	/*!
+	 * \ref ResourceFileException constructor
 	 *
-	 * @param filePath The file path
-	 * @param error The error
+	 * \param filePath The file path
+	 * \param error The error
 	 */
 	ResourceFileException(const std::string& filePath,
 			      const std::string& error);
 	// Constructors -
 
 	// Destructor +
-	/**
-	 * {@link ResourceFileException} destructor
+	/*!
+	 * \ref ResourceFileException} destructor
 	 */
-	virtual ~ResourceFileException() throw();
+	virtual ~ResourceFileException() noexcept;
 	// Destructor -
 
       public:
-	/**
+	/*!
 	 * Retrieve the complete error message
 	 *
-	 * @return The error message
+	 * \return The error message
 	 */
-	const char* what() const throw();
+	const char* what() const noexcept;
 
       };
 

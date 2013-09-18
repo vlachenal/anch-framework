@@ -45,32 +45,31 @@ const regex ConfigurationFileParser::_commentPattern = regex("( |\t)*([^\\\\]#).
 // Static intialization -
 
 
-/**
- * {@link ConfigurationFileParser} constructor
+/*!
+ * \ref ConfigurationFileParser constructor
  *
- * @param filePath The configuration file path
+ * \param filePath The configuration file path
  */
 ConfigurationFileParser::ConfigurationFileParser(const string& filePath):
   _filePath(filePath) {
   // Nothing to do
 }
 
-/**
- * {@link ConfigurationFileParser} destructor
+/*!
+ * \ref ConfigurationFileParser destructor
  */
 ConfigurationFileParser::~ConfigurationFileParser() {
   // Nothing to do
 }
 
-/**
+/*!
  * Get configuration from file
  *
- * @param config The current configuration
+ * \param config The current configuration
  */
 void
 ConfigurationFileParser::getConfiguration(map<string, Section>& config)
   const throw(ResourceFileException) {
-
   // Open file +
   ifstream file(_filePath);
   if(!file.is_open()) {
@@ -89,15 +88,14 @@ ConfigurationFileParser::getConfiguration(map<string, Section>& config)
   // Parse file -
 
   file.close();
-
 }
 
-/**
+/*!
  * Parse a line and store information in result map if needed
  *
- * @param line The line to parse
- * @param currentSection The current section
- * @param config The result map
+ * \param line The line to parse
+ * \param currentSection The current section
+ * \param config The result map
  */
 void
 ConfigurationFileParser::parseLine(const string& line,

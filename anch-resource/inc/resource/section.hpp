@@ -26,80 +26,80 @@
 namespace anch {
   namespace resource {
 
-    /**
+    /*!
      * Parameters defined in a section
      *
-     * @author Vincent Lachenal
+     * \author Vincent Lachenal
      */
     class Section {
 
     public:
       // Attributes +
-      /** Parameter default value when not found */
+      /*! Parameter default value when not found */
       static std::string DEFAULT_VALUE;
 
     private:
-      /** Parameters map */
+      /*! Parameters map */
       std::map<std::string,std::string> _parameters;
       // Attributes -
 
     public:
       // Constructors +
-      /**
-       * {@link Section} default constructor
+      /*!
+       * \ref Section default constructor
        */
       Section();
 
-      /**
-       * {@link Section} copy constructor
+      /*!
+       * \ref Section copy constructor
        */
       Section(const Section& section);
       // Constructors -
 
       // Destructor +
-      /**
-       * Section destructor
+      /*!
+       * \ref Section destructor
        */
       ~Section();
       // Destructor -
 
     public:
       // Accessors +
-      /**
+      /*!
        * Parameters getter
        *
-       * @return The parameters
+       * \return The parameters
        */
       inline const std::map<std::string,std::string>& getParameters() const {
 	return _parameters;
-      };
+      }
 
-      /**
+      /*!
        * Parameters setter
        *
-       * @param parameters The parameters
+       * \param parameters The parameters
        */
       inline void setParameters(const std::map<std::string,std::string>& parameters) {
 	_parameters = parameters;
-      };
+      }
 
-      /**
+      /*!
        * Add parameter to section
        *
-       * @param param The parameter
-       * @param value The associated value
+       * \param param The parameter
+       * \param value The associated value
        */
       inline void addParameter(const std::string& param, const std::string& value) {
 	_parameters[param] = value;
-      };
+      }
 
-      /**
-       * Parameter getter.<br>
+      /*!
+       * Parameter getter.\n
        * Search a parameter value by parameter name. If not found, an empty string will be returned.
        *
-       * @param parameterName The parameter's name
+       * \param parameterName The parameter's name
        *
-       * @return The parameter value or empty if not found
+       * \return The parameter value or empty if not found
        */
       inline const std::string& getParameter(const std::string& parameterName) const {
 	auto iter = _parameters.find(parameterName);
@@ -108,7 +108,7 @@ namespace anch {
 	} else {
 	  return iter->second;
 	}
-      };
+      }
       // Accessors -
 
     };

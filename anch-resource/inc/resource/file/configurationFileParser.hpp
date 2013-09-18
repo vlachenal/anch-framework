@@ -32,68 +32,68 @@ namespace anch {
   namespace resource {
     namespace file {
 
-      /**
-       * Configuration file parser<br>
-       * <br>
-       * Classic configuration file paser<br>
-       * Sections are declared following pattern ^\[[-a-zA-Z0-9_]+\]<br>
-       * Options are declared following pattern ^[-a-zA-Z0-9_]+=.*<br>
-       * Comments are declared following pattern ([^\]#).*<br>
-       * <br>
-       * If empty section is found, every of its options will be store with no section.<br>
+      /*!
+       * Configuration file parser\n
+       * \n
+       * Classic configuration file paser\n
+       * Sections are declared following pattern ^\[[-a-zA-Z0-9_]+\]\n
+       * Options are declared following pattern ^[-a-zA-Z0-9_]+=.*\n
+       * Comments are declared following pattern ([^\]#).*\n
+       * \n
+       * If empty section is found, every of its options will be store with no section.\n
        * Errors in configuration file will be ignored.
        *
-       * @author Vincent Lachenal
+       * \author Vincent Lachenal
        */
       class ConfigurationFileParser {
       private:
 	// Attributes +
-	/** Section regular expression */
+	/*! Section regular expression */
 	static const boost::regex _sectionPattern;
 
-	/** Option regular expression */
+	/*! Option regular expression */
 	static const boost::regex _optionPattern;
 
-	/** Comments regular expression */
+	/*! Comments regular expression */
 	static const boost::regex _commentPattern;
 
-	/** The configuration file path */
+	/*! The configuration file path */
 	std::string _filePath;
 	// Attributes -
 
       public:
 	// Constructors +
-	/**
-	 * {@link ConfigurationFileParser} constructor
+	/*!
+	 * \ref ConfigurationFileParser constructor
 	 *
-	 * @param filePath The configuration file path
+	 * \param filePath The configuration file path
 	 */
 	ConfigurationFileParser(const std::string& filePath);
 	// Constructors -
 
 	// Destructor +
-	/**
-	 * {@link ConfigurationFileParser} destructor
+	/*!
+	 * \ref ConfigurationFileParser destructor
 	 */
 	virtual ~ConfigurationFileParser();
 	// Destructor -
 
       public:
-	/**
+	/*!
 	 * Get configuration from file
 	 *
-	 * @param config The current configuration
+	 * \param config The current configuration
 	 */
 	void getConfiguration(std::map<std::string,anch::resource::Section>& config)
 	  const throw(anch::resource::file::ResourceFileException);
 
       private:
-	/**
+	/*!
 	 * Parse a line and store information in result map if needed
 	 *
-	 * @param line The line to parse
-	 * @param currentSection The current section
-	 * @param config The result map
+	 * \param line The line to parse
+	 * \param currentSection The current section
+	 * \param config The result map
 	 */
 	void parseLine(const std::string& line,
 		       std::string& currentSection,

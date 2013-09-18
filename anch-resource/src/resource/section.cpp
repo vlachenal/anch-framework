@@ -30,15 +30,15 @@ string Section::DEFAULT_VALUE = "";
 
 
 // Constructors +
-/**
- * Section constructor
+/*!
+ * \ref Section default constructor
  */
 Section::Section() {
   // Nothing to do
 }
 
-/**
- * {@link Section} copy constructor
+/*!
+ * \ref Section copy constructor
  */
 Section::Section(const Section& section): _parameters(section._parameters) {
   // Nothing to do
@@ -46,8 +46,8 @@ Section::Section(const Section& section): _parameters(section._parameters) {
 // Constructors -
 
 // Destructors +
-/**
- * Section destructor
+/*!
+ * \ref Section destructor
  */
 Section::~Section() {
   // Nothing to do

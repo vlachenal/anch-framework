@@ -24,11 +24,11 @@ using std::string;
 using anch::resource::file::ResourceFileException;
 
 
-/**
- * {@link ResourceFileException} constructor
+/*!
+ * \ref ResourceFileException constructor
  *
- * @param filePath The file path
- * @param error The error
+ * \param filePath The file path
+ * \param error The error
  */
 ResourceFileException::ResourceFileException(const std::string& filePath,
 					     const std::string& error) {
@@ -36,19 +36,19 @@ ResourceFileException::ResourceFileException(const std::string& filePath,
     + string(" treatment: ") + error;
 }
 
-/**
- * {@link ResourceFileException} destructor
+/*!
+ * \ref ResourceFileException destructor
  */
-ResourceFileException::~ResourceFileException() throw() {
+ResourceFileException::~ResourceFileException() noexcept {
   // Nothing to do
 }
 
-/**
+/*!
  * Retrieve the complete error message
  *
- * @return The error message
+ * \return The error message
  */
 const char*
-ResourceFileException::what() const throw() {
+ResourceFileException::what() const noexcept {
   return _message.data();
 }
