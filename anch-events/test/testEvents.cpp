@@ -39,8 +39,8 @@ public:
   };
 
 public:
-  virtual void notify(const Event& event) const throw() {
-    cout << "Observer " << getIdentifier() << " receive event: " << event.str() << endl;
+  virtual void notify(const Event& event) noexcept {
+    cout << "Observer receive event: " << event.str() << endl;
   };
 
 };
@@ -84,14 +84,6 @@ main(void) {
   cout << "Notify" << endl;
   // Send event +
   handler.notifyObservers(Event("TITITITITITI"));
-  // Send event -
-
-  cout << "Remove observer by identifier" << endl;
-  handler.removeObserver(obs5.getIdentifier());
-
-  cout << "Notify" << endl;
-  // Send event +
-  handler.notifyObservers(Event("TATATATATATA"));
   // Send event -
 
   return 0;

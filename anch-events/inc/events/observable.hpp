@@ -21,7 +21,7 @@
 #define _ANCH_EVENTS_OBSERVABLE_H_
 
 #include <mutex>
-#include <map>
+#include <set>
 
 #include "events/observer.hpp"
 
@@ -29,39 +29,36 @@
 namespace anch {
   namespace events {
 
-    /**
+    /*!
      * Class observable implementation of the observers/observable design pattern
      *
-     * @author Vincent Lachenal
+     * \author Vincent Lachenal
      */
-    template<typename T>
+    template<typename Event>
     class Observable {
 
     private:
       // Attributes +
-      /** Observers */
-      std::map<uint16_t, const Observer<T>&> _observers;
+      /*! Observers list */
+      std::set<anch::events::Observer<Event>*, anch::events::ObserverAddrCompare<Event> > _observers;
 
-      /** Current identifier */
-      uint16_t _currentId;
-
-      /** Mutex */
+      /*! Mutex */
       std::mutex _mutex;
       // Attributes -
 
     public:
       // Constructors +
-      /**
-       * {@link Observable} default constructor
+      /*!
+       * \ref Observable default constructor
        */
-      Observable(): _observers(), _currentId(0), _mutex() {
+      Observable(): _observers(), _mutex() {
 	// Nothing to do
       }
       // Constructors -
 
       // Destructor +
-      /**
-       * {@link Observable} destructor
+      /*!
+       * \ref Observable destructor
        */
       virtual ~Observable() {
 	// Nothing to do
@@ -70,56 +67,40 @@ namespace anch {
 
     public:
       // Methods +
-      /**
+      /*!
        * Add observer for notifications
        *
-       * @param observer The observer to add
+       * \param observer The observer to add
        *
-       * @return <code>true</code> if observer has been added, <code>false</code> otherwise
+       * \return \c true if observer has been added, \c false otherwise
        */
-      bool addObserver(anch::events::Observer<T>& observer) {
+      bool addObserver(anch::events::Observer<Event>& observer) {
 	_mutex.lock();
-	bool added = false;
-	uint16_t obsId = observer.getIdentifier();
-	obsId = ++_currentId;
-	if(_observers.find(observer.getIdentifier()) == _observers.cend()) {
-	  _observers.insert(std::pair<uint16_t,const anch::events::Observer<T>&>(obsId, observer));
-	  added = true;
-	  observer.setIdentifier(obsId);
-	}
+	bool added = _observers.insert(&observer).second;
 	_mutex.unlock();
 	return added;
       }
 
-      /**
+      /*!
        * Remove observer for notifications
        *
-       * @param observer The observer to remove
+       * \param observer The observer to remove
        */
-      void removeObserver(const anch::events::Observer<T>& observer) {
+      void removeObserver(anch::events::Observer<Event>& observer) {
 	_mutex.lock();
-	_observers.erase(observer.getIdentifier());
+	_observers.erase(&observer);
 	_mutex.unlock();
       }
 
-      /**
-       * Remove observer for notifications according to its identifier
-       *
-       * @param observerId The observer identifier to remove
-       */
-      void removeObserver(const uint16_t observerId) {
-	_mutex.lock();
-	_observers.erase(observerId);
-	_mutex.unlock();
-      }
-
-      /**
+      /*!
        * Notify every observer that an event has been fired
+       *
+       * \param event the event to fire
        */
-      void notifyObservers(const T& event) {
+      void notifyObservers(const Event& event) {
 	_mutex.lock();
-	for(auto iter = _observers.begin() ; iter != _observers.end() ; ++iter) {
-	  iter->second.notify(event);
+	for(anch::events::Observer<Event>* observer : _observers) {
+	  observer->notify(event);
 	}
 	_mutex.unlock();
       }

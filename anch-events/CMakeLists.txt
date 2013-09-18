@@ -23,7 +23,7 @@ endif()
 # Check GCC version -
 
 # Add GCC definitions
-add_definitions("-Wall -Werror")
+add_definitions("-Wall -Wextra -Werror")
 
 # Include librairies
 include(FindThreads)
@@ -36,26 +36,66 @@ include_directories(
 
 if(ANCH_EVENTS_UNITARY_TEST)
 
-  # Build parser unitary test +
+  # Build observer/observable unitary test +
   file(
     GLOB_RECURSE
-    test_files
+    observ_files
     inc/*
     test/testEvents.cpp
   )
 
   add_executable(
-    anch-events-test
-    ${test_files}
+    anch-observ-test
+    ${observ_files}
   )
 
   target_link_libraries(
-    anch-events-test
+    anch-observ-test
     ${CMAKE_THREAD_LIBS_INIT}
   )
-  # Build parser unitary test -
+  # Build observer/observable unitary test -
+
+  # Build event handler unitary test +
+  file(
+    GLOB_RECURSE
+    handler_files
+    inc/*
+    test/testMultiHandler.cpp
+  )
+
+  add_executable(
+    anch-handlers-test
+    ${handler_files}
+  )
+
+  target_link_libraries(
+    anch-handlers-test
+    ${CMAKE_THREAD_LIBS_INIT}
+  )
+  # Build event handler unitary test -
+
+  # Build event bus unitary test +
+  file(
+    GLOB_RECURSE
+    bus_files
+    inc/*
+    test/testEventBus.cpp
+  )
+
+  add_executable(
+    anch-event-bus-test
+    ${bus_files}
+  )
+
+  target_link_libraries(
+    anch-event-bus-test
+    ${CMAKE_THREAD_LIBS_INIT}
+  )
+  # Build event bus unitary test -
 
   enable_testing()
-  add_test(anch-events-test ${EXECUTABLE_OUTPUT_PATH}/anch-events-test main)
+  add_test(anch-observ-test ${EXECUTABLE_OUTPUT_PATH}/anch-observ-test main)
+  add_test(anch-handlers-test ${EXECUTABLE_OUTPUT_PATH}/anch-handlers-test main)
+  add_test(anch-event-bus-test ${EXECUTABLE_OUTPUT_PATH}/anch-event-bus-test main)
 
 endif(ANCH_EVENTS_UNITARY_TEST)

@@ -20,53 +20,52 @@
 #ifndef _ANCH_EVENTS_OSERVER_H_
 #define _ANCH_EVENTS_OSERVER_H_
 
+#include <cstdint>
+
+
 namespace anch {
   namespace events {
 
-    /**
-     * Observer abstract class.<br>
+    /*!
+     * Observer abstract class.\n
      * It has to be implemented to handle events correctly.
      *
-     * @author Vincent Lachenal
+     * \author Vincent Lachenal
      */
-    template<typename T>
+    template<typename Event>
     class Observer {
-
-    private:
-      /** Observer identifier */
-      uint16_t _identifier;
 
     public:
       // Methods +
-      /**
+      /*!
        * Receive event notification
        *
-       * @param event The event to receive
+       * \param event The event to receive
        */
-      virtual void notify(const T& event) const throw() = 0;
+      virtual void notify(const Event& event) noexcept = 0;
       // Methods -
 
-    public:
-      // Accessors +
-      /**
-       * Observer identifier getter
-       *
-       * @return The observer identifier
-       */
-      inline uint16_t getIdentifier() const {
-	return _identifier;
-      }
+    };
 
-      /**
-       * Observer identifier setter
+    /*!
+     * \ref Observer comparator based on instance address
+     *
+     * \author Vincent Lachenal
+     */
+    template<typename Event>
+    struct ObserverAddrCompare {
+      /*!
+       * Address comparison operator.
        *
-       * @param identifier The observer identifier to set
+       * \param first the first \ref Observer
+       * \param second the second \ref Observer
+       *
+       * \return \c true if first address is less than second, \c false otherwise
        */
-      inline void setIdentifier(uint16_t  identifier) {
-	_identifier = identifier;
+      bool operator() (const anch::events::Observer<Event>* const first,
+		       const anch::events::Observer<Event>* const second) const {
+	return first < second;
       }
-      // Accessors -
-
     };
 
   }
