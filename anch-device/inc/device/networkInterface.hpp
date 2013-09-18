@@ -30,129 +30,129 @@
 namespace anch {
   namespace device {
 
-    /**
+    /*!
      * Network interface
      *
-     * @author Vincent Lachenal
+     * \author Vincent Lachenal
      */
     class NetworkInterface {
     private:
       // Attributes +
-      /** Interface name */
+      /*! Interface name */
       std::string _name;
 
-      /** Interface IPV4 address */
+      /*! Interface IPV4 address */
       std::string _ipAddress;
 
-      /** Hardware address */
+      /*! Hardware address */
       std::string _macAddress;
 
-      /** Interface broadcast address */
+      /*! Interface broadcast address */
       std::string _broadcastAddress;
 
-      /** Interface netmask */
+      /*! Interface netmask */
       std::string _netmask;
 
-      /** Interface MTU */
+      /*! Interface MTU */
       int _mtu;
 
-      /** Interface metric */
+      /*! Interface metric */
       int _metric;
 
-      /** Interface is local loopback */
+      /*! Interface is local loopback */
       bool _localhost;
       // Attributes -
 
     public:
       // Constructor +
-      /**
-       * {@link NetworkInterface} constructor.
+      /*!
+       * \ref NetworkInterface constructor.
        *
-       * @param interface Data retrieved through <code>ioctl</code> POSIX call
-       * @param isLocalhost Interface is local loopback
+       * \param interface data retrieved through \c ioctl POSIX call
+       * \param isLocalhost interface is local loopback
        *
-       * @throw anch::device::DeviceException Device error
+       * \throw anch::device::DeviceException Device error
        */
       NetworkInterface(const struct ifreq& interface, bool isLocalhost)
 	throw(anch::device::DeviceException);
       // Constructor -
 
       // Destructor +
-      /**
-       * {@link NetworkInterface} destructor
+      /*!
+       * \ref NetworkInterface destructor
        */
       virtual ~NetworkInterface();
       // Destructor -
 
     public:
       // Accessors +
-      /**
+      /*!
        * Interface name getter
        *
-       * @return The interface name
+       * \return The interface name
        */
       inline const std::string& getName() const {
 	return _name;
       }
 
-      /**
+      /*!
        * Interface IP address getter
        *
-       * @return The interface IP address
+       * \return The interface IP address
        */
       inline const std::string& getIpAddress() const {
 	return _ipAddress;
       }
 
-      /**
+      /*!
        * MAC address getter
        *
-       * @return The MAC address
+       * \return The MAC address
        */
       inline const std::string& getMacAddress() const {
 	return _macAddress;
       }
 
-      /**
+      /*!
        * Interface broadcast address getter
        *
-       * @return The interface broadcast address
+       * \return The interface broadcast address
        */
       inline const std::string& getBroadcastAddress() const {
 	return _broadcastAddress;
       }
 
-      /**
+      /*!
        * Interface netmask getter
        *
-       * @return The interface netmask
+       * \return The interface netmask
        */
       inline const std::string& getNetmask() const {
 	return _netmask;
       }
 
-      /**
+      /*!
        * Interface MTU getter
        *
-       * @return The interface MTU
+       * \return The interface MTU
        */
       inline int getMtu() const {
 	return _mtu;
       }
 
-      /**
+      /*!
        * Interface metric getter
        *
-       * @return The interface metric
+       * \return The interface metric
        */
       inline int getMetric() const {
 	return _metric;
       }
 
-      /**
+      /*!
        * Is interface localhost getter
        *
-       * @return <code>true</code> if interface is localhost, <code>false</code> otherwise
+       * \return \c true if interface is localhost, \c false otherwise
        */
       inline bool isLocalhost() const {
 	return _localhost;

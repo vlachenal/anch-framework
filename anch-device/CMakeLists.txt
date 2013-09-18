@@ -23,7 +23,7 @@ endif()
 # Check GCC version -
 
 # Add GCC definitions
-add_definitions("-Wall -Werror")
+add_definitions("-Wall -Wextra -Werror")
 
 # Includes location
 include_directories(

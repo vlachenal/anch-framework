@@ -50,7 +50,7 @@ map<string,NetworkInterface>* Network::_interfaces = NULL;
 
 
 // Constructors +
-/**
+/*!
  * Network configuration private constructor
  */
 Network::Network() {
@@ -59,7 +59,7 @@ Network::Network() {
 // Constructors -
 
 // Destructor +
-/**
+/*!
  * Network configuration destructor
  */
 Network::~Network() {
@@ -70,19 +70,19 @@ Network::~Network() {
 // Destructor -
 
 // Methods +
-/**
+/*!
  * Retrieve network interface by its name.
  *
- * @param ifName The interface name
+ * \param ifName The interface name
  *
- * @return The interface if found, <code>NULL</code> otherwise
+ * \return The interface if found, \c NULL otherwise
  *
- * @throw DeviceException Network interfaces error
+ * \throw DeviceException Network interfaces error
  */
-const NetworkInterface* const
+const NetworkInterface*
 Network::getInterface(const string& ifName) throw(DeviceException) {
+  std::lock_guard<mutex> lock(MUTEX);
   const NetworkInterface* interface = NULL;
-  MUTEX.lock();
   if(_interfaces == NULL) {
     load();
   }
@@ -90,47 +90,43 @@ Network::getInterface(const string& ifName) throw(DeviceException) {
   if(iter != _interfaces->cend()) {
     interface = &(iter->second);
   }
-  MUTEX.unlock();
   return interface;
 }
 
-/**
+/*!
  * Retrieve all network interfaces.
  *
- * @return The network interfaces
+ * \return The network interfaces
  *
- * @throw DeviceException Network interfaces error
+ * \throw DeviceException Network interfaces error
  */
 const map<string,NetworkInterface>&
 Network::getInterfaces() throw(DeviceException) {
-  MUTEX.lock();
+  std::lock_guard<mutex> lock(MUTEX);
   if(_interfaces == NULL) {
     load();
   }
-  MUTEX.unlock();
   return *_interfaces;
 }
 
-/**
+/*!
  * Reload network interfaces
  *
- * @throw DeviceException Network interfaces error
+ * \throw DeviceException Network interfaces error
  */
 void
 Network::reload() throw(DeviceException) {
-  MUTEX.lock();
+  std::lock_guard<mutex> lock(MUTEX);
   if(_interfaces != NULL) {
     _interfaces->clear();
   }
   load();
-  MUTEX.unlock();
 }
 
-
-/**
+/*!
  * Load network interfaces
  *
- * @throw DeviceException Network interfaces error
+ * \throw DeviceException Network interfaces error
  */
 void
 Network::load() throw(DeviceException) {
@@ -154,6 +150,7 @@ Network::load() throw(DeviceException) {
   request.ifc_buf = buffer;
   int ret = ::ioctl(sock, SIOCGIFCONF, &request);
   if(ret < 0) {
+    ::close(sock);
     throw DeviceException("Error while retrieving interfaces configuration",ret);
   }
   // Request for interfaces configuration -

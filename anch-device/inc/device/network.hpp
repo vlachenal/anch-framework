@@ -31,25 +31,25 @@
 namespace anch {
   namespace device {
 
-    /**
+    /*!
      * Network device utilities class
      *
-     * @author Vincent Lachenal
+     * \author Vincent Lachenal
      */
     class Network {
 
     private:
       // Attributes +
-      /** Network interfaces indexed by their names */
+      /*! Network interfaces indexed by their names */
       static std::map<std::string,anch::device::NetworkInterface>* _interfaces;
 
-      /** Mutex */
+      /*! Mutex */
       static std::mutex MUTEX;
       // Attributes -
 
     private:
       // Constructors +
-      /**
+      /*!
        * Network configuration private constructor
        */
       Network();
@@ -57,7 +57,7 @@ namespace anch {
 
     public:
       // Destructors +
-      /**
+      /*!
        * Network configuration destructor
        */
       virtual ~Network();
@@ -65,40 +65,40 @@ namespace anch {
 
     public:
       // Methods +
-      /**
+      /*!
        * Retrieve network interface by its name.
        *
-       * @param ifName The interface name
+       * \param ifName the interface name
        *
-       * @return The interface if found, <code>NULL</code> otherwise
+       * \return the interface if found, \c NULL otherwise
        *
-       * @throw anch::device::DeviceException Network interfaces error
+       * \throw anch::device::DeviceException Network interfaces error
        */
-      static const anch::device::NetworkInterface* const getInterface(const std::string& ifName)
+      static const anch::device::NetworkInterface* getInterface(const std::string& ifName)
 	throw(anch::device::DeviceException);
 
-      /**
+      /*!
        * Retrieve all network interfaces.
        *
-       * @return The network interfaces
+       * \return the network interfaces
        *
-       * @throw anch::device::DeviceException Network interfaces error
+       * \throw anch::device::DeviceException Network interfaces error
        */
       static const std::map<std::string,anch::device::NetworkInterface>& getInterfaces()
 	throw(anch::device::DeviceException);
 
-      /**
+      /*!
        * Reload network interfaces
        *
-       * @throw anch::device::DeviceException Network interfaces error
+       * \throw anch::device::DeviceException Network interfaces error
        */
       static void reload() throw(anch::device::DeviceException);
 
     private:
-      /**
+      /*!
        * Load network interfaces
        *
-       * @throw anch::device::DeviceException Network interfaces error
+       * \throw anch::device::DeviceException Network interfaces error
        */
       static void load() throw(anch::device::DeviceException);
       // Methods -

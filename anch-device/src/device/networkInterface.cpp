@@ -32,13 +32,13 @@ using anch::device::DeviceException;
 
 
 // Constructors +
-/**
- * {@link NetworkInterface} constructor.
+/*!
+ * \ref NetworkInterface constructor.
  *
- * @param interface Data retrieved through <code>ioctl</code> POSIX call
- * @param isLocalhost Interface is local loopback
+ * \param interface Data retrieved through <code>ioctl</code> POSIX call
+ * \param isLocalhost Interface is local loopback
  *
- * @throw DeviceException Device error
+ * \throw DeviceException Device error
  */
 NetworkInterface::NetworkInterface(const struct ifreq& interface, bool isLocalhost)
   throw(DeviceException) {
@@ -54,11 +54,13 @@ NetworkInterface::NetworkInterface(const struct ifreq& interface, bool isLocalho
 
   int ret = ::ioctl(sock, SIOCGIFFLAGS, &interface);
   if(ret < 0) {
+    ::close(sock);
     throw DeviceException("Error while retrieving flags for interface " + _name,ret);
   }
   // IP address +
   ret = ::ioctl(sock, SIOCGIFADDR, &interface);
   if(ret < 0) {
+    ::close(sock);
     throw DeviceException("Error while retrieving IP address for interface " + _name,ret);
   }
   _ipAddress = inet_ntoa(((sockaddr_in *)&(interface.ifr_addr))->sin_addr);
@@ -66,6 +68,7 @@ NetworkInterface::NetworkInterface(const struct ifreq& interface, bool isLocalho
   // MTU +
   ret = ::ioctl(sock, SIOCGIFMTU, &interface);
   if(ret < 0) {
+    ::close(sock);
     throw DeviceException("Error while retrieving MTU for interface " + _name,ret);
   }
   _mtu = interface.ifr_mtu;
@@ -73,6 +76,7 @@ NetworkInterface::NetworkInterface(const struct ifreq& interface, bool isLocalho
   // MAC address +
   ret = ::ioctl(sock, SIOCGIFHWADDR, &interface);
   if(ret < 0) {
+    ::close(sock);
     throw DeviceException("Error while retrieving hardware address for interface " + _name,ret);
   }
   char buffer[17];
@@ -88,6 +92,7 @@ NetworkInterface::NetworkInterface(const struct ifreq& interface, bool isLocalho
   // Broadcast address +
   ret = ::ioctl(sock, SIOCGIFBRDADDR, &interface);
   if(ret < 0) {
+    ::close(sock);
     throw DeviceException("Error while retrieving broadcast address for interface " + _name,ret);
   }
   _broadcastAddress = inet_ntoa(((sockaddr_in*)&(interface.ifr_broadaddr))->sin_addr);
@@ -95,6 +100,7 @@ NetworkInterface::NetworkInterface(const struct ifreq& interface, bool isLocalho
   // Netmask +
   ret = ::ioctl(sock, SIOCGIFNETMASK, &interface);
   if(ret < 0) {
+    ::close(sock);
     throw DeviceException("Error while retrieving netmask for interface " + _name,ret);
   }
   _netmask = inet_ntoa(((sockaddr_in*)&(interface.ifr_netmask))->sin_addr);
@@ -110,8 +116,8 @@ NetworkInterface::NetworkInterface(const struct ifreq& interface, bool isLocalho
 
 
 // Destructor +
-/**
- * {@link NetworkInterface} destructor
+/*!
+ * \ref NetworkInterface destructor
  */
 NetworkInterface::~NetworkInterface() {
   // Nothing to do
