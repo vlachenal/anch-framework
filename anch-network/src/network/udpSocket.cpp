@@ -32,19 +32,19 @@ using anch::network::IOException;
 
 
 // Constructors +
-/**
- * {@link UdpSocket} default constructor
+/*!
+ * \ref UdpSocket default constructor
  */
 UdpSocket::UdpSocket():
   Socket(SocketType::UDP) {
   // Nothing to do
 }
 
-/**
- * {@link UdpSocket} constructor
+/*!
+ * \ref UdpSocket constructor
  *
- * @param ipAddress The IP address
- * @param port The port number
+ * \param ipAddress The IP address
+ * \param port The port number
  */
 UdpSocket::UdpSocket(const string& ipAddress, uint16_t port) throw(IOException):
   Socket(ipAddress, port, SocketType::UDP) {
@@ -53,56 +53,56 @@ UdpSocket::UdpSocket(const string& ipAddress, uint16_t port) throw(IOException):
 // Constructors -
 
 // Destructors +
-/**
- * {@link UdpSocket} destructor
+/*!
+ * \ref UdpSocket} destructor
  */
-UdpSocket::~UdpSocket() throw() {
+UdpSocket::~UdpSocket() noexcept {
   // Nothing to do
 }
 // Destructors -
 
 
 // Methods +
-/**
+/*!
  * Listen on socket
  *
- * @throw anch::network::IOException Error while listening on the socket
+ * \throw anch::network::IOException Error while listening on the socket
  */
 void
 UdpSocket::listen() throw(IOException) {
   // Nothing to do
 }
 
-/**
- * Accept client connection.<br>
+/*!
+ * Accept client connection.\n
  * This method do nothing since UDP is not connected
  *
- * @param socket The socket which describes client connection
+ * \param socket The socket which describes client connection
  *
- * @throw anch::network::IOException Never on UDP socket
+ * \throw anch::network::IOException Never on UDP socket
  */
 void
-UdpSocket::accept(Socket& socket) throw(IOException) {
+UdpSocket::accept(Socket& socket __attribute__((unused))) throw(IOException) {
   // Nothing to do
 }
 
-/**
- * Connect to remote socket.<br>
+/*!
+ * Connect to remote socket.\n
  * This method do nothing since UDP is not connected.
  *
- * @throw anch::network::IOException Never on UDP socket
+ * \throw anch::network::IOException Never on UDP socket
  */
 void
 UdpSocket::connect() throw(IOException) {
   // Nothing to do
 }
 
-/**
+/*!
  * Send a message on socket
  *
- * @param message The message to send
+ * \param message The message to send
  *
- * @throw anch::network::IOException Network error while sending message
+ * \throw anch::network::IOException Network error while sending message
  */
 void
 UdpSocket::send(const string& message) throw(IOException) {
@@ -117,12 +117,12 @@ UdpSocket::send(const string& message) throw(IOException) {
   }
 }
 
-/**
+/*!
  * Send a message on socket
  *
- * @param message The message to send
+ * \param message The message to send
  *
- * @throw anch::network::IOException Network error while sending message
+ * \throw anch::network::IOException Network error while sending message
  */
 void
 UdpSocket::send(const string& message, const sockaddr_storage& peerAddr)
@@ -138,12 +138,12 @@ UdpSocket::send(const string& message, const sockaddr_storage& peerAddr)
   }
 }
 
-/**
+/*!
  * Receive a message on socket
  *
- * @param message The string where to write the message
+ * \param message The string where to write the message
  *
- * @throw anch::network::IOException Network error while receiving message
+ * \throw anch::network::IOException Network error while receiving message
  */
 void
 UdpSocket::receive(string& message) throw(IOException) {
@@ -169,20 +169,20 @@ UdpSocket::receive(string& message) throw(IOException) {
 
 
 // Accessors +
-/**
+/*!
  * Get the socket domain
  *
- * @return The POSIX socket domain
+ * \return The POSIX socket domain
  */
 int
 UdpSocket::getDomain() const {
   return AF_INET;
 }
 
-/**
+/*!
  * Get the socket service type
  *
- * @return The POSIX socket service type
+ * \return The POSIX socket service type
  */
 int
 UdpSocket::getType() const {

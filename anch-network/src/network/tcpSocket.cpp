@@ -36,8 +36,8 @@ const int BUFFER_SIZE = 1024;
 
 
 // Constructors +
-/**
- * {@link TcpSocket} default constructor
+/*!
+ * \ref TcpSocket default constructor
  */
 TcpSocket::TcpSocket():
   Socket(SocketType::TCP) {
@@ -45,10 +45,10 @@ TcpSocket::TcpSocket():
 }
 
 /**
- * {@link TcpSocket} constructor
+ * \ref TcpSocket constructor
  *
- * @param ipAddress The IP address
- * @param port The port number
+ * \param ipAddress The IP address
+ * \param port The port number
  */
 TcpSocket::TcpSocket(const string& ipAddress, uint16_t port) throw(IOException):
   Socket(ipAddress, port, SocketType::TCP) {
@@ -57,22 +57,22 @@ TcpSocket::TcpSocket(const string& ipAddress, uint16_t port) throw(IOException):
 // Constructors -
 
 // Destructors +
-/**
- * {@link TcpSocket} destructor
+/*!
+ * \ref TcpSocket destructor
  */
-TcpSocket::~TcpSocket() throw() {
+TcpSocket::~TcpSocket() noexcept {
   // Nothing to do
 }
 // Destructors -
 
 
 // Methods +
-/**
+/*!
  * Send a message on socket
  *
- * @param message The message to send
+ * \param message The message to send
  *
- * @throw anch::network::IOException Network error while sending message
+ * \throw anch::network::IOException Network error while sending message
  */
 void
 TcpSocket::send(const string& message) throw(IOException) {
@@ -82,12 +82,12 @@ TcpSocket::send(const string& message) throw(IOException) {
   }
 }
 
-/**
+/*!
  * Receive a message on socket
  *
- * @param message The string where to write the message
+ * \param message The string where to write the message
  *
- * @throw anch::network::IOException Network error while receiving message
+ * \throw anch::network::IOException Network error while receiving message
  */
 void
 TcpSocket::receive(string& message) throw(IOException) {
@@ -113,20 +113,20 @@ TcpSocket::receive(string& message) throw(IOException) {
 
 
 // Accessors +
-/**
+/*!
  * Get the socket domain
  *
- * @return The POSIX socket domain
+ * \return The POSIX socket domain
  */
 int
 TcpSocket::getDomain() const {
   return AF_INET;
 }
 
-/**
+/*!
  * Get the socket service type
  *
- * @return The POSIX socket service type
+ * \return The POSIX socket service type
  */
 int
 TcpSocket::getType() const {

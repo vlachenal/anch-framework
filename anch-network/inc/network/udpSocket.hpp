@@ -26,10 +26,10 @@
 namespace anch {
   namespace network {
 
-    /**
+    /*!
      * UDP socket implementation
      *
-     * @author Vincent Lachenal
+     * \author Vincent Lachenal
      */
     class UdpSocket: public Socket {
 
@@ -39,100 +39,100 @@ namespace anch {
 
     public:
       // Constructors +
-      /**
-       * {@link UdpSocket} default constructor
+      /*!
+       * \ref UdpSocket default constructor
        */
       UdpSocket();
 
-      /**
-       * {@link UdpSocket} constructor
+      /*!
+       * \ref UdpSocket constructor
        *
-       * @param ipAddress The IP address
-       * @param port The port number
+       * \param ipAddress The IP address
+       * \param port The port number
        *
-       * @throw anch::network::IOException Error while creating the socket
+       * \throw anch::network::IOException Error while creating the socket
        */
       UdpSocket(const std::string& ipAddress, uint16_t port)
 	throw(anch::network::IOException);
       // Constructors -
 
       // Destructors +
-      /**
-       * {@link UdpSocket} destructor
+      /*!
+       * \ref UdpSocket destructor
        */
-      virtual ~UdpSocket() throw();
+      virtual ~UdpSocket() noexcept;
       // Destructors -
 
     public:
       // Methods +
-      /**
+      /*!
        * Listen on socket
        *
-       * @throw anch::network::IOException Error while listening on the socket
+       * \throw anch::network::IOException Error while listening on the socket
        */
       virtual void listen() throw(anch::network::IOException);
 
-      /**
-       * Connect to remote socket.<br>
+      /*!
+       * Connect to remote socket.\n
        * This method do nothing since UDP is not connected.
        *
-       * @throw anch::network::IOException Never on UDP socket
+       * \throw anch::network::IOException Never on UDP socket
        */
       virtual void connect() throw(anch::network::IOException);
 
-      /**
-       * Accept client connection.<br>
+      /*!
+       * Accept client connection.\n
        * This method do nothing since UDP is not connected
        *
-       * @param socket The socket which describes client connection
+       * \param socket The socket which describes client connection
        *
-       * @throw anch::network::IOException Never on UDP socket
+       * \throw anch::network::IOException Never on UDP socket
        */
       virtual void accept(Socket& socket) throw(anch::network::IOException);
 
-      /**
+      /*!
        * Send a message on socket
        *
-       * @param message The message to send
+       * \param message The message to send
        *
-       * @throw anch::network::IOException Network error while sending message
+       * \throw anch::network::IOException Network error while sending message
        */
       virtual void send(const std::string& message) throw(anch::network::IOException);
 
-      /**
+      /*!
        * Send a message on socket
        *
-       * @param message The message to send
-       * @param peerAddr The address where the message has to be sent
+       * \param message The message to send
+       * \param peerAddr The address where the message has to be sent
        *
-       * @throw anch::network::IOException Network error while sending message
+       * \throw anch::network::IOException Network error while sending message
        */
       virtual void send(const std::string& message,
 			const sockaddr_storage& peerAddr)
 	throw(anch::network::IOException);
 
-      /**
+      /*!
        * Receive a message on socket
        *
-       * @param message The string where to write the message
+       * \param message The string where to write the message
        *
-       * @throw anch::network::IOException Network error while receiving message
+       * \throw anch::network::IOException Network error while receiving message
        */
       virtual void receive(std::string& message) throw(anch::network::IOException);
       // Methods -
 
       // Accessors +
-      /**
+      /*!
        * Get the socket domain
        *
-       * @return The POSIX socket domain
+       * \return The POSIX socket domain
        */
       virtual int getDomain() const;
 
-      /**
+      /*!
        * Get the socket service type
        *
-       * @return The POSIX socket service type
+       * \return The POSIX socket service type
        */
       virtual int getType() const;
       // Accessors -

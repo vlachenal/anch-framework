@@ -47,104 +47,92 @@ typedef struct sockaddr SOCKADDR;
 namespace anch {
   namespace network {
 
-    /**
+    /*!
      * Socket type enumerations
      *
-     * @author Vincent Lachenal
+     * \author Vincent Lachenal
      */
     enum SocketType {
-      /** Unknown socket */
+      /*! Unknown socket */
       UNKNOWN = 0,
 
-      /** TCP socket */
+      /*! TCP socket */
       TCP,
 
-      /** UDP socket */
+      /*! UDP socket */
       UDP,
 
 #ifdef ANCH_POSIX
-      /** POSIX socket (not available for Microsoft Windows TM operating system) */
+      /*! POSIX socket (not available for Microsoft Windows TM operating system) */
       POSIX,
 #endif
     };
 
-  }
-}
-
-namespace anch {
-  namespace network {
-
-    /**
-     * Socket direction.<br>
+    /*!
+     * Socket direction.\n
      * Usefull for shutdown method.
      *
-     * @author Vincent Lachenal
+     * \author Vincent Lachenal
      */
     enum Direction {
-      /** Reception */
+      /*! Reception */
       RECEPTION = 0,
 
-      /** Transmission */
+      /*! Transmission */
       TRANSMISSION = 1,
 
-      /** Reception and transmission */
+      /*! Reception and transmission */
       BOTH = 2,
     };
 
-  }
-}
-
-namespace anch {
-  namespace network {
-
-    /**
+    /*!
      * Network socket management class
      *
-     * @author Vincent Lachenal
+     * \author Vincent Lachenal
      */
     class Socket : public anch::events::Observable<anch::network::SocketEvent> {
 
     private:
       // Attributes +
-      /** IP address */
+      /*! IP address */
       std::string _ipAddress;
 
-      /** Destination port */
+      /*! Destination port */
       uint16_t _port;
 
-      /** The socket type */
+      /*! The socket type */
       SocketType _type;
 
     protected:
-      /** The socket */
+      /*! The socket */
       SOCKET _sock;
 
-      /** The number of connection in waiting state */
+      /*! The number of connection in waiting state */
       int _backlog;
 
-      /** The address informations */
+      /*! The address informations */
       addrinfo* _address;
       // Attributes -
 
       // Constructors +
     protected:
-      /**
-       * {@link Socket} constructor.
+      /*!
+       * \ref Socket constructor.
        *
-       * @param type The socket type
+       * \param type The socket type
        */
       Socket(anch::network::SocketType type);
 
     public:
-      /**
-       * {@link Socket} constructor.
+      /*!
+       * \ref Socket constructor.\n
        * Backlog is set to 5 by default. You can change it using the setter before call listen method.
        *
-       * @param ipAddress IP address
-       * @param port Destination port
-       * @param type The socket type
+       * \param ipAddress IP address
+       * \param port Destination port
+       * \param type The socket type
        *
-       * @throw anch::network::IOException Error while creating the socket
+       * \throw anch::network::IOException Error while creating the socket
        */
       Socket(const std::string& ipAddress,
 	     uint16_t port,
@@ -153,168 +141,169 @@ namespace anch {
       // Constructors -
 
       // Destructor +
-      /**
-       * {@link Socket} destructor
+      /*!
+       * \ref Socket destructor
        */
-      virtual ~Socket() throw();
+      virtual ~Socket() noexcept;
       // Destructor -
 
     public:
       // Methods +
-      /**
+      /*!
        * Bind socket
        *
-       * @throw anch::network::IOException Error while binding the socket
+       * \throw anch::network::IOException Error while binding the socket
        */
       virtual void bind() throw(anch::network::IOException);
 
-      /**
+      /*!
        * Connect to remote socket
        *
-       * @throw anch::network::IOException Error while connectin the client socket to the server socket
+       * \throw anch::network::IOException Error while connectin the client socket to the server socket
        */
       virtual void connect() throw(anch::network::IOException);
 
-      /**
+      /*!
        * Listen on socket
        *
-       * @throw anch::network::IOException Error while listening on the socket
+       * \throw anch::network::IOException Error while listening on the socket
        */
       virtual void listen() throw(anch::network::IOException);
 
-      /**
+      /*!
        * Accept client connection
        *
-       * @param socket The socket which describes client connection
+       * \param socket The socket which describes client connection
        *
-       * @throw anch::network::IOException Error while accepting client connection
+       * \throw anch::network::IOException Error while accepting client connection
        */
       virtual void accept(Socket& socket) throw(anch::network::IOException);
 
-      /**
+      /*!
        * Send a message on socket
        *
-       * @param message The message to send
+       * \param message The message to send
        *
-       * @throw anch::network::IOException Network error while sending message
+       * \throw anch::network::IOException Network error while sending message
        */
       virtual void send(const std::string& message) throw(anch::network::IOException) = 0;
 
-      /**
+      /*!
        * Receive a message on socket
        *
-       * @param message The messages which has been received
+       * \param message The messages which has been received
        *
-       * @throw anch::network::IOException Network error while receiving message
+       * \throw anch::network::IOException Network error while receiving message
        */
       virtual void receive(std::string& message) throw(anch::network::IOException) = 0;
 
-      /**
+      /*!
        * Receive a message on socket
        *
-       * @throw anch::network::IOException Network error while receiving message
+       * \throw anch::network::IOException Network error while receiving message
        */
       virtual void receive() throw(anch::network::IOException);
 
-      /**
-       * Shutdown data flow between client and server.<br>
+      /*!
+       * Shutdown data flow between client and server.\n
        * This method has to be called by server.
        *
-       * @param how Direction of the data flow which has to be closed
+       * \param how Direction of the data flow which has to be closed
        *
-       * @throw anch::network::IOException Network error while shutting down data transfer
+       * \throw anch::network::IOException Network error while shutting down data transfer
        */
       virtual void shutdown(anch::network::Direction how = anch::network::Direction::BOTH)
 	throw(anch::network::IOException);
 
-      /**
+      /*!
        * Close the socket
        */
-      virtual void close() throw();
+      virtual void close() noexcept;
       // Methods -
 
     public:
       // Accessors +
-      /**
+      /*!
        * Get the socket domain
        *
-       * @return The POSIX socket domain
+       * \return The POSIX socket domain
        */
       virtual int getDomain() const = 0;
 
-      /**
+      /*!
        * Get the socket service type
        *
-       * @return The POSIX socket service type
+       * \return The POSIX socket service type
        */
       virtual int getType() const = 0;
 
-      /**
+      /*!
        * IP address getter
        *
-       * @return The IP address
+       * \return The IP address
        */
       inline const std::string& getIpAddress() const {
 	return _ipAddress;
       }
 
-      /**
+      /*!
        * IP address setter
        *
-       * @param ipAddress The IP address to set
+       * \param ipAddress The IP address to set
        */
       inline void setIpAddress(const std::string& ipAddress) {
 	_ipAddress = ipAddress;
       }
-      /**
+
+      /*!
        * Destination port getter
        *
-       * @return The destination port
+       * \return The destination port
        */
       inline uint16_t getPort() const {
 	return _port;
       }
 
-      /**
+      /*!
        * Destination port setter
        *
-       * @param port The destination port to set
+       * \param port The destination port to set
        */
       inline void setIpAddress(uint16_t port) {
 	_port = port;
       }
 
-      /**
+      /*!
        * Socket type getter
        *
-       * @return The socket type
+       * \return The socket type
        */
       inline anch::network::SocketType getSocketType() const {
 	return _type;
       }
 
-      /**
+      /*!
        * Socket type setter
        *
-       * @param type The socket type to set
+       * \param type The socket type to set
        */
       inline void setSocketType(SocketType type) {
 	_type = type;
       }
 
-      /**
+      /*!
        * Backlog getter
        *
-       * @return The backlog
+       * \return The backlog
        */
       inline int getBacklog() const {
 	return _backlog;
       }
 
-      /**
+      /*!
        * Backlog setter
        *
-       * @param backlog The backlog to set
+       * \param backlog The backlog to set
        */
       inline void setBacklog(int backlog) {
 	_backlog = backlog;

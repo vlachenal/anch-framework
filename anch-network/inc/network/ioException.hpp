@@ -26,46 +26,46 @@
 namespace anch {
   namespace network {
 
-    /**
+    /*!
      * Network input/output error management by exception
      *
-     * @author Vincent Lachenal
+     * \author Vincent Lachenal
      */
     class IOException : public std::exception {
     private:
-      /** Error message */
+      /*! Error message */
       std::string _message;
 
     public:
       // Constructors +
-      /**
-       * {@link IOException} constructor
+      /*!
+       * \ref IOException constructor
        *
-       * @param message The error message
+       * \param message The error message
        */
       IOException(const std::string& message);
 
-      /**
-       * {@link IOException} constructor
+      /*!
+       * \ref IOException constructor
        *
-       * @param message The error message
-       * @param errorCode The error code (from <code>getinfoaddr</code>)
+       * \param message The error message
+       * \param errorCode The error code (from <code>getinfoaddr</code>)
        */
       IOException(const std::string& message, int errorCode);
       // Constructors -
 
       // Destructor +
-      /**
-       * {@link IOException} destructor
+      /*!
+       * \ref IOException destructor
        */
       virtual ~IOException() noexcept;
       // Destructor -
 
     public:
-      /**
+      /*!
        * Return the error message
        *
-       * @return The error message
+       * \return The error message
        */
       virtual const char* what() const noexcept;
 

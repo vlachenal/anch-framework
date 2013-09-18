@@ -30,20 +30,20 @@ using anch::network::IOException;
 
 
 // Constructors +
-/**
- * {@link IOException} constructor
+/*!
+ * \ref IOException constructor
  *
- * @param message The error message
+ * \param message The error message
  */
 IOException::IOException(const string& message): _message(message) {
   _message = message + ": " + sys_errlist[errno];
 }
 
-/**
- * {@link IOException} constructor
+/*!
+ * \ref IOException constructor
  *
- * @param message The error message
- * @param errorCode The error code (from <code>getinfoaddr</code>)
+ * \param message The error message
+ * \param errorCode The error code (from <code>getinfoaddr</code>)
  */
 IOException::IOException(const string& message, int errorCode) {
   _message = message + ": " + gai_strerror(errorCode);
@@ -51,21 +51,21 @@ IOException::IOException(const string& message, int errorCode) {
 // Constructors -
 
 // Destructor +
-/**
- * {@link IOException} destructor
+/*!
+ * \ref IOException destructor
  */
-IOException::~IOException() throw() {
+IOException::~IOException() noexcept {
   // Nothing to do
 }
 // Destructor -
 
 
-/**
+/*!
  * Return the error message
  *
- * @return The error message
+ * \return The error message
  */
 const char*
-IOException::what() const throw() {
+IOException::what() const noexcept {
   return _message.data();
 }

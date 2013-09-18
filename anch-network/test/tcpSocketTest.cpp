@@ -26,7 +26,7 @@ public:
   ~ServerObs() {};
 
 public:
-  virtual void notify(const SocketEvent& evt) const throw() {
+  virtual void notify(const SocketEvent& evt) noexcept {
     cout << "Server receive " + evt.getMessage() << endl;
   }
 
@@ -39,7 +39,7 @@ public:
   ~ClientObs() {};
 
 public:
-  virtual void notify(const SocketEvent& evt) const throw() {
+  virtual void notify(const SocketEvent& evt) noexcept {
     cout << "Client receive " + evt.getMessage() << endl;
   }
 

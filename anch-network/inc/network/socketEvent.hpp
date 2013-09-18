@@ -29,62 +29,62 @@
 namespace anch {
   namespace network {
 
-    /**
+    /*!
      * Socket event
      *
-     * @author Vincent Lachenal
+     * \author Vincent Lachenal
      */
     class SocketEvent {
 
     private:
       // Attributes +
-      /** The message received on socket */
+      /*! The message received on socket */
       std::string _message;
 
-      /** Sock address */
+      /*! Sock address */
       sockaddr_storage _address;
       // Attributes -
 
     public:
       // Constructors +
-      /**
-       * {@link SocketEvent} constructor
+      /*!
+       * \ref SocketEvent constructor
        *
-       * @param message The message received on socket
+       * \param message The message received on socket
        */
       SocketEvent(const std::string& message);
 
-      /**
-       * {@link SocketEvent} constructor
+      /*!
+       * \ref SocketEvent constructor
        *
-       * @param message The message received on socket
-       * @param address The address where the message has been sent
+       * \param message The message received on socket
+       * \param address The address where the message has been sent
        */
       SocketEvent(const std::string& message, const sockaddr_storage& address);
       // Constructors -
 
       // Destructor +
-      /**
-       * {@link SocketEvent} destructor
+      /*!
+       * \ref SocketEvent destructor
        */
       virtual ~SocketEvent();
       // Destructor -
 
     public:
       // Accessors +
-      /**
+      /*!
        * Get the event message
        *
-       * @return The message
+       * \return The message
        */
       inline const std::string& getMessage() const {
 	return _message;
       };
 
-      /**
+      /*!
        * Get the event message
        *
-       * @return The message
+       * \return The message
        */
       inline const sockaddr_storage& getAddress() const {
 	return _address;
