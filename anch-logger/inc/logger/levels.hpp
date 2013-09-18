@@ -26,41 +26,35 @@
 namespace anch {
   namespace logger {
 
-    /**
+    /*!
      * Logging levels definitions
      *
-     * @author Vincent Lachenal
+     * \author Vincent Lachenal
      */
     enum Level {
-      /** Trace logging level */
+      /*! Trace logging level */
       TRACE = 0,
 
-      /** Debug logging level */
+      /*! Debug logging level */
       DEBUG = 10,
 
-      /** Information logging level */
+      /*! Information logging level */
       INFO = 20,
 
-      /** Warning logging level */
+      /*! Warning logging level */
       WARN = 30,
 
-      /** Error logging level */
+      /*! Error logging level */
       ERROR = 40,
 
-      /** Fatal logging level */
+      /*! Fatal logging level */
       FATAL = 50
     };
 
-  }
-}
-
-namespace anch {
-  namespace logger {
-
-    /**
+    /*!
      * Level labels for logging facilities
      *
-     * @author Vincent Lachenal
+     * \author Vincent Lachenal
      */
     const std::map<const Level,const std::string> LEVEL_LABEL = {
       {Level::TRACE,"TRACE"},
@@ -71,16 +65,10 @@ namespace anch {
       {Level::FATAL,"FATAL"},
     };
 
-  }
-}
-
-namespace anch {
-  namespace logger {
-
-    /**
+    /*!
      * Level labels for logging facilities
      *
-     * @author Vincent Lachenal
+     * \author Vincent Lachenal
      */
     const std::map<const std::string,const Level> LABEL_LEVEL = {
       {"TRACE",Level::TRACE},

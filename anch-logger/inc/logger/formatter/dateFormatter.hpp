@@ -27,49 +27,50 @@ namespace anch {
   namespace logger {
     namespace formatter {
 
-      /**
+      /*!
        * String formatter
        *
-       * @author Vincent Lachenal
+       *\@author Vincent Lachenal
        */
       class DateFormatter: public anch::logger::formatter::IFormatter {
       private:
 	// Attributes +
+	/*! Date format pattern */
 	std::string _dateFormat;
 	// Attributes -
 
       public:
 	// Constructors +
-	/**
-	 * {@link DateFormatter} default constructor
+	/*!
+	 * \ref DateFormatter default constructor
 	 */
 	DateFormatter(const std::string& dateFormat);
 	// Constructors -
 
 	// Destructor +
-	/**
-	 * {@link DateFormatter} destructor
+	/*!
+	 * \ref DateFormatter destructor
 	 */
 	~DateFormatter();
 	// Destructor -
 
       public:
-	/**
+	/*!
 	 * Return the input string
 	 *
-	 * @param value The input string
-	 * @param out The output stream to write in
+	 * \param value The input string
+	 * \param out The output stream to write in
 	 */
 	virtual void formatValue(const void* const value,
 				 std::ostream& out)
-	  const throw();
+	  const noexcept;
 
-	/**
+	/*!
 	 * Get the formatter type
 	 *
-	 * @return The formatter type
+	 * \return The formatter type
 	 */
-	virtual anch::logger::formatter::FormatterType getType() const throw();
+	virtual anch::logger::formatter::FormatterType getType() const noexcept;
 
       };
 

@@ -27,12 +27,12 @@ using anch::logger::Writer;
 using anch::logger::LoggerConfiguration;
 
 
-/**
- * {@link LoggerConfiguration} constructor
+/*!
+ * \ref LoggerConfiguration constructor
  *
- * @param category The category
- * @param level The logging level
- * @param writers The writers
+ * \param category The category
+ * \param level The logging level
+ * \param writers The writers
  */
 LoggerConfiguration::LoggerConfiguration(const string& category,
 					 const Level& level,
@@ -43,8 +43,8 @@ LoggerConfiguration::LoggerConfiguration(const string& category,
   // Nothing to do
 }
 
-/**
- * {@link LoggerConfiguration} destructor
+/*!
+ * \ref LoggerConfiguration destructor
  */
 LoggerConfiguration::~LoggerConfiguration() {
   // Nothing to do

@@ -27,35 +27,35 @@ using std::ostream;
 using anch::logger::formatter::ThreadIdFormatter;
 using anch::logger::formatter::FormatterType;
 
-/**
- * {@link ThreadIdFormatter} default constructor
+/*!
+ * \ref ThreadIdFormatter default constructor
  */
 ThreadIdFormatter::ThreadIdFormatter() {
   // Nothing to do
 }
 
-/**
- * {@link ThreadIdFormatter} destructor
+/*!
+ * \ref ThreadIdFormatter destructor
  */
 ThreadIdFormatter::~ThreadIdFormatter() {
   // Nothing to do
 }
 
-/**
+/*!
  * Return the input string
  *
- * @param value The input string
- * @param out The output stream to write in
+ * \param value The input string
+ * \param out The output stream to write in
  */
 void
-ThreadIdFormatter::formatValue(const void* const value, ostream& out) const noexcept {
+ThreadIdFormatter::formatValue(const void* const value __attribute__((unused)), ostream& out) const noexcept {
   out << std::this_thread::get_id();
 }
 
-/**
+/*!
  * Get the formatter type
  *
- * @return The formatter type
+ * \return The formatter type
  */
 FormatterType
 ThreadIdFormatter::getType() const noexcept {

@@ -25,35 +25,35 @@ using std::ostream;
 using anch::logger::formatter::StringFormatter;
 using anch::logger::formatter::FormatterType;
 
-/**
- * {@link StringFormatter} default constructor
+/*!
+ * \ref StringFormatter default constructor
  */
 StringFormatter::StringFormatter() {
   // Nothing to do
 }
 
-/**
- * {@link StringFormatter} destructor
+/*!
+ * \ref StringFormatter destructor
  */
 StringFormatter::~StringFormatter() {
   // Nothing to do
 }
 
-/**
+/*!
  * Return the input string
  *
- * @param value The input string
- * @param out The output stream to write in
+ * \param value The input string
+ * \param out The output stream to write in
  */
 void
 StringFormatter::formatValue(const void* const value, ostream& out) const noexcept {
   out << *((const string*)value);
 }
 
-/**
+/*!
  * Get the formatter type
  *
- * @return The formatter type
+ * \return The formatter type
  */
 FormatterType
 StringFormatter::getType() const noexcept {

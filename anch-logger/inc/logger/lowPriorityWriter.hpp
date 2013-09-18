@@ -17,77 +17,76 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef _ANCH_LOGGER_WRITER_H_
-#define _ANCH_LOGGER_WRITER_H_
+#ifndef _ANCH_LOGGER_LOW_PRIORITY_WRITER_H_
+#define _ANCH_LOGGER_LOW_PRIORITY_WRITER_H_
 
 #include <iostream>
+#include <queue>
+#include <mutex>
+#include <thread>
 
-#include "logger/levels.hpp"
-#include "logger/formatter/messageFormatter.hpp"
+#include "logger/writer.hpp"
 
 
 namespace anch {
   namespace logger {
 
     /*!
-     * File writer which is not thread safe
+     * File writer with QoS implementation to avoid performance lose
+     * when files are written.
      *
      * \author Vincent Lachenal
      */
-    class Writer {
+    class LowPriorityWriter: public Writer {
+
       // Attributes +
-    protected:
-      /*! Ouput file stream */
-      std::ostream* _output;
-
-      /*! Message formatter */
-      anch::logger::formatter::MessageFormatter _formatter;
-
     private:
-      /*! File name */
-      std::string _fileName;
+      /*! Messages queue */
+      std::queue<std::string> _messages;
 
-      /*! Maximum file size */
-      int _maxSize;
+      /*! Running state */
+      bool _running;
 
-      /*! Maximum file index */
-      int _maxIndex;
+      /*! Treatment thread */
+      std::thread* _thread;
 
-      /*! Current file index */
-      int _fileIndex;
+      /*! Writer mutex */
+      std::mutex _mutex;
       // Attributes -
 
     public:
       // Constructors +
       /*!
-       * \ref Writer constructor
+       * \ref LowPriorityWriter constructor
        *
        * \param fileName The file name
        * \param linePattern The line pattern
        * \param maxSize The file maximum size before file rotation
        * \param maxIndex The maximum number of log files to keep
        */
-      Writer(const std::string& fileName,
-	     const std::string& linePattern,
-	     int maxSize = 0,
-	     int maxIndex = 0);
+      LowPriorityWriter(const std::string& fileName,
+			const std::string& linePattern,
+			int maxSize = 0,
+			int maxIndex = 0);
 
       /*!
-       * \ref Writer constructor
+       * \ref LowPriorityWriter constructor
        *
        * \param output The output to use
        * \param linePattern The line pattern
        */
-      Writer(std::ostream* output, const std::string& linePattern);
+      LowPriorityWriter(std::ostream* output, const std::string& linePattern);
       // Constructors -
 
       // Destructor +
       /*!
-       * \ref Writer destructor
+       * \ref LowPriorityWriter destructor
        */
-      virtual ~Writer();
+      virtual ~LowPriorityWriter();
       // Destructor -
 
+
+      // Method +
     public:
       /*!
        * Write message in the file
@@ -100,24 +99,21 @@ namespace anch {
 			 const anch::logger::Level& level,
 			 const std::string& message);
 
-    protected:
       /*!
-       * Check if file has to be rotate according to configuration and its size
-       *
-       * \return true or false
+       * Start messages queue pooling
        */
-      inline bool rotate() const {
-	return (_maxSize > 0 && _fileName != "" && _output->tellp() >= _maxSize);
-      }
+      void startTreatment();
 
+    private:
       /*!
-       * Rotate files when current reachs the maximum file length.
+       * Process messages in queue in a separated thread
        */
-      void rotateFiles();
+      void process();
+      // Method -
 
     };
 
   }
 }
 
-#endif // _ANCH_LOGGER_WRITER_H_
+#endif // _ANCH_LOGGER_LOW_PRIORITY_WRITER_H_

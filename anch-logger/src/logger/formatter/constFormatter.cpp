@@ -26,37 +26,37 @@ using anch::logger::formatter::ConstFormatter;
 using anch::logger::formatter::FormatterType;
 
 
-/**
- * {@link ConstFormatter} constructor
+/*!
+ * \ref ConstFormatter constructor
  *
- * @param strToPrint The string to print
+ * \param strToPrint The string to print
  */
 ConstFormatter::ConstFormatter(const string strToPrint): _strToPrint(strToPrint) {
   _strToPrint.shrink_to_fit();
 }
 
-/**
- * {@link ConstFormatter} destructor
+/*!
+ * \ref ConstFormatter destructor
  */
 ConstFormatter::~ConstFormatter() {
   // Nothing to do
 }
 
-/**
+/*!
  * Return the constant string
  *
- * @param value Nothing (NULL will be passed every time)
- * @param out The output stream to write in
+ * \param value Nothing (NULL will be passed every time)
+ * \param out The output stream to write in
  */
 void
-ConstFormatter::formatValue(const void* const value, ostream& out) const noexcept {
+ConstFormatter::formatValue(const void* const value __attribute__((unused)), ostream& out) const noexcept {
   out << _strToPrint;
 }
 
-/**
+/*!
  * Get the formatter type
  *
- * @return The formatter type
+ * \return The formatter type
  */
 FormatterType
 ConstFormatter::getType() const noexcept {

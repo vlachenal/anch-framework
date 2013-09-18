@@ -27,42 +27,42 @@ namespace anch {
   namespace logger {
     namespace formatter {
 
-      /**
+      /*!
        * String formatter
        *
-       * @author Vincent Lachenal
+       * \author Vincent Lachenal
        */
       class StringFormatter: public anch::logger::formatter::IFormatter {
       public:
 	// Constructors +
-	/**
-	 * {@link StringFormatter} default constructor
+	/*!
+	 * \ref StringFormatter default constructor
 	 */
 	StringFormatter();
 	// Constructors -
 
 	// Destructor +
-	/**
-	 * {@link StringFormatter} destructor
+	/*!
+	 * \ref StringFormatter destructor
 	 */
 	~StringFormatter();
 	// Destructor -
 
       public:
-	/**
+	/*!
 	 * Return the input string
 	 *
-	 * @param value The input string
-	 * @param out The output stream to write in
+	 * \param value The input string
+	 * \param out The output stream to write in
 	 */
 	virtual void formatValue(const void* const value,
 				 std::ostream& out)
 	  const noexcept;
 
-	/**
+	/*!
 	 * Get the formatter type
 	 *
-	 * @return The formatter type
+	 * \return The formatter type
 	 */
 	virtual anch::logger::formatter::FormatterType getType() const noexcept;
 

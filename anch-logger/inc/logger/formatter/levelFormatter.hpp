@@ -27,45 +27,44 @@ namespace anch {
   namespace logger {
     namespace formatter {
 
-      /**
+      /*!
        * Logging level formatter
        *
-       * @author Vincent Lachenal
+       * \author Vincent Lachenal
        */
       class LevelFormatter: public anch::logger::formatter::IFormatter {
       public:
 	// Constructors +
-	/**
-	 * {@link LevelFormatter} default constructor
+	/*!
+	 * \ref LevelFormatter default constructor
 	 */
 	LevelFormatter();
 	// Constructors -
 
 	// Destructor +
-	/**
-	 * {@link LevelFormatter} destructor
+	/*!
+	 * \ref LevelFormatter destructor
 	 */
 	virtual ~LevelFormatter();
 	// Destructor -
 
       public:
-	/**
+	/*!
 	 * Return the level label
 	 *
-	 * @param value The logging level
-	 * @param out The output stream to write in
+	 * \param value The logging level
+	 * \param out The output stream to write in
 	 */
 	virtual void formatValue(const void* const value,
 				 std::ostream& out)
 	  const noexcept;
 
-	/**
+	/*!
 	 * Get the formatter type
 	 *
-	 * @return The formatter type
+	 * \return The formatter type
 	 */
 	virtual anch::logger::formatter::FormatterType getType() const noexcept;
-
       };
 
     }

@@ -27,12 +27,12 @@ using anch::logger::Level;
 using anch::logger::Writer;
 
 
-/**
- * {@link Logger} constructor.
+/*!
+ * \ref Logger constructor.
  *
- * @param name Logger name
- * @param level The logging level to set
- * @param writers The writers list
+ * \param name Logger name
+ * \param level The logging level to set
+ * \param writers The writers list
  */
 Logger::Logger(const string& name,
 	       const Level level,
@@ -46,7 +46,7 @@ Logger::Logger(const string& name,
 }
 
 /**
- * {@link Logger} destructor
+ * \ref Logger destructor
  */
 Logger::~Logger() {
   // Nothing to do

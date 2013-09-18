@@ -26,10 +26,10 @@ namespace anch {
   namespace logger {
     namespace formatter {
 
-      /**
+      /*!
        * Formatter types
        *
-       * @author Vincent Lachenal
+       * \author Vincent Lachenal
        */
       enum FormatterType {
 	LEVEL,
@@ -41,38 +41,37 @@ namespace anch {
 	ANCH_DATE
       };
 
-    }
-  }
-}
-
-namespace anch {
-  namespace logger {
-    namespace formatter {
-
-      /**
+      /*!
        * Provide an interface for every item which will be format
        *
-       * @author Vincent Lachenal
+       * \author Vincent Lachenal
        */
       class IFormatter {
       public:
-	/**
+	/*!
+	 * \ref IFormatter destructor
+	 */
+	virtual ~IFormatter() {
+	  // Nothing to do
+	}
+
+      public:
+	/*!
+	 * Get the formatter type
+	 *
+	 * \return The formatter type
+	 */
+	virtual anch::logger::formatter::FormatterType getType() const noexcept = 0;
+
+	/*!
 	 * Format value
 	 *
-	 * @param value The value to format
-	 * @param out The output stream to write in
+	 * \param value The value to format
+	 * \param out The output stream to write in
 	 */
 	virtual void formatValue(const void* const value,
 				 std::ostream& out)
 	  const noexcept = 0;
-
-	/**
-	 * Get the formatter type
-	 *
-	 * @return The formatter type
-	 */
-	virtual anch::logger::formatter::FormatterType getType() const noexcept = 0;
-
       };
 
     }

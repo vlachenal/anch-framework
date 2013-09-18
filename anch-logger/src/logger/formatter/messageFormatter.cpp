@@ -52,10 +52,10 @@ using anch::logger::formatter::AnchDateFormatter;
 const regex MessageFormatter::CONFIG_PATTERN = regex(R"(^((\$d\{[^\}]+\})|(\$D\{[^\}]+\})|(\$m)|(\$c)|(\$p)|(\$t)|([^\$]+)))");
 // Static initialization -
 
-/**
- * {@link MessageFormatter} constructor
+/*!
+ * \ref MessageFormatter constructor
  *
- * @param linePattern The message line pattern
+ * \param linePattern The message line pattern
  */
 MessageFormatter::MessageFormatter(const string& linePattern): _formatters() {
   smatch match;
@@ -73,18 +73,20 @@ MessageFormatter::MessageFormatter(const string& linePattern): _formatters() {
   _formatters.shrink_to_fit();
 }
 
-/**
- * {@link MessageFormatter} destructor
+/*!
+ * \ref MessageFormatter destructor
  */
 MessageFormatter::~MessageFormatter() {
-  // Nothing to do
+  for(auto item : _formatters) {
+    delete item;
+  }
 }
 
 
-/**
+/*!
  * Add formatter element to message formatter
  *
- * @param str The formatter string
+ * \param str The formatter string
  */
 void
 MessageFormatter::addFormatter(const string& strFormatter) {
@@ -118,14 +120,14 @@ MessageFormatter::addFormatter(const string& strFormatter) {
   }
 }
 
-/**
+/*!
  * Format message.
  *
- * @param category The logger category
- * @param level The logging level
- * @param message The logging message
+ * \param category The logger category
+ * \param level The logging level
+ * \param message The logging message
  *
- * @return The formatted message
+ * \return The formatted message
  */
 const std::string
 MessageFormatter::formatMessage(const string& category,

@@ -29,30 +29,30 @@
 namespace anch {
   namespace logger {
 
-    /**
+    /*!
      * Loggers configuration extract from configuration file
      *
-     * @author Vincent Lachenal
+     * \author Vincent Lachenal
      */
     class LoggerConfiguration {
     private:
-      /** Logger category */
+      /*! Logger category */
       std::string _category;
 
-      /** Logging level */
+      /*! Logging level */
       anch::logger::Level _level;
 
-      /** Writers */
+      /*! Writers */
       std::vector<anch::logger::Writer*> _writers;
 
     public:
       // Constructor +
-      /**
-       * {@link LoggerConfiguration} constructor
+      /*!
+       * \ref LoggerConfiguration constructor
        *
-       * @param category The category
-       * @param level The logging level
-       * @param writers The writers
+       * \param category The category
+       * \param level The logging level
+       * \param writers The writers
        */
       LoggerConfiguration(const std::string& category,
 			  const anch::logger::Level& level,
@@ -60,36 +60,36 @@ namespace anch {
       // Constructor -
 
       // Destructor +
-      /**
-       * {@link LoggerConfiguration} destructor
+      /*!
+       * \ref LoggerConfiguration destructor
        */
       ~LoggerConfiguration();
       // Destructor -
 
     public:
       // Accessors +
-      /**
+      /*!
        * Category getter
        *
-       * @return The category
+       * \return The category
        */
       inline const std::string& getCategory() const {
 	return _category;
       };
 
-      /**
+      /*!
        * Logging level getter
        *
-       * @return The logging level
+       * \return The logging level
        */
       inline const anch::logger::Level& getLevel() const {
 	return _level;
       };
 
-      /**
+      /*!
        * Writers getter
        *
-       * @return The writers
+       * \return The writers
        */
       inline const std::vector<anch::logger::Writer*>& getWriters() const {
 	return _writers;

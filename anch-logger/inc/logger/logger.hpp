@@ -30,130 +30,128 @@
 namespace anch {
   namespace logger {
 
-    /**
-     * Logger class.<br>
-     * Aims to provide logging facilities.<br>
-     * <br>
-     * Logging levels are:<br>
-     * <ul>
-     *   <li>TRACE</li>
-     *   <li>DEBUG</li>
-     *   <li>INFO</li>
-     *   <li>WARN</li>
-     *   <li>ERROR</li>
-     *   <li>FATAL</li>
-     * </ul>
+    /*!
+     * Logger class.\n
+     * Aims to provide logging facilities.\n
+     * \n
+     * Logging levels are:\n
+     * - TRACE
+     * - DEBUG
+     * - INFO
+     * - WARN
+     * - ERROR
+     * - FATAL
      *
-     * @author Vincent Lachenal
+     * \author Vincent Lachenal
      */
     class Logger {
     private:
-      /** Logger name */
+      /*! Logger name */
       std::string _name;
 
-      /** The current logging level */
+      /*! The current logging level */
       anch::logger::Level _level;
 
-      /** Logger writers */
+      /*! Logger writers */
       std::vector<anch::logger::Writer*> _writers;
 
     public:
-      /**
-       * {@link Logger} constructor.
+      /*!
+       * \ref Logger constructor.
        *
-       * @param name Logger name
-       * @param level The logging level to set
-       * @param writers The writers list
+       * \param name Logger name
+       * \param level The logging level to set
+       * \param writers The writers list
        */
       Logger(const std::string& name,
 	     const anch::logger::Level level,
 	     const std::vector<anch::logger::Writer*>& writers);
 
-      /**
-       * {@link Logger} destructor
+      /*!
+       * \ref Logger destructor
        */
       virtual ~Logger();
 
     public:
-      /**
+      /*!
        * Concatenate message and log it in TRACE level
        *
-       * @param value The first value of the message to concatenate
-       * @param values The other values of the message to concatenate
+       * \param value The first value of the message to concatenate
+       * \param values The other values of the message to concatenate
        */
       template<typename T, typename... Q>
-      void trace(const T& value, const Q&... values) const throw() {
+      void trace(const T& value, const Q&... values) const noexcept {
 	log(Level::TRACE, value, values...);
       }
 
-      /**
+      /*!
        * Concatenate message and log it in DEBUG level
        *
-       * @param value The first value of the message to concatenate
-       * @param values The other values of the message to concatenate
+       * \param value The first value of the message to concatenate
+       * \param values The other values of the message to concatenate
        */
       template<typename T, typename... Q>
-      void debug(const T& value, const Q&... values) const throw() {
+      void debug(const T& value, const Q&... values) const noexcept {
 	log(Level::DEBUG, value, values...);
       }
 
-      /**
+      /*!
        * Concatenate message and log it in INFO level
        *
-       * @param value The first value of the message to concatenate
-       * @param values The other values of the message to concatenate
+       * \param value The first value of the message to concatenate
+       * \param values The other values of the message to concatenate
        */
       template<typename T, typename... Q>
-      void info(const T& value, const Q&... values) const throw() {
+      void info(const T& value, const Q&... values) const noexcept {
 	log(Level::INFO, value, values...);
       }
 
-      /**
+      /*!
        * Concatenate message and log it in WARN level
        *
-       * @param value The first value of the message to concatenate
-       * @param values The other values of the message to concatenate
+       * \param value The first value of the message to concatenate
+       * \param values The other values of the message to concatenate
        */
       template<typename T, typename... Q>
-      void warn(const T& value, const Q&... values) const throw() {
+      void warn(const T& value, const Q&... values) const noexcept {
 	log(Level::WARN, value, values...);
       }
 
-      /**
+      /*!
        * Concatenate message and log it in ERROR level
        *
-       * @param value The first value of the message to concatenate
-       * @param values The other values of the message to concatenate
+       * \param value The first value of the message to concatenate
+       * \param values The other values of the message to concatenate
        */
       template<typename T, typename... Q>
-      void error(const T& value, const Q&... values) const throw() {
+      void error(const T& value, const Q&... values) const noexcept {
 	log(Level::ERROR, value, values...);
       }
 
-      /**
+      /*!
        * Concatenate message and log it in FATAL level
        *
-       * @param value The first value of the message to concatenate
-       * @param values The other values of the message to concatenate
+       * \param value The first value of the message to concatenate
+       * \param values The other values of the message to concatenate
        */
       template<typename T, typename... Q>
-      void fatal(const T& value, const Q&... values) const throw() {
+      void fatal(const T& value, const Q&... values) const noexcept {
 	log(Level::FATAL, value, values...);
       }
 
     private:
-      /**
-       * Log a message<br>
+      /*!
+       * Log a message\n
        * Logger last iteration
        *
-       * @param level The logging level
-       * @param out The output stream to concatenate message
-       * @param value The message to log
+       * \param level The logging level
+       * \param out The output stream to concatenate message
+       * \param value The message to log
        */
       template<typename T>
       void log(const Level& level,
 	       std::ostringstream& out,
-	       const T& value) const throw() {
+	       const T& value) const noexcept {
 	out << value;
 	const std::string& message = out.str();
 	for(size_t i = 0 ; i < _writers.size() ; i++) {
@@ -161,36 +159,36 @@ namespace anch {
 	}
       }
 
-      /**
+      /*!
        * Concatenate message and log it
        *
-       * @param level The message level
-       * @param value The first value of the message to concatenate
-       * @param values The other values of the message to concatenate
+       * \param level The message level
+       * \param value The first value of the message to concatenate
+       * \param values The other values of the message to concatenate
        */
       template<typename T, typename... Q>
       void log(const Level& level,
 	       const T& value,
-	       const Q&... values) const throw() {
+	       const Q&... values) const noexcept {
 	if(level >= _level && !_writers.empty()) {
 	  std::ostringstream out;
 	  log(level, out, value, values...);
 	}
       }
 
-      /**
+      /*!
        * Concatenate message and log it
        *
-       * @param level The logging level
-       * @param out The output stream to concatenate message
-       * @param value The first value of the message to concatenate
-       * @param values The other values of the message to concatenate
+       * \param level The logging level
+       * \param out The output stream to concatenate message
+       * \param value The first value of the message to concatenate
+       * \param values The other values of the message to concatenate
        */
       template<typename T, typename... Q>
       void log(const Level& level,
 	       std::ostringstream& out,
 	       const T& value,
-	       const Q&... values) const throw() {
+	       const Q&... values) const noexcept {
 	out << value;
 	log(level, out, values...);
       }

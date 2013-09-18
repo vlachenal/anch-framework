@@ -7,7 +7,7 @@ set(ANCH_DATE_LIBRARY_DIR "$ENV{HOME}/projects/anch-framework/anch-date/build/li
 
 # Anch logger installation configuration
 set(ANCH_LOGGER_LIBRARY_DIR "")
-set(ANCH_LOGGER_COMPILE_FLAGS "-O2")
+set(ANCH_LOGGER_COMPILE_FLAGS "-O2 -g")
 
 # Unitary tests
 set(ANCH_LOGGER_UNITARY_TEST ON CACHE BOOL "Anch logger unitary tests")

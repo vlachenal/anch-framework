@@ -32,69 +32,70 @@ namespace anch {
   namespace logger {
     namespace formatter {
 
-      /**
-       * Format a message for logging acording writer configuration<br>
-       * <br>
+      /*!
+       * Format a message for logging acording writer configuration\n
+       * \n
        * Paterns are:
-       * <ul>
-       *   <li>%c: The category (logger name)</li>
-       *   <li>%p: The logging level</li>
-       *   <li>%m: The message</li>
-       *   <li>%d{C++ time standard}: The date</li>
-       *   <li>%t: The current thread ID</li>
-       *   <li>%f: The function name (not imlpemented)</li>
-       * </ul>
+       * - %c: The category (logger name)
+       * - %p: The logging level
+       * - %m: The message
+       * - %d{C++ time standard}: The date
+       * - %D{C++ time standard}: The high precision date
+       * - %t: The current thread ID
+       * - %f: The function name (not imlpemented)
        *
-       * @author Vincent Lachenal
+       * \author Vincent Lachenal
        */
       class MessageFormatter {
       private:
 	// Attributes +
-	/** Writter configuration pattern */
+	/*! Writter configuration pattern */
 	const static boost::regex CONFIG_PATTERN;
 
-	/** Formatters list */
+	/*! Formatters list */
 	std::vector<anch::logger::formatter::IFormatter*> _formatters;
 	// Attributes -
 
       public:
 	// Constructors +
-	/**
-	 * {@link MessageFormatter} constructor
+	/*!
+	 * \ref MessageFormatter constructor
 	 *
-	 * @param linePattern The message line pattern
+	 * \param linePattern The message line pattern
 	 */
 	MessageFormatter(const std::string& linePattern);
 	// Constructors -
 
 	// Destructor +
-	/**
-	 * {@link MessageFormatter} destructor
+	/*!
+	 * \ref MessageFormatter destructor
 	 */
 	virtual ~MessageFormatter();
 	// Destructor -
 
+	// Methods +
       public:
-	/**
+	/*!
 	 * Format message.
 	 *
-	 * @param category The logger category
-	 * @param level The logging level
-	 * @param message The logging message
+	 * \param category The logger category
+	 * \param level The logging level
+	 * \param message The logging message
 	 *
-	 * @return The formatted message
+	 * \return The formatted message
 	 */
 	const std::string formatMessage(const std::string& category,
 					const anch::logger::Level& level,
 					const std::string& message) const;
 
       private:
-	/**
+	/*!
 	 * Add formatter element to message formatter
 	 *
-	 * @param str The formatter string
+	 * \param str The formatter string
 	 */
 	void addFormatter(const std::string& strFormatter);
+	// Methods -
 
       };
 

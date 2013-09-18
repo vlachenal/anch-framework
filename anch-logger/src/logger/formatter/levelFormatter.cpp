@@ -27,25 +27,25 @@ using anch::logger::formatter::FormatterType;
 using anch::logger::Level;
 
 
-/**
- * {@link LevelFormatter} default constructor
+/*!
+ * \ref LevelFormatter default constructor
  */
 LevelFormatter::LevelFormatter() {
   // Nothing to do
 }
 
-/**
- * {@link LevelFormatter} destructor
+/*!
+ * \ref LevelFormatter destructor
  */
 LevelFormatter::~LevelFormatter() {
   // Nothing to do
 }
 
-/**
+/*!
  * Return the level label
  *
- * @param value The logging level
- * @param out The output stream to write in
+ * \param value The logging level
+ * \param out The output stream to write in
  */
 void
 LevelFormatter::formatValue(const void* const value, ostream& out) const noexcept {
@@ -53,10 +53,10 @@ LevelFormatter::formatValue(const void* const value, ostream& out) const noexcep
   out << LEVEL_LABEL.find(*level)->second;
 }
 
-/**
+/*!
  * Get the formatter type
  *
- * @return The formatter type
+ * \return The formatter type
  */
 FormatterType
 LevelFormatter::getType() const noexcept {

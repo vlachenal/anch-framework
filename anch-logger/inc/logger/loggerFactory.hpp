@@ -38,50 +38,60 @@
 #include "logger/loggerConfiguration.hpp"
 #include "logger/logger.hpp"
 #include "logger/writer.hpp"
+#include "logger/threadSafeWriter.hpp"
+#include "logger/lowPriorityWriter.hpp"
 #include "resource/resource.hpp"
 
 
 namespace anch {
   namespace logger {
 
-    /**
-     * Logger factory.<br>
-     * This class aims to manage logger according to the loggers name and configuration.<br>
-     * <br>
+    /*!
+     * Logger factory.\n
+     * This class aims to manage logger according to the loggers name and configuration.\n
+     * \n
      * The macro ANCH_LOGGER_INIT MUST be called by the program only ONCE.
      *
-     * @author Vincent Lachenal
+     * \author Vincent Lachenal
      */
     class LoggerFactory {
     private:
       // Attributes +
-      /** Mutex for conccurency access */
+      /*! Mutex for conccurency access */
       static std::mutex MUTEX;
 
-      /** {@link LoggerFactory} unique instance */
+      /*! \ref LoggerFactory unique instance */
       static LoggerFactory* _self;
 
-      /** Loggers configuration */
+      /*! Loggers configuration */
       std::vector<LoggerConfiguration> _loggersConfig;
+
+      /*! Register loggers to free them */
+      std::vector<anch::logger::Logger*> _loggers;
       // Attributes -
 
     private:
       // Constructor +
-      /**
-       * {@link LoggerFactory} private constructor
+      /*!
+       * \ref LoggerFactory private constructor
        */
       LoggerFactory(): _loggersConfig() {
-        anch::resource::Resource resource = anch::resource::Resource::getResource(_ANCH_LOGGER_CONFIG_FILE_);
 	std::atexit(LoggerFactory::cleanWriters);
-	std::map<std::string,anch::logger::Writer*> writers;
-	initializeWriters(writers, resource);
-	initializeLoggersConfiguration(writers, resource);
+	try {
+	  const anch::resource::Resource& resource = anch::resource::Resource::getResource(_ANCH_LOGGER_CONFIG_FILE_);
+	  std::map<std::string,anch::logger::Writer*> writers;
+	  initializeWriters(writers, resource);
+	  initializeLoggersConfiguration(writers, resource);
+
+	} catch(...) {
+	  loadDefaultConfiguration();
+	}
       }
       // Constructor -
 
       // Destructor +
-      /**
-       * {@link LoggerFactory} destructor
+      /*!
+       * \ref LoggerFactory destructor
        */
       virtual ~LoggerFactory() {
 	// Nothing to do
@@ -90,13 +100,13 @@ namespace anch {
 
     public:
       // Methods +
-      /**
+      /*!
        * Retrieve a registered logger from a logger name or create a new one
        * and register it.
        *
-       * @param loggerName The logger name to retrieve
+       * \param loggerName The logger name to retrieve
        *
-       * @return The loggerr instance
+       * \return The loggerr instance
        */
       static const anch::logger::Logger& getLogger(const std::string& loggerName) {
 	MUTEX.lock();
@@ -138,14 +148,15 @@ namespace anch {
 	  logger = new anch::logger::Logger(loggerName,
 					    loggerConfig->getLevel(),
 					    loggerConfig->getWriters());
+	  _self->_loggers.push_back(logger);
 	}
 	// Instanciate a new logger from configuration -
 
 	return *logger;
       }
 
-      /**
-       * Clean every {@link anch::logger::Writer} to flush their output and close files.
+      /*!
+       * Clean every \ref Writer to flush their output and close files.
        *
        * std::atexit is already map on it. But you can use it if you trap signals.
        */
@@ -153,30 +164,99 @@ namespace anch {
 	std::set<anch::logger::Writer*> writers;
 	for(size_t i = 0 ; i < _self->_loggersConfig.size() ; i++) {
 	  const std::vector<anch::logger::Writer*>& confWriters = _self->_loggersConfig[i].getWriters();
-	  for(size_t j = 0 ; j < confWriters.size() ; j++) {
-	    writers.insert(confWriters[j]);
+	  for(anch::logger::Writer* writer : confWriters) {
+	    writers.insert(writer);
 	  }
 	}
-	for(auto iter = writers.begin() ; iter != writers.end() ; ++iter) {
-	  delete *iter;
+	for(anch::logger::Writer* writer : writers) {
+	  delete writer;
+	}
+	for(anch::logger::Logger* logger : _self->_loggers) {
+	  delete logger;
 	}
       }
 
     private:
-      /**
+      /*!
+       * Create writer instance according to writter configuration
+       *
+       * \param threadSafe Use a thread safe logger
+       * \param lowPriority Use a low priority logger
+       * \param out the output stream to use
+       * \param pattern the logger pattern configuration
+       */
+      anch::logger::Writer* createWriterInstance(bool threadSafe,
+						 bool lowPriority,
+						 std::ostream* out,
+						 const std::string& pattern) {
+	anch::logger::Writer* writer = NULL;
+	if(lowPriority) {
+	  writer = new anch::logger::LowPriorityWriter(out,pattern);
+	  static_cast<anch::logger::LowPriorityWriter*>(writer)->startTreatment();
+	} else if(threadSafe) {
+	  writer = new anch::logger::ThreadSafeWriter(out,pattern);
+	} else {
+	  writer = new anch::logger::Writer(out,pattern);
+	}
+	return writer;
+      }
+
+      /*!
+       * Create writer instance according to writter configuration
+       *
+       * \param threadSafe use a thread safe logger
+       * \param lowPriority use a low priority logger
+       * \param path the file path
+       * \param pattern the logger pattern configuration
+       * \param maxSize the log files maximum size
+       * \param maxIndex the maximum number of log file to keep
+       */
+      anch::logger::Writer* createWriterInstance(bool threadSafe,
+						 bool lowPriority,
+						 const std::string& path,
+						 const std::string& pattern,
+						 unsigned int maxSize,
+						 int maxIndex) {
+	anch::logger::Writer* writer = NULL;
+	if(lowPriority) {
+	  writer = new anch::logger::LowPriorityWriter(path,pattern,maxSize,maxIndex);
+	  static_cast<anch::logger::LowPriorityWriter*>(writer)->startTreatment();
+	} else if(threadSafe) {
+	  writer = new anch::logger::ThreadSafeWriter(path,pattern,maxSize,maxIndex);
+	} else {
+	  writer = new anch::logger::Writer(path,pattern,maxSize,maxIndex);
+	}
+	return writer;
+      }
+
+      /*!
        * Initialize writers
        *
-       * @param writers The writers container
-       * @param resource The resource configuration file
+       * \param writers The writers container
+       * \param resource The resource configuration file
        */
       void initializeWriters(std::map<std::string,anch::logger::Writer*>& writers,
-			     anch::resource::Resource& resource) {
+			     const anch::resource::Resource& resource) {
 	std::map<std::string,unsigned int> sizeMap = std::map<std::string,unsigned int>({
 	    {"K",1024},
 	    {"M",1024*1024},
 	    {"G",1024*1024*1024}
 	  });
 	const boost::regex sizeRegex = boost::regex("^([0-9]+)(K|M|G)?$");
+
+	// Writer QoS configuration +
+	bool globalThreadSafe = true;
+	std::string paramValue;
+	if(resource.getParameter(paramValue, "thread.safe")) {
+	  globalThreadSafe = (paramValue == "1");
+	}
+	paramValue = "";
+	bool globalLowPriority = false;
+	if(resource.getParameter(paramValue, "low.priority")) {
+	  globalLowPriority = (paramValue == "1");
+	}
+	paramValue = "";
+	// Writer QoS configuration -
 
 	boost::smatch match;
 	const std::map<std::string,anch::resource::Section>& config = resource.getConfiguration();
@@ -194,9 +274,23 @@ namespace anch {
 	    }
 	    // Retrieve log pattern -
 
+	    // Writer QoS configuration +
+	    bool threadSafe = globalThreadSafe;
+	    if(resource.getParameter(paramValue, "writer.thread.safe", writer)) {
+	      threadSafe = (paramValue == "1");
+	    }
+	    paramValue = "";
+	    bool lowPriority = globalLowPriority;
+	    if(resource.getParameter(paramValue, "writer.low.priority", writer)) {
+	      lowPriority = (paramValue == "1");
+	    }
+	    // Writer QoS configuration -
+
 	    if(name == "console") { // Console writer will put logs on standard output
-	      writers[name] = new anch::logger::Writer((std::ostream*)(&std::cout),
-						       pattern);
+	      writers[name] = createWriterInstance(threadSafe,
+						   lowPriority,
+						   (std::ostream*)(&std::cout),
+						   pattern);
 
 	    } else { // File writer
 	      // File path +
@@ -229,24 +323,26 @@ namespace anch {
 		  maxIndex = std::stoi(maxIdxStr);
 		}
 		// Max file index on rotate -
-		writers[name] = new anch::logger::Writer(path,
-							 pattern,
-							 maxSize,
-							 maxIndex);
+		writers[name] = createWriterInstance(threadSafe,
+						     lowPriority,
+						     path,
+						     pattern,
+						     maxSize,
+						     maxIndex);
 	      }
 	    }
 	  }
 	}
       }
 
-      /**
+      /*!
        * Initialize loggers configuration
        *
-       * @param writers The configured writers
-       * @param resource The resource configuration file
+       * \param writers The configured writers
+       * \param resource The resource configuration file
        */
       void initializeLoggersConfiguration(const std::map<std::string,anch::logger::Writer*>& writers,
-					  anch::resource::Resource& resource) {
+					  const anch::resource::Resource& resource) {
 	boost::regex upperRegex = boost::regex("[a-z]");
 	std::string upperRep = "[A-Z]";
 	boost::smatch match;
@@ -310,6 +406,23 @@ namespace anch {
 	  }
 	}
       }
+
+      /*!
+       * Load default configuration
+       */
+      void loadDefaultConfiguration() {
+	_loggersConfig.clear();
+	std::cerr <<  "Logger configuration file " << _ANCH_LOGGER_CONFIG_FILE_ << " has not been found or is not readable." << std::endl;
+	std::cerr << "Default configuration is loading." << std::endl;
+	std::cerr << "Everything will be logged in console." << std::endl;
+	ThreadSafeWriter* console = new ThreadSafeWriter((std::ostream*)(&std::cout), "$d{%Y-%m-%d %H:%M:%S} - $m");
+	std::vector<anch::logger::Writer*> loggerWriters;
+	loggerWriters.push_back(console);
+	loggerWriters.shrink_to_fit();
+	_loggersConfig.push_back(LoggerConfiguration("default",
+						     anch::logger::Level::TRACE,
+						     loggerWriters));
+      }
       // Methods -
 
     };
@@ -317,7 +430,7 @@ namespace anch {
   }
 }
 
-/**
+/*!
  * This macro MUST be called by the program only ONCE.
  */
 #define ANCH_LOGGER_INIT std::mutex anch::logger::LoggerFactory::MUTEX;\

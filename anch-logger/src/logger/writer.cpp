@@ -40,23 +40,22 @@ using anch::logger::Level;
 using anch::logger::formatter::MessageFormatter;
 
 
-/**
- * {@link Writer} constructor
+/*!
+ * \ref Writer constructor
  *
- * @param fileName The file name
- * @param linePattern The line pattern
- * @param maxSize The file maximum size before file rotation
- * @param maxIndex The maximum number of log files to keep
+ * \param fileName The file name
+ * \param linePattern The line pattern
+ * \param maxSize The file maximum size before file rotation
+ * \param maxIndex The maximum number of log files to keep
  */
 Writer::Writer(const string& fileName,
 	       const string& linePattern,
 	       int maxSize,
-	       int maxIndex):  _fileName(fileName),
+	       int maxIndex):  _formatter(linePattern),
+			       _fileName(fileName),
 			       _maxSize(maxSize),
 			       _maxIndex(maxIndex),
-			       _fileIndex(0),
-			       _mutex(),
-			       _formatter(linePattern) {
+			       _fileIndex(0) {
   try {
     _output = new ofstream(fileName,ios_base::app);
     // Retrieve current file index +
@@ -75,67 +74,64 @@ Writer::Writer(const string& fileName,
 
   } catch(const std::exception& e) {
     cerr << "Unable to open file. Use standard output." << endl;
-    _output = (ostream*)(&cout);
+    _output = static_cast<ostream*>(&cout);
     _fileName = "";
     _maxSize = 0;
     _maxIndex = 0;
   }
 }
 
-/**
- * {@link Writer} constructor
+/*!
+ * \ref Writer constructor
  *
- * @param output The output to use
- * @param linePattern The line pattern
+ * \param output The output to use
+ * \param linePattern The line pattern
  */
 Writer::Writer(ostream* output,
 	       const string& linePattern): _output(output),
+					   _formatter(linePattern),
 					   _fileName(""),
 					   _maxSize(0),
 					   _maxIndex(0),
-					   _fileIndex(0),
-					   _mutex(),
-					   _formatter(linePattern) {
+					   _fileIndex(0) {
   // Nothing to do
 }
 
-/**
- * {@link Writer} destructor
+/*!
+ * \ref Writer destructor
  */
 Writer::~Writer() {
   _output->flush();
   if(_fileName != "") {
-    ((ofstream*)_output)->close();
-  }
+    static_cast<ofstream*>(_output)->close();
+    delete _output;
+  } // else do not delete cout ...
 }
 
-/**
+/*!
  * Write message in the file
  *
- * @param category The logger category
- * @param level The message level
- * @param message Message to write
+ * \param category The logger category
+ * \param level The message level
+ * \param message Message to write
  */
 void
 Writer::write(const string& category,
 	      const Level& level,
 	      const string& message) {
-  _mutex.lock();
-  string line;
   *_output << _formatter.formatMessage(category, level, message) << "\n";
-  if(_maxSize > 0 && _output->tellp() >= _maxSize) {
+  if(rotate()) {
     rotateFiles();
   }
-  _mutex.unlock();
 }
 
-/**
+/*!
  * Rotate files when current reachs the maximum file length.
  */
 void
 Writer::rotateFiles() {
   _output->flush();
-  ((ofstream*)_output)->close();
+  static_cast<ofstream*>(_output)->close();
   delete _output;
   ostringstream ostr;
   // Remove older file if max index file has been reached +

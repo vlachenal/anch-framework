@@ -23,7 +23,7 @@ endif()
 # Check GCC version -
 
 # Add GCC definitions
-add_definitions("-Wall -Werror")
+add_definitions("-Wall -Wextra -Werror")
 add_definitions(${ANCH_LOGGER_COMPILE_FLAGS})
 
 # Include librairies
@@ -122,8 +122,72 @@ if(ANCH_LOGGER_UNITARY_TEST)
   configure_file(test/customFile.ini customFile.ini COPYONLY)
   # build custom file test -
 
+  # build low priority file test +
+  file(
+    GLOB_RECURSE
+    test_low_priority_file
+    inc/*
+    test/testLowPriority.cpp
+  )
+
+  add_executable(
+    anch-logger-low-priority
+    ${test_low_priority_file}
+  )
+
+  list(APPEND low_priority_file_def "_ANCH_LOGGER_CONFIG_FILE_=\"low-priority-logger.conf\"")
+  set_target_properties(
+    anch-logger-low-priority
+    PROPERTIES
+    COMPILE_DEFINITIONS "${low_priority_file_def}"
+  )
+
+  target_link_libraries(
+    anch-logger-low-priority
+    anch-logger
+    anch-resource
+    anch-date
+    ${CMAKE_THREAD_LIBS_INIT}
+    ${Boost_LIBRARIES}
+  )
+
+  configure_file(test/low-priority-logger.conf low-priority-logger.conf COPYONLY)
+  # build low priority file test -
+
+  # build default configuration test +
+  file(
+    GLOB_RECURSE
+    test_default_conf
+    inc/*
+    test/testDefaultConfig.cpp
+  )
+
+  add_executable(
+    anch-logger-default-config
+    ${test_default_conf}
+  )
+
+  list(APPEND default_conf_def "_ANCH_LOGGER_CONFIG_FILE_=\"invalid.conf\"")
+  set_target_properties(
+    anch-logger-default-config
+    PROPERTIES
+    COMPILE_DEFINITIONS "${default_conf_def}"
+  )
+
+  target_link_libraries(
+    anch-logger-default-config
+    anch-logger
+    anch-resource
+    anch-date
+    ${CMAKE_THREAD_LIBS_INIT}
+    ${Boost_LIBRARIES}
+  )
+  # build default configuration test -
+
   enable_testing()
   add_test(anch-logger-rotate ${EXECUTABLE_OUTPUT_PATH}/anch-logger-rotate main)
   add_test(anch-logger-custom-file ${EXECUTABLE_OUTPUT_PATH}/anch-logger-custom-file main)
+  add_test(anch-logger-low-priority ${EXECUTABLE_OUTPUT_PATH}/anch-logger-low-priority main)
+  add_test(anch-logger-default-config ${EXECUTABLE_OUTPUT_PATH}/anch-logger-default-config main)
 
 endif(ANCH_LOGGER_UNITARY_TEST)
