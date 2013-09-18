@@ -25,11 +25,11 @@
 using anch::crypto::SHA1;
 
 
-/**
+/*!
  * Swap byte for endianness conversion
  *
- * @param src Source
- * @param dest Destination
+ * \param src Source
+ * \param dest Destination
  */
 template<typename T>
 inline void
@@ -46,9 +46,28 @@ byteSwap(T src, uint8_t* dest) {
   }
 }
 
+/*!
+ * Swap byte for endianness conversion
+ *
+ * \param buf The 4-bytes words to process
+ * \param count The number of operation to do
+ */
+inline void
+bytesSwap(uint32_t* buf, uint8_t count) {
+  const uint32_t byteOrderTest = 0x01;
+  if(reinterpret_cast<const uint8_t*>(&byteOrderTest)[0] == 1) { // endianess test
+    uint8_t* words = reinterpret_cast<uint8_t*>(buf);
+    do {
+      byteSwap(*buf,words);
+      buf++;
+      words += 4;
+    } while(--count);
+  }
+}
+
 // Constructors +
-/**
- * {@link SHA1} default constructor
+/*!
+ * \ref SHA1 default constructor
  */
 SHA1::SHA1() {
   // Nothing to do
@@ -56,8 +75,8 @@ SHA1::SHA1() {
 // Constructors -
 
 // Destructors +
-/**
- * {@link SHA1} destructor
+/*!
+ * \ref SHA1 destructor
  */
 SHA1::~SHA1() {
   // Nothing to do
@@ -65,162 +84,20 @@ SHA1::~SHA1() {
 // Destructors -
 
 // Methods +
-/**
+/*!
  * Get the SHA1 hash result
  *
- * @return the SHA1 hash result
+ * \return the SHA1 hash result
  */
 const std::array<uint8_t,20>&
 SHA1::digest() const {
   return _context.digest;
 }
 
-
-/**
- * Bits rotation of 32 bits integer from a value
- *
- * @param value The integer to process
- * @param shift The number of bits to shift
- */
-uint32_t
-SHA1::rol32(uint32_t value, unsigned int shift) {
-  return ((value << shift) | value >> (32 - shift));
-}
-
-/**
- * Compute SHA1 word
- *
- * @param chunk The SHA1 chunk
- * @param position The position
- */
-uint32_t
-SHA1::word(SHA1::Chunk& chunk, unsigned int position) {
-  return (chunk.words[position & 0xf] = rol32(chunk.words[(position + 13)  & 0xf]
-					       ^ chunk.words[(position + 8) & 0xf]
-					       ^ chunk.words[(position + 2) & 0xf]
-					       ^ chunk.words[(position)     & 0xf],
-					       1));
-}
-
-/**
- * First core function
- *
- * @param chunk The chunk to process
- * @param position The position
- * @param v The first parameter
- * @param w The second parameter
- * @param x The third parameter
- * @param y The fourth parameter
- * @param z The fifth parameter
- */
-void
-SHA1::round0(SHA1::Chunk& chunk,
-	     const unsigned int position,
-	     uint32_t& v,
-	     uint32_t& w,
-	     uint32_t& x,
-	     uint32_t& y,
-	     uint32_t& z) {
-  z += ((( w & (x ^ y)) ^ y) + chunk.words[position] + 0x5A827999 + rol32(v, 5));
-  w = rol32(w, 30);
-}
-
-/**
- * Second core function
- *
- * @param chunk The chunk to process
- * @param position The position
- * @param v The first parameter
- * @param w The second parameter
- * @param x The third parameter
- * @param y The fourth parameter
- * @param z The fifth parameter
- */
-void
-SHA1::round1(SHA1::Chunk& chunk,
-	     const unsigned int position,
-	     uint32_t& v,
-	     uint32_t& w,
-	     uint32_t& x,
-	     uint32_t& y,
-	     uint32_t& z) {
-  z += ((( w & (x ^ y)) ^ y) + word(chunk,position) + 0x5A827999 + rol32(v, 5));
-  w = rol32(w, 30);
-}
-
-/**
- * Third core function
- *
- * @param chunk The chunk to process
- * @param position The position
- * @param v The first parameter
- * @param w The second parameter
- * @param x The third parameter
- * @param y The fourth parameter
- * @param z The fifth parameter
- */
-void
-SHA1::round2(SHA1::Chunk& chunk,
-	     const unsigned int position,
-	     uint32_t& v,
-	     uint32_t& w,
-	     uint32_t& x,
-	     uint32_t& y,
-	     uint32_t& z) {
-  z += (( w ^ x ^ y) + word(chunk, position) + 0x6ED9EBA1 + rol32(v, 5));
-  w = rol32(w, 30);
-}
-
-/**
- * Fourth core function
- *
- * @param chunk The chunk to process
- * @param position The position
- * @param v The first parameter
- * @param w The second parameter
- * @param x The third parameter
- * @param y The fourth parameter
- * @param z The fifth parameter
- */
-void
-SHA1::round3(SHA1::Chunk& chunk,
-	     const unsigned int position,
-	     uint32_t& v,
-	     uint32_t& w,
-	     uint32_t& x,
-	     uint32_t& y,
-	     uint32_t& z) {
-  z += (((( w | x) & y) | (w & x)) + word(chunk, position) + 0x8F1BBCDC + rol32(v, 5));
-  w = rol32(w, 30);
-}
-
-/**
- * Fifth core function
- *
- * @param chunk The chunk to process
- * @param position The position
- * @param v The first parameter
- * @param w The second parameter
- * @param x The third parameter
- * @param y The fourth parameter
- * @param z The fifth parameter
- */
-void
-SHA1::round4(SHA1::Chunk& chunk,
-	     const unsigned int position,
-	     uint32_t& v,
-	     uint32_t& w,
-	     uint32_t& x,
-	     uint32_t& y,
-	     uint32_t& z) {
-  z += ((w ^ x ^ y) + word(chunk, position) + 0xCA62C1D6 + rol32(v, 5));
-  w = rol32(w, 30);
-}
-
-/**
+/*!
  * Transform SHA1 with the current chunk
  *
- * @param buffer The data to process
+ * \param buffer The data to process
  */
 void
 SHA1::transform(const uint8_t* buffer) {
@@ -331,11 +208,11 @@ SHA1::transform(const uint8_t* buffer) {
   _context.state[4] += e;
 }
 
-/**
+/*!
  * Compute hash for data with the current hash
  *
- * @param data The data to add
- * @param len The data length
+ * \param data The data to add
+ * \param len The data length
  */
 void
 SHA1::addData(const uint8_t* data, size_t len) {
@@ -361,7 +238,7 @@ SHA1::addData(const uint8_t* data, size_t len) {
   }
 }
 
-/**
+/*!
  * Finalize hash
  */
 void
@@ -388,24 +265,5 @@ SHA1::finalize() {
   byteSwap(_context.state[2], _context.digest.data() + 8);
   byteSwap(_context.state[3], _context.digest.data() + 12);
   byteSwap(_context.state[4], _context.digest.data() + 16);
-}
-
-/**
- * Swap byte for endianness conversion
- *
- * @param buf The 4-bytes words to process
- * @param count The number of operation to do
- */
-void
-SHA1::bytesSwap(uint32_t* buf, uint8_t count) {
-  const uint32_t byteOrderTest = 0x01;
-  if(reinterpret_cast<const uint8_t*>(&byteOrderTest)[0] == 1) { // endianess test
-    uint8_t* words = reinterpret_cast<uint8_t*>(buf);
-    do {
-      byteSwap(*buf,words);
-      buf++;
-      words += 4;
-    } while(--count);
-  }
 }
 // Methods -

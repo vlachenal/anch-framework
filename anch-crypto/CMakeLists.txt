@@ -93,8 +93,48 @@ if(ANCH_CRYPTO_UNITARY_TEST)
   )
   # Build SHA1 unitary test -
 
+  # Build SHA2 unitary test +
+  file(
+    GLOB_RECURSE
+    test_sha2
+    inc/*
+    test/testSHA2.cpp
+  )
+
+  add_executable(
+    anch-sha2-test
+    ${test_sha2}
+  )
+
+  target_link_libraries(
+    anch-sha2-test
+    anch-crypto
+  )
+  # Build SHA2 unitary test -
+
+  # Build HMAC unitary test +
+  file(
+    GLOB_RECURSE
+    test_hmac
+    inc/*
+    test/testHmac.cpp
+  )
+
+  add_executable(
+    anch-hmac-test
+    ${test_hmac}
+  )
+
+  target_link_libraries(
+    anch-hmac-test
+    anch-crypto
+  )
+  # Build HMAC unitary test -
+
   enable_testing()
   add_test(anch-md5-test ${EXECUTABLE_OUTPUT_PATH}/anch-md5-test main)
   add_test(anch-sha1-test ${EXECUTABLE_OUTPUT_PATH}/anch-sha1-test main)
+  add_test(anch-sha2-test ${EXECUTABLE_OUTPUT_PATH}/anch-sha2-test main)
+  add_test(anch-hmac-test ${EXECUTABLE_OUTPUT_PATH}/anch-hmac-test main)
 
 endif(ANCH_CRYPTO_UNITARY_TEST)

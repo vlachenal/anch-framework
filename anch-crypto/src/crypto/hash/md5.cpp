@@ -23,12 +23,31 @@
 
 
 using anch::crypto::MD5;
-using std::string;
+
+
+/*!
+ * Swap byte
+ *
+ * \param buf The bytes to process
+ * \param count The number of operation to do
+ */
+inline void
+byteSwap(uint32_t* buf, uint8_t count) {
+  const uint32_t byteOrderTest = 0x1;
+  if(reinterpret_cast<const uint8_t*>(&byteOrderTest)[0] == 0) { // endianess test
+    uint8_t* words = reinterpret_cast<uint8_t*>(buf);
+    do {
+      *buf++ = static_cast<uint32_t>(words[3] << 8 | words[2]) << 16
+	| (words[1] << 8 | words[0]);
+      words += 4;
+    } while(--count);
+  }
+}
 
 
 // Constructors +
-/**
- * {@link MD5} default constructor
+/*!
+ * \ref MD5 default constructor
  */
 MD5::MD5() {
   // Nothing to do
@@ -37,8 +56,8 @@ MD5::MD5() {
 
 
 // Destructor +
-/**
- * {@link MD5} destructor
+/*!
+ * \ref MD5 destructor
  */
 MD5::~MD5() {
   // Nothing to do
@@ -47,21 +66,21 @@ MD5::~MD5() {
 
 
 // Methods +
-/**
+/*!
  * Get the MD5 hash result
  *
- * @return the MD5 hash result
+ * \return the MD5 hash result
  */
 const std::array<uint8_t,16>&
 MD5::digest() const {
   return _context.digest;
 }
 
-/**
+/*!
  * Compute hash for data with the current hash
  *
- * @param data The data to add
- * @param len The data length
+ * \param data The data to add
+ * \param len The data length
  */
 void
 MD5::addData(const uint8_t* data, size_t len) {
@@ -100,7 +119,7 @@ MD5::addData(const uint8_t* data, size_t len) {
   }
 }
 
-/**
+/*!
  * Finalize hash
  */
 void
@@ -134,7 +153,7 @@ MD5::finalize() {
 	      _context.buffer.data(), 16);
 }
 
-/**
+/*!
  * Apply transformation
  */
 void
@@ -216,24 +235,5 @@ MD5::transform() {
   _context.buffer[1] += b;
   _context.buffer[2] += c;
   _context.buffer[3] += d;
-}
-
-/**
- * Swap byte for endianness conversion
- *
- * @param buf The 4-bytes words to process
- * @param count The number of operation to do
- */
-void
-MD5::byteSwap(uint32_t* buf, uint8_t count) {
-  const uint32_t byteOrderTest = 0x1;
-  if(reinterpret_cast<const uint8_t*>(&byteOrderTest)[0] == 0) { // endianess test
-    uint8_t* words = reinterpret_cast<uint8_t*>(buf);
-    do {
-      *buf++ = static_cast<uint32_t>(words[3] << 8 | words[2]) << 16
-	| (words[1] << 8 | words[0]);
-      words += 4;
-    } while(--count);
-  }
 }
 // Methods -

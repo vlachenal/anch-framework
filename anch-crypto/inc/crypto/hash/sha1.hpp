@@ -17,65 +17,62 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef _ANCH_CRYPTO_SHA1_
-#define _ANCH_CRYPTO_SHA1_
+#ifndef _ANCH_CRYPTO_SHA1_H_
+#define _ANCH_CRYPTO_SHA1_H_
 
-#include <iostream>
-#include <ostream>
-#include <iomanip>
-#include <array>
+#include "crypto/hash/hash.hpp"
 
 
 namespace anch {
   namespace crypto {
 
-    /**
-     * SHA1 hash algorithm implementation<br>
+    /*!
+     * SHA1 hash algorithm implementation\n
      * This algorithm is based on Qt framework algorithm.
      *
-     * @author Vincent Lachenal
+     * \author Vincent Lachenal
      */
-    class SHA1 {
+    class SHA1: public Hash<20,64> {
     private:
-      /**
+      /*!
        * SHA1 chunk
        *
-       * @author Vincent Lachenal
+       * \author Vincent Lachenal
        */
       typedef union {
-	/** Bytes */
+	/*! Bytes */
 	uint8_t bytes[64];
 
-	/** Words */
+	/*! Words */
 	uint32_t words[16];
       } Chunk;
 
-      /**
+      /*!
        * SHA1 context
        *
-       * @author Vincent Lachenal
+       * \author Vincent Lachenal
        */
       struct Context {
-	/** State */
+	/*! State */
 	std::array<uint32_t,5> state;
 
-	/** Message size */
+	/*! Message size */
 	uint64_t size;
 
-	/** Buffer */
+	/*! Buffer */
 	std::array<uint8_t,64> buffer;
 
-	/** Digest */
+	/*! Digest */
 	std::array<uint8_t,20> digest;
 
-	/**
-	 * {@link SHA1} {@link Context} constructor
+	/*!
+	 * \ref SHA1 \ref Context constructor
 	 */
 	Context() {
 	  reset();
 	}
 
-	/**
+	/*!
 	 * Initialize SHA1 context
 	 */
 	void reset() {
@@ -86,51 +83,43 @@ namespace anch {
 
       // Attributes +
     private:
-      /** SHA1 context */
+      /*! SHA1 context */
       Context _context;
       // Attributes -
 
 
       // Constructors +
     public:
-      /**
-       * {@link SHA1} default constructor
+      /*!
+       * \ref SHA1 default constructor
        */
       SHA1();
 
-      /**
-       * {@link SHA1} constructor with string
+      /*!
+       * \ref SHA1 constructor with string
        *
-       * @param data The string data to process
+       * \param data The string data to process
        */
       template<class CharT, class Traits, class Allocator>
       SHA1(const std::basic_string<CharT,Traits,Allocator>& data) {
-	addData(reinterpret_cast<const uint8_t*>(data.data()), data.length());
-	finalize();
+	Hash::digest(data);
       }
 
-      /**
-       * {@link SHA1} constructor with input stream.
+      /*!
+       * \ref SHA1 constructor with input stream.
        *
-       * @param stream The input stream to process
+       * \param stream The input stream to process
        */
       template<class CharT, class Traits>
       SHA1(std::basic_istream<CharT,Traits>& stream) {
-	if(stream) {
-	  char data[1024];
-	  while(!stream.eof()) {
-	    stream.read(data, 1024);
-	    addData(reinterpret_cast<uint8_t*>(data), stream.gcount());
-	  }
-	  finalize();
-	}
+	Hash::digest(stream);
       }
       // Constructors -
 
 
       // Destructor +
-      /**
-       * {@link SHA1} destructor
+      /*!
+       * \ref SHA1 destructor
        */
       virtual ~SHA1();
       // Destructor -
@@ -138,69 +127,76 @@ namespace anch {
 
       // Methods +
     public:
-      /**
-       * Get the MD5 hash result
+      /*!
+       * Get the SAH1 hash result
        *
-       * @return the MD5 hash result
+       * \return the SAH1 hash result
        */
-      const std::array<uint8_t,20>& digest() const;
+      virtual const std::array<uint8_t,20>& digest() const override;
 
-    private:
+    protected:
+      /*!
+       * Reset hash context
+       */
+      virtual void reset() override {
+	_context.reset();
+      }
 
-      /**
+      /*!
        * Compute hash for data with the current hash
        *
-       * @param data The data to add
-       * @param len The data length
+       * \param data The data to add
+       * \param len The data length
        */
-      void addData(const uint8_t* data, size_t len);
+      virtual void addData(const uint8_t* data, std::size_t len) override;
 
-      /**
+      /*!
+       * Finalize hash
+       */
+      virtual void finalize() override;
+
+    private:
+      /*!
        * Transform SHA1 with the current chunk
        *
-       * @param buffer The data to process
+       * \param buffer The data to process
        */
       void transform(const uint8_t* buffer);
 
-      /**
-       * Finalize hash
-       */
-      void finalize();
-
-      /**
+      /*!
        * Bits rotation of 32 bits integer from a value
        *
-       * @param value The integer to process
-       * @param shift The number of bits to shift
+       * \param value The integer to process
+       * \param shift The number of bits to shift
        */
-      static inline uint32_t rol32(uint32_t value, unsigned int shift);
+      static inline uint32_t rol32(uint32_t value, unsigned int shift){
+	return ((value << shift) | value >> (32 - shift));
+      }
 
-      /**
+      /*!
        * Compute SHA1 word
        *
-       * @param chunk The SHA1 chunk
-       * @param position The position
+       * \param chunk The SHA1 chunk
+       * \param position The position
        */
-      static inline uint32_t word(Chunk& chunk, unsigned int position);
+      static inline uint32_t word(Chunk& chunk, unsigned int position){
+	return (chunk.words[position & 0xf] = rol32(chunk.words[(position + 13)  & 0xf]
+						    ^ chunk.words[(position + 8) & 0xf]
+						    ^ chunk.words[(position + 2) & 0xf]
+						    ^ chunk.words[(position)     & 0xf],
+						    1));
+      }
 
-      /**
-       * Swap byte for endianness conversion
-       *
-       * @param buf The 4-bytes words to process
-       * @param count The number of operation to do
-       */
-      static inline void bytesSwap(uint32_t* buf, uint8_t count);
-
-      /**
+      /*!
        * First core function
        *
-       * @param chunk The chunk to process
-       * @param position The position
-       * @param v The first parameter
-       * @param w The second parameter
-       * @param x The third parameter
-       * @param y The fourth parameter
-       * @param z The fifth parameter
+       * \param chunk The chunk to process
+       * \param position The position
+       * \param v The first parameter
+       * \param w The second parameter
+       * \param x The third parameter
+       * \param y The fourth parameter
+       * \param z The fifth parameter
        */
       static inline void round0(Chunk& chunk,
 				const unsigned int position,
@@ -208,18 +204,21 @@ namespace anch {
 				uint32_t& w,
 				uint32_t& x,
 				uint32_t& y,
-				uint32_t& z);
+				uint32_t& z){
+	z += ((( w & (x ^ y)) ^ y) + chunk.words[position] + 0x5A827999 + rol32(v, 5));
+	w = rol32(w, 30);
+      }
 
-      /**
+      /*!
        * Second core function
        *
-       * @param chunk The chunk to process
-       * @param position The position
-       * @param v The first parameter
-       * @param w The second parameter
-       * @param x The third parameter
-       * @param y The fourth parameter
-       * @param z The fifth parameter
+       * \param chunk The chunk to process
+       * \param position The position
+       * \param v The first parameter
+       * \param w The second parameter
+       * \param x The third parameter
+       * \param y The fourth parameter
+       * \param z The fifth parameter
        */
       static inline void round1(Chunk& chunk,
 				const unsigned int position,
@@ -227,18 +226,21 @@ namespace anch {
 				uint32_t& w,
 				uint32_t& x,
 				uint32_t& y,
-				uint32_t& z);
+				uint32_t& z){
+	z += ((( w & (x ^ y)) ^ y) + word(chunk,position) + 0x5A827999 + rol32(v, 5));
+	w = rol32(w, 30);
+      }
 
-      /**
+      /*!
        * Third core function
        *
-       * @param chunk The chunk to process
-       * @param position The position
-       * @param v The first parameter
-       * @param w The second parameter
-       * @param x The third parameter
-       * @param y The fourth parameter
-       * @param z The fifth parameter
+       * \param chunk The chunk to process
+       * \param position The position
+       * \param v The first parameter
+       * \param w The second parameter
+       * \param x The third parameter
+       * \param y The fourth parameter
+       * \param z The fifth parameter
        */
       static inline void round2(Chunk& chunk,
 				const unsigned int position,
@@ -246,18 +248,21 @@ namespace anch {
 				uint32_t& w,
 				uint32_t& x,
 				uint32_t& y,
-				uint32_t& z);
+				uint32_t& z){
+	z += (( w ^ x ^ y) + word(chunk, position) + 0x6ED9EBA1 + rol32(v, 5));
+	w = rol32(w, 30);
+      }
 
-      /**
+      /*!
        * Fourth core function
        *
-       * @param chunk The chunk to process
-       * @param position The position
-       * @param v The first parameter
-       * @param w The second parameter
-       * @param x The third parameter
-       * @param y The fourth parameter
-       * @param z The fifth parameter
+       * \param chunk The chunk to process
+       * \param position The position
+       * \param v The first parameter
+       * \param w The second parameter
+       * \param x The third parameter
+       * \param y The fourth parameter
+       * \param z The fifth parameter
        */
       static inline void round3(Chunk& chunk,
 				const unsigned int position,
@@ -265,18 +270,21 @@ namespace anch {
 				uint32_t& w,
 				uint32_t& x,
 				uint32_t& y,
-				uint32_t& z);
+				uint32_t& z){
+	z += (((( w | x) & y) | (w & x)) + word(chunk, position) + 0x8F1BBCDC + rol32(v, 5));
+	w = rol32(w, 30);
+      }
 
-      /**
+      /*!
        * Fifth core function
        *
-       * @param chunk The chunk to process
-       * @param position The position
-       * @param v The first parameter
-       * @param w The second parameter
-       * @param x The third parameter
-       * @param y The fourth parameter
-       * @param z The fifth parameter
+       * \param chunk The chunk to process
+       * \param position The position
+       * \param v The first parameter
+       * \param w The second parameter
+       * \param x The third parameter
+       * \param y The fourth parameter
+       * \param z The fifth parameter
        */
       static inline void round4(Chunk& chunk,
 				const unsigned int position,
@@ -284,7 +292,10 @@ namespace anch {
 				uint32_t& w,
 				uint32_t& x,
 				uint32_t& y,
-				uint32_t& z);
+				uint32_t& z){
+	z += ((w ^ x ^ y) + word(chunk, position) + 0xCA62C1D6 + rol32(v, 5));
+	w = rol32(w, 30);
+      }
       // Methods -
 
     };
@@ -292,25 +303,4 @@ namespace anch {
   }
 }
 
-/**
- * Ouput stream operator definition for MD5.<br>
- * This function preserves the formatting flags.
- *
- * @param out The output stream
- * @param hash The MD5 hash
- *
- * @return The output stream
- */
-template<class CharT, class Traits>
-std::basic_ostream<CharT, Traits>&
-operator << (std::basic_ostream<CharT, Traits>& out, const anch::crypto::SHA1& hash) {
-  std::ios_base::fmtflags flags = out.flags(); // Save current flags
-  out << std::hex;
-  for(const uint8_t& byte : hash.digest()) {
-    out << std::setfill('0') << std::setw(2) << static_cast<uint16_t>(byte);
-  }
-  out.flags(flags); // Restore flags
-  return out;
-}
-
-#endif // _ANCH_CRYPTO_SHA1_
+#endif // _ANCH_CRYPTO_SHA1_H_
