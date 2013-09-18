@@ -27,67 +27,76 @@
 namespace anch {
   namespace uuid {
 
-    /**
+    /*!
      * The UUID version
      *
-     * @author Vincent Lachenal
+     * \author Vincent Lachenal
      */
     enum Version {
+      /*! MAC address based algorithm */
       MAC_ADDRESS = 1,
+
+      /*! DCE security (Windows) base algorithm */
       DCE_SECURITY,
+
+      /*! MD5 hash based algorithm */
       MD5_HASH,
+
+      /*! Random based algorithm */
       RANDOM,
+
+      /*! SHA1 hash based algorithm */
       SHA1_HASH
     };
 
-    /**
-     * UUID generator and parser.<br>
-     * <br>
-     * For now, only version 1 is implemented.<br>
+    /*!
+     * UUID generator and parser.\n
+     * \n
+     * For now, only version 1 is implemented.\n
      * See RFC 4122 for more details (http://www.ietf.org/rfc/rfc4122.txt)
      *
-     * @author Vincent Lachenal
+     * \author Vincent Lachenal
      */
     class Uuid {
       // Attributes +
     private:
-      /** UTC offset to apply to Epoch timestamp */
+      /*! UTC offset to apply to Epoch timestamp */
       static const uint64_t UTC_OFFSET;
 
-      /** The timestamp low value */
+      /*! The timestamp low value */
       uint32_t _lowTime;
 
-      /** The timestamp mid value */
+      /*! The timestamp mid value */
       uint16_t _midTime;
 
-      /** The timestamp high value */
+      /*! The timestamp high value */
       uint16_t _highTime;
 
-      /** The clock sequence low value */
+      /*! The clock sequence low value */
       uint16_t _clockSeqLow;
 
-      /** The clock sequence high value and reserved value */
+      /*! The clock sequence high value and reserved value */
       uint16_t _clockSeqHighRes;
 
-      /** The node */
+      /*! The node */
       uint64_t _node;
 
-      /** Version */
+      /*! Version */
       anch::uuid::Version _version;
       // Attributes -
 
 
       // Constructors +
     public:
-      /**
-       * {@link Uuid} default constructor
+      /*!
+       * \ref Uuid default constructor
        */
       Uuid();
 
-      /**
-       * {@link Uuid} copy constructor
+      /*!
+       * \ref Uuid copy constructor
        *
-       * @param uuid The {@link Uuid} to copy
+       * \param uuid The \ref Uuid to copy
        */
       Uuid(const Uuid& uuid);
       // Constructors -
@@ -95,55 +104,55 @@ namespace anch {
 
       // Static methods +
     public:
-      /**
+      /*!
        * Generate a new UUID
        *
-       * @param uuid The UUID to set
-       * @param version The UUID algorithm version to use (default to MAC based algorithm)
-       * @param data The data to process (used to SHA1 and MD5 algorithms)
+       * \param uuid The UUID to set
+       * \param version The UUID algorithm version to use (default to MAC based algorithm)
+       * \param data The data to process (used to SHA1 and MD5 algorithms)
        */
       static void generateUuid(Uuid& uuid,
 			       anch::uuid::Version version = anch::uuid::Version::RANDOM,
 			       const std::string& data = "");
 
-      /**
+      /*!
        * Generate a new UUID with version 1 (MAC address based) algorithm
        *
-       * @param uuid The UUID to set
-       * @param macAddress The MAC address to use. If empty, the first MAC address
+       * \param uuid The UUID to set
+       * \param macAddress The MAC address to use. If empty, the first MAC address
        *                   available will be choosen
        */
       static void generateUuidVersion1(Uuid& uuid,
 				       const std::string& macAddress = "");
 
-      /**
+      /*!
        * Generate a new UUID with version 3 (MD5 based) algorithm
        *
-       * @param uuid The UUID to set
-       * @param data The data to process
+       * \param uuid The UUID to set
+       * \param data The data to process
        */
       static void generateUuidVersion3(Uuid& uuid, const std::string& data);
 
-      /**
+      /*!
        * Generate a new UUID with version 4 (random) algorithm
        *
-       * @param uuid The UUID to set
+       * \param uuid The UUID to set
        */
       static void generateUuidVersion4(Uuid& uuid);
 
-      /**
+      /*!
        * Generate a new UUID with version 5 (SHA1 based) algorithm
        *
-       * @param uuid The UUID to set
-       * @param data The data to process
+       * \param uuid The UUID to set
+       * \param data The data to process
        */
       static void generateUuidVersion5(Uuid& uuid, const std::string& data);
 
     private:
-      /**
+      /*!
        * Get UTC timestamp
        *
-       * @return The UTC timestamp
+       * \return The UTC timestamp
        */
       static uint64_t getUtcTimestamp();
       // Static methods -
@@ -151,10 +160,10 @@ namespace anch {
 
       // Methods +
     public:
-      /**
-       * Convert {@link Uuid} to std::string
+      /*!
+       * Convert \ref Uuid to std::string
        *
-       * @return The string representation of {@link Uuid}
+       * \return The string representation of \ref Uuid
        */
       std::string toString() const;
       // Methods -
@@ -162,64 +171,64 @@ namespace anch {
 
       // Accessors +
     public:
-      /**
+      /*!
        * The timestamp low value getter
        *
-       * @return The timestamp low value
+       * \return The timestamp low value
        */
       inline uint32_t getLowTime() const {
 	return _lowTime;
       }
 
-      /**
+      /*!
        * The timestamp mid value getter
        *
-       * @return The timestamp mid value
+       * \return The timestamp mid value
        */
       inline uint16_t getMidTime() const {
 	return _midTime;
       }
 
-      /**
+      /*!
        * The timestamp high value getter
        *
-       * @return The timestamp high value
+       * \return The timestamp high value
        */
       inline uint16_t getHighTime() const {
 	return _highTime;
       }
 
-      /**
+      /*!
        * The clock sequence low value getter
        *
-       * @return The clock sequence low value
+       * \return The clock sequence low value
        */
       inline uint16_t getClockSeqLow() const {
 	return _clockSeqLow;
       }
 
-      /**
+      /*!
        * The clock sequence high value and reserved value getter
        *
-       * @return The clock sequence high value and reserved value
+       * \return The clock sequence high value and reserved value
        */
       inline uint16_t getClockSeqHighRes() const {
 	return _clockSeqHighRes;
       }
 
-      /**
+      /*!
        * The node getter
        *
-       * @return The node
+       * \return The node
        */
       inline uint64_t getNode() const {
 	return _node;
       }
 
-      /**
+      /*!
        * Version getter
        *
-       * @return The version
+       * \return The version
        */
       inline anch::uuid::Version getVersion() const {
 	return _version;
@@ -231,14 +240,14 @@ namespace anch {
   }
 }
 
-/**
+/*!
  * Ouput stream operator definition for UUID.<br>
  * This function preserves the formatting flags.
  *
- * @param out The output stream
- * @param uuid The UUID
+ * \param out The output stream
+ * \param uuid The UUID
  *
- * @return The output stream
+ * \return The output stream
  */
 template<class CharT, class Traits>
 std::basic_ostream<CharT, Traits>&

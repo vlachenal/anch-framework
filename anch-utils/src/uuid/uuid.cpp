@@ -60,17 +60,17 @@ uniform_int_distribution<uint64_t> dist64(0, 0xFFFFFFFFFFFF); // Max 12 hexadeci
 
 
 // Constructors +
-/**
- * {@link Uuid} default constructor
+/*!
+ * \ref Uuid default constructor
  */
 Uuid::Uuid() {
   // Intialize some fields ?
 }
 
-/**
- * {@link Uuid} copy constructor
+/*!
+ * \ref Uuid copy constructor
  *
- * @param uuid The {@link Uuid} to copy
+ * \param uuid The \ref Uuid to copy
  */
 Uuid::Uuid(const Uuid& uuid): _lowTime(uuid._lowTime),
 			      _midTime(uuid._midTime),
@@ -84,12 +84,12 @@ Uuid::Uuid(const Uuid& uuid): _lowTime(uuid._lowTime),
 
 
 // Methods +
-/**
+/*!
  * Generate a new UUID
  *
- * @param uuid The UUID to set
- * @param version The UUID algorithm version to use (default to MAC based algorithm)
- * @param data The data to process (used to SHA1 and MD5 algorithms)
+ * \param uuid The UUID to set
+ * \param version The UUID algorithm version to use (default to MAC based algorithm)
+ * \param data The data to process (used to SHA1 and MD5 algorithms)
  */
 void
   Uuid::generateUuid(Uuid& uuid, Version version, const string& data) {
@@ -124,11 +124,11 @@ void
   }
 }
 
-/**
+/*!
  * Generate a new UUID with version 1 (MAC address based) algorithm
  *
- * @param uuid The UUID to set
- * @param macAddress The MAC address to use. If empty, the first MAC address
+ * \param uuid The UUID to set
+ * \param macAddress The MAC address to use. If empty, the first MAC address
  *                   available will be choosen
  */
 void
@@ -172,11 +172,11 @@ Uuid::generateUuidVersion1(Uuid& uuid, const string& macAddress) {
   // MAC address -
 }
 
-/**
+/*!
  * Generate a new UUID with version 3 (MD5 based) algorithm
  *
- * @param uuid The UUID to set
- * @param data The data to process
+ * \param uuid The UUID to set
+ * \param data The data to process
  */
 void
 Uuid::generateUuidVersion3(Uuid& uuid, const string& data) {
@@ -211,10 +211,10 @@ Uuid::generateUuidVersion3(Uuid& uuid, const string& data) {
   // Node -
 }
 
-/**
+/*!
  * Generate a new UUID with version 1 (MAC address based) algorithm
  *
- * @param uuid The UUID to set
+ * \param uuid The UUID to set
  */
 void
 Uuid::generateUuidVersion4(Uuid& uuid) {
@@ -236,11 +236,11 @@ Uuid::generateUuidVersion4(Uuid& uuid) {
   // Node -
 }
 
-/**
+/*!
  * Generate a new UUID with version 3 (MD5 based) algorithm
  *
- * @param uuid The UUID to set
- * @param data The data to process
+ * \param uuid The UUID to set
+ * \param data The data to process
  */
 void
 Uuid::generateUuidVersion5(Uuid& uuid, const string& data) {
@@ -275,10 +275,10 @@ Uuid::generateUuidVersion5(Uuid& uuid, const string& data) {
   // Node -
 }
 
-/**
+/*!
  * Get UTC timestamp
  *
- * @return The UTC timestamp
+ * \return The UTC timestamp
  */
 uint64_t
 Uuid::getUtcTimestamp() {
@@ -288,10 +288,10 @@ Uuid::getUtcTimestamp() {
   return UTC_OFFSET + (uint64_t)timestamp;
 }
 
-/**
- * Convert {@link Uuid} to std::string
+/*!
+ * Convert \ref Uuid to std::string
  *
- * @return The string representation of {@link Uuid}
+ * \return The string representation of \ref Uuid
  */
 std::string
 Uuid::toString() const {
