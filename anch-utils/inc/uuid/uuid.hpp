@@ -241,7 +241,7 @@ namespace anch {
 }
 
 /*!
- * Ouput stream operator definition for UUID.<br>
+ * Ouput stream operator definition for UUID.\n
  * This function preserves the formatting flags.
  *
  * \param out The output stream
