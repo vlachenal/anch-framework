@@ -26,49 +26,49 @@
 namespace anch {
   namespace device {
 
-    /**
+    /*!
      * Device exception class.
      *
-     * @author Vincent Lachenal
+     * \author Vincent Lachenal
      */
     class DeviceException : public std::exception {
     private:
-      /** Exception message */
+      /*! Exception message */
       std::string _message;
 
     public:
       // Constructors +
-      /**
-       * {@link DeviceException} constructor
+      /*!
+       * \ref DeviceException constructor
        *
-       * @param message The error message
+       * \param message The error message
        */
-      DeviceException(const std::string& message) throw();
+      DeviceException(const std::string& message) noexcept;
 
-      /**
-       * {@link DeviceException} constructor
+      /*!
+       * \ref DeviceException constructor
        *
-       * @param message The error message
-       * @param errorCode The error code
+       * \param message The error message
+       * \param errorCode The error code
        */
-      DeviceException(const std::string& message, int errorCode) throw();
+      DeviceException(const std::string& message, int errorCode) noexcept;
       // Constructors -
 
       // Destructor +
-      /**
-       * {@link DeviceException} destructor
+      /*!
+       * \ref DeviceException destructor
        */
-      virtual ~DeviceException() throw();
+      virtual ~DeviceException() noexcept;
       // Destructor -
 
     public:
       // Methods +
-      /**
+      /*!
        * Return the error message
        *
-       * @return The error message
+       * \return The error message
        */
-      virtual const char* what() const throw();
+      virtual const char* what() const noexcept;
       // Methods -
 
     };

@@ -12,8 +12,8 @@ using anch::device::NetworkInterface;
 using anch::device::DeviceException;
 
 
-/**
- * Test valid network device.<br>
+/*!
+ * Test valid network device.\n
  *
  * This test has to succeed.
  */

@@ -35,7 +35,7 @@ using anch::device::DeviceException;
 /*!
  * \ref NetworkInterface constructor.
  *
- * \param interface Data retrieved through <code>ioctl</code> POSIX call
+ * \param interface Data retrieved through \c ioctl POSIX call
  * \param isLocalhost Interface is local loopback
  *
  * \throw DeviceException Device error
