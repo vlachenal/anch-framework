@@ -73,7 +73,7 @@ namespace anch {
 
       // Constructors +
     public:
-      /**
+      /*!
        * \ref DateFormatter constructor
        *
        * \param dateFormat The date format

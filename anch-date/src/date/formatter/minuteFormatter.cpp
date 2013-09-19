@@ -36,46 +36,46 @@ using anch::date::formatter::IDatePartFormatter;
 const string MinuteFormatter::PATTERN = "%M";
 
 
-/**
- * {@link MinuteFormatter} default constructor
+/*!
+ * \ref MinuteFormatter default constructor
  */
 MinuteFormatter::MinuteFormatter() {
   // Nothing to do
 }
 
-/**
- * {@link MinuteFormatter} destructor
+/*!
+ * \ref MinuteFormatter destructor
  */
 MinuteFormatter::~MinuteFormatter() {
   // Nothing to do
 }
 
-/**
+/*!
  * Format date
  *
- * @param date The {@link Date} to format
- * @param output The output stream to write in
+ * \param date The \ref Date to format
+ * \param output The output stream to write in
  */
 void
 MinuteFormatter::format(const Date& date, ostream& output) const noexcept {
   output << setfill('0') << setw(2) << getMinute(date);
 }
 
-/**
+/*!
  * Get size of formatter part
  *
- * @return The size of formatter part
+ * \return The size of formatter part
  */
 size_t
 MinuteFormatter::getSize() const noexcept {
   return 2;
 }
 
-/**
- * Set value to {@link Date}
+/*!
+ * Set value to \ref Date
  *
- * @param date The {@link Date} to modify
- * @param value The value to set
+ * \param date The \ref Date to modify
+ * \param value The value to set
  */
 bool
 MinuteFormatter::setValue(Date& date, const string& value) const noexcept {
@@ -94,20 +94,20 @@ MinuteFormatter::setValue(Date& date, const string& value) const noexcept {
   }
 }
 
-/**
+/*!
  * Get formatter part pattern
  *
- * @return The formatter part pattern
+ * \return The formatter part pattern
  */
 const string&
 MinuteFormatter::getPattern() const noexcept {
   return MinuteFormatter::PATTERN;
 }
 
-/**
- * Return a new instance of {@link MinuteFormatter}
+/*!
+ * Return a new instance of \ref MinuteFormatter
  *
- * @return A new instance of {@link MinuteFormatter}
+ * \return A new instance of \ref MinuteFormatter
  */
 IDatePartFormatter*
 MinuteFormatter::getInstance() {

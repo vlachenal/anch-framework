@@ -36,25 +36,25 @@ using anch::date::formatter::IDatePartFormatter;
 const string MarkerFormatter::PATTERN = "%p";
 
 
-/**
- * {@link MarkerFormatter} default constructor
+/*!
+ * \ref MarkerFormatter default constructor
  */
 MarkerFormatter::MarkerFormatter() {
   // Nothing to do
 }
 
-/**
- * {@link MarkerFormatter} destructor
+/*!
+ * \ref MarkerFormatter destructor
  */
 MarkerFormatter::~MarkerFormatter() {
   // Nothing to do
 }
 
-/**
+/*!
  * Format date
  *
- * @param date The {@link Date} to format
- * @param output The output stream to write in
+ * \param date The \ref Date to format
+ * \param output The output stream to write in
  */
 void
 MarkerFormatter::format(const Date& date, ostream& output) const noexcept {
@@ -67,21 +67,21 @@ MarkerFormatter::format(const Date& date, ostream& output) const noexcept {
   output << marker;
 }
 
-/**
+/*!
  * Get size of formatter part
  *
- * @return The size of formatter part
+ * \return The size of formatter part
  */
 size_t
 MarkerFormatter::getSize() const noexcept {
   return 4;
 }
 
-/**
- * Set value to {@link Date}
+/*!
+ * Set value to \ref Date
  *
- * @param date The {@link Date} to modify
- * @param value The value to set
+ * \param date The \ref Date to modify
+ * \param value The value to set
  */
 bool
 MarkerFormatter::setValue(Date& date, const string& value) const noexcept {
@@ -93,20 +93,20 @@ MarkerFormatter::setValue(Date& date, const string& value) const noexcept {
   return true;
 }
 
-/**
+/*!
  * Get formatter part pattern
  *
- * @return The formatter part pattern
+ * \return The formatter part pattern
  */
 const string&
 MarkerFormatter::getPattern() const noexcept {
   return MarkerFormatter::PATTERN;
 }
 
-/**
- * Return a new instance of {@link MarkerFormatter}
+/*!
+ * Return a new instance of \ref MarkerFormatter
  *
- * @return A new instance of {@link MarkerFormatter}
+ * \return A new instance of \ref MarkerFormatter
  */
 IDatePartFormatter*
 MarkerFormatter::getInstance() {

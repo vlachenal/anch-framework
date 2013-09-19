@@ -36,46 +36,46 @@ using anch::date::formatter::IDatePartFormatter;
 const string Hour24Formatter::PATTERN = "%H";
 
 
-/**
- * {@link Hour24Formatter} default constructor
+/*!
+ * \ref Hour24Formatter default constructor
  */
 Hour24Formatter::Hour24Formatter() {
   // Nothing to do
 }
 
-/**
- * {@link Hour24Formatter} destructor
+/*!
+ * \ref Hour24Formatter destructor
  */
 Hour24Formatter::~Hour24Formatter() {
   // Nothing to do
 }
 
-/**
+/*!
  * Format date
  *
- * @param date The {@link Date} to format
- * @param output The output stream to write in
+ * \param date The \ref Date to format
+ * \param output The output stream to write in
  */
 void
 Hour24Formatter::format(const Date& date, ostream& output) const noexcept {
   output << setfill('0') << setw(2) << getHour(date);
 }
 
-/**
+/*!
  * Get size of formatter part
  *
- * @return The size of formatter part
+ * \return The size of formatter part
  */
 size_t
 Hour24Formatter::getSize() const noexcept {
   return 2;
 }
 
-/**
- * Set value to {@link Date}
+/*!
+ * Set value to \ref Date
  *
- * @param date The {@link Date} to modify
- * @param value The value to set
+ * \param date The \ref Date to modify
+ * \param value The value to set
  */
 bool
 Hour24Formatter::setValue(Date& date, const string& value) const noexcept {
@@ -94,20 +94,20 @@ Hour24Formatter::setValue(Date& date, const string& value) const noexcept {
   }
 }
 
-/**
+/*!
  * Get formatter part pattern
  *
- * @return The formatter part pattern
+ * \return The formatter part pattern
  */
 const string&
 Hour24Formatter::getPattern() const noexcept {
   return Hour24Formatter::PATTERN;
 }
 
-/**
- * Return a new instance of {@link Hour24Formatter}
+/*!
+ * Return a new instance of \ref Hour24Formatter
  *
- * @return A new instance of {@link Hour24Formatter}
+ * \return A new instance of \ref Hour24Formatter
  */
 IDatePartFormatter*
 Hour24Formatter::getInstance() {

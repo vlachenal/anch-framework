@@ -75,10 +75,10 @@ map<string, getInstance> DateFormatter::FORMATTERS = {
 
 
 // Constructors +
-/**
- * {@link DateFormatter} constructor
+/*!
+ * \ref DateFormatter constructor
  *
- * @param dateFormat The date format
+ * \param dateFormat The date format
  */
 DateFormatter::DateFormatter(const string& dateFormat) {
   string line = dateFormat;
@@ -99,8 +99,8 @@ DateFormatter::DateFormatter(const string& dateFormat) {
 // Constructors -
 
 // Destructor +
-/**
- * {@link DateFormatter} destructor
+/*!
+ * \ref DateFormatter destructor
  */
 DateFormatter::~DateFormatter() {
   for(const IDatePartFormatter* part : _formatters) {
@@ -111,11 +111,11 @@ DateFormatter::~DateFormatter() {
 
 
 // Methods +
-/**
+/*!
  * Register a new formatter part
  *
- * @param pattern The formatter part pattern
- * @param instGetter The formatter part new instance getter
+ * \param pattern The formatter part pattern
+ * \param instGetter The formatter part new instance getter
  */
 void
 DateFormatter::registerFormatterPart(const string& pattern,
@@ -126,11 +126,11 @@ DateFormatter::registerFormatterPart(const string& pattern,
   }
 }
 
-/**
+/*!
  * Format date
  *
- * @param date The date to format
- * @param output The output string
+ * \param date The date to format
+ * \param output The output string
  */
 void
 DateFormatter::format(const Date& date, string& output) const {
@@ -140,11 +140,11 @@ DateFormatter::format(const Date& date, string& output) const {
   output = oss.str();
 }
 
-/**
- * Format date
+/*!
+ * Format date.
  *
- * @param date The date to format
- * @param output The output string
+ * \param date The date to format
+ * \param output The output string
  */
 void
 DateFormatter::format(const Date& date, ostream& output) const {
@@ -154,12 +154,12 @@ DateFormatter::format(const Date& date, ostream& output) const {
   output.flush();
 }
 
-/**
- * Build date from string<br>
- * You can build the output {@link Date} with Date(false) constructor.
+/*!
+ * Build date from string.\n
+ * You can build the output \ref Date with Date(false) constructor.
  *
- * @param strDate String formatted date
- * @param date The output date
+ * \param strDate String formatted date
+ * \param date The output date
  */
 void
 DateFormatter::parse(const string& strDate, Date& date) const {
@@ -178,13 +178,13 @@ DateFormatter::parse(const string& strDate, Date& date) const {
   date.computeTimestamp();
 }
 
-/**
- * Build date from string.<br>
- * You had to delete {@link Date} to not make memory leaks.
+/*!
+ * Build date from string.\n
+ * You had to delete \ref Date to not make memory leaks.
  *
- * @param strDate String formatted date
+ * \param strDate String formatted date
  *
- * @return A date
+ * \return A date
  */
 Date*
 DateFormatter::parse(const std::string& strDate) const {
@@ -193,10 +193,10 @@ DateFormatter::parse(const std::string& strDate) const {
   return date;
 }
 
-/**
+/*!
  * Add formatter to formatter list
  *
- * @param strFormatter The formatter part to instanciate
+ * \param strFormatter The formatter part to instanciate
  */
 void
 DateFormatter::addFormatter(const string& strFormatter) {

@@ -36,46 +36,46 @@ using anch::date::formatter::IDatePartFormatter;
 const string DayFormatter::PATTERN = "%d";
 
 
-/**
- * {@link DayFormatter} default constructor
+/*!
+ * \ref DayFormatter default constructor
  */
 DayFormatter::DayFormatter() {
   // Nothing to do
 }
 
-/**
- * {@link DayFormatter} destructor
+/*!
+ * \ref DayFormatter destructor
  */
 DayFormatter::~DayFormatter() {
   // Nothing to do
 }
 
-/**
+/*!
  * Format date
  *
- * @param date The {@link Date} to format
- * @param output The output stream to write in
+ * \param date The \ref Date to format
+ * \param output The output stream to write in
  */
 void
 DayFormatter::format(const Date& date, ostream& output) const noexcept {
   output << setfill('0') << setw(2) << getDay(date);
 }
 
-/**
+/*!
  * Get size of formatter part
  *
- * @return The size of formatter part
+ * \return The size of formatter part
  */
 size_t
 DayFormatter::getSize() const noexcept {
   return 2;
 }
 
-/**
- * Set value to {@link Date}
+/*!
+ * Set value to \ref Date
  *
- * @param date The {@link Date} to modify
- * @param value The value to set
+ * \param date The \ref Date to modify
+ * \param value The value to set
  */
 bool
 DayFormatter::setValue(Date& date, const string& value) const noexcept {
@@ -94,20 +94,20 @@ DayFormatter::setValue(Date& date, const string& value) const noexcept {
   }
 }
 
-/**
+/*!
  * Get formatter part pattern
  *
- * @return The formatter part pattern
+ * \return The formatter part pattern
  */
 const string&
 DayFormatter::getPattern() const noexcept {
   return DayFormatter::PATTERN;
 }
 
-/**
- * Return a new instance of {@link DayFormatter}
+/*!
+ * Return a new instance of \ref DayFormatter
  *
- * @return A new instance of {@link DayFormatter}
+ * \return A new instance of \ref DayFormatter
  */
 IDatePartFormatter*
 DayFormatter::getInstance() {

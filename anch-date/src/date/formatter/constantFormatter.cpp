@@ -32,48 +32,48 @@ using anch::date::Date;
 using anch::date::formatter::ConstantFormatter;
 
 
-/**
- * {@link ConstantFormatter} default constructor
+/*!
+ * \ref ConstantFormatter default constructor
  *
- * @param message The constant message
+ * \param message The constant message
  */
 ConstantFormatter::ConstantFormatter(const string& message): _message(message) {
   _message.shrink_to_fit();
 }
 
-/**
- * {@link ConstantFormatter} destructor
+/*!
+ * \ref ConstantFormatter destructor
  */
 ConstantFormatter::~ConstantFormatter() {
   // Nothing to do
 }
 
-/**
+/*!
  * Format date
  *
- * @param date The {@link Date} to format
- * @param output The output stream to write in
+ * \param date The \ref Date to format
+ * \param output The output stream to write in
  */
 void
 ConstantFormatter::format(const Date& date, ostream& output) const noexcept {
   output << _message;
 }
 
-/**
+/*!
  * Get size of formatter part
  *
- * @return The size of formatter part
+ * \return The size of formatter part
  */
 size_t
 ConstantFormatter::getSize() const noexcept {
   return _message.size();
 }
 
-/**
- * Set value to {@link Date}
+/*!
+ * Set value to \ref Date
  *
- * @param date The {@link Date} to modify
- * @param value The value to set
+ * \param date The \ref Date to modify
+ * \param value The value to set
  */
 bool
 ConstantFormatter::setValue(Date& date, const string& value) const noexcept {
@@ -81,10 +81,10 @@ ConstantFormatter::setValue(Date& date, const string& value) const noexcept {
   return true;
 }
 
-/**
+/*!
  * Get formatter part pattern
  *
- * @return The formatter part pattern
+ * \return The formatter part pattern
  */
 const string&
 ConstantFormatter::getPattern() const noexcept {
