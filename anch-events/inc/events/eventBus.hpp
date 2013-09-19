@@ -94,11 +94,10 @@ namespace anch {
        * \return the \ref EventBus unique instance
        */
       static EventBus<Event>& getEventBus() {
-	EventBus<Event>::INSTANCE_MUTEX.lock();
+	std::lock_guard<std::mutex> lock(INSTANCE_MUTEX);
 	if(_self == NULL) {
 	  _self = new EventBus<Event>();
 	}
-	EventBus<Event>::INSTANCE_MUTEX.unlock();
 	return *_self;
       }
 
@@ -108,9 +107,8 @@ namespace anch {
        * \param observer the \ref Observer to register
        */
       bool addObserver(anch::events::Observer<Event>& observer) noexcept {
-	_eventMutex.lock();
+	std::lock_guard<std::mutex> lock(_eventMutex);
 	bool added = _observers.insert(&observer).second;
-	_eventMutex.unlock();
 	return added;
       }
 
@@ -120,9 +118,8 @@ namespace anch {
        * \param observer The observer to remove
        */
       void removeObserver(anch::events::Observer<Event>& observer) noexcept {
-	_eventMutex.lock();
+	std::lock_guard<std::mutex> lock(_eventMutex);
 	_observers.erase(&observer);
-	_eventMutex.unlock();
       }
 
       /*!
@@ -131,11 +128,10 @@ namespace anch {
        * \param event the event which has been fired
        */
       void fireEvent(const Event& event) noexcept {
-	_eventMutex.lock();
+	std::lock_guard<std::mutex> lock(_eventMutex);
 	for(anch::events::Observer<Event>* observer : _observers) {
 	  observer->notify(event);
 	}
-	_eventMutex.unlock();
       }
 
       /*!
@@ -144,7 +140,7 @@ namespace anch {
        * \param event the event to process
        */
       void scheduleDeferred(const Event& event) noexcept {
-	_queueMutex.lock();
+	std::lock_guard<std::mutex> lock(_queueMutex);
 	bool empty = _events.empty();
 	_events.push(event);
 	if(empty) {
@@ -154,7 +150,6 @@ namespace anch {
 	  }
 	  _thread = new std::thread(&EventBus<Event>::processEvents,this);
 	}
-	_queueMutex.unlock();
       }
 
     private:
