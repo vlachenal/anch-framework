@@ -28,20 +28,20 @@ using anch::file::FileException;
 
 
 // Constructors +
-/**
- * {@link FileException} constructor
+/*!
+ * \ref FileException constructor
  *
- * @param message The error message
+ * \param message The error message
  */
 FileException::FileException(const string& message): _message(message) {
   _message.shrink_to_fit();
 }
 
-/**
- * {@link FileException} constructor
+/*!
+ * \ref FileException constructor
  *
- * @param message The error message
- * @param errnum System error number
+ * \param message The error message
+ * \param errnum System error number
  */
 FileException::FileException(const std::string& message, int errnum) {
   char buffer[1024];
@@ -52,8 +52,8 @@ FileException::FileException(const std::string& message, int errnum) {
 // Constructors -
 
 // Destructor +
-/**
- * {@link FileException} destructor
+/*!
+ * \ref FileException destructor
  */
 FileException::~FileException() noexcept {
   // Nothing to do
@@ -62,10 +62,10 @@ FileException::~FileException() noexcept {
 
 
 // Methods +
-/**
+/*!
  * Display message error
  *
- * @return The message error
+ * \return The message error
  */
 const char*
 FileException::what() const noexcept {

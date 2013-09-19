@@ -140,7 +140,7 @@ namespace anch {
       /*!
        * Create a new file
        *
-       * @param out The output stream on the file
+       * \param out The output stream on the file
        *
        * \throw anch::file::FileException any error on file creation
        */
@@ -155,7 +155,7 @@ namespace anch {
        */
       void createDirectory(bool parents = false) throw(anch::file::FileException);
 
-      /**
+      /*!
        * Delete this \ref File
        *
        * \throw anch::file::FileException any error on file deletion
