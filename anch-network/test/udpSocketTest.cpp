@@ -72,7 +72,7 @@ runUdpServer(UdpSocket* const serverSock) {
 }
 
 
-/**
+/*!
  * UDP socket unitary tests
  */
 int

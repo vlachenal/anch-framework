@@ -57,7 +57,7 @@ using anch::network::IOException;
 /*!
  * \ref Socket constructor.
  *
- * @param type The socket type
+ * \param type The socket type
  */
 Socket::Socket(anch::network::SocketType type):
   Observable<SocketEvent>(),
@@ -69,7 +69,7 @@ Socket::Socket(anch::network::SocketType type):
   // Nothing to do
 }
 
-/**
+/*!
  * \ref Socket constructor.\n
  * Backlog is set to 5 by default. You can change it using the setter before call listen method.
  *

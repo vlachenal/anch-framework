@@ -49,7 +49,7 @@ namespace anch {
        * \ref IOException constructor
        *
        * \param message The error message
-       * \param errorCode The error code (from <code>getinfoaddr</code>)
+       * \param errorCode The error code (from \c getinfoaddr)
        */
       IOException(const std::string& message, int errorCode);
       // Constructors -

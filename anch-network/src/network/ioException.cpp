@@ -43,7 +43,7 @@ IOException::IOException(const string& message): _message(message) {
  * \ref IOException constructor
  *
  * \param message The error message
- * \param errorCode The error code (from <code>getinfoaddr</code>)
+ * \param errorCode The error code (from \c getinfoaddr)
  */
 IOException::IOException(const string& message, int errorCode) {
   _message = message + ": " + gai_strerror(errorCode);

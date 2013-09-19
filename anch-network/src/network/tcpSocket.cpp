@@ -44,7 +44,7 @@ TcpSocket::TcpSocket():
   // Nothing to do
 }
 
-/**
+/*!
  * \ref TcpSocket constructor
  *
  * \param ipAddress The IP address

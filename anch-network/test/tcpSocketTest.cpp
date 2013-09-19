@@ -76,7 +76,7 @@ runTcpServer(TcpSocket* const serverSock) {
 }
 
 
-/**
+/*!
  * TCP socket unitary tests
  */
 int
