@@ -13,7 +13,6 @@ using anch::events::Observer;
 class Event {
 
 private:
-  /** Message */
   string _message;
 
 public:
