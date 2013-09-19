@@ -75,7 +75,7 @@ Resource::getResource(const string& filePath) {
  * \param param The parameter to find
  * \param section The parameter section (optional)
  *
- * \return <code>true</code> if value has been found, <code>false</code> otherwise.
+ * \return \c true if value has been found, \c false otherwise.
  */
 bool
 Resource::getParameter(string& value,
