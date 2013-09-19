@@ -30,7 +30,7 @@ namespace anch {
       /*!
        * String formatter
        *
-       *\@author Vincent Lachenal
+       * \author Vincent Lachenal
        */
       class DateFormatter: public anch::logger::formatter::IFormatter {
       private:

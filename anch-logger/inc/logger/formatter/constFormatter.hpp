@@ -44,7 +44,7 @@ namespace anch {
 	/*!
 	 * \ref ConstFormatter constructor
 	 *
-	 * @param strToPrint The string to print
+	 * \param strToPrint The string to print
 	 */
 	ConstFormatter(const std::string strToPrint);
 	// Constructor -

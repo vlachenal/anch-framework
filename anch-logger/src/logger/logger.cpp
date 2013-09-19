@@ -45,7 +45,7 @@ Logger::Logger(const string& name,
   }
 }
 
-/**
+/*!
  * \ref Logger destructor
  */
 Logger::~Logger() {

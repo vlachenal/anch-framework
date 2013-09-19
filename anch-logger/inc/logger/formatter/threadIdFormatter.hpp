@@ -27,42 +27,42 @@ namespace anch {
   namespace logger {
     namespace formatter {
 
-      /**
+      /*!
        * String formatter
        *
-       * @author Vincent Lachenal
+       * \author Vincent Lachenal
        */
       class ThreadIdFormatter: public anch::logger::formatter::IFormatter {
       public:
 	// Constructors +
-	/**
-	 * {@link ThreadIdFormatter} default constructor
+	/*!
+	 * \ref ThreadIdFormatter default constructor
 	 */
 	ThreadIdFormatter();
 	// Constructors -
 
 	// Destructor +
-	/**
-	 * {@link ThreadIdFormatter} destructor
+	/*!
+	 * \ref ThreadIdFormatter destructor
 	 */
 	~ThreadIdFormatter();
 	// Destructor -
 
       public:
-	/**
+	/*!
 	 * Return the input string
 	 *
-	 * @param value The input string
-	 * @param out The output stream to write in
+	 * \param value The input string
+	 * \param out The output stream to write in
 	 */
 	virtual void formatValue(const void* const value,
 				 std::ostream& out)
 	  const noexcept;
 
-	/**
+	/*!
 	 * Get the formatter type
 	 *
-	 * @return The formatter type
+	 * \return The formatter type
 	 */
 	virtual anch::logger::formatter::FormatterType getType() const noexcept;
 
