@@ -69,7 +69,7 @@ namespace anch {
        * \ref EventBus default constructor
        */
       EventBus(): _eventMutex(), _queueMutex(), _thread(NULL), _events(), _observers() {
-      	// \todo find a way to register self in global bus
+      	// Nothing to do
       }
       // Constructors -
 
