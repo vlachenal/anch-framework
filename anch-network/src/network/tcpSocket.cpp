@@ -49,6 +49,8 @@ TcpSocket::TcpSocket():
  *
  * \param ipAddress The IP address
  * \param port The port number
+ *
+ * \throw IOException any error
  */
 TcpSocket::TcpSocket(const string& ipAddress, uint16_t port) throw(IOException):
   Socket(ipAddress, port, SocketType::TCP) {

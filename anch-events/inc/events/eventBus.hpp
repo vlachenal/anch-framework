@@ -26,6 +26,7 @@
 #include <set>
 
 #include "events/observer.hpp"
+#include "lessPtrCompare.hpp"
 
 
 namespace anch {
@@ -33,6 +34,8 @@ namespace anch {
 
     /*!
      * Manage global events firing and events QoS.
+     *
+     * \since 0.1
      *
      * \author Vincent Lachenal
      */
@@ -59,7 +62,7 @@ namespace anch {
       std::queue<Event> _events;
 
       /*! Observers list */
-      std::set<anch::events::Observer<Event>*, anch::events::ObserverAddrCompare<Event> > _observers;
+      std::set<anch::events::Observer<Event>*, anch::LessPtrCompare<Observer<Event> > > _observers;
       // Attributes -
 
 

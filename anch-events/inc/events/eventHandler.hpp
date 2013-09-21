@@ -29,6 +29,8 @@ namespace anch {
     /*!
      * Event handler.
      *
+     * \since 0.1
+     *
      * \author Vincent Lachenal
      */
     template<typename Event, typename Derived>

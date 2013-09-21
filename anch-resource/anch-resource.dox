@@ -1,0 +1,18 @@
+/*! \page page_res AnCH resource library documentation
+ *
+ * \tableofcontents
+ *
+ * \section res_intro_seq Introduction
+ *
+ * AnCh resource library aims to provide facilities to handle resource files.
+ *
+ * \section res_req_sec Prerequisites
+ *
+ * Until standard C++ library implements regular expression, library will dependes on boost library.
+ *
+ * \section res_install_sec Installation
+ *
+ * TODO fill this section
+ *
+ * \section res_usage_sec Usage
+ */

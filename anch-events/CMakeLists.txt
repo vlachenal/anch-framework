@@ -32,6 +32,7 @@ find_package(Threads)
 # Includes location
 include_directories(
   inc
+  ${ANCH_UTILS_INCLUDES_DIR}
 )
 
 if(ANCH_EVENTS_UNITARY_TEST)

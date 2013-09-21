@@ -52,7 +52,7 @@ namespace anch {
       /*!
        * Reset current hash context and compute hash for string
        *
-       * \param stream the string to hash
+       * \param data the string to hash
        *
        * \return the hash result
        */
@@ -67,7 +67,7 @@ namespace anch {
       /*!
        * Reset current hash context and compute hash for string
        *
-       * \param stream the string to hash
+       * \param data the string to hash
        *
        * \return the hash result
        */
@@ -82,7 +82,8 @@ namespace anch {
       /*!
        * Reset current hash context and compute hash for string
        *
-       * \param stream the string to hash
+       * \param data the string to hash
+       * \param len the data length
        *
        * \return the hash result
        */

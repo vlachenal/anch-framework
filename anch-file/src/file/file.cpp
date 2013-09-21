@@ -108,7 +108,7 @@ File::File(const File& parent, const string& name) : _path(parent._path + SEP + 
  * \param parent the parent \ref File
  * \param name The \ref File name
  */
-File::File(shared_ptr<File> parent, const string& name) : _path(parent->_path + SEP + name) {
+File::File(std::shared_ptr<File> parent, const string& name) : _path(parent->_path + SEP + name) {
   initialize();
   _parent = shared_ptr<File>(parent);
 }

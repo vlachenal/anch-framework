@@ -17,39 +17,35 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef _ANCH_EVENTS_OSERVER_H_
-#define _ANCH_EVENTS_OSERVER_H_
-
-#include <cstdint>
-
+#ifndef _ANCH_UTILS_LESS_PTR_COMMPARE_H_
+#define _ANCH_UTILS_LESS_PTR_COMMPARE_H_
 
 namespace anch {
-  namespace events {
 
+  /*!
+   * Less comparator based on object address.\n
+   * This class can be used to register objects in std::set or std::map.
+   *
+   * \since 0.1
+   *
+   * \author Vincent Lachenal
+   */
+  template<typename T>
+  struct LessPtrCompare {
     /*!
-     * Observer abstract class.\n
-     * It has to be implemented to handle events correctly.
+     * Address comparison operator.
      *
-     * \since 0.1
+     * \param first the first object instance
+     * \param second the second object instance
      *
-     * \author Vincent Lachenal
+     * \return \c true if first address is less than second, \c false otherwise
      */
-    template<typename Event>
-    class Observer {
+    bool operator() (const T* const first,
+		     const T* const second) const {
+      return first < second;
+    }
+  };
 
-    public:
-      // Methods +
-      /*!
-       * Receive event notification
-       *
-       * \param event The event to receive
-       */
-      virtual void notify(const Event& event) noexcept = 0;
-      // Methods -
-
-    };
-
-  }
 }
 
-#endif // _ANCH_EVENTS_OSERVER_H_
+#endif // _ANCH_UTILS_LESS_PTR_COMMPARE_H_

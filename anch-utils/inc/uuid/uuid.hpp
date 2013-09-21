@@ -28,7 +28,9 @@ namespace anch {
   namespace uuid {
 
     /*!
-     * The UUID version
+     * The UUID versions
+     *
+     * \since 0.1
      *
      * \author Vincent Lachenal
      */
@@ -52,8 +54,9 @@ namespace anch {
     /*!
      * UUID generator and parser.\n
      * \n
-     * For now, only version 1 is implemented.\n
      * See RFC 4122 for more details (http://www.ietf.org/rfc/rfc4122.txt)
+     *
+     * \since 0.1
      *
      * \author Vincent Lachenal
      */

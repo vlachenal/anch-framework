@@ -83,7 +83,7 @@ Date::Date(const Date& date): _timestamp(date._timestamp),
  *
  * \param time The time to set
  */
-Date::Date(const time_t& time) {
+Date::Date(const std::time_t& time) {
   time_point<system_clock> timePoint = system_clock::from_time_t(time);
   _timestamp = duration_cast<std::chrono::nanoseconds>(timePoint.time_since_epoch()).count();
   _mutex.lock();
@@ -96,7 +96,7 @@ Date::Date(const time_t& time) {
  *
  * \param time The time to set
  */
-Date::Date(const tm* const time) {
+Date::Date(const std::tm* const time) {
   _mutex.lock();
   // Copy time to not change time values
   tm tmpTm = tm(*time);
@@ -124,7 +124,7 @@ Date::~Date() {
  * \param time The current time
  */
 void
-Date::initialize(const tm* const time) {
+Date::initialize(const std::tm* const time) {
   _seconds = static_cast<uint16_t>(time->tm_sec);
   _minutes = static_cast<uint16_t>(time->tm_min);
   if(time->tm_isdst > 0) {

@@ -1,0 +1,22 @@
+/*! \page page_events AnCH events library documentation
+ *
+ * \tableofcontents
+ *
+ * \section evt_intro_seq Introduction
+ *
+ * AnCH resource library aims to provide event programming facilities based on C++11 thread library.\n
+ * AnCH events library is based on C++ template. This is not a library but only header files.\n
+ * \n
+ * This library is based on observer/observable design pattern. So the base classes are \ref Observer "anch::events::Observer<T>" and \ref Observable "anch::events::Observable<T>".
+ *
+ * \section evt_req_sec Prerequisites
+ *
+ * Nothing
+ *
+ * \section evt_install_sec Installation
+ *
+ * TODO fill this section
+ *
+ * \section evt_usage_sec Usage
+ *
+ */
