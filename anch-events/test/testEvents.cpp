@@ -18,7 +18,7 @@ private:
 public:
   Event(const string& message): _message(message) {
     // Nothing to do
-  };
+  }
 
   const string& str() const {
     return _message;
@@ -31,16 +31,16 @@ class StrObserver : public Observer<Event> {
 public:
   StrObserver() {
     // Nothing to do
-  };
+  }
 
   virtual ~StrObserver() {
     // Nothing to do
-  };
+  }
 
 public:
   virtual void notify(const Event& event) noexcept {
     cout << "Observer receive event: " << event.str() << endl;
-  };
+  }
 
 };
 

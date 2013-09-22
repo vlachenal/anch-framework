@@ -97,9 +97,12 @@ namespace anch {
        * \return the \ref EventBus unique instance
        */
       static EventBus<Event>& getEventBus() {
-	std::lock_guard<std::mutex> lock(INSTANCE_MUTEX);
 	if(_self == NULL) {
-	  _self = new EventBus<Event>();
+	  INSTANCE_MUTEX.lock();
+	  if(_self == NULL) {
+	    _self = new EventBus<Event>();
+	  }
+	  INSTANCE_MUTEX.unlock();
 	}
 	return *_self;
       }
@@ -116,6 +119,15 @@ namespace anch {
       }
 
       /*!
+       * Retrieve \ref EventBus instance and register \ref Observer to \ref EventBus
+       *
+       * \param observer the \ref Observer to register
+       */
+      static bool AddObserver(anch::events::Observer<Event>& observer) noexcept {
+	return getEventBus().addObserver(observer);
+      }
+
+      /*!
        * Remove observer for notifications
        *
        * \param observer The observer to remove
@@ -123,6 +135,15 @@ namespace anch {
       void removeObserver(anch::events::Observer<Event>& observer) noexcept {
 	std::lock_guard<std::mutex> lock(_eventMutex);
 	_observers.erase(&observer);
+      }
+
+      /*!
+       * Retrieve \ref EventBus instance and remove observer for notifications
+       *
+       * \param observer The observer to remove
+       */
+      static void RemoveObserver(anch::events::Observer<Event>& observer) noexcept {
+	getEventBus().removeObserver(observer);
       }
 
       /*!
@@ -135,6 +156,15 @@ namespace anch {
 	for(anch::events::Observer<Event>* observer : _observers) {
 	  observer->notify(event);
 	}
+      }
+
+      /*!
+       * Retrieve \ref EventBus instance and notify all observer that an event has been fired
+       *
+       * \param event the event which has been fired
+       */
+      static void FireEvent(const Event& event) noexcept {
+	getEventBus().fireEvent(event);
       }
 
       /*!
@@ -153,6 +183,15 @@ namespace anch {
 	  }
 	  _thread = new std::thread(&EventBus<Event>::processEvents,this);
 	}
+      }
+
+      /*!
+       * Retrieve \ref EventBus instance and put event in sheduler.
+       *
+       * \param event the event to process
+       */
+      static void ScheduleDeferred(const Event& event) noexcept {
+	getEventBus().scheduleDeferred(event);
       }
 
     private:
