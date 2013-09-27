@@ -23,7 +23,8 @@
 namespace anch {
 
   /*!
-   * Less comparator based on object address.\n
+   * \brief Less comparator based on object address.
+   *
    * This class can be used to register objects in std::set or std::map.
    *
    * \since 0.1
