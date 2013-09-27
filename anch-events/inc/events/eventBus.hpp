@@ -33,7 +33,7 @@ namespace anch {
   namespace events {
 
     /*!
-     * \brief Manage global events firing and events QoS.
+     * \brief A class which manage global events firing and events QoS.
      *
      * EventBus is a singleton.
      *

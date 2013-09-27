@@ -31,9 +31,9 @@ namespace anch {
   namespace events {
 
     /*!
-     * \brief Class observable implementation of the observers/observable design pattern.
+     * \brief An observable implementation of the observers/observable design pattern.
      *
-     * It maintains an observer list which have to be notified on event.
+     * This class maintains an observer list which have to be notified on event.
      *
      * \since 0.1
      *

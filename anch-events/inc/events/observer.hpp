@@ -27,7 +27,7 @@ namespace anch {
   namespace events {
 
     /*!
-     * \brief Observer interface.
+     * \brief An observer interface of the observers/observable design pattern.
      *
      * It has to be implemented to handle events correctly.
      *

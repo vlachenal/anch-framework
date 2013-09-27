@@ -27,7 +27,7 @@ namespace anch {
   namespace events {
 
     /*!
-     * \brief Event handler.
+     * \brief An event handler.
      *
      * It provides a simple way to inherits several times from Observer and cutomize event receiving method name.
      *
