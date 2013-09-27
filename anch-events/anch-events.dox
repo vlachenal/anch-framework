@@ -4,14 +4,15 @@
  *
  * \section evt_intro_seq Introduction
  *
- * AnCH resource library aims to provide event programming facilities based on C++11 thread library.\n
- * AnCH events library is based on C++ template. This is not a library but only header files.\n
+ * AnCH events library aims to provide event programming facilities based on C++11 thread library.\n
+ * It is based on C++ template. This is not a library but only header files.\n
  * \n
  * This library is based on observer/observable design pattern. So the base classes are \ref anch::events::Observer "anch::events::Observer<T>" and \ref anch::events::Observable "anch::events::Observable<T>".
  *
  * \section evt_req_sec Prerequisites
  *
- * You need anch-utils header files.
+ * - anch-utils header files
+ * - pthread library
  *
  * \section evt_install_sec Installation
  *
@@ -36,7 +37,9 @@
  * \ref anch::events::EventHandler "EventHandler" is a template that aims to provide a way to inherits multiple times from Observer.\n
  * This class is based on the C++ curiously recurring pattern. Template parameters will be event type and observer implementation type. It implements the Observer<type>::notify(const type&) by calling the callback method passed as argument in constructor.\n
  * \n
- * EventHandler provides also a simple way to register the observer in global event management (see \ref evt_concept_eventbus_sec "Event bus") through its constructors.
+ * EventHandler provides also a simple way to register the observer in global event management (see \ref evt_concept_eventbus_sec "Event bus") through its constructors.\n
+ * \n
+ * EventHandler may need EventBus: in order to initialize EventBus, you will have to call INIT_ANCH_EVENT_BUS macro somewhere in your source file.
  *
  * \subsection evt_concept_eventbus_sec Event bus
  *
@@ -44,7 +47,9 @@
  * Methods are the same than Observable.\n
  * Every methods can be accessed in static or instance way. The static method are named similar to instance method with the first letter in upper case. You should use the instance because the static will always retrieved the EventBus instance through mutex.\n
  * \n
- * EventBus has an additional method compare to Observable: scheduleDeferred which allow to put an event in a queue which will be dequeued later in another thread.
+ * EventBus has an additional method compare to Observable: scheduleDeferred which allow to put an event in a queue which will be dequeued later in another thread.\n
+ * \n
+ * In order to initialize \ref anch::events::EventBus "EventBus", you will have to call INIT_ANCH_EVENT_BUS macro somewhere in your source file.
  *
  * \section evt_example_sec Examples
  *
@@ -59,7 +64,7 @@
 #include <iostream>
 
 class StrObserver: public anch::events::Observer<std::string> {
-  void notify(const std::string& event) {
+  void notify(const std::string& event) noexcept {
     std::cout << event << std::endl;
   }
 };
@@ -78,6 +83,7 @@ int main(void) {
  * \code{.cpp}
 #include "events/eventHandler.hpp"
 #include "events/observable.hpp"
+INIT_ANCH_EVENT_BUS;
 
 #include <iostream>
 
@@ -94,33 +100,34 @@ public:
 template<typename Derived>
 class Type1EventHandlerIface: public anch::events::EventHandler<Type1,Derived> {
 public:
-  Type1EventHandlerIface(): EventHandler<Type1,Derived>(&Derived::onType1) { }
+  Type1EventHandlerIface(): anch::events::EventHandler<Type1,Derived>(&Derived::onType1) { }
   virtual void onType1(const Type1& event) = 0;
 };
 
 class Type2 {
 private:
-  std::int _index;
+  int _index;
 public:
-  Type1(int index): _index(index) { }
+  Type2(int index): _index(index) { }
   inline int Index() const {
-    return _message;
+    return _index;
   }
 };
 
 template<typename Derived>
 class Type2EventHandlerIface: public anch::events::EventHandler<Type2,Derived> {
 public:
-  Type2EventHandlerIface(): EventHandler<Type2,Derived>(&Derived::onType2) { }
+  Type2EventHandlerIface(): anch::events::EventHandler<Type2,Derived>(&Derived::onType2) { }
   virtual void onType2(const Type2& event) = 0;
 };
 
 class TypesEventHandler: public Type1EventHandlerIface<TypesEventHandler>, public Type2EventHandlerIface<TypesEventHandler> {
 public:
-  virtual void onType1(const Type1 event) {
+  TypesEventHandler(): Type1EventHandlerIface<TypesEventHandler>(), Type2EventHandlerIface<TypesEventHandler>() { }
+  virtual void onType1(const Type1& event) override {
     std::cout << "Type1: " << event.getMessage() << std::endl;
   }
-  virtual void onType2(const Type2 event) {
+  virtual void onType2(const Type2& event) override {
     std::cout << "Type2: " << event.Index() << std::endl;
   }
 };
@@ -143,6 +150,7 @@ int main(void) {
  * \code{.cpp}
 #include "events/eventHandler.hpp"
 #include "events/observable.hpp"
+INIT_ANCH_EVENT_BUS;
 
 #include <iostream>
 
@@ -159,44 +167,44 @@ public:
 template<typename Derived>
 class Type1EventHandlerIface: public anch::events::EventHandler<Type1,Derived> {
 public:
-  Type1EventHandlerIface(): EventHandler<Type1,Derived>(&Derived::onType1) { }
+  Type1EventHandlerIface(): anch::events::EventHandler<Type1,Derived>(&Derived::onType1) { }
   virtual void onType1(const Type1& event) = 0;
 };
 
 class Type2 {
 private:
-  std::int _index;
+  int _index;
 public:
-  Type1(int index): _index(index) { }
+  Type2(int index): _index(index) { }
   inline int Index() const {
-    return _message;
+    return _index;
   }
 };
 
 template<typename Derived>
 class Type2EventHandlerIface: public anch::events::EventHandler<Type2,Derived> {
 public:
-  Type2EventHandlerIface(): EventHandler<Type2,Derived>(&Derived::onType2) { }
+  Type2EventHandlerIface(): anch::events::EventHandler<Type2,Derived>(&Derived::onType2) { }
   virtual void onType2(const Type2& event) = 0;
 };
 
 class TypesEventHandler: public Type1EventHandlerIface<TypesEventHandler>, public Type2EventHandlerIface<TypesEventHandler> {
 public:
-  virtual void onType1(const Type1 event) {
+  virtual void onType1(const Type1& event) override {
     std::cout << "Type1: " << event.getMessage() << std::endl;
   }
-  virtual void onType2(const Type2 event) {
+  virtual void onType2(const Type2& event) override {
     std::cout << "Type2: " << event.Index() << std::endl;
   }
 };
 
 int main(void) {
   TypesEventHandler handler;
-  EventBus<Type1>::addObserver(handler);
-  EventBus<Type1>::scheduleDeferred(Type1("test"));
-  EventBus<Type2>::addObserver(handler);
-  EventBus<Type2>::fireEvent(Type2(1));
-  EventBus<Type1>::fireEvent(Type1("test 2"));
+  anch::events::EventBus<Type1>::AddObserver(handler);
+  anch::events::EventBus<Type1>::ScheduleDeferred(Type1("test"));
+  anch::events::EventBus<Type2>::AddObserver(handler);
+  anch::events::EventBus<Type2>::FireEvent(Type2(1));
+  anch::events::EventBus<Type1>::FireEvent(Type1("test 2"));
   return 0;
 }\endcode
  *

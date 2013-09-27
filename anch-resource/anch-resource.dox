@@ -4,15 +4,99 @@
  *
  * \section res_intro_seq Introduction
  *
- * AnCh resource library aims to provide facilities to handle resource files.
+ * AnCh resource library aims to provide facilities to handle resource/configuration files.
  *
  * \section res_req_sec Prerequisites
  *
- * Until standard C++ library implements regular expression, library will dependes on boost library.
+ * - boost library (until standard C++ library implements regular expression)
+ * - pthread library
  *
  * \section res_install_sec Installation
  *
  * TODO fill this section
  *
- * \section res_usage_sec Usage
+ * \section res_concept_sec Conception
+ *
+ * AnCH resource library is a thread safe configuration files management library.\n
+ * Every resources will be store in application cache and will be available with static methods.\n
+ * \n
+ * Configuration files has to be formatted with classic key=value syntax. It supports comments with \c # character.\n
+ * Resource files can also contains categories which will be declared between brackets.\n
+ * \n
+ * Configuration file example:\n
+ * \code{.txt}
+# Some comment
+key=value
+key1=value1
+
+[category]
+key=value # Other comment
+key2=value2
+\endcode
+ * \n
+ * Library interface is done in a single class: \ref anch::resource::Resource "anch::resource::Resource".\n
+ * Resource files are retrieved through \c getResource static method which returns a \ref anch::resource::Resource "anch::resource::Resource" instance.\n
+ * Resource parameters are retrieved through \c getParameter method.
+ *
+ * \section res_example_sec Example
+ *
+ * Resource file "test.ini":
+ * \code{.txt}
+# Comments
+
+toto=tata
+tata=tutu # test with comments
+
+[TOTO]
+toto=titi
+\endcode
+ * \n
+ * C++ example:
+ * \code{.cpp}
+#include <iostream>
+
+#include "resource/resource.hpp"
+
+
+using std::cout;
+using std::endl;
+using std::string;
+
+using anch::resource::Resource;
+
+
+int
+main(void) {
+  cout << "Enter in test resource" << endl;
+
+  cout << "Parse file" << endl;
+  const Resource& res = Resource::getResource("test.ini");
+  cout << "File has been parsed" << endl;
+
+  string value;
+  bool found = res.getParameter(value,"toto");
+  if(found) {
+    cout << "toto=" << value << endl;
+  } else {
+    cout << "toto has not been found" << endl;
+  }
+
+  found = res.getParameter(value,"toto","TOTO");
+  if(found) {
+    cout << "TOTO/toto=" << value << endl;
+  } else {
+    cout << "TOTO/toto has not been found" << endl;
+  }
+
+  found = res.getParameter(value,"tata");
+  if(found) {
+    cout << "tata=" << value << endl;
+  } else {
+    cout << "tata has not been found" << endl;
+  }
+
+
+  cout << "Exit test resource" << endl;
+  return 0;
+}\endcode
  */

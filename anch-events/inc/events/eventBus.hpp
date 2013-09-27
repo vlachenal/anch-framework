@@ -221,7 +221,8 @@ namespace anch {
 /*!
  * This macro MUST be called by the program only ONCE.
  */
-#define INIT_ANCH_EVENT_BUS template<typename T> std::mutex anch::events::EventBus<T>::INSTANCE_MUTEX;\
+
+#define INIT_ANCH_EVENT_BUS template<typename T> std::mutex anch::events::EventBus<T>::INSTANCE_MUTEX; \
   template<typename T> anch::events::EventBus<T>* anch::events::EventBus<T>::_self = NULL;
 
 #endif // _ANCH_EVENTS_EVENT_BUS_H_

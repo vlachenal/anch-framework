@@ -11,7 +11,7 @@
  * Features are splitted into small libraries. Some of them are only header files :
  * - \ref page_res "anch-resource": provides library to parse configuration files based on C++11 regular expression library (using boost for now).
  * - anch-date: provides date and time facilities based on C++11 high precision clock.
- * - anch-logger: provides logging facilities based on C++11 thread and regular expression libraries.
+ * - \ref page_logger "anch-logger": provides logging facilities based on C++11 thread and regular expression libraries.
  * - \ref page_events "anch-events": provides event programming facilities based on C++11 thread library.
  * - anch-crypto: provides cryptographic library which only include hash algorithms implementation (MD5 and SHA1) and HMAC (with implemented hashes).
  * - anch-device: provides device interaction library (only to retrieve network status for now).
@@ -55,6 +55,13 @@
  * \section install_sec Installation
  *
  * TODO fill this section
+ *
+ * \section version_sec Versions
+ *
+ * AnCH framework will be released with classic version numbers (A.B.C).\n
+ * Until version 1.0.0 will, the backward compatibility will not be ensure. API could change on every B changes.\n
+ * \n
+ * From version 1.0.0, the A digit will ensure that API will be backward compatible. B digit will be used for new features and C digit for bug fixes.
  *
  * \section todo_sec TODO list
  *
