@@ -33,7 +33,9 @@ namespace anch {
   namespace events {
 
     /*!
-     * Manage global events firing and events QoS.
+     * \brief Manage global events firing and events QoS.
+     *
+     * EventBus is a singleton.
      *
      * \since 0.1
      *

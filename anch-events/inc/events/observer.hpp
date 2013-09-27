@@ -27,7 +27,8 @@ namespace anch {
   namespace events {
 
     /*!
-     * Observer abstract class.\n
+     * \brief Observer interface.
+     *
      * It has to be implemented to handle events correctly.
      *
      * \since 0.1

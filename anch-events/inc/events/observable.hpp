@@ -31,7 +31,9 @@ namespace anch {
   namespace events {
 
     /*!
-     * Class observable implementation of the observers/observable design pattern
+     * \brief Class observable implementation of the observers/observable design pattern.
+     *
+     * It maintains an observer list which have to be notified on event.
      *
      * \since 0.1
      *

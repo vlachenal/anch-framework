@@ -27,7 +27,9 @@ namespace anch {
   namespace events {
 
     /*!
-     * Event handler.
+     * \brief Event handler.
+     *
+     * It provides a simple way to inherits several times from Observer and cutomize event receiving method name.
      *
      * \since 0.1
      *
