@@ -100,6 +100,16 @@ namespace anch {
       MD5(std::basic_istream<CharT,Traits>& stream) {
 	Hash::digest(stream);
       }
+
+      /*!
+       * \ref MD5 constructor with bytes
+       *
+       * \param data the data bytes
+       * \param len the data length
+       */
+      MD5(const uint8_t* data, std::size_t len) {
+	Hash::digest(data, len);
+      }
       // Constructors -
 
       // Destructor +

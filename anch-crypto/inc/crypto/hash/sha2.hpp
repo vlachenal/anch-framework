@@ -27,36 +27,37 @@
 namespace anch {
   namespace crypto {
 
+    /*!
+     * \brief SHA2 interface.
+     *
+     * \since 0.1
+     *
+     * \author Vincent Lachenal
+     */
     template<std::size_t O, std::size_t B>
     class SHA2: public Hash<O,B> {
 
     protected:
+      /*!
+       * Some SHA2 transformation function
+       *
+       * \param x first value
+       * \param y second value
+       * \param z third value
+       */
       static inline uint32_t ch(uint32_t x, uint32_t y, uint32_t z) {
 	return ((x & (y ^ z)) ^ z);
       }
 
+      /*!
+       * Some SHA2 transformation function
+       *
+       * \param x first value
+       * \param y second value
+       * \param z third value
+       */
       static inline uint32_t maj(uint32_t x, uint32_t y, uint32_t z) {
 	return ((x & (y | z)) | (y & z));
-      }
-
-      /*!
-       * Swap byte for endianness conversion
-       *
-       * \param src Source
-       * \param dest Destination
-       */
-      template<typename T>
-      static inline void byteSwap(T src, uint8_t* dest) {
-	const uint32_t byteOrderTest = 0x1;
-	uint8_t* words = reinterpret_cast<uint8_t*>(&src);
-	int size = sizeof(T);
-	if(reinterpret_cast<const uint8_t*>(&byteOrderTest)[0] == 1) { // endianess test
-	  for(int i = 0 ; i < size ; i++) {
-	    dest[i] = words[size - 1 - i];
-	  }
-	} else {
-	  std::memcpy(dest, &src, size);
-	}
       }
 
     };

@@ -18,6 +18,7 @@
   along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "crypto/hash/sha1.hpp"
+#include "endianness.hpp"
 
 #include <cstring>
 
@@ -28,37 +29,15 @@ using anch::crypto::SHA1;
 /*!
  * Swap byte for endianness conversion
  *
- * \param src Source
- * \param dest Destination
- */
-template<typename T>
-inline void
-byteSwap(T src, uint8_t* dest) {
-  const uint32_t byteOrderTest = 0x1;
-  uint8_t* words = reinterpret_cast<uint8_t*>(&src);
-  int size = sizeof(T);
-  if(reinterpret_cast<const uint8_t*>(&byteOrderTest)[0] == 1) { // endianess test
-    for(int i = 0 ; i < size ; i++) {
-      dest[i] = words[size - 1 - i];
-    }
-  } else {
-    std::memcpy(dest, &src, size);
-  }
-}
-
-/*!
- * Swap byte for endianness conversion
- *
  * \param buf The 4-bytes words to process
  * \param count The number of operation to do
  */
 inline void
 bytesSwap(uint32_t* buf, uint8_t count) {
-  const uint32_t byteOrderTest = 0x01;
-  if(reinterpret_cast<const uint8_t*>(&byteOrderTest)[0] == 1) { // endianess test
+  if(anch::isLittleEndian()) {
     uint8_t* words = reinterpret_cast<uint8_t*>(buf);
     do {
-      byteSwap(*buf,words);
+      anch::byteSwap(*buf,words);
       buf++;
       words += 4;
     } while(--count);
@@ -245,7 +224,12 @@ void
 SHA1::finalize() {
   uint64_t messageSize = _context.size;
   uint8_t sizeInBits[8];
-  byteSwap(messageSize << 3, sizeInBits);
+  if(anch::isLittleEndian()) {
+    anch::byteSwap(messageSize << 3, sizeInBits);
+  } else {
+    uint64_t tmp = messageSize << 3;
+    std::memcpy(sizeInBits, &tmp, 8);
+  }
 
   addData((const uint8_t*)"\200", 1);
 
@@ -260,10 +244,16 @@ SHA1::finalize() {
 
   addData(sizeInBits, 8);
 
-  byteSwap(_context.state[0], _context.digest.data());
-  byteSwap(_context.state[1], _context.digest.data() + 4);
-  byteSwap(_context.state[2], _context.digest.data() + 8);
-  byteSwap(_context.state[3], _context.digest.data() + 12);
-  byteSwap(_context.state[4], _context.digest.data() + 16);
+  if(anch::isLittleEndian()) {
+    anch::byteSwap(_context.state[0], _context.digest.data());
+    anch::byteSwap(_context.state[1], _context.digest.data() + 4);
+    anch::byteSwap(_context.state[2], _context.digest.data() + 8);
+    anch::byteSwap(_context.state[3], _context.digest.data() + 12);
+    anch::byteSwap(_context.state[4], _context.digest.data() + 16);
+  } else {
+    std::memcpy(_context.digest.data(),
+		_context.state.data(),
+		sizeof(uint32_t) * _context.state.size());
+  }
 }
 // Methods -

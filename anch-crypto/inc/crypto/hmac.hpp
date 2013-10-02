@@ -20,8 +20,6 @@
 #ifndef _ANCH_CRYPTO_HMAC_
 #define _ANCH_CRYPTO_HMAC_
 
-#include "crypto/hash/hash.hpp"
-
 
 namespace anch {
   namespace crypto {
@@ -52,23 +50,32 @@ namespace anch {
       }
       // Treatment on key -
       // Compute paddings +
-      std::basic_ostringstream<CharT,Traits,Allocator> inPad;
-      std::basic_ostringstream<CharT,Traits,Allocator> outPad;
+
+      std::size_t msgLen = std::char_traits<CharT>::length(message.c_str());
+      std::size_t inSize = block + msgLen;
+      uint8_t* inPad = new uint8_t[inSize];
+      std::array<uint8_t, (block + H::getOutputSize())> outPad;
       // 'Magic numbers' 0x36 and 0x5c are specified in RFC2104 to have a large hamming distance
       for(std::size_t i = 0 ; i < block ; i++) {
-	inPad << static_cast<const char>(static_cast<uint8_t>(0x36) ^ keyArray[i]);
-	outPad << static_cast<const char>(static_cast<uint8_t>(0x5c) ^ keyArray[i]);
+	inPad[i] = static_cast<uint8_t>(0x36) ^ keyArray[i];
+	outPad[i] = static_cast<uint8_t>(0x5c) ^ keyArray[i];
       }
       // Compute paddings -
       // First hash +
-      inPad << message;
+      const uint8_t* msg = reinterpret_cast<const uint8_t*>(message.c_str());
+      for(std::size_t i = 0 ; i < msgLen ; i++) {
+	inPad[i + block] = msg[i];
+      }
+      const std::array<uint8_t,H::getOutputSize()>& inDigest = H(inPad, inSize).digest();
+      delete[] inPad;
       // First hash -
       // Second hash +
-      const std::array<uint8_t,H::getOutputSize()>& inDigest = H(inPad.str()).digest();
+      std::size_t idx = block;
       for(uint8_t byte : inDigest) {
-	outPad << static_cast<char>(byte);
+	outPad[idx] = byte;
+	idx++;
       }
-      return H(outPad.str());
+      return H(outPad.data(), outPad.size());
       // Second hash -
     }
 

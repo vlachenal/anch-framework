@@ -114,6 +114,16 @@ namespace anch {
       SHA1(std::basic_istream<CharT,Traits>& stream) {
 	Hash::digest(stream);
       }
+
+      /*!
+       * \ref SHA1 constructor with data bytes.
+       *
+       * \param data the data bytes
+       * \param len the data length
+       */
+      SHA1(const uint8_t* data, std::size_t len) {
+	Hash::digest(data, len);
+      }
       // Constructors -
 
 
@@ -128,9 +138,9 @@ namespace anch {
       // Methods +
     public:
       /*!
-       * Get the SAH1 hash result
+       * Get the SHA1 hash result
        *
-       * \return the SAH1 hash result
+       * \return the SHA1 hash result
        */
       virtual const std::array<uint8_t,20>& digest() const override;
 

@@ -1,6 +1,7 @@
 #include "crypto/hash/md5.hpp"
 #include "crypto/hmac.hpp"
 #include "crypto/hash/sha1.hpp"
+#include "crypto/hash/sha224_256.hpp"
 
 #include <iostream>
 #include <sstream>
@@ -9,6 +10,8 @@
 
 using anch::crypto::MD5;
 using anch::crypto::SHA1;
+using anch::crypto::SHA224;
+using anch::crypto::SHA256;
 using anch::crypto::HMAC;
 using std::cout;
 using std::cerr;
@@ -21,29 +24,65 @@ int
 main(void) {
   cout << "Enter in HMAC tests" << endl;
 
-  cout << "Enter in HMAC-MD5 test" << endl;
-  ostringstream out1;
-  out1 << HMAC<MD5>("key", "The quick brown fox jumps over the lazy dog");
-  string res1 = out1.str();
-  if(res1 != "80070713463e7749b90c2dc24911e275") {
-    cerr << "Found " << res1 << " instead of 80070713463e7749b90c2dc24911e275" << endl;
-    return 1;
-  } else {
-    cout << "Found HMAC-MD5 " << res1 << endl;
+  {
+    cout << "Enter in HMAC-MD5 test" << endl;
+    ostringstream out;
+    out << HMAC<MD5>("key", "The quick brown fox jumps over the lazy dog");
+    string res = out.str();
+    if(res != "80070713463e7749b90c2dc24911e275") {
+      cerr << "Found      " << res << endl;
+      cerr << "Instead of 80070713463e7749b90c2dc24911e275" << endl;
+      return 1;
+    } else {
+      cout << "Found HMAC-MD5 " << res << endl;
+    }
+    cout << "Exit HMAC-MD5 test" << endl;
   }
-  cout << "Exit HMAC-MD5 test" << endl;
 
-  cout << "Enter in HMAC-SHA1 test" << endl;
-  ostringstream out2;
-  out2 << HMAC<SHA1>("key", "The quick brown fox jumps over the lazy dog");
-  string res2 = out2.str();
-  if(res2 != "de7c9b85b8b78aa6bc8a7a36f70a90701c9db4d9") {
-    cerr << "Found " << res2 << " instead of de7c9b85b8b78aa6bc8a7a36f70a90701c9db4d9" << endl;
-    return 1;
-  } else {
-    cout << "Found HMAC-SHA1 " << res2 << endl;
+  {
+    cout << "Enter in HMAC-SHA1 test" << endl;
+    ostringstream out;
+    out << HMAC<SHA1>("key", "The quick brown fox jumps over the lazy dog");
+    string res = out.str();
+    if(res != "de7c9b85b8b78aa6bc8a7a36f70a90701c9db4d9") {
+      cerr << "Found      " << res << endl;
+      cerr << "Instead of de7c9b85b8b78aa6bc8a7a36f70a90701c9db4d9" << endl;
+      return 1;
+    } else {
+      cout << "Found HMAC-SHA1 " << res << endl;
+    }
+    cout << "Exit HMAC-SHA1 test" << endl;
   }
-  cout << "Exit HMAC-SHA1 test" << endl;
+
+  {
+    cout << "Enter in HMAC-SHA224 test" << endl;
+    ostringstream out;
+    out << HMAC<SHA224>("key", "The quick brown fox jumps over the lazy dog");
+    string res = out.str();
+    if(res != "88ff8b54675d39b8f72322e65ff945c52d96379988ada25639747e69") {
+      cerr << "Found      " << res << endl;
+      cerr << "Instead of 88ff8b54675d39b8f72322e65ff945c52d96379988ada25639747e69" << endl;
+      return 1;
+    } else {
+      cout << "Found HMAC-SHA224 " << res << endl;
+    }
+    cout << "Exit HMAC-SHA224 test" << endl;
+  }
+
+  {
+    cout << "Enter in HMAC-SHA256 test" << endl;
+    ostringstream out;
+    out << HMAC<SHA256>("key", "The quick brown fox jumps over the lazy dog");
+    string res = out.str();
+    if(res != "f7bc83f430538424b13298e6aa6fb143ef4d59a14946175997479dbc2d1a3cd8") {
+      cerr << "Found      " << res << endl;
+      cerr << "Instead of f7bc83f430538424b13298e6aa6fb143ef4d59a14946175997479dbc2d1a3cd8" << endl;
+      return 1;
+    } else {
+      cout << "Found HMAC-SHA256 " << res << endl;
+    }
+    cout << "Exit HMAC-SHA256 test" << endl;
+  }
 
   cout << "Exit HMAC tests" << endl;
   return 0;

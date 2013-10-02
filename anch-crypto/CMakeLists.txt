@@ -34,7 +34,7 @@ add_definitions(${ANCH_CRYPTO_COMPILE_FLAGS})
 # Includes location
 include_directories(
   inc
-  ${ANCH_DEVICE_INCLUDES_DIR}
+  ${ANCH_UTILS_INCLUDES_DIR}
 )
 
 # Retrieve every files in project
@@ -78,6 +78,7 @@ if(ANCH_CRYPTO_UNITARY_TEST)
   file(
     GLOB_RECURSE
     test_sha1
+    ${ANCH_UTILS_INCLUDES_DIR}/*
     inc/*
     test/testSHA1.cpp
   )
@@ -97,6 +98,7 @@ if(ANCH_CRYPTO_UNITARY_TEST)
   file(
     GLOB_RECURSE
     test_sha2
+    ${ANCH_UTILS_INCLUDES_DIR}/*
     inc/*
     test/testSHA2.cpp
   )
@@ -131,10 +133,30 @@ if(ANCH_CRYPTO_UNITARY_TEST)
   )
   # Build HMAC unitary test -
 
+  # Build Base64 unitary test +
+  file(
+    GLOB_RECURSE
+    test_base64
+    inc/*
+    test/testBase64.cpp
+  )
+
+  add_executable(
+    anch-base64-test
+    ${test_base64}
+  )
+
+  target_link_libraries(
+    anch-base64-test
+    anch-crypto
+  )
+  # Build Base64 unitary test -
+
   enable_testing()
   add_test(anch-md5-test ${EXECUTABLE_OUTPUT_PATH}/anch-md5-test main)
   add_test(anch-sha1-test ${EXECUTABLE_OUTPUT_PATH}/anch-sha1-test main)
   add_test(anch-sha2-test ${EXECUTABLE_OUTPUT_PATH}/anch-sha2-test main)
   add_test(anch-hmac-test ${EXECUTABLE_OUTPUT_PATH}/anch-hmac-test main)
+  add_test(anch-base64-test ${EXECUTABLE_OUTPUT_PATH}/anch-base64-test main)
 
 endif(ANCH_CRYPTO_UNITARY_TEST)
