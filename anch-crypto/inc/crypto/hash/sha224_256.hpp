@@ -392,7 +392,7 @@ namespace anch {
     /*!
      * SHA256 defintion
      */
-    typedef SHA224_256<32,SHA256_VALUES> SHA256;
+    using SHA256 = SHA224_256<32,SHA256_VALUES>;
 
     /*! SHA224 initial values */
     std::array<uint32_t,8> SHA224_VALUES = { {
@@ -402,7 +402,7 @@ namespace anch {
     /*!
      * SHA224 defintion
      */
-    typedef SHA224_256<28,SHA224_VALUES> SHA224;
+    using SHA224 = SHA224_256<28,SHA224_VALUES>;
 
   }
 }
