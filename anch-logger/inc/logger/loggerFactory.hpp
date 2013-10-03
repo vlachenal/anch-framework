@@ -28,7 +28,6 @@
 
 #include <iostream>
 #include <map>
-#include <mutex>
 #include <vector>
 #include <set>
 
@@ -41,28 +40,26 @@
 #include "logger/threadSafeWriter.hpp"
 #include "logger/lowPriorityWriter.hpp"
 #include "resource/resource.hpp"
+#include "singleton.hpp"
 
 
 namespace anch {
   namespace logger {
 
     /*!
-     * Logger factory.\n
-     * This class aims to manage logger according to the loggers name and configuration.\n
-     * \n
-     * The macro ANCH_LOGGER_INIT MUST be called by the program only ONCE.
+     * \brief Logger factory.
+     *
+     * This class aims to manage logger according to the loggers name and configuration.
+     *
+     * \since 0.1
      *
      * \author Vincent Lachenal
      */
-    class LoggerFactory {
+    class LoggerFactory: public anch::Singleton<LoggerFactory> {
+      friend class anch::Singleton<LoggerFactory>;
+
     private:
       // Attributes +
-      /*! Mutex for conccurency access */
-      static std::mutex MUTEX;
-
-      /*! \ref LoggerFactory unique instance */
-      static LoggerFactory* _self;
-
       /*! Loggers configuration */
       std::vector<LoggerConfiguration> _loggersConfig;
 
@@ -76,7 +73,7 @@ namespace anch {
        * \ref LoggerFactory private constructor
        */
       LoggerFactory(): _loggersConfig() {
-	std::atexit(LoggerFactory::cleanWriters);
+	//std::atexit(LoggerFactory::cleanWriters);
 	try {
 	  const anch::resource::Resource& resource = anch::resource::Resource::getResource(_ANCH_LOGGER_CONFIG_FILE_);
 	  std::map<std::string,anch::logger::Writer*> writers;
@@ -91,10 +88,23 @@ namespace anch {
 
       // Destructor +
       /*!
-       * \ref LoggerFactory destructor
+       * \ref LoggerFactory destructor.\n
+       * Clean every \ref Writer to flush their output and close files.
        */
       virtual ~LoggerFactory() {
-	// Nothing to do
+	std::set<anch::logger::Writer*> writers;
+	for(size_t i = 0 ; i < _loggersConfig.size() ; i++) {
+	  const std::vector<anch::logger::Writer*>& confWriters = _loggersConfig[i].getWriters();
+	  for(anch::logger::Writer* writer : confWriters) {
+	    writers.insert(writer);
+	  }
+	}
+	for(anch::logger::Writer* writer : writers) {
+	  delete writer;
+	}
+	for(anch::logger::Logger* logger : _loggers) {
+	  delete logger;
+	}
       };
       // Destructor -
 
@@ -109,15 +119,11 @@ namespace anch {
        * \return The loggerr instance
        */
       static const anch::logger::Logger& getLogger(const std::string& loggerName) {
-	MUTEX.lock();
-	if(_self == NULL) {
-	  _self = new LoggerFactory();
-	}
-	MUTEX.unlock();
+	LoggerFactory& self = LoggerFactory::getInstance();
 
 	const anch::logger::LoggerConfiguration* loggerConfig = NULL;
-	for(size_t i = 0 ; i < _self->_loggersConfig.size() ; i++) {
-	  const anch::logger::LoggerConfiguration& config = _self->_loggersConfig[i];
+	for(size_t i = 0 ; i < self._loggersConfig.size() ; i++) {
+	  const anch::logger::LoggerConfiguration& config = self._loggersConfig[i];
 	  const std::string& confName = config.getCategory();
 	  // First check on size +
 	  if((loggerConfig != NULL
@@ -148,32 +154,11 @@ namespace anch {
 	  logger = new anch::logger::Logger(loggerName,
 					    loggerConfig->getLevel(),
 					    loggerConfig->getWriters());
-	  _self->_loggers.push_back(logger);
+	  self._loggers.push_back(logger);
 	}
 	// Instanciate a new logger from configuration -
 
 	return *logger;
-      }
-
-      /*!
-       * Clean every \ref Writer to flush their output and close files.
-       *
-       * std::atexit is already map on it. But you can use it if you trap signals.
-       */
-      static void cleanWriters() {
-	std::set<anch::logger::Writer*> writers;
-	for(size_t i = 0 ; i < _self->_loggersConfig.size() ; i++) {
-	  const std::vector<anch::logger::Writer*>& confWriters = _self->_loggersConfig[i].getWriters();
-	  for(anch::logger::Writer* writer : confWriters) {
-	    writers.insert(writer);
-	  }
-	}
-	for(anch::logger::Writer* writer : writers) {
-	  delete writer;
-	}
-	for(anch::logger::Logger* logger : _self->_loggers) {
-	  delete logger;
-	}
       }
 
     private:
@@ -429,12 +414,5 @@ namespace anch {
 
   }
 }
-
-/*!
- * This macro MUST be called by the program only ONCE.
- */
-#define ANCH_LOGGER_INIT std::mutex anch::logger::LoggerFactory::MUTEX;\
-anch::logger::LoggerFactory* anch::logger::LoggerFactory::_self = NULL;
-
 
 #endif // _ANCH_LOGGER_LOGGER_FACTORY_H_

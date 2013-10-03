@@ -56,7 +56,7 @@ Resource::~Resource() {
  */
 const Resource&
 Resource::getResource(const string& filePath) {
-  MUTEX.lock();
+  std::lock_guard<mutex> lock(MUTEX);
   auto iter = RESOURCES.find(filePath);
   if(iter == RESOURCES.cend()) {
     Resource res;
@@ -64,7 +64,6 @@ Resource::getResource(const string& filePath) {
     configParser.getConfiguration(res._resources);
     iter = RESOURCES.insert(pair<string, Resource>(filePath,res)).first;
   }
-  MUTEX.unlock();
   return iter->second;
 }
 

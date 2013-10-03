@@ -38,6 +38,7 @@ include_directories(
   ${Boost_INCLUDE_DIRS}
   ${ANCH_RESOURCE_INCLUDES_DIR}
   ${ANCH_DATE_INCLUDES_DIR}
+  ${ANCH_UTILS_INCLUDES_DIR}
 )
 
 # Retrieve every files in project

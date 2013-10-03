@@ -1,6 +1,5 @@
 #include "events/eventBus.hpp"
 #include "events/eventHandler.hpp"
-INIT_ANCH_EVENT_BUS;
 
 #include <iostream>
 
@@ -53,7 +52,7 @@ main(void) {
 
   EventObserver obs;
   EventHandler handler;
-  EventBus<Evt>& eventBus = EventBus<Evt>::getEventBus();
+  EventBus<Evt>& eventBus = EventBus<Evt>::getInstance();
   eventBus.addObserver(obs);
   eventBus.addObserver(handler);
 

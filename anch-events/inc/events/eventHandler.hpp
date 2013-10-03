@@ -57,7 +57,7 @@ namespace anch {
 		   bool useEventBus = false) {
 	_callbackFunction = callbackFunction;
 	if(useEventBus) {
-	  anch::events::EventBus<Event>& eventBus = anch::events::EventBus<Event>::getEventBus();
+	  anch::events::EventBus<Event>& eventBus = anch::events::EventBus<Event>::getInstance();
 	  eventBus.addObserver(*this);
 	  _eventBus = &eventBus;
 	} else {

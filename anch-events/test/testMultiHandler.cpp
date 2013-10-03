@@ -1,6 +1,5 @@
 #include "events/observable.hpp"
 #include "events/eventHandler.hpp"
-INIT_ANCH_EVENT_BUS;
 
 #include <iostream>
 

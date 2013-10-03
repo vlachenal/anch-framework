@@ -27,6 +27,7 @@
 
 #include "events/observer.hpp"
 #include "lessPtrCompare.hpp"
+#include "singleton.hpp"
 
 
 namespace anch {
@@ -42,15 +43,11 @@ namespace anch {
      * \author Vincent Lachenal
      */
     template<typename Event>
-    class EventBus {
+    class EventBus: public anch::Singleton<EventBus<Event> > {
+      friend class anch::Singleton<EventBus<Event> >; 
+
       // Attributes +
     private:
-      /*! Mutex for retrieving instance */
-      static std::mutex INSTANCE_MUTEX;
-
-      /*! \ref EventBus unique instance */
-      static EventBus<Event>* _self;
-
       /*! Mutex for firing event*/
       std::mutex _eventMutex;
 
@@ -94,22 +91,6 @@ namespace anch {
       // Methods +
     public:
       /*!
-       * Get \ref EventBus unique instance
-       *
-       * \return the \ref EventBus unique instance
-       */
-      static EventBus<Event>& getEventBus() {
-	if(_self == NULL) {
-	  INSTANCE_MUTEX.lock();
-	  if(_self == NULL) {
-	    _self = new EventBus<Event>();
-	  }
-	  INSTANCE_MUTEX.unlock();
-	}
-	return *_self;
-      }
-
-      /*!
        * Register \ref Observer to \ref EventBus
        *
        * \param observer the \ref Observer to register
@@ -126,7 +107,7 @@ namespace anch {
        * \param observer the \ref Observer to register
        */
       static bool AddObserver(anch::events::Observer<Event>& observer) noexcept {
-	return getEventBus().addObserver(observer);
+	return EventBus<Event>::getInstance().addObserver(observer);
       }
 
       /*!
@@ -145,7 +126,7 @@ namespace anch {
        * \param observer The observer to remove
        */
       static void RemoveObserver(anch::events::Observer<Event>& observer) noexcept {
-	getEventBus().removeObserver(observer);
+	EventBus<Event>::getInstance().removeObserver(observer);
       }
 
       /*!
@@ -166,7 +147,7 @@ namespace anch {
        * \param event the event which has been fired
        */
       static void FireEvent(const Event& event) noexcept {
-	getEventBus().fireEvent(event);
+	EventBus<Event>::getInstance().fireEvent(event);
       }
 
       /*!
@@ -193,7 +174,7 @@ namespace anch {
        * \param event the event to process
        */
       static void ScheduleDeferred(const Event& event) noexcept {
-	getEventBus().scheduleDeferred(event);
+	EventBus<Event>::getInstance().scheduleDeferred(event);
       }
 
     private:
@@ -219,12 +200,5 @@ namespace anch {
 
   }
 }
-
-/*!
- * This macro MUST be called by the program only ONCE.
- */
-
-#define INIT_ANCH_EVENT_BUS template<typename T> std::mutex anch::events::EventBus<T>::INSTANCE_MUTEX; \
-  template<typename T> anch::events::EventBus<T>* anch::events::EventBus<T>::_self = NULL;
 
 #endif // _ANCH_EVENTS_EVENT_BUS_H_
