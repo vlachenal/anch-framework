@@ -2,6 +2,7 @@
 #include "crypto/hmac.hpp"
 #include "crypto/hash/sha1.hpp"
 #include "crypto/hash/sha224_256.hpp"
+#include "crypto/hash/sha384_512.hpp"
 
 #include <iostream>
 #include <sstream>
@@ -12,6 +13,8 @@ using anch::crypto::MD5;
 using anch::crypto::SHA1;
 using anch::crypto::SHA224;
 using anch::crypto::SHA256;
+using anch::crypto::SHA384;
+using anch::crypto::SHA512;
 using anch::crypto::HMAC;
 using std::cout;
 using std::cerr;
@@ -82,6 +85,36 @@ main(void) {
       cout << "Found HMAC-SHA256 " << res << endl;
     }
     cout << "Exit HMAC-SHA256 test" << endl;
+  }
+
+  {
+    cout << "Enter in HMAC-SHA384 test" << endl;
+    ostringstream out;
+    out << HMAC<SHA384>("key", "The quick brown fox jumps over the lazy dog");
+    string res = out.str();
+    if(res != "d7f4727e2c0b39ae0f1e40cc96f60242d5b7801841cea6fc592c5d3e1ae50700582a96cf35e1e554995fe4e03381c237") {
+      cerr << "Found      " << res << endl;
+      cerr << "Instead of d7f4727e2c0b39ae0f1e40cc96f60242d5b7801841cea6fc592c5d3e1ae50700582a96cf35e1e554995fe4e03381c237" << endl;
+      return 1;
+    } else {
+      cout << "Found HMAC-SHA384 " << res << endl;
+    }
+    cout << "Exit HMAC-SHA384 test" << endl;
+  }
+
+  {
+    cout << "Enter in HMAC-SHA512 test" << endl;
+    ostringstream out;
+    out << HMAC<SHA512>("key", "The quick brown fox jumps over the lazy dog");
+    string res = out.str();
+    if(res != "b42af09057bac1e2d41708e48a902e09b5ff7f12ab428a4fe86653c73dd248fb82f948a549f7b791a5b41915ee4d1ec3935357e4e2317250d0372afa2ebeeb3a") {
+      cerr << "Found      " << res << endl;
+      cerr << "Instead of b42af09057bac1e2d41708e48a902e09b5ff7f12ab428a4fe86653c73dd248fb82f948a549f7b791a5b41915ee4d1ec3935357e4e2317250d0372afa2ebeeb3a" << endl;
+      return 1;
+    } else {
+      cout << "Found HMAC-SHA512 " << res << endl;
+    }
+    cout << "Exit HMAC-SHA512 test" << endl;
   }
 
   cout << "Exit HMAC tests" << endl;

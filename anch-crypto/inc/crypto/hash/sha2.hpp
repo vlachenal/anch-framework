@@ -45,7 +45,8 @@ namespace anch {
        * \param y second value
        * \param z third value
        */
-      static inline uint32_t ch(uint32_t x, uint32_t y, uint32_t z) {
+      template<typename T>
+      static inline T ch(T x, T y, T z) {
 	return ((x & (y ^ z)) ^ z);
       }
 
@@ -56,7 +57,8 @@ namespace anch {
        * \param y second value
        * \param z third value
        */
-      static inline uint32_t maj(uint32_t x, uint32_t y, uint32_t z) {
+      template<typename T>
+      static inline T maj(T x, T y, T z) {
 	return ((x & (y | z)) | (y & z));
       }
 
