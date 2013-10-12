@@ -1,5 +1,7 @@
-#include "crypto/hash/sha224_256.hpp"
-#include "crypto/hash/sha384_512.hpp"
+#include "crypto/hash/sha224.hpp"
+#include "crypto/hash/sha256.hpp"
+#include "crypto/hash/sha384.hpp"
+#include "crypto/hash/sha512.hpp"
 
 #include <iostream>
 #include <sstream>

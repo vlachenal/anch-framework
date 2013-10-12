@@ -21,7 +21,6 @@
 #define _ANCH_CRYPTO_SHA224_256_H_
 
 #include "crypto/hash/sha2.hpp"
-#include "endianness.hpp"
 
 #include <array>
 #include <list>
@@ -40,67 +39,16 @@ namespace anch {
      * \author Vincent Lachenal
      */
     template<std::size_t O, const std::array<uint32_t,8>& I>
-    class SHA224_256: public SHA2<O,64> {
-      /*!
-       * SHA224_256 chunk
-       *
-       * \author Vincent Lachenal
-       */
-      typedef union {
-	/*! Bytes */
-	uint8_t bytes[256];
-
-	/*! Words */
-	uint32_t words[64];
-      } Chunk;
-
-      /*!
-       * \ref SHA224_256 context
-       *
-       * \author Vincent Lachenal
-       */
-      template<std::size_t Output, const std::array<uint32_t,8>& Init>
-      struct Context {
-	/*! State */
-	std::array<uint32_t,8> state;
-
-	/*! Message size */
-	uint64_t size;
-
-	/*! Buffer */
-	std::array<uint8_t,64> buffer;
-
-	/*! Digest */
-	std::array<uint8_t,Output> digest;
-
-	/*!
-	 * \ref SHA224_256 \ref Context constructor
-	 */
-	Context() {
-	  reset();
-	}
-
-	/*!
-	 * Initialize SHA 224/256 context
-	 */
-	void reset() {
-	  state = Init;
-	  size = 0;
-	}
-      };
-
-      // Attributes +
-      /*! \ref SHA224_256 context */
-      Context<O,I> _context;
-      // Attributes -
-
+    class SHA224_256: public SHA2<O,64,uint32_t,64,I> {
 
       // Constructors +
     public:
       /*!
        * \ref SHA224_256 default constructor
        */
-      SHA224_256();
+      SHA224_256(): SHA2<O,64,uint32_t,64,I>() {
+	// Nothing to do
+      }
 
       /*!
        * \ref SHA224_256 constructor with string
@@ -108,8 +56,9 @@ namespace anch {
        * \param data The string data to process
        */
       template<class CharT, class Traits, class Allocator>
-      SHA224_256(const std::basic_string<CharT,Traits,Allocator>& data) {
-	Hash<O,64>::digest(data);
+      SHA224_256(const std::basic_string<CharT,Traits,Allocator>& data):
+	SHA2<O,64,uint32_t,64,I>() {
+    	Hash<O,64>::digest(data);
       }
 
       /*!
@@ -118,8 +67,9 @@ namespace anch {
        * \param stream The input stream to process
        */
       template<class CharT, class Traits>
-      SHA224_256(std::basic_istream<CharT,Traits>& stream) {
-	Hash<O,64>::digest(stream);
+      SHA224_256(std::basic_istream<CharT,Traits>& stream):
+	SHA2<O,64,uint32_t,64,I>() {
+    	Hash<O,64>::digest(stream);
       }
 
       /*!
@@ -128,114 +78,30 @@ namespace anch {
        * \param data the data bytes
        * \param len the dataa length
        */
-      SHA224_256(const uint8_t* data, std::size_t len) {
-	Hash<O,64>::digest(data, len);
+      SHA224_256(const uint8_t* data, std::size_t len):
+	SHA2<O,64,uint32_t,64,I>() {
+    	Hash<O,64>::digest(data, len);
       }
       // Constructors -
 
 
       // Destructor +
       /*!
-       * \ref SHA1 destructor
+       * \ref SHA224_256 destructor
        */
       virtual ~SHA224_256() {
-	// Nothing to do
+    	// Nothing to do
       }
       // Destructor -
 
-
       // Methods +
-    public:
-      /*!
-       * Get the SHA 224/256 hash result
-       *
-       * \return the SHA 224/256 hash result
-       */
-      virtual const std::array<uint8_t,O>& digest() const override {
-	return _context.digest;
-      }
-
-    protected:
-      /*!
-       * Reset hash context
-       */
-      virtual void reset() override {
-	_context.reset();
-      }
-
-      /*!
-       * Compute hash for data with the current hash
-       *
-       * \param data The data to add
-       * \param len The data length
-       */
-      virtual void addData(const uint8_t* data, std::size_t len) override {
-	uint32_t rest = static_cast<uint32_t>(_context.size & static_cast<uint64_t>(63));
-
-	uint64_t availableData = static_cast<uint64_t>(len) + static_cast<uint64_t>(rest);
-	_context.size += len;
-
-	if(availableData < static_cast<uint64_t>(64)) {
-	  std::memcpy(&_context.buffer[rest], &data[0], len);
-
-	} else {
-	  uint64_t i = static_cast<uint64_t>(64 - rest);
-	  std::memcpy(&_context.buffer[rest], &data[0], static_cast<uint32_t>(i));
-	  transform(_context.buffer.data());
-
-	  uint64_t lastI = len - ((len + rest) & static_cast<uint64_t>(63));
-	  for( ; i < lastI ; i += 64) {
-	    transform(&data[i]);
-	  }
-
-	  std::memcpy(&_context.buffer[0], &data[i], len - i);
-	}
-      }
-
-      /*!
-       * Finalize hash
-       */
-      virtual void finalize() override {
-	uint64_t messageSize = _context.size;
-	uint8_t sizeInBits[8];
-	if(anch::isLittleEndian()) {
-	  anch::byteSwap(messageSize << 3, sizeInBits);
-	} else {
-	  uint64_t tmp = messageSize << 3;
-	  std::memcpy(sizeInBits, &tmp, 8);
-	}
-
-	addData((const uint8_t*)"\200", 1);
-
-	uint8_t zero[64];
-	std::memset(zero, 0, 64);
-	if(static_cast<int>(messageSize & 63) > 56 - 1) {
-	  addData(zero, 64 - 1 - static_cast<size_t>(messageSize & 63));
-	  addData(zero, 64 - 8);
-	} else {
-	  addData(zero, 64 - 1 - 8 - static_cast<size_t>(messageSize & 63));
-	}
-
-	addData(sizeInBits, 8);
-
-	if(anch::isLittleEndian()) {
-	  for(size_t i = 0 ; i < 8 ; i++) {
-	    anch::byteSwap(_context.state[i], _context.digest.data() + (i * 4));
-	  }
-	} else {
-	  std::memcpy(_context.digest.data(),
-		      _context.state.data(),
-		      sizeof(uint32_t) * O);
-	}
-      }
-
     private:
       /*!
        * SHA224/256 translation array getter.
        *
        * \return the SHA224/256 translation array
        */
-      static const std::array<uint32_t,64>& getTranslationArray() {
+      virtual const std::array<uint32_t,64>& getTranslationArray() const {
 	static std::array<uint32_t,64> trArray = { {
 	    0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b,
 	    0x59f111f1, 0x923f82a4, 0xab1c5ed5, 0xd807aa98, 0x12835b01,
@@ -254,112 +120,15 @@ namespace anch {
 	return trArray;
       }
 
-
-      /*!
-       * Swap byte for endianness conversion
-       *
-       * \param buf The 4-bytes words to process
-       * \param count The number of operation to do
-       */
-      inline void bytesSwap(uint32_t* buf, uint8_t count) {
-	if(anch::isLittleEndian()) {
-	  uint8_t* words = reinterpret_cast<uint8_t*>(buf);
-	  do {
-	    anch::byteSwap(*buf,words);
-	    buf++;
-	    words += 4;
-	  } while(--count);
-	}
-      }
-
-      /*!
-       * Transform SHA 224/256 with the current chunk
-       *
-       * \param buffer The data to process
-       */
-      void transform(const uint8_t* buffer) {
-	uint8_t chunkBuffer[256];
-	std::memcpy(chunkBuffer, buffer, 256);
-
-	Chunk* chunk = reinterpret_cast<Chunk*>(&chunkBuffer);
-	bytesSwap(chunk->words, 64);
-	for(int i = 16 ; i < 64 ; i++) {
-	  chunk->words[i] = sigma1(chunk->words[i-2]) + chunk->words[i-7]
-	    + sigma0(chunk->words[i-15]) + chunk->words[i-16];
-	}
-
-	// Copy state[] to working vars
-	uint32_t a = _context.state[0];
-	uint32_t b = _context.state[1];
-	uint32_t c = _context.state[2];
-	uint32_t d = _context.state[3];
-	uint32_t e = _context.state[4];
-	uint32_t f = _context.state[5];
-	uint32_t g = _context.state[6];
-	uint32_t h = _context.state[7];
-
-	const std::array<uint32_t,64>& trArray = getTranslationArray();
-	for(int i = 0 ; i < 64 ; i++) {
-	  uint32_t temp1 = h + SIGMA1(e) + SHA2<O,64>::ch(e, f, g) + trArray[i] + chunk->words[i];
-	  uint32_t temp2 = SIGMA0(a) + SHA2<O,64>::maj(a, b, c);
-	  h = g;
-	  g = f;
-	  f = e;
-	  e = d + temp1;
-	  d = c;
-	  c = b;
-	  b = a;
-	  a = temp1 + temp2;
-	}
-
-	// Add the working vars back into state
-	_context.state[0] += a;
-	_context.state[1] += b;
-	_context.state[2] += c;
-	_context.state[3] += d;
-	_context.state[4] += e;
-	_context.state[5] += f;
-	_context.state[6] += g;
-	_context.state[7] += h;
-      }
-
-      /*!
-       * Shift 32 bits word from n bits to right
-       *
-       * \param bits the number of bits to shift
-       * \param word the 32 bits word to shift
-       */
-      static constexpr inline uint32_t shiftRight(uint8_t bits, uint32_t word) {
-	return (word >> bits);
-      }
-
-      /*!
-       * Rotate 32 bits word from n bits to left
-       *
-       * \param bits the number of bits to rotate
-       * \param word the 32 bits word to rotate
-       */
-      static constexpr inline uint32_t rotateLeft(uint8_t bits, uint32_t word) {
-	return ((word << bits) | (word >> (32 - bits)));
-      }
-
-      /*!
-       * Rotate 32 bits word from n bits to right
-       *
-       * \param bits the number of bits to rotate
-       * \param word the 32 bits word to rotate
-       */
-      static constexpr inline uint32_t rotateRight(uint8_t bits, uint32_t word) {
-	return ((word >> bits) | (word << (32 - bits)));
-      }
-
       /*!
        * SHA224/256 first sigma function
        *
        * \param word the word to transform
        */
-      static constexpr inline uint32_t SIGMA0(uint32_t word) {
-	return (rotateRight(2, word) ^ rotateRight(13, word) ^ rotateRight(22, word));
+      virtual uint32_t SIGMA0(uint32_t word) const {
+	return (SHA2<O,64,uint32_t,64,I>::rotateRight(2, word)
+		^ SHA2<O,64,uint32_t,64,I>::rotateRight(13, word)
+		^ SHA2<O,64,uint32_t,64,I>::rotateRight(22, word));
       }
 
       /*!
@@ -367,8 +136,10 @@ namespace anch {
        *
        * \param word the word to transform
        */
-      static constexpr inline uint32_t SIGMA1(uint32_t word) {
-	return (rotateRight(6, word) ^ rotateRight(11, word) ^ rotateRight(25, word));
+      virtual uint32_t SIGMA1(uint32_t word) const {
+	return (SHA2<O,64,uint32_t,64,I>::rotateRight(6, word)
+		^ SHA2<O,64,uint32_t,64,I>::rotateRight(11, word)
+		^ SHA2<O,64,uint32_t,64,I>::rotateRight(25, word));
       }
 
       /*!
@@ -376,8 +147,10 @@ namespace anch {
        *
        * \param word the word to transform
        */
-      static constexpr inline uint32_t sigma0(uint32_t word) {
-	return (rotateRight(7, word) ^ rotateRight(18, word) ^ shiftRight(3, word));
+      virtual uint32_t sigma0(uint32_t word) const {
+	return (SHA2<O,64,uint32_t,64,I>::rotateRight(7, word)
+		^ SHA2<O,64,uint32_t,64,I>::rotateRight(18, word)
+		^ SHA2<O,64,uint32_t,64,I>::shiftRight(3, word));
       }
 
       /*!
@@ -385,32 +158,14 @@ namespace anch {
        *
        * \param word the word to transform
        */
-      static constexpr inline uint32_t sigma1(uint32_t word) {
-	return (rotateRight(17, word) ^ rotateRight(19, word) ^ shiftRight(10, word));
+      virtual uint32_t sigma1(uint32_t word) const {
+	return (SHA2<O,64,uint32_t,64,I>::rotateRight(17, word)
+		^ SHA2<O,64,uint32_t,64,I>::rotateRight(19, word)
+		^ SHA2<O,64,uint32_t,64,I>::shiftRight(10, word));
       }
       // Methods -
 
     };
-
-    /*! SHA256 initial values */
-    std::array<uint32_t,8> SHA256_VALUES = { {
-	0x6A09E667, 0xBB67AE85, 0x3C6EF372, 0xA54FF53A,
-	0x510E527F, 0x9B05688C, 0x1F83D9AB, 0x5BE0CD19
-      } };
-    /*!
-     * SHA256 defintion
-     */
-    using SHA256 = SHA224_256<32,SHA256_VALUES>;
-
-    /*! SHA224 initial values */
-    std::array<uint32_t,8> SHA224_VALUES = { {
-	0xC1059ED8, 0x367CD507, 0x3070DD17, 0xF70E5939,
-	0xFFC00B31, 0x68581511, 0x64F98FA7, 0xBEFA4FA4
-      } };
-    /*!
-     * SHA224 defintion
-     */
-    using SHA224 = SHA224_256<28,SHA224_VALUES>;
 
   }
 }
