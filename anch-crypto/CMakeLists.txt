@@ -152,11 +152,31 @@ if(ANCH_CRYPTO_UNITARY_TEST)
   )
   # Build Base64 unitary test -
 
+  # Build AES unitary test +
+  file(
+    GLOB_RECURSE
+    test_aes
+    inc/*
+    test/testAES.cpp
+  )
+
+  add_executable(
+    anch-aes-test
+    ${test_aes}
+  )
+
+  target_link_libraries(
+    anch-aes-test
+    anch-crypto
+  )
+  # Build AES unitary test -
+
   enable_testing()
   add_test(anch-md5-test ${EXECUTABLE_OUTPUT_PATH}/anch-md5-test main)
   add_test(anch-sha1-test ${EXECUTABLE_OUTPUT_PATH}/anch-sha1-test main)
   add_test(anch-sha2-test ${EXECUTABLE_OUTPUT_PATH}/anch-sha2-test main)
   add_test(anch-hmac-test ${EXECUTABLE_OUTPUT_PATH}/anch-hmac-test main)
   add_test(anch-base64-test ${EXECUTABLE_OUTPUT_PATH}/anch-base64-test main)
+  add_test(anch-aes-test ${EXECUTABLE_OUTPUT_PATH}/anch-aes-test main)
 
 endif(ANCH_CRYPTO_UNITARY_TEST)

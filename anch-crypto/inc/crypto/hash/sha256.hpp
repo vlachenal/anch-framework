@@ -31,6 +31,7 @@ namespace anch {
      * SHA256 defintion
      */
     using SHA256 = SHA224_256<32,SHA256_VALUES>;
+    //extern template class SHA224_256<32,SHA256_VALUES>;
 
   }
 }

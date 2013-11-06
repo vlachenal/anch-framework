@@ -29,7 +29,19 @@ namespace anch {
   namespace crypto {
 
     /*!
-     * \brief SHA2 interface.
+     * \brief SHA2 abstract class.
+     *
+     * \ref SHA2 contains algorithms for SHA224/256/384/512.\n
+     * The children have to define the translation array and the sigma
+     * transformation functions.\n
+     * The template parameters are:
+     * - O: the output size in byte
+     * - B: the treatment block size in byte
+     * - W: the word type (32 bits or 64 bits)
+     * - R: the number of round for each chunk
+     * - I: the initial state
+     *
+     * SHA224/256/384/512 are implemented in this library.
      *
      * \since 0.1
      *
@@ -116,9 +128,9 @@ namespace anch {
       // Methods +
     public:
       /*!
-       * Get the SHA 224/256 hash result
+       * Get the SHA2 hash result
        *
-       * \return the SHA 224/256 hash result
+       * \return the SHA2 hash result
        */
       virtual const std::array<uint8_t,O>& digest() const override {
 	return _context.digest;
@@ -240,7 +252,7 @@ namespace anch {
       virtual const std::array<W,R>& getTranslationArray() const = 0;
 
       /*!
-       * Transform SHA 224/256 with the current chunk
+       * Transform SHA2 with the current chunk
        *
        * \param buffer The data to process
        */

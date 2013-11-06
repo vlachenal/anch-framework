@@ -20,17 +20,30 @@
 #ifndef _ANCH_CRYPTO_SHA384_H_
 #define _ANCH_CRYPTO_SHA384_H_
 
+#include "processor.hpp"
 #include "crypto/hash/sha384_512.hpp"
 
 namespace anch {
   namespace crypto {
 
+#ifdef ANCH64
     /*! SHA384 initial values */
     extern std::array<uint64_t,8> SHA384_VALUES;
     /*!
      * SHA384 defintion
      */
     using SHA384 = SHA384_512<48,SHA384_VALUES>;
+    //extern template class SHA384_512<48,SHA384_VALUES>;
+#else
+    // TODO implements 32 bits version
+    /*! SHA384 initial values */
+    extern std::array<uint64_t,8> SHA384_VALUES;
+    /*!
+     * SHA384 defintion
+     */
+    using SHA384 = SHA384_512<48,SHA384_VALUES>;
+    extern template SHA384_512<48,SHA384_VALUES>;
+#endif // ANCH64
 
   }
 }

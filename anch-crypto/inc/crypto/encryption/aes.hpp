@@ -1,0 +1,356 @@
+/*
+  ANCH Framework: ANother C++ Hack is a C++ framework based on C++11 standard
+  Copyright (C) 2012 Vincent Lachenal
+
+  This file is part of ANCH Framework.
+
+  ANCH Framework is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Lesser General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  ANCH Framework is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU Lesser General Public License for more details.
+
+  You should have received a copy of the GNU Lesser General Public License
+  along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
+*/
+#ifndef _ANCH_CRYPTO_AES_H_
+#define _ANCH_CRYPTO_AES_H_
+
+#include <bitset>
+#include <cstring>
+
+
+namespace anch {
+  namespace crypto {
+
+    /*! Cipher subsitution box */
+    extern const uint8_t CIPHER_SUB_BOX[256];
+
+    /*! Decipher subsitution box */
+    extern const uint8_t DECIPHER_SUB_BOX[256];
+
+    /*! Round constants */
+    extern const uint32_t RCON[11];
+
+    /*!
+     * AES encryption algorithm implementation.
+     *
+     * \since 0.1
+     *
+     * \author Vincent Lachenal
+     */
+    template<std::size_t K, std::size_t R>
+    class AES {
+      // Attributes +
+    private:
+      /*! Internal state */
+      uint8_t _state[4][4];
+
+      /*! Expanded key */
+      uint32_t _expKey[4*(R+1)];
+      // Attributes -
+
+
+      // Constructors +
+    public:
+      /*!
+       * \ref AES constructor
+       *
+       * \param key the encryption key
+       */
+      AES(const uint8_t key[4*K]): _state(), _expKey() {
+	expandKey(key);
+      }
+      // Constructors -
+
+
+      // Destructors +
+      /*!
+       * \ref AES destructor
+       */
+      virtual ~AES() {
+	// Nothing to do
+      }
+      // Destructors -
+
+
+      // Methods +
+    public:
+      /*!
+       * Cipher algorithm
+       */
+      void cipher(uint8_t input[16], uint8_t output[16]) {
+	std::memcpy(&_state, input, 16);
+	unsigned int round = 0;
+
+	// Initial round +
+	addRoundKey(round);
+	// Initial round -
+
+	// Rounds +
+	for(round = 1 ; round < R ; round++) {
+	  cipherSubBytes();
+	  cipherShiftRows();
+	  cipherMixColumns();
+	  addRoundKey(round);
+	}
+	// Rounds -
+
+	// Final round +
+	cipherSubBytes();
+	cipherShiftRows();
+	addRoundKey(round);
+	// Final round -
+
+	std::memcpy(output, &_state, 16);
+      }
+
+      /*!
+       * Cipher algorithm
+       */
+      void decipher(uint8_t input[16], uint8_t output[16]) {
+	std::memcpy(&_state, input, 16);
+	unsigned int round = R;
+
+	// Initial round +
+	addRoundKey(round);
+	decipherShiftRows();
+	decipherSubBytes();
+	// Initial round -
+
+	// Rounds +
+	for(round = R - 1 ; round > 0 ; round--) {
+	  addRoundKey(round);
+	  decipherMixColumns();
+	  decipherShiftRows();
+	  decipherSubBytes();
+	}
+	// Rounds -
+
+	// Final round +
+	addRoundKey(round);
+	// Final round -
+
+	std::memcpy(output, &_state, 16);
+      }
+
+    private:
+      /*!
+       * Key expansion algorithm
+       */
+      void expandKey(const uint8_t key[4*K]) {
+	std::memcpy(_expKey, key, 4*K);
+	for(std::size_t i = K ; i < 4*(R+1) ; i++) {
+	  uint32_t mod = i % K;
+	  if(mod == 0) {
+	    _expKey[i] = _expKey[i-K] ^ (subWord(rotateWord(_expKey[i-1])) ^ RCON[i/K]);
+	  } else if(K > 6 && mod == 4) {
+	    _expKey[i] = _expKey[i-K] ^ subWord(_expKey[i-1]);
+	  } else {
+	    _expKey[i] = _expKey[i-K] ^ _expKey[i-1];
+	  }
+	}
+      }
+
+      /*!
+       * Substitutes 32-bits word using substituion box defined in the
+       * AES specification.
+       *
+       * \param word the word to treat
+       *
+       * \return the result of substitution
+       */
+      inline uint32_t subWord(uint32_t word) {
+	uint32_t res;
+	uint8_t* resBytes = reinterpret_cast<uint8_t*>(&res);
+	uint8_t* bytes = reinterpret_cast<uint8_t*>(&word);
+	resBytes[0] = CIPHER_SUB_BOX[bytes[0]];
+	resBytes[1] = CIPHER_SUB_BOX[bytes[1]];
+	resBytes[2] = CIPHER_SUB_BOX[bytes[2]];
+	resBytes[3] = CIPHER_SUB_BOX[bytes[3]];
+	return res;
+      }
+
+      /*!
+       * Rotate word to 8-bits to left
+       *
+       * \param word the word to rotate
+       *
+       * \return the rotated word
+       */
+      inline uint32_t rotateWord(uint32_t word) {
+	return ((word << 24) | (word >> 8));
+      }
+
+      /*!
+       * Substites internal state bytes using substituion box defined in the
+       * AES specification.
+       */
+      inline void cipherSubBytes() {
+	for(std::size_t i = 0 ; i < 4 ; i++) {
+	  for(std::size_t j = 0 ; j < 4 ; j++) {
+	    _state[i][j] = CIPHER_SUB_BOX[_state[i][j]];
+	  }
+	}
+      }
+
+      /*!
+       * Substites internal state bytes using substituion box defined in the
+       * AES specification.
+       */
+      inline void decipherSubBytes() {
+	for(std::size_t i = 0 ; i < 4 ; i++) {
+	  for(std::size_t j = 0 ; j < 4 ; j++) {
+	    _state[i][j] = DECIPHER_SUB_BOX[_state[i][j]];
+	  }
+	}
+      }
+
+      /*!
+       * Shift internal state rows (cipher)
+       */
+      inline void cipherShiftRows() {
+	uint8_t tmp = _state[0][1];
+	_state[0][1] = _state[1][1];
+	_state[1][1] = _state[2][1];
+	_state[2][1] = _state[3][1];
+	_state[3][1] = tmp;
+	tmp = _state[1][2];
+	_state[1][2] = _state[3][2];
+	_state[3][2] = tmp;
+	tmp = _state[2][2];
+	_state[2][2] = _state[0][2];
+	_state[0][2] = tmp;
+	tmp = _state[3][3];
+	_state[3][3] = _state[2][3];
+	_state[2][3] = _state[1][3];
+	_state[1][3] = _state[0][3];
+	_state[0][3] = tmp;
+      }
+
+      /*!
+       * Shift internal state rows (decipher)
+       */
+      inline void decipherShiftRows() {
+	uint8_t tmp = _state[3][1];
+	_state[3][1] = _state[2][1];
+	_state[2][1] = _state[1][1];
+	_state[1][1] = _state[0][1];
+	_state[0][1] = tmp;
+	tmp = _state[1][2];
+	_state[1][2] = _state[3][2];
+	_state[3][2] = tmp;
+	tmp = _state[2][2];
+	_state[2][2] = _state[0][2];
+	_state[0][2] = tmp;
+	tmp = _state[0][3];
+	_state[0][3] = _state[1][3];
+	_state[1][3] = _state[2][3];
+	_state[2][3] = _state[3][3];
+	_state[3][3] = tmp;
+      }
+
+      /*!
+       * Mix internal by columns (cipher)
+       */
+      inline void cipherMixColumns() {
+	uint8_t state[4];
+	uint8_t state2[4];
+	for(int i = 0 ; i < 4 ; i++) {
+	  /* The array 'state' is simply a copy of the input array '_state[i]'
+	   * The array 'state2' is each element of the array 'state' multiplied by 2
+	   * in Rijndael's Galois field
+	   * state[n] ^ state2[n] is element n multiplied by 3 in Rijndael's Galois field */ 
+	  for(int j = 0 ; j < 4 ; j++) {
+	    state[j] = _state[i][j];
+	    // arithmetic right shift, thus shifting in either zeros or ones
+	    // implicitly removes high bit because state2[j] is an 8-bit char, so we xor by 0x1b and not 0x11b in the next line
+	    // 'h' is 0xff if the high bit of _state[j] is set, 0 otherwise
+	    // Rijndael's Galois field
+	    state2[j] = (_state[i][j] << 1) ^ (0x1B & (uint8_t)((int8_t)_state[i][j] >> 7));
+	  }
+	  _state[i][0] = state2[0] ^ state[3] ^ state[2] ^ state2[1] ^ state[1];
+	  _state[i][1] = state2[1] ^ state[0] ^ state[3] ^ state2[2] ^ state[2];
+	  _state[i][2] = state2[2] ^ state[1] ^ state[0] ^ state2[3] ^ state[3];
+	  _state[i][3] = state2[3] ^ state[2] ^ state[1] ^ state2[0] ^ state[0];
+	}
+      }
+
+      /*!
+       * Mix internal by columns (decipher)
+       */
+      inline void decipherMixColumns() {
+	for(unsigned int i = 0 ; i < 4 ; i++) {
+	  uint8_t state[4] = { _state[i][0], _state[i][1], _state[i][2], _state[i][3] };
+	  _state[i][0] = mult(0x0E, state[0]) ^ mult(0x0B, state[1]) ^ mult(0x0D, state[2]) ^ mult(0x09, state[3]);
+	  _state[i][1] = mult(0x09, state[0]) ^ mult(0x0E, state[1]) ^ mult(0x0B, state[2]) ^ mult(0x0D, state[3]);
+	  _state[i][2] = mult(0x0D, state[0]) ^ mult(0x09, state[1]) ^ mult(0x0E, state[2]) ^ mult(0x0B, state[3]);
+	  _state[i][3] = mult(0x0B, state[0]) ^ mult(0x0D, state[1]) ^ mult(0x09, state[2]) ^ mult(0x0E, state[3]);
+	}
+      }
+
+      /*!
+       * Galois Field multiplication implementation
+       *
+       * \param a the first operand
+       * \param b the second operand
+       *
+       * \return the multiplication result
+       */
+      inline uint8_t mult(uint8_t a, uint8_t b) {
+	uint8_t res = 0;
+	uint8_t highBitSet = 0;
+	for(uint8_t counter = 0; counter < 8; counter++) {
+	  if((b & 1) != 0) {
+	    res ^= a;
+	  }
+	  highBitSet = a & 0x80;
+	  a <<= 1;
+	  if(highBitSet != 0) {
+	    a ^= 0x1b; // x^8 + x^4 + x^3 + x + 1
+	  }
+	  b >>= 1;
+	}
+	return res;
+      }
+
+      /*!
+       * Add round key (cipher)
+       *
+       * \param round the current round
+       */
+      inline void addRoundKey(unsigned int round) {
+	uint32_t* key = _expKey + 4 * round;
+	uint32_t* state = reinterpret_cast<uint32_t*>(_state);
+	for(unsigned int i = 0 ; i < 4 ; i++) {
+	  state[i] ^= *key;
+	  key++;
+	}
+      }
+      // Methods -
+
+    };
+
+    /*!
+     * AES-128 definition
+     */
+    using AES128 = AES<4,10>;
+
+    /*!
+     * AES-128 definition
+     */
+    using AES192 = AES<6,12>;
+
+    /*!
+     * AES-256 definition
+     */
+    using AES256 = AES<8,14>;
+
+  }
+}
+
+#endif // _ANCH_CRYPTO_AES_H_
