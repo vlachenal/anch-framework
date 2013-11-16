@@ -1,7 +1,12 @@
 #include "crypto/hash/sha1.hpp"
+#include "crypto/b2t/base64.hpp"
 
 #include <iostream>
 #include <sstream>
+#include <random>
+#include <iomanip>
+#include <chrono>
+#include <cstring>
 
 using anch::crypto::SHA1;
 using std::cout;
@@ -76,6 +81,43 @@ main(void) {
     } else {
       cout << "Found value: " << res << endl << endl;
     }
+  }
+
+  {
+    cout << "Enter in secure password test" << endl;
+    string password("vfdbhjilvbgfvfdjnl");
+    std::random_device rd;
+    std::default_random_engine engine(rd());
+    std::uniform_int_distribution<uint8_t> uniform_dist;
+    std::chrono::time_point<std::chrono::high_resolution_clock> start, end;
+    start = std::chrono::high_resolution_clock::now();
+    uint8_t salt[16];
+    for(int i = 0 ; i < 16 ; i++) {
+      salt[i] = uniform_dist(engine);
+    }
+    std::size_t len = password.size() + 16;
+    uint8_t* saltPasswd = new uint8_t[len];
+    std::memcpy(saltPasswd, salt, 16);
+    std::memcpy(saltPasswd + 16, password.data(), password.size());
+    //SHA1 digester;
+    for(int i = 0 ; i < 1500 ; i++) {
+      std::memcpy(saltPasswd, SHA1(saltPasswd, len).digest().data(), 20);
+      //std::memcpy(saltPasswd, digester.digest(saltPasswd, len).data(), 20);
+      len = 20;
+    }
+    uint8_t saltDigest[36];
+    std::memcpy(saltDigest, salt, 16);
+    std::memcpy(saltDigest + 16, saltPasswd, 20);
+    string storedPasswd = anch::crypto::Base64::encode(saltDigest, 36);
+    end = std::chrono::high_resolution_clock::now();
+    std::chrono::microseconds duration = std::chrono::duration_cast<std::chrono::microseconds>(end.time_since_epoch()) - std::chrono::duration_cast<std::chrono::microseconds>(start.time_since_epoch());
+    cout << "Salt is " << std::hex;
+    for(int i = 0 ; i < 16 ; i++) {
+      cout << std::setw(2) << std::setfill('0') << static_cast<uint32_t>(salt[i]);
+    }
+    cout << std::dec << endl;
+    cout << "We will store: " << storedPasswd << endl;
+    cout << "Password has been encrypted in " << duration.count() << " µs" << endl;
   }
 
   return 0;

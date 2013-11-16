@@ -32,8 +32,18 @@ namespace anch {
     /*!
      * SHA384 defintion
      */
+    extern template class Hash<48,128>;
+    extern template const std::array<uint8_t,48>& Hash<48,128>::digest(const std::string& data);
+    extern template const std::array<uint8_t,48>& Hash<48,128>::digest(const std::wstring& data);
+    extern template const std::array<uint8_t,48>& Hash<48,128>::digest(std::istream& stream);
+    //extern template const std::array<uint8_t,48>& Hash<48,128>::digest(std::wistream& stream);
+    extern template class SHA2<48,128,uint64_t,80,SHA384_VALUES>;
+    extern template class SHA384_512<48,SHA384_VALUES>;
+    extern template SHA384_512<48,SHA384_VALUES>::SHA384_512(const std::string& data);
+    extern template SHA384_512<48,SHA384_VALUES>::SHA384_512(const std::wstring& data);
+    extern template SHA384_512<48,SHA384_VALUES>::SHA384_512(std::istream& stream);
+    //extern template SHA384_512<48,SHA384_VALUES>::SHA384_512(std::wistream& stream);
     using SHA384 = SHA384_512<48,SHA384_VALUES>;
-    //extern template class SHA384_512<48,SHA384_VALUES>;
 #else
     // TODO implements 32 bits version
     /*! SHA384 initial values */
@@ -41,8 +51,8 @@ namespace anch {
     /*!
      * SHA384 defintion
      */
-    using SHA384 = SHA384_512<48,SHA384_VALUES>;
     extern template SHA384_512<48,SHA384_VALUES>;
+    using SHA384 = SHA384_512<48,SHA384_VALUES>;
 #endif // ANCH64
 
   }

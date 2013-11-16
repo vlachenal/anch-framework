@@ -19,6 +19,8 @@
 */
 #include "crypto/encryption/aes.hpp"
 
+using anch::crypto::AES;
+
 /*! Cipher subsitution box */
 const uint8_t anch::crypto::CIPHER_SUB_BOX[256] = {
   0x63, 0x7C, 0x77, 0x7B, 0xF2, 0x6B, 0x6F, 0xC5,
@@ -97,3 +99,15 @@ const uint32_t anch::crypto::RCON[11] = {
   0x00000008, 0x00000010, 0x00000020, 0x00000040,
   0x00000080, 0x0000001B, 0x00000036
 };
+
+// AES-128 defintion +
+template class AES<4,10>;
+// AES-128 defintion -
+
+// AES-192 defintion +
+template class AES<6,12>;
+// AES-192 defintion -
+
+// AES-256 defintion +
+template class AES<8,14>;
+// AES-256 defintion -

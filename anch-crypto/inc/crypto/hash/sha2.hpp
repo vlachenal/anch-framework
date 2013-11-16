@@ -143,8 +143,7 @@ namespace anch {
        * \param bits the number of bits to shift
        * \param word the n bits word to shift
        */
-      template<typename T>
-      static constexpr inline T shiftRight(uint8_t bits, T word) {
+      static constexpr inline W shiftRight(uint8_t bits, W word) {
 	return (word >> bits);
       }
 
@@ -154,9 +153,8 @@ namespace anch {
        * \param bits the number of bits to rotate
        * \param word the n bits word to rotate
        */
-      template<typename T>
-      static constexpr inline T rotateLeft(uint8_t bits, T word) {
-	return ((word << bits) | (word >> (sizeof(T) * 8 - bits)));
+      static constexpr inline W rotateLeft(uint8_t bits, W word) {
+	return ((word << bits) | (word >> (sizeof(W) * 8 - bits)));
       }
 
       /*!
@@ -165,9 +163,8 @@ namespace anch {
        * \param bits the number of bits to rotate
        * \param word the n bits word to rotate
        */
-      template<typename T>
-      static constexpr inline T rotateRight(uint8_t bits, T word) {
-	return ((word >> bits) | (word << (sizeof(T) * 8 - bits)));
+      static constexpr inline W rotateRight(uint8_t bits, W word) {
+	return ((word >> bits) | (word << (sizeof(W) * 8 - bits)));
       }
 
     private:
@@ -308,14 +305,13 @@ namespace anch {
        * \param buf The 4-bytes words to process
        * \param count The number of operation to do
        */
-      template<typename T>
-      static inline void bytesSwap(T* buf, uint8_t count) {
+      static inline void bytesSwap(W* buf, uint8_t count) {
 	if(anch::isLittleEndian()) {
 	  uint8_t* words = reinterpret_cast<uint8_t*>(buf);
 	  do {
 	    anch::byteSwap(*buf,words);
 	    buf++;
-	    words += sizeof(T);
+	    words += sizeof(W);
 	  } while(--count);
 	}
       }
@@ -327,8 +323,7 @@ namespace anch {
        * \param y second value
        * \param z third value
        */
-      template<typename T>
-      static inline T ch(T x, T y, T z) {
+      static inline W ch(W x, W y, W z) {
 	return ((x & (y ^ z)) ^ z);
       }
 
@@ -339,8 +334,7 @@ namespace anch {
        * \param y second value
        * \param z third value
        */
-      template<typename T>
-      static inline T maj(T x, T y, T z) {
+      static inline W maj(W x, W y, W z) {
 	return ((x & (y | z)) | (y & z));
       }
 

@@ -189,7 +189,7 @@ namespace anch {
        * \param chunk The SHA1 chunk
        * \param position The position
        */
-      static inline uint32_t word(Chunk& chunk, unsigned int position){
+      static inline uint32_t word(Chunk& chunk, unsigned int position) {
 	return (chunk.words[position & 0xf] = rol32(chunk.words[(position + 13)  & 0xf]
 						    ^ chunk.words[(position + 8) & 0xf]
 						    ^ chunk.words[(position + 2) & 0xf]

@@ -335,21 +335,6 @@ namespace anch {
 
     };
 
-    /*!
-     * AES-128 definition
-     */
-    using AES128 = AES<4,10>;
-
-    /*!
-     * AES-128 definition
-     */
-    using AES192 = AES<6,12>;
-
-    /*!
-     * AES-256 definition
-     */
-    using AES256 = AES<8,14>;
-
   }
 }
 
