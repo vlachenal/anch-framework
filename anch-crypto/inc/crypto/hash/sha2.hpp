@@ -275,7 +275,7 @@ namespace anch {
 	W h = _context.state[7];
 
 	const std::array<W,R>& trArray = getTranslationArray();
-	for(int i = 0 ; i < R ; i++) {
+	for(uint32_t i = 0 ; i < R ; i++) {
 	  W temp1 = h + SIGMA1(e) + ch(e, f, g) + trArray[i] + chunk->words[i];
 	  W temp2 = SIGMA0(a) + maj(a, b, c);
 	  h = g;

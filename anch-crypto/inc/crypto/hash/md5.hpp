@@ -22,6 +22,8 @@
 
 #include "crypto/hash/hash.hpp"
 
+#include <cstring>
+
 
 namespace anch {
   namespace crypto {
@@ -41,13 +43,13 @@ namespace anch {
        */
       struct Context {
 	/*! Number of bits handle mod 2^64 */
-	std::array<uint32_t,2> handle;
+	uint32_t handle[2];
 
 	/*! Scratch buffer */
-	std::array<uint32_t,4> buffer;
+	uint32_t buffer[4];
 
 	/*! Input buffer */
-	std::array<uint32_t,16> input;
+	uint32_t input[16];
 
 	/*! Actual digest after computing */
 	std::array<uint8_t,16> digest;
@@ -63,8 +65,10 @@ namespace anch {
 	 * Reset current context
 	 */
 	void reset() {
-	  handle = { {0,0} };
-	  buffer = { {0x67452301,0xefcdab89,0x98badcfe,0x10325476}} ;
+	  static uint32_t HANDLE_INIT[2] = { 0, 0 };
+	  std::memcpy(handle, HANDLE_INIT, 2 * sizeof(uint32_t));
+	  static uint32_t BUFFER_INIT[4] = { 0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476, };
+	  std::memcpy(buffer, BUFFER_INIT, 4 * sizeof(uint32_t));
 	}
       };
 
