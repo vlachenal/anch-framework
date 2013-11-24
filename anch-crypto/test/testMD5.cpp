@@ -259,6 +259,44 @@ main(void) {
     }
   }
 
+  // Million of 'a'
+  {
+    std::ostringstream in;
+    for(int i = 0 ; i < 1000000 ; i++) {
+      in << 'a';
+    }
+    string msg = in.str();
+    cout << "Hash message: a million of 'a'" << endl;
+    start = std::chrono::high_resolution_clock::now();
+    MD5 hash(msg);
+    const std::array<uint8_t,16>& res = hash.digest();
+    end = std::chrono::high_resolution_clock::now();
+    std::chrono::microseconds anchDuration = std::chrono::duration_cast<std::chrono::microseconds>(end.time_since_epoch()) - std::chrono::duration_cast<std::chrono::microseconds>(start.time_since_epoch());
+
+    std::array<uint8_t,16> sum;
+    start = std::chrono::high_resolution_clock::now();
+    md5(msg.data(), sum);
+    end = std::chrono::high_resolution_clock::now();
+    std::chrono::microseconds md5Duration = std::chrono::duration_cast<std::chrono::microseconds>(end.time_since_epoch()) - std::chrono::duration_cast<std::chrono::microseconds>(start.time_since_epoch());
+
+    std::ostringstream out;
+    out << hash;
+    string strRes = out.str();
+    if(res != sum) {
+      char digest[32];
+      sprintf(digest,"%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x",
+	      sum[0],sum[1],sum[2],sum[3],sum[4],sum[5],sum[6],sum[7],sum[8],sum[9],sum[10],sum[11],sum[12],sum[13],sum[14],sum[15]);
+      cerr << "Hash are differents:" << endl;
+      cerr << "AnCH result: " << strRes << endl;
+      cerr << "Instead of:  " << digest << endl;
+      return 1;
+    } else {
+      cout << "Found value: " << strRes << endl;
+      cout << "AnCH implementation time:      " << anchDuration.count() << " µs" << endl;
+      cout << "Reference implementation time: " << md5Duration.count() << " µs" << endl << endl;
+    }
+  }
+
   // File test
   {
     cout << "Hash file Makefile" << endl;
