@@ -225,6 +225,7 @@ main(void) {
 
   std::chrono::time_point<std::chrono::high_resolution_clock> start, end;
 
+  MD5 init(string("")); // Initialize MD5 static context to perform bench in correct condition
   // String test
   {
     string msg("\"Ta mère suce des bites en enfer\" - Linda Blair - L'Exorciste - 1973");
