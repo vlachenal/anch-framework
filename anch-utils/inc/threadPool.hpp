@@ -74,7 +74,7 @@ namespace anch {
       _running(false) {
       if(maxThreads == 0) {
 	_maxThreads = std::thread::hardware_concurrency();
-	if(_maxThreads == 0) { // Check if maximum number is not 0 to execute at least one thread
+	if(_maxThreads < 1) { // Check if maximum number of thread is at least 1 to execute at least one thread
 	  _maxThreads = 1;
 	}
       } else {
@@ -83,7 +83,7 @@ namespace anch {
     }
     // Constructors -
 
-    // Destructors +
+    // Destructor +
   public:
     /*!
      * \ref ThreadPool destructor
@@ -91,7 +91,7 @@ namespace anch {
     virtual ~ThreadPool() {
       // Nothing to do
     }
-    // Destructors -
+    // Destructor -
 
     // Methods +
   public:
