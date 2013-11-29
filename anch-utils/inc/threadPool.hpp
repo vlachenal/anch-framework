@@ -103,14 +103,14 @@ namespace anch {
       if(!_running) {
 	_available.store(_maxThreads);
 	_running = true;
-	// Check if there is some thread to process +
+	// Check if there is some threads to proceed +
 	while(_available.load() > 0 && !_threads.empty()) {
 	  _available--;
 	  std::thread exec(&ThreadPool::execute, this, _threads.front());
 	  exec.detach();
 	  _threads.pop();
 	}
-	// Check if there is some thread to process -
+	// Check if there is some threads to proceed -
       }
     }
 
