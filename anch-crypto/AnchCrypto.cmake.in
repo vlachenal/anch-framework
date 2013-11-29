@@ -5,7 +5,7 @@ set(ANCH_UTILS_INCLUDES_DIR "$ENV{HOME}/projects/anch-framework/anch-utils/inc")
 
 # Anch crypto installation configuration
 set(ANCH_CRYPTO_LIBRARY_DIR "")
-set(ANCH_CRYPTO_COMPILE_FLAGS "-O2")
+set(ANCH_CRYPTO_COMPILE_FLAGS "-O2 -march=native -pipe")
 #set(ANCH_CRYPTO_COMPILE_FLAGS "-g")
 
 # Unitary tests

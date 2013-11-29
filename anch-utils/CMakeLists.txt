@@ -82,7 +82,31 @@ if(ANCH_UTILS_UNITARY_TEST)
   )
   # Build UUID unitary test -
 
+  # Include librairies
+  include(FindThreads)
+  find_package(Threads)
+
+  # Build thread pool unitary test +
+  file(
+    GLOB_RECURSE
+    test_thread_pool
+    inc/*
+    test/testThreadPool.cpp
+  )
+
+  add_executable(
+    anch-thread-pool-test
+    ${test_thread_pool}
+  )
+
+  target_link_libraries(
+    anch-thread-pool-test
+    ${CMAKE_THREAD_LIBS_INIT}
+  )
+  # Build thread pool unitary test -
+
   enable_testing()
   add_test(anch-uuid-test ${EXECUTABLE_OUTPUT_PATH}/anch-uuid-test main)
+  add_test(anch-thread-pool-test ${EXECUTABLE_OUTPUT_PATH}/anch-thread-pool-test main)
 
 endif(ANCH_UTILS_UNITARY_TEST)
