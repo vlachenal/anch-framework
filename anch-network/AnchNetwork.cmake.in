@@ -1,6 +1,7 @@
 ## Anch network configuration +
 # Anch resource path
 set(ANCH_EVENTS_INCLUDES_DIR "$ENV{HOME}/projects/anch-framework/anch-events/inc")
+set(ANCH_UTILS_INCLUDES_DIR "$ENV{HOME}/projects/anch-framework/anch-utils/inc")
 
 # Anch network installation configuration
 set(ANCH_NETWORK_LIBRARY_DIR "")

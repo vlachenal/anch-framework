@@ -38,6 +38,7 @@ find_package(Threads)
 include_directories(
   inc
   ${ANCH_EVENTS_INCLUDES_DIR}
+  ${ANCH_UTILS_INCLUDES_DIR}
 )
 
 # Retrieve every files in project
