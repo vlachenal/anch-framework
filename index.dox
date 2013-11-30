@@ -25,7 +25,7 @@
  * \n
  * \n
  * If you wandering why this guy is developing another C++ framework, the answer is: "Because I can !" ;) ... and I don't want to depends on other libraries than mine.\n
- * I have other projects (unfinished) and I wanted to share my work with these libraries and I wanted that they may be used with the least possible restrictions (these libraries are LGPL).
+ * I have other projects (unfinished) and I wanted to share my work with these libraries which may be used with the least possible restrictions (these libraries are LGPL).
  *
  * \section prereq_sec Prerequisites
  *
@@ -66,7 +66,6 @@
  *
  * \section todo_sec TODO list
  *
- * - Finalize SHA2 (334 and 512) implementation in anch-crypto.
  * - Find a way anch-network to be easier to use.
  * - Implements an XML parser (SAX and DOM API) when std::basic_string manipulation (through std::codecv) will be implemented in C++ standard library.
  */

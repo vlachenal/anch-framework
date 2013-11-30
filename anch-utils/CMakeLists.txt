@@ -46,13 +46,6 @@ file(
   inc/*
 )
 
-# Declare exec
-add_library(
-  anch-utils
-  SHARED
-  ${source_files}
-)
-
 # Unitary tests
 if(ANCH_UTILS_UNITARY_TEST)
 
@@ -76,7 +69,6 @@ if(ANCH_UTILS_UNITARY_TEST)
 
   target_link_libraries(
     anch-uuid-test
-    anch-utils
     anch-device
     anch-crypto
   )

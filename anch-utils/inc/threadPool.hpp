@@ -32,10 +32,11 @@ namespace anch {
   /*!
    * \brief Thread pool utility class.
    *
-   * Thread pooling utility class.\n
-   * \n
    * Number of thread can be parameterized in constructor. If not set, the
-   * maximum number of thread will be equal to the number of processor or 1.
+   * maximum number of thread will be equal to the number of processor or 1.\n
+   * \n
+   * Every thread which will be run by this way will be detach. They will be not joinable.\n
+   * Thread can be retrieve through event mechanism or by specific implementation in thread function.
    *
    * \author Vincent Lachenal
    *
