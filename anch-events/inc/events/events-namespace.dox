@@ -1,0 +1,7 @@
+/*!
+ * \namespace anch::events
+ *
+ * \brief Events management namespace.
+ *
+ * It contains every classes for events oriented programmation facilities.
+ */

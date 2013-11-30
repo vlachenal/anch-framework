@@ -1,0 +1,12 @@
+## Anch file configuration +
+# Anch resource path
+set(ANCH_DATE_INCLUDES_DIR "$ENV{HOME}/projects/anch-framework/anch-date/inc")
+set(ANCH_DATE_LIBRARY_DIR "$ENV{HOME}/projects/anch-framework/anch-date/build/lib")
+
+# Anch file installation configuration
+set(ANCH_FILE_LIBRARY_DIR "")
+set(ANCH_FILE_COMPILE_FLAGS "-O2")
+
+# Unitary tests
+set(ANCH_FILE_UNITARY_TEST ON CACHE BOOL "Anch file unitary tests")
+## Anch file configuration -
