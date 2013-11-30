@@ -1,0 +1,11 @@
+/*!
+ * \namespace anch::crypto
+ *
+ * \brief Cryptography namespace.
+ *
+ * It contains classes for cryptography facilities:\n
+ * - Hash functions (\ref MD5, \ref SHA1 and \ref SHA2)
+ * - Cipher functions (\ref AES)
+ * - Message authentication code functions (\ref HMAC)
+ * - Binary to text functions (\ref Base64)
+ */
