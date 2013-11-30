@@ -13,9 +13,10 @@
  * - anch-date: provides date and time facilities based on C++11 high precision clock.
  * - \ref page_logger "anch-logger": provides logging facilities based on C++11 thread and regular expression libraries.
  * - \ref page_events "anch-events": provides event programming facilities based on C++11 thread library.
- * - anch-crypto: provides cryptographic library which only include hash algorithms implementation (MD5, SHA1 and SHA2) and HMAC (with implemented hashes).
+ * - \ref page_crypto "anch-crypto": provides cryptographic library which only include hash algorithms implementation (MD5, SHA1 and SHA2) and HMAC (with implemented hashes).
  * - anch-device: provides device interaction library (only to retrieve network status for now).
  * - anch-network: provides basic API to send and receive data on TCP or UDP sockets.
+ * - anch-utils: provides some utility classes and functions. This 'library' contains header only implementations.
  *
  * Each library contains unitary tests which can provide a way to use it.\n
  * \n
@@ -38,7 +39,7 @@
  *
  * \section anch_lib_sec Libraries dependencies
  *
- * - anch-utils: Dependends on the feature
+ * - anch-utils: Dependends on the feature (see class and function description)
  * - anch-resource:
  *   - boost (until standard C++ library implements regular expression)
  * - anch-date:
@@ -47,6 +48,7 @@
  *   - anch-resource: parse anch-logger configuration file
  *   - anch-date: high resolution clock (up to nanosecond)
  *   - anch-utils: Meyer's singleton
+ *   - boost (until standard C++ library implements regular expression)
  * - anch-events:
  *   - anch-utils: object instance address comparator and Meyers' singleton
  * - anch-crypto: nothing

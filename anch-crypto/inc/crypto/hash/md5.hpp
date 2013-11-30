@@ -29,7 +29,8 @@ namespace anch {
   namespace crypto {
 
     /*!
-     * MD5 hash algorithm implementation\n
+     * \brief MD5 hash algorithm implementation
+     *
      * This algorithm is based on Qt framework algorithm.
      *
      * \author Vincent Lachenal

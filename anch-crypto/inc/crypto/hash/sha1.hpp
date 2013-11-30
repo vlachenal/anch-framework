@@ -27,7 +27,8 @@ namespace anch {
   namespace crypto {
 
     /*!
-     * SHA1 hash algorithm implementation\n
+     * \brief SHA1 hash algorithm implementation
+     *
      * This algorithm is based on Qt framework algorithm.
      *
      * \author Vincent Lachenal

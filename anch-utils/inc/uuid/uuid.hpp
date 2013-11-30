@@ -37,11 +37,11 @@
 namespace anch {
 
   /*!
-   * UUID generator and parser.\n
-   * \n
+   * \brief UUID generator and parser.
+   *
    * See RFC 4122 for more details (http://www.ietf.org/rfc/rfc4122.txt)\n
    * \n
-   * This class need anch-crypto and anch-device libraries.
+   * This class needs anch-crypto and anch-device libraries.
    *
    * \since 0.1
    *

@@ -30,7 +30,7 @@ namespace anch {
   namespace crypto {
 
     /*!
-     * Hash algorithm abstract class.
+     * \brief Hash algorithm abstract class.
      *
      * N is the hash output size in bytes.\n
      * B is the hash block size in bytes (used in HMAC algorithm).

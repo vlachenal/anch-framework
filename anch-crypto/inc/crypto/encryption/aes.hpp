@@ -37,7 +37,10 @@ namespace anch {
     extern const uint32_t RCON[11];
 
     /*!
-     * AES encryption algorithm implementation.
+     * \brief AES block cipher algorithm implementation.
+     *
+     * This class only implements the key management and the cipher/decipher of one block.\n
+     * See standard specification for more details (http://csrc.nist.gov/publications/fips/fips197/fips-197.pdf).
      *
      * \since 0.1
      *
