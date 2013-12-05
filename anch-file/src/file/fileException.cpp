@@ -45,8 +45,11 @@ FileException::FileException(const string& message): _message(message) {
  */
 FileException::FileException(const std::string& message, int errnum) {
   char buffer[1024];
-  ::strerror_r(errnum,buffer,1024);
-  _message = message + ": " + buffer;
+  if(::strerror_r(errnum,buffer,1024) == 0) {
+    _message = message + ": " + buffer;
+  } else {
+    _message = message;
+  }
   _message.shrink_to_fit();
 }
 // Constructors -
