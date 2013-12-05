@@ -1,0 +1,7 @@
+/*!
+ * \namespace anch::resource
+ *
+ * \brief Resources namespace.
+ *
+ * It contains resources access classes.
+ */

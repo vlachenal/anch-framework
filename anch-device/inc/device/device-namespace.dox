@@ -1,0 +1,8 @@
+/*!
+ * \namespace anch::device
+ *
+ * \brief Device management namespace.
+ *
+ * It contains classes for POSIX (for now) devices management.\n
+ * Only network devices are managed for now.
+ */

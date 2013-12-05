@@ -1,0 +1,7 @@
+/*!
+ * \namespace anch::resource::file
+ *
+ * \brief File resources namespace.
+ *
+ * File resources implementation namespace.
+ */

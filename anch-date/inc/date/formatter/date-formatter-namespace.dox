@@ -1,0 +1,7 @@
+/*!
+ * \namespace anch::date::formatter
+ *
+ * \brief Date formatter namespace.
+ *
+ * It contains internal classes for date/time parsing and formatting.
+ */

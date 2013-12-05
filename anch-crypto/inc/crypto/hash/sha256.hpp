@@ -30,7 +30,7 @@ namespace anch {
 
     /*! SHA256 initial values */
     extern std::array<uint32_t,8> SHA256_VALUES;
-    /*!
+    /*
      * SHA256 defintion
      */
     extern template class Hash<32,64>;
@@ -44,6 +44,9 @@ namespace anch {
     extern template SHA224_256<32,SHA256_VALUES>::SHA224_256(const std::wstring& data);
     extern template SHA224_256<32,SHA256_VALUES>::SHA224_256(std::istream& stream);
     //extern template SHA224_256<32,SHA256_VALUES>::SHA224_256(std::wistream& stream);
+    /*!
+     * SHA256 defintion
+     */
     using SHA256 = SHA224_256<32,SHA256_VALUES>;
 
   }

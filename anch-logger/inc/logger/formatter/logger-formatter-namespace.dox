@@ -1,0 +1,7 @@
+/*!
+ * \namespace anch::logger::formatter
+ *
+ * \brief Logger formatter internalnamespace.
+ *
+ * It contains AnCH logger library internal classes for messages formatting.
+ */

@@ -1,0 +1,8 @@
+/*!
+ * \namespace anch::network
+ *
+ * \brief Network namespace.
+ *
+ * It contains classes to manage network data management.\n
+ * For now only TCP and UDP are implemented and needed some work to be use easier. Transport layers (such as HTTP) should be implemented soon.
+ */

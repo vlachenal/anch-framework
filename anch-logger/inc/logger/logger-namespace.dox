@@ -1,0 +1,7 @@
+/*!
+ * \namespace anch::logger
+ *
+ * \brief Logger namespace.
+ *
+ * It contains ready (and easy) to use logger library.
+ */

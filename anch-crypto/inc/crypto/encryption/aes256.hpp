@@ -22,10 +22,10 @@
 namespace anch {
   namespace crypto {
 
+    extern template class AES<8,14>;
     /*!
      * AES-256 defintion
      */
-    extern template class AES<8,14>;
     using AES256 = AES<8,14>;
 
   }

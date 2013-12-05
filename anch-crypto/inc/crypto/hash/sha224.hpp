@@ -27,7 +27,7 @@ namespace anch {
 
     /*! SHA224 initial values */
     extern std::array<uint32_t,8> SHA224_VALUES;
-    /*!
+    /*
      * SHA224 defintion
      */
     extern template class Hash<28,64>;
@@ -40,6 +40,9 @@ namespace anch {
     extern template SHA224_256<28,SHA224_VALUES>::SHA224_256(const std::wstring& data);
     extern template SHA224_256<28,SHA224_VALUES>::SHA224_256(std::istream& stream);
     //extern template SHA224_256<28,SHA224_VALUES>::SHA224_256(std::wistream& stream);
+    /*!
+     * SHA224 definition
+     */
     using SHA224 = SHA224_256<28,SHA224_VALUES>;
 
   }
