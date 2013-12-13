@@ -1,0 +1,9 @@
+#######################################################
+# AnCH Framework ignores files/directories in project #
+#######################################################
+
+# Build directories
+**/build/
+
+# Editors backup files
+**/*~
