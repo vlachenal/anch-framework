@@ -7,3 +7,6 @@
 
 # Editors backup files
 **/*~
+
+# Documentation directory
+documentation/
