@@ -20,6 +20,8 @@
 #ifndef _ANCH_CRYPTO_AES_H_
 #define _ANCH_CRYPTO_AES_H_
 
+#include "crypto/encryption/block_cipher.hpp"
+
 #include <bitset>
 #include <cstring>
 
@@ -47,7 +49,7 @@ namespace anch {
      * \author Vincent Lachenal
      */
     template<std::size_t K, std::size_t R>
-    class AES {
+    class AES: public anch::crypto::BlockCipher<16> {
       // Attributes +
     private:
       /*! Internal state */
@@ -84,9 +86,12 @@ namespace anch {
       // Methods +
     public:
       /*!
-       * Cipher algorithm
+       * Cipher a block
+       *
+       * \param input the block to cipher
+       * \param output the ciphered block
        */
-      void cipher(uint8_t input[16], uint8_t output[16]) {
+      virtual void cipher(uint8_t input[16], uint8_t output[16]) {
 	std::memcpy(&_state, input, 16);
 	unsigned int round = 0;
 
@@ -113,9 +118,12 @@ namespace anch {
       }
 
       /*!
-       * Cipher algorithm
+       * Decipher a block
+       *
+       * \param input the block to decipher
+       * \param output the deciphered block
        */
-      void decipher(uint8_t input[16], uint8_t output[16]) {
+      virtual void decipher(uint8_t input[16], uint8_t output[16]) {
 	std::memcpy(&_state, input, 16);
 	unsigned int round = R;
 
