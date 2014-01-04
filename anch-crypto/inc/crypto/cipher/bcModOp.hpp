@@ -118,7 +118,10 @@ namespace anch {
 	    while(!input.eof()) {
 	      input.read(data, Cipher::getBlockSize());
 	      std::streamsize nbRead = input.gcount();
-	      if(nbRead < Cipher::getBlockSize()) {
+	      if(nbRead == 0) {
+		break;
+
+	      } else if(nbRead < Cipher::getBlockSize()) {
 		// \todo manage different padding
 		std::cout << "Size: " << nbRead << std::endl;
 		std::cout << "Fill " << Cipher::getBlockSize() - nbRead << " 0x00 from index " << nbRead << " to end" << std::endl;
