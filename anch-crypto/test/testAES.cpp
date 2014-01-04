@@ -1,6 +1,6 @@
-#include "crypto/encryption/aes128.hpp"
-#include "crypto/encryption/aes192.hpp"
-#include "crypto/encryption/aes256.hpp"
+#include "crypto/cipher/aes128.hpp"
+#include "crypto/cipher/aes192.hpp"
+#include "crypto/cipher/aes256.hpp"
 
 #include <iostream>
 #include <sstream>

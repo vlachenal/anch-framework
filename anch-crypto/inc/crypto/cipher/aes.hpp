@@ -20,7 +20,7 @@
 #ifndef _ANCH_CRYPTO_AES_H_
 #define _ANCH_CRYPTO_AES_H_
 
-#include "crypto/encryption/block_cipher.hpp"
+#include "crypto/cipher/block_cipher.hpp"
 
 #include <bitset>
 #include <cstring>
@@ -69,6 +69,16 @@ namespace anch {
        */
       AES(const uint8_t key[4*K]): _state(), _expKey() {
 	expandKey(key);
+      }
+
+      /*!
+       * \ref AES copy constructor.\n
+       * This constructor will copy the expanded key to avoid to compute it another time.
+       *
+       * \param other the AES to copy
+       */
+      AES(const AES& other): _state() {
+	std::memcpy(_expKey, other._expKey, 4 * (R + 1) * sizeof(uint32_t));
       }
       // Constructors -
 

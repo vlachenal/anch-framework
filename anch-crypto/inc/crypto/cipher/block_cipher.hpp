@@ -56,6 +56,15 @@ namespace anch {
        * \param output the deciphered block
        */
       virtual void decipher(uint8_t input[B], uint8_t output[B]) = 0;
+
+      /*!
+       * Block size getter.
+       *
+       * \return the block size
+       */
+      constexpr inline static std::size_t getBlockSize() {
+	return B;
+      }
       // Methods -
 
     };
