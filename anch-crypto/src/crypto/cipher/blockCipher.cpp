@@ -17,17 +17,8 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "crypto/cipher/aes.hpp"
+#include "crypto/cipher/blockCipher.hpp"
 
-namespace anch {
-  namespace crypto {
+using anch::crypto::BlockCipher;
 
-    extern template class BlockCipher<16>;
-    extern template class AES<4,10>;
-    /*!
-     * AES-128 defintion
-     */
-    using AES128 = AES<4,10>;
-
-  }
-}
+template class BlockCipher<16>;

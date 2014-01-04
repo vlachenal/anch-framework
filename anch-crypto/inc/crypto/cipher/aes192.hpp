@@ -22,6 +22,7 @@
 namespace anch {
   namespace crypto {
 
+    extern template class BlockCipher<16>;
     extern template class AES<6,12>;
     /*!
      * AES-192 defintion
