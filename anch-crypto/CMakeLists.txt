@@ -171,6 +171,25 @@ if(ANCH_CRYPTO_UNITARY_TEST)
   )
   # Build AES unitary test -
 
+  # Build block cipher mode of operation unitary test +
+  file(
+    GLOB_RECURSE
+    test_bcmod
+    inc/*
+    test/testBlockCipherModeOfOperation.cpp
+  )
+
+  add_executable(
+    anch-bcmod-test
+    ${test_bcmod}
+  )
+
+  target_link_libraries(
+    anch-bcmod-test
+    anch-crypto
+  )
+  # Build block cipher mode of operation unitary test -
+
   enable_testing()
   add_test(anch-md5-test ${EXECUTABLE_OUTPUT_PATH}/anch-md5-test main)
   add_test(anch-sha1-test ${EXECUTABLE_OUTPUT_PATH}/anch-sha1-test main)
@@ -178,5 +197,6 @@ if(ANCH_CRYPTO_UNITARY_TEST)
   add_test(anch-hmac-test ${EXECUTABLE_OUTPUT_PATH}/anch-hmac-test main)
   add_test(anch-base64-test ${EXECUTABLE_OUTPUT_PATH}/anch-base64-test main)
   add_test(anch-aes-test ${EXECUTABLE_OUTPUT_PATH}/anch-aes-test main)
+  add_test(anch-bcmod-test ${EXECUTABLE_OUTPUT_PATH}/anch-bcmod-test main)
 
 endif(ANCH_CRYPTO_UNITARY_TEST)
