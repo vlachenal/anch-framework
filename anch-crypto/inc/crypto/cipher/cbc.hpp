@@ -17,36 +17,47 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef _ANCH_CRYPTO_ECB_H_
-#define _ANCH_CRYPTO_ECB_H_
+#ifndef _ANCH_CRYPTO_CBC_H_
+#define _ANCH_CRYPTO_CBC_H_
 
 #include "crypto/cipher/bcModOp.hpp"
-
 
 namespace anch {
   namespace crypto {
 
     /*!
-     * \brief Electronic codebook implementation.
+     * \brief Cipher-block chaining implementation.
      *
-     * Block cipher mode of operation simpliest (and weakest) algorithm.
+     * CBC is the most commonly used mode of operation
      *
      * \since 0.1
      *
      * \author Vincent Lachenal
      */
     template<typename Cipher>
-    class ECB: public BlockCipherModeOfOperation<Cipher> {
+    class CBC: public BlockCipherModeOfOperation<Cipher> {
+
+      // Attributes +
+    private:
+      /*! Initialization vector */
+      std::array<uint8_t,Cipher::getBlockSize()> _initVect;
+
+      /*! Context vector */
+      std::array<uint8_t,Cipher::getBlockSize()> _ctxtVect;
+      // Attributes -
+
 
       // Constructors +
     public:
       /*!
-       * \ref ECB constructor
+       * \ref CBC constructor
        *
+       * \param initVect the initialization vector
        * \param nbThread the maximum number of thread to run in parallel (default to 1).
        *                 If is set to 0, it will be set to the number of CPU if found (1 otherwise).
        */
-      ECB(unsigned int nbThread = 1): BlockCipherModeOfOperation<Cipher>(true, true, nbThread) {
+      CBC(const std::array<uint8_t,Cipher::getBlockSize()>& initVect, unsigned int nbThread = 1):
+	BlockCipherModeOfOperation<Cipher>(false, true, nbThread), _initVect(initVect), _ctxtVect() {
 	// Nothing to do
       }
       // Constructors -
@@ -54,9 +65,9 @@ namespace anch {
 
       // Destructor +
       /*!
-       * \ref ECB destructor
+       * \ref CBC destructor
        */
-      virtual ~ECB() {
+      virtual ~CBC() {
 	// Nothing to do
       }
       // Destructor -
@@ -74,7 +85,14 @@ namespace anch {
       virtual void cipherBlock(uint8_t input[Cipher::getBlockSize()],
 			       uint8_t output[Cipher::getBlockSize()],
 			       Cipher& cipher) override {
-	cipher.cipher(input, output);
+	uint8_t data[Cipher::getBlockSize()];
+	for(std::size_t i = 0 ; i < Cipher::getBlockSize() ; i++) {
+	  data[i] = input[i] ^ _ctxtVect[i];
+	}
+	cipher.cipher(data, output);
+	for(std::size_t i = 0 ; i < Cipher::getBlockSize() ; i++) {
+	  _ctxtVect[i] = output[i];
+	}
       }
 
       /*!
@@ -87,14 +105,19 @@ namespace anch {
       virtual void decipherBlock(uint8_t input[Cipher::getBlockSize()],
 				 uint8_t output[Cipher::getBlockSize()],
 				 Cipher& cipher) override {
-	cipher.decipher(input, output);
+	uint8_t data[Cipher::getBlockSize()];
+	cipher.decipher(input, data);
+	for(std::size_t i = 0 ; i < Cipher::getBlockSize() ; i++) {
+	  output[i] = data[i] ^ _ctxtVect[i];
+	  _ctxtVect[i] = input[i];
+	}
       }
 
       /*!
        * Reset block cipher mode of operation context
        */
       virtual void reset() {
-	// Nothing to do
+	_ctxtVect = _initVect;
       }
       // Methods -
 
@@ -103,4 +126,4 @@ namespace anch {
   }
 }
 
-#endif // _ANCH_CRYPTO_ECB_H_
+#endif // _ANCH_CRYPTO_CBC_H_

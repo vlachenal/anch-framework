@@ -57,9 +57,6 @@ namespace anch {
 
       /*! Maximum number of thread to run in parallel */
       unsigned int _nbThread;
-
-      /*! Initialization vector */
-      std::array<uint8_t,Cipher::getBlockSize()> _initVector;
       // Attributes -
 
 
@@ -111,6 +108,7 @@ namespace anch {
 		  std::ostream& output,
 		  const std::string& key) {
 	if(input && output) {
+	  reset();
 	  if(!_cipherParallelizable || _nbThread == 1) {
 	    Cipher cipher(reinterpret_cast<const uint8_t*>(key.data()));
 	    char data[Cipher::getBlockSize()];
@@ -155,6 +153,7 @@ namespace anch {
 		    std::ostream& output,
 		    const std::string& key) {
 	if(input && output) {
+	  reset();
 	  if(!_cipherParallelizable || _nbThread == 1) {
 	    Cipher cipher(reinterpret_cast<const uint8_t*>(key.data()));
 	    uint8_t out[Cipher::getBlockSize()];
@@ -213,8 +212,7 @@ namespace anch {
        */
       virtual void cipherBlock(uint8_t input[Cipher::getBlockSize()],
 			       uint8_t output[Cipher::getBlockSize()],
-			       Cipher& cipher)
-	const = 0;
+			       Cipher& cipher) = 0;
 
       /*!
        * Decipher a block.\n
@@ -225,8 +223,12 @@ namespace anch {
        */
       virtual void decipherBlock(uint8_t input[Cipher::getBlockSize()],
 				 uint8_t output[Cipher::getBlockSize()],
-				 Cipher& cipher)
-	const = 0;
+				 Cipher& cipher) = 0;
+
+      /*!
+       * Reset block cipher mode of operation context
+       */
+      virtual void reset() = 0;
 
       /*!
        * Cipher a block

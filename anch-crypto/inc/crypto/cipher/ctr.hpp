@@ -17,36 +17,47 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef _ANCH_CRYPTO_ECB_H_
-#define _ANCH_CRYPTO_ECB_H_
+#ifndef _ANCH_CRYPTO_CTR_H_
+#define _ANCH_CRYPTO_CTR_H_
 
 #include "crypto/cipher/bcModOp.hpp"
-
 
 namespace anch {
   namespace crypto {
 
     /*!
-     * \brief Electronic codebook implementation.
+     * \brief Counter implementation.
      *
-     * Block cipher mode of operation simpliest (and weakest) algorithm.
+     * CTR mode is also known as ICM (integer counter mode) and SIC (segmented integer counter).
      *
      * \since 0.1
      *
      * \author Vincent Lachenal
      */
     template<typename Cipher>
-    class ECB: public BlockCipherModeOfOperation<Cipher> {
+    class CTR: public BlockCipherModeOfOperation<Cipher> {
+
+      // Attributes +
+    private:
+      /*! Initialization vector */
+      std::array<uint8_t,Cipher::getBlockSize()> _nonce;
+
+      /*! Context vector */
+      std::array<uint8_t,Cipher::getBlockSize()> _ctxtVect;
+      // Attributes -
+
 
       // Constructors +
     public:
       /*!
-       * \ref ECB constructor
+       * \ref CTR constructor
        *
+       * \param nonce the nonce
        * \param nbThread the maximum number of thread to run in parallel (default to 1).
        *                 If is set to 0, it will be set to the number of CPU if found (1 otherwise).
        */
-      ECB(unsigned int nbThread = 1): BlockCipherModeOfOperation<Cipher>(true, true, nbThread) {
+      CTR(const std::array<uint8_t,Cipher::getBlockSize()>& nonce, unsigned int nbThread = 1):
+	BlockCipherModeOfOperation<Cipher>(false, false, nbThread), _nonce(nonce), _ctxtVect() {
 	// Nothing to do
       }
       // Constructors -
@@ -54,9 +65,9 @@ namespace anch {
 
       // Destructor +
       /*!
-       * \ref ECB destructor
+       * \ref CTR destructor
        */
-      virtual ~ECB() {
+      virtual ~CTR() {
 	// Nothing to do
       }
       // Destructor -
@@ -74,7 +85,12 @@ namespace anch {
       virtual void cipherBlock(uint8_t input[Cipher::getBlockSize()],
 			       uint8_t output[Cipher::getBlockSize()],
 			       Cipher& cipher) override {
-	cipher.cipher(input, output);
+	uint8_t data[Cipher::getBlockSize()];
+	cipher.cipher(_ctxtVect.data(), data);
+	for(std::size_t i = 0 ; i < Cipher::getBlockSize() ; i++) {
+	  output[i] = input[i] ^ data[i];
+	  increment();
+	}
       }
 
       /*!
@@ -87,14 +103,29 @@ namespace anch {
       virtual void decipherBlock(uint8_t input[Cipher::getBlockSize()],
 				 uint8_t output[Cipher::getBlockSize()],
 				 Cipher& cipher) override {
-	cipher.decipher(input, output);
+	uint8_t data[Cipher::getBlockSize()];
+	cipher.cipher(_ctxtVect.data(), data);
+	for(std::size_t i = 0 ; i < Cipher::getBlockSize() ; i++) {
+	  output[i] = input[i] ^ data[i];
+	  increment();
+	}
       }
 
       /*!
        * Reset block cipher mode of operation context
        */
       virtual void reset() {
-	// Nothing to do
+	_ctxtVect = _nonce;
+	uint16_t* counter = reinterpret_cast<uint16_t*>(&_ctxtVect.data()[Cipher::getBlockSize() - 2]);
+	*counter = 0;
+      }
+
+      /*!
+       * Increments context vector counter
+       */
+      inline void increment() {
+	uint16_t* counter = reinterpret_cast<uint16_t*>(&_ctxtVect.data()[Cipher::getBlockSize() - 2]);
+	(*counter)++;
       }
       // Methods -
 
@@ -103,4 +134,4 @@ namespace anch {
   }
 }
 
-#endif // _ANCH_CRYPTO_ECB_H_
+#endif // _ANCH_CRYPTO_CTR_H_
