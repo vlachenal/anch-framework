@@ -32,7 +32,7 @@ using anch::crypto::ZeroPadding;
 void
 ZeroPadding::pad(uint8_t* data, std::size_t len, std::size_t expLen) {
   if(len < expLen) {
-    for(std::size_t idx = len - 1 ; idx < expLen ; idx++) {
+    for(std::size_t idx = len ; idx < expLen ; idx++) {
       data[idx] = 0x00;
     }
   }
@@ -49,9 +49,11 @@ ZeroPadding::pad(uint8_t* data, std::size_t len, std::size_t expLen) {
 std::size_t
 ZeroPadding::length(uint8_t* data, std::size_t len) {
   std::size_t dataLen = len;
-  while(data[dataLen - 1] == 0 && dataLen > 0) {
-    dataLen--;
+  std::size_t idx = dataLen - 1;
+  while(data[idx] == 0x00 && idx > 0) {
+    idx--;
   }
+  dataLen = idx + 1;
   return dataLen;
 }
 

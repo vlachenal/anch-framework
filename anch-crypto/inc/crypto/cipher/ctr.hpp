@@ -35,7 +35,7 @@ namespace anch {
      * \author Vincent Lachenal
      */
     template<typename Cipher>
-    class CTR: public BlockCipherModeOfOperation<Cipher> {
+    class CTR: public BlockCipherModeOfOperation<CTR<Cipher>,Cipher> {
 
       // Attributes +
     private:
@@ -57,7 +57,9 @@ namespace anch {
        *                 If is set to 0, it will be set to the number of CPU if found (1 otherwise).
        */
       CTR(const std::array<uint8_t,Cipher::getBlockSize()>& nonce, unsigned int nbThread = 1):
-	BlockCipherModeOfOperation<Cipher>(false, false, nbThread), _nonce(nonce), _ctxtVect() {
+	BlockCipherModeOfOperation<CTR<Cipher>,Cipher>(false, false, nbThread),
+	_nonce(nonce),
+	_ctxtVect() {
 	// Nothing to do
       }
       // Constructors -

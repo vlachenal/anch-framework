@@ -39,6 +39,7 @@ namespace anch {
      */
     class ANSIX923 {
 
+    public:
       /*!
        * Pad data
        *

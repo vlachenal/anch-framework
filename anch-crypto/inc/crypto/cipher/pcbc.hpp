@@ -38,7 +38,7 @@ namespace anch {
      * \author Vincent Lachenal
      */
     template<typename Cipher>
-    class PCBC: public BlockCipherModeOfOperation<Cipher> {
+    class PCBC: public BlockCipherModeOfOperation<PCBC<Cipher>,Cipher> {
 
       // Attributes +
     private:
@@ -60,7 +60,9 @@ namespace anch {
        *                 If is set to 0, it will be set to the number of CPU if found (1 otherwise).
        */
       PCBC(const std::array<uint8_t,Cipher::getBlockSize()>& initVect, unsigned int nbThread = 1):
-	BlockCipherModeOfOperation<Cipher>(false, false, nbThread), _initVect(initVect), _ctxtVect() {
+	BlockCipherModeOfOperation<PCBC<Cipher>,Cipher>(false, false, nbThread),
+	_initVect(initVect),
+	_ctxtVect() {
 	// Nothing to do
       }
       // Constructors -

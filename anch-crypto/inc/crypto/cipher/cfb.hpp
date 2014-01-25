@@ -35,7 +35,7 @@ namespace anch {
      * \author Vincent Lachenal
      */
     template<typename Cipher>
-    class CFB: public BlockCipherModeOfOperation<Cipher> {
+    class CFB: public BlockCipherModeOfOperation<CFB<Cipher>,Cipher> {
 
       // Attributes +
     private:
@@ -57,7 +57,9 @@ namespace anch {
        *                 If is set to 0, it will be set to the number of CPU if found (1 otherwise).
        */
       CFB(const std::array<uint8_t,Cipher::getBlockSize()>& initVect, unsigned int nbThread = 1):
-	BlockCipherModeOfOperation<Cipher>(false, true, nbThread), _initVect(initVect), _ctxtVect() {
+	BlockCipherModeOfOperation<CFB<Cipher>,Cipher>(false, true, nbThread),
+	_initVect(initVect),
+	_ctxtVect() {
 	// Nothing to do
       }
       // Constructors -

@@ -39,6 +39,7 @@ namespace anch {
      */
     class ZeroPadding {
 
+    public:
       /*!
        * Pad data
        *

@@ -32,8 +32,8 @@ using anch::crypto::ISO7816_4Padding;
 void
 ISO7816_4Padding::pad(uint8_t* data, std::size_t len, std::size_t expLen) {
   if(len < expLen) {
-    data[len - 1] = 0x80;
-    for(std::size_t idx = len ; idx < expLen ; idx++) {
+    data[len] = 0x80;
+    for(std::size_t idx = len + 1 ; idx < expLen ; idx++) {
       data[idx] = 0x00;
     }
   }
@@ -52,7 +52,7 @@ ISO7816_4Padding::length(uint8_t* data, std::size_t len) {
   std::size_t dataLen = len;
   for(std::size_t i = len - 1 ; i >= 0 ; i--) {
     if(data[i] == 0x80) {
-      dataLen = i + i;
+      dataLen = i;
       break;
     } else if(data[i] != 0x00) {
       break;

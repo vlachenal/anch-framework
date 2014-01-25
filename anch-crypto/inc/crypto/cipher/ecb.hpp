@@ -36,7 +36,7 @@ namespace anch {
      * \author Vincent Lachenal
      */
     template<typename Cipher>
-    class ECB: public BlockCipherModeOfOperation<Cipher> {
+    class ECB: public BlockCipherModeOfOperation<ECB<Cipher>,Cipher> {
 
       // Constructors +
     public:
@@ -46,7 +46,8 @@ namespace anch {
        * \param nbThread the maximum number of thread to run in parallel (default to 1).
        *                 If is set to 0, it will be set to the number of CPU if found (1 otherwise).
        */
-      ECB(unsigned int nbThread = 1): BlockCipherModeOfOperation<Cipher>(true, true, nbThread) {
+      ECB(unsigned int nbThread = 1):
+	BlockCipherModeOfOperation<ECB<Cipher>,Cipher>(true, true, nbThread) {
 	// Nothing to do
       }
       // Constructors -

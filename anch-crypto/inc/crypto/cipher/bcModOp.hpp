@@ -27,6 +27,9 @@
 #include <array>
 #include <thread>
 #include <cstring>
+#include <map>
+
+#include "threadPool.hpp"
 
 // \todo remove
 #include <iostream>
@@ -44,8 +47,10 @@ namespace anch {
      *
      * \author Vincent Lachenal
      */
-    template<typename Cipher>
+    template<typename Derived, typename Cipher>
     class BlockCipherModeOfOperation {
+
+      friend class anch::ThreadPool;
 
       // Attributes +
     private:
@@ -57,6 +62,21 @@ namespace anch {
 
       /*! Maximum number of thread to run in parallel */
       unsigned int _nbThread;
+
+      /*! Mutex for waiting result */
+      std::mutex _waitComplete;
+
+      /*! Result map mutex */
+      std::mutex _resMutex;
+
+      /*! Available results */
+      std::map<uint32_t, uint8_t[Cipher::getBlockSize()]> _pendingResult;
+
+      /*! Current result index */
+      std::atomic<uint32_t> _currentIdx;
+
+      /*! End index */
+      uint32_t _endIdx;
       // Attributes -
 
 
@@ -75,7 +95,12 @@ namespace anch {
 				 unsigned int nbThread = 1):
 	_cipherParallelizable(cipherParallelizable),
 	_decipherParallelizable(decipherParallelizable),
-	_nbThread(nbThread) {
+	_nbThread(nbThread),
+	_waitComplete(),
+	_resMutex(),
+	_pendingResult(),
+	_currentIdx(0),
+	_endIdx(UINT32_MAX) {
 	if(nbThread == 0 && (cipherParallelizable || decipherParallelizable)) {
 	  _nbThread = std::thread::hardware_concurrency();
 	  if(_nbThread == 0) { // Keep at least 1 thread running
@@ -133,11 +158,37 @@ namespace anch {
 	    output.flush();
 
 	  } else {
+	    Cipher cipher(reinterpret_cast<const uint8_t*>(key.data()));
+	    _waitComplete.lock();
+	    ThreadPool pool(_nbThread);
+	    pool.start();
 	    char data[Cipher::getBlockSize()];
+	    uint32_t index = 0;
 	    while(!input.eof()) {
 	      input.read(data, Cipher::getBlockSize());
-	      deferredCipherBlock(reinterpret_cast<uint8_t*>(data), input.gcount());
+	      std::streamsize nbRead = input.gcount();
+	      if(nbRead == 0) {
+		_endIdx = index - 1;
+		break;
+
+	      } else if(nbRead < Cipher::getBlockSize()) {
+		_endIdx = index;
+		// \todo manage different padding
+		std::cout << "Size: " << nbRead << std::endl;
+		std::cout << "Fill " << Cipher::getBlockSize() - nbRead << " 0x00 from index " << nbRead << " to end" << std::endl;
+		std::memset(data + nbRead, 0x00, Cipher::getBlockSize() - nbRead);
+	      }
+	      pool.add(&Derived::deferredCipherBlock, static_cast<Derived*>(this), index, reinterpret_cast<uint8_t*>(data), cipher);
+	      // deferredCipherBlock(reinterpret_cast<uint8_t*>(data), out, cipher);
+	      // for(std::size_t i = 0 ; i < Cipher::getBlockSize() ; i++) {
+	      // 	output << out[i];
+	      // }
+	      index++;
 	    }
+
+	    _waitComplete.lock();
+	    _waitComplete.unlock();
+	    pool.stop();
 
 	  }
 	}
@@ -235,9 +286,11 @@ namespace anch {
        *
        * \param input the input block to cipher
        */
-      virtual void deferredCipherBlock(uint8_t input[Cipher::getBlockSize()], std::streamsize size) const {
+      virtual void deferredCipherBlock(uint32_t index, uint8_t input[Cipher::getBlockSize()], Cipher cipher) {
+	//uint8_t out[Cipher::getBlockSize()];
+	std::cout << index << std::endl;
 	std::cout << input << std::endl;
-	std::cout << size << std::endl;
+	std::cout << &cipher << std::endl;
       }
 
       /*!
@@ -245,7 +298,7 @@ namespace anch {
        *
        * \param input the input block to decipher
        */
-      virtual void deferredDecipherBlock(uint8_t input[Cipher::getBlockSize()], std::streamsize size) const {
+      virtual void deferredDecipherBlock(uint8_t input[Cipher::getBlockSize()], std::streamsize size) {
 	std::cout << input << std::endl;
 	std::cout << size << std::endl;
       }

@@ -171,6 +171,25 @@ if(ANCH_CRYPTO_UNITARY_TEST)
   )
   # Build AES unitary test -
 
+  # Build padding unitary test +
+  file(
+    GLOB_RECURSE
+    test_padding
+    inc/*
+    test/testPadding.cpp
+  )
+
+  add_executable(
+    anch-padding-test
+    ${test_padding}
+  )
+
+  target_link_libraries(
+    anch-padding-test
+    anch-crypto
+  )
+  # Build padding unitary test -
+
   # Build block cipher mode of operation unitary test +
   file(
     GLOB_RECURSE
@@ -197,6 +216,7 @@ if(ANCH_CRYPTO_UNITARY_TEST)
   add_test(anch-hmac-test ${EXECUTABLE_OUTPUT_PATH}/anch-hmac-test main)
   add_test(anch-base64-test ${EXECUTABLE_OUTPUT_PATH}/anch-base64-test main)
   add_test(anch-aes-test ${EXECUTABLE_OUTPUT_PATH}/anch-aes-test main)
+  add_test(anch-padding-test ${EXECUTABLE_OUTPUT_PATH}/anch-padding-test main)
   add_test(anch-bcmod-test ${EXECUTABLE_OUTPUT_PATH}/anch-bcmod-test main)
 
 endif(ANCH_CRYPTO_UNITARY_TEST)

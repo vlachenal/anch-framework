@@ -38,6 +38,7 @@ namespace anch {
      */
     class PKCS7Padding {
 
+    public:
       /*!
        * Pad data
        *

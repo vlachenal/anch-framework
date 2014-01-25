@@ -34,7 +34,7 @@ PKCS7Padding::pad(uint8_t* data, std::size_t len, std::size_t expLen) {
   std::size_t diff = expLen - len;
   if(diff > 0) {
     data[expLen - 1] = static_cast<uint8_t>(diff);
-    for(std::size_t i = expLen - 2 ; i >= 0 ; i--) {
+    for(std::size_t i = expLen - 2 ; i >= len ; i--) {
       data[i] = static_cast<uint8_t>(diff);
     }
   }
@@ -54,8 +54,7 @@ PKCS7Padding::length(uint8_t* data, std::size_t len) {
   uint8_t nbBytes = data[len - 1];
   if(nbBytes > 1 && nbBytes < len) {
     bool isPadded = true;
-    uint8_t maxIdx = nbBytes - 1;
-    for(std::size_t i = len - 2 ; i >= maxIdx ; i--) {
+    for(std::size_t i = len - 2 ; i > len - nbBytes - 1 ; i--) {
       if(data[i] != nbBytes) {
 	isPadded = false;
 	break;
@@ -64,6 +63,10 @@ PKCS7Padding::length(uint8_t* data, std::size_t len) {
     if(isPadded) {
       dataLen = len - nbBytes;
     }
+
+  } else if(nbBytes == 1) {
+    dataLen = len - 1;
   }
+
   return dataLen;
 }

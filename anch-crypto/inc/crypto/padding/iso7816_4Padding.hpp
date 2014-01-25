@@ -39,6 +39,7 @@ namespace anch {
      */
     class ISO7816_4Padding {
 
+    public:
       /*!
        * Pad data
        *
