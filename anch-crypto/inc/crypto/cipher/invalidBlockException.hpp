@@ -59,7 +59,7 @@ namespace anch {
       /*!
        * \ref InvalidBlockException destructor
        */
-      virtual ~InvalidBlockException();
+      virtual ~InvalidBlockException() noexcept;
       // Destructor -
 
       // Methods +

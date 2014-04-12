@@ -39,7 +39,7 @@ InvalidBlockException::InvalidBlockException(const std::string& message):
 /*!
  * \ref InvalidBlockException destructor
  */
-InvalidBlockException::~InvalidBlockException() {
+InvalidBlockException::~InvalidBlockException() noexcept {
   // Nothing to do
 }
 // Destructor -
