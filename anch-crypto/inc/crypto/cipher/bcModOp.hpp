@@ -226,7 +226,7 @@ namespace anch {
 	      decipherBlock(cipherData, out, cipher);
 	      std::size_t end = Cipher::getBlockSize();
 	      if(input.eof()) { // \todo manage different padding algorithms
-		std::size_t index;
+		int index;
 		for(index = end - 1 ; index >= 0 ; index--) {
 		  if(out[index] != 0x00) {
 		    index++; // Works only with text files ...
