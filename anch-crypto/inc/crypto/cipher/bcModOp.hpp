@@ -162,10 +162,10 @@ namespace anch {
 	    _waitComplete.lock();
 	    ThreadPool pool(_nbThread);
 	    pool.start();
-	    char data[Cipher::getBlockSize()];
+	    std::array<uint8_t,Cipher::getBlockSize()> data;
 	    uint32_t index = 0;
 	    while(!input.eof()) {
-	      input.read(data, Cipher::getBlockSize());
+	      input.read(reinterpret_cast<char*>(data.data()), Cipher::getBlockSize());
 	      std::streamsize nbRead = input.gcount();
 	      if(nbRead == 0) {
 		_endIdx = index - 1;
@@ -176,9 +176,9 @@ namespace anch {
 		// \todo manage different padding
 		std::cout << "Size: " << nbRead << std::endl;
 		std::cout << "Fill " << Cipher::getBlockSize() - nbRead << " 0x00 from index " << nbRead << " to end" << std::endl;
-		std::memset(data + nbRead, 0x00, Cipher::getBlockSize() - nbRead);
+		std::memset(data.data() + nbRead, 0x00, Cipher::getBlockSize() - nbRead);
 	      }
-	      //pool.add(&Derived::deferredCipherBlock, static_cast<Derived*>(this), index, data, cipher);
+	      pool.add(&Derived::deferredCipherBlock, static_cast<Derived*>(this), index, data, cipher);
 	      // deferredCipherBlock(reinterpret_cast<uint8_t*>(data), out, cipher);
 	      // for(std::size_t i = 0 ; i < Cipher::getBlockSize() ; i++) {
 	      // 	output << out[i];
