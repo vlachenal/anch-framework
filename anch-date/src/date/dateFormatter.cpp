@@ -45,9 +45,15 @@ using std::ostringstream;
 using std::map;
 using std::pair;
 
+#ifdef ANCH_BOOST_REGEX
 using boost::regex;
 using boost::smatch;
 using boost::regex_search;
+#else
+using std::regex;
+using std::smatch;
+using std::regex_search;
+#endif
 
 using anch::date::Date;
 using anch::date::DateFormatter;

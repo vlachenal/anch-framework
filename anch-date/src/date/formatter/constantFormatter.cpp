@@ -55,7 +55,7 @@ ConstantFormatter::~ConstantFormatter() {
  * \param output The output stream to write in
  */
 void
-ConstantFormatter::format(const Date& date, ostream& output) const noexcept {
+ConstantFormatter::format(const Date&, ostream& output) const noexcept {
   output << _message;
 }
 
@@ -76,7 +76,7 @@ ConstantFormatter::getSize() const noexcept {
  * \param value The value to set
  */
 bool
-ConstantFormatter::setValue(Date& date, const string& value) const noexcept {
+ConstantFormatter::setValue(Date&, const string&) const noexcept {
   // Nothing to do
   return true;
 }

@@ -31,7 +31,11 @@
 #include <vector>
 #include <set>
 
+#ifdef ANCH_BOOST_REGEX
 #include <boost/regex.hpp>
+#else
+#include <regex>
+#endif
 
 #include "logger/levels.hpp"
 #include "logger/loggerConfiguration.hpp"
@@ -227,7 +231,11 @@ namespace anch {
 	    {"M",1024*1024},
 	    {"G",1024*1024*1024}
 	  });
+#ifdef ANCH_BOOST_REGEX
 	const boost::regex sizeRegex = boost::regex("^([0-9]+)(K|M|G)?$");
+#else
+	const std::regex sizeRegex = std::regex("^([0-9]+)(K|M|G)?$");
+#endif
 
 	// Writer QoS configuration +
 	bool globalThreadSafe = true;
@@ -243,7 +251,11 @@ namespace anch {
 	paramValue = "";
 	// Writer QoS configuration -
 
+#ifdef ANCH_BOOST_REGEX
 	boost::smatch match;
+#else
+	std::smatch match;
+#endif
 	const std::map<std::string,anch::resource::Section>& config = resource.getConfiguration();
 	for(auto iter = config.cbegin() ; iter != config.cend() ; iter++) {
 	  if(iter->first.substr(0,8) == "WRITER::") {
@@ -328,9 +340,14 @@ namespace anch {
        */
       void initializeLoggersConfiguration(const std::map<std::string,anch::logger::Writer*>& writers,
 					  const anch::resource::Resource& resource) {
+#ifdef ANCH_BOOST_REGEX
 	boost::regex upperRegex = boost::regex("[a-z]");
-	std::string upperRep = "[A-Z]";
 	boost::smatch match;
+#else
+	std::regex upperRegex = std::regex("[a-z]");
+	std::smatch match;
+#endif
+	std::string upperRep = "[A-Z]";
 
 	const std::map<std::string,anch::resource::Section>& config = resource.getConfiguration();
 	for(auto iter = config.cbegin() ; iter != config.cend() ; iter++) {

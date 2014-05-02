@@ -23,7 +23,11 @@
 #include <iostream>
 #include <map>
 
+#ifdef ANCH_BOOST_REGEX
 #include <boost/regex.hpp>
+#else
+#include <regex>
+#endif
 
 #include "resourceFileException.hpp"
 #include "resource/section.hpp"
@@ -48,6 +52,7 @@ namespace anch {
       class ConfigurationFileParser {
       private:
 	// Attributes +
+#ifdef ANCH_BOOST_REGEX
 	/*! Section regular expression */
 	static const boost::regex _sectionPattern;
 
@@ -56,6 +61,16 @@ namespace anch {
 
 	/*! Comments regular expression */
 	static const boost::regex _commentPattern;
+#else
+	/*! Section regular expression */
+	static const std::regex _sectionPattern;
+
+	/*! Option regular expression */
+	static const std::regex _optionPattern;
+
+	/*! Comments regular expression */
+	static const std::regex _commentPattern;
+#endif
 
 	/*! The configuration file path */
 	std::string _filePath;

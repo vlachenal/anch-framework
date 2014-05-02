@@ -22,7 +22,11 @@
 
 #include <iostream>
 #include <vector>
+#ifdef ANCH_BOOST_REGEX
 #include <boost/regex.hpp>
+#else
+#include <regex>
+#endif
 
 #include "logger/levels.hpp"
 #include "logger/formatter/iFormatter.hpp"
@@ -49,8 +53,13 @@ namespace anch {
       class MessageFormatter {
       private:
 	// Attributes +
+#ifdef ANCH_BOOST_REGEX
 	/*! Writter configuration pattern */
 	const static boost::regex CONFIG_PATTERN;
+#else
+	/*! Writter configuration pattern */
+	const static std::regex CONFIG_PATTERN;
+#endif
 
 	/*! Formatters list */
 	std::vector<anch::logger::formatter::IFormatter*> _formatters;

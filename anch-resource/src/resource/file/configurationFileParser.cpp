@@ -30,8 +30,15 @@ using std::pair;
 using std::ifstream;
 using std::getline;
 
+#ifdef ANCH_BOOST_REGEX
 using boost::regex;
 using boost::smatch;
+using boost::regex_search;
+#else
+using std::regex;
+using std::smatch;
+using std::regex_search;
+#endif
 
 using anch::resource::file::ConfigurationFileParser;
 using anch::resource::file::ResourceFileException;
@@ -102,13 +109,13 @@ ConfigurationFileParser::parseLine(const string& line,
 				   string& currentSection,
 				   map<string,Section>& config) const {
   smatch match;
-  if(boost::regex_search(line, match, _sectionPattern)) {
+  if(regex_search(line, match, _sectionPattern)) {
     currentSection = match[1];
 
-  } else if(boost::regex_search(line, match, _optionPattern)) {
+  } else if(regex_search(line, match, _optionPattern)) {
     const string& option = match[1];
     string value = match[4];
-    if(boost::regex_search(value, match, _commentPattern)) {
+    if(regex_search(value, match, _commentPattern)) {
       value = match.prefix();
     }
     auto iter = config.find(currentSection);

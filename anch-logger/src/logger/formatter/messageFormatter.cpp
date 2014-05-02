@@ -32,9 +32,15 @@
 using std::string;
 using std::ostringstream;
 
+#ifdef ANCH_BOOST_REGEX
 using boost::regex;
 using boost::smatch;
 using boost::regex_search;
+#else
+using std::regex;
+using std::smatch;
+using std::regex_search;
+#endif
 
 using anch::logger::formatter::MessageFormatter;
 using anch::logger::formatter::IFormatter;

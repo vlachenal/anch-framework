@@ -20,6 +20,7 @@
 #include "network/ioException.hpp"
 
 #include <errno.h>
+#include <string.h>
 #include <netdb.h>
 
 
@@ -36,7 +37,7 @@ using anch::network::IOException;
  * \param message The error message
  */
 IOException::IOException(const string& message): _message(message) {
-  _message = message + ": " + sys_errlist[errno];
+  _message = message + ": " + strerror(errno);
 }
 
 /*!

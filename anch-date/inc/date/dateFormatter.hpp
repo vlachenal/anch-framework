@@ -23,7 +23,12 @@
 #include <iostream>
 #include <map>
 #include <vector>
+
+#ifdef ANCH_BOOST_REGEX
 #include <boost/regex.hpp>
+#else
+#include <regex>
+#endif
 
 #include "date/date.hpp"
 
@@ -58,8 +63,13 @@ namespace anch {
     class DateFormatter {
 
       // Attributes +
+#ifdef ANCH_BOOST_REGEX
       /*! Date formatter pattern */
       const static boost::regex DATE_PATTERN;
+#else
+      /*! Date formatter pattern */
+      const static std::regex DATE_PATTERN;
+#endif
 
       /*! Formatter registration map */
       static std::map<std::string, getInstance> FORMATTERS;
