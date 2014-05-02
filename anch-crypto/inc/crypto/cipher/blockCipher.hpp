@@ -22,6 +22,7 @@
 
 #include <stdint.h>
 #include <cstddef>
+#include <array>
 
 
 namespace anch {
@@ -47,7 +48,7 @@ namespace anch {
        * \param input the block to cipher
        * \param output the ciphered block
        */
-      virtual void cipher(uint8_t input[B], uint8_t output[B]) = 0;
+      virtual void cipher(const std::array<uint8_t,B>& input, std::array<uint8_t,B>& output) = 0;
 
       /*!
        * Decipher a block
@@ -55,7 +56,7 @@ namespace anch {
        * \param input the block to decipher
        * \param output the deciphered block
        */
-      virtual void decipher(uint8_t input[B], uint8_t output[B]) = 0;
+      virtual void decipher(const std::array<uint8_t,B>& input, std::array<uint8_t,B>& output) = 0;
 
       /*!
        * Block size getter.

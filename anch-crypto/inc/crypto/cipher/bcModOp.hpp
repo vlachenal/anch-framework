@@ -136,21 +136,21 @@ namespace anch {
 	  reset();
 	  if(!_cipherParallelizable || _nbThread == 1) {
 	    Cipher cipher(reinterpret_cast<const uint8_t*>(key.data()));
-	    char data[Cipher::getBlockSize()];
-	    uint8_t out[Cipher::getBlockSize()];
+	    std::array<uint8_t, Cipher::getBlockSize()> data;
+	    std::array<uint8_t, Cipher::getBlockSize()> out;
 	    while(!input.eof()) {
-	      input.read(data, Cipher::getBlockSize());
+	      input.read(reinterpret_cast<char*>(data.data()), Cipher::getBlockSize());
 	      std::streamsize nbRead = input.gcount();
 	      if(nbRead == 0) {
 		break;
 
-	      } else if(nbRead < Cipher::getBlockSize()) {
+	      } else if(nbRead < static_cast<std::streamsize>(Cipher::getBlockSize())) {
 		// \todo manage different padding
 		std::cout << "Size: " << nbRead << std::endl;
 		std::cout << "Fill " << Cipher::getBlockSize() - nbRead << " 0x00 from index " << nbRead << " to end" << std::endl;
-		std::memset(data + nbRead, 0x00, Cipher::getBlockSize() - nbRead);
+		std::memset(data.data() + nbRead, 0x00, Cipher::getBlockSize() - nbRead);
 	      }
-	      cipherBlock(reinterpret_cast<uint8_t*>(data), out, cipher);
+	      cipherBlock(data, out, cipher);
 	      for(std::size_t i = 0 ; i < Cipher::getBlockSize() ; i++) {
 		output << out[i];
 	      }
@@ -171,14 +171,14 @@ namespace anch {
 		_endIdx = index - 1;
 		break;
 
-	      } else if(nbRead < Cipher::getBlockSize()) {
+	      } else if(nbRead < static_cast<std::streamsize>(Cipher::getBlockSize())) {
 		_endIdx = index;
 		// \todo manage different padding
 		std::cout << "Size: " << nbRead << std::endl;
 		std::cout << "Fill " << Cipher::getBlockSize() - nbRead << " 0x00 from index " << nbRead << " to end" << std::endl;
 		std::memset(data + nbRead, 0x00, Cipher::getBlockSize() - nbRead);
 	      }
-	      pool.add(&Derived::deferredCipherBlock, static_cast<Derived*>(this), index, reinterpret_cast<uint8_t*>(data), cipher);
+	      //pool.add(&Derived::deferredCipherBlock, static_cast<Derived*>(this), index, data, cipher);
 	      // deferredCipherBlock(reinterpret_cast<uint8_t*>(data), out, cipher);
 	      // for(std::size_t i = 0 ; i < Cipher::getBlockSize() ; i++) {
 	      // 	output << out[i];
@@ -207,23 +207,23 @@ namespace anch {
 	  reset();
 	  if(!_cipherParallelizable || _nbThread == 1) {
 	    Cipher cipher(reinterpret_cast<const uint8_t*>(key.data()));
-	    uint8_t out[Cipher::getBlockSize()];
-	    char data[Cipher::getBlockSize()];
-	    char cipherData[Cipher::getBlockSize()];
-	    input.read(data, Cipher::getBlockSize());
+	    std::array<uint8_t,Cipher::getBlockSize()> out;
+	    std::array<uint8_t,Cipher::getBlockSize()> data;
+	    std::array<uint8_t,Cipher::getBlockSize()> cipherData;
+	    input.read(reinterpret_cast<char*>(data.data()), Cipher::getBlockSize());
 	    std::streamsize nbRead = input.gcount();
 	    do {
-	      if(nbRead < Cipher::getBlockSize()) {
+	      if(nbRead < static_cast<std::streamsize>(Cipher::getBlockSize())) {
 		output.flush();
 		std::cout << nbRead << std::endl;
 		throw InvalidBlockException("Invalid block size"); // \todo set better error message
 	      }
 
-	      std::memcpy(cipherData, data, Cipher::getBlockSize());
-	      input.read(data, Cipher::getBlockSize());
+	      cipherData = data;
+	      input.read(reinterpret_cast<char*>(data.data()), Cipher::getBlockSize());
 	      nbRead = input.gcount();
 
-	      decipherBlock(reinterpret_cast<uint8_t*>(cipherData), out, cipher);
+	      decipherBlock(cipherData, out, cipher);
 	      std::size_t end = Cipher::getBlockSize();
 	      if(input.eof()) { // \todo manage different padding algorithms
 		std::size_t index;
@@ -243,10 +243,10 @@ namespace anch {
 	    output.flush();
 
 	  } else {
-	    char data[Cipher::getBlockSize()];
+	    std::array<uint8_t,Cipher::getBlockSize()> data;
 	    while(!input.eof()) {
-	      input.read(data, Cipher::getBlockSize());
-	      deferredDecipherBlock(reinterpret_cast<uint8_t*>(data), input.gcount());
+	      input.read(reinterpret_cast<char*>(data.data()), Cipher::getBlockSize());
+	      deferredDecipherBlock(data, input.gcount());
 	    }
 
 	  }
@@ -261,8 +261,8 @@ namespace anch {
        * \param input the input block to cipher
        * \param output the output block
        */
-      virtual void cipherBlock(uint8_t input[Cipher::getBlockSize()],
-			       uint8_t output[Cipher::getBlockSize()],
+      virtual void cipherBlock(const std::array<uint8_t,Cipher::getBlockSize()>& input,
+			       std::array<uint8_t,Cipher::getBlockSize()>& output,
 			       Cipher& cipher) = 0;
 
       /*!
@@ -272,8 +272,8 @@ namespace anch {
        * \param input the input block to decipher
        * \param output the output block
        */
-      virtual void decipherBlock(uint8_t input[Cipher::getBlockSize()],
-				 uint8_t output[Cipher::getBlockSize()],
+      virtual void decipherBlock(const std::array<uint8_t,Cipher::getBlockSize()>& input,
+				 std::array<uint8_t,Cipher::getBlockSize()>& output,
 				 Cipher& cipher) = 0;
 
       /*!
@@ -286,10 +286,10 @@ namespace anch {
        *
        * \param input the input block to cipher
        */
-      virtual void deferredCipherBlock(uint32_t index, uint8_t input[Cipher::getBlockSize()], Cipher cipher) {
+      virtual void deferredCipherBlock(uint32_t index, std::array<uint8_t,Cipher::getBlockSize()> input, Cipher cipher) {
 	//uint8_t out[Cipher::getBlockSize()];
 	std::cout << index << std::endl;
-	std::cout << input << std::endl;
+	std::cout << input.data() << std::endl;
 	std::cout << &cipher << std::endl;
       }
 
@@ -298,8 +298,8 @@ namespace anch {
        *
        * \param input the input block to decipher
        */
-      virtual void deferredDecipherBlock(uint8_t input[Cipher::getBlockSize()], std::streamsize size) {
-	std::cout << input << std::endl;
+      virtual void deferredDecipherBlock(std::array<uint8_t,Cipher::getBlockSize()> input, std::streamsize size) {
+	std::cout << input.data() << std::endl;
 	std::cout << size << std::endl;
       }
       // Methods -

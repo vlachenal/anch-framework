@@ -72,8 +72,8 @@ namespace anch {
        * \param input the input block to cipher
        * \param output the output block
        */
-      virtual void cipherBlock(uint8_t input[Cipher::getBlockSize()],
-			       uint8_t output[Cipher::getBlockSize()],
+      virtual void cipherBlock(const std::array<uint8_t,Cipher::getBlockSize()>& input,
+			       std::array<uint8_t,Cipher::getBlockSize()>& output,
 			       Cipher& cipher) override {
 	cipher.cipher(input, output);
       }
@@ -85,8 +85,8 @@ namespace anch {
        * \param input the input block to decipher
        * \param output the output block
        */
-      virtual void decipherBlock(uint8_t input[Cipher::getBlockSize()],
-				 uint8_t output[Cipher::getBlockSize()],
+      virtual void decipherBlock(const std::array<uint8_t,Cipher::getBlockSize()>& input,
+				 std::array<uint8_t,Cipher::getBlockSize()>& output,
 				 Cipher& cipher) override {
 	cipher.decipher(input, output);
       }

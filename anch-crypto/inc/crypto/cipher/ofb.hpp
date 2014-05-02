@@ -84,11 +84,11 @@ namespace anch {
        * \param input the input block to cipher
        * \param output the output block
        */
-      virtual void cipherBlock(uint8_t input[Cipher::getBlockSize()],
-			       uint8_t output[Cipher::getBlockSize()],
+      virtual void cipherBlock(const std::array<uint8_t,Cipher::getBlockSize()>& input,
+			       std::array<uint8_t,Cipher::getBlockSize()>& output,
 			       Cipher& cipher) override {
-	uint8_t data[Cipher::getBlockSize()];
-	cipher.cipher(_ctxtVect.data(), data);
+	std::array<uint8_t,Cipher::getBlockSize()> data;
+	cipher.cipher(_ctxtVect, data);
 	for(std::size_t i = 0 ; i < Cipher::getBlockSize() ; i++) {
 	  output[i] = input[i] ^ data[i];
 	  _ctxtVect[i] = data[i];
@@ -102,11 +102,11 @@ namespace anch {
        * \param input the input block to decipher
        * \param output the output block
        */
-      virtual void decipherBlock(uint8_t input[Cipher::getBlockSize()],
-				 uint8_t output[Cipher::getBlockSize()],
+      virtual void decipherBlock(const std::array<uint8_t,Cipher::getBlockSize()>& input,
+				 std::array<uint8_t,Cipher::getBlockSize()>& output,
 				 Cipher& cipher) override {
-	uint8_t data[Cipher::getBlockSize()];
-	cipher.cipher(_ctxtVect.data(), data);
+	std::array<uint8_t,Cipher::getBlockSize()> data;
+	cipher.cipher(_ctxtVect, data);
 	for(std::size_t i = 0 ; i < Cipher::getBlockSize() ; i++) {
 	  output[i] = input[i] ^ data[i];
 	  _ctxtVect[i] = data[i];
