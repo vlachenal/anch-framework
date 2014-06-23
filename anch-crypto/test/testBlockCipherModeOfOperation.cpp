@@ -55,11 +55,7 @@ main(void) {
     std::cout << "Compute Makefile.ecb.aes128.decipher hash using SHA1" << std::endl;
     input = new std::ifstream("Makefile.ecb.aes128.decipher", std::ifstream::binary);
     SHA1 cipherHash(*input);
-    //hash.template digest(*input);
-    //std::ifstream toto("Makefile.aes128.decipher", std::ifstream::binary);
-    //hash.template digest(toto);
     std::array<uint8_t,20> resHash = cipherHash.digest();
-    //toto.close();
     input->close();
     delete input;
 
@@ -69,6 +65,49 @@ main(void) {
     }
 
     std::cout << "Exit ECB with AES128 tests" << std::endl;
+  }
+
+  {
+    std::cout << "Enter in ECB with parallel AES128 tests" << std::endl;
+
+    std::ifstream* input = new std::ifstream("Makefile", std::ifstream::binary);
+    std::ofstream ecbOutCipher("Makefile.ecb.aes128.async.cipher", std::ofstream::binary);
+
+    std::cout << "Cipher Makefile" << std::endl;
+    ECB<AES128> ecb(4);
+    ecb.cipher(*input, ecbOutCipher, "foobar    raboof");
+    ecbOutCipher.close();
+    input->close();
+    delete input;
+
+    std::cout << "Decipher Makefile.ecb.aes128.async.cipher" << std::endl;
+    input = new std::ifstream("Makefile.ecb.aes128.async.cipher", std::ifstream::binary);
+    std::ofstream ecbOutDecipher("Makefile.ecb.aes128.async.decipher");
+    ecb.decipher(*input, ecbOutDecipher, "foobar    raboof");
+    ecbOutDecipher.close();
+    input->close();
+    delete input;
+
+    std::cout << "Compute Makefile hash using SHA1" << std::endl;
+    input = new std::ifstream("Makefile", std::ifstream::binary);
+    SHA1 hash(*input);
+    std::array<uint8_t,20> initHash = hash.digest();
+    input->close();
+    delete input;
+
+    std::cout << "Compute Makefile.ecb.aes128.async.decipher hash using SHA1" << std::endl;
+    input = new std::ifstream("Makefile.ecb.aes128.async.decipher", std::ifstream::binary);
+    SHA1 cipherHash(*input);
+    std::array<uint8_t,20> resHash = cipherHash.digest();
+    input->close();
+    delete input;
+
+    if(initHash != resHash) {
+      std::cerr << "Makefiles are differents" << std::endl;
+      return 1;
+    }
+
+    std::cout << "Exit ECB with parallel AES128 tests" << std::endl;
   }
 
   {

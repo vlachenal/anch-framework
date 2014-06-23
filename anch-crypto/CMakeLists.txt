@@ -31,6 +31,10 @@ else()
 endif()
 add_definitions(${ANCH_CRYPTO_COMPILE_FLAGS})
 
+# Include librairies
+include(FindThreads)
+find_package(Threads)
+
 # Includes location
 include_directories(
   inc
@@ -206,6 +210,7 @@ if(ANCH_CRYPTO_UNITARY_TEST)
   target_link_libraries(
     anch-bcmod-test
     anch-crypto
+    ${CMAKE_THREAD_LIBS_INIT}
   )
   # Build block cipher mode of operation unitary test -
 
