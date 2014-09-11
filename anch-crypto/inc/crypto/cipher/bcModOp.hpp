@@ -386,7 +386,7 @@ namespace anch {
 	  delete[] blocks;
 	  _streamMutex.unlock();
 
-	  if(_currentIdx == _endIdx) {
+	  if(index > _endIdx - _nbThread) {
 	    _waitComplete.unlock();
 	  }
 	}
@@ -424,7 +424,7 @@ namespace anch {
 	  delete[] blocks;
 	  _streamMutex.unlock();
 
-	  if(_currentIdx == _endIdx) {
+	  if(index > _endIdx - _nbThread) {
 	    _waitComplete.unlock();
 	  }
 	}
