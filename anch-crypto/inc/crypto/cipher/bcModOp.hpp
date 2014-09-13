@@ -26,6 +26,7 @@
 #include <ostream>
 #include <array>
 #include <thread>
+#include <condition_variable>
 #include <cstring>
 #include <map>
 
@@ -63,32 +64,17 @@ namespace anch {
       /*! Maximum number of thread to run in parallel */
       unsigned int _nbThread;
 
-      /*! Mutex for waiting result */
-      std::mutex _waitComplete;
-
-      /*! Result map mutex */
-      std::mutex _resMutex;
-
       /*! Output stream mutex */
       std::mutex _streamMutex;
 
-      /*! Available results */
-      std::map<uint32_t, uint8_t[Cipher::getBlockSize()]> _pendingResult;
-
-      /*! Current result index */
-      std::atomic<uint32_t> _currentIdx;
+      /*! Write block condition variable */
+      std::condition_variable _writeBlock;
 
       /*! End index */
       std::atomic<uint32_t> _endIdx;
 
-      /*! Number of treated blocks */
-      std::atomic<uint32_t> _nbTreatedBlocks;
-
       /*! Write index */
       std::atomic<uint32_t> _writeIdx;
-
-      /*! Blocks in cache */
-      std::array<uint8_t,Cipher::getBlockSize()>* _blocks;
 
       /*! Output stream */
       std::ostream* _stream;
@@ -111,14 +97,9 @@ namespace anch {
 	_cipherParallelizable(cipherParallelizable),
 	_decipherParallelizable(decipherParallelizable),
 	_nbThread(nbThread),
-	_waitComplete(),
-	_resMutex(),
-	_pendingResult(),
-	_currentIdx(0),
+	_writeBlock(),
 	_endIdx(UINT32_MAX),
-	_nbTreatedBlocks(0),
-	_writeIdx(0),
-	_blocks(NULL) {
+	_writeIdx(0) {
 	if(nbThread == 0 && (cipherParallelizable || decipherParallelizable)) {
 	  _nbThread = std::thread::hardware_concurrency();
 	  if(_nbThread == 0) { // Keep at least 1 thread running
@@ -151,6 +132,8 @@ namespace anch {
 		  std::ostream& output,
 		  const std::string& key) {
 	if(input && output) {
+	  _endIdx = UINT32_MAX;
+	  _writeIdx = 0;
 	  reset();
 	  if(!_cipherParallelizable || _nbThread == 1) {
 	    Cipher cipher(reinterpret_cast<const uint8_t*>(key.data()));
@@ -177,52 +160,41 @@ namespace anch {
 
 	  } else {
 	    _stream = &output;
-	    _blocks = new std::array<uint8_t,Cipher::getBlockSize()>[_nbThread];
-	    _nbTreatedBlocks = 0;
-	    _writeIdx = (_nbThread - 1);
 	    Cipher cipher(reinterpret_cast<const uint8_t*>(key.data()));
-	    _waitComplete.lock();
-	    ThreadPool pool(_nbThread);
+	    ThreadPool pool(_nbThread, _nbThread * 3);
 	    pool.start();
 	    std::array<uint8_t,Cipher::getBlockSize()> data;
 	    uint32_t index = 0;
+	    uint32_t endIdx = 0;
 	    while(!input.eof()) {
+	      //std::cout << "Read block n°" << index << std::endl;
 	      input.read(reinterpret_cast<char*>(data.data()), Cipher::getBlockSize());
 	      std::streamsize nbRead = input.gcount();
 	      if(nbRead == 0) {
-		_endIdx = index - 1;
-		_writeIdx = (_endIdx % _nbThread);
-		_currentIdx = index - 1;
+		endIdx = index;
 		std::cout << "TOTOTOTOTO " << _writeIdx << std::endl;
 		break;
 
 	      } else if(nbRead < static_cast<std::streamsize>(Cipher::getBlockSize())) {
-		_endIdx = index;
-		_writeIdx = (_endIdx % _nbThread);
-		_currentIdx = index;
+		endIdx = index + 1;
 		// \todo manage different padding
 		std::cout << "Size: " << nbRead << std::endl;
 		std::cout << "Fill " << Cipher::getBlockSize() - nbRead << " 0x00 from index " << nbRead << " to end" << std::endl;
 		std::memset(data.data() + nbRead, 0x00, Cipher::getBlockSize() - nbRead);
 		std::cout << "TOTOTOTOTO pad " << _writeIdx << std::endl;
 	      }
-	      _resMutex.lock();
 	      pool.add(&Derived::deferredCipherBlock, static_cast<Derived*>(this), index, data, cipher);
-	      if((index % _nbThread) != _writeIdx) {
-		std::cout << index << " " << _nbThread << " " << (index % _nbThread) << std::endl;
-		_resMutex.unlock();
-	      }
-	      index++;
-	      _currentIdx++;
+	      ++index;
 	    }
 
-	    _waitComplete.lock();
+	    std::unique_lock<std::mutex> finalizeLock(_streamMutex);
+	    _writeBlock.wait(finalizeLock, [this,&endIdx]{ return _writeIdx.load() == endIdx; });
+
 	    pool.stop();
 	    output.flush();
-	    delete[] _blocks;
 	    _stream = NULL;
-	    _waitComplete.unlock();
 
+	    finalizeLock.unlock();
 	  }
 	}
       }
@@ -237,8 +209,10 @@ namespace anch {
 		    std::ostream& output,
 		    const std::string& key) {
 	if(input && output) {
+	  _endIdx = UINT32_MAX;
+	  _writeIdx = 0;
 	  reset();
-	  if(!_cipherParallelizable || _nbThread == 1) {
+	  if(!_decipherParallelizable || _nbThread == 1) {
 	    Cipher cipher(reinterpret_cast<const uint8_t*>(key.data()));
 	    std::array<uint8_t,Cipher::getBlockSize()> out;
 	    std::array<uint8_t,Cipher::getBlockSize()> data;
@@ -277,52 +251,42 @@ namespace anch {
 
 	  } else {
 	    _stream = &output;
-	    _blocks = new std::array<uint8_t,Cipher::getBlockSize()>[_nbThread];
-	    _nbTreatedBlocks = 0;
-	    _writeIdx = (_nbThread - 1);
 	    Cipher cipher(reinterpret_cast<const uint8_t*>(key.data()));
-	    _waitComplete.lock();
-	    ThreadPool pool(_nbThread);
+	    ThreadPool pool(_nbThread, _nbThread * 3);
 	    pool.start();
 	    std::array<uint8_t,Cipher::getBlockSize()> data;
+	    std::array<uint8_t,Cipher::getBlockSize()> cipherData;
 	    uint32_t index = 0;
-	    while(!input.eof()) {
+	    input.read(reinterpret_cast<char*>(data.data()), Cipher::getBlockSize());
+	    std::streamsize nbRead = input.gcount();
+	    do {
+	      if(nbRead < static_cast<std::streamsize>(Cipher::getBlockSize())) {
+		output.flush();
+		std::cout << nbRead << std::endl;
+		throw InvalidBlockException("Invalid block size"); // \todo set better error message
+	      }
+
+	      cipherData = data;
 	      input.read(reinterpret_cast<char*>(data.data()), Cipher::getBlockSize());
-	      std::streamsize nbRead = input.gcount();
-	      if(nbRead == 0) {
-		_endIdx = index - 1;
-		_writeIdx = (_endIdx % _nbThread);
-		_currentIdx = index - 1;
-		std::cout << "TOTOTOTOTO " << _writeIdx << std::endl;
-		break;
+	      nbRead = input.gcount();
 
-	      } else if(nbRead < static_cast<std::streamsize>(Cipher::getBlockSize())) {
+	      if(input.eof()) { // Set end index for padding
 		_endIdx = index;
-		_writeIdx = (_endIdx % _nbThread);
-		_currentIdx = index;
-		// \todo manage different padding
-		std::cout << "Size: " << nbRead << std::endl;
-		std::cout << "Fill " << Cipher::getBlockSize() - nbRead << " 0x00 from index " << nbRead << " to end" << std::endl;
-		std::memset(data.data() + nbRead, 0x00, Cipher::getBlockSize() - nbRead);
-		std::cout << "TOTOTOTOTO pad " << _writeIdx << std::endl;
 	      }
-	      _resMutex.lock();
-	      pool.add(&Derived::deferredDecipherBlock, static_cast<Derived*>(this), index, data, cipher);
-	      if((index % _nbThread) != _writeIdx) {
-		std::cout << index << " " << _nbThread << " " << (index % _nbThread) << std::endl;
-		_resMutex.unlock();
-	      }
-	      index++;
-	      _currentIdx++;
-	    }
 
-	    _waitComplete.lock();
+	      pool.add(&Derived::deferredDecipherBlock, static_cast<Derived*>(this), index, cipherData, cipher);
+	      ++index;
+
+	    } while(!input.eof());
+
+	    std::unique_lock<std::mutex> finalizeLock(_streamMutex);
+	    _writeBlock.wait(finalizeLock, [this,&index]{ return _writeIdx.load() == index; });
+
 	    pool.stop();
 	    output.flush();
-	    delete[] _blocks;
 	    _stream = NULL;
-	    _waitComplete.unlock();
 
+	    finalizeLock.unlock();
 	  }
 	}
       }
@@ -360,37 +324,21 @@ namespace anch {
        *
        * \param input the input block to cipher
        */
-      virtual void deferredCipherBlock(uint32_t index, std::array<uint8_t,Cipher::getBlockSize()> input, Cipher cipher) {
-	cipherBlock(input, _blocks[index % _nbThread], cipher);
-	std::cout << "Treat block n°" << (index % _nbThread) << " in buffer. " << _nbTreatedBlocks << std::endl;
+      void deferredCipherBlock(uint32_t index, std::array<uint8_t,Cipher::getBlockSize()> input, Cipher cipher) {
+	std::array<uint8_t,Cipher::getBlockSize()> output;
+	cipherBlock(input, output, cipher);
 
-	if(_nbTreatedBlocks.fetch_add(1) == _writeIdx) {
-	  uint32_t startblock = index - (index % _nbThread);
-	  uint32_t endblock = index + (_nbThread - (index % _nbThread));
-	  //std::cout << "Write blocks for index " << index << ". Number of threads = " << _nbThread << std::endl;
-	  _nbTreatedBlocks = 0;
-	  std::array<uint8_t,Cipher::getBlockSize()>* blocks = new std::array<uint8_t,Cipher::getBlockSize()>[_nbThread];
-	  for(std::uint32_t i = 0 ; i < _writeIdx + 1 ; i++) {
-	    blocks[i] = _blocks[i];
-	  }
+	std::unique_lock<std::mutex> lockIdx(_streamMutex);
+	_writeBlock.wait(lockIdx, [this,&index]{ return _writeIdx.load() == index; });
 
-	  _streamMutex.lock();
-	  _resMutex.unlock();
-
-	  std::cout << "Write blocks from " << startblock << " to " << endblock << std::endl;
-	  for(uint32_t i = 0 ; i < _writeIdx + 1 ; i++) {
-	    for(std::size_t j = 0 ; j < Cipher::getBlockSize() ; j++) {
-	      *_stream << blocks[i][j];
-	    }
-	  }
-	  delete[] blocks;
-	  _streamMutex.unlock();
-
-	  if(index > _endIdx - _nbThread) {
-	    _waitComplete.unlock();
-	  }
+	for(std::size_t i = 0 ; i < Cipher::getBlockSize() ; i++) {
+	  *_stream << output[i];
 	}
 
+	_writeIdx.store(index + 1);
+
+	lockIdx.unlock();
+	_writeBlock.notify_all();
       }
 
       /*!
@@ -399,36 +347,31 @@ namespace anch {
        * \param input the input block to decipher
        */
       virtual void deferredDecipherBlock(uint32_t index, std::array<uint8_t,Cipher::getBlockSize()> input, Cipher cipher) {
-	decipherBlock(input, _blocks[index % _nbThread], cipher);
-	std::cout << "Treat block n°" << (index % _nbThread) << " in buffer. " << _nbTreatedBlocks << std::endl;
+	std::array<uint8_t,Cipher::getBlockSize()> output;
+	decipherBlock(input, output, cipher);
 
-	if(_nbTreatedBlocks.fetch_add(1) == _writeIdx) {
-	  uint32_t startblock = index - (index % _nbThread);
-	  uint32_t endblock = index + (_nbThread - (index % _nbThread));
-	  //std::cout << "Write blocks for index " << index << ". Number of threads = " << _nbThread << std::endl;
-	  _nbTreatedBlocks = 0;
-	  std::array<uint8_t,Cipher::getBlockSize()>* blocks = new std::array<uint8_t,Cipher::getBlockSize()>[_nbThread];
-	  for(std::uint32_t i = 0 ; i < _writeIdx + 1 ; i++) {
-	    blocks[i] = _blocks[i];
-	  }
+	std::unique_lock<std::mutex> lockIdx(_streamMutex);
+	_writeBlock.wait(lockIdx, [this,&index]{ return _writeIdx.load() == index; });
 
-	  _streamMutex.lock();
-	  _resMutex.unlock();
-
-	  std::cout << "Write blocks from " << startblock << " to " << endblock << std::endl;
-	  for(uint32_t i = 0 ; i < _writeIdx + 1 ; i++) {
-	    for(std::size_t j = 0 ; j < Cipher::getBlockSize() ; j++) {
-	      *_stream << blocks[i][j];
+	std::size_t end = Cipher::getBlockSize();
+	if(index == _endIdx) { // \todo manage different padding algorithms
+	  int idx;
+	  for(idx = end - 1 ; idx >= 0 ; idx--) {
+	    if(output[idx] != 0x00) {
+	      idx++; // Works only with text files ...
+	      break;
 	    }
 	  }
-	  delete[] blocks;
-	  _streamMutex.unlock();
-
-	  if(index > _endIdx - _nbThread) {
-	    _waitComplete.unlock();
-	  }
+	  end = idx;
+	}
+	for(std::size_t i = 0 ; i < end ; i++) {
+	  *_stream << output[i];
 	}
 
+	_writeIdx.store(index + 1);
+
+	lockIdx.unlock();
+	_writeBlock.notify_all();
       }
       // Methods -
 
