@@ -24,6 +24,9 @@ int
 main(void) {
   std::cout << "Enter in block cipher mode of operation tests" << std::endl;
 
+  std::chrono::time_point<std::chrono::high_resolution_clock> start, end;
+  std::chrono::microseconds duration;
+
   {
     std::cout << "Enter in ECB with AES128 tests" << std::endl;
 
@@ -32,18 +35,26 @@ main(void) {
 
     std::cout << "Cipher Makefile" << std::endl;
     ECB<AES128> ecb;
+    start = std::chrono::high_resolution_clock::now();
     ecb.cipher(*input, ecbOutCipher, "foobar    raboof");
+    end = std::chrono::high_resolution_clock::now();
+    duration = std::chrono::duration_cast<std::chrono::microseconds>(end.time_since_epoch()) - std::chrono::duration_cast<std::chrono::microseconds>(start.time_since_epoch());
     ecbOutCipher.close();
     input->close();
     delete input;
+    std::cout << "ECB sequential cipher duration: " << duration.count() << " µs" << std::endl;
 
     std::cout << "Decipher Makefile.ecb.aes128.cipher" << std::endl;
     input = new std::ifstream("Makefile.ecb.aes128.cipher", std::ifstream::binary);
     std::ofstream ecbOutDecipher("Makefile.ecb.aes128.decipher");
+    start = std::chrono::high_resolution_clock::now();
     ecb.decipher(*input, ecbOutDecipher, "foobar    raboof");
+    end = std::chrono::high_resolution_clock::now();
+    duration = std::chrono::duration_cast<std::chrono::microseconds>(end.time_since_epoch()) - std::chrono::duration_cast<std::chrono::microseconds>(start.time_since_epoch());
     ecbOutDecipher.close();
     input->close();
     delete input;
+    std::cout << "ECB sequential decipher duration: " << duration.count() << " µs" << std::endl;
 
     std::cout << "Compute Makefile hash using SHA1" << std::endl;
     input = new std::ifstream("Makefile", std::ifstream::binary);
@@ -74,19 +85,28 @@ main(void) {
     std::ofstream ecbOutCipher("Makefile.ecb.aes128.async.cipher", std::ofstream::binary);
 
     std::cout << "Cipher Makefile" << std::endl;
-    ECB<AES128> ecb(4);
+    //ECB<AES128> ecb(0); // Detect number of CPUs
+    ECB<AES128> ecb(2);
+    start = std::chrono::high_resolution_clock::now();
     ecb.cipher(*input, ecbOutCipher, "foobar    raboof");
+    end = std::chrono::high_resolution_clock::now();
+    duration = std::chrono::duration_cast<std::chrono::microseconds>(end.time_since_epoch()) - std::chrono::duration_cast<std::chrono::microseconds>(start.time_since_epoch());
     ecbOutCipher.close();
     input->close();
     delete input;
+    std::cout << "ECB parallel cipher duration: " << duration.count() << " µs" << std::endl;
 
     std::cout << "Decipher Makefile.ecb.aes128.async.cipher" << std::endl;
     input = new std::ifstream("Makefile.ecb.aes128.async.cipher", std::ifstream::binary);
     std::ofstream ecbOutDecipher("Makefile.ecb.aes128.async.decipher");
+    start = std::chrono::high_resolution_clock::now();
     ecb.decipher(*input, ecbOutDecipher, "foobar    raboof");
+    end = std::chrono::high_resolution_clock::now();
+    duration = std::chrono::duration_cast<std::chrono::microseconds>(end.time_since_epoch()) - std::chrono::duration_cast<std::chrono::microseconds>(start.time_since_epoch());
     ecbOutDecipher.close();
     input->close();
     delete input;
+    std::cout << "ECB parallel decipher duration: " << duration.count() << " µs" << std::endl;
 
     std::cout << "Compute Makefile hash using SHA1" << std::endl;
     input = new std::ifstream("Makefile", std::ifstream::binary);

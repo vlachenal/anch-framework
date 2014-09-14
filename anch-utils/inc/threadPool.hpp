@@ -57,9 +57,6 @@ namespace anch {
     /*! Remaining threads */
     std::atomic<unsigned int> _available;
 
-    /*! Maximum number of elements in queue */
-    std::size_t _maxElems;
-
     /*! Thread pool internal state */
     bool _running;
     // Attributes -
@@ -70,13 +67,11 @@ namespace anch {
      * \ref ThreadPool constructor
      *
      * \param maxThreads the maximum number of alive threads (default number of processor or 1 if not defined)
-     * \param maxElems the maximum number of elements in queue
      */
-    ThreadPool(unsigned int maxThreads = 0, std::size_t maxElems = 0):
+    ThreadPool(unsigned int maxThreads = 0):
       _threads(),
       _mutex(),
       _available(0),
-      _maxElems(maxElems),
       _running(false) {
       if(maxThreads == 0) {
 	_maxThreads = std::thread::hardware_concurrency();
