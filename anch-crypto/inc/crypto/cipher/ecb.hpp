@@ -87,7 +87,7 @@ namespace anch {
 				      std::streamsize nbRead,
 				      std::array<uint8_t,Cipher::getBlockSize()>& output,
 				      uint32_t, Cipher& cipher) override {
-	if(nbRead != Cipher::getBlockSize()) {
+	if(static_cast<std::size_t>(nbRead) != Cipher::getBlockSize()) {
 	  Padding::pad(input.data(), nbRead, Cipher::getBlockSize());
 	}
 	cipher.cipher(input, output);
@@ -112,7 +112,7 @@ namespace anch {
 					bool lastBlock,
 					std::array<uint8_t,Cipher::getBlockSize()>& output,
 					uint32_t, Cipher& cipher) override {
-	if(lastBlock && nbRead != Cipher::getBlockSize()) {
+	if(lastBlock && static_cast<std::size_t>(nbRead) != Cipher::getBlockSize()) {
 	  throw InvalidBlockException("Invalid block size");
 	}
 	cipher.decipher(input, output);
