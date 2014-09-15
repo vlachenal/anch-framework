@@ -194,25 +194,125 @@ if(ANCH_CRYPTO_UNITARY_TEST)
   )
   # Build padding unitary test -
 
-  # Build block cipher mode of operation unitary test +
+  # Build AES - ECB unit tests +
   file(
     GLOB_RECURSE
-    test_bcmod
+    test_aes_ecb
     inc/*
-    test/testBlockCipherModeOfOperation.cpp
+    test/testAesEcb.cpp
   )
 
   add_executable(
-    anch-bcmod-test
-    ${test_bcmod}
+    anch-aes-ecb-test
+    ${test_aes_ecb}
   )
 
   target_link_libraries(
-    anch-bcmod-test
+    anch-aes-ecb-test
     anch-crypto
     ${CMAKE_THREAD_LIBS_INIT}
   )
-  # Build block cipher mode of operation unitary test -
+  # Build AES-ECB unit tests -
+
+  # Build AES - CBC unit tests +
+  file(
+    GLOB_RECURSE
+    test_aes_cbc
+    inc/*
+    test/testAesCbc.cpp
+  )
+
+  add_executable(
+    anch-aes-cbc-test
+    ${test_aes_cbc}
+  )
+
+  target_link_libraries(
+    anch-aes-cbc-test
+    anch-crypto
+    ${CMAKE_THREAD_LIBS_INIT}
+  )
+  # Build AES-CBC unit tests -
+
+  # Build AES - PCBC unit tests +
+  file(
+    GLOB_RECURSE
+    test_aes_pcbc
+    inc/*
+    test/testAesPcbc.cpp
+  )
+
+  add_executable(
+    anch-aes-pcbc-test
+    ${test_aes_pcbc}
+  )
+
+  target_link_libraries(
+    anch-aes-pcbc-test
+    anch-crypto
+    ${CMAKE_THREAD_LIBS_INIT}
+  )
+  # Build AES-PCBC unit tests -
+
+  # Build AES - CTR unit tests +
+  file(
+    GLOB_RECURSE
+    test_aes_ctr
+    inc/*
+    test/testAesCtr.cpp
+  )
+
+  add_executable(
+    anch-aes-ctr-test
+    ${test_aes_ctr}
+  )
+
+  target_link_libraries(
+    anch-aes-ctr-test
+    anch-crypto
+    ${CMAKE_THREAD_LIBS_INIT}
+  )
+  # Build AES-CTR unit tests -
+
+  # Build AES - OFB unit tests +
+  file(
+    GLOB_RECURSE
+    test_aes_ofb
+    inc/*
+    test/testAesOfb.cpp
+  )
+
+  add_executable(
+    anch-aes-ofb-test
+    ${test_aes_ofb}
+  )
+
+  target_link_libraries(
+    anch-aes-ofb-test
+    anch-crypto
+    ${CMAKE_THREAD_LIBS_INIT}
+  )
+  # Build AES-OFB unit tests -
+
+  # Build AES - CFB unit tests +
+  file(
+    GLOB_RECURSE
+    test_aes_cfb
+    inc/*
+    test/testAesCfb.cpp
+  )
+
+  add_executable(
+    anch-aes-cfb-test
+    ${test_aes_cfb}
+  )
+
+  target_link_libraries(
+    anch-aes-cfb-test
+    anch-crypto
+    ${CMAKE_THREAD_LIBS_INIT}
+  )
+  # Build AES-CFB unit tests -
 
   enable_testing()
   add_test(anch-md5-test ${EXECUTABLE_OUTPUT_PATH}/anch-md5-test main)
@@ -222,6 +322,11 @@ if(ANCH_CRYPTO_UNITARY_TEST)
   add_test(anch-base64-test ${EXECUTABLE_OUTPUT_PATH}/anch-base64-test main)
   add_test(anch-aes-test ${EXECUTABLE_OUTPUT_PATH}/anch-aes-test main)
   add_test(anch-padding-test ${EXECUTABLE_OUTPUT_PATH}/anch-padding-test main)
-  add_test(anch-bcmod-test ${EXECUTABLE_OUTPUT_PATH}/anch-bcmod-test main)
+  add_test(anch-aes-ecb-test ${EXECUTABLE_OUTPUT_PATH}/anch-aes-ecb-test main)
+  add_test(anch-aes-cbc-test ${EXECUTABLE_OUTPUT_PATH}/anch-aes-cbc-test main)
+  add_test(anch-aes-pcbc-test ${EXECUTABLE_OUTPUT_PATH}/anch-aes-pcbc-test main)
+  add_test(anch-aes-ctr-test ${EXECUTABLE_OUTPUT_PATH}/anch-aes-ctr-test main)
+  add_test(anch-aes-ofb-test ${EXECUTABLE_OUTPUT_PATH}/anch-aes-ofb-test main)
+  add_test(anch-aes-cfb-test ${EXECUTABLE_OUTPUT_PATH}/anch-aes-cfb-test main)
 
 endif(ANCH_CRYPTO_UNITARY_TEST)

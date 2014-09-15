@@ -82,17 +82,23 @@ namespace anch {
        * This method will handle initialization vector management.
        *
        * \param input the input block to cipher
+       * \param nbRead the size of block which has been read
        * \param output the output block
+       * \param cipher the cipher instance
+       *
+       * \return the number of bytes to write
        */
-      virtual void cipherBlock(const std::array<uint8_t,Cipher::getBlockSize()>& input,
-			       std::array<uint8_t,Cipher::getBlockSize()>& output,
-			       Cipher& cipher) override {
+      virtual std::size_t cipherBlock(std::array<uint8_t,Cipher::getBlockSize()>& input,
+				      std::streamsize nbRead,
+				      std::array<uint8_t,Cipher::getBlockSize()>& output,
+				      uint32_t, Cipher& cipher) override {
 	std::array<uint8_t,Cipher::getBlockSize()> data;
 	cipher.cipher(_ctxtVect, data);
-	for(std::size_t i = 0 ; i < Cipher::getBlockSize() ; i++) {
+	for(std::streamsize i = 0 ; i < nbRead ; i++) {
 	  output[i] = input[i] ^ data[i];
 	  _ctxtVect[i] = data[i];
 	}
+	return nbRead;
       }
 
       /*!
@@ -100,24 +106,35 @@ namespace anch {
        * This method will handle initialization vector management.
        *
        * \param input the input block to decipher
+       * \param nbRead the size of block which has been read
        * \param output the output block
+       * \param cipher the cipher instance
+       *
+       * \return the number of bytes to write
        */
-      virtual void decipherBlock(const std::array<uint8_t,Cipher::getBlockSize()>& input,
-				 std::array<uint8_t,Cipher::getBlockSize()>& output,
-				 Cipher& cipher) override {
+      virtual std::size_t decipherBlock(std::array<uint8_t,Cipher::getBlockSize()>& input,
+					std::array<uint8_t,Cipher::getBlockSize()>&,
+					std::streamsize nbRead,
+					bool,
+					std::array<uint8_t,Cipher::getBlockSize()>& output,
+					uint32_t, Cipher& cipher) override {
 	std::array<uint8_t,Cipher::getBlockSize()> data;
 	cipher.cipher(_ctxtVect, data);
-	for(std::size_t i = 0 ; i < Cipher::getBlockSize() ; i++) {
+	for(std::streamsize i = 0 ; i < nbRead ; i++) {
 	  output[i] = input[i] ^ data[i];
 	  _ctxtVect[i] = data[i];
 	}
+	return nbRead;
       }
 
       /*!
        * Reset block cipher mode of operation context
+       *
+       * \return the initial context
        */
-      virtual void reset() {
+      virtual const std::array<uint8_t,Cipher::getBlockSize()>& reset() {
 	_ctxtVect = _initVect;
+	return _initVect;
       }
       // Methods -
 

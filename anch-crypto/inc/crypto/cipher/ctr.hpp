@@ -41,9 +41,6 @@ namespace anch {
     private:
       /*! Initialization vector */
       std::array<uint8_t,Cipher::getBlockSize()> _nonce;
-
-      /*! Context vector */
-      std::array<uint8_t,Cipher::getBlockSize()> _ctxtVect;
       // Attributes -
 
 
@@ -57,9 +54,8 @@ namespace anch {
        *                 If is set to 0, it will be set to the number of CPU if found (1 otherwise).
        */
       CTR(const std::array<uint8_t,Cipher::getBlockSize()>& nonce, unsigned int nbThread = 1):
-	BlockCipherModeOfOperation<CTR<Cipher>,Cipher>(false, false, nbThread),
-	_nonce(nonce),
-	_ctxtVect() {
+	BlockCipherModeOfOperation<CTR<Cipher>,Cipher>(true, true, nbThread),
+	_nonce(nonce) {
 	// Nothing to do
       }
       // Constructors -
@@ -82,17 +78,27 @@ namespace anch {
        * This method will handle initialization vector management.
        *
        * \param input the input block to cipher
+       * \param nbRead the size of block which has been read
        * \param output the output block
+       * \param index the block index
+       * \param cipher the cipher instance
+       *
+       * \return the number of bytes to write
        */
-      virtual void cipherBlock(const std::array<uint8_t,Cipher::getBlockSize()>& input,
-			       std::array<uint8_t,Cipher::getBlockSize()>& output,
-			       Cipher& cipher) override {
+      virtual std::size_t cipherBlock(std::array<uint8_t,Cipher::getBlockSize()>& input,
+				      std::streamsize nbRead,
+				      std::array<uint8_t,Cipher::getBlockSize()>& output,
+				      uint32_t index,
+				      Cipher& cipher) override {
+	std::array<uint8_t,Cipher::getBlockSize()> ctxtVect(_nonce);
+	uint16_t* counter = reinterpret_cast<uint16_t*>(&ctxtVect.data()[Cipher::getBlockSize() - 2]);
+	*counter = index;
 	std::array<uint8_t,Cipher::getBlockSize()> data;
-	cipher.cipher(_ctxtVect, data);
-	for(std::size_t i = 0 ; i < Cipher::getBlockSize() ; i++) {
+	cipher.cipher(ctxtVect, data);
+	for(std::streamsize i = 0 ; i < nbRead ; i++) {
 	  output[i] = input[i] ^ data[i];
-	  increment();
 	}
+	return nbRead;
       }
 
       /*!
@@ -100,34 +106,38 @@ namespace anch {
        * This method will handle initialization vector management.
        *
        * \param input the input block to decipher
+       * \param nbRead the size of block which has been read
        * \param output the output block
+       * \param index the block index
+       * \param cipher the cipher instance
+       *
+       * \return the number of bytes to write
        */
-      virtual void decipherBlock(const std::array<uint8_t,Cipher::getBlockSize()>& input,
-				 std::array<uint8_t,Cipher::getBlockSize()>& output,
-				 Cipher& cipher) override {
+      virtual std::size_t decipherBlock(std::array<uint8_t,Cipher::getBlockSize()>& input,
+					std::array<uint8_t,Cipher::getBlockSize()>&,
+					std::streamsize nbRead,
+					bool,
+					std::array<uint8_t,Cipher::getBlockSize()>& output,
+					uint32_t index,
+					Cipher& cipher) override {
+	std::array<uint8_t,Cipher::getBlockSize()> ctxtVect(_nonce);
+	uint16_t* counter = reinterpret_cast<uint16_t*>(&ctxtVect.data()[Cipher::getBlockSize() - 2]);
+	*counter = index;
 	std::array<uint8_t,Cipher::getBlockSize()> data;
-	cipher.cipher(_ctxtVect, data);
-	for(std::size_t i = 0 ; i < Cipher::getBlockSize() ; i++) {
+	cipher.cipher(ctxtVect, data);
+	for(std::streamsize i = 0 ; i < nbRead ; i++) {
 	  output[i] = input[i] ^ data[i];
-	  increment();
 	}
+	return nbRead;
       }
 
       /*!
        * Reset block cipher mode of operation context
+       *
+       * \return the initial context
        */
-      virtual void reset() {
-	_ctxtVect = _nonce;
-	uint16_t* counter = reinterpret_cast<uint16_t*>(&_ctxtVect.data()[Cipher::getBlockSize() - 2]);
-	*counter = 0;
-      }
-
-      /*!
-       * Increments context vector counter
-       */
-      inline void increment() {
-	uint16_t* counter = reinterpret_cast<uint16_t*>(&_ctxtVect.data()[Cipher::getBlockSize() - 2]);
-	(*counter)++;
+      virtual const std::array<uint8_t,Cipher::getBlockSize()>& reset() {
+	return _nonce;
       }
       // Methods -
 

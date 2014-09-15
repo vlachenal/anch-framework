@@ -34,8 +34,8 @@ namespace anch {
      *
      * \author Vincent Lachenal
      */
-    template<typename Cipher>
-    class CBC: public BlockCipherModeOfOperation<CBC<Cipher>,Cipher> {
+    template<typename Cipher, typename Padding>
+    class CBC: public BlockCipherModeOfOperation<CBC<Cipher,Padding>,Cipher> {
 
       // Attributes +
     private:
@@ -57,7 +57,7 @@ namespace anch {
        *                 If is set to 0, it will be set to the number of CPU if found (1 otherwise).
        */
       CBC(const std::array<uint8_t,Cipher::getBlockSize()>& initVect, unsigned int nbThread = 1):
-	BlockCipherModeOfOperation<CBC<Cipher>,Cipher>(false, true, nbThread),
+	BlockCipherModeOfOperation<CBC<Cipher,Padding>,Cipher>(false, true, nbThread),
 	_initVect(initVect),
 	_ctxtVect() {
 	// Nothing to do
@@ -82,11 +82,19 @@ namespace anch {
        * This method will handle initialization vector management.
        *
        * \param input the input block to cipher
+       * \param nbRead the size of block which has been read
        * \param output the output block
+       * \param cipher the cipher instance
+       *
+       * \return the number of bytes to write
        */
-      virtual void cipherBlock(const std::array<uint8_t,Cipher::getBlockSize()>& input,
-			       std::array<uint8_t,Cipher::getBlockSize()>& output,
-			       Cipher& cipher) override {
+      virtual std::size_t cipherBlock(std::array<uint8_t,Cipher::getBlockSize()>& input,
+				      std::streamsize nbRead,
+				      std::array<uint8_t,Cipher::getBlockSize()>& output,
+				      uint32_t, Cipher& cipher) override {
+	if(nbRead != Cipher::getBlockSize()) {
+	  Padding::pad(input.data(), nbRead, Cipher::getBlockSize());
+	}
 	std::array<uint8_t,Cipher::getBlockSize()> data;
 	for(std::size_t i = 0 ; i < Cipher::getBlockSize() ; i++) {
 	  data[i] = input[i] ^ _ctxtVect[i];
@@ -95,6 +103,7 @@ namespace anch {
 	for(std::size_t i = 0 ; i < Cipher::getBlockSize() ; i++) {
 	  _ctxtVect[i] = output[i];
 	}
+	return Cipher::getBlockSize(); // This mode pad data => the number of bytes to write will always be a complete block
       }
 
       /*!
@@ -102,24 +111,43 @@ namespace anch {
        * This method will handle initialization vector management.
        *
        * \param input the input block to decipher
+       * \param prevInput the previous input block to decipher
+       * \param nbRead the size of block which has been read
+       * \param lastBlock is last block to decipher
        * \param output the output block
+       * \param cipher the cipher instance
+       *
+       * \return the number of bytes to write
        */
-      virtual void decipherBlock(const std::array<uint8_t,Cipher::getBlockSize()>& input,
-				 std::array<uint8_t,Cipher::getBlockSize()>& output,
-				 Cipher& cipher) override {
+      virtual std::size_t decipherBlock(std::array<uint8_t,Cipher::getBlockSize()>& input,
+					std::array<uint8_t,Cipher::getBlockSize()>& prevInput,
+					std::streamsize nbRead,
+					bool lastBlock,
+					std::array<uint8_t,Cipher::getBlockSize()>& output,
+					uint32_t, Cipher& cipher) override {
+	if(lastBlock && nbRead != Cipher::getBlockSize()) {
+	  throw InvalidBlockException("Invalid block size");
+	}
 	std::array<uint8_t,Cipher::getBlockSize()> data;
 	cipher.decipher(input, data);
 	for(std::size_t i = 0 ; i < Cipher::getBlockSize() ; i++) {
-	  output[i] = data[i] ^ _ctxtVect[i];
-	  _ctxtVect[i] = input[i];
+	  output[i] = data[i] ^ prevInput[i];
+	}
+	if(lastBlock) {
+	  return Padding::length(output.data(), Cipher::getBlockSize());
+	} else {
+	  return Cipher::getBlockSize();
 	}
       }
 
       /*!
        * Reset block cipher mode of operation context
+       *
+       * \return the initial context
        */
-      virtual void reset() {
+      virtual const std::array<uint8_t,Cipher::getBlockSize()>& reset() {
 	_ctxtVect = _initVect;
+	return _initVect;
       }
       // Methods -
 

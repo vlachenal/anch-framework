@@ -32,9 +32,6 @@
 
 #include "threadPool.hpp"
 
-// \todo remove
-#include <iostream>
-
 
 namespace anch {
   namespace crypto {
@@ -76,6 +73,9 @@ namespace anch {
       /*! Write index */
       std::atomic<uint32_t> _writeIdx;
 
+      /*! Error flag */
+      std::atomic<bool> _error;
+
       /*! Output stream */
       std::ostream* _stream;
       // Attributes -
@@ -99,7 +99,8 @@ namespace anch {
 	_nbThread(nbThread),
 	_writeBlock(),
 	_endIdx(UINT32_MAX),
-	_writeIdx(0) {
+	_writeIdx(0),
+	_error(false) {
 	if(nbThread == 0 && (cipherParallelizable || decipherParallelizable)) {
 	  _nbThread = std::thread::hardware_concurrency(); 
 	  if(_nbThread == 0) { // Keep at least 1 thread running
@@ -139,22 +140,18 @@ namespace anch {
 	    Cipher cipher(reinterpret_cast<const uint8_t*>(key.data()));
 	    std::array<uint8_t, Cipher::getBlockSize()> data;
 	    std::array<uint8_t, Cipher::getBlockSize()> out;
+	    uint32_t index = 0;
 	    while(!input.eof()) {
 	      input.read(reinterpret_cast<char*>(data.data()), Cipher::getBlockSize());
 	      std::streamsize nbRead = input.gcount();
 	      if(nbRead == 0) {
 		break;
-
-	      } else if(nbRead < static_cast<std::streamsize>(Cipher::getBlockSize())) {
-		// \todo manage different padding
-		std::cout << "Size: " << nbRead << std::endl;
-		std::cout << "Fill " << Cipher::getBlockSize() - nbRead << " 0x00 from index " << nbRead << " to end" << std::endl;
-		std::memset(data.data() + nbRead, 0x00, Cipher::getBlockSize() - nbRead);
 	      }
-	      cipherBlock(data, out, cipher);
-	      for(std::size_t i = 0 ; i < Cipher::getBlockSize() ; i++) {
+	      std::size_t nbBlocks = cipherBlock(data, nbRead, out, index, cipher);
+	      for(std::size_t i = 0 ; i < nbBlocks ; i++) {
 		output << out[i];
 	      }
+	      index++;
 	    }
 	    output.flush();
 
@@ -167,7 +164,6 @@ namespace anch {
 	    uint32_t index = 0;
 	    uint32_t endIdx = 0;
 	    while(!input.eof()) {
-	      //std::cout << "Read block n°" << index << std::endl;
 	      // Add lock to avoid memory consumption on big data +
 	      std::unique_lock<std::mutex> readLock(_streamMutex);
 	      _writeBlock.wait(readLock, [this,&index]{ return  index < (_writeIdx.load() + _nbThread * 3); });
@@ -181,12 +177,8 @@ namespace anch {
 
 	      } else if(nbRead < static_cast<std::streamsize>(Cipher::getBlockSize())) {
 		endIdx = index + 1;
-		// \todo manage different padding
-		std::cout << "Size: " << nbRead << std::endl;
-		std::cout << "Fill " << Cipher::getBlockSize() - nbRead << " 0x00 from index " << nbRead << " to end" << std::endl;
-		std::memset(data.data() + nbRead, 0x00, Cipher::getBlockSize() - nbRead);
 	      }
-	      pool.add(&Derived::deferredCipherBlock, static_cast<Derived*>(this), index, data, cipher);
+	      pool.add(&Derived::deferredCipherBlock, static_cast<Derived*>(this), index, data, nbRead, cipher);
 	      ++index;
 	    }
 
@@ -214,7 +206,7 @@ namespace anch {
 	if(input && output) {
 	  _endIdx = UINT32_MAX;
 	  _writeIdx = 0;
-	  reset();
+	  std::array<uint8_t,Cipher::getBlockSize()> prevData = reset();
 	  if(!_decipherParallelizable || _nbThread == 1) {
 	    Cipher cipher(reinterpret_cast<const uint8_t*>(key.data()));
 	    std::array<uint8_t,Cipher::getBlockSize()> out;
@@ -222,34 +214,22 @@ namespace anch {
 	    std::array<uint8_t,Cipher::getBlockSize()> cipherData;
 	    input.read(reinterpret_cast<char*>(data.data()), Cipher::getBlockSize());
 	    std::streamsize nbRead = input.gcount();
+	    uint32_t index = 0;
 	    do {
-	      if(nbRead < static_cast<std::streamsize>(Cipher::getBlockSize())) {
-		output.flush();
-		std::cout << nbRead << std::endl;
-		throw InvalidBlockException("Invalid block size"); // \todo set better error message
-	      }
-
 	      cipherData = data;
+	      std::size_t read = nbRead;
 	      input.read(reinterpret_cast<char*>(data.data()), Cipher::getBlockSize());
-	      nbRead = input.gcount();
 
-	      decipherBlock(cipherData, out, cipher);
-	      std::size_t end = Cipher::getBlockSize();
-	      if(input.eof()) { // \todo manage different padding algorithms
-		int index;
-		for(index = end - 1 ; index >= 0 ; index--) {
-		  if(out[index] != 0x00) {
-		    index++; // Works only with text files ...
-		    break;
-		  }
-		}
-		end = index;
-	      }
+	      std::size_t end = decipherBlock(cipherData, prevData, read, input.eof(), out, index, cipher);
 	      for(std::size_t i = 0 ; i < end ; i++) {
-		output << out[i];
+	    	output << out[i];
 	      }
 
-	    } while(!input.eof());
+	      prevData = cipherData;
+	      nbRead = input.gcount();
+	      index++;
+
+	    } while(nbRead != 0);
 	    output.flush();
 
 	  } else {
@@ -263,12 +243,6 @@ namespace anch {
 	    input.read(reinterpret_cast<char*>(data.data()), Cipher::getBlockSize());
 	    std::streamsize nbRead = input.gcount();
 	    do {
-	      if(nbRead < static_cast<std::streamsize>(Cipher::getBlockSize())) {
-		output.flush();
-		std::cout << nbRead << std::endl;
-		throw InvalidBlockException("Invalid block size"); // \todo set better error message
-	      }
-
 	      cipherData = data;
 
 	      // Add lock to avoid memory consumption on big data +
@@ -277,19 +251,24 @@ namespace anch {
 	      // Add lock to avoid memory consumption on big data -
 
 	      input.read(reinterpret_cast<char*>(data.data()), Cipher::getBlockSize());
-	      nbRead = input.gcount();
 
 	      if(input.eof()) { // Set end index for padding
 		_endIdx = index;
 	      }
 
-	      pool.add(&Derived::deferredDecipherBlock, static_cast<Derived*>(this), index, cipherData, cipher);
+	      pool.add(&Derived::deferredDecipherBlock, static_cast<Derived*>(this), index, cipherData, prevData, nbRead, cipher);
 	      ++index;
 
-	    } while(!input.eof());
+	      prevData = cipherData;
+	      nbRead = input.gcount();
+	    } while(nbRead != 0 && !_error);
 
 	    std::unique_lock<std::mutex> finalizeLock(_streamMutex);
 	    _writeBlock.wait(finalizeLock, [this,&index]{ return _writeIdx.load() == index; });
+
+	    if(_error) {
+	      throw InvalidBlockException("Error while decipher data");
+	    }
 
 	    pool.stop();
 	    output.flush();
@@ -306,41 +285,64 @@ namespace anch {
        * This method will handle initialization vector management.
        *
        * \param input the input block to cipher
+       * \param nbRead the size of block which has been read
        * \param output the output block
+       * \param index the block index
+       * \param cipher the cipher instance
+       *
+       * \return the number of bytes to write
        */
-      virtual void cipherBlock(const std::array<uint8_t,Cipher::getBlockSize()>& input,
-			       std::array<uint8_t,Cipher::getBlockSize()>& output,
-			       Cipher& cipher) = 0;
+      virtual std::size_t cipherBlock(std::array<uint8_t,Cipher::getBlockSize()>& input,
+				      std::streamsize nbRead,
+				      std::array<uint8_t,Cipher::getBlockSize()>& output,
+				      uint32_t index,
+				      Cipher& cipher) = 0;
 
       /*!
        * Decipher a block.\n
        * This method will handle initialization vector management.
        *
        * \param input the input block to decipher
+       * \param prevInput the previous input block to decipher
+       * \param nbRead the size of block which has been read
+       * \param lastBlock is last block to decipher
        * \param output the output block
+       * \param index the block index
+       * \param cipher the cipher instance
+       *
+       * \return the number of bytes to write
        */
-      virtual void decipherBlock(const std::array<uint8_t,Cipher::getBlockSize()>& input,
-				 std::array<uint8_t,Cipher::getBlockSize()>& output,
-				 Cipher& cipher) = 0;
+      virtual std::size_t decipherBlock(std::array<uint8_t,Cipher::getBlockSize()>& input,
+					std::array<uint8_t,Cipher::getBlockSize()>& prevInput,
+					std::streamsize nbRead,
+					bool lastBlock,
+					std::array<uint8_t,Cipher::getBlockSize()>& output,
+					uint32_t index,
+					Cipher& cipher) = 0;
 
       /*!
        * Reset block cipher mode of operation context
+       *
+       * \return the initial context
        */
-      virtual void reset() = 0;
+      virtual const std::array<uint8_t,Cipher::getBlockSize()>& reset() = 0;
 
       /*!
        * Cipher a block
        *
        * \param input the input block to cipher
        */
-      void deferredCipherBlock(uint32_t index, std::array<uint8_t,Cipher::getBlockSize()> input, Cipher cipher) {
+      void deferredCipherBlock(uint32_t index,
+			       std::array<uint8_t,Cipher::getBlockSize()> input,
+			       std::streamsize nbRead,
+			       Cipher cipher) {
 	std::array<uint8_t,Cipher::getBlockSize()> output;
-	cipherBlock(input, output, cipher);
+	std::size_t nbBlocks = cipherBlock(input, nbRead, output, index, cipher);
 
 	std::unique_lock<std::mutex> indexLock(_streamMutex);
 	_writeBlock.wait(indexLock, [this,&index]{ return _writeIdx.load() == index; });
 
-	for(std::size_t i = 0 ; i < Cipher::getBlockSize() ; i++) {
+	for(std::size_t i = 0 ; i < nbBlocks ; i++) {
 	  *_stream << output[i];
 	}
 
@@ -355,25 +357,23 @@ namespace anch {
        *
        * \param input the input block to decipher
        */
-      virtual void deferredDecipherBlock(uint32_t index, std::array<uint8_t,Cipher::getBlockSize()> input, Cipher cipher) {
+      virtual void deferredDecipherBlock(uint32_t index,
+					 std::array<uint8_t, Cipher::getBlockSize()> input,
+					 std::array<uint8_t, Cipher::getBlockSize()> prevInput,
+					 std::streamsize nbRead,
+					 Cipher cipher) {
 	std::array<uint8_t,Cipher::getBlockSize()> output;
-	decipherBlock(input, output, cipher);
+	std::size_t nbBlocks = 0;
+	try {
+	  nbBlocks = decipherBlock(input, prevInput, nbRead, (index == _endIdx), output, index, cipher);
+	} catch(const InvalidBlockException& e) {
+	  _error = true;
+	}
 
 	std::unique_lock<std::mutex> indexLock(_streamMutex);
 	_writeBlock.wait(indexLock, [this,&index]{ return _writeIdx.load() == index; });
 
-	std::size_t end = Cipher::getBlockSize();
-	if(index == _endIdx) { // \todo manage different padding algorithms
-	  int idx;
-	  for(idx = end - 1 ; idx >= 0 ; idx--) {
-	    if(output[idx] != 0x00) {
-	      idx++; // Works only with text files ...
-	      break;
-	    }
-	  }
-	  end = idx;
-	}
-	for(std::size_t i = 0 ; i < end ; i++) {
+	for(std::size_t i = 0 ; i < nbBlocks ; i++) {
 	  *_stream << output[i];
 	}
 
