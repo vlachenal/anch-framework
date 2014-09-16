@@ -19,7 +19,34 @@
 */
 #include "crypto/cipher/aes.hpp"
 
+#include "crypto/cipher/ecb.hpp"
+#include "crypto/cipher/cbc.hpp"
+#include "crypto/cipher/pcbc.hpp"
+#include "crypto/cipher/cfb.hpp"
+#include "crypto/cipher/ofb.hpp"
+#include "crypto/cipher/ctr.hpp"
+
+#include "crypto/padding/ansiX923.hpp"
+#include "crypto/padding/iso7816_4Padding.hpp"
+#include "crypto/padding/pkcs7Padding.hpp"
+#include "crypto/padding/zeroPadding.hpp"
+
+
 using anch::crypto::AES;
+
+using anch::crypto::BlockCipherModeOfOperation;
+using anch::crypto::ECB;
+using anch::crypto::CBC;
+using anch::crypto::PCBC;
+using anch::crypto::CFB;
+using anch::crypto::OFB;
+using anch::crypto::CTR;
+
+using anch::crypto::ZeroPadding;
+using anch::crypto::ANSIX923;
+using anch::crypto::ISO7816_4Padding;
+using anch::crypto::PKCS7Padding;
+
 
 /*! Cipher subsitution box */
 const uint8_t anch::crypto::CIPHER_SUB_BOX[256] = {
@@ -102,12 +129,120 @@ const uint32_t anch::crypto::RCON[11] = {
 
 // AES-128 defintion +
 template class AES<4,10>;
+
+template class BlockCipherModeOfOperation<ECB<AES<4,10>,ZeroPadding>,AES<4,10>>;
+template class ECB<AES<4,10>,ZeroPadding>;
+template class BlockCipherModeOfOperation<ECB<AES<4,10>,ANSIX923>,AES<4,10>>;
+template class ECB<AES<4,10>,ANSIX923>;
+template class BlockCipherModeOfOperation<ECB<AES<4,10>,ISO7816_4Padding>,AES<4,10>>;
+template class ECB<AES<4,10>,ISO7816_4Padding>;
+template class BlockCipherModeOfOperation<ECB<AES<4,10>,PKCS7Padding>,AES<4,10>>;
+template class ECB<AES<4,10>,PKCS7Padding>;
+
+template class BlockCipherModeOfOperation<CBC<AES<4,10>,ZeroPadding>,AES<4,10>>;
+template class CBC<AES<4,10>,ZeroPadding>;
+template class BlockCipherModeOfOperation<CBC<AES<4,10>,ANSIX923>,AES<4,10>>;
+template class CBC<AES<4,10>,ANSIX923>;
+template class BlockCipherModeOfOperation<CBC<AES<4,10>,ISO7816_4Padding>,AES<4,10>>;
+template class CBC<AES<4,10>,ISO7816_4Padding>;
+template class BlockCipherModeOfOperation<CBC<AES<4,10>,PKCS7Padding>,AES<4,10>>;
+template class CBC<AES<4,10>,PKCS7Padding>;
+
+template class BlockCipherModeOfOperation<PCBC<AES<4,10>,ZeroPadding>,AES<4,10>>;
+template class PCBC<AES<4,10>,ZeroPadding>;
+template class BlockCipherModeOfOperation<PCBC<AES<4,10>,ANSIX923>,AES<4,10>>;
+template class PCBC<AES<4,10>,ANSIX923>;
+template class BlockCipherModeOfOperation<PCBC<AES<4,10>,ISO7816_4Padding>,AES<4,10>>;
+template class PCBC<AES<4,10>,ISO7816_4Padding>;
+template class BlockCipherModeOfOperation<PCBC<AES<4,10>,PKCS7Padding>,AES<4,10>>;
+template class PCBC<AES<4,10>,PKCS7Padding>;
+
+template class BlockCipherModeOfOperation<CFB<AES<4,10>>,AES<4,10>>;
+template class CFB<AES<4,10>>;
+
+template class BlockCipherModeOfOperation<OFB<AES<4,10>>,AES<4,10>>;
+template class OFB<AES<4,10>>;
+
+template class BlockCipherModeOfOperation<CTR<AES<4,10>>,AES<4,10>>;
+template class CTR<AES<4,10>>;
 // AES-128 defintion -
 
 // AES-192 defintion +
 template class AES<6,12>;
+
+template class BlockCipherModeOfOperation<ECB<AES<6,12>,ZeroPadding>,AES<6,12>>;
+template class ECB<AES<6,12>,ZeroPadding>;
+template class BlockCipherModeOfOperation<ECB<AES<6,12>,ANSIX923>,AES<6,12>>;
+template class ECB<AES<6,12>,ANSIX923>;
+template class BlockCipherModeOfOperation<ECB<AES<6,12>,ISO7816_4Padding>,AES<6,12>>;
+template class ECB<AES<6,12>,ISO7816_4Padding>;
+template class BlockCipherModeOfOperation<ECB<AES<6,12>,PKCS7Padding>,AES<6,12>>;
+template class ECB<AES<6,12>,PKCS7Padding>;
+
+template class BlockCipherModeOfOperation<CBC<AES<6,12>,ZeroPadding>,AES<6,12>>;
+template class CBC<AES<6,12>,ZeroPadding>;
+template class BlockCipherModeOfOperation<CBC<AES<6,12>,ANSIX923>,AES<6,12>>;
+template class CBC<AES<6,12>,ANSIX923>;
+template class BlockCipherModeOfOperation<CBC<AES<6,12>,ISO7816_4Padding>,AES<6,12>>;
+template class CBC<AES<6,12>,ISO7816_4Padding>;
+template class BlockCipherModeOfOperation<CBC<AES<6,12>,PKCS7Padding>,AES<6,12>>;
+template class CBC<AES<6,12>,PKCS7Padding>;
+
+template class BlockCipherModeOfOperation<PCBC<AES<6,12>,ZeroPadding>,AES<6,12>>;
+template class PCBC<AES<6,12>,ZeroPadding>;
+template class BlockCipherModeOfOperation<PCBC<AES<6,12>,ANSIX923>,AES<6,12>>;
+template class PCBC<AES<6,12>,ANSIX923>;
+template class BlockCipherModeOfOperation<PCBC<AES<6,12>,ISO7816_4Padding>,AES<6,12>>;
+template class PCBC<AES<6,12>,ISO7816_4Padding>;
+template class BlockCipherModeOfOperation<PCBC<AES<6,12>,PKCS7Padding>,AES<6,12>>;
+template class PCBC<AES<6,12>,PKCS7Padding>;
+
+template class BlockCipherModeOfOperation<CFB<AES<6,12>>,AES<6,12>>;
+template class CFB<AES<6,12>>;
+
+template class BlockCipherModeOfOperation<OFB<AES<6,12>>,AES<6,12>>;
+template class OFB<AES<6,12>>;
+
+template class BlockCipherModeOfOperation<CTR<AES<6,12>>,AES<6,12>>;
+template class CTR<AES<6,12>>;
 // AES-192 defintion -
 
 // AES-256 defintion +
 template class AES<8,14>;
+
+template class BlockCipherModeOfOperation<ECB<AES<8,14>,ZeroPadding>,AES<8,14>>;
+template class ECB<AES<8,14>,ZeroPadding>;
+template class BlockCipherModeOfOperation<ECB<AES<8,14>,ANSIX923>,AES<8,14>>;
+template class ECB<AES<8,14>,ANSIX923>;
+template class BlockCipherModeOfOperation<ECB<AES<8,14>,ISO7816_4Padding>,AES<8,14>>;
+template class ECB<AES<8,14>,ISO7816_4Padding>;
+template class BlockCipherModeOfOperation<ECB<AES<8,14>,PKCS7Padding>,AES<8,14>>;
+template class ECB<AES<8,14>,PKCS7Padding>;
+
+template class BlockCipherModeOfOperation<CBC<AES<8,14>,ZeroPadding>,AES<8,14>>;
+template class CBC<AES<8,14>,ZeroPadding>;
+template class BlockCipherModeOfOperation<CBC<AES<8,14>,ANSIX923>,AES<8,14>>;
+template class CBC<AES<8,14>,ANSIX923>;
+template class BlockCipherModeOfOperation<CBC<AES<8,14>,ISO7816_4Padding>,AES<8,14>>;
+template class CBC<AES<8,14>,ISO7816_4Padding>;
+template class BlockCipherModeOfOperation<CBC<AES<8,14>,PKCS7Padding>,AES<8,14>>;
+template class CBC<AES<8,14>,PKCS7Padding>;
+
+template class BlockCipherModeOfOperation<PCBC<AES<8,14>,ZeroPadding>,AES<8,14>>;
+template class PCBC<AES<8,14>,ZeroPadding>;
+template class BlockCipherModeOfOperation<PCBC<AES<8,14>,ANSIX923>,AES<8,14>>;
+template class PCBC<AES<8,14>,ANSIX923>;
+template class BlockCipherModeOfOperation<PCBC<AES<8,14>,ISO7816_4Padding>,AES<8,14>>;
+template class PCBC<AES<8,14>,ISO7816_4Padding>;
+template class BlockCipherModeOfOperation<PCBC<AES<8,14>,PKCS7Padding>,AES<8,14>>;
+template class PCBC<AES<8,14>,PKCS7Padding>;
+
+template class BlockCipherModeOfOperation<CFB<AES<8,14>>,AES<8,14>>;
+template class CFB<AES<8,14>>;
+
+template class BlockCipherModeOfOperation<OFB<AES<8,14>>,AES<8,14>>;
+template class OFB<AES<8,14>>;
+
+template class BlockCipherModeOfOperation<CTR<AES<8,14>>,AES<8,14>>;
+template class CTR<AES<8,14>>;
 // AES-256 defintion -

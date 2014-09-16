@@ -10,16 +10,36 @@ using anch::crypto::AES128;
 using anch::crypto::SHA1;
 
 
+/*!
+ * Run test.\n
+ * \n
+ * You can use openssl to check result (key and initialization vector are formatted into hexidecimal):\n
+ * openssl aes-128-ofb -in Makefile -out Makefile.openssl.aes128.ofb.cipher -K 666f6f626172202020207261626f6f66 -iv 6162636465666768696a6b6c6d6e6f70
+ *
+ * \return test result
+ */
 int
 main(void) {
+  std::array<uint8_t, 16> iv = { {
+      'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p'
+    } };
+
+  // {
+  //   // This test is for bench comparison with openssl
+  //   std::ifstream* input = new std::ifstream("Makefile", std::ifstream::binary);
+  //   std::ofstream ofbOutCipher("Makefile.ofb.aes128.cipher", std::ofstream::binary);
+
+  //   OFB<AES128> ofb(iv);
+  //   ofb.cipher(*input, ofbOutCipher, "foobar    raboof");
+  //   ofbOutCipher.close();
+  //   input->close();
+  //   delete input;
+  // }
+
   std::cout << "Enter in AES - OFB tests" << std::endl;
 
   std::chrono::time_point<std::chrono::high_resolution_clock> start, end;
   std::chrono::microseconds duration;
-
-  std::array<uint8_t, 16> iv = { {
-      'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p'
-    } };
 
   {
     std::cout << "Enter in OFB sequential with AES128 tests" << std::endl;
@@ -73,5 +93,6 @@ main(void) {
   }
 
   std::cout << "Exit AES - OFB tests" << std::endl;
+
   return 0;
 }

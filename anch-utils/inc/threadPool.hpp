@@ -90,7 +90,12 @@ namespace anch {
      * \ref ThreadPool destructor
      */
     virtual ~ThreadPool() {
-      // Nothing to do
+      _mutex.lock();
+      _running = false;
+      while(!_threads.empty()) {
+	_threads.pop();
+      }
+      _mutex.unlock();
     }
     // Destructor -
 
