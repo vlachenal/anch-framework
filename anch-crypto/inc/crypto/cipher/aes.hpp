@@ -325,7 +325,7 @@ namespace anch {
       inline uint8_t mult(uint8_t a, uint8_t b) {
 	uint8_t res = 0;
 	uint8_t highBitSet = 0;
-	for(uint8_t counter = 0; counter < 8; counter++) {
+	for(uint8_t counter = 0 ; counter < 8 ; counter++) {
 	  if((b & 1) != 0) {
 	    res ^= a;
 	  }
@@ -347,10 +347,10 @@ namespace anch {
       inline void addRoundKey(unsigned int round) {
 	uint32_t* key = _expKey + 4 * round;
 	uint32_t* state = reinterpret_cast<uint32_t*>(_state);
-	for(unsigned int i = 0 ; i < 4 ; i++) {
-	  state[i] ^= *key;
-	  key++;
-	}
+	state[0] ^= key[0];
+	state[1] ^= key[1];
+	state[2] ^= key[2];
+	state[3] ^= key[3];
       }
       // Methods -
 
