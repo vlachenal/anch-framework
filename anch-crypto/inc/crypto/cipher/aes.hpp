@@ -77,7 +77,7 @@ namespace anch {
        *
        * \param other the AES to copy
        */
-      AES(const AES& other): _state() {
+      AES(const AES& other): _state(), _expKey() {
 	std::memcpy(_expKey, other._expKey, 4 * (R + 1) * sizeof(uint32_t));
       }
       // Constructors -
