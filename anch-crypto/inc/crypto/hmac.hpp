@@ -49,8 +49,8 @@ namespace anch {
 	keyArray[i] = static_cast<uint8_t>(buffer[i]);
       }
       // Treatment on key -
-      // Compute paddings +
 
+      // Compute paddings +
       std::size_t msgLen = std::char_traits<CharT>::length(message.c_str());
       std::size_t inSize = block + msgLen;
       uint8_t* inPad = new uint8_t[inSize];
@@ -61,6 +61,7 @@ namespace anch {
 	outPad[i] = static_cast<uint8_t>(0x5c) ^ keyArray[i];
       }
       // Compute paddings -
+
       // First hash +
       const uint8_t* msg = reinterpret_cast<const uint8_t*>(message.c_str());
       for(std::size_t i = 0 ; i < msgLen ; i++) {
@@ -69,6 +70,7 @@ namespace anch {
       const std::array<uint8_t,H::getOutputSize()>& inDigest = H(inPad, inSize).digest();
       delete[] inPad;
       // First hash -
+
       // Second hash +
       std::size_t idx = block;
       for(uint8_t byte : inDigest) {
