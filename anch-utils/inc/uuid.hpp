@@ -163,7 +163,7 @@ namespace anch {
       std::chrono::time_point<std::chrono::high_resolution_clock> now = std::chrono::high_resolution_clock::now();
       auto epoch = now.time_since_epoch();
       int64_t timestamp = (std::chrono::duration_cast<std::chrono::nanoseconds>(epoch).count());
-      getRandomEgine().seed(timestamp);
+      getRandomEngine().seed(timestamp);
       // Initialize random seed -
 
       uuid._version = version;
@@ -207,7 +207,7 @@ namespace anch {
       // Timestamp -
 
       // Sequence +
-      uint16_t clockSeq = getDistSeq()(getRandomEgine());
+      uint16_t clockSeq = getDistSeq()(getRandomEngine());
       uuid._clockSeqLow = clockSeq & SEQ_LOW_MASK;
       uuid._clockSeqHighRes = (clockSeq & SEQ_HIGH_MASK) >> 8;
       uuid._clockSeqHighRes |= 0x80;
@@ -286,20 +286,20 @@ namespace anch {
       static std::uniform_int_distribution<uint64_t> dist64(0, 0xFFFFFFFFFFFF); // Max 12 hexadecimal digits
 
       // Timestamp +
-      uuid._lowTime = dist32(getRandomEgine());
-      uuid._midTime = dist16(getRandomEgine());
-      uuid._highTime = dist16(getRandomEgine()) & TIME_HIGH_MASK;
+      uuid._lowTime = dist32(getRandomEngine());
+      uuid._midTime = dist16(getRandomEngine());
+      uuid._highTime = dist16(getRandomEngine()) & TIME_HIGH_MASK;
       // Timestamp -
 
       // Sequence +
-      uint16_t clockSeq = getDistSeq()(getRandomEgine());
+      uint16_t clockSeq = getDistSeq()(getRandomEngine());
       uuid._clockSeqLow = clockSeq & SEQ_LOW_MASK;
       uuid._clockSeqHighRes = (clockSeq & SEQ_HIGH_MASK) >> 8;
       uuid._clockSeqHighRes |= 0x80;
       // Sequence -
 
       // Node +
-      uuid._node = dist64(getRandomEgine());
+      uuid._node = dist64(getRandomEngine());
       // Node -
     }
 
@@ -360,7 +360,7 @@ namespace anch {
      *
      * \return the random engine
      */
-    static inline std::mt19937& getRandomEgine() {
+    static inline std::mt19937& getRandomEngine() {
       static std::mt19937 engine;
       return engine;
     }
