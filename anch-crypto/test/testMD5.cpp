@@ -315,8 +315,9 @@ main(void) {
     char buffer[1024];
     while(!fileBis.eof()) {
       fileBis.read(buffer, 1024);
-      std::string tmp(buffer);
-      msg << tmp.substr(0,fileBis.gcount());
+      for(int i = 0 ; i < fileBis.gcount() ; ++i) {
+	msg << buffer[i];
+      }
     }
     fileBis.close();
 
