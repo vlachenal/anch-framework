@@ -162,6 +162,8 @@ namespace anch {
     private:
       /*!
        * Key expansion algorithm
+       *
+       * \param key the key to expand
        */
       void expandKey(const uint8_t key[4*K]) {
 	std::memcpy(_expKey, key, 4*K);

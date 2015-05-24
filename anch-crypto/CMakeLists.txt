@@ -23,7 +23,7 @@ endif()
 # Check GCC version -
 
 # Add GCC definitions
-add_definitions("-Wall -Wextra -Werror")
+add_definitions("-Wall -Wextra -Werror -Wuninitialized")
 if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
   add_definitions("-D ANCH_WINDOWS")
 else()
@@ -75,6 +75,7 @@ if(ANCH_CRYPTO_UNITARY_TEST)
   target_link_libraries(
     anch-md5-test
     anch-crypto
+    ${CMAKE_THREAD_LIBS_INIT}
   )
   # Build MD5 unitary test -
 
@@ -95,6 +96,7 @@ if(ANCH_CRYPTO_UNITARY_TEST)
   target_link_libraries(
     anch-sha1-test
     anch-crypto
+    ${CMAKE_THREAD_LIBS_INIT}
   )
   # Build SHA1 unitary test -
 
@@ -115,6 +117,7 @@ if(ANCH_CRYPTO_UNITARY_TEST)
   target_link_libraries(
     anch-sha2-test
     anch-crypto
+    ${CMAKE_THREAD_LIBS_INIT}
   )
   # Build SHA2 unitary test -
 
@@ -134,6 +137,7 @@ if(ANCH_CRYPTO_UNITARY_TEST)
   target_link_libraries(
     anch-hmac-test
     anch-crypto
+    ${CMAKE_THREAD_LIBS_INIT}
   )
   # Build HMAC unitary test -
 
@@ -153,6 +157,7 @@ if(ANCH_CRYPTO_UNITARY_TEST)
   target_link_libraries(
     anch-base64-test
     anch-crypto
+    ${CMAKE_THREAD_LIBS_INIT}
   )
   # Build Base64 unitary test -
 
@@ -172,6 +177,7 @@ if(ANCH_CRYPTO_UNITARY_TEST)
   target_link_libraries(
     anch-aes-test
     anch-crypto
+    ${CMAKE_THREAD_LIBS_INIT}
   )
   # Build AES unitary test -
 
@@ -191,6 +197,7 @@ if(ANCH_CRYPTO_UNITARY_TEST)
   target_link_libraries(
     anch-padding-test
     anch-crypto
+    ${CMAKE_THREAD_LIBS_INIT}
   )
   # Build padding unitary test -
 
