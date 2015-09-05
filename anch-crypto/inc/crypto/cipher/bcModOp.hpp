@@ -133,8 +133,6 @@ namespace anch {
 		  std::ostream& output,
 		  const std::string& key) {
 	if(input && output) {
-	  _endIdx = UINT32_MAX;
-	  _writeIdx = 0;
 	  reset();
 	  if(!_cipherParallelizable || _nbThread == 1) {
 	    Cipher cipher(reinterpret_cast<const uint8_t*>(key.data()));
@@ -156,6 +154,8 @@ namespace anch {
 	    output.flush();
 
 	  } else {
+	    _endIdx = UINT32_MAX;
+	    _writeIdx = 0;
 	    _stream = &output;
 	    Cipher cipher(reinterpret_cast<const uint8_t*>(key.data()));
 	    ThreadPool pool(_nbThread);
@@ -204,8 +204,6 @@ namespace anch {
 		    std::ostream& output,
 		    const std::string& key) {
 	if(input && output) {
-	  _endIdx = UINT32_MAX;
-	  _writeIdx = 0;
 	  std::array<uint8_t,Cipher::getBlockSize()> prevData = reset();
 	  if(!_decipherParallelizable || _nbThread == 1) {
 	    Cipher cipher(reinterpret_cast<const uint8_t*>(key.data()));
@@ -233,6 +231,8 @@ namespace anch {
 	    output.flush();
 
 	  } else {
+	    _endIdx = UINT32_MAX;
+	    _writeIdx = 0;
 	    _stream = &output;
 	    Cipher cipher(reinterpret_cast<const uint8_t*>(key.data()));
 	    ThreadPool pool(_nbThread);

@@ -342,18 +342,45 @@ if(ANCH_CRYPTO_UNITARY_TEST)
   # Build AES-CFB unit tests -
 
   enable_testing()
-  add_test(anch-md5-test ${EXECUTABLE_OUTPUT_PATH}/anch-md5-test main)
-  add_test(anch-sha1-test ${EXECUTABLE_OUTPUT_PATH}/anch-sha1-test main)
-  add_test(anch-sha2-test ${EXECUTABLE_OUTPUT_PATH}/anch-sha2-test main)
-  add_test(anch-hmac-test ${EXECUTABLE_OUTPUT_PATH}/anch-hmac-test main)
-  add_test(anch-base64-test ${EXECUTABLE_OUTPUT_PATH}/anch-base64-test main)
-  add_test(anch-aes-test ${EXECUTABLE_OUTPUT_PATH}/anch-aes-test main)
-  add_test(anch-padding-test ${EXECUTABLE_OUTPUT_PATH}/anch-padding-test main)
-  add_test(anch-aes-ecb-test ${EXECUTABLE_OUTPUT_PATH}/anch-aes-ecb-test main)
-  add_test(anch-aes-cbc-test ${EXECUTABLE_OUTPUT_PATH}/anch-aes-cbc-test main)
-  add_test(anch-aes-pcbc-test ${EXECUTABLE_OUTPUT_PATH}/anch-aes-pcbc-test main)
-  add_test(anch-aes-ctr-test ${EXECUTABLE_OUTPUT_PATH}/anch-aes-ctr-test main)
-  add_test(anch-aes-ofb-test ${EXECUTABLE_OUTPUT_PATH}/anch-aes-ofb-test main)
-  add_test(anch-aes-cfb-test ${EXECUTABLE_OUTPUT_PATH}/anch-aes-cfb-test main)
+  add_test(MD5 ${EXECUTABLE_OUTPUT_PATH}/anch-md5-test main)
+  add_test(SHA1 ${EXECUTABLE_OUTPUT_PATH}/anch-sha1-test main)
+  add_test(SHA2 ${EXECUTABLE_OUTPUT_PATH}/anch-sha2-test main)
+  add_test(HMAC ${EXECUTABLE_OUTPUT_PATH}/anch-hmac-test main)
+  add_test(Base64 ${EXECUTABLE_OUTPUT_PATH}/anch-base64-test main)
+  add_test(AES ${EXECUTABLE_OUTPUT_PATH}/anch-aes-test main)
+  add_test(Padding ${EXECUTABLE_OUTPUT_PATH}/anch-padding-test main)
+  add_test(AesEcb ${EXECUTABLE_OUTPUT_PATH}/anch-aes-ecb-test main)
+  add_test(AesCBC ${EXECUTABLE_OUTPUT_PATH}/anch-aes-cbc-test main)
+  add_test(AesPcbc ${EXECUTABLE_OUTPUT_PATH}/anch-aes-pcbc-test main)
+  add_test(AesCtr ${EXECUTABLE_OUTPUT_PATH}/anch-aes-ctr-test main)
+  add_test(AesOfb ${EXECUTABLE_OUTPUT_PATH}/anch-aes-ofb-test main)
+  add_test(AesCfb ${EXECUTABLE_OUTPUT_PATH}/anch-aes-cfb-test main)
+
+  find_package(OpenSSL)
+  if(OpenSSL_FOUND)
+    message(STATUS "OpenSSL include directory: " ${OPENSSL_INCLUDE_DIR})
+    message(STATUS "OpenSSL libraries: " ${OPENSSL_LIBRARIES})
+    # Build AES benchmark +
+    file(
+      GLOB_RECURSE
+      bench_anch_openssl
+      inc/*
+      test/benchAnchOpenssl.cpp
+    )
+
+    add_executable(
+      anch-bench-openssl
+      ${bench_anch_openssl}
+    )
+
+    target_link_libraries(
+      anch-bench-openssl
+      anch-crypto
+      ${OPENSSL_LIBRARIES}
+      ${CMAKE_THREAD_LIBS_INIT}
+    )
+    # Build AES benchmark -
+    add_test(BenchOpenssl ${EXECUTABLE_OUTPUT_PATH}/anch-bench-openssl main)
+  endif()
 
 endif(ANCH_CRYPTO_UNITARY_TEST)

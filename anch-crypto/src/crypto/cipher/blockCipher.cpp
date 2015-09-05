@@ -21,4 +21,5 @@
 
 using anch::crypto::BlockCipher;
 
+template class BlockCipher<8>;
 template class BlockCipher<16>;
