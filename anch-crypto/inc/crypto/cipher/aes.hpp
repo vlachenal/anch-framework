@@ -110,7 +110,7 @@ namespace anch {
 	// Initial round -
 
 	// Rounds +
-	for(round = 1 ; round < R ; round++) {
+	for(round = 1 ; round < R ; ++round) {
 	  cipherSubBytes();
 	  cipherShiftRows();
 	  cipherMixColumns();
@@ -144,7 +144,7 @@ namespace anch {
 	// Initial round -
 
 	// Rounds +
-	for(round = R - 1 ; round > 0 ; round--) {
+	for(round = R - 1 ; round > 0 ; --round) {
 	  addRoundKey(round);
 	  decipherMixColumns();
 	  decipherShiftRows();
@@ -167,7 +167,7 @@ namespace anch {
        */
       void expandKey(const uint8_t key[4*K]) {
 	std::memcpy(_expKey, key, 4*K);
-	for(std::size_t i = K ; i < 4*(R+1) ; i++) {
+	for(std::size_t i = K ; i < 4*(R+1) ; ++i) {
 	  uint32_t mod = i % K;
 	  if(mod == 0) {
 	    _expKey[i] = _expKey[i-K] ^ (subWord(rotateWord(_expKey[i-1])) ^ RCON[i/K]);
@@ -214,11 +214,22 @@ namespace anch {
        * AES specification.
        */
       inline void cipherSubBytes() {
-	for(std::size_t i = 0 ; i < 4 ; i++) {
-	  for(std::size_t j = 0 ; j < 4 ; j++) {
-	    _state[i][j] = CIPHER_SUB_BOX[_state[i][j]];
-	  }
-	}
+	_state[0][0] = CIPHER_SUB_BOX[_state[0][0]];
+	_state[0][1] = CIPHER_SUB_BOX[_state[0][1]];
+	_state[0][2] = CIPHER_SUB_BOX[_state[0][2]];
+	_state[0][3] = CIPHER_SUB_BOX[_state[0][3]];
+	_state[1][0] = CIPHER_SUB_BOX[_state[1][0]];
+	_state[1][1] = CIPHER_SUB_BOX[_state[1][1]];
+	_state[1][2] = CIPHER_SUB_BOX[_state[1][2]];
+	_state[1][3] = CIPHER_SUB_BOX[_state[1][3]];
+	_state[2][0] = CIPHER_SUB_BOX[_state[2][0]];
+	_state[2][1] = CIPHER_SUB_BOX[_state[2][1]];
+	_state[2][2] = CIPHER_SUB_BOX[_state[2][2]];
+	_state[2][3] = CIPHER_SUB_BOX[_state[2][3]];
+	_state[3][0] = CIPHER_SUB_BOX[_state[3][0]];
+	_state[3][1] = CIPHER_SUB_BOX[_state[3][1]];
+	_state[3][2] = CIPHER_SUB_BOX[_state[3][2]];
+	_state[3][3] = CIPHER_SUB_BOX[_state[3][3]];
       }
 
       /*!
@@ -226,11 +237,22 @@ namespace anch {
        * AES specification.
        */
       inline void decipherSubBytes() {
-	for(std::size_t i = 0 ; i < 4 ; i++) {
-	  for(std::size_t j = 0 ; j < 4 ; j++) {
-	    _state[i][j] = DECIPHER_SUB_BOX[_state[i][j]];
-	  }
-	}
+	_state[0][0] = DECIPHER_SUB_BOX[_state[0][0]];
+	_state[0][1] = DECIPHER_SUB_BOX[_state[0][1]];
+	_state[0][2] = DECIPHER_SUB_BOX[_state[0][2]];
+	_state[0][3] = DECIPHER_SUB_BOX[_state[0][3]];
+	_state[1][0] = DECIPHER_SUB_BOX[_state[1][0]];
+	_state[1][1] = DECIPHER_SUB_BOX[_state[1][1]];
+	_state[1][2] = DECIPHER_SUB_BOX[_state[1][2]];
+	_state[1][3] = DECIPHER_SUB_BOX[_state[1][3]];
+	_state[2][0] = DECIPHER_SUB_BOX[_state[2][0]];
+	_state[2][1] = DECIPHER_SUB_BOX[_state[2][1]];
+	_state[2][2] = DECIPHER_SUB_BOX[_state[2][2]];
+	_state[2][3] = DECIPHER_SUB_BOX[_state[2][3]];
+	_state[3][0] = DECIPHER_SUB_BOX[_state[3][0]];
+	_state[3][1] = DECIPHER_SUB_BOX[_state[3][1]];
+	_state[3][2] = DECIPHER_SUB_BOX[_state[3][2]];
+	_state[3][3] = DECIPHER_SUB_BOX[_state[3][3]];
       }
 
       /*!
@@ -283,37 +305,101 @@ namespace anch {
       inline void cipherMixColumns() {
 	uint8_t state[4];
 	uint8_t state2[4];
-	for(int i = 0 ; i < 4 ; i++) {
-	  /* The array 'state' is simply a copy of the input array '_state[i]'
-	   * The array 'state2' is each element of the array 'state' multiplied by 2
-	   * in Rijndael's Galois field
-	   * state[n] ^ state2[n] is element n multiplied by 3 in Rijndael's Galois field */ 
-	  for(int j = 0 ; j < 4 ; j++) {
-	    state[j] = _state[i][j];
-	    // arithmetic right shift, thus shifting in either zeros or ones
-	    // implicitly removes high bit because state2[j] is an 8-bit char, so we xor by 0x1b and not 0x11b in the next line
-	    // 'h' is 0xff if the high bit of _state[j] is set, 0 otherwise
-	    // Rijndael's Galois field
-	    state2[j] = (_state[i][j] << 1) ^ (0x1B & (uint8_t)((int8_t)_state[i][j] >> 7));
-	  }
-	  _state[i][0] = state2[0] ^ state[3] ^ state[2] ^ state2[1] ^ state[1];
-	  _state[i][1] = state2[1] ^ state[0] ^ state[3] ^ state2[2] ^ state[2];
-	  _state[i][2] = state2[2] ^ state[1] ^ state[0] ^ state2[3] ^ state[3];
-	  _state[i][3] = state2[3] ^ state[2] ^ state[1] ^ state2[0] ^ state[0];
-	}
+
+	state[0] = _state[0][0];
+	state[1] = _state[0][1];
+	state[2] = _state[0][2];
+	state[3] = _state[0][3];
+	state2[0] = (_state[0][0] << 1) ^ (0x1B & (uint8_t)((int8_t)_state[0][0] >> 7));
+	state2[1] = (_state[0][1] << 1) ^ (0x1B & (uint8_t)((int8_t)_state[0][1] >> 7));
+	state2[2] = (_state[0][2] << 1) ^ (0x1B & (uint8_t)((int8_t)_state[0][2] >> 7));
+	state2[3] = (_state[0][3] << 1) ^ (0x1B & (uint8_t)((int8_t)_state[0][3] >> 7));
+	_state[0][0] = state2[0] ^ state[3] ^ state[2] ^ state2[1] ^ state[1];
+	_state[0][1] = state2[1] ^ state[0] ^ state[3] ^ state2[2] ^ state[2];
+	_state[0][2] = state2[2] ^ state[1] ^ state[0] ^ state2[3] ^ state[3];
+	_state[0][3] = state2[3] ^ state[2] ^ state[1] ^ state2[0] ^ state[0];
+
+	state[0] = _state[1][0];
+	state[1] = _state[1][1];
+	state[2] = _state[1][2];
+	state[3] = _state[1][3];
+	state2[0] = (_state[1][0] << 1) ^ (0x1B & (uint8_t)((int8_t)_state[1][0] >> 7));
+	state2[1] = (_state[1][1] << 1) ^ (0x1B & (uint8_t)((int8_t)_state[1][1] >> 7));
+	state2[2] = (_state[1][2] << 1) ^ (0x1B & (uint8_t)((int8_t)_state[1][2] >> 7));
+	state2[3] = (_state[1][3] << 1) ^ (0x1B & (uint8_t)((int8_t)_state[1][3] >> 7));
+	_state[1][0] = state2[0] ^ state[3] ^ state[2] ^ state2[1] ^ state[1];
+	_state[1][1] = state2[1] ^ state[0] ^ state[3] ^ state2[2] ^ state[2];
+	_state[1][2] = state2[2] ^ state[1] ^ state[0] ^ state2[3] ^ state[3];
+	_state[1][3] = state2[3] ^ state[2] ^ state[1] ^ state2[0] ^ state[0];
+
+	state[0] = _state[2][0];
+	state[1] = _state[2][1];
+	state[2] = _state[2][2];
+	state[3] = _state[2][3];
+	state2[0] = (_state[2][0] << 1) ^ (0x1B & (uint8_t)((int8_t)_state[2][0] >> 7));
+	state2[1] = (_state[2][1] << 1) ^ (0x1B & (uint8_t)((int8_t)_state[2][1] >> 7));
+	state2[2] = (_state[2][2] << 1) ^ (0x1B & (uint8_t)((int8_t)_state[2][2] >> 7));
+	state2[3] = (_state[2][3] << 1) ^ (0x1B & (uint8_t)((int8_t)_state[2][3] >> 7));
+	_state[2][0] = state2[0] ^ state[3] ^ state[2] ^ state2[1] ^ state[1];
+	_state[2][1] = state2[1] ^ state[0] ^ state[3] ^ state2[2] ^ state[2];
+	_state[2][2] = state2[2] ^ state[1] ^ state[0] ^ state2[3] ^ state[3];
+	_state[2][3] = state2[3] ^ state[2] ^ state[1] ^ state2[0] ^ state[0];
+
+	state[0] = _state[3][0];
+	state[1] = _state[3][1];
+	state[2] = _state[3][2];
+	state[3] = _state[3][3];
+	state2[0] = (_state[3][0] << 1) ^ (0x1B & (uint8_t)((int8_t)_state[3][0] >> 7));
+	state2[1] = (_state[3][1] << 1) ^ (0x1B & (uint8_t)((int8_t)_state[3][1] >> 7));
+	state2[2] = (_state[3][2] << 1) ^ (0x1B & (uint8_t)((int8_t)_state[3][2] >> 7));
+	state2[3] = (_state[3][3] << 1) ^ (0x1B & (uint8_t)((int8_t)_state[3][3] >> 7));
+	_state[3][0] = state2[0] ^ state[3] ^ state[2] ^ state2[1] ^ state[1];
+	_state[3][1] = state2[1] ^ state[0] ^ state[3] ^ state2[2] ^ state[2];
+	_state[3][2] = state2[2] ^ state[1] ^ state[0] ^ state2[3] ^ state[3];
+	_state[3][3] = state2[3] ^ state[2] ^ state[1] ^ state2[0] ^ state[0];
       }
 
       /*!
        * Mix internal by columns (decipher)
        */
       inline void decipherMixColumns() {
-	for(unsigned int i = 0 ; i < 4 ; i++) {
-	  uint8_t state[4] = { _state[i][0], _state[i][1], _state[i][2], _state[i][3] };
-	  _state[i][0] = mult(0x0E, state[0]) ^ mult(0x0B, state[1]) ^ mult(0x0D, state[2]) ^ mult(0x09, state[3]);
-	  _state[i][1] = mult(0x09, state[0]) ^ mult(0x0E, state[1]) ^ mult(0x0B, state[2]) ^ mult(0x0D, state[3]);
-	  _state[i][2] = mult(0x0D, state[0]) ^ mult(0x09, state[1]) ^ mult(0x0E, state[2]) ^ mult(0x0B, state[3]);
-	  _state[i][3] = mult(0x0B, state[0]) ^ mult(0x0D, state[1]) ^ mult(0x09, state[2]) ^ mult(0x0E, state[3]);
-	}
+	uint8_t state[4];
+
+	state[0] = _state[0][0];
+	state[1] = _state[0][1];
+	state[2] = _state[0][2];
+	state[3] = _state[0][3];
+	_state[0][0] = mult(0x0E, state[0]) ^ mult(0x0B, state[1]) ^ mult(0x0D, state[2]) ^ mult(0x09, state[3]);
+	_state[0][1] = mult(0x09, state[0]) ^ mult(0x0E, state[1]) ^ mult(0x0B, state[2]) ^ mult(0x0D, state[3]);
+	_state[0][2] = mult(0x0D, state[0]) ^ mult(0x09, state[1]) ^ mult(0x0E, state[2]) ^ mult(0x0B, state[3]);
+	_state[0][3] = mult(0x0B, state[0]) ^ mult(0x0D, state[1]) ^ mult(0x09, state[2]) ^ mult(0x0E, state[3]);
+
+	state[0] = _state[1][0];
+	state[1] = _state[1][1];
+	state[2] = _state[1][2];
+	state[3] = _state[1][3];
+	_state[1][0] = mult(0x0E, state[0]) ^ mult(0x0B, state[1]) ^ mult(0x0D, state[2]) ^ mult(0x09, state[3]);
+	_state[1][1] = mult(0x09, state[0]) ^ mult(0x0E, state[1]) ^ mult(0x0B, state[2]) ^ mult(0x0D, state[3]);
+	_state[1][2] = mult(0x0D, state[0]) ^ mult(0x09, state[1]) ^ mult(0x0E, state[2]) ^ mult(0x0B, state[3]);
+	_state[1][3] = mult(0x0B, state[0]) ^ mult(0x0D, state[1]) ^ mult(0x09, state[2]) ^ mult(0x0E, state[3]);
+
+	state[0] = _state[2][0];
+	state[1] = _state[2][1];
+	state[2] = _state[2][2];
+	state[3] = _state[2][3];
+	_state[2][0] = mult(0x0E, state[0]) ^ mult(0x0B, state[1]) ^ mult(0x0D, state[2]) ^ mult(0x09, state[3]);
+	_state[2][1] = mult(0x09, state[0]) ^ mult(0x0E, state[1]) ^ mult(0x0B, state[2]) ^ mult(0x0D, state[3]);
+	_state[2][2] = mult(0x0D, state[0]) ^ mult(0x09, state[1]) ^ mult(0x0E, state[2]) ^ mult(0x0B, state[3]);
+	_state[2][3] = mult(0x0B, state[0]) ^ mult(0x0D, state[1]) ^ mult(0x09, state[2]) ^ mult(0x0E, state[3]);
+
+	state[0] = _state[3][0];
+	state[1] = _state[3][1];
+	state[2] = _state[3][2];
+	state[3] = _state[3][3];
+	_state[3][0] = mult(0x0E, state[0]) ^ mult(0x0B, state[1]) ^ mult(0x0D, state[2]) ^ mult(0x09, state[3]);
+	_state[3][1] = mult(0x09, state[0]) ^ mult(0x0E, state[1]) ^ mult(0x0B, state[2]) ^ mult(0x0D, state[3]);
+	_state[3][2] = mult(0x0D, state[0]) ^ mult(0x09, state[1]) ^ mult(0x0E, state[2]) ^ mult(0x0B, state[3]);
+	_state[3][3] = mult(0x0B, state[0]) ^ mult(0x0D, state[1]) ^ mult(0x09, state[2]) ^ mult(0x0E, state[3]);
       }
 
       /*!
@@ -327,18 +413,35 @@ namespace anch {
       inline uint8_t mult(uint8_t a, uint8_t b) {
 	uint8_t res = 0;
 	uint8_t highBitSet = 0;
-	for(uint8_t counter = 0 ; counter < 8 ; counter++) {
-	  if((b & 1) != 0) {
-	    res ^= a;
-	  }
-	  highBitSet = a & 0x80;
-	  a <<= 1;
-	  if(highBitSet != 0) {
-	    a ^= 0x1b; // x^8 + x^4 + x^3 + x + 1
-	  }
-	  b >>= 1;
-	}
+	mult(a, b, res, highBitSet);
+	mult(a, b, res, highBitSet);
+	mult(a, b, res, highBitSet);
+	mult(a, b, res, highBitSet);
+	mult(a, b, res, highBitSet);
+	mult(a, b, res, highBitSet);
+	mult(a, b, res, highBitSet);
+	mult(a, b, res, highBitSet);
 	return res;
+      }
+
+      /*!
+       * Galois Field multiplication implementation single round
+       *
+       * \param a the first operand
+       * \param b the second operand
+       * \param res the result
+       * \param highBitSet the high bit set
+       */
+      inline void mult(uint8_t& a, uint8_t& b, uint8_t& res, uint8_t& highBitSet) {
+	if((b & 1) != 0) {
+	  res ^= a;
+	}
+	highBitSet = a & 0x80;
+	a <<= 1;
+	if(highBitSet != 0) {
+	  a ^= 0x1b; // x^8 + x^4 + x^3 + x + 1
+	}
+	b >>= 1;
       }
 
       /*!
