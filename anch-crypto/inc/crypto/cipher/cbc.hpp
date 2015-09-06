@@ -96,11 +96,11 @@ namespace anch {
 	  Padding::pad(input.data(), nbRead, Cipher::getBlockSize());
 	}
 	std::array<uint8_t,Cipher::getBlockSize()> data;
-	for(std::size_t i = 0 ; i < Cipher::getBlockSize() ; i++) {
+	for(std::size_t i = 0 ; i < Cipher::getBlockSize() ; ++i) {
 	  data[i] = input[i] ^ _ctxtVect[i];
 	}
 	cipher.cipher(data, output);
-	for(std::size_t i = 0 ; i < Cipher::getBlockSize() ; i++) {
+	for(std::size_t i = 0 ; i < Cipher::getBlockSize() ; ++i) {
 	  _ctxtVect[i] = output[i];
 	}
 	return Cipher::getBlockSize(); // This mode pad data => the number of bytes to write will always be a complete block
@@ -130,7 +130,7 @@ namespace anch {
 	}
 	std::array<uint8_t,Cipher::getBlockSize()> data;
 	cipher.decipher(input, data);
-	for(std::size_t i = 0 ; i < Cipher::getBlockSize() ; i++) {
+	for(std::size_t i = 0 ; i < Cipher::getBlockSize() ; ++i) {
 	  output[i] = data[i] ^ prevInput[i];
 	}
 	if(lastBlock) {

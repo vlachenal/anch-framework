@@ -95,7 +95,7 @@ namespace anch {
 	*counter = index;
 	std::array<uint8_t,Cipher::getBlockSize()> data;
 	cipher.cipher(ctxtVect, data);
-	for(std::streamsize i = 0 ; i < nbRead ; i++) {
+	for(std::streamsize i = 0 ; i < nbRead ; ++i) {
 	  output[i] = input[i] ^ data[i];
 	}
 	return nbRead;
@@ -125,7 +125,7 @@ namespace anch {
 	*counter = index;
 	std::array<uint8_t,Cipher::getBlockSize()> data;
 	cipher.cipher(ctxtVect, data);
-	for(std::streamsize i = 0 ; i < nbRead ; i++) {
+	for(std::streamsize i = 0 ; i < nbRead ; ++i) {
 	  output[i] = input[i] ^ data[i];
 	}
 	return nbRead;

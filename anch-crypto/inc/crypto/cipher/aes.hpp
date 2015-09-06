@@ -101,7 +101,7 @@ namespace anch {
        * \param input the block to cipher
        * \param output the ciphered block
        */
-      virtual void cipher(const std::array<uint8_t,16>& input, std::array<uint8_t,16>& output) {
+      void cipher(const std::array<uint8_t,16>& input, std::array<uint8_t,16>& output) {
 	std::memcpy(&_state, input.data(), 16);
 	unsigned int round = 0;
 
@@ -133,7 +133,7 @@ namespace anch {
        * \param input the block to decipher
        * \param output the deciphered block
        */
-      virtual void decipher(const std::array<uint8_t,16>& input, std::array<uint8_t,16>& output) {
+      void decipher(const std::array<uint8_t,16>& input, std::array<uint8_t,16>& output) {
 	std::memcpy(&_state, input.data(), 16);
 	unsigned int round = R;
 

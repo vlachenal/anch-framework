@@ -146,7 +146,7 @@ namespace anch {
 		break;
 	      }
 	      std::size_t nbBlocks = cipherBlock(data, nbRead, out, index, cipher);
-	      for(std::size_t i = 0 ; i < nbBlocks ; i++) {
+	      for(std::size_t i = 0 ; i < nbBlocks ; ++i) {
 		output << out[i];
 	      }
 	      index++;
@@ -219,7 +219,7 @@ namespace anch {
 	      input.read(reinterpret_cast<char*>(data.data()), Cipher::getBlockSize());
 
 	      std::size_t end = decipherBlock(cipherData, prevData, read, input.eof(), out, index, cipher);
-	      for(std::size_t i = 0 ; i < end ; i++) {
+	      for(std::size_t i = 0 ; i < end ; ++i) {
 	    	output << out[i];
 	      }
 
@@ -342,7 +342,7 @@ namespace anch {
 	std::unique_lock<std::mutex> indexLock(_streamMutex);
 	_writeBlock.wait(indexLock, [this,&index]{ return _writeIdx.load() == index; });
 
-	for(std::size_t i = 0 ; i < nbBlocks ; i++) {
+	for(std::size_t i = 0 ; i < nbBlocks ; ++i) {
 	  *_stream << output[i];
 	}
 
@@ -373,7 +373,7 @@ namespace anch {
 	std::unique_lock<std::mutex> indexLock(_streamMutex);
 	_writeBlock.wait(indexLock, [this,&index]{ return _writeIdx.load() == index; });
 
-	for(std::size_t i = 0 ; i < nbBlocks ; i++) {
+	for(std::size_t i = 0 ; i < nbBlocks ; ++i) {
 	  *_stream << output[i];
 	}
 
