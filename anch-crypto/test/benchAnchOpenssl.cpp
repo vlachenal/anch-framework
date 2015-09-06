@@ -6,7 +6,7 @@
 #include "crypto/cipher/aes256.hpp"
 #include "crypto/hash/sha1.hpp"
 
-#include "crypto/padding/iso7816_4Padding.hpp"
+#include "crypto/padding/pkcs7Padding.hpp"
 
 #include <openssl/conf.h>
 #include <openssl/evp.h>
@@ -16,7 +16,7 @@
 using anch::crypto::CBC;
 using anch::crypto::AES256;
 using anch::crypto::SHA1;
-using anch::crypto::ISO7816_4Padding;
+using anch::crypto::PKCS7Padding;
 
 
 void
@@ -27,7 +27,7 @@ handleErrors(void) {
 
 int
 main(void) {
-  std::cout << "Enter in AES - CBC tests" << std::endl;
+  std::cout << "Enter in AES/CBC/PKCS7 benchmark tests" << std::endl;
 
   std::chrono::time_point<std::chrono::high_resolution_clock> start, end;
   std::chrono::microseconds duration;
@@ -37,67 +37,14 @@ main(void) {
     } };
 
   {
-    std::cout << "Enter in AnCH CBC sequential with AES256 and ISO7816_4 padding tests" << std::endl;
-
-    std::ifstream* input = new std::ifstream("Makefile", std::ifstream::binary);
-    std::ofstream cbcOutCipher("Makefile.AnCH.cbc.aes256.ISO7816_4.cipher", std::ofstream::binary);
-
-    std::cout << "Cipher Makefile" << std::endl;
-    CBC<AES256,ISO7816_4Padding> cbc(iv);
-    start = std::chrono::high_resolution_clock::now();
-    cbc.cipher(*input, cbcOutCipher, "foobar    rabooffoobar    raboof");
-    end = std::chrono::high_resolution_clock::now();
-    duration = std::chrono::duration_cast<std::chrono::microseconds>(end.time_since_epoch()) - std::chrono::duration_cast<std::chrono::microseconds>(start.time_since_epoch());
-    cbcOutCipher.close();
-    input->close();
-    delete input;
-    std::cout << "CBC sequential cipher duration: " << duration.count() << " µs" << std::endl;
-
-    std::cout << "Decipher Makefile.AnCH.cbc.aes256.ISO7816_4.cipher" << std::endl;
-    input = new std::ifstream("Makefile.AnCH.cbc.aes256.ISO7816_4.cipher", std::ifstream::binary);
-    std::ofstream cbcOutDecipher("Makefile.AnCH.cbc.aes256.ISO7816_4.decipher");
-    start = std::chrono::high_resolution_clock::now();
-    cbc.decipher(*input, cbcOutDecipher, "foobar    rabooffoobar    raboof");
-    end = std::chrono::high_resolution_clock::now();
-    duration = std::chrono::duration_cast<std::chrono::microseconds>(end.time_since_epoch()) - std::chrono::duration_cast<std::chrono::microseconds>(start.time_since_epoch());
-    cbcOutDecipher.close();
-    input->close();
-    delete input;
-    std::cout << "CBC sequential decipher duration: " << duration.count() << " µs" << std::endl;
-
-    std::cout << "Compute Makefile hash using SHA1" << std::endl;
-    input = new std::ifstream("Makefile", std::ifstream::binary);
-    SHA1 hash(*input);
-    std::array<uint8_t,20> initHash = hash.digest();
-    input->close();
-    delete input;
-
-    std::cout << "Compute Makefile.AnCH.cbc.aes256.ISO7816_4.decipher hash using SHA1" << std::endl;
-    input = new std::ifstream("Makefile.AnCH.cbc.aes256.ISO7816_4.decipher", std::ifstream::binary);
-    SHA1 cipherHash(*input);
-    std::array<uint8_t,20> resHash = cipherHash.digest();
-    input->close();
-    delete input;
-
-    if(initHash != resHash) {
-      std::cerr << "Makefiles are differents" << std::endl;
-      return 1;
-    }
-
-    std::cout << "Exit AnCH CBC with sequential AES256 and ISO7816_4 padding tests" << std::endl;
-  }
-
-  std::cout << std::endl;
-
-  {
-    std::cout << "Enter in OpenSSL CBC sequential with AES256 and ISO7816_4 padding tests" << std::endl;
+    std::cout << "Enter in OpenSSL CBC sequential with AES256 and PKCS7 padding tests" << std::endl;
 
     ERR_load_crypto_strings();
     OpenSSL_add_all_algorithms();
     OPENSSL_config(NULL);
 
     std::ifstream* input = new std::ifstream("Makefile", std::ifstream::binary);
-    std::ofstream cbcOutCipher("Makefile.OpenSSL.cbc.aes256.ISO7816_4.cipher", std::ofstream::binary);
+    std::ofstream cbcOutCipher("Makefile.OpenSSL.cbc.aes256.PKCS7.cipher", std::ofstream::binary);
 
     std::cout << "Cipher Makefile" << std::endl;
 
@@ -154,9 +101,9 @@ main(void) {
     delete input;
     std::cout << "CBC sequential cipher duration: " << duration.count() << " µs" << std::endl;
 
-    std::cout << "Decipher Makefile.OpenSSL.cbc.aes256.ISO7816_4.cipher" << std::endl;
-    input = new std::ifstream("Makefile.OpenSSL.cbc.aes256.ISO7816_4.cipher", std::ifstream::binary);
-    std::ofstream cbcOutDecipher("Makefile.OpenSSL.cbc.aes256.ISO7816_4.decipher");
+    std::cout << "Decipher Makefile.OpenSSL.cbc.aes256.PKCS7.cipher" << std::endl;
+    input = new std::ifstream("Makefile.OpenSSL.cbc.aes256.PKCS7.cipher", std::ifstream::binary);
+    std::ofstream cbcOutDecipher("Makefile.OpenSSL.cbc.aes256.PKCS7.decipher");
     std::ostringstream inCipherStream;
     inCipherStream << input->rdbuf();
     std::string cipherText = inCipherStream.str();
@@ -217,8 +164,8 @@ main(void) {
     input->close();
     delete input;
 
-    std::cout << "Compute Makefile.OpenSSL.cbc.aes256.ISO7816_4.decipher hash using SHA1" << std::endl;
-    input = new std::ifstream("Makefile.OpenSSL.cbc.aes256.ISO7816_4.decipher", std::ifstream::binary);
+    std::cout << "Compute Makefile.OpenSSL.cbc.aes256.PKCS7.decipher hash using SHA1" << std::endl;
+    input = new std::ifstream("Makefile.OpenSSL.cbc.aes256.PKCS7.decipher", std::ifstream::binary);
     SHA1 cipherHash(*input);
     std::array<uint8_t,20> resHash = cipherHash.digest();
     input->close();
@@ -232,9 +179,62 @@ main(void) {
     EVP_cleanup();
     ERR_free_strings();
 
-    std::cout << "Exit OpenSSL CBC with sequential AES256 and ISO7816_4 padding tests" << std::endl;
+    std::cout << "Exit OpenSSL CBC with sequential AES256 and PKCS7 padding tests" << std::endl;
   }
 
-  std::cout << "Exit AES - CBC tests" << std::endl;
+  std::cout << std::endl;
+
+  {
+    std::cout << "Enter in AnCH CBC sequential with AES256 and PKCS7 padding tests" << std::endl;
+
+    std::ifstream* input = new std::ifstream("Makefile", std::ifstream::binary);
+    std::ofstream cbcOutCipher("Makefile.AnCH.cbc.aes256.PKCS7.cipher", std::ofstream::binary);
+
+    std::cout << "Cipher Makefile" << std::endl;
+    CBC<AES256,PKCS7Padding> cbc(iv);
+    start = std::chrono::high_resolution_clock::now();
+    cbc.cipher(*input, cbcOutCipher, "foobar    rabooffoobar    raboof");
+    end = std::chrono::high_resolution_clock::now();
+    duration = std::chrono::duration_cast<std::chrono::microseconds>(end.time_since_epoch()) - std::chrono::duration_cast<std::chrono::microseconds>(start.time_since_epoch());
+    cbcOutCipher.close();
+    input->close();
+    delete input;
+    std::cout << "CBC sequential cipher duration: " << duration.count() << " µs" << std::endl;
+
+    std::cout << "Decipher Makefile.AnCH.cbc.aes256.PKCS7.cipher" << std::endl;
+    input = new std::ifstream("Makefile.AnCH.cbc.aes256.PKCS7.cipher", std::ifstream::binary);
+    std::ofstream cbcOutDecipher("Makefile.AnCH.cbc.aes256.PKCS7.decipher");
+    start = std::chrono::high_resolution_clock::now();
+    cbc.decipher(*input, cbcOutDecipher, "foobar    rabooffoobar    raboof");
+    end = std::chrono::high_resolution_clock::now();
+    duration = std::chrono::duration_cast<std::chrono::microseconds>(end.time_since_epoch()) - std::chrono::duration_cast<std::chrono::microseconds>(start.time_since_epoch());
+    cbcOutDecipher.close();
+    input->close();
+    delete input;
+    std::cout << "CBC sequential decipher duration: " << duration.count() << " µs" << std::endl;
+
+    std::cout << "Compute Makefile hash using SHA1" << std::endl;
+    input = new std::ifstream("Makefile", std::ifstream::binary);
+    SHA1 hash(*input);
+    std::array<uint8_t,20> initHash = hash.digest();
+    input->close();
+    delete input;
+
+    std::cout << "Compute Makefile.AnCH.cbc.aes256.PKCS7.decipher hash using SHA1" << std::endl;
+    input = new std::ifstream("Makefile.AnCH.cbc.aes256.PKCS7.decipher", std::ifstream::binary);
+    SHA1 cipherHash(*input);
+    std::array<uint8_t,20> resHash = cipherHash.digest();
+    input->close();
+    delete input;
+
+    if(initHash != resHash) {
+      std::cerr << "Makefiles are differents" << std::endl;
+      return 1;
+    }
+
+    std::cout << "Exit AnCH CBC with sequential AES256 and PKCS7 padding tests" << std::endl;
+  }
+
+  std::cout << "Exit AES/CBC/PKCS7 benchmark tests" << std::endl;
   return 0;
 }
