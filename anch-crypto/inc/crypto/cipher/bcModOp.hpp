@@ -128,6 +128,7 @@ namespace anch {
        *
        * \param input the input stream to cipher
        * \param output the ouput stream to write in
+       * \param key the cipher key
        */
       void cipher(std::istream& input,
 		  std::ostream& output,
@@ -199,6 +200,7 @@ namespace anch {
        *
        * \param input the input stream to decipher
        * \param output the ouput stream to write in
+       * \param key the decipher key
        */
       void decipher(std::istream& input,
 		    std::ostream& output,
@@ -330,7 +332,10 @@ namespace anch {
       /*!
        * Cipher a block
        *
+       * \param index the block index
        * \param input the input block to cipher
+       * \param nbRead the number of bytes which have been read
+       * \param cipher the cipher instance to use
        */
       void deferredCipherBlock(uint32_t index,
 			       std::array<uint8_t,Cipher::getBlockSize()> input,
@@ -355,7 +360,11 @@ namespace anch {
       /*!
        * Decipher a block
        *
-       * \param input the input block to decipher
+       * \param index the block index
+       * \param input the input block to cipher
+       * \param prevInput the previous input
+       * \param nbRead the number of bytes which have been read
+       * \param cipher the cipher instance to use
        */
       virtual void deferredDecipherBlock(uint32_t index,
 					 std::array<uint8_t, Cipher::getBlockSize()> input,
