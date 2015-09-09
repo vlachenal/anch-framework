@@ -49,7 +49,7 @@ ConstFormatter::~ConstFormatter() {
  * \param out The output stream to write in
  */
 void
-ConstFormatter::formatValue(const void* const value __attribute__((unused)), ostream& out) const noexcept {
+ConstFormatter::formatValue(const void* const, ostream& out) const noexcept {
   out << _strToPrint;
 }
 

@@ -48,7 +48,7 @@ ThreadIdFormatter::~ThreadIdFormatter() {
  * \param out The output stream to write in
  */
 void
-ThreadIdFormatter::formatValue(const void* const value __attribute__((unused)), ostream& out) const noexcept {
+ThreadIdFormatter::formatValue(const void* const, ostream& out) const noexcept {
   out << std::this_thread::get_id();
 }
 

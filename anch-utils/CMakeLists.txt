@@ -67,16 +67,17 @@ if(ANCH_UTILS_UNITARY_TEST)
     ${test_uuid}
   )
 
+  # Include libraries
+  include(FindThreads)
+  find_package(Threads)
+
   target_link_libraries(
     anch-uuid-test
     anch-device
     anch-crypto
+    ${CMAKE_THREAD_LIBS_INIT}
   )
   # Build UUID unitary test -
-
-  # Include librairies
-  include(FindThreads)
-  find_package(Threads)
 
   # Build thread pool unitary test +
   file(

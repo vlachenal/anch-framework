@@ -51,7 +51,7 @@ AnchDateFormatter::~AnchDateFormatter() {
  * \param out The output stream to write in
  */
 void
-AnchDateFormatter::formatValue(const void* const value __attribute__((unused)), ostream& out) const noexcept {
+AnchDateFormatter::formatValue(const void* const, ostream& out) const noexcept {
   _dateFormat.format(Date(), out);
 }
 

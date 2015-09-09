@@ -17,7 +17,7 @@ int
 main(void) {
   cout << "Enter in test file" << endl;
 
-  File home("/home/cs200");
+  File home("/home/winz");
   if(!home.isDirectory()) {
     cerr << home.getPath() << " should be a directory." << endl;
     return 1;

@@ -39,9 +39,8 @@ namespace anch {
      *
      * \return the unique instance
      */
-    template<typename... Args>
-    static T& getInstance(Args... args) {
-      static T instance(args);
+    static T& getInstance() {
+      static T instance;
       return instance;
     }
   };

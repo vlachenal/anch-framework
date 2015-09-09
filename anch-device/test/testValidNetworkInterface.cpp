@@ -19,7 +19,7 @@ using anch::device::DeviceException;
  */
 int
 main(void) {
-  string ifName = "wlan0";
+  string ifName = "wlp2s0";
   try {
     const NetworkInterface* interface = Network::getInterface(ifName);
     if(interface == NULL) {

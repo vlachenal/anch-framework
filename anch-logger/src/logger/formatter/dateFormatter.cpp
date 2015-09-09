@@ -50,7 +50,7 @@ DateFormatter::~DateFormatter() {
  * \param out The output stream to write in
  */
 void
-DateFormatter::formatValue(const void* const value __attribute__((unused)), ostream& out) const noexcept {
+DateFormatter::formatValue(const void* const, ostream& out) const noexcept {
   std::chrono::time_point<std::chrono::system_clock> now = std::chrono::system_clock::now();
   std::time_t now_c = std::chrono::system_clock::to_time_t(now);
   char buf[200];
