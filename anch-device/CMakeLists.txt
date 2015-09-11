@@ -24,6 +24,11 @@ endif()
 
 # Add GCC definitions
 add_definitions("-Wall -Wextra -Werror")
+if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+  add_definitions("-D ANCH_WINDOWS")
+else()
+  add_definitions("-D ANCH_POSIX")
+endif()
 
 # Includes location
 include_directories(
@@ -74,22 +79,44 @@ if(ANCH_DEVICE_UNITARY_TEST)
     test_invalid_net_files
     inc/*
     test/testInvalidNetworkInterface.cpp
-  )
+    )
 
   add_executable(
     anch-device-invalid-network-interface
     ${test_invalid_net_files}
-  )
+    )
 
   target_link_libraries(
     anch-device-invalid-network-interface
     anch-device
-  )
+    )
   # Invalid network interface -
+
+  # CPU instructions set +
+  file(
+    GLOB_RECURSE
+    test_cpu
+    #${ANCH_UTILS_INCLUDES_DIR}/*
+    #inc/*
+    test/testCPU.cpp
+    )
+
+  # Includes location
+  include_directories(
+    inc
+    ${ANCH_UTILS_INCLUDES_DIR}
+    )
+
+  add_executable(
+    anch-device-cpu
+    ${test_cpu}
+    )
+  # CPU instructions set -
   # Build parser unitary test -
 
   enable_testing()
   add_test(anch-device-valid-network-interface ${EXECUTABLE_OUTPUT_PATH}/anch-device-valid-network-interface main)
   add_test(anch-device-invalid-network-interface ${EXECUTABLE_OUTPUT_PATH}/anch-device-invalid-network-interface main)
+  add_test(anch-device-cpu ${EXECUTABLE_OUTPUT_PATH}/anch-device-cpu main)
 
 endif(ANCH_DEVICE_UNITARY_TEST)

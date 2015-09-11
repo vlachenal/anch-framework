@@ -1,6 +1,7 @@
 ## Anch device configuration +
 # Anch device installation configuration
 set(ANCH_DEVICE_LIBRARY_DIR "")
+set(ANCH_UTILS_INCLUDES_DIR "$ENV{HOME}/projects/anch-framework/anch-utils/inc")
 
 # Unitary tests
 set(ANCH_DEVICE_UNITARY_TEST ON CACHE BOOL "Anch device unitary tests")
