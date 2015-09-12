@@ -58,6 +58,30 @@ namespace anch {
     private:
       /*! AES instruction set support */
       bool _aes;
+
+      /*! MMX instruction set support */
+      bool _mmx;
+
+      /*! SSE instruction set support */
+      bool _sse;
+
+      /*! SSE2 instruction set support */
+      bool _sse2;
+
+      /*! SSE3 instruction set support */
+      bool _sse3;
+
+      /*! SSSE3 instruction set support */
+      bool _ssse3;
+
+      /*! SSE4 instruction set support */
+      bool _sse4;
+
+      /*! SSE4.1 instruction set support */
+      bool _sse4_1;
+
+      /*! SSE4.2 instruction set support */
+      bool _sse4_2;
       // Attributes -
 
 
@@ -73,6 +97,14 @@ namespace anch {
 	if(nIds >= 0x00000001) {
 	  anch_cpuid(info,0x00000001);
 	  _aes = (info[2] & ((int)1 << 25)) != 0;
+	  _mmx = (info[3] & ((int)1 << 23)) != 0;
+	  _sse = (info[3] & ((int)1 << 25)) != 0;
+	  _sse2 = (info[3] & ((int)1 << 26)) != 0;
+	  _sse3 = (info[2] & ((int)1 << 0)) != 0;
+	  _ssse3 = (info[2] & ((int)1 << 9)) != 0;
+	  _sse4_1 = (info[2] & ((int)1 << 19)) != 0;
+	  _sse4_2 = (info[2] & ((int)1 << 20)) != 0;
+	  _sse4 = _sse4_1 || _sse4_2;
 	}
       }
       // Constructors -
@@ -87,6 +119,78 @@ namespace anch {
        */
       inline bool isAES() const {
 	return _aes;
+      }
+
+      /*!
+       * MMX support getter
+       *
+       * \return MMX feature support
+       */
+      inline bool isMMX() const {
+	return _mmx;
+      }
+
+      /*!
+       * SSE support getter
+       *
+       * \return SSE feature support
+       */
+      inline bool isSSE() const {
+	return _sse;
+      }
+
+      /*!
+       * SSE2 support getter
+       *
+       * \return SSE2 feature support
+       */
+      inline bool isSSE2() const {
+	return _sse2;
+      }
+
+      /*!
+       * SSE3 support getter
+       *
+       * \return SSE3 feature support
+       */
+      inline bool isSSE3() const {
+	return _sse3;
+      }
+
+      /*!
+       * SSSE3 support getter
+       *
+       * \return SSSE3 feature support
+       */
+      inline bool isSSSE3() const {
+	return _ssse3;
+      }
+
+      /*!
+       * SSE4 support getter
+       *
+       * \return SSE4 feature support
+       */
+      inline bool isSSE4() const {
+	return _sse4;
+      }
+
+      /*!
+       * SSE4.1 support getter
+       *
+       * \return SSE4.1 feature support
+       */
+      inline bool isSSE4_1() const {
+	return _sse4_1;
+      }
+
+      /*!
+       * SSE4.2 support getter
+       *
+       * \return SSE4.2 feature support
+       */
+      inline bool isSSE4_2() const {
+	return _sse4_2;
       }
       // Accessors -
 
