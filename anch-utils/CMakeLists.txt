@@ -98,8 +98,28 @@ if(ANCH_UTILS_UNITARY_TEST)
   )
   # Build thread pool unitary test -
 
+  # Build resource pool unitary test +
+  file(
+    GLOB_RECURSE
+    test_res_pool
+    inc/*
+    test/testResourcedPool.cpp
+  )
+
+  add_executable(
+    anch-res-pool-test
+    ${test_res_pool}
+  )
+
+  target_link_libraries(
+    anch-res-pool-test
+    ${CMAKE_THREAD_LIBS_INIT}
+  )
+  # Build resource pool unitary test -
+
   enable_testing()
   add_test(anch-uuid-test ${EXECUTABLE_OUTPUT_PATH}/anch-uuid-test main)
   add_test(anch-thread-pool-test ${EXECUTABLE_OUTPUT_PATH}/anch-thread-pool-test main)
+  add_test(anch-thread-res-test ${EXECUTABLE_OUTPUT_PATH}/anch-res-pool-test main)
 
 endif(ANCH_UTILS_UNITARY_TEST)

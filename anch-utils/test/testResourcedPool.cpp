@@ -1,0 +1,142 @@
+#include "resourcePool.hpp"
+
+#include <iostream>
+#include <random>
+
+class TestConfig {
+public:
+  virtual ~TestConfig() {
+  }
+};
+
+class Test {
+private:
+  static std::default_random_engine randNgin;
+  static std::uniform_int_distribution<int> rand;
+  static std::atomic<int> globalIdx;
+  int _idx;
+  const TestConfig& _config;
+  bool _valid;
+public:
+  Test(const TestConfig& config): _idx(globalIdx.fetch_add(1)), _config(config), _valid(true) {
+    std::cout << "Build Test " << _idx << std::endl;
+  }
+
+  virtual ~Test() {
+    std::cout << "Destroy Test " << _idx << std::endl;
+  }
+
+  void doStuff() {
+    std::cout << "Stuff " << _idx << std::endl;
+    int nb = Test::rand(Test::randNgin);
+    if(nb == 4) {
+      _valid = false;
+    }
+  }
+
+  inline int getIdx() const {
+    return _idx;
+  }
+
+  inline bool isValid() const {
+    return _valid;
+  }
+};
+
+std::random_device rDev;
+std::default_random_engine Test::randNgin(rDev());
+std::uniform_int_distribution<int> Test::rand(1,4);
+std::atomic<int> Test::globalIdx;
+
+using TestPool = anch::ResourcePool<Test, TestConfig>;
+
+void
+doStuff(TestPool* const pool) {
+  try {
+    auto res = pool->borrowResource();
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    res.get().doStuff();
+  } catch(const anch::TimeoutException& e) {
+    std::cerr << "Timeout error: " << e.what() << " ; timeout=" << e.getTimeout().count() << "ms" << std::endl;
+  }
+}
+
+class Test2 {
+private:
+  static std::default_random_engine randNgin;
+  static std::uniform_int_distribution<int> rand;
+  static std::atomic<int> globalIdx;
+  int _idx;
+  const TestConfig& _config;
+  bool _valid;
+  std::mutex _mutex;
+public:
+  Test2(const TestConfig& config): _idx(globalIdx.fetch_add(1)), _config(config), _valid(true), _mutex() {
+    std::cout << "Build Test2 " << _idx << std::endl;
+  }
+
+  virtual ~Test2() {
+    std::cout << "Destroy Test2 " << _idx << std::endl;
+  }
+
+  void doStuff() {
+    if(_mutex.try_lock()) {
+      std::cout << "Stuff2 " << _idx << std::endl;
+      int nb = Test2::rand(Test2::randNgin);
+      if(nb == 4) {
+	_valid = false;
+      }
+      std::this_thread::sleep_for(std::chrono::milliseconds(100));
+      _mutex.unlock();
+    } else {
+      std::cerr << "Test2 " << _idx << " is already in use ..." << std::endl;
+    }
+  }
+
+  inline int getIdx() const {
+    return _idx;
+  }
+
+  inline bool isValid() const {
+    return _valid;
+  }
+};
+
+std::default_random_engine Test2::randNgin(rDev());
+std::uniform_int_distribution<int> Test2::rand(1,4);
+std::atomic<int> Test2::globalIdx;
+
+using Test2Pool = anch::ResourcePool<Test2, TestConfig>;
+
+void
+doStuff2(Test2Pool* const pool) {
+  try {
+    pool->borrowResource().get().doStuff();
+  } catch(const anch::TimeoutException& e) {
+    std::cerr << "Timeout error: " << e.what() << " ; timeout=" << e.getTimeout().count() << "ms" << std::endl;
+  }
+}
+
+int
+main(void) {
+  TestConfig config;
+  {
+    TestPool pool(config, 10, 5);
+    for(int i = 0 ; i < 15 ; ++i) {
+      std::thread t(doStuff, &pool);
+      t.detach();
+    }
+    std::this_thread::sleep_for(std::chrono::seconds(2));
+  }
+
+  {
+    Test2Pool pool2(config, 10, 5);
+    for(int i = 0 ; i < 15 ; ++i) {
+      std::thread t(doStuff2, &pool2);
+      t.detach();
+    }
+    std::this_thread::sleep_for(std::chrono::seconds(2));
+  }
+
+  return 0;
+}
