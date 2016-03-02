@@ -23,7 +23,6 @@
 #include <memory>
 #include <mutex>
 #include <chrono>
-#include <thread>
 #include <condition_variable>
 #include <deque>
 #include <atomic>
