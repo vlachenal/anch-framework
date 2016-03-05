@@ -40,6 +40,7 @@ ResultSet::next() throw(SqlException) {
   _currentRow++;
 }
 
+// SQL field conversion specializations +
 namespace anch {
   namespace sql {
 
@@ -212,3 +213,4 @@ namespace anch {
 
   }
 }
+// SQL field conversion specializations -

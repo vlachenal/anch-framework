@@ -31,7 +31,9 @@ MySQLResultSet::MySQLResultSet(MYSQL_RES* result, const std::vector<std::string>
 }
 
 MySQLResultSet::~MySQLResultSet() {
-  mysql_free_result(_result);
+  if(_result != NULL) {
+    mysql_free_result(_result);
+  }
 }
 
 bool

@@ -37,7 +37,7 @@ using anch::sql::MySQLResultSet;
 /*!
  * \brief MySQL (un)initializer
  *
- * Use Meyer singleton to provide lazy intialization.
+ * Use Meyer singleton to provide lazy (un)intialization.
  *
  * \author Vincent Lachenal
  *
@@ -45,6 +45,7 @@ using anch::sql::MySQLResultSet;
  */
 class MySQLInitializer: public anch::Singleton<MySQLInitializer> {
   friend class anch::Singleton<MySQLInitializer>;
+
 private:
   /*!
    * \ref MySQLInitializer private constructor.\n
@@ -65,6 +66,7 @@ private:
   ~MySQLInitializer() {
     mysql_library_end();
   }
+
 };
 
 // Constructors +
@@ -156,7 +158,6 @@ MySQLConnection::query(const std::string& query) throw(SqlException) {
     }
 
   } else {
-    //int nbFields = mysql_num_fields(result);
     MYSQL_FIELD* field;
     std::vector<std::string> fields;
     while((field = mysql_fetch_field(result))) {
@@ -164,15 +165,6 @@ MySQLConnection::query(const std::string& query) throw(SqlException) {
     }
     my_ulonglong nbRow = mysql_num_rows(result);
     resSet = new MySQLResultSet(result, fields, static_cast<std::size_t>(nbRow));
-    // MYSQL_ROW row;
-    // while((row = mysql_fetch_row(result))) {
-    //   unsigned long* lengths;
-    //   lengths = mysql_fetch_lengths(result);
-    //   for(int i = 0 ; i < nbFields ; ++i) {
-    // 	printf("[%.*s] ", (int)lengths[i], row[i] ? row[i] : "NULL");
-    //   }
-    //   printf("\n");
-    // }
   }
   return resSet;
 }

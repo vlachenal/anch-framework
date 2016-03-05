@@ -5,9 +5,9 @@ set(ANCH_UTILS_INCLUDES_DIR "$ENV{HOME}/projects/anch-framework/anch-utils/inc")
 
 # Anch SQL installation configuration
 set(ANCH_SQL_LIBRARY_DIR "")
-#set(ANCH_SQL_COMPILE_FLAGS "-O2 -march=native -pipe")
+set(ANCH_SQL_COMPILE_FLAGS "-O2 -march=native -pipe")
 #set(ANCH_SQL_COMPILE_FLAGS "-O2 -pipe")
-set(ANCH_SQL_COMPILE_FLAGS "-g")
+#set(ANCH_SQL_COMPILE_FLAGS "-g")
 
 ## SQL database engines +
 set(ANCH_SQL_MYSQL ON CACHE BOOL "AnCH MySQL support")

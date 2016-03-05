@@ -22,6 +22,7 @@
 #define _ANCH_SQL_MYCON_H_
 
 #include <string>
+#include <functional>
 
 #include "sql/connection.hpp"
 

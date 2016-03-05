@@ -20,6 +20,8 @@
 #ifndef _ANCH_SQL_CON_H_
 #define _ANCH_SQL_CON_H_
 
+#include <functional>
+
 #include "sql/sqlException.hpp"
 #include "sql/resultSet.hpp"
 
@@ -36,6 +38,7 @@ namespace anch {
      * \since 0.1
      */
     class Connection {
+
       // Attributes +
     protected:
       /*! Auto commit */
@@ -92,11 +95,31 @@ namespace anch {
        *
        * \param query the SQL query to execute
        *
-       * \return the result set
+       * \return the result set which has to be deleted after use
        *
        * \throw SqlException any error
        */
       virtual ResultSet* query(const std::string& query) throw(SqlException) = 0;
+
+      /*!
+       * Execute query and treat each row of result set
+       *
+       * \param sqlQuery the SQL query to execute
+       * \param rowMapper the row mapper function
+       *
+       * \throw SqlException any error
+       */
+      void queryMapRow(const std::string& sqlQuery, std::function<void(ResultSet&)> rowMapper) throw(SqlException);
+
+      /*!
+       * Execute query and extract result set
+       *
+       * \param sqlQuery the SQL query to execute
+       * \param resExtractor the result set extractor function
+       *
+       * \throw SqlException any error
+       */
+      void queryExtract(const std::string& sqlQuery, std::function<void(ResultSet&)> resExtractor) throw(SqlException);
 
     protected:
       /*!

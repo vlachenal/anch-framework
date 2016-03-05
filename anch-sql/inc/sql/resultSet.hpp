@@ -42,6 +42,7 @@ namespace anch {
      * \since 0.1
      */
     class ResultSet {
+
       // Attributes +
     private:
       /*! Result set fields */
@@ -94,6 +95,8 @@ namespace anch {
        * Get field value by index.\n
        * You have to delete result once treated.
        *
+       * \tparam T expected type
+       *
        * \param idx the index
        *
        * \return the result
@@ -107,6 +110,8 @@ namespace anch {
        * Get field value by index.\n
        * The output parameter will be set only if SQL result is not \c NULL.
        *
+       * \tparam T expected type
+       *
        * \param idx the index
        * \param out the result
        *
@@ -118,6 +123,8 @@ namespace anch {
       /*!
        * Get field value by field name.\n
        * The output parameter will be set only if SQL result is not \c NULL.
+       *
+       * \tparam T expected type
        *
        * \param field the field name
        * \param out the result
@@ -146,6 +153,8 @@ namespace anch {
       /*!
        * Get field value by field name.\n
        * You have to delete result once treated.
+       *
+       * \tparam T expected type
        *
        * \param field the field name
        *

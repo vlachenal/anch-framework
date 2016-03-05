@@ -55,4 +55,31 @@ Connection::setAutoCommit(bool autoCommit) throw(SqlException) {
     _autoCommit = autoCommit;
   }
 }
+
+void
+Connection::queryMapRow(const std::string& sqlQuery, std::function<void(ResultSet&)> rowMapper) throw(SqlException) {
+  ResultSet* res = query(sqlQuery);
+  try {
+    while(res->hasNext()) {
+      res->next();
+      rowMapper(*res);
+    }
+  } catch(...) {
+    delete res;
+    throw;
+  }
+  delete res;
+}
+
+void
+Connection::queryExtract(const std::string& sqlQuery, std::function<void(ResultSet&)> resExtractor) throw(SqlException) {
+  ResultSet* res = query(sqlQuery);
+  try {
+    resExtractor(*res);
+  } catch(...) {
+    delete res;
+    throw;
+  }
+  delete res;
+}
 // Methods -
