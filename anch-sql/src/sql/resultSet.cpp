@@ -24,7 +24,7 @@
 using anch::sql::ResultSet;
 
 
-ResultSet::ResultSet(const std::vector<std::string>& fields, std::size_t nbRow): _fields(), _nbRow(nbRow), _currentRow(0) {
+ResultSet::ResultSet(const std::vector<std::string>& fields, int nbRow): _fields(), _nbRow(nbRow), _currentRow(-1) {
   for(std::size_t i = 0 ; i < fields.size() ; ++i) {
     _fields[fields[i]] = i;
   }

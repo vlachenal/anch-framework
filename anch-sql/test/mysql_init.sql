@@ -16,5 +16,5 @@ CREATE TABLE IF NOT EXISTS  T_Test (
 CREATE INDEX T_Test_name ON T_Test (first_name, last_name) USING BTREE;
 
 INSERT INTO T_Test (birth_date) VALUES ('1970-01-01');
-INSERT INTO T_Test (first_name, last_name, birth_date) VALUES ('George', 'Abitbol', '1993-01-01','george.abitbol@classe.us');
+INSERT INTO T_Test (first_name, last_name, birth_date,email) VALUES ('George', 'Abitbol', '1993-01-01','george.abitbol@classe.us');
 INSERT INTO T_Test (first_name, last_name, birth_date) VALUES ('Jesus', 'Christ', '0000-12-24');

@@ -11,7 +11,7 @@ set(ANCH_SQL_COMPILE_FLAGS "-O2 -march=native -pipe")
 
 ## SQL database engines +
 set(ANCH_SQL_MYSQL ON CACHE BOOL "AnCH MySQL support")
-set(ANCH_SQL_POSTGRESQL OFF CACHE BOOL "AnCH PostgreSQL support")
+set(ANCH_SQL_POSTGRESQL ON CACHE BOOL "AnCH PostgreSQL support")
 ## SQL database engines -
 
 # Unitary tests

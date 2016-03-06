@@ -17,39 +17,52 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "sql/mysqlResultSet.hpp"
+#ifdef ANCH_SQL_POSTGRESQL
 
-using anch::sql::MySQLResultSet;
+#include "sql/postgresqlResultSet.hpp"
+
+using anch::sql::PostgreSQLResultSet;
 using anch::sql::ResultSet;
 
 
-MySQLResultSet::MySQLResultSet(MYSQL_RES* result, const std::vector<std::string>& fields, int nbRow):
+// Constructors +
+PostgreSQLResultSet::PostgreSQLResultSet(PGresult* result,
+					 const std::vector<std::string>& fields,
+					 int nbRow):
   ResultSet(fields, nbRow),
-  _result(result),
-  _row() {
+  _result(result) {
   // Nothing to do
 }
+// Constructors -
 
-MySQLResultSet::~MySQLResultSet() {
+// Destructor +
+PostgreSQLResultSet::~PostgreSQLResultSet() {
   if(_result != NULL) {
-    mysql_free_result(_result);
+    PQclear(_result);
   }
 }
+// Destructor -
 
+// Methods +
 bool
-MySQLResultSet::getValue(std::size_t idx, std::string& out) {
+PostgreSQLResultSet::getValue(std::size_t idx, std::string& out) {
   bool null = true;
-  if(_row[idx] != NULL) {
+  if(!PQgetisnull(_result, _currentRow, idx)) {
     null = false;
-    out = _row[idx];
+    out = PQgetvalue(_result, _currentRow, idx);
   }
   return null;
 }
 
+/*!
+ * Fetch next row in SQL result set.
+ *
+ * \throw SqlException any error
+ */
 void
-MySQLResultSet::fetchNextRow() throw(SqlException) {
-  _row = mysql_fetch_row(_result);
-  if(_row == NULL) {
-    throw SqlException("Can not fetch next row");
-  }
+PostgreSQLResultSet::fetchNextRow() throw(SqlException) {
+  // Nothing to do
 }
+// Methods -
+
+#endif // ANCH_SQL_POSTGRESQL

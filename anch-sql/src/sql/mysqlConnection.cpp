@@ -148,9 +148,7 @@ MySQLConnection::query(const std::string& query) throw(SqlException) {
   }
   MYSQL_RES* result = mysql_store_result(&_mysql);
   if(result == NULL) {
-    if(mysql_field_count(&_mysql) == 0) { // Not a SELECT query
-      mysql_affected_rows(&_mysql);
-    } else { // Error
+    if(mysql_field_count(&_mysql) != 0) { // Not an INSERT/UPDATE/DELETE query
       std::ostringstream out;
       out << "Error while retrieving result " << query << " ; message="
 	  << mysql_error(&_mysql);
@@ -164,7 +162,7 @@ MySQLConnection::query(const std::string& query) throw(SqlException) {
       fields.push_back(field->name);
     }
     my_ulonglong nbRow = mysql_num_rows(result);
-    resSet = new MySQLResultSet(result, fields, static_cast<std::size_t>(nbRow));
+    resSet = new MySQLResultSet(result, fields, static_cast<int>(nbRow));
   }
   return resSet;
 }

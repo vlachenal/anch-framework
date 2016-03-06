@@ -1,11 +1,11 @@
-#include "sql/mysqlConnection.hpp"
+#include "sql/postgresqlConnection.hpp"
 
 #include <iostream>
 #include <functional>
 #include <list>
 
 using anch::sql::Connection;
-using anch::sql::MySQLConnection;
+using anch::sql::PostgreSQLConnection;
 using anch::sql::SqlException;
 using anch::sql::ResultSet;
 
@@ -36,14 +36,14 @@ public:
 
 int
 main(void) {
-  std::cout << "Enter in MySQL unit tests" << std::endl << std::endl;
+  std::cout << "Enter in PostgreSQL unit tests" << std::endl << std::endl;
 
   try {
-    MySQLConnection dbCon("localhost",
-			  "anch",
-			  "anch",
-			  "anch_test",
-			  3306);
+    PostgreSQLConnection dbCon("localhost",
+			       "anch",
+			       "anch",
+			       "anch_test",
+			       5432);
     std::cout << "Connected to database" << std::endl;
     dbCon.setAutoCommit(false);
     std::cout << "Auto commit set to false" << std::endl;
@@ -136,6 +136,6 @@ main(void) {
     return 1;
   }
 
-  std::cout << "Exit MySQL unit tests" << std::endl;
+  std::cout << "Exit PostgreSQL unit tests" << std::endl;
   return 0;
 }

@@ -49,10 +49,11 @@ namespace anch {
       std::map<std::string, std::size_t> _fields;
 
       /** Number of result */
-      std::size_t _nbRow;
+      int _nbRow;
 
+    protected:
       /*! Current row */
-      std::size_t _currentRow;
+      int _currentRow;
       // Attributes -
 
       // Constructors +
@@ -63,7 +64,7 @@ namespace anch {
        * \param fields the fields' name
        * \param nbRow the number of row in result set
        */
-      ResultSet(const std::vector<std::string>& fields, std::size_t nbRow);
+      ResultSet(const std::vector<std::string>& fields, int nbRow);
       // Constructors -
 
       // Destructor +
@@ -81,7 +82,7 @@ namespace anch {
        * \return \c true if there is more row, \c false otherwise
        */
       inline bool hasNext() {
-	return (_currentRow < _nbRow);
+	return (_currentRow + 1 < _nbRow);
       }
 
       /*!

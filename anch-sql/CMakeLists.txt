@@ -45,10 +45,23 @@ if(ANCH_SQL_MYSQL)
   endif(MySQL_FOUND)
 endif(ANCH_SQL_MYSQL)
 
+if(ANCH_SQL_POSTGRESQL)
+  find_package(PostgreSQL)
+  if(PostgreSQL_FOUND)
+    add_definitions("-D ANCH_SQL_POSTGRESQL")
+    message(STATUS "Found MySQL version: ${PostgreSQL_VERSION_STRING}")
+    message(STATUS "Found MySQL include directory: ${PostgreSQL_INCLUDE_DIRS}")
+    message(STATUS "Found MySQL libraries: ${PostgreSQL_LIBRARIES}")
+  else()
+    message(FATAL_ERROR "PostgreSQL libraries not found")
+  endif(PostgreSQL_FOUND)
+endif(ANCH_SQL_POSTGRESQL)
+
 # Includes location
 include_directories(
   inc
   ${MySQL_INCLUDE_DIRS}
+  ${PostgreSQL_INCLUDE_DIRS}
   ${ANCH_UTILS_INCLUDES_DIR}
 )
 
@@ -88,11 +101,40 @@ if(ANCH_SQL_UNITARY_TEST)
       anch-mysql-test
       anch-sql
       ${MySQL_LIBRARIES}
+      ${PostgreSQL_LIBRARIES}
       )
   endif(ANCH_SQL_MYSQL)
   # Build MySQL unitary test -
 
+  # Build PostgreSQL unitary test +
+  if(ANCH_SQL_POSTGRESQL)
+    file(
+      GLOB_RECURSE
+      test_postgresql
+      inc/*
+      test/testPostgreSQL.cpp
+      )
+
+    add_executable(
+      anch-postgresql-test
+      ${test_postgresql}
+      )
+
+    target_link_libraries(
+      anch-postgresql-test
+      anch-sql
+      ${MySQL_LIBRARIES}
+      ${PostgreSQL_LIBRARIES}
+      )
+  endif(ANCH_SQL_POSTGRESQL)
+  # Build PostgreSQL unitary test -
+
   enable_testing()
-  add_test(MySQL ${EXECUTABLE_OUTPUT_PATH}/anch-mysql-test main)
+  if(ANCH_SQL_MYSQL)
+    add_test(MySQL ${EXECUTABLE_OUTPUT_PATH}/anch-mysql-test main)
+  endif(ANCH_SQL_MYSQL)
+  if(ANCH_SQL_POSTGRESQL)
+    add_test(PostgreSQL ${EXECUTABLE_OUTPUT_PATH}/anch-postgresql-test main)
+  endif(ANCH_SQL_POSTGRESQL)
 
 endif(ANCH_SQL_UNITARY_TEST)

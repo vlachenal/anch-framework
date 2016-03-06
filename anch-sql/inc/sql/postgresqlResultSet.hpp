@@ -17,57 +17,53 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifdef ANCH_SQL_MYSQL
-#ifndef _ANCH_SQL_MYSQL_RESULT_SET_H_
-#define _ANCH_SQL_MYSQL_RESULT_SET_H_
+#ifdef ANCH_SQL_POSTGRESQL
+#ifndef _ANCH_SQL_PG_RESULT_SET_H_
+#define _ANCH_SQL_PG_RESULT_SET_H_
 
 #include "sql/resultSet.hpp"
 
-#include <list>
-
-#include "mysql.h"
+#include "libpq-fe.h"
 
 
 namespace anch {
   namespace sql {
 
     /*!
-     * \brief MySQL result set implementation
+     * \brief PostgreSQL result set implementation
      *
-     * Implements \ref ResultSet for MySQL
+     * Implements \ref ResultSet for PostgreSQL
      *
      * \author Vincent Lachenal
      *
      * \since 0.1
      */
-    class MySQLResultSet: public ResultSet {
+    class PostgreSQLResultSet: public ResultSet {
 
       // Attributes +
     private:
-      /*! MySQL result */
-      MYSQL_RES* _result;
-
-      /*! MySQL current row */
-      MYSQL_ROW _row;
+      /*! PostgreSQL result */
+      PGresult* _result;
       // Attributes -
 
       // Constructors +
     public:
       /*!
-       * \ref MySQLResultSet constructor
+       * \ref PostgreSQLResultSet constructor
        *
-       * \param result the MySQL result
+       * \param result the PostgreSQL result
        * \param fields the fields' name
        * \param nbRow the number of row in result set
        */
-      MySQLResultSet(MYSQL_RES* result, const std::vector<std::string>& fields, int nbRow);
+      PostgreSQLResultSet(PGresult* result, const std::vector<std::string>& fields, int nbRow);
       // Constructors -
 
       // Destructor +
+    public:
       /*!
-       * \ref MySQLResultSet destructor
+       * \ref PostgreSQLResultSet destructor
        */
-      virtual ~MySQLResultSet();
+      virtual ~PostgreSQLResultSet();
       // Destructor -
 
       // Methods +
@@ -93,5 +89,5 @@ namespace anch {
   }
 }
 
-#endif // _ANCH_SQL_MYSQL_RESULT_SET_H_
-#endif // ANCH_SQL_MYSQL
+#endif // _ANCH_SQL_PG_RESULT_SET_H_
+#endif // ANCH_SQL_POSTGRESQL
