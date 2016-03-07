@@ -5,14 +5,14 @@ set(ANCH_UTILS_INCLUDES_DIR "$ENV{HOME}/projects/anch-framework/anch-utils/inc")
 
 # Anch SQL installation configuration
 set(ANCH_SQL_LIBRARY_DIR "")
-#set(ANCH_SQL_COMPILE_FLAGS "-O2 -march=native -pipe")
+set(ANCH_SQL_COMPILE_FLAGS "-O2 -march=native -pipe")
 #set(ANCH_SQL_COMPILE_FLAGS "-O2 -pipe")
-set(ANCH_SQL_COMPILE_FLAGS "-g")
+#set(ANCH_SQL_COMPILE_FLAGS "-g")
 
 ## SQL database engines +
 set(ANCH_SQL_MYSQL ON CACHE BOOL "AnCH MySQL support")
 set(ANCH_SQL_POSTGRESQL ON CACHE BOOL "AnCH PostgreSQL support")
-set(ANCH_SQL_SQLITE3 OFF CACHE BOOL "AnCH SQLite3 support")
+set(ANCH_SQL_SQLITE3 ON CACHE BOOL "AnCH SQLite3 support")
 ## SQL database engines -
 
 # Unitary tests

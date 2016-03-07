@@ -24,27 +24,52 @@
 using anch::sql::SQLite3ResultSet;
 using anch::sql::SqlException;
 
+
 // Constructors +
-SQLite3ResultSet::SQLite3ResultSet(sqlite3_stmt* stmt, const std::vector<std::string>& fields, int nbRow):
-  ResultSet(fields, nbRow),
-  _stmt(stmt) {
+SQLite3ResultSet::SQLite3ResultSet(sqlite3_stmt* stmt):
+  ResultSet(),
+  _stmt(stmt),
+  _nbFields(-1) {
+  // Nothing to do
 }
 // Constructors -
 
 // Destructor +
 SQLite3ResultSet::~SQLite3ResultSet() {
+  if(_stmt != NULL) {
+    sqlite3_finalize(_stmt); // Do not check result because we do not care about it
+  }
 }
 // Destructor -
 
 // Methods +
 bool
-SQLite3ResultSet::getValue(std::size_t /*idx*/, std::string& /*out*/) {
-  return false;
+SQLite3ResultSet::getValue(std::size_t idx, std::string& out) throw(SqlException) {
+  if(static_cast<int>(idx) >= _nbFields) {
+    std::ostringstream msg;
+    msg << "Index out of range (0.." << (_nbFields - 1) << "): " << idx;
+    throw SqlException(msg.str());
+  }
+  bool null = true;
+  const unsigned char* data = sqlite3_column_text(_stmt, idx);
+  if(data != NULL) {
+    out = std::string((char*)data);
+    null = false;
+  }
+  return null;
 }
 
-void
-SQLite3ResultSet::fetchNextRow() throw(SqlException) {
-
+bool
+SQLite3ResultSet::next() throw(SqlException) {
+  int res = sqlite3_step(_stmt);
+  bool hasMore = (res == SQLITE_ROW);
+  if(hasMore && _fields.empty()) {
+    _nbFields = sqlite3_column_count(_stmt);
+    for(int i = 0 ; i < _nbFields ; ++i) {
+      _fields[sqlite3_column_name(_stmt, i)] = i;
+    }
+  }
+  return hasMore;
 }
 // Methods -
 

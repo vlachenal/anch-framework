@@ -36,7 +36,7 @@ SQLite3Connection::SQLite3Connection(const std::string& database)
   throw(SqlException): Connection(), _conn() {
   std::string connStr = "file:";
   connStr += database;
-  int res = sqlite3_open(connStr.data(), &_conn);
+  int res = sqlite3_open_v2(connStr.data(), &_conn, SQLITE_OPEN_URI | SQLITE_OPEN_READWRITE, NULL);
   if(res != SQLITE_OK) {
     std::ostringstream msg;
     msg << "Fail to connect SQLite3 database " << database << ": " << sqlite3_errmsg(_conn);
@@ -53,38 +53,16 @@ SQLite3Connection::~SQLite3Connection() {
 // Destructor -
 
 // Methods +
-static int countCB(void* res, int nbCol, char** columns, char**) {
-  if(nbCol != 1) {
-    throw SqlException("Number of columns should be 1");
-  }
-  int* nbRes = static_cast<int*>(res);
-  *nbRes = std::atoi(columns[0]);
-  return 0;
-}
-
 ResultSet*
 SQLite3Connection::query(const std::string& query) throw(SqlException) {
-  char* errMsg = 0;
-  std::ostringstream countQuery;
-  countQuery << "SELECT count(*) AS anch_query_count FROM (" << query << ')';
-  int nbRows = -1;
-  int res = sqlite3_exec(_conn, countQuery.str().data(), countCB, static_cast<void*>(&nbRows), &errMsg);
-  if(res != SQLITE_OK) {
-    std::ostringstream msg;
-    msg << "Error while counting number of result: " << errMsg;
-    sqlite3_free(errMsg);
-    throw SqlException(msg.str());
-  }
   sqlite3_stmt* stmt;
-  res = sqlite3_prepare_v2(_conn, query.data(), -1, &stmt, NULL);
+  int res = sqlite3_prepare_v2(_conn, query.data(), -1, &stmt, NULL);
   if(res != SQLITE_OK) {
     std::ostringstream msg;
-    msg << "Error while commiting transaction: " << res;
+    msg << "Error while preparing statement " << query << ": " << sqlite3_errmsg(_conn);
     throw SqlException(msg.str());
   }
-  std::vector<std::string> fields;
-  ResultSet* resSet = new SQLite3ResultSet(stmt, fields, nbRows);
-  // \todo retrieve fields on first row fetch ...
+  ResultSet* resSet = new SQLite3ResultSet(stmt);
   return resSet;
 }
 

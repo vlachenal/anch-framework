@@ -150,6 +150,31 @@ if(ANCH_SQL_UNITARY_TEST)
   endif(ANCH_SQL_POSTGRESQL)
   # Build PostgreSQL unitary test -
 
+  # Build SQLite3 unitary test +
+  if(ANCH_SQL_SQLITE3)
+    file(
+      GLOB_RECURSE
+      test_sqlite3
+      inc/*
+      test/testSQLite3.cpp
+      )
+
+    add_executable(
+      anch-sqlite3-test
+      ${test_sqlite3}
+      )
+
+    target_link_libraries(
+      anch-sqlite3-test
+      anch-sql
+      ${MySQL_LIBRARIES}
+      ${PostgreSQL_LIBRARIES}
+      ${SQLite3_LIBRARIES}
+      )
+  endif(ANCH_SQL_SQLITE3)
+  configure_file(test/anch.db anch.db COPYONLY)
+  # Build SQLite3 unitary test -
+
   enable_testing()
   if(ANCH_SQL_MYSQL)
     add_test(MySQL ${EXECUTABLE_OUTPUT_PATH}/anch-mysql-test main)
@@ -157,5 +182,8 @@ if(ANCH_SQL_UNITARY_TEST)
   if(ANCH_SQL_POSTGRESQL)
     add_test(PostgreSQL ${EXECUTABLE_OUTPUT_PATH}/anch-postgresql-test main)
   endif(ANCH_SQL_POSTGRESQL)
+  if(ANCH_SQL_SQLITE3)
+    add_test(SQLite3 ${EXECUTABLE_OUTPUT_PATH}/anch-sqlite3-test main)
+  endif(ANCH_SQL_SQLITE3)
 
 endif(ANCH_SQL_UNITARY_TEST)

@@ -44,6 +44,9 @@ namespace anch {
     private:
       /*! PostgreSQL result */
       sqlite3_stmt* _stmt;
+
+      /*! Number of columns */
+      int _nbFields;
       // Attributes -
 
       // Constructors +
@@ -52,10 +55,8 @@ namespace anch {
        * \ref SQLite3ResultSet constructor
        *
        * \param stmt the SQLite3 statement
-       * \param fields the fields' name
-       * \param nbRow the number of row in result set
        */
-      SQLite3ResultSet(sqlite3_stmt* stmt, const std::vector<std::string>& fields, int nbRow);
+      SQLite3ResultSet(sqlite3_stmt* stmt);
       // Constructors -
 
       // Destructor +
@@ -67,6 +68,16 @@ namespace anch {
       // Destructor -
 
       // Methods +
+    public:
+      /*!
+       * Fetch next row in SQL result set.
+       *
+       * \return \c true if next row exists, \c false otherwise
+       *
+       * \throw SqlException any error
+       */
+      virtual bool next() throw(SqlException);
+
     protected:
       /*!
        * Retrieve string value from result set according to SQL database engine.
@@ -74,14 +85,7 @@ namespace anch {
        * \param idx the field index
        * \param out the result
        */
-      virtual bool getValue(std::size_t idx, std::string& out);
-
-      /*!
-       * Fetch next row in SQL result set.
-       *
-       * \throw SqlException any error
-       */
-      virtual void fetchNextRow() throw(SqlException);
+      virtual bool getValue(std::size_t idx, std::string& out) throw(SqlException);
       // Methods -
 
     };
