@@ -25,6 +25,7 @@
 #include "sql/sqlException.hpp"
 #include "sql/resultSet.hpp"
 
+
 namespace anch {
   namespace sql {
 
