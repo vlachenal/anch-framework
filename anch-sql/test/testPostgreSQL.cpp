@@ -59,8 +59,7 @@ main(void) {
     ResultSet* res = dbCon.query("SELECT id,first_name,last_name,birth_date,email FROM T_Test");
     int row = 0;
     std::string nullStr("NULL");
-    while(res->hasNext()) {
-      res->next();
+    while(res->next()) {
       std::cout << "Row " << row << std::endl;
       const uint32_t* id = res->get<uint32_t>(0);
       std::cout << "id=";
@@ -94,10 +93,10 @@ main(void) {
     dbCon.queryMapRow("SELECT id,first_name,last_name,birth_date,email FROM T_Test", [&persons](ResultSet& resSet) {
 	Person person;
 	resSet.get<uint32_t>(0,person._id);
-	resSet.get<std::string>(1,person._firstName);
-	resSet.get<std::string>(2,person._lastName);
-	resSet.get<std::string>(3,person._birthDate);
-	resSet.get<std::string>(4,person._email);
+	resSet.get<std::string>(1, person._firstName);
+	resSet.get<std::string>(2, person._lastName);
+	resSet.get<std::string>(3, person._birthDate);
+	resSet.get<std::string>(4, person._email);
 	persons.push_back(person);
       });
     std::cout << "Found " << persons.size() << " persons." << std::endl;
@@ -113,14 +112,13 @@ main(void) {
 
     std::cout << "Execute 'SELECT id,first_name,last_name,birth_date,email FROM T_Test' with result set extracting" << std::endl;
     dbCon.queryExtract("SELECT id,first_name,last_name,birth_date,email FROM T_Test", [](ResultSet& resSet) {
-	while(resSet.hasNext()) {
-	  resSet.next();
+	while(resSet.next()) {
 	  Person pers;
 	  resSet.get<uint32_t>(0,pers._id);
-	  resSet.get<std::string>(1,pers._firstName);
-	  resSet.get<std::string>(2,pers._lastName);
-	  resSet.get<std::string>(3,pers._birthDate);
-	  resSet.get<std::string>(4,pers._email);
+	  resSet.get<std::string>(1, pers._firstName);
+	  resSet.get<std::string>(2, pers._lastName);
+	  resSet.get<std::string>(3, pers._birthDate);
+	  resSet.get<std::string>(4, pers._email);
 	  std::cout << "Person " << pers._id << ":" << std::endl;
 	  std::cout << "first name: " << pers._firstName << std::endl;
 	  std::cout << "last name: " << pers._lastName << std::endl;

@@ -130,26 +130,13 @@ PostgreSQLConnection::toggleAutoCommit(bool) throw(SqlException) {
 
 ResultSet*
 PostgreSQLConnection::query(const std::string& query) throw(SqlException) {
-  PGresult* res = PQexec(_conn, query.data());
-  ExecStatusType status = PQresultStatus(res);
-  if(status == PGRES_FATAL_ERROR) {
+  int res = PQsendQuery(_conn, query.data());
+  if(res != 1) {
     std::ostringstream msg;
-    msg << "Unable to execute query " << query << ": " << PQresultErrorMessage(res);
-    PQclear(res);
+    msg << "Unable to execute query " << query << ": " << PQerrorMessage(_conn);
     throw SqlException(msg.str());
   }
-  int nbFields = PQnfields(res);
-  PostgreSQLResultSet* resSet = NULL;
-  if(nbFields > 0) {
-    int nbRows = PQntuples(res);
-    std::vector<std::string> fields;
-    for(int i = 0 ; i < nbFields ; ++i) {
-      fields.push_back(PQfname(res, i));
-    }
-    resSet = new PostgreSQLResultSet(res, fields, nbRows);
-  } else {
-    PQclear(res);
-  }
+  ResultSet* resSet = new PostgreSQLResultSet(_conn);
   return resSet;
 }
 // Methods -

@@ -17,78 +17,71 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifdef ANCH_SQL_MYSQL
-#ifndef _ANCH_SQL_MYSQL_RESULT_SET_H_
-#define _ANCH_SQL_MYSQL_RESULT_SET_H_
+#ifdef ANCH_SQL_SQLITE3
+#ifndef _ANCH_SQL_SQLITE3_RESULT_SET_
+#define _ANCH_SQL_SQLITE3_RESULT_SET_
 
 #include "sql/resultSet.hpp"
 
-#include <list>
-
-#include "mysql.h"
+#include "sqlite3.h"
 
 
 namespace anch {
   namespace sql {
 
     /*!
-     * \brief MySQL result set implementation
+     * \brief SQLite3 result set implementation
      *
-     * Implements \ref ResultSet for MySQL
+     * Implements \ref ResultSet for SQLite3
      *
      * \author Vincent Lachenal
      *
      * \since 0.1
      */
-    class MySQLResultSet: public ResultSet {
+    class SQLite3ResultSet: public ResultSet {
 
       // Attributes +
     private:
-      /*! MySQL result */
-      MYSQL_RES* _result;
-
-      /*! MySQL current row */
-      MYSQL_ROW _row;
+      /*! PostgreSQL result */
+      sqlite3_stmt* _stmt;
       // Attributes -
 
       // Constructors +
     public:
       /*!
-       * \ref MySQLResultSet constructor
+       * \ref SQLite3ResultSet constructor
        *
-       * \param result the MySQL result
+       * \param stmt the SQLite3 statement
+       * \param fields the fields' name
+       * \param nbRow the number of row in result set
        */
-      MySQLResultSet(MYSQL_RES* result);
+      SQLite3ResultSet(sqlite3_stmt* stmt, const std::vector<std::string>& fields, int nbRow);
       // Constructors -
 
       // Destructor +
+    public:
       /*!
-       * \ref MySQLResultSet destructor
+       * \ref SQLite3ResultSet destructor
        */
-      virtual ~MySQLResultSet();
+      virtual ~SQLite3ResultSet();
       // Destructor -
 
       // Methods +
-    public:
-      /*!
-       * Fetch next row in SQL result set.
-       *
-       * \return \c true if next row exists, \c false otherwise
-       *
-       * \throw SqlException any error
-       */
-      virtual bool next() throw(SqlException);
-
     protected:
       /*!
        * Retrieve string value from result set according to SQL database engine.
        *
        * \param idx the field index
        * \param out the result
+       */
+      virtual bool getValue(std::size_t idx, std::string& out);
+
+      /*!
+       * Fetch next row in SQL result set.
        *
        * \throw SqlException any error
        */
-      virtual bool getValue(std::size_t idx, std::string& out) throw(SqlException);
+      virtual void fetchNextRow() throw(SqlException);
       // Methods -
 
     };
@@ -96,5 +89,5 @@ namespace anch {
   }
 }
 
-#endif // _ANCH_SQL_MYSQL_RESULT_SET_H_
-#endif // ANCH_SQL_MYSQL
+#endif // _ANCH_SQL_SQLITE3_RESULT_SET_
+#endif // ANCH_SQL_SQLITE3

@@ -44,16 +44,9 @@ namespace anch {
     class ResultSet {
 
       // Attributes +
-    private:
+    protected:
       /*! Result set fields */
       std::map<std::string, std::size_t> _fields;
-
-      /** Number of result */
-      int _nbRow;
-
-    protected:
-      /*! Current row */
-      int _currentRow;
       // Attributes -
 
       // Constructors +
@@ -64,7 +57,7 @@ namespace anch {
        * \param fields the fields' name
        * \param nbRow the number of row in result set
        */
-      ResultSet(const std::vector<std::string>& fields, int nbRow);
+      ResultSet();
       // Constructors -
 
       // Destructor +
@@ -76,22 +69,6 @@ namespace anch {
       // Destructor -
 
       // Methods +
-      /*!
-       * Check if there is more row in result set
-       *
-       * \return \c true if there is more row, \c false otherwise
-       */
-      inline bool hasNext() {
-	return (_currentRow + 1 < _nbRow);
-      }
-
-      /*!
-       * Retrieve next row
-       *
-       * \throw SqlException any error
-       */
-      void next() throw(SqlException);
-
       /*!
        * Get field value by index.\n
        * You have to delete result once treated.
@@ -182,21 +159,25 @@ namespace anch {
 	return get<T>(search->second);
       }
 
+      /*!
+       * Retrieve next row
+       *
+       * \return \c true if next row exists, \c false otherwise
+       *
+       * \throw SqlException any error
+       */
+      virtual bool next() throw(SqlException) = 0;
+
     protected:
       /*!
        * Retrieve string value from result set according to SQL database engine.
        *
        * \param idx the field index
        * \param out the result
-       */
-      virtual bool getValue(std::size_t idx, std::string& out) = 0;
-
-      /*!
-       * Fetch next row in SQL result set.
        *
        * \throw SqlException any error
        */
-      virtual void fetchNextRow() throw(SqlException) = 0;
+      virtual bool getValue(std::size_t idx, std::string& out) throw(SqlException) = 0;
       // Methods -
 
     };

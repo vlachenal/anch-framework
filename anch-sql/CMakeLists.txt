@@ -121,6 +121,7 @@ if(ANCH_SQL_UNITARY_TEST)
       anch-sql
       ${MySQL_LIBRARIES}
       ${PostgreSQL_LIBRARIES}
+      ${SQLite3_LIBRARIES}
       )
   endif(ANCH_SQL_MYSQL)
   # Build MySQL unitary test -
@@ -144,6 +145,7 @@ if(ANCH_SQL_UNITARY_TEST)
       anch-sql
       ${MySQL_LIBRARIES}
       ${PostgreSQL_LIBRARIES}
+      ${SQLite3_LIBRARIES}
       )
   endif(ANCH_SQL_POSTGRESQL)
   # Build PostgreSQL unitary test -

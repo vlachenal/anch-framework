@@ -59,8 +59,7 @@ main(void) {
     ResultSet* res = dbCon.query("SELECT id,first_name,last_name,birth_date,email FROM T_Test");
     int row = 0;
     std::string nullStr("NULL");
-    while(res->hasNext()) {
-      res->next();
+    while(res->next()) {
       std::cout << "Row " << row << std::endl;
       const uint32_t* id = res->get<uint32_t>(0);
       std::cout << "id=";
@@ -113,8 +112,7 @@ main(void) {
 
     std::cout << "Execute 'SELECT id,first_name,last_name,birth_date,email FROM T_Test' with result set extracting" << std::endl;
     dbCon.queryExtract("SELECT id,first_name,last_name,birth_date,email FROM T_Test", [](ResultSet& resSet) {
-	while(resSet.hasNext()) {
-	  resSet.next();
+	while(resSet.next()) {
 	  Person pers;
 	  resSet.get<uint32_t>(0,pers._id);
 	  resSet.get<std::string>(1,pers._firstName);

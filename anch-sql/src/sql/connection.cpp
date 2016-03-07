@@ -60,8 +60,7 @@ void
 Connection::queryMapRow(const std::string& sqlQuery, std::function<void(ResultSet&)> rowMapper) throw(SqlException) {
   ResultSet* res = query(sqlQuery);
   try {
-    while(res->hasNext()) {
-      res->next();
+    while(res->next()) {
       rowMapper(*res);
     }
   } catch(...) {

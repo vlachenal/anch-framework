@@ -17,17 +17,25 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
+#ifdef ANCH_SQL_MYSQL
+
 #include "sql/mysqlResultSet.hpp"
 
 using anch::sql::MySQLResultSet;
 using anch::sql::ResultSet;
 
 
-MySQLResultSet::MySQLResultSet(MYSQL_RES* result, const std::vector<std::string>& fields, int nbRow):
-  ResultSet(fields, nbRow),
+MySQLResultSet::MySQLResultSet(MYSQL_RES* result):
+  ResultSet(),
   _result(result),
   _row() {
-  // Nothing to do
+  MYSQL_FIELD* field;
+  std::vector<std::string> fields;
+  int i = 0;
+  while((field = mysql_fetch_field(_result))) {
+    _fields[field->name] = i;
+    i++;
+  }
 }
 
 MySQLResultSet::~MySQLResultSet() {
@@ -37,7 +45,7 @@ MySQLResultSet::~MySQLResultSet() {
 }
 
 bool
-MySQLResultSet::getValue(std::size_t idx, std::string& out) {
+MySQLResultSet::getValue(std::size_t idx, std::string& out) throw(SqlException) {
   bool null = true;
   if(_row[idx] != NULL) {
     null = false;
@@ -46,10 +54,13 @@ MySQLResultSet::getValue(std::size_t idx, std::string& out) {
   return null;
 }
 
-void
-MySQLResultSet::fetchNextRow() throw(SqlException) {
+bool
+MySQLResultSet::next() throw(SqlException) {
   _row = mysql_fetch_row(_result);
-  if(_row == NULL) {
-    throw SqlException("Can not fetch next row");
-  }
+  return (_row != NULL);
+  // if(_row == NULL) {
+  //   throw SqlException("Can not fetch next row");
+  // }
 }
+
+#endif // ANCH_SQL_MYSQL

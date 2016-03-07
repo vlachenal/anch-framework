@@ -24,20 +24,12 @@
 using anch::sql::ResultSet;
 
 
-ResultSet::ResultSet(const std::vector<std::string>& fields, int nbRow): _fields(), _nbRow(nbRow), _currentRow(-1) {
-  for(std::size_t i = 0 ; i < fields.size() ; ++i) {
-    _fields[fields[i]] = i;
-  }
+ResultSet::ResultSet(): _fields() {
+  // Nothing to do
 }
 
 ResultSet::~ResultSet() {
   // Nothing to do
-}
-
-void
-ResultSet::next() throw(SqlException) {
-  fetchNextRow();
-  _currentRow++;
 }
 
 // SQL field conversion specializations +

@@ -42,8 +42,20 @@ namespace anch {
 
       // Attributes +
     private:
+      /*! PostgreSQL database connection */
+      PGconn* _conn;
+
       /*! PostgreSQL result */
       PGresult* _result;
+
+      /*! Current row in current result */
+      int _currentRow;
+
+      /*! Number of rows in current result */
+      int _nbRows;
+
+      /*! Number of fields in result */
+      int _nbFields;
       // Attributes -
 
       // Constructors +
@@ -51,11 +63,9 @@ namespace anch {
       /*!
        * \ref PostgreSQLResultSet constructor
        *
-       * \param result the PostgreSQL result
-       * \param fields the fields' name
-       * \param nbRow the number of row in result set
+       * \param conn the PostgreSQL database connection
        */
-      PostgreSQLResultSet(PGresult* result, const std::vector<std::string>& fields, int nbRow);
+      PostgreSQLResultSet(PGconn* conn);
       // Constructors -
 
       // Destructor +
@@ -67,21 +77,26 @@ namespace anch {
       // Destructor -
 
       // Methods +
+    public:
+      /*!
+       * Fetch next row in SQL result set.
+       *
+       * \return \c true if next row exists, \c false otherwise
+       *
+       * \throw SqlException any error
+       */
+      virtual bool next() throw(SqlException);
+
     protected:
       /*!
        * Retrieve string value from result set according to SQL database engine.
        *
        * \param idx the field index
        * \param out the result
-       */
-      virtual bool getValue(std::size_t idx, std::string& out);
-
-      /*!
-       * Fetch next row in SQL result set.
        *
        * \throw SqlException any error
        */
-      virtual void fetchNextRow() throw(SqlException);
+      virtual bool getValue(std::size_t idx, std::string& out) throw(SqlException);
       // Methods -
 
     };

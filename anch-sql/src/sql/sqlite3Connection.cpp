@@ -28,6 +28,7 @@ using anch::sql::Connection;
 using anch::sql::SQLite3Connection;
 using anch::sql::ResultSet;
 using anch::sql::SQLite3ResultSet;
+using anch::sql::SqlException;
 
 
 // Constructors +
@@ -58,6 +59,7 @@ static int countCB(void* res, int nbCol, char** columns, char**) {
   }
   int* nbRes = static_cast<int*>(res);
   *nbRes = std::atoi(columns[0]);
+  return 0;
 }
 
 ResultSet*
@@ -66,7 +68,7 @@ SQLite3Connection::query(const std::string& query) throw(SqlException) {
   std::ostringstream countQuery;
   countQuery << "SELECT count(*) AS anch_query_count FROM (" << query << ')';
   int nbRows = -1;
-  int res = sqlite3_exec(&nbRows, countQuery.str().data(), countCB, this, &errMsg);
+  int res = sqlite3_exec(_conn, countQuery.str().data(), countCB, static_cast<void*>(&nbRows), &errMsg);
   if(res != SQLITE_OK) {
     std::ostringstream msg;
     msg << "Error while counting number of result: " << errMsg;
@@ -80,13 +82,15 @@ SQLite3Connection::query(const std::string& query) throw(SqlException) {
     msg << "Error while commiting transaction: " << res;
     throw SqlException(msg.str());
   }
-  ResultSet* resSet = new SQLite3ResultSet(stmt, nbRows);
+  std::vector<std::string> fields;
+  ResultSet* resSet = new SQLite3ResultSet(stmt, fields, nbRows);
   // \todo retrieve fields on first row fetch ...
   return resSet;
 }
 
 static int emptyCB(void*, int, char**, char**) {
   // Nothing to do
+  return 0;
 }
 
 void
@@ -114,7 +118,7 @@ SQLite3Connection::sendRollback() throw(SqlException) {
 }
 
 void
-SQLite3Connection::toggleAutoCommit(bool autoCommit) throw(SqlException) {
+SQLite3Connection::toggleAutoCommit(bool /*autoCommit*/) throw(SqlException) {
   // Nothing to do .. for now => keep internal state ?
 }
 // Methods -

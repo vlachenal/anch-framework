@@ -26,11 +26,13 @@ using anch::sql::ResultSet;
 
 
 // Constructors +
-PostgreSQLResultSet::PostgreSQLResultSet(PGresult* result,
-					 const std::vector<std::string>& fields,
-					 int nbRow):
-  ResultSet(fields, nbRow),
-  _result(result) {
+PostgreSQLResultSet::PostgreSQLResultSet(PGconn* conn):
+  ResultSet(),
+  _conn(conn),
+  _result(NULL),
+  _currentRow(-1),
+  _nbRows(-1),
+  _nbFields(-1) {
   // Nothing to do
 }
 // Constructors -
@@ -40,12 +42,20 @@ PostgreSQLResultSet::~PostgreSQLResultSet() {
   if(_result != NULL) {
     PQclear(_result);
   }
+  while((_result = PQgetResult(_conn)) != NULL) {
+    PQclear(_result);
+  }
 }
 // Destructor -
 
 // Methods +
 bool
-PostgreSQLResultSet::getValue(std::size_t idx, std::string& out) {
+PostgreSQLResultSet::getValue(std::size_t idx, std::string& out) throw(SqlException) {
+  if(static_cast<int>(idx) >= _nbFields) {
+    std::ostringstream msg;
+    msg << "Index out of range (0.." << (_nbFields - 1) << "): " << idx;
+    throw SqlException(msg.str());
+  }
   bool null = true;
   if(!PQgetisnull(_result, _currentRow, idx)) {
     null = false;
@@ -54,14 +64,31 @@ PostgreSQLResultSet::getValue(std::size_t idx, std::string& out) {
   return null;
 }
 
-/*!
- * Fetch next row in SQL result set.
- *
- * \throw SqlException any error
- */
-void
-PostgreSQLResultSet::fetchNextRow() throw(SqlException) {
-  // Nothing to do
+bool
+PostgreSQLResultSet::next() throw(SqlException) {
+  bool hasMore = false;
+  if(_currentRow + 1 < _nbRows) {
+    _currentRow++;
+    hasMore = true;
+
+  } else {
+    if(_result != NULL) {
+      PQclear(_result);
+    }
+    _result = PQgetResult(_conn);
+    hasMore = (_result != NULL);
+    if(hasMore) {
+      _currentRow = 0;
+      _nbRows = PQntuples(_result);
+      if(_fields.empty()) {
+	_nbFields = PQnfields(_result);
+	for(int i = 0 ; i < _nbFields ; ++i) {
+	  _fields[PQfname(_result, i)] = i;
+	}
+      }
+    }
+  }
+  return hasMore;
 }
 // Methods -
 
