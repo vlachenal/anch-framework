@@ -40,7 +40,7 @@ PostgreSQLConnection::PostgreSQLConnection(const std::string& host,
 					   const std::string& app)
   throw(SqlException):
   Connection(),
-  _conn() {
+  _conn(NULL) {
   std::ostringstream conninfo;
   conninfo << "postgresql://";
   if(!user.empty()) {
@@ -68,8 +68,7 @@ PostgreSQLConnection::PostgreSQLConnection(const std::string& host,
     conninfo << app;
   }
   _conn = PQconnectdb(conninfo.str().data());
-  ConnStatusType status = PQstatus(_conn);
-  if(status == CONNECTION_BAD) {
+  if(PQstatus(_conn) != CONNECTION_OK) {
     std::ostringstream msg;
     msg << "Fail to connect PostgreSQL database " << database
 	<< ":" << port << " with user " << user << ": " << PQerrorMessage(_conn);
@@ -80,8 +79,7 @@ PostgreSQLConnection::PostgreSQLConnection(const std::string& host,
 
 PostgreSQLConnection::PostgreSQLConnection(const std::string& connStr) throw(SqlException): _conn() {
   _conn = PQconnectdb(connStr.data());
-  ConnStatusType status = PQstatus(_conn);
-  if(status == CONNECTION_BAD) {
+  if(PQstatus(_conn) != CONNECTION_OK) {
     std::ostringstream msg;
     msg << "Fail to connect PostgreSQL database: " << PQerrorMessage(_conn);
     PQfinish(_conn);

@@ -128,7 +128,7 @@ namespace anch {
 
       // Attributes +
     private:
-      /*! Curren resource pool */
+      /*! Current resource pool */
       ResourcePool<T, C>& _pool;
 
       /*! Resource */

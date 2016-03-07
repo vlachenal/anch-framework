@@ -33,6 +33,7 @@ add_definitions(${ANCH_SQL_COMPILE_FLAGS})
 
 # Include librairies
 set(CMAKE_MODULE_PATH "$ENV{HOME}/projects/anch-framework/anch-sql/;${CMAKE_MODULE_PATH}")
+# MySQL +
 if(ANCH_SQL_MYSQL)
   find_package(MySQL)
   if(MySQL_FOUND)
@@ -44,24 +45,42 @@ if(ANCH_SQL_MYSQL)
     message(FATAL_ERROR "MySQL libraries not found")
   endif(MySQL_FOUND)
 endif(ANCH_SQL_MYSQL)
+# MySQL -
 
+# PostgreSQL +
 if(ANCH_SQL_POSTGRESQL)
   find_package(PostgreSQL)
   if(PostgreSQL_FOUND)
     add_definitions("-D ANCH_SQL_POSTGRESQL")
-    message(STATUS "Found MySQL version: ${PostgreSQL_VERSION_STRING}")
-    message(STATUS "Found MySQL include directory: ${PostgreSQL_INCLUDE_DIRS}")
-    message(STATUS "Found MySQL libraries: ${PostgreSQL_LIBRARIES}")
+    message(STATUS "Found PostgreSQL version: ${PostgreSQL_VERSION_STRING}")
+    message(STATUS "Found PostgreSQL include directory: ${PostgreSQL_INCLUDE_DIRS}")
+    message(STATUS "Found PostgreSQL libraries: ${PostgreSQL_LIBRARIES}")
   else()
     message(FATAL_ERROR "PostgreSQL libraries not found")
   endif(PostgreSQL_FOUND)
 endif(ANCH_SQL_POSTGRESQL)
+# PostgreSQL -
+
+# SQLite3 +
+if(ANCH_SQL_SQLITE3)
+  find_package(SQLite3)
+  if(SQLite3_FOUND)
+    add_definitions("-D ANCH_SQL_SQLITE3")
+    message(STATUS "Found SQLite3 version: ${SQLite3_VERSION_STRING}")
+    message(STATUS "Found SQLite3 include directory: ${SQLite3_INCLUDE_DIRS}")
+    message(STATUS "Found SQLite3 libraries: ${SQLite3_LIBRARIES}")
+  else()
+    message(FATAL_ERROR "SQLite3 libraries not found")
+  endif(SQLite3_FOUND)
+endif(ANCH_SQL_SQLITE3)
+# SQLite3 -
 
 # Includes location
 include_directories(
   inc
   ${MySQL_INCLUDE_DIRS}
   ${PostgreSQL_INCLUDE_DIRS}
+  ${SQLite3_INCLUDE_DIRS}
   ${ANCH_UTILS_INCLUDES_DIR}
 )
 
