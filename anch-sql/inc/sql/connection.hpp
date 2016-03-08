@@ -30,6 +30,38 @@ namespace anch {
   namespace sql {
 
     /*!
+     * \brief SQL database connection configuration
+     *
+     * Parameters can not be used according to SQL database (especially for SQLite3).
+     *
+     * \author Vincent Lachenal
+     *
+     * \since 0.1
+     */
+    struct SqlConnectionConfiguration {
+      /*! SQL connection database type */
+      std::string driver;
+
+      /*! SQL database name */
+      std::string database;
+
+      /*! SQL database hostname */
+      std::string hostname;
+
+      /*! SQL database port */
+      int port;
+
+      /*! SQL database connection user */
+      std::string user;
+
+      /*! SQL database user password */
+      std::string password;
+
+      /*! Client application */
+      std::string application;
+    };
+
+    /*!
      * \brief SQL connection virtual class
      *
      * Abstract layer for SQL connections management.
@@ -44,6 +76,9 @@ namespace anch {
     protected:
       /*! Auto commit */
       bool _autoCommit;
+
+      /*! Is SQL connection valid */
+      bool _valid;
       // Attributes -
 
       // Constructors +
@@ -148,6 +183,7 @@ namespace anch {
       // Methods -
 
       // Accessors +
+    public:
       /*!
        * Auto commit status getter
        *
@@ -155,6 +191,15 @@ namespace anch {
        */
       inline bool isAutoCommit() const {
 	return _autoCommit;
+      }
+
+      /*!
+       * Valid status getter
+       *
+       * \return the status
+       */
+      inline bool isValid() const {
+	return _valid;
       }
       // Accessors -
 

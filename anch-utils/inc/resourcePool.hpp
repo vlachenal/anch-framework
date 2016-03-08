@@ -106,13 +106,14 @@ namespace anch {
    * If no resource is available, pool will wait until timeout (default to 100ms) is reached.\n
    * Resources are automatically released through their destructor.\n
    * If you have only one action to do, you can use pool.borrowResource.get().doAction() ;
-   * otherwise you should to keep reference to \ref PoolableResource until all actions have been done (with auto res = pool.borrowResource())
+   * otherwise you should to keep reference to \ref PoolableResource until all actions have been done (with auto res = pool.borrowResource()).\n
+   * You can specifiy an \c std::shared_ptr creation function as third template parameter. By default, \c std::make_shared<T> will be used. It can be usefull for polymorphism dynamic allocation.
    *
    * \author Vincent Lachenal
    *
    * \since 0.1
    */
-  template<typename T, typename C>
+  template<typename T, typename C, std::shared_ptr<T>(*make_ptr)(const C&) = std::make_shared<T> >
   class ResourcePool {
 
     /*!
@@ -129,7 +130,7 @@ namespace anch {
       // Attributes +
     private:
       /*! Current resource pool */
-      ResourcePool<T, C>& _pool;
+      ResourcePool<T, C, make_ptr>& _pool;
 
       /*! Resource */
       std::shared_ptr<T> _ptr;
@@ -140,7 +141,7 @@ namespace anch {
       /*!
        * \ref PoolableResource constructor
        */
-      PoolableResource(ResourcePool<T, C>& pool, std::shared_ptr<T> ptr): _pool(pool), _ptr(ptr) {
+      PoolableResource(ResourcePool<T, C, make_ptr>& pool, std::shared_ptr<T> ptr): _pool(pool), _ptr(ptr) {
 	// Nothing to do
       }
       // Constructors -
@@ -222,9 +223,14 @@ namespace anch {
       _config(config),
       _timeout(timeout) {
       for(std::size_t i = 0 ; i < initialiSize && i < maxSize ; ++i) {
-	_availables.push_back(std::make_shared<T>(_config));
+	_availables.push_back(make_ptr(_config));
       }
     }
+
+    /*!
+     * Prohibits \ref ResourcePool copy constructor
+     */
+    ResourcePool(const ResourcePool&) = delete;
     // Constructors -
 
     // Destructor +
@@ -256,7 +262,7 @@ namespace anch {
       std::shared_ptr<T> ptr;
       if(_availables.empty()) {
 	if(_used.load() < _maxSize) {
-	  ptr = std::make_shared<T>(_config);
+	  ptr = make_ptr(_config);
 	  _used.fetch_add(1);
 	  _mutex.unlock();
 
@@ -305,7 +311,7 @@ namespace anch {
     void invalidateResource(std::shared_ptr<T> res) {
       res.reset();
       _used.fetch_sub(1);
-      _availables.push_back(std::make_shared<T>(_config));
+      _availables.push_back(make_ptr(_config));
       _wait.notify_one();
     }
     // Methods -

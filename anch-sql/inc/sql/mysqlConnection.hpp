@@ -69,6 +69,16 @@ namespace anch {
 		      int port,
 		      const std::string& app = "AnCH")
 	throw(SqlException);
+
+      /*!
+       * \ref MySQLConnection constructor
+       *
+       * \param config the MySQL database configuration
+       *
+       * \throw SqlException any error
+       */
+      MySQLConnection(const SqlConnectionConfiguration& config)
+	throw(SqlException);
       // Constructors -
 
       // Destructor +

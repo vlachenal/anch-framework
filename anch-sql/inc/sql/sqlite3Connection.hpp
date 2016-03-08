@@ -59,6 +59,16 @@ namespace anch {
 	throw(SqlException);
 
       /*!
+       * \ref SQLite3Connection constructor
+       *
+       * \param config the SQLite3 configuration
+       *
+       * \throw SqlException fail to create connection
+       */
+      SQLite3Connection(const SqlConnectionConfiguration& config)
+	throw(SqlException);
+
+      /*!
        * Prohibit \ref SQLite3Connection copy constructor
        */
       SQLite3Connection(const SQLite3Connection&) = delete;

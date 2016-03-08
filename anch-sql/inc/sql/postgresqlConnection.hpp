@@ -78,6 +78,15 @@ namespace anch {
       PostgreSQLConnection(const std::string& connStr) throw(SqlException);
 
       /*!
+       * \ref PostgreSQLConnection constructor
+       *
+       * \param config the PostgreSQL database configuration
+       *
+       * \throw SqlException fail to create connection
+       */
+      PostgreSQLConnection(const SqlConnectionConfiguration& config) throw(SqlException);
+
+      /*!
        * Prohibit \ref PostgreSQLConnection copy constructor
        */
       PostgreSQLConnection(const PostgreSQLConnection&) = delete;

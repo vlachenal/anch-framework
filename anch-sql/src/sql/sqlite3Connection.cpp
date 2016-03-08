@@ -44,6 +44,19 @@ SQLite3Connection::SQLite3Connection(const std::string& database)
     throw SqlException(msg.str());
   }
 }
+
+SQLite3Connection::SQLite3Connection(const SqlConnectionConfiguration& config)
+  throw(SqlException): Connection(), _conn() {
+  std::string connStr = "file:";
+  connStr += config.database;
+  int res = sqlite3_open_v2(connStr.data(), &_conn, SQLITE_OPEN_URI | SQLITE_OPEN_READWRITE, NULL);
+  if(res != SQLITE_OK) {
+    std::ostringstream msg;
+    msg << "Fail to connect SQLite3 database " << config.database << ": " << sqlite3_errmsg(_conn);
+    sqlite3_close(_conn);
+    throw SqlException(msg.str());
+  }
+}
 // Constructors -
 
 // Destructor +

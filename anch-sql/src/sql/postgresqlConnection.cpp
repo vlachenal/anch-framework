@@ -26,6 +26,7 @@
 
 using anch::sql::Connection;
 using anch::sql::SqlException;
+using anch::sql::SqlConnectionConfiguration;
 using anch::sql::PostgreSQLConnection;
 using anch::sql::ResultSet;
 using anch::sql::PostgreSQLResultSet;
@@ -82,6 +83,46 @@ PostgreSQLConnection::PostgreSQLConnection(const std::string& connStr) throw(Sql
   if(PQstatus(_conn) != CONNECTION_OK) {
     std::ostringstream msg;
     msg << "Fail to connect PostgreSQL database: " << PQerrorMessage(_conn);
+    PQfinish(_conn);
+    throw SqlException(msg.str());
+  }
+}
+
+PostgreSQLConnection::PostgreSQLConnection(const SqlConnectionConfiguration& config)
+  throw(SqlException):
+  Connection(),
+  _conn(NULL) {
+  std::ostringstream conninfo;
+  conninfo << "postgresql://";
+  if(!config.user.empty()) {
+    conninfo << config.user;
+    if(!config.password.empty()) {
+      conninfo << ":";
+      conninfo << config.password;
+    }
+    conninfo << "@";
+  }
+  if(!config.hostname.empty()) {
+    conninfo << config.hostname;
+  }
+  if(config.port > 0) {
+    conninfo << ":";
+    conninfo << config.port;
+  }
+  if(!config.database.empty()) {
+    conninfo << "/";
+    conninfo << config.database;
+  }
+  conninfo << "?keepalives=1";
+  if(!config.application.empty()) {
+    conninfo << "&application_name=";
+    conninfo << config.application;
+  }
+  _conn = PQconnectdb(conninfo.str().data());
+  if(PQstatus(_conn) != CONNECTION_OK) {
+    std::ostringstream msg;
+    msg << "Fail to connect PostgreSQL database " << config.database
+	<< ":" << config.port << " with user " << config.user << ": " << PQerrorMessage(_conn);
     PQfinish(_conn);
     throw SqlException(msg.str());
   }

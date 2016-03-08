@@ -16,9 +16,11 @@ if (GCC_VERSION VERSION_LESS 4.5)
 elseif(GCC_VERSION VERSION_GREATER 4.7 OR GCC_VERSION VERSION_EQUAL 4.7)
   message(STATUS "Version >= 4.7 use -std=c++11")
   add_definitions("-std=c++11")
+  set(USE_BOOST_RE true)
 else()
   message(STATUS "4.5 <= Version < 4.7 use -std=c++0x")
   add_definitions("-std=c++0x")
+  set(USE_BOOST_RE true)
 endif()
 # Check GCC version -
 
@@ -82,6 +84,7 @@ include_directories(
   ${PostgreSQL_INCLUDE_DIRS}
   ${SQLite3_INCLUDE_DIRS}
   ${ANCH_UTILS_INCLUDES_DIR}
+  ${ANCH_RES_INCLUDES_DIR}
 )
 
 # Retrieve every files in project
@@ -102,6 +105,18 @@ add_library(
 # Unitary tests
 if(ANCH_SQL_UNITARY_TEST)
 
+  if(USE_BOOST_RE)
+    find_package(Boost COMPONENTS regex)
+    link_directories(
+      ${Boost_LIBRARY_DIRS}
+      ${ANCH_RES_LIBRARY_DIR}
+      )
+  else()
+    link_directories(
+      ${ANCH_RES_LIBRARY_DIR}
+      )
+  endif()
+
   # Build MySQL unitary test +
   if(ANCH_SQL_MYSQL)
     file(
@@ -116,13 +131,26 @@ if(ANCH_SQL_UNITARY_TEST)
       ${test_mysql}
       )
 
-    target_link_libraries(
-      anch-mysql-test
-      anch-sql
-      ${MySQL_LIBRARIES}
-      ${PostgreSQL_LIBRARIES}
-      ${SQLite3_LIBRARIES}
-      )
+    if(USE_BOOST_RE)
+      target_link_libraries(
+	anch-mysql-test
+	anch-sql
+	anch-resource
+	${MySQL_LIBRARIES}
+	${PostgreSQL_LIBRARIES}
+	${SQLite3_LIBRARIES}
+	${Boost_LIBRARIES}
+	)
+    else()
+      target_link_libraries(
+	anch-mysql-test
+	anch-sql
+	anch-resource
+	${MySQL_LIBRARIES}
+	${PostgreSQL_LIBRARIES}
+	${SQLite3_LIBRARIES}
+	)
+    endif()
   endif(ANCH_SQL_MYSQL)
   # Build MySQL unitary test -
 
@@ -140,13 +168,26 @@ if(ANCH_SQL_UNITARY_TEST)
       ${test_postgresql}
       )
 
-    target_link_libraries(
-      anch-postgresql-test
-      anch-sql
-      ${MySQL_LIBRARIES}
-      ${PostgreSQL_LIBRARIES}
-      ${SQLite3_LIBRARIES}
-      )
+    if(USE_BOOST_RE)
+      target_link_libraries(
+	anch-postgresql-test
+	anch-sql
+	anch-resource
+	${MySQL_LIBRARIES}
+	${PostgreSQL_LIBRARIES}
+	${SQLite3_LIBRARIES}
+	${Boost_LIBRARIES}
+	)
+    else()
+      target_link_libraries(
+	anch-postgresql-test
+	anch-sql
+	anch-resource
+	${MySQL_LIBRARIES}
+	${PostgreSQL_LIBRARIES}
+	${SQLite3_LIBRARIES}
+	)
+    endif()
   endif(ANCH_SQL_POSTGRESQL)
   # Build PostgreSQL unitary test -
 
@@ -164,17 +205,68 @@ if(ANCH_SQL_UNITARY_TEST)
       ${test_sqlite3}
       )
 
-    target_link_libraries(
-      anch-sqlite3-test
-      anch-sql
-      ${MySQL_LIBRARIES}
-      ${PostgreSQL_LIBRARIES}
-      ${SQLite3_LIBRARIES}
-      )
+    if(USE_BOOST_RE)
+      target_link_libraries(
+	anch-sqlite3-test
+	anch-sql
+	anch-resource
+	${MySQL_LIBRARIES}
+	${PostgreSQL_LIBRARIES}
+	${SQLite3_LIBRARIES}
+	${Boost_LIBRARIES}
+	)
+    else()
+      target_link_libraries(
+	anch-sqlite3-test
+	anch-sql
+	anch-resource
+	${MySQL_LIBRARIES}
+	${PostgreSQL_LIBRARIES}
+	${SQLite3_LIBRARIES}
+	)
+    endif()
   endif(ANCH_SQL_SQLITE3)
-  configure_file(test/anch.db anch.db COPYONLY)
   # Build SQLite3 unitary test -
 
+  # Build SQL connection factory test +
+  if(ANCH_SQL_MYSQL AND ANCH_SQL_POSTGRESQL AND ANCH_SQL_SQLITE3)
+    file(
+      GLOB_RECURSE
+      test_sqlfactory
+      inc/*
+      test/testSQLConnectionFactory.cpp
+      )
+
+    add_executable(
+      anch-sql-connection-factory-test
+      ${test_sqlfactory}
+      )
+
+    if(USE_BOOST_RE)
+      target_link_libraries(
+	anch-sql-connection-factory-test
+	anch-sql
+	anch-resource
+	${MySQL_LIBRARIES}
+	${PostgreSQL_LIBRARIES}
+	${SQLite3_LIBRARIES}
+	${Boost_LIBRARIES}
+	)
+    else()
+      target_link_libraries(
+	anch-sql-connection-factory-test
+	anch-sql
+	anch-resource
+	${MySQL_LIBRARIES}
+	${PostgreSQL_LIBRARIES}
+	${SQLite3_LIBRARIES}
+	)
+    endif()
+  endif()
+  # Build SQL connection factory test -
+
+  configure_file(test/anch.db anch.db COPYONLY)
+  configure_file(test/dbCon.conf dbCon.conf COPYONLY)
   enable_testing()
   if(ANCH_SQL_MYSQL)
     add_test(MySQL ${EXECUTABLE_OUTPUT_PATH}/anch-mysql-test main)
@@ -185,5 +277,8 @@ if(ANCH_SQL_UNITARY_TEST)
   if(ANCH_SQL_SQLITE3)
     add_test(SQLite3 ${EXECUTABLE_OUTPUT_PATH}/anch-sqlite3-test main)
   endif(ANCH_SQL_SQLITE3)
+  if(ANCH_SQL_MYSQL AND ANCH_SQL_POSTGRESQL AND ANCH_SQL_SQLITE3)
+    add_test(SQLConnectionFactory ${EXECUTABLE_OUTPUT_PATH}anch-sql-connection-factory-test main)
+  endif()
 
 endif(ANCH_SQL_UNITARY_TEST)

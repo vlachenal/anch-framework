@@ -30,6 +30,7 @@
 
 using anch::sql::MySQLConnection;
 using anch::sql::SqlException;
+using anch::sql::SqlConnectionConfiguration;
 using anch::sql::ResultSet;
 using anch::sql::MySQLResultSet;
 
@@ -84,6 +85,42 @@ MySQLConnection::MySQLConnection(const std::string& host,
   mysql_init(&_mysql);
   mysql_options(&_mysql, MYSQL_READ_DEFAULT_GROUP, app.data());
   MYSQL* res = mysql_real_connect(&_mysql, host.data(), user.data(), password.data(), database.data(), port, NULL, 0);
+  if(res == NULL) {
+    /*
+      \todo manage error with mysql_errno(&_mysql):
+      - CR_CONN_HOST_ERROR: fail to connect server
+      - CR_CONNECTION_ERROR: fail to connect localhost server
+      - CR_IPSOCK_ERROR: fail to create IP socket
+      - CR_OUT_OF_MEMORY: out of memory
+      - CR_SOCKET_CREATE_ERROR: fail to create UNIX socket
+      - CR_UNKNOWN_HOST: unknown host
+      - CR_VERSION_ERROR: protocol versions mismatch between client and server
+      - CR_NAMEDPIPEOPEN_ERROR: fail to create named pipe on Windows
+      - CR_NAMEDPIPEWAIT_ERROR: fail to wait for a named pipe on Windows
+      - CR_NAMEDPIPESETSTATE_ERROR: fail to get a pipe handler on Windows
+      - CR_SERVER_LOST: connection timeout if set or server died
+      - CR_ALREADY_CONNECTED: already connected ... can not happened
+    */
+    std::ostringstream msg;
+    msg << "Failed to connect to database. Error: " << mysql_error(&_mysql);
+    throw SqlException(msg.str());
+  }
+}
+
+MySQLConnection::MySQLConnection(const SqlConnectionConfiguration& config)
+  throw(SqlException):
+  _mysql() {
+
+  MySQLInitializer::getInstance(); // Initialize MySQL library if not already done
+
+  mysql_init(&_mysql);
+  mysql_options(&_mysql, MYSQL_READ_DEFAULT_GROUP, config.application.data());
+  MYSQL* res = mysql_real_connect(&_mysql,
+				  config.hostname.data(),
+				  config.user.data(),
+				  config.password.data(),
+				  config.database.data(),
+				  config.port, NULL, 0);
   if(res == NULL) {
     /*
       \todo manage error with mysql_errno(&_mysql):
