@@ -112,6 +112,9 @@ SqlConnectionFactory::SqlConnectionFactory(): _configs(), _pools() {
 // Destructor +
 SqlConnectionFactory::~SqlConnectionFactory() {
   _configs.clear();
+  for(auto iter = _pools.begin() ; iter != _pools.end() ; ++iter) {
+    delete iter->second;
+  }
   _pools.clear();
 }
 // Destructor -
