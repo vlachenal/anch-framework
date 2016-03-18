@@ -223,7 +223,12 @@ namespace anch {
       _config(config),
       _timeout(timeout) {
       for(std::size_t i = 0 ; i < initialiSize && i < maxSize ; ++i) {
-	_availables.push_back(make_ptr(_config));
+	try {
+	  std::shared_ptr<T> ptr = make_ptr(_config);
+	  _availables.push_back(ptr);
+	} catch(...) {
+	  // Nothing to do => resources will be instanciated later ... or not
+	}
       }
     }
 
@@ -251,18 +256,24 @@ namespace anch {
   public:
     /*!
      * Retrieve available resource if there is one.\n
-     * Create a new resource if maximum size has not been reached.
+     * Create a new resource if maximum size has not been reached.\n
+     * \n
+     * This method will raise \ref TimeoutException if timeout has been reached while waiting
+     * available resource or any other exception thrown by the resource constructor.
      *
      * \return the poolable resource (\ref PoolableResource)
-     *
-     * \throw TimeoutException when all resources are used for timeout milliseconds
      */
-    PoolableResource borrowResource() throw(TimeoutException) {
+    PoolableResource borrowResource() {
       _mutex.lock();
       std::shared_ptr<T> ptr;
       if(_availables.empty()) {
 	if(_used.load() < _maxSize) {
-	  ptr = make_ptr(_config);
+	  try {
+	    ptr = make_ptr(_config);
+	  } catch(...) {
+	    _mutex.unlock();
+	    throw;
+	  }
 	  _used.fetch_add(1);
 	  _mutex.unlock();
 
@@ -311,8 +322,12 @@ namespace anch {
     void invalidateResource(std::shared_ptr<T> res) {
       res.reset();
       _used.fetch_sub(1);
-      _availables.push_back(make_ptr(_config));
-      _wait.notify_one();
+      try {
+	_availables.push_back(make_ptr(_config));
+	_wait.notify_one();
+      } catch(...) {
+	// Nothing to do => until resource will be instanciate other waiters will fail on timeout
+      }
     }
     // Methods -
 

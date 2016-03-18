@@ -250,7 +250,7 @@ Socket::close() noexcept {
   // Shutdown the socket to release every data on the socket +
   try {
     shutdown(Direction::BOTH);
-  } catch(const IOException& e) {
+  } catch(...) {
     // Nothing to do
   }
   // Shutdown the socket to release every data on the socket -
