@@ -16,6 +16,7 @@
  * - \ref page_crypto "anch-crypto": provides cryptographic library which only include hash algorithms implementation (MD5, SHA1 and SHA2) and HMAC (with implemented hashes).
  * - anch-device: provides device interaction library (only to retrieve network status for now).
  * - anch-network: provides basic API to send and receive data on TCP or UDP sockets.
+ * - \ref page_sql "anch-sql": provides SQL client abstraction layer implementation for SQLite3, PostgreSQL and MySQL.
  * - anch-utils: provides some utility classes and functions. This 'library' contains header only implementations.
  *
  * Each library contains unitary tests which can provide a way to use it.\n

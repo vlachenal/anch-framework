@@ -85,8 +85,15 @@ namespace anch {
     public:
       /*!
        * \ref Connection default constructor
+       *
+       * \throw SqlException any error
        */
-      Connection();
+      Connection() throw(SqlException);
+
+      /*!
+       * Prohibit \ref Connection copy constructor
+       */
+      Connection(const Connection&) = delete;
       // Constructors -
 
       // Destructor +
@@ -200,6 +207,16 @@ namespace anch {
        */
       inline bool isValid() const {
 	return _valid;
+      }
+
+    protected:
+      /*!
+       * Valid status setter
+       *
+       * \param valid the status to set
+       */
+      inline void setValid(bool valid) {
+	_valid = valid;
       }
       // Accessors -
 

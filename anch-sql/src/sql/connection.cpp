@@ -23,7 +23,7 @@ using anch::sql::Connection;
 
 
 // Constructors +
-Connection::Connection(): _autoCommit(true), _valid(true) {
+Connection::Connection() throw(SqlException): _autoCommit(true), _valid(true) {
 }
 // Constructors -
 

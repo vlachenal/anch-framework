@@ -19,9 +19,9 @@
  *
  * AnCH SQL library is an layout to manage SQL client. Managed SQL clients are SQLite3, PostgreSQL and MySQL/MariaDB.\n
  * \n
- * SQl interfaces are inspired by Java JDBC. You will find \ref anch::sql::Connection, \ref anch::sql::ResultSet, ... \todo list other classes.
- * \ref anch::sql::ResulSet can be handle with row mapper and complete extract \ref std::function trough queryMapRow and queryExtract methods.
- * These methods will release \ref anch::sqlResultSet .\n
+ * SQl interfaces are inspired by Java JDBC. You will find \ref anch::sql::Connection "Connection", \ref anch::sql::ResultSet "ResultSet", ... \todo list other classes.
+ * \ref anch::sql::ResultSet "ResultSet" can be handle with row mapper and complete extract \c std::function "std::function" trough queryMapRow and queryExtract methods.
+ * These methods will release \ref anch::sql::ResultSet "ResultSet".\n
  * \n
  * AnCH SQL provides connection factory.
  *

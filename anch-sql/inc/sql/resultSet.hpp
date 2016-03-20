@@ -52,10 +52,7 @@ namespace anch {
       // Constructors +
     public:
       /*!
-       * \ref ResultSet constructor
-       *
-       * \param fields the fields' name
-       * \param nbRow the number of row in result set
+       * \ref ResultSet default constructor
        */
       ResultSet();
       // Constructors -
@@ -94,6 +91,8 @@ namespace anch {
        * \param out the result
        *
        * \return \c true if result is NULL, \c false otherwise
+       *
+       * \throw SqlException any error
        */
       template<typename T>
       bool get(std::size_t idx, T& out) throw(SqlException);

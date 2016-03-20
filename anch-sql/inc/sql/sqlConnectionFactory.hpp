@@ -81,6 +81,7 @@ namespace anch {
       return conn;
     }
 
+    /*! SQL connections pool definition */
     using SqlConnectionPool = anch::ResourcePool<Connection, SqlConnectionConfiguration, make_shared_connection>;
 
     /*!

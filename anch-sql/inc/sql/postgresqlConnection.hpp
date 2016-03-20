@@ -110,7 +110,7 @@ namespace anch {
        *
        * \throw SqlException any error
        */
-      virtual ResultSet* query(const std::string& query) throw(SqlException);
+      virtual ResultSet* query(const std::string& query) throw(SqlException) override;
 
     protected:
       /*!
@@ -118,14 +118,14 @@ namespace anch {
        *
        * \throw SqlException fail to commit transaction
        */
-      virtual void sendCommit() throw(SqlException);
+      virtual void sendCommit() throw(SqlException) override;
 
       /*!
        * Send rollback to database server
        *
        * \throw SqlException fail to rollback transaction
        */
-      virtual void sendRollback() throw(SqlException);
+      virtual void sendRollback() throw(SqlException) override;
 
       /*!
        * Send auto commit status modification to server
@@ -134,7 +134,7 @@ namespace anch {
        *
        * \throw SqlException any error
        */
-      virtual void toggleAutoCommit(bool autoCommit) throw(SqlException);
+      virtual void toggleAutoCommit(bool autoCommit) throw(SqlException) override;
       // Methods -
 
     };

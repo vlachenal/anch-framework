@@ -106,7 +106,7 @@ namespace anch {
    * If no resource is available, pool will wait until timeout (default to 100ms) is reached.\n
    * Resources are automatically released through their destructor.\n
    * If you have only one action to do, you can use pool.borrowResource.get().doAction() ;
-   * otherwise you should to keep reference to \ref PoolableResource until all actions have been done (with auto res = pool.borrowResource()).\n
+   * otherwise you should to keep reference to \c anch::PoolableResource until all actions have been done (with auto res = pool.borrowResource()).\n
    * You can specifiy an \c std::shared_ptr creation function as third template parameter. By default, \c std::make_shared<T> will be used. It can be usefull for polymorphism dynamic allocation.
    *
    * \author Vincent Lachenal
@@ -261,7 +261,7 @@ namespace anch {
      * This method will raise \ref TimeoutException if timeout has been reached while waiting
      * available resource or any other exception thrown by the resource constructor.
      *
-     * \return the poolable resource (\ref PoolableResource)
+     * \return the poolable resource (\c anch::PoolableResource)
      */
     PoolableResource borrowResource() {
       _mutex.lock();

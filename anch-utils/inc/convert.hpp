@@ -29,7 +29,7 @@
 namespace anch {
 
   /*!
-   * Performs strict conversion from \ref std::string to number
+   * Performs strict conversion from \c std::string to number
    *
    * \param str the string to convert
    *

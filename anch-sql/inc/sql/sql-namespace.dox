@@ -1,0 +1,11 @@
+/*!
+ * \namespace anch::sql
+ *
+ * \brief SQL namespace.
+ *
+ * Provides abstraction layer for several SQL clients.\n
+ * Supported SQL database are (for now):
+ * - SQLite3
+ * - MySQL/MariaDB
+ * - PostgreSQL
+ */
