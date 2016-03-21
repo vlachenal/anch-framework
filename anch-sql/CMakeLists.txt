@@ -13,7 +13,7 @@ execute_process(COMMAND ${CMAKE_C_COMPILER} -dumpversion
                 OUTPUT_VARIABLE GCC_VERSION)
 if (GCC_VERSION VERSION_LESS 4.5)
   message(FATAL_ERROR "Version < 4.5. This library is based on C++11 standard. Exit.")
-elseif(GCC_VERSION VERSION_GREATER 5.1 OR GCC_VERSION VERSION_EQUAL 5.1)
+elseif(GCC_VERSION VERSION_GREATER 4.9 OR GCC_VERSION VERSION_EQUAL 4.9)
   message(STATUS "Version >= 4.7 use -std=c++11")
   add_definitions("-std=c++11")
   set(USE_BOOST_RE false)
