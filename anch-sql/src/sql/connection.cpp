@@ -20,6 +20,7 @@
 #include "sql/connection.hpp"
 
 using anch::sql::Connection;
+using anch::sql::ResultSet;
 
 
 // Constructors +
@@ -56,6 +57,12 @@ Connection::setAutoCommit(bool autoCommit) throw(SqlException) {
   }
 }
 
+ResultSet*
+Connection::query(const std::string& query) throw(SqlException) {
+  // \todo parse select query
+  return executeQuery(query);
+}
+
 void
 Connection::queryMapRow(const std::string& sqlQuery, std::function<void(ResultSet&)> rowMapper) throw(SqlException) {
   ResultSet* res = query(sqlQuery);
@@ -80,5 +87,11 @@ Connection::queryExtract(const std::string& sqlQuery, std::function<void(ResultS
     throw;
   }
   delete res;
+}
+
+uint64_t
+Connection::update(const std::string& query) throw(SqlException) {
+  // \todo check update query ...
+  return executeUpdate(query);
 }
 // Methods -

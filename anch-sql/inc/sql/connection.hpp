@@ -142,7 +142,7 @@ namespace anch {
        *
        * \throw SqlException any error
        */
-      virtual ResultSet* query(const std::string& query) throw(SqlException) = 0;
+      ResultSet* query(const std::string& query) throw(SqlException);
 
       /*!
        * Execute query and treat each row of result set
@@ -164,7 +164,38 @@ namespace anch {
        */
       void queryExtract(const std::string& sqlQuery, std::function<void(ResultSet&)> resExtractor) throw(SqlException);
 
+      /*!
+       * Execute update (INSERT, UPDATE or DELETE) SQL query.
+       *
+       * \param query the SQL query
+       *
+       * \throw SqlException any error
+       */
+      uint64_t update(const std::string& query) throw(SqlException);
+
     protected:
+      /*!
+       * Execute SQL select query
+       *
+       * \param query the SQL query to execute
+       *
+       * \return the result set which has to be deleted after use
+       *
+       * \throw SqlException any error
+       */
+      virtual ResultSet* executeQuery(const std::string& query) throw(SqlException) = 0;
+
+      /*!
+       * Execute SQL update query
+       *
+       * \param query the SQL query to execute
+       *
+       * \return the result set which has to be deleted after use
+       *
+       * \throw SqlException any error
+       */
+      virtual uint64_t executeUpdate(const std::string& query) throw(SqlException) = 0;
+
       /*!
        * Send commit to database server
        *

@@ -21,6 +21,7 @@
 
 #include "sql/postgresqlConnection.hpp"
 #include "sql/postgresqlResultSet.hpp"
+#include "convert.hpp"
 
 #include <sstream>
 
@@ -170,7 +171,7 @@ PostgreSQLConnection::toggleAutoCommit(bool) throw(SqlException) {
 }
 
 ResultSet*
-PostgreSQLConnection::query(const std::string& query) throw(SqlException) {
+PostgreSQLConnection::executeQuery(const std::string& query) throw(SqlException) {
   int res = PQsendQuery(_conn, query.data());
   if(res != 1) {
     std::ostringstream msg;
@@ -179,6 +180,52 @@ PostgreSQLConnection::query(const std::string& query) throw(SqlException) {
   }
   ResultSet* resSet = new PostgreSQLResultSet(_conn);
   return resSet;
+}
+
+uint64_t
+PostgreSQLConnection::executeUpdate(const std::string& query) throw(SqlException) {
+  PGresult* res = PQexec(_conn, query.data());
+  if(res == NULL) {
+    std::ostringstream msg;
+    msg << "Unable to execute query " << query << ": " << PQerrorMessage(_conn);
+    throw SqlException(msg.str());
+  }
+  ExecStatusType status = PQresultStatus(res);
+  switch(status) {
+  case PGRES_COMMAND_OK:
+    // OK => continue
+    break;
+  case PGRES_EMPTY_QUERY:
+  case PGRES_TUPLES_OK:
+  case PGRES_COPY_OUT:
+  case PGRES_COPY_IN:
+  case PGRES_COPY_BOTH:
+    {
+      std::ostringstream msg;
+      msg << "Unexpected update query: " << query;
+      PQclear(res);
+      throw SqlException(msg.str());
+    }
+    break;
+  case PGRES_FATAL_ERROR:
+    _valid = false; // Do not break => go to default and throw execption
+  default:
+    {
+      std::ostringstream msg;
+      msg << "Unable to execute query " << query << ": " << PQerrorMessage(_conn);
+      PQclear(res);
+      throw SqlException(msg.str());
+    }
+  }
+  std::string strRes = PQcmdTuples(res);
+  PQclear(res);
+  uint64_t nbRows = 0;
+  try {
+    nbRows = convert<uint64_t>(strRes);
+  } catch(std::bad_cast&) {
+    // Nothing to do
+  }
+  return nbRows;
 }
 // Methods -
 

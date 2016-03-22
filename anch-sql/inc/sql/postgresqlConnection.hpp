@@ -100,9 +100,9 @@ namespace anch {
       // Destructor -
 
       // Methods +
-    public:
+    protected:
       /*!
-       * Execute SQL query
+       * Execute SQL select query
        *
        * \param query the SQL query to execute
        *
@@ -110,9 +110,19 @@ namespace anch {
        *
        * \throw SqlException any error
        */
-      virtual ResultSet* query(const std::string& query) throw(SqlException) override;
+      virtual ResultSet* executeQuery(const std::string& query) throw(SqlException) override;
 
-    protected:
+      /*!
+       * Execute SQL update query
+       *
+       * \param query the SQL query to execute
+       *
+       * \return the number of updated rows
+       *
+       * \throw SqlException any error
+       */
+      virtual uint64_t executeUpdate(const std::string& query) throw(SqlException) override;
+
       /*!
        * Send commit to database server
        *

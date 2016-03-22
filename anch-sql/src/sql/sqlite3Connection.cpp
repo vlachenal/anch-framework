@@ -67,7 +67,7 @@ SQLite3Connection::~SQLite3Connection() {
 
 // Methods +
 ResultSet*
-SQLite3Connection::query(const std::string& query) throw(SqlException) {
+SQLite3Connection::executeQuery(const std::string& query) throw(SqlException) {
   sqlite3_stmt* stmt;
   int res = sqlite3_prepare_v2(_conn, query.data(), -1, &stmt, NULL);
   if(res != SQLITE_OK) {
@@ -82,6 +82,19 @@ SQLite3Connection::query(const std::string& query) throw(SqlException) {
 static int emptyCB(void*, int, char**, char**) {
   // Nothing to do
   return 0;
+}
+
+uint64_t
+SQLite3Connection::executeUpdate(const std::string& query) throw(SqlException) {
+  char* errMsg = 0;
+  int res = sqlite3_exec(_conn, query.data(), emptyCB, 0, &errMsg);
+  if(res != SQLITE_OK) {
+    std::ostringstream msg;
+    msg << "Error while executing update: " << errMsg;
+    sqlite3_free(errMsg);
+    throw SqlException(msg.str());
+  }
+  return static_cast<uint64_t>(sqlite3_changes(_conn));;
 }
 
 void

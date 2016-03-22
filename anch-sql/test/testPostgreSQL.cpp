@@ -129,6 +129,33 @@ main(void) {
 
     std::cout << std::endl;
 
+    std::cout << "Execute 'INSERT INTO T_Test (first_name,last_name,birth_date,email) VALUES('Insert','Test','2016-03-22','insert.test@yopmail.com')'" << std::endl;
+    uint64_t nbRow = dbCon.update("INSERT INTO T_Test (first_name,last_name,birth_date,email) VALUES('Insert','Test','2016-03-22','insert.test@yopmail.com')");
+    if(nbRow != 1) {
+      std::cerr << "Number of affected rows should be 1 instead of " << nbRow << std::endl;
+      return 1;
+    }
+
+    std::cout << std::endl;
+
+    std::cout << "Execute 'UPDATE T_Test SET first_name = 'Update', email = 'update.test@yopmail.com' WHERE first_name = 'Insert' AND last_name = 'Test''" << std::endl;
+    nbRow = dbCon.update("UPDATE T_Test SET first_name = 'Update', email = 'update.test@yopmail.com' WHERE first_name = 'Insert' AND last_name = 'Test'");
+    if(nbRow != 1) {
+      std::cerr << "Number of affected rows should be 1 instead of " << nbRow << std::endl;
+      return 1;
+    }
+
+    std::cout << std::endl;
+
+    std::cout << "Execute 'DELETE FROM T_Test WHERE first_name = 'Update' AND last_name = 'Test''" << std::endl;
+    nbRow = dbCon.update("DELETE FROM T_Test WHERE first_name = 'Update' AND last_name = 'Test'");
+    if(nbRow != 1) {
+      std::cerr << "Number of affected rows should be 1 instead of " << nbRow << std::endl;
+      return 1;
+    }
+
+    std::cout << std::endl;
+
   } catch(const SqlException& e) {
     std::cerr << "Error: " << e.what() << std::endl;
     return 1;

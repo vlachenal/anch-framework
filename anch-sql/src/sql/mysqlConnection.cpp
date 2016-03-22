@@ -174,7 +174,7 @@ MySQLConnection::toggleAutoCommit(bool autoCommit) throw(SqlException) {
 }
 
 ResultSet*
-MySQLConnection::query(const std::string& query) throw(SqlException) {
+MySQLConnection::executeQuery(const std::string& query) throw(SqlException) {
   ResultSet* resSet = NULL;
   int res = mysql_query(&_mysql, query.data());
   if(res != 0) {
@@ -194,6 +194,25 @@ MySQLConnection::query(const std::string& query) throw(SqlException) {
     resSet = new MySQLResultSet(result);
   }
   return resSet;
+}
+
+uint64_t
+MySQLConnection::executeUpdate(const std::string& query) throw(SqlException) {
+  int res = mysql_query(&_mysql, query.data());
+  if(res != 0) {
+    std::ostringstream out;
+    out << "Error while executing query " << query << " ; message="
+	<< mysql_error(&_mysql);
+    throw SqlException(out.str());
+  }
+  my_ulonglong nbRow = mysql_affected_rows(&_mysql);
+  if(nbRow == static_cast<my_ulonglong>(-1)) {
+    std::ostringstream out;
+    out << "Query " << query << " is not an update query " << query
+	<< " ; message=" << mysql_error(&_mysql);
+    throw SqlException(out.str());
+  }
+  return static_cast<uint64_t>(nbRow);
 }
 // Methods -
 

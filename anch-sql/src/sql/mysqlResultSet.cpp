@@ -58,9 +58,6 @@ bool
 MySQLResultSet::next() throw(SqlException) {
   _row = mysql_fetch_row(_result);
   return (_row != NULL);
-  // if(_row == NULL) {
-  //   throw SqlException("Can not fetch next row");
-  // }
 }
 
 #endif // ANCH_SQL_MYSQL
