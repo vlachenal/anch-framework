@@ -281,26 +281,6 @@ if(ANCH_CRYPTO_UNITARY_TEST)
   )
   # Build AES-CTR unit tests -
 
-  # Build AES - CTR unit tests +
-  file(
-    GLOB_RECURSE
-    test_aes_ctr_big_data
-    inc/*
-    test/testAesCtrBigData.cpp
-  )
-
-  add_executable(
-    anch-aes-ctr-big-data-test
-    ${test_aes_ctr_big_data}
-  )
-
-  target_link_libraries(
-    anch-aes-ctr-big-data-test
-    anch-crypto
-    ${CMAKE_THREAD_LIBS_INIT}
-  )
-  # Build AES-CTR unit tests -
-
   # Build AES - OFB unit tests +
   file(
     GLOB_RECURSE
@@ -378,9 +358,33 @@ if(ANCH_CRYPTO_UNITARY_TEST)
       anch-crypto
       ${OPENSSL_LIBRARIES}
       ${CMAKE_THREAD_LIBS_INIT}
-    )
-    # Build AES benchmark -
+      )
+
     add_test(BenchOpenssl ${EXECUTABLE_OUTPUT_PATH}/anch-bench-openssl main)
+    # Build AES benchmark -
+
+
+    # Build AES - CTR unit tests +
+    file(
+      GLOB_RECURSE
+      test_aes_ctr_big_data
+      inc/*
+      test/testAesCtrBigData.cpp
+      )
+
+    add_executable(
+      anch-aes-ctr-big-data-test
+      ${test_aes_ctr_big_data}
+      )
+
+    target_link_libraries(
+      anch-aes-ctr-big-data-test
+      anch-crypto
+      ${OPENSSL_LIBRARIES}
+      ${CMAKE_THREAD_LIBS_INIT}
+      )
+    # Build AES-CTR unit tests -
+
   endif()
 
 endif(ANCH_CRYPTO_UNITARY_TEST)

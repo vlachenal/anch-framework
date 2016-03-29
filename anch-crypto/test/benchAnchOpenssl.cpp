@@ -101,6 +101,9 @@ main(void) {
     delete input;
     std::cout << "CBC sequential cipher duration: " << duration.count() << " µs" << std::endl;
 
+    EVP_cleanup();
+    ERR_free_strings();
+
     std::cout << "Decipher Makefile.OpenSSL.cbc.aes256.PKCS7.cipher" << std::endl;
     input = new std::ifstream("Makefile.OpenSSL.cbc.aes256.PKCS7.cipher", std::ifstream::binary);
     std::ofstream cbcOutDecipher("Makefile.OpenSSL.cbc.aes256.PKCS7.decipher");
@@ -157,6 +160,9 @@ main(void) {
     delete input;
     std::cout << "CBC sequential decipher duration: " << duration.count() << " µs" << std::endl;
 
+    EVP_cleanup();
+    ERR_free_strings();
+
     std::cout << "Compute Makefile hash using SHA1" << std::endl;
     input = new std::ifstream("Makefile", std::ifstream::binary);
     SHA1 hash(*input);
@@ -175,9 +181,6 @@ main(void) {
       std::cerr << "Makefiles are differents" << std::endl;
       return 1;
     }
-
-    EVP_cleanup();
-    ERR_free_strings();
 
     std::cout << "Exit OpenSSL CBC with sequential AES256 and PKCS7 padding tests" << std::endl;
   }
