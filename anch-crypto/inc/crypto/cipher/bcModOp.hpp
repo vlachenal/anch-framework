@@ -102,7 +102,7 @@ namespace anch {
 	_writeIdx(0),
 	_error(false) {
 	if(nbThread == 0 && (cipherParallelizable || decipherParallelizable)) {
-	  _nbThread = std::thread::hardware_concurrency(); 
+	  _nbThread = std::thread::hardware_concurrency();
 	  if(_nbThread == 0) { // Keep at least 1 thread running
 	    _nbThread = 1;
 	  }
@@ -254,46 +254,52 @@ namespace anch {
        * \param output the output stream
        * \param key the cipher key
        */
-      void cipherInParallel(std::istream& input,
-			    std::ostream& output,
-			    const std::string& key) {
-	_endIdx = UINT32_MAX;
-	_writeIdx = 0;
-	_stream = &output;
-
-	Cipher cipher(reinterpret_cast<const uint8_t*>(key.data()));
-	ThreadPool pool(_nbThread);
-	pool.start();
-	std::array<uint8_t,Cipher::getBlockSize()> data;
+      inline void cipherInParallel(std::istream& input,
+				   std::ostream& output,
+				   const std::string& key) {
+	std::array<uint8_t,Cipher::getBlockSize()>* data = new std::array<uint8_t,Cipher::getBlockSize()>[_nbThread];
+	std::array<uint8_t,Cipher::getBlockSize()>* result = new std::array<uint8_t,Cipher::getBlockSize()>[_nbThread];
+	std::size_t* nbWrite = new std::size_t[_nbThread];
 	uint32_t index = 0;
-	uint32_t endIdx = 0;
+	std::deque<std::thread> threads;
+	std::vector<Cipher> ciph;
+	ciph.push_back(Cipher(reinterpret_cast<const uint8_t*>(key.data())));
+	for(std::size_t i = 1 ; i < _nbThread ; ++i) {
+	  ciph.push_back(Cipher(ciph[0]));
+	}
 	while(!input.eof()) {
-	  // Add lock to avoid memory consumption on big data +
-	  std::unique_lock<std::mutex> readLock(_streamMutex);
-	  _writeBlock.wait(readLock, [this,&index]{ return  index < (_writeIdx.load() + _nbThread * 3); });
-	  // Add lock to avoid memory consumption on big data -
-
-	  input.read(reinterpret_cast<char*>(data.data()), Cipher::getBlockSize());
-	  std::streamsize nbRead = input.gcount();
-	  if(nbRead == 0) {
-	    endIdx = index;
-	    break;
-
-	  } else if(nbRead < static_cast<std::streamsize>(Cipher::getBlockSize())) {
-	    endIdx = index + 1;
+	  for(std::size_t i = 0 ; i < _nbThread ; ++i) {
+	    input.read(reinterpret_cast<char*>(data[i].data()), Cipher::getBlockSize());
+	    std::streamsize nbRead = input.gcount();
+	    if(nbRead == 0) {
+	      break;
+	    }
+	    threads.push_back(std::thread(&Derived::deferredCipherBlock,
+					  this,
+					  index++,
+					  std::ref(data[i]),
+					  nbRead,
+					  std::ref(result[i]),
+					  std::ref(ciph[i]),
+					  std::ref(nbWrite[i])));
+	    if(nbRead != Cipher::getBlockSize()) {
+	      break;
+	    }
 	  }
-	  pool.add(&Derived::deferredCipherBlock, static_cast<Derived*>(this), index, data, nbRead, cipher);
-	  ++index;
+	  for(uint32_t i = 0 ; !threads.empty() ; ++i) {
+	    std::thread& th = threads.front();
+	    th.join();
+	    for(uint32_t j = 0 ; j < nbWrite[i] ; ++j) {
+	      output << result[i][j];
+	    }
+	    threads.pop_front();
+	  }
 	}
 
-	std::unique_lock<std::mutex> finalizeLock(_streamMutex);
-	_writeBlock.wait(finalizeLock, [this,&endIdx]{ return _writeIdx.load() == endIdx; });
-
-	pool.stop();
 	output.flush();
-	_stream = NULL;
-
-	finalizeLock.unlock();
+	delete[] data;
+	delete[] result;
+	delete[] nbWrite;
       }
 
       /*!
@@ -345,50 +351,60 @@ namespace anch {
 				     std::ostream& output,
 				     const std::string& key,
 				     std::array<uint8_t,Cipher::getBlockSize()>& prevData) {
-	_endIdx = UINT32_MAX;
-	_writeIdx = 0;
-	_stream = &output;
-	Cipher cipher(reinterpret_cast<const uint8_t*>(key.data()));
-	ThreadPool pool(_nbThread);
-	pool.start();
-	std::array<uint8_t,Cipher::getBlockSize()> data;
-	std::array<uint8_t,Cipher::getBlockSize()> cipherData;
+	std::array<uint8_t,Cipher::getBlockSize()>* data = new std::array<uint8_t,Cipher::getBlockSize()>[_nbThread + 1];
+	std::array<uint8_t,Cipher::getBlockSize()>* result = new std::array<uint8_t,Cipher::getBlockSize()>[_nbThread];
+	std::size_t* nbWrite = new std::size_t[_nbThread];
 	uint32_t index = 0;
-	input.read(reinterpret_cast<char*>(data.data()), Cipher::getBlockSize());
-	std::streamsize nbRead = input.gcount();
-	do {
-	  cipherData = data;
-
-	  // Add lock to avoid memory consumption on big data +
-	  std::unique_lock<std::mutex> readLock(_streamMutex);
-	  _writeBlock.wait(readLock, [this,&index]{ return  index < (_writeIdx.load() + _nbThread * 3); });
-	  // Add lock to avoid memory consumption on big data -
-
-	  input.read(reinterpret_cast<char*>(data.data()), Cipher::getBlockSize());
-
-	  if(input.eof()) { // Set end index for padding
-	    _endIdx = index;
-	  }
-
-	  pool.add(&Derived::deferredDecipherBlock, static_cast<Derived*>(this), index, cipherData, prevData, nbRead, cipher);
-	  ++index;
-
-	  prevData = cipherData;
-	  nbRead = input.gcount();
-	} while(nbRead != 0 && !_error);
-
-	std::unique_lock<std::mutex> finalizeLock(_streamMutex);
-	_writeBlock.wait(finalizeLock, [this,&index]{ return _writeIdx.load() == index; });
-
-	if(_error) {
-	  throw InvalidBlockException("Error while decipher data");
+	std::deque<std::thread> threads;
+	std::vector<Cipher> ciph;
+	ciph.push_back(Cipher(reinterpret_cast<const uint8_t*>(key.data())));
+	for(std::size_t i = 1 ; i < _nbThread ; ++i) {
+	  ciph.push_back(Cipher(ciph[0]));
 	}
+	bool lastBlock = false;
+	input.read(reinterpret_cast<char*>(data[0].data()), Cipher::getBlockSize());
+	std::size_t nbRead = input.gcount();
+	do {
+	  for(std::size_t i = 0, idx = 1 ; i < _nbThread ; ++i, ++idx) {
+	    input.read(reinterpret_cast<char*>(data[idx].data()), Cipher::getBlockSize());
+	    std::streamsize nextCount = input.gcount();
+	    if(nextCount == 0) {
+	      lastBlock = true;
+	    }
+	    threads.push_back(std::thread(&Derived::deferredDecipherBlock,
+					  this,
+					  index++,
+					  std::ref(data[i]),
+					  prevData,
+					  nbRead,
+					  lastBlock,
+					  std::ref(result[i]),
+					  std::ref(ciph[i]),
+					  std::ref(nbWrite[i])));
+	    if(lastBlock) {
+	      break;
+	    }
+	    nbRead = nextCount;
+	    prevData = data[i];
+	  }
+	  for(uint32_t i = 0 ; !threads.empty() ; ++i) {
+	    std::thread& th = threads.front();
+	    th.join();
+	    for(uint32_t j = 0 ; j < nbWrite[i] ; ++j) {
+	      output << result[i][j];
+	    }
+	    threads.pop_front();
+	  }
+	  if(_error) {
+	    throw InvalidBlockException("Error while decipher stream");
+	  }
+	  data[0] = data[_nbThread];
+	} while(!input.eof() && !lastBlock);
 
-	pool.stop();
 	output.flush();
-	_stream = NULL;
-
-	finalizeLock.unlock();
+	delete[] data;
+	delete[] result;
+	delete[] nbWrite;
       }
 
       /*!
@@ -400,23 +416,12 @@ namespace anch {
        * \param cipher the cipher instance to use
        */
       void deferredCipherBlock(uint32_t index,
-			       std::array<uint8_t,Cipher::getBlockSize()> input,
+			       std::array<uint8_t,Cipher::getBlockSize()>& input,
 			       std::streamsize nbRead,
-			       Cipher cipher) {
-	std::array<uint8_t,Cipher::getBlockSize()> output;
-	std::size_t nbBlocks = cipherBlock(input, nbRead, output, index, cipher);
-
-	std::unique_lock<std::mutex> indexLock(_streamMutex);
-	_writeBlock.wait(indexLock, [this,&index]{ return _writeIdx.load() == index; });
-
-	for(std::size_t i = 0 ; i < nbBlocks ; ++i) {
-	  *_stream << output[i];
-	}
-
-	_writeIdx.store(index + 1);
-
-	indexLock.unlock();
-	_writeBlock.notify_all();
+			       std::array<uint8_t,Cipher::getBlockSize()>& output,
+			       Cipher& cipher,
+			       std::size_t& nbWrite) {
+	nbWrite = cipherBlock(input, nbRead, output, index, cipher);
       }
 
       /*!
@@ -429,29 +434,18 @@ namespace anch {
        * \param cipher the cipher instance to use
        */
       virtual void deferredDecipherBlock(uint32_t index,
-					 std::array<uint8_t, Cipher::getBlockSize()> input,
+					 std::array<uint8_t, Cipher::getBlockSize()>& input,
 					 std::array<uint8_t, Cipher::getBlockSize()> prevInput,
 					 std::streamsize nbRead,
-					 Cipher cipher) {
-	std::array<uint8_t,Cipher::getBlockSize()> output;
-	std::size_t nbBlocks = 0;
+					 bool lastBlock,
+					 std::array<uint8_t, Cipher::getBlockSize()>& output,
+					 Cipher& cipher,
+					 std::size_t& nbWrite) {
 	try {
-	  nbBlocks = decipherBlock(input, prevInput, nbRead, (index == _endIdx), output, index, cipher);
+	  nbWrite = decipherBlock(input, prevInput, nbRead, lastBlock, output, index, cipher);
 	} catch(const InvalidBlockException& e) {
 	  _error = true;
 	}
-
-	std::unique_lock<std::mutex> indexLock(_streamMutex);
-	_writeBlock.wait(indexLock, [this,&index]{ return _writeIdx.load() == index; });
-
-	for(std::size_t i = 0 ; i < nbBlocks ; ++i) {
-	  *_stream << output[i];
-	}
-
-	_writeIdx.store(index + 1);
-
-	indexLock.unlock();
-	_writeBlock.notify_all();
       }
       // Methods -
 

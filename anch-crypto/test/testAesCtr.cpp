@@ -83,7 +83,7 @@ main(void) {
     std::ofstream ctrOutCipher("Makefile.ctr.aes128.async.cipher", std::ofstream::binary);
 
     std::cout << "Cipher Makefile" << std::endl;
-    CTR<AES128> ctr(iv,2);
+    CTR<AES128> ctr(iv,4);
     start = std::chrono::high_resolution_clock::now();
     ctr.cipher(*input, ctrOutCipher, "foobar    raboof");
     end = std::chrono::high_resolution_clock::now();
@@ -189,7 +189,7 @@ main(void) {
     std::ofstream ctrOutCipher("Makefile.ctr.aes256.async.cipher", std::ofstream::binary);
 
     std::cout << "Cipher Makefile" << std::endl;
-    CTR<AES256> ctr(iv,2);
+    CTR<AES256> ctr(iv,4);
     start = std::chrono::high_resolution_clock::now();
     ctr.cipher(*input, ctrOutCipher, "foobar    rabooffoobar    raboof");
     end = std::chrono::high_resolution_clock::now();

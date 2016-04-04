@@ -90,7 +90,7 @@ main(void) {
     std::ofstream cbcOutCipher("Makefile.cbc.aes128.ISO7816_4.async.cipher", std::ofstream::binary);
 
     std::cout << "Cipher Makefile" << std::endl;
-    CBC<AES128,ISO7816_4Padding> cbc(iv,2);
+    CBC<AES128,ISO7816_4Padding> cbc(iv,3);
     start = std::chrono::high_resolution_clock::now();
     cbc.cipher(*input, cbcOutCipher, "foobar    raboof");
     end = std::chrono::high_resolution_clock::now();
