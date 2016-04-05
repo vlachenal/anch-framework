@@ -34,6 +34,17 @@ public:
   inline void setEmail(const std::string& email) {_email = email;}
 };
 
+void
+mapPersonRows(ResultSet& resSet, std::list<Person>& persons) {
+  Person person;
+  resSet.get<uint32_t>(0,person._id);
+  resSet.get<std::string>(1,person._firstName);
+  resSet.get<std::string>(2,person._lastName);
+  resSet.get<std::string>(3,person._birthDate);
+  resSet.get<std::string>(4,person._email);
+  persons.push_back(person);
+}
+
 int
 main(void) {
   std::cout << "Enter in SQL connection factory unit test" << std::endl;
@@ -45,15 +56,8 @@ main(void) {
     SqlConnectionPool& myPool = fact.getPool("anch_mysql");
     std::cout << "Execute 'SELECT id,first_name,last_name,birth_date,email FROM T_Test' on MySQL database" << std::endl;
     std::list<Person> persons;
-    myPool.borrowResource().get().queryMapRow("SELECT id,first_name,last_name,birth_date,email FROM T_Test", [&persons](ResultSet& resSet) {
-	Person person;
-	resSet.get<uint32_t>(0,person._id);
-	resSet.get<std::string>(1,person._firstName);
-	resSet.get<std::string>(2,person._lastName);
-	resSet.get<std::string>(3,person._birthDate);
-	resSet.get<std::string>(4,person._email);
-	persons.push_back(person);
-      });
+    auto mysqlFct = std::bind(mapPersonRows, std::placeholders::_1, std::ref(persons));
+    myPool.borrowResource().get().queryMapRow("SELECT id,first_name,last_name,birth_date,email FROM T_Test", mysqlFct);
     std::cout << "Found " << persons.size() << " persons." << std::endl;
     for(const Person& pers : persons) {
       std::cout << "Person " << pers._id << ":" << std::endl;
