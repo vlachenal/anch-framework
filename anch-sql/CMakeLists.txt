@@ -270,7 +270,7 @@ if(ANCH_SQL_UNITARY_TEST)
   # Build SQL connection factory test -
 
   configure_file(test/anch.db anch.db COPYONLY)
-  configure_file(test/dbCon.conf dbCon.conf COPYONLY)
+  configure_file(test/db_con.conf db_con.conf COPYONLY)
   enable_testing()
   if(ANCH_SQL_MYSQL)
     add_test(MySQL ${EXECUTABLE_OUTPUT_PATH}/anch-mysql-test main)

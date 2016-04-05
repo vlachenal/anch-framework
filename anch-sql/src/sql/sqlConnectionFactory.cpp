@@ -47,7 +47,7 @@ using anch::sql::SQLite3Connection;
 
 // Constructors +
 SqlConnectionFactory::SqlConnectionFactory(): _configs(), _pools() {
-  const Resource& resource = Resource::getResource("dbCon.conf");
+  const Resource& resource = Resource::getResource("db_con.conf");
   auto conf = resource.getConfiguration();
   for(auto iter = conf.cbegin() ; iter != conf.cend() ; ++iter) {
     const std::string name = iter->first;
