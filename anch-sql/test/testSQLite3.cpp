@@ -36,7 +36,7 @@ public:
 
 int
 main(void) {
-  std::cout << "Enter in MySQL unit tests" << std::endl << std::endl;
+  std::cout << "Enter in SQLite3 unit tests" << std::endl << std::endl;
 
   try {
     SQLite3Connection dbCon("anch.db");
@@ -157,6 +157,6 @@ main(void) {
     return 1;
   }
 
-  std::cout << "Exit MySQL unit tests" << std::endl;
+  std::cout << "Exit SQLite3 unit tests" << std::endl;
   return 0;
 }
