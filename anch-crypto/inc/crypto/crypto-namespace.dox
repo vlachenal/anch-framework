@@ -8,4 +8,6 @@
  * - Cipher functions (\ref AES)
  * - Message authentication code functions (\ref HMAC)
  * - Binary to text functions (\ref Base64)
+ * - Block cipher mode of operation (\ref ECB, \ref CBC, \ref PCBC, \ref OFB, \ref CFB, \ref CTR)
+ * - Padding algorithms (\ref PKCS7Padding, \ref ZeroPadding, \ref ISO7816_4Padding, \ref ANSIX923)
  */
