@@ -1,5 +1,5 @@
 #include "crypto/padding/ansiX923.hpp"
-#include "crypto/padding/pkcs7Padding.hpp"
+#include "crypto/padding/pkcs5Padding.hpp"
 #include "crypto/padding/iso7816_4Padding.hpp"
 #include "crypto/padding/zeroPadding.hpp"
 
@@ -8,7 +8,7 @@
 #include <array>
 
 using anch::crypto::ANSIX923;
-using anch::crypto::PKCS7Padding;
+using anch::crypto::PKCS5Padding;
 using anch::crypto::ISO7816_4Padding;
 using anch::crypto::ZeroPadding;
 
@@ -42,7 +42,7 @@ main(void) {
 
   data = initData;
   std::cout << "PKCS#7" << std::endl;
-  PKCS7Padding::pad(data.data(),10,16);
+  PKCS5Padding::pad(data.data(),10,16);
   std::cout << "Result: " << std::hex;
   for(int i = 0 ; i < 16 ; i++) {
     std::cout << "0x" << std::setw(2) << std::setfill('0') << static_cast<uint16_t>(data[i]) << ',';
@@ -54,7 +54,7 @@ main(void) {
       return 1;
     }
   }
-  len = PKCS7Padding::length(data.data(),16);
+  len = PKCS5Padding::length(data.data(),16);
   std::cout << "Data length: " << std::dec << len << std::endl;
   if(len != 10) {
     std::cerr << "Invalid size (10 expected)" << std::endl;

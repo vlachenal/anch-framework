@@ -28,7 +28,7 @@
 
 #include "crypto/padding/ansiX923.hpp"
 #include "crypto/padding/iso7816_4Padding.hpp"
-#include "crypto/padding/pkcs7Padding.hpp"
+#include "crypto/padding/pkcs5Padding.hpp"
 #include "crypto/padding/zeroPadding.hpp"
 
 namespace anch {
@@ -50,8 +50,8 @@ namespace anch {
     extern template class ECB<AES128,ANSIX923>;
     extern template class BlockCipherModeOfOperation<ECB<AES128,ISO7816_4Padding>,AES128>;
     extern template class ECB<AES128,ISO7816_4Padding>;
-    extern template class BlockCipherModeOfOperation<ECB<AES128,PKCS7Padding>,AES128>;
-    extern template class ECB<AES128,PKCS7Padding>;
+    extern template class BlockCipherModeOfOperation<ECB<AES128,PKCS5Padding>,AES128>;
+    extern template class ECB<AES128,PKCS5Padding>;
 
     extern template class BlockCipherModeOfOperation<CBC<AES128,ZeroPadding>,AES128>;
     extern template class CBC<AES128,ZeroPadding>;
@@ -59,8 +59,8 @@ namespace anch {
     extern template class CBC<AES128,ANSIX923>;
     extern template class BlockCipherModeOfOperation<CBC<AES128,ISO7816_4Padding>,AES128>;
     extern template class CBC<AES128,ISO7816_4Padding>;
-    extern template class BlockCipherModeOfOperation<CBC<AES128,PKCS7Padding>,AES128>;
-    extern template class CBC<AES128,PKCS7Padding>;
+    extern template class BlockCipherModeOfOperation<CBC<AES128,PKCS5Padding>,AES128>;
+    extern template class CBC<AES128,PKCS5Padding>;
 
     extern template class BlockCipherModeOfOperation<PCBC<AES128,ZeroPadding>,AES128>;
     extern template class PCBC<AES128,ZeroPadding>;
@@ -68,8 +68,8 @@ namespace anch {
     extern template class PCBC<AES128,ANSIX923>;
     extern template class BlockCipherModeOfOperation<PCBC<AES128,ISO7816_4Padding>,AES128>;
     extern template class PCBC<AES128,ISO7816_4Padding>;
-    extern template class BlockCipherModeOfOperation<PCBC<AES128,PKCS7Padding>,AES128>;
-    extern template class PCBC<AES128,PKCS7Padding>;
+    extern template class BlockCipherModeOfOperation<PCBC<AES128,PKCS5Padding>,AES128>;
+    extern template class PCBC<AES128,PKCS5Padding>;
 
     extern template class BlockCipherModeOfOperation<CFB<AES128>,AES128>;
     extern template class CFB<AES128>;

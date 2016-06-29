@@ -6,7 +6,7 @@
 #include "crypto/hash/sha1.hpp"
 
 #include "crypto/padding/zeroPadding.hpp"
-#include "crypto/padding/pkcs7Padding.hpp"
+#include "crypto/padding/pkcs5Padding.hpp"
 #include "crypto/padding/iso7816_4Padding.hpp"
 #include "crypto/padding/ansiX923.hpp"
 
@@ -14,7 +14,7 @@ using anch::crypto::PCBC;
 using anch::crypto::AES128;
 using anch::crypto::SHA1;
 using anch::crypto::ISO7816_4Padding;
-using anch::crypto::PKCS7Padding;
+using anch::crypto::PKCS5Padding;
 using anch::crypto::ZeroPadding;
 using anch::crypto::ANSIX923;
 
@@ -87,10 +87,10 @@ main(void) {
     std::cout << "Enter in PCBC sequential with AES128 and PKCS#7 padding tests" << std::endl;
 
     std::ifstream* input = new std::ifstream("Makefile", std::ifstream::binary);
-    std::ofstream pcbcOutCipher("Makefile.pcbc.aes128.pkcs7.cipher", std::ofstream::binary);
+    std::ofstream pcbcOutCipher("Makefile.pcbc.aes128.pkcs5.cipher", std::ofstream::binary);
 
     std::cout << "Cipher Makefile" << std::endl;
-    PCBC<AES128,PKCS7Padding> pcbc(iv);
+    PCBC<AES128,PKCS5Padding> pcbc(iv);
     start = std::chrono::high_resolution_clock::now();
     pcbc.cipher(*input, pcbcOutCipher, "foobar    raboof");
     end = std::chrono::high_resolution_clock::now();
@@ -100,9 +100,9 @@ main(void) {
     delete input;
     std::cout << "PCBC sequential cipher duration: " << duration.count() << " µs" << std::endl;
 
-    std::cout << "Decipher Makefile.pcbc.aes128.pkcs7.cipher" << std::endl;
-    input = new std::ifstream("Makefile.pcbc.aes128.pkcs7.cipher", std::ifstream::binary);
-    std::ofstream pcbcOutDecipher("Makefile.pcbc.aes128.pkcs7.decipher");
+    std::cout << "Decipher Makefile.pcbc.aes128.pkcs5.cipher" << std::endl;
+    input = new std::ifstream("Makefile.pcbc.aes128.pkcs5.cipher", std::ifstream::binary);
+    std::ofstream pcbcOutDecipher("Makefile.pcbc.aes128.pkcs5.decipher");
     start = std::chrono::high_resolution_clock::now();
     pcbc.decipher(*input, pcbcOutDecipher, "foobar    raboof");
     end = std::chrono::high_resolution_clock::now();
@@ -119,8 +119,8 @@ main(void) {
     input->close();
     delete input;
 
-    std::cout << "Compute Makefile.pcbc.aes128.pkcs7.decipher hash using SHA1" << std::endl;
-    input = new std::ifstream("Makefile.pcbc.aes128.pkcs7.decipher", std::ifstream::binary);
+    std::cout << "Compute Makefile.pcbc.aes128.pkcs5.decipher hash using SHA1" << std::endl;
+    input = new std::ifstream("Makefile.pcbc.aes128.pkcs5.decipher", std::ifstream::binary);
     SHA1 cipherHash(*input);
     std::array<uint8_t,20> resHash = cipherHash.digest();
     input->close();

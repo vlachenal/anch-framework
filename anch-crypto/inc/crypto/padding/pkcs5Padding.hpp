@@ -17,8 +17,8 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef _ANCH_CRYPTO_PAD_PKCS7_H_
-#define _ANCH_CRYPTO_PAD_PKCS7_H_
+#ifndef _ANCH_CRYPTO_PAD_PKCS5_H_
+#define _ANCH_CRYPTO_PAD_PKCS5_H_
 
 #include <cstddef>
 #include <stdint.h>
@@ -28,15 +28,15 @@ namespace anch {
   namespace crypto {
 
     /*!
-     * \brief PKCS7 padding implementation.
+     * \brief PKCS5 padding implementation.
      *
-     * Padding used in PKCS7 public-key cryptography standard.
+     * Padding used in PKCS5 public-key cryptography standard.
      *
      * \since 0.1
      *
      * \author Vincent Lachenal
      */
-    class PKCS7Padding {
+    class PKCS5Padding {
 
     public:
       /*!
@@ -63,4 +63,4 @@ namespace anch {
   }
 }
 
-#endif // _ANCH_CRYPTO_PAD_PKCS7_H_
+#endif // _ANCH_CRYPTO_PAD_PKCS5_H_

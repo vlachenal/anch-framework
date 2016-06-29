@@ -6,7 +6,7 @@
 #include "crypto/hash/sha1.hpp"
 
 #include "crypto/padding/zeroPadding.hpp"
-#include "crypto/padding/pkcs7Padding.hpp"
+#include "crypto/padding/pkcs5Padding.hpp"
 #include "crypto/padding/iso7816_4Padding.hpp"
 #include "crypto/padding/ansiX923.hpp"
 
@@ -14,7 +14,7 @@ using anch::crypto::ECB;
 using anch::crypto::AES128;
 using anch::crypto::SHA1;
 using anch::crypto::ISO7816_4Padding;
-using anch::crypto::PKCS7Padding;
+using anch::crypto::PKCS5Padding;
 using anch::crypto::ZeroPadding;
 using anch::crypto::ANSIX923;
 
@@ -136,10 +136,10 @@ main(void) {
     std::cout << "Enter in ECB sequential with AES128 and PKCS#7 padding tests" << std::endl;
 
     std::ifstream* input = new std::ifstream("Makefile", std::ifstream::binary);
-    std::ofstream ecbOutCipher("Makefile.ecb.aes128.pkcs7.cipher", std::ofstream::binary);
+    std::ofstream ecbOutCipher("Makefile.ecb.aes128.pkcs5.cipher", std::ofstream::binary);
 
     std::cout << "Cipher Makefile" << std::endl;
-    ECB<AES128,PKCS7Padding> ecb;
+    ECB<AES128,PKCS5Padding> ecb;
     start = std::chrono::high_resolution_clock::now();
     ecb.cipher(*input, ecbOutCipher, "foobar    raboof");
     end = std::chrono::high_resolution_clock::now();
@@ -149,9 +149,9 @@ main(void) {
     delete input;
     std::cout << "ECB sequential cipher duration: " << duration.count() << " µs" << std::endl;
 
-    std::cout << "Decipher Makefile.ecb.aes128.pkcs7.cipher" << std::endl;
-    input = new std::ifstream("Makefile.ecb.aes128.pkcs7.cipher", std::ifstream::binary);
-    std::ofstream ecbOutDecipher("Makefile.ecb.aes128.pkcs7.decipher");
+    std::cout << "Decipher Makefile.ecb.aes128.pkcs5.cipher" << std::endl;
+    input = new std::ifstream("Makefile.ecb.aes128.pkcs5.cipher", std::ifstream::binary);
+    std::ofstream ecbOutDecipher("Makefile.ecb.aes128.pkcs5.decipher");
     start = std::chrono::high_resolution_clock::now();
     ecb.decipher(*input, ecbOutDecipher, "foobar    raboof");
     end = std::chrono::high_resolution_clock::now();
@@ -168,8 +168,8 @@ main(void) {
     input->close();
     delete input;
 
-    std::cout << "Compute Makefile.ecb.aes128.pkcs7.decipher hash using SHA1" << std::endl;
-    input = new std::ifstream("Makefile.ecb.aes128.pkcs7.decipher", std::ifstream::binary);
+    std::cout << "Compute Makefile.ecb.aes128.pkcs5.decipher hash using SHA1" << std::endl;
+    input = new std::ifstream("Makefile.ecb.aes128.pkcs5.decipher", std::ifstream::binary);
     SHA1 cipherHash(*input);
     std::array<uint8_t,20> resHash = cipherHash.digest();
     input->close();
@@ -189,10 +189,10 @@ main(void) {
     std::cout << "Enter in ECB with parallel AES128 and PKCS#7 padding tests" << std::endl;
 
     std::ifstream* input = new std::ifstream("Makefile", std::ifstream::binary);
-    std::ofstream ecbOutCipher("Makefile.ecb.aes128.pkcs7.async.cipher", std::ofstream::binary);
+    std::ofstream ecbOutCipher("Makefile.ecb.aes128.pkcs5.async.cipher", std::ofstream::binary);
 
     std::cout << "Cipher Makefile" << std::endl;
-    ECB<AES128,PKCS7Padding> ecb(2);
+    ECB<AES128,PKCS5Padding> ecb(2);
     start = std::chrono::high_resolution_clock::now();
     ecb.cipher(*input, ecbOutCipher, "foobar    raboof");
     end = std::chrono::high_resolution_clock::now();
@@ -202,9 +202,9 @@ main(void) {
     delete input;
     std::cout << "ECB parallel cipher duration: " << duration.count() << " µs" << std::endl;
 
-    std::cout << "Decipher Makefile.ecb.aes128.pkcs7.async.cipher" << std::endl;
-    input = new std::ifstream("Makefile.ecb.aes128.pkcs7.async.cipher", std::ifstream::binary);
-    std::ofstream ecbOutDecipher("Makefile.ecb.aes128.pkcs7.async.decipher");
+    std::cout << "Decipher Makefile.ecb.aes128.pkcs5.async.cipher" << std::endl;
+    input = new std::ifstream("Makefile.ecb.aes128.pkcs5.async.cipher", std::ifstream::binary);
+    std::ofstream ecbOutDecipher("Makefile.ecb.aes128.pkcs5.async.decipher");
     start = std::chrono::high_resolution_clock::now();
     ecb.decipher(*input, ecbOutDecipher, "foobar    raboof");
     end = std::chrono::high_resolution_clock::now();
@@ -221,8 +221,8 @@ main(void) {
     input->close();
     delete input;
 
-    std::cout << "Compute Makefile.ecb.aes128.pkcs7.async.decipher hash using SHA1" << std::endl;
-    input = new std::ifstream("Makefile.ecb.aes128.pkcs7.async.decipher", std::ifstream::binary);
+    std::cout << "Compute Makefile.ecb.aes128.pkcs5.async.decipher hash using SHA1" << std::endl;
+    input = new std::ifstream("Makefile.ecb.aes128.pkcs5.async.decipher", std::ifstream::binary);
     SHA1 cipherHash(*input);
     std::array<uint8_t,20> resHash = cipherHash.digest();
     input->close();
