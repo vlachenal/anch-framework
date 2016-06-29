@@ -6,7 +6,7 @@
 #include "crypto/cipher/aes256.hpp"
 #include "crypto/hash/sha1.hpp"
 
-#include "crypto/padding/pkcs7Padding.hpp"
+#include "crypto/padding/pkcs5Padding.hpp"
 
 #include <openssl/conf.h>
 #include <openssl/evp.h>
@@ -17,7 +17,7 @@ using anch::crypto::CBC;
 using anch::crypto::CTR;
 using anch::crypto::AES256;
 using anch::crypto::SHA1;
-using anch::crypto::PKCS7Padding;
+using anch::crypto::PKCS5Padding;
 
 
 void
@@ -34,7 +34,7 @@ main(void) {
   std::chrono::microseconds duration;
 
   {
-    std::cout << "Enter in OpenSSL CBC sequential with AES256 and PKCS7 padding tests" << std::endl;
+    std::cout << "Enter in OpenSSL CBC sequential with AES256 and PKCS5 padding tests" << std::endl;
 
     std::array<uint8_t, 16> iv = { {
 	'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p'
@@ -45,7 +45,7 @@ main(void) {
     OPENSSL_config(NULL);
 
     std::ifstream* input = new std::ifstream("/home/winz/toto.avi", std::ifstream::binary);
-    std::ofstream cbcOutCipher("Makefile.OpenSSL.cbc.aes256.pkcs7.bigdata.cipher", std::ofstream::binary);
+    std::ofstream cbcOutCipher("Makefile.OpenSSL.cbc.aes256.pkcs5.bigdata.cipher", std::ofstream::binary);
 
     std::cout << "Cipher /home/winz/toto.avi" << std::endl;
 
@@ -133,10 +133,10 @@ main(void) {
     std::cout << "Enter in CBC sequential with AES256 tests" << std::endl;
 
     std::ifstream* input = new std::ifstream("/home/winz/toto.avi", std::ifstream::binary);
-    std::ofstream ctrOutCipher("Makefile.AnCH.cbc.aes256.pkcs7.bigdata.cipher", std::ofstream::binary);
+    std::ofstream ctrOutCipher("Makefile.AnCH.cbc.aes256.pkcs5.bigdata.cipher", std::ofstream::binary);
 
     std::cout << "Cipher big data" << std::endl;
-    CBC<AES256,PKCS7Padding> ctr(iv);
+    CBC<AES256,PKCS5Padding> ctr(iv);
     start = std::chrono::high_resolution_clock::now();
     ctr.cipher(*input, ctrOutCipher, "foobar    rabooffoobar    raboof");
     end = std::chrono::high_resolution_clock::now();
