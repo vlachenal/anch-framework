@@ -26,6 +26,8 @@
 namespace anch {
   namespace crypto {
 
+    template<typename H> H HMAC(const std::string&, const std::string&);
+
     /*!
      * \brief SHA1 hash algorithm implementation
      *
@@ -34,6 +36,9 @@ namespace anch {
      * \author Vincent Lachenal
      */
     class SHA1: public Hash<20,64> {
+
+      friend SHA1 anch::crypto::HMAC<SHA1>(const std::string&, const std::string&);
+
     private:
       /*!
        * SHA1 chunk
@@ -116,6 +121,7 @@ namespace anch {
 	Hash::digest(stream);
       }
 
+    private:
       /*!
        * \ref SHA1 constructor with data bytes.
        *
@@ -123,12 +129,13 @@ namespace anch {
        * \param len the data length
        */
       SHA1(const uint8_t* data, std::size_t len) {
-	Hash::digest(data, len);
+      	Hash::digest(data, len);
       }
       // Constructors -
 
 
       // Destructor +
+    public:
       /*!
        * \ref SHA1 destructor
        */
@@ -310,6 +317,8 @@ namespace anch {
       // Methods -
 
     };
+
+    extern template SHA1 HMAC<SHA1>(const std::string&, const std::string&);
 
   }
 }

@@ -20,6 +20,9 @@
 #ifndef _ANCH_CRYPTO_HMAC_
 #define _ANCH_CRYPTO_HMAC_
 
+#include <sstream>
+#include <array>
+
 
 namespace anch {
   namespace crypto {
@@ -31,11 +34,10 @@ namespace anch {
      * \param key the key to use
      * \param message the message to use
      */
-    template<class H, class CharT, class Traits, class Allocator>
-    H HMAC(const std::basic_string<CharT,Traits,Allocator>& key,
-	   const std::basic_string<CharT,Traits,Allocator>& message) {
+    template<class H>
+    H HMAC(const std::string& key, const std::string& message) {
       // Treatment on key +
-      std::basic_ostringstream<CharT,Traits,Allocator> keyBuf;
+      std::ostringstream keyBuf;
       const std::size_t block = H::getBlockSize();
       if(key.length() > block) {
 	keyBuf << H(key);
@@ -44,19 +46,19 @@ namespace anch {
       }
       std::array<uint8_t,block> keyArray;
       keyArray.fill(0x00);
-      const std::basic_string<CharT,Traits,Allocator>& buffer = keyBuf.str();
-      for(std::size_t i = 0 ; i < buffer.length() ; i++) {
+      const std::string& buffer = keyBuf.str();
+      for(std::size_t i = 0 ; i < buffer.length() ; ++i) {
 	keyArray[i] = static_cast<uint8_t>(buffer[i]);
       }
       // Treatment on key -
 
       // Compute paddings +
-      std::size_t msgLen = std::char_traits<CharT>::length(message.c_str());
+      std::size_t msgLen = message.length();
       std::size_t inSize = block + msgLen;
       uint8_t* inPad = new uint8_t[inSize];
       std::array<uint8_t, (block + H::getOutputSize())> outPad;
       // 'Magic numbers' 0x36 and 0x5c are specified in RFC2104 to have a large hamming distance
-      for(std::size_t i = 0 ; i < block ; i++) {
+      for(std::size_t i = 0 ; i < block ; ++i) {
 	inPad[i] = static_cast<uint8_t>(0x36) ^ keyArray[i];
 	outPad[i] = static_cast<uint8_t>(0x5c) ^ keyArray[i];
       }
@@ -64,7 +66,7 @@ namespace anch {
 
       // First hash +
       const uint8_t* msg = reinterpret_cast<const uint8_t*>(message.c_str());
-      for(std::size_t i = 0 ; i < msgLen ; i++) {
+      for(std::size_t i = 0 ; i < msgLen ; ++i) {
 	inPad[i + block] = msg[i];
       }
       const std::array<uint8_t,H::getOutputSize()>& inDigest = H(inPad, inSize).digest();
@@ -75,7 +77,7 @@ namespace anch {
       std::size_t idx = block;
       for(uint8_t byte : inDigest) {
 	outPad[idx] = byte;
-	idx++;
+	++idx;
       }
       return H(outPad.data(), outPad.size());
       // Second hash -

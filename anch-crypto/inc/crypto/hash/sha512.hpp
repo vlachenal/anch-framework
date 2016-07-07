@@ -47,6 +47,8 @@ namespace anch {
      * SHA512 defintion
      */
     using SHA512 = SHA384_512<64,SHA512_VALUES>;
+
+    extern template SHA512 HMAC<SHA512>(const std::string&, const std::string&);
 // #else
 //     // TODO implements 32 bits version
 //     /*! SHA512 initial values */

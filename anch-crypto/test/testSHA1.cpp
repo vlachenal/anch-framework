@@ -91,30 +91,36 @@ main(void) {
     std::uniform_int_distribution<uint8_t> uniform_dist;
     std::chrono::time_point<std::chrono::high_resolution_clock> start, end;
     start = std::chrono::high_resolution_clock::now();
-    uint8_t salt[16];
-    for(int i = 0 ; i < 16 ; i++) {
-      salt[i] = uniform_dist(engine);
+    std::ostringstream outSalt;
+    //uint8_t salt[16];
+    for(int i = 0 ; i < 16 ; ++i) {
+      //salt[i] = uniform_dist(engine);
+      outSalt << static_cast<uint8_t>(uniform_dist(engine));
     }
-    std::size_t len = password.size() + 16;
-    uint8_t* saltPasswd = new uint8_t[len];
-    std::memcpy(saltPasswd, salt, 16);
-    std::memcpy(saltPasswd + 16, password.data(), password.size());
+    std::string salt = outSalt.str();
+    // std::size_t len = password.size() + 16;
+    // uint8_t* saltPasswd = new uint8_t[len];
+    // std::memcpy(saltPasswd, salt, 16);
+    // std::memcpy(saltPasswd + 16, password.data(), password.size());
+    std::string saltPasswd = salt + password;
     //SHA1 digester;
-    for(int i = 0 ; i < 1500 ; i++) {
-      std::memcpy(saltPasswd, SHA1(saltPasswd, len).digest().data(), 20);
+    for(int i = 0 ; i < 1500 ; ++i) {
+      //saltPasswd = SHA1(saltPasswd).digest().data();
+      saltPasswd.assign(reinterpret_cast<const char*>(SHA1(saltPasswd).digest().data()), SHA1::getBlockSize());
+      //std::memcpy(saltPasswd, SHA1(saltPasswd, len).digest().data(), 20);
       //std::memcpy(saltPasswd, digester.digest(saltPasswd, len).data(), 20);
-      len = 20;
+      //len = 20;
     }
     uint8_t saltDigest[36];
-    std::memcpy(saltDigest, salt, 16);
-    std::memcpy(saltDigest + 16, saltPasswd, 20);
+    std::memcpy(saltDigest, salt.data(), 16);
+    std::memcpy(saltDigest + 16, saltPasswd.data(), 20);
     string storedPasswd = anch::crypto::Base64::encode(saltDigest, 36);
-    delete[] saltPasswd;
+    //delete[] saltPasswd;
     end = std::chrono::high_resolution_clock::now();
     std::chrono::microseconds duration = std::chrono::duration_cast<std::chrono::microseconds>(end.time_since_epoch()) - std::chrono::duration_cast<std::chrono::microseconds>(start.time_since_epoch());
     cout << "Salt is " << std::hex;
-    for(int i = 0 ; i < 16 ; i++) {
-      cout << std::setw(2) << std::setfill('0') << static_cast<uint32_t>(salt[i]);
+    for(int i = 0 ; i < 16 ; ++i) {
+      cout << std::setw(2) << std::setfill('0') << static_cast<uint32_t>(static_cast<const uint8_t>(salt[i]));
     }
     cout << std::dec << endl;
     cout << "We will store: " << storedPasswd << endl;

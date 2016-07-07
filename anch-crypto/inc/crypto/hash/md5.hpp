@@ -28,6 +28,8 @@
 namespace anch {
   namespace crypto {
 
+    template<typename H> H HMAC(const std::string&, const std::string&);
+
     /*!
      * \brief MD5 hash algorithm implementation
      *
@@ -36,6 +38,9 @@ namespace anch {
      * \author Vincent Lachenal
      */
     class MD5: public Hash<16,64> {
+
+      friend MD5 anch::crypto::HMAC<MD5>(const std::string&, const std::string&);
+
     private:
       /*!
        * MD5 execution context
@@ -106,6 +111,7 @@ namespace anch {
 	Hash::digest(stream);
       }
 
+    private:
       /*!
        * \ref MD5 constructor with bytes
        *
@@ -113,11 +119,12 @@ namespace anch {
        * \param len the data length
        */
       MD5(const uint8_t* data, std::size_t len) {
-	Hash::digest(data, len);
+      	Hash::digest(data, len);
       }
       // Constructors -
 
       // Destructor +
+    public:
       /*!
        * \ref MD5 destructor
        */
@@ -213,6 +220,8 @@ namespace anch {
       // Core functions -
 
     };
+
+    extern template MD5 HMAC<MD5>(const std::string&, const std::string&);
 
   }
 }

@@ -49,6 +49,8 @@ namespace anch {
      */
     using SHA256 = SHA224_256<32,SHA256_VALUES>;
 
+    extern template SHA256 HMAC<SHA256>(const std::string&, const std::string&);
+
   }
 }
 

@@ -29,6 +29,8 @@
 namespace anch {
   namespace crypto {
 
+    template<typename H> H HMAC(const std::string&, const std::string&);
+
     /*!
      * \brief SHA2 384/512 implementation.
      *
@@ -40,6 +42,8 @@ namespace anch {
      */
     template<std::size_t O, const std::array<uint64_t,8>& I>
     class SHA384_512: public SHA2<O,128,uint64_t,80,I> {
+
+      friend SHA384_512 anch::crypto::HMAC<SHA384_512>(const std::string&, const std::string&);
 
       // Constructors +
     public:
@@ -72,6 +76,7 @@ namespace anch {
 	Hash<O,128>::digest(stream);
       }
 
+    private:
       /*!
        * \ref SHA384_512 constructor with data bytes.
        *
@@ -79,13 +84,14 @@ namespace anch {
        * \param len the dataa length
        */
       SHA384_512(const uint8_t* data, std::size_t len):
-	SHA2<O,128,uint64_t,80,I>() {
-	Hash<O,128>::digest(data, len);
+      	SHA2<O,128,uint64_t,80,I>() {
+      	Hash<O,128>::digest(data, len);
       }
       // Constructors -
 
 
       // Destructor +
+    public:
       /*!
        * \ref SHA384_512 destructor
        */
@@ -113,7 +119,7 @@ namespace anch {
 	    0x983E5152EE66DFAB, 0xA831C66D2DB43210, 0xB00327C898FB213F, 0xBF597FC7BEEF0EE4,
 	    0xC6E00BF33DA88FC2, 0xD5A79147930AA725, 0x06CA6351E003826F, 0x142929670A0E6E70,
 	    0x27B70A8546D22FFC, 0x2E1B21385C26C926, 0x4D2C6DFC5AC42AED, 0x53380D139D95B3DF,
-	    0x650A73548BAF63DE, 0x766A0ABB3C77B2A8, 0x81C2C92E47EDAEE6, 0x92722C851482353B, 
+	    0x650A73548BAF63DE, 0x766A0ABB3C77B2A8, 0x81C2C92E47EDAEE6, 0x92722C851482353B,
 	    0xA2BFE8A14CF10364, 0xA81A664BBC423001, 0xC24B8B70D0F89791, 0xC76C51A30654BE30,
 	    0xD192E819D6EF5218, 0xD69906245565A910, 0xF40E35855771202A, 0x106AA07032BBD1B8,
 	    0x19A4C116B8D2D0C8, 0x1E376C085141AB53, 0x2748774CDF8EEB99, 0x34B0BCB5E19B48A8,

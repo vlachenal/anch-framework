@@ -45,6 +45,8 @@ namespace anch {
      */
     using SHA224 = SHA224_256<28,SHA224_VALUES>;
 
+    extern template SHA224 HMAC<SHA224>(const std::string&, const std::string&);
+
   }
 }
 

@@ -29,6 +29,8 @@
 namespace anch {
   namespace crypto {
 
+    template<typename H> H HMAC(const std::string&, const std::string&);
+
     /*!
      * \brief SHA2 224/256 implementation.
      *
@@ -40,6 +42,8 @@ namespace anch {
      */
     template<std::size_t O, const std::array<uint32_t,8>& I>
     class SHA224_256: public SHA2<O,64,uint32_t,64,I> {
+
+      friend SHA224_256 anch::crypto::HMAC<SHA224_256>(const std::string&, const std::string&);
 
       // Constructors +
     public:
@@ -72,6 +76,7 @@ namespace anch {
     	Hash<O,64>::digest(stream);
       }
 
+    private:
       /*!
        * \ref SHA224_256 constructor with data bytes.
        *
@@ -79,13 +84,14 @@ namespace anch {
        * \param len the dataa length
        */
       SHA224_256(const uint8_t* data, std::size_t len):
-	SHA2<O,64,uint32_t,64,I>() {
-    	Hash<O,64>::digest(data, len);
+      	SHA2<O,64,uint32_t,64,I>() {
+      	Hash<O,64>::digest(data, len);
       }
       // Constructors -
 
 
       // Destructor +
+    public:
       /*!
        * \ref SHA224_256 destructor
        */

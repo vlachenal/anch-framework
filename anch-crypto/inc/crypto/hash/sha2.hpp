@@ -49,6 +49,7 @@ namespace anch {
      */
     template<std::size_t O, std::size_t B, typename W, uint32_t R, const std::array<W,8>& I>
     class SHA2: public Hash<O,B> {
+
     private:
       /*!
        * \ref SHA2 chunk
