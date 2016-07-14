@@ -47,12 +47,6 @@ const char File::SEP = '\\';
 
 
 // Constructors +
-/*!
- * \ref File constructor
- *
- * \param path The \ref File path
- * \param init Initialize file members
- */
 File::File(const string& path, bool init) : _path(path) {
   if(init) {
     initialize();
@@ -63,7 +57,7 @@ File::File(const string& path, bool init) : _path(path) {
 #ifdef ANCH_POSIX
     char* parent_path = ::get_current_dir_name();
 #elif defined ANCH_WINDOWS
-    // TODO use Windows implementation
+    // \todo use Windows implementation
 #endif
     if(parent_path != nullptr) {
       parentPath = parent_path;
@@ -80,44 +74,21 @@ File::File(const string& path, bool init) : _path(path) {
   }
 }
 
-/*!
- * \ref File constructor
- *
- * \param parent The parent \ref File path
- * \param name The \ref File name
- */
 File::File(const string& parent, const string& name) : _path(parent + SEP + name) {
   initialize();
   _parent = make_shared<File>(parent, false);
 }
 
-/*!
- * \ref File constructor
- *
- * \param parent the parent \ref File
- * \param name the \ref File name
- */
 File::File(const File& parent, const string& name) : _path(parent._path + SEP + name) {
   initialize();
   _parent = make_shared<File>(parent);
 }
 
-/*!
- * \ref File constructor
- *
- * \param parent the parent \ref File
- * \param name The \ref File name
- */
 File::File(std::shared_ptr<File> parent, const string& name) : _path(parent->_path + SEP + name) {
   initialize();
   _parent = shared_ptr<File>(parent);
 }
 
-/*!
- * \ref File copy constructor
- *
- * \param file \ref File to copy
- */
 File::File(const File& file) : _path(file._path),
 			       _exists(file._exists),
 			       _directory(file._directory),
@@ -134,9 +105,6 @@ File::File(const File& file) : _path(file._path),
 
 
 // Destructor +
-/*!
- * \ref File destructor
- */
 File::~File() {
   // Nothing to do
 }
@@ -144,11 +112,6 @@ File::~File() {
 
 
 // Methods +
-/*!
- * Create a new file
- *
- * \throw FileException any error on file creation
- */
 void
 File::createFile() throw(FileException) {
   ofstream out;
@@ -156,13 +119,6 @@ File::createFile() throw(FileException) {
   out.close();
 }
 
-/*!
- * Create a new file
- *
- * \param out The output stream on the file
- *
- * \throw FileException any error on file creation
- */
 void
 File::createFile(ofstream& out) throw(FileException) {
   if(!_exists) {
@@ -179,13 +135,6 @@ File::createFile(ofstream& out) throw(FileException) {
   }
 }
 
-/*!
- * Create directory
- *
- * \param parents Create parent directories if needed
- *
- * \throw FileException any error on directory creation
- */
 void
 File::createDirectory(bool parents) throw(FileException) {
   if(!_exists && _parent->isDirectory()) {
@@ -199,11 +148,6 @@ File::createDirectory(bool parents) throw(FileException) {
   }
 }
 
-/*!
- * Delete this \ref File
- *
- * \throw FileException any error on file deletion
- */
 void
 File::deleteFile() throw(FileException) {
   if(_exists && !_directory && _writable) {
@@ -217,13 +161,6 @@ File::deleteFile() throw(FileException) {
   }
 }
 
-/*!
- * List files and directories in current directory.
- *
- * \return The files list
- *
- * \throw FileException any error on directory list
- */
 void
 File::list(vector<string>& files) throw(FileException) {
   if(_directory && _readable) {
@@ -246,13 +183,6 @@ File::list(vector<string>& files) throw(FileException) {
   }
 }
 
-/*!
- * List files and directories in current directory.
- *
- * \return The \ref File list
- *
- * \throw FileException any error on directory list
- */
 void
 File::list(vector<File>& files) throw(FileException) {
   vector<string> res;
@@ -264,9 +194,6 @@ File::list(vector<File>& files) throw(FileException) {
   files.shrink_to_fit();
 }
 
-/*!
- * Initialize file information
- */
 void
 File::initialize() {
   _path.shrink_to_fit();
