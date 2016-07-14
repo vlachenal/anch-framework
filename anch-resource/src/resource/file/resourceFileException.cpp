@@ -24,30 +24,16 @@ using std::string;
 using anch::resource::file::ResourceFileException;
 
 
-/*!
- * \ref ResourceFileException constructor
- *
- * \param filePath The file path
- * \param error The error
- */
 ResourceFileException::ResourceFileException(const std::string& filePath,
 					     const std::string& error) {
   _message = string("Error while on ") + filePath
     + string(" treatment: ") + error;
 }
 
-/*!
- * \ref ResourceFileException destructor
- */
 ResourceFileException::~ResourceFileException() noexcept {
   // Nothing to do
 }
 
-/*!
- * Retrieve the complete error message
- *
- * \return The error message
- */
 const char*
 ResourceFileException::what() const noexcept {
   return _message.data();

@@ -35,25 +35,14 @@ mutex Resource::MUTEX;
 // Static initialization -
 
 
-/*!
- * \ref Resource private constructor
- */
 Resource::Resource(): _resources() {
   // Nothing to do
 }
 
-/*!
- * \ref Resource destructor
- */
 Resource::~Resource() {
   // Nothing to do
 }
 
-/*!
- * Get Resource unique instance
- *
- * \return The \ref Resource unique instance
- */
 const Resource&
 Resource::getResource(const string& filePath) {
   std::lock_guard<mutex> lock(MUTEX);
@@ -67,15 +56,6 @@ Resource::getResource(const string& filePath) {
   return iter->second;
 }
 
-/*!
- * Get parameter value from its name and section
- *
- * \param value The value to set
- * \param param The parameter to find
- * \param section The parameter section (optional)
- *
- * \return \c true if value has been found, \c false otherwise.
- */
 bool
 Resource::getParameter(string& value,
 		       const string& param,

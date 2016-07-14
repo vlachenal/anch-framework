@@ -30,27 +30,17 @@ string Section::DEFAULT_VALUE = "";
 
 
 // Constructors +
-/*!
- * \ref Section default constructor
- */
 Section::Section() {
   // Nothing to do
 }
 
-/*!
- * \ref Section copy constructor
- */
 Section::Section(const Section& section): _parameters(section._parameters) {
   // Nothing to do
 }
 // Constructors -
 
 // Destructors +
-/*!
- * \ref Section destructor
- */
 Section::~Section() {
   // Nothing to do
 }
 // Destructors -
-
