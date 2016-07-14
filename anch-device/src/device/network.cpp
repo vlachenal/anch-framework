@@ -50,18 +50,12 @@ map<string,NetworkInterface>* Network::_interfaces = NULL;
 
 
 // Constructors +
-/*!
- * Network configuration private constructor
- */
 Network::Network() {
   // Nothing to do
 }
 // Constructors -
 
 // Destructor +
-/*!
- * Network configuration destructor
- */
 Network::~Network() {
   if(_interfaces != NULL) {
     delete _interfaces;
@@ -70,15 +64,6 @@ Network::~Network() {
 // Destructor -
 
 // Methods +
-/*!
- * Retrieve network interface by its name.
- *
- * \param ifName The interface name
- *
- * \return The interface if found, \c NULL otherwise
- *
- * \throw DeviceException Network interfaces error
- */
 const NetworkInterface*
 Network::getInterface(const string& ifName) throw(DeviceException) {
   std::lock_guard<mutex> lock(MUTEX);
@@ -93,13 +78,6 @@ Network::getInterface(const string& ifName) throw(DeviceException) {
   return interface;
 }
 
-/*!
- * Retrieve all network interfaces.
- *
- * \return The network interfaces
- *
- * \throw DeviceException Network interfaces error
- */
 const map<string,NetworkInterface>&
 Network::getInterfaces() throw(DeviceException) {
   std::lock_guard<mutex> lock(MUTEX);
@@ -109,11 +87,6 @@ Network::getInterfaces() throw(DeviceException) {
   return *_interfaces;
 }
 
-/*!
- * Reload network interfaces
- *
- * \throw DeviceException Network interfaces error
- */
 void
 Network::reload() throw(DeviceException) {
   std::lock_guard<mutex> lock(MUTEX);
@@ -123,11 +96,6 @@ Network::reload() throw(DeviceException) {
   load();
 }
 
-/*!
- * Load network interfaces
- *
- * \throw DeviceException Network interfaces error
- */
 void
 Network::load() throw(DeviceException) {
   // Initialize interfaces container if needed +

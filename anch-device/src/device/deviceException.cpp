@@ -29,42 +29,23 @@ using anch::device::DeviceException;
 
 
 // Constructors +
-/*!
- * \ref DeviceException constructor
- *
- * \param message The error message
- */
 DeviceException::DeviceException(const string& message) noexcept :
   _message(message) {
   // Do nothing
 }
 
-/*!
- * \ref DeviceException constructor
- *
- * \param message the error message
- * \param errorCode the error code
- */
 DeviceException::DeviceException(const string& message, int errorCode) noexcept {
   _message = message + ": " + ::gai_strerror(errorCode);
 }
 // Constructors -
 
 // Destructor +
-/*!
- * \ref DeviceException destructor
- */
 DeviceException::~DeviceException() noexcept {
   // Do nothing
 }
 // Destructor -
 
 // Methods +
-/*!
- * Return the error message
- *
- * \return The error message
- */
 const char*
 DeviceException::what() const noexcept {
   return _message.data();

@@ -32,14 +32,6 @@ using anch::device::DeviceException;
 
 
 // Constructors +
-/*!
- * \ref NetworkInterface constructor.
- *
- * \param interface Data retrieved through \c ioctl POSIX call
- * \param isLocalhost Interface is local loopback
- *
- * \throw DeviceException Device error
- */
 NetworkInterface::NetworkInterface(const struct ifreq& interface, bool isLocalhost)
   throw(DeviceException) {
   _name = interface.ifr_name;
@@ -116,9 +108,6 @@ NetworkInterface::NetworkInterface(const struct ifreq& interface, bool isLocalho
 
 
 // Destructor +
-/*!
- * \ref NetworkInterface destructor
- */
 NetworkInterface::~NetworkInterface() {
   // Nothing to do
 }
