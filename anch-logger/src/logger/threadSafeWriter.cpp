@@ -28,14 +28,6 @@ using anch::logger::ThreadSafeWriter;
 using anch::logger::Level;
 
 
-/*!
- * \ref ThreadSafeWriter constructor
- *
- * \param fileName The file name
- * \param linePattern The line pattern
- * \param maxSize The file maximum size before file rotation
- * \param maxIndex The maximum number of log files to keep
- */
 ThreadSafeWriter::ThreadSafeWriter(const string& fileName,
 				   const string& linePattern,
 				   int maxSize,
@@ -44,32 +36,16 @@ ThreadSafeWriter::ThreadSafeWriter(const string& fileName,
   // Nothing to do
 }
 
-/*!
- * \ref ThreadSafeWriter constructor
- *
- * \param output The output to use
- * \param linePattern The line pattern
- */
 ThreadSafeWriter::ThreadSafeWriter(ostream* output,
 				   const string& linePattern): Writer(output,linePattern),
 							       _mutex() {
   // Nothing to do
 }
 
-/*!
- * \ref ThreadSafeWriter destructor
- */
 ThreadSafeWriter::~ThreadSafeWriter() {
   // Nothing to do
 }
 
-/*!
- * Write message in the file
- *
- * \param category The logger category
- * \param level The message level
- * \param message Message to write
- */
 void
 ThreadSafeWriter::write(const string& category,
 			const Level& level,

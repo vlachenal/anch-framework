@@ -30,36 +30,19 @@ using anch::logger::formatter::FormatterType;
 using anch::date::Date;
 
 
-/*!
- * \ref AnchDateFormatter default constructor
- */
 AnchDateFormatter::AnchDateFormatter(const string& dateFormat): _dateFormat(dateFormat) {
   // Nothing to do
 }
 
-/*!
- * \ref AnchDateFormatter destructor
- */
 AnchDateFormatter::~AnchDateFormatter() {
   // Nothing to do
 }
 
-/*!
- * Return the input string
- *
- * \param value The input string
- * \param out The output stream to write in
- */
 void
 AnchDateFormatter::formatValue(const void* const, ostream& out) const noexcept {
   _dateFormat.format(Date(), out);
 }
 
-/*!
- * Get the formatter type
- *
- * \return The formatter type
- */
 FormatterType
 AnchDateFormatter::getType() const noexcept {
   return FormatterType::ANCH_DATE;

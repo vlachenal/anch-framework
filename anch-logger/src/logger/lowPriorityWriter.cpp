@@ -33,14 +33,6 @@ using anch::logger::Level;
 
 
 // Constructors +
-/*!
- * \ref LowPriorityWriter constructor
- *
- * \param fileName The file name
- * \param linePattern The line pattern
- * \param maxSize The file maximum size before file rotation
- * \param maxIndex The maximum number of log files to keep
- */
 LowPriorityWriter::LowPriorityWriter(const string& fileName,
 				     const string& linePattern,
 				     int maxSize,
@@ -50,12 +42,6 @@ LowPriorityWriter::LowPriorityWriter(const string& fileName,
   // Nothing to do
 }
 
-/*!
- * \ref LowPriorityWriter constructor
- *
- * \param output The output to use
- * \param linePattern The line pattern
- */
 LowPriorityWriter::LowPriorityWriter(ostream* output,
 				     const string& linePattern) : Writer(output,linePattern),
 								  _messages(),
@@ -66,9 +52,6 @@ LowPriorityWriter::LowPriorityWriter(ostream* output,
 
 
 // Destructor +
-/*!
- * \ref LowPriorityWriter destructor
- */
 LowPriorityWriter::~LowPriorityWriter() {
   _running = false;
   _thread->join();
@@ -77,13 +60,6 @@ LowPriorityWriter::~LowPriorityWriter() {
 
 
 // Methods +
-/*!
- * Write message in the file
- *
- * \param category The logger category
- * \param level The message level
- * \param message Message to write
- */
 void
 LowPriorityWriter::write(const string& category,
 			 const Level& level,
@@ -93,9 +69,6 @@ LowPriorityWriter::write(const string& category,
   _mutex.unlock();
 }
 
-/*!
- * Thread process method
- */
 void
 LowPriorityWriter::process() {
   while(_running) {
@@ -120,9 +93,6 @@ LowPriorityWriter::process() {
   }
 }
 
-/*!
- * Start messages queue poolingg
- */
 void
 LowPriorityWriter::startTreatment() {
   _running = true;

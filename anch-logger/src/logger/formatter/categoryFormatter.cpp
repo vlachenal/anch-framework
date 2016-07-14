@@ -25,36 +25,19 @@ using std::ostream;
 using anch::logger::formatter::CategoryFormatter;
 using anch::logger::formatter::FormatterType;
 
-/*!
- * \ref CategoryFormatter default constructor
- */
 CategoryFormatter::CategoryFormatter() {
   // Nothing to do
 }
 
-/*!
- * \ref CategoryFormatter destructor
- */
 CategoryFormatter::~CategoryFormatter() {
   // Nothing to do
 }
 
-/*!
- * Return the input string
- *
- * \param value The input string
- * \param out The output stream to write in
- */
 void
 CategoryFormatter::formatValue(const void* const value, ostream& out) const noexcept {
   out << *((string*)value);
 }
 
-/*!
- * Get the formatter type
- *
- * \return The formatter type
- */
 FormatterType
 CategoryFormatter::getType() const noexcept {
   return FormatterType::CATEGORY;

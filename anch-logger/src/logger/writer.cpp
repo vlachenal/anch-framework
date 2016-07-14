@@ -40,14 +40,6 @@ using anch::logger::Level;
 using anch::logger::formatter::MessageFormatter;
 
 
-/*!
- * \ref Writer constructor
- *
- * \param fileName The file name
- * \param linePattern The line pattern
- * \param maxSize The file maximum size before file rotation
- * \param maxIndex The maximum number of log files to keep
- */
 Writer::Writer(const string& fileName,
 	       const string& linePattern,
 	       int maxSize,
@@ -81,12 +73,6 @@ Writer::Writer(const string& fileName,
   }
 }
 
-/*!
- * \ref Writer constructor
- *
- * \param output The output to use
- * \param linePattern The line pattern
- */
 Writer::Writer(ostream* output,
 	       const string& linePattern): _output(output),
 					   _formatter(linePattern),
@@ -97,9 +83,6 @@ Writer::Writer(ostream* output,
   // Nothing to do
 }
 
-/*!
- * \ref Writer destructor
- */
 Writer::~Writer() {
   _output->flush();
   if(_fileName != "") {
@@ -108,13 +91,6 @@ Writer::~Writer() {
   } // else do not delete cout ...
 }
 
-/*!
- * Write message in the file
- *
- * \param category The logger category
- * \param level The message level
- * \param message Message to write
- */
 void
 Writer::write(const string& category,
 	      const Level& level,
@@ -125,9 +101,6 @@ Writer::write(const string& category,
   }
 }
 
-/*!
- * Rotate files when current reachs the maximum file length.
- */
 void
 Writer::rotateFiles() {
   _output->flush();

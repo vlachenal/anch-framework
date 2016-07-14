@@ -27,13 +27,6 @@ using anch::logger::Level;
 using anch::logger::Writer;
 
 
-/*!
- * \ref Logger constructor.
- *
- * \param name Logger name
- * \param level The logging level to set
- * \param writers The writers list
- */
 Logger::Logger(const string& name,
 	       const Level level,
 	       const vector<Writer*>& writers):
@@ -45,9 +38,6 @@ Logger::Logger(const string& name,
   }
 }
 
-/*!
- * \ref Logger destructor
- */
 Logger::~Logger() {
   // Nothing to do
 }

@@ -29,26 +29,14 @@ using std::ostream;
 using anch::logger::formatter::DateFormatter;
 using anch::logger::formatter::FormatterType;
 
-/*!
- * \ref DateFormatter default constructor
- */
 DateFormatter::DateFormatter(const string& dateFormat): _dateFormat(dateFormat) {
   // Nothing to do
 }
 
-/*!
- * \ref DateFormatter destructor
- */
 DateFormatter::~DateFormatter() {
   // Nothing to do
 }
 
-/*!
- * Return the input string
- *
- * \param value The input string
- * \param out The output stream to write in
- */
 void
 DateFormatter::formatValue(const void* const, ostream& out) const noexcept {
   std::chrono::time_point<std::chrono::system_clock> now = std::chrono::system_clock::now();
@@ -58,11 +46,6 @@ DateFormatter::formatValue(const void* const, ostream& out) const noexcept {
   out << buf;
 }
 
-/*!
- * Get the formatter type
- *
- * \return The formatter type
- */
 FormatterType
 DateFormatter::getType() const noexcept {
   return FormatterType::DATE;

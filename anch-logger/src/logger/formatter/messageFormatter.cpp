@@ -58,11 +58,6 @@ using anch::logger::formatter::AnchDateFormatter;
 const regex MessageFormatter::CONFIG_PATTERN = regex(R"(^((\$d\{[^\}]+\})|(\$D\{[^\}]+\})|(\$m)|(\$c)|(\$p)|(\$t)|([^\$]+)))");
 // Static initialization -
 
-/*!
- * \ref MessageFormatter constructor
- *
- * \param linePattern The message line pattern
- */
 MessageFormatter::MessageFormatter(const string& linePattern): _formatters() {
   smatch match;
   string line = linePattern;
@@ -79,9 +74,6 @@ MessageFormatter::MessageFormatter(const string& linePattern): _formatters() {
   _formatters.shrink_to_fit();
 }
 
-/*!
- * \ref MessageFormatter destructor
- */
 MessageFormatter::~MessageFormatter() {
   for(auto item : _formatters) {
     delete item;
@@ -89,11 +81,6 @@ MessageFormatter::~MessageFormatter() {
 }
 
 
-/*!
- * Add formatter element to message formatter
- *
- * \param str The formatter string
- */
 void
 MessageFormatter::addFormatter(const string& strFormatter) {
   if(strFormatter.length() == 1) {
@@ -126,15 +113,6 @@ MessageFormatter::addFormatter(const string& strFormatter) {
   }
 }
 
-/*!
- * Format message.
- *
- * \param category The logger category
- * \param level The logging level
- * \param message The logging message
- *
- * \return The formatted message
- */
 const std::string
 MessageFormatter::formatMessage(const string& category,
 				const Level& level,
