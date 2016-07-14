@@ -36,47 +36,24 @@ using anch::date::formatter::IDatePartFormatter;
 const string Year2DFormatter::PATTERN = "%y";
 
 
-/*!
- * \ref Year2DFormatter default constructor
- */
 Year2DFormatter::Year2DFormatter() {
   // Nothing to do
 }
 
-/*!
- * \ref Year2DFormatter destructor
- */
 Year2DFormatter::~Year2DFormatter() {
   // Nothing to do
 }
 
-/*!
- * Format date
- *
- * \param date The \ref Date to format
- * \param output The output stream to write in
- */
 void
 Year2DFormatter::format(const Date& date, ostream& output) const noexcept {
   output << setfill('0') << setw(2) << getYear(date);
 }
 
-/*!
- * Get size of formatter part
- *
- * \return The size of formatter part
- */
 size_t
 Year2DFormatter::getSize() const noexcept {
   return 2;
 }
 
-/*!
- * Set value to \ref Date
- *
- * \param date The \ref Date to modify
- * \param value The value to set
- */
 bool
 Year2DFormatter::setValue(Date& date, const string& value) const noexcept {
   istringstream iss(value);
@@ -90,21 +67,11 @@ Year2DFormatter::setValue(Date& date, const string& value) const noexcept {
   }
 }
 
-/*!
- * Get formatter part pattern
- *
- * \return The formatter part pattern
- */
 const string&
 Year2DFormatter::getPattern() const noexcept {
   return Year2DFormatter::PATTERN;
 }
 
-/*!
- * Return a new instance of \ref Year2DFormatter
- *
- * \return A new instance of \ref Year2DFormatter
- */
 IDatePartFormatter*
 Year2DFormatter::getInstance() {
   return new Year2DFormatter();

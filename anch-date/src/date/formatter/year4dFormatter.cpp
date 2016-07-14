@@ -36,47 +36,24 @@ using anch::date::formatter::IDatePartFormatter;
 const string Year4DFormatter::PATTERN = "%Y";
 
 
-/*!
- * \ref Year4DFormatter default constructor
- */
 Year4DFormatter::Year4DFormatter() {
   // Nothing to do
 }
 
-/*!
- * \ref Year4DFormatter destructor
- */
 Year4DFormatter::~Year4DFormatter() {
   // Nothing to do
 }
 
-/*!
- * Format date
- *
- * \param date The \ref Date to format
- * \param output The output stream to write in
- */
 void
 Year4DFormatter::format(const Date& date, ostream& output) const noexcept {
   output << setfill('0') << setw(4) << getYear(date);
 }
 
-/*!
- * Get size of formatter part
- *
- * \return The size of formatter part
- */
 size_t
 Year4DFormatter::getSize() const noexcept {
   return 4;
 }
 
-/*!
- * Set value to \ref Date
- *
- * \param date The \ref Date to modify
- * \param value The value to set
- */
 bool
 Year4DFormatter::setValue(Date& date, const string& value) const noexcept {
   istringstream iss(value);
@@ -90,21 +67,11 @@ Year4DFormatter::setValue(Date& date, const string& value) const noexcept {
   }
 }
 
-/*!
- * Get formatter part pattern
- *
- * \return The formatter part pattern
- */
 const string&
 Year4DFormatter::getPattern() const noexcept {
   return Year4DFormatter::PATTERN;
 }
 
-/*!
- * Return a new instance of \ref Year4DFormatter
- *
- * \return A new instance of \ref Year4DFormatter
- */
 IDatePartFormatter*
 Year4DFormatter::getInstance() {
   return new Year4DFormatter();

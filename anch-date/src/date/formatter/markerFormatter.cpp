@@ -36,26 +36,14 @@ using anch::date::formatter::IDatePartFormatter;
 const string MarkerFormatter::PATTERN = "%p";
 
 
-/*!
- * \ref MarkerFormatter default constructor
- */
 MarkerFormatter::MarkerFormatter() {
   // Nothing to do
 }
 
-/*!
- * \ref MarkerFormatter destructor
- */
 MarkerFormatter::~MarkerFormatter() {
   // Nothing to do
 }
 
-/*!
- * Format date
- *
- * \param date The \ref Date to format
- * \param output The output stream to write in
- */
 void
 MarkerFormatter::format(const Date& date, ostream& output) const noexcept {
   string marker;
@@ -67,22 +55,11 @@ MarkerFormatter::format(const Date& date, ostream& output) const noexcept {
   output << marker;
 }
 
-/*!
- * Get size of formatter part
- *
- * \return The size of formatter part
- */
 size_t
 MarkerFormatter::getSize() const noexcept {
   return 4;
 }
 
-/*!
- * Set value to \ref Date
- *
- * \param date The \ref Date to modify
- * \param value The value to set
- */
 bool
 MarkerFormatter::setValue(Date& date, const string& value) const noexcept {
   if(value == "p.m.") {
@@ -93,21 +70,11 @@ MarkerFormatter::setValue(Date& date, const string& value) const noexcept {
   return true;
 }
 
-/*!
- * Get formatter part pattern
- *
- * \return The formatter part pattern
- */
 const string&
 MarkerFormatter::getPattern() const noexcept {
   return MarkerFormatter::PATTERN;
 }
 
-/*!
- * Return a new instance of \ref MarkerFormatter
- *
- * \return A new instance of \ref MarkerFormatter
- */
 IDatePartFormatter*
 MarkerFormatter::getInstance() {
   return new MarkerFormatter();

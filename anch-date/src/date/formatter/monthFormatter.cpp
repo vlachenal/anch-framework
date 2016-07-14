@@ -36,47 +36,24 @@ using anch::date::formatter::IDatePartFormatter;
 const string MonthFormatter::PATTERN = "%m";
 
 
-/*!
- * \ref MonthFormatter default constructor
- */
 MonthFormatter::MonthFormatter() {
   // Nothing to do
 }
 
-/*!
- * \ref MonthFormatter destructor
- */
 MonthFormatter::~MonthFormatter() {
   // Nothing to do
 }
 
-/*!
- * Format date
- *
- * \param date The \ref Date to format
- * \param output The output stream to write in
- */
 void
 MonthFormatter::format(const Date& date, ostream& output) const noexcept {
   output << setfill('0') << setw(2) << getMonth(date) + 1;
 }
 
-/*!
- * Get size of formatter part
- *
- * \return The size of formatter part
- */
 size_t
 MonthFormatter::getSize() const noexcept {
   return 2;
 }
 
-/*!
- * Set value to \ref Date
- *
- * \param date The \ref Date to modify
- * \param value The value to set
- */
 bool
 MonthFormatter::setValue(Date& date, const string& value) const noexcept {
   istringstream iss(value);
@@ -94,21 +71,11 @@ MonthFormatter::setValue(Date& date, const string& value) const noexcept {
   }
 }
 
-/*!
- * Get formatter part pattern
- *
- * \return The formatter part pattern
- */
 const string&
 MonthFormatter::getPattern() const noexcept {
   return MonthFormatter::PATTERN;
 }
 
-/*!
- * Return a new instance of \ref MonthFormatter
- *
- * \return A new instance of \ref MonthFormatter
- */
 IDatePartFormatter*
 MonthFormatter::getInstance() {
   return new MonthFormatter();

@@ -36,26 +36,14 @@ using anch::date::formatter::IDatePartFormatter;
 const string Hour12Formatter::PATTERN = "%h";
 
 
-/*!
- * \ref Hour12Formatter default constructor
- */
 Hour12Formatter::Hour12Formatter() {
   // Nothing to do
 }
 
-/*!
- * \ref Hour12Formatter destructor
- */
 Hour12Formatter::~Hour12Formatter() {
   // Nothing to do
 }
 
-/*!
- * Format date
- *
- * \param date The \ref Date to format
- * \param output The output stream to write in
- */
 void
 Hour12Formatter::format(const Date& date, ostream& output) const noexcept {
   uint16_t hours = getHour(date);
@@ -65,22 +53,11 @@ Hour12Formatter::format(const Date& date, ostream& output) const noexcept {
   output << setfill('0') << setw(2) << hours;
 }
 
-/*!
- * Get size of formatter part
- *
- * \return The size of formatter part
- */
 size_t
 Hour12Formatter::getSize() const noexcept {
   return 2;
 }
 
-/*!
- * Set value to \ref Date
- *
- * \param date The \ref Date to modify
- * \param value The value to set
- */
 bool
 Hour12Formatter::setValue(Date& date, const string& value) const noexcept {
   istringstream iss(value);
@@ -98,21 +75,11 @@ Hour12Formatter::setValue(Date& date, const string& value) const noexcept {
   }
 }
 
-/*!
- * Get formatter part pattern
- *
- * \return The formatter part pattern
- */
 const string&
 Hour12Formatter::getPattern() const noexcept {
   return Hour12Formatter::PATTERN;
 }
 
-/*!
- * Return a new instance of \ref Hour12Formatter
- *
- * \return A new instance of \ref Hour12Formatter
- */
 IDatePartFormatter*
 Hour12Formatter::getInstance() {
   return new Hour12Formatter();

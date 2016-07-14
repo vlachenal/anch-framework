@@ -36,47 +36,24 @@ using anch::date::formatter::IDatePartFormatter;
 const string MillisecondFormatter::PATTERN = "%s";
 
 
-/*!
- * \ref MillisecondFormatter default constructor
- */
 MillisecondFormatter::MillisecondFormatter() {
   // Nothing to do
 }
 
-/*!
- * \ref MillisecondFormatter destructor
- */
 MillisecondFormatter::~MillisecondFormatter() {
   // Nothing to do
 }
 
-/*!
- * Format date
- *
- * \param date The \ref Date to format
- * \param output The output stream to write in
- */
 void
 MillisecondFormatter::format(const Date& date, ostream& output) const noexcept {
   output << setfill('0') << setw(3) << getMillisecond(date);
 }
 
-/*!
- * Get size of formatter part
- *
- * \return The size of formatter part
- */
 size_t
 MillisecondFormatter::getSize() const noexcept {
   return 3;
 }
 
-/*!
- * Set value to \ref Date
- *
- * \param date The \ref Date to modify
- * \param value The value to set
- */
 bool
 MillisecondFormatter::setValue(Date& date, const string& value) const noexcept {
   istringstream iss(value);
@@ -90,21 +67,11 @@ MillisecondFormatter::setValue(Date& date, const string& value) const noexcept {
   }
 }
 
-/*!
- * Get formatter part pattern
- *
- * \return The formatter part pattern
- */
 const string&
 MillisecondFormatter::getPattern() const noexcept {
   return MillisecondFormatter::PATTERN;
 }
 
-/*!
- * Return a new instance of \ref MillisecondFormatter
- *
- * \return A new instance of \ref MillisecondFormatter
- */
 IDatePartFormatter*
 MillisecondFormatter::getInstance() {
   return new MillisecondFormatter();

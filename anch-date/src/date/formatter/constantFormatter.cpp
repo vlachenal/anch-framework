@@ -32,60 +32,30 @@ using anch::date::Date;
 using anch::date::formatter::ConstantFormatter;
 
 
-/*!
- * \ref ConstantFormatter default constructor
- *
- * \param message The constant message
- */
 ConstantFormatter::ConstantFormatter(const string& message): _message(message) {
   _message.shrink_to_fit();
 }
 
-/*!
- * \ref ConstantFormatter destructor
- */
 ConstantFormatter::~ConstantFormatter() {
   // Nothing to do
 }
 
-/*!
- * Format date
- *
- * \param date The \ref Date to format
- * \param output The output stream to write in
- */
 void
 ConstantFormatter::format(const Date&, ostream& output) const noexcept {
   output << _message;
 }
 
-/*!
- * Get size of formatter part
- *
- * \return The size of formatter part
- */
 size_t
 ConstantFormatter::getSize() const noexcept {
   return _message.size();
 }
 
-/*!
- * Set value to \ref Date
- *
- * \param date The \ref Date to modify
- * \param value The value to set
- */
 bool
 ConstantFormatter::setValue(Date&, const string&) const noexcept {
   // Nothing to do
   return true;
 }
 
-/*!
- * Get formatter part pattern
- *
- * \return The formatter part pattern
- */
 const string&
 ConstantFormatter::getPattern() const noexcept {
   return _message;

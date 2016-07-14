@@ -36,47 +36,24 @@ using anch::date::formatter::IDatePartFormatter;
 const string DayFormatter::PATTERN = "%d";
 
 
-/*!
- * \ref DayFormatter default constructor
- */
 DayFormatter::DayFormatter() {
   // Nothing to do
 }
 
-/*!
- * \ref DayFormatter destructor
- */
 DayFormatter::~DayFormatter() {
   // Nothing to do
 }
 
-/*!
- * Format date
- *
- * \param date The \ref Date to format
- * \param output The output stream to write in
- */
 void
 DayFormatter::format(const Date& date, ostream& output) const noexcept {
   output << setfill('0') << setw(2) << getDay(date);
 }
 
-/*!
- * Get size of formatter part
- *
- * \return The size of formatter part
- */
 size_t
 DayFormatter::getSize() const noexcept {
   return 2;
 }
 
-/*!
- * Set value to \ref Date
- *
- * \param date The \ref Date to modify
- * \param value The value to set
- */
 bool
 DayFormatter::setValue(Date& date, const string& value) const noexcept {
   istringstream iss(value);
@@ -94,21 +71,11 @@ DayFormatter::setValue(Date& date, const string& value) const noexcept {
   }
 }
 
-/*!
- * Get formatter part pattern
- *
- * \return The formatter part pattern
- */
 const string&
 DayFormatter::getPattern() const noexcept {
   return DayFormatter::PATTERN;
 }
 
-/*!
- * Return a new instance of \ref DayFormatter
- *
- * \return A new instance of \ref DayFormatter
- */
 IDatePartFormatter*
 DayFormatter::getInstance() {
   return new DayFormatter();

@@ -36,47 +36,24 @@ using anch::date::formatter::IDatePartFormatter;
 const string SecondFormatter::PATTERN = "%S";
 
 
-/*!
- * \ref SecondFormatter default constructor
- */
 SecondFormatter::SecondFormatter() {
   // Nothing to do
 }
 
-/*!
- * \ref SecondFormatter destructor
- */
 SecondFormatter::~SecondFormatter() {
   // Nothing to do
 }
 
-/*!
- * Format date
- *
- * \param date The \ref Date to format
- * \param output The output stream to write in
- */
 void
 SecondFormatter::format(const Date& date, ostream& output) const noexcept {
   output << setfill('0') << setw(2) << getSecond(date);
 }
 
-/*!
- * Get size of formatter part
- *
- * \return The size of formatter part
- */
 size_t
 SecondFormatter::getSize() const noexcept {
   return 2;
 }
 
-/*!
- * Set value to \ref Date
- *
- * \param date The \ref Date to modify
- * \param value The value to set
- */
 bool
 SecondFormatter::setValue(Date& date, const string& value) const noexcept {
   istringstream iss(value);
@@ -94,21 +71,11 @@ SecondFormatter::setValue(Date& date, const string& value) const noexcept {
   }
 }
 
-/*!
- * Get formatter part pattern
- *
- * \return The formatter part pattern
- */
 const string&
 SecondFormatter::getPattern() const noexcept {
   return SecondFormatter::PATTERN;
 }
 
-/*!
- * Return a new instance of \ref SecondFormatter
- *
- * \return A new instance of \ref SecondFormatter
- */
 IDatePartFormatter*
 SecondFormatter::getInstance() {
   return new SecondFormatter();

@@ -39,11 +39,6 @@ mutex Date::_mutex;
 
 
 //Constructors +
-/*!
- * \ref Date default constructor.
- *
- * \param init Initialize the \ref Date to now (default true)
- */
 Date::Date(bool init) {
   if(init) {
     time_point<high_resolution_clock> now = high_resolution_clock::now();
@@ -58,11 +53,6 @@ Date::Date(bool init) {
   }
 }
 
-/*!
- * \ref Date private copy constructor
- *
- * \param date The \ref Date to copy
- */
 Date::Date(const Date& date): _timestamp(date._timestamp),
 			      _years(date._years),
 			      _months(date._months),
@@ -78,11 +68,6 @@ Date::Date(const Date& date): _timestamp(date._timestamp),
   // Nothing to do more => every fields have been initialized
 }
 
-/*!
- * \ref Date constructor.
- *
- * \param time The time to set
- */
 Date::Date(const std::time_t& time) {
   time_point<system_clock> timePoint = system_clock::from_time_t(time);
   _timestamp = duration_cast<std::chrono::nanoseconds>(timePoint.time_since_epoch()).count();
@@ -91,11 +76,6 @@ Date::Date(const std::time_t& time) {
   _mutex.unlock();
 }
 
-/*!
- * \ref Date constructor.
- *
- * \param time The time to set
- */
 Date::Date(const std::tm* const time) {
   _mutex.lock();
   // Copy time to not change time values
@@ -108,9 +88,6 @@ Date::Date(const std::tm* const time) {
 //Constructors -
 
 // Destructors +
-/*!
- * \ref Date destructor
- */
 Date::~Date() {
   // Nothing to do
 }
@@ -118,11 +95,6 @@ Date::~Date() {
 
 
 // Methods +
-/*!
- * Initialize date fields
- *
- * \param time The current time
- */
 void
 Date::initialize(const std::tm* const time) {
   _seconds = static_cast<uint16_t>(time->tm_sec);
@@ -139,9 +111,6 @@ Date::initialize(const std::tm* const time) {
   _years = static_cast<int32_t>(time->tm_year) + 1900;
 }
 
-/*!
- * Compute timestamp from internal members
- */
 void
 Date::computeTimestamp() {
   _mutex.lock();
