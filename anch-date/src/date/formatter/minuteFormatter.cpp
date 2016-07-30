@@ -49,7 +49,7 @@ MinuteFormatter::format(const Date& date, ostream& output) const noexcept {
   output << setfill('0') << setw(2) << getMinute(date);
 }
 
-size_t
+std::size_t
 MinuteFormatter::getSize() const noexcept {
   return 2;
 }

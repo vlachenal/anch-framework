@@ -31,6 +31,7 @@
 #endif
 
 #include "date/date.hpp"
+#include "date/invalidFormatException.hpp"
 
 
 namespace anch {
@@ -71,8 +72,8 @@ namespace anch {
       const static std::regex DATE_PATTERN;
 #endif
 
-      /*! Formatter registration map */
-      static std::map<std::string, getInstance> FORMATTERS;
+      // /*! Formatter registration map */
+      // static std::map<std::string, getInstance> FORMATTERS;
 
       /*! Formatter list */
       std::vector<anch::date::formatter::IDatePartFormatter*> _formatters;
@@ -107,8 +108,7 @@ namespace anch {
        * \param pattern The formatter part pattern
        * \param instGetter The formatter part new instance getter
        */
-      static void registerFormatterPart(const std::string& pattern,
-					getInstance instGetter);
+      static void registerFormatterPart(const std::string& pattern, getInstance instGetter);
 
       /*!
        * Format date
@@ -132,8 +132,10 @@ namespace anch {
        *
        * \param strDate String formatted date
        * \param date The output date
+       *
+       * \throw InvalidFormatException invalid format
        */
-      void parse(const std::string& strDate, anch::date::Date& date) const;
+      void parse(const std::string& strDate, anch::date::Date& date) const throw(InvalidFormatException);
 
       /*!
        * Build date from string.\n
@@ -142,8 +144,10 @@ namespace anch {
        * \param strDate String formatted date
        *
        * \return A date
+       *
+       * \throw InvalidFormatException invalid format
        */
-      anch::date::Date* parse(const std::string& strDate) const;
+      anch::date::Date* parse(const std::string& strDate) const throw(InvalidFormatException);
 
     private:
       /*!

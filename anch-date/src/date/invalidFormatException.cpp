@@ -17,46 +17,26 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "date/formatter/constantFormatter.hpp"
+#include "date/invalidFormatException.hpp"
 
-#include <iomanip>
-#include <sstream>
-
-using std::string;
-using std::ostream;
-using std::setfill;
-using std::setw;
-using std::istringstream;
-
-using anch::date::Date;
-using anch::date::formatter::ConstantFormatter;
+using anch::date::InvalidFormatException;
 
 
-ConstantFormatter::ConstantFormatter(const string& message): _message(message) {
-  _message.shrink_to_fit();
-}
-
-ConstantFormatter::~ConstantFormatter() {
+// Constructors +
+InvalidFormatException::InvalidFormatException(const std::string& msg): _msg(msg) {
   // Nothing to do
 }
+// Constructors -
 
-void
-ConstantFormatter::format(const Date&, ostream& output) const noexcept {
-  output << _message;
-}
-
-std::size_t
-ConstantFormatter::getSize() const noexcept {
-  return _message.size();
-}
-
-bool
-ConstantFormatter::setValue(Date&, const string&) const noexcept {
+// Destructors +
+InvalidFormatException::~InvalidFormatException() {
   // Nothing to do
-  return true;
 }
+// Destructors -
 
-const string&
-ConstantFormatter::getPattern() const noexcept {
-  return _message;
+// Methods +
+const char*
+InvalidFormatException::what() const noexcept {
+  return _msg.data();
 }
+// Methods -

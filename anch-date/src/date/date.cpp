@@ -20,33 +20,23 @@
 #include "date/date.hpp"
 
 
-using std::mutex;
-using std::tm;
-using std::time_t;
-using std::mktime;
-using std::localtime;
-using std::chrono::time_point;
-using std::chrono::system_clock;
-using std::chrono::high_resolution_clock;
-using std::chrono::duration_cast;
-
 using anch::date::Date;
 
 
 // Static initialization +
-mutex Date::_mutex;
+std::mutex Date::_mutex;
 // Static initialization -
 
 
 //Constructors +
 Date::Date(bool init) {
   if(init) {
-    time_point<high_resolution_clock> now = high_resolution_clock::now();
+    std::chrono::time_point<std::chrono::high_resolution_clock> now = std::chrono::high_resolution_clock::now();
     auto epoch = now.time_since_epoch();
-    _timestamp = duration_cast<std::chrono::nanoseconds>(epoch).count();
+    _timestamp = std::chrono::duration_cast<std::chrono::nanoseconds>(epoch).count();
     initialize(epoch); // Retrieve ms, µs, ns
     // Initialize others fields according to UTC time
-    time_t time = system_clock::to_time_t(now);
+    std::time_t time = std::chrono::system_clock::to_time_t(now);
     _mutex.lock();
     initialize(localtime(&time));
     _mutex.unlock();
@@ -69,8 +59,8 @@ Date::Date(const Date& date): _timestamp(date._timestamp),
 }
 
 Date::Date(const std::time_t& time) {
-  time_point<system_clock> timePoint = system_clock::from_time_t(time);
-  _timestamp = duration_cast<std::chrono::nanoseconds>(timePoint.time_since_epoch()).count();
+  std::chrono::time_point<std::chrono::system_clock> timePoint = std::chrono::system_clock::from_time_t(time);
+  _timestamp = std::chrono::duration_cast<std::chrono::nanoseconds>(timePoint.time_since_epoch()).count();
   _mutex.lock();
   initialize(localtime(&time));
   _mutex.unlock();
@@ -79,9 +69,9 @@ Date::Date(const std::time_t& time) {
 Date::Date(const std::tm* const time) {
   _mutex.lock();
   // Copy time to not change time values
-  tm tmpTm = tm(*time);
-  time_point<system_clock> timePoint = system_clock::from_time_t(mktime(&tmpTm));
-  _timestamp = duration_cast<std::chrono::nanoseconds>(timePoint.time_since_epoch()).count();
+  std::tm tmpTm = tm(*time);
+  std::chrono::time_point<std::chrono::system_clock> timePoint = std::chrono::system_clock::from_time_t(mktime(&tmpTm));
+  _timestamp = std::chrono::duration_cast<std::chrono::nanoseconds>(timePoint.time_since_epoch()).count();
   initialize(time);
   _mutex.unlock();
 }
@@ -100,7 +90,7 @@ Date::initialize(const std::tm* const time) {
   _seconds = static_cast<uint16_t>(time->tm_sec);
   _minutes = static_cast<uint16_t>(time->tm_min);
   if(time->tm_isdst > 0) {
-    _hours = static_cast<uint16_t>(time->tm_hour) + 1;
+    _hours = static_cast<uint16_t>(time->tm_hour + 1);
   } else {
     _hours = static_cast<uint16_t>(time->tm_hour);
   }
@@ -114,11 +104,12 @@ Date::initialize(const std::tm* const time) {
 void
 Date::computeTimestamp() {
   _mutex.lock();
-  tm tmpTm;
+  std::tm tmpTm;
   computeTm(tmpTm);
 
-  time_point<system_clock> timePoint = system_clock::from_time_t(mktime(&tmpTm));
-  _timestamp = duration_cast<std::chrono::nanoseconds>(timePoint.time_since_epoch()).count();
+  std::time_t tmpTime = std::mktime(&tmpTm);
+  std::chrono::time_point<std::chrono::system_clock> timePoint = std::chrono::system_clock::from_time_t(tmpTime);
+  _timestamp = std::chrono::duration_cast<std::chrono::nanoseconds>(timePoint.time_since_epoch()).count();
   _mutex.unlock();
 }
 // Methods -

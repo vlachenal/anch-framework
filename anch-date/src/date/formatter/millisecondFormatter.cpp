@@ -49,7 +49,7 @@ MillisecondFormatter::format(const Date& date, ostream& output) const noexcept {
   output << setfill('0') << setw(3) << getMillisecond(date);
 }
 
-size_t
+std::size_t
 MillisecondFormatter::getSize() const noexcept {
   return 3;
 }

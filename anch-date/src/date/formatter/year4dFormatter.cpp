@@ -22,18 +22,12 @@
 #include <iomanip>
 #include <sstream>
 
-using std::string;
-using std::ostream;
-using std::setfill;
-using std::setw;
-using std::istringstream;
-
 using anch::date::Date;
 using anch::date::formatter::Year4DFormatter;
 using anch::date::formatter::IDatePartFormatter;
 
 
-const string Year4DFormatter::PATTERN = "%Y";
+const std::string Year4DFormatter::PATTERN = "%Y";
 
 
 Year4DFormatter::Year4DFormatter() {
@@ -45,18 +39,18 @@ Year4DFormatter::~Year4DFormatter() {
 }
 
 void
-Year4DFormatter::format(const Date& date, ostream& output) const noexcept {
-  output << setfill('0') << setw(4) << getYear(date);
+Year4DFormatter::format(const Date& date, std::ostream& output) const noexcept {
+  output << std::setfill('0') << std::setw(4) << getYear(date);
 }
 
-size_t
+std::size_t
 Year4DFormatter::getSize() const noexcept {
   return 4;
 }
 
 bool
-Year4DFormatter::setValue(Date& date, const string& value) const noexcept {
-  istringstream iss(value);
+Year4DFormatter::setValue(Date& date, const std::string& value) const noexcept {
+  std::istringstream iss(value);
   int32_t val;
   iss >> std::dec >> val;
   if(iss.fail()) {
@@ -67,7 +61,7 @@ Year4DFormatter::setValue(Date& date, const string& value) const noexcept {
   }
 }
 
-const string&
+const std::string&
 Year4DFormatter::getPattern() const noexcept {
   return Year4DFormatter::PATTERN;
 }

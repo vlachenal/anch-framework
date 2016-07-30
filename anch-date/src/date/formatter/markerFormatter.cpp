@@ -22,18 +22,12 @@
 #include <iomanip>
 #include <sstream>
 
-using std::string;
-using std::ostream;
-using std::setfill;
-using std::setw;
-using std::istringstream;
-
 using anch::date::Date;
 using anch::date::formatter::MarkerFormatter;
 using anch::date::formatter::IDatePartFormatter;
 
 
-const string MarkerFormatter::PATTERN = "%p";
+const std::string MarkerFormatter::PATTERN = "%p";
 
 
 MarkerFormatter::MarkerFormatter() {
@@ -45,8 +39,8 @@ MarkerFormatter::~MarkerFormatter() {
 }
 
 void
-MarkerFormatter::format(const Date& date, ostream& output) const noexcept {
-  string marker;
+MarkerFormatter::format(const Date& date, std::ostream& output) const noexcept {
+  std::string marker;
   if(getHour(date) < 12) {
     marker = "a.m.";
   } else {
@@ -55,22 +49,22 @@ MarkerFormatter::format(const Date& date, ostream& output) const noexcept {
   output << marker;
 }
 
-size_t
+std::size_t
 MarkerFormatter::getSize() const noexcept {
   return 4;
 }
 
 bool
-MarkerFormatter::setValue(Date& date, const string& value) const noexcept {
+MarkerFormatter::setValue(Date& date, const std::string& value) const noexcept {
   if(value == "p.m.") {
-    setHour(date, getHour(date) + 12);
+    setHour(date, static_cast<uint16_t>(getHour(date) + 12));
   } else if(value != "a.m.") {
     return false;
   }
   return true;
 }
 
-const string&
+const std::string&
 MarkerFormatter::getPattern() const noexcept {
   return MarkerFormatter::PATTERN;
 }

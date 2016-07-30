@@ -49,7 +49,7 @@ SecondFormatter::format(const Date& date, ostream& output) const noexcept {
   output << setfill('0') << setw(2) << getSecond(date);
 }
 
-size_t
+std::size_t
 SecondFormatter::getSize() const noexcept {
   return 2;
 }

@@ -53,14 +53,14 @@ namespace anch {
 	 * \param date The \ref Date to format
 	 * \param output The output stream to write in
 	 */
-	void format(const anch::date::Date& date, std::ostream& output) const noexcept;
+	virtual void format(const anch::date::Date& date, std::ostream& output) const noexcept override;
 
 	/*!
 	 * Get size of formatter part
 	 *
 	 * \return The size of formatter part
 	 */
-	size_t getSize() const noexcept;
+	virtual std::size_t getSize() const noexcept override;
 
 	/*!
 	 * Set value to \ref Date
@@ -68,14 +68,14 @@ namespace anch {
 	 * \param date The \ref Date to modify
 	 * \param value The value to set
 	 */
-	bool setValue(anch::date::Date& date, const std::string& value) const noexcept;
+	virtual bool setValue(anch::date::Date& date, const std::string& value) const noexcept override;
 
 	/*!
 	 * Get formatter part pattern
 	 *
 	 * \return The formatter part pattern
 	 */
-	const std::string& getPattern() const noexcept;
+	virtual const std::string& getPattern() const noexcept override;
 
 	/*!
 	 * Return a new instance of \ref Year2DFormatter

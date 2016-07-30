@@ -57,7 +57,7 @@ namespace anch {
 	 *
 	 * \return The size of formatter part
 	 */
-	virtual size_t getSize() const noexcept = 0;
+	virtual std::size_t getSize() const noexcept = 0;
 
 	/*!
 	 * Set value to \ref Date

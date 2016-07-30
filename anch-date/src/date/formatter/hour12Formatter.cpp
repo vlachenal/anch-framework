@@ -22,18 +22,12 @@
 #include <iomanip>
 #include <sstream>
 
-using std::string;
-using std::ostream;
-using std::setfill;
-using std::setw;
-using std::istringstream;
-
 using anch::date::Date;
 using anch::date::formatter::Hour12Formatter;
 using anch::date::formatter::IDatePartFormatter;
 
 
-const string Hour12Formatter::PATTERN = "%h";
+const std::string Hour12Formatter::PATTERN = "%h";
 
 
 Hour12Formatter::Hour12Formatter() {
@@ -45,22 +39,22 @@ Hour12Formatter::~Hour12Formatter() {
 }
 
 void
-Hour12Formatter::format(const Date& date, ostream& output) const noexcept {
+Hour12Formatter::format(const Date& date, std::ostream& output) const noexcept {
   uint16_t hours = getHour(date);
   if(hours >= 12) {
-    hours = hours - 12;
+    hours = static_cast<uint16_t>(hours - 12);
   }
-  output << setfill('0') << setw(2) << hours;
+  output << std::setfill('0') << std::setw(2) << hours;
 }
 
-size_t
+std::size_t
 Hour12Formatter::getSize() const noexcept {
   return 2;
 }
 
 bool
-Hour12Formatter::setValue(Date& date, const string& value) const noexcept {
-  istringstream iss(value);
+Hour12Formatter::setValue(Date& date, const std::string& value) const noexcept {
+  std::istringstream iss(value);
   uint16_t val;
   iss >> std::dec >> val;
   if(iss.fail()) {
@@ -69,13 +63,13 @@ Hour12Formatter::setValue(Date& date, const string& value) const noexcept {
     if(val > 11) {
       return false;
     } else {
-      setHour(date, getHour(date) + val);
+      setHour(date, static_cast<uint16_t>(getHour(date) + val));
       return true;
     }
   }
 }
 
-const string&
+const std::string&
 Hour12Formatter::getPattern() const noexcept {
   return Hour12Formatter::PATTERN;
 }

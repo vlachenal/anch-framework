@@ -49,7 +49,7 @@ Hour24Formatter::format(const Date& date, ostream& output) const noexcept {
   output << setfill('0') << setw(2) << getHour(date);
 }
 
-size_t
+std::size_t
 Hour24Formatter::getSize() const noexcept {
   return 2;
 }

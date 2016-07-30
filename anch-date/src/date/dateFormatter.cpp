@@ -36,15 +36,6 @@
 #include "date/formatter/year2dFormatter.hpp"
 #include "date/formatter/year4dFormatter.hpp"
 
-using std::string;
-using std::ostream;
-using std::setfill;
-using std::setw;
-using std::istringstream;
-using std::ostringstream;
-using std::map;
-using std::pair;
-
 #ifdef ANCH_BOOST_REGEX
 using boost::regex;
 using boost::smatch;
@@ -59,37 +50,38 @@ using anch::date::Date;
 using anch::date::DateFormatter;
 using anch::date::getInstance;
 
-using namespace anch::date::formatter;
-
 
 // Static initialization +
 const regex DateFormatter::DATE_PATTERN = regex(R"(^((%.)|([^%]+)))");
-
-map<string, getInstance> DateFormatter::FORMATTERS = {
-  {Year4DFormatter::PATTERN, &Year4DFormatter::getInstance},
-  {Year2DFormatter::PATTERN, &Year2DFormatter::getInstance},
-  {MonthFormatter::PATTERN, &MonthFormatter::getInstance},
-  {DayFormatter::PATTERN, &DayFormatter::getInstance},
-  {Hour24Formatter::PATTERN, &Hour24Formatter::getInstance},
-  {Hour12Formatter::PATTERN, &Hour12Formatter::getInstance},
-  {MarkerFormatter::PATTERN, &MarkerFormatter::getInstance},
-  {MinuteFormatter::PATTERN, &MinuteFormatter::getInstance},
-  {SecondFormatter::PATTERN, &SecondFormatter::getInstance},
-  {MillisecondFormatter::PATTERN, &MillisecondFormatter::getInstance}
-};
 // Static initialization -
+
+std::map<std::string, getInstance>&
+getFormatters() {
+  static std::map<std::string, getInstance> formatters = {
+    { anch::date::formatter::Year4DFormatter::PATTERN, &anch::date::formatter::Year4DFormatter::getInstance },
+    { anch::date::formatter::Year2DFormatter::PATTERN, &anch::date::formatter::Year2DFormatter::getInstance },
+    { anch::date::formatter::MonthFormatter::PATTERN, &anch::date::formatter::MonthFormatter::getInstance },
+    { anch::date::formatter::DayFormatter::PATTERN, &anch::date::formatter::DayFormatter::getInstance },
+    { anch::date::formatter::Hour24Formatter::PATTERN, &anch::date::formatter::Hour24Formatter::getInstance },
+    { anch::date::formatter::Hour12Formatter::PATTERN, &anch::date::formatter::Hour12Formatter::getInstance },
+    { anch::date::formatter::MarkerFormatter::PATTERN, &anch::date::formatter::MarkerFormatter::getInstance },
+    { anch::date::formatter::MinuteFormatter::PATTERN, &anch::date::formatter::MinuteFormatter::getInstance },
+    { anch::date::formatter::SecondFormatter::PATTERN, &anch::date::formatter::SecondFormatter::getInstance },
+    { anch::date::formatter::MillisecondFormatter::PATTERN, &anch::date::formatter::MillisecondFormatter::getInstance }
+  };
+  return formatters;
+}
 
 
 // Constructors +
-DateFormatter::DateFormatter(const string& dateFormat) {
-  string line = dateFormat;
-  _size = 0;
+DateFormatter::DateFormatter(const std::string& dateFormat): _formatters(), _size(0) {
+  std::string remain = dateFormat;
   bool ok = true;
   smatch match;
-  while(!line.empty() && ok) {
-    if(regex_search(line, match, DATE_PATTERN)) {
-      addFormatter(string(match[0].first, match[0].second));
-      line = string(match.suffix().first, match.suffix().second);
+  while(!remain.empty() && ok) {
+    if(regex_search(remain, match, DATE_PATTERN)) {
+      addFormatter(std::string(match[0].first, match[0].second));
+      remain = std::string(match.suffix().first, match.suffix().second);
 
     } else {
       ok = false;
@@ -99,9 +91,10 @@ DateFormatter::DateFormatter(const string& dateFormat) {
 }
 // Constructors -
 
+
 // Destructor +
 DateFormatter::~DateFormatter() {
-  for(const IDatePartFormatter* part : _formatters) {
+  for(const anch::date::formatter::IDatePartFormatter* part : _formatters) {
     delete part;
   }
 }
@@ -110,41 +103,42 @@ DateFormatter::~DateFormatter() {
 
 // Methods +
 void
-DateFormatter::registerFormatterPart(const string& pattern,
+DateFormatter::registerFormatterPart(const std::string& pattern,
 				     getInstance instGetter) {
-  if(FORMATTERS.find(pattern) == FORMATTERS.end()) {
-    FORMATTERS.insert(pair<string, getInstance>(pattern, instGetter));
-    FORMATTERS[pattern] = instGetter;
+  if(getFormatters().find(pattern) == getFormatters().end()) {
+    getFormatters()[pattern] = instGetter;
   }
 }
 
 void
-DateFormatter::format(const Date& date, string& output) const {
-  ostringstream oss;
+DateFormatter::format(const Date& date, std::string& output) const {
+  std::ostringstream oss;
   format(date, oss);
   output.clear();
   output = oss.str();
 }
 
 void
-DateFormatter::format(const Date& date, ostream& output) const {
-  for(const IDatePartFormatter* part : _formatters) {
+DateFormatter::format(const Date& date, std::ostream& output) const {
+  for(const anch::date::formatter::IDatePartFormatter* part : _formatters) {
     part->format(date, output);
   }
   output.flush();
 }
 
 void
-DateFormatter::parse(const string& strDate, Date& date) const {
+DateFormatter::parse(const std::string& strDate, Date& date) const throw(InvalidFormatException) {
   if(strDate.size() != _size) {
-    // TODO throw exception
+    std::stringstream oss;
+    oss << "Found " << strDate.size() << " characters instead of " << _size;
+    throw InvalidFormatException(oss.str());
   }
-  size_t offset = 0;
+  std::size_t offset = 0;
   bool ok = false;
-  for(const IDatePartFormatter* part : _formatters) {
+  for(const anch::date::formatter::IDatePartFormatter* part : _formatters) {
     ok = part->setValue(date, strDate.substr(offset, part->getSize()));
     if(!ok) {
-      // TODO throw an exception
+      throw InvalidFormatException("Fail to parse " + strDate);
     }
     offset += part->getSize();
   }
@@ -152,23 +146,23 @@ DateFormatter::parse(const string& strDate, Date& date) const {
 }
 
 Date*
-DateFormatter::parse(const std::string& strDate) const {
+DateFormatter::parse(const std::string& strDate) const throw(InvalidFormatException) {
   Date* date = new Date(false);
   parse(strDate, *date);
   return date;
 }
 
 void
-DateFormatter::addFormatter(const string& strFormatter) {
-  IDatePartFormatter* form;
+DateFormatter::addFormatter(const std::string& strFormatter) {
+  anch::date::formatter::IDatePartFormatter* form;
   if(strFormatter.length() == 1) {
-    form = new ConstantFormatter(strFormatter);
+    form = new anch::date::formatter::ConstantFormatter(strFormatter);
 
   } else {
-    const string pattern = strFormatter.substr(0,2);
-    auto iter = FORMATTERS.find(pattern);
-    if(iter == FORMATTERS.end()) {
-      form = new ConstantFormatter(strFormatter);
+    const std::string pattern = strFormatter.substr(0,2);
+    auto iter = getFormatters().find(pattern);
+    if(iter == getFormatters().end()) {
+      form = new anch::date::formatter::ConstantFormatter(strFormatter);
     } else {
       form = (*(iter->second))();
     }

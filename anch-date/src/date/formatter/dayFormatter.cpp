@@ -49,7 +49,7 @@ DayFormatter::format(const Date& date, ostream& output) const noexcept {
   output << setfill('0') << setw(2) << getDay(date);
 }
 
-size_t
+std::size_t
 DayFormatter::getSize() const noexcept {
   return 2;
 }
