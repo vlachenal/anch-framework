@@ -72,9 +72,6 @@ namespace anch {
       const static std::regex DATE_PATTERN;
 #endif
 
-      // /*! Formatter registration map */
-      // static std::map<std::string, getInstance> FORMATTERS;
-
       /*! Formatter list */
       std::vector<anch::date::formatter::IDatePartFormatter*> _formatters;
 
