@@ -125,8 +125,8 @@ Network::load() throw(DeviceException) {
 
   // Retrieve all network interfaces configuration +
   struct ifreq* req = request.ifc_req;
-  int nbResult = request.ifc_len / sizeof(struct ifreq);
-  for(int i = 0 ; i < nbResult ; i++) {
+  std::size_t nbResult = static_cast<std::size_t>(request.ifc_len) / sizeof(struct ifreq);
+  for(std::size_t i = 0 ; i < nbResult ; ++i) {
     struct ifreq* interface = &req[i];
     string ifName = interface->ifr_name;
     bool isLoopback = (ifName == LOCALHOST);

@@ -3,6 +3,9 @@
 set(ANCH_DEVICE_LIBRARY_DIR "")
 set(ANCH_UTILS_INCLUDES_DIR "$ENV{HOME}/projects/anch-framework/anch-utils/inc")
 
+set(ANCH_DEVICE_COMPILE_FLAGS "-O2")
+#set(ANCH_DATE_COMPILE_FLAGS "-g")
+
 # Unitary tests
 set(ANCH_DEVICE_UNITARY_TEST ON CACHE BOOL "Anch device unitary tests")
 ## Anch device configuration -
