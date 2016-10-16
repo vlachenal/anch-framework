@@ -26,7 +26,7 @@ endif()
 # Check GCC version -
 
 # Add GCC definitions
-add_definitions("-Wall -Wextra -Werror")
+add_definitions(${ANCH_EVENTS_COMPILE_FLAGS})
 
 # Include librairies
 include(FindThreads)
