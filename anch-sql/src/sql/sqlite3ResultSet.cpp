@@ -51,7 +51,7 @@ SQLite3ResultSet::getValue(std::size_t idx, std::string& out) throw(SqlException
     throw SqlException(msg.str());
   }
   bool null = true;
-  const unsigned char* data = sqlite3_column_text(_stmt, idx);
+  const unsigned char* data = sqlite3_column_text(_stmt, static_cast<int>(idx));
   if(data != NULL) {
     out = std::string((char*)data);
     null = false;
@@ -65,8 +65,8 @@ SQLite3ResultSet::next() throw(SqlException) {
   bool hasMore = (res == SQLITE_ROW);
   if(hasMore && _fields.empty()) {
     _nbFields = sqlite3_column_count(_stmt);
-    for(int i = 0 ; i < _nbFields ; ++i) {
-      _fields[sqlite3_column_name(_stmt, i)] = i;
+    for(std::size_t i = 0 ; i < static_cast<std::size_t>(_nbFields) ; ++i) {
+      _fields[sqlite3_column_name(_stmt, static_cast<int>(i))] = i;
     }
   }
   return hasMore;

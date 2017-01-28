@@ -57,9 +57,9 @@ PostgreSQLResultSet::getValue(std::size_t idx, std::string& out) throw(SqlExcept
     throw SqlException(msg.str());
   }
   bool null = true;
-  if(!PQgetisnull(_result, _currentRow, idx)) {
+  if(!PQgetisnull(_result, _currentRow, static_cast<int>(idx))) {
     null = false;
-    out = PQgetvalue(_result, _currentRow, idx);
+    out = PQgetvalue(_result, _currentRow, static_cast<int>(idx));
   }
   return null;
 }
@@ -82,8 +82,8 @@ PostgreSQLResultSet::next() throw(SqlException) {
       _nbRows = PQntuples(_result);
       if(_fields.empty()) {
 	_nbFields = PQnfields(_result);
-	for(int i = 0 ; i < _nbFields ; ++i) {
-	  _fields[PQfname(_result, i)] = i;
+	for(std::size_t i = 0 ; i < static_cast<std::size_t>(_nbFields) ; ++i) {
+	  _fields[PQfname(_result, static_cast<int>(i))] = i;
 	}
       }
     }

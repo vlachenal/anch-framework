@@ -31,10 +31,10 @@ MySQLResultSet::MySQLResultSet(MYSQL_RES* result):
   _row() {
   MYSQL_FIELD* field;
   std::vector<std::string> fields;
-  int i = 0;
+  std::size_t i = 0;
   while((field = mysql_fetch_field(_result))) {
     _fields[field->name] = i;
-    i++;
+    ++i;
   }
 }
 

@@ -84,7 +84,7 @@ MySQLConnection::MySQLConnection(const std::string& host,
 
   mysql_init(&_mysql);
   mysql_options(&_mysql, MYSQL_READ_DEFAULT_GROUP, app.data());
-  MYSQL* res = mysql_real_connect(&_mysql, host.data(), user.data(), password.data(), database.data(), port, NULL, 0);
+  MYSQL* res = mysql_real_connect(&_mysql, host.data(), user.data(), password.data(), database.data(), static_cast<unsigned int>(port), NULL, 0);
   if(res == NULL) {
     /*
       \todo manage error with mysql_errno(&_mysql):
@@ -120,7 +120,7 @@ MySQLConnection::MySQLConnection(const SqlConnectionConfiguration& config)
 				  config.user.data(),
 				  config.password.data(),
 				  config.database.data(),
-				  config.port, NULL, 0);
+				  static_cast<unsigned int>(config.port), NULL, 0);
   if(res == NULL) {
     /*
       \todo manage error with mysql_errno(&_mysql):
