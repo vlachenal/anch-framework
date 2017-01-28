@@ -84,7 +84,7 @@ main(void) {
       if(nbRead == 0) {
 	break;
       }
-      if(1 != EVP_EncryptUpdate(ctx, ciphertext, &len, plaintext, nbRead))
+      if(1 != EVP_EncryptUpdate(ctx, ciphertext, &len, plaintext, static_cast<int>(nbRead)))
 	handleErrors();
       ciphertext_len = len;
 

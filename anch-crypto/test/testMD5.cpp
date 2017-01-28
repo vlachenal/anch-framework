@@ -24,7 +24,7 @@ using std::string;
 /*
  * Simple MD5 implementation from wikipedia
  */
- 
+
 // leftrotate function definition
 uint32_t k[64] = { 0xd76aa478, 0xe8c7b756, 0x242070db, 0xc1bdceee ,
 		   0xf57c0faf, 0x4787c62a, 0xa8304613, 0xfd469501 ,
@@ -47,7 +47,7 @@ uint32_t k[64] = { 0xd76aa478, 0xe8c7b756, 0x242070db, 0xc1bdceee ,
 
 // These vars will contain the hash
 uint32_t h0, h1, h2, h3;
- 
+
 void md5(const uint8_t *initial_msg, size_t initial_len) {
 
   // Message (to prepare)
@@ -69,7 +69,7 @@ void md5(const uint8_t *initial_msg, size_t initial_len) {
   h3 = 0x10325476;
 
   // Pre-processing: adding a single 1 bit
-  //append "1" bit to message    
+  //append "1" bit to message
   /* Notice: the input bytes are considered as bits strings,
      where the first bit is the most significant bit of the byte.[37] */
 
@@ -78,15 +78,15 @@ void md5(const uint8_t *initial_msg, size_t initial_len) {
   //append length mod (2 pow 64) to message
 
   int new_len;
-  for(new_len = initial_len*8 + 1; new_len%512!=448; new_len++);
+  for(new_len = static_cast<int>(initial_len * 8 + 1) ; new_len % 512 != 448 ; ++new_len);
   new_len /= 8;
 
-  msg = (uint8_t*)calloc(new_len + 64, 1); // also appends "0" bits 
+  msg = (uint8_t*)calloc(static_cast<std::size_t>(new_len + 64), 1); // also appends "0" bits
   // (we alloc also 64 extra bytes...)
   memcpy(msg, initial_msg, initial_len);
   msg[initial_len] = 128; // write the "1" bit
 
-  uint32_t bits_len = 8*initial_len; // note, we append the len
+  uint32_t bits_len = static_cast<uint32_t>(8 * initial_len); // note, we append the len
   memcpy(msg + new_len, &bits_len, 4);           // in bits at the end of the buffer
 
   // Process the message in successive 512-bit chunks:
@@ -125,7 +125,7 @@ void md5(const uint8_t *initial_msg, size_t initial_len) {
 	g = (5*i + 1) % 16;
       } else if (i < 48) {
 	f = b ^ c ^ d;
-	g = (3*i + 5) % 16;          
+	g = (3*i + 5) % 16;
       } else {
 	f = c ^ (b | (~d));
 	g = (7*i) % 16;
@@ -152,7 +152,7 @@ void md5(const uint8_t *initial_msg, size_t initial_len) {
   free(msg);
 
 }
- 
+
 void
 md5(const char* msg, string& result) {
 
@@ -180,7 +180,7 @@ md5(const char* msg, string& result) {
 
   result = digest;
 }
- 
+
 void
 md5(const char* msg, std::array<uint8_t,16>& result) {
 

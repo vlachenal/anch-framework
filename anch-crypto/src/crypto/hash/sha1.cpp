@@ -23,7 +23,10 @@
 #include <cstring>
 
 
+using anch::crypto::Hash;
 using anch::crypto::SHA1;
+
+template class Hash<20,64>;
 
 
 /*!

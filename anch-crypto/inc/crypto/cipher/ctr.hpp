@@ -92,13 +92,13 @@ namespace anch {
 				      Cipher& cipher) override {
 	std::array<uint8_t,Cipher::getBlockSize()> ctxtVect(_nonce);
 	uint16_t* counter = reinterpret_cast<uint16_t*>(&ctxtVect.data()[Cipher::getBlockSize() - 2]);
-	*counter = index;
+	*counter = static_cast<uint16_t>(index);
 	std::array<uint8_t,Cipher::getBlockSize()> data;
 	cipher.cipher(ctxtVect, data);
-	for(std::streamsize i = 0 ; i < nbRead ; ++i) {
+	for(std::size_t i = 0 ; i < static_cast<std::size_t>(nbRead) ; ++i) {
 	  output[i] = input[i] ^ data[i];
 	}
-	return nbRead;
+	return static_cast<std::size_t>(nbRead);
       }
 
       /*!
@@ -122,13 +122,13 @@ namespace anch {
 					Cipher& cipher) override {
 	std::array<uint8_t,Cipher::getBlockSize()> ctxtVect(_nonce);
 	uint16_t* counter = reinterpret_cast<uint16_t*>(&ctxtVect.data()[Cipher::getBlockSize() - 2]);
-	*counter = index;
+	*counter = static_cast<uint16_t>(index);
 	std::array<uint8_t,Cipher::getBlockSize()> data;
 	cipher.cipher(ctxtVect, data);
-	for(std::streamsize i = 0 ; i < nbRead ; ++i) {
+	for(std::size_t i = 0 ; i < static_cast<std::size_t>(nbRead) ; ++i) {
 	  output[i] = input[i] ^ data[i];
 	}
-	return nbRead;
+	return static_cast<std::size_t>(nbRead);
       }
 
       /*!

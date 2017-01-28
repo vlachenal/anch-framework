@@ -88,7 +88,7 @@ namespace anch {
 				      std::array<uint8_t,Cipher::getBlockSize()>& output,
 				      uint32_t, Cipher& cipher) override {
 	if(static_cast<std::size_t>(nbRead) != Cipher::getBlockSize()) {
-	  Padding::pad(input.data(), nbRead, Cipher::getBlockSize());
+	  Padding::pad(input.data(), static_cast<std::size_t>(nbRead), Cipher::getBlockSize());
 	}
 	cipher.cipher(input, output);
 	return Cipher::getBlockSize(); // This mode pad data => the number of bytes to write will always be a complete block

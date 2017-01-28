@@ -25,6 +25,10 @@
 #include <bitset>
 #include <cstring>
 
+#ifdef ANCH_CPU_DETECTION
+#include "device/cpu.hpp"
+#endif
+
 
 namespace anch {
   namespace crypto {
@@ -56,7 +60,17 @@ namespace anch {
       uint8_t _state[4][4];
 
       /*! Expanded key */
-      uint32_t _expKey[4*(R+1)];
+      union ExpKey {
+#ifdef ANCH_CPU_DETECTION
+	uint32_t swKey[4 * (R + 1)];
+	__m128i hwKey[R + 1];
+#elif ANCH_CPU_AES
+	__m128i hwKey[R + 1];
+#else
+	uint32_t swKey[4 * (R + 1)];
+#endif
+      };
+      ExpKey _expKey;
       // Attributes -
 
 
@@ -68,7 +82,17 @@ namespace anch {
        * \param key the encryption key
        */
       AES(const uint8_t key[4*K]): _state(), _expKey() {
+#ifdef ANCH_CPU_DETECTION
+	if(anch::device::CPU::getInstance().isAES()) {
+	  // \todo call specific AESn key expansion
+	} else {
+	  expandKey(key);
+	}
+#elif ANCH_CPU_AES
+	// \todo call specific AESn key expansion
+#else
 	expandKey(key);
+#endif
       }
 
       /*!
@@ -78,7 +102,17 @@ namespace anch {
        * \param other the AES to copy
        */
       AES(const AES& other): _state(), _expKey() {
-	std::memcpy(_expKey, other._expKey, 4 * (R + 1) * sizeof(uint32_t));
+#ifdef ANCH_CPU_DETECTION
+	if(anch::device::CPU::getInstance().isAES()) {
+	  std::memcpy(_expKey.hwKey, other._expKey.hwKey, (R + 1) * sizeof(__m128i));
+	} else {
+	  std::memcpy(_expKey.swKey, other._expKey.swKey, 4 * (R + 1) * sizeof(uint32_t));
+	}
+#elif ANCH_CPU_AES
+	std::memcpy(_expKey.hwKey, other._expKey.hwKey, (R + 1) * sizeof(__m128i));
+#else
+	std::memcpy(_expKey.swKey, other._expKey.swKey, 4 * (R + 1) * sizeof(uint32_t));
+#endif
       }
       // Constructors -
 
@@ -160,21 +194,25 @@ namespace anch {
       }
 
     private:
+#ifdef ANCH_CPU_AES
+      // \todo implements hardware methods
+#endif // ANCH_CPU_AES
+
       /*!
        * Key expansion generic algorithm
        *
        * \param key the key to expand
        */
-      void expandKey(const uint8_t key[4*K]) {
-	std::memcpy(_expKey, key, 4*K);
-	for(std::size_t i = K ; i < 4*(R+1) ; ++i) {
-	  uint32_t mod = i % K;
+      void expandKey(const uint8_t key[4 * K]) {
+	std::memcpy(_expKey.swKey, key, 4 * K);
+	for(std::size_t i = K ; i < 4 * (R + 1) ; ++i) {
+	  uint32_t mod = static_cast<uint32_t>(i % K);
 	  if(mod == 0) {
-	    _expKey[i] = _expKey[i-K] ^ (subWord(rotateWord(_expKey[i-1])) ^ ANCH_AES_RCON[i/K]);
+	    _expKey.swKey[i] = _expKey.swKey[i - K] ^ (subWord(rotateWord(_expKey.swKey[i - 1])) ^ ANCH_AES_RCON[i / K]);
 	  } else if(K > 6 && mod == 4) {
-	    _expKey[i] = _expKey[i-K] ^ subWord(_expKey[i-1]);
+	    _expKey.swKey[i] = _expKey.swKey[i - K] ^ subWord(_expKey.swKey[i - 1]);
 	  } else {
-	    _expKey[i] = _expKey[i-K] ^ _expKey[i-1];
+	    _expKey.swKey[i] = _expKey.swKey[i - K] ^ _expKey.swKey[i - 1];
 	  }
 	}
       }
@@ -391,7 +429,7 @@ namespace anch {
        * \param round the current round
        */
       inline void addRoundKey(const uint32_t& round) {
-	uint32_t* key = _expKey + 4 * round;
+	uint32_t* key = _expKey.swKey + 4 * round;
 	uint32_t* state = reinterpret_cast<uint32_t*>(_state);
 	state[0] ^= key[0];
 	state[1] ^= key[1];

@@ -93,7 +93,7 @@ namespace anch {
 				      std::array<uint8_t,Cipher::getBlockSize()>& output,
 				      uint32_t, Cipher& cipher) override {
 	if(static_cast<std::size_t>(nbRead) != Cipher::getBlockSize()) {
-	  Padding::pad(input.data(), nbRead, Cipher::getBlockSize());
+	  Padding::pad(input.data(), static_cast<std::size_t>(nbRead), Cipher::getBlockSize());
 	}
 	std::array<uint8_t,Cipher::getBlockSize()> data;
 	for(std::size_t i = 0 ; i < Cipher::getBlockSize() ; ++i) {

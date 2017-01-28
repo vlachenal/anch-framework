@@ -282,7 +282,7 @@ namespace anch {
 					  std::ref(result[i]),
 					  std::ref(ciph[i]),
 					  std::ref(nbWrite[i])));
-	    if(nbRead != Cipher::getBlockSize()) {
+	    if(static_cast<std::size_t>(nbRead) != Cipher::getBlockSize()) {
 	      break;
 	    }
 	  }
@@ -323,7 +323,7 @@ namespace anch {
 	uint32_t index = 0;
 	do {
 	  cipherData = data;
-	  std::size_t read = nbRead;
+	  std::streamsize read = nbRead;
 	  input.read(reinterpret_cast<char*>(data.data()), Cipher::getBlockSize());
 
 	  std::size_t end = decipherBlock(cipherData, prevData, read, input.eof(), out, index, cipher);
@@ -363,7 +363,7 @@ namespace anch {
 	}
 	bool lastBlock = false;
 	input.read(reinterpret_cast<char*>(data[0].data()), Cipher::getBlockSize());
-	std::size_t nbRead = input.gcount();
+	std::size_t nbRead = static_cast<std::size_t>(input.gcount());
 	do {
 	  for(std::size_t i = 0, idx = 1 ; i < _nbThread ; ++i, ++idx) {
 	    input.read(reinterpret_cast<char*>(data[idx].data()), Cipher::getBlockSize());
@@ -384,7 +384,7 @@ namespace anch {
 	    if(lastBlock) {
 	      break;
 	    }
-	    nbRead = nextCount;
+	    nbRead = static_cast<std::size_t>(nextCount);
 	    prevData = data[i];
 	  }
 	  for(uint32_t i = 0 ; !threads.empty() ; ++i) {
@@ -399,7 +399,7 @@ namespace anch {
 	    throw InvalidBlockException("Error while decipher stream");
 	  }
 	  data[0] = data[_nbThread];
-	} while(!input.eof() && !lastBlock);
+	} while(!lastBlock);
 
 	output.flush();
 	delete[] data;

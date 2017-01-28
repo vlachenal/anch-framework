@@ -108,7 +108,7 @@ namespace anch {
 	  char data[1024];
 	  while(!stream.eof()) {
 	    stream.read(data, 1024);
-	    addData(reinterpret_cast<uint8_t*>(data), stream.gcount());
+	    addData(reinterpret_cast<uint8_t*>(data), static_cast<std::size_t>(stream.gcount()));
 	  }
 	  finalize();
 	}

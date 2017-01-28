@@ -80,7 +80,7 @@ namespace anch {
 	  char buffer[1024];
 	  while(!data.eof()) {
 	    data.read(buffer, 1024);
-	    encode(reinterpret_cast<uint8_t*>(buffer), data.gcount(), output);
+	    encode(reinterpret_cast<uint8_t*>(buffer), static_cast<uint64_t>(data.gcount()), output);
 	  }
 	}
       }
@@ -191,7 +191,7 @@ namespace anch {
 	  char buffer[1024];
 	  while(!data.eof()) {
 	    data.read(buffer, 1024);
-	    decode(buffer, data.gcount(), output);
+	    decode(buffer, static_cast<uint64_t>(data.gcount()), output);
 	  }
 	}
       }
@@ -218,7 +218,7 @@ namespace anch {
       template<class CharT, class Traits>
       static void decode(const std::string& data,
 			 std::basic_ostream<CharT,Traits>& output) noexcept {
-	decode(data.data(), data.length(), output);
+	decode(data.data(), static_cast<uint64_t>(data.length()), output);
       }
 
       /*!

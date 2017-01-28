@@ -26,6 +26,7 @@
 #include "crypto/hash/sha512.hpp"
 
 using anch::crypto::HMAC;
+using anch::crypto::Hash;
 using anch::crypto::MD5;
 using anch::crypto::SHA1;
 using anch::crypto::SHA224;

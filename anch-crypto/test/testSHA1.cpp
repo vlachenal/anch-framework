@@ -119,7 +119,7 @@ main(void) {
     end = std::chrono::high_resolution_clock::now();
     std::chrono::microseconds duration = std::chrono::duration_cast<std::chrono::microseconds>(end.time_since_epoch()) - std::chrono::duration_cast<std::chrono::microseconds>(start.time_since_epoch());
     cout << "Salt is " << std::hex;
-    for(int i = 0 ; i < 16 ; ++i) {
+    for(std::size_t i = 0 ; i < 16 ; ++i) {
       cout << std::setw(2) << std::setfill('0') << static_cast<uint32_t>(static_cast<const uint8_t>(salt[i]));
     }
     cout << std::dec << endl;

@@ -94,11 +94,11 @@ namespace anch {
 				      uint32_t, Cipher& cipher) override {
 	std::array<uint8_t,Cipher::getBlockSize()> data;
 	cipher.cipher(_ctxtVect, data);
-	for(std::streamsize i = 0 ; i < nbRead ; ++i) {
+	for(std::size_t i = 0 ; i < static_cast<std::size_t>(nbRead) ; ++i) {
 	  output[i] = input[i] ^ data[i];
 	  _ctxtVect[i] = data[i];
 	}
-	return nbRead;
+	return static_cast<std::size_t>(nbRead);
       }
 
       /*!
@@ -120,11 +120,11 @@ namespace anch {
 					uint32_t, Cipher& cipher) override {
 	std::array<uint8_t,Cipher::getBlockSize()> data;
 	cipher.cipher(_ctxtVect, data);
-	for(std::streamsize i = 0 ; i < nbRead ; ++i) {
+	for(std::size_t i = 0 ; i < static_cast<std::size_t>(nbRead) ; ++i) {
 	  output[i] = input[i] ^ data[i];
 	  _ctxtVect[i] = data[i];
 	}
-	return nbRead;
+	return static_cast<std::size_t>(nbRead);
       }
 
       /*!

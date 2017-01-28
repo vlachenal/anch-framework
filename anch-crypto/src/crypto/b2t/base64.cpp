@@ -103,25 +103,25 @@ Base64::decode(const char* data, uint64_t length, uint8_t buffer[4]) noexcept {
   char bytes[4];
   uint8_t read;
   for(read = 0 ; read < 4 && read < length && data[read] != '='; read++) {
-    current = data[read];
+    current = static_cast<uint8_t>(data[read]);
     if(current >= 'A' && current <= 'Z') {
-      bytes[read] = current - 'A';
+      bytes[read] = static_cast<char>(current - 'A');
     } else if(current >= 'a' && current <= 'z') {
-      bytes[read] = current + 26 - 'a';
+      bytes[read] = static_cast<char>(current + 26 - 'a');
     } else if(current >= '0' && current <= '9') {
-      bytes[read] = current + 52 - '0';
+      bytes[read] = static_cast<char>(current + 52 - '0');
     } else if(current == '+') {
-      bytes[read] = 62;
+      bytes[read] = static_cast<char>(62);
     } else if(current == '/') {
-      bytes[read] = 63;
+      bytes[read] = static_cast<char>(63);
     }
   }
   if(read > 0) {
-    buffer[0] = (bytes[0] << 2) | (bytes[1] >> 4);
+    buffer[0] = static_cast<uint8_t>((bytes[0] << 2) | (bytes[1] >> 4));
     if(read > 2) {
-      buffer[1] = (bytes[1] << 4) | (bytes[2] >> 2);
+      buffer[1] = static_cast<uint8_t>((bytes[1] << 4) | (bytes[2] >> 2));
       if(read > 3) {
-	buffer[2] = (bytes[2] << 6) | bytes[3];
+	buffer[2] = static_cast<uint8_t>((bytes[2] << 6) | bytes[3]);
       }
     }
   }

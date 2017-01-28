@@ -34,7 +34,7 @@ namespace anch {
      * \param key the key to use
      * \param message the message to use
      */
-    template<class H>
+    template<typename H>
     H HMAC(const std::string& key, const std::string& message) {
       // Treatment on key +
       std::ostringstream keyBuf;
@@ -81,18 +81,6 @@ namespace anch {
       }
       return H(outPad.data(), outPad.size());
       // Second hash -
-    }
-
-    /*!
-     * Compute HMAC according to hash algorithm, key and message.\n
-     * This function uses characters for key and message.
-     *
-     * \param key the key to use
-     * \param message the message to use
-     */
-    template<class H>
-    H HMAC(const char* const key, const char* const message) {
-      return HMAC<H>(std::string(key), std::string(message));
     }
 
   }

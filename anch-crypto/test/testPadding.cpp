@@ -24,11 +24,11 @@ main(void) {
   std::cout << "ANSI X.923" << std::endl;
   ANSIX923::pad(data.data(),10,16);
   std::cout << "Result: " << std::hex;
-  for(int i = 0 ; i < 16 ; i++) {
+  for(std::size_t i = 0 ; i < 16 ; i++) {
     std::cout << "0x" << std::hex << std::setw(2) << std::setfill('0') << static_cast<uint16_t>(data[i]) << ',';
   }
   std::cout << std::endl;
-  for(int i = 0 ; i < 10 ; i++) {
+  for(std::size_t i = 0 ; i < 10 ; i++) {
     if(data[i] != initData[i]) {
       std::cerr << "Invalid found at index " << i << std::endl;
       return 1;
@@ -44,11 +44,11 @@ main(void) {
   std::cout << "PKCS#7" << std::endl;
   PKCS5Padding::pad(data.data(),10,16);
   std::cout << "Result: " << std::hex;
-  for(int i = 0 ; i < 16 ; i++) {
+  for(std::size_t i = 0 ; i < 16 ; i++) {
     std::cout << "0x" << std::setw(2) << std::setfill('0') << static_cast<uint16_t>(data[i]) << ',';
   }
   std::cout << std::endl;
-  for(int i = 0 ; i < 10 ; i++) {
+  for(std::size_t i = 0 ; i < 10 ; i++) {
     if(data[i] != initData[i]) {
       std::cerr << "Invalid found at index " << i << std::endl;
       return 1;
@@ -64,11 +64,11 @@ main(void) {
   std::cout << "ISO/IEC 7816-4" << std::endl;
   ISO7816_4Padding::pad(data.data(),10,16);
   std::cout << "Result: " << std::hex;
-  for(int i = 0 ; i < 16 ; i++) {
+  for(std::size_t i = 0 ; i < 16 ; i++) {
     std::cout << "0x" << std::hex << std::setw(2) << std::setfill('0') << static_cast<uint16_t>(data[i]) << ',';
   }
   std::cout << std::endl;
-  for(int i = 0 ; i < 10 ; i++) {
+  for(std::size_t i = 0 ; i < 10 ; i++) {
     if(data[i] != initData[i]) {
       std::cerr << "Invalid found at index " << i << std::endl;
       return 1;
@@ -84,11 +84,11 @@ main(void) {
   std::cout << "Zero padding" << std::endl;
   ZeroPadding::pad(data.data(),10,16);
   std::cout << "Result: " << std::hex;
-  for(int i = 0 ; i < 16 ; i++) {
+  for(std::size_t i = 0 ; i < 16 ; i++) {
     std::cout << "0x" << std::hex << std::setw(2) << std::setfill('0') << static_cast<uint16_t>(data[i]) << ',';
   }
   std::cout << std::endl;
-  for(int i = 0 ; i < 10 ; i++) {
+  for(std::size_t i = 0 ; i < 10 ; i++) {
     if(data[i] != initData[i]) {
       std::cerr << "Invalid found at index " << i << std::endl;
       return 1;

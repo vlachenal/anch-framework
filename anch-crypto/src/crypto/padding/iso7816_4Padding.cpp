@@ -50,13 +50,23 @@ ISO7816_4Padding::pad(uint8_t* data, std::size_t len, std::size_t expLen) {
 std::size_t
 ISO7816_4Padding::length(uint8_t* data, std::size_t len) {
   std::size_t dataLen = len;
-  for(int i = len - 1 ; i >= 0 ; i--) {
+  std::size_t i = len - 1;
+  do {
     if(data[i] == 0x80) {
       dataLen = i;
       break;
     } else if(data[i] != 0x00) {
       break;
     }
-  }
+    --i;
+  } while(i != 0);
+  // for(std::size_t i = len - 1 ; i >= 0 ; --i) {
+  //   if(data[i] == 0x80) {
+  //     dataLen = i;
+  //     break;
+  //   } else if(data[i] != 0x00) {
+  //     break;
+  //   }
+  // }
   return dataLen;
 }

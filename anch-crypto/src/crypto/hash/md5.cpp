@@ -20,8 +20,10 @@
 #include "crypto/hash/md5.hpp"
 
 
+using anch::crypto::Hash;
 using anch::crypto::MD5;
 
+template class Hash<16,64>;
 
 /*!
  * Swap byte
@@ -35,8 +37,7 @@ byteSwap(uint32_t* buf, uint8_t count) {
   if(reinterpret_cast<const uint8_t*>(&byteOrderTest)[0] == 0) { // endianess test
     uint8_t* words = reinterpret_cast<uint8_t*>(buf);
     do {
-      *buf++ = static_cast<uint32_t>(words[3] << 8 | words[2]) << 16
-	| (words[1] << 8 | words[0]);
+      *buf++ = static_cast<uint32_t>(words[3] << 8 | words[2]) << 16 | static_cast<uint32_t>(words[1] << 8 | words[0]);
       words += 4;
     } while(--count);
   }
@@ -82,12 +83,10 @@ MD5::digest() const {
  */
 void
 MD5::addData(const uint8_t* data, size_t len) {
-  uint32_t word;
-
   // Update byte count
-  word = _context.handle[0];
-  if((_context.handle[0] = word + len) < word) {
-    _context.handle[1]++; // Carry from low to high
+  uint32_t word = _context.handle[0];
+  if((_context.handle[0] = word + static_cast<uint32_t>(len)) < word) {
+    ++_context.handle[1]; // Carry from low to high
   }
 
   word = 64 - (word & 0x3f); // Space available in _context.input (at least 1)
@@ -132,13 +131,13 @@ MD5::finalize() {
   count = 56 - 1 - count;
 
   if(count < 0) { // Padding forces an extra block
-    std::memset(p, 0, count + 8);
+    std::memset(p, 0, static_cast<std::size_t>(count) + 8);
     byteSwap(_context.input, 16);
     transform();
     p = reinterpret_cast<uint8_t*>(_context.input);
     count = 56;
   }
-  std::memset(p, 0, count);
+  std::memset(p, 0, static_cast<std::size_t>(count));
   byteSwap(_context.input, 14);
 
   // Append length in bits and transform
@@ -147,8 +146,7 @@ MD5::finalize() {
   transform();
 
   byteSwap(_context.buffer, 4);
-  std::memcpy(_context.digest.data(),
-	      _context.buffer, 16);
+  std::memcpy(_context.digest.data(), _context.buffer, 16);
 }
 
 /*!
