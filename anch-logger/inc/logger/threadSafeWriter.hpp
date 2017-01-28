@@ -52,7 +52,7 @@ namespace anch {
        */
       ThreadSafeWriter(const std::string& fileName,
 		       const std::string& linePattern,
-		       int maxSize = 0,
+		       unsigned int maxSize = 0,
 		       int maxIndex = 0);
 
       /*!

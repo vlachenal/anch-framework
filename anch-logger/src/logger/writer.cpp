@@ -42,7 +42,7 @@ using anch::logger::formatter::MessageFormatter;
 
 Writer::Writer(const string& fileName,
 	       const string& linePattern,
-	       int maxSize,
+	       unsigned int maxSize,
 	       int maxIndex):  _formatter(linePattern),
 			       _fileName(fileName),
 			       _maxSize(maxSize),

@@ -302,8 +302,8 @@ namespace anch {
 		if(regex_search(maxSizeStr, match, sizeRegex)) {
 		  const std::string multStr = std::string(match[2].first,
 							  match[2].second);
-		  maxSize = std::stoi(std::string(match[1].first,
-						  match[1].second).data());
+		  maxSize = static_cast<unsigned int>(std::stoi(std::string(match[1].first,
+									    match[1].second).data()));
 		  if(multStr != "") {
 		    maxSize *= sizeMap[multStr];
 		  }

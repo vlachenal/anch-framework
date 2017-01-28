@@ -48,7 +48,7 @@ namespace anch {
       std::string _fileName;
 
       /*! Maximum file size */
-      int _maxSize;
+      unsigned int _maxSize;
 
       /*! Maximum file index */
       int _maxIndex;
@@ -69,7 +69,7 @@ namespace anch {
        */
       Writer(const std::string& fileName,
 	     const std::string& linePattern,
-	     int maxSize = 0,
+	     unsigned int maxSize = 0,
 	     int maxIndex = 0);
 
       /*!

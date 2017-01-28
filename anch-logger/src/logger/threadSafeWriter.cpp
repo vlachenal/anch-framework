@@ -30,7 +30,7 @@ using anch::logger::Level;
 
 ThreadSafeWriter::ThreadSafeWriter(const string& fileName,
 				   const string& linePattern,
-				   int maxSize,
+				   unsigned int maxSize,
 				   int maxIndex):  Writer(fileName,linePattern,maxSize,maxIndex),
 						   _mutex() {
   // Nothing to do

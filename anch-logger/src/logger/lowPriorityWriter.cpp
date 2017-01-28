@@ -35,7 +35,7 @@ using anch::logger::Level;
 // Constructors +
 LowPriorityWriter::LowPriorityWriter(const string& fileName,
 				     const string& linePattern,
-				     int maxSize,
+				     unsigned int maxSize,
 				     int maxIndex) : Writer(fileName,linePattern,maxSize,maxIndex),
 						     _messages(),
 						     _mutex() {
