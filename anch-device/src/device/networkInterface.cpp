@@ -55,7 +55,7 @@ NetworkInterface::NetworkInterface(const struct ifreq& interface, bool isLocalho
     ::close(sock);
     throw DeviceException("Error while retrieving IP address for interface " + _name,ret);
   }
-  _ipAddress = inet_ntoa(((sockaddr_in *)&(interface.ifr_addr))->sin_addr);
+  _ipAddress = ::inet_ntoa(((sockaddr_in *)&(interface.ifr_addr))->sin_addr);
   // IP address -
   // MTU +
   ret = ::ioctl(sock, SIOCGIFMTU, &interface);
@@ -71,7 +71,7 @@ NetworkInterface::NetworkInterface(const struct ifreq& interface, bool isLocalho
     ::close(sock);
     throw DeviceException("Error while retrieving hardware address for interface " + _name,ret);
   }
-  char buffer[17];
+  char buffer[18];
   sprintf(buffer,"%02x:%02x:%02x:%02x:%02x:%02x",
 	  (unsigned char)interface.ifr_hwaddr.sa_data[0],
 	  (unsigned char)interface.ifr_hwaddr.sa_data[1],
@@ -87,7 +87,7 @@ NetworkInterface::NetworkInterface(const struct ifreq& interface, bool isLocalho
     ::close(sock);
     throw DeviceException("Error while retrieving broadcast address for interface " + _name,ret);
   }
-  _broadcastAddress = inet_ntoa(((sockaddr_in*)&(interface.ifr_broadaddr))->sin_addr);
+  _broadcastAddress = ::inet_ntoa(((sockaddr_in*)&(interface.ifr_broadaddr))->sin_addr);
   // Broadcast address -
   // Netmask +
   ret = ::ioctl(sock, SIOCGIFNETMASK, &interface);
@@ -95,10 +95,9 @@ NetworkInterface::NetworkInterface(const struct ifreq& interface, bool isLocalho
     ::close(sock);
     throw DeviceException("Error while retrieving netmask for interface " + _name,ret);
   }
-  _netmask = inet_ntoa(((sockaddr_in*)&(interface.ifr_netmask))->sin_addr);
+  _netmask = ::inet_ntoa(((sockaddr_in*)&(interface.ifr_netmask))->sin_addr);
   // Netmask -
   _metric = interface.ifr_metric;
-
 
   // Release resources +
   ::close(sock);

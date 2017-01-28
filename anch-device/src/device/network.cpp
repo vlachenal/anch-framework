@@ -33,19 +33,14 @@
 #define LOCALHOST "lo"
 #endif
 
-using std::string;
-using std::map;
-using std::pair;
-using std::mutex;
-
 using anch::device::Network;
 using anch::device::NetworkInterface;
 using anch::device::DeviceException;
 
 
 // Static members initialization +
-mutex Network::MUTEX;
-map<string,NetworkInterface>* Network::_interfaces = NULL;
+std::mutex Network::MUTEX;
+std::map<std::string,NetworkInterface>* Network::_interfaces = NULL;
 // Static members initialization -
 
 
@@ -65,22 +60,22 @@ Network::~Network() {
 
 // Methods +
 const NetworkInterface*
-Network::getInterface(const string& ifName) throw(DeviceException) {
-  std::lock_guard<mutex> lock(MUTEX);
+Network::getInterface(const std::string& ifName) throw(DeviceException) {
+  std::lock_guard<std::mutex> lock(MUTEX);
   const NetworkInterface* interface = NULL;
   if(_interfaces == NULL) {
     load();
   }
-  map<string,NetworkInterface>::const_iterator iter = _interfaces->find(ifName);
+  std::map<std::string, NetworkInterface>::const_iterator iter = _interfaces->find(ifName);
   if(iter != _interfaces->cend()) {
     interface = &(iter->second);
   }
   return interface;
 }
 
-const map<string,NetworkInterface>&
+const std::map<std::string,NetworkInterface>&
 Network::getInterfaces() throw(DeviceException) {
-  std::lock_guard<mutex> lock(MUTEX);
+  std::lock_guard<std::mutex> lock(MUTEX);
   if(_interfaces == NULL) {
     load();
   }
@@ -89,7 +84,7 @@ Network::getInterfaces() throw(DeviceException) {
 
 void
 Network::reload() throw(DeviceException) {
-  std::lock_guard<mutex> lock(MUTEX);
+  std::lock_guard<std::mutex> lock(MUTEX);
   if(_interfaces != NULL) {
     _interfaces->clear();
   }
@@ -100,7 +95,7 @@ void
 Network::load() throw(DeviceException) {
   // Initialize interfaces container if needed +
   if(_interfaces == NULL) {
-    _interfaces = new map<string,NetworkInterface>();
+    _interfaces = new std::map<std::string,NetworkInterface>();
   }
   // Initialize interfaces container if needed -
 
@@ -128,9 +123,9 @@ Network::load() throw(DeviceException) {
   std::size_t nbResult = static_cast<std::size_t>(request.ifc_len) / sizeof(struct ifreq);
   for(std::size_t i = 0 ; i < nbResult ; ++i) {
     struct ifreq* interface = &req[i];
-    string ifName = interface->ifr_name;
+    std::string ifName = interface->ifr_name;
     bool isLoopback = (ifName == LOCALHOST);
-    _interfaces->insert(pair<string,NetworkInterface>(ifName, NetworkInterface(*interface,isLoopback)));
+    _interfaces->insert(std::pair<std::string,NetworkInterface>(ifName, NetworkInterface(*interface,isLoopback)));
   }
   // Retrieve all network interfaces configuration -
 
