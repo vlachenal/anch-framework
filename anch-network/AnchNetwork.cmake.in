@@ -6,6 +6,9 @@ set(ANCH_UTILS_INCLUDES_DIR "$ENV{HOME}/projects/anch-framework/anch-utils/inc")
 # Anch network installation configuration
 set(ANCH_NETWORK_LIBRARY_DIR "")
 
+set(ANCH_NETWORK_COMPILE_FLAGS "-O2 -pipe -march=native")
+#set(ANCH_NETWORK_COMPILE_FLAGS "-g")
+
 # Unitary tests
 set(ANCH_NETWORK_UNITARY_TEST ON CACHE BOOL "Anch network unitary tests")
 ## Anch network configuration -

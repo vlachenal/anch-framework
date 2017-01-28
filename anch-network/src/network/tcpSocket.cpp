@@ -78,7 +78,7 @@ TcpSocket::~TcpSocket() noexcept {
  */
 void
 TcpSocket::send(const string& message) throw(IOException) {
-  int res = ::send(_sock, message.data(), message.size() + 1, 0);
+  ssize_t res = ::send(_sock, message.data(), message.size() + 1, 0);
   if(res == SOCKET_ERROR) {
     throw IOException("Error on send()");
   }
@@ -96,7 +96,7 @@ TcpSocket::receive(string& message) throw(IOException) {
   // Receive message +
   char buffer[BUFFER_SIZE];
   memset(&buffer, 0, BUFFER_SIZE);
-  int res = 0;
+  ssize_t res = 0;
   while((res = ::recv(_sock, buffer, sizeof(buffer) - 1, 0)) > 0) {
     message += buffer;
     memset(&buffer, 0, BUFFER_SIZE);

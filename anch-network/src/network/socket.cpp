@@ -62,7 +62,7 @@ using anch::network::IOException;
 Socket::Socket(anch::network::SocketType type):
   Observable<SocketEvent>(),
   _ipAddress(""),
-  _port(-1),
+  _port(0),
   _type(type),
   _sock(INVALID_SOCKET),
   _backlog(5) {

@@ -26,12 +26,13 @@ endif()
 # Check GCC version -
 
 # Add GCC definitions
-add_definitions("-Wall -Wextra -Werror")
+add_definitions("-Wall -Wextra -Werror -Wuninitialized -Wconversion -Wsign-conversion -Wformat-security -fstack-protector-all -Wstack-protector --param ssp-buffer-size=4 -ftrapv  -z relro,now -fPIC -D_FORTIFY_SOURCE=2")
 if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
   add_definitions("-D ANCH_WINDOWS")
 else()
   add_definitions("-D ANCH_POSIX")
 endif()
+add_definitions(${ANCH_NETWORK_COMPILE_FLAGS})
 
 # Include librairies
 include(FindThreads)

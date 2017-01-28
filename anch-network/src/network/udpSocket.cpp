@@ -106,12 +106,12 @@ UdpSocket::connect() throw(IOException) {
  */
 void
 UdpSocket::send(const string& message) throw(IOException) {
-  int res = ::sendto(_sock,
-		     message.data(),
-		     message.size() + 1,
-		     0,
-		     _address->ai_addr,
-		     sizeof(*(_address->ai_addr)));
+  ssize_t res = ::sendto(_sock,
+			 message.data(),
+			 message.size() + 1,
+			 0,
+			 _address->ai_addr,
+			 sizeof(*(_address->ai_addr)));
   if(res == SOCKET_ERROR) {
     throw IOException("Error on sendto()");
   }
@@ -127,12 +127,12 @@ UdpSocket::send(const string& message) throw(IOException) {
 void
 UdpSocket::send(const string& message, const sockaddr_storage& peerAddr)
   throw(IOException) {
-  int res = ::sendto(_sock,
-		     message.data(),
-		     message.size() + 1,
-		     0,
-		     (SOCKADDR*)&peerAddr,
-		     sizeof(sockaddr_storage));
+  ssize_t res = ::sendto(_sock,
+			 message.data(),
+			 message.size() + 1,
+			 0,
+			 (SOCKADDR*)&peerAddr,
+			 sizeof(sockaddr_storage));
   if(res == SOCKET_ERROR) {
     throw IOException("Error on sendto()");
   }
@@ -149,7 +149,7 @@ void
 UdpSocket::receive(string& message) throw(IOException) {
   // Receive message +
   char buffer[1024];
-  int res = 0;
+  ssize_t res = 0;
   sockaddr_storage peerAddr;
   socklen_t peerAddrLen = sizeof(sockaddr_storage);
   if((res = ::recvfrom(_sock, buffer, sizeof(buffer) - 1, 0, (sockaddr*)&peerAddr, &peerAddrLen)) > 0) {
