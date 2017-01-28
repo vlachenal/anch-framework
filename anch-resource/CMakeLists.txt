@@ -33,7 +33,8 @@ endif()
 # Check GCC version -
 
 # Add GCC definitions
-add_definitions("-Wall -Werror")
+add_definitions("-Wall -Wextra -Werror -Wuninitialized -Wconversion -Wsign-conversion -Wformat-security -fstack-protector-all -Wstack-protector --param ssp-buffer-size=4 -ftrapv  -z relro,now -fPIC -D_FORTIFY_SOURCE=2")
+add_definitions(${ANCH_RESOURCE_COMPILE_FLAGS})
 
 # Include librairies
 include(FindThreads)

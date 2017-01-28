@@ -2,6 +2,9 @@
 # Anch resource installation configuration
 set(ANCH_RESOURCE_LIBRARY_DIR "")
 
+set(ANCH_RESOURCE_COMPILE_FLAGS "-O2 -march=native -pipe")
+#set(ANCH_RESOURCE_COMPILE_FLAGS "-g")
+
 # Unitary tests
 set(ANCH_RESOURCE_UNITARY_TEST ON CACHE BOOL "Anch resource unitary tests")
 ## Anch resource configuration -
