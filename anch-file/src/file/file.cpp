@@ -136,7 +136,8 @@ File::createFile(ofstream& out) throw(FileException) {
 }
 
 void
-File::createDirectory(bool parents) throw(FileException) {
+File::createDirectory(bool/* parents*/) throw(FileException) {
+  // \todo create directory recursively according to input parameter
   if(!_exists && _parent->isDirectory()) {
     int status = ::mkdir(_path.data(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
     if(status == -1) {

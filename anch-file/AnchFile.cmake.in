@@ -5,7 +5,8 @@ set(ANCH_DATE_LIBRARY_DIR "$ENV{HOME}/projects/anch-framework/anch-date/build/li
 
 # Anch file installation configuration
 set(ANCH_FILE_LIBRARY_DIR "")
-set(ANCH_FILE_COMPILE_FLAGS "-O2")
+set(ANCH_FILE_COMPILE_FLAGS "-O2 -pipe -march=native")
+#set(ANCH_FILE_COMPILE_FLAGS "-g")
 
 # Unitary tests
 set(ANCH_FILE_UNITARY_TEST ON CACHE BOOL "Anch file unitary tests")
