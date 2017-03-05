@@ -45,6 +45,9 @@ namespace anch {
     protected:
       /*! Statement values */
       std::map<std::size_t,std::string> _values;
+
+      /*! Number of wildcards in SQL query */
+      std::size_t _nbWildcards;
       // Attributes -
 
       // Constructors +

@@ -22,7 +22,7 @@
 using anch::sql::PreparedStatement;
 
 
-PreparedStatement::PreparedStatement(): _values() {
+PreparedStatement::PreparedStatement(): _values(), _nbWildcards(0) {
   // Nothing to do
 }
 

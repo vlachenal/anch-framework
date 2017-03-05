@@ -42,6 +42,12 @@ namespace anch {
      */
     class PostgreSQLPreparedStatement: public PreparedStatement {
 
+      // Attributes +
+    private:
+      /*! PostgreSQL database connection */
+      PGconn* _conn;
+      // Attributes -
+
       // Constructors +
     public:
       /*!

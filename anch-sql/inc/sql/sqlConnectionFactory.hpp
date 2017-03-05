@@ -75,7 +75,7 @@ namespace anch {
       if(conn.get() == NULL) {
 	std::ostringstream out;
 	out << "Can not create connection from configuration: driver "
-	    << config.driver << " is not taken into account." << std::endl;
+	    << config.driver << " is not taken into account.";
 	throw SqlException(out.str());
       }
       return conn;

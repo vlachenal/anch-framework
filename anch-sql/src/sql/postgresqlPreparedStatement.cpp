@@ -30,8 +30,9 @@ using anch::sql::ResultSet;
 
 
 // Constructors +
-PostgreSQLPreparedStatement::PostgreSQLPreparedStatement(PGconn* dbCon, const std::string& query) throw(SqlException): PreparedStatement() {
+PostgreSQLPreparedStatement::PostgreSQLPreparedStatement(PGconn* dbCon, const std::string& query) throw(SqlException): PreparedStatement(), _conn(dbCon) {
   std::set<std::size_t> pos = getWildCards(query);
+  _nbWildcards = pos.size();
   std::size_t offset = 0;
   std::ostringstream oss;
   std::size_t idx = 0;
@@ -43,7 +44,7 @@ PostgreSQLPreparedStatement::PostgreSQLPreparedStatement(PGconn* dbCon, const st
     oss << query.substr(offset);
   }
   std::string pgQuery = oss.str();
-  PGresult* res = PQprepare(dbCon, query.data(), query.data(), -1, NULL);
+  PGresult* res = PQprepare(dbCon, pgQuery.data(), pgQuery.data(), -1, NULL);
   if(res == NULL || PQresultStatus(res) != PGRES_COMMAND_OK) {
     std::ostringstream msg;
     msg << "Fail to prepare PostgreSQL statement: " << PQerrorMessage(dbCon);
