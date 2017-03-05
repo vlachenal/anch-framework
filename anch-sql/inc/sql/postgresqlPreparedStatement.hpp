@@ -1,0 +1,153 @@
+/*
+  ANCH Framework: ANother C++ Hack is a C++ framework based on C++11 standard
+  Copyright (C) 2012 Vincent Lachenal
+
+  This file is part of ANCH Framework.
+
+  ANCH Framework is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Lesser General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  ANCH Framework is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU Lesser General Public License for more details.
+
+  You should have received a copy of the GNU Lesser General Public License
+  along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
+*/
+#ifndef _ANCH_SQL_PG_PREPARED_STATEMENT_H_
+#define _ANCH_SQL_PG_PREPARED_STATEMENT_H_
+
+#include "sql/preparedStatement.hpp"
+#include "sql/postgresqlConnection.hpp"
+
+#include "libpq-fe.h"
+
+
+namespace anch {
+  namespace sql {
+
+    class PostgreSQLConnection;
+
+    /*!
+     * \brief PostgreSQL prepared statement implementation
+     *
+     * Compile prepared statement in constructor, manage bind and statement execution.
+     *
+     * \author Vincent Lachenal
+     *
+     * \since 0.1
+     */
+    class PostgreSQLPreparedStatement: public PreparedStatement {
+
+      // Constructors +
+    public:
+      /*!
+       * \ref PostgreSQLPreparedStatement constructor
+       *
+       * \param dbCon the database connection
+       * \param query the SQL query
+       *
+       * \throw SqlException any error
+       */
+      PostgreSQLPreparedStatement(PGconn* dbCon, const std::string& query) throw(SqlException);
+      // Constructors -
+
+      // Destructor +
+    public:
+      /*!
+       * \ref PostgreSQLPreparedStatement destructor
+       */
+      virtual ~PostgreSQLPreparedStatement();
+      // Destructor -
+
+      // Methods +
+    public:
+      /*!
+       * Execute prepared statement
+       *
+       * \return the result set
+       *
+       * \throw SqlException any error
+       */
+      ResultSet* execute() throw(SqlException);
+
+      /*!
+       * Bind 16 bits signed integer value to prepared statement
+       *
+       * \param idx the prepared statement index parameter
+       * \param value the value to bind
+       *
+       * \throw SqlException any error
+       */
+      virtual void set(std::size_t idx, int16_t value) throw(SqlException);
+
+      /*!
+       * Bind 16 bits unsigned integer value to prepared statement
+       *
+       * \param idx the prepared statement index parameter
+       * \param value the value to bind
+       *
+       * \throw SqlException any error
+       */
+      virtual void set(std::size_t idx, uint16_t value) throw(SqlException);
+
+      /*!
+       * Bind 32 bits signed integer value to prepared statement
+       *
+       * \param idx the prepared statement index parameter
+       * \param value the value to bind
+       *
+       * \throw SqlException any error
+       */
+      virtual void set(std::size_t idx, int32_t value) throw(SqlException);
+
+      /*!
+       * Bind 32 bits unsigned integer value to prepared statement
+       *
+       * \param idx the prepared statement index parameter
+       * \param value the value to bind
+       *
+       * \throw SqlException any error
+       */
+      virtual void set(std::size_t idx, uint32_t value) throw(SqlException);
+
+      /*!
+       * Bind 64 bits signed integer value to prepared statement
+       *
+       * \param idx the prepared statement index parameter
+       * \param value the value to bind
+       *
+       * \throw SqlException any error
+       */
+      virtual void set(std::size_t idx, int64_t value) throw(SqlException);
+
+      /*!
+       * Bind 64 bits unsigned integer value to prepared statement
+       *
+       * \param idx the prepared statement index parameter
+       * \param value the value to bind
+       *
+       * \throw SqlException any error
+       */
+      virtual void set(std::size_t idx, uint64_t value) throw(SqlException);
+
+      /*!
+       * Bind string value to prepared statement
+       *
+       * \param idx the prepared statement index parameter
+       * \param value the value to bind
+       *
+       * \throw SqlException any error
+       */
+      virtual void set(std::size_t idx, const std::string& value) throw(SqlException);
+      // Methods -
+
+    };
+
+  }
+}
+
+#endif // _ANCH_SQL_PG_PREPARED_STATEMENT_H_

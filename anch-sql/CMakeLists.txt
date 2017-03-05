@@ -272,6 +272,41 @@ if(ANCH_SQL_UNITARY_TEST)
   endif()
   # Build SQL connection factory test -
 
+  # Build SQL prepare statement wild cards +
+  file(
+    GLOB_RECURSE
+    test_wildcards
+    inc/*
+    test/testPrepareStatementWildCards.cpp
+    )
+
+  add_executable(
+    anch-wildcards-test
+    ${test_wildcards}
+    )
+
+  if(USE_BOOST_RE)
+    target_link_libraries(
+      anch-wildcards-test
+      anch-sql
+      anch-resource
+      ${MySQL_LIBRARIES}
+      ${PostgreSQL_LIBRARIES}
+      ${SQLite3_LIBRARIES}
+      ${Boost_LIBRARIES}
+      )
+  else()
+    target_link_libraries(
+      anch-wildcards-test
+      anch-sql
+      anch-resource
+      ${MySQL_LIBRARIES}
+      ${PostgreSQL_LIBRARIES}
+      ${SQLite3_LIBRARIES}
+      )
+  endif()
+  # Build SQL prepare statement wild cards -
+
   configure_file(test/anch.db anch.db COPYONLY)
   configure_file(test/db_con.conf db_con.conf COPYONLY)
   enable_testing()
@@ -287,5 +322,6 @@ if(ANCH_SQL_UNITARY_TEST)
   if(ANCH_SQL_MYSQL AND ANCH_SQL_POSTGRESQL AND ANCH_SQL_SQLITE3)
     add_test(SQLConnectionFactory ${EXECUTABLE_OUTPUT_PATH}anch-sql-connection-factory-test main)
   endif()
+  add_test(SQLPrepareStatementWildCards ${EXECUTABLE_OUTPUT_PATH}anch-wildcards-test main)
 
 endif(ANCH_SQL_UNITARY_TEST)
