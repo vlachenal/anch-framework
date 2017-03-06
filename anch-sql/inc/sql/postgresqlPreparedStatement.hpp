@@ -23,6 +23,8 @@
 #include "sql/preparedStatement.hpp"
 #include "sql/postgresqlConnection.hpp"
 
+#include <atomic>
+
 #include "libpq-fe.h"
 
 
@@ -44,8 +46,14 @@ namespace anch {
 
       // Attributes +
     private:
+      /*! Statement counter */
+      static std::atomic<std::uint64_t> _counter;
+
       /*! PostgreSQL database connection */
       PGconn* _conn;
+
+      /** PostgreSQL statement identifier */
+      std::string _stmtId;
       // Attributes -
 
       // Constructors +
@@ -79,76 +87,6 @@ namespace anch {
        * \throw SqlException any error
        */
       ResultSet* execute() throw(SqlException);
-
-      /*!
-       * Bind 16 bits signed integer value to prepared statement
-       *
-       * \param idx the prepared statement index parameter
-       * \param value the value to bind
-       *
-       * \throw SqlException any error
-       */
-      virtual void set(std::size_t idx, int16_t value) throw(SqlException);
-
-      /*!
-       * Bind 16 bits unsigned integer value to prepared statement
-       *
-       * \param idx the prepared statement index parameter
-       * \param value the value to bind
-       *
-       * \throw SqlException any error
-       */
-      virtual void set(std::size_t idx, uint16_t value) throw(SqlException);
-
-      /*!
-       * Bind 32 bits signed integer value to prepared statement
-       *
-       * \param idx the prepared statement index parameter
-       * \param value the value to bind
-       *
-       * \throw SqlException any error
-       */
-      virtual void set(std::size_t idx, int32_t value) throw(SqlException);
-
-      /*!
-       * Bind 32 bits unsigned integer value to prepared statement
-       *
-       * \param idx the prepared statement index parameter
-       * \param value the value to bind
-       *
-       * \throw SqlException any error
-       */
-      virtual void set(std::size_t idx, uint32_t value) throw(SqlException);
-
-      /*!
-       * Bind 64 bits signed integer value to prepared statement
-       *
-       * \param idx the prepared statement index parameter
-       * \param value the value to bind
-       *
-       * \throw SqlException any error
-       */
-      virtual void set(std::size_t idx, int64_t value) throw(SqlException);
-
-      /*!
-       * Bind 64 bits unsigned integer value to prepared statement
-       *
-       * \param idx the prepared statement index parameter
-       * \param value the value to bind
-       *
-       * \throw SqlException any error
-       */
-      virtual void set(std::size_t idx, uint64_t value) throw(SqlException);
-
-      /*!
-       * Bind string value to prepared statement
-       *
-       * \param idx the prepared statement index parameter
-       * \param value the value to bind
-       *
-       * \throw SqlException any error
-       */
-      virtual void set(std::size_t idx, const std::string& value) throw(SqlException);
       // Methods -
 
     };

@@ -86,3 +86,57 @@ PreparedStatement::getWildCards(const std::string& query) const {
   }
   return pos;
 }
+
+void
+PreparedStatement::set(std::size_t idx, int16_t value) throw(SqlException) {
+  checkIndex(idx);
+  std::ostringstream oss;
+  oss << value;
+  _values[idx] = oss.str();
+}
+
+void
+PreparedStatement::set(std::size_t idx, uint16_t value) throw(SqlException) {
+  checkIndex(idx);
+  std::ostringstream oss;
+  oss << value;
+  _values[idx] = oss.str();
+}
+
+void
+PreparedStatement::set(std::size_t idx, int32_t value) throw(SqlException) {
+  checkIndex(idx);
+  std::ostringstream oss;
+  oss << value;
+  _values[idx] = oss.str();
+}
+
+void
+PreparedStatement::set(std::size_t idx, uint32_t value) throw(SqlException) {
+  checkIndex(idx);
+  std::ostringstream oss;
+  oss << value;
+  _values[idx] = oss.str();
+}
+
+void
+PreparedStatement::set(std::size_t idx, int64_t value) throw(SqlException) {
+  checkIndex(idx);
+  std::ostringstream oss;
+  oss << value;
+  _values[idx] = oss.str();
+}
+
+void
+PreparedStatement::set(std::size_t idx, uint64_t value) throw(SqlException) {
+  checkIndex(idx);
+  std::ostringstream oss;
+  oss << value;
+  _values[idx] = oss.str();
+}
+
+void
+PreparedStatement::set(std::size_t idx, const std::string& value) throw(SqlException) {
+  checkIndex(idx);
+  _values[idx] = value;
+}

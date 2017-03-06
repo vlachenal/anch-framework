@@ -54,8 +54,6 @@ namespace anch {
     public:
       /*!
        * \ref PreparedStatement constructor
-       *
-       * \param query the SQL query
        */
       PreparedStatement();
       // Constructors -
@@ -75,9 +73,9 @@ namespace anch {
        *
        * \return the result set
        *
-       * \throw anch::sql::SqlException any error
+       * \throw SqlException any error
        */
-      virtual anch::sql::ResultSet* execute() throw(anch::sql::SqlException) = 0;
+      virtual ResultSet* execute() throw(SqlException) = 0;
 
       /*!
        * Bind 16 bits signed integer value to prepared statement
@@ -85,9 +83,9 @@ namespace anch {
        * \param idx the prepared statement index parameter
        * \param value the value to bind
        *
-       * \throw anch::sql::SqlException any error
+       * \throw SqlException any error
        */
-      virtual void set(std::size_t idx, int16_t value) throw(anch::sql::SqlException) = 0;
+      void set(std::size_t idx, int16_t value) throw(SqlException);
 
       /*!
        * Bind 16 bits unsigned integer value to prepared statement
@@ -95,9 +93,9 @@ namespace anch {
        * \param idx the prepared statement index parameter
        * \param value the value to bind
        *
-       * \throw anch::sql::SqlException any error
+       * \throw SqlException any error
        */
-      virtual void set(std::size_t idx, uint16_t value) throw(anch::sql::SqlException) = 0;
+      void set(std::size_t idx, uint16_t value) throw(SqlException);
 
       /*!
        * Bind 32 bits signed integer value to prepared statement
@@ -105,9 +103,9 @@ namespace anch {
        * \param idx the prepared statement index parameter
        * \param value the value to bind
        *
-       * \throw anch::sql::SqlException any error
+       * \throw SqlException any error
        */
-      virtual void set(std::size_t idx, int32_t value) throw(anch::sql::SqlException) = 0;
+      void set(std::size_t idx, int32_t value) throw(SqlException);
 
       /*!
        * Bind 32 bits unsigned integer value to prepared statement
@@ -115,9 +113,9 @@ namespace anch {
        * \param idx the prepared statement index parameter
        * \param value the value to bind
        *
-       * \throw anch::sql::SqlException any error
+       * \throw SqlException any error
        */
-      virtual void set(std::size_t idx, uint32_t value) throw(anch::sql::SqlException) = 0;
+      void set(std::size_t idx, uint32_t value) throw(SqlException);
 
       /*!
        * Bind 64 bits signed integer value to prepared statement
@@ -125,9 +123,9 @@ namespace anch {
        * \param idx the prepared statement index parameter
        * \param value the value to bind
        *
-       * \throw anch::sql::SqlException any error
+       * \throw SqlException any error
        */
-      virtual void set(std::size_t idx, int64_t value) throw(anch::sql::SqlException) = 0;
+      void set(std::size_t idx, int64_t value) throw(SqlException);
 
       /*!
        * Bind 64 bits unsigned integer value to prepared statement
@@ -135,9 +133,9 @@ namespace anch {
        * \param idx the prepared statement index parameter
        * \param value the value to bind
        *
-       * \throw anch::sql::SqlException any error
+       * \throw SqlException any error
        */
-      virtual void set(std::size_t idx, uint64_t value) throw(anch::sql::SqlException) = 0;
+      void set(std::size_t idx, uint64_t value) throw(SqlException);
 
       /*!
        * Bind string value to prepared statement
@@ -145,9 +143,9 @@ namespace anch {
        * \param idx the prepared statement index parameter
        * \param value the value to bind
        *
-       * \throw anch::sql::SqlException any error
+       * \throw SqlException any error
        */
-      virtual void set(std::size_t idx, const std::string& value) throw(anch::sql::SqlException) = 0;
+      void set(std::size_t idx, const std::string& value) throw(SqlException);
 
     protected:
       /*!
@@ -158,6 +156,21 @@ namespace anch {
        * \return the wildcards' position
        */
       std::set<std::size_t> getWildCards(const std::string& query) const;
+
+      /*!
+       * Check index value
+       *
+       * \param index the index to check
+       *
+       * \throw SqlException the index is upper than number of wildcards
+       */
+      inline void checkIndex(std::size_t index) const throw(SqlException) {
+	if(index > _nbWildcards) {
+	  std::ostringstream oss;
+	  oss << "Index " << index << " is upper than number of wildcards " << _nbWildcards;
+	  throw SqlException(oss.str());
+	}
+      }
       // Methods -
 
     };

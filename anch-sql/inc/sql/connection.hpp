@@ -24,6 +24,7 @@
 
 #include "sql/sqlException.hpp"
 #include "sql/resultSet.hpp"
+#include "sql/preparedStatement.hpp"
 
 
 namespace anch {
@@ -79,6 +80,9 @@ namespace anch {
 
       /*! Is SQL connection valid */
       bool _valid;
+
+      /*! Prepared statements */
+      std::map<std::string, PreparedStatement*> _stmts;
       // Attributes -
 
       // Constructors +
@@ -132,6 +136,17 @@ namespace anch {
        * \throw SqlException any error
        */
       void setAutoCommit(bool autoCommit) throw(SqlException);
+
+      /*!
+       * Prepare SQL statement if not already done.
+       *
+       * \param query the SQL query
+       *
+       * \return the prepared statement
+       *
+       * \throw SqlException any error
+       */
+      PreparedStatement& prepareStatement(const std::string& query) throw(SqlException);
 
       /*!
        * Execute SQL query
@@ -218,6 +233,17 @@ namespace anch {
        * \throw SqlException any error
        */
       virtual void toggleAutoCommit(bool autoCommit) throw(SqlException) = 0;
+
+      /*!
+       * Send SQL query to prepare SQL statement
+       *
+       * \param query the SQL query
+       *
+       * \return the prepared statement
+       *
+       * \throw SqlException any error
+       */
+      virtual PreparedStatement* makePrepared(const std::string& query) throw(SqlException) = 0;
       // Methods -
 
       // Accessors +

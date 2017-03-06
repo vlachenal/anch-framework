@@ -21,16 +21,22 @@
 
 using anch::sql::Connection;
 using anch::sql::ResultSet;
+using anch::sql::PreparedStatement;
 
 
 // Constructors +
-Connection::Connection() throw(SqlException): _autoCommit(true), _valid(true) {
+Connection::Connection() throw(SqlException): _autoCommit(true), _valid(true), _stmts() {
+  // Nothing to do
 }
 // Constructors -
 
 // Destructor +
 Connection::~Connection() {
-  // Nothing to do ... for now
+  // Delete prepared statements +
+  for(auto iter = _stmts.begin() ; iter != _stmts.end() ; ++iter) {
+    delete iter->second;
+  }
+  // Delete prepared statements -
 }
 // Destructor -
 
@@ -93,5 +99,17 @@ uint64_t
 Connection::update(const std::string& query) throw(SqlException) {
   // \todo check update query ...
   return executeUpdate(query);
+}
+
+PreparedStatement&
+Connection::prepareStatement(const std::string& query) throw(SqlException) {
+  auto iter = _stmts.find(query);
+  if(iter == _stmts.end()) { // Not found => create and return it
+    PreparedStatement* stmt = makePrepared(query);
+    _stmts[query] = stmt;
+    return *stmt;
+  } else {
+    return *iter->second;
+  }
 }
 // Methods -

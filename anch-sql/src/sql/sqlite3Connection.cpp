@@ -29,6 +29,7 @@ using anch::sql::SQLite3Connection;
 using anch::sql::ResultSet;
 using anch::sql::SQLite3ResultSet;
 using anch::sql::SqlException;
+using anch::sql::PreparedStatement;
 
 
 // Constructors +
@@ -124,6 +125,11 @@ SQLite3Connection::sendRollback() throw(SqlException) {
 void
 SQLite3Connection::toggleAutoCommit(bool /*autoCommit*/) throw(SqlException) {
   // Nothing to do .. for now => keep internal state ?
+}
+
+PreparedStatement*
+SQLite3Connection::makePrepared(const std::string& /*query*/) throw(SqlException) {
+  return NULL;
 }
 // Methods -
 

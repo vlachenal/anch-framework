@@ -33,6 +33,7 @@ using anch::sql::SqlException;
 using anch::sql::SqlConnectionConfiguration;
 using anch::sql::ResultSet;
 using anch::sql::MySQLResultSet;
+using anch::sql::PreparedStatement;
 
 
 /*!
@@ -213,6 +214,11 @@ MySQLConnection::executeUpdate(const std::string& query) throw(SqlException) {
     throw SqlException(out.str());
   }
   return static_cast<uint64_t>(nbRow);
+}
+
+PreparedStatement*
+MySQLConnection::makePrepared(const std::string& /*query*/) throw(SqlException) {
+  return NULL;
 }
 // Methods -
 

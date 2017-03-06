@@ -21,6 +21,7 @@
 
 #include "sql/postgresqlConnection.hpp"
 #include "sql/postgresqlResultSet.hpp"
+#include "sql/postgresqlPreparedStatement.hpp"
 #include "convert.hpp"
 
 #include <sstream>
@@ -31,6 +32,8 @@ using anch::sql::SqlConnectionConfiguration;
 using anch::sql::PostgreSQLConnection;
 using anch::sql::ResultSet;
 using anch::sql::PostgreSQLResultSet;
+using anch::sql::PreparedStatement;
+using anch::sql::PostgreSQLPreparedStatement;
 
 
 // Constructors +
@@ -178,8 +181,7 @@ PostgreSQLConnection::executeQuery(const std::string& query) throw(SqlException)
     msg << "Unable to execute query " << query << ": " << PQerrorMessage(_conn);
     throw SqlException(msg.str());
   }
-  ResultSet* resSet = new PostgreSQLResultSet(_conn);
-  return resSet;
+  return new PostgreSQLResultSet(_conn);
 }
 
 uint64_t
@@ -226,6 +228,11 @@ PostgreSQLConnection::executeUpdate(const std::string& query) throw(SqlException
     // Nothing to do
   }
   return nbRows;
+}
+
+PreparedStatement*
+PostgreSQLConnection::makePrepared(const std::string& query) throw(SqlException) {
+  return new PostgreSQLPreparedStatement(_conn, query);
 }
 // Methods -
 

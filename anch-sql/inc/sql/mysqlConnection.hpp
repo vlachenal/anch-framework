@@ -140,6 +140,17 @@ namespace anch {
        * \throw SqlException any error
        */
       virtual void toggleAutoCommit(bool autoCommit) throw(SqlException) override;
+
+      /*!
+       * Send SQL query to prepare SQL statement
+       *
+       * \param query the SQL query
+       *
+       * \return the prepared statement
+       *
+       * \throw SqlException any error
+       */
+      virtual PreparedStatement* makePrepared(const std::string& query) throw(SqlException) override;
       // Methods -
 
     };

@@ -23,11 +23,15 @@
 
 #include <sstream>
 
+#include "sql/postgresqlResultSet.hpp"
+
 using anch::sql::PreparedStatement;
 using anch::sql::PostgreSQLPreparedStatement;
+using anch::sql::PostgreSQLResultSet;
 using anch::sql::SqlException;
 using anch::sql::ResultSet;
 
+std::atomic<std::uint64_t> PostgreSQLPreparedStatement::_counter(0);
 
 // Constructors +
 PostgreSQLPreparedStatement::PostgreSQLPreparedStatement(PGconn* dbCon, const std::string& query) throw(SqlException): PreparedStatement(), _conn(dbCon) {
@@ -44,7 +48,10 @@ PostgreSQLPreparedStatement::PostgreSQLPreparedStatement(PGconn* dbCon, const st
     oss << query.substr(offset);
   }
   std::string pgQuery = oss.str();
-  PGresult* res = PQprepare(dbCon, pgQuery.data(), pgQuery.data(), -1, NULL);
+  std::ostringstream ids;
+  ids << std::addressof(dbCon) << '_' << _counter.fetch_add(1);
+  _stmtId = ids.str();
+  PGresult* res = PQprepare(dbCon, _stmtId.data(), pgQuery.data(), static_cast<int>(_nbWildcards), NULL);
   if(res == NULL || PQresultStatus(res) != PGRES_COMMAND_OK) {
     std::ostringstream msg;
     msg << "Fail to prepare PostgreSQL statement: " << PQerrorMessage(dbCon);
@@ -66,42 +73,21 @@ PostgreSQLPreparedStatement::~PostgreSQLPreparedStatement() {
 // Methods +
 ResultSet*
 PostgreSQLPreparedStatement::execute() throw(SqlException) {
-  return NULL;
-}
-
-void
-PostgreSQLPreparedStatement::set(std::size_t /*idx*/, int16_t /*value*/) throw(SqlException) {
-
-}
-
-void
-PostgreSQLPreparedStatement::set(std::size_t /*idx*/, uint16_t /*value*/) throw(SqlException) {
-
-}
-
-void
-PostgreSQLPreparedStatement::set(std::size_t /*idx*/, int32_t /*value*/) throw(SqlException) {
-
-}
-
-void
-PostgreSQLPreparedStatement::set(std::size_t /*idx*/, uint32_t /*value*/) throw(SqlException) {
-
-}
-
-void
-PostgreSQLPreparedStatement::set(std::size_t /*idx*/, int64_t /*value*/) throw(SqlException) {
-
-}
-
-void
-PostgreSQLPreparedStatement::set(std::size_t /*idx*/, uint64_t /*value*/) throw(SqlException) {
-
-}
-
-void
-PostgreSQLPreparedStatement::set(std::size_t /*idx*/, const std::string& /*value*/) throw(SqlException) {
-
+  const char** values = new const char*[_nbWildcards];
+  int* lengths = new int[_nbWildcards];
+  std::size_t idx = 0;
+  for(auto iter = _values.cbegin() ; iter != _values.cend() ; ++iter) {
+    lengths[idx] = static_cast<int>(iter->second.length());
+    values[idx] = iter->second.data();
+    ++idx;
+  }
+  int res = PQsendQueryPrepared(_conn, _stmtId.data(), static_cast<int>(_nbWildcards), values, lengths, NULL, 0);
+  if(res == 0) {
+    std::ostringstream msg;
+    msg << "Fail to execute PostgreSQL statement: " << PQerrorMessage(_conn);
+    throw SqlException(msg.str());
+  }
+  return new PostgreSQLResultSet(_conn);
 }
 
 #endif // ANCH_SQL_POSTGRESQL
