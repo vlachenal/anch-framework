@@ -233,7 +233,7 @@ namespace anch {
 	std::array<uint8_t, Cipher::getBlockSize()> out;
 	uint32_t index = 0;
 	while(!input.eof()) {
-	  input.read(reinterpret_cast<char*>(data.data()), Cipher::getBlockSize());
+	  input.read(reinterpret_cast<char*>(data.data()), static_cast<std::streamsize>(Cipher::getBlockSize()));
 	  std::streamsize nbRead = input.gcount();
 	  if(nbRead == 0) {
 	    break;
@@ -269,7 +269,7 @@ namespace anch {
 	}
 	while(!input.eof()) {
 	  for(std::size_t i = 0 ; i < _nbThread ; ++i) {
-	    input.read(reinterpret_cast<char*>(data[i].data()), Cipher::getBlockSize());
+	    input.read(reinterpret_cast<char*>(data[i].data()), static_cast<std::streamsize>(Cipher::getBlockSize()));
 	    std::streamsize nbRead = input.gcount();
 	    if(nbRead == 0) {
 	      break;
@@ -318,13 +318,13 @@ namespace anch {
 	std::array<uint8_t,Cipher::getBlockSize()> out;
 	std::array<uint8_t,Cipher::getBlockSize()> data;
 	std::array<uint8_t,Cipher::getBlockSize()> cipherData;
-	input.read(reinterpret_cast<char*>(data.data()), Cipher::getBlockSize());
+	input.read(reinterpret_cast<char*>(data.data()), static_cast<std::streamsize>(Cipher::getBlockSize()));
 	std::streamsize nbRead = input.gcount();
 	uint32_t index = 0;
 	do {
 	  cipherData = data;
 	  std::streamsize read = nbRead;
-	  input.read(reinterpret_cast<char*>(data.data()), Cipher::getBlockSize());
+	  input.read(reinterpret_cast<char*>(data.data()), static_cast<std::streamsize>(Cipher::getBlockSize()));
 
 	  std::size_t end = decipherBlock(cipherData, prevData, read, input.eof(), out, index, cipher);
 	  for(std::size_t i = 0 ; i < end ; ++i) {
@@ -362,11 +362,11 @@ namespace anch {
 	  ciph.push_back(Cipher(ciph[0]));
 	}
 	bool lastBlock = false;
-	input.read(reinterpret_cast<char*>(data[0].data()), Cipher::getBlockSize());
+	input.read(reinterpret_cast<char*>(data[0].data()), static_cast<std::streamsize>(Cipher::getBlockSize()));
 	std::size_t nbRead = static_cast<std::size_t>(input.gcount());
 	do {
 	  for(std::size_t i = 0, idx = 1 ; i < _nbThread ; ++i, ++idx) {
-	    input.read(reinterpret_cast<char*>(data[idx].data()), Cipher::getBlockSize());
+	    input.read(reinterpret_cast<char*>(data[idx].data()), static_cast<std::streamsize>(Cipher::getBlockSize()));
 	    std::streamsize nextCount = input.gcount();
 	    if(nextCount == 0) {
 	      lastBlock = true;
