@@ -189,6 +189,8 @@ main(void) {
     }
     delete res;
 
+    std::cout << std::endl;
+
   } catch(const SqlException& e) {
     std::cerr << "Error: " << e.what() << std::endl;
     return 1;
