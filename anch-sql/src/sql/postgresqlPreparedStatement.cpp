@@ -73,6 +73,7 @@ PostgreSQLPreparedStatement::~PostgreSQLPreparedStatement() {
 // Methods +
 ResultSet*
 PostgreSQLPreparedStatement::execute() throw(SqlException) {
+  // Bind parameters +
   const char** values = new const char*[_nbWildcards];
   int* lengths = new int[_nbWildcards];
   std::size_t idx = 0;
@@ -81,12 +82,15 @@ PostgreSQLPreparedStatement::execute() throw(SqlException) {
     values[idx] = iter->second.data();
     ++idx;
   }
+  // Bind parameters -
+  // Execute statement +
   int res = PQsendQueryPrepared(_conn, _stmtId.data(), static_cast<int>(_nbWildcards), values, lengths, NULL, 0);
   if(res == 0) {
     std::ostringstream msg;
     msg << "Fail to execute PostgreSQL statement: " << PQerrorMessage(_conn);
     throw SqlException(msg.str());
   }
+  // Execute statement -
   return new PostgreSQLResultSet(_conn);
 }
 
