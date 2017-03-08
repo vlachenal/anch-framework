@@ -1,0 +1,9 @@
+<map id="anch::logger::formatter::IFormatter" name="anch::logger::formatter::IFormatter">
+<area shape="rect" id="node2" href="$classanch_1_1logger_1_1formatter_1_1_anch_date_formatter.html" title="{anch::logger::formatter\l::AnchDateFormatter\n||+ AnchDateFormatter()\l+ ~AnchDateFormatter()\l+ formatValue()\l+ getType()\l}" alt="" coords="5,175,191,311"/>
+<area shape="rect" id="node3" href="$classanch_1_1logger_1_1formatter_1_1_category_formatter.html" title="{anch::logger::formatter\l::CategoryFormatter\n||+ CategoryFormatter()\l+ ~CategoryFormatter()\l+ formatValue()\l+ getType()\l}" alt="" coords="215,175,397,311"/>
+<area shape="rect" id="node4" href="$classanch_1_1logger_1_1formatter_1_1_const_formatter.html" title="{anch::logger::formatter\l::ConstFormatter\n||+ ConstFormatter()\l+ ~ConstFormatter()\l+ formatValue()\l+ getType()\l}" alt="" coords="421,175,593,311"/>
+<area shape="rect" id="node5" href="$classanch_1_1logger_1_1formatter_1_1_date_formatter.html" title="{anch::logger::formatter\l::DateFormatter\n||+ DateFormatter()\l+ ~DateFormatter()\l+ formatValue()\l+ getType()\l}" alt="" coords="617,175,789,311"/>
+<area shape="rect" id="node6" href="$classanch_1_1logger_1_1formatter_1_1_level_formatter.html" title="{anch::logger::formatter\l::LevelFormatter\n||+ LevelFormatter()\l+ ~LevelFormatter()\l+ formatValue()\l+ getType()\l}" alt="" coords="813,175,985,311"/>
+<area shape="rect" id="node7" href="$classanch_1_1logger_1_1formatter_1_1_string_formatter.html" title="{anch::logger::formatter\l::StringFormatter\n||+ StringFormatter()\l+ ~StringFormatter()\l+ formatValue()\l+ getType()\l}" alt="" coords="1009,175,1181,311"/>
+<area shape="rect" id="node8" href="$classanch_1_1logger_1_1formatter_1_1_thread_id_formatter.html" title="{anch::logger::formatter\l::ThreadIdFormatter\n||+ ThreadIdFormatter()\l+ ~ThreadIdFormatter()\l+ formatValue()\l+ getType()\l}" alt="" coords="1206,175,1385,311"/>
+</map>

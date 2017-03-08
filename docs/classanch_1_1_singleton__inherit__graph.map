@@ -1,0 +1,12 @@
+<map id="anch::Singleton&lt; T &gt;" name="anch::Singleton&lt; T &gt;">
+<area shape="rect" id="node2" href="$classanch_1_1_singleton.html" title="{anch::Singleton\&lt; CPU \&gt;\n||+ getInstance()\l}" alt="" coords="5,153,184,230"/>
+<area shape="rect" id="node4" href="$classanch_1_1_singleton.html" title="{anch::Singleton\&lt; EventBus\l\&lt; Event \&gt; \&gt;\n||+ getInstance()\l}" alt="" coords="209,145,407,237"/>
+<area shape="rect" id="node6" href="$classanch_1_1_singleton.html" title="{anch::Singleton\&lt; MySQLInitializer \&gt;\n||+ getInstance()\l}" alt="" coords="431,153,689,230"/>
+<area shape="rect" id="node8" href="$classanch_1_1_singleton.html" title="{anch::Singleton\&lt; SqlConnection\lFactory \&gt;\n||+ getInstance()\l}" alt="" coords="713,145,943,237"/>
+<area shape="rect" id="node10" href="$classanch_1_1_singleton.html" title="{anch::Singleton\&lt; LoggerFactory \&gt;\n||+ getInstance()\l}" alt="" coords="968,153,1211,230"/>
+<area shape="rect" id="node3" href="$classanch_1_1device_1_1_c_p_u.html" title="CPU features detection. " alt="" coords="25,287,164,481"/>
+<area shape="rect" id="node5" href="$classanch_1_1events_1_1_event_bus.html" title="A class which manage global events firing and events QoS. " alt="" coords="221,287,395,481"/>
+<area shape="rect" id="node7" href="$class_my_s_q_l_initializer.html" title="MySQL (un)initializer. " alt="" coords="497,345,623,423"/>
+<area shape="rect" id="node9" href="$classanch_1_1sql_1_1_sql_connection_factory.html" title="SQL connection factory. " alt="" coords="737,331,919,437"/>
+<area shape="rect" id="node11" href="$classanch_1_1logger_1_1_logger_factory.html" title="Logger factory. " alt="" coords="989,345,1190,423"/>
+</map>

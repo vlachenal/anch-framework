@@ -1,0 +1,6 @@
+<map id="anch::network::Socket" name="anch::network::Socket">
+<area shape="rect" id="node4" href="$classanch_1_1network_1_1_tcp_socket.html" title="{anch::network::TcpSocket\n||+ TcpSocket()\l+ TcpSocket()\l+ ~TcpSocket()\l+ send()\l+ receive()\l+ getDomain()\l+ getType()\l}" alt="" coords="5,765,192,931"/>
+<area shape="rect" id="node5" href="$classanch_1_1network_1_1_udp_socket.html" title="{anch::network::UdpSocket\n||+ UdpSocket()\l+ UdpSocket()\l+ ~UdpSocket()\l+ listen()\l+ connect()\l+ accept()\l+ send()\l+ send()\l+ receive()\l+ getDomain()\l+ getType()\l}" alt="" coords="216,736,408,960"/>
+<area shape="rect" id="node2" href="$classanch_1_1events_1_1_observable.html" title="{anch::events::Observable\l\&lt; anch::network::SocketEvent \&gt;\n||+ Observable()\l+ ~Observable()\l+ addObserver()\l+ removeObserver()\l+ notifyObservers()\l}" alt="" coords="89,219,322,369"/>
+<area shape="rect" id="node3" href="$classanch_1_1events_1_1_observable.html" title="An observable implementation of the observers/observable design pattern. " alt="" coords="112,5,299,156"/>
+</map>
