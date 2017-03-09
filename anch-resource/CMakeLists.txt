@@ -62,11 +62,6 @@ add_library(
   ${source_files}
 )
 
-# Link with libraries
-target_link_libraries(
-  anch-resource
-)
-
 if(ANCH_RESOURCE_UNITARY_TEST)
 
   # Build parser unitary test +
