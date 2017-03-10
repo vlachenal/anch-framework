@@ -16,10 +16,16 @@ using std::endl;
 using std::string;
 
 int
-main(void) {
+main(int argc, char** argv) {
+
+  bool all = true;
+  if(argc == 2) {
+    all = false;
+  }
+
   cout << "Enter in SHA2 tests" << endl;
 
-  {
+  if(all || strcmp("224", argv[1]) == 0) {
     string msg = "The quick brown fox jumps over the lazy dog";
     cout << "Hash SHA224 message: " << msg << endl;
     SHA224 hash(msg);
@@ -39,7 +45,7 @@ main(void) {
     }
   }
 
-  {
+  if(all || strcmp("256", argv[1]) == 0) {
     string msg = "The quick brown fox jumps over the lazy dog";
     cout << "Hash SHA256 message: " << msg << endl;
     SHA256 hash(msg);
@@ -59,7 +65,7 @@ main(void) {
     }
   }
 
-  {
+  if(all || strcmp("384", argv[1]) == 0) {
     string msg = "The quick brown fox jumps over the lazy dog";
     cout << "Hash SHA384 message: " << msg << endl;
     SHA384 hash(msg);
@@ -79,7 +85,7 @@ main(void) {
     }
   }
 
-  {
+  if(all || strcmp("512", argv[1]) == 0) {
     string msg = "The quick brown fox jumps over the lazy dog";
     cout << "Hash SHA512 message: " << msg << endl;
     SHA512 hash(msg);

@@ -20,8 +20,13 @@ using anch::crypto::ANSIX923;
 
 
 int
-main(void) {
+main(int argc, char** argv) {
   std::cout << "Enter in AES - CBC tests" << std::endl;
+
+  bool all = true;
+  if(argc == 3) {
+    all = false;
+  }
 
   std::chrono::time_point<std::chrono::high_resolution_clock> start, end;
   std::chrono::microseconds duration;
@@ -30,7 +35,7 @@ main(void) {
       'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p'
     } };
 
-  {
+  if(all || (strcmp("ISO7816_4", argv[1]) == 0 && strcmp("sequential", argv[2]) == 0)) {
     std::cout << "Enter in CBC sequential with AES128 and ISO7816_4 padding tests" << std::endl;
 
     std::ifstream* input = new std::ifstream("Makefile", std::ifstream::binary);
@@ -83,7 +88,7 @@ main(void) {
 
   std::cout << std::endl;
 
-  {
+  if(all || (strcmp("ISO7816_4", argv[1]) == 0 && strcmp("parallel", argv[2]) == 0)) {
     std::cout << "Enter in CBC with parallel AES128 and ISO7816_4 padding tests" << std::endl;
 
     std::ifstream* input = new std::ifstream("Makefile", std::ifstream::binary);
@@ -136,7 +141,7 @@ main(void) {
 
   std::cout << std::endl;
 
-  {
+  if(all || (strcmp("PKCS#7", argv[1]) == 0 && strcmp("sequential", argv[2]) == 0)) {
     std::cout << "Enter in CBC sequential with AES128 and PKCS#7 padding tests" << std::endl;
 
     std::ifstream* input = new std::ifstream("Makefile", std::ifstream::binary);
@@ -189,7 +194,7 @@ main(void) {
 
   std::cout << std::endl;
 
-  {
+  if(all || (strcmp("PKCS#7", argv[1]) == 0 && strcmp("parallel", argv[2]) == 0)) {
     std::cout << "Enter in CBC with parallel AES128 and PKCS#7 padding tests" << std::endl;
 
     std::ifstream* input = new std::ifstream("Makefile", std::ifstream::binary);
@@ -242,7 +247,7 @@ main(void) {
 
   std::cout << std::endl;
 
-  {
+  if(all || (strcmp("zero", argv[1]) == 0 && strcmp("sequential", argv[2]) == 0)) {
     std::cout << "Enter in CBC sequential with AES128 and zero padding tests" << std::endl;
 
     std::ifstream* input = new std::ifstream("Makefile", std::ifstream::binary);
@@ -295,7 +300,7 @@ main(void) {
 
   std::cout << std::endl;
 
-  {
+  if(all || (strcmp("zero", argv[1]) == 0 && strcmp("parallel", argv[2]) == 0)) {
     std::cout << "Enter in CBC with parallel AES128 and zero padding tests" << std::endl;
 
     std::ifstream* input = new std::ifstream("Makefile", std::ifstream::binary);
@@ -348,7 +353,7 @@ main(void) {
 
   std::cout << std::endl;
 
-  {
+  if(all || (strcmp("ANSIX923", argv[1]) == 0 && strcmp("sequential", argv[2]) == 0)) {
     std::cout << "Enter in CBC sequential with AES128 and ANSIX923 padding tests" << std::endl;
 
     std::ifstream* input = new std::ifstream("Makefile", std::ifstream::binary);
@@ -401,7 +406,7 @@ main(void) {
 
   std::cout << std::endl;
 
-  {
+  if(all || (strcmp("ANSIX923", argv[1]) == 0 && strcmp("parallel", argv[2]) == 0)) {
     std::cout << "Enter in CBC with parallel AES128 and ANSIX923 padding tests" << std::endl;
 
     std::ifstream* input = new std::ifstream("Makefile", std::ifstream::binary);
