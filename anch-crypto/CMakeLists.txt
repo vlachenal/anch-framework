@@ -340,7 +340,10 @@ if(ANCH_CRYPTO_UNITARY_TEST)
   add_test(AES192 ${EXECUTABLE_OUTPUT_PATH}/anch-aes-test 192)
   add_test(AES256 ${EXECUTABLE_OUTPUT_PATH}/anch-aes-test 256)
 
-  add_test(Padding ${EXECUTABLE_OUTPUT_PATH}/anch-padding-test main)
+  add_test(Padding-ANSIX923 ${EXECUTABLE_OUTPUT_PATH}/anch-padding-test ANSIX923)
+  add_test(Padding-PKCS7 ${EXECUTABLE_OUTPUT_PATH}/anch-padding-test "PKCS#7")
+  add_test(Padding-ISO7816_4 ${EXECUTABLE_OUTPUT_PATH}/anch-padding-test ISO7816_4)
+  add_test(Padding-zero ${EXECUTABLE_OUTPUT_PATH}/anch-padding-test zero)
 
   add_test(Aes128Ecb-ISO7816_4-seq ${EXECUTABLE_OUTPUT_PATH}/anch-aes-ecb-test ISO7816_4 sequential 128)
   add_test(Aes128Ecb-ISO7816_4-para ${EXECUTABLE_OUTPUT_PATH}/anch-aes-ecb-test ISO7816_4 parallel 128)
