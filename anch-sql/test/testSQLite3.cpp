@@ -8,6 +8,7 @@ using anch::sql::Connection;
 using anch::sql::SQLite3Connection;
 using anch::sql::SqlException;
 using anch::sql::ResultSet;
+using anch::sql::PreparedStatement;
 
 class Person {
 public:
@@ -149,6 +150,40 @@ main(void) {
       std::cerr << "Number of affected rows should be 1 instead of " << nbRow << std::endl;
       return 1;
     }
+
+    std::cout << std::endl;
+
+    std::cout << "Prepare and execute statement 'SELECT id,first_name,last_name,birth_date,email FROM T_Test WHERE id = ?' with per row result handling" << std::endl;
+    PreparedStatement& stmt = dbCon.prepareStatement("SELECT id,first_name,last_name,birth_date,email FROM T_Test WHERE id = ?");
+    stmt.set(1, 1);
+    res = stmt.execute();
+    row = 0;
+    while(res->next()) {
+      std::cout << "Row " << row << std::endl;
+      const uint32_t* id = res->get<uint32_t>(0);
+      std::cout << "id=";
+      if(id == NULL) {
+	std::cout << "NULL";
+      } else {
+	std::cout << *id;
+      }
+      std::cout << std::endl;
+      delete id;
+      const std::string* fName = res->get<std::string>(1);
+      std::cout << "first name=" << (fName == NULL ? nullStr : *fName) << std::endl;
+      delete fName;
+      const std::string* lName = res->get<std::string>(2);
+      std::cout << "last name=" << (lName == NULL ? nullStr : *lName) << std::endl;
+      delete lName;
+      const std::string* bDate = res->get<std::string>("birth_date");
+      std::cout << "birth date=" << (bDate == NULL ? nullStr : *bDate) << std::endl;
+      delete bDate;
+      const std::string* email = res->get<std::string>(4);
+      std::cout << "email=" << (email == NULL ? nullStr : *email) << std::endl;
+      delete email;
+      row++;
+    }
+    delete res;
 
     std::cout << std::endl;
 

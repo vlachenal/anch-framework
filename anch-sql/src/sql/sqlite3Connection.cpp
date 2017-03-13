@@ -21,6 +21,7 @@
 
 #include "sql/sqlite3Connection.hpp"
 #include "sql/sqlite3ResultSet.hpp"
+#include "sql/sqlite3PreparedStatement.hpp"
 
 #include <sstream>
 
@@ -28,6 +29,7 @@ using anch::sql::Connection;
 using anch::sql::SQLite3Connection;
 using anch::sql::ResultSet;
 using anch::sql::SQLite3ResultSet;
+using anch::sql::SQLite3PreparedStatement;
 using anch::sql::SqlException;
 using anch::sql::PreparedStatement;
 
@@ -76,8 +78,7 @@ SQLite3Connection::executeQuery(const std::string& query) throw(SqlException) {
     msg << "Error while preparing statement " << query << ": " << sqlite3_errmsg(_conn);
     throw SqlException(msg.str());
   }
-  ResultSet* resSet = new SQLite3ResultSet(stmt);
-  return resSet;
+  return new SQLite3ResultSet(stmt);
 }
 
 static int emptyCB(void*, int, char**, char**) {
@@ -128,8 +129,8 @@ SQLite3Connection::toggleAutoCommit(bool /*autoCommit*/) throw(SqlException) {
 }
 
 PreparedStatement*
-SQLite3Connection::makePrepared(const std::string& /*query*/) throw(SqlException) {
-  return NULL;
+SQLite3Connection::makePrepared(const std::string& query) throw(SqlException) {
+  return new SQLite3PreparedStatement(_conn, query);
 }
 // Methods -
 
