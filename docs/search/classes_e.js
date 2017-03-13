@@ -20,6 +20,7 @@ var searchData=
   ['sqlconnectionfactory',['SqlConnectionFactory',['../classanch_1_1sql_1_1_sql_connection_factory.html',1,'anch::sql']]],
   ['sqlexception',['SqlException',['../classanch_1_1sql_1_1_sql_exception.html',1,'anch::sql']]],
   ['sqlite3connection',['SQLite3Connection',['../classanch_1_1sql_1_1_s_q_lite3_connection.html',1,'anch::sql']]],
+  ['sqlite3preparedstatement',['SQLite3PreparedStatement',['../classanch_1_1sql_1_1_s_q_lite3_prepared_statement.html',1,'anch::sql']]],
   ['sqlite3resultset',['SQLite3ResultSet',['../classanch_1_1sql_1_1_s_q_lite3_result_set.html',1,'anch::sql']]],
   ['stringformatter',['StringFormatter',['../classanch_1_1logger_1_1formatter_1_1_string_formatter.html',1,'anch::logger::formatter']]]
 ];

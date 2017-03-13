@@ -8,9 +8,9 @@
  viewBox="0.00 0.00 296.00 328.50" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 <g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 324.5)">
 <title>Graphical Class Hierarchy</title>
-<!-- Node75 -->
+<!-- Node76 -->
 <g id="node1" class="node">
-<title>Node75</title>
+<title>Node76</title>
 <g id="a_node1"><a xlink:title="STL class. ">
 <polygon fill="none" stroke="#bfbfbf" points="0,-145.5 0,-164.5 86,-164.5 86,-145.5 0,-145.5"/>
 <text text-anchor="middle" x="43" y="-152.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">std::exception</text>
@@ -27,15 +27,15 @@
 </a>
 </g>
 </g>
-<!-- Node75&#45;&gt;Node0 -->
+<!-- Node76&#45;&gt;Node0 -->
 <g id="edge1" class="edge">
-<title>Node75&#45;&gt;Node0</title>
+<title>Node76&#45;&gt;Node0</title>
 <path fill="none" stroke="#191970" d="M49.9257,-174.2794C60.8868,-202.0401 84.8745,-253.0034 122,-281 126.551,-284.432 131.5798,-287.3739 136.8441,-289.8956"/>
 <polygon fill="#191970" stroke="#191970" points="53.0605,-172.6739 46.249,-164.5588 46.5132,-175.1503 53.0605,-172.6739"/>
 </g>
-<!-- Node77 -->
+<!-- Node78 -->
 <g id="node3" class="node">
-<title>Node77</title>
+<title>Node78</title>
 <g id="a_node3"><a xlink:href="classanch_1_1date_1_1_invalid_format_exception.html" target="_top" xlink:title="Invalid date format error. ">
 <polygon fill="none" stroke="#000000" points="134.5,-241 134.5,-271 275.5,-271 275.5,-241 134.5,-241"/>
 <text text-anchor="start" x="142.5" y="-259" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">anch::date::InvalidFormat</text>
@@ -43,60 +43,60 @@
 </a>
 </g>
 </g>
-<!-- Node75&#45;&gt;Node77 -->
+<!-- Node76&#45;&gt;Node78 -->
 <g id="edge2" class="edge">
-<title>Node75&#45;&gt;Node77</title>
+<title>Node76&#45;&gt;Node78</title>
 <path fill="none" stroke="#191970" d="M57.1146,-172.8056C71.658,-190.0255 95.8408,-215.6973 122,-231 128.4949,-234.7994 135.619,-238.0684 142.8786,-240.8691"/>
 <polygon fill="#191970" stroke="#191970" points="59.4822,-170.174 50.4287,-164.6709 54.0744,-174.6187 59.4822,-170.174"/>
 </g>
-<!-- Node78 -->
+<!-- Node79 -->
 <g id="node4" class="node">
-<title>Node78</title>
+<title>Node79</title>
 <g id="a_node4"><a xlink:href="classanch_1_1device_1_1_device_exception.html" target="_top" xlink:title="anch::device::DeviceException">
 <polygon fill="none" stroke="#000000" points="122,-202.5 122,-221.5 288,-221.5 288,-202.5 122,-202.5"/>
 <text text-anchor="middle" x="205" y="-209.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">anch::device::DeviceException</text>
 </a>
 </g>
 </g>
-<!-- Node75&#45;&gt;Node78 -->
+<!-- Node76&#45;&gt;Node79 -->
 <g id="edge3" class="edge">
-<title>Node75&#45;&gt;Node78</title>
+<title>Node76&#45;&gt;Node79</title>
 <path fill="none" stroke="#191970" d="M69.3058,-169.4832C84.3786,-177.3118 103.853,-186.6482 122,-193 132.4643,-196.6627 143.9212,-199.8101 154.8908,-202.4297"/>
 <polygon fill="#191970" stroke="#191970" points="70.5696,-166.1919 60.0946,-164.6029 67.2924,-172.3774 70.5696,-166.1919"/>
 </g>
-<!-- Node79 -->
+<!-- Node80 -->
 <g id="node5" class="node">
-<title>Node79</title>
+<title>Node80</title>
 <g id="a_node5"><a xlink:href="classanch_1_1file_1_1_file_exception.html" target="_top" xlink:title="anch::file::FileException">
 <polygon fill="none" stroke="#000000" points="139.5,-164.5 139.5,-183.5 270.5,-183.5 270.5,-164.5 139.5,-164.5"/>
 <text text-anchor="middle" x="205" y="-171.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">anch::file::FileException</text>
 </a>
 </g>
 </g>
-<!-- Node75&#45;&gt;Node79 -->
+<!-- Node76&#45;&gt;Node80 -->
 <g id="edge4" class="edge">
-<title>Node75&#45;&gt;Node79</title>
+<title>Node76&#45;&gt;Node80</title>
 <path fill="none" stroke="#191970" d="M96.583,-161.2844C110.2212,-162.884 125.0351,-164.6214 139.2051,-166.2833"/>
 <polygon fill="#191970" stroke="#191970" points="96.7527,-157.7804 86.413,-160.0917 95.9372,-164.7328 96.7527,-157.7804"/>
 </g>
-<!-- Node80 -->
+<!-- Node81 -->
 <g id="node6" class="node">
-<title>Node80</title>
+<title>Node81</title>
 <g id="a_node6"><a xlink:href="classanch_1_1network_1_1_i_o_exception.html" target="_top" xlink:title="anch::network::IOException">
 <polygon fill="none" stroke="#000000" points="130,-126.5 130,-145.5 280,-145.5 280,-126.5 130,-126.5"/>
 <text text-anchor="middle" x="205" y="-133.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">anch::network::IOException</text>
 </a>
 </g>
 </g>
-<!-- Node75&#45;&gt;Node80 -->
+<!-- Node76&#45;&gt;Node81 -->
 <g id="edge5" class="edge">
-<title>Node75&#45;&gt;Node80</title>
+<title>Node76&#45;&gt;Node81</title>
 <path fill="none" stroke="#191970" d="M96.4323,-148.7332C107.1461,-147.4767 118.5905,-146.1344 129.8817,-144.8102"/>
 <polygon fill="#191970" stroke="#191970" points="95.9372,-145.2672 86.413,-149.9083 96.7527,-152.2196 95.9372,-145.2672"/>
 </g>
-<!-- Node81 -->
+<!-- Node82 -->
 <g id="node7" class="node">
-<title>Node81</title>
+<title>Node82</title>
 <g id="a_node7"><a xlink:href="classanch_1_1resource_1_1file_1_1_resource_file_exception.html" target="_top" xlink:title="anch::resource::file\l::ResourceFileException">
 <polygon fill="none" stroke="#000000" points="139.5,-77 139.5,-107 270.5,-107 270.5,-77 139.5,-77"/>
 <text text-anchor="start" x="147.5" y="-95" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">anch::resource::file</text>
@@ -104,39 +104,39 @@
 </a>
 </g>
 </g>
-<!-- Node75&#45;&gt;Node81 -->
+<!-- Node76&#45;&gt;Node82 -->
 <g id="edge6" class="edge">
-<title>Node75&#45;&gt;Node81</title>
+<title>Node76&#45;&gt;Node82</title>
 <path fill="none" stroke="#191970" d="M70.0703,-140.6855C85.1117,-133.0628 104.3105,-123.8703 122,-117 131.1184,-113.4586 140.9572,-110.1038 150.5628,-107.0692"/>
 <polygon fill="#191970" stroke="#191970" points="68.1378,-137.7434 60.844,-145.4278 71.3379,-143.9692 68.1378,-137.7434"/>
 </g>
-<!-- Node82 -->
+<!-- Node83 -->
 <g id="node8" class="node">
-<title>Node82</title>
+<title>Node83</title>
 <g id="a_node8"><a xlink:href="classanch_1_1sql_1_1_sql_exception.html" target="_top" xlink:title="SQL exception. ">
 <polygon fill="none" stroke="#000000" points="140.5,-38.5 140.5,-57.5 269.5,-57.5 269.5,-38.5 140.5,-38.5"/>
 <text text-anchor="middle" x="205" y="-45.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">anch::sql::SqlException</text>
 </a>
 </g>
 </g>
-<!-- Node75&#45;&gt;Node82 -->
+<!-- Node76&#45;&gt;Node83 -->
 <g id="edge7" class="edge">
-<title>Node75&#45;&gt;Node82</title>
+<title>Node76&#45;&gt;Node83</title>
 <path fill="none" stroke="#191970" d="M54.4729,-136.9255C68.1158,-116.9546 92.7573,-85.3309 122,-68 129.3956,-63.6169 137.7005,-60.1933 146.123,-57.5194"/>
 <polygon fill="#191970" stroke="#191970" points="51.4424,-135.1628 48.844,-145.434 57.2805,-139.025 51.4424,-135.1628"/>
 </g>
-<!-- Node83 -->
+<!-- Node84 -->
 <g id="node9" class="node">
-<title>Node83</title>
+<title>Node84</title>
 <g id="a_node9"><a xlink:href="classanch_1_1_timeout_exception.html" target="_top" xlink:title="Timeout exception. ">
 <polygon fill="none" stroke="#000000" points="138,-.5 138,-19.5 272,-19.5 272,-.5 138,-.5"/>
 <text text-anchor="middle" x="205" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">anch::TimeoutException</text>
 </a>
 </g>
 </g>
-<!-- Node75&#45;&gt;Node83 -->
+<!-- Node76&#45;&gt;Node84 -->
 <g id="edge8" class="edge">
-<title>Node75&#45;&gt;Node83</title>
+<title>Node76&#45;&gt;Node84</title>
 <path fill="none" stroke="#8b1a1a" d="M49.5799,-135.8131C60.2179,-107.7873 83.9316,-56.0571 122,-29 127.4221,-25.1462 133.5026,-22.0602 139.8425,-19.5912"/>
 <polygon fill="#8b1a1a" stroke="#8b1a1a" points="46.2611,-134.6986 46.1403,-145.2928 52.8413,-137.0862 46.2611,-134.6986"/>
 </g>
