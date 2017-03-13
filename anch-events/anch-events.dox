@@ -37,9 +37,7 @@
  * \ref anch::events::EventHandler "EventHandler" is a template that aims to provide a way to inherits multiple times from Observer.\n
  * This class is based on the C++ curiously recurring pattern. Template parameters will be event type and observer implementation type. It implements the Observer<type>::notify(const type&) by calling the callback method passed as argument in constructor.\n
  * \n
- * EventHandler provides also a simple way to register the observer in global event management (see \ref evt_concept_eventbus_sec "Event bus") through its constructors.\n
- * \n
- * EventHandler may need EventBus: in order to initialize EventBus, you will have to call INIT_ANCH_EVENT_BUS macro somewhere in your source file.
+ * EventHandler provides also a simple way to register the observer in global event management (see \ref evt_concept_eventbus_sec "Event bus") through its constructors.
  *
  * \subsection evt_concept_eventbus_sec Event bus
  *
@@ -47,9 +45,7 @@
  * Methods are the same than Observable.\n
  * Every methods can be accessed in static or instance way. The static method are named similar to instance method with the first letter in upper case. You should use the instance because the static will always retrieved the EventBus instance through mutex.\n
  * \n
- * EventBus has an additional method compare to Observable: scheduleDeferred which allow to put an event in a queue which will be dequeued later in another thread.\n
- * \n
- * In order to initialize \ref anch::events::EventBus "EventBus", you will have to call INIT_ANCH_EVENT_BUS macro somewhere in your source file.
+ * EventBus has an additional method compare to Observable: scheduleDeferred which allow to put an event in a queue which will be dequeued later in another thread.
  *
  * \section evt_example_sec Examples
  *
@@ -83,7 +79,6 @@ int main(void) {
  * \code{.cpp}
 #include "events/eventHandler.hpp"
 #include "events/observable.hpp"
-INIT_ANCH_EVENT_BUS;
 
 #include <iostream>
 
@@ -150,7 +145,6 @@ int main(void) {
  * \code{.cpp}
 #include "events/eventHandler.hpp"
 #include "events/observable.hpp"
-INIT_ANCH_EVENT_BUS;
 
 #include <iostream>
 
