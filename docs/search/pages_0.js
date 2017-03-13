@@ -1,6 +1,7 @@
 var searchData=
 [
   ['anch_20framework',['AnCH Framework',['../index.html',1,'']]],
+  ['anch_2dframework',['anch-framework',['../md__r_e_a_d_m_e.html',1,'']]],
   ['anch_20cryptography_20library_20documentation',['AnCH cryptography library documentation',['../page_crypto.html',1,'']]],
   ['anch_20events_20library_20documentation',['AnCH events library documentation',['../page_events.html',1,'']]],
   ['anch_20logger_20library_20documentation',['AnCH logger library documentation',['../page_logger.html',1,'']]],

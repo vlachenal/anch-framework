@@ -31,6 +31,7 @@ var searchData=
   ['formatter',['formatter',['../namespaceanch_1_1date_1_1formatter.html',1,'anch::date::formatter'],['../namespaceanch_1_1logger_1_1formatter.html',1,'anch::logger::formatter']]],
   ['anch_20framework',['AnCH Framework',['../index.html',1,'']]],
   ['logger',['logger',['../namespaceanch_1_1logger.html',1,'anch']]],
+  ['anch_2dframework',['anch-framework',['../md__r_e_a_d_m_e.html',1,'']]],
   ['network',['network',['../namespaceanch_1_1network.html',1,'anch']]],
   ['anch_20cryptography_20library_20documentation',['AnCH cryptography library documentation',['../page_crypto.html',1,'']]],
   ['anch_20events_20library_20documentation',['AnCH events library documentation',['../page_events.html',1,'']]],
