@@ -45,6 +45,9 @@ namespace anch {
       /*! PostgreSQL result */
       sqlite3_stmt* _stmt;
 
+      /*! Prepared statement flag */
+      bool _prepared;
+
       /*! Number of columns */
       int _nbFields;
       // Attributes -
@@ -56,7 +59,7 @@ namespace anch {
        *
        * \param stmt the SQLite3 statement
        */
-      SQLite3ResultSet(sqlite3_stmt* stmt);
+      SQLite3ResultSet(sqlite3_stmt* stmt, bool prepared = false);
       // Constructors -
 
       // Destructor +

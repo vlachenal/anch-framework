@@ -26,9 +26,10 @@ using anch::sql::SqlException;
 
 
 // Constructors +
-SQLite3ResultSet::SQLite3ResultSet(sqlite3_stmt* stmt):
+SQLite3ResultSet::SQLite3ResultSet(sqlite3_stmt* stmt, bool prepared):
   ResultSet(),
   _stmt(stmt),
+  _prepared(prepared),
   _nbFields(-1) {
   // Nothing to do
 }
@@ -36,7 +37,7 @@ SQLite3ResultSet::SQLite3ResultSet(sqlite3_stmt* stmt):
 
 // Destructor +
 SQLite3ResultSet::~SQLite3ResultSet() {
-  if(_stmt != NULL) {
+  if(_stmt != NULL && !_prepared) { // If prepared keep statement
     sqlite3_finalize(_stmt); // Do not check result because we do not care about it
   }
 }

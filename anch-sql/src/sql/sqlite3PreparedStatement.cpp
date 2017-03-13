@@ -48,7 +48,9 @@ SQLite3PreparedStatement::SQLite3PreparedStatement(sqlite3* dbCon, const std::st
 
 // Destructor +
 SQLite3PreparedStatement::~SQLite3PreparedStatement() {
-  // Nothing to do
+  if(_stmt != NULL) {
+    sqlite3_finalize(_stmt);
+  }
 }
 // Destructor -
 
@@ -67,7 +69,7 @@ SQLite3PreparedStatement::execute() throw(SqlException) {
     }
   }
   // Bind parameters -
-  return new SQLite3ResultSet(_stmt);
+  return new SQLite3ResultSet(_stmt, true);
 }
 
 #endif // ANCH_SQL_SQLITE3
