@@ -26,7 +26,7 @@
 
 #include <atomic>
 
-#include "libpq-fe.h"
+typedef struct pg_conn PGconn;
 
 
 namespace anch {

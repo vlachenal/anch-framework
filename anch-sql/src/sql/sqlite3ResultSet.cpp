@@ -21,6 +21,8 @@
 
 #include "sql/sqlite3ResultSet.hpp"
 
+#include "sqlite3.h"
+
 using anch::sql::SQLite3ResultSet;
 using anch::sql::SqlException;
 

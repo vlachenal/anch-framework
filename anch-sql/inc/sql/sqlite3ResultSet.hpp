@@ -23,7 +23,7 @@
 
 #include "sql/resultSet.hpp"
 
-#include "sqlite3.h"
+struct sqlite3_stmt;
 
 
 namespace anch {

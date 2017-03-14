@@ -20,10 +20,12 @@
 #ifdef ANCH_SQL_POSTGRESQL
 
 #include "sql/postgresqlPreparedStatement.hpp"
+#include "sql/postgresqlResultSet.hpp"
 
 #include <sstream>
 
-#include "sql/postgresqlResultSet.hpp"
+#include "libpq-fe.h"
+
 
 using anch::sql::PreparedStatement;
 using anch::sql::PostgreSQLPreparedStatement;

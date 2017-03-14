@@ -26,6 +26,9 @@
 
 #include <sstream>
 
+#include "libpq-fe.h"
+
+
 using anch::sql::Connection;
 using anch::sql::SqlException;
 using anch::sql::SqlConnectionConfiguration;

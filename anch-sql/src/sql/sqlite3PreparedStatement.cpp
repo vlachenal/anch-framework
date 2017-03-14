@@ -20,10 +20,11 @@
 #ifdef ANCH_SQL_SQLITE3
 
 #include "sql/sqlite3PreparedStatement.hpp"
+#include "sql/sqlite3ResultSet.hpp"
 
 #include <sstream>
 
-#include "sql/sqlite3ResultSet.hpp"
+#include "sqlite3.h"
 
 using anch::sql::PreparedStatement;
 using anch::sql::SQLite3PreparedStatement;

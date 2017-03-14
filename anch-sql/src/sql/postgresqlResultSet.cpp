@@ -21,6 +21,8 @@
 
 #include "sql/postgresqlResultSet.hpp"
 
+#include "libpq-fe.h"
+
 using anch::sql::PostgreSQLResultSet;
 using anch::sql::ResultSet;
 

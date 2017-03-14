@@ -23,7 +23,9 @@
 
 #include "sql/resultSet.hpp"
 
-#include "libpq-fe.h"
+
+typedef struct pg_conn PGconn;
+typedef struct pg_result PGresult;
 
 
 namespace anch {

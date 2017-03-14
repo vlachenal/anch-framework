@@ -23,7 +23,8 @@
 
 #include "sql/connection.hpp"
 
-#include "libpq-fe.h"
+
+typedef struct pg_conn PGconn;
 
 
 namespace anch {
