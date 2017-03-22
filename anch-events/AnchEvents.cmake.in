@@ -1,13 +1,12 @@
 ## Anch events configuration +
-# Anch resource path
-set(ANCH_UTILS_INCLUDES_DIR "$ENV{HOME}/projects/anch-framework/anch-utils/inc")
+# Anch utils path
+set(ANCH_UTILS_INCLUDES_DIR "$ENV{HOME}/projects/anch-framework/anch-utils/inc" CACHE STRING "AnCH utils include directory")
 
-# Anch events installation configuration
-set(ANCH_EVENTS_LIBRARY_DIR "")
-
+# Compilation flags
 set(ANCH_EVENTS_COMPILE_FLAGS "-O2 -pipe -march=native" CACHE STRING "Additional compilation flags")
 #set(ANCH_EVENTS_COMPILE_FLAGS "-g" CACHE STRING "Additional compilation flags")
 
+# Install configuration
 set(ANCH_EVENTS_INSTALL_INC_DIR "/usr/local/include/anch" CACHE STRING "Header installation path")
 
 # Unitary tests
