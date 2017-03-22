@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 2.8.8)
 
 # Project anch resource
 # ANother C++ Harsh/Huge/Hack
@@ -55,12 +55,47 @@ file(
   inc/*
 )
 
-# Declare exec
+# Build objects
+add_library(
+  anch-resource-obj
+  OBJECT
+  ${source_files}
+  )
+
+## Dynamic library +
 add_library(
   anch-resource
   SHARED
-  ${source_files}
-)
+  $<TARGET_OBJECTS:anch-resource-obj>
+  )
+
+install(
+  DIRECTORY inc/ DESTINATION ${ANCH_RESOURCE_INSTALL_INC_DIR}
+  FILES_MATCHING PATTERN "*.hpp"
+  )
+
+install(
+  TARGETS anch-resource
+  LIBRARY DESTINATION ${ANCH_RESOURCE_INSTALL_LIB_DIR}
+  )
+## Dynamic library -
+
+## Static library +
+if(ANCH_RESOURCE_STATIC_LIB)
+  add_library(
+    anch-resource-static
+    STATIC
+    $<TARGET_OBJECTS:anch-resource-obj>
+    )
+  set_target_properties(anch-resource-static PROPERTIES OUTPUT_NAME anch-resource)
+
+  install(
+    TARGETS anch-resource-static
+    ARCHIVE DESTINATION ${ANCH_RESOURCE_INSTALL_LIB_DIR}
+    )
+endif(ANCH_RESOURCE_STATIC_LIB)
+## Static library -
+
 
 if(ANCH_RESOURCE_UNITARY_TEST)
 
