@@ -5,8 +5,8 @@ set(ANCH_RESOURCE_LIBRARY_DIR "")
 set(ANCH_RESOURCE_COMPILE_FLAGS "-O2 -march=native -pipe")
 #set(ANCH_RESOURCE_COMPILE_FLAGS "-g")
 
-set(ANCH_RESOURCE_INSTALL_INC_DIR "/usr/include/anch")
-set(ANCH_RESOURCE_INSTALL_LIB_DIR "/usr/lib/")
+set(ANCH_RESOURCE_INSTALL_INC_DIR "/usr/local/include/anch" CACHE STRING "Header installation path")
+set(ANCH_RESOURCE_INSTALL_LIB_DIR "/usr/local/lib/" CACHE STRING "Libraries installation path")
 
 set(ANCH_RESOURCE_STATIC_LIB OFF CACHE BOOL "Build static library")
 

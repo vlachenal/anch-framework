@@ -8,7 +8,7 @@ set(ANCH_EVENTS_LIBRARY_DIR "")
 set(ANCH_EVENTS_COMPILE_FLAGS "-O2 -pipe -march=native")
 #set(ANCH_EVENTS_COMPILE_FLAGS "-g")
 
-set(ANCH_EVENTS_INSTALL_INC_DIR "/usr/include/anch")
+set(ANCH_EVENTS_INSTALL_INC_DIR "/usr/local/include/anch" CACHE STRING "Header installation path")
 
 # Unitary tests
 set(ANCH_EVENTS_UNITARY_TEST ON CACHE BOOL "Anch events unitary tests")
