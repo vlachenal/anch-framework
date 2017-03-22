@@ -39,6 +39,11 @@ include_directories(
   ${ANCH_UTILS_INCLUDES_DIR}
 )
 
+install(
+  DIRECTORY inc/ DESTINATION ${ANCH_EVENTS_INSTALL_INC_DIR}
+  FILES_MATCHING PATTERN "*.hpp"
+  )
+
 if(ANCH_EVENTS_UNITARY_TEST)
 
   # Build observer/observable unitary test +
