@@ -52,12 +52,47 @@ file(
   inc/*
 )
 
-# Declare exec
+# Build objects
+add_library(
+  anch-crypto-obj
+  OBJECT
+  ${source_files}
+  )
+
+## Dynamic library +
 add_library(
   anch-crypto
   SHARED
-  ${source_files}
+  $<TARGET_OBJECTS:anch-crypto-obj>
 )
+
+install(
+  DIRECTORY inc/ DESTINATION ${ANCH_CRYPTO_INSTALL_INC_DIR}
+  FILES_MATCHING PATTERN "*.hpp"
+  )
+
+install(
+  TARGETS anch-crypto
+  LIBRARY DESTINATION ${ANCH_CRYPTO_INSTALL_LIB_DIR}
+  )
+## Dynamic library -
+
+## Static library +
+if(ANCH_CRYPTO_STATIC_LIB)
+  add_library(
+    anch-crypto-static
+    STATIC
+    $<TARGET_OBJECTS:anch-crypto-obj>
+    )
+  set_target_properties(anch-crypto-static PROPERTIES OUTPUT_NAME anch-crypto)
+
+  install(
+    TARGETS anch-crypto-static
+    ARCHIVE DESTINATION ${ANCH_CRYPTO_INSTALL_LIB_DIR}
+    )
+endif(ANCH_CRYPTO_STATIC_LIB)
+## Static library -
+
 
 # Unitary tests
 if(ANCH_CRYPTO_UNITARY_TEST)
