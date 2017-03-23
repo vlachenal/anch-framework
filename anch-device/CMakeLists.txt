@@ -47,12 +47,46 @@ file(
   inc/*
 )
 
-# Declare exec
+# Build objects
+add_library(
+  anch-device-obj
+  OBJECT
+  ${source_files}
+  )
+
+## Dynamic library +
 add_library(
   anch-device
   SHARED
-  ${source_files}
-)
+  $<TARGET_OBJECTS:anch-device-obj>
+  )
+
+install(
+  DIRECTORY inc/ DESTINATION ${ANCH_DEVICE_INSTALL_INC_DIR}
+  FILES_MATCHING PATTERN "*.hpp"
+  )
+
+install(
+  TARGETS anch-device
+  LIBRARY DESTINATION ${ANCH_DEVICE_INSTALL_LIB_DIR}
+  )
+## Dynamic library -
+
+## Static library +
+if(ANCH_DEVICE_STATIC_LIB)
+  add_library(
+    anch-device-static
+    STATIC
+    $<TARGET_OBJECTS:anch-device-obj>
+    )
+  set_target_properties(anch-device-static PROPERTIES OUTPUT_NAME anch-device)
+
+  install(
+    TARGETS anch-device-static
+    ARCHIVE DESTINATION ${ANCH_DEVICE_INSTALL_LIB_DIR}
+    )
+endif(ANCH_DEVICE_STATIC_LIB)
+## Static library -
 
 
 if(ANCH_DEVICE_UNITARY_TEST)
