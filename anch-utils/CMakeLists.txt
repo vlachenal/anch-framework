@@ -49,6 +49,11 @@ file(
   inc/*
 )
 
+install(
+  DIRECTORY inc/ DESTINATION ${ANCH_UTILS_INSTALL_INC_DIR}
+  FILES_MATCHING PATTERN "*.hpp"
+  )
+
 # Unitary tests
 if(ANCH_UTILS_UNITARY_TEST)
 
