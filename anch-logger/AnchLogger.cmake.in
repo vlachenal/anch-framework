@@ -7,7 +7,6 @@ set(ANCH_DATE_LIBRARY_DIR "$ENV{HOME}/projects/anch-framework/anch-date/build/li
 set(ANCH_UTILS_INCLUDES_DIR "$ENV{HOME}/projects/anch-framework/anch-utils/inc")
 
 # Anch logger installation configuration
-set(ANCH_LOGGER_LIBRARY_DIR "")
 set(ANCH_LOGGER_COMPILE_FLAGS "-O2 -march=native -pipe")
 #set(ANCH_LOGGER_COMPILE_FLAGS "-g")
 

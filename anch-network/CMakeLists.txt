@@ -53,17 +53,46 @@ file(
   inc/*
 )
 
-# Declare exec
+# Build objects
+add_library(
+  anch-network-obj
+  OBJECT
+  ${source_files}
+  )
+
+## Dynamic library +
 add_library(
   anch-network
   SHARED
-  ${source_files}
-)
+  $<TARGET_OBJECTS:anch-network-obj>
+  )
 
-# Link with libraries
-target_link_libraries(
-  anch-network
-)
+install(
+  DIRECTORY inc/ DESTINATION ${ANCH_NETWORK_INSTALL_INC_DIR}
+  FILES_MATCHING PATTERN "*.hpp"
+  )
+
+install(
+  TARGETS anch-network
+  LIBRARY DESTINATION ${ANCH_NETWORK_INSTALL_LIB_DIR}
+  )
+## Dynamic library -
+
+## Static library +
+if(ANCH_NETWORK_STATIC_LIB)
+  add_library(
+    anch-network-static
+    STATIC
+    $<TARGET_OBJECTS:anch-network-obj>
+    )
+  set_target_properties(anch-network-static PROPERTIES OUTPUT_NAME anch-network)
+
+  install(
+    TARGETS anch-network-static
+    ARCHIVE DESTINATION ${ANCH_NETWORK_INSTALL_LIB_DIR}
+    )
+endif(ANCH_NETWORK_STATIC_LIB)
+## Static library -
 
 if(ANCH_NETWORK_UNITARY_TEST)
 
