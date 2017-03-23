@@ -102,12 +102,46 @@ file(
   inc/*
 )
 
-# Declare exec
+# Build objects
+add_library(
+  anch-sql-obj
+  OBJECT
+  ${source_files}
+  )
+
+## Dynamic library +
 add_library(
   anch-sql
   SHARED
-  ${source_files}
-)
+  $<TARGET_OBJECTS:anch-sql-obj>
+  )
+
+install(
+  DIRECTORY inc/ DESTINATION ${ANCH_SQL_INSTALL_INC_DIR}
+  FILES_MATCHING PATTERN "*.hpp"
+  )
+
+install(
+  TARGETS anch-sql
+  LIBRARY DESTINATION ${ANCH_SQL_INSTALL_LIB_DIR}
+  )
+## Dynamic library -
+
+## Static library +
+if(ANCH_SQL_STATIC_LIB)
+  add_library(
+    anch-sql-static
+    STATIC
+    $<TARGET_OBJECTS:anch-sql-obj>
+    )
+  set_target_properties(anch-sql-static PROPERTIES OUTPUT_NAME anch-sql)
+
+  install(
+    TARGETS anch-sql-static
+    ARCHIVE DESTINATION ${ANCH_SQL_INSTALL_LIB_DIR}
+    )
+endif(ANCH_SQL_STATIC_LIB)
+## Static library -
 
 # Unitary tests
 if(ANCH_SQL_UNITARY_TEST)
