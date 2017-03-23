@@ -60,12 +60,46 @@ file(
   inc/*
 )
 
-# Declare exec
+# Build objects
+add_library(
+  anch-date-obj
+  OBJECT
+  ${source_files}
+  )
+
+## Dynamic library +
 add_library(
   anch-date
   SHARED
-  ${source_files}
-)
+  $<TARGET_OBJECTS:anch-date-obj>
+  )
+
+install(
+  DIRECTORY inc/ DESTINATION ${ANCH_DATE_INSTALL_INC_DIR}
+  FILES_MATCHING PATTERN "*.hpp"
+  )
+
+install(
+  TARGETS anch-date
+  LIBRARY DESTINATION ${ANCH_DATE_INSTALL_LIB_DIR}
+  )
+## Dynamic library -
+
+## Static library +
+if(ANCH_DATE_STATIC_LIB)
+  add_library(
+    anch-date-static
+    STATIC
+    $<TARGET_OBJECTS:anch-date-obj>
+    )
+  set_target_properties(anch-date-static PROPERTIES OUTPUT_NAME anch-date)
+
+  install(
+    TARGETS anch-date-static
+    ARCHIVE DESTINATION ${ANCH_DATE_INSTALL_LIB_DIR}
+    )
+endif(ANCH_DATE_STATIC_LIB)
+## Static library -
 
 # Unitary tests
 if(ANCH_DATE_UNITARY_TEST)
