@@ -52,12 +52,46 @@ file(
   inc/*
 )
 
-# Declare exec
+# Build objects
+add_library(
+  anch-file-obj
+  OBJECT
+  ${source_files}
+  )
+
+## Dynamic library +
 add_library(
   anch-file
   SHARED
-  ${source_files}
-)
+  $<TARGET_OBJECTS:anch-file-obj>
+  )
+
+install(
+  DIRECTORY inc/ DESTINATION ${ANCH_FILE_INSTALL_INC_DIR}
+  FILES_MATCHING PATTERN "*.hpp"
+  )
+
+install(
+  TARGETS anch-file
+  LIBRARY DESTINATION ${ANCH_FILE_INSTALL_LIB_DIR}
+  )
+## Dynamic library -
+
+## Static library +
+if(ANCH_FILE_STATIC_LIB)
+  add_library(
+    anch-file-static
+    STATIC
+    $<TARGET_OBJECTS:anch-file-obj>
+    )
+  set_target_properties(anch-file-static PROPERTIES OUTPUT_NAME anch-file)
+
+  install(
+    TARGETS anch-file-static
+    ARCHIVE DESTINATION ${ANCH_FILE_INSTALL_LIB_DIR}
+    )
+endif(ANCH_FILE_STATIC_LIB)
+## Static library -
 
 if(ANCH_FILE_UNITARY_TEST)
 
