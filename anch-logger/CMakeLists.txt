@@ -61,12 +61,46 @@ file(
   inc/*
 )
 
-# Declare exec
+# Build objects
+add_library(
+  anch-logger-obj
+  OBJECT
+  ${source_files}
+  )
+
+## Dynamic library +
 add_library(
   anch-logger
   SHARED
-  ${source_files}
-)
+  $<TARGET_OBJECTS:anch-logger-obj>
+  )
+
+install(
+  DIRECTORY inc/ DESTINATION ${ANCH_LOGGER_INSTALL_INC_DIR}
+  FILES_MATCHING PATTERN "*.hpp"
+  )
+
+install(
+  TARGETS anch-logger
+  LIBRARY DESTINATION ${ANCH_LOGGER_INSTALL_LIB_DIR}
+  )
+## Dynamic library -
+
+## Static library +
+if(ANCH_LOGGER_STATIC_LIB)
+  add_library(
+    anch-logger-static
+    STATIC
+    $<TARGET_OBJECTS:anch-logger-obj>
+    )
+  set_target_properties(anch-logger-static PROPERTIES OUTPUT_NAME anch-logger)
+
+  install(
+    TARGETS anch-logger-static
+    ARCHIVE DESTINATION ${ANCH_LOGGER_INSTALL_LIB_DIR}
+    )
+endif(ANCH_LOGGER_STATIC_LIB)
+## Static library -
 
 
 # Unitary tests

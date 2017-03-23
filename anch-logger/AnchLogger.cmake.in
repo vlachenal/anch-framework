@@ -11,6 +11,13 @@ set(ANCH_LOGGER_LIBRARY_DIR "")
 set(ANCH_LOGGER_COMPILE_FLAGS "-O2 -march=native -pipe")
 #set(ANCH_LOGGER_COMPILE_FLAGS "-g")
 
+# Install path
+set(ANCH_LOGGER_INSTALL_INC_DIR "/usr/local/include/anch" CACHE STRING "Header installation path")
+set(ANCH_LOGGER_INSTALL_LIB_DIR "/usr/local/lib/" CACHE STRING "Libraries installation path")
+
+# Static library build
+set(ANCH_LOGGER_STATIC_LIB OFF CACHE BOOL "Build static library")
+
 # Unitary tests
 set(ANCH_LOGGER_UNITARY_TEST ON CACHE BOOL "Anch logger unitary tests")
 ## Anch logger configuration -
