@@ -222,6 +222,7 @@ namespace anch {
     };
 
     extern template class Hash<16,64>;
+    /*! HMAC MD5 definition */
     extern template MD5 HMAC<MD5>(const std::string&, const std::string&);
 
   }

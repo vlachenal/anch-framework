@@ -58,6 +58,7 @@ namespace anch {
        * \ref SQLite3ResultSet constructor
        *
        * \param stmt the SQLite3 statement
+       * \param prepared prepared statement or not (default to not)
        */
       SQLite3ResultSet(sqlite3_stmt* stmt, bool prepared = false);
       // Constructors -

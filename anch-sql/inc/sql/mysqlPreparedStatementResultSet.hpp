@@ -63,7 +63,7 @@ namespace anch {
       /*!
        * \ref MySQLPreparedStatementResultSet constructor
        *
-       * \param result the MySQL result
+       * \param stmt the MySQL statement
        */
       MySQLPreparedStatementResultSet(MYSQL_STMT* stmt);
       // Constructors -

@@ -319,6 +319,7 @@ namespace anch {
     };
 
     extern template class Hash<20,64>;
+    /*! HMAC SHA1 definition */
     extern template SHA1 HMAC<SHA1>(const std::string&, const std::string&);
 
   }
