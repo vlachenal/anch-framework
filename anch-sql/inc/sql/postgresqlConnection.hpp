@@ -97,7 +97,7 @@ namespace anch {
       /*!
        * \ref PostgreSQLConnection destructor
        */
-      ~PostgreSQLConnection();
+      virtual ~PostgreSQLConnection() noexcept;
       // Destructor -
 
       // Methods +

@@ -78,7 +78,7 @@ namespace anch {
       /*!
        * \ref SQLite3Connection destructor
        */
-      ~SQLite3Connection();
+      virtual ~SQLite3Connection() noexcept;
       // Destructor -
 
       // Methods +
