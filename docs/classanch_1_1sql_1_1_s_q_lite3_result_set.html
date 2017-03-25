@@ -81,18 +81,20 @@ $(function() {
 <div class="dynheader">
 Inheritance diagram for anch::sql::SQLite3ResultSet:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classanch_1_1sql_1_1_s_q_lite3_result_set__inherit__graph.svg" width="210" height="419"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="classanch_1_1sql_1_1_s_q_lite3_result_set__inherit__graph.svg" width="210" height="419"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 <div class="dynheader">
 Collaboration diagram for anch::sql::SQLite3ResultSet:</div>
 <div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="classanch_1_1sql_1_1_s_q_lite3_result_set__coll__graph.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="classanch_1_1sql_1_1_s_q_lite3_result_set__coll__graph.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
 </div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ac1935f907bc77dc4607acce16c42c7d8"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1sql_1_1_s_q_lite3_result_set.html#ac1935f907bc77dc4607acce16c42c7d8">SQLite3ResultSet</a> (sqlite3_stmt *stmt)</td></tr>
-<tr class="separator:ac1935f907bc77dc4607acce16c42c7d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad897116a56429099799ace42bac6f68a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1sql_1_1_s_q_lite3_result_set.html#ad897116a56429099799ace42bac6f68a">SQLite3ResultSet</a> (sqlite3_stmt *stmt, bool prepared=false)</td></tr>
+<tr class="separator:ad897116a56429099799ace42bac6f68a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a58f4be0caf05f5beb3196ea5003a1a8c"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1sql_1_1_s_q_lite3_result_set.html#a58f4be0caf05f5beb3196ea5003a1a8c">~SQLite3ResultSet</a> ()</td></tr>
 <tr class="separator:a58f4be0caf05f5beb3196ea5003a1a8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a76196917a027cab11e8e97745d42016a"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1sql_1_1_s_q_lite3_result_set.html#a76196917a027cab11e8e97745d42016a">next</a> ()  throw (SqlException)</td></tr>
@@ -168,8 +170,8 @@ Additional Inherited Members</h2></td></tr>
 <dl class="section author"><dt>Author</dt><dd>Vincent Lachenal</dd></dl>
 <dl class="section since"><dt>Since</dt><dd>0.1 </dd></dl>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="ac1935f907bc77dc4607acce16c42c7d8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac1935f907bc77dc4607acce16c42c7d8">&#9670;&nbsp;</a></span>SQLite3ResultSet()</h2>
+<a id="ad897116a56429099799ace42bac6f68a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad897116a56429099799ace42bac6f68a">&#9670;&nbsp;</a></span>SQLite3ResultSet()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -178,8 +180,18 @@ Additional Inherited Members</h2></td></tr>
           <td class="memname">SQLite3ResultSet::SQLite3ResultSet </td>
           <td>(</td>
           <td class="paramtype">sqlite3_stmt *&#160;</td>
-          <td class="paramname"><em>stmt</em></td><td>)</td>
+          <td class="paramname"><em>stmt</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>prepared</em> = <code>false</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -187,6 +199,7 @@ Additional Inherited Members</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">stmt</td><td>the SQLite3 statement </td></tr>
+    <tr><td class="paramname">prepared</td><td>prepared statement or not (default to not) </td></tr>
   </table>
   </dd>
 </dl>
@@ -320,7 +333,7 @@ Additional Inherited Members</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Mar 13 2017 22:00:34 for AnCH Framework by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sat Mar 25 2017 15:30:41 for AnCH Framework by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.13
 </small></address>

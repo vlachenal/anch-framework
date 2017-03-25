@@ -1,6 +1,7 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classanch_1_1sql_1_1_result_set.html" title="SQL result representation. " alt="" coords="5,56,155,83"/>
-<area shape="rect" id="node2" href="$classanch_1_1sql_1_1_my_s_q_l_result_set.html" title="MySQL result set implementation. " alt="" coords="217,5,411,32"/>
-<area shape="rect" id="node3" href="$classanch_1_1sql_1_1_postgre_s_q_l_result_set.html" title="PostgreSQL result set implementation. " alt="" coords="203,56,425,83"/>
-<area shape="rect" id="node4" href="$classanch_1_1sql_1_1_s_q_lite3_result_set.html" title="SQLite3 result set implementation. " alt="" coords="215,107,413,133"/>
+<area shape="rect" id="node1" href="$classanch_1_1sql_1_1_result_set.html" title="SQL result representation. " alt="" coords="5,97,155,123"/>
+<area shape="rect" id="node2" href="$classanch_1_1sql_1_1_my_s_q_l_prepared_statement_result_set.html" title="MySQL result set implementation for prepared statement ... shitty API. " alt="" coords="219,5,409,47"/>
+<area shape="rect" id="node3" href="$classanch_1_1sql_1_1_my_s_q_l_result_set.html" title="MySQL result set implementation. " alt="" coords="217,71,411,98"/>
+<area shape="rect" id="node4" href="$classanch_1_1sql_1_1_postgre_s_q_l_result_set.html" title="PostgreSQL result set implementation. " alt="" coords="203,122,425,149"/>
+<area shape="rect" id="node5" href="$classanch_1_1sql_1_1_s_q_lite3_result_set.html" title="SQLite3 result set implementation. " alt="" coords="215,173,413,199"/>
 </map>
