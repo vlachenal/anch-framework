@@ -71,6 +71,11 @@ MySQLPreparedStatementResultSet::MySQLPreparedStatementResultSet(MYSQL_STMT* stm
 MySQLPreparedStatementResultSet::~MySQLPreparedStatementResultSet() {
   delete[] _lengths;
   delete[] _nulls;
+  for(std::size_t i = 0 ; i < _fields.size() ; ++i) {
+    MYSQL_BIND* bind = &_binds[i];
+    delete[] reinterpret_cast<char*>(bind->buffer);
+    bind->buffer = NULL;
+  }
   delete[] _binds;
 }
 
