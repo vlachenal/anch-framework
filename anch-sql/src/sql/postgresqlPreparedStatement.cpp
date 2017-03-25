@@ -88,10 +88,14 @@ PostgreSQLPreparedStatement::execute() throw(SqlException) {
   // Execute statement +
   int res = PQsendQueryPrepared(_conn, _stmtId.data(), static_cast<int>(_nbWildcards), values, lengths, NULL, 0);
   if(res == 0) {
+    delete[] values;
+    delete[] lengths;
     std::ostringstream msg;
     msg << "Fail to execute PostgreSQL statement: " << PQerrorMessage(_conn);
     throw SqlException(msg.str());
   }
+  delete[] values;
+  delete[] lengths;
   // Execute statement -
   return new PostgreSQLResultSet(_conn);
 }
