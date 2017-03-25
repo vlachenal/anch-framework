@@ -19,14 +19,16 @@
 */
 #ifdef ANCH_SQL_MYSQL
 
+#include "mysql.h"
+#include "errmsg.h"
+
 #include "sql/mysqlConnection.hpp"
 #include "sql/mysqlResultSet.hpp"
+#include "sql/mysqlPreparedStatement.hpp"
 #include "singleton.hpp"
 
 #include <sstream>
 #include <vector>
-
-#include "errmsg.h"
 
 using anch::sql::MySQLConnection;
 using anch::sql::SqlException;
@@ -34,6 +36,7 @@ using anch::sql::SqlConnectionConfiguration;
 using anch::sql::ResultSet;
 using anch::sql::MySQLResultSet;
 using anch::sql::PreparedStatement;
+using anch::sql::MySQLPreparedStatement;
 
 
 /*!
@@ -78,17 +81,17 @@ MySQLConnection::MySQLConnection(const std::string& host,
 				 const std::string& database,
 				 int port,
 				 const std::string& app)
-  throw(SqlException):
-  _mysql() {
+  throw(SqlException) {
 
   MySQLInitializer::getInstance(); // Initialize MySQL library if not already done
 
-  mysql_init(&_mysql);
-  mysql_options(&_mysql, MYSQL_READ_DEFAULT_GROUP, app.data());
-  MYSQL* res = mysql_real_connect(&_mysql, host.data(), user.data(), password.data(), database.data(), static_cast<unsigned int>(port), NULL, 0);
+  _mysql = new MYSQL;
+  mysql_init(_mysql);
+  mysql_options(_mysql, MYSQL_READ_DEFAULT_GROUP, app.data());
+  MYSQL* res = mysql_real_connect(_mysql, host.data(), user.data(), password.data(), database.data(), static_cast<unsigned int>(port), NULL, 0);
   if(res == NULL) {
     /*
-      \todo manage error with mysql_errno(&_mysql):
+      \todo manage error with mysql_errno(_mysql):
       - CR_CONN_HOST_ERROR: fail to connect server
       - CR_CONNECTION_ERROR: fail to connect localhost server
       - CR_IPSOCK_ERROR: fail to create IP socket
@@ -103,20 +106,20 @@ MySQLConnection::MySQLConnection(const std::string& host,
       - CR_ALREADY_CONNECTED: already connected ... can not happened
     */
     std::ostringstream msg;
-    msg << "Failed to connect to database. Error: " << mysql_error(&_mysql);
+    msg << "Failed to connect to database. Error: " << mysql_error(_mysql);
     throw SqlException(msg.str());
   }
 }
 
 MySQLConnection::MySQLConnection(const SqlConnectionConfiguration& config)
-  throw(SqlException):
-  _mysql() {
+  throw(SqlException) {
 
   MySQLInitializer::getInstance(); // Initialize MySQL library if not already done
 
-  mysql_init(&_mysql);
-  mysql_options(&_mysql, MYSQL_READ_DEFAULT_GROUP, config.application.data());
-  MYSQL* res = mysql_real_connect(&_mysql,
+  _mysql = new MYSQL;
+  mysql_init(_mysql);
+  mysql_options(_mysql, MYSQL_READ_DEFAULT_GROUP, config.application.data());
+  MYSQL* res = mysql_real_connect(_mysql,
 				  config.hostname.data(),
 				  config.user.data(),
 				  config.password.data(),
@@ -124,7 +127,7 @@ MySQLConnection::MySQLConnection(const SqlConnectionConfiguration& config)
 				  static_cast<unsigned int>(config.port), NULL, 0);
   if(res == NULL) {
     /*
-      \todo manage error with mysql_errno(&_mysql):
+      \todo manage error with mysql_errno(_mysql):
       - CR_CONN_HOST_ERROR: fail to connect server
       - CR_CONNECTION_ERROR: fail to connect localhost server
       - CR_IPSOCK_ERROR: fail to create IP socket
@@ -139,7 +142,7 @@ MySQLConnection::MySQLConnection(const SqlConnectionConfiguration& config)
       - CR_ALREADY_CONNECTED: already connected ... can not happened
     */
     std::ostringstream msg;
-    msg << "Failed to connect to database. Error: " << mysql_error(&_mysql);
+    msg << "Failed to connect to database. Error: " << mysql_error(_mysql);
     throw SqlException(msg.str());
   }
 }
@@ -147,14 +150,15 @@ MySQLConnection::MySQLConnection(const SqlConnectionConfiguration& config)
 
 // Destructor +
 MySQLConnection::~MySQLConnection() noexcept {
-  mysql_close(&_mysql);
+  mysql_close(_mysql);
+  delete _mysql;
 }
 // Destructor -
 
 // Methods +
 void
 MySQLConnection::sendCommit() throw(SqlException) {
-  my_bool res = mysql_commit(&_mysql);
+  my_bool res = mysql_commit(_mysql);
   if(res != 0) {
     throw SqlException("Fail to commit transaction");
   }
@@ -162,7 +166,7 @@ MySQLConnection::sendCommit() throw(SqlException) {
 
 void
 MySQLConnection::sendRollback() throw(SqlException) {
-  my_bool res = mysql_rollback(&_mysql);
+  my_bool res = mysql_rollback(_mysql);
   if(res != 0) {
     throw SqlException("Fail to rollback transaction");
   }
@@ -171,24 +175,24 @@ MySQLConnection::sendRollback() throw(SqlException) {
 void
 MySQLConnection::toggleAutoCommit(bool autoCommit) throw(SqlException) {
   my_bool status = autoCommit ? 1 : 0;
-  mysql_autocommit(&_mysql, status);
+  mysql_autocommit(_mysql, status);
 }
 
 ResultSet*
 MySQLConnection::executeQuery(const std::string& query) throw(SqlException) {
   ResultSet* resSet = NULL;
-  int res = mysql_query(&_mysql, query.data());
+  int res = mysql_query(_mysql, query.data());
   if(res != 0) {
     std::ostringstream out;
     out << "Error while executing query " << query << " ; message="
-	<< mysql_error(&_mysql);
+	<< mysql_error(_mysql);
     throw SqlException(out.str());
   }
-  MYSQL_RES* result = mysql_use_result(&_mysql);
+  MYSQL_RES* result = mysql_use_result(_mysql);
   if(result == NULL) {
     std::ostringstream out;
     out << "Error while retrieving result " << query << " ; message="
-	<< mysql_error(&_mysql);
+	<< mysql_error(_mysql);
     throw SqlException(out.str());
 
   } else {
@@ -199,26 +203,26 @@ MySQLConnection::executeQuery(const std::string& query) throw(SqlException) {
 
 uint64_t
 MySQLConnection::executeUpdate(const std::string& query) throw(SqlException) {
-  int res = mysql_query(&_mysql, query.data());
+  int res = mysql_query(_mysql, query.data());
   if(res != 0) {
     std::ostringstream out;
     out << "Error while executing query " << query << " ; message="
-	<< mysql_error(&_mysql);
+	<< mysql_error(_mysql);
     throw SqlException(out.str());
   }
-  my_ulonglong nbRow = mysql_affected_rows(&_mysql);
+  my_ulonglong nbRow = mysql_affected_rows(_mysql);
   if(nbRow == static_cast<my_ulonglong>(-1)) {
     std::ostringstream out;
     out << "Query " << query << " is not an update query " << query
-	<< " ; message=" << mysql_error(&_mysql);
+	<< " ; message=" << mysql_error(_mysql);
     throw SqlException(out.str());
   }
   return static_cast<uint64_t>(nbRow);
 }
 
 PreparedStatement*
-MySQLConnection::makePrepared(const std::string& /*query*/) throw(SqlException) {
-  return NULL;
+MySQLConnection::makePrepared(const std::string& query) throw(SqlException) {
+  return new MySQLPreparedStatement(_mysql, query);
 }
 // Methods -
 

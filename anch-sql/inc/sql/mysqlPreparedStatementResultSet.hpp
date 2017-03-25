@@ -18,54 +18,61 @@
   along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
 #ifdef ANCH_SQL_MYSQL
-#ifndef _ANCH_SQL_MYSQL_RESULT_SET_H_
-#define _ANCH_SQL_MYSQL_RESULT_SET_H_
+#ifndef _ANCH_SQL_MYSQL_PS_RESULT_SET_H_
+#define _ANCH_SQL_MYSQL_PS_RESULT_SET_H_
 
 #include "sql/resultSet.hpp"
 
 #include <list>
 
-typedef struct st_mysql_res MYSQL_RES;
 
+typedef struct st_mysql_stmt MYSQL_STMT;
+typedef struct st_mysql_bind MYSQL_BIND;
 
 namespace anch {
   namespace sql {
 
     /*!
-     * \brief MySQL result set implementation
+     * \brief MySQL result set implementation for prepared statement ... shitty API
      *
-     * Implements \ref ResultSet for MySQL
+     * Implements \ref ResultSet for MySQL for prepared statement
      *
      * \author Vincent Lachenal
      *
      * \since 0.1
      */
-    class MySQLResultSet: public ResultSet {
+    class MySQLPreparedStatementResultSet: public ResultSet {
 
       // Attributes +
     private:
-      /*! MySQL result */
-      MYSQL_RES* _result;
+      /*! MySQL statement */
+      MYSQL_STMT* _stmt;
 
-      /*! MySQL current row */
-      char** _row;
+      /*! Columns length */
+      long unsigned int* _lengths;
+
+      /*! Columns null */
+      char* _nulls;
+
+      /*! MySQL result binding */
+      MYSQL_BIND* _binds;
       // Attributes -
 
       // Constructors +
     public:
       /*!
-       * \ref MySQLResultSet constructor
+       * \ref MySQLPreparedStatementResultSet constructor
        *
        * \param result the MySQL result
        */
-      MySQLResultSet(MYSQL_RES* result);
+      MySQLPreparedStatementResultSet(MYSQL_STMT* stmt);
       // Constructors -
 
       // Destructor +
       /*!
-       * \ref MySQLResultSet destructor
+       * \ref MySQLPreparedStatementResultSet destructor
        */
-      virtual ~MySQLResultSet();
+      virtual ~MySQLPreparedStatementResultSet();
       // Destructor -
 
       // Methods +
@@ -96,5 +103,5 @@ namespace anch {
   }
 }
 
-#endif // _ANCH_SQL_MYSQL_RESULT_SET_H_
+#endif // _ANCH_SQL_MYSQL_PS_RESULT_SET_H_
 #endif // ANCH_SQL_MYSQL

@@ -26,7 +26,7 @@
 
 #include "sql/connection.hpp"
 
-#include "mysql.h"
+typedef struct st_mysql MYSQL;
 
 namespace anch {
   namespace sql {
@@ -45,7 +45,7 @@ namespace anch {
       // Attributes +
     private:
       /*! MySQL connection */
-      MYSQL _mysql;
+      MYSQL* _mysql;
       // Attributes -
 
       // Constructors +

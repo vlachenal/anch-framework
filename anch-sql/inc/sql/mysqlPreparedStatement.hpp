@@ -18,77 +18,78 @@
   along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
 #ifdef ANCH_SQL_MYSQL
-#ifndef _ANCH_SQL_MYSQL_RESULT_SET_H_
-#define _ANCH_SQL_MYSQL_RESULT_SET_H_
+#ifndef _ANCH_SQL_MYSQL_PREPARED_STATEMENT_H_
+#define _ANCH_SQL_MYSQL_PREPARED_STATEMENT_H_
 
-#include "sql/resultSet.hpp"
+#include "sql/preparedStatement.hpp"
+#include "sql/mysqlConnection.hpp"
 
-#include <list>
+#include <atomic>
 
-typedef struct st_mysql_res MYSQL_RES;
-
+typedef struct st_mysql_stmt MYSQL_STMT;
 
 namespace anch {
   namespace sql {
 
+    class MySQLConnection;
+
     /*!
-     * \brief MySQL result set implementation
+     * \brief MySQL prepared statement implementation
      *
-     * Implements \ref ResultSet for MySQL
+     * Compile prepared statement in constructor, manage bind and statement execution.
      *
      * \author Vincent Lachenal
      *
      * \since 0.1
      */
-    class MySQLResultSet: public ResultSet {
+    class MySQLPreparedStatement: public PreparedStatement {
 
       // Attributes +
     private:
-      /*! MySQL result */
-      MYSQL_RES* _result;
+      /*! Statement counter */
+      static std::atomic<std::uint64_t> _counter;
 
-      /*! MySQL current row */
-      char** _row;
+      /*! MySQL connection */
+      MYSQL* _conn;
+
+      /*! MySQL statement */
+      MYSQL_STMT* _stmt;
+
+      /** MySQL statement identifier */
+      std::string _stmtId;
       // Attributes -
 
       // Constructors +
     public:
       /*!
-       * \ref MySQLResultSet constructor
+       * \ref MySQLPreparedStatement constructor
        *
-       * \param result the MySQL result
+       * \param dbCon the database connection
+       * \param query the SQL query
+       *
+       * \throw SqlException any error
        */
-      MySQLResultSet(MYSQL_RES* result);
+      MySQLPreparedStatement(MYSQL* dbCon, const std::string& query) throw(SqlException);
       // Constructors -
 
       // Destructor +
+    public:
       /*!
-       * \ref MySQLResultSet destructor
+       * \ref MySQLPreparedStatement destructor
        */
-      virtual ~MySQLResultSet();
+      virtual ~MySQLPreparedStatement();
       // Destructor -
 
       // Methods +
     public:
       /*!
-       * Fetch next row in SQL result set.
+       * Execute prepared statement
        *
-       * \return \c true if next row exists, \c false otherwise
-       *
-       * \throw SqlException any error
-       */
-      virtual bool next() throw(SqlException);
-
-    protected:
-      /*!
-       * Retrieve string value from result set according to SQL database engine.
-       *
-       * \param idx the field index
-       * \param out the result
+       * \return the result set
        *
        * \throw SqlException any error
        */
-      virtual bool getValue(std::size_t idx, std::string& out) throw(SqlException);
+      ResultSet* execute() throw(SqlException);
       // Methods -
 
     };
@@ -96,5 +97,5 @@ namespace anch {
   }
 }
 
-#endif // _ANCH_SQL_MYSQL_RESULT_SET_H_
+#endif // _ANCH_SQL_MYSQL_PREPARED_STATEMENT_H_
 #endif // ANCH_SQL_MYSQL

@@ -19,6 +19,8 @@
 */
 #ifdef ANCH_SQL_MYSQL
 
+#include "mysql.h"
+
 #include "sql/mysqlResultSet.hpp"
 
 using anch::sql::MySQLResultSet;
@@ -46,6 +48,11 @@ MySQLResultSet::~MySQLResultSet() {
 
 bool
 MySQLResultSet::getValue(std::size_t idx, std::string& out) throw(SqlException) {
+  if(idx >= _fields.size()) {
+    std::ostringstream msg;
+    msg << "Index out of range (0.." << (_fields.size() - 1) << "): " << idx;
+    throw SqlException(msg.str());
+  }
   bool null = true;
   if(_row[idx] != NULL) {
     null = false;
