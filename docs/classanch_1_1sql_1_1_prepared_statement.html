@@ -82,14 +82,12 @@ $(function() {
 <div class="dynheader">
 Inheritance diagram for anch::sql::PreparedStatement:</div>
 <div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="classanch_1_1sql_1_1_prepared_statement__inherit__graph.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="classanch_1_1sql_1_1_prepared_statement__inherit__graph.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
 </div>
 <div class="dynheader">
 Collaboration diagram for anch::sql::PreparedStatement:</div>
 <div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="classanch_1_1sql_1_1_prepared_statement__coll__graph.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="classanch_1_1sql_1_1_prepared_statement__coll__graph.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
 </div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
@@ -100,8 +98,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a68db1a3435118b1d0c5b083c75ea875c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac3d3d4f38061265b66b5d6e7b8b051cd"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classanch_1_1sql_1_1_result_set.html">ResultSet</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1sql_1_1_prepared_statement.html#ac3d3d4f38061265b66b5d6e7b8b051cd">executeQuery</a> ()=0  throw (SqlException)</td></tr>
 <tr class="separator:ac3d3d4f38061265b66b5d6e7b8b051cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adcd69bb7c92f0854b69342c68a351026"><td class="memItemLeft" align="right" valign="top">virtual std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1sql_1_1_prepared_statement.html#adcd69bb7c92f0854b69342c68a351026">executeUpdate</a> ()=0  throw (SqlException)</td></tr>
-<tr class="separator:adcd69bb7c92f0854b69342c68a351026"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2021cf06b370c247105510909f6afb11"><td class="memItemLeft" align="right" valign="top">virtual uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1sql_1_1_prepared_statement.html#a2021cf06b370c247105510909f6afb11">executeUpdate</a> ()=0  throw (SqlException)</td></tr>
+<tr class="separator:a2021cf06b370c247105510909f6afb11"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af1dec1e5f3f425a2e4b3dda18062c95c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1sql_1_1_prepared_statement.html#af1dec1e5f3f425a2e4b3dda18062c95c">set</a> (std::size_t idx, int16_t value)  throw (SqlException)</td></tr>
 <tr class="separator:af1dec1e5f3f425a2e4b3dda18062c95c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaf9ce5b09a66bb3cf154d407c398d5e4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1sql_1_1_prepared_statement.html#aaf9ce5b09a66bb3cf154d407c398d5e4">set</a> (std::size_t idx, uint16_t value)  throw (SqlException)</td></tr>
@@ -268,8 +266,8 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="adcd69bb7c92f0854b69342c68a351026"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adcd69bb7c92f0854b69342c68a351026">&#9670;&nbsp;</a></span>executeUpdate()</h2>
+<a id="a2021cf06b370c247105510909f6afb11"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2021cf06b370c247105510909f6afb11">&#9670;&nbsp;</a></span>executeUpdate()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -278,7 +276,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual std::size_t anch::sql::PreparedStatement::executeUpdate </td>
+          <td class="memname">virtual uint64_t anch::sql::PreparedStatement::executeUpdate </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -305,7 +303,7 @@ Protected Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p>Implemented in <a class="el" href="classanch_1_1sql_1_1_my_s_q_l_prepared_statement.html#aa687af155e8a57e4669ec67487d02c7d">anch::sql::MySQLPreparedStatement</a>, <a class="el" href="classanch_1_1sql_1_1_s_q_lite3_prepared_statement.html#a8d56df0decb3db733cd52ba3d3126969">anch::sql::SQLite3PreparedStatement</a>, and <a class="el" href="classanch_1_1sql_1_1_postgre_s_q_l_prepared_statement.html#af427ca1433275625a97ef1d93f70d20d">anch::sql::PostgreSQLPreparedStatement</a>.</p>
+<p>Implemented in <a class="el" href="classanch_1_1sql_1_1_my_s_q_l_prepared_statement.html#adfc92c445cf7f5e29b51f919dd6d7ef4">anch::sql::MySQLPreparedStatement</a>, <a class="el" href="classanch_1_1sql_1_1_s_q_lite3_prepared_statement.html#ab742db0d3b90fc2fd518f69259479a01">anch::sql::SQLite3PreparedStatement</a>, and <a class="el" href="classanch_1_1sql_1_1_postgre_s_q_l_prepared_statement.html#a7eb7259d9a4eb7f97c9fb16c2c62850e">anch::sql::PostgreSQLPreparedStatement</a>.</p>
 
 </div>
 </div>
