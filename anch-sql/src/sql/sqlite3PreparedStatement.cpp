@@ -50,6 +50,7 @@ SQLite3PreparedStatement::SQLite3PreparedStatement(sqlite3* dbCon, const std::st
 // Destructor +
 SQLite3PreparedStatement::~SQLite3PreparedStatement() {
   if(_stmt != NULL) {
+    sqlite3_clear_bindings(_stmt);
     sqlite3_finalize(_stmt);
   }
 }
@@ -91,10 +92,10 @@ SQLite3PreparedStatement::executeQuery() throw(SqlException) {
   return new SQLite3ResultSet(_stmt, true);
 }
 
-std::size_t
+uint64_t
 SQLite3PreparedStatement::executeUpdate() throw(SqlException) {
   bindParamsAndSend(_conn, _stmt, _values);
-  return static_cast<std::size_t>(sqlite3_changes(_conn));
+  return static_cast<uint64_t>(sqlite3_changes(_conn));
 }
 // Methods -
 

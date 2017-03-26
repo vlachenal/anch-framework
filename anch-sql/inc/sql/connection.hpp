@@ -180,13 +180,89 @@ namespace anch {
       void queryExtract(const std::string& sqlQuery, std::function<void(ResultSet&)> resExtractor) throw(SqlException);
 
       /*!
+       * Execute SQL prepared statement query
+       *
+       * \param query the SQL query to execute
+       * \param value the first value to bind
+       * \param values the other values
+       *
+       * \return the result set which has to be deleted after use
+       *
+       * \throw SqlException any error
+       */
+      template<typename T, typename... Q>
+      ResultSet* query(const std::string& query, const T& value, const Q&... values) throw(SqlException) {
+	PreparedStatement& stmt = prepareStatement(query);
+	std::size_t idx = 1;
+	bindParameters(stmt, idx, value, values...);
+	return stmt.executeQuery();
+      }
+
+      /*!
+       * Execute query and treat each row of result set
+       *
+       * \param sqlQuery the SQL query to execute
+       * \param rowMapper the row mapper function
+       * \param value the first value to bind
+       * \param values the other values
+       *
+       * \throw SqlException any error
+       */
+      template<typename T, typename... Q>
+      void queryMapRow(const std::string& query, std::function<void(ResultSet&)> rowMapper, const T& value, const Q&... values) throw(SqlException) {
+	PreparedStatement& stmt = prepareStatement(query);
+	std::size_t idx = 1;
+	Connection::bindParameters(stmt, idx, value, values...);
+	Connection::mapRow(stmt.executeQuery(), rowMapper);
+      }
+
+      /*!
+       * Execute query and extract result set
+       *
+       * \param sqlQuery the SQL query to execute
+       * \param resExtractor the result set extractor function
+       * \param value the first value to bind
+       * \param values the other values
+       *
+       * \throw SqlException any error
+       */
+      template<typename T, typename... Q>
+      void queryExtract(const std::string& query, std::function<void(ResultSet&)> resExtractor, const T& value, const Q&... values) throw(SqlException) {
+	PreparedStatement& stmt = prepareStatement(query);
+	std::size_t idx = 1;
+	Connection::bindParameters(stmt, idx, value, values...);
+	Connection::extract(stmt.executeQuery(), resExtractor);
+      }
+
+      /*!
        * Execute update (INSERT, UPDATE or DELETE) SQL query.
        *
        * \param query the SQL query
        *
+       * \return the number of affected rows
+       *
        * \throw SqlException any error
        */
       uint64_t update(const std::string& query) throw(SqlException);
+
+      /*!
+       * Execute update (INSERT, UPDATE or DELETE) SQL prepared statement.
+       *
+       * \param query the SQL query
+       * \param value the first value to bind
+       * \param values the other values
+       *
+       * \return the number of affected rows
+       *
+       * \throw SqlException any error
+       */
+      template<typename T, typename... Q>
+      uint64_t update(const std::string& query, const T& value, const Q&... values) throw(SqlException) {
+	PreparedStatement& stmt = prepareStatement(query);
+	std::size_t idx = 1;
+	bindParameters(stmt, idx, value, values...);
+	return stmt.executeUpdate();
+      }
 
     protected:
       /*!
@@ -244,6 +320,57 @@ namespace anch {
        * \throw SqlException any error
        */
       virtual PreparedStatement* makePrepared(const std::string& query) throw(SqlException) = 0;
+
+    private:
+      /*!
+       * Extract result set and delete it
+       *
+       * \param res the result set
+       * \param resExtractor the result extraction function
+       *
+       * \throw SqlException any error
+       */
+      static void extract(ResultSet* res, std::function<void(ResultSet&)> resExtractor) throw(SqlException);
+
+      /*!
+       * Map row from result set and delete it
+       *
+       * \param res the result set
+       * \param rowMapper the result extraction function
+       *
+       * \throw SqlException any error
+       */
+      static void mapRow(ResultSet* res, std::function<void(ResultSet&)> rowMapper) throw(SqlException);
+
+      /*!
+       * Bind parameters to prepared statement
+       *
+       * \param stmt the prepared statement
+       * \param idx the current index
+       * \param value the value to bind for index
+       * \param values the other values to bind
+       *
+       * \throw SqlException any error
+       */
+      template<typename T, typename... Q>
+      static inline void bindParameters(PreparedStatement& stmt, std::size_t& idx, const T& value, const Q&... values) throw(SqlException) {
+	stmt.set(idx, value);
+	bindParameters(stmt, ++idx, values...);
+      }
+
+      /*!
+       * Bind parameters to prepared statement
+       *
+       * \param stmt the prepared statement
+       * \param idx the current index
+       * \param value the value to bind for index
+       *
+       * \throw SqlException any error
+       */
+      template<typename T>
+      static inline void bindParameters(PreparedStatement& stmt, std::size_t& idx, const T& value) throw(SqlException) {
+	stmt.set(idx, value);
+      }
       // Methods -
 
       // Accessors +

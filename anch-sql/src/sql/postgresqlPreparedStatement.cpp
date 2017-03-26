@@ -120,7 +120,7 @@ PostgreSQLPreparedStatement::executeQuery() throw(SqlException) {
   return new PostgreSQLResultSet(_conn);
 }
 
-std::size_t
+uint64_t
 PostgreSQLPreparedStatement::executeUpdate() throw(SqlException) {
   bindParamsAndSend(_conn, _stmtId, _nbPlaceholders, _values);
   PGresult* pgRes = PQgetResult(_conn);
@@ -130,7 +130,7 @@ PostgreSQLPreparedStatement::executeUpdate() throw(SqlException) {
     PQclear(pgRes);
     throw SqlException(msg.str());
   }
-  std::size_t nbRows = static_cast<std::size_t>(std::atoll(PQcmdTuples(pgRes)));
+  uint64_t nbRows = static_cast<uint64_t>(std::atoll(PQcmdTuples(pgRes)));
   PQclear(pgRes);
   return nbRows;
 }

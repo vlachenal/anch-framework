@@ -84,7 +84,7 @@ namespace anch {
        *
        * \throw SqlException any error
        */
-      virtual std::size_t executeUpdate() throw(SqlException) = 0;
+      virtual uint64_t executeUpdate() throw(SqlException) = 0;
 
       /*!
        * Bind 16 bits signed integer value to prepared statement

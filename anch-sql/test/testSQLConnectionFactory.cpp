@@ -69,6 +69,21 @@ main(void) {
 
     std::cout << std::endl;
 
+    persons.clear();
+    myPool.borrowResource().get().queryMapRow("SELECT id,first_name,last_name,birth_date,email FROM T_Test WHERE id IN (?,?,?)",
+					      mysqlFct, // Row mapping function
+					      1, 2, 3); // Parameters to bind to statement
+    std::cout << "Found " << persons.size() << " persons." << std::endl;
+    for(const Person& pers : persons) {
+      std::cout << "Person " << pers._id << ":" << std::endl;
+      std::cout << "first name: " << pers._firstName << std::endl;
+      std::cout << "last name: " << pers._lastName << std::endl;
+      std::cout << "birth data: " << pers._birthDate << std::endl;
+      std::cout << "email: " << pers._email << std::endl;
+    }
+
+    std::cout << std::endl;
+
     SqlConnectionPool& pgPool = fact.getPool("anch_pgsql");
     persons.clear();
     std::cout << "Execute 'SELECT id,first_name,last_name,birth_date,email FROM T_Test' on PostgreSQL database" << std::endl;
@@ -81,6 +96,29 @@ main(void) {
 	resSet.get<std::string>(4,person._email);
 	persons.push_back(person);
       });
+    std::cout << "Found " << persons.size() << " persons." << std::endl;
+    for(const Person& pers : persons) {
+      std::cout << "Person " << pers._id << ":" << std::endl;
+      std::cout << "first name: " << pers._firstName << std::endl;
+      std::cout << "last name: " << pers._lastName << std::endl;
+      std::cout << "birth data: " << pers._birthDate << std::endl;
+      std::cout << "email: " << pers._email << std::endl;
+    }
+
+    std::cout << std::endl;
+
+    persons.clear();
+    std::cout << "Execute 'SELECT id,first_name,last_name,birth_date,email FROM T_Test' on PostgreSQL database" << std::endl;
+    pgPool.borrowResource().get().queryMapRow("SELECT id,first_name,last_name,birth_date,email FROM T_Test WHERE id IN (?,?,?)", [&persons](ResultSet& resSet) {
+	Person person;
+	resSet.get<uint32_t>(0,person._id);
+	resSet.get<std::string>(1,person._firstName);
+	resSet.get<std::string>(2,person._lastName);
+	resSet.get<std::string>(3,person._birthDate);
+	resSet.get<std::string>(4,person._email);
+	persons.push_back(person);
+      },
+      1, 2, 3);
     std::cout << "Found " << persons.size() << " persons." << std::endl;
     for(const Person& pers : persons) {
       std::cout << "Person " << pers._id << ":" << std::endl;
@@ -112,6 +150,30 @@ main(void) {
       std::cout << "birth data: " << pers._birthDate << std::endl;
       std::cout << "email: " << pers._email << std::endl;
     }
+
+    std::cout << std::endl;
+
+    persons.clear();
+    std::cout << "Execute 'SELECT id,first_name,last_name,birth_date,email FROM T_Test' on PostgreSQL database" << std::endl;
+    sqliteCon->queryMapRow("SELECT id,first_name,last_name,birth_date,email FROM T_Test WHERE id IN (?,?,?)", [&persons](ResultSet& resSet) {
+	Person person;
+	resSet.get<uint32_t>(0,person._id);
+	resSet.get<std::string>(1,person._firstName);
+	resSet.get<std::string>(2,person._lastName);
+	resSet.get<std::string>(3,person._birthDate);
+	resSet.get<std::string>(4,person._email);
+	persons.push_back(person);
+      },
+      1, 2, 3);
+    std::cout << "Found " << persons.size() << " persons." << std::endl;
+    for(const Person& pers : persons) {
+      std::cout << "Person " << pers._id << ":" << std::endl;
+      std::cout << "first name: " << pers._firstName << std::endl;
+      std::cout << "last name: " << pers._lastName << std::endl;
+      std::cout << "birth data: " << pers._birthDate << std::endl;
+      std::cout << "email: " << pers._email << std::endl;
+    }
+
     delete sqliteCon;
 
   } catch(const SqlException& e) {

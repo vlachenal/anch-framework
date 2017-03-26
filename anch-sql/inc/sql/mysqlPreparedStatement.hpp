@@ -98,7 +98,7 @@ namespace anch {
        *
        * \throw SqlException any error
        */
-      virtual std::size_t executeUpdate() throw(SqlException) override;
+      virtual uint64_t executeUpdate() throw(SqlException) override;
       // Methods -
 
     };

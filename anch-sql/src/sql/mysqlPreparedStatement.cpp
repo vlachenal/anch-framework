@@ -112,10 +112,10 @@ MySQLPreparedStatement::executeQuery() throw(SqlException) {
   return new MySQLPreparedStatementResultSet(_stmt);
 }
 
-std::size_t
+uint64_t
 MySQLPreparedStatement::executeUpdate() throw(SqlException) {
   bindParamsAndSend(_stmt, _nbPlaceholders, _values);
-  return mysql_stmt_affected_rows(_stmt);
+  return static_cast<uint64_t>(mysql_stmt_affected_rows(_stmt));
 }
 // Methods -
 

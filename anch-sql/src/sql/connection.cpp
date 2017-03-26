@@ -70,8 +70,7 @@ Connection::query(const std::string& query) throw(SqlException) {
 }
 
 void
-Connection::queryMapRow(const std::string& sqlQuery, std::function<void(ResultSet&)> rowMapper) throw(SqlException) {
-  ResultSet* res = query(sqlQuery);
+Connection::mapRow(ResultSet* res, std::function<void(ResultSet&)> rowMapper) throw(SqlException) {
   try {
     while(res->next()) {
       rowMapper(*res);
@@ -84,8 +83,12 @@ Connection::queryMapRow(const std::string& sqlQuery, std::function<void(ResultSe
 }
 
 void
-Connection::queryExtract(const std::string& sqlQuery, std::function<void(ResultSet&)> resExtractor) throw(SqlException) {
-  ResultSet* res = query(sqlQuery);
+Connection::queryMapRow(const std::string& sqlQuery, std::function<void(ResultSet&)> rowMapper) throw(SqlException) {
+  mapRow(query(sqlQuery), rowMapper);
+}
+
+void
+Connection::extract(ResultSet* res, std::function<void(ResultSet&)> resExtractor) throw(SqlException) {
   try {
     resExtractor(*res);
   } catch(...) {
@@ -93,6 +96,11 @@ Connection::queryExtract(const std::string& sqlQuery, std::function<void(ResultS
     throw;
   }
   delete res;
+}
+
+void
+Connection::queryExtract(const std::string& sqlQuery, std::function<void(ResultSet&)> resExtractor) throw(SqlException) {
+  extract(query(sqlQuery), resExtractor);
 }
 
 uint64_t
