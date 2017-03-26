@@ -46,8 +46,8 @@ namespace anch {
       /*! Statement values */
       std::map<std::size_t,std::string> _values;
 
-      /*! Number of wildcards in SQL query */
-      std::size_t _nbWildcards;
+      /*! Number of placeholders in SQL query */
+      std::size_t _nbPlaceholders;
       // Attributes -
 
       // Constructors +
@@ -149,13 +149,13 @@ namespace anch {
 
     protected:
       /*!
-       * Retrieve wildcards positions ('?') in SQL query
+       * Retrieve placeholders positions ('?') in SQL query
        *
        * \param query the SQL query
        *
-       * \return the wildcards' position
+       * \return the placeholders' position
        */
-      std::set<std::size_t> getWildCards(const std::string& query) const;
+      std::set<std::size_t> getPlaceholders(const std::string& query) const;
 
       /*!
        * Check index value
@@ -165,9 +165,9 @@ namespace anch {
        * \throw SqlException the index is upper than number of wildcards
        */
       inline void checkIndex(std::size_t index) const throw(SqlException) {
-	if(index > _nbWildcards) {
+	if(index > _nbPlaceholders) {
 	  std::ostringstream oss;
-	  oss << "Index " << index << " is upper than number of wildcards " << _nbWildcards;
+	  oss << "Index " << index << " is upper than number of wildcards " << _nbPlaceholders;
 	  throw SqlException(oss.str());
 	}
       }

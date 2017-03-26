@@ -37,8 +37,8 @@ std::atomic<std::uint64_t> PostgreSQLPreparedStatement::_counter(0);
 
 // Constructors +
 PostgreSQLPreparedStatement::PostgreSQLPreparedStatement(PGconn* dbCon, const std::string& query) throw(SqlException): PreparedStatement(), _conn(dbCon) {
-  std::set<std::size_t> pos = getWildCards(query);
-  _nbWildcards = pos.size();
+  std::set<std::size_t> pos = getPlaceholders(query);
+  _nbPlaceholders = pos.size();
   std::size_t offset = 0;
   std::ostringstream oss;
   std::size_t idx = 0;
@@ -53,7 +53,7 @@ PostgreSQLPreparedStatement::PostgreSQLPreparedStatement(PGconn* dbCon, const st
   std::ostringstream ids;
   ids << std::addressof(dbCon) << '_' << _counter.fetch_add(1);
   _stmtId = ids.str();
-  PGresult* res = PQprepare(dbCon, _stmtId.data(), pgQuery.data(), static_cast<int>(_nbWildcards), NULL);
+  PGresult* res = PQprepare(dbCon, _stmtId.data(), pgQuery.data(), static_cast<int>(_nbPlaceholders), NULL);
   if(res == NULL || PQresultStatus(res) != PGRES_COMMAND_OK) {
     std::ostringstream msg;
     msg << "Fail to prepare PostgreSQL statement: " << PQerrorMessage(dbCon);
@@ -76,8 +76,8 @@ PostgreSQLPreparedStatement::~PostgreSQLPreparedStatement() {
 ResultSet*
 PostgreSQLPreparedStatement::execute() throw(SqlException) {
   // Bind parameters +
-  const char** values = new const char*[_nbWildcards];
-  int* lengths = new int[_nbWildcards];
+  const char** values = new const char*[_nbPlaceholders];
+  int* lengths = new int[_nbPlaceholders];
   std::size_t idx = 0;
   for(auto iter = _values.cbegin() ; iter != _values.cend() ; ++iter) {
     lengths[idx] = static_cast<int>(iter->second.length());
@@ -86,7 +86,7 @@ PostgreSQLPreparedStatement::execute() throw(SqlException) {
   }
   // Bind parameters -
   // Execute statement +
-  int res = PQsendQueryPrepared(_conn, _stmtId.data(), static_cast<int>(_nbWildcards), values, lengths, NULL, 0);
+  int res = PQsendQueryPrepared(_conn, _stmtId.data(), static_cast<int>(_nbPlaceholders), values, lengths, NULL, 0);
   if(res == 0) {
     delete[] values;
     delete[] lengths;

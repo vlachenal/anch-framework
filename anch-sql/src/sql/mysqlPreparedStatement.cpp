@@ -49,8 +49,8 @@ MySQLPreparedStatement::MySQLPreparedStatement(MYSQL* dbCon, const std::string& 
     mysql_stmt_close(_stmt);
     throw SqlException(msg.str());
   }
-  std::set<std::size_t> pos = getWildCards(query);
-  _nbWildcards = pos.size();
+  std::set<std::size_t> pos = getPlaceholders(query);
+  _nbPlaceholders = pos.size();
 }
 // Constructors -
 
@@ -64,8 +64,8 @@ MySQLPreparedStatement::~MySQLPreparedStatement() {
 ResultSet*
 MySQLPreparedStatement::execute() throw(SqlException) {
   // Bind parameters +
-  MYSQL_BIND* bind = new MYSQL_BIND[_nbWildcards];
-  std::memset(bind, 0, _nbWildcards * sizeof(MYSQL_BIND));
+  MYSQL_BIND* bind = new MYSQL_BIND[_nbPlaceholders];
+  std::memset(bind, 0, _nbPlaceholders * sizeof(MYSQL_BIND));
   std::size_t idx = 0;
   for(auto iter = _values.cbegin() ; iter != _values.cend() ; ++iter) {
     bind[idx].buffer_type = MYSQL_TYPE_STRING;

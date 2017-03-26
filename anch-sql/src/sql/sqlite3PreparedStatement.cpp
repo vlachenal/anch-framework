@@ -42,8 +42,8 @@ SQLite3PreparedStatement::SQLite3PreparedStatement(sqlite3* dbCon, const std::st
     msg << "Error while preparing statement " << query << ": " << sqlite3_errmsg(_conn);
     throw SqlException(msg.str());
   }
-  std::set<std::size_t> pos = getWildCards(query);
-  _nbWildcards = pos.size();
+  std::set<std::size_t> pos = getPlaceholders(query);
+  _nbPlaceholders = pos.size();
 }
 // Constructors -
 

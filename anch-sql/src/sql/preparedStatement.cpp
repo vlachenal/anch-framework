@@ -22,7 +22,7 @@
 using anch::sql::PreparedStatement;
 
 
-PreparedStatement::PreparedStatement(): _values(), _nbWildcards(0) {
+PreparedStatement::PreparedStatement(): _values(), _nbPlaceholders(0) {
   // Nothing to do
 }
 
@@ -31,7 +31,7 @@ PreparedStatement::~PreparedStatement() {
 }
 
 std::set<std::size_t>
-PreparedStatement::getWildCards(const std::string& query) const {
+PreparedStatement::getPlaceholders(const std::string& query) const {
   std::set<std::size_t> pos;
   bool singleVal = false;
   bool listVal = false;

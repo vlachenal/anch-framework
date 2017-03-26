@@ -20,14 +20,14 @@ public:
   virtual void set(std::size_t, uint64_t) throw(SqlException) {}
   virtual void set(std::size_t, const std::string&) throw(SqlException) {}
   std::set<std::size_t> getPositions(const std::string& query) const {
-    return getWildCards(query);
+    return getPlaceholders(query);
   }
 
 };
 
 int
 main(void) {
-  std::cout << "Enter in prepared statement wildcards unit tests" << std::endl << std::endl;
+  std::cout << "Enter in prepared statement placeholders unit tests" << std::endl << std::endl;
 
   PrepareStatementMock stmt;
   std::cout << "Check query: SELECT * FROM toto WHERE a = ? AND b = ?" << std::endl;
@@ -38,7 +38,7 @@ main(void) {
     return 1;
   }
   if(expPos != pos) {
-    std::cerr << "Positions of wildcards differ" << std::endl;
+    std::cerr << "Positions of placeholders differ" << std::endl;
     return 1;
   }
   std::cout << "Query: SELECT * FROM toto WHERE a = ? AND b = ? has been correctly parsed" << std::endl << std::endl;
@@ -51,7 +51,7 @@ main(void) {
     return 1;
   }
   if(expPos != pos) {
-    std::cerr << "Positions of wildcards differ" << std::endl;
+    std::cerr << "Positions of placeholders differ" << std::endl;
     return 1;
   }
   std::cout << "Query: SELECT * FROM toto WHERE a = ? AND b = ? AND c = 'tata' has been correctly parsed" << std::endl << std::endl;
@@ -64,7 +64,7 @@ main(void) {
     return 1;
   }
   if(expPos != pos) {
-    std::cerr << "Positions of wildcards differ" << std::endl;
+    std::cerr << "Positions of placeholders differ" << std::endl;
     return 1;
   }
   std::cout << "Query: SELECT * FROM toto WHERE a = ? AND c = 'tata' AND b = ? has been correctly parsed" << std::endl << std::endl;
@@ -77,7 +77,7 @@ main(void) {
     return 1;
   }
   if(expPos != pos) {
-    std::cerr << "Positions of wildcards differ" << std::endl;
+    std::cerr << "Positions of placeholders differ" << std::endl;
     return 1;
   }
   std::cout << "Query: SELECT * FROM toto WHERE a = ? AND c = 'ta''ta' AND b = ? has been correctly parsed" << std::endl << std::endl;
@@ -90,7 +90,7 @@ main(void) {
     return 1;
   }
   if(expPos != pos) {
-    std::cerr << "Positions of wildcards differ" << std::endl;
+    std::cerr << "Positions of placeholders differ" << std::endl;
     return 1;
   }
   std::cout << "Query: SELECT * FROM toto WHERE a = ? AND c = 'ta\\'ta' AND b = ? has been correctly parsed" << std::endl << std::endl;
@@ -103,7 +103,7 @@ main(void) {
     return 1;
   }
   if(expPos != pos) {
-    std::cerr << "Positions of wildcards differ" << std::endl;
+    std::cerr << "Positions of placeholders differ" << std::endl;
     return 1;
   }
   std::cout << "Query: SELECT * FROM toto WHERE a = ? AND c = 'tata''' AND b = ? has been correctly parsed" << std::endl << std::endl;
@@ -116,7 +116,7 @@ main(void) {
     return 1;
   }
   if(expPos != pos) {
-    std::cerr << "Positions of wildcards differ" << std::endl;
+    std::cerr << "Positions of placeholders differ" << std::endl;
     return 1;
   }
   std::cout << "Query: SELECT * FROM toto WHERE a = ? AND c = '''tata' AND b = ? has been correctly parsed" << std::endl << std::endl;
@@ -129,7 +129,7 @@ main(void) {
     return 1;
   }
   if(expPos != pos) {
-    std::cerr << "Positions of wildcards differ" << std::endl;
+    std::cerr << "Positions of placeholders differ" << std::endl;
     return 1;
   }
   std::cout << "Query: INSERT INTO toto (a,b) VALUES (?,?) has been correctly parsed" << std::endl << std::endl;
@@ -142,7 +142,7 @@ main(void) {
     return 1;
   }
   if(expPos != pos) {
-    std::cerr << "Positions of wildcards differ" << std::endl;
+    std::cerr << "Positions of placeholders differ" << std::endl;
     return 1;
   }
   std::cout << "Query: INSERT INTO toto (a,b,c) VALUES (?,'tata',?) has been correctly parsed" << std::endl << std::endl;
@@ -155,7 +155,7 @@ main(void) {
     return 1;
   }
   if(expPos != pos) {
-    std::cerr << "Positions of wildcards differ" << std::endl;
+    std::cerr << "Positions of placeholders differ" << std::endl;
     return 1;
   }
   std::cout << "Query: INSERT INTO toto (a,b,c) VALUES (?,'ta''ta',?) has been correctly parsed" << std::endl << std::endl;
@@ -168,7 +168,7 @@ main(void) {
     return 1;
   }
   if(expPos != pos) {
-    std::cerr << "Positions of wildcards differ" << std::endl;
+    std::cerr << "Positions of placeholders differ" << std::endl;
     return 1;
   }
   std::cout << "Query: INSERT INTO toto (a,b,c) VALUES (?,'ta\\'ta',?) has been correctly parsed" << std::endl << std::endl;
@@ -181,7 +181,7 @@ main(void) {
     return 1;
   }
   if(expPos != pos) {
-    std::cerr << "Positions of wildcards differ" << std::endl;
+    std::cerr << "Positions of placeholders differ" << std::endl;
     return 1;
   }
   std::cout << "Query: INSERT INTO toto (a,b,c) VALUES (?,'tata''',?) has been correctly parsed" << std::endl << std::endl;
@@ -194,7 +194,7 @@ main(void) {
     return 1;
   }
   if(expPos != pos) {
-    std::cerr << "Positions of wildcards differ" << std::endl;
+    std::cerr << "Positions of placeholders differ" << std::endl;
     return 1;
   }
   std::cout << "Query: INSERT INTO toto (a,b,c) VALUES (?,'''tata',?) has been correctly parsed" << std::endl << std::endl;
@@ -207,7 +207,7 @@ main(void) {
     return 1;
   }
   if(expPos != pos) {
-    std::cerr << "Positions of wildcards differ" << std::endl;
+    std::cerr << "Positions of placeholders differ" << std::endl;
     return 1;
   }
   std::cout << "Query: INSERT INTO toto (a,b,c) VALUES (?,'ta(ta',?) has been correctly parsed" << std::endl << std::endl;
@@ -220,7 +220,7 @@ main(void) {
     return 1;
   }
   if(expPos != pos) {
-    std::cerr << "Positions of wildcards differ" << std::endl;
+    std::cerr << "Positions of placeholders differ" << std::endl;
     return 1;
   }
   std::cout << "Query: INSERT INTO toto (a,b,c) VALUES (?,'ta)ta',?) has been correctly parsed" << std::endl << std::endl;
@@ -233,7 +233,7 @@ main(void) {
     return 1;
   }
   if(expPos != pos) {
-    std::cerr << "Positions of wildcards differ" << std::endl;
+    std::cerr << "Positions of placeholders differ" << std::endl;
     return 1;
   }
   std::cout << "Query: SELECT * FROM toto WHERE a IN (?, ?, ?) AND c = '''tata' AND b = ? has been correctly parsed" << std::endl << std::endl;
@@ -246,12 +246,12 @@ main(void) {
     return 1;
   }
   if(expPos != pos) {
-    std::cerr << "Positions of wildcards differ" << std::endl;
+    std::cerr << "Positions of placeholders differ" << std::endl;
     return 1;
   }
   std::cout << "Query: SELECT * FROM toto WHERE a IN (?, ''''tata'', ?) AND c = '''tata' AND b = ? has been correctly parsed" << std::endl << std::endl;
 
-  std::cout << "Check PostgreSQL wildcards replacement" << std::endl;
+  std::cout << "Check PostgreSQL placeholders replacement" << std::endl;
   std::string query = "SELECT * FROM toto WHERE a IN (?, ''''tata'', ?) AND c = '''tata' AND b = ? AND d = 'titi'";
   pos = stmt.getPositions(query);
   std::size_t offset = 0;
@@ -271,6 +271,6 @@ main(void) {
   }
   std::cout << "PostgreSQL prepared statement query will be: " << pgQuery << std::endl << std::endl;
 
-  std::cout << "Exit prepared statement wildcards unit tests" << std::endl;
+  std::cout << "Exit prepared statement placeholders unit tests" << std::endl;
   return 0;
 }
