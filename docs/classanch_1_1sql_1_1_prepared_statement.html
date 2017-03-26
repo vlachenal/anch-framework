@@ -98,8 +98,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a3699583a408873ade02efa0b3293e2e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a68db1a3435118b1d0c5b083c75ea875c"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1sql_1_1_prepared_statement.html#a68db1a3435118b1d0c5b083c75ea875c">~PreparedStatement</a> ()</td></tr>
 <tr class="separator:a68db1a3435118b1d0c5b083c75ea875c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad292682fe436c363ef0227d560e40738"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classanch_1_1sql_1_1_result_set.html">ResultSet</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1sql_1_1_prepared_statement.html#ad292682fe436c363ef0227d560e40738">execute</a> ()=0  throw (SqlException)</td></tr>
-<tr class="separator:ad292682fe436c363ef0227d560e40738"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac3d3d4f38061265b66b5d6e7b8b051cd"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classanch_1_1sql_1_1_result_set.html">ResultSet</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1sql_1_1_prepared_statement.html#ac3d3d4f38061265b66b5d6e7b8b051cd">executeQuery</a> ()=0  throw (SqlException)</td></tr>
+<tr class="separator:ac3d3d4f38061265b66b5d6e7b8b051cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adcd69bb7c92f0854b69342c68a351026"><td class="memItemLeft" align="right" valign="top">virtual std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1sql_1_1_prepared_statement.html#adcd69bb7c92f0854b69342c68a351026">executeUpdate</a> ()=0  throw (SqlException)</td></tr>
+<tr class="separator:adcd69bb7c92f0854b69342c68a351026"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af1dec1e5f3f425a2e4b3dda18062c95c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1sql_1_1_prepared_statement.html#af1dec1e5f3f425a2e4b3dda18062c95c">set</a> (std::size_t idx, int16_t value)  throw (SqlException)</td></tr>
 <tr class="separator:af1dec1e5f3f425a2e4b3dda18062c95c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaf9ce5b09a66bb3cf154d407c398d5e4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1sql_1_1_prepared_statement.html#aaf9ce5b09a66bb3cf154d407c398d5e4">set</a> (std::size_t idx, uint16_t value)  throw (SqlException)</td></tr>
@@ -225,8 +227,8 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="ad292682fe436c363ef0227d560e40738"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad292682fe436c363ef0227d560e40738">&#9670;&nbsp;</a></span>execute()</h2>
+<a id="ac3d3d4f38061265b66b5d6e7b8b051cd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac3d3d4f38061265b66b5d6e7b8b051cd">&#9670;&nbsp;</a></span>executeQuery()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -235,7 +237,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual <a class="el" href="classanch_1_1sql_1_1_result_set.html">ResultSet</a>* anch::sql::PreparedStatement::execute </td>
+          <td class="memname">virtual <a class="el" href="classanch_1_1sql_1_1_result_set.html">ResultSet</a>* anch::sql::PreparedStatement::executeQuery </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -253,7 +255,7 @@ Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Execute prepared statement</p>
+<p>Execute prepared statement for SELECT statement</p>
 <dl class="section return"><dt>Returns</dt><dd>the result set</dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
@@ -262,7 +264,48 @@ Protected Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p>Implemented in <a class="el" href="classanch_1_1sql_1_1_my_s_q_l_prepared_statement.html#a52da894975d6d4e6f3acf33a8904523f">anch::sql::MySQLPreparedStatement</a>, <a class="el" href="classanch_1_1sql_1_1_s_q_lite3_prepared_statement.html#a71f199087f597c63c5660f60838edfb7">anch::sql::SQLite3PreparedStatement</a>, and <a class="el" href="classanch_1_1sql_1_1_postgre_s_q_l_prepared_statement.html#a3b61767c02c972a699c5948627abe015">anch::sql::PostgreSQLPreparedStatement</a>.</p>
+<p>Implemented in <a class="el" href="classanch_1_1sql_1_1_my_s_q_l_prepared_statement.html#a795efb550f564e609d9355e4dd58d068">anch::sql::MySQLPreparedStatement</a>, <a class="el" href="classanch_1_1sql_1_1_s_q_lite3_prepared_statement.html#af755f938b306de28505bb8fff343cc47">anch::sql::SQLite3PreparedStatement</a>, and <a class="el" href="classanch_1_1sql_1_1_postgre_s_q_l_prepared_statement.html#a30e2614410f75645c3d1afda23e38fe0">anch::sql::PostgreSQLPreparedStatement</a>.</p>
+
+</div>
+</div>
+<a id="adcd69bb7c92f0854b69342c68a351026"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adcd69bb7c92f0854b69342c68a351026">&#9670;&nbsp;</a></span>executeUpdate()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual std::size_t anch::sql::PreparedStatement::executeUpdate </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td align="right">throw </td><td>(</td><td colspan="2"><a class="el" href="classanch_1_1sql_1_1_sql_exception.html">SqlException</a></td>
+        </tr>
+        <tr>
+          <td align="right"></td><td>)</td><td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Execute prepared statement for update database (INSERT, UPDATE, DELETE)</p>
+<dl class="section return"><dt>Returns</dt><dd>the number of affected rows</dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classanch_1_1sql_1_1_sql_exception.html" title="SQL exception. ">SqlException</a></td><td>any error </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Implemented in <a class="el" href="classanch_1_1sql_1_1_my_s_q_l_prepared_statement.html#aa687af155e8a57e4669ec67487d02c7d">anch::sql::MySQLPreparedStatement</a>, <a class="el" href="classanch_1_1sql_1_1_s_q_lite3_prepared_statement.html#a8d56df0decb3db733cd52ba3d3126969">anch::sql::SQLite3PreparedStatement</a>, and <a class="el" href="classanch_1_1sql_1_1_postgre_s_q_l_prepared_statement.html#af427ca1433275625a97ef1d93f70d20d">anch::sql::PostgreSQLPreparedStatement</a>.</p>
 
 </div>
 </div>
@@ -690,7 +733,7 @@ Protected Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Mar 26 2017 11:50:37 for AnCH Framework by &#160;<a href="http://www.doxygen.org/index.html">
+Generated by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.13
 </small></address>
