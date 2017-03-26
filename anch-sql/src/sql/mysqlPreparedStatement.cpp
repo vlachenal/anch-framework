@@ -60,14 +60,25 @@ MySQLPreparedStatement::~MySQLPreparedStatement() {
 }
 // Destructor -
 
-// Methods +
-ResultSet*
-MySQLPreparedStatement::execute() throw(SqlException) {
+// Functions +
+/*!
+ * Bind prepared statement parameters and send query to server
+ *
+ * \param stmt the MySQL prepared statement
+ * \param nbPlaceholders the number of placeholders in query
+ * \param paramValues the values to bind
+ *
+ * \throw SqlException any error
+ */
+void
+bindParamsAndSend(MYSQL_STMT* stmt,
+		  std::size_t nbPlaceholders,
+		  const std::map<std::size_t,std::string>& paramValues) throw(SqlException) {
   // Bind parameters +
-  MYSQL_BIND* bind = new MYSQL_BIND[_nbPlaceholders];
-  std::memset(bind, 0, _nbPlaceholders * sizeof(MYSQL_BIND));
+  MYSQL_BIND* bind = new MYSQL_BIND[nbPlaceholders];
+  std::memset(bind, 0, nbPlaceholders * sizeof(MYSQL_BIND));
   std::size_t idx = 0;
-  for(auto iter = _values.cbegin() ; iter != _values.cend() ; ++iter) {
+  for(auto iter = paramValues.cbegin() ; iter != paramValues.cend() ; ++iter) {
     bind[idx].buffer_type = MYSQL_TYPE_STRING;
     bind[idx].buffer = (void*)iter->second.data();
     bind[idx].buffer_length = iter->second.length();
@@ -75,23 +86,37 @@ MySQLPreparedStatement::execute() throw(SqlException) {
     bind[idx].is_null = 0;
     ++idx;
   }
-  if(mysql_stmt_bind_param(_stmt, bind) != 0) {
+  if(mysql_stmt_bind_param(stmt, bind) != 0) {
     delete[] bind;
     std::ostringstream msg;
-    msg << "Fail to bind MySQL statement parameters " << mysql_stmt_errno(_stmt) << ": " << mysql_stmt_error(_stmt);
+    msg << "Fail to bind MySQL statement parameters " << mysql_stmt_errno(stmt) << ": " << mysql_stmt_error(stmt);
     throw SqlException(msg.str());
   }
   // Bind parameters -
   // Execute statement +
-  if(mysql_stmt_execute(_stmt) != 0) {
+  if(mysql_stmt_execute(stmt) != 0) {
     delete[] bind;
     std::ostringstream msg;
-    msg << "Fail to execute MySQL statement " << mysql_stmt_errno(_stmt) << ": " << mysql_stmt_error(_stmt);
+    msg << "Fail to execute MySQL statement " << mysql_stmt_errno(stmt) << ": " << mysql_stmt_error(stmt);
     throw SqlException(msg.str());
   }
   delete[] bind;
   // Execute statement -
+}
+// Functions -
+
+// Methods +
+ResultSet*
+MySQLPreparedStatement::executeQuery() throw(SqlException) {
+  bindParamsAndSend(_stmt, _nbPlaceholders, _values);
   return new MySQLPreparedStatementResultSet(_stmt);
 }
+
+std::size_t
+MySQLPreparedStatement::executeUpdate() throw(SqlException) {
+  bindParamsAndSend(_stmt, _nbPlaceholders, _values);
+  return mysql_stmt_affected_rows(_stmt);
+}
+// Methods -
 
 #endif // ANCH_SQL_MYSQL

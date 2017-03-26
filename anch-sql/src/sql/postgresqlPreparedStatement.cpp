@@ -72,32 +72,68 @@ PostgreSQLPreparedStatement::~PostgreSQLPreparedStatement() {
 }
 // Destructor -
 
-// Methods +
-ResultSet*
-PostgreSQLPreparedStatement::execute() throw(SqlException) {
+// Functions +
+/*!
+ * Bind prepared statement parameters and send query to server
+ *
+ * \param conn the PostgreSQL connection
+ * \param stmtId the prepared statement identifier
+ * \param nbPlaceholders the number of placeholders in query
+ * \param paramValues the values to bind
+ *
+ * \throw SqlException any error
+ */
+void
+bindParamsAndSend(PGconn* conn,
+		  const std::string& stmtId,
+		  std::size_t nbPlaceholders,
+		  const std::map<std::size_t,std::string>& paramValues) throw(SqlException) {
   // Bind parameters +
-  const char** values = new const char*[_nbPlaceholders];
-  int* lengths = new int[_nbPlaceholders];
+  const char** values = new const char*[nbPlaceholders];
+  int* lengths = new int[nbPlaceholders];
   std::size_t idx = 0;
-  for(auto iter = _values.cbegin() ; iter != _values.cend() ; ++iter) {
+  for(auto iter = paramValues.cbegin() ; iter != paramValues.cend() ; ++iter) {
     lengths[idx] = static_cast<int>(iter->second.length());
     values[idx] = iter->second.data();
     ++idx;
   }
   // Bind parameters -
   // Execute statement +
-  int res = PQsendQueryPrepared(_conn, _stmtId.data(), static_cast<int>(_nbPlaceholders), values, lengths, NULL, 0);
+  int res = PQsendQueryPrepared(conn, stmtId.data(), static_cast<int>(nbPlaceholders), values, lengths, NULL, 0);
   if(res == 0) {
     delete[] values;
     delete[] lengths;
     std::ostringstream msg;
-    msg << "Fail to execute PostgreSQL statement: " << PQerrorMessage(_conn);
+    msg << "Fail to execute PostgreSQL statement: " << PQerrorMessage(conn);
     throw SqlException(msg.str());
   }
   delete[] values;
   delete[] lengths;
   // Execute statement -
+}
+// Functions -
+
+// Methods +
+ResultSet*
+PostgreSQLPreparedStatement::executeQuery() throw(SqlException) {
+  bindParamsAndSend(_conn, _stmtId, _nbPlaceholders, _values);
   return new PostgreSQLResultSet(_conn);
 }
+
+std::size_t
+PostgreSQLPreparedStatement::executeUpdate() throw(SqlException) {
+  bindParamsAndSend(_conn, _stmtId, _nbPlaceholders, _values);
+  PGresult* pgRes = PQgetResult(_conn);
+  if(pgRes == NULL || PQresultStatus(pgRes) != PGRES_COMMAND_OK) {
+    std::ostringstream msg;
+    msg << "Error while executing PostgreSQL command: " << PQerrorMessage(_conn);
+    PQclear(pgRes);
+    throw SqlException(msg.str());
+  }
+  std::size_t nbRows = static_cast<std::size_t>(std::atoll(PQcmdTuples(pgRes)));
+  PQclear(pgRes);
+  return nbRows;
+}
+// Methods -
 
 #endif // ANCH_SQL_POSTGRESQL

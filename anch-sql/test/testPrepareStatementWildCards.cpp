@@ -11,7 +11,8 @@ class PrepareStatementMock: public anch::sql::PreparedStatement {
 public:
   PrepareStatementMock(): anch::sql::PreparedStatement() {}
   ~PrepareStatementMock() {}
-  virtual ResultSet* execute() throw(SqlException) {return NULL;}
+  virtual ResultSet* executeQuery() throw(SqlException) override {return NULL;}
+  virtual std::size_t executeUpdate() throw(SqlException) override {return 0;}
   virtual void set(std::size_t, int16_t) throw(SqlException) {}
   virtual void set(std::size_t, uint16_t) throw(SqlException) {}
   virtual void set(std::size_t, int32_t) throw(SqlException) {}

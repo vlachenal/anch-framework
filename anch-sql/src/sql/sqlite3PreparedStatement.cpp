@@ -55,22 +55,47 @@ SQLite3PreparedStatement::~SQLite3PreparedStatement() {
 }
 // Destructor -
 
-// Methods +
-ResultSet*
-SQLite3PreparedStatement::execute() throw(SqlException) {
-  sqlite3_clear_bindings(_stmt);
+// Functions +
+/*!
+ * Bind prepared statement parameters and send query to server
+ *
+ * \param conn the SQLite3 connection
+ * \param stmt the prepared statement
+ * \param paramValues the values to bind
+ *
+ * \throw SqlException any error
+ */
+void
+bindParamsAndSend(sqlite3* conn,
+		  sqlite3_stmt* stmt,
+		  const std::map<std::size_t,std::string>& paramValues) throw(SqlException) {
+  sqlite3_clear_bindings(stmt);
   // Bind parameters +
   int res = SQLITE_OK;
-  for(auto iter = _values.cbegin() ; iter != _values.cend() ; ++iter) {
-    sqlite3_bind_text(_stmt, static_cast<int>(iter->first), iter->second.data(), static_cast<int>(iter->second.length()), SQLITE_STATIC);
+  for(auto iter = paramValues.cbegin() ; iter != paramValues.cend() ; ++iter) {
+    sqlite3_bind_text(stmt, static_cast<int>(iter->first), iter->second.data(), static_cast<int>(iter->second.length()), SQLITE_STATIC);
     if(res != SQLITE_OK) {
       std::ostringstream msg;
-      msg << "Error while binding parameter [" << iter->first << "] = " << iter->second << ": " << sqlite3_errmsg(_conn);
+      msg << "Error while binding parameter [" << iter->first << "] = " << iter->second << ": " << sqlite3_errmsg(conn);
       throw SqlException(msg.str());
     }
   }
   // Bind parameters -
+}
+// Functions -
+
+// Methods +
+ResultSet*
+SQLite3PreparedStatement::executeQuery() throw(SqlException) {
+  bindParamsAndSend(_conn, _stmt, _values);
   return new SQLite3ResultSet(_stmt, true);
 }
+
+std::size_t
+SQLite3PreparedStatement::executeUpdate() throw(SqlException) {
+  bindParamsAndSend(_conn, _stmt, _values);
+  return static_cast<std::size_t>(sqlite3_changes(_conn));
+}
+// Methods -
 
 #endif // ANCH_SQL_SQLITE3

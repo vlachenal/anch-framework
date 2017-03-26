@@ -82,13 +82,22 @@ namespace anch {
       // Methods +
     public:
       /*!
-       * Execute prepared statement
+       * Execute prepared statement for SELECT statement
        *
        * \return the result set
        *
        * \throw SqlException any error
        */
-      ResultSet* execute() throw(SqlException);
+      virtual ResultSet* executeQuery() throw(SqlException) override;
+
+      /*!
+       * Execute prepared statement for update database (INSERT, UPDATE, DELETE)
+       *
+       * \return the number of affected rows
+       *
+       * \throw SqlException any error
+       */
+      virtual std::size_t executeUpdate() throw(SqlException) override;
       // Methods -
 
     };

@@ -69,13 +69,22 @@ namespace anch {
       // Methods +
     public:
       /*!
-       * Execute prepared statement
+       * Execute prepared statement for SELECT statement
        *
        * \return the result set
        *
        * \throw SqlException any error
        */
-      virtual ResultSet* execute() throw(SqlException) = 0;
+      virtual ResultSet* executeQuery() throw(SqlException) = 0;
+
+      /*!
+       * Execute prepared statement for update database (INSERT, UPDATE, DELETE)
+       *
+       * \return the number of affected rows
+       *
+       * \throw SqlException any error
+       */
+      virtual std::size_t executeUpdate() throw(SqlException) = 0;
 
       /*!
        * Bind 16 bits signed integer value to prepared statement

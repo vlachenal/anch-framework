@@ -158,9 +158,9 @@ main(void) {
     std::cout << std::endl;
 
     std::cout << "Prepare and execute statement 'SELECT id,first_name,last_name,birth_date,email FROM T_Test WHERE id = ?' with per row result handling" << std::endl;
-    PreparedStatement& stmt = dbCon.prepareStatement("SELECT id,first_name,last_name,birth_date,email FROM T_Test WHERE id = ?");
-    stmt.set(1, 1);
-    res = stmt.execute();
+    PreparedStatement& stmtS = dbCon.prepareStatement("SELECT id,first_name,last_name,birth_date,email FROM T_Test WHERE id = ?");
+    stmtS.set(1, 1);
+    res = stmtS.executeQuery();
     row = 0;
     while(res->next()) {
       std::cout << "Row " << row << std::endl;
@@ -188,6 +188,46 @@ main(void) {
       row++;
     }
     delete res;
+
+    std::cout << std::endl;
+
+    std::cout << "Execute 'INSERT INTO T_Test (first_name,last_name,birth_date,email) VALUES(?,?,?,?)'" << std::endl;
+    PreparedStatement& stmtI = dbCon.prepareStatement("INSERT INTO T_Test (first_name,last_name,birth_date,email) VALUES(?,?,?,?)");
+    stmtI.set(1,"Insert");
+    stmtI.set(2, "Test");
+    stmtI.set(3, "2016-03-22");
+    stmtI.set(4, "insert.test@yopmail.com");
+    nbRow = stmtI.executeUpdate();
+    if(nbRow != 1) {
+      std::cerr << "Number of affected rows should be 1 instead of " << nbRow << std::endl;
+      return 1;
+    }
+
+    std::cout << std::endl;
+
+    std::cout << "Execute 'UPDATE T_Test SET first_name = ?, email = ? WHERE first_name = ? AND last_name = ?'" << std::endl;
+    PreparedStatement& stmtU = dbCon.prepareStatement("UPDATE T_Test SET first_name = ?, email = ? WHERE first_name = ? AND last_name = ?");
+    stmtU.set(1,"Update");
+    stmtU.set(2, "update.test@yopmail.com");
+    stmtU.set(3, "Insert");
+    stmtU.set(4, "Test");
+    nbRow = stmtU.executeUpdate();
+    if(nbRow != 1) {
+      std::cerr << "Number of affected rows should be 1 instead of " << nbRow << std::endl;
+      return 1;
+    }
+
+    std::cout << std::endl;
+
+    std::cout << "Execute 'DELETE FROM T_Test WHERE first_name = ? AND last_name = ?'" << std::endl;
+    PreparedStatement& stmtD = dbCon.prepareStatement("DELETE FROM T_Test WHERE first_name = ? AND last_name = ?");
+    stmtD.set(1,"Update");
+    stmtD.set(2, "Test");
+    nbRow = stmtD.executeUpdate();
+    if(nbRow != 1) {
+      std::cerr << "Number of affected rows should be 1 instead of " << nbRow << std::endl;
+      return 1;
+    }
 
     std::cout << std::endl;
 

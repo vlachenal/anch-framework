@@ -70,7 +70,7 @@ bool
 PostgreSQLResultSet::next() throw(SqlException) {
   bool hasMore = false;
   if(_currentRow + 1 < _nbRows) {
-    _currentRow++;
+    ++_currentRow;
     hasMore = true;
 
   } else {
