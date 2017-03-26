@@ -61,7 +61,7 @@ var sectionId = 'dynsection-0';
 <text text-anchor="middle" x="286.5" y="-304.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">anch::sql::PreparedStatement</text>
 <polyline fill="none" stroke="#000000" points="206,-297.5 367,-297.5 "/>
 <text text-anchor="start" x="214" y="-285.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"># _values</text>
-<text text-anchor="start" x="214" y="-274.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"># _nbWildcards</text>
+<text text-anchor="start" x="214" y="-274.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"># _nbPlaceholders</text>
 <polyline fill="none" stroke="#000000" points="206,-267.5 367,-267.5 "/>
 <text text-anchor="start" x="214" y="-255.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ PreparedStatement()</text>
 <text text-anchor="start" x="214" y="-244.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ ~PreparedStatement()</text>
@@ -73,7 +73,7 @@ var sectionId = 'dynsection-0';
 <text text-anchor="start" x="214" y="-178.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ set()</text>
 <text text-anchor="start" x="214" y="-167.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ set()</text>
 <text text-anchor="start" x="214" y="-156.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ set()</text>
-<text text-anchor="start" x="214" y="-145.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"># getWildCards()</text>
+<text text-anchor="start" x="214" y="-145.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"># getPlaceholders()</text>
 <text text-anchor="start" x="214" y="-134.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"># checkIndex()</text>
 </g>
 <!-- Node1 -->

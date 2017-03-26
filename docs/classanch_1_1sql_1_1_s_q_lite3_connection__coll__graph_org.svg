@@ -91,7 +91,7 @@
 <polygon fill="none" stroke="#000000" points="62.5,-635.5 62.5,-813.5 223.5,-813.5 223.5,-635.5 62.5,-635.5"/>
 <text text-anchor="middle" x="143" y="-801.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">anch::sql::PreparedStatement</text>
 <polyline fill="none" stroke="#000000" points="62.5,-794.5 223.5,-794.5 "/>
-<text text-anchor="start" x="70.5" y="-782.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"># _nbWildcards</text>
+<text text-anchor="start" x="70.5" y="-782.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"># _nbPlaceholders</text>
 <polyline fill="none" stroke="#000000" points="62.5,-775.5 223.5,-775.5 "/>
 <text text-anchor="start" x="70.5" y="-763.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ PreparedStatement()</text>
 <text text-anchor="start" x="70.5" y="-752.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ ~PreparedStatement()</text>
@@ -103,7 +103,7 @@
 <text text-anchor="start" x="70.5" y="-686.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ set()</text>
 <text text-anchor="start" x="70.5" y="-675.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ set()</text>
 <text text-anchor="start" x="70.5" y="-664.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ set()</text>
-<text text-anchor="start" x="70.5" y="-653.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"># getWildCards()</text>
+<text text-anchor="start" x="70.5" y="-653.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"># getPlaceholders()</text>
 <text text-anchor="start" x="70.5" y="-642.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"># checkIndex()</text>
 </a>
 </g>

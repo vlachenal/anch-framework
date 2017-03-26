@@ -104,7 +104,7 @@ I have other projects (unfinished) and I wanted to share my work with these libr
 Prerequisites</h1>
 <p>AnCH libraries have various requirements.<br />
 To use AnCH Framework in its totallity, you need:</p><ul>
-<li>recent C++ compiler (such as gcc 4.8.1 or later seems to work with gcc 4.7)</li>
+<li>recent C++ compiler (such as gcc 4.8.1 or later)</li>
 <li>boost library (until standard C++ library implements regular expression)</li>
 <li>CMake</li>
 <li>POSIX system</li>
@@ -114,18 +114,18 @@ Libraries dependencies</h1>
 <ul>
 <li>anch-utils: Dependends on the feature (see class and function description)</li>
 <li>anch-resource:<ul>
-<li>boost (until standard C++ library implements regular expression)</li>
+<li>boost (until standard C++ library implements regular expression =&gt; gcc 5 or later)</li>
 </ul>
 </li>
 <li>anch-date:<ul>
-<li>boost (until standard C++ library implements regular expression)</li>
+<li>boost (until standard C++ library implements regular expression =&gt; gcc 5 or later)</li>
 </ul>
 </li>
 <li>anch-logger:<ul>
 <li>anch-resource: parse anch-logger configuration file</li>
 <li>anch-date: high resolution clock (up to nanosecond)</li>
 <li>anch-utils: Meyer's singleton</li>
-<li>boost (until standard C++ library implements regular expression)</li>
+<li>boost (until standard C++ library implements regular expression =&gt; gcc 5 or later)</li>
 </ul>
 </li>
 <li>anch-events:<ul>
@@ -135,10 +135,15 @@ Libraries dependencies</h1>
 <li>anch-crypto: nothing</li>
 <li>anch-device: nothing</li>
 <li>anch-network: nothing</li>
+<li>anch-sql:<ul>
+<li>anch-utils: SQL connection pool</li>
+<li>anch-resource: SQL database and connection pool configuration</li>
+</ul>
+</li>
 </ul>
 <h1><a class="anchor" id="install_sec"></a>
 Installation</h1>
-<p>TODO fill this section</p>
+<p>make install</p>
 <h1><a class="anchor" id="version_sec"></a>
 Versions</h1>
 <p>AnCH framework will be released with classic version numbers (A.B.C).<br />
@@ -154,7 +159,7 @@ TODO list</h1>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Mar 25 2017 15:30:41 for AnCH Framework by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Mar 26 2017 11:50:37 for AnCH Framework by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.13
 </small></address>

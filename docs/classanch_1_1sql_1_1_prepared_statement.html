@@ -117,8 +117,8 @@ Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
-<tr class="memitem:a5b44845fca0aa967abbd68b6b3afb2d9"><td class="memItemLeft" align="right" valign="top">std::set&lt; std::size_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1sql_1_1_prepared_statement.html#a5b44845fca0aa967abbd68b6b3afb2d9">getWildCards</a> (const std::string &amp;query) const</td></tr>
-<tr class="separator:a5b44845fca0aa967abbd68b6b3afb2d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6b28fada2c9a3f5dbf98a6023945dc33"><td class="memItemLeft" align="right" valign="top">std::set&lt; std::size_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1sql_1_1_prepared_statement.html#a6b28fada2c9a3f5dbf98a6023945dc33">getPlaceholders</a> (const std::string &amp;query) const</td></tr>
+<tr class="separator:a6b28fada2c9a3f5dbf98a6023945dc33"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac0796b88d7c148de109dd34934ec4826"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1sql_1_1_prepared_statement.html#ac0796b88d7c148de109dd34934ec4826">checkIndex</a> (std::size_t index) const  throw (SqlException)</td></tr>
 <tr class="separator:ac0796b88d7c148de109dd34934ec4826"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -126,8 +126,8 @@ Protected Member Functions</h2></td></tr>
 Protected Attributes</h2></td></tr>
 <tr class="memitem:a772ac1ecb80c5376978d78cdbf83e394"><td class="memItemLeft" align="right" valign="top">std::map&lt; std::size_t, std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1sql_1_1_prepared_statement.html#a772ac1ecb80c5376978d78cdbf83e394">_values</a></td></tr>
 <tr class="separator:a772ac1ecb80c5376978d78cdbf83e394"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af309a2c667c4194b8cfe186884afa6e1"><td class="memItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1sql_1_1_prepared_statement.html#af309a2c667c4194b8cfe186884afa6e1">_nbWildcards</a></td></tr>
-<tr class="separator:af309a2c667c4194b8cfe186884afa6e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a44525e33ea1e0f7da07cca8a841843e5"><td class="memItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1sql_1_1_prepared_statement.html#a44525e33ea1e0f7da07cca8a841843e5">_nbPlaceholders</a></td></tr>
+<tr class="separator:a44525e33ea1e0f7da07cca8a841843e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>SQL prepared statement. </p>
@@ -266,8 +266,8 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a5b44845fca0aa967abbd68b6b3afb2d9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5b44845fca0aa967abbd68b6b3afb2d9">&#9670;&nbsp;</a></span>getWildCards()</h2>
+<a id="a6b28fada2c9a3f5dbf98a6023945dc33"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6b28fada2c9a3f5dbf98a6023945dc33">&#9670;&nbsp;</a></span>getPlaceholders()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -276,7 +276,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::set&lt; std::size_t &gt; PreparedStatement::getWildCards </td>
+          <td class="memname">std::set&lt; std::size_t &gt; PreparedStatement::getPlaceholders </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&#160;</td>
           <td class="paramname"><em>query</em></td><td>)</td>
@@ -289,14 +289,14 @@ Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Retrieve wildcards positions ('?') in SQL query</p>
+<p>Retrieve placeholders positions ('?') in SQL query</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">query</td><td>the SQL query</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>the wildcards' position </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>the placeholders' position </dd></dl>
 
 </div>
 </div>
@@ -637,8 +637,8 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="af309a2c667c4194b8cfe186884afa6e1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af309a2c667c4194b8cfe186884afa6e1">&#9670;&nbsp;</a></span>_nbWildcards</h2>
+<a id="a44525e33ea1e0f7da07cca8a841843e5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a44525e33ea1e0f7da07cca8a841843e5">&#9670;&nbsp;</a></span>_nbPlaceholders</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -647,7 +647,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::size_t anch::sql::PreparedStatement::_nbWildcards</td>
+          <td class="memname">std::size_t anch::sql::PreparedStatement::_nbPlaceholders</td>
         </tr>
       </table>
   </td>
@@ -656,7 +656,7 @@ Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Number of wildcards in SQL query </p>
+<p>Number of placeholders in SQL query </p>
 
 </div>
 </div>
@@ -690,7 +690,7 @@ Protected Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Mar 25 2017 15:30:41 for AnCH Framework by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Mar 26 2017 11:50:37 for AnCH Framework by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.13
 </small></address>
