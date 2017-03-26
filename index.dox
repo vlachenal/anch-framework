@@ -33,7 +33,7 @@
  *
  * AnCH libraries have various requirements.\n
  * To use AnCH Framework in its totallity, you need:
- * - recent C++ compiler (such as gcc 4.8.1 or later seems to work with gcc 4.7)
+ * - recent C++ compiler (such as gcc 4.8.1 or later)
  * - boost library (until standard C++ library implements regular expression)
  * - CMake
  * - POSIX system
@@ -42,23 +42,26 @@
  *
  * - anch-utils: Dependends on the feature (see class and function description)
  * - anch-resource:
- *   - boost (until standard C++ library implements regular expression)
+ *   - boost (until standard C++ library implements regular expression => gcc 5 or later)
  * - anch-date:
- *   - boost (until standard C++ library implements regular expression)
+ *   - boost (until standard C++ library implements regular expression => gcc 5 or later)
  * - anch-logger:
  *   - anch-resource: parse anch-logger configuration file
  *   - anch-date: high resolution clock (up to nanosecond)
  *   - anch-utils: Meyer's singleton
- *   - boost (until standard C++ library implements regular expression)
+ *   - boost (until standard C++ library implements regular expression => gcc 5 or later)
  * - anch-events:
  *   - anch-utils: object instance address comparator and Meyers' singleton
  * - anch-crypto: nothing
  * - anch-device: nothing
  * - anch-network: nothing
+ * - anch-sql:
+ *   - anch-utils: SQL connection pool
+ *   - anch-resource: SQL database and connection pool configuration
  *
  * \section install_sec Installation
  *
- * TODO fill this section
+ * make install
  *
  * \section version_sec Versions
  *
