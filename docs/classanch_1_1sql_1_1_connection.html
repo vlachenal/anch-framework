@@ -128,6 +128,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ad3ec5cab9f60dece303d571fb185a8e5"><td class="memTemplParams" colspan="2">template&lt;typename T , typename... Q&gt; </td></tr>
 <tr class="memitem:ad3ec5cab9f60dece303d571fb185a8e5"><td class="memTemplItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classanch_1_1sql_1_1_connection.html#ad3ec5cab9f60dece303d571fb185a8e5">update</a> (const std::string &amp;<a class="el" href="classanch_1_1sql_1_1_connection.html#a06be37c636583b9fe7905dd4e1a7d588">query</a>, const T &amp;value, const Q &amp;... values)  throw (SqlException)</td></tr>
 <tr class="separator:ad3ec5cab9f60dece303d571fb185a8e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a16bb2c8695a30f4aa4832017662aa034"><td class="memTemplParams" colspan="2">template&lt;typename T , typename Iterable &gt; </td></tr>
+<tr class="memitem:a16bb2c8695a30f4aa4832017662aa034"><td class="memTemplItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classanch_1_1sql_1_1_connection.html#a16bb2c8695a30f4aa4832017662aa034">batchUpdate</a> (const std::string &amp;<a class="el" href="classanch_1_1sql_1_1_connection.html#a06be37c636583b9fe7905dd4e1a7d588">query</a>, std::function&lt; void(<a class="el" href="classanch_1_1sql_1_1_prepared_statement.html">PreparedStatement</a> &amp;, const T &amp;)&gt; mapper, const Iterable &amp;values)  throw (SqlException)</td></tr>
+<tr class="separator:a16bb2c8695a30f4aa4832017662aa034"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adb784b20e789d1b9c7aca8047d7c412a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1sql_1_1_connection.html#adb784b20e789d1b9c7aca8047d7c412a">isAutoCommit</a> () const</td></tr>
 <tr class="separator:adb784b20e789d1b9c7aca8047d7c412a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a235ca781c1677744712592162bebf24c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1sql_1_1_connection.html#a235ca781c1677744712592162bebf24c">isValid</a> () const</td></tr>
@@ -249,6 +252,72 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a16bb2c8695a30f4aa4832017662aa034"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a16bb2c8695a30f4aa4832017662aa034">&#9670;&nbsp;</a></span>batchUpdate()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T , typename Iterable &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint64_t anch::sql::Connection::batchUpdate </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>query</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::function&lt; void(<a class="el" href="classanch_1_1sql_1_1_prepared_statement.html">PreparedStatement</a> &amp;, const T &amp;)&gt;&#160;</td>
+          <td class="paramname"><em>mapper</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const Iterable &amp;&#160;</td>
+          <td class="paramname"><em>values</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+        <tr>
+          <td align="right">throw </td><td>(</td><td colspan="2"><a class="el" href="classanch_1_1sql_1_1_sql_exception.html">SqlException</a></td>
+        </tr>
+        <tr>
+          <td align="right"></td><td>)</td><td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Execute batch prepared statement</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">query</td><td>the SQL query </td></tr>
+    <tr><td class="paramname">mapper</td><td>the single value prepared statement mapper </td></tr>
+    <tr><td class="paramname">values</td><td>the values as structure or class</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>the number of affected rows</dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classanch_1_1sql_1_1_sql_exception.html" title="SQL exception. ">SqlException</a></td><td>any error </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="a441570914a181c03cc9f954d14134d44"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a441570914a181c03cc9f954d14134d44">&#9670;&nbsp;</a></span>commit()</h2>
 

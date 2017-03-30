@@ -48,7 +48,7 @@
 <text text-anchor="start" x="87" y="-322.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ query()</text>
 <text text-anchor="start" x="87" y="-311.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ queryMapRow()</text>
 <text text-anchor="start" x="87" y="-300.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ queryExtract()</text>
-<text text-anchor="start" x="87" y="-289.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">and 7 more...</text>
+<text text-anchor="start" x="87" y="-289.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">and 8 more...</text>
 <text text-anchor="start" x="87" y="-278.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"># executeQuery()</text>
 <text text-anchor="start" x="87" y="-267.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"># executeUpdate()</text>
 <text text-anchor="start" x="87" y="-256.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"># sendCommit()</text>
