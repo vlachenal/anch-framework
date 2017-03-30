@@ -82,7 +82,8 @@ $(function() {
 <div class="dynheader">
 Inheritance diagram for anch::sql::Connection:</div>
 <div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="classanch_1_1sql_1_1_connection__inherit__graph.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="classanch_1_1sql_1_1_connection__inherit__graph.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
 </div>
 <div class="dynheader">
 Collaboration diagram for anch::sql::Connection:</div>
@@ -113,8 +114,20 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:afd8cf7f3ede6b11277988ab569873c3b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa53989aee0830a47f2d6a6ac52087435"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1sql_1_1_connection.html#aa53989aee0830a47f2d6a6ac52087435">queryExtract</a> (const std::string &amp;sqlQuery, std::function&lt; void(<a class="el" href="classanch_1_1sql_1_1_result_set.html">ResultSet</a> &amp;)&gt; resExtractor)  throw (SqlException)</td></tr>
 <tr class="separator:aa53989aee0830a47f2d6a6ac52087435"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0998f4e0745cf70b09703c61ff43718d"><td class="memTemplParams" colspan="2">template&lt;typename T , typename... Q&gt; </td></tr>
+<tr class="memitem:a0998f4e0745cf70b09703c61ff43718d"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classanch_1_1sql_1_1_result_set.html">ResultSet</a> *&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classanch_1_1sql_1_1_connection.html#a0998f4e0745cf70b09703c61ff43718d">query</a> (const std::string &amp;query, const T &amp;value, const Q &amp;... values)  throw (SqlException)</td></tr>
+<tr class="separator:a0998f4e0745cf70b09703c61ff43718d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4450e4f4c4e41ddb1ae49023b2755edb"><td class="memTemplParams" colspan="2">template&lt;typename T , typename... Q&gt; </td></tr>
+<tr class="memitem:a4450e4f4c4e41ddb1ae49023b2755edb"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classanch_1_1sql_1_1_connection.html#a4450e4f4c4e41ddb1ae49023b2755edb">queryMapRow</a> (const std::string &amp;<a class="el" href="classanch_1_1sql_1_1_connection.html#a06be37c636583b9fe7905dd4e1a7d588">query</a>, std::function&lt; void(<a class="el" href="classanch_1_1sql_1_1_result_set.html">ResultSet</a> &amp;)&gt; rowMapper, const T &amp;value, const Q &amp;... values)  throw (SqlException)</td></tr>
+<tr class="separator:a4450e4f4c4e41ddb1ae49023b2755edb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:affcdb78efbbe95748ba52aec2f7ca57e"><td class="memTemplParams" colspan="2">template&lt;typename T , typename... Q&gt; </td></tr>
+<tr class="memitem:affcdb78efbbe95748ba52aec2f7ca57e"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classanch_1_1sql_1_1_connection.html#affcdb78efbbe95748ba52aec2f7ca57e">queryExtract</a> (const std::string &amp;<a class="el" href="classanch_1_1sql_1_1_connection.html#a06be37c636583b9fe7905dd4e1a7d588">query</a>, std::function&lt; void(<a class="el" href="classanch_1_1sql_1_1_result_set.html">ResultSet</a> &amp;)&gt; resExtractor, const T &amp;value, const Q &amp;... values)  throw (SqlException)</td></tr>
+<tr class="separator:affcdb78efbbe95748ba52aec2f7ca57e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab342f819c23a8ad1e763d1bc93f2c7af"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1sql_1_1_connection.html#ab342f819c23a8ad1e763d1bc93f2c7af">update</a> (const std::string &amp;<a class="el" href="classanch_1_1sql_1_1_connection.html#a06be37c636583b9fe7905dd4e1a7d588">query</a>)  throw (SqlException)</td></tr>
 <tr class="separator:ab342f819c23a8ad1e763d1bc93f2c7af"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad3ec5cab9f60dece303d571fb185a8e5"><td class="memTemplParams" colspan="2">template&lt;typename T , typename... Q&gt; </td></tr>
+<tr class="memitem:ad3ec5cab9f60dece303d571fb185a8e5"><td class="memTemplItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classanch_1_1sql_1_1_connection.html#ad3ec5cab9f60dece303d571fb185a8e5">update</a> (const std::string &amp;<a class="el" href="classanch_1_1sql_1_1_connection.html#a06be37c636583b9fe7905dd4e1a7d588">query</a>, const T &amp;value, const Q &amp;... values)  throw (SqlException)</td></tr>
+<tr class="separator:ad3ec5cab9f60dece303d571fb185a8e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adb784b20e789d1b9c7aca8047d7c412a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1sql_1_1_connection.html#adb784b20e789d1b9c7aca8047d7c412a">isAutoCommit</a> () const</td></tr>
 <tr class="separator:adb784b20e789d1b9c7aca8047d7c412a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a235ca781c1677744712592162bebf24c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1sql_1_1_connection.html#a235ca781c1677744712592162bebf24c">isValid</a> () const</td></tr>
@@ -504,7 +517,7 @@ If auto commit is set, this method does nothing.</p>
 </div>
 </div>
 <a id="a06be37c636583b9fe7905dd4e1a7d588"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a06be37c636583b9fe7905dd4e1a7d588">&#9670;&nbsp;</a></span>query()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a06be37c636583b9fe7905dd4e1a7d588">&#9670;&nbsp;</a></span>query() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -541,8 +554,74 @@ If auto commit is set, this method does nothing.</p>
 
 </div>
 </div>
+<a id="a0998f4e0745cf70b09703c61ff43718d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0998f4e0745cf70b09703c61ff43718d">&#9670;&nbsp;</a></span>query() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T , typename... Q&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classanch_1_1sql_1_1_result_set.html">ResultSet</a>* anch::sql::Connection::query </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>query</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const T &amp;&#160;</td>
+          <td class="paramname"><em>value</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const Q &amp;...&#160;</td>
+          <td class="paramname"><em>values</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+        <tr>
+          <td align="right">throw </td><td>(</td><td colspan="2"><a class="el" href="classanch_1_1sql_1_1_sql_exception.html">SqlException</a></td>
+        </tr>
+        <tr>
+          <td align="right"></td><td>)</td><td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Execute SQL prepared statement query</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">query</td><td>the SQL query to execute </td></tr>
+    <tr><td class="paramname">value</td><td>the first value to bind </td></tr>
+    <tr><td class="paramname">values</td><td>the other values</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>the result set which has to be deleted after use</dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classanch_1_1sql_1_1_sql_exception.html" title="SQL exception. ">SqlException</a></td><td>any error </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="aa53989aee0830a47f2d6a6ac52087435"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa53989aee0830a47f2d6a6ac52087435">&#9670;&nbsp;</a></span>queryExtract()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aa53989aee0830a47f2d6a6ac52087435">&#9670;&nbsp;</a></span>queryExtract() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -589,8 +668,80 @@ If auto commit is set, this method does nothing.</p>
 
 </div>
 </div>
+<a id="affcdb78efbbe95748ba52aec2f7ca57e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#affcdb78efbbe95748ba52aec2f7ca57e">&#9670;&nbsp;</a></span>queryExtract() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T , typename... Q&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void anch::sql::Connection::queryExtract </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>query</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::function&lt; void(<a class="el" href="classanch_1_1sql_1_1_result_set.html">ResultSet</a> &amp;)&gt;&#160;</td>
+          <td class="paramname"><em>resExtractor</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const T &amp;&#160;</td>
+          <td class="paramname"><em>value</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const Q &amp;...&#160;</td>
+          <td class="paramname"><em>values</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+        <tr>
+          <td align="right">throw </td><td>(</td><td colspan="2"><a class="el" href="classanch_1_1sql_1_1_sql_exception.html">SqlException</a></td>
+        </tr>
+        <tr>
+          <td align="right"></td><td>)</td><td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Execute query and extract result set</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">sqlQuery</td><td>the SQL query to execute </td></tr>
+    <tr><td class="paramname">resExtractor</td><td>the result set extractor function </td></tr>
+    <tr><td class="paramname">value</td><td>the first value to bind </td></tr>
+    <tr><td class="paramname">values</td><td>the other values</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classanch_1_1sql_1_1_sql_exception.html" title="SQL exception. ">SqlException</a></td><td>any error </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="afd8cf7f3ede6b11277988ab569873c3b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afd8cf7f3ede6b11277988ab569873c3b">&#9670;&nbsp;</a></span>queryMapRow()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#afd8cf7f3ede6b11277988ab569873c3b">&#9670;&nbsp;</a></span>queryMapRow() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -625,6 +776,78 @@ If auto commit is set, this method does nothing.</p>
   <table class="params">
     <tr><td class="paramname">sqlQuery</td><td>the SQL query to execute </td></tr>
     <tr><td class="paramname">rowMapper</td><td>the row mapper function</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classanch_1_1sql_1_1_sql_exception.html" title="SQL exception. ">SqlException</a></td><td>any error </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a4450e4f4c4e41ddb1ae49023b2755edb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4450e4f4c4e41ddb1ae49023b2755edb">&#9670;&nbsp;</a></span>queryMapRow() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T , typename... Q&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void anch::sql::Connection::queryMapRow </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>query</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::function&lt; void(<a class="el" href="classanch_1_1sql_1_1_result_set.html">ResultSet</a> &amp;)&gt;&#160;</td>
+          <td class="paramname"><em>rowMapper</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const T &amp;&#160;</td>
+          <td class="paramname"><em>value</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const Q &amp;...&#160;</td>
+          <td class="paramname"><em>values</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+        <tr>
+          <td align="right">throw </td><td>(</td><td colspan="2"><a class="el" href="classanch_1_1sql_1_1_sql_exception.html">SqlException</a></td>
+        </tr>
+        <tr>
+          <td align="right"></td><td>)</td><td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Execute query and treat each row of result set</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">sqlQuery</td><td>the SQL query to execute </td></tr>
+    <tr><td class="paramname">rowMapper</td><td>the row mapper function </td></tr>
+    <tr><td class="paramname">value</td><td>the first value to bind </td></tr>
+    <tr><td class="paramname">values</td><td>the other values</td></tr>
   </table>
   </dd>
 </dl>
@@ -868,7 +1091,7 @@ This method does nothing if auto commit is same as before.</p>
 </div>
 </div>
 <a id="ab342f819c23a8ad1e763d1bc93f2c7af"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab342f819c23a8ad1e763d1bc93f2c7af">&#9670;&nbsp;</a></span>update()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ab342f819c23a8ad1e763d1bc93f2c7af">&#9670;&nbsp;</a></span>update() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -895,6 +1118,73 @@ This method does nothing if auto commit is same as before.</p>
   </table>
   </dd>
 </dl>
+<dl class="section return"><dt>Returns</dt><dd>the number of affected rows</dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classanch_1_1sql_1_1_sql_exception.html" title="SQL exception. ">SqlException</a></td><td>any error </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ad3ec5cab9f60dece303d571fb185a8e5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad3ec5cab9f60dece303d571fb185a8e5">&#9670;&nbsp;</a></span>update() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T , typename... Q&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint64_t anch::sql::Connection::update </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>query</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const T &amp;&#160;</td>
+          <td class="paramname"><em>value</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const Q &amp;...&#160;</td>
+          <td class="paramname"><em>values</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+        <tr>
+          <td align="right">throw </td><td>(</td><td colspan="2"><a class="el" href="classanch_1_1sql_1_1_sql_exception.html">SqlException</a></td>
+        </tr>
+        <tr>
+          <td align="right"></td><td>)</td><td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Execute update (INSERT, UPDATE or DELETE) SQL prepared statement.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">query</td><td>the SQL query </td></tr>
+    <tr><td class="paramname">value</td><td>the first value to bind </td></tr>
+    <tr><td class="paramname">values</td><td>the other values</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>the number of affected rows</dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
     <tr><td class="paramname"><a class="el" href="classanch_1_1sql_1_1_sql_exception.html" title="SQL exception. ">SqlException</a></td><td>any error </td></tr>
