@@ -88,7 +88,7 @@ static int emptyCB(void*, int, char**, char**) {
 
 uint64_t
 SQLite3Connection::executeUpdate(const std::string& query) throw(SqlException) {
-  char* errMsg = 0;
+  char* errMsg = NULL;
   int res = sqlite3_exec(_conn, query.data(), emptyCB, 0, &errMsg);
   if(res != SQLITE_OK) {
     std::ostringstream msg;
@@ -96,7 +96,7 @@ SQLite3Connection::executeUpdate(const std::string& query) throw(SqlException) {
     sqlite3_free(errMsg);
     throw SqlException(msg.str());
   }
-  return static_cast<uint64_t>(sqlite3_changes(_conn));;
+  return static_cast<uint64_t>(sqlite3_changes(_conn));
 }
 
 void

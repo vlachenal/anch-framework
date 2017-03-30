@@ -70,6 +70,7 @@ void
 bindParamsAndSend(sqlite3* conn,
 		  sqlite3_stmt* stmt,
 		  const std::map<std::size_t,std::string>& paramValues) throw(SqlException) {
+  sqlite3_reset(stmt);
   sqlite3_clear_bindings(stmt);
   // Bind parameters +
   int res = SQLITE_OK;
@@ -95,6 +96,9 @@ SQLite3PreparedStatement::executeQuery() throw(SqlException) {
 uint64_t
 SQLite3PreparedStatement::executeUpdate() throw(SqlException) {
   bindParamsAndSend(_conn, _stmt, _values);
+  while(sqlite3_step(_stmt) == SQLITE_ROW) {
+    // Nothing to do
+  }
   return static_cast<uint64_t>(sqlite3_changes(_conn));
 }
 // Methods -
