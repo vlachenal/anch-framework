@@ -133,7 +133,7 @@ PostgreSQLPreparedStatement::executeUpdate() throw(SqlException) {
   uint64_t nbRows = static_cast<uint64_t>(std::atoll(PQcmdTuples(pgRes)));
   PQclear(pgRes);
   // Consume next result to avoid error ... +
-  if((pgRes = PQgetResult(_conn)) != NULL) {
+  if((pgRes = PQgetResult(_conn)) != NULL) { // Should not happen
     PQclear(pgRes);
     while((pgRes = PQgetResult(_conn)) != NULL) {
       PQclear(pgRes); // free PostgreSQL result

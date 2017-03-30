@@ -264,6 +264,28 @@ namespace anch {
 	return stmt.executeUpdate();
       }
 
+      /*!
+       * Execute batch prepared statement
+       *
+       * \param query the SQL query
+       * \param mapper the single value prepared statement mapper
+       * \param values the values as structure or class
+       *
+       * \return the number of affected rows
+       *
+       * \throw SqlException any error
+       */
+      template<typename T, typename Iterable>
+      uint64_t batchUpdate(const std::string& query, std::function<void(PreparedStatement&, const T&)> mapper, const Iterable& values) throw(SqlException) {
+	PreparedStatement& stmt = prepareStatement(query);
+	uint64_t nbRows = 0;
+	for(auto iter = values.cbegin() ; iter != values.cend() ; ++iter) {
+	  mapper(stmt, *iter);
+	  nbRows += stmt.executeUpdate();
+	}
+	return nbRows;
+      }
+
     protected:
       /*!
        * Execute SQL select query
