@@ -50,6 +50,7 @@ SQLite3PreparedStatement::SQLite3PreparedStatement(sqlite3* dbCon, const std::st
 // Destructor +
 SQLite3PreparedStatement::~SQLite3PreparedStatement() {
   if(_stmt != NULL) {
+    sqlite3_reset(_stmt);
     sqlite3_clear_bindings(_stmt);
     sqlite3_finalize(_stmt);
   }
@@ -75,7 +76,11 @@ bindParamsAndSend(sqlite3* conn,
   // Bind parameters +
   int res = SQLITE_OK;
   for(auto iter = paramValues.cbegin() ; iter != paramValues.cend() ; ++iter) {
-    sqlite3_bind_text(stmt, static_cast<int>(iter->first), iter->second.data(), static_cast<int>(iter->second.length()), SQLITE_STATIC);
+    sqlite3_bind_text(stmt,
+		      static_cast<int>(iter->first),
+		      iter->second.data(),
+		      static_cast<int>(iter->second.length()),
+		      SQLITE_STATIC);
     if(res != SQLITE_OK) {
       std::ostringstream msg;
       msg << "Error while binding parameter [" << iter->first << "] = " << iter->second << ": " << sqlite3_errmsg(conn);

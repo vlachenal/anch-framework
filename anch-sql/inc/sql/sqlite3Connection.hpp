@@ -55,8 +55,7 @@ namespace anch {
        *
        * \throw SqlException fail to create connection
        */
-      SQLite3Connection(const std::string& database)
-	throw(SqlException);
+      SQLite3Connection(const std::string& database) throw(SqlException);
 
       /*!
        * \ref SQLite3Connection constructor
@@ -65,8 +64,7 @@ namespace anch {
        *
        * \throw SqlException fail to create connection
        */
-      SQLite3Connection(const SqlConnectionConfiguration& config)
-	throw(SqlException);
+      SQLite3Connection(const SqlConnectionConfiguration& config) throw(SqlException);
 
       /*!
        * Prohibit \ref SQLite3Connection copy constructor

@@ -56,7 +56,7 @@ SQLite3ResultSet::getValue(std::size_t idx, std::string& out) throw(SqlException
   bool null = true;
   const unsigned char* data = sqlite3_column_text(_stmt, static_cast<int>(idx));
   if(data != NULL) {
-    out = std::string((char*)data);
+    out = std::string(reinterpret_cast<const char*>(data));
     null = false;
   }
   return null;
