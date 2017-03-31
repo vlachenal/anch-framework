@@ -71,8 +71,8 @@ void
 bindParamsAndSend(sqlite3* conn,
 		  sqlite3_stmt* stmt,
 		  const std::map<std::size_t,std::string>& paramValues) throw(SqlException) {
-  sqlite3_reset(stmt);
   sqlite3_clear_bindings(stmt);
+  sqlite3_reset(stmt);
   // Bind parameters +
   int res = SQLITE_OK;
   for(auto iter = paramValues.cbegin() ; iter != paramValues.cend() ; ++iter) {

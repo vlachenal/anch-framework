@@ -64,6 +64,10 @@ SQLite3Connection::SQLite3Connection(const SqlConnectionConfiguration& config)
 
 // Destructor +
 SQLite3Connection::~SQLite3Connection() {
+  for(auto iter = _stmts.begin() ; iter != _stmts.end() ; ++iter) {
+    delete iter->second;
+  }
+  _stmts.clear();
   sqlite3_close(_conn);
 }
 // Destructor -
@@ -71,7 +75,7 @@ SQLite3Connection::~SQLite3Connection() {
 // Methods +
 ResultSet*
 SQLite3Connection::executeQuery(const std::string& query) throw(SqlException) {
-  sqlite3_stmt* stmt;
+  sqlite3_stmt* stmt = NULL;
   int res = sqlite3_prepare_v2(_conn, query.data(), -1, &stmt, NULL);
   if(res != SQLITE_OK) {
     std::ostringstream msg;
