@@ -143,7 +143,7 @@ main(int argc, char** argv) {
     std::cout << "Cipher Makefile" << std::endl;
     CFB<AES192> cfb(iv);
     start = std::chrono::high_resolution_clock::now();
-    cfb.cipher(*input, cfbOutCipher, "foobar    raboof");
+    cfb.cipher(*input, cfbOutCipher, "foobar    rabooffoobar    raboof");
     end = std::chrono::high_resolution_clock::now();
     duration = std::chrono::duration_cast<std::chrono::microseconds>(end.time_since_epoch()) - std::chrono::duration_cast<std::chrono::microseconds>(start.time_since_epoch());
     cfbOutCipher.close();
@@ -155,7 +155,7 @@ main(int argc, char** argv) {
     input = new std::ifstream("Makefile.cfb.aes192.cipher", std::ifstream::binary);
     std::ofstream cfbOutDecipher("Makefile.cfb.aes192.decipher");
     start = std::chrono::high_resolution_clock::now();
-    cfb.decipher(*input, cfbOutDecipher, "foobar    raboof");
+    cfb.decipher(*input, cfbOutDecipher, "foobar    rabooffoobar    raboof");
     end = std::chrono::high_resolution_clock::now();
     duration = std::chrono::duration_cast<std::chrono::microseconds>(end.time_since_epoch()) - std::chrono::duration_cast<std::chrono::microseconds>(start.time_since_epoch());
     cfbOutDecipher.close();

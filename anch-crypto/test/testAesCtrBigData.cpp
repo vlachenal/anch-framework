@@ -79,7 +79,7 @@ main(void) {
      * EVP_EncryptUpdate can be called multiple times if necessary
      */
     while(!input->eof()) {
-      input->read(reinterpret_cast<char*>(plaintext), AES256::getBlockSize() * 4);
+      input->read(reinterpret_cast<char*>(plaintext), static_cast<std::streamsize>(AES256::getBlockSize() * 4));
       std::streamsize nbRead = input->gcount();
       if(nbRead == 0) {
 	break;

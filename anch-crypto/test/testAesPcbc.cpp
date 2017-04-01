@@ -258,7 +258,7 @@ main(int argc, char** argv) {
     std::cout << "Cipher Makefile" << std::endl;
     PCBC<AES192,ISO7816_4Padding> pcbc(iv);
     start = std::chrono::high_resolution_clock::now();
-    pcbc.cipher(*input, pcbcOutCipher, "foobar    raboof");
+    pcbc.cipher(*input, pcbcOutCipher, "foobar    rabooffoobar    raboof");
     end = std::chrono::high_resolution_clock::now();
     duration = std::chrono::duration_cast<std::chrono::microseconds>(end.time_since_epoch()) - std::chrono::duration_cast<std::chrono::microseconds>(start.time_since_epoch());
     pcbcOutCipher.close();
@@ -270,7 +270,7 @@ main(int argc, char** argv) {
     input = new std::ifstream("Makefile.pcbc.aes192.ISO7816_4.cipher", std::ifstream::binary);
     std::ofstream pcbcOutDecipher("Makefile.pcbc.aes192.ISO7816_4.decipher");
     start = std::chrono::high_resolution_clock::now();
-    pcbc.decipher(*input, pcbcOutDecipher, "foobar    raboof");
+    pcbc.decipher(*input, pcbcOutDecipher, "foobar    rabooffoobar    raboof");
     end = std::chrono::high_resolution_clock::now();
     duration = std::chrono::duration_cast<std::chrono::microseconds>(end.time_since_epoch()) - std::chrono::duration_cast<std::chrono::microseconds>(start.time_since_epoch());
     pcbcOutDecipher.close();
@@ -311,7 +311,7 @@ main(int argc, char** argv) {
     std::cout << "Cipher Makefile" << std::endl;
     PCBC<AES192,PKCS5Padding> pcbc(iv);
     start = std::chrono::high_resolution_clock::now();
-    pcbc.cipher(*input, pcbcOutCipher, "foobar    raboof");
+    pcbc.cipher(*input, pcbcOutCipher, "foobar    rabooffoobar    raboof");
     end = std::chrono::high_resolution_clock::now();
     duration = std::chrono::duration_cast<std::chrono::microseconds>(end.time_since_epoch()) - std::chrono::duration_cast<std::chrono::microseconds>(start.time_since_epoch());
     pcbcOutCipher.close();
@@ -323,7 +323,7 @@ main(int argc, char** argv) {
     input = new std::ifstream("Makefile.pcbc.aes192.pkcs5.cipher", std::ifstream::binary);
     std::ofstream pcbcOutDecipher("Makefile.pcbc.aes192.pkcs5.decipher");
     start = std::chrono::high_resolution_clock::now();
-    pcbc.decipher(*input, pcbcOutDecipher, "foobar    raboof");
+    pcbc.decipher(*input, pcbcOutDecipher, "foobar    rabooffoobar    raboof");
     end = std::chrono::high_resolution_clock::now();
     duration = std::chrono::duration_cast<std::chrono::microseconds>(end.time_since_epoch()) - std::chrono::duration_cast<std::chrono::microseconds>(start.time_since_epoch());
     pcbcOutDecipher.close();
@@ -364,7 +364,7 @@ main(int argc, char** argv) {
     std::cout << "Cipher Makefile" << std::endl;
     PCBC<AES192,ZeroPadding> pcbc(iv);
     start = std::chrono::high_resolution_clock::now();
-    pcbc.cipher(*input, pcbcOutCipher, "foobar    raboof");
+    pcbc.cipher(*input, pcbcOutCipher, "foobar    rabooffoobar    raboof");
     end = std::chrono::high_resolution_clock::now();
     duration = std::chrono::duration_cast<std::chrono::microseconds>(end.time_since_epoch()) - std::chrono::duration_cast<std::chrono::microseconds>(start.time_since_epoch());
     pcbcOutCipher.close();
@@ -376,7 +376,7 @@ main(int argc, char** argv) {
     input = new std::ifstream("Makefile.pcbc.aes192.zero.cipher", std::ifstream::binary);
     std::ofstream pcbcOutDecipher("Makefile.pcbc.aes192.zero.decipher");
     start = std::chrono::high_resolution_clock::now();
-    pcbc.decipher(*input, pcbcOutDecipher, "foobar    raboof");
+    pcbc.decipher(*input, pcbcOutDecipher, "foobar    rabooffoobar    raboof");
     end = std::chrono::high_resolution_clock::now();
     duration = std::chrono::duration_cast<std::chrono::microseconds>(end.time_since_epoch()) - std::chrono::duration_cast<std::chrono::microseconds>(start.time_since_epoch());
     pcbcOutDecipher.close();
@@ -417,7 +417,7 @@ main(int argc, char** argv) {
     std::cout << "Cipher Makefile" << std::endl;
     PCBC<AES192,ANSIX923> pcbc(iv);
     start = std::chrono::high_resolution_clock::now();
-    pcbc.cipher(*input, pcbcOutCipher, "foobar    raboof");
+    pcbc.cipher(*input, pcbcOutCipher, "foobar    rabooffoobar    raboof");
     end = std::chrono::high_resolution_clock::now();
     duration = std::chrono::duration_cast<std::chrono::microseconds>(end.time_since_epoch()) - std::chrono::duration_cast<std::chrono::microseconds>(start.time_since_epoch());
     pcbcOutCipher.close();
@@ -429,7 +429,7 @@ main(int argc, char** argv) {
     input = new std::ifstream("Makefile.pcbc.aes192.ANSIX923.cipher", std::ifstream::binary);
     std::ofstream pcbcOutDecipher("Makefile.pcbc.aes192.ANSIX923.decipher");
     start = std::chrono::high_resolution_clock::now();
-    pcbc.decipher(*input, pcbcOutDecipher, "foobar    raboof");
+    pcbc.decipher(*input, pcbcOutDecipher, "foobar    rabooffoobar    raboof");
     end = std::chrono::high_resolution_clock::now();
     duration = std::chrono::duration_cast<std::chrono::microseconds>(end.time_since_epoch()) - std::chrono::duration_cast<std::chrono::microseconds>(start.time_since_epoch());
     pcbcOutDecipher.close();
@@ -468,7 +468,7 @@ main(int argc, char** argv) {
     std::cout << "Cipher Makefile" << std::endl;
     PCBC<AES256,ISO7816_4Padding> pcbc(iv);
     start = std::chrono::high_resolution_clock::now();
-    pcbc.cipher(*input, pcbcOutCipher, "foobar    raboof");
+    pcbc.cipher(*input, pcbcOutCipher, "foobar    rabooffoobar    raboof");
     end = std::chrono::high_resolution_clock::now();
     duration = std::chrono::duration_cast<std::chrono::microseconds>(end.time_since_epoch()) - std::chrono::duration_cast<std::chrono::microseconds>(start.time_since_epoch());
     pcbcOutCipher.close();
@@ -480,7 +480,7 @@ main(int argc, char** argv) {
     input = new std::ifstream("Makefile.pcbc.aes256.ISO7816_4.cipher", std::ifstream::binary);
     std::ofstream pcbcOutDecipher("Makefile.pcbc.aes256.ISO7816_4.decipher");
     start = std::chrono::high_resolution_clock::now();
-    pcbc.decipher(*input, pcbcOutDecipher, "foobar    raboof");
+    pcbc.decipher(*input, pcbcOutDecipher, "foobar    rabooffoobar    raboof");
     end = std::chrono::high_resolution_clock::now();
     duration = std::chrono::duration_cast<std::chrono::microseconds>(end.time_since_epoch()) - std::chrono::duration_cast<std::chrono::microseconds>(start.time_since_epoch());
     pcbcOutDecipher.close();
@@ -521,7 +521,7 @@ main(int argc, char** argv) {
     std::cout << "Cipher Makefile" << std::endl;
     PCBC<AES256,PKCS5Padding> pcbc(iv);
     start = std::chrono::high_resolution_clock::now();
-    pcbc.cipher(*input, pcbcOutCipher, "foobar    raboof");
+    pcbc.cipher(*input, pcbcOutCipher, "foobar    rabooffoobar    raboof");
     end = std::chrono::high_resolution_clock::now();
     duration = std::chrono::duration_cast<std::chrono::microseconds>(end.time_since_epoch()) - std::chrono::duration_cast<std::chrono::microseconds>(start.time_since_epoch());
     pcbcOutCipher.close();
@@ -533,7 +533,7 @@ main(int argc, char** argv) {
     input = new std::ifstream("Makefile.pcbc.aes256.pkcs5.cipher", std::ifstream::binary);
     std::ofstream pcbcOutDecipher("Makefile.pcbc.aes256.pkcs5.decipher");
     start = std::chrono::high_resolution_clock::now();
-    pcbc.decipher(*input, pcbcOutDecipher, "foobar    raboof");
+    pcbc.decipher(*input, pcbcOutDecipher, "foobar    rabooffoobar    raboof");
     end = std::chrono::high_resolution_clock::now();
     duration = std::chrono::duration_cast<std::chrono::microseconds>(end.time_since_epoch()) - std::chrono::duration_cast<std::chrono::microseconds>(start.time_since_epoch());
     pcbcOutDecipher.close();
@@ -574,7 +574,7 @@ main(int argc, char** argv) {
     std::cout << "Cipher Makefile" << std::endl;
     PCBC<AES256,ZeroPadding> pcbc(iv);
     start = std::chrono::high_resolution_clock::now();
-    pcbc.cipher(*input, pcbcOutCipher, "foobar    raboof");
+    pcbc.cipher(*input, pcbcOutCipher, "foobar    rabooffoobar    raboof");
     end = std::chrono::high_resolution_clock::now();
     duration = std::chrono::duration_cast<std::chrono::microseconds>(end.time_since_epoch()) - std::chrono::duration_cast<std::chrono::microseconds>(start.time_since_epoch());
     pcbcOutCipher.close();
@@ -586,7 +586,7 @@ main(int argc, char** argv) {
     input = new std::ifstream("Makefile.pcbc.aes256.zero.cipher", std::ifstream::binary);
     std::ofstream pcbcOutDecipher("Makefile.pcbc.aes256.zero.decipher");
     start = std::chrono::high_resolution_clock::now();
-    pcbc.decipher(*input, pcbcOutDecipher, "foobar    raboof");
+    pcbc.decipher(*input, pcbcOutDecipher, "foobar    rabooffoobar    raboof");
     end = std::chrono::high_resolution_clock::now();
     duration = std::chrono::duration_cast<std::chrono::microseconds>(end.time_since_epoch()) - std::chrono::duration_cast<std::chrono::microseconds>(start.time_since_epoch());
     pcbcOutDecipher.close();
@@ -627,7 +627,7 @@ main(int argc, char** argv) {
     std::cout << "Cipher Makefile" << std::endl;
     PCBC<AES256,ANSIX923> pcbc(iv);
     start = std::chrono::high_resolution_clock::now();
-    pcbc.cipher(*input, pcbcOutCipher, "foobar    raboof");
+    pcbc.cipher(*input, pcbcOutCipher, "foobar    rabooffoobar    raboof");
     end = std::chrono::high_resolution_clock::now();
     duration = std::chrono::duration_cast<std::chrono::microseconds>(end.time_since_epoch()) - std::chrono::duration_cast<std::chrono::microseconds>(start.time_since_epoch());
     pcbcOutCipher.close();
@@ -639,7 +639,7 @@ main(int argc, char** argv) {
     input = new std::ifstream("Makefile.pcbc.aes256.ANSIX923.cipher", std::ifstream::binary);
     std::ofstream pcbcOutDecipher("Makefile.pcbc.aes256.ANSIX923.decipher");
     start = std::chrono::high_resolution_clock::now();
-    pcbc.decipher(*input, pcbcOutDecipher, "foobar    raboof");
+    pcbc.decipher(*input, pcbcOutDecipher, "foobar    rabooffoobar    raboof");
     end = std::chrono::high_resolution_clock::now();
     duration = std::chrono::duration_cast<std::chrono::microseconds>(end.time_since_epoch()) - std::chrono::duration_cast<std::chrono::microseconds>(start.time_since_epoch());
     pcbcOutDecipher.close();
