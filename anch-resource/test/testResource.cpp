@@ -3,44 +3,40 @@
 #include "resource/resource.hpp"
 
 
-using std::cout;
-using std::endl;
-using std::string;
-
 using anch::resource::Resource;
 
 
 int
 main(void) {
-  cout << "Enter in test resource" << endl;
+  std::cout << "Enter in test resource" << std::endl;
 
-  cout << "Parse file" << endl;
+  std::cout << "Parse file" << std::endl;
   const Resource& res = Resource::getResource("../test/test.ini");
-  cout << "File has been parsed" << endl;
+  std::cout << "File has been parsed" << std::endl;
 
-  string value;
+  std::string value;
   bool found = res.getParameter(value,"toto");
   if(found) {
-    cout << "toto=" << value << endl;
+    std::cout << "toto=" << value << std::endl;
   } else {
-    cout << "toto has not been found" << endl;
+    std::cout << "toto has not been found" << std::endl;
   }
 
   found = res.getParameter(value,"toto","TOTO");
   if(found) {
-    cout << "TOTO/toto=" << value << endl;
+    std::cout << "TOTO/toto=" << value << std::endl;
   } else {
-    cout << "TOTO/toto has not been found" << endl;
+    std::cout << "TOTO/toto has not been found" << std::endl;
   }
 
   found = res.getParameter(value,"tata");
   if(found) {
-    cout << "tata=" << value << endl;
+    std::cout << "tata=" << value << std::endl;
   } else {
-    cout << "tata has not been found" << endl;
+    std::cout << "tata has not been found" << std::endl;
   }
 
 
-  cout << "Exit test resource" << endl;
+  std::cout << "Exit test resource" << std::endl;
   return 0;
 }

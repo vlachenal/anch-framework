@@ -20,7 +20,6 @@
 #ifndef _ANCH_RESOURCE_SECTION_H_
 #define _ANCH_RESOURCE_SECTION_H_
 
-#include <iostream>
 #include <map>
 
 namespace anch {
@@ -117,4 +116,3 @@ namespace anch {
 }
 
 #endif // _ANCH_RESOURCE_SECTION_H_
-

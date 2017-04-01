@@ -20,7 +20,7 @@
 #ifndef _ANCH_RESOURCE_FILE_RESOURCE_FILE_EXCEPTION_H_
 #define _ANCH_RESOURCE_FILE_RESOURCE_FILE_EXCEPTION_H_
 
-#include <iostream>
+#include <string>
 
 namespace anch {
   namespace resource {

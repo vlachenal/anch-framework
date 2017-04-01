@@ -20,7 +20,6 @@
 #ifndef _ANCH_RESOURCE_FILE_CONFIGURATION_FILE_PARSER_H_
 #define _ANCH_RESOURCE_FILE_CONFIGURATION_FILE_PARSER_H_
 
-#include <iostream>
 #include <map>
 
 #ifdef ANCH_BOOST_REGEX

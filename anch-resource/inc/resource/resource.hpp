@@ -20,7 +20,6 @@
 #ifndef _ANCH_RESOURCE_RESOURCE_H_
 #define _ANCH_RESOURCE_RESOURCE_H_
 
-#include <iostream>
 #include <map>
 #include <mutex>
 
