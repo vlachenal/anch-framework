@@ -32,10 +32,6 @@ namespace anch {
      */
     class TcpSocket: public Socket {
 
-    private:
-      // Attributes +
-      // Attributes -
-
     public:
       // Constructors +
       /*!

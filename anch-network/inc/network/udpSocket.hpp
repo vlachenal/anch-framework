@@ -33,10 +33,6 @@ namespace anch {
      */
     class UdpSocket: public Socket {
 
-    private:
-      // Attributes +
-      // Attributes -
-
     public:
       // Constructors +
       /*!
