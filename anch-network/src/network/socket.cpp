@@ -42,9 +42,6 @@
 #include <sstream>
 
 
-using std::string;
-using std::ostringstream;
-
 using anch::events::Observable;
 using anch::network::Socket;
 using anch::network::Direction;
@@ -79,7 +76,7 @@ Socket::Socket(anch::network::SocketType type):
  *
  * \throw anch::network::IOException Error while creating the socket
  */
-Socket::Socket(const string& ipAddress, uint16_t port, SocketType type)
+Socket::Socket(const std::string& ipAddress, uint16_t port, SocketType type)
   throw(IOException):
   Observable<SocketEvent>(),
   _ipAddress(ipAddress),
@@ -118,7 +115,7 @@ Socket::Socket(const string& ipAddress, uint16_t port, SocketType type)
   hints.ai_canonname = NULL;
   hints.ai_addr = NULL;
   hints.ai_next = NULL;
-  ostringstream strPortOss;
+  std::ostringstream strPortOss;
   strPortOss << _port;
   int res = getaddrinfo(_ipAddress.empty() ? NULL : _ipAddress.data(),
 			strPortOss.str().data(), &hints, &result);
@@ -222,7 +219,7 @@ Socket::accept(Socket& socket) throw(IOException) {
  */
 void
 Socket::receive() throw(anch::network::IOException) {
-  string message;
+  std::string message;
   receive(message);
 }
 

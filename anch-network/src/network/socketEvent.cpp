@@ -19,8 +19,6 @@
 */
 #include "network/socketEvent.hpp"
 
-using std::string;
-
 using anch::network::SocketEvent;
 
 
@@ -30,7 +28,7 @@ using anch::network::SocketEvent;
  *
  * \param message The message received on socket
  */
-SocketEvent::SocketEvent(const string& message): _message(message) {
+SocketEvent::SocketEvent(const std::string& message): _message(message) {
   // Nothing to do
 }
 

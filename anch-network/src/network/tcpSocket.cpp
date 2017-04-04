@@ -24,8 +24,6 @@
 #include <string.h>
 
 
-using std::string;
-
 using anch::network::Socket;
 using anch::network::SocketType;
 using anch::network::TcpSocket;
@@ -52,7 +50,7 @@ TcpSocket::TcpSocket():
  *
  * \throw IOException any error
  */
-TcpSocket::TcpSocket(const string& ipAddress, uint16_t port) throw(IOException):
+TcpSocket::TcpSocket(const std::string& ipAddress, uint16_t port) throw(IOException):
   Socket(ipAddress, port, SocketType::TCP) {
   // Nothing to do
 }
@@ -77,7 +75,7 @@ TcpSocket::~TcpSocket() noexcept {
  * \throw anch::network::IOException Network error while sending message
  */
 void
-TcpSocket::send(const string& message) throw(IOException) {
+TcpSocket::send(const std::string& message) throw(IOException) {
   ssize_t res = ::send(_sock, message.data(), message.size() + 1, 0);
   if(res == SOCKET_ERROR) {
     throw IOException("Error on send()");
@@ -92,7 +90,7 @@ TcpSocket::send(const string& message) throw(IOException) {
  * \throw anch::network::IOException Network error while receiving message
  */
 void
-TcpSocket::receive(string& message) throw(IOException) {
+TcpSocket::receive(std::string& message) throw(IOException) {
   // Receive message +
   char buffer[BUFFER_SIZE];
   memset(&buffer, 0, BUFFER_SIZE);

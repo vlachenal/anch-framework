@@ -23,8 +23,6 @@
 #include <netinet/in.h>
 
 
-using std::string;
-
 using anch::network::Socket;
 using anch::network::SocketType;
 using anch::network::UdpSocket;
@@ -46,7 +44,7 @@ UdpSocket::UdpSocket():
  * \param ipAddress The IP address
  * \param port The port number
  */
-UdpSocket::UdpSocket(const string& ipAddress, uint16_t port) throw(IOException):
+UdpSocket::UdpSocket(const std::string& ipAddress, uint16_t port) throw(IOException):
   Socket(ipAddress, port, SocketType::UDP) {
   // Nothing to do
 }
@@ -105,7 +103,7 @@ UdpSocket::connect() throw(IOException) {
  * \throw anch::network::IOException Network error while sending message
  */
 void
-UdpSocket::send(const string& message) throw(IOException) {
+UdpSocket::send(const std::string& message) throw(IOException) {
   ssize_t res = ::sendto(_sock,
 			 message.data(),
 			 message.size() + 1,
@@ -125,7 +123,7 @@ UdpSocket::send(const string& message) throw(IOException) {
  * \throw anch::network::IOException Network error while sending message
  */
 void
-UdpSocket::send(const string& message, const sockaddr_storage& peerAddr)
+UdpSocket::send(const std::string& message, const sockaddr_storage& peerAddr)
   throw(IOException) {
   ssize_t res = ::sendto(_sock,
 			 message.data(),
@@ -146,7 +144,7 @@ UdpSocket::send(const string& message, const sockaddr_storage& peerAddr)
  * \throw anch::network::IOException Network error while receiving message
  */
 void
-UdpSocket::receive(string& message) throw(IOException) {
+UdpSocket::receive(std::string& message) throw(IOException) {
   // Receive message +
   char buffer[1024];
   ssize_t res = 0;

@@ -24,7 +24,6 @@
 #include <netdb.h>
 
 
-using std::string;
 using std::exception;
 
 using anch::network::IOException;
@@ -36,7 +35,7 @@ using anch::network::IOException;
  *
  * \param message The error message
  */
-IOException::IOException(const string& message): _message(message) {
+IOException::IOException(const std::string& message): _message(message) {
   _message = message + ": " + strerror(errno);
 }
 
@@ -46,7 +45,7 @@ IOException::IOException(const string& message): _message(message) {
  * \param message The error message
  * \param errorCode The error code (from \c getinfoaddr)
  */
-IOException::IOException(const string& message, int errorCode) {
+IOException::IOException(const std::string& message, int errorCode) {
   _message = message + ": " + gai_strerror(errorCode);
 }
 // Constructors -
