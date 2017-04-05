@@ -47,8 +47,7 @@ namespace anch {
        *
        * \throw anch::network::IOException Error while creating the socket
        */
-      TcpSocket(const std::string& ipAddress, uint16_t port)
-	throw(anch::network::IOException);
+      TcpSocket(const std::string& ipAddress, uint16_t port) throw(IOException);
       // Constructors -
 
       // Destructors +
@@ -67,7 +66,7 @@ namespace anch {
        *
        * \throw anch::network::IOException Network error while sending message
        */
-      virtual void send(const std::string& message) throw(anch::network::IOException);
+      virtual void send(const std::string& message) throw(IOException);
 
       /*!
        * Receive a message on socket
@@ -76,7 +75,7 @@ namespace anch {
        *
        * \throw anch::network::IOException Network error while receiving message
        */
-      virtual void receive(std::string& message) throw(anch::network::IOException);
+      virtual void receive(std::string& message) throw(IOException);
       // Methods -
 
       // Accessors +

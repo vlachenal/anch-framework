@@ -48,8 +48,7 @@ namespace anch {
        *
        * \throw anch::network::IOException Error while creating the socket
        */
-      UdpSocket(const std::string& ipAddress, uint16_t port)
-	throw(anch::network::IOException);
+      UdpSocket(const std::string& ipAddress, uint16_t port) throw(IOException);
       // Constructors -
 
       // Destructors +

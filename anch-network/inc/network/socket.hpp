@@ -90,7 +90,7 @@ namespace anch {
      *
      * \author Vincent Lachenal
      */
-    class Socket : public anch::events::Observable<anch::network::SocketEvent> {
+    class Socket : public anch::events::Observable<SocketEvent> {
 
     private:
       // Attributes +
@@ -134,10 +134,7 @@ namespace anch {
        *
        * \throw anch::network::IOException Error while creating the socket
        */
-      Socket(const std::string& ipAddress,
-	     uint16_t port,
-	     anch::network::SocketType type = anch::network::SocketType::UNKNOWN)
-	throw(anch::network::IOException);
+      Socket(const std::string& ipAddress, uint16_t port, SocketType type = SocketType::UNKNOWN) throw(IOException);
       // Constructors -
 
       // Destructor +
@@ -154,21 +151,21 @@ namespace anch {
        *
        * \throw anch::network::IOException Error while binding the socket
        */
-      virtual void bind() throw(anch::network::IOException);
+      virtual void bind() throw(IOException);
 
       /*!
        * Connect to remote socket
        *
        * \throw anch::network::IOException Error while connectin the client socket to the server socket
        */
-      virtual void connect() throw(anch::network::IOException);
+      virtual void connect() throw(IOException);
 
       /*!
        * Listen on socket
        *
        * \throw anch::network::IOException Error while listening on the socket
        */
-      virtual void listen() throw(anch::network::IOException);
+      virtual void listen() throw(IOException);
 
       /*!
        * Accept client connection
@@ -177,7 +174,7 @@ namespace anch {
        *
        * \throw anch::network::IOException Error while accepting client connection
        */
-      virtual void accept(Socket& socket) throw(anch::network::IOException);
+      virtual void accept(Socket& socket) throw(IOException);
 
       /*!
        * Send a message on socket
@@ -186,7 +183,7 @@ namespace anch {
        *
        * \throw anch::network::IOException Network error while sending message
        */
-      virtual void send(const std::string& message) throw(anch::network::IOException) = 0;
+      virtual void send(const std::string& message) throw(IOException) = 0;
 
       /*!
        * Receive a message on socket
@@ -195,14 +192,14 @@ namespace anch {
        *
        * \throw anch::network::IOException Network error while receiving message
        */
-      virtual void receive(std::string& message) throw(anch::network::IOException) = 0;
+      virtual void receive(std::string& message) throw(IOException) = 0;
 
       /*!
        * Receive a message on socket
        *
        * \throw anch::network::IOException Network error while receiving message
        */
-      virtual void receive() throw(anch::network::IOException);
+      virtual void receive() throw(IOException);
 
       /*!
        * Shutdown data flow between client and server.\n
@@ -212,8 +209,7 @@ namespace anch {
        *
        * \throw anch::network::IOException Network error while shutting down data transfer
        */
-      virtual void shutdown(anch::network::Direction how = anch::network::Direction::BOTH)
-	throw(anch::network::IOException);
+      virtual void shutdown(Direction how = Direction::BOTH) throw(anch::network::IOException);
 
       /*!
        * Close the socket
