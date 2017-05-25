@@ -1,9 +1,9 @@
 var searchData=
 [
   ['observable',['Observable',['../classanch_1_1events_1_1_observable.html',1,'anch::events::Observable&lt; Event &gt;'],['../classanch_1_1events_1_1_observable.html#a83bccdde5125b7d7edca0e81fb46cfdd',1,'anch::events::Observable::Observable()']]],
-  ['observable_3c_20anch_3a_3anetwork_3a_3asocketevent_20_3e',['Observable&lt; anch::network::SocketEvent &gt;',['../classanch_1_1events_1_1_observable.html',1,'anch::events']]],
+  ['observable_3c_20socketevent_20_3e',['Observable&lt; SocketEvent &gt;',['../classanch_1_1events_1_1_observable.html',1,'anch::events']]],
   ['observer',['Observer',['../classanch_1_1events_1_1_observer.html',1,'anch::events']]],
-  ['observer_3c_20anch_3a_3anetwork_3a_3asocketevent_20_3e',['Observer&lt; anch::network::SocketEvent &gt;',['../classanch_1_1events_1_1_observer.html',1,'anch::events']]],
+  ['observer_3c_20socketevent_20_3e',['Observer&lt; SocketEvent &gt;',['../classanch_1_1events_1_1_observer.html',1,'anch::events']]],
   ['ofb',['OFB',['../classanch_1_1crypto_1_1_o_f_b.html',1,'anch::crypto::OFB&lt; Cipher &gt;'],['../classanch_1_1crypto_1_1_o_f_b.html#a58b7de20f6e16d4bab7967cf0cf84038',1,'anch::crypto::OFB::OFB()']]],
   ['operator_21_3d',['operator!=',['../classanch_1_1date_1_1_date.html#a49044d6c99b0a48085b176119b3b93ba',1,'anch::date::Date']]],
   ['operator_28_29',['operator()',['../structanch_1_1_less_ptr_compare.html#a39093239df7b0afafd94e3c216defd23',1,'anch::LessPtrCompare']]],

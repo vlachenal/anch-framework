@@ -46,7 +46,7 @@ if (edges && edges.length) {
         </defs>
 
 <script type="text/javascript">
-var viewWidth = 258;
+var viewWidth = 165;
 var viewHeight = 519;
 var sectionId = 'dynsection-1';
 </script>
@@ -57,36 +57,36 @@ var sectionId = 'dynsection-1';
 <!-- Node5 -->
 <g id="node1" class="node">
 <title>Node5</title>
-<polygon fill="#bfbfbf" stroke="#000000" points="25,-.5 25,-200.5 150,-200.5 150,-.5 25,-.5"/>
-<text text-anchor="middle" x="87.5" y="-188.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">anch::network::Socket</text>
-<polyline fill="none" stroke="#000000" points="25,-181.5 150,-181.5 "/>
-<text text-anchor="start" x="33" y="-169.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"># _sock</text>
-<text text-anchor="start" x="33" y="-158.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"># _backlog</text>
-<text text-anchor="start" x="33" y="-147.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"># _address</text>
-<polyline fill="none" stroke="#000000" points="25,-140.5 150,-140.5 "/>
-<text text-anchor="start" x="33" y="-128.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ Socket()</text>
-<text text-anchor="start" x="33" y="-117.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ ~Socket()</text>
-<text text-anchor="start" x="33" y="-106.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ bind()</text>
-<text text-anchor="start" x="33" y="-95.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ connect()</text>
-<text text-anchor="start" x="33" y="-84.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ listen()</text>
-<text text-anchor="start" x="33" y="-73.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ accept()</text>
-<text text-anchor="start" x="33" y="-62.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ send()</text>
-<text text-anchor="start" x="33" y="-51.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ receive()</text>
-<text text-anchor="start" x="33" y="-40.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ receive()</text>
-<text text-anchor="start" x="33" y="-29.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ shutdown()</text>
-<text text-anchor="start" x="33" y="-18.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">and 11 more...</text>
-<text text-anchor="start" x="33" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"># Socket()</text>
+<polygon fill="#bfbfbf" stroke="#000000" points="7.5,-.5 7.5,-200.5 132.5,-200.5 132.5,-.5 7.5,-.5"/>
+<text text-anchor="middle" x="70" y="-188.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">anch::network::Socket</text>
+<polyline fill="none" stroke="#000000" points="7.5,-181.5 132.5,-181.5 "/>
+<text text-anchor="start" x="15.5" y="-169.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"># _sock</text>
+<text text-anchor="start" x="15.5" y="-158.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"># _backlog</text>
+<text text-anchor="start" x="15.5" y="-147.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"># _address</text>
+<polyline fill="none" stroke="#000000" points="7.5,-140.5 132.5,-140.5 "/>
+<text text-anchor="start" x="15.5" y="-128.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ Socket()</text>
+<text text-anchor="start" x="15.5" y="-117.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ ~Socket()</text>
+<text text-anchor="start" x="15.5" y="-106.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ bind()</text>
+<text text-anchor="start" x="15.5" y="-95.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ connect()</text>
+<text text-anchor="start" x="15.5" y="-84.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ listen()</text>
+<text text-anchor="start" x="15.5" y="-73.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ accept()</text>
+<text text-anchor="start" x="15.5" y="-62.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ send()</text>
+<text text-anchor="start" x="15.5" y="-51.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ receive()</text>
+<text text-anchor="start" x="15.5" y="-40.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ receive()</text>
+<text text-anchor="start" x="15.5" y="-29.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ shutdown()</text>
+<text text-anchor="start" x="15.5" y="-18.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">and 11 more...</text>
+<text text-anchor="start" x="15.5" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"># Socket()</text>
 </g>
 <!-- Node6 -->
 <g id="node2" class="node">
 <title>Node6</title>
-<g id="a_node2"><a xlink:href="classanch_1_1events_1_1_observable.html" target="_top" xlink:title="{anch::events::Observable\l\&lt; anch::network::SocketEvent \&gt;\n||+ Observable()\l+ ~Observable()\l+ addObserver()\l+ removeObserver()\l+ notifyObservers()\l}">
-<polygon fill="none" stroke="#000000" points="0,-238.5 0,-350.5 175,-350.5 175,-238.5 0,-238.5"/>
+<g id="a_node2"><a xlink:href="classanch_1_1events_1_1_observable.html" target="_top" xlink:title="{anch::events::Observable\l\&lt; SocketEvent \&gt;\n||+ Observable()\l+ ~Observable()\l+ addObserver()\l+ removeObserver()\l+ notifyObservers()\l}">
+<polygon fill="none" stroke="#000000" points="0,-238.5 0,-350.5 140,-350.5 140,-238.5 0,-238.5"/>
 <text text-anchor="start" x="8" y="-338.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">anch::events::Observable</text>
-<text text-anchor="middle" x="87.5" y="-327.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">&lt; anch::network::SocketEvent &gt;</text>
-<polyline fill="none" stroke="#000000" points="0,-320.5 175,-320.5 "/>
-<text text-anchor="middle" x="87.5" y="-308.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"> </text>
-<polyline fill="none" stroke="#000000" points="0,-301.5 175,-301.5 "/>
+<text text-anchor="middle" x="70" y="-327.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">&lt; SocketEvent &gt;</text>
+<polyline fill="none" stroke="#000000" points="0,-320.5 140,-320.5 "/>
+<text text-anchor="middle" x="70" y="-308.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"> </text>
+<polyline fill="none" stroke="#000000" points="0,-301.5 140,-301.5 "/>
 <text text-anchor="start" x="8" y="-289.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ Observable()</text>
 <text text-anchor="start" x="8" y="-278.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ ~Observable()</text>
 <text text-anchor="start" x="8" y="-267.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ addObserver()</text>
@@ -98,33 +98,33 @@ var sectionId = 'dynsection-1';
 <!-- Node6&#45;&gt;Node5 -->
 <g id="edge1" class="edge">
 <title>Node6&#45;&gt;Node5</title>
-<path fill="none" stroke="#191970" d="M87.5,-228.1622C87.5,-219.2851 87.5,-210.0261 87.5,-200.7276"/>
-<polygon fill="none" stroke="#191970" points="84.0001,-228.3871 87.5,-238.3872 91.0001,-228.3872 84.0001,-228.3871"/>
+<path fill="none" stroke="#191970" d="M70,-228.1622C70,-219.2851 70,-210.0261 70,-200.7276"/>
+<polygon fill="none" stroke="#191970" points="66.5001,-228.3871 70,-238.3872 73.5001,-228.3872 66.5001,-228.3871"/>
 </g>
 <!-- Node7 -->
 <g id="node3" class="node">
 <title>Node7</title>
 <g id="a_node3"><a xlink:href="classanch_1_1events_1_1_observable.html" target="_top" xlink:title="An observable implementation of the observers/observable design pattern. ">
-<polygon fill="none" stroke="#000000" points="17.5,-398.5 17.5,-510.5 157.5,-510.5 157.5,-398.5 17.5,-398.5"/>
-<text text-anchor="start" x="25.5" y="-498.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">anch::events::Observable</text>
-<text text-anchor="middle" x="87.5" y="-487.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">&lt; Event &gt;</text>
-<polyline fill="none" stroke="#000000" points="17.5,-480.5 157.5,-480.5 "/>
-<text text-anchor="middle" x="87.5" y="-468.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"> </text>
-<polyline fill="none" stroke="#000000" points="17.5,-461.5 157.5,-461.5 "/>
-<text text-anchor="start" x="25.5" y="-449.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ Observable()</text>
-<text text-anchor="start" x="25.5" y="-438.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ ~Observable()</text>
-<text text-anchor="start" x="25.5" y="-427.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ addObserver()</text>
-<text text-anchor="start" x="25.5" y="-416.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ removeObserver()</text>
-<text text-anchor="start" x="25.5" y="-405.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ notifyObservers()</text>
+<polygon fill="none" stroke="#000000" points="0,-398.5 0,-510.5 140,-510.5 140,-398.5 0,-398.5"/>
+<text text-anchor="start" x="8" y="-498.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">anch::events::Observable</text>
+<text text-anchor="middle" x="70" y="-487.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">&lt; Event &gt;</text>
+<polyline fill="none" stroke="#000000" points="0,-480.5 140,-480.5 "/>
+<text text-anchor="middle" x="70" y="-468.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"> </text>
+<polyline fill="none" stroke="#000000" points="0,-461.5 140,-461.5 "/>
+<text text-anchor="start" x="8" y="-449.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ Observable()</text>
+<text text-anchor="start" x="8" y="-438.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ ~Observable()</text>
+<text text-anchor="start" x="8" y="-427.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ addObserver()</text>
+<text text-anchor="start" x="8" y="-416.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ removeObserver()</text>
+<text text-anchor="start" x="8" y="-405.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ notifyObservers()</text>
 </a>
 </g>
 </g>
 <!-- Node7&#45;&gt;Node6 -->
 <g id="edge2" class="edge">
 <title>Node7&#45;&gt;Node6</title>
-<path fill="none" stroke="#ffa500" d="M87.5,-387.837C87.5,-375.4766 87.5,-362.6792 87.5,-350.6701"/>
-<polygon fill="#ffa500" stroke="#ffa500" points="84.0001,-388.09 87.5,-398.09 91.0001,-388.09 84.0001,-388.09"/>
-<text text-anchor="middle" x="168.5" y="-372" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"> &lt; anch::network::SocketEvent &gt;</text>
+<path fill="none" stroke="#ffa500" d="M70,-387.837C70,-375.4766 70,-362.6792 70,-350.6701"/>
+<polygon fill="#ffa500" stroke="#ffa500" points="66.5001,-388.09 70,-398.09 73.5001,-388.09 66.5001,-388.09"/>
+<text text-anchor="middle" x="113.5" y="-372" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"> &lt; SocketEvent &gt;</text>
 </g>
 </g>
 </svg>

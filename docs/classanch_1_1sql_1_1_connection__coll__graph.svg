@@ -57,30 +57,30 @@ var sectionId = 'dynsection-1';
 <!-- Node4 -->
 <g id="node1" class="node">
 <title>Node4</title>
-<polygon fill="#bfbfbf" stroke="#000000" points="79,-.5 79,-255.5 207,-255.5 207,-.5 79,-.5"/>
+<polygon fill="#bfbfbf" stroke="#000000" points="74.5,-.5 74.5,-255.5 211.5,-255.5 211.5,-.5 74.5,-.5"/>
 <text text-anchor="middle" x="143" y="-243.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">anch::sql::Connection</text>
-<polyline fill="none" stroke="#000000" points="79,-236.5 207,-236.5 "/>
-<text text-anchor="start" x="87" y="-224.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"># _autoCommit</text>
-<text text-anchor="start" x="87" y="-213.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"># _valid</text>
-<polyline fill="none" stroke="#000000" points="79,-206.5 207,-206.5 "/>
-<text text-anchor="start" x="87" y="-194.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ Connection()</text>
-<text text-anchor="start" x="87" y="-183.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ Connection()</text>
-<text text-anchor="start" x="87" y="-172.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ ~Connection()</text>
-<text text-anchor="start" x="87" y="-161.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ commit()</text>
-<text text-anchor="start" x="87" y="-150.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ rollback()</text>
-<text text-anchor="start" x="87" y="-139.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ setAutoCommit()</text>
-<text text-anchor="start" x="87" y="-128.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ prepareStatement()</text>
-<text text-anchor="start" x="87" y="-117.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ query()</text>
-<text text-anchor="start" x="87" y="-106.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ queryMapRow()</text>
-<text text-anchor="start" x="87" y="-95.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ queryExtract()</text>
-<text text-anchor="start" x="87" y="-84.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">and 8 more...</text>
-<text text-anchor="start" x="87" y="-73.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"># executeQuery()</text>
-<text text-anchor="start" x="87" y="-62.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"># executeUpdate()</text>
-<text text-anchor="start" x="87" y="-51.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"># sendCommit()</text>
-<text text-anchor="start" x="87" y="-40.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"># sendRollback()</text>
-<text text-anchor="start" x="87" y="-29.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"># toggleAutoCommit()</text>
-<text text-anchor="start" x="87" y="-18.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"># makePrepared()</text>
-<text text-anchor="start" x="87" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"># setValid()</text>
+<polyline fill="none" stroke="#000000" points="74.5,-236.5 211.5,-236.5 "/>
+<text text-anchor="start" x="82.5" y="-224.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"># _valid</text>
+<text text-anchor="start" x="82.5" y="-213.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"># _transaction</text>
+<polyline fill="none" stroke="#000000" points="74.5,-206.5 211.5,-206.5 "/>
+<text text-anchor="start" x="82.5" y="-194.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ Connection()</text>
+<text text-anchor="start" x="82.5" y="-183.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ Connection()</text>
+<text text-anchor="start" x="82.5" y="-172.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ ~Connection()</text>
+<text text-anchor="start" x="82.5" y="-161.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ startTransaction()</text>
+<text text-anchor="start" x="82.5" y="-150.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ begin()</text>
+<text text-anchor="start" x="82.5" y="-139.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ commit()</text>
+<text text-anchor="start" x="82.5" y="-128.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ rollback()</text>
+<text text-anchor="start" x="82.5" y="-117.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ prepareStatement()</text>
+<text text-anchor="start" x="82.5" y="-106.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ query()</text>
+<text text-anchor="start" x="82.5" y="-95.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ queryMapRow()</text>
+<text text-anchor="start" x="82.5" y="-84.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">and 8 more...</text>
+<text text-anchor="start" x="82.5" y="-73.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"># executeQuery()</text>
+<text text-anchor="start" x="82.5" y="-62.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"># executeUpdate()</text>
+<text text-anchor="start" x="82.5" y="-51.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"># sendStartTransaction()</text>
+<text text-anchor="start" x="82.5" y="-40.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"># sendCommit()</text>
+<text text-anchor="start" x="82.5" y="-29.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"># sendRollback()</text>
+<text text-anchor="start" x="82.5" y="-18.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"># makePrepared()</text>
+<text text-anchor="start" x="82.5" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"># setValid()</text>
 </g>
 <!-- Node5 -->
 <g id="node2" class="node">

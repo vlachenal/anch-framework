@@ -7,7 +7,6 @@ var searchData=
   ['invalidformatexception',['InvalidFormatException',['../classanch_1_1date_1_1_invalid_format_exception.html',1,'anch::date::InvalidFormatException'],['../classanch_1_1date_1_1_invalid_format_exception.html#a42a2a90d957939c8fff857ce57798d6c',1,'anch::date::InvalidFormatException::InvalidFormatException()']]],
   ['ioexception',['IOException',['../classanch_1_1network_1_1_i_o_exception.html',1,'anch::network::IOException'],['../classanch_1_1network_1_1_i_o_exception.html#adebe91abf8c2016c7c6f83eef943a87a',1,'anch::network::IOException::IOException(const std::string &amp;message)'],['../classanch_1_1network_1_1_i_o_exception.html#a69ab62f34766d2532e6d449eac53857e',1,'anch::network::IOException::IOException(const std::string &amp;message, int errorCode)']]],
   ['isaes',['isAES',['../classanch_1_1device_1_1_c_p_u.html#a2b10f7f067a1a6083ca90621be24f805',1,'anch::device::CPU']]],
-  ['isautocommit',['isAutoCommit',['../classanch_1_1sql_1_1_connection.html#adb784b20e789d1b9c7aca8047d7c412a',1,'anch::sql::Connection']]],
   ['isbigendian',['isBigEndian',['../namespaceanch.html#a8dff697fb25aed06666b05c8862caa0a',1,'anch']]],
   ['isdirectory',['isDirectory',['../classanch_1_1file_1_1_file.html#a439bf75c4574e655e91da0f1db28638d',1,'anch::file::File']]],
   ['isfile',['isFile',['../classanch_1_1file_1_1_file.html#a9adb4ddf49b7f96f427293d5a2e0bebc',1,'anch::file::File']]],

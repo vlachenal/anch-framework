@@ -70,37 +70,37 @@ var sectionId = 'dynsection-1';
 <text text-anchor="start" x="72" y="-51.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"># executeUpdate()</text>
 <text text-anchor="start" x="72" y="-40.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"># sendCommit()</text>
 <text text-anchor="start" x="72" y="-29.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"># sendRollback()</text>
-<text text-anchor="start" x="72" y="-18.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"># toggleAutoCommit()</text>
+<text text-anchor="start" x="72" y="-18.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"># sendStartTransaction()</text>
 <text text-anchor="start" x="72" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"># makePrepared()</text>
 </g>
 <!-- Node3 -->
 <g id="node2" class="node">
 <title>Node3</title>
 <g id="a_node2"><a xlink:href="classanch_1_1sql_1_1_connection.html" target="_top" xlink:title="SQL connection virtual class. ">
-<polygon fill="none" stroke="#000000" points="79,-194.5 79,-449.5 207,-449.5 207,-194.5 79,-194.5"/>
+<polygon fill="none" stroke="#000000" points="74.5,-194.5 74.5,-449.5 211.5,-449.5 211.5,-194.5 74.5,-194.5"/>
 <text text-anchor="middle" x="143" y="-437.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">anch::sql::Connection</text>
-<polyline fill="none" stroke="#000000" points="79,-430.5 207,-430.5 "/>
-<text text-anchor="start" x="87" y="-418.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"># _autoCommit</text>
-<text text-anchor="start" x="87" y="-407.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"># _valid</text>
-<polyline fill="none" stroke="#000000" points="79,-400.5 207,-400.5 "/>
-<text text-anchor="start" x="87" y="-388.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ Connection()</text>
-<text text-anchor="start" x="87" y="-377.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ Connection()</text>
-<text text-anchor="start" x="87" y="-366.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ ~Connection()</text>
-<text text-anchor="start" x="87" y="-355.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ commit()</text>
-<text text-anchor="start" x="87" y="-344.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ rollback()</text>
-<text text-anchor="start" x="87" y="-333.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ setAutoCommit()</text>
-<text text-anchor="start" x="87" y="-322.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ prepareStatement()</text>
-<text text-anchor="start" x="87" y="-311.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ query()</text>
-<text text-anchor="start" x="87" y="-300.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ queryMapRow()</text>
-<text text-anchor="start" x="87" y="-289.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ queryExtract()</text>
-<text text-anchor="start" x="87" y="-278.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">and 8 more...</text>
-<text text-anchor="start" x="87" y="-267.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"># executeQuery()</text>
-<text text-anchor="start" x="87" y="-256.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"># executeUpdate()</text>
-<text text-anchor="start" x="87" y="-245.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"># sendCommit()</text>
-<text text-anchor="start" x="87" y="-234.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"># sendRollback()</text>
-<text text-anchor="start" x="87" y="-223.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"># toggleAutoCommit()</text>
-<text text-anchor="start" x="87" y="-212.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"># makePrepared()</text>
-<text text-anchor="start" x="87" y="-201.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"># setValid()</text>
+<polyline fill="none" stroke="#000000" points="74.5,-430.5 211.5,-430.5 "/>
+<text text-anchor="start" x="82.5" y="-418.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"># _valid</text>
+<text text-anchor="start" x="82.5" y="-407.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"># _transaction</text>
+<polyline fill="none" stroke="#000000" points="74.5,-400.5 211.5,-400.5 "/>
+<text text-anchor="start" x="82.5" y="-388.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ Connection()</text>
+<text text-anchor="start" x="82.5" y="-377.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ Connection()</text>
+<text text-anchor="start" x="82.5" y="-366.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ ~Connection()</text>
+<text text-anchor="start" x="82.5" y="-355.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ startTransaction()</text>
+<text text-anchor="start" x="82.5" y="-344.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ begin()</text>
+<text text-anchor="start" x="82.5" y="-333.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ commit()</text>
+<text text-anchor="start" x="82.5" y="-322.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ rollback()</text>
+<text text-anchor="start" x="82.5" y="-311.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ prepareStatement()</text>
+<text text-anchor="start" x="82.5" y="-300.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ query()</text>
+<text text-anchor="start" x="82.5" y="-289.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">+ queryMapRow()</text>
+<text text-anchor="start" x="82.5" y="-278.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">and 8 more...</text>
+<text text-anchor="start" x="82.5" y="-267.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"># executeQuery()</text>
+<text text-anchor="start" x="82.5" y="-256.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"># executeUpdate()</text>
+<text text-anchor="start" x="82.5" y="-245.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"># sendStartTransaction()</text>
+<text text-anchor="start" x="82.5" y="-234.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"># sendCommit()</text>
+<text text-anchor="start" x="82.5" y="-223.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"># sendRollback()</text>
+<text text-anchor="start" x="82.5" y="-212.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"># makePrepared()</text>
+<text text-anchor="start" x="82.5" y="-201.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000"># setValid()</text>
 </a>
 </g>
 </g>

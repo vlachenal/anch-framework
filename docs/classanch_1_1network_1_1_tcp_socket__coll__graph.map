@@ -1,5 +1,5 @@
 <map id="anch::network::TcpSocket" name="anch::network::TcpSocket">
-<area shape="rect" id="node2" href="$classanch_1_1network_1_1_socket.html" title="{anch::network::Socket\n|# _sock\l# _backlog\l# _address\l|+ Socket()\l+ ~Socket()\l+ bind()\l+ connect()\l+ listen()\l+ accept()\l+ send()\l+ receive()\l+ receive()\l+ shutdown()\land 11 more...\l# Socket()\l}" alt="" coords="39,419,205,687"/>
-<area shape="rect" id="node3" href="$classanch_1_1events_1_1_observable.html" title="{anch::events::Observable\l\&lt; anch::network::SocketEvent \&gt;\n||+ Observable()\l+ ~Observable()\l+ addObserver()\l+ removeObserver()\l+ notifyObservers()\l}" alt="" coords="5,219,239,369"/>
-<area shape="rect" id="node4" href="$classanch_1_1events_1_1_observable.html" title="An observable implementation of the observers/observable design pattern. " alt="" coords="29,5,215,156"/>
+<area shape="rect" id="node2" href="$classanch_1_1network_1_1_socket.html" title="{anch::network::Socket\n|# _sock\l# _backlog\l# _address\l|+ Socket()\l+ ~Socket()\l+ bind()\l+ connect()\l+ listen()\l+ accept()\l+ send()\l+ receive()\l+ receive()\l+ shutdown()\land 11 more...\l# Socket()\l}" alt="" coords="15,419,182,687"/>
+<area shape="rect" id="node3" href="$classanch_1_1events_1_1_observable.html" title="{anch::events::Observable\l\&lt; SocketEvent \&gt;\n||+ Observable()\l+ ~Observable()\l+ addObserver()\l+ removeObserver()\l+ notifyObservers()\l}" alt="" coords="5,219,192,369"/>
+<area shape="rect" id="node4" href="$classanch_1_1events_1_1_observable.html" title="An observable implementation of the observers/observable design pattern. " alt="" coords="5,5,192,156"/>
 </map>
