@@ -128,8 +128,15 @@ SQLite3Connection::sendRollback() throw(SqlException) {
 }
 
 void
-SQLite3Connection::toggleAutoCommit(bool /*autoCommit*/) throw(SqlException) {
-  // Nothing to do .. for now => keep internal state ?
+SQLite3Connection::sendStartTransaction() throw(SqlException) {
+  char* errMsg = 0;
+  int res = sqlite3_exec(_conn, "BEGIN", emptyCB, 0, &errMsg);
+  if(res != SQLITE_OK) {
+    std::ostringstream msg;
+    msg << "Error while starting transaction: " << errMsg;
+    sqlite3_free(errMsg);
+    throw SqlException(msg.str());
+  }
 }
 
 PreparedStatement*

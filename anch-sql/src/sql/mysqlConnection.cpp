@@ -158,24 +158,32 @@ MySQLConnection::~MySQLConnection() noexcept {
 // Methods +
 void
 MySQLConnection::sendCommit() throw(SqlException) {
-  my_bool res = mysql_commit(_mysql);
+  int res = mysql_query(_mysql, "COMMIT");
   if(res != 0) {
-    throw SqlException("Fail to commit transaction");
+    std::ostringstream out;
+    out << "Unable to commit transaction ; message=" << mysql_error(_mysql);
+    throw SqlException(out.str());
   }
 }
 
 void
 MySQLConnection::sendRollback() throw(SqlException) {
-  my_bool res = mysql_rollback(_mysql);
+  int res = mysql_query(_mysql, "ROLLBACK");
   if(res != 0) {
-    throw SqlException("Fail to rollback transaction");
+    std::ostringstream out;
+    out << "Unable to rollback transaction ; message=" << mysql_error(_mysql);
+    throw SqlException(out.str());
   }
 }
 
 void
-MySQLConnection::toggleAutoCommit(bool autoCommit) throw(SqlException) {
-  my_bool status = autoCommit ? 1 : 0;
-  mysql_autocommit(_mysql, status);
+MySQLConnection::sendStartTransaction() throw(SqlException) {
+  int res = mysql_query(_mysql, "START TRANSACTION");
+  if(res != 0) {
+    std::ostringstream out;
+    out << "Unable to start transaction ; message=" << mysql_error(_mysql);
+    throw SqlException(out.str());
+  }
 }
 
 ResultSet*

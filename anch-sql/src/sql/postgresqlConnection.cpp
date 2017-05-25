@@ -172,8 +172,16 @@ PostgreSQLConnection::sendRollback() throw(SqlException) {
 }
 
 void
-PostgreSQLConnection::toggleAutoCommit(bool) throw(SqlException) {
-  // Nothing to do .. for now => keep internal state ?
+PostgreSQLConnection::sendStartTransaction() throw(SqlException) {
+  PGresult* res = PQexec(_conn, "START TRANSACTION");
+  ExecStatusType status = PQresultStatus(res);
+  if(status == PGRES_FATAL_ERROR) {
+    std::ostringstream msg;
+    msg << "Unable to start transaction: " << PQresultErrorMessage(res);
+    PQclear(res);
+    throw SqlException(msg.str());
+  }
+  PQclear(res);
 }
 
 ResultSet*

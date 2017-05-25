@@ -139,13 +139,11 @@ namespace anch {
       virtual void sendRollback() throw(SqlException) override;
 
       /*!
-       * Send auto commit status modification to server
-       *
-       * \param autoCommit the status to send
+       * Send start transaction to database server
        *
        * \throw SqlException any error
        */
-      virtual void toggleAutoCommit(bool autoCommit) throw(SqlException) override;
+      virtual void sendStartTransaction() throw(SqlException) override;
 
       /*!
        * Send SQL query to prepare SQL statement

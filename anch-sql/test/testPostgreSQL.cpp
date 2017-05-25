@@ -46,13 +46,6 @@ main(void) {
 			       "anch_test",
 			       5432);
     std::cout << "Connected to database" << std::endl;
-    dbCon.setAutoCommit(false);
-    std::cout << "Auto commit set to false" << std::endl;
-    dbCon.commit();
-    std::cout << "Commit no transaction ..." << std::endl;
-    dbCon.rollback();
-    std::cout << "Rollback no transaction ..." << std::endl;
-    dbCon.setAutoCommit(true);
 
     std::cout << std::endl;
 
@@ -228,6 +221,104 @@ main(void) {
       std::cerr << "Number of affected rows should be 1 instead of " << nbRow << std::endl;
       return 1;
     }
+
+    std::cout << std::endl;
+
+    std::cout << "Begin transaction tests" << std::endl;
+
+    std::cout << "Begin transaction" << std::endl;
+    dbCon.startTransaction();
+    std::cout << "Execute 'INSERT INTO T_Test (first_name,last_name,birth_date,email) VALUES('Roll','Back','2016-03-22','roll.back@yopmail.com')'" << std::endl;
+    nbRow = dbCon.update("INSERT INTO T_Test (first_name,last_name,birth_date,email) VALUES('Roll','Back','2016-03-22','roll.back@yopmail.com')");
+    if(nbRow != 1) {
+      std::cerr << "Number of affected rows should be 1 instead of " << nbRow << std::endl;
+      return 1;
+    }
+    std::cout << "Execute 'SELECT id,first_name,last_name,birth_date,email FROM T_Test WHERE first_name = 'Roll''" << std::endl;
+    persons.clear();
+    dbCon.queryMapRow("SELECT id,first_name,last_name,birth_date,email FROM T_Test WHERE first_name = 'Roll'", [&persons](ResultSet& resSet) {
+	Person person;
+	resSet.get<uint32_t>(0,person._id);
+	resSet.get<std::string>(1,person._firstName);
+	resSet.get<std::string>(2,person._lastName);
+	resSet.get<std::string>(3,person._birthDate);
+	resSet.get<std::string>(4,person._email);
+	persons.push_back(person);
+      });
+    if(persons.size() != 1) {
+      std::cerr << "Found " << persons.size() << " persons instead of 1" << std::endl;
+      return 1;
+    }
+    std::cout << "Found " << persons.size() << " persons" << std::endl;
+    std::cout << "Rollback transaction" << std::endl;
+    dbCon.rollback();
+    std::cout << "Execute 'SELECT id,first_name,last_name,birth_date,email FROM T_Test WHERE first_name = 'Roll''" << std::endl;
+    persons.clear();
+    dbCon.queryMapRow("SELECT id,first_name,last_name,birth_date,email FROM T_Test WHERE first_name = 'Roll'", [&persons](ResultSet& resSet) {
+	Person person;
+	resSet.get<uint32_t>(0,person._id);
+	resSet.get<std::string>(1,person._firstName);
+	resSet.get<std::string>(2,person._lastName);
+	resSet.get<std::string>(3,person._birthDate);
+	resSet.get<std::string>(4,person._email);
+	persons.push_back(person);
+      });
+    if(persons.size() != 0) {
+      std::cerr << "Found " << persons.size() << " persons instead of 0" << std::endl;
+      return 1;
+    }
+    std::cout << "Found " << persons.size() << " persons" << std::endl;
+
+    dbCon.startTransaction();
+    std::cout << "Execute 'INSERT INTO T_Test (first_name,last_name,birth_date,email) VALUES('Com','Mit','2016-03-22','com.mit@yopmail.com')'" << std::endl;
+    nbRow = dbCon.update("INSERT INTO T_Test (first_name,last_name,birth_date,email) VALUES('Com','Mit','2016-03-22','com.mit@yopmail.com')");
+    if(nbRow != 1) {
+      std::cerr << "Number of affected rows should be 1 instead of " << nbRow << std::endl;
+      return 1;
+    }
+    std::cout << "Execute 'SELECT id,first_name,last_name,birth_date,email FROM T_Test WHERE first_name = 'Com''" << std::endl;
+    persons.clear();
+    dbCon.queryMapRow("SELECT id,first_name,last_name,birth_date,email FROM T_Test WHERE first_name = 'Com'", [&persons](ResultSet& resSet) {
+	Person person;
+	resSet.get<uint32_t>(0,person._id);
+	resSet.get<std::string>(1,person._firstName);
+	resSet.get<std::string>(2,person._lastName);
+	resSet.get<std::string>(3,person._birthDate);
+	resSet.get<std::string>(4,person._email);
+	persons.push_back(person);
+      });
+    if(persons.size() != 1) {
+      std::cerr << "Found " << persons.size() << " persons instead of 1" << std::endl;
+      return 1;
+    }
+    std::cout << "Found " << persons.size() << " persons" << std::endl;
+    std::cout << "Commit transaction" << std::endl;
+    dbCon.commit();
+    std::cout << "Execute 'SELECT id,first_name,last_name,birth_date,email FROM T_Test WHERE first_name = 'Com''" << std::endl;
+    persons.clear();
+    dbCon.queryMapRow("SELECT id,first_name,last_name,birth_date,email FROM T_Test WHERE first_name = 'Com'", [&persons](ResultSet& resSet) {
+	Person person;
+	resSet.get<uint32_t>(0,person._id);
+	resSet.get<std::string>(1,person._firstName);
+	resSet.get<std::string>(2,person._lastName);
+	resSet.get<std::string>(3,person._birthDate);
+	resSet.get<std::string>(4,person._email);
+	persons.push_back(person);
+      });
+    if(persons.size() != 1) {
+      std::cerr << "Found " << persons.size() << " persons instead of 1" << std::endl;
+      return 1;
+    }
+    std::cout << "Found " << persons.size() << " persons" << std::endl;
+
+    std::cout << "Execute 'DELETE FROM T_Test WHERE first_name = 'Com' AND last_name = 'Mit''" << std::endl;
+    nbRow = dbCon.update("DELETE FROM T_Test WHERE first_name = 'Com' AND last_name = 'Mit'");
+    if(nbRow != 1) {
+      std::cerr << "Number of affected rows should be 1 instead of " << nbRow << std::endl;
+      return 1;
+    }
+
+    std::cout << "End transaction tests" << std::endl;
 
     std::cout << std::endl;
 

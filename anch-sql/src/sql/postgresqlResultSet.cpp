@@ -82,7 +82,8 @@ PostgreSQLResultSet::next() throw(SqlException) {
     if(hasMore) {
       _currentRow = 0;
       _nbRows = PQntuples(_result);
-      if(_fields.empty()) {
+      hasMore = (_nbRows > 0);
+      if(hasMore && _fields.empty()) {
 	_nbFields = PQnfields(_result);
 	for(std::size_t i = 0 ; i < static_cast<std::size_t>(_nbFields) ; ++i) {
 	  _fields[PQfname(_result, static_cast<int>(i))] = i;

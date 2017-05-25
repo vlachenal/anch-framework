@@ -25,7 +25,7 @@ using anch::sql::PreparedStatement;
 
 
 // Constructors +
-Connection::Connection() throw(SqlException): _autoCommit(true), _valid(true), _stmts() {
+Connection::Connection() throw(SqlException): _valid(true), _transaction(false), _stmts() {
   // Nothing to do
 }
 // Constructors -
@@ -43,29 +43,30 @@ Connection::~Connection() {
 // Methods +
 void
 Connection::commit() throw(SqlException) {
-  if(!_autoCommit) {
+  if(_transaction) {
     sendCommit();
+    _transaction = false;
   }
 }
 
 void
 Connection::rollback() throw(SqlException) {
-  if(!_autoCommit) {
+  if(_transaction) {
     sendRollback();
+    _transaction = false;
   }
 }
 
 void
-Connection::setAutoCommit(bool autoCommit) throw(SqlException) {
-  if(autoCommit != _autoCommit) {
-    toggleAutoCommit(autoCommit);
-    _autoCommit = autoCommit;
+Connection::startTransaction() throw(SqlException) {
+  if(!_transaction) {
+    sendStartTransaction();
+    _transaction = true;
   }
 }
 
 ResultSet*
 Connection::query(const std::string& query) throw(SqlException) {
-  // \todo parse select query
   return executeQuery(query);
 }
 

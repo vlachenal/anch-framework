@@ -75,11 +75,11 @@ namespace anch {
 
       // Attributes +
     protected:
-      /*! Auto commit */
-      bool _autoCommit;
-
       /*! Is SQL connection valid */
       bool _valid;
+
+      /*! Is in SQL transaction */
+      bool _transaction;
 
       /*! Prepared statements */
       std::map<std::string, PreparedStatement*> _stmts;
@@ -111,8 +111,25 @@ namespace anch {
       // Methods +
     public:
       /*!
+       * Start SQL transaction.\n
+       * If there is a transaction on this database connection, this method does nothing.
+       *
+       * \throw SqlException any error
+       */
+      void startTransaction() throw(SqlException);
+
+      /*!
+       * Alias for startTransaction
+       *
+       * \throw SqlException any error
+       */
+      inline void begin() throw(SqlException) {
+	startTransaction();
+      }
+
+      /*!
        * Commit current SQL transaction.\n
-       * If auto commit is set, this method does nothing.
+       * If there is not transaction, this method does nothing.
        *
        * \throw SqlException any error
        */
@@ -120,22 +137,11 @@ namespace anch {
 
       /*!
        * Rollback current SQL transaction.\n
-       * If auto commit is set, this method does nothing.
+       * If there is not transaction, this method does nothing.
        *
        * \throw SqlException any error
        */
       void rollback() throw(SqlException);
-
-      /*!
-       * Auto commit status setter.\n
-       * Change auto commit status in database connection too.\n
-       * This method does nothing if auto commit is same as before.
-       *
-       * \param autoCommit the status
-       *
-       * \throw SqlException any error
-       */
-      void setAutoCommit(bool autoCommit) throw(SqlException);
 
       /*!
        * Prepare SQL statement if not already done.
@@ -310,6 +316,13 @@ namespace anch {
       virtual uint64_t executeUpdate(const std::string& query) throw(SqlException) = 0;
 
       /*!
+       * Send start transaction to database server
+       *
+       * \throw SqlException any error
+       */
+      virtual void sendStartTransaction() throw(SqlException) = 0;
+
+      /*!
        * Send commit to database server
        *
        * \throw SqlException any error
@@ -322,15 +335,6 @@ namespace anch {
        * \throw SqlException any error
        */
       virtual void sendRollback() throw(SqlException) = 0;
-
-      /*!
-       * Send auto commit status modification to server
-       *
-       * \param autoCommit the status to send
-       *
-       * \throw SqlException any error
-       */
-      virtual void toggleAutoCommit(bool autoCommit) throw(SqlException) = 0;
 
       /*!
        * Send SQL query to prepare SQL statement
@@ -397,15 +401,6 @@ namespace anch {
 
       // Accessors +
     public:
-      /*!
-       * Auto commit status getter
-       *
-       * \return the status
-       */
-      inline bool isAutoCommit() const {
-	return _autoCommit;
-      }
-
       /*!
        * Valid status getter
        *

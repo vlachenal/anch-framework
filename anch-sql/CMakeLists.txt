@@ -306,22 +306,22 @@ if(ANCH_SQL_UNITARY_TEST)
   endif()
   # Build SQL connection factory test -
 
-  # Build SQL prepare statement wild cards +
+  # Build SQL prepare statement placeholders +
   file(
     GLOB_RECURSE
-    test_wildcards
+    test_placeholders
     inc/*
     test/testPrepareStatementWildCards.cpp
     )
 
   add_executable(
-    anch-wildcards-test
-    ${test_wildcards}
+    anch-placeholders-test
+    ${test_placeholders}
     )
 
   if(USE_BOOST_RE)
     target_link_libraries(
-      anch-wildcards-test
+      anch-placeholders-test
       anch-sql
       anch-resource
       ${MySQL_LIBRARIES}
@@ -331,7 +331,7 @@ if(ANCH_SQL_UNITARY_TEST)
       )
   else()
     target_link_libraries(
-      anch-wildcards-test
+      anch-placeholders-test
       anch-sql
       anch-resource
       ${MySQL_LIBRARIES}
@@ -339,7 +339,7 @@ if(ANCH_SQL_UNITARY_TEST)
       ${SQLite3_LIBRARIES}
       )
   endif()
-  # Build SQL prepare statement wild cards -
+  # Build SQL prepare statement placeholders -
 
   configure_file(test/anch.db anch.db COPYONLY)
   configure_file(test/db_con.conf db_con.conf COPYONLY)
@@ -356,6 +356,6 @@ if(ANCH_SQL_UNITARY_TEST)
     add_test(SQLite3 ${EXECUTABLE_OUTPUT_PATH}/anch-sqlite3-test main)
     add_test(SQLConnectionFactorySQLite ${EXECUTABLE_OUTPUT_PATH}anch-sql-connection-factory-test SQLite)
   endif(ANCH_SQL_SQLITE3)
-  add_test(SQLPrepareStatementWildCards ${EXECUTABLE_OUTPUT_PATH}anch-wildcards-test main)
+  add_test(SQLPrepareStatementPlaceholders ${EXECUTABLE_OUTPUT_PATH}anch-placeholders-test main)
 
 endif(ANCH_SQL_UNITARY_TEST)
