@@ -74,7 +74,7 @@ getFormatters() {
 
 
 // Constructors +
-DateFormatter::DateFormatter(const std::string& dateFormat): _formatters(), _size(0) {
+DateFormatter::DateFormatter(const std::string& dateFormat) noexcept: _formatters(), _size(0) {
   std::string remain = dateFormat;
   bool ok = true;
   smatch match;
@@ -93,7 +93,7 @@ DateFormatter::DateFormatter(const std::string& dateFormat): _formatters(), _siz
 
 
 // Destructor +
-DateFormatter::~DateFormatter() {
+DateFormatter::~DateFormatter() noexcept {
   for(const anch::date::formatter::IDatePartFormatter* part : _formatters) {
     delete part;
   }
@@ -104,14 +104,14 @@ DateFormatter::~DateFormatter() {
 // Methods +
 void
 DateFormatter::registerFormatterPart(const std::string& pattern,
-				     getInstance instGetter) {
+				     getInstance instGetter) noexcept {
   if(getFormatters().find(pattern) == getFormatters().end()) {
     getFormatters()[pattern] = instGetter;
   }
 }
 
 void
-DateFormatter::format(const Date& date, std::string& output) const {
+DateFormatter::format(const Date& date, std::string& output) const noexcept {
   std::ostringstream oss;
   format(date, oss);
   output.clear();
@@ -119,7 +119,7 @@ DateFormatter::format(const Date& date, std::string& output) const {
 }
 
 void
-DateFormatter::format(const Date& date, std::ostream& output) const {
+DateFormatter::format(const Date& date, std::ostream& output) const noexcept {
   for(const anch::date::formatter::IDatePartFormatter* part : _formatters) {
     part->format(date, output);
   }
@@ -127,7 +127,7 @@ DateFormatter::format(const Date& date, std::ostream& output) const {
 }
 
 void
-DateFormatter::parse(const std::string& strDate, Date& date) const throw(InvalidFormatException) {
+DateFormatter::parse(const std::string& strDate, Date& date) const {
   if(strDate.size() != _size) {
     std::stringstream oss;
     oss << "Found " << strDate.size() << " characters instead of " << _size;
@@ -146,14 +146,14 @@ DateFormatter::parse(const std::string& strDate, Date& date) const throw(Invalid
 }
 
 Date*
-DateFormatter::parse(const std::string& strDate) const throw(InvalidFormatException) {
+DateFormatter::parse(const std::string& strDate) const {
   Date* date = new Date(false);
   parse(strDate, *date);
   return date;
 }
 
 void
-DateFormatter::addFormatter(const std::string& strFormatter) {
+DateFormatter::addFormatter(const std::string& strFormatter) noexcept {
   anch::date::formatter::IDatePartFormatter* form;
   if(strFormatter.length() == 1) {
     form = new anch::date::formatter::ConstantFormatter(strFormatter);

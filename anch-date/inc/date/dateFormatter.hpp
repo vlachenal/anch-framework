@@ -86,7 +86,7 @@ namespace anch {
        *
        * \param dateFormat The date format
        */
-      DateFormatter(const std::string& dateFormat);
+      DateFormatter(const std::string& dateFormat) noexcept;
       // Constructors -
 
       // Destructor +
@@ -94,7 +94,7 @@ namespace anch {
       /*!
        * \ref DateFormatter destructor
        */
-      virtual ~DateFormatter();
+      virtual ~DateFormatter() noexcept;
       // Destructor -
 
       // Methods +
@@ -105,7 +105,7 @@ namespace anch {
        * \param pattern The formatter part pattern
        * \param instGetter The formatter part new instance getter
        */
-      static void registerFormatterPart(const std::string& pattern, getInstance instGetter);
+      static void registerFormatterPart(const std::string& pattern, getInstance instGetter) noexcept;
 
       /*!
        * Format date
@@ -113,7 +113,7 @@ namespace anch {
        * \param date The date to format
        * \param output The output string
        */
-      void format(const anch::date::Date& date, std::string& output) const;
+      void format(const anch::date::Date& date, std::string& output) const noexcept;
 
       /*!
        * Format date
@@ -121,7 +121,7 @@ namespace anch {
        * \param date The date to format
        * \param output The output stream
        */
-      void format(const anch::date::Date& date, std::ostream& output) const;
+      void format(const anch::date::Date& date, std::ostream& output) const noexcept;
 
       /*!
        * Build date from string.\n
@@ -132,7 +132,7 @@ namespace anch {
        *
        * \throw InvalidFormatException invalid format
        */
-      void parse(const std::string& strDate, anch::date::Date& date) const throw(InvalidFormatException);
+      void parse(const std::string& strDate, anch::date::Date& date) const;
 
       /*!
        * Build date from string.\n
@@ -144,7 +144,7 @@ namespace anch {
        *
        * \throw InvalidFormatException invalid format
        */
-      anch::date::Date* parse(const std::string& strDate) const throw(InvalidFormatException);
+      anch::date::Date* parse(const std::string& strDate) const;
 
     private:
       /*!
@@ -152,7 +152,7 @@ namespace anch {
        *
        * \param strFormatter The formatter part to instanciate
        */
-      void addFormatter(const std::string& strFormatter);
+      void addFormatter(const std::string& strFormatter) noexcept;
       // Methods -
 
     };
