@@ -37,7 +37,7 @@ using anch::sql::ResultSet;
 std::atomic<std::uint64_t> MySQLPreparedStatement::_counter(0);
 
 // Constructors +
-MySQLPreparedStatement::MySQLPreparedStatement(MYSQL* dbCon, const std::string& query) throw(SqlException): PreparedStatement(), _conn(dbCon) {
+MySQLPreparedStatement::MySQLPreparedStatement(MYSQL* dbCon, const std::string& query): PreparedStatement(), _conn(dbCon) {
   _stmt = mysql_stmt_init(dbCon);
   if(_stmt == NULL) {
     throw SqlException("MySQL out of memory");
@@ -55,7 +55,7 @@ MySQLPreparedStatement::MySQLPreparedStatement(MYSQL* dbCon, const std::string& 
 // Constructors -
 
 // Destructor +
-MySQLPreparedStatement::~MySQLPreparedStatement() {
+MySQLPreparedStatement::~MySQLPreparedStatement() noexcept {
   mysql_stmt_close(_stmt);
 }
 // Destructor -
@@ -73,7 +73,7 @@ MySQLPreparedStatement::~MySQLPreparedStatement() {
 void
 bindParamsAndSend(MYSQL_STMT* stmt,
 		  std::size_t nbPlaceholders,
-		  const std::map<std::size_t,std::string>& paramValues) throw(SqlException) {
+		  const std::map<std::size_t,std::string>& paramValues) {
   // Bind parameters +
   MYSQL_BIND* bind = new MYSQL_BIND[nbPlaceholders];
   std::memset(bind, 0, nbPlaceholders * sizeof(MYSQL_BIND));
@@ -107,13 +107,13 @@ bindParamsAndSend(MYSQL_STMT* stmt,
 
 // Methods +
 ResultSet*
-MySQLPreparedStatement::executeQuery() throw(SqlException) {
+MySQLPreparedStatement::executeQuery() {
   bindParamsAndSend(_stmt, _nbPlaceholders, _values);
   return new MySQLPreparedStatementResultSet(_stmt);
 }
 
 uint64_t
-MySQLPreparedStatement::executeUpdate() throw(SqlException) {
+MySQLPreparedStatement::executeUpdate() {
   bindParamsAndSend(_stmt, _nbPlaceholders, _values);
   return static_cast<uint64_t>(mysql_stmt_affected_rows(_stmt));
 }

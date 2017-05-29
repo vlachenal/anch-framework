@@ -38,7 +38,7 @@ namespace anch {
    * \throw std::bad_cast conversion error
    */
   template <typename N>
-  N convert(const std::string& str) throw(std::bad_cast) {
+  N convert(const std::string& str) {
     N num;
     std::stringstream conv;
     conv << std::noskipws << str;

@@ -68,7 +68,7 @@ MySQLPreparedStatementResultSet::MySQLPreparedStatementResultSet(MYSQL_STMT* stm
   mysql_free_result(result);
 }
 
-MySQLPreparedStatementResultSet::~MySQLPreparedStatementResultSet() {
+MySQLPreparedStatementResultSet::~MySQLPreparedStatementResultSet() noexcept {
   delete[] _lengths;
   delete[] _nulls;
   for(std::size_t i = 0 ; i < _fields.size() ; ++i) {
@@ -80,7 +80,7 @@ MySQLPreparedStatementResultSet::~MySQLPreparedStatementResultSet() {
 }
 
 bool
-MySQLPreparedStatementResultSet::getValue(std::size_t idx, std::string& out) throw(SqlException) {
+MySQLPreparedStatementResultSet::getValue(std::size_t idx, std::string& out) {
   if(idx >= _fields.size()) {
     std::ostringstream msg;
     msg << "Index out of range (0.." << (_fields.size() - 1) << "): " << idx;
@@ -94,7 +94,7 @@ MySQLPreparedStatementResultSet::getValue(std::size_t idx, std::string& out) thr
 }
 
 bool
-MySQLPreparedStatementResultSet::next() throw(SqlException) {
+MySQLPreparedStatementResultSet::next() {
   return (mysql_stmt_fetch(_stmt) == 0);
 }
 

@@ -46,7 +46,7 @@ using anch::sql::SQLite3Connection;
 #endif // ANCH_SQL_SQLITE3
 
 // Constructors +
-SqlConnectionFactory::SqlConnectionFactory(): _configs(), _pools() {
+SqlConnectionFactory::SqlConnectionFactory() noexcept: _configs(), _pools() {
   const Resource& resource = Resource::getResource("db_con.conf");
   auto conf = resource.getConfiguration();
   for(auto iter = conf.cbegin() ; iter != conf.cend() ; ++iter) {
@@ -110,7 +110,7 @@ SqlConnectionFactory::SqlConnectionFactory(): _configs(), _pools() {
 // Constructors -
 
 // Destructor +
-SqlConnectionFactory::~SqlConnectionFactory() {
+SqlConnectionFactory::~SqlConnectionFactory() noexcept {
   _configs.clear();
   for(auto iter = _pools.begin() ; iter != _pools.end() ; ++iter) {
     delete iter->second;
@@ -121,7 +121,7 @@ SqlConnectionFactory::~SqlConnectionFactory() {
 
 // Methods +
 Connection*
-SqlConnectionFactory::createConnection(const std::string& name) throw(SqlException) {
+SqlConnectionFactory::createConnection(const std::string& name) {
   auto iter = _configs.find(name);
   if(iter == _configs.end()) {
     std::ostringstream out;
@@ -155,7 +155,7 @@ SqlConnectionFactory::createConnection(const std::string& name) throw(SqlExcepti
 }
 
 SqlConnectionPool&
-SqlConnectionFactory::getPool(const std::string& name) throw(SqlException) {
+SqlConnectionFactory::getPool(const std::string& name) {
   auto iter = _pools.find(name);
   if(iter == _pools.end()) {
   std::ostringstream out;

@@ -36,7 +36,7 @@ using anch::sql::ResultSet;
 std::atomic<std::uint64_t> PostgreSQLPreparedStatement::_counter(0);
 
 // Constructors +
-PostgreSQLPreparedStatement::PostgreSQLPreparedStatement(PGconn* dbCon, const std::string& query) throw(SqlException): PreparedStatement(), _conn(dbCon) {
+PostgreSQLPreparedStatement::PostgreSQLPreparedStatement(PGconn* dbCon, const std::string& query): PreparedStatement(), _conn(dbCon) {
   std::set<std::size_t> pos = getPlaceholders(query);
   _nbPlaceholders = pos.size();
   std::size_t offset = 0;
@@ -67,7 +67,7 @@ PostgreSQLPreparedStatement::PostgreSQLPreparedStatement(PGconn* dbCon, const st
 // Constructors -
 
 // Destructor +
-PostgreSQLPreparedStatement::~PostgreSQLPreparedStatement() {
+PostgreSQLPreparedStatement::~PostgreSQLPreparedStatement() noexcept {
   // Nothing to do
 }
 // Destructor -
@@ -87,7 +87,7 @@ void
 bindParamsAndSend(PGconn* conn,
 		  const std::string& stmtId,
 		  std::size_t nbPlaceholders,
-		  const std::map<std::size_t,std::string>& paramValues) throw(SqlException) {
+		  const std::map<std::size_t,std::string>& paramValues) {
   // Bind parameters +
   const char** values = new const char*[nbPlaceholders];
   int* lengths = new int[nbPlaceholders];
@@ -115,13 +115,13 @@ bindParamsAndSend(PGconn* conn,
 
 // Methods +
 ResultSet*
-PostgreSQLPreparedStatement::executeQuery() throw(SqlException) {
+PostgreSQLPreparedStatement::executeQuery() {
   bindParamsAndSend(_conn, _stmtId, _nbPlaceholders, _values);
   return new PostgreSQLResultSet(_conn);
 }
 
 uint64_t
-PostgreSQLPreparedStatement::executeUpdate() throw(SqlException) {
+PostgreSQLPreparedStatement::executeUpdate() {
   bindParamsAndSend(_conn, _stmtId, _nbPlaceholders, _values);
   PGresult* pgRes = PQgetResult(_conn);
   if(pgRes == NULL || PQresultStatus(pgRes) != PGRES_COMMAND_OK) {

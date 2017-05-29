@@ -55,7 +55,7 @@ namespace anch {
       /*!
        * \ref PreparedStatement constructor
        */
-      PreparedStatement();
+      PreparedStatement() noexcept;
       // Constructors -
 
       // Destructor +
@@ -63,7 +63,7 @@ namespace anch {
       /*!
        * \ref PreparedStatement destructor
        */
-      virtual ~PreparedStatement();
+      virtual ~PreparedStatement() noexcept;
       // Destructor -
 
       // Methods +
@@ -75,7 +75,7 @@ namespace anch {
        *
        * \throw SqlException any error
        */
-      virtual ResultSet* executeQuery() throw(SqlException) = 0;
+      virtual ResultSet* executeQuery() = 0;
 
       /*!
        * Execute prepared statement for update database (INSERT, UPDATE, DELETE)
@@ -84,7 +84,7 @@ namespace anch {
        *
        * \throw SqlException any error
        */
-      virtual uint64_t executeUpdate() throw(SqlException) = 0;
+      virtual uint64_t executeUpdate() = 0;
 
       /*!
        * Bind 16 bits signed integer value to prepared statement
@@ -94,7 +94,7 @@ namespace anch {
        *
        * \throw SqlException any error
        */
-      void set(std::size_t idx, int16_t value) throw(SqlException);
+      void set(std::size_t idx, int16_t value);
 
       /*!
        * Bind 16 bits unsigned integer value to prepared statement
@@ -104,7 +104,7 @@ namespace anch {
        *
        * \throw SqlException any error
        */
-      void set(std::size_t idx, uint16_t value) throw(SqlException);
+      void set(std::size_t idx, uint16_t value);
 
       /*!
        * Bind 32 bits signed integer value to prepared statement
@@ -114,7 +114,7 @@ namespace anch {
        *
        * \throw SqlException any error
        */
-      void set(std::size_t idx, int32_t value) throw(SqlException);
+      void set(std::size_t idx, int32_t value);
 
       /*!
        * Bind 32 bits unsigned integer value to prepared statement
@@ -124,7 +124,7 @@ namespace anch {
        *
        * \throw SqlException any error
        */
-      void set(std::size_t idx, uint32_t value) throw(SqlException);
+      void set(std::size_t idx, uint32_t value);
 
       /*!
        * Bind 64 bits signed integer value to prepared statement
@@ -134,7 +134,7 @@ namespace anch {
        *
        * \throw SqlException any error
        */
-      void set(std::size_t idx, int64_t value) throw(SqlException);
+      void set(std::size_t idx, int64_t value);
 
       /*!
        * Bind 64 bits unsigned integer value to prepared statement
@@ -144,7 +144,7 @@ namespace anch {
        *
        * \throw SqlException any error
        */
-      void set(std::size_t idx, uint64_t value) throw(SqlException);
+      void set(std::size_t idx, uint64_t value);
 
       /*!
        * Bind string value to prepared statement
@@ -154,7 +154,7 @@ namespace anch {
        *
        * \throw SqlException any error
        */
-      void set(std::size_t idx, const std::string& value) throw(SqlException);
+      void set(std::size_t idx, const std::string& value);
 
     protected:
       /*!
@@ -173,7 +173,7 @@ namespace anch {
        *
        * \throw SqlException the index is upper than number of wildcards
        */
-      inline void checkIndex(std::size_t index) const throw(SqlException) {
+      inline void checkIndex(std::size_t index) const {
 	if(index > _nbPlaceholders) {
 	  std::ostringstream oss;
 	  oss << "Index " << index << " is upper than number of wildcards " << _nbPlaceholders;

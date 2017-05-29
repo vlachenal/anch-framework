@@ -66,8 +66,7 @@ namespace anch {
 			   const std::string& password,
 			   const std::string& database,
 			   int port,
-			   const std::string& app = "")
-	throw(SqlException);
+			   const std::string& app = "");
 
       /*!
        * \ref PostgreSQLConnection constructor
@@ -76,7 +75,7 @@ namespace anch {
        *
        * \throw SqlException fail to create connection
        */
-      PostgreSQLConnection(const std::string& connStr) throw(SqlException);
+      PostgreSQLConnection(const std::string& connStr);
 
       /*!
        * \ref PostgreSQLConnection constructor
@@ -85,7 +84,7 @@ namespace anch {
        *
        * \throw SqlException fail to create connection
        */
-      PostgreSQLConnection(const SqlConnectionConfiguration& config) throw(SqlException);
+      PostgreSQLConnection(const SqlConnectionConfiguration& config);
 
       /*!
        * Prohibit \ref PostgreSQLConnection copy constructor
@@ -111,7 +110,7 @@ namespace anch {
        *
        * \throw SqlException any error
        */
-      virtual ResultSet* executeQuery(const std::string& query) throw(SqlException) override;
+      virtual ResultSet* executeQuery(const std::string& query) override;
 
       /*!
        * Execute SQL update query
@@ -122,28 +121,28 @@ namespace anch {
        *
        * \throw SqlException any error
        */
-      virtual uint64_t executeUpdate(const std::string& query) throw(SqlException) override;
+      virtual uint64_t executeUpdate(const std::string& query) override;
 
       /*!
        * Send commit to database server
        *
        * \throw SqlException fail to commit transaction
        */
-      virtual void sendCommit() throw(SqlException) override;
+      virtual void sendCommit() override;
 
       /*!
        * Send rollback to database server
        *
        * \throw SqlException fail to rollback transaction
        */
-      virtual void sendRollback() throw(SqlException) override;
+      virtual void sendRollback() override;
 
       /*!
        * Send start transaction to database server
        *
        * \throw SqlException any error
        */
-      virtual void sendStartTransaction() throw(SqlException) override;
+      virtual void sendStartTransaction() override;
 
       /*!
        * Send SQL query to prepare SQL statement
@@ -154,7 +153,7 @@ namespace anch {
        *
        * \throw SqlException any error
        */
-      virtual PreparedStatement* makePrepared(const std::string& query) throw(SqlException) override;
+      virtual PreparedStatement* makePrepared(const std::string& query) override;
       // Methods -
 
     };

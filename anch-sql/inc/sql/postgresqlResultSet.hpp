@@ -67,7 +67,7 @@ namespace anch {
        *
        * \param conn the PostgreSQL database connection
        */
-      PostgreSQLResultSet(PGconn* conn);
+      PostgreSQLResultSet(PGconn* conn) noexcept;
       // Constructors -
 
       // Destructor +
@@ -75,7 +75,7 @@ namespace anch {
       /*!
        * \ref PostgreSQLResultSet destructor
        */
-      virtual ~PostgreSQLResultSet();
+      virtual ~PostgreSQLResultSet() noexcept;
       // Destructor -
 
       // Methods +
@@ -87,7 +87,7 @@ namespace anch {
        *
        * \throw SqlException any error
        */
-      virtual bool next() throw(SqlException);
+      virtual bool next();
 
     protected:
       /*!
@@ -98,7 +98,7 @@ namespace anch {
        *
        * \throw SqlException any error
        */
-      virtual bool getValue(std::size_t idx, std::string& out) throw(SqlException);
+      virtual bool getValue(std::size_t idx, std::string& out);
       // Methods -
 
     };

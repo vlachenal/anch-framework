@@ -24,11 +24,11 @@
 using anch::sql::ResultSet;
 
 
-ResultSet::ResultSet(): _fields() {
+ResultSet::ResultSet() noexcept: _fields() {
   // Nothing to do
 }
 
-ResultSet::~ResultSet() {
+ResultSet::~ResultSet() noexcept {
   // Nothing to do
 }
 
@@ -49,7 +49,7 @@ namespace anch {
      */
     template<>
     bool
-    ResultSet::get<std::string>(std::size_t idx, std::string& out) throw(SqlException) {
+    ResultSet::get<std::string>(std::size_t idx, std::string& out) {
       if(idx >= _fields.size()) {
 	std::ostringstream msg;
 	msg << "Index out of range: try to retrieve index " << idx
@@ -72,7 +72,7 @@ namespace anch {
      */
     template<>
     bool
-    ResultSet::get<int64_t>(std::size_t idx, int64_t& out) throw(SqlException) {
+    ResultSet::get<int64_t>(std::size_t idx, int64_t& out) {
       bool null = true;
       std::string strVal;
       if(!get(idx, strVal)) {
@@ -101,7 +101,7 @@ namespace anch {
      */
     template<>
     bool
-    ResultSet::get<int32_t>(std::size_t idx, int32_t& out) throw(SqlException) {
+    ResultSet::get<int32_t>(std::size_t idx, int32_t& out) {
       bool null = true;
       std::string strVal;
       if(!get(idx, strVal)) {
@@ -130,7 +130,7 @@ namespace anch {
      */
     template<>
     bool
-    ResultSet::get<int16_t>(std::size_t idx, int16_t& out) throw(SqlException) {
+    ResultSet::get<int16_t>(std::size_t idx, int16_t& out) {
       bool null = true;
       std::string strVal;
       if(!get(idx, strVal)) {
@@ -159,7 +159,7 @@ namespace anch {
      */
     template<>
     bool
-    ResultSet::get<uint64_t>(std::size_t idx, uint64_t& out) throw(SqlException) {
+    ResultSet::get<uint64_t>(std::size_t idx, uint64_t& out) {
       bool null = true;
       std::string strVal;
       if(!get(idx, strVal)) {
@@ -188,7 +188,7 @@ namespace anch {
      */
     template<>
     bool
-    ResultSet::get<uint32_t>(std::size_t idx, uint32_t& out) throw(SqlException) {
+    ResultSet::get<uint32_t>(std::size_t idx, uint32_t& out) {
       bool null = true;
       std::string strVal;
       if(!get(idx, strVal)) {
@@ -217,7 +217,7 @@ namespace anch {
      */
     template<>
     bool
-    ResultSet::get<uint16_t>(std::size_t idx, uint16_t& out) throw(SqlException) {
+    ResultSet::get<uint16_t>(std::size_t idx, uint16_t& out) {
       bool null = true;
       std::string strVal;
       if(!get(idx, strVal)) {
@@ -245,7 +245,7 @@ namespace anch {
      */
     template<>
     const std::string*
-    ResultSet::get<std::string>(std::size_t idx) throw(SqlException) {
+    ResultSet::get<std::string>(std::size_t idx) {
       std::string out;
       std::string* res = NULL;
       if(!get(idx, out)) {
@@ -266,7 +266,7 @@ namespace anch {
      */
     template<>
     const int64_t*
-    ResultSet::get<int64_t>(std::size_t idx) throw(SqlException) {
+    ResultSet::get<int64_t>(std::size_t idx) {
       int64_t* res = NULL;
       std::string strVal;
       if(!get(idx, strVal)) {
@@ -295,7 +295,7 @@ namespace anch {
      */
     template<>
     const int32_t*
-    ResultSet::get<int32_t>(std::size_t idx) throw(SqlException) {
+    ResultSet::get<int32_t>(std::size_t idx) {
       int32_t* res = NULL;
       std::string strVal;
       if(!get(idx, strVal)) {
@@ -324,7 +324,7 @@ namespace anch {
      */
     template<>
     const int16_t*
-    ResultSet::get<int16_t>(std::size_t idx) throw(SqlException) {
+    ResultSet::get<int16_t>(std::size_t idx) {
       int16_t* res = NULL;
       std::string strVal;
       if(!get(idx, strVal)) {
@@ -353,7 +353,7 @@ namespace anch {
      */
     template<>
     const uint64_t*
-    ResultSet::get<uint64_t>(std::size_t idx) throw(SqlException) {
+    ResultSet::get<uint64_t>(std::size_t idx) {
       uint64_t* res = NULL;
       std::string strVal;
       if(!get(idx, strVal)) {
@@ -382,7 +382,7 @@ namespace anch {
      */
     template<>
     const uint32_t*
-    ResultSet::get<uint32_t>(std::size_t idx) throw(SqlException) {
+    ResultSet::get<uint32_t>(std::size_t idx) {
       uint32_t* res = NULL;
       std::string strVal;
       if(!get(idx, strVal)) {
@@ -411,7 +411,7 @@ namespace anch {
      */
     template<>
     const uint16_t*
-    ResultSet::get<uint16_t>(std::size_t idx) throw(SqlException) {
+    ResultSet::get<uint16_t>(std::size_t idx) {
       uint16_t* res = NULL;
       std::string strVal;
       if(!get(idx, strVal)) {

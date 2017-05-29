@@ -22,11 +22,11 @@
 using anch::sql::PreparedStatement;
 
 
-PreparedStatement::PreparedStatement(): _values(), _nbPlaceholders(0) {
+PreparedStatement::PreparedStatement() noexcept: _values(), _nbPlaceholders(0) {
   // Nothing to do
 }
 
-PreparedStatement::~PreparedStatement() {
+PreparedStatement::~PreparedStatement() noexcept {
   // Nothing to do
 }
 
@@ -88,7 +88,7 @@ PreparedStatement::getPlaceholders(const std::string& query) const {
 }
 
 void
-PreparedStatement::set(std::size_t idx, int16_t value) throw(SqlException) {
+PreparedStatement::set(std::size_t idx, int16_t value) {
   checkIndex(idx);
   std::ostringstream oss;
   oss << value;
@@ -96,7 +96,7 @@ PreparedStatement::set(std::size_t idx, int16_t value) throw(SqlException) {
 }
 
 void
-PreparedStatement::set(std::size_t idx, uint16_t value) throw(SqlException) {
+PreparedStatement::set(std::size_t idx, uint16_t value) {
   checkIndex(idx);
   std::ostringstream oss;
   oss << value;
@@ -104,7 +104,7 @@ PreparedStatement::set(std::size_t idx, uint16_t value) throw(SqlException) {
 }
 
 void
-PreparedStatement::set(std::size_t idx, int32_t value) throw(SqlException) {
+PreparedStatement::set(std::size_t idx, int32_t value) {
   checkIndex(idx);
   std::ostringstream oss;
   oss << value;
@@ -112,7 +112,7 @@ PreparedStatement::set(std::size_t idx, int32_t value) throw(SqlException) {
 }
 
 void
-PreparedStatement::set(std::size_t idx, uint32_t value) throw(SqlException) {
+PreparedStatement::set(std::size_t idx, uint32_t value) {
   checkIndex(idx);
   std::ostringstream oss;
   oss << value;
@@ -120,7 +120,7 @@ PreparedStatement::set(std::size_t idx, uint32_t value) throw(SqlException) {
 }
 
 void
-PreparedStatement::set(std::size_t idx, int64_t value) throw(SqlException) {
+PreparedStatement::set(std::size_t idx, int64_t value) {
   checkIndex(idx);
   std::ostringstream oss;
   oss << value;
@@ -128,7 +128,7 @@ PreparedStatement::set(std::size_t idx, int64_t value) throw(SqlException) {
 }
 
 void
-PreparedStatement::set(std::size_t idx, uint64_t value) throw(SqlException) {
+PreparedStatement::set(std::size_t idx, uint64_t value) {
   checkIndex(idx);
   std::ostringstream oss;
   oss << value;
@@ -136,7 +136,7 @@ PreparedStatement::set(std::size_t idx, uint64_t value) throw(SqlException) {
 }
 
 void
-PreparedStatement::set(std::size_t idx, const std::string& value) throw(SqlException) {
+PreparedStatement::set(std::size_t idx, const std::string& value) {
   checkIndex(idx);
   _values[idx] = value;
 }

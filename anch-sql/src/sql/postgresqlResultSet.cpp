@@ -28,7 +28,7 @@ using anch::sql::ResultSet;
 
 
 // Constructors +
-PostgreSQLResultSet::PostgreSQLResultSet(PGconn* conn):
+PostgreSQLResultSet::PostgreSQLResultSet(PGconn* conn) noexcept:
   ResultSet(),
   _conn(conn),
   _result(NULL),
@@ -40,7 +40,7 @@ PostgreSQLResultSet::PostgreSQLResultSet(PGconn* conn):
 // Constructors -
 
 // Destructor +
-PostgreSQLResultSet::~PostgreSQLResultSet() {
+PostgreSQLResultSet::~PostgreSQLResultSet() noexcept {
   if(_result != NULL) {
     PQclear(_result);
   }
@@ -52,7 +52,7 @@ PostgreSQLResultSet::~PostgreSQLResultSet() {
 
 // Methods +
 bool
-PostgreSQLResultSet::getValue(std::size_t idx, std::string& out) throw(SqlException) {
+PostgreSQLResultSet::getValue(std::size_t idx, std::string& out) {
   if(static_cast<int>(idx) >= _nbFields) {
     std::ostringstream msg;
     msg << "Index out of range (0.." << (_nbFields - 1) << "): " << idx;
@@ -67,7 +67,7 @@ PostgreSQLResultSet::getValue(std::size_t idx, std::string& out) throw(SqlExcept
 }
 
 bool
-PostgreSQLResultSet::next() throw(SqlException) {
+PostgreSQLResultSet::next() {
   bool hasMore = false;
   if(_currentRow + 1 < _nbRows) {
     ++_currentRow;

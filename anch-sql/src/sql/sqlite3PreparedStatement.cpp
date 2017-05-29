@@ -35,7 +35,7 @@ using anch::sql::ResultSet;
 std::atomic<std::uint64_t> SQLite3PreparedStatement::_counter(0);
 
 // Constructors +
-SQLite3PreparedStatement::SQLite3PreparedStatement(sqlite3* dbCon, const std::string& query) throw(SqlException): PreparedStatement(), _conn(dbCon), _stmt() {
+SQLite3PreparedStatement::SQLite3PreparedStatement(sqlite3* dbCon, const std::string& query): PreparedStatement(), _conn(dbCon), _stmt() {
   int res = sqlite3_prepare_v2(_conn, query.data(), -1, &_stmt, NULL);
   if(res != SQLITE_OK) {
     std::ostringstream msg;
@@ -48,7 +48,7 @@ SQLite3PreparedStatement::SQLite3PreparedStatement(sqlite3* dbCon, const std::st
 // Constructors -
 
 // Destructor +
-SQLite3PreparedStatement::~SQLite3PreparedStatement() {
+SQLite3PreparedStatement::~SQLite3PreparedStatement() noexcept {
   if(_stmt != NULL) {
     sqlite3_reset(_stmt);
     sqlite3_clear_bindings(_stmt);
@@ -70,7 +70,7 @@ SQLite3PreparedStatement::~SQLite3PreparedStatement() {
 void
 bindParamsAndSend(sqlite3* conn,
 		  sqlite3_stmt* stmt,
-		  const std::map<std::size_t,std::string>& paramValues) throw(SqlException) {
+		  const std::map<std::size_t,std::string>& paramValues) {
   sqlite3_clear_bindings(stmt);
   sqlite3_reset(stmt);
   // Bind parameters +
@@ -93,13 +93,13 @@ bindParamsAndSend(sqlite3* conn,
 
 // Methods +
 ResultSet*
-SQLite3PreparedStatement::executeQuery() throw(SqlException) {
+SQLite3PreparedStatement::executeQuery() {
   bindParamsAndSend(_conn, _stmt, _values);
   return new SQLite3ResultSet(_stmt, true);
 }
 
 uint64_t
-SQLite3PreparedStatement::executeUpdate() throw(SqlException) {
+SQLite3PreparedStatement::executeUpdate() {
   bindParamsAndSend(_conn, _stmt, _values);
   while(sqlite3_step(_stmt) == SQLITE_ROW) {
     // Nothing to do

@@ -54,7 +54,7 @@ namespace anch {
       /*!
        * \ref ResultSet default constructor
        */
-      ResultSet();
+      ResultSet() noexcept;
       // Constructors -
 
       // Destructor +
@@ -62,7 +62,7 @@ namespace anch {
       /*!
        * \ref ResultSet destrcutor
        */
-      virtual ~ResultSet();
+      virtual ~ResultSet() noexcept;
       // Destructor -
 
       // Methods +
@@ -79,7 +79,7 @@ namespace anch {
        * \throw SqlException any error
        */
       template<typename T>
-      const T* get(std::size_t idx) throw(SqlException);
+      const T* get(std::size_t idx);
 
       /*!
        * Get field value by index.\n
@@ -95,7 +95,7 @@ namespace anch {
        * \throw SqlException any error
        */
       template<typename T>
-      bool get(std::size_t idx, T& out) throw(SqlException);
+      bool get(std::size_t idx, T& out);
 
       /*!
        * Get field value by field name.\n
@@ -109,7 +109,7 @@ namespace anch {
        * \return \c true if result is NULL, \c false otherwise
        */
       template<typename T>
-      bool get(const std::string field, T& out) throw(SqlException) {
+      bool get(const std::string field, T& out) {
 	auto search = _fields.find(field);
 	if(search == _fields.end()) {
 	  std::ostringstream msg;
@@ -140,7 +140,7 @@ namespace anch {
        * \throw SqlException any error
        */
       template<typename T>
-      const T* get(const std::string field) throw(SqlException) {
+      const T* get(const std::string field) {
 	auto search = _fields.find(field);
 	if(search == _fields.end()) {
 	  std::ostringstream msg;
@@ -165,7 +165,7 @@ namespace anch {
        *
        * \throw SqlException any error
        */
-      virtual bool next() throw(SqlException) = 0;
+      virtual bool next() = 0;
 
     protected:
       /*!
@@ -176,7 +176,7 @@ namespace anch {
        *
        * \throw SqlException any error
        */
-      virtual bool getValue(std::size_t idx, std::string& out) throw(SqlException) = 0;
+      virtual bool getValue(std::size_t idx, std::string& out) = 0;
       // Methods -
 
     };

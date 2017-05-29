@@ -25,13 +25,13 @@ using anch::sql::PreparedStatement;
 
 
 // Constructors +
-Connection::Connection() throw(SqlException): _valid(true), _transaction(false), _stmts() {
+Connection::Connection(): _valid(true), _transaction(false), _stmts() {
   // Nothing to do
 }
 // Constructors -
 
 // Destructor +
-Connection::~Connection() {
+Connection::~Connection() noexcept {
   // Delete prepared statements +
   for(auto iter = _stmts.begin() ; iter != _stmts.end() ; ++iter) {
     delete iter->second;
@@ -42,7 +42,7 @@ Connection::~Connection() {
 
 // Methods +
 void
-Connection::commit() throw(SqlException) {
+Connection::commit() {
   if(_transaction) {
     sendCommit();
     _transaction = false;
@@ -50,7 +50,7 @@ Connection::commit() throw(SqlException) {
 }
 
 void
-Connection::rollback() throw(SqlException) {
+Connection::rollback() {
   if(_transaction) {
     sendRollback();
     _transaction = false;
@@ -58,7 +58,7 @@ Connection::rollback() throw(SqlException) {
 }
 
 void
-Connection::startTransaction() throw(SqlException) {
+Connection::startTransaction() {
   if(!_transaction) {
     sendStartTransaction();
     _transaction = true;
@@ -66,12 +66,12 @@ Connection::startTransaction() throw(SqlException) {
 }
 
 ResultSet*
-Connection::query(const std::string& query) throw(SqlException) {
+Connection::query(const std::string& query) {
   return executeQuery(query);
 }
 
 void
-Connection::mapRow(ResultSet* res, std::function<void(ResultSet&)> rowMapper) throw(SqlException) {
+Connection::mapRow(ResultSet* res, std::function<void(ResultSet&)> rowMapper) {
   try {
     while(res->next()) {
       rowMapper(*res);
@@ -84,12 +84,12 @@ Connection::mapRow(ResultSet* res, std::function<void(ResultSet&)> rowMapper) th
 }
 
 void
-Connection::queryMapRow(const std::string& sqlQuery, std::function<void(ResultSet&)> rowMapper) throw(SqlException) {
+Connection::queryMapRow(const std::string& sqlQuery, std::function<void(ResultSet&)> rowMapper) {
   mapRow(query(sqlQuery), rowMapper);
 }
 
 void
-Connection::extract(ResultSet* res, std::function<void(ResultSet&)> resExtractor) throw(SqlException) {
+Connection::extract(ResultSet* res, std::function<void(ResultSet&)> resExtractor) {
   try {
     resExtractor(*res);
   } catch(...) {
@@ -100,18 +100,17 @@ Connection::extract(ResultSet* res, std::function<void(ResultSet&)> resExtractor
 }
 
 void
-Connection::queryExtract(const std::string& sqlQuery, std::function<void(ResultSet&)> resExtractor) throw(SqlException) {
+Connection::queryExtract(const std::string& sqlQuery, std::function<void(ResultSet&)> resExtractor) {
   extract(query(sqlQuery), resExtractor);
 }
 
 uint64_t
-Connection::update(const std::string& query) throw(SqlException) {
-  // \todo check update query ...
+Connection::update(const std::string& query) {
   return executeUpdate(query);
 }
 
 PreparedStatement&
-Connection::prepareStatement(const std::string& query) throw(SqlException) {
+Connection::prepareStatement(const std::string& query) {
   auto iter = _stmts.find(query);
   if(iter == _stmts.end()) { // Not found => create and return it
     PreparedStatement* stmt = makePrepared(query);

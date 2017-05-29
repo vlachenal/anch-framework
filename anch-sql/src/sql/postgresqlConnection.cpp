@@ -45,8 +45,7 @@ PostgreSQLConnection::PostgreSQLConnection(const std::string& host,
 					   const std::string& password,
 					   const std::string& database,
 					   int port,
-					   const std::string& app)
-  throw(SqlException):
+					   const std::string& app):
   Connection(),
   _conn(NULL) {
   std::ostringstream conninfo;
@@ -85,7 +84,7 @@ PostgreSQLConnection::PostgreSQLConnection(const std::string& host,
   }
 }
 
-PostgreSQLConnection::PostgreSQLConnection(const std::string& connStr) throw(SqlException): _conn() {
+PostgreSQLConnection::PostgreSQLConnection(const std::string& connStr): _conn() {
   _conn = PQconnectdb(connStr.data());
   if(PQstatus(_conn) != CONNECTION_OK) {
     std::ostringstream msg;
@@ -95,8 +94,7 @@ PostgreSQLConnection::PostgreSQLConnection(const std::string& connStr) throw(Sql
   }
 }
 
-PostgreSQLConnection::PostgreSQLConnection(const SqlConnectionConfiguration& config)
-  throw(SqlException):
+PostgreSQLConnection::PostgreSQLConnection(const SqlConnectionConfiguration& config):
   Connection(),
   _conn(NULL) {
   std::ostringstream conninfo;
@@ -146,7 +144,7 @@ PostgreSQLConnection::~PostgreSQLConnection() noexcept {
 
 // Methods +
 void
-PostgreSQLConnection::sendCommit() throw(SqlException) {
+PostgreSQLConnection::sendCommit() {
   PGresult* res = PQexec(_conn, "COMMIT");
   ExecStatusType status = PQresultStatus(res);
   if(status == PGRES_FATAL_ERROR) {
@@ -159,7 +157,7 @@ PostgreSQLConnection::sendCommit() throw(SqlException) {
 }
 
 void
-PostgreSQLConnection::sendRollback() throw(SqlException) {
+PostgreSQLConnection::sendRollback() {
   PGresult* res = PQexec(_conn, "ROLLBACK");
   ExecStatusType status = PQresultStatus(res);
   if(status == PGRES_FATAL_ERROR) {
@@ -172,7 +170,7 @@ PostgreSQLConnection::sendRollback() throw(SqlException) {
 }
 
 void
-PostgreSQLConnection::sendStartTransaction() throw(SqlException) {
+PostgreSQLConnection::sendStartTransaction() {
   PGresult* res = PQexec(_conn, "START TRANSACTION");
   ExecStatusType status = PQresultStatus(res);
   if(status == PGRES_FATAL_ERROR) {
@@ -185,7 +183,7 @@ PostgreSQLConnection::sendStartTransaction() throw(SqlException) {
 }
 
 ResultSet*
-PostgreSQLConnection::executeQuery(const std::string& query) throw(SqlException) {
+PostgreSQLConnection::executeQuery(const std::string& query) {
   int res = PQsendQuery(_conn, query.data());
   if(res != 1) {
     std::ostringstream msg;
@@ -196,7 +194,7 @@ PostgreSQLConnection::executeQuery(const std::string& query) throw(SqlException)
 }
 
 uint64_t
-PostgreSQLConnection::executeUpdate(const std::string& query) throw(SqlException) {
+PostgreSQLConnection::executeUpdate(const std::string& query) {
   PGresult* res = PQexec(_conn, query.data());
   if(res == NULL) {
     std::ostringstream msg;
@@ -222,6 +220,7 @@ PostgreSQLConnection::executeUpdate(const std::string& query) throw(SqlException
     break;
   case PGRES_FATAL_ERROR:
     _valid = false; // Do not break => go to default and throw execption
+    [[fallthrough]];
   default:
     {
       std::ostringstream msg;
@@ -242,7 +241,7 @@ PostgreSQLConnection::executeUpdate(const std::string& query) throw(SqlException
 }
 
 PreparedStatement*
-PostgreSQLConnection::makePrepared(const std::string& query) throw(SqlException) {
+PostgreSQLConnection::makePrepared(const std::string& query) {
   return new PostgreSQLPreparedStatement(_conn, query);
 }
 // Methods -

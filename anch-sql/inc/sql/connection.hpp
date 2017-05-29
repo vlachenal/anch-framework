@@ -92,7 +92,7 @@ namespace anch {
        *
        * \throw SqlException any error
        */
-      Connection() throw(SqlException);
+      Connection();
 
       /*!
        * Prohibit \ref Connection copy constructor
@@ -105,7 +105,7 @@ namespace anch {
       /*!
        * \ref Connection destrcutor
        */
-      virtual ~Connection();
+      virtual ~Connection() noexcept;
       // Destructor -
 
       // Methods +
@@ -116,14 +116,14 @@ namespace anch {
        *
        * \throw SqlException any error
        */
-      void startTransaction() throw(SqlException);
+      void startTransaction();
 
       /*!
        * Alias for startTransaction
        *
        * \throw SqlException any error
        */
-      inline void begin() throw(SqlException) {
+      inline void begin() {
 	startTransaction();
       }
 
@@ -133,7 +133,7 @@ namespace anch {
        *
        * \throw SqlException any error
        */
-      void commit() throw(SqlException);
+      void commit();
 
       /*!
        * Rollback current SQL transaction.\n
@@ -141,7 +141,7 @@ namespace anch {
        *
        * \throw SqlException any error
        */
-      void rollback() throw(SqlException);
+      void rollback();
 
       /*!
        * Prepare SQL statement if not already done.
@@ -152,7 +152,7 @@ namespace anch {
        *
        * \throw SqlException any error
        */
-      PreparedStatement& prepareStatement(const std::string& query) throw(SqlException);
+      PreparedStatement& prepareStatement(const std::string& query);
 
       /*!
        * Execute SQL query
@@ -163,7 +163,7 @@ namespace anch {
        *
        * \throw SqlException any error
        */
-      ResultSet* query(const std::string& query) throw(SqlException);
+      ResultSet* query(const std::string& query);
 
       /*!
        * Execute query and treat each row of result set
@@ -173,7 +173,7 @@ namespace anch {
        *
        * \throw SqlException any error
        */
-      void queryMapRow(const std::string& sqlQuery, std::function<void(ResultSet&)> rowMapper) throw(SqlException);
+      void queryMapRow(const std::string& sqlQuery, std::function<void(ResultSet&)> rowMapper);
 
       /*!
        * Execute query and extract result set
@@ -183,7 +183,7 @@ namespace anch {
        *
        * \throw SqlException any error
        */
-      void queryExtract(const std::string& sqlQuery, std::function<void(ResultSet&)> resExtractor) throw(SqlException);
+      void queryExtract(const std::string& sqlQuery, std::function<void(ResultSet&)> resExtractor);
 
       /*!
        * Execute SQL prepared statement query
@@ -197,7 +197,7 @@ namespace anch {
        * \throw SqlException any error
        */
       template<typename T, typename... Q>
-      ResultSet* query(const std::string& query, const T& value, const Q&... values) throw(SqlException) {
+      ResultSet* query(const std::string& query, const T& value, const Q&... values) {
 	PreparedStatement& stmt = prepareStatement(query);
 	std::size_t idx = 1;
 	bindParameters(stmt, idx, value, values...);
@@ -215,7 +215,7 @@ namespace anch {
        * \throw SqlException any error
        */
       template<typename T, typename... Q>
-      void queryMapRow(const std::string& query, std::function<void(ResultSet&)> rowMapper, const T& value, const Q&... values) throw(SqlException) {
+      void queryMapRow(const std::string& query, std::function<void(ResultSet&)> rowMapper, const T& value, const Q&... values) {
 	PreparedStatement& stmt = prepareStatement(query);
 	std::size_t idx = 1;
 	Connection::bindParameters(stmt, idx, value, values...);
@@ -233,7 +233,7 @@ namespace anch {
        * \throw SqlException any error
        */
       template<typename T, typename... Q>
-      void queryExtract(const std::string& query, std::function<void(ResultSet&)> resExtractor, const T& value, const Q&... values) throw(SqlException) {
+      void queryExtract(const std::string& query, std::function<void(ResultSet&)> resExtractor, const T& value, const Q&... values) {
 	PreparedStatement& stmt = prepareStatement(query);
 	std::size_t idx = 1;
 	Connection::bindParameters(stmt, idx, value, values...);
@@ -249,7 +249,7 @@ namespace anch {
        *
        * \throw SqlException any error
        */
-      uint64_t update(const std::string& query) throw(SqlException);
+      uint64_t update(const std::string& query);
 
       /*!
        * Execute update (INSERT, UPDATE or DELETE) SQL prepared statement.
@@ -263,7 +263,7 @@ namespace anch {
        * \throw SqlException any error
        */
       template<typename T, typename... Q>
-      uint64_t update(const std::string& query, const T& value, const Q&... values) throw(SqlException) {
+      uint64_t update(const std::string& query, const T& value, const Q&... values) {
 	PreparedStatement& stmt = prepareStatement(query);
 	std::size_t idx = 1;
 	bindParameters(stmt, idx, value, values...);
@@ -282,7 +282,7 @@ namespace anch {
        * \throw SqlException any error
        */
       template<typename T, typename Iterable>
-      uint64_t batchUpdate(const std::string& query, std::function<void(PreparedStatement&, const T&)> mapper, const Iterable& values) throw(SqlException) {
+      uint64_t batchUpdate(const std::string& query, std::function<void(PreparedStatement&, const T&)> mapper, const Iterable& values) {
 	PreparedStatement& stmt = prepareStatement(query);
 	uint64_t nbRows = 0;
 	for(auto iter = values.cbegin() ; iter != values.cend() ; ++iter) {
@@ -302,7 +302,7 @@ namespace anch {
        *
        * \throw SqlException any error
        */
-      virtual ResultSet* executeQuery(const std::string& query) throw(SqlException) = 0;
+      virtual ResultSet* executeQuery(const std::string& query) = 0;
 
       /*!
        * Execute SQL update query
@@ -313,28 +313,28 @@ namespace anch {
        *
        * \throw SqlException any error
        */
-      virtual uint64_t executeUpdate(const std::string& query) throw(SqlException) = 0;
+      virtual uint64_t executeUpdate(const std::string& query) = 0;
 
       /*!
        * Send start transaction to database server
        *
        * \throw SqlException any error
        */
-      virtual void sendStartTransaction() throw(SqlException) = 0;
+      virtual void sendStartTransaction() = 0;
 
       /*!
        * Send commit to database server
        *
        * \throw SqlException any error
        */
-      virtual void sendCommit() throw(SqlException) = 0;
+      virtual void sendCommit() = 0;
 
       /*!
        * Send rollback to database server
        *
        * \throw SqlException any error
        */
-      virtual void sendRollback() throw(SqlException) = 0;
+      virtual void sendRollback() = 0;
 
       /*!
        * Send SQL query to prepare SQL statement
@@ -345,7 +345,7 @@ namespace anch {
        *
        * \throw SqlException any error
        */
-      virtual PreparedStatement* makePrepared(const std::string& query) throw(SqlException) = 0;
+      virtual PreparedStatement* makePrepared(const std::string& query) = 0;
 
     private:
       /*!
@@ -356,7 +356,7 @@ namespace anch {
        *
        * \throw SqlException any error
        */
-      static void extract(ResultSet* res, std::function<void(ResultSet&)> resExtractor) throw(SqlException);
+      static void extract(ResultSet* res, std::function<void(ResultSet&)> resExtractor);
 
       /*!
        * Map row from result set and delete it
@@ -366,7 +366,7 @@ namespace anch {
        *
        * \throw SqlException any error
        */
-      static void mapRow(ResultSet* res, std::function<void(ResultSet&)> rowMapper) throw(SqlException);
+      static void mapRow(ResultSet* res, std::function<void(ResultSet&)> rowMapper);
 
       /*!
        * Bind parameters to prepared statement
@@ -379,7 +379,7 @@ namespace anch {
        * \throw SqlException any error
        */
       template<typename T, typename... Q>
-      static inline void bindParameters(PreparedStatement& stmt, std::size_t& idx, const T& value, const Q&... values) throw(SqlException) {
+      static inline void bindParameters(PreparedStatement& stmt, std::size_t& idx, const T& value, const Q&... values) {
 	stmt.set(idx, value);
 	bindParameters(stmt, ++idx, values...);
       }
@@ -394,7 +394,7 @@ namespace anch {
        * \throw SqlException any error
        */
       template<typename T>
-      static inline void bindParameters(PreparedStatement& stmt, std::size_t& idx, const T& value) throw(SqlException) {
+      static inline void bindParameters(PreparedStatement& stmt, std::size_t& idx, const T& value) {
 	stmt.set(idx, value);
       }
       // Methods -
@@ -406,7 +406,7 @@ namespace anch {
        *
        * \return the status
        */
-      inline bool isValid() const {
+      inline bool isValid() const noexcept {
 	return _valid;
       }
 
@@ -416,7 +416,7 @@ namespace anch {
        *
        * \param valid the status to set
        */
-      inline void setValid(bool valid) {
+      inline void setValid(bool valid) noexcept {
 	_valid = valid;
       }
       // Accessors -

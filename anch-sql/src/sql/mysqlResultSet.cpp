@@ -27,7 +27,7 @@ using anch::sql::MySQLResultSet;
 using anch::sql::ResultSet;
 
 
-MySQLResultSet::MySQLResultSet(MYSQL_RES* result):
+MySQLResultSet::MySQLResultSet(MYSQL_RES* result) noexcept:
   ResultSet(),
   _result(result),
   _row() {
@@ -40,14 +40,14 @@ MySQLResultSet::MySQLResultSet(MYSQL_RES* result):
   }
 }
 
-MySQLResultSet::~MySQLResultSet() {
+MySQLResultSet::~MySQLResultSet() noexcept {
   if(_result != NULL) {
     mysql_free_result(_result);
   }
 }
 
 bool
-MySQLResultSet::getValue(std::size_t idx, std::string& out) throw(SqlException) {
+MySQLResultSet::getValue(std::size_t idx, std::string& out) {
   if(idx >= _fields.size()) {
     std::ostringstream msg;
     msg << "Index out of range (0.." << (_fields.size() - 1) << "): " << idx;
@@ -62,7 +62,7 @@ MySQLResultSet::getValue(std::size_t idx, std::string& out) throw(SqlException) 
 }
 
 bool
-MySQLResultSet::next() throw(SqlException) {
+MySQLResultSet::next() {
   _row = mysql_fetch_row(_result);
   return (_row != NULL);
 }

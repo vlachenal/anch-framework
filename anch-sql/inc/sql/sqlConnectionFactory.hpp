@@ -55,7 +55,7 @@ namespace anch {
      * \throw SqlException any error
      */
     std::shared_ptr<Connection>
-    make_shared_connection(const SqlConnectionConfiguration& config) throw(SqlException) {
+    make_shared_connection(const SqlConnectionConfiguration& config) {
       std::shared_ptr<Connection> conn;
 #ifdef ANCH_SQL_MYSQL
       if(config.driver == "MySQL") {
@@ -109,7 +109,7 @@ namespace anch {
        * \ref SqlConnectionFactory private constructor.\n
        * Read databases configuration file and create database configurations.
        */
-      SqlConnectionFactory();
+      SqlConnectionFactory() noexcept;
 
       /*!
        * Prohibits \ref SqlConnectionFactory copy constructor
@@ -136,7 +136,7 @@ namespace anch {
        *
        * \return the SQL database connection
        */
-      Connection* createConnection(const std::string& name) throw(SqlException);
+      Connection* createConnection(const std::string& name);
 
       /*!
        * Retrieve SQL connection pool
@@ -145,7 +145,7 @@ namespace anch {
        *
        * \return the pool
        */
-      SqlConnectionPool& getPool(const std::string& name) throw(SqlException);
+      SqlConnectionPool& getPool(const std::string& name);
       // Methods -
 
     };

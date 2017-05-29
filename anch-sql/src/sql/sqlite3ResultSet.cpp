@@ -28,7 +28,7 @@ using anch::sql::SqlException;
 
 
 // Constructors +
-SQLite3ResultSet::SQLite3ResultSet(sqlite3_stmt* stmt, bool prepared):
+SQLite3ResultSet::SQLite3ResultSet(sqlite3_stmt* stmt, bool prepared) noexcept:
   ResultSet(),
   _stmt(stmt),
   _prepared(prepared),
@@ -47,7 +47,7 @@ SQLite3ResultSet::~SQLite3ResultSet() {
 
 // Methods +
 bool
-SQLite3ResultSet::getValue(std::size_t idx, std::string& out) throw(SqlException) {
+SQLite3ResultSet::getValue(std::size_t idx, std::string& out) {
   if(static_cast<int>(idx) >= _nbFields) {
     std::ostringstream msg;
     msg << "Index out of range (0.." << (_nbFields - 1) << "): " << idx;
@@ -63,7 +63,7 @@ SQLite3ResultSet::getValue(std::size_t idx, std::string& out) throw(SqlException
 }
 
 bool
-SQLite3ResultSet::next() throw(SqlException) {
+SQLite3ResultSet::next() {
   int res = sqlite3_step(_stmt);
   bool hasMore = (res == SQLITE_ROW);
   if(hasMore && _fields.empty()) {

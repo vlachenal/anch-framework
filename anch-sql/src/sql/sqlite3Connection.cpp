@@ -35,8 +35,7 @@ using anch::sql::PreparedStatement;
 
 
 // Constructors +
-SQLite3Connection::SQLite3Connection(const std::string& database)
-  throw(SqlException): Connection(), _conn() {
+SQLite3Connection::SQLite3Connection(const std::string& database): Connection(), _conn() {
   std::string connStr = "file:";
   connStr += database;
   int res = sqlite3_open_v2(connStr.data(), &_conn, SQLITE_OPEN_URI | SQLITE_OPEN_READWRITE, NULL);
@@ -48,8 +47,7 @@ SQLite3Connection::SQLite3Connection(const std::string& database)
   }
 }
 
-SQLite3Connection::SQLite3Connection(const SqlConnectionConfiguration& config)
-  throw(SqlException): Connection(), _conn() {
+SQLite3Connection::SQLite3Connection(const SqlConnectionConfiguration& config): Connection(), _conn() {
   std::string connStr = "file:";
   connStr += config.database;
   int res = sqlite3_open_v2(connStr.data(), &_conn, SQLITE_OPEN_URI | SQLITE_OPEN_READWRITE, NULL);
@@ -74,7 +72,7 @@ SQLite3Connection::~SQLite3Connection() {
 
 // Methods +
 ResultSet*
-SQLite3Connection::executeQuery(const std::string& query) throw(SqlException) {
+SQLite3Connection::executeQuery(const std::string& query) {
   sqlite3_stmt* stmt = NULL;
   int res = sqlite3_prepare_v2(_conn, query.data(), -1, &stmt, NULL);
   if(res != SQLITE_OK) {
@@ -85,13 +83,13 @@ SQLite3Connection::executeQuery(const std::string& query) throw(SqlException) {
   return new SQLite3ResultSet(stmt);
 }
 
-static int emptyCB(void*, int, char**, char**) {
+static int emptyCB(void*, int, char**, char**) noexcept {
   // Nothing to do
   return 0;
 }
 
 uint64_t
-SQLite3Connection::executeUpdate(const std::string& query) throw(SqlException) {
+SQLite3Connection::executeUpdate(const std::string& query) {
   char* errMsg = NULL;
   int res = sqlite3_exec(_conn, query.data(), emptyCB, 0, &errMsg);
   if(res != SQLITE_OK) {
@@ -104,7 +102,7 @@ SQLite3Connection::executeUpdate(const std::string& query) throw(SqlException) {
 }
 
 void
-SQLite3Connection::sendCommit() throw(SqlException) {
+SQLite3Connection::sendCommit() {
   char* errMsg = 0;
   int res = sqlite3_exec(_conn, "COMMIT", emptyCB, 0, &errMsg);
   if(res != SQLITE_OK) {
@@ -116,7 +114,7 @@ SQLite3Connection::sendCommit() throw(SqlException) {
 }
 
 void
-SQLite3Connection::sendRollback() throw(SqlException) {
+SQLite3Connection::sendRollback() {
   char* errMsg = 0;
   int res = sqlite3_exec(_conn, "ROLLBACK", emptyCB, 0, &errMsg);
   if(res != SQLITE_OK) {
@@ -128,7 +126,7 @@ SQLite3Connection::sendRollback() throw(SqlException) {
 }
 
 void
-SQLite3Connection::sendStartTransaction() throw(SqlException) {
+SQLite3Connection::sendStartTransaction() {
   char* errMsg = 0;
   int res = sqlite3_exec(_conn, "BEGIN", emptyCB, 0, &errMsg);
   if(res != SQLITE_OK) {
@@ -140,7 +138,7 @@ SQLite3Connection::sendStartTransaction() throw(SqlException) {
 }
 
 PreparedStatement*
-SQLite3Connection::makePrepared(const std::string& query) throw(SqlException) {
+SQLite3Connection::makePrepared(const std::string& query) {
   return new SQLite3PreparedStatement(_conn, query);
 }
 // Methods -

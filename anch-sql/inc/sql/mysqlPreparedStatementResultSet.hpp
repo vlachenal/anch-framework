@@ -64,6 +64,8 @@ namespace anch {
        * \ref MySQLPreparedStatementResultSet constructor
        *
        * \param stmt the MySQL statement
+       *
+       * \throw SqlException any error
        */
       MySQLPreparedStatementResultSet(MYSQL_STMT* stmt);
       // Constructors -
@@ -72,7 +74,7 @@ namespace anch {
       /*!
        * \ref MySQLPreparedStatementResultSet destructor
        */
-      virtual ~MySQLPreparedStatementResultSet();
+      virtual ~MySQLPreparedStatementResultSet() noexcept;
       // Destructor -
 
       // Methods +
@@ -84,7 +86,7 @@ namespace anch {
        *
        * \throw SqlException any error
        */
-      virtual bool next() throw(SqlException);
+      virtual bool next();
 
     protected:
       /*!
@@ -95,7 +97,7 @@ namespace anch {
        *
        * \throw SqlException any error
        */
-      virtual bool getValue(std::size_t idx, std::string& out) throw(SqlException);
+      virtual bool getValue(std::size_t idx, std::string& out);
       // Methods -
 
     };

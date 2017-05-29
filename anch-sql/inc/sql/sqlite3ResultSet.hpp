@@ -60,7 +60,7 @@ namespace anch {
        * \param stmt the SQLite3 statement
        * \param prepared prepared statement or not (default to not)
        */
-      SQLite3ResultSet(sqlite3_stmt* stmt, bool prepared = false);
+      SQLite3ResultSet(sqlite3_stmt* stmt, bool prepared = false) noexcept;
       // Constructors -
 
       // Destructor +
@@ -80,7 +80,7 @@ namespace anch {
        *
        * \throw SqlException any error
        */
-      virtual bool next() throw(SqlException);
+      virtual bool next();
 
     protected:
       /*!
@@ -88,8 +88,10 @@ namespace anch {
        *
        * \param idx the field index
        * \param out the result
+       *
+       * \throw SqlException any error
        */
-      virtual bool getValue(std::size_t idx, std::string& out) throw(SqlException);
+      virtual bool getValue(std::size_t idx, std::string& out);
       // Methods -
 
     };

@@ -58,7 +58,7 @@ private:
    *
    * \throw SqlException fail to initialize MySQL library
    */
-  MySQLInitializer() throw(SqlException) {
+  MySQLInitializer() {
     if(mysql_library_init(0, NULL, NULL) != 0) {
       throw SqlException("Unable to initialize MySQL library");
     }
@@ -68,7 +68,7 @@ private:
    * \ref MySQLInitializer destructor.\n
    * Uninitialize MySQL library
    */
-  ~MySQLInitializer() {
+  ~MySQLInitializer() noexcept {
     mysql_library_end();
   }
 
@@ -80,8 +80,7 @@ MySQLConnection::MySQLConnection(const std::string& host,
 				 const std::string& password,
 				 const std::string& database,
 				 int port,
-				 const std::string& app)
-  throw(SqlException) {
+				 const std::string& app) {
 
   MySQLInitializer::getInstance(); // Initialize MySQL library if not already done
 
@@ -111,8 +110,7 @@ MySQLConnection::MySQLConnection(const std::string& host,
   }
 }
 
-MySQLConnection::MySQLConnection(const SqlConnectionConfiguration& config)
-  throw(SqlException) {
+MySQLConnection::MySQLConnection(const SqlConnectionConfiguration& config) {
 
   MySQLInitializer::getInstance(); // Initialize MySQL library if not already done
 
@@ -157,7 +155,7 @@ MySQLConnection::~MySQLConnection() noexcept {
 
 // Methods +
 void
-MySQLConnection::sendCommit() throw(SqlException) {
+MySQLConnection::sendCommit() {
   int res = mysql_query(_mysql, "COMMIT");
   if(res != 0) {
     std::ostringstream out;
@@ -167,7 +165,7 @@ MySQLConnection::sendCommit() throw(SqlException) {
 }
 
 void
-MySQLConnection::sendRollback() throw(SqlException) {
+MySQLConnection::sendRollback() {
   int res = mysql_query(_mysql, "ROLLBACK");
   if(res != 0) {
     std::ostringstream out;
@@ -177,7 +175,7 @@ MySQLConnection::sendRollback() throw(SqlException) {
 }
 
 void
-MySQLConnection::sendStartTransaction() throw(SqlException) {
+MySQLConnection::sendStartTransaction() {
   int res = mysql_query(_mysql, "START TRANSACTION");
   if(res != 0) {
     std::ostringstream out;
@@ -187,7 +185,7 @@ MySQLConnection::sendStartTransaction() throw(SqlException) {
 }
 
 ResultSet*
-MySQLConnection::executeQuery(const std::string& query) throw(SqlException) {
+MySQLConnection::executeQuery(const std::string& query) {
   ResultSet* resSet = NULL;
   int res = mysql_query(_mysql, query.data());
   if(res != 0) {
@@ -210,7 +208,7 @@ MySQLConnection::executeQuery(const std::string& query) throw(SqlException) {
 }
 
 uint64_t
-MySQLConnection::executeUpdate(const std::string& query) throw(SqlException) {
+MySQLConnection::executeUpdate(const std::string& query) {
   int res = mysql_query(_mysql, query.data());
   if(res != 0) {
     std::ostringstream out;
@@ -229,7 +227,7 @@ MySQLConnection::executeUpdate(const std::string& query) throw(SqlException) {
 }
 
 PreparedStatement*
-MySQLConnection::makePrepared(const std::string& query) throw(SqlException) {
+MySQLConnection::makePrepared(const std::string& query) {
   return new MySQLPreparedStatement(_mysql, query);
 }
 // Methods -

@@ -68,7 +68,7 @@ namespace anch {
        *
        * \throw SqlException any error
        */
-      SQLite3PreparedStatement(sqlite3* dbCon, const std::string& query) throw(SqlException);
+      SQLite3PreparedStatement(sqlite3* dbCon, const std::string& query);
       // Constructors -
 
       // Destructor +
@@ -76,7 +76,7 @@ namespace anch {
       /*!
        * \ref SQLite3PreparedStatement destructor
        */
-      virtual ~SQLite3PreparedStatement();
+      virtual ~SQLite3PreparedStatement() noexcept;
       // Destructor -
 
       // Methods +
@@ -88,7 +88,7 @@ namespace anch {
        *
        * \throw SqlException any error
        */
-      virtual ResultSet* executeQuery() throw(SqlException) override;
+      virtual ResultSet* executeQuery() override;
 
       /*!
        * Execute prepared statement for update database (INSERT, UPDATE, DELETE)
@@ -97,7 +97,7 @@ namespace anch {
        *
        * \throw SqlException any error
        */
-      virtual uint64_t executeUpdate() throw(SqlException) override;
+      virtual uint64_t executeUpdate() override;
       // Methods -
 
     };
