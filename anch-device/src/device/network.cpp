@@ -60,7 +60,7 @@ Network::~Network() {
 
 // Methods +
 const NetworkInterface*
-Network::getInterface(const std::string& ifName) throw(DeviceException) {
+Network::getInterface(const std::string& ifName) {
   std::lock_guard<std::mutex> lock(MUTEX);
   const NetworkInterface* interface = NULL;
   if(_interfaces == NULL) {
@@ -74,7 +74,7 @@ Network::getInterface(const std::string& ifName) throw(DeviceException) {
 }
 
 const std::map<std::string,NetworkInterface>&
-Network::getInterfaces() throw(DeviceException) {
+Network::getInterfaces() {
   std::lock_guard<std::mutex> lock(MUTEX);
   if(_interfaces == NULL) {
     load();
@@ -83,7 +83,7 @@ Network::getInterfaces() throw(DeviceException) {
 }
 
 void
-Network::reload() throw(DeviceException) {
+Network::reload() {
   std::lock_guard<std::mutex> lock(MUTEX);
   if(_interfaces != NULL) {
     _interfaces->clear();
@@ -92,7 +92,7 @@ Network::reload() throw(DeviceException) {
 }
 
 void
-Network::load() throw(DeviceException) {
+Network::load() {
   // Initialize interfaces container if needed +
   if(_interfaces == NULL) {
     _interfaces = new std::map<std::string,NetworkInterface>();

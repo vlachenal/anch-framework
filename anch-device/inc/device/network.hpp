@@ -74,8 +74,7 @@ namespace anch {
        *
        * \throw anch::device::DeviceException Network interfaces error
        */
-      static const anch::device::NetworkInterface* getInterface(const std::string& ifName)
-	throw(anch::device::DeviceException);
+      static const anch::device::NetworkInterface* getInterface(const std::string& ifName);
 
       /*!
        * Retrieve all network interfaces.
@@ -84,15 +83,14 @@ namespace anch {
        *
        * \throw anch::device::DeviceException Network interfaces error
        */
-      static const std::map<std::string,anch::device::NetworkInterface>& getInterfaces()
-	throw(anch::device::DeviceException);
+      static const std::map<std::string,anch::device::NetworkInterface>& getInterfaces();
 
       /*!
        * Reload network interfaces
        *
        * \throw anch::device::DeviceException Network interfaces error
        */
-      static void reload() throw(anch::device::DeviceException);
+      static void reload();
 
     private:
       /*!
@@ -100,7 +98,7 @@ namespace anch {
        *
        * \throw anch::device::DeviceException Network interfaces error
        */
-      static void load() throw(anch::device::DeviceException);
+      static void load();
       // Methods -
 
     };

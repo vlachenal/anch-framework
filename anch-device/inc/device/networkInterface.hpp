@@ -73,8 +73,7 @@ namespace anch {
        *
        * \throw anch::device::DeviceException Device error
        */
-      NetworkInterface(const struct ifreq& interface, bool isLocalhost)
-	throw(anch::device::DeviceException);
+      NetworkInterface(const struct ifreq& interface, bool isLocalhost);
       // Constructor -
 
       // Destructor +

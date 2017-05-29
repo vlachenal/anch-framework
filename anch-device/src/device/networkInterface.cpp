@@ -32,8 +32,7 @@ using anch::device::DeviceException;
 
 
 // Constructors +
-NetworkInterface::NetworkInterface(const struct ifreq& interface, bool isLocalhost)
-  throw(DeviceException) {
+NetworkInterface::NetworkInterface(const struct ifreq& interface, bool isLocalhost) {
   _name = interface.ifr_name;
   _localhost = isLocalhost;
 
