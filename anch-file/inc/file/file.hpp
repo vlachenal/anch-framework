@@ -135,7 +135,7 @@ namespace anch {
        *
        * \throw anch::file::FileException any error on file creation
        */
-      void createFile() throw(anch::file::FileException);
+      void createFile();
 
       /*!
        * Create a new file
@@ -144,7 +144,7 @@ namespace anch {
        *
        * \throw anch::file::FileException any error on file creation
        */
-      void createFile(std::ofstream& out) throw(anch::file::FileException);
+      void createFile(std::ofstream& out);
 
       /*!
        * Create directory
@@ -153,14 +153,14 @@ namespace anch {
        *
        * \throw anch::file::FileException any error on directory creation
        */
-      void createDirectory(bool parents = false) throw(anch::file::FileException);
+      void createDirectory(bool parents = false);
 
       /*!
        * Delete this \ref File
        *
        * \throw anch::file::FileException any error on file deletion
        */
-      void deleteFile() throw(anch::file::FileException);
+      void deleteFile();
 
       /*!
        * List files and directories in current directory.
@@ -169,7 +169,7 @@ namespace anch {
        *
        * \throw anch::file::FileException any error on directory list
        */
-      void list(std::vector<std::string>& files) throw(anch::file::FileException);
+      void list(std::vector<std::string>& files);
 
       /*!
        * List files and directories in current directory.
@@ -178,7 +178,7 @@ namespace anch {
        *
        * \throw anch::file::FileException any error on directory list
        */
-      void list(std::vector<File>& files) throw(anch::file::FileException);
+      void list(std::vector<File>& files);
 
     private:
       /*!

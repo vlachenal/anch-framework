@@ -113,14 +113,14 @@ File::~File() {
 
 // Methods +
 void
-File::createFile() throw(FileException) {
+File::createFile() {
   ofstream out;
   createFile(out);
   out.close();
 }
 
 void
-File::createFile(ofstream& out) throw(FileException) {
+File::createFile(ofstream& out) {
   if(!_exists) {
     if(out.is_open()) {
       out.close();
@@ -136,7 +136,7 @@ File::createFile(ofstream& out) throw(FileException) {
 }
 
 void
-File::createDirectory(bool/* parents*/) throw(FileException) {
+File::createDirectory(bool/* parents*/) {
   // \todo create directory recursively according to input parameter
   if(!_exists && _parent->isDirectory()) {
     int status = ::mkdir(_path.data(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
@@ -150,7 +150,7 @@ File::createDirectory(bool/* parents*/) throw(FileException) {
 }
 
 void
-File::deleteFile() throw(FileException) {
+File::deleteFile() {
   if(_exists && !_directory && _writable) {
     int res = ::unlink(_path.data());
     if(res == -1) {
@@ -163,7 +163,7 @@ File::deleteFile() throw(FileException) {
 }
 
 void
-File::list(vector<string>& files) throw(FileException) {
+File::list(vector<string>& files) {
   if(_directory && _readable) {
     DIR* dir;
     struct dirent* entry;
@@ -185,7 +185,7 @@ File::list(vector<string>& files) throw(FileException) {
 }
 
 void
-File::list(vector<File>& files) throw(FileException) {
+File::list(vector<File>& files) {
   vector<string> res;
   list(res);
   shared_ptr<File> copy = make_shared<File>(*this);
