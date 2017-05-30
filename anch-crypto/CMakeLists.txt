@@ -27,6 +27,7 @@ endif()
 
 # Add GCC definitions
 add_definitions("-Wall -Wextra -Werror -Wuninitialized -Wconversion -Wsign-conversion -Wformat-security -fstack-protector-all -Wstack-protector --param ssp-buffer-size=4 -ftrapv -D_FORTIFY_SOURCE=2 -z relro,now -fPIC")
+#add_definitions("-Wall -Wextra -Werror -Wuninitialized -Wconversion -Wsign-conversion -Wformat-security -fstack-protector-all -Wstack-protector --param ssp-buffer-size=4 -ftrapv -z relro,now -fPIC")
 if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
   add_definitions("-D ANCH_WINDOWS")
 else()

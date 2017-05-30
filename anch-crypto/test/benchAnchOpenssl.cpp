@@ -41,7 +41,7 @@ main(void) {
 
     ERR_load_crypto_strings();
     OpenSSL_add_all_algorithms();
-    OPENSSL_config(NULL);
+    //OPENSSL_config(NULL);
 
     std::ifstream* input = new std::ifstream("Makefile", std::ifstream::binary);
     std::ofstream cbcOutCipher("Makefile.OpenSSL.cbc.aes256.PKCS5.cipher", std::ofstream::binary);

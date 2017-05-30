@@ -171,7 +171,7 @@ namespace anch {
        *
        * \return the number of read bytes
        */
-      static uint8_t encode(const uint8_t* data, uint64_t length, char buffer[5]) noexcept;
+      static uint8_t encode(const uint8_t* data, uint64_t length, char* buffer) noexcept;
       // Encoding methods -
 
 

@@ -62,7 +62,7 @@ Base64::~Base64() {
  * \return the number of read bytes
  */
 uint8_t
-Base64::encode(const uint8_t* data, uint64_t length, char buffer[5]) noexcept {
+Base64::encode(const uint8_t* data, uint64_t length, char* buffer) noexcept {
   uint8_t read = 0;
   buffer[0] = Base64::_alphabet[data[0] >> 2];
   if(length >= 3) {

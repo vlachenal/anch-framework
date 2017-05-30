@@ -153,19 +153,18 @@ void md5(const uint8_t *initial_msg, size_t initial_len) {
 
 }
 
-void
-md5(const char* msg, string& result) {
+void md5(const char* msg, string& result) {
 
   size_t len = strlen(msg);
 
   md5((const uint8_t*)msg, len);
 
   //var char digest[16] := h0 append h1 append h2 append h3 //(Output is in little-endian)
-  uint8_t *p;
+  uint8_t* p;
 
   // display result
 
-  char digest[32];
+  char digest[33];
   p=(uint8_t *)&h0;
   sprintf(digest,"%2.2x%2.2x%2.2x%2.2x", p[0], p[1], p[2], p[3]);
 
@@ -181,37 +180,36 @@ md5(const char* msg, string& result) {
   result = digest;
 }
 
-void
-md5(const char* msg, std::array<uint8_t,16>& result) {
+void md5(const char* msg, std::array<uint8_t,16>& result) {
 
   size_t len = strlen(msg);
 
   md5((const uint8_t*)msg, len);
 
   //var char digest[16] := h0 append h1 append h2 append h3 //(Output is in little-endian)
-  uint8_t *p;
+  uint8_t* p;
 
   // display result
 
-  p=(uint8_t *)&h0;
+  p = (uint8_t *)&h0;
   result[0] = p[0];
   result[1] = p[1];
   result[2] = p[2];
   result[3] = p[3];
 
-  p=(uint8_t *)&h1;
+  p = (uint8_t *)&h1;
   result[4] = p[0];
   result[5] = p[1];
   result[6] = p[2];
   result[7] = p[3];
 
-  p=(uint8_t *)&h2;
+  p = (uint8_t *)&h2;
   result[8] = p[0];
   result[9] = p[1];
   result[10] = p[2];
   result[11] = p[3];
 
-  p=(uint8_t *)&h3;
+  p = (uint8_t *)&h3;
   result[12] = p[0];
   result[13] = p[1];
   result[14] = p[2];
@@ -246,7 +244,7 @@ main(void) {
     out << hash;
     string strRes = out.str();
     if(res != sum) {
-      char digest[32];
+      char digest[33];
       sprintf(digest,"%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x",
 	      sum[0],sum[1],sum[2],sum[3],sum[4],sum[5],sum[6],sum[7],sum[8],sum[9],sum[10],sum[11],sum[12],sum[13],sum[14],sum[15]);
       cerr << "Hash are differents:" << endl;
@@ -284,7 +282,7 @@ main(void) {
     out << hash;
     string strRes = out.str();
     if(res != sum) {
-      char digest[32];
+      char digest[33];
       sprintf(digest,"%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x",
 	      sum[0],sum[1],sum[2],sum[3],sum[4],sum[5],sum[6],sum[7],sum[8],sum[9],sum[10],sum[11],sum[12],sum[13],sum[14],sum[15]);
       cerr << "Hash are differents:" << endl;
@@ -330,7 +328,7 @@ main(void) {
     out << hash;
     string strRes = out.str();
     if(res != sum) {
-      char digest[32];
+      char digest[33];
       sprintf(digest,"%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x",
 	      sum[0],sum[1],sum[2],sum[3],sum[4],sum[5],sum[6],sum[7],sum[8],sum[9],sum[10],sum[11],sum[12],sum[13],sum[14],sum[15]);
       cerr << "Hash are differents:" << endl;
