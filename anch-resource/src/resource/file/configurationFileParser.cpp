@@ -62,8 +62,7 @@ ConfigurationFileParser::~ConfigurationFileParser() {
 }
 
 void
-ConfigurationFileParser::getConfiguration(map<string, Section>& config)
-  const throw(ResourceFileException) {
+ConfigurationFileParser::getConfiguration(map<string, Section>& config) const {
   // Open file +
   ifstream file(_filePath);
   if(!file.is_open()) {

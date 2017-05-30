@@ -98,8 +98,7 @@ namespace anch {
 	 *
 	 * \param config The current configuration
 	 */
-	void getConfiguration(std::map<std::string,anch::resource::Section>& config)
-	  const throw(anch::resource::file::ResourceFileException);
+	void getConfiguration(std::map<std::string,anch::resource::Section>& config) const;
 
       private:
 	/*!
@@ -111,8 +110,7 @@ namespace anch {
 	 */
 	void parseLine(const std::string& line,
 		       std::string& currentSection,
-		       std::map<std::string,anch::resource::Section>& config)
-	  const;
+		       std::map<std::string,anch::resource::Section>& config) const;
 
       };
 
