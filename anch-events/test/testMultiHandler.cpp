@@ -3,10 +3,6 @@
 
 #include <iostream>
 
-using std::string;
-using std::cout;
-using std::endl;
-
 using anch::events::Observable;
 using anch::events::EventHandler;
 
@@ -41,7 +37,7 @@ class SingleMsgHandler: public MessageEventHandler<SingleMsgHandler> {
 public:
   SingleMsgHandler(): MessageEventHandler<SingleMsgHandler>() {}
   virtual void onMessage(const Message& event) noexcept {
-    cout << event.getMessage() << endl;
+    std::cout << event.getMessage() << std::endl;
   }
 };
 
@@ -50,10 +46,10 @@ public:
  * \ref string event handler interface.
  */
 template<typename D>
-class StringEventHandler: public EventHandler<string,D> {
+class StringEventHandler: public EventHandler<std::string,D> {
 public:
-  StringEventHandler(): EventHandler<string,D>(&D::onString) {}
-  virtual void onString(const std::string& event) = 0;
+  StringEventHandler(): EventHandler<std::string,D>(&D::onString) {}
+  virtual void onString(const std::string& event) noexcept = 0;
 };
 
 /*!
@@ -63,17 +59,17 @@ class MultiEventHandler: public MessageEventHandler<MultiEventHandler>, public S
 public:
   MultiEventHandler(): MessageEventHandler<MultiEventHandler>(), StringEventHandler<MultiEventHandler>() {}
   virtual void onMessage(const Message& event) noexcept {
-    cout << "MULTI : " << event.getMessage() << endl;
+    std::cout << "MULTI : " << event.getMessage() << std::endl;
   }
-  virtual void onString(const std::string& event) {
-    cout << "MULTI : " << event << endl;
+  virtual void onString(const std::string& event) noexcept {
+    std::cout << "MULTI : " << event << std::endl;
   }
 };
 
 
 int
 main(void) {
-  cout << "Enter in test" << endl;
+  std::cout << "Enter in test" << std::endl;
 
   SingleMsgHandler handler;
   MultiEventHandler multi;
@@ -81,12 +77,12 @@ main(void) {
   Observable<Message> observable;
   observable.addObserver(handler);
   observable.addObserver(multi);
-  Observable<string> strObs;
+  Observable<std::string> strObs;
   strObs.addObserver(multi);
 
   strObs.notifyObservers("tata");
   observable.notifyObservers(Message("toto"));
 
-  cout << "Exit test" << endl;
+  std::cout << "Exit test" << std::endl;
   return 0;
 }

@@ -22,6 +22,8 @@
 
 #include "events/eventBus.hpp"
 
+#include <functional>
+
 
 namespace anch {
   namespace events {
@@ -39,7 +41,7 @@ namespace anch {
     class EventHandler: public Observer<Event> {
     private:
       /*! Callback method to call on event */
-      std::function<void(Derived&,const Event&) noexcept> _callbackFunction;
+      std::function<void(Derived&,const Event&)> _callbackFunction;
 
       /*! \ref EventBus registration */
       anch::events::EventBus<Event>* _eventBus;
@@ -53,9 +55,9 @@ namespace anch {
        * \param callbackFunction the callback method to use on notify
        * \param useEventBus if \c true register itself in global \ref EventBus, \c false otherwise (default)
        */
-      EventHandler(const std::function<void(Derived&,const Event&) noexcept>& callbackFunction,
-		   bool useEventBus = false) {
-	_callbackFunction = callbackFunction;
+      EventHandler(const std::function<void(Derived&,const Event&)>& callbackFunction,
+		   bool useEventBus = false): _callbackFunction(callbackFunction) {
+	//_callbackFunction = callbackFunction;
 	if(useEventBus) {
 	  anch::events::EventBus<Event>& eventBus = anch::events::EventBus<Event>::getInstance();
 	  eventBus.addObserver(*this);
@@ -73,9 +75,9 @@ namespace anch {
        * \param callbackFunction the callback method to use on notify
        * \param eventBus the \ref EventBus to register itself
        */
-      EventHandler(const std::function<void(Derived&,const Event&) noexcept>& callbackFunction,
-		   anch::events::EventBus<Event>& eventBus) {
-	_callbackFunction = callbackFunction;
+      EventHandler(const std::function<void(Derived&,const Event&)>& callbackFunction,
+		   anch::events::EventBus<Event>& eventBus): _callbackFunction(callbackFunction) {
+	//_callbackFunction = callbackFunction;
 	eventBus.addObserver(*this);
 	_eventBus = &eventBus;
       }
