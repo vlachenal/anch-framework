@@ -6,3 +6,4 @@ This framework was initially a way to test new C++ specifications (C++11) and to
 Only POSIX systems are supported for now. Others could be supported later.
 
 (Partial) Doxygen documentation can be found on [project home page](https://vlachenal.github.io/anch-framework/).
+
