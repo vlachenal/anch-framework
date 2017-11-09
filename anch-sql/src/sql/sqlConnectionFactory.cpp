@@ -45,6 +45,33 @@ using anch::sql::PostgreSQLConnection;
 using anch::sql::SQLite3Connection;
 #endif // ANCH_SQL_SQLITE3
 
+std::shared_ptr<Connection>
+anch::sql::make_shared_connection(const SqlConnectionConfiguration& config) {
+  std::shared_ptr<Connection> conn;
+#ifdef ANCH_SQL_MYSQL
+  if(config.driver == "MySQL") {
+    conn = std::make_shared<MySQLConnection>(config);
+  }
+#endif // ANCH_SQL_MYSQL
+#ifdef ANCH_SQL_POSTGRESQL
+  if(config.driver == "PostgreSQL") {
+    conn = std::make_shared<PostgreSQLConnection>(config);
+  }
+#endif // ANCH_SQL_POSTGRESQL
+#ifdef ANCH_SQL_SQLITE3
+  if(config.driver == "SQLite3") {
+    conn = std::make_shared<SQLite3Connection>(config);
+  }
+#endif // ANCH_SQL_SQLITE3
+  if(conn.get() == NULL) {
+    std::ostringstream out;
+    out << "Can not create connection from configuration: driver "
+	<< config.driver << " is not managed by AnCH SQL library.";
+    throw SqlException(out.str());
+  }
+  return conn;
+}
+
 // Constructors +
 SqlConnectionFactory::SqlConnectionFactory() noexcept: _configs(), _pools() {
   const Resource& resource = Resource::getResource("db_con.conf");

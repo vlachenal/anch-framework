@@ -54,32 +54,7 @@ namespace anch {
      *
      * \throw SqlException any error
      */
-    std::shared_ptr<Connection>
-    make_shared_connection(const SqlConnectionConfiguration& config) {
-      std::shared_ptr<Connection> conn;
-#ifdef ANCH_SQL_MYSQL
-      if(config.driver == "MySQL") {
-	conn = std::make_shared<MySQLConnection>(config);
-      }
-#endif // ANCH_SQL_MYSQL
-#ifdef ANCH_SQL_POSTGRESQL
-      if(config.driver == "PostgreSQL") {
-	conn = std::make_shared<PostgreSQLConnection>(config);
-      }
-#endif // ANCH_SQL_POSTGRESQL
-#ifdef ANCH_SQL_SQLITE3
-      if(config.driver == "SQLite3") {
-	conn = std::make_shared<SQLite3Connection>(config);
-      }
-#endif // ANCH_SQL_SQLITE3
-      if(conn.get() == NULL) {
-	std::ostringstream out;
-	out << "Can not create connection from configuration: driver "
-	    << config.driver << " is not managed by AnCH SQL library.";
-	throw SqlException(out.str());
-      }
-      return conn;
-    }
+    extern std::shared_ptr<Connection> make_shared_connection(const SqlConnectionConfiguration& config);
 
     /*! SQL connections pool definition */
     using SqlConnectionPool = anch::ResourcePool<Connection, SqlConnectionConfiguration, make_shared_connection>;
