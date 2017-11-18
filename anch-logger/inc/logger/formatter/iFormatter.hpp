@@ -31,7 +31,7 @@ namespace anch {
        *
        * \author Vincent Lachenal
        */
-      enum FormatterType {
+      enum class FormatterType {
 	LEVEL,
 	CONST,
 	STRING,

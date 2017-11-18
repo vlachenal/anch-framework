@@ -23,21 +23,10 @@ using anch::network::SocketEvent;
 
 
 // Constructors +
-/*!
- * \ref SocketEvent constructor
- *
- * \param message The message received on socket
- */
 SocketEvent::SocketEvent(const std::string& message): _message(message) {
   // Nothing to do
 }
 
-/*!
- * \ref SocketEvent constructor
- *
- * \param message The message received on socket
- * \param address The address where the message has been sent
- */
 SocketEvent::SocketEvent(const std::string& message,
 			 const sockaddr_storage& address):
   _message(message),
@@ -47,9 +36,6 @@ SocketEvent::SocketEvent(const std::string& message,
 // Constructors -
 
 // Destructor +
-/*!
- * \ref SocketEvent destructor
- */
 SocketEvent::~SocketEvent() {
   // Nothing to do
 }

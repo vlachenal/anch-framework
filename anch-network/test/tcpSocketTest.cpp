@@ -5,12 +5,6 @@
 #include "events/observer.hpp"
 
 
-using std::string;
-using std::cout;
-using std::cerr;
-using std::endl;
-using std::thread;
-
 using anch::network::TcpSocket;
 using anch::network::SocketEvent;
 using anch::network::IOException;
@@ -27,7 +21,7 @@ public:
 
 public:
   virtual void notify(const SocketEvent& evt) noexcept {
-    cout << "Server receive " + evt.getMessage() << endl;
+    std::cout << "Server receive " + evt.getMessage() << std::endl;
   }
 
 };
@@ -40,7 +34,7 @@ public:
 
 public:
   virtual void notify(const SocketEvent& evt) noexcept {
-    cout << "Client receive " + evt.getMessage() << endl;
+    std::cout << "Client receive " + evt.getMessage() << std::endl;
   }
 
 };
@@ -48,7 +42,7 @@ public:
 
 void
 runTcpServer(TcpSocket* const serverSock) {
-  cout << "Server: Wait for client connection" << endl;
+  std::cout << "Server: Wait for client connection" << std::endl;
   // Wait for client
   TcpSocket csock;
   serverSock->accept(csock);
@@ -57,20 +51,20 @@ runTcpServer(TcpSocket* const serverSock) {
 
   std::this_thread::sleep_for(std::chrono::seconds(1));
 
-  cout << "Server send a message" << endl;
+  std::cout << "Server send a message" << std::endl;
   try {
     csock.send("You are connected !!");
   } catch(const IOException& e) {
-    cerr << "Server " << e.what() << endl;
+    std::cerr << "Server " << e.what() << std::endl;
   }
   csock.shutdown(Direction::TRANSMISSION);
 
-  cout << "Server is waiting for a message" << endl;
-  string message;
+  std::cout << "Server is waiting for a message" << std::endl;
+  std::string message;
   try {
     csock.receive(message);
   } catch(const IOException& e) {
-    cerr << "Server " << e.what() << endl;
+    std::cerr << "Server " << e.what() << std::endl;
   }
   csock.close();
 }
@@ -81,39 +75,39 @@ runTcpServer(TcpSocket* const serverSock) {
  */
 int
 main(void) {
-  cout << "Enter in TCP sockets unitary test" << endl;
+  std::cout << "Enter in TCP sockets unitary test" << std::endl;
 
   // Server socket +
   // Open the server TCP socket for listening on <any>:40099
-  cout << "Create server TCP socket on port 40099" << endl;
+  std::cout << "Create server TCP socket on port 40099" << std::endl;
   TcpSocket serverSock("",40099);
-  cout << "bind()" << endl;
+  std::cout << "bind()" << std::endl;
   serverSock.bind();
-  cout << "listen()" << endl;
+  std::cout << "listen()" << std::endl;
   serverSock.listen();
-  thread srvTh(runTcpServer, &serverSock);
+  std::thread srvTh(runTcpServer, &serverSock);
   // Server socket -
 
   // Client socket +
   // Open the server TCP socket on localhost:40099
-  cout << "Create client TCP socket on localhost:40099" << endl;
+  std::cout << "Create client TCP socket on localhost:40099" << std::endl;
   TcpSocket clientSocket("127.0.0.1",40099);
   ClientObs cliObs;
   clientSocket.addObserver(cliObs);
-  cout << "connect()" << endl;
+  std::cout << "connect()" << std::endl;
   try {
     clientSocket.connect();
   } catch(const IOException& e) {
-    cerr << "Client " << e.what() << endl;
+    std::cerr << "Client " << e.what() << std::endl;
     serverSock.close();
   }
-  cout << "Client is waiting for message" << endl;
-  string message;
+  std::cout << "Client is waiting for message" << std::endl;
+  std::string message;
   clientSocket.receive(message);
 
   std::this_thread::sleep_for(std::chrono::seconds(1));
 
-  cout << "Client send a message" << endl;
+  std::cout << "Client send a message" << std::endl;
   clientSocket.send("Bye bye !");
   clientSocket.shutdown();
   // Client socket -
@@ -123,6 +117,6 @@ main(void) {
   clientSocket.close();
   serverSock.close();
 
-  cout << "Exit TCP sockets unitary test" << endl;
+  std::cout << "Exit TCP sockets unitary test" << std::endl;
   return 0;
 }

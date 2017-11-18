@@ -5,12 +5,6 @@
 #include "events/observer.hpp"
 
 
-using std::string;
-using std::cout;
-using std::cerr;
-using std::endl;
-using std::thread;
-
 using anch::network::UdpSocket;
 using anch::network::SocketEvent;
 using anch::network::IOException;
@@ -30,12 +24,12 @@ public:
 
 public:
   virtual void notify(const SocketEvent& evt) noexcept {
-    cout << "Server receive " + evt.getMessage() << endl;
-    cout << "Server send response" << endl;
+    std::cout << "Server receive " + evt.getMessage() << std::endl;
+    std::cout << "Server send response" << std::endl;
     try {
       _sock->send("Bye bye !", evt.getAddress());
     } catch(const IOException& e) {
-      cerr << "Server " << e.what() << endl;
+      std::cerr << "Server " << e.what() << std::endl;
     }
   }
 
@@ -49,7 +43,7 @@ public:
 
 public:
   virtual void notify(const SocketEvent& evt) noexcept {
-    cout << "Client receive " + evt.getMessage() << endl;
+    std::cout << "Client receive " + evt.getMessage() << std::endl;
   }
 
 };
@@ -61,13 +55,13 @@ runUdpServer(UdpSocket* const serverSock) {
   ServerObs srvObs(serverSock);
   serverSock->addObserver(srvObs);
 
-  cout << "Server is waiting for a message" << endl;
-  string message;
+  std::cout << "Server is waiting for a message" << std::endl;
+  std::string message;
   try {
     serverSock->receive(message);
 
   } catch(const IOException& e) {
-    cerr << "Server " << e.what() << endl;
+    std::cerr << "Server " << e.what() << std::endl;
   }
 }
 
@@ -77,30 +71,30 @@ runUdpServer(UdpSocket* const serverSock) {
  */
 int
 main(void) {
-  cout << "Enter in UDP sockets unitary test" << endl;
+  std::cout << "Enter in UDP sockets unitary test" << std::endl;
 
   // Server socket +
   // Open the server UDP socket for listening on <any>:40099
-  cout << "Create server UDP socket on port 40099" << endl;
+  std::cout << "Create server UDP socket on port 40099" << std::endl;
   UdpSocket serverSock("",40099);
-  cout << "bind()" << endl;
+  std::cout << "bind()" << std::endl;
   serverSock.bind();
-  thread srvTh(runUdpServer, &serverSock);
+  std::thread srvTh(runUdpServer, &serverSock);
   // Server socket -
 
   std::this_thread::sleep_for(std::chrono::seconds(1));
 
   // Client socket +
   // Open the server UDP socket on localhost:40099
-  cout << "Create client UDP socket on localhost:40099" << endl;
+  std::cout << "Create client UDP socket on localhost:40099" << std::endl;
   UdpSocket clientSocket("127.0.0.1",40099);
   ClientObs cliObs;
   clientSocket.addObserver(cliObs);
-  cout << "Client send a message" << endl;
+  std::cout << "Client send a message" << std::endl;
   clientSocket.send("Hello !");
 
-  cout << "Client is waiting for response" << endl;
-  string message;
+  std::cout << "Client is waiting for response" << std::endl;
+  std::string message;
   clientSocket.receive(message);
   // Client socket -
 
@@ -109,6 +103,6 @@ main(void) {
   clientSocket.close();
   serverSock.close();
 
-  cout << "Exit UDP sockets unitary test" << endl;
+  std::cout << "Exit UDP sockets unitary test" << std::endl;
   return 0;
 }

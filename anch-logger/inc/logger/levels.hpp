@@ -31,7 +31,7 @@ namespace anch {
      *
      * \author Vincent Lachenal
      */
-    enum Level {
+    enum class Level {
       /*! Trace logging level */
       TRACE = 0,
 

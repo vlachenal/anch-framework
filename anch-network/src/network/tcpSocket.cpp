@@ -34,32 +34,18 @@ const int BUFFER_SIZE = 1024;
 
 
 // Constructors +
-/*!
- * \ref TcpSocket default constructor
- */
 TcpSocket::TcpSocket():
   Socket(SocketType::TCP) {
   // Nothing to do
 }
 
-/*!
- * \ref TcpSocket constructor
- *
- * \param ipAddress The IP address
- * \param port The port number
- *
- * \throw IOException any error
- */
-TcpSocket::TcpSocket(const std::string& ipAddress, uint16_t port) throw(IOException):
+TcpSocket::TcpSocket(const std::string& ipAddress, uint16_t port):
   Socket(ipAddress, port, SocketType::TCP) {
   // Nothing to do
 }
 // Constructors -
 
 // Destructors +
-/*!
- * \ref TcpSocket destructor
- */
 TcpSocket::~TcpSocket() noexcept {
   // Nothing to do
 }
@@ -67,37 +53,23 @@ TcpSocket::~TcpSocket() noexcept {
 
 
 // Methods +
-/*!
- * Send a message on socket
- *
- * \param message The message to send
- *
- * \throw anch::network::IOException Network error while sending message
- */
 void
-TcpSocket::send(const std::string& message) throw(IOException) {
+TcpSocket::send(const std::string& message) {
   ssize_t res = ::send(_sock, message.data(), message.size() + 1, 0);
   if(res == SOCKET_ERROR) {
     throw IOException("Error on send()");
   }
 }
 
-/*!
- * Receive a message on socket
- *
- * \param message The string where to write the message
- *
- * \throw anch::network::IOException Network error while receiving message
- */
 void
-TcpSocket::receive(std::string& message) throw(IOException) {
+TcpSocket::receive(std::string& message) {
   // Receive message +
   char buffer[BUFFER_SIZE];
-  memset(&buffer, 0, BUFFER_SIZE);
+  std::memset(&buffer, 0, BUFFER_SIZE);
   ssize_t res = 0;
   while((res = ::recv(_sock, buffer, sizeof(buffer) - 1, 0)) > 0) {
     message += buffer;
-    memset(&buffer, 0, BUFFER_SIZE);
+    std::memset(&buffer, 0, BUFFER_SIZE);
   }
   if(res == SOCKET_ERROR) {
     throw IOException("Error on recv()");
@@ -113,21 +85,11 @@ TcpSocket::receive(std::string& message) throw(IOException) {
 
 
 // Accessors +
-/*!
- * Get the socket domain
- *
- * \return The POSIX socket domain
- */
 int
 TcpSocket::getDomain() const {
   return AF_INET;
 }
 
-/*!
- * Get the socket service type
- *
- * \return The POSIX socket service type
- */
 int
 TcpSocket::getType() const {
   return SOCK_STREAM;

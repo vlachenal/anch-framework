@@ -30,41 +30,22 @@ using anch::network::IOException;
 
 
 // Constructors +
-/*!
- * \ref IOException constructor
- *
- * \param message The error message
- */
 IOException::IOException(const std::string& message): _message(message) {
   _message = message + ": " + strerror(errno);
 }
 
-/*!
- * \ref IOException constructor
- *
- * \param message The error message
- * \param errorCode The error code (from \c getinfoaddr)
- */
 IOException::IOException(const std::string& message, int errorCode) {
   _message = message + ": " + gai_strerror(errorCode);
 }
 // Constructors -
 
 // Destructor +
-/*!
- * \ref IOException destructor
- */
 IOException::~IOException() noexcept {
   // Nothing to do
 }
 // Destructor -
 
 
-/*!
- * Return the error message
- *
- * \return The error message
- */
 const char*
 IOException::what() const noexcept {
   return _message.data();

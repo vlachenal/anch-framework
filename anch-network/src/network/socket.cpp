@@ -51,11 +51,6 @@ using anch::network::IOException;
 
 
 // Constructors +
-/*!
- * \ref Socket constructor.
- *
- * \param type The socket type
- */
 Socket::Socket(anch::network::SocketType type):
   Observable<SocketEvent>(),
   _ipAddress(""),
@@ -66,18 +61,7 @@ Socket::Socket(anch::network::SocketType type):
   // Nothing to do
 }
 
-/*!
- * \ref Socket constructor.\n
- * Backlog is set to 5 by default. You can change it using the setter before call listen method.
- *
- * \param ipAddress IP address
- * \param port Destination port
- * \param type The socket type
- *
- * \throw anch::network::IOException Error while creating the socket
- */
-Socket::Socket(const std::string& ipAddress, uint16_t port, SocketType type)
-  throw(IOException):
+Socket::Socket(const std::string& ipAddress, uint16_t port, SocketType type):
   Observable<SocketEvent>(),
   _ipAddress(ipAddress),
   _port(port),
@@ -117,8 +101,8 @@ Socket::Socket(const std::string& ipAddress, uint16_t port, SocketType type)
   hints.ai_next = NULL;
   std::ostringstream strPortOss;
   strPortOss << _port;
-  int res = getaddrinfo(_ipAddress.empty() ? NULL : _ipAddress.data(),
-			strPortOss.str().data(), &hints, &result);
+  int res = ::getaddrinfo(_ipAddress.empty() ? NULL : _ipAddress.data(),
+			  strPortOss.str().data(), &hints, &result);
   if(res != 0) {
     throw IOException("Error on getaddrinfo()", res);
   }
@@ -133,7 +117,7 @@ Socket::Socket(const std::string& ipAddress, uint16_t port, SocketType type)
     }
   }
 
-  freeaddrinfo(result);
+  ::freeaddrinfo(result);
   if(_address == NULL) {
     throw IOException("No working address");
   }
@@ -142,9 +126,6 @@ Socket::Socket(const std::string& ipAddress, uint16_t port, SocketType type)
 // Constructors -
 
 // Destructor +
-/*!
- * \ref Socket destructor
- */
 Socket::~Socket() noexcept {
   // Nothing to do
 }
@@ -152,15 +133,10 @@ Socket::~Socket() noexcept {
 
 
 // Methods +
-/*!
- * Bind socket
- *
- * \throw anch::network::IOException Error while binding the socket
- */
 void
-Socket::bind() throw(IOException) {
+Socket::bind() {
   int reusePort = true;
-  int res = setsockopt(_sock, SOL_SOCKET, SO_REUSEPORT, &reusePort, sizeof(reusePort));
+  int res = ::setsockopt(_sock, SOL_SOCKET, SO_REUSEPORT, &reusePort, sizeof(reusePort));
   if(res == SOCKET_ERROR) {
     throw IOException("Error on setsockopt()");
   }
@@ -170,39 +146,24 @@ Socket::bind() throw(IOException) {
   }
 }
 
-/*!
- * Connect to remote socket
- *
- * \throw anch::network::IOException Error while connectin the client socket to the server socket
- */
 void
-Socket::connect() throw(IOException) {
+Socket::connect() {
   int res = ::connect(_sock, _address->ai_addr, _address->ai_addrlen);
   if(res != 0) {
     throw IOException("Error on connect()");
   }
 }
 
-/*!
- * Listen on socket
- *
- * \throw anch::network::IOException Error while listening on the socket
- */
 void
-Socket::listen() throw(IOException) {
+Socket::listen() {
   int res = ::listen(_sock, _backlog);
   if(res == SOCKET_ERROR) {
     throw IOException("Error on listen()");
   }
 }
 
-/*!
- * Accept client connection
- *
- * \throw anch::network::IOException Error while accepting client connection
- */
 void
-Socket::accept(Socket& socket) throw(IOException) {
+Socket::accept(Socket& socket) {
   SOCKADDR_IN csin;
   socklen_t length = sizeof(csin);
   SOCKET sock = ::accept(_sock, (SOCKADDR*)&csin, &length);
@@ -212,36 +173,20 @@ Socket::accept(Socket& socket) throw(IOException) {
   socket._sock = sock;
 }
 
-/*!
- * Receive a message on socket
- *
- * \throw anch::network::IOException Network error while receiving message
- */
 void
-Socket::receive() throw(anch::network::IOException) {
+Socket::receive() {
   std::string message;
   receive(message);
 }
 
-/*!
- * Shutdown data flow between client and server.<br>
- * This method has to be called by server.
- *
- * \param how Direction of the data flow which has to be closed
- *
- * \throw anch::network::IOException Network error while shutting down data transfer
- */
 void
-Socket::shutdown(Direction how) throw(IOException) {
+Socket::shutdown(Direction how) {
   int res = ::shutdown(_sock, static_cast<int>(how));
   if(res != 0) {
     throw IOException("Error on shutdown()");
   }
 }
 
-/*!
- * Close the socket
- */
 void
 Socket::close() noexcept {
   // Shutdown the socket to release every data on the socket +

@@ -56,7 +56,7 @@ namespace anch {
      *
      * \author Vincent Lachenal
      */
-    enum Version {
+    enum class Version {
       /*! MAC address based algorithm */
       MAC_ADDRESS = 1,
 
@@ -386,7 +386,7 @@ namespace anch {
       out << std::hex
 	  << std::setfill('0') << std::setw(8) << _lowTime << '-'
 	  << std::setfill('0') << std::setw(4) << _midTime << '-'
-	  << std::setfill('0') << std::setw(1) << _version
+	  << std::setfill('0') << std::setw(1) << static_cast<int>(_version)
 	  << std::setfill('0') << std::setw(3) << _highTime << '-'
 	  << std::setfill('0') << std::setw(2) << _clockSeqHighRes
 	  << std::setfill('0') << std::setw(2) << _clockSeqLow << '-'
@@ -482,7 +482,7 @@ operator<<(std::basic_ostream<CharT, Traits>& out, const anch::Uuid& uuid) {
   out << std::hex
       << std::setfill('0') << std::setw(8) << uuid.getLowTime() << '-'
       << std::setfill('0') << std::setw(4) << uuid.getMidTime() << '-'
-      << std::setfill('0') << std::setw(1) << uuid.getVersion()
+      << std::setfill('0') << std::setw(1) << static_cast<int>(uuid.getVersion())
       << std::setfill('0') << std::setw(3) << uuid.getHighTime() << '-'
       << std::setfill('0') << std::setw(2) << uuid.getClockSeqHighRes()
       << std::setfill('0') << std::setw(2) << uuid.getClockSeqLow() << '-'
