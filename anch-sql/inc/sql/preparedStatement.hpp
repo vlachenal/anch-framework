@@ -25,6 +25,9 @@
 
 #include "sql/sqlException.hpp"
 #include "sql/resultSet.hpp"
+#include "sql/types/date.hpp"
+#include "sql/types/time.hpp"
+#include "sql/types/timestamp.hpp"
 
 
 namespace anch {
@@ -155,6 +158,46 @@ namespace anch {
        * \throw SqlException any error
        */
       void set(std::size_t idx, const std::string& value);
+
+      /*!
+       * Bind character array value to prepared statement
+       *
+       * \param idx the prepared statement index parameter
+       * \param value the value to bind
+       *
+       * \throw SqlException any error
+       */
+      void set(std::size_t idx, const char* const value);
+
+      /*!
+       * Bind SQL date value to prepared statement
+       *
+       * \param idx the prepared statement index parameter
+       * \param value the value to bind
+       *
+       * \throw SqlException any error
+       */
+      virtual void set(std::size_t idx, const anch::sql::Date& value);
+
+      /*!
+       * Bind SQL time value to prepared statement
+       *
+       * \param idx the prepared statement index parameter
+       * \param value the value to bind
+       *
+       * \throw SqlException any error
+       */
+      virtual void set(std::size_t idx, const anch::sql::Time& value);
+
+      /*!
+       * Bind SQL timestamp value to prepared statement
+       *
+       * \param idx the prepared statement index parameter
+       * \param value the value to bind
+       *
+       * \throw SqlException any error
+       */
+      virtual void set(std::size_t idx, const anch::sql::Timestamp& value);
 
     protected:
       /*!

@@ -50,7 +50,7 @@ namespace anch {
       friend class DateFormatter;
 
       // Attributes +
-    private:
+    protected:
       /*! Mutex for thread-safe implementation */
       static std::mutex _mutex;
 

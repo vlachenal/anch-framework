@@ -74,6 +74,21 @@ SQLite3ResultSet::next() {
   }
   return hasMore;
 }
+
+const anch::date::DateFormatter&
+SQLite3ResultSet::getDateFormatter() {
+  return getDefaultDateFormatter();
+}
+
+const anch::date::DateFormatter&
+SQLite3ResultSet::getTimeFormatter() {
+  return getDefaultTimeFormatter();
+}
+
+const anch::date::DateFormatter&
+SQLite3ResultSet::getTimestampFormatter() {
+  return getDefaultTimestampFormatter();
+}
 // Methods -
 
 #endif // ANCH_SQL_SQLITE3

@@ -67,4 +67,19 @@ MySQLResultSet::next() {
   return (_row != NULL);
 }
 
+const anch::date::DateFormatter&
+MySQLResultSet::getDateFormatter() {
+  return getDefaultDateFormatter();
+}
+
+const anch::date::DateFormatter&
+MySQLResultSet::getTimeFormatter() {
+  return getDefaultTimeFormatter();
+}
+
+const anch::date::DateFormatter&
+MySQLResultSet::getTimestampFormatter() {
+  return getDefaultTimestampFormatter();
+}
+
 #endif // ANCH_SQL_MYSQL

@@ -95,6 +95,7 @@ include_directories(
   ${SQLite3_INCLUDE_DIRS}
   ${ANCH_UTILS_INCLUDES_DIR}
   ${ANCH_RES_INCLUDES_DIR}
+  ${ANCH_DATE_INCLUDES_DIR}
 )
 
 # Retrieve every files in project
@@ -154,10 +155,12 @@ if(ANCH_SQL_UNITARY_TEST)
     link_directories(
       ${Boost_LIBRARY_DIRS}
       ${ANCH_RES_LIBRARY_DIR}
+      ${ANCH_DATE_LIBRARY_DIR}
       )
   else()
     link_directories(
       ${ANCH_RES_LIBRARY_DIR}
+      ${ANCH_DATE_LIBRARY_DIR}
       )
   endif()
 
@@ -180,6 +183,7 @@ if(ANCH_SQL_UNITARY_TEST)
 	anch-mysql-test
 	anch-sql
 	anch-resource
+	anch-date
 	${MySQL_LIBRARIES}
 	${PostgreSQL_LIBRARIES}
 	${SQLite3_LIBRARIES}
@@ -190,6 +194,7 @@ if(ANCH_SQL_UNITARY_TEST)
 	anch-mysql-test
 	anch-sql
 	anch-resource
+	anch-date
 	${MySQL_LIBRARIES}
 	${PostgreSQL_LIBRARIES}
 	${SQLite3_LIBRARIES}
@@ -217,6 +222,7 @@ if(ANCH_SQL_UNITARY_TEST)
 	anch-postgresql-test
 	anch-sql
 	anch-resource
+	anch-date
 	${MySQL_LIBRARIES}
 	${PostgreSQL_LIBRARIES}
 	${SQLite3_LIBRARIES}
@@ -227,6 +233,7 @@ if(ANCH_SQL_UNITARY_TEST)
 	anch-postgresql-test
 	anch-sql
 	anch-resource
+	anch-date
 	${MySQL_LIBRARIES}
 	${PostgreSQL_LIBRARIES}
 	${SQLite3_LIBRARIES}
@@ -254,6 +261,7 @@ if(ANCH_SQL_UNITARY_TEST)
 	anch-sqlite3-test
 	anch-sql
 	anch-resource
+	anch-date
 	${MySQL_LIBRARIES}
 	${PostgreSQL_LIBRARIES}
 	${SQLite3_LIBRARIES}
@@ -264,6 +272,7 @@ if(ANCH_SQL_UNITARY_TEST)
 	anch-sqlite3-test
 	anch-sql
 	anch-resource
+	anch-date
 	${MySQL_LIBRARIES}
 	${PostgreSQL_LIBRARIES}
 	${SQLite3_LIBRARIES}
@@ -291,6 +300,7 @@ if(ANCH_SQL_UNITARY_TEST)
 	anch-sql-connection-factory-test
 	anch-sql
 	anch-resource
+	anch-date
 	${MySQL_LIBRARIES}
 	${PostgreSQL_LIBRARIES}
 	${SQLite3_LIBRARIES}
@@ -301,6 +311,7 @@ if(ANCH_SQL_UNITARY_TEST)
 	anch-sql-connection-factory-test
 	anch-sql
 	anch-resource
+	anch-date
 	${MySQL_LIBRARIES}
 	${PostgreSQL_LIBRARIES}
 	${SQLite3_LIBRARIES}
@@ -327,6 +338,7 @@ if(ANCH_SQL_UNITARY_TEST)
       anch-placeholders-test
       anch-sql
       anch-resource
+      anch-date
       ${MySQL_LIBRARIES}
       ${PostgreSQL_LIBRARIES}
       ${SQLite3_LIBRARIES}
@@ -337,6 +349,7 @@ if(ANCH_SQL_UNITARY_TEST)
       anch-placeholders-test
       anch-sql
       anch-resource
+      anch-date
       ${MySQL_LIBRARIES}
       ${PostgreSQL_LIBRARIES}
       ${SQLite3_LIBRARIES}

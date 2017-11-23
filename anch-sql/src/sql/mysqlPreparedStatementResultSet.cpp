@@ -98,4 +98,19 @@ MySQLPreparedStatementResultSet::next() {
   return (mysql_stmt_fetch(_stmt) == 0);
 }
 
+const anch::date::DateFormatter&
+MySQLPreparedStatementResultSet::getDateFormatter() {
+  return getDefaultDateFormatter();
+}
+
+const anch::date::DateFormatter&
+MySQLPreparedStatementResultSet::getTimeFormatter() {
+  return getDefaultTimeFormatter();
+}
+
+const anch::date::DateFormatter&
+MySQLPreparedStatementResultSet::getTimestampFormatter() {
+  return getDefaultTimestampFormatter();
+}
+
 #endif // ANCH_SQL_MYSQL

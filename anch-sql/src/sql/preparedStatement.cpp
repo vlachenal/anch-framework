@@ -19,6 +19,8 @@
 */
 #include "sql/preparedStatement.hpp"
 
+#include "date/dateFormatter.hpp"
+
 using anch::sql::PreparedStatement;
 
 
@@ -139,4 +141,31 @@ void
 PreparedStatement::set(std::size_t idx, const std::string& value) {
   checkIndex(idx);
   _values[idx] = value;
+}
+
+void
+PreparedStatement::set(std::size_t idx, const char* const value) {
+  checkIndex(idx);
+  _values[idx] = std::string(value);
+}
+
+void
+PreparedStatement::set(std::size_t idx, const anch::sql::Date& value) {
+  static anch::date::DateFormatter formatter("%Y-%m-%d");
+  checkIndex(idx);
+  formatter.format(value, _values[idx]);
+}
+
+void
+PreparedStatement::set(std::size_t idx, const anch::sql::Time& value) {
+  static anch::date::DateFormatter formatter("%H:%M:%S.%s");
+  checkIndex(idx);
+  formatter.format(value, _values[idx]);
+}
+
+void
+PreparedStatement::set(std::size_t idx, const anch::sql::Timestamp& value) {
+  static anch::date::DateFormatter formatter("%Y-%m-%d %H:%M:%S.%s");
+  checkIndex(idx);
+  formatter.format(value, _values[idx]);
 }

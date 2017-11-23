@@ -28,6 +28,7 @@
 #include <limits>
 #include <random>
 #include <functional>
+#include <regex>
 
 #include "device/network.hpp"
 #include "crypto/hash/md5.hpp"
@@ -84,6 +85,9 @@ namespace anch {
     /*! Time high part time mask */
     static const uint64_t TIME_HIGH_MASK = 0x0000000000000FFF;
 
+    /*! Time high part time mask */
+    static const uint64_t VERSION_MASK = 0x000000000000F000;
+
     /*! Sequence low part time mask */
     static const uint32_t SEQ_LOW_MASK = 0x00FF;
 
@@ -135,6 +139,46 @@ namespace anch {
 			    _node(uuid._node) {
       // Nothing to do
     }
+
+    /*!
+     * \ref Uuid from std::string constructor
+     *
+     * \param uuid the std::string to parse
+     */
+    Uuid(const std::string& uuid): _lowTime(0),
+				   _midTime(0),
+				   _highTime(0),
+				   _clockSeqLow(0),
+				   _clockSeqHighRes(0),
+				   _node(0) {
+      static std::regex regexp("([0-9A-Fa-f]{8})-([0-9A-Fa-f]{4})-([0-9A-Fa-f]{1})([0-9A-Fa-f]{3})-([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})-([0-9A-Fa-f]{12})");
+      std::cmatch matches;
+      if(!std::regex_match(uuid.data(), matches, regexp)) {
+	throw std::bad_cast();
+      }
+      std::istringstream iss(matches.str(1));
+      iss >> std::hex >> _lowTime;
+      iss.clear();
+      iss.str(matches.str(2));
+      iss >> std::hex >> _midTime;
+      iss.clear();
+      iss.str(matches.str(3));
+      int version;
+      iss >> std::hex >> version;
+      _version = static_cast<anch::Uuid::Version>(version);
+      iss.clear();
+      iss.str(matches.str(4));
+      iss >> std::hex >> _highTime;
+      iss.clear();
+      iss.str(matches.str(5));
+      iss >> std::hex >> _clockSeqHighRes;
+      iss.clear();
+      iss.str(matches.str(6));
+      iss >> std::hex >> _clockSeqLow;
+      iss.clear();
+      iss.str(matches.str(7));
+      iss >> std::hex >> _node;
+    }
     // Constructors -
 
     // Destructor +
@@ -173,7 +217,7 @@ namespace anch {
 	generateUuidVersion1(uuid, data);
 	break;
       case Uuid::Version::DCE_SECURITY:
-	// TODO implements this algorithm version
+	// \todo implements this algorithm version
 	break;
       case Uuid::Version::MD5_HASH:
 	generateUuidVersion3(uuid,data);
@@ -394,6 +438,16 @@ namespace anch {
       return out.str();
     }
     // Methods -
+
+
+    // Operators +
+    /*!
+     * Cast \ref UUID to std::string
+     */
+    explicit operator std::string() const {
+      return toString();
+    }
+    // Operators -
 
 
     // Accessors +

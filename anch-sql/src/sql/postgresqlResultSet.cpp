@@ -93,6 +93,21 @@ PostgreSQLResultSet::next() {
   }
   return hasMore;
 }
+
+const anch::date::DateFormatter&
+PostgreSQLResultSet::getDateFormatter() {
+  return getDefaultDateFormatter();
+}
+
+const anch::date::DateFormatter&
+PostgreSQLResultSet::getTimeFormatter() {
+  return getDefaultTimeFormatter();
+}
+
+const anch::date::DateFormatter&
+PostgreSQLResultSet::getTimestampFormatter() {
+  return getDefaultTimestampFormatter();
+}
 // Methods -
 
 #endif // ANCH_SQL_POSTGRESQL
