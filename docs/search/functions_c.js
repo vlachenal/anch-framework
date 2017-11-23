@@ -9,6 +9,7 @@ var searchData=
   ['operator_3d_3d',['operator==',['../classanch_1_1date_1_1_date.html#a8f7ef790a94dce37c347ce958ceabf37',1,'anch::date::Date']]],
   ['operator_3e',['operator&gt;',['../classanch_1_1date_1_1_date.html#a2809baefb43af6919dede19f4c62b229',1,'anch::date::Date']]],
   ['operator_3e_3d',['operator&gt;=',['../classanch_1_1date_1_1_date.html#a5c765545333e076b4c858503bc4e1496',1,'anch::date::Date']]],
+  ['string',['string',['../classanch_1_1_uuid.html#abbb23d2b7edd38f7ea764c10b9dba3b1',1,'anch::Uuid']]],
   ['time_5ft',['time_t',['../classanch_1_1date_1_1_date.html#ab5375cca269351c73a57e7fc47f6f0c0',1,'anch::date::Date']]],
   ['tm',['tm',['../classanch_1_1date_1_1_date.html#a0ba08b673fe186616e291d810244cd05',1,'anch::date::Date']]]
 ];

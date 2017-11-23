@@ -18,5 +18,5 @@ var searchData=
   ['issse4_5f1',['isSSE4_1',['../classanch_1_1device_1_1_c_p_u.html#a2936400b2b99a6ddf338dcd8ec1cb602',1,'anch::device::CPU']]],
   ['issse4_5f2',['isSSE4_2',['../classanch_1_1device_1_1_c_p_u.html#a4533df5494c0de7f51fe61f39dce3aee',1,'anch::device::CPU']]],
   ['isssse3',['isSSSE3',['../classanch_1_1device_1_1_c_p_u.html#a8a6bb46ea5ec3a546991df68d4dfdea8',1,'anch::device::CPU']]],
-  ['isvalid',['isValid',['../classanch_1_1sql_1_1_connection.html#a235ca781c1677744712592162bebf24c',1,'anch::sql::Connection']]]
+  ['isvalid',['isValid',['../classanch_1_1sql_1_1_connection.html#ad940302808cfd3e736377e23195102d7',1,'anch::sql::Connection']]]
 ];

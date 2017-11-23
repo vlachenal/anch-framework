@@ -82,18 +82,19 @@ $(function() {
 <div class="dynheader">
 Collaboration diagram for anch::Uuid:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classanch_1_1_uuid__coll__graph.svg" width="202" height="308"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="classanch_1_1_uuid__coll__graph.svg" width="202" height="338"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
 <tr class="memitem:ad4663c0e322dd6445c99d820e5e7e8fc"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1_uuid.html#ad4663c0e322dd6445c99d820e5e7e8fc">Version</a> { <br />
-&#160;&#160;<a class="el" href="classanch_1_1_uuid.html#ad4663c0e322dd6445c99d820e5e7e8fca871eb77502ed91f51ccf2c72ef32fbf8">MAC_ADDRESS</a> = 1, 
-<a class="el" href="classanch_1_1_uuid.html#ad4663c0e322dd6445c99d820e5e7e8fca1a075ee249b19f4b1c6f5c6e6913acef">DCE_SECURITY</a>, 
-<a class="el" href="classanch_1_1_uuid.html#ad4663c0e322dd6445c99d820e5e7e8fca6304f7b38279500d8eb76a8a75e9f7d8">MD5_HASH</a>, 
-<a class="el" href="classanch_1_1_uuid.html#ad4663c0e322dd6445c99d820e5e7e8fcad9b517d7056ec98a0cd5b08fc4c5ec7a">RANDOM</a>, 
+&#160;&#160;<a class="el" href="classanch_1_1_uuid.html#ad4663c0e322dd6445c99d820e5e7e8fca298f2346d8522b9a2c6ee1101e0f1a4d">Version::MAC_ADDRESS</a> = 1, 
+<a class="el" href="classanch_1_1_uuid.html#ad4663c0e322dd6445c99d820e5e7e8fcaffa23ee2a831cf77de87152b513c4119">Version::DCE_SECURITY</a>, 
+<a class="el" href="classanch_1_1_uuid.html#ad4663c0e322dd6445c99d820e5e7e8fca63bd233e447da01a556518b319b1abc5">Version::MD5_HASH</a>, 
+<a class="el" href="classanch_1_1_uuid.html#ad4663c0e322dd6445c99d820e5e7e8fca170e02e86972c2be8559884cc3c12254">Version::RANDOM</a>, 
 <br />
-&#160;&#160;<a class="el" href="classanch_1_1_uuid.html#ad4663c0e322dd6445c99d820e5e7e8fca134431ee386ebe569ed0cf79385a5364">SHA1_HASH</a>
+&#160;&#160;<a class="el" href="classanch_1_1_uuid.html#ad4663c0e322dd6445c99d820e5e7e8fca11ac5cacee1040b5b2bf75799b0a2e30">Version::SHA1_HASH</a>
 <br />
  }</td></tr>
 <tr class="separator:ad4663c0e322dd6445c99d820e5e7e8fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -104,10 +105,14 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:af3c19e58d1359bdbaee54f6fb1bc2777"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a351c71105bd793c3a8625574fdeec147"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1_uuid.html#a351c71105bd793c3a8625574fdeec147">Uuid</a> (const <a class="el" href="classanch_1_1_uuid.html">Uuid</a> &amp;uuid)</td></tr>
 <tr class="separator:a351c71105bd793c3a8625574fdeec147"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa1ae10a6e203f2a2e69b6ab1c2e4ff58"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1_uuid.html#aa1ae10a6e203f2a2e69b6ab1c2e4ff58">Uuid</a> (const std::string &amp;uuid)</td></tr>
+<tr class="separator:aa1ae10a6e203f2a2e69b6ab1c2e4ff58"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a444d5e46f4e97c22e9828e610a19240c"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1_uuid.html#a444d5e46f4e97c22e9828e610a19240c">~Uuid</a> ()</td></tr>
 <tr class="separator:a444d5e46f4e97c22e9828e610a19240c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5aef8102d0cfb8f6e2a517100434efe6"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1_uuid.html#a5aef8102d0cfb8f6e2a517100434efe6">toString</a> () const</td></tr>
 <tr class="separator:a5aef8102d0cfb8f6e2a517100434efe6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abbb23d2b7edd38f7ea764c10b9dba3b1"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1_uuid.html#abbb23d2b7edd38f7ea764c10b9dba3b1">operator std::string</a> () const</td></tr>
+<tr class="separator:abbb23d2b7edd38f7ea764c10b9dba3b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad489f7ebe1be625ba74a333db735c4e5"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1_uuid.html#ad489f7ebe1be625ba74a333db735c4e5">getLowTime</a> () const</td></tr>
 <tr class="separator:ad489f7ebe1be625ba74a333db735c4e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acc547a4a99a8dfdb899f6e2664b83752"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1_uuid.html#acc547a4a99a8dfdb899f6e2664b83752">getMidTime</a> () const</td></tr>
@@ -125,7 +130,7 @@ Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:aa01e153b65d97f66252ea26ed2a091ed"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1_uuid.html#aa01e153b65d97f66252ea26ed2a091ed">generateUuid</a> (<a class="el" href="classanch_1_1_uuid.html">Uuid</a> &amp;uuid, <a class="el" href="classanch_1_1_uuid.html#ad4663c0e322dd6445c99d820e5e7e8fc">anch::Uuid::Version</a> version=anch::Uuid::Version::RANDOM, const std::string &amp;data=&quot;&quot;)</td></tr>
+<tr class="memitem:aa01e153b65d97f66252ea26ed2a091ed"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1_uuid.html#aa01e153b65d97f66252ea26ed2a091ed">generateUuid</a> (<a class="el" href="classanch_1_1_uuid.html">Uuid</a> &amp;uuid, <a class="el" href="classanch_1_1_uuid.html#ad4663c0e322dd6445c99d820e5e7e8fc">anch::Uuid::Version</a> version=<a class="el" href="classanch_1_1_uuid.html#ad4663c0e322dd6445c99d820e5e7e8fca170e02e86972c2be8559884cc3c12254">anch::Uuid::Version::RANDOM</a>, const std::string &amp;data=&quot;&quot;)</td></tr>
 <tr class="separator:aa01e153b65d97f66252ea26ed2a091ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acce74ca623bb77347e40714d5e73f91f"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1_uuid.html#acce74ca623bb77347e40714d5e73f91f">generateUuidVersion1</a> (<a class="el" href="classanch_1_1_uuid.html">Uuid</a> &amp;uuid, const std::string &amp;macAddress=&quot;&quot;)</td></tr>
 <tr class="separator:acce74ca623bb77347e40714d5e73f91f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -149,25 +154,33 @@ This class needs anch-crypto and anch-device libraries.</p>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">enum <a class="el" href="classanch_1_1_uuid.html#ad4663c0e322dd6445c99d820e5e7e8fc">anch::Uuid::Version</a></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">strong</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 <p>The UUID versions</p>
 <dl class="section since"><dt>Since</dt><dd>0.1</dd></dl>
 <dl class="section author"><dt>Author</dt><dd>Vincent Lachenal </dd></dl>
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ad4663c0e322dd6445c99d820e5e7e8fca871eb77502ed91f51ccf2c72ef32fbf8"></a>MAC_ADDRESS&#160;</td><td class="fielddoc"><p>MAC address based algorithm </p>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ad4663c0e322dd6445c99d820e5e7e8fca298f2346d8522b9a2c6ee1101e0f1a4d"></a>MAC_ADDRESS&#160;</td><td class="fielddoc"><p>MAC address based algorithm </p>
 </td></tr>
-<tr><td class="fieldname"><a id="ad4663c0e322dd6445c99d820e5e7e8fca1a075ee249b19f4b1c6f5c6e6913acef"></a>DCE_SECURITY&#160;</td><td class="fielddoc"><p>DCE security (Windows) base algorithm </p>
+<tr><td class="fieldname"><a id="ad4663c0e322dd6445c99d820e5e7e8fcaffa23ee2a831cf77de87152b513c4119"></a>DCE_SECURITY&#160;</td><td class="fielddoc"><p>DCE security (Windows) base algorithm </p>
 </td></tr>
-<tr><td class="fieldname"><a id="ad4663c0e322dd6445c99d820e5e7e8fca6304f7b38279500d8eb76a8a75e9f7d8"></a>MD5_HASH&#160;</td><td class="fielddoc"><p>MD5 hash based algorithm </p>
+<tr><td class="fieldname"><a id="ad4663c0e322dd6445c99d820e5e7e8fca63bd233e447da01a556518b319b1abc5"></a>MD5_HASH&#160;</td><td class="fielddoc"><p>MD5 hash based algorithm </p>
 </td></tr>
-<tr><td class="fieldname"><a id="ad4663c0e322dd6445c99d820e5e7e8fcad9b517d7056ec98a0cd5b08fc4c5ec7a"></a>RANDOM&#160;</td><td class="fielddoc"><p>Random based algorithm </p>
+<tr><td class="fieldname"><a id="ad4663c0e322dd6445c99d820e5e7e8fca170e02e86972c2be8559884cc3c12254"></a>RANDOM&#160;</td><td class="fielddoc"><p>Random based algorithm </p>
 </td></tr>
-<tr><td class="fieldname"><a id="ad4663c0e322dd6445c99d820e5e7e8fca134431ee386ebe569ed0cf79385a5364"></a>SHA1_HASH&#160;</td><td class="fielddoc"><p>SHA1 hash based algorithm </p>
+<tr><td class="fieldname"><a id="ad4663c0e322dd6445c99d820e5e7e8fca11ac5cacee1040b5b2bf75799b0a2e30"></a>SHA1_HASH&#160;</td><td class="fielddoc"><p>SHA1 hash based algorithm </p>
 </td></tr>
 </table>
 
@@ -175,7 +188,7 @@ This class needs anch-crypto and anch-device libraries.</p>
 </div>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="af3c19e58d1359bdbaee54f6fb1bc2777"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af3c19e58d1359bdbaee54f6fb1bc2777">&#9670;&nbsp;</a></span>Uuid() <span class="overload">[1/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#af3c19e58d1359bdbaee54f6fb1bc2777">&#9670;&nbsp;</a></span>Uuid() <span class="overload">[1/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -201,7 +214,7 @@ This class needs anch-crypto and anch-device libraries.</p>
 </div>
 </div>
 <a id="a351c71105bd793c3a8625574fdeec147"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a351c71105bd793c3a8625574fdeec147">&#9670;&nbsp;</a></span>Uuid() <span class="overload">[2/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a351c71105bd793c3a8625574fdeec147">&#9670;&nbsp;</a></span>Uuid() <span class="overload">[2/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -227,6 +240,39 @@ This class needs anch-crypto and anch-device libraries.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">uuid</td><td>The <a class="el" href="classanch_1_1_uuid.html">Uuid</a> to copy </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="aa1ae10a6e203f2a2e69b6ab1c2e4ff58"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa1ae10a6e203f2a2e69b6ab1c2e4ff58">&#9670;&nbsp;</a></span>Uuid() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">anch::Uuid::Uuid </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>uuid</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p><a class="el" href="classanch_1_1_uuid.html">Uuid</a> from std::string constructor</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">uuid</td><td>the std::string to parse </td></tr>
   </table>
   </dd>
 </dl>
@@ -279,7 +325,7 @@ This class needs anch-crypto and anch-device libraries.</p>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="classanch_1_1_uuid.html#ad4663c0e322dd6445c99d820e5e7e8fc">anch::Uuid::Version</a>&#160;</td>
-          <td class="paramname"><em>version</em> = <code>anch::Uuid::Version::RANDOM</code>, </td>
+          <td class="paramname"><em>version</em> = <code><a class="el" href="classanch_1_1_uuid.html#ad4663c0e322dd6445c99d820e5e7e8fca170e02e86972c2be8559884cc3c12254">anch::Uuid::Version::RANDOM</a></code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -662,6 +708,32 @@ This class needs anch-crypto and anch-device libraries.</p>
 </div><div class="memdoc">
 <p>Version getter</p>
 <dl class="section return"><dt>Returns</dt><dd>The version </dd></dl>
+
+</div>
+</div>
+<a id="abbb23d2b7edd38f7ea764c10b9dba3b1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abbb23d2b7edd38f7ea764c10b9dba3b1">&#9670;&nbsp;</a></span>operator std::string()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">anch::Uuid::operator std::string </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">explicit</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Cast UUID to std::string </p>
 
 </div>
 </div>

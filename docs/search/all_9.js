@@ -2,7 +2,7 @@ var searchData=
 [
   ['idatepartformatter',['IDatePartFormatter',['../classanch_1_1date_1_1formatter_1_1_i_date_part_formatter.html',1,'anch::date::formatter']]],
   ['iformatter',['IFormatter',['../classanch_1_1logger_1_1formatter_1_1_i_formatter.html',1,'anch::logger::formatter']]],
-  ['info',['info',['../classanch_1_1logger_1_1_logger.html#a8a665671d02104ec06dacdcae7bf0a26',1,'anch::logger::Logger::info()'],['../namespaceanch_1_1logger.html#a973cdff92f296b5fba7f68660d4ee41faeeb47f7660d565791ac2a60d910b3373',1,'anch::logger::INFO()']]],
+  ['info',['info',['../classanch_1_1logger_1_1_logger.html#a8a665671d02104ec06dacdcae7bf0a26',1,'anch::logger::Logger::info()'],['../namespaceanch_1_1logger.html#a973cdff92f296b5fba7f68660d4ee41fa551b723eafd6a31d444fcb2f5920fbd3',1,'anch::logger::INFO()']]],
   ['invalidblockexception',['InvalidBlockException',['../classanch_1_1crypto_1_1_invalid_block_exception.html',1,'anch::crypto::InvalidBlockException'],['../classanch_1_1crypto_1_1_invalid_block_exception.html#a179b25ae851c74ea0e1a8233c7fa8722',1,'anch::crypto::InvalidBlockException::InvalidBlockException()']]],
   ['invalidformatexception',['InvalidFormatException',['../classanch_1_1date_1_1_invalid_format_exception.html',1,'anch::date::InvalidFormatException'],['../classanch_1_1date_1_1_invalid_format_exception.html#a42a2a90d957939c8fff857ce57798d6c',1,'anch::date::InvalidFormatException::InvalidFormatException()']]],
   ['ioexception',['IOException',['../classanch_1_1network_1_1_i_o_exception.html',1,'anch::network::IOException'],['../classanch_1_1network_1_1_i_o_exception.html#adebe91abf8c2016c7c6f83eef943a87a',1,'anch::network::IOException::IOException(const std::string &amp;message)'],['../classanch_1_1network_1_1_i_o_exception.html#a69ab62f34766d2532e6d449eac53857e',1,'anch::network::IOException::IOException(const std::string &amp;message, int errorCode)']]],
@@ -21,5 +21,5 @@ var searchData=
   ['issse4_5f1',['isSSE4_1',['../classanch_1_1device_1_1_c_p_u.html#a2936400b2b99a6ddf338dcd8ec1cb602',1,'anch::device::CPU']]],
   ['issse4_5f2',['isSSE4_2',['../classanch_1_1device_1_1_c_p_u.html#a4533df5494c0de7f51fe61f39dce3aee',1,'anch::device::CPU']]],
   ['isssse3',['isSSSE3',['../classanch_1_1device_1_1_c_p_u.html#a8a6bb46ea5ec3a546991df68d4dfdea8',1,'anch::device::CPU']]],
-  ['isvalid',['isValid',['../classanch_1_1sql_1_1_connection.html#a235ca781c1677744712592162bebf24c',1,'anch::sql::Connection']]]
+  ['isvalid',['isValid',['../classanch_1_1sql_1_1_connection.html#ad940302808cfd3e736377e23195102d7',1,'anch::sql::Connection']]]
 ];

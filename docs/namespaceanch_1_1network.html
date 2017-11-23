@@ -91,15 +91,15 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
 Enumerations</h2></td></tr>
-<tr class="memitem:aa518b6bd398c963767bf1974e5c113be"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceanch_1_1network.html#aa518b6bd398c963767bf1974e5c113be">SocketType</a> { <a class="el" href="namespaceanch_1_1network.html#aa518b6bd398c963767bf1974e5c113beacd3239dd86446bc9ce7661a56c32c037">UNKNOWN</a> = 0, 
-<a class="el" href="namespaceanch_1_1network.html#aa518b6bd398c963767bf1974e5c113bea4113ecf9a65578f6dea4e5b472866430">TCP</a>, 
-<a class="el" href="namespaceanch_1_1network.html#aa518b6bd398c963767bf1974e5c113beaa971eda6cf1e2956e20a535f9f1cda9f">UDP</a>, 
-<a class="el" href="namespaceanch_1_1network.html#aa518b6bd398c963767bf1974e5c113bea9b9ac84f5f459d9c87966175e702822d">POSIX</a>
+<tr class="memitem:aa518b6bd398c963767bf1974e5c113be"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceanch_1_1network.html#aa518b6bd398c963767bf1974e5c113be">SocketType</a> { <a class="el" href="namespaceanch_1_1network.html#aa518b6bd398c963767bf1974e5c113bea696b031073e74bf2cb98e5ef201d4aa3">SocketType::UNKNOWN</a> = 0, 
+<a class="el" href="namespaceanch_1_1network.html#aa518b6bd398c963767bf1974e5c113beab136ef5f6a01d816991fe3cf7a6ac763">SocketType::TCP</a>, 
+<a class="el" href="namespaceanch_1_1network.html#aa518b6bd398c963767bf1974e5c113beaf5ef036b4d8b630721e51fe23489fbc9">SocketType::UDP</a>, 
+<a class="el" href="namespaceanch_1_1network.html#aa518b6bd398c963767bf1974e5c113bea0028405011724c5677faba466637b1e5">SocketType::POSIX</a>
  }</td></tr>
 <tr class="separator:aa518b6bd398c963767bf1974e5c113be"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9f8e25f60fe02869e8ee22c02024854d"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceanch_1_1network.html#a9f8e25f60fe02869e8ee22c02024854d">Direction</a> { <a class="el" href="namespaceanch_1_1network.html#a9f8e25f60fe02869e8ee22c02024854da8411dc548dbc5deb6d73944a65514153">RECEPTION</a> = 0, 
-<a class="el" href="namespaceanch_1_1network.html#a9f8e25f60fe02869e8ee22c02024854dabd234b938a84500345e950b6b1209fcd">TRANSMISSION</a> = 1, 
-<a class="el" href="namespaceanch_1_1network.html#a9f8e25f60fe02869e8ee22c02024854da79b05757ec0c9b3b618e1d4430d2f3b5">BOTH</a> = 2
+<tr class="memitem:a9f8e25f60fe02869e8ee22c02024854d"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceanch_1_1network.html#a9f8e25f60fe02869e8ee22c02024854d">Direction</a> { <a class="el" href="namespaceanch_1_1network.html#a9f8e25f60fe02869e8ee22c02024854da090237bb91fd0d8cde45ec58edb67b57">Direction::RECEPTION</a> = 0, 
+<a class="el" href="namespaceanch_1_1network.html#a9f8e25f60fe02869e8ee22c02024854da20580b40d2c28165915cffd90aa4fdda">Direction::TRANSMISSION</a> = 1, 
+<a class="el" href="namespaceanch_1_1network.html#a9f8e25f60fe02869e8ee22c02024854da6328e5e3186c227a021ef2ff77e40197">Direction::BOTH</a> = 2
  }</td></tr>
 <tr class="separator:a9f8e25f60fe02869e8ee22c02024854d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -113,21 +113,29 @@ For now only TCP and UDP are implemented and needed some work to be use easier. 
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">enum <a class="el" href="namespaceanch_1_1network.html#a9f8e25f60fe02869e8ee22c02024854d">anch::network::Direction</a></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">strong</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 <p><a class="el" href="classanch_1_1network_1_1_socket.html">Socket</a> direction.<br />
 Usefull for shutdown method.</p>
 <dl class="section author"><dt>Author</dt><dd>Vincent Lachenal </dd></dl>
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a9f8e25f60fe02869e8ee22c02024854da8411dc548dbc5deb6d73944a65514153"></a>RECEPTION&#160;</td><td class="fielddoc"><p>Reception </p>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a9f8e25f60fe02869e8ee22c02024854da090237bb91fd0d8cde45ec58edb67b57"></a>RECEPTION&#160;</td><td class="fielddoc"><p>Reception </p>
 </td></tr>
-<tr><td class="fieldname"><a id="a9f8e25f60fe02869e8ee22c02024854dabd234b938a84500345e950b6b1209fcd"></a>TRANSMISSION&#160;</td><td class="fielddoc"><p>Transmission </p>
+<tr><td class="fieldname"><a id="a9f8e25f60fe02869e8ee22c02024854da20580b40d2c28165915cffd90aa4fdda"></a>TRANSMISSION&#160;</td><td class="fielddoc"><p>Transmission </p>
 </td></tr>
-<tr><td class="fieldname"><a id="a9f8e25f60fe02869e8ee22c02024854da79b05757ec0c9b3b618e1d4430d2f3b5"></a>BOTH&#160;</td><td class="fielddoc"><p>Reception and transmission </p>
+<tr><td class="fieldname"><a id="a9f8e25f60fe02869e8ee22c02024854da6328e5e3186c227a021ef2ff77e40197"></a>BOTH&#160;</td><td class="fielddoc"><p>Reception and transmission </p>
 </td></tr>
 </table>
 
@@ -138,22 +146,30 @@ Usefull for shutdown method.</p>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">enum <a class="el" href="namespaceanch_1_1network.html#aa518b6bd398c963767bf1974e5c113be">anch::network::SocketType</a></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">strong</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 <p><a class="el" href="classanch_1_1network_1_1_socket.html">Socket</a> type enumerations</p>
 <dl class="section author"><dt>Author</dt><dd>Vincent Lachenal </dd></dl>
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="aa518b6bd398c963767bf1974e5c113beacd3239dd86446bc9ce7661a56c32c037"></a>UNKNOWN&#160;</td><td class="fielddoc"><p>Unknown socket </p>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="aa518b6bd398c963767bf1974e5c113bea696b031073e74bf2cb98e5ef201d4aa3"></a>UNKNOWN&#160;</td><td class="fielddoc"><p>Unknown socket </p>
 </td></tr>
-<tr><td class="fieldname"><a id="aa518b6bd398c963767bf1974e5c113bea4113ecf9a65578f6dea4e5b472866430"></a>TCP&#160;</td><td class="fielddoc"><p>TCP socket </p>
+<tr><td class="fieldname"><a id="aa518b6bd398c963767bf1974e5c113beab136ef5f6a01d816991fe3cf7a6ac763"></a>TCP&#160;</td><td class="fielddoc"><p>TCP socket </p>
 </td></tr>
-<tr><td class="fieldname"><a id="aa518b6bd398c963767bf1974e5c113beaa971eda6cf1e2956e20a535f9f1cda9f"></a>UDP&#160;</td><td class="fielddoc"><p>UDP socket </p>
+<tr><td class="fieldname"><a id="aa518b6bd398c963767bf1974e5c113beaf5ef036b4d8b630721e51fe23489fbc9"></a>UDP&#160;</td><td class="fielddoc"><p>UDP socket </p>
 </td></tr>
-<tr><td class="fieldname"><a id="aa518b6bd398c963767bf1974e5c113bea9b9ac84f5f459d9c87966175e702822d"></a>POSIX&#160;</td><td class="fielddoc"><p>POSIX socket (not available for Microsoft Windows TM operating system) </p>
+<tr><td class="fieldname"><a id="aa518b6bd398c963767bf1974e5c113bea0028405011724c5677faba466637b1e5"></a>POSIX&#160;</td><td class="fielddoc"><p>POSIX socket (not available for Microsoft Windows TM operating system) </p>
 </td></tr>
 </table>
 

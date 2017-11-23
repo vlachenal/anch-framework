@@ -15,6 +15,6 @@ var searchData=
   ['blockciphermodeofoperation_3c_20ofb_3c_20cipher_20_3e_2c_20cipher_20_3e',['BlockCipherModeOfOperation&lt; OFB&lt; Cipher &gt;, Cipher &gt;',['../classanch_1_1crypto_1_1_block_cipher_mode_of_operation.html',1,'anch::crypto']]],
   ['blockciphermodeofoperation_3c_20pcbc_3c_20cipher_2c_20padding_20_3e_2c_20cipher_20_3e',['BlockCipherModeOfOperation&lt; PCBC&lt; Cipher, Padding &gt;, Cipher &gt;',['../classanch_1_1crypto_1_1_block_cipher_mode_of_operation.html',1,'anch::crypto']]],
   ['borrowresource',['borrowResource',['../classanch_1_1_resource_pool.html#a9df3c930ee4a9e5bdd82949e07576a85',1,'anch::ResourcePool']]],
-  ['both',['BOTH',['../namespaceanch_1_1network.html#a9f8e25f60fe02869e8ee22c02024854da79b05757ec0c9b3b618e1d4430d2f3b5',1,'anch::network']]],
+  ['both',['BOTH',['../namespaceanch_1_1network.html#a9f8e25f60fe02869e8ee22c02024854da6328e5e3186c227a021ef2ff77e40197',1,'anch::network']]],
   ['byteswap',['byteSwap',['../namespaceanch.html#a174316b4a0cb08ff4099ce8708412f4f',1,'anch']]]
 ];

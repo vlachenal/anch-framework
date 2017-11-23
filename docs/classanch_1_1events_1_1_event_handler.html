@@ -90,10 +90,10 @@ Collaboration diagram for anch::events::EventHandler&lt; Event, Derived &gt;:</d
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a39d24859b31dab7ed88abaa1b691de05"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1events_1_1_event_handler.html#a39d24859b31dab7ed88abaa1b691de05">EventHandler</a> (const std::function&lt; void(Derived &amp;, const Event &amp;) noexcept &gt; &amp;callbackFunction, bool useEventBus=false)</td></tr>
-<tr class="separator:a39d24859b31dab7ed88abaa1b691de05"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2ece8dd114853186b4bafb115c1a8c64"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1events_1_1_event_handler.html#a2ece8dd114853186b4bafb115c1a8c64">EventHandler</a> (const std::function&lt; void(Derived &amp;, const Event &amp;) noexcept &gt; &amp;callbackFunction, <a class="el" href="classanch_1_1events_1_1_event_bus.html">anch::events::EventBus</a>&lt; Event &gt; &amp;eventBus)</td></tr>
-<tr class="separator:a2ece8dd114853186b4bafb115c1a8c64"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab62f33d4cbd4925d47f44faa367ebeeb"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1events_1_1_event_handler.html#ab62f33d4cbd4925d47f44faa367ebeeb">EventHandler</a> (const std::function&lt; void(Derived &amp;, const Event &amp;)&gt; &amp;callbackFunction, bool useEventBus=false)</td></tr>
+<tr class="separator:ab62f33d4cbd4925d47f44faa367ebeeb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a62ed072ac8b9c23cee8312b0f836c74f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1events_1_1_event_handler.html#a62ed072ac8b9c23cee8312b0f836c74f">EventHandler</a> (const std::function&lt; void(Derived &amp;, const Event &amp;)&gt; &amp;callbackFunction, <a class="el" href="classanch_1_1events_1_1_event_bus.html">anch::events::EventBus</a>&lt; Event &gt; &amp;eventBus)</td></tr>
+<tr class="separator:a62ed072ac8b9c23cee8312b0f836c74f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae33d79ee2fc490ac3969254a536d293d"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1events_1_1_event_handler.html#ae33d79ee2fc490ac3969254a536d293d">~EventHandler</a> ()</td></tr>
 <tr class="separator:ae33d79ee2fc490ac3969254a536d293d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abdb16ec9eea92a9ead52582393515fde"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1events_1_1_event_handler.html#abdb16ec9eea92a9ead52582393515fde">notify</a> (const Event &amp;event) noexcept</td></tr>
@@ -108,8 +108,8 @@ class anch::events::EventHandler&lt; Event, Derived &gt;</h3>
 <dl class="section since"><dt>Since</dt><dd>0.1</dd></dl>
 <dl class="section author"><dt>Author</dt><dd>Vincent Lachenal </dd></dl>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a39d24859b31dab7ed88abaa1b691de05"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a39d24859b31dab7ed88abaa1b691de05">&#9670;&nbsp;</a></span>EventHandler() <span class="overload">[1/2]</span></h2>
+<a id="ab62f33d4cbd4925d47f44faa367ebeeb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab62f33d4cbd4925d47f44faa367ebeeb">&#9670;&nbsp;</a></span>EventHandler() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -122,7 +122,7 @@ template&lt;typename Event , typename Derived &gt; </div>
         <tr>
           <td class="memname"><a class="el" href="classanch_1_1events_1_1_event_handler.html">anch::events::EventHandler</a>&lt; Event, Derived &gt;::<a class="el" href="classanch_1_1events_1_1_event_handler.html">EventHandler</a> </td>
           <td>(</td>
-          <td class="paramtype">const std::function&lt; void(Derived &amp;, const Event &amp;) noexcept &gt; &amp;&#160;</td>
+          <td class="paramtype">const std::function&lt; void(Derived &amp;, const Event &amp;)&gt; &amp;&#160;</td>
           <td class="paramname"><em>callbackFunction</em>, </td>
         </tr>
         <tr>
@@ -156,8 +156,8 @@ Register itself in global <a class="el" href="classanch_1_1events_1_1_event_bus.
 
 </div>
 </div>
-<a id="a2ece8dd114853186b4bafb115c1a8c64"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2ece8dd114853186b4bafb115c1a8c64">&#9670;&nbsp;</a></span>EventHandler() <span class="overload">[2/2]</span></h2>
+<a id="a62ed072ac8b9c23cee8312b0f836c74f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a62ed072ac8b9c23cee8312b0f836c74f">&#9670;&nbsp;</a></span>EventHandler() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -170,7 +170,7 @@ template&lt;typename Event , typename Derived &gt; </div>
         <tr>
           <td class="memname"><a class="el" href="classanch_1_1events_1_1_event_handler.html">anch::events::EventHandler</a>&lt; Event, Derived &gt;::<a class="el" href="classanch_1_1events_1_1_event_handler.html">EventHandler</a> </td>
           <td>(</td>
-          <td class="paramtype">const std::function&lt; void(Derived &amp;, const Event &amp;) noexcept &gt; &amp;&#160;</td>
+          <td class="paramtype">const std::function&lt; void(Derived &amp;, const Event &amp;)&gt; &amp;&#160;</td>
           <td class="paramname"><em>callbackFunction</em>, </td>
         </tr>
         <tr>

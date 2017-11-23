@@ -82,6 +82,9 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1sql_1_1_connection.html">Connection</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">SQL connection virtual class.  <a href="classanch_1_1sql_1_1_connection.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1sql_1_1_date.html">Date</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">SQL date type.  <a href="classanch_1_1sql_1_1_date.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1sql_1_1_my_s_q_l_connection.html">MySQLConnection</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">MySQL connection.  <a href="classanch_1_1sql_1_1_my_s_q_l_connection.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -127,22 +130,46 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1sql_1_1_s_q_lite3_result_set.html">SQLite3ResultSet</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">SQLite3 result set implementation.  <a href="classanch_1_1sql_1_1_s_q_lite3_result_set.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1sql_1_1_time.html">Time</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">SQL time type.  <a href="classanch_1_1sql_1_1_time.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1sql_1_1_timestamp.html">Timestamp</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">SQL timestamp type.  <a href="classanch_1_1sql_1_1_timestamp.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:abfa39a35ff9a908e59466440e6e45cf8"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceanch_1_1sql.html#abfa39a35ff9a908e59466440e6e45cf8">SqlConnectionPool</a> = <a class="el" href="classanch_1_1_resource_pool.html">anch::ResourcePool</a>&lt; <a class="el" href="classanch_1_1sql_1_1_connection.html">Connection</a>, <a class="el" href="structanch_1_1sql_1_1_sql_connection_configuration.html">SqlConnectionConfiguration</a>, <a class="el" href="namespaceanch_1_1sql.html#adbbaeeb8812d7850e9af0ed50fc30047">make_shared_connection</a> &gt;</td></tr>
+<tr class="memitem:abfa39a35ff9a908e59466440e6e45cf8"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceanch_1_1sql.html#abfa39a35ff9a908e59466440e6e45cf8">SqlConnectionPool</a> = <a class="el" href="classanch_1_1_resource_pool.html">anch::ResourcePool</a>&lt; <a class="el" href="classanch_1_1sql_1_1_connection.html">Connection</a>, <a class="el" href="structanch_1_1sql_1_1_sql_connection_configuration.html">SqlConnectionConfiguration</a>, <a class="el" href="namespaceanch_1_1sql.html#a322a938c82f4b6c5ab176a7f0c6516d1">make_shared_connection</a> &gt;</td></tr>
 <tr class="separator:abfa39a35ff9a908e59466440e6e45cf8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:adbbaeeb8812d7850e9af0ed50fc30047"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classanch_1_1sql_1_1_connection.html">Connection</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceanch_1_1sql.html#adbbaeeb8812d7850e9af0ed50fc30047">make_shared_connection</a> (const <a class="el" href="structanch_1_1sql_1_1_sql_connection_configuration.html">SqlConnectionConfiguration</a> &amp;config)  throw (SqlException)</td></tr>
-<tr class="separator:adbbaeeb8812d7850e9af0ed50fc30047"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a322a938c82f4b6c5ab176a7f0c6516d1"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classanch_1_1sql_1_1_connection.html">Connection</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceanch_1_1sql.html#a322a938c82f4b6c5ab176a7f0c6516d1">make_shared_connection</a> (const <a class="el" href="structanch_1_1sql_1_1_sql_connection_configuration.html">SqlConnectionConfiguration</a> &amp;config)</td></tr>
+<tr class="separator:a322a938c82f4b6c5ab176a7f0c6516d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa29b13acfbc7e3e0c298617b3886cadb"><td class="memTemplParams" colspan="2">template&lt;&gt; </td></tr>
-<tr class="memitem:aa29b13acfbc7e3e0c298617b3886cadb"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceanch_1_1sql.html#aa29b13acfbc7e3e0c298617b3886cadb">ResultSet::get&lt; std::string &gt;</a> (std::size_t idx, std::string &amp;out)  throw (SqlException)</td></tr>
+<tr class="memitem:aa29b13acfbc7e3e0c298617b3886cadb"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceanch_1_1sql.html#aa29b13acfbc7e3e0c298617b3886cadb">ResultSet::get&lt; std::string &gt;</a> (std::size_t idx, std::string &amp;out)</td></tr>
 <tr class="separator:aa29b13acfbc7e3e0c298617b3886cadb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a85770672169ff94f23442576818f527f"><td class="memTemplParams" colspan="2">template&lt;&gt; </td></tr>
+<tr class="memitem:a85770672169ff94f23442576818f527f"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceanch_1_1sql.html#a85770672169ff94f23442576818f527f">ResultSet::get&lt; anch::sql::Date &gt;</a> (std::size_t idx, <a class="el" href="classanch_1_1sql_1_1_date.html">anch::sql::Date</a> &amp;out)</td></tr>
+<tr class="separator:a85770672169ff94f23442576818f527f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:affbf6c75d12f7d1014fb289912acaab2"><td class="memTemplParams" colspan="2">template&lt;&gt; </td></tr>
+<tr class="memitem:affbf6c75d12f7d1014fb289912acaab2"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceanch_1_1sql.html#affbf6c75d12f7d1014fb289912acaab2">ResultSet::get&lt; anch::sql::Time &gt;</a> (std::size_t idx, <a class="el" href="classanch_1_1sql_1_1_time.html">anch::sql::Time</a> &amp;out)</td></tr>
+<tr class="separator:affbf6c75d12f7d1014fb289912acaab2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3e72b6bd252caef36fb26499cbd88a9f"><td class="memTemplParams" colspan="2">template&lt;&gt; </td></tr>
+<tr class="memitem:a3e72b6bd252caef36fb26499cbd88a9f"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceanch_1_1sql.html#a3e72b6bd252caef36fb26499cbd88a9f">ResultSet::get&lt; anch::sql::Timestamp &gt;</a> (std::size_t idx, <a class="el" href="classanch_1_1sql_1_1_timestamp.html">anch::sql::Timestamp</a> &amp;out)</td></tr>
+<tr class="separator:a3e72b6bd252caef36fb26499cbd88a9f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad80b61bbdf7db8880b6a6850f02661d4"><td class="memTemplParams" colspan="2">template&lt;&gt; </td></tr>
-<tr class="memitem:ad80b61bbdf7db8880b6a6850f02661d4"><td class="memTemplItemLeft" align="right" valign="top">const std::string *&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceanch_1_1sql.html#ad80b61bbdf7db8880b6a6850f02661d4">ResultSet::get&lt; std::string &gt;</a> (std::size_t idx)  throw (SqlException)</td></tr>
+<tr class="memitem:ad80b61bbdf7db8880b6a6850f02661d4"><td class="memTemplItemLeft" align="right" valign="top">const std::string *&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceanch_1_1sql.html#ad80b61bbdf7db8880b6a6850f02661d4">ResultSet::get&lt; std::string &gt;</a> (std::size_t idx)</td></tr>
 <tr class="separator:ad80b61bbdf7db8880b6a6850f02661d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9e455b56cd4e0030ad51a28f0f6b9683"><td class="memTemplParams" colspan="2">template&lt;&gt; </td></tr>
+<tr class="memitem:a9e455b56cd4e0030ad51a28f0f6b9683"><td class="memTemplItemLeft" align="right" valign="top">const <a class="el" href="classanch_1_1sql_1_1_date.html">anch::sql::Date</a> *&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceanch_1_1sql.html#a9e455b56cd4e0030ad51a28f0f6b9683">ResultSet::get&lt; anch::sql::Date &gt;</a> (std::size_t idx)</td></tr>
+<tr class="separator:a9e455b56cd4e0030ad51a28f0f6b9683"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4f6a529cd15ce151c9d57fec85068b8b"><td class="memTemplParams" colspan="2">template&lt;&gt; </td></tr>
+<tr class="memitem:a4f6a529cd15ce151c9d57fec85068b8b"><td class="memTemplItemLeft" align="right" valign="top">const <a class="el" href="classanch_1_1sql_1_1_time.html">anch::sql::Time</a> *&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceanch_1_1sql.html#a4f6a529cd15ce151c9d57fec85068b8b">ResultSet::get&lt; anch::sql::Time &gt;</a> (std::size_t idx)</td></tr>
+<tr class="separator:a4f6a529cd15ce151c9d57fec85068b8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9f86168eaedaa7e7dd4ed4964f5d8a09"><td class="memTemplParams" colspan="2">template&lt;&gt; </td></tr>
+<tr class="memitem:a9f86168eaedaa7e7dd4ed4964f5d8a09"><td class="memTemplItemLeft" align="right" valign="top">const <a class="el" href="classanch_1_1sql_1_1_timestamp.html">anch::sql::Timestamp</a> *&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceanch_1_1sql.html#a9f86168eaedaa7e7dd4ed4964f5d8a09">ResultSet::get&lt; anch::sql::Timestamp &gt;</a> (std::size_t idx)</td></tr>
+<tr class="separator:a9f86168eaedaa7e7dd4ed4964f5d8a09"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>SQL namespace. </p>
@@ -160,7 +187,7 @@ Supported SQL database are (for now):</p><ul>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="namespaceanch_1_1sql.html#abfa39a35ff9a908e59466440e6e45cf8">anch::sql::SqlConnectionPool</a> = typedef <a class="el" href="classanch_1_1_resource_pool.html">anch::ResourcePool</a>&lt;<a class="el" href="classanch_1_1sql_1_1_connection.html">Connection</a>, <a class="el" href="structanch_1_1sql_1_1_sql_connection_configuration.html">SqlConnectionConfiguration</a>, <a class="el" href="namespaceanch_1_1sql.html#adbbaeeb8812d7850e9af0ed50fc30047">make_shared_connection</a>&gt;</td>
+          <td class="memname">using <a class="el" href="namespaceanch_1_1sql.html#abfa39a35ff9a908e59466440e6e45cf8">anch::sql::SqlConnectionPool</a> = typedef <a class="el" href="classanch_1_1_resource_pool.html">anch::ResourcePool</a>&lt;<a class="el" href="classanch_1_1sql_1_1_connection.html">Connection</a>, <a class="el" href="structanch_1_1sql_1_1_sql_connection_configuration.html">SqlConnectionConfiguration</a>, <a class="el" href="namespaceanch_1_1sql.html#a322a938c82f4b6c5ab176a7f0c6516d1">make_shared_connection</a>&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -169,24 +196,18 @@ Supported SQL database are (for now):</p><ul>
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="adbbaeeb8812d7850e9af0ed50fc30047"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adbbaeeb8812d7850e9af0ed50fc30047">&#9670;&nbsp;</a></span>make_shared_connection()</h2>
+<a id="a322a938c82f4b6c5ab176a7f0c6516d1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a322a938c82f4b6c5ab176a7f0c6516d1">&#9670;&nbsp;</a></span>make_shared_connection()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::shared_ptr&lt;<a class="el" href="classanch_1_1sql_1_1_connection.html">Connection</a>&gt; anch::sql::make_shared_connection </td>
+          <td class="memname">std::shared_ptr&lt; <a class="el" href="classanch_1_1sql_1_1_connection.html">Connection</a> &gt; anch::sql::make_shared_connection </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="structanch_1_1sql_1_1_sql_connection_configuration.html">SqlConnectionConfiguration</a> &amp;&#160;</td>
           <td class="paramname"><em>config</em></td><td>)</td>
           <td></td>
-        </tr>
-        <tr>
-          <td align="right">throw </td><td>(</td><td colspan="2">SqlException</td>
-        </tr>
-        <tr>
-          <td align="right"></td><td>)</td><td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -198,6 +219,246 @@ Supported SQL database are (for now):</p><ul>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the connection</dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classanch_1_1sql_1_1_sql_exception.html" title="SQL exception. ">SqlException</a></td><td>any error </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a85770672169ff94f23442576818f527f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a85770672169ff94f23442576818f527f">&#9670;&nbsp;</a></span>ResultSet::get< anch::sql::Date >() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="classanch_1_1sql_1_1_result_set.html#a3aa32dd23b009a2942a83eb91df5e47e">anch::sql::ResultSet::get</a>&lt; <a class="el" href="classanch_1_1sql_1_1_date.html">anch::sql::Date</a> &gt; </td>
+          <td>(</td>
+          <td class="paramtype">std::size_t&#160;</td>
+          <td class="paramname"><em>idx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classanch_1_1sql_1_1_date.html">anch::sql::Date</a> &amp;&#160;</td>
+          <td class="paramname"><em>out</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Get field <a class="el" href="classanch_1_1sql_1_1_date.html">Date</a> value by index.<br />
+You have to delete result once treated.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">idx</td><td>the index</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>the result</dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classanch_1_1sql_1_1_sql_exception.html" title="SQL exception. ">SqlException</a></td><td>any error </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a9e455b56cd4e0030ad51a28f0f6b9683"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9e455b56cd4e0030ad51a28f0f6b9683">&#9670;&nbsp;</a></span>ResultSet::get< anch::sql::Date >() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="classanch_1_1sql_1_1_date.html">anch::sql::Date</a>* <a class="el" href="classanch_1_1sql_1_1_result_set.html#a3aa32dd23b009a2942a83eb91df5e47e">anch::sql::ResultSet::get</a>&lt; <a class="el" href="classanch_1_1sql_1_1_date.html">anch::sql::Date</a> &gt; </td>
+          <td>(</td>
+          <td class="paramtype">std::size_t&#160;</td>
+          <td class="paramname"><em>idx</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Get field <a class="el" href="classanch_1_1sql_1_1_date.html">Date</a> value by index.<br />
+You have to delete result once treated.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">idx</td><td>the index</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>the result</dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classanch_1_1sql_1_1_sql_exception.html" title="SQL exception. ">SqlException</a></td><td>any error </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="affbf6c75d12f7d1014fb289912acaab2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#affbf6c75d12f7d1014fb289912acaab2">&#9670;&nbsp;</a></span>ResultSet::get< anch::sql::Time >() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="classanch_1_1sql_1_1_result_set.html#a3aa32dd23b009a2942a83eb91df5e47e">anch::sql::ResultSet::get</a>&lt; <a class="el" href="classanch_1_1sql_1_1_time.html">anch::sql::Time</a> &gt; </td>
+          <td>(</td>
+          <td class="paramtype">std::size_t&#160;</td>
+          <td class="paramname"><em>idx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classanch_1_1sql_1_1_time.html">anch::sql::Time</a> &amp;&#160;</td>
+          <td class="paramname"><em>out</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Get field <a class="el" href="classanch_1_1sql_1_1_time.html">Time</a> value by index.<br />
+You have to delete result once treated.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">idx</td><td>the index</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>the result</dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classanch_1_1sql_1_1_sql_exception.html" title="SQL exception. ">SqlException</a></td><td>any error </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a4f6a529cd15ce151c9d57fec85068b8b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4f6a529cd15ce151c9d57fec85068b8b">&#9670;&nbsp;</a></span>ResultSet::get< anch::sql::Time >() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="classanch_1_1sql_1_1_time.html">anch::sql::Time</a>* <a class="el" href="classanch_1_1sql_1_1_result_set.html#a3aa32dd23b009a2942a83eb91df5e47e">anch::sql::ResultSet::get</a>&lt; <a class="el" href="classanch_1_1sql_1_1_time.html">anch::sql::Time</a> &gt; </td>
+          <td>(</td>
+          <td class="paramtype">std::size_t&#160;</td>
+          <td class="paramname"><em>idx</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Get field <a class="el" href="classanch_1_1sql_1_1_time.html">Time</a> value by index.<br />
+You have to delete result once treated.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">idx</td><td>the index</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>the result</dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classanch_1_1sql_1_1_sql_exception.html" title="SQL exception. ">SqlException</a></td><td>any error </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a3e72b6bd252caef36fb26499cbd88a9f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3e72b6bd252caef36fb26499cbd88a9f">&#9670;&nbsp;</a></span>ResultSet::get< anch::sql::Timestamp >() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="classanch_1_1sql_1_1_result_set.html#a3aa32dd23b009a2942a83eb91df5e47e">anch::sql::ResultSet::get</a>&lt; <a class="el" href="classanch_1_1sql_1_1_timestamp.html">anch::sql::Timestamp</a> &gt; </td>
+          <td>(</td>
+          <td class="paramtype">std::size_t&#160;</td>
+          <td class="paramname"><em>idx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classanch_1_1sql_1_1_timestamp.html">anch::sql::Timestamp</a> &amp;&#160;</td>
+          <td class="paramname"><em>out</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Get field <a class="el" href="classanch_1_1sql_1_1_timestamp.html">Timestamp</a> value by index.<br />
+You have to delete result once treated.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">idx</td><td>the index</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>the result</dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classanch_1_1sql_1_1_sql_exception.html" title="SQL exception. ">SqlException</a></td><td>any error </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a9f86168eaedaa7e7dd4ed4964f5d8a09"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9f86168eaedaa7e7dd4ed4964f5d8a09">&#9670;&nbsp;</a></span>ResultSet::get< anch::sql::Timestamp >() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="classanch_1_1sql_1_1_timestamp.html">anch::sql::Timestamp</a>* <a class="el" href="classanch_1_1sql_1_1_result_set.html#a3aa32dd23b009a2942a83eb91df5e47e">anch::sql::ResultSet::get</a>&lt; <a class="el" href="classanch_1_1sql_1_1_timestamp.html">anch::sql::Timestamp</a> &gt; </td>
+          <td>(</td>
+          <td class="paramtype">std::size_t&#160;</td>
+          <td class="paramname"><em>idx</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Get field <a class="el" href="classanch_1_1sql_1_1_timestamp.html">Timestamp</a> value by index.<br />
+You have to delete result once treated.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">idx</td><td>the index</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>the result</dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
     <tr><td class="paramname"><a class="el" href="classanch_1_1sql_1_1_sql_exception.html" title="SQL exception. ">SqlException</a></td><td>any error </td></tr>
@@ -231,12 +492,6 @@ template&lt;&gt; </div>
           <td></td>
           <td>)</td>
           <td></td><td></td>
-        </tr>
-        <tr>
-          <td align="right">throw </td><td>(</td><td colspan="2">SqlException</td>
-        </tr>
-        <tr>
-          <td align="right"></td><td>)</td><td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -273,12 +528,6 @@ template&lt;&gt; </div>
           <td class="paramtype">std::size_t&#160;</td>
           <td class="paramname"><em>idx</em></td><td>)</td>
           <td></td>
-        </tr>
-        <tr>
-          <td align="right">throw </td><td>(</td><td colspan="2">SqlException</td>
-        </tr>
-        <tr>
-          <td align="right"></td><td>)</td><td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
