@@ -144,6 +144,8 @@ namespace anch {
      * \ref Uuid from std::string constructor
      *
      * \param uuid the std::string to parse
+     *
+     * \throw std::bad_cast unable to parse UUID
      */
     Uuid(const std::string& uuid): _lowTime(0),
 				   _midTime(0),
