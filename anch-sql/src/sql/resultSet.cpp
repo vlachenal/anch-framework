@@ -257,8 +257,7 @@ namespace anch {
      * You have to delete result once treated.
      *
      * \param idx the index
-     *
-     * \return the result
+     * \param out the result
      *
      * \throw SqlException any error
      */
@@ -282,8 +281,7 @@ namespace anch {
      * You have to delete result once treated.
      *
      * \param idx the index
-     *
-     * \return the result
+     * \param out the result
      *
      * \throw SqlException any error
      */
@@ -307,8 +305,7 @@ namespace anch {
      * You have to delete result once treated.
      *
      * \param idx the index
-     *
-     * \return the result
+     * \param out the result
      *
      * \throw SqlException any error
      */

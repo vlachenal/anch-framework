@@ -444,7 +444,7 @@ namespace anch {
 
     // Operators +
     /*!
-     * Cast \ref UUID to std::string
+     * Cast \ref Uuid to std::string
      */
     explicit operator std::string() const {
       return toString();

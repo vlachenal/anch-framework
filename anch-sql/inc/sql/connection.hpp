@@ -207,7 +207,7 @@ namespace anch {
       /*!
        * Execute query and treat each row of result set
        *
-       * \param sqlQuery the SQL query to execute
+       * \param query the SQL query to execute
        * \param rowMapper the row mapper function
        * \param value the first value to bind
        * \param values the other values
@@ -225,7 +225,7 @@ namespace anch {
       /*!
        * Execute query and extract result set
        *
-       * \param sqlQuery the SQL query to execute
+       * \param query the SQL query to execute
        * \param resExtractor the result set extractor function
        * \param value the first value to bind
        * \param values the other values

@@ -50,7 +50,7 @@ namespace anch {
       /*!
        * \ref Time private copy constructor
        *
-       * \param Date The \ref Date to copy
+       * \param date The \ref Date to copy
        */
       Time(const anch::date::Date& date);
 

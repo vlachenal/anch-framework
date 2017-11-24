@@ -37,7 +37,7 @@
 namespace anch {
   namespace date {
 
-    /*! \ref IDateFormatter instance getter function/method prototype */
+    /*! \ref IDatePartFormatter instance getter function/method prototype */
     typedef anch::date::formatter::IDatePartFormatter* (*getInstance)();
 
     /*!
