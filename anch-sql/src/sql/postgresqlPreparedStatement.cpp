@@ -54,13 +54,14 @@ PostgreSQLPreparedStatement::PostgreSQLPreparedStatement(PGconn* dbCon, const st
   ids << std::addressof(dbCon) << '_' << _counter.fetch_add(1);
   _stmtId = ids.str();
   PGresult* res = PQprepare(dbCon, _stmtId.data(), pgQuery.data(), static_cast<int>(_nbPlaceholders), NULL);
-  if(res == NULL || PQresultStatus(res) != PGRES_COMMAND_OK) {
+  int retCode = PQresultStatus(res);
+  if(res == NULL || retCode != PGRES_COMMAND_OK) {
     std::ostringstream msg;
     msg << "Fail to prepare PostgreSQL statement: " << PQerrorMessage(dbCon);
     if(res != NULL) {
       PQclear(res);
     }
-    throw SqlException(msg.str());
+    throw SqlException(msg.str(), retCode != PGRES_FATAL_ERROR);
   }
   PQclear(res);
 }
@@ -101,11 +102,12 @@ bindParamsAndSend(PGconn* conn,
   // Execute statement +
   int res = PQsendQueryPrepared(conn, stmtId.data(), static_cast<int>(nbPlaceholders), values, lengths, NULL, 0);
   if(res == 0) {
+    bool valid = (PQstatus(conn) == CONNECTION_OK);
     delete[] values;
     delete[] lengths;
     std::ostringstream msg;
     msg << "Fail to execute PostgreSQL statement: " << PQerrorMessage(conn);
-    throw SqlException(msg.str());
+    throw SqlException(msg.str(), valid);
   }
   delete[] values;
   delete[] lengths;
@@ -124,11 +126,12 @@ uint64_t
 PostgreSQLPreparedStatement::executeUpdate() {
   bindParamsAndSend(_conn, _stmtId, _nbPlaceholders, _values);
   PGresult* pgRes = PQgetResult(_conn);
-  if(pgRes == NULL || PQresultStatus(pgRes) != PGRES_COMMAND_OK) {
+  int retCode = PQresultStatus(pgRes);
+  if(pgRes == NULL || retCode != PGRES_COMMAND_OK) {
     std::ostringstream msg;
     msg << "Error while executing PostgreSQL command: " << PQerrorMessage(_conn);
     PQclear(pgRes);
-    throw SqlException(msg.str());
+    throw SqlException(msg.str(), retCode != PGRES_FATAL_ERROR);
   }
   uint64_t nbRows = static_cast<uint64_t>(std::atoll(PQcmdTuples(pgRes)));
   PQclear(pgRes);
@@ -138,7 +141,7 @@ PostgreSQLPreparedStatement::executeUpdate() {
     while((pgRes = PQgetResult(_conn)) != NULL) {
       PQclear(pgRes); // free PostgreSQL result
     }
-    throw SqlException("Error: next result should be NULL ...");
+    throw SqlException("Error: next result should be NULL ...", true);
   }
   // Consume next result to avoid error ... -
   return nbRows;

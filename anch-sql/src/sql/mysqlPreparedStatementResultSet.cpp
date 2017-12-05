@@ -20,6 +20,7 @@
 #ifdef ANCH_SQL_MYSQL
 
 #include "mysql.h"
+#include "errmsg.h"
 
 #include "sql/mysqlPreparedStatementResultSet.hpp"
 
@@ -37,9 +38,11 @@ MySQLPreparedStatementResultSet::MySQLPreparedStatementResultSet(MYSQL_STMT* stm
   _stmt(stmt) {
   MYSQL_RES* result = mysql_stmt_result_metadata(_stmt);
   if(result == NULL) {
+    unsigned int res = mysql_stmt_errno(_stmt);
+    bool ok = res != CR_OUT_OF_MEMORY;
     std::ostringstream msg;
-    msg << "Fail to get MySQL statement result metadata " << mysql_stmt_errno(_stmt) << ": " << mysql_stmt_error(_stmt);
-    throw SqlException(msg.str());
+    msg << "Fail to get MySQL statement result metadata " << res << ": " << mysql_stmt_error(_stmt);
+    throw SqlException(msg.str(), ok);
   }
   unsigned int nbFields = mysql_num_fields(result);
   _binds = new MYSQL_BIND[nbFields];
@@ -60,10 +63,12 @@ MySQLPreparedStatementResultSet::MySQLPreparedStatementResultSet(MYSQL_STMT* stm
     bind->length = &_lengths[i];
     bind->is_unsigned = field->flags & UNSIGNED_FLAG ? 1 : 0;
   }
-  if(mysql_stmt_bind_result(_stmt, _binds) != 0) {
+  int res = mysql_stmt_bind_result(_stmt, _binds);
+  if(res != 0) {
+    bool ok = res != CR_OUT_OF_MEMORY;
     std::ostringstream msg;
     msg << "Fail to bind MySQL statement result " << mysql_stmt_errno(_stmt) << ": " << mysql_stmt_error(_stmt);
-    throw SqlException(msg.str());
+    throw SqlException(msg.str(), ok);
   }
   mysql_free_result(result);
 }
@@ -84,7 +89,7 @@ MySQLPreparedStatementResultSet::getValue(std::size_t idx, std::string& out) {
   if(idx >= _fields.size()) {
     std::ostringstream msg;
     msg << "Index out of range (0.." << (_fields.size() - 1) << "): " << idx;
-    throw SqlException(msg.str());
+    throw SqlException(msg.str(), true);
   }
   bool null = (_nulls[idx] != 0);
   if(!null) {

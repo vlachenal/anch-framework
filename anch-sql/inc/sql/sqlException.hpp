@@ -42,6 +42,9 @@ namespace anch {
     private:
       /*! Error message */
       std::string _msg;
+
+      /*! Connection status */
+      bool _ok;
       // Attributes -
 
       // Constructors +
@@ -50,10 +53,9 @@ namespace anch {
        * \ref SqlException constructor
        *
        * \param msg the error message
+       * \param ok connection status
        */
-      SqlException(std::string msg) noexcept: _msg(msg) {
-	// Nothing to do
-      }
+      SqlException(std::string msg, bool ok = true) noexcept;
       // Constructors -
 
       // Destructor +
@@ -61,9 +63,7 @@ namespace anch {
       /**!
        * \ref SqlException destructor
        */
-      virtual ~SqlException() noexcept {
-	// Nothing to do
-      }
+      virtual ~SqlException() noexcept;
       // Destructor -
 
       // Methods +
@@ -73,8 +73,15 @@ namespace anch {
        *
        * \return the error message
        */
-      const char* what() const noexcept {
-	return _msg.data();
+      virtual const char* what() const noexcept;
+
+      /*!
+       * Connection status getter
+       *
+       * \return \c true if connection  can be reused, \c false otherwise
+       */
+      inline bool isOK() const noexcept {
+	return _ok;
       }
       // Methods -
 

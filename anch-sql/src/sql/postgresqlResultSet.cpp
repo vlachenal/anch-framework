@@ -56,7 +56,7 @@ PostgreSQLResultSet::getValue(std::size_t idx, std::string& out) {
   if(static_cast<int>(idx) >= _nbFields) {
     std::ostringstream msg;
     msg << "Index out of range (0.." << (_nbFields - 1) << "): " << idx;
-    throw SqlException(msg.str());
+    throw SqlException(msg.str(), true);
   }
   bool null = true;
   if(!PQgetisnull(_result, _currentRow, static_cast<int>(idx))) {

@@ -76,21 +76,23 @@ PostgreSQLConnection::PostgreSQLConnection(const std::string& host,
   }
   _conn = PQconnectdb(conninfo.str().data());
   if(PQstatus(_conn) != CONNECTION_OK) {
+    _valid = false;
     std::ostringstream msg;
     msg << "Fail to connect PostgreSQL database " << database
 	<< ":" << port << " with user " << user << ": " << PQerrorMessage(_conn);
     PQfinish(_conn);
-    throw SqlException(msg.str());
+    throw SqlException(msg.str(), _valid);
   }
 }
 
 PostgreSQLConnection::PostgreSQLConnection(const std::string& connStr): _conn() {
   _conn = PQconnectdb(connStr.data());
   if(PQstatus(_conn) != CONNECTION_OK) {
+    _valid = false;
     std::ostringstream msg;
     msg << "Fail to connect PostgreSQL database: " << PQerrorMessage(_conn);
     PQfinish(_conn);
-    throw SqlException(msg.str());
+    throw SqlException(msg.str(), _valid);
   }
 }
 
@@ -125,11 +127,12 @@ PostgreSQLConnection::PostgreSQLConnection(const SqlConnectionConfiguration& con
   }
   _conn = PQconnectdb(conninfo.str().data());
   if(PQstatus(_conn) != CONNECTION_OK) {
+    _valid = false;
     std::ostringstream msg;
     msg << "Fail to connect PostgreSQL database " << config.database
 	<< ":" << config.port << " with user " << config.user << ": " << PQerrorMessage(_conn);
     PQfinish(_conn);
-    throw SqlException(msg.str());
+    throw SqlException(msg.str(), _valid);
   }
 }
 // Constructors -
@@ -148,10 +151,11 @@ PostgreSQLConnection::sendCommit() {
   PGresult* res = PQexec(_conn, "COMMIT");
   ExecStatusType status = PQresultStatus(res);
   if(status == PGRES_FATAL_ERROR) {
+    _valid = false;
     std::ostringstream msg;
     msg << "Unable to commit transaction: " << PQresultErrorMessage(res);
     PQclear(res);
-    throw SqlException(msg.str());
+    throw SqlException(msg.str(), _valid);
   }
   PQclear(res);
 }
@@ -164,7 +168,7 @@ PostgreSQLConnection::sendRollback() {
     std::ostringstream msg;
     msg << "Unable to rollback transaction: " << PQresultErrorMessage(res);
     PQclear(res);
-    throw SqlException(msg.str());
+    throw SqlException(msg.str(), false);
   }
   PQclear(res);
 }
@@ -174,10 +178,11 @@ PostgreSQLConnection::sendStartTransaction() {
   PGresult* res = PQexec(_conn, "START TRANSACTION");
   ExecStatusType status = PQresultStatus(res);
   if(status == PGRES_FATAL_ERROR) {
+    _valid = false;
     std::ostringstream msg;
     msg << "Unable to start transaction: " << PQresultErrorMessage(res);
     PQclear(res);
-    throw SqlException(msg.str());
+    throw SqlException(msg.str(), false);
   }
   PQclear(res);
 }
@@ -186,9 +191,10 @@ ResultSet*
 PostgreSQLConnection::executeQuery(const std::string& query) {
   int res = PQsendQuery(_conn, query.data());
   if(res != 1) {
+    _valid = (PQstatus(_conn) == CONNECTION_OK);
     std::ostringstream msg;
     msg << "Unable to execute query " << query << ": " << PQerrorMessage(_conn);
-    throw SqlException(msg.str());
+    throw SqlException(msg.str(), _valid);
   }
   return new PostgreSQLResultSet(_conn);
 }
@@ -197,9 +203,10 @@ uint64_t
 PostgreSQLConnection::executeUpdate(const std::string& query) {
   PGresult* res = PQexec(_conn, query.data());
   if(res == NULL) {
+    _valid = (PQstatus(_conn) == CONNECTION_OK);
     std::ostringstream msg;
     msg << "Unable to execute query " << query << ": " << PQerrorMessage(_conn);
-    throw SqlException(msg.str());
+    throw SqlException(msg.str(), _valid);
   }
   ExecStatusType status = PQresultStatus(res);
   switch(status) {
@@ -215,7 +222,7 @@ PostgreSQLConnection::executeUpdate(const std::string& query) {
       std::ostringstream msg;
       msg << "Unexpected update query: " << query;
       PQclear(res);
-      throw SqlException(msg.str());
+      throw SqlException(msg.str(), true);
     }
     break;
   case PGRES_FATAL_ERROR:
@@ -226,7 +233,7 @@ PostgreSQLConnection::executeUpdate(const std::string& query) {
       std::ostringstream msg;
       msg << "Unable to execute query " << query << ": " << PQerrorMessage(_conn);
       PQclear(res);
-      throw SqlException(msg.str());
+      throw SqlException(msg.str(), _valid);
     }
   }
   std::string strRes = PQcmdTuples(res);

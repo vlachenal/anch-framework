@@ -51,7 +51,7 @@ MySQLResultSet::getValue(std::size_t idx, std::string& out) {
   if(idx >= _fields.size()) {
     std::ostringstream msg;
     msg << "Index out of range (0.." << (_fields.size() - 1) << "): " << idx;
-    throw SqlException(msg.str());
+    throw SqlException(msg.str(), true);
   }
   bool null = true;
   if(_row[idx] != NULL) {

@@ -73,7 +73,7 @@ namespace anch {
 	std::ostringstream msg;
 	msg << "Index out of range: try to retrieve index " << idx
 	    << " but result set contains " << _fields.size() << " fields";
-	throw SqlException(msg.str());
+	throw SqlException(msg.str(), true);
       }
       return getValue(idx, out);
     }
@@ -101,7 +101,7 @@ namespace anch {
 	} catch(const std::bad_cast& e) {
 	  std::ostringstream msg;
 	  msg << "Can not convert '" << strVal << "' into int64_t";
-	  throw SqlException(msg.str());
+	  throw SqlException(msg.str(), true);
 	}
       }
       return null;
@@ -130,7 +130,7 @@ namespace anch {
 	} catch(const std::bad_cast& e) {
 	  std::ostringstream msg;
 	  msg << "Can not convert '" << strVal << "' into int32_t";
-	  throw SqlException(msg.str());
+	  throw SqlException(msg.str(), true);
 	}
       }
       return null;
@@ -159,7 +159,7 @@ namespace anch {
 	} catch(const std::bad_cast& e) {
 	  std::ostringstream msg;
 	  msg << "Can not convert '" << strVal << "' into int16_t";
-	  throw SqlException(msg.str());
+	  throw SqlException(msg.str(), true);
 	}
       }
       return null;
@@ -188,7 +188,7 @@ namespace anch {
 	} catch(const std::bad_cast& e) {
 	  std::ostringstream msg;
 	  msg << "Can not convert '" << strVal << "' into uint64_t";
-	  throw SqlException(msg.str());
+	  throw SqlException(msg.str(), true);
 	}
       }
       return null;
@@ -217,7 +217,7 @@ namespace anch {
 	} catch(const std::bad_cast& e) {
 	  std::ostringstream msg;
 	  msg << "Can not convert '" << strVal << "' into uint32_t";
-	  throw SqlException(msg.str());
+	  throw SqlException(msg.str(), true);
 	}
       }
       return null;
@@ -246,7 +246,7 @@ namespace anch {
 	} catch(const std::bad_cast& e) {
 	  std::ostringstream msg;
 	  msg << "Can not convert '" << strVal << "' into uint16_t";
-	  throw SqlException(msg.str());
+	  throw SqlException(msg.str(), true);
 	}
       }
       return null;
@@ -368,7 +368,7 @@ namespace anch {
 	  delete res;
 	  std::ostringstream msg;
 	  msg << "Can not convert '" << strVal << "' into int64_t";
-	  throw SqlException(msg.str());
+	  throw SqlException(msg.str(), true);
 	}
       }
       return res;
@@ -397,7 +397,7 @@ namespace anch {
 	  delete res;
 	  std::ostringstream msg;
 	  msg << "Can not convert '" << strVal << "' into int32_t";
-	  throw SqlException(msg.str());
+	  throw SqlException(msg.str(), true);
 	}
       }
       return res;
@@ -426,7 +426,7 @@ namespace anch {
 	  delete res;
 	  std::ostringstream msg;
 	  msg << "Can not convert '" << strVal << "' into int16_t";
-	  throw SqlException(msg.str());
+	  throw SqlException(msg.str(), true);
 	}
       }
       return res;
@@ -455,7 +455,7 @@ namespace anch {
 	  delete res;
 	  std::ostringstream msg;
 	  msg << "Can not convert '" << strVal << "' into uint64_t";
-	  throw SqlException(msg.str());
+	  throw SqlException(msg.str(), true);
 	}
       }
       return res;
@@ -484,7 +484,7 @@ namespace anch {
 	  delete res;
 	  std::ostringstream msg;
 	  msg << "Can not convert '" << strVal << "' into uint32_t";
-	  throw SqlException(msg.str());
+	  throw SqlException(msg.str(), true);
 	}
       }
       return res;
@@ -513,7 +513,7 @@ namespace anch {
 	  delete res;
 	  std::ostringstream msg;
 	  msg << "Can not convert '" << strVal << "' into uint16_t";
-	  throw SqlException(msg.str());
+	  throw SqlException(msg.str(), true);
 	}
       }
       return res;

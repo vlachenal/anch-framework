@@ -60,7 +60,7 @@ private:
    */
   MySQLInitializer() {
     if(mysql_library_init(0, NULL, NULL) != 0) {
-      throw SqlException("Unable to initialize MySQL library");
+      throw SqlException("Unable to initialize MySQL library", false);
     }
   }
 
@@ -89,24 +89,10 @@ MySQLConnection::MySQLConnection(const std::string& host,
   mysql_options(_mysql, MYSQL_READ_DEFAULT_GROUP, app.data());
   MYSQL* res = mysql_real_connect(_mysql, host.data(), user.data(), password.data(), database.data(), static_cast<unsigned int>(port), NULL, 0);
   if(res == NULL) {
-    /*
-      \todo manage error with mysql_errno(_mysql):
-      - CR_CONN_HOST_ERROR: fail to connect server
-      - CR_CONNECTION_ERROR: fail to connect localhost server
-      - CR_IPSOCK_ERROR: fail to create IP socket
-      - CR_OUT_OF_MEMORY: out of memory
-      - CR_SOCKET_CREATE_ERROR: fail to create UNIX socket
-      - CR_UNKNOWN_HOST: unknown host
-      - CR_VERSION_ERROR: protocol versions mismatch between client and server
-      - CR_NAMEDPIPEOPEN_ERROR: fail to create named pipe on Windows
-      - CR_NAMEDPIPEWAIT_ERROR: fail to wait for a named pipe on Windows
-      - CR_NAMEDPIPESETSTATE_ERROR: fail to get a pipe handler on Windows
-      - CR_SERVER_LOST: connection timeout if set or server died
-      - CR_ALREADY_CONNECTED: already connected ... can not happened
-    */
+    _valid = false;
     std::ostringstream msg;
     msg << "Failed to connect to database. Error: " << mysql_error(_mysql);
-    throw SqlException(msg.str());
+    throw SqlException(msg.str(), _valid);
   }
 }
 
@@ -124,24 +110,10 @@ MySQLConnection::MySQLConnection(const SqlConnectionConfiguration& config) {
 				  config.database.data(),
 				  static_cast<unsigned int>(config.port), NULL, 0);
   if(res == NULL) {
-    /*
-      \todo manage error with mysql_errno(_mysql):
-      - CR_CONN_HOST_ERROR: fail to connect server
-      - CR_CONNECTION_ERROR: fail to connect localhost server
-      - CR_IPSOCK_ERROR: fail to create IP socket
-      - CR_OUT_OF_MEMORY: out of memory
-      - CR_SOCKET_CREATE_ERROR: fail to create UNIX socket
-      - CR_UNKNOWN_HOST: unknown host
-      - CR_VERSION_ERROR: protocol versions mismatch between client and server
-      - CR_NAMEDPIPEOPEN_ERROR: fail to create named pipe on Windows
-      - CR_NAMEDPIPEWAIT_ERROR: fail to wait for a named pipe on Windows
-      - CR_NAMEDPIPESETSTATE_ERROR: fail to get a pipe handler on Windows
-      - CR_SERVER_LOST: connection timeout if set or server died
-      - CR_ALREADY_CONNECTED: already connected ... can not happened
-    */
+    _valid = false;
     std::ostringstream msg;
     msg << "Failed to connect to database. Error: " << mysql_error(_mysql);
-    throw SqlException(msg.str());
+    throw SqlException(msg.str(), _valid);
   }
 }
 // Constructors -
@@ -158,9 +130,10 @@ void
 MySQLConnection::sendCommit() {
   int res = mysql_query(_mysql, "COMMIT");
   if(res != 0) {
+    _valid = res != CR_SERVER_GONE_ERROR && res != CR_SERVER_LOST;
     std::ostringstream out;
     out << "Unable to commit transaction ; message=" << mysql_error(_mysql);
-    throw SqlException(out.str());
+    throw SqlException(out.str(), _valid);
   }
 }
 
@@ -168,9 +141,10 @@ void
 MySQLConnection::sendRollback() {
   int res = mysql_query(_mysql, "ROLLBACK");
   if(res != 0) {
+    _valid = res != CR_SERVER_GONE_ERROR && res != CR_SERVER_LOST;
     std::ostringstream out;
     out << "Unable to rollback transaction ; message=" << mysql_error(_mysql);
-    throw SqlException(out.str());
+    throw SqlException(out.str(), _valid);
   }
 }
 
@@ -178,9 +152,10 @@ void
 MySQLConnection::sendStartTransaction() {
   int res = mysql_query(_mysql, "START TRANSACTION");
   if(res != 0) {
+    _valid = res != CR_SERVER_GONE_ERROR && res != CR_SERVER_LOST;
     std::ostringstream out;
     out << "Unable to start transaction ; message=" << mysql_error(_mysql);
-    throw SqlException(out.str());
+    throw SqlException(out.str(), _valid);
   }
 }
 
@@ -189,17 +164,18 @@ MySQLConnection::executeQuery(const std::string& query) {
   ResultSet* resSet = NULL;
   int res = mysql_query(_mysql, query.data());
   if(res != 0) {
+    _valid = res != CR_SERVER_GONE_ERROR && res != CR_SERVER_LOST;
     std::ostringstream out;
     out << "Error while executing query " << query << " ; message="
 	<< mysql_error(_mysql);
-    throw SqlException(out.str());
+    throw SqlException(out.str(), _valid);
   }
   MYSQL_RES* result = mysql_use_result(_mysql);
   if(result == NULL) {
     std::ostringstream out;
     out << "Error while retrieving result " << query << " ; message="
 	<< mysql_error(_mysql);
-    throw SqlException(out.str());
+    throw SqlException(out.str(), true);
 
   } else {
     resSet = new MySQLResultSet(result);
@@ -211,17 +187,18 @@ uint64_t
 MySQLConnection::executeUpdate(const std::string& query) {
   int res = mysql_query(_mysql, query.data());
   if(res != 0) {
+    _valid = res != CR_SERVER_GONE_ERROR && res != CR_SERVER_LOST;
     std::ostringstream out;
     out << "Error while executing query " << query << " ; message="
 	<< mysql_error(_mysql);
-    throw SqlException(out.str());
+    throw SqlException(out.str(), _valid);
   }
   my_ulonglong nbRow = mysql_affected_rows(_mysql);
   if(nbRow == static_cast<my_ulonglong>(-1)) {
     std::ostringstream out;
     out << "Query " << query << " is not an update query " << query
 	<< " ; message=" << mysql_error(_mysql);
-    throw SqlException(out.str());
+    throw SqlException(out.str(), true);
   }
   return static_cast<uint64_t>(nbRow);
 }

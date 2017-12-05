@@ -103,7 +103,6 @@ file(
   GLOB_RECURSE
   source_files
   src/*
-  inc/*
 )
 
 # Build objects

@@ -220,7 +220,7 @@ namespace anch {
 	if(index > _nbPlaceholders) {
 	  std::ostringstream oss;
 	  oss << "Index " << index << " is upper than number of wildcards " << _nbPlaceholders;
-	  throw SqlException(oss.str());
+	  throw SqlException(oss.str(), true);
 	}
       }
       // Methods -

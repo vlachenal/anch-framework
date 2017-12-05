@@ -20,6 +20,7 @@
 #ifdef ANCH_SQL_MYSQL
 
 #include "mysql.h"
+#include "errmsg.h"
 
 #include "sql/mysqlPreparedStatement.hpp"
 
@@ -40,14 +41,15 @@ std::atomic<std::uint64_t> MySQLPreparedStatement::_counter(0);
 MySQLPreparedStatement::MySQLPreparedStatement(MYSQL* dbCon, const std::string& query): PreparedStatement(), _conn(dbCon) {
   _stmt = mysql_stmt_init(dbCon);
   if(_stmt == NULL) {
-    throw SqlException("MySQL out of memory");
+    throw SqlException("MySQL out of memory", false);
   }
   int res = mysql_stmt_prepare(_stmt, query.data(), query.length());
   if(res != 0) {
+    bool ok = res != CR_SERVER_GONE_ERROR && res != CR_SERVER_LOST && res != CR_OUT_OF_MEMORY;
     std::ostringstream msg;
     msg << "Fail to prepare MySQL statement " << mysql_stmt_errno(_stmt) << ": " << mysql_stmt_error(_stmt);
     mysql_stmt_close(_stmt);
-    throw SqlException(msg.str());
+    throw SqlException(msg.str(), ok);
   }
   std::set<std::size_t> pos = getPlaceholders(query);
   _nbPlaceholders = pos.size();
@@ -86,19 +88,23 @@ bindParamsAndSend(MYSQL_STMT* stmt,
     bind[idx].is_null = 0;
     ++idx;
   }
-  if(mysql_stmt_bind_param(stmt, bind) != 0) {
+  int res = mysql_stmt_bind_param(stmt, bind);
+  if(res != 0) {
     delete[] bind;
+    bool ok = res != CR_OUT_OF_MEMORY;
     std::ostringstream msg;
     msg << "Fail to bind MySQL statement parameters " << mysql_stmt_errno(stmt) << ": " << mysql_stmt_error(stmt);
-    throw SqlException(msg.str());
+    throw SqlException(msg.str(), ok);
   }
   // Bind parameters -
   // Execute statement +
-  if(mysql_stmt_execute(stmt) != 0) {
+  res = mysql_stmt_execute(stmt);
+  if(res != 0) {
+    bool ok = res != CR_SERVER_GONE_ERROR && res != CR_SERVER_LOST && res != CR_OUT_OF_MEMORY;
     delete[] bind;
     std::ostringstream msg;
     msg << "Fail to execute MySQL statement " << mysql_stmt_errno(stmt) << ": " << mysql_stmt_error(stmt);
-    throw SqlException(msg.str());
+    throw SqlException(msg.str(), ok);
   }
   delete[] bind;
   // Execute statement -
