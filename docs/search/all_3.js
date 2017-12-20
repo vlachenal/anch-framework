@@ -18,6 +18,7 @@ var searchData=
   ['constformatter',['ConstFormatter',['../classanch_1_1logger_1_1formatter_1_1_const_formatter.html',1,'anch::logger::formatter::ConstFormatter'],['../classanch_1_1logger_1_1formatter_1_1_const_formatter.html#a46da8cc4d9dc1a0fd0ad340c420f234e',1,'anch::logger::formatter::ConstFormatter::ConstFormatter()']]],
   ['convert',['convert',['../namespaceanch.html#a7163f06dc31c45480a4fcff1c9cbf22c',1,'anch']]],
   ['cpu',['CPU',['../classanch_1_1device_1_1_c_p_u.html',1,'anch::device']]],
+  ['create',['create',['../structanch_1_1sql_1_1_s_q_l_shared_library.html#a468c130cc8f412fa155fdbb71a1ccc72',1,'anch::sql::SQLSharedLibrary']]],
   ['createconnection',['createConnection',['../classanch_1_1sql_1_1_sql_connection_factory.html#a148e126d90d3169eda43f15090299e71',1,'anch::sql::SqlConnectionFactory']]],
   ['createdirectory',['createDirectory',['../classanch_1_1file_1_1_file.html#a1247283f8e989774d4dfc5b5def4f972',1,'anch::file::File']]],
   ['createfile',['createFile',['../classanch_1_1file_1_1_file.html#a4233256c8f4b14a883e31f2ffeffbcfa',1,'anch::file::File::createFile()'],['../classanch_1_1file_1_1_file.html#a6b67958c394e3f477a514879b1f6e836',1,'anch::file::File::createFile(std::ofstream &amp;out)']]],

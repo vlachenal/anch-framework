@@ -14,6 +14,7 @@ var searchData=
   ['singleton_3c_20loggerfactory_20_3e',['Singleton&lt; LoggerFactory &gt;',['../classanch_1_1_singleton.html',1,'anch']]],
   ['singleton_3c_20mysqlinitializer_20_3e',['Singleton&lt; MySQLInitializer &gt;',['../classanch_1_1_singleton.html',1,'anch']]],
   ['singleton_3c_20sqlconnectionfactory_20_3e',['Singleton&lt; SqlConnectionFactory &gt;',['../classanch_1_1_singleton.html',1,'anch']]],
+  ['singleton_3c_20sqlsharedlibraries_20_3e',['Singleton&lt; SQLSharedLibraries &gt;',['../classanch_1_1_singleton.html',1,'anch']]],
   ['socket',['Socket',['../classanch_1_1network_1_1_socket.html',1,'anch::network']]],
   ['socketevent',['SocketEvent',['../classanch_1_1network_1_1_socket_event.html',1,'anch::network']]],
   ['sqlconnectionconfiguration',['SqlConnectionConfiguration',['../structanch_1_1sql_1_1_sql_connection_configuration.html',1,'anch::sql']]],
@@ -22,5 +23,7 @@ var searchData=
   ['sqlite3connection',['SQLite3Connection',['../classanch_1_1sql_1_1_s_q_lite3_connection.html',1,'anch::sql']]],
   ['sqlite3preparedstatement',['SQLite3PreparedStatement',['../classanch_1_1sql_1_1_s_q_lite3_prepared_statement.html',1,'anch::sql']]],
   ['sqlite3resultset',['SQLite3ResultSet',['../classanch_1_1sql_1_1_s_q_lite3_result_set.html',1,'anch::sql']]],
+  ['sqlsharedlibraries',['SQLSharedLibraries',['../classanch_1_1sql_1_1_s_q_l_shared_libraries.html',1,'anch::sql']]],
+  ['sqlsharedlibrary',['SQLSharedLibrary',['../structanch_1_1sql_1_1_s_q_l_shared_library.html',1,'anch::sql']]],
   ['stringformatter',['StringFormatter',['../classanch_1_1logger_1_1formatter_1_1_string_formatter.html',1,'anch::logger::formatter']]]
 ];

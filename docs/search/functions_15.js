@@ -62,7 +62,7 @@ var searchData=
   ['_7esha384_5f512',['~SHA384_512',['../classanch_1_1crypto_1_1_s_h_a384__512.html#a6aa931610abac9c49f03d1be65c3327d',1,'anch::crypto::SHA384_512']]],
   ['_7esocket',['~Socket',['../classanch_1_1network_1_1_socket.html#a2d1b014c3f33bb2b0400baf08681f973',1,'anch::network::Socket']]],
   ['_7esocketevent',['~SocketEvent',['../classanch_1_1network_1_1_socket_event.html#a5696876933452ade8ce47f565247c3b2',1,'anch::network::SocketEvent']]],
-  ['_7esqlexception',['~SqlException',['../classanch_1_1sql_1_1_sql_exception.html#ab318d764cca918284f616a6614be0449',1,'anch::sql::SqlException']]],
+  ['_7esqlexception',['~SqlException',['../classanch_1_1sql_1_1_sql_exception.html#afb8f733b9f7db0c08f06c5809bb13787',1,'anch::sql::SqlException']]],
   ['_7esqlite3connection',['~SQLite3Connection',['../classanch_1_1sql_1_1_s_q_lite3_connection.html#aaeb44211ac4ee1fee046d55f8e0a3953',1,'anch::sql::SQLite3Connection']]],
   ['_7esqlite3preparedstatement',['~SQLite3PreparedStatement',['../classanch_1_1sql_1_1_s_q_lite3_prepared_statement.html#a938cdfd44449f3b5e5a41a83afe96e31',1,'anch::sql::SQLite3PreparedStatement']]],
   ['_7esqlite3resultset',['~SQLite3ResultSet',['../classanch_1_1sql_1_1_s_q_lite3_result_set.html#a58f4be0caf05f5beb3196ea5003a1a8c',1,'anch::sql::SQLite3ResultSet']]],

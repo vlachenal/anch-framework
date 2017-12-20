@@ -11,6 +11,7 @@ var searchData=
   ['islittleendian',['isLittleEndian',['../namespaceanch.html#a4fa5b950902e9a46ee9b5abb6a4c41d9',1,'anch']]],
   ['islocalhost',['isLocalhost',['../classanch_1_1device_1_1_network_interface.html#a11b32388e0ae6f2ba47e5c80a414fa50',1,'anch::device::NetworkInterface']]],
   ['ismmx',['isMMX',['../classanch_1_1device_1_1_c_p_u.html#ad0b6afb6f85962aca540f8b7d354ab76',1,'anch::device::CPU']]],
+  ['isok',['isOK',['../classanch_1_1sql_1_1_sql_exception.html#a04a4447ba4b6c0f284acf82902853bde',1,'anch::sql::SqlException']]],
   ['issse',['isSSE',['../classanch_1_1device_1_1_c_p_u.html#afbf01e8e12843467acf234f7baf32e2e',1,'anch::device::CPU']]],
   ['issse2',['isSSE2',['../classanch_1_1device_1_1_c_p_u.html#a061be9e70c28c003add35c60e10730a0',1,'anch::device::CPU']]],
   ['issse3',['isSSE3',['../classanch_1_1device_1_1_c_p_u.html#abefe81f6d24c523f86c98bd0b5eb341a',1,'anch::device::CPU']]],

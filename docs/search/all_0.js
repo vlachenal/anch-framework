@@ -5,6 +5,7 @@ var searchData=
   ['_5ffields',['_fields',['../classanch_1_1sql_1_1_result_set.html#a822ebf0a600665b729f95decaba877ac',1,'anch::sql::ResultSet']]],
   ['_5fformatter',['_formatter',['../classanch_1_1logger_1_1_writer.html#a94933843e59000a2f8b7c0ec40b5c1a2',1,'anch::logger::Writer']]],
   ['_5fhours',['_hours',['../classanch_1_1date_1_1_date.html#ac89e32ae99996f1630c5b96a5e9ceafd',1,'anch::date::Date']]],
+  ['_5flayer',['_layer',['../structanch_1_1sql_1_1_s_q_l_shared_library.html#a29a5796ba7802d99ceb52443fccde14c',1,'anch::sql::SQLSharedLibrary']]],
   ['_5fmdays',['_mdays',['../classanch_1_1date_1_1_date.html#a392ba350057a08a1e8dd5ba2e6527e72',1,'anch::date::Date']]],
   ['_5fmessage',['_message',['../classanch_1_1date_1_1formatter_1_1_constant_formatter.html#abbe7e5956c8d5789bc36ab39f23c7101',1,'anch::date::formatter::ConstantFormatter']]],
   ['_5fmicroseconds',['_microseconds',['../classanch_1_1date_1_1_date.html#a8d2fc11e01c51c12db95620e19789aaf',1,'anch::date::Date']]],

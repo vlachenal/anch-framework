@@ -1,7 +1,9 @@
 var searchData=
 [
   ['make_5fshared_5fconnection',['make_shared_connection',['../namespaceanch_1_1sql.html#a322a938c82f4b6c5ab176a7f0c6516d1',1,'anch::sql']]],
+  ['makeconnection',['makeConnection',['../classanch_1_1sql_1_1_s_q_l_shared_libraries.html#ad8a93abf160117a80e6b7f6b7a5b359c',1,'anch::sql::SQLSharedLibraries']]],
   ['makeprepared',['makePrepared',['../classanch_1_1sql_1_1_connection.html#aefca05e575d68c51fb62560921eff4cd',1,'anch::sql::Connection::makePrepared()'],['../classanch_1_1sql_1_1_my_s_q_l_connection.html#aa551dd41c4b9ee673106601f559bcba1',1,'anch::sql::MySQLConnection::makePrepared()'],['../classanch_1_1sql_1_1_postgre_s_q_l_connection.html#a439444d5e48db2c5eac308afc7e43688',1,'anch::sql::PostgreSQLConnection::makePrepared()'],['../classanch_1_1sql_1_1_s_q_lite3_connection.html#a4a6d8f8a231aa8965185edf89bcd3b7e',1,'anch::sql::SQLite3Connection::makePrepared()']]],
+  ['makesharedconnection',['makeSharedConnection',['../classanch_1_1sql_1_1_s_q_l_shared_libraries.html#abba2b3b022bf465611fade928f9a0468',1,'anch::sql::SQLSharedLibraries']]],
   ['markerformatter',['MarkerFormatter',['../classanch_1_1date_1_1formatter_1_1_marker_formatter.html#a70f7d199da01b31c1d44ce0d3b7a8bb8',1,'anch::date::formatter::MarkerFormatter']]],
   ['md5',['MD5',['../classanch_1_1crypto_1_1_m_d5.html#afa6155ec36de415ab2dcf5e54b670d13',1,'anch::crypto::MD5::MD5()'],['../classanch_1_1crypto_1_1_m_d5.html#a0a89361f19046eaa9a61486024fc2fa3',1,'anch::crypto::MD5::MD5(const std::basic_string&lt; CharT, Traits, Allocator &gt; &amp;data)'],['../classanch_1_1crypto_1_1_m_d5.html#a9b24d51a7e8edf65a8230c262405990e',1,'anch::crypto::MD5::MD5(std::basic_istream&lt; CharT, Traits &gt; &amp;stream)']]],
   ['messageformatter',['MessageFormatter',['../classanch_1_1logger_1_1formatter_1_1_message_formatter.html#a0ef6c01a94c62817c678849b172973c9',1,'anch::logger::formatter::MessageFormatter']]],
