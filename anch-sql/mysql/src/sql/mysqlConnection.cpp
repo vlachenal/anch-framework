@@ -30,6 +30,7 @@
 #include <sstream>
 #include <vector>
 
+using anch::sql::Connection;
 using anch::sql::MySQLConnection;
 using anch::sql::SqlException;
 using anch::sql::SqlConnectionConfiguration;
@@ -208,5 +209,40 @@ MySQLConnection::makePrepared(const std::string& query) {
   return new MySQLPreparedStatement(_mysql, query);
 }
 // Methods -
+
+// C shared library definition +
+/*!
+ * C shared library connection maker
+ *
+ * \return the MySQL connection
+ */
+extern "C"
+std::shared_ptr<Connection>
+create_shared_connection(const SqlConnectionConfiguration& config) {
+  return std::make_shared<MySQLConnection>(config);
+}
+
+/*!
+ * C shared library connection maker
+ *
+ * \return the MySQL connection
+ */
+extern "C"
+Connection*
+create_connection(const SqlConnectionConfiguration& config) {
+  return new MySQLConnection(config);
+}
+
+/*!
+ * C shared library MySQL connection free
+ *
+ * \param conn the connection to free
+ */
+extern "C"
+void
+delete_connection(MySQLConnection* conn) {
+  delete conn;
+}
+// C shared library definition -
 
 #endif // ANCH_SQL_MYSQL

@@ -23,18 +23,6 @@
 #include "sql/connection.hpp"
 #include "sql/sqlException.hpp"
 
-#ifdef ANCH_SQL_MYSQL
-#include "sql/mysqlConnection.hpp"
-#endif // ANCH_SQL_MYSQL
-
-#ifdef ANCH_SQL_POSTGRESQL
-#include "sql/postgresqlConnection.hpp"
-#endif // ANCH_SQL_POSTGRESQL
-
-#ifdef ANCH_SQL_SQLITE3
-#include "sql/sqlite3Connection.hpp"
-#endif // ANCH_SQL_SQLITE3
-
 #include "resourcePool.hpp"
 #include "singleton.hpp"
 

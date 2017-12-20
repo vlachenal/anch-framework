@@ -32,6 +32,7 @@ using anch::sql::SQLite3ResultSet;
 using anch::sql::SQLite3PreparedStatement;
 using anch::sql::SqlException;
 using anch::sql::PreparedStatement;
+using anch::sql::SqlConnectionConfiguration;
 
 
 // Constructors +
@@ -142,5 +143,40 @@ SQLite3Connection::makePrepared(const std::string& query) {
   return new SQLite3PreparedStatement(_conn, query);
 }
 // Methods -
+
+// C shared library definition +
+/*!
+ * C shared library connection maker
+ *
+ * \return the SQLite3 connection
+ */
+extern "C"
+std::shared_ptr<Connection>
+create_shared_connection(const SqlConnectionConfiguration& config) {
+  return std::make_shared<SQLite3Connection>(config);
+}
+
+/*!
+ * C shared library connection maker
+ *
+ * \return the SQLite3 connection
+ */
+extern "C"
+Connection*
+create_connection(const SqlConnectionConfiguration& config) {
+  return new SQLite3Connection(config);
+}
+
+/*!
+ * C shared library SQLite3 connection free
+ *
+ * \param conn the connection to free
+ */
+extern "C"
+void
+delete_connection(SQLite3Connection* conn) {
+  delete conn;
+}
+// C shared library definition -
 
 #endif // ANCH_SQL_SQLITE3

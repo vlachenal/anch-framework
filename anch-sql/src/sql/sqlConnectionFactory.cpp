@@ -19,57 +19,28 @@
 */
 #include "sql/sqlConnectionFactory.hpp"
 
+#include "sql/sqlSharedLibraries.hpp"
 #include "resource/resource.hpp"
 #include "convert.hpp"
+#include "singleton.hpp"
 
 #include <sstream>
+#include <dlfcn.h>
 
 using anch::sql::Connection;
 using anch::sql::SqlException;
 using anch::sql::SqlConnectionFactory;
 using anch::sql::SqlConnectionConfiguration;
 using anch::sql::SqlConnectionPool;
+using anch::sql::SQLSharedLibraries;
 
 using anch::resource::Resource;
 using anch::resource::Section;
 
-#ifdef ANCH_SQL_MYSQL
-using anch::sql::MySQLConnection;
-#endif // ANCH_SQL_MYSQL
-
-#ifdef ANCH_SQL_POSTGRESQL
-using anch::sql::PostgreSQLConnection;
-#endif // ANCH_SQL_POSTGRESQL
-
-#ifdef ANCH_SQL_SQLITE3
-using anch::sql::SQLite3Connection;
-#endif // ANCH_SQL_SQLITE3
 
 std::shared_ptr<Connection>
 anch::sql::make_shared_connection(const SqlConnectionConfiguration& config) {
-  std::shared_ptr<Connection> conn;
-#ifdef ANCH_SQL_MYSQL
-  if(config.driver == "MySQL") {
-    conn = std::make_shared<MySQLConnection>(config);
-  }
-#endif // ANCH_SQL_MYSQL
-#ifdef ANCH_SQL_POSTGRESQL
-  if(config.driver == "PostgreSQL") {
-    conn = std::make_shared<PostgreSQLConnection>(config);
-  }
-#endif // ANCH_SQL_POSTGRESQL
-#ifdef ANCH_SQL_SQLITE3
-  if(config.driver == "SQLite3") {
-    conn = std::make_shared<SQLite3Connection>(config);
-  }
-#endif // ANCH_SQL_SQLITE3
-  if(conn.get() == NULL) {
-    std::ostringstream out;
-    out << "Can not create connection from configuration: driver "
-	<< config.driver << " is not managed by AnCH SQL library.";
-    throw SqlException(out.str());
-  }
-  return conn;
+  return SQLSharedLibraries::getInstance().makeSharedConnection(config);
 }
 
 // Constructors +
@@ -155,30 +126,7 @@ SqlConnectionFactory::createConnection(const std::string& name) {
     out << "Configuration " << name << " does not exist." << std::endl;
     throw SqlException(out.str());
   }
-  const SqlConnectionConfiguration& config = iter->second;
-  Connection* conn = NULL;
-#ifdef ANCH_SQL_MYSQL
-  if(config.driver == "MySQL") {
-    conn = new MySQLConnection(config);
-  }
-#endif // ANCH_SQL_MYSQL
-#ifdef ANCH_SQL_POSTGRESQL
-  if(config.driver == "PostgreSQL") {
-    conn = new PostgreSQLConnection(config);
-  }
-#endif // ANCH_SQL_POSTGRESQL
-#ifdef ANCH_SQL_SQLITE3
-  if(config.driver == "SQLite3") {
-    conn = new SQLite3Connection(config);
-  }
-#endif // ANCH_SQL_SQLITE3
-  if(conn == NULL) {
-    std::ostringstream out;
-    out << "Can not create connection from configuration " << name << ": driver "
-	<< config.driver << " is not taken into account." << std::endl;
-    throw SqlException(out.str());
-  }
-  return conn;
+  return SQLSharedLibraries::getInstance().makeConnection(iter->second);
 }
 
 SqlConnectionPool&

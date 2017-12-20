@@ -1,4 +1,5 @@
 #include "sql/sqlConnectionFactory.hpp"
+#include "sql/sqlSharedLibraries.hpp"
 
 #include <iostream>
 #include <list>
@@ -11,6 +12,7 @@ using anch::sql::SqlConnectionPool;
 using anch::sql::SqlException;
 using anch::sql::ResultSet;
 using anch::sql::PreparedStatement;
+using anch::sql::SQLSharedLibraries;
 
 class Person {
 public:
@@ -60,6 +62,16 @@ mapPersonRows(ResultSet& resSet, std::list<Person>& persons) {
 int
 main(int argc, char** argv) {
   std::cout << "Enter in SQL connection factory unit test" << std::endl;
+
+#ifdef ANCH_SQL_MYSQL
+  SQLSharedLibraries::getInstance().registerMySQL();
+#endif
+#ifdef ANCH_SQL_POSTGRESQL
+  SQLSharedLibraries::getInstance().registerPostgreSQL();
+#endif
+#ifdef ANCH_SQL_SQLITE3
+  SQLSharedLibraries::getInstance().registerSQLite();
+#endif
 
   try {
     SqlConnectionFactory& fact = SqlConnectionFactory::getInstance();

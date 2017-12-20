@@ -253,4 +253,39 @@ PostgreSQLConnection::makePrepared(const std::string& query) {
 }
 // Methods -
 
+// C shared library definition +
+/*!
+ * C shared library connection maker
+ *
+ * \return the PostgreSQL connection
+ */
+extern "C"
+std::shared_ptr<Connection>
+create_shared_connection(const SqlConnectionConfiguration& config) {
+  return std::make_shared<PostgreSQLConnection>(config);
+}
+
+/*!
+ * C shared library connection maker
+ *
+ * \return the PostgreSQL connection
+ */
+extern "C"
+Connection*
+create_connection(const SqlConnectionConfiguration& config) {
+  return new PostgreSQLConnection(config);
+}
+
+/*!
+ * C shared library PostgreSQL connection free
+ *
+ * \param conn the connection to free
+ */
+extern "C"
+void
+delete_connection(PostgreSQLConnection* conn) {
+  delete conn;
+}
+// C shared library definition -
+
 #endif //ANCH_SQL_POSTGRESQL

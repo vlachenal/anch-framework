@@ -36,6 +36,7 @@ endif()
 
 # Add GCC definitions
 add_definitions("-Wall -Wextra -Werror -Wuninitialized -Wconversion -Wsign-conversion -Wformat-security -fstack-protector-all -Wstack-protector --param ssp-buffer-size=4 -ftrapv  -z relro,now -fPIC -D_FORTIFY_SOURCE=2")
+#add_definitions("-Wall -Wextra -Werror -Wuninitialized -Wconversion -Wsign-conversion -Wformat-security -fstack-protector-all -Wstack-protector --param ssp-buffer-size=4 -ftrapv  -z relro,now -fPIC")
 if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
   add_definitions("-D ANCH_WINDOWS")
 else()
@@ -43,67 +44,20 @@ else()
 endif()
 add_definitions(${ANCH_SQL_COMPILE_FLAGS})
 
-# Include librairies
-set(CMAKE_MODULE_PATH "$ENV{HOME}/projects/anch-framework/anch-sql/;${CMAKE_MODULE_PATH}")
-# MySQL +
-if(ANCH_SQL_MYSQL)
-  find_package(MySQL)
-  if(MySQL_FOUND)
-    add_definitions("-D ANCH_SQL_MYSQL")
-    message(STATUS "Found MySQL version: ${MySQL_VERSION_STRING}")
-    message(STATUS "Found MySQL include directory: ${MySQL_INCLUDE_DIRS}")
-    message(STATUS "Found MySQL libraries: ${MySQL_LIBRARIES}")
-  else()
-    message(FATAL_ERROR "MySQL libraries not found")
-  endif(MySQL_FOUND)
-endif(ANCH_SQL_MYSQL)
-# MySQL -
-
-# PostgreSQL +
-if(ANCH_SQL_POSTGRESQL)
-  find_package(PostgreSQL)
-  if(PostgreSQL_FOUND)
-    add_definitions("-D ANCH_SQL_POSTGRESQL")
-    message(STATUS "Found PostgreSQL version: ${PostgreSQL_VERSION_STRING}")
-    message(STATUS "Found PostgreSQL include directory: ${PostgreSQL_INCLUDE_DIRS}")
-    message(STATUS "Found PostgreSQL libraries: ${PostgreSQL_LIBRARIES}")
-  else()
-    message(FATAL_ERROR "PostgreSQL libraries not found")
-  endif(PostgreSQL_FOUND)
-endif(ANCH_SQL_POSTGRESQL)
-# PostgreSQL -
-
-# SQLite3 +
-if(ANCH_SQL_SQLITE3)
-  find_package(SQLite3)
-  if(SQLite3_FOUND)
-    add_definitions("-D ANCH_SQL_SQLITE3")
-    message(STATUS "Found SQLite3 version: ${SQLite3_VERSION_STRING}")
-    message(STATUS "Found SQLite3 include directory: ${SQLite3_INCLUDE_DIRS}")
-    message(STATUS "Found SQLite3 libraries: ${SQLite3_LIBRARIES}")
-  else()
-    message(FATAL_ERROR "SQLite3 libraries not found")
-  endif(SQLite3_FOUND)
-endif(ANCH_SQL_SQLITE3)
-# SQLite3 -
-
 # Includes location
 include_directories(
   inc
-  ${MySQL_INCLUDE_DIRS}
-  ${PostgreSQL_INCLUDE_DIRS}
-  ${SQLite3_INCLUDE_DIRS}
   ${ANCH_UTILS_INCLUDES_DIR}
   ${ANCH_RES_INCLUDES_DIR}
   ${ANCH_DATE_INCLUDES_DIR}
-)
+  )
 
 # Retrieve every files in project
 file(
   GLOB_RECURSE
   source_files
   src/*
-)
+  )
 
 # Build objects
 add_library(
@@ -146,6 +100,235 @@ if(ANCH_SQL_STATIC_LIB)
 endif(ANCH_SQL_STATIC_LIB)
 ## Static library -
 
+## Shared libraries +
+# Include librairies
+set(CMAKE_MODULE_PATH "$ENV{HOME}/projects/anch-framework/anch-sql/;${CMAKE_MODULE_PATH}")
+# MySQL +
+if(ANCH_SQL_MYSQL)
+  find_package(MySQL)
+  if(MySQL_FOUND)
+    add_definitions("-D ANCH_SQL_MYSQL")
+    message(STATUS "Found MySQL version: ${MySQL_VERSION_STRING}")
+    message(STATUS "Found MySQL include directory: ${MySQL_INCLUDE_DIRS}")
+    message(STATUS "Found MySQL libraries: ${MySQL_LIBRARIES}")
+  else()
+    message(FATAL_ERROR "MySQL libraries not found")
+  endif(MySQL_FOUND)
+
+  # MySQL includes location
+  include_directories(
+    mysql/inc
+    inc
+    ${MySQL_INCLUDE_DIRS}
+    ${ANCH_UTILS_INCLUDES_DIR}
+    ${ANCH_RES_INCLUDES_DIR}
+    ${ANCH_DATE_INCLUDES_DIR}
+    )
+
+  # Retrieve every files in MySQL project
+  file(
+    GLOB_RECURSE
+    mysql_source_files
+    mysql/*
+    )
+
+  # Build objects
+  add_library(
+    anch-mysql-obj
+    OBJECT
+    ${mysql_source_files}
+    )
+
+  ## Dynamic library +
+  add_library(
+    anch-mysql
+    SHARED
+    $<TARGET_OBJECTS:anch-mysql-obj>
+    )
+  target_link_libraries(anch-mysql ${MySQL_LIBRARIES})
+
+  install(
+    DIRECTORY mysql/inc/ DESTINATION ${ANCH_SQL_INSTALL_INC_DIR}
+    FILES_MATCHING PATTERN "*.hpp"
+    )
+
+  install(
+    TARGETS anch-mysql
+    LIBRARY DESTINATION ${ANCH_SQL_INSTALL_LIB_DIR}
+    )
+  ## Dynamic library -
+
+  ## Static library +
+  if(ANCH_SQL_STATIC_LIB)
+    add_library(
+      anch-mysql-static
+      STATIC
+      $<TARGET_OBJECTS:anch-mysql-obj>
+      )
+    set_target_properties(anch-mysql-static PROPERTIES OUTPUT_NAME anch-mysql)
+    target_link_libraries(anch-mysql-static ${MySQL_LIBRARIES})
+
+    install(
+      TARGETS anch-mysql-static
+      ARCHIVE DESTINATION ${ANCH_SQL_INSTALL_LIB_DIR}
+      )
+  endif(ANCH_SQL_STATIC_LIB)
+  ## Static library -
+
+endif(ANCH_SQL_MYSQL)
+# MySQL -
+
+# PostgreSQL +
+if(ANCH_SQL_POSTGRESQL)
+  find_package(PostgreSQL)
+  if(PostgreSQL_FOUND)
+    add_definitions("-D ANCH_SQL_POSTGRESQL")
+    message(STATUS "Found PostgreSQL version: ${PostgreSQL_VERSION_STRING}")
+    message(STATUS "Found PostgreSQL include directory: ${PostgreSQL_INCLUDE_DIRS}")
+    message(STATUS "Found PostgreSQL libraries: ${PostgreSQL_LIBRARIES}")
+  else()
+    message(FATAL_ERROR "PostgreSQL libraries not found")
+  endif(PostgreSQL_FOUND)
+
+  # PostgreSQL includes location
+  include_directories(
+    postgresql/inc
+    inc
+    ${PostgreSQL_INCLUDE_DIRS}
+    ${ANCH_UTILS_INCLUDES_DIR}
+    ${ANCH_RES_INCLUDES_DIR}
+    ${ANCH_DATE_INCLUDES_DIR}
+    )
+
+  # Retrieve every files in PostgreSQL project
+  file(
+    GLOB_RECURSE
+    pg_source_files
+    postgresql/*
+    )
+
+  # Build objects
+  add_library(
+    anch-postgresql-obj
+    OBJECT
+    ${pg_source_files}
+    )
+
+  ## Dynamic library +
+  add_library(
+    anch-postgresql
+    SHARED
+    $<TARGET_OBJECTS:anch-postgresql-obj>
+    )
+  target_link_libraries(anch-postgresql ${PostgreSQL_LIBRARIES})
+
+  install(
+    DIRECTORY postgresql/inc/ DESTINATION ${ANCH_SQL_INSTALL_INC_DIR}
+    FILES_MATCHING PATTERN "*.hpp"
+    )
+
+  install(
+    TARGETS anch-postgresql
+    LIBRARY DESTINATION ${ANCH_SQL_INSTALL_LIB_DIR}
+    )
+  ## Dynamic library -
+
+  ## Static library +
+  if(ANCH_SQL_STATIC_LIB)
+    add_library(
+      anch-postgresql-static
+      STATIC
+      $<TARGET_OBJECTS:anch-postgresql-obj>
+      )
+    set_target_properties(anch-postgresql-static PROPERTIES OUTPUT_NAME anch-postgresql)
+    target_link_libraries(anch-postgresql-static ${PostgreSQL_LIBRARIES})
+
+    install(
+      TARGETS anch-postgresql-static
+      ARCHIVE DESTINATION ${ANCH_SQL_INSTALL_LIB_DIR}
+      )
+  endif(ANCH_SQL_STATIC_LIB)
+  ## Static library -
+
+endif(ANCH_SQL_POSTGRESQL)
+# PostgreSQL -
+
+# SQLite3 +
+if(ANCH_SQL_SQLITE3)
+  find_package(SQLite3)
+  if(SQLite3_FOUND)
+    add_definitions("-D ANCH_SQL_SQLITE3")
+    message(STATUS "Found SQLite3 version: ${SQLite3_VERSION_STRING}")
+    message(STATUS "Found SQLite3 include directory: ${SQLite3_INCLUDE_DIRS}")
+    message(STATUS "Found SQLite3 libraries: ${SQLite3_LIBRARIES}")
+  else()
+    message(FATAL_ERROR "SQLite3 libraries not found")
+  endif(SQLite3_FOUND)
+
+  # SQLite3 includes location
+  include_directories(
+    sqlite/inc
+    inc
+    ${SQLite3_INCLUDE_DIRS}
+    ${ANCH_UTILS_INCLUDES_DIR}
+    ${ANCH_RES_INCLUDES_DIR}
+    ${ANCH_DATE_INCLUDES_DIR}
+    )
+
+  # Retrieve every files in PostgreSQL project
+  file(
+    GLOB_RECURSE
+    sqlite_source_files
+    sqlite/*
+    )
+
+  # Build objects
+  add_library(
+    anch-sqlite-obj
+    OBJECT
+    ${sqlite_source_files}
+    )
+
+  ## Dynamic library +
+  add_library(
+    anch-sqlite
+    SHARED
+    $<TARGET_OBJECTS:anch-sqlite-obj>
+    )
+  target_link_libraries(anch-sqlite ${SQLite3_LIBRARIES})
+
+  install(
+    DIRECTORY sqlite/inc/ DESTINATION ${ANCH_SQL_INSTALL_INC_DIR}
+    FILES_MATCHING PATTERN "*.hpp"
+    )
+
+  install(
+    TARGETS anch-sqlite
+    LIBRARY DESTINATION ${ANCH_SQL_INSTALL_LIB_DIR}
+    )
+  ## Dynamic library -
+
+  ## Static library +
+  if(ANCH_SQL_STATIC_LIB)
+    add_library(
+      anch-sqlite-static
+      STATIC
+      $<TARGET_OBJECTS:anch-sqlite-obj>
+      )
+    set_target_properties(anch-sqlite-static PROPERTIES OUTPUT_NAME anch-sqlite)
+    target_link_libraries(anch-sqlite-static ${SQLite3_LIBRARIES})
+
+    install(
+      TARGETS anch-sqlite-static
+      ARCHIVE DESTINATION ${ANCH_SQL_INSTALL_LIB_DIR}
+      )
+  endif(ANCH_SQL_STATIC_LIB)
+  ## Static library -
+
+endif(ANCH_SQL_SQLITE3)
+# SQLite3 -
+## Shared libraries -
+
 # Unitary tests
 if(ANCH_SQL_UNITARY_TEST)
 
@@ -181,22 +364,20 @@ if(ANCH_SQL_UNITARY_TEST)
       target_link_libraries(
 	anch-mysql-test
 	anch-sql
+	anch-mysql
 	anch-resource
 	anch-date
-	${MySQL_LIBRARIES}
-	${PostgreSQL_LIBRARIES}
-	${SQLite3_LIBRARIES}
 	${Boost_LIBRARIES}
+	${MySQL_LIBRARIES}
 	)
     else()
       target_link_libraries(
 	anch-mysql-test
 	anch-sql
+	anch-mysql
 	anch-resource
 	anch-date
 	${MySQL_LIBRARIES}
-	${PostgreSQL_LIBRARIES}
-	${SQLite3_LIBRARIES}
 	)
     endif()
   endif(ANCH_SQL_MYSQL)
@@ -220,22 +401,20 @@ if(ANCH_SQL_UNITARY_TEST)
       target_link_libraries(
 	anch-postgresql-test
 	anch-sql
+	anch-postgresql
 	anch-resource
 	anch-date
-	${MySQL_LIBRARIES}
-	${PostgreSQL_LIBRARIES}
-	${SQLite3_LIBRARIES}
 	${Boost_LIBRARIES}
+	${PostgreSQL_LIBRARIES}
 	)
     else()
       target_link_libraries(
 	anch-postgresql-test
 	anch-sql
+	anch-postgresql
 	anch-resource
 	anch-date
-	${MySQL_LIBRARIES}
 	${PostgreSQL_LIBRARIES}
-	${SQLite3_LIBRARIES}
 	)
     endif()
   endif(ANCH_SQL_POSTGRESQL)
@@ -259,21 +438,19 @@ if(ANCH_SQL_UNITARY_TEST)
       target_link_libraries(
 	anch-sqlite3-test
 	anch-sql
+	anch-sqlite
 	anch-resource
 	anch-date
-	${MySQL_LIBRARIES}
-	${PostgreSQL_LIBRARIES}
-	${SQLite3_LIBRARIES}
 	${Boost_LIBRARIES}
+	${SQLite3_LIBRARIES}
 	)
     else()
       target_link_libraries(
 	anch-sqlite3-test
 	anch-sql
+	anch-sqlite
 	anch-resource
 	anch-date
-	${MySQL_LIBRARIES}
-	${PostgreSQL_LIBRARIES}
 	${SQLite3_LIBRARIES}
 	)
     endif()
@@ -281,7 +458,6 @@ if(ANCH_SQL_UNITARY_TEST)
   # Build SQLite3 unitary test -
 
   # Build SQL connection factory test +
-  if(ANCH_SQL_MYSQL AND ANCH_SQL_POSTGRESQL AND ANCH_SQL_SQLITE3)
     file(
       GLOB_RECURSE
       test_sqlfactory
@@ -300,10 +476,8 @@ if(ANCH_SQL_UNITARY_TEST)
 	anch-sql
 	anch-resource
 	anch-date
-	${MySQL_LIBRARIES}
-	${PostgreSQL_LIBRARIES}
-	${SQLite3_LIBRARIES}
 	${Boost_LIBRARIES}
+	${CMAKE_DL_LIBS}
 	)
     else()
       target_link_libraries(
@@ -311,12 +485,9 @@ if(ANCH_SQL_UNITARY_TEST)
 	anch-sql
 	anch-resource
 	anch-date
-	${MySQL_LIBRARIES}
-	${PostgreSQL_LIBRARIES}
-	${SQLite3_LIBRARIES}
+	${CMAKE_DL_LIBS}
 	)
     endif()
-  endif()
   # Build SQL connection factory test -
 
   # Build SQL prepare statement placeholders +
@@ -338,10 +509,8 @@ if(ANCH_SQL_UNITARY_TEST)
       anch-sql
       anch-resource
       anch-date
-      ${MySQL_LIBRARIES}
-      ${PostgreSQL_LIBRARIES}
-      ${SQLite3_LIBRARIES}
       ${Boost_LIBRARIES}
+      ${CMAKE_DL_LIBS}
       )
   else()
     target_link_libraries(
@@ -349,9 +518,7 @@ if(ANCH_SQL_UNITARY_TEST)
       anch-sql
       anch-resource
       anch-date
-      ${MySQL_LIBRARIES}
-      ${PostgreSQL_LIBRARIES}
-      ${SQLite3_LIBRARIES}
+      ${CMAKE_DL_LIBS}
       )
   endif()
   # Build SQL prepare statement placeholders -
