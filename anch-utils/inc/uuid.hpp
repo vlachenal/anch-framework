@@ -136,7 +136,8 @@ namespace anch {
 			    _highTime(uuid._highTime),
 			    _clockSeqLow(uuid._clockSeqLow),
 			    _clockSeqHighRes(uuid._clockSeqHighRes),
-			    _node(uuid._node) {
+			    _node(uuid._node),
+			    _version(uuid._version) {
       // Nothing to do
     }
 
