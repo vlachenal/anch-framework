@@ -63,16 +63,6 @@ int
 main(int argc, char** argv) {
   std::cout << "Enter in SQL connection factory unit test" << std::endl;
 
-#ifdef ANCH_SQL_MYSQL
-  SQLSharedLibraries::getInstance().registerMySQL();
-#endif
-#ifdef ANCH_SQL_POSTGRESQL
-  SQLSharedLibraries::getInstance().registerPostgreSQL();
-#endif
-#ifdef ANCH_SQL_SQLITE3
-  SQLSharedLibraries::getInstance().registerSQLite();
-#endif
-
   try {
     SqlConnectionFactory& fact = SqlConnectionFactory::getInstance();
     std::cout << "Factory has been correctly initialized" << std::endl;

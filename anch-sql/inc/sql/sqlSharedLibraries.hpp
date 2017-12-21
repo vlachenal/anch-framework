@@ -124,32 +124,26 @@ namespace anch {
        */
       Connection* makeConnection(const SqlConnectionConfiguration& config);
 
-#ifdef ANCH_SQL_MYSQL
       /*!
        * Register MySQL driver utlility method
        */
       inline static void registerMySQL() {
         getInstance().registerSQLLibrary("MySQL", "libanch-mysql.so");
       }
-#endif // ANCH_SQL_MYSQL
 
-#ifdef ANCH_SQL_POSTGRESQL
       /*!
        * Register PostgreSQL driver utlility method
        */
       inline static void registerPostgreSQL() {
 	getInstance().registerSQLLibrary("PostgreSQL", "libanch-postgresql.so");
       }
-#endif // ANCH_SQL_POSTGRESQL
 
-#ifdef ANCH_SQL_SQLITE3
       /*!
        * Register SQLite3 driver utlility method
        */
       inline static void registerSQLite() {
 	getInstance().registerSQLLibrary("SQLite3", "libanch-sqlite.so");
       }
-#endif // ANCH_SQL_SQLITE3
       // Methods -
 
     };

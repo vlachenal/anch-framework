@@ -72,7 +72,7 @@ namespace anch {
        * \ref SqlConnectionFactory private constructor.\n
        * Read databases configuration file and create database configurations.
        */
-      SqlConnectionFactory() noexcept;
+      SqlConnectionFactory();
 
       /*!
        * Prohibits \ref SqlConnectionFactory copy constructor

@@ -44,7 +44,7 @@ anch::sql::make_shared_connection(const SqlConnectionConfiguration& config) {
 }
 
 // Constructors +
-SqlConnectionFactory::SqlConnectionFactory() noexcept: _configs(), _pools() {
+SqlConnectionFactory::SqlConnectionFactory(): _configs(), _pools() {
   const Resource& resource = Resource::getResource("db_con.conf");
   auto conf = resource.getConfiguration();
   for(auto iter = conf.cbegin() ; iter != conf.cend() ; ++iter) {
@@ -56,6 +56,15 @@ SqlConnectionFactory::SqlConnectionFactory() noexcept: _configs(), _pools() {
     if(conConf.driver.empty()) {
       continue;
     }
+    // Try to register known database engine if found +
+    if(conConf.driver == "PostgreSQL") {
+      SQLSharedLibraries::registerPostgreSQL();
+    } else if(conConf.driver == "MySQL") {
+      SQLSharedLibraries::registerMySQL();
+    } else if(conConf.driver == "SQLite3") {
+      SQLSharedLibraries::registerSQLite();
+    }
+    // Try to register known database engine if found -
     conConf.database = conf.getParameter("database");
     conConf.hostname = conf.getParameter("host");
     conConf.user = conf.getParameter("user");
