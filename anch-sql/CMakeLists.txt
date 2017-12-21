@@ -73,6 +73,11 @@ add_library(
   $<TARGET_OBJECTS:anch-sql-obj>
   )
 
+target_link_libraries(
+  anch-sql
+  ${CMAKE_DL_LIBS}
+  )
+
 install(
   DIRECTORY inc/ DESTINATION ${ANCH_SQL_INSTALL_INC_DIR}
   FILES_MATCHING PATTERN "*.hpp"
@@ -458,36 +463,34 @@ if(ANCH_SQL_UNITARY_TEST)
   # Build SQLite3 unitary test -
 
   # Build SQL connection factory test +
-    file(
-      GLOB_RECURSE
-      test_sqlfactory
-      inc/*
-      test/testSQLConnectionFactory.cpp
-      )
+  file(
+    GLOB_RECURSE
+    test_sqlfactory
+    inc/*
+    test/testSQLConnectionFactory.cpp
+    )
 
-    add_executable(
+  add_executable(
+    anch-sql-connection-factory-test
+    ${test_sqlfactory}
+    )
+
+  if(USE_BOOST_RE)
+    target_link_libraries(
       anch-sql-connection-factory-test
-      ${test_sqlfactory}
+      anch-sql
+      anch-resource
+      anch-date
+      ${Boost_LIBRARIES}
       )
-
-    if(USE_BOOST_RE)
-      target_link_libraries(
-	anch-sql-connection-factory-test
-	anch-sql
-	anch-resource
-	anch-date
-	${Boost_LIBRARIES}
-	${CMAKE_DL_LIBS}
-	)
-    else()
-      target_link_libraries(
-	anch-sql-connection-factory-test
-	anch-sql
-	anch-resource
-	anch-date
-	${CMAKE_DL_LIBS}
-	)
-    endif()
+  else()
+    target_link_libraries(
+      anch-sql-connection-factory-test
+      anch-sql
+      anch-resource
+      anch-date
+      )
+  endif()
   # Build SQL connection factory test -
 
   # Build SQL prepare statement placeholders +
@@ -510,7 +513,6 @@ if(ANCH_SQL_UNITARY_TEST)
       anch-resource
       anch-date
       ${Boost_LIBRARIES}
-      ${CMAKE_DL_LIBS}
       )
   else()
     target_link_libraries(
@@ -518,7 +520,6 @@ if(ANCH_SQL_UNITARY_TEST)
       anch-sql
       anch-resource
       anch-date
-      ${CMAKE_DL_LIBS}
       )
   endif()
   # Build SQL prepare statement placeholders -
