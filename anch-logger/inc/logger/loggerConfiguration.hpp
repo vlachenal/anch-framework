@@ -73,30 +73,36 @@ namespace anch {
        *
        * \return The category
        */
-      inline const std::string& getCategory() const {
-	return _category;
-      };
+      const std::string& getCategory() const;
 
       /*!
        * Logging level getter
        *
        * \return The logging level
        */
-      inline const anch::logger::Level& getLevel() const {
-	return _level;
-      };
+      const anch::logger::Level& getLevel() const;
 
       /*!
        * Writers getter
        *
        * \return The writers
        */
-      inline const std::vector<anch::logger::Writer*>& getWriters() const {
-	return _writers;
-      };
+      const std::vector<anch::logger::Writer*>& getWriters() const;
       // Accessors -
 
     };
+
+    inline const std::string& LoggerConfiguration::getCategory() const {
+      return _category;
+    }
+
+    inline const anch::logger::Level& LoggerConfiguration::getLevel() const {
+      return _level;
+    }
+
+    inline const std::vector<anch::logger::Writer*>& LoggerConfiguration::getWriters() const {
+      return _writers;
+    }
 
   }
 }

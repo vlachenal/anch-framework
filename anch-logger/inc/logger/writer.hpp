@@ -106,9 +106,7 @@ namespace anch {
        *
        * \return true or false
        */
-      inline bool rotate() const {
-	return (_maxSize > 0 && _fileName != "" && _output->tellp() >= _maxSize);
-      }
+      bool rotate() const;
 
       /*!
        * Rotate files when current reachs the maximum file length.
@@ -116,6 +114,10 @@ namespace anch {
       void rotateFiles();
 
     };
+
+    inline bool Writer::rotate() const {
+      return (_maxSize > 0 && _fileName != "" && _output->tellp() >= _maxSize);
+    }
 
   }
 }
