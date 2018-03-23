@@ -407,20 +407,14 @@ namespace anch {
      *
      * \return the random engine
      */
-    static inline std::mt19937& getRandomEngine() {
-      static std::mt19937 engine;
-      return engine;
-    }
+    static std::mt19937& getRandomEngine();
 
     /*!
      * Distribution sequence getter
      *
      * \return the distribution sequence
      */
-    static inline std::uniform_int_distribution<uint16_t>& getDistSeq() {
-      static std::uniform_int_distribution<uint16_t> distSeq(0, SEQ_HIGH_MASK);
-      return distSeq;
-    }
+    static std::uniform_int_distribution<uint16_t>& getDistSeq();
 
   public:
     /*!
@@ -460,66 +454,90 @@ namespace anch {
      *
      * \return The timestamp low value
      */
-    inline uint32_t getLowTime() const {
-      return _lowTime;
-    }
+    uint32_t getLowTime() const;
 
     /*!
      * The timestamp mid value getter
      *
      * \return The timestamp mid value
      */
-    inline uint16_t getMidTime() const {
-      return _midTime;
-    }
+    uint16_t getMidTime() const;
 
     /*!
      * The timestamp high value getter
      *
      * \return The timestamp high value
      */
-    inline uint16_t getHighTime() const {
-      return _highTime;
-    }
+    uint16_t getHighTime() const;
 
     /*!
      * The clock sequence low value getter
      *
      * \return The clock sequence low value
      */
-    inline uint16_t getClockSeqLow() const {
-      return _clockSeqLow;
-    }
+    uint16_t getClockSeqLow() const;
 
     /*!
      * The clock sequence high value and reserved value getter
      *
      * \return The clock sequence high value and reserved value
      */
-    inline uint16_t getClockSeqHighRes() const {
-      return _clockSeqHighRes;
-    }
+    uint16_t getClockSeqHighRes() const;
 
     /*!
      * The node getter
      *
      * \return The node
      */
-    inline uint64_t getNode() const {
-      return _node;
-    }
+    uint64_t getNode() const;
 
     /*!
      * Version getter
      *
      * \return The version
      */
-    inline anch::Uuid::Version getVersion() const {
-      return _version;
-    }
+    anch::Uuid::Version getVersion() const;
     // Accessors -
 
   };
+
+  inline std::mt19937& Uuid::getRandomEngine() {
+    static std::mt19937 engine;
+    return engine;
+  }
+
+  inline std::uniform_int_distribution<uint16_t>& Uuid::getDistSeq() {
+    static std::uniform_int_distribution<uint16_t> distSeq(0, SEQ_HIGH_MASK);
+    return distSeq;
+  }
+
+  inline uint32_t Uuid::getLowTime() const {
+    return _lowTime;
+  }
+
+  inline uint16_t Uuid::getMidTime() const {
+    return _midTime;
+  }
+
+  inline uint16_t Uuid::getHighTime() const {
+    return _highTime;
+  }
+
+  inline uint16_t Uuid::getClockSeqLow() const {
+    return _clockSeqLow;
+  }
+
+  inline uint16_t Uuid::getClockSeqHighRes() const {
+    return _clockSeqHighRes;
+  }
+
+  inline uint64_t Uuid::getNode() const {
+    return _node;
+  }
+
+  inline anch::Uuid::Version Uuid::getVersion() const {
+    return _version;
+  }
 
 }
 
