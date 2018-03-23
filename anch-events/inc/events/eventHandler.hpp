@@ -57,7 +57,6 @@ namespace anch {
        */
       EventHandler(const std::function<void(Derived&,const Event&)>& callbackFunction,
 		   bool useEventBus = false): _callbackFunction(callbackFunction) {
-	//_callbackFunction = callbackFunction;
 	if(useEventBus) {
 	  anch::events::EventBus<Event>& eventBus = anch::events::EventBus<Event>::getInstance();
 	  eventBus.addObserver(*this);
