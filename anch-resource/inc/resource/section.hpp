@@ -69,18 +69,14 @@ namespace anch {
        *
        * \return The parameters
        */
-      inline const std::map<std::string,std::string>& getParameters() const {
-	return _parameters;
-      }
+      const std::map<std::string,std::string>& getParameters() const;
 
       /*!
        * Parameters setter
        *
        * \param parameters The parameters
        */
-      inline void setParameters(const std::map<std::string,std::string>& parameters) {
-	_parameters = parameters;
-      }
+      void setParameters(const std::map<std::string,std::string>& parameters);
 
       /*!
        * Add parameter to section
@@ -88,9 +84,7 @@ namespace anch {
        * \param param The parameter
        * \param value The associated value
        */
-      inline void addParameter(const std::string& param, const std::string& value) {
-	_parameters[param] = value;
-      }
+      void addParameter(const std::string& param, const std::string& value);
 
       /*!
        * Parameter getter.\n
@@ -100,17 +94,31 @@ namespace anch {
        *
        * \return The parameter value or empty if not found
        */
-      inline const std::string& getParameter(const std::string& parameterName) const {
-	auto iter = _parameters.find(parameterName);
-	if(iter == _parameters.end()) {
-	  return Section::DEFAULT_VALUE;
-	} else {
-	  return iter->second;
-	}
-      }
+      const std::string& getParameter(const std::string& parameterName) const;
       // Accessors -
 
     };
+
+    inline const std::map<std::string,std::string>& Section::getParameters() const {
+      return _parameters;
+    }
+
+    inline void Section::setParameters(const std::map<std::string,std::string>& parameters) {
+      _parameters = parameters;
+    }
+
+    inline void Section::addParameter(const std::string& param, const std::string& value) {
+      _parameters[param] = value;
+    }
+
+    inline const std::string& Section::getParameter(const std::string& parameterName) const {
+      auto iter = _parameters.find(parameterName);
+      if(iter == _parameters.end()) {
+	return Section::DEFAULT_VALUE;
+      } else {
+	return iter->second;
+      }
+    }
 
   }
 }

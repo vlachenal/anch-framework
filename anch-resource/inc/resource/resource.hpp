@@ -90,12 +90,13 @@ namespace anch {
        *
        * \return The configuration
        */
-      inline const std::map<std::string,anch::resource::Section>& getConfiguration() const {
-	return _resources;
-      }
+      const std::map<std::string,anch::resource::Section>& getConfiguration() const;
 
     };
 
+    inline const std::map<std::string,anch::resource::Section>& Resource::getConfiguration() const {
+      return _resources;
+    }
   }
 }
 
