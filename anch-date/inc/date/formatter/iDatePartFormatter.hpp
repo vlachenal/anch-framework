@@ -81,9 +81,7 @@ namespace anch {
 	 *
 	 * \return The year
 	 */
-	inline static int32_t getYear(const anch::date::Date& date) {
-	  return date._years;
-	}
+	static int32_t getYear(const anch::date::Date& date);
 
 	/*!
 	 * \ref Date year setter
@@ -91,18 +89,14 @@ namespace anch {
 	 * \param date The \ref Date to modify
 	 * \param year The year value to set
 	 */
-	inline static void setYear(anch::date::Date& date, int32_t year) {
-	  date._years = year;
-	}
+	static void setYear(anch::date::Date& date, int32_t year);
 
 	/*!
 	 * \ref Date month getter
 	 *
 	 * \return The month
 	 */
-	inline static uint16_t getMonth(const anch::date::Date& date) {
-	  return date._months;
-	}
+	static uint16_t getMonth(const anch::date::Date& date);
 
 	/*!
 	 * \ref Date month setter
@@ -110,18 +104,14 @@ namespace anch {
 	 * \param date The \ref Date to modify
 	 * \param month The month value to set
 	 */
-	inline static void setMonth(anch::date::Date& date, uint16_t month) {
-	  date._months = month;
-	}
+	static void setMonth(anch::date::Date& date, uint16_t month);
 
 	/*!
 	 * \ref Date day getter
 	 *
 	 * \return The day
 	 */
-	inline static uint16_t getDay(const anch::date::Date& date) {
-	  return date._mdays;
-	}
+	static uint16_t getDay(const anch::date::Date& date);
 
 	/*!
 	 * \ref Date day setter
@@ -129,18 +119,14 @@ namespace anch {
 	 * \param date The \ref Date to modify
 	 * \param mday The day value to set
 	 */
-	inline static void setDay(anch::date::Date& date, uint16_t mday) {
-	  date._mdays = mday;
-	}
+	static void setDay(anch::date::Date& date, uint16_t mday);
 
 	/*!
 	 * \ref Date hour getter
 	 *
 	 * \return The hour
 	 */
-	inline static uint16_t getHour(const anch::date::Date& date) {
-	  return date._hours;
-	}
+	static uint16_t getHour(const anch::date::Date& date);
 
 	/*!
 	 * \ref Date hour setter
@@ -148,18 +134,14 @@ namespace anch {
 	 * \param date The \ref Date to modify
 	 * \param hour The hour value to set
 	 */
-	inline static void setHour(anch::date::Date& date, uint16_t hour) {
-	  date._hours = hour;
-	}
+	static void setHour(anch::date::Date& date, uint16_t hour);
 
 	/*!
 	 * \ref Date minute getter
 	 *
 	 * \return The minute
 	 */
-	inline static uint16_t getMinute(const anch::date::Date& date) {
-	  return date._minutes;
-	}
+	static uint16_t getMinute(const anch::date::Date& date);
 
 	/*!
 	 * \ref Date minute setter
@@ -167,18 +149,14 @@ namespace anch {
 	 * \param date The \ref Date to modify
 	 * \param minute The minute value to set
 	 */
-	inline static void setMinute(anch::date::Date& date, uint16_t minute) {
-	  date._minutes = minute;
-	}
+	static void setMinute(anch::date::Date& date, uint16_t minute);
 
 	/*!
 	 * \ref Date second getter
 	 *
 	 * \return The second
 	 */
-	inline static uint16_t getSecond(const anch::date::Date& date) {
-	  return date._seconds;
-	}
+	static uint16_t getSecond(const anch::date::Date& date);
 
 	/*!
 	 * \ref Date second setter
@@ -186,18 +164,14 @@ namespace anch {
 	 * \param date The \ref Date to modify
 	 * \param second The second value to set
 	 */
-	inline static void setSecond(anch::date::Date& date, uint16_t second) {
-	  date._seconds = second;
-	}
+	static void setSecond(anch::date::Date& date, uint16_t second);
 
 	/*!
 	 * \ref Date millisecond getter
 	 *
 	 * \return The millisecond
 	 */
-	inline static uint16_t getMillisecond(const anch::date::Date& date) {
-	  return date._milliseconds;
-	}
+	static uint16_t getMillisecond(const anch::date::Date& date);
 
 	/*!
 	 * \ref Date millisecond setter
@@ -205,18 +179,14 @@ namespace anch {
 	 * \param date The \ref Date to modify
 	 * \param milli The millisecond value to set
 	 */
-	inline static void setMillisecond(anch::date::Date& date, uint16_t milli) {
-	  date._milliseconds = milli;
-	}
+	static void setMillisecond(anch::date::Date& date, uint16_t milli);
 
 	/*!
 	 * \ref Date microsecond getter
 	 *
 	 * \return The microsecond
 	 */
-	inline static uint16_t getMicrosecond(const anch::date::Date& date) {
-	  return date._microseconds;
-	}
+	static uint16_t getMicrosecond(const anch::date::Date& date);
 
 	/*!
 	 * \ref Date microsecond setter
@@ -224,18 +194,14 @@ namespace anch {
 	 * \param date The \ref Date to modify
 	 * \param micro The microsecond value to set
 	 */
-	inline static void setMicrosecond(anch::date::Date& date, uint16_t micro) {
-	  date._microseconds = micro;
-	}
+	static void setMicrosecond(anch::date::Date& date, uint16_t micro);
 
 	/*!
 	 * \ref Date nanosecond getter
 	 *
 	 * \return The nanosecond
 	 */
-	inline static uint16_t getNanosecond(const anch::date::Date& date) {
-	  return date._nanoseconds;
-	}
+	static uint16_t getNanosecond(const anch::date::Date& date);
 
 	/*!
 	 * \ref Date nanosecond setter
@@ -243,11 +209,81 @@ namespace anch {
 	 * \param date The \ref Date to modify
 	 * \param nano The nanosecond value to set
 	 */
-	inline static void setNanosecond(anch::date::Date& date, uint16_t nano) {
-	  date._nanoseconds = nano;
-	}
+	static void setNanosecond(anch::date::Date& date, uint16_t nano);
 	// Accessors -
       };
+
+      inline int32_t IDatePartFormatter::getYear(const anch::date::Date& date) {
+	return date._years;
+      }
+
+      inline void IDatePartFormatter::setYear(anch::date::Date& date, int32_t year) {
+	date._years = year;
+      }
+
+      inline uint16_t IDatePartFormatter::getMonth(const anch::date::Date& date) {
+	return date._months;
+      }
+
+      inline void IDatePartFormatter::setMonth(anch::date::Date& date, uint16_t month) {
+	date._months = month;
+      }
+
+      inline uint16_t IDatePartFormatter::getDay(const anch::date::Date& date) {
+	return date._mdays;
+      }
+
+      inline void IDatePartFormatter::setDay(anch::date::Date& date, uint16_t mday) {
+	date._mdays = mday;
+      }
+
+      inline uint16_t IDatePartFormatter::getHour(const anch::date::Date& date) {
+	return date._hours;
+      }
+
+      inline void IDatePartFormatter::setHour(anch::date::Date& date, uint16_t hour) {
+	date._hours = hour;
+      }
+
+      inline uint16_t IDatePartFormatter::getMinute(const anch::date::Date& date) {
+	return date._minutes;
+      }
+
+      inline void IDatePartFormatter::setMinute(anch::date::Date& date, uint16_t minute) {
+	date._minutes = minute;
+      }
+
+      inline uint16_t IDatePartFormatter::getSecond(const anch::date::Date& date) {
+	return date._seconds;
+      }
+
+      inline void IDatePartFormatter::setSecond(anch::date::Date& date, uint16_t second) {
+	date._seconds = second;
+      }
+
+      inline uint16_t IDatePartFormatter::getMillisecond(const anch::date::Date& date) {
+	return date._milliseconds;
+      }
+
+      inline void IDatePartFormatter::setMillisecond(anch::date::Date& date, uint16_t milli) {
+	date._milliseconds = milli;
+      }
+
+      inline uint16_t IDatePartFormatter::getMicrosecond(const anch::date::Date& date) {
+	return date._microseconds;
+      }
+
+      inline void IDatePartFormatter::setMicrosecond(anch::date::Date& date, uint16_t micro) {
+	date._microseconds = micro;
+      }
+
+      inline uint16_t IDatePartFormatter::getNanosecond(const anch::date::Date& date) {
+	return date._nanoseconds;
+      }
+
+      inline void IDatePartFormatter::setNanosecond(anch::date::Date& date, uint16_t nano) {
+	date._nanoseconds = nano;
+      }
 
     }
   }

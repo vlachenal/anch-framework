@@ -159,14 +159,7 @@ namespace anch {
       /*!
        * Compute std::tm from internal members
        */
-      inline void computeTm(std::tm& time) const {
-	time.tm_sec = _seconds;
-	time.tm_min = _minutes;
-	time.tm_hour = _hours;
-	time.tm_mday = _mdays;
-	time.tm_mon = _months;
-	time.tm_year = _years - 1900;
-      }
+      void computeTm(std::tm& time) const;
 
     public:
       /*!
@@ -176,9 +169,7 @@ namespace anch {
        *
        * \return \c true if current \ref Date is after the other one, \c false otherwise.
        */
-      inline bool after(const Date& date) const noexcept {
-	return _timestamp > date._timestamp;
-      }
+      bool after(const Date& date) const noexcept;
 
       /*!
        * Check if current \ref Date is before another one.
@@ -187,9 +178,7 @@ namespace anch {
        *
        * \return \c true if current \ref Date is before the other one, \c false otherwise.
        */
-      inline bool before(const Date& date) const noexcept {
-	return _timestamp < date._timestamp;
-      }
+      bool before(const Date& date) const noexcept;
 
       /*!
        * Check if current \ref Date is equals to another one.
@@ -198,9 +187,7 @@ namespace anch {
        *
        * \return \c true if current \ref Date is equals to the other one, \c false otherwise.
        */
-      inline bool equals(const Date& date) const noexcept {
-	return _timestamp == date._timestamp;
-      }
+      bool equals(const Date& date) const noexcept;
       // Methods -
 
 
@@ -212,9 +199,7 @@ namespace anch {
        *
        * \param date The date to compare to
        */
-      inline bool operator > (const Date& date) const noexcept {
-	return after(date);
-      }
+      bool operator > (const Date& date) const noexcept;
 
       /*!
        * '>=' operator definition.
@@ -222,9 +207,7 @@ namespace anch {
        *
        * \param date The date to compare to
        */
-      inline bool operator >= (const Date& date) const noexcept {
-	return (after(date) || equals(date));
-      }
+      bool operator >= (const Date& date) const noexcept;
 
       /*!
        * '<' operator definition.
@@ -232,9 +215,7 @@ namespace anch {
        *
        * \param date The date to compare to
        */
-      inline bool operator < (const Date& date) const noexcept {
-	return before(date);
-      }
+      bool operator < (const Date& date) const noexcept;
 
       /*!
        * '<=' operator definition.
@@ -242,9 +223,7 @@ namespace anch {
        *
        * \param date The date to compare to
        */
-      inline bool operator <= (const Date& date) const noexcept {
-	return (before(date) || equals(date));
-      }
+      bool operator <= (const Date& date) const noexcept;
 
       /*!
        * '==' operator definition.
@@ -252,9 +231,7 @@ namespace anch {
        *
        * \param date The date to compare to
        */
-      inline bool operator == (const Date& date) const noexcept {
-	return equals(date);
-      }
+      bool operator == (const Date& date) const noexcept;
 
       /*!
        * '!=' operator definition.
@@ -262,34 +239,81 @@ namespace anch {
        *
        * \param date The date to compare to
        */
-      inline bool operator != (const Date& date) const noexcept {
-	return !equals(date);
-      }
+      bool operator != (const Date& date) const noexcept;
 
       /*!
        * Cast operator to std::time_t definition.
        *
        * \return The converted std::time_t
        */
-      inline operator std::time_t() const noexcept {
-	std::tm time;
-	computeTm(time);
-	return std::mktime(&time);
-      }
+      operator std::time_t() const noexcept;
 
       /*!
        * Cast operator to std::tm definition.
        *
        * \return The converted std::tm
        */
-      inline operator std::tm() const noexcept {
-	std::tm time;
-	computeTm(time);
-	return time;
-      }
+      operator std::tm() const noexcept;
       // Operators -
 
     };
+
+    inline void Date::computeTm(std::tm& time) const {
+      time.tm_sec = _seconds;
+      time.tm_min = _minutes;
+      time.tm_hour = _hours;
+      time.tm_mday = _mdays;
+      time.tm_mon = _months;
+      time.tm_year = _years - 1900;
+    }
+
+    inline bool Date::after(const Date& date) const noexcept {
+      return _timestamp > date._timestamp;
+    }
+
+    inline bool Date::before(const Date& date) const noexcept {
+      return _timestamp < date._timestamp;
+    }
+
+    inline bool Date::equals(const Date& date) const noexcept {
+      return _timestamp == date._timestamp;
+    }
+
+    inline bool Date::operator > (const Date& date) const noexcept {
+      return after(date);
+    }
+
+    inline bool Date::operator >= (const Date& date) const noexcept {
+      return (after(date) || equals(date));
+    }
+
+    inline bool Date::operator < (const Date& date) const noexcept {
+      return before(date);
+    }
+
+    inline bool Date::operator <= (const Date& date) const noexcept {
+      return (before(date) || equals(date));
+    }
+
+    inline bool Date::operator == (const Date& date) const noexcept {
+      return equals(date);
+    }
+
+    inline bool Date::operator != (const Date& date) const noexcept {
+      return !equals(date);
+    }
+
+    inline Date::operator std::time_t() const noexcept {
+      std::tm time;
+      computeTm(time);
+      return std::mktime(&time);
+    }
+
+    inline Date::operator std::tm() const noexcept {
+      std::tm time;
+      computeTm(time);
+      return time;
+    }
 
   }
 }
