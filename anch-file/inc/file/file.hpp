@@ -194,111 +194,135 @@ namespace anch {
        *
        * \return the \ref File path
        */
-      inline const std::string& getPath() const {
-	return _path;
-      }
+      const std::string& getPath() const;
 
       /*!
        * Get the parent \ref File
        *
        * \return the parent \ref File
        */
-      inline std::shared_ptr<File> getParent() const {
-	return _parent;
-      }
+      std::shared_ptr<File> getParent() const;
 
       /*!
        * Check if \ref File exist.
        *
        * \return \c true if \ref File exists, \c false otherwise.
        */
-      inline bool exists() const {
-	return _exists;
-      }
+      bool exists() const;
 
       /*!
        * Check is \ref File is a directory.
        *
        * \return \c true if \ref File is a directory, \c false otherwise.
        */
-      inline bool isDirectory() const {
-	return _directory;
-      }
+      bool isDirectory() const;
 
       /*!
        * Check is \ref File is a regular file.
        *
        * \return \c true if \ref File is a regular file, \c false otherwise.
        */
-      inline bool isFile() const {
-	return !_directory;
-      }
+      bool isFile() const;
 
       /*!
        * Return the readable state
        *
        * \return \c true is the \ref File can be read, \c false otherwise.
        */
-      inline bool canRead() const {
-	return _readable;
-      }
+      bool canRead() const;
 
       /*!
        * Return the writable state
        *
        * \return \c true is the \ref File can be written, \c false otherwise.
        */
-      inline bool canWrite() const {
-	return _writable;
-      }
+      bool canWrite() const;
 
       /*!
        * Return the executable state
        *
        * \return \c true is the \ref File can be executed, \c false otherwise.
        */
-      inline bool canExecute() const {
-	return _executable;
-      }
+      bool canExecute() const;
 
       /*!
        * \ref File size getter
        *
        * \return the \ref File size
        */
-      inline uint64_t getSize() const {
-	return _size;
-      }
+      uint64_t getSize() const;
 
       /*!
        * \ref File last access getter
        *
        * \return the \ref File last access
        */
-      inline const anch::date::Date& getLastAccess() const {
-	return _lastAccess;
-      }
+      const anch::date::Date& getLastAccess() const;
 
       /*!
        * \ref File last modification getter
        *
        * \return the \ref File last modification
        */
-      inline const anch::date::Date& getLastModification() const {
-	return _lastModification;
-      }
+      const anch::date::Date& getLastModification() const;
 
       /*!
        * \ref File last status change getter
        *
        * \return the \ref File last status change
        */
-      inline const anch::date::Date& getLastStatusChange() const {
-	return _lastStatusChange;
-      }
+      const anch::date::Date& getLastStatusChange() const;
       // Accessors -
 
     };
+
+    inline const std::string& File::getPath() const {
+      return _path;
+    }
+
+    inline std::shared_ptr<File> File::getParent() const {
+      return _parent;
+    }
+
+    inline bool File::exists() const {
+      return _exists;
+    }
+
+    inline bool File::isDirectory() const {
+      return _directory;
+    }
+
+    inline bool File::isFile() const {
+      return !_directory;
+    }
+
+    inline bool File::canRead() const {
+      return _readable;
+    }
+
+    inline bool File::canWrite() const {
+      return _writable;
+    }
+
+    inline bool File::canExecute() const {
+      return _executable;
+    }
+
+    inline uint64_t File::getSize() const {
+      return _size;
+    }
+
+    inline const anch::date::Date& File::getLastAccess() const {
+      return _lastAccess;
+    }
+
+    inline const anch::date::Date& File::getLastModification() const {
+      return _lastModification;
+    }
+
+    inline const anch::date::Date& File::getLastStatusChange() const {
+      return _lastStatusChange;
+    }
 
   }
 }
