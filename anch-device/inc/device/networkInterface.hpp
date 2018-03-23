@@ -90,75 +90,91 @@ namespace anch {
        *
        * \return The interface name
        */
-      inline const std::string& getName() const {
-	return _name;
-      }
+      inline const std::string& getName() const;
 
       /*!
        * Interface IP address getter
        *
        * \return The interface IP address
        */
-      inline const std::string& getIpAddress() const {
-	return _ipAddress;
-      }
+      inline const std::string& getIpAddress() const;
 
       /*!
        * MAC address getter
        *
        * \return The MAC address
        */
-      inline const std::string& getMacAddress() const {
-	return _macAddress;
-      }
+      inline const std::string& getMacAddress() const;
 
       /*!
        * Interface broadcast address getter
        *
        * \return The interface broadcast address
        */
-      inline const std::string& getBroadcastAddress() const {
-	return _broadcastAddress;
-      }
+      inline const std::string& getBroadcastAddress() const;
 
       /*!
        * Interface netmask getter
        *
        * \return The interface netmask
        */
-      inline const std::string& getNetmask() const {
-	return _netmask;
-      }
+      inline const std::string& getNetmask() const;
 
       /*!
        * Interface MTU getter
        *
        * \return The interface MTU
        */
-      inline int getMtu() const {
-	return _mtu;
-      }
+      inline int getMtu() const;
 
       /*!
        * Interface metric getter
        *
        * \return The interface metric
        */
-      inline int getMetric() const {
-	return _metric;
-      }
+      inline int getMetric() const;
 
       /*!
        * Is interface localhost getter
        *
        * \return \c true if interface is localhost, \c false otherwise
        */
-      inline bool isLocalhost() const {
-	return _localhost;
-      }
+      inline bool isLocalhost() const;
       // Accessors -
 
     };
+
+    inline const std::string& NetworkInterface::getName() const {
+      return _name;
+    }
+
+    inline const std::string& NetworkInterface::getIpAddress() const {
+      return _ipAddress;
+    }
+
+    inline const std::string& NetworkInterface::getMacAddress() const {
+      return _macAddress;
+    }
+
+    inline const std::string& NetworkInterface::getBroadcastAddress() const {
+      return _broadcastAddress;
+    }
+
+    inline const std::string& NetworkInterface::getNetmask() const {
+      return _netmask;
+    }
+
+    inline int NetworkInterface::getMtu() const {
+      return _mtu;
+    }
+
+    inline int NetworkInterface::getMetric() const {
+      return _metric;
+    }
+
+    inline bool NetworkInterface::isLocalhost() const {
+      return _localhost;
+    }
 
   }
 }

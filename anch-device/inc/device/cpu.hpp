@@ -117,84 +117,102 @@ namespace anch {
        *
        * \return AES feature support
        */
-      inline bool isAES() const {
-	return _aes;
-      }
+      inline bool isAES() const;
 
       /*!
        * MMX support getter
        *
        * \return MMX feature support
        */
-      inline bool isMMX() const {
-	return _mmx;
-      }
+      inline bool isMMX() const;
 
       /*!
        * SSE support getter
        *
        * \return SSE feature support
        */
-      inline bool isSSE() const {
-	return _sse;
-      }
+      inline bool isSSE() const;
 
       /*!
        * SSE2 support getter
        *
        * \return SSE2 feature support
        */
-      inline bool isSSE2() const {
-	return _sse2;
-      }
+      inline bool isSSE2() const;
 
       /*!
        * SSE3 support getter
        *
        * \return SSE3 feature support
        */
-      inline bool isSSE3() const {
-	return _sse3;
-      }
+      inline bool isSSE3() const;
 
       /*!
        * SSSE3 support getter
        *
        * \return SSSE3 feature support
        */
-      inline bool isSSSE3() const {
-	return _ssse3;
-      }
+      inline bool isSSSE3() const;
 
       /*!
        * SSE4 support getter
        *
        * \return SSE4 feature support
        */
-      inline bool isSSE4() const {
-	return _sse4;
-      }
+      inline bool isSSE4() const;
 
       /*!
        * SSE4.1 support getter
        *
        * \return SSE4.1 feature support
        */
-      inline bool isSSE4_1() const {
-	return _sse4_1;
-      }
+      inline bool isSSE4_1() const;
 
       /*!
        * SSE4.2 support getter
        *
        * \return SSE4.2 feature support
        */
-      inline bool isSSE4_2() const {
-	return _sse4_2;
-      }
+      inline bool isSSE4_2() const;
       // Accessors -
 
     };
+
+    inline bool CPU::isAES() const {
+      return _aes;
+    }
+
+    inline bool CPU::isMMX() const {
+      return _mmx;
+    }
+
+    inline bool CPU::isSSE() const {
+      return _sse;
+    }
+
+    inline bool CPU::isSSE2() const {
+      return _sse2;
+    }
+
+    inline bool CPU::isSSE3() const {
+      return _sse3;
+    }
+
+    inline bool CPU::isSSSE3() const {
+      return _ssse3;
+    }
+
+    inline bool CPU::isSSE4() const {
+      return _sse4;
+    }
+
+    inline bool CPU::isSSE4_1() const {
+      return _sse4_1;
+    }
+
+    inline bool CPU::isSSE4_2() const {
+      return _sse4_2;
+    }
 
   }
 }
