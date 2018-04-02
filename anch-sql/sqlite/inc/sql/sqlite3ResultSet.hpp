@@ -91,28 +91,41 @@ namespace anch {
        *
        * \throw SqlException any error
        */
-      virtual bool getValue(std::size_t idx, std::string& out);
+      virtual bool getValue(std::size_t idx, std::string& out) override;
+
+#ifdef ANCH_STD_OTP
+      /*!
+       * Retrieve string value from result set according to SQL database engine.
+       *
+       * \param idx the index
+       *
+       * \return the result
+       *
+       * \throw SqlException any error
+       */
+      virtual std::optional<std::string> getValue(std::size_t idx) override;
+#endif // ANCH_STD_OTP
 
       /*!
        * Retrieve SQL date formatter
        *
        * \return the SQL date formatter
        */
-      virtual const anch::date::DateFormatter& getDateFormatter();
+      virtual const anch::date::DateFormatter& getDateFormatter() override;
 
       /*!
        * Retrieve SQL time formatter
        *
        * \return the SQL time formatter
        */
-      virtual const anch::date::DateFormatter& getTimeFormatter();
+      virtual const anch::date::DateFormatter& getTimeFormatter() override;
 
       /*!
        * Retrieve SQL timestamp formatter
        *
        * \return the SQL timestamp formatter
        */
-      virtual const anch::date::DateFormatter& getTimestampFormatter();
+      virtual const anch::date::DateFormatter& getTimestampFormatter() override;
       // Methods -
 
     };

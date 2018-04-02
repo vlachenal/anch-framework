@@ -324,50 +324,48 @@ namespace anch {
       return null;
     }
 
+#ifdef ANCH_STD_OTP
     /*!
-     * Get field string value by index.\n
-     * You have to delete result once treated.
+     * Get field \c string value by index.
      *
      * \param idx the index
      *
-     * \return the result
+     * \return the optional value
      *
      * \throw SqlException any error
      */
     template<>
-    const std::string*
+    std::optional<std::string>
     ResultSet::get<std::string>(std::size_t idx) {
-      std::string out;
-      std::string* res = NULL;
-      if(!get(idx, out)) {
-	res = new std::string(out);
+      if(idx >= _fields.size()) {
+	std::ostringstream msg;
+	msg << "Index out of range: try to retrieve index " << idx
+	    << " but result set contains " << _fields.size() << " fields";
+	throw SqlException(msg.str(), true);
       }
-      return res;
+      return getValue(idx);
     }
 
     /*!
-     * Get field int64_t value by index.\n
-     * You have to delete result once treated.
+     * Get field \c int64_t value by index.
      *
      * \param idx the index
      *
-     * \return the result
+     * \return the optional value
      *
      * \throw SqlException any error
      */
     template<>
-    const int64_t*
+    std::optional<int64_t>
     ResultSet::get<int64_t>(std::size_t idx) {
-      int64_t* res = NULL;
-      std::string strVal;
-      if(!get(idx, strVal)) {
-	res = new int64_t();
+      std::optional<int64_t> res;
+      std::optional<std::string> strRes = get<std::string>(idx);
+      if(strRes) {
 	try {
-	  *res = anch::convert<int64_t>(strVal);
+	  res = anch::convert<int64_t>(strRes.value());
 	} catch(const std::bad_cast& e) {
-	  delete res;
 	  std::ostringstream msg;
-	  msg << "Can not convert '" << strVal << "' into int64_t";
+	  msg << "Can not convert '" << strRes.value() << "' into int64_t";
 	  throw SqlException(msg.str(), true);
 	}
       }
@@ -375,28 +373,25 @@ namespace anch {
     }
 
     /*!
-     * Get field int32_t value by index.\n
-     * You have to delete result once treated.
+     * Get field \c int32_t value by index.
      *
      * \param idx the index
      *
-     * \return the result
+     * \return the optional value
      *
      * \throw SqlException any error
      */
     template<>
-    const int32_t*
+    std::optional<int32_t>
     ResultSet::get<int32_t>(std::size_t idx) {
-      int32_t* res = NULL;
-      std::string strVal;
-      if(!get(idx, strVal)) {
-	res = new int32_t();
+      std::optional<int32_t> res;
+      std::optional<std::string> strRes = get<std::string>(idx);
+      if(strRes) {
 	try {
-	  *res = anch::convert<int32_t>(strVal);
+	  res = anch::convert<int32_t>(strRes.value());
 	} catch(const std::bad_cast& e) {
-	  delete res;
 	  std::ostringstream msg;
-	  msg << "Can not convert '" << strVal << "' into int32_t";
+	  msg << "Can not convert '" << strRes.value() << "' into int64_t";
 	  throw SqlException(msg.str(), true);
 	}
       }
@@ -404,28 +399,25 @@ namespace anch {
     }
 
     /*!
-     * Get field int16_t value by index.\n
-     * You have to delete result once treated.
+     * Get field \c int16_t value by index.
      *
      * \param idx the index
      *
-     * \return the result
+     * \return the optional value
      *
      * \throw SqlException any error
      */
     template<>
-    const int16_t*
+    std::optional<int16_t>
     ResultSet::get<int16_t>(std::size_t idx) {
-      int16_t* res = NULL;
-      std::string strVal;
-      if(!get(idx, strVal)) {
-	res = new int16_t();
+      std::optional<int16_t> res;
+      std::optional<std::string> strRes = get<std::string>(idx);
+      if(strRes) {
 	try {
-	  *res = anch::convert<int16_t>(strVal);
+	  res = anch::convert<int16_t>(strRes.value());
 	} catch(const std::bad_cast& e) {
-	  delete res;
 	  std::ostringstream msg;
-	  msg << "Can not convert '" << strVal << "' into int16_t";
+	  msg << "Can not convert '" << strRes.value() << "' into int64_t";
 	  throw SqlException(msg.str(), true);
 	}
       }
@@ -433,28 +425,25 @@ namespace anch {
     }
 
     /*!
-     * Get field uint64_t value by index.\n
-     * You have to delete result once treated.
+     * Get field \c uint64_t value by index.
      *
      * \param idx the index
      *
-     * \return the result
+     * \return the optional value
      *
      * \throw SqlException any error
      */
     template<>
-    const uint64_t*
+    std::optional<uint64_t>
     ResultSet::get<uint64_t>(std::size_t idx) {
-      uint64_t* res = NULL;
-      std::string strVal;
-      if(!get(idx, strVal)) {
-	res = new uint64_t();
+      std::optional<uint64_t> res;
+      std::optional<std::string> strRes = get<std::string>(idx);
+      if(strRes) {
 	try {
-	  *res = anch::convert<uint64_t>(strVal);
+	  res = anch::convert<uint64_t>(strRes.value());
 	} catch(const std::bad_cast& e) {
-	  delete res;
 	  std::ostringstream msg;
-	  msg << "Can not convert '" << strVal << "' into uint64_t";
+	  msg << "Can not convert '" << strRes.value() << "' into int64_t";
 	  throw SqlException(msg.str(), true);
 	}
       }
@@ -462,28 +451,25 @@ namespace anch {
     }
 
     /*!
-     * Get field uint32_t value by index.\n
-     * You have to delete result once treated.
+     * Get field \c uint32_t value by index.
      *
      * \param idx the index
      *
-     * \return the result
+     * \return the optional value
      *
      * \throw SqlException any error
      */
     template<>
-    const uint32_t*
+    std::optional<uint32_t>
     ResultSet::get<uint32_t>(std::size_t idx) {
-      uint32_t* res = NULL;
-      std::string strVal;
-      if(!get(idx, strVal)) {
-	res = new uint32_t();
+      std::optional<uint32_t> res;
+      std::optional<std::string> strRes = get<std::string>(idx);
+      if(strRes) {
 	try {
-	  *res = anch::convert<uint32_t>(strVal);
+	  res = anch::convert<uint32_t>(strRes.value());
 	} catch(const std::bad_cast& e) {
-	  delete res;
 	  std::ostringstream msg;
-	  msg << "Can not convert '" << strVal << "' into uint32_t";
+	  msg << "Can not convert '" << strRes.value() << "' into int64_t";
 	  throw SqlException(msg.str(), true);
 	}
       }
@@ -491,28 +477,25 @@ namespace anch {
     }
 
     /*!
-     * Get field uint16_t value by index.\n
-     * You have to delete result once treated.
+     * Get field \c uint16_t value by index.
      *
      * \param idx the index
      *
-     * \return the result
+     * \return the optional value
      *
      * \throw SqlException any error
      */
     template<>
-    const uint16_t*
+    std::optional<uint16_t>
     ResultSet::get<uint16_t>(std::size_t idx) {
-      uint16_t* res = NULL;
-      std::string strVal;
-      if(!get(idx, strVal)) {
-	res = new uint16_t();
+      std::optional<uint16_t> res;
+      std::optional<std::string> strRes = get<std::string>(idx);
+      if(strRes) {
 	try {
-	  *res = anch::convert<uint16_t>(strVal);
+	  res = anch::convert<uint16_t>(strRes.value());
 	} catch(const std::bad_cast& e) {
-	  delete res;
 	  std::ostringstream msg;
-	  msg << "Can not convert '" << strVal << "' into uint16_t";
+	  msg << "Can not convert '" << strRes.value() << "' into int64_t";
 	  throw SqlException(msg.str(), true);
 	}
       }
@@ -520,76 +503,74 @@ namespace anch {
     }
 
     /*!
-     * Get field \ref Date value by index.\n
-     * You have to delete result once treated.
+     * Get field \ref Date value by index.
      *
      * \param idx the index
      *
-     * \return the result
+     * \return the optional value
      *
      * \throw SqlException any error
      */
     template<>
-    const anch::sql::Date*
+    std::optional<anch::sql::Date>
     ResultSet::get<anch::sql::Date>(std::size_t idx) {
-      anch::sql::Date* res = NULL;
-      std::string strVal;
-      if(!get(idx, strVal)) {
+      std::optional<anch::sql::Date> res;
+      std::optional<std::string> strRes = get<std::string>(idx);
+      if(strRes) {
 	const anch::date::DateFormatter& formatter = getDateFormatter();
 	anch::date::Date date;
-	formatter.parse(strVal, date);
-	res = new anch::sql::Date(date);
+	formatter.parse(strRes.value(), date);
+	res = anch::sql::Date(date);
       }
       return res;
     }
 
     /*!
-     * Get field \ref Time value by index.\n
-     * You have to delete result once treated.
+     * Get field \ref Time value by index.
      *
      * \param idx the index
      *
-     * \return the result
+     * \return the optional value
      *
      * \throw SqlException any error
      */
     template<>
-    const anch::sql::Time*
+    std::optional<anch::sql::Time>
     ResultSet::get<anch::sql::Time>(std::size_t idx) {
-      anch::sql::Time* res = NULL;
-      std::string strVal;
-      if(!get(idx, strVal)) {
-	const anch::date::DateFormatter& formatter = getDateFormatter();
+      std::optional<anch::sql::Date> res;
+      std::optional<std::string> strRes = get<std::string>(idx);
+      if(strRes) {
+	const anch::date::DateFormatter& formatter = getTimeFormatter();
 	anch::date::Date date;
-	formatter.parse(strVal, date);
-	res = new anch::sql::Time(date);
+	formatter.parse(strRes.value(), date);
+	res = anch::sql::Time(date);
       }
       return res;
     }
 
     /*!
-     * Get field \ref Timestamp value by index.\n
-     * You have to delete result once treated.
+     * Get field \ref Timestamp value by index.
      *
      * \param idx the index
      *
-     * \return the result
+     * \return the optional value
      *
      * \throw SqlException any error
      */
     template<>
-    const anch::sql::Timestamp*
+    std::optional<anch::sql::Timestamp>
     ResultSet::get<anch::sql::Timestamp>(std::size_t idx) {
-      anch::sql::Timestamp* res = NULL;
-      std::string strVal;
-      if(!get(idx, strVal)) {
-	const anch::date::DateFormatter& formatter = getDateFormatter();
+      std::optional<anch::sql::Date> res;
+      std::optional<std::string> strRes = get<std::string>(idx);
+      if(strRes) {
+	const anch::date::DateFormatter& formatter = getTimestampFormatter();
 	anch::date::Date date;
-	formatter.parse(strVal, date);
-	res = new anch::sql::Timestamp(date);
+	formatter.parse(strRes.value(), date);
+	res = anch::sql::Timestamp(date);
       }
       return res;
     }
+#endif // ANCH_STD_OTP
 
   }
 }

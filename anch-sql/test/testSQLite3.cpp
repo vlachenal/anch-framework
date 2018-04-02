@@ -48,30 +48,39 @@ main(void) {
     std::cout << "Execute 'SELECT id,first_name,last_name,birth_date,email FROM T_Test' with manual result handling" << std::endl;
     ResultSet* res = dbCon.query("SELECT id,first_name,last_name,birth_date,email FROM T_Test");
     int row = 0;
-    std::string nullStr("NULL");
+    const std::string nullStr("NULL");
     while(res->next()) {
       std::cout << "Row " << row << std::endl;
-      const uint32_t* id = res->get<uint32_t>(0);
+#ifdef ANCH_STD_OTP
+      std::optional<uint32_t> id = res->get<uint32_t>(0);
       std::cout << "id=";
-      if(id == NULL) {
+      if(!id) {
 	std::cout << "NULL";
       } else {
-	std::cout << *id;
+	std::cout << id.value();
       }
       std::cout << std::endl;
-      delete id;
-      const std::string* fName = res->get<std::string>(1);
-      std::cout << "first name=" << (fName == NULL ? nullStr : *fName) << std::endl;
-      delete fName;
-      const std::string* lName = res->get<std::string>(2);
-      std::cout << "last name=" << (lName == NULL ? nullStr : *lName) << std::endl;
-      delete lName;
-      const std::string* bDate = res->get<std::string>("birth_date");
-      std::cout << "birth date=" << (bDate == NULL ? nullStr : *bDate) << std::endl;
-      delete bDate;
-      const std::string* email = res->get<std::string>(4);
-      std::cout << "email=" << (email == NULL ? nullStr : *email) << std::endl;
-      delete email;
+      std::optional<std::string> fName = res->get<std::string>(1);
+      std::cout << "first name=" << (!fName ? nullStr : fName.value()) << std::endl;
+      std::optional<std::string> lName = res->get<std::string>(2);
+      std::cout << "last name=" << (!lName ? nullStr : lName.value()) << std::endl;
+      std::optional<std::string> bDate = res->get<std::string>("birth_date");
+      std::cout << "birth date=" << (!bDate ? nullStr : bDate.value()) << std::endl;
+      std::optional<std::string> email = res->get<std::string>(4);
+      std::cout << "email=" << (!email ? nullStr : email.value()) << std::endl;
+#else // ANCH_STD_OTP
+      Person pers;
+      res.get<uint32_t>(0,pers._id);
+      res.get<std::string>(1, pers._firstName);
+      res.get<std::string>(2, pers._lastName);
+      res.get<std::string>(3, pers._birthDate);
+      res.get<std::string>(4, pers._email);
+      std::cout << "Person " << pers._id << ":" << std::endl;
+      std::cout << "first name: " << pers._firstName << std::endl;
+      std::cout << "last name: " << pers._lastName << std::endl;
+      std::cout << "birth data: " << pers._birthDate << std::endl;
+      std::cout << "email: " << pers._email << std::endl;
+#endif // ANCH_STD_OTP
       row++;
     }
     delete res;
@@ -153,27 +162,36 @@ main(void) {
     row = 0;
     while(res->next()) {
       std::cout << "Row " << row << std::endl;
-      const uint32_t* id = res->get<uint32_t>(0);
+#ifdef ANCH_STD_OTP
+      std::optional<uint32_t> id = res->get<uint32_t>(0);
       std::cout << "id=";
-      if(id == NULL) {
+      if(!id) {
 	std::cout << "NULL";
       } else {
-	std::cout << *id;
+	std::cout << id.value();
       }
       std::cout << std::endl;
-      delete id;
-      const std::string* fName = res->get<std::string>(1);
-      std::cout << "first name=" << (fName == NULL ? nullStr : *fName) << std::endl;
-      delete fName;
-      const std::string* lName = res->get<std::string>(2);
-      std::cout << "last name=" << (lName == NULL ? nullStr : *lName) << std::endl;
-      delete lName;
-      const std::string* bDate = res->get<std::string>("birth_date");
-      std::cout << "birth date=" << (bDate == NULL ? nullStr : *bDate) << std::endl;
-      delete bDate;
-      const std::string* email = res->get<std::string>(4);
-      std::cout << "email=" << (email == NULL ? nullStr : *email) << std::endl;
-      delete email;
+      std::optional<std::string> fName = res->get<std::string>(1);
+      std::cout << "first name=" << (!fName ? nullStr : fName.value()) << std::endl;
+      std::optional<std::string> lName = res->get<std::string>(2);
+      std::cout << "last name=" << (!lName ? nullStr : lName.value()) << std::endl;
+      std::optional<std::string> bDate = res->get<std::string>("birth_date");
+      std::cout << "birth date=" << (!bDate ? nullStr : bDate.value()) << std::endl;
+      std::optional<std::string> email = res->get<std::string>(4);
+      std::cout << "email=" << (!email ? nullStr : email.value()) << std::endl;
+#else // ANCH_STD_OTP
+      Person pers;
+      res.get<uint32_t>(0,pers._id);
+      res.get<std::string>(1, pers._firstName);
+      res.get<std::string>(2, pers._lastName);
+      res.get<std::string>(3, pers._birthDate);
+      res.get<std::string>(4, pers._email);
+      std::cout << "Person " << pers._id << ":" << std::endl;
+      std::cout << "first name: " << pers._firstName << std::endl;
+      std::cout << "last name: " << pers._lastName << std::endl;
+      std::cout << "birth data: " << pers._birthDate << std::endl;
+      std::cout << "email: " << pers._email << std::endl;
+#endif // ANCH_STD_OTP
       row++;
     }
     delete res;

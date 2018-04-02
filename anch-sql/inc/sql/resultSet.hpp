@@ -25,6 +25,10 @@
 #include <sstream>
 #include <map>
 
+#ifdef ANCH_STD_OTP
+#include <optional>
+#endif // ANCH_STD_OTP
+
 #include "sql/sqlException.hpp"
 
 #include "date/dateFormatter.hpp"
@@ -74,21 +78,6 @@ namespace anch {
       // Methods +
       /*!
        * Get field value by index.\n
-       * You have to delete result once treated.
-       *
-       * \tparam T expected type
-       *
-       * \param idx the index
-       *
-       * \return the result
-       *
-       * \throw SqlException any error
-       */
-      template<typename T>
-      const T* get(std::size_t idx);
-
-      /*!
-       * Get field value by index.\n
        * The output parameter will be set only if SQL result is not \c NULL.
        *
        * \tparam T expected type
@@ -133,9 +122,23 @@ namespace anch {
 	return get<T>(search->second, out);
       }
 
+#ifdef ANCH_STD_OTP
       /*!
-       * Get field value by field name.\n
-       * You have to delete result once treated.
+       * Get field value by index.
+       *
+       * \tparam T expected type
+       *
+       * \param idx the index
+       *
+       * \return the result
+       *
+       * \throw SqlException any error
+       */
+      template<typename T>
+      std::optional<T> get(std::size_t idx);
+
+      /*!
+       * Get field value by field name.
        *
        * \tparam T expected type
        *
@@ -146,7 +149,7 @@ namespace anch {
        * \throw SqlException any error
        */
       template<typename T>
-      const T* get(const std::string field) {
+      const std::optional<T> get(const std::string field) {
 	auto search = _fields.find(field);
 	if(search == _fields.end()) {
 	  std::ostringstream msg;
@@ -163,6 +166,7 @@ namespace anch {
 	}
 	return get<T>(search->second);
       }
+#endif // ANCH_STD_OTP
 
       /*!
        * Retrieve next row
@@ -183,6 +187,19 @@ namespace anch {
        * \throw SqlException any error
        */
       virtual bool getValue(std::size_t idx, std::string& out) = 0;
+
+#ifdef ANCH_STD_OTP
+      /*!
+       * Retrieve string value from result set according to SQL database engine.
+       *
+       * \param idx the field index
+       *
+       * \return the result as optional character string
+       *
+       * \throw SqlException any error
+       */
+      virtual std::optional<std::string> getValue(std::size_t idx) = 0;
+#endif
 
       /*!
        * Retrieve SQL date formatter

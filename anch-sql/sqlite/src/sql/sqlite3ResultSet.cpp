@@ -62,6 +62,23 @@ SQLite3ResultSet::getValue(std::size_t idx, std::string& out) {
   return null;
 }
 
+#ifdef ANCH_STD_OTP
+std::optional<std::string>
+SQLite3ResultSet::getValue(std::size_t idx) {
+  if(static_cast<int>(idx) >= _nbFields) {
+    std::ostringstream msg;
+    msg << "Index out of range (0.." << (_nbFields - 1) << "): " << idx;
+    throw SqlException(msg.str());
+  }
+  std::optional<std::string> res;
+  const unsigned char* data = sqlite3_column_text(_stmt, static_cast<int>(idx));
+  if(data != NULL) {
+    res = std::string(reinterpret_cast<const char*>(data));
+  }
+  return res;
+}
+#endif // ANCH_STD_OTP
+
 bool
 SQLite3ResultSet::next() {
   int res = sqlite3_step(_stmt);

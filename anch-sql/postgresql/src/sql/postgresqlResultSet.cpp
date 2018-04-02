@@ -66,6 +66,22 @@ PostgreSQLResultSet::getValue(std::size_t idx, std::string& out) {
   return null;
 }
 
+#ifdef ANCH_STD_OTP
+std::optional<std::string>
+PostgreSQLResultSet::getValue(std::size_t idx) {
+  if(static_cast<int>(idx) >= _nbFields) {
+    std::ostringstream msg;
+    msg << "Index out of range (0.." << (_nbFields - 1) << "): " << idx;
+    throw SqlException(msg.str(), true);
+  }
+  std::optional<std::string> res;
+  if(!PQgetisnull(_result, _currentRow, static_cast<int>(idx))) {
+    res = PQgetvalue(_result, _currentRow, static_cast<int>(idx));
+  }
+  return res;
+}
+#endif // ANCH_STD_OTP
+
 bool
 PostgreSQLResultSet::next() {
   bool hasMore = false;

@@ -61,6 +61,22 @@ MySQLResultSet::getValue(std::size_t idx, std::string& out) {
   return null;
 }
 
+#ifdef ANCH_STD_OTP
+std::optional<std::string>
+MySQLResultSet::getValue(std::size_t idx) {
+  if(idx >= _fields.size()) {
+    std::ostringstream msg;
+    msg << "Index out of range (0.." << (_fields.size() - 1) << "): " << idx;
+    throw SqlException(msg.str(), true);
+  }
+  std::optional<std::string> res;
+  if(_row[idx] != NULL) {
+    res = _row[idx];
+  }
+  return res;
+}
+#endif // ANCH_STD_OTP
+
 bool
 MySQLResultSet::next() {
   _row = mysql_fetch_row(_result);
