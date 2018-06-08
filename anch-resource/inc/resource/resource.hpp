@@ -23,6 +23,10 @@
 #include <map>
 #include <mutex>
 
+#ifdef ANCH_STD_OTP
+#include <optional>
+#endif
+
 #include "resource/section.hpp"
 
 namespace anch {
@@ -84,6 +88,26 @@ namespace anch {
       bool getParameter(std::string& value,
 			const std::string& param,
 			const std::string& section = "") const;
+
+#ifdef ANCH_STD_OTP
+      /*!
+       * Access section
+       *
+       * \param section the section name
+       *
+       * \return the optional result
+       */
+      std::optional<anch::resource::Section> section(const std::string& section) const;
+
+      /*!
+       * Access parameter without section
+       *
+       * \param param the parameter name
+       *
+       * \return the optional result
+       */
+      std::optional<std::string> parameter(const std::string& param) const;
+#endif
 
       /*!
        * Get resource configuration

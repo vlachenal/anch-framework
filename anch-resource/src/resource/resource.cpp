@@ -27,11 +27,31 @@ using std::pair;
 using std::map;
 
 using anch::resource::Resource;
+using anch::resource::Section;
 using anch::resource::file::ConfigurationFileParser;
+
+namespace anch {
+  namespace resource {
+    class FakeSection: public Section {
+      virtual const std::string& getParameter(const std::string&) const override {
+	return Section::DEFAULT_VALUE;
+      }
+#ifdef ANCH_STD_OTP
+      virtual std::optional<std::string> parameter(const std::string&) const override {
+	return std::optional<std::string>();
+      }
+#endif
+    };
+  }
+}
+
+using anch::resource::FakeSection;
 
 // Static initialization +
 map<string,Resource> Resource::RESOURCES;
 mutex Resource::MUTEX;
+
+FakeSection FAKE_SEC;
 // Static initialization -
 
 
@@ -70,3 +90,20 @@ Resource::getParameter(string& value,
   }
   return found;
 }
+
+#ifdef ANCH_STD_OTP
+std::optional<Section>
+Resource::section(const std::string& section) const {
+  std::optional<Section> value;
+  auto iter = _resources.find(section);
+  if(iter != _resources.end()) {
+    value = iter->second;
+  }
+  return value;
+}
+
+std::optional<std::string>
+Resource::parameter(const std::string& param) const {
+  return section("").value_or(FAKE_SEC).parameter(param);
+}
+#endif

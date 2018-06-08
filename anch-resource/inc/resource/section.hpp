@@ -22,6 +22,10 @@
 
 #include <map>
 
+#ifdef ANCH_STD_OTP
+#include <optional>
+#endif
+
 namespace anch {
   namespace resource {
 
@@ -94,7 +98,18 @@ namespace anch {
        *
        * \return The parameter value or empty if not found
        */
-      const std::string& getParameter(const std::string& parameterName) const;
+      virtual const std::string& getParameter(const std::string& parameterName) const;
+
+#ifdef ANCH_STD_OTP
+      /*!
+       * Access parameter
+       *
+       * \param param the parameter name
+       *
+       * \return the optional result
+       */
+      virtual std::optional<std::string> parameter(const std::string& param) const;
+#endif
       // Accessors -
 
     };
@@ -109,15 +124,6 @@ namespace anch {
 
     inline void Section::addParameter(const std::string& param, const std::string& value) {
       _parameters[param] = value;
-    }
-
-    inline const std::string& Section::getParameter(const std::string& parameterName) const {
-      auto iter = _parameters.find(parameterName);
-      if(iter == _parameters.end()) {
-	return Section::DEFAULT_VALUE;
-      } else {
-	return iter->second;
-      }
     }
 
   }

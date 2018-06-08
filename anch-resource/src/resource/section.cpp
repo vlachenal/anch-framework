@@ -44,3 +44,27 @@ Section::~Section() {
   // Nothing to do
 }
 // Destructors -
+
+// Methods +
+const std::string&
+Section::getParameter(const std::string& parameterName) const {
+  auto iter = _parameters.find(parameterName);
+  if(iter == _parameters.end()) {
+    return Section::DEFAULT_VALUE;
+  } else {
+    return iter->second;
+  }
+}
+
+#ifdef ANCH_STD_OTP
+std::optional<std::string>
+Section::parameter(const std::string& param) const {
+  std::optional<std::string> value;
+  auto iter = _parameters.find(param);
+  if(iter != _parameters.end()) {
+    value = iter->second;
+  }
+  return value;
+}
+#endif
+// Methods -
