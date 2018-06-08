@@ -106,7 +106,7 @@ main(void) {
     std::chrono::microseconds duration = std::chrono::duration_cast<std::chrono::microseconds>(end.time_since_epoch()) - std::chrono::duration_cast<std::chrono::microseconds>(start.time_since_epoch());
     std::cout << "Salt is " << std::hex;
     for(std::size_t i = 0 ; i < 16 ; ++i) {
-      std::cout << std::setw(2) << std::setfill('0') << static_cast<uint32_t>(static_cast<const uint8_t>(salt[i]));
+      std::cout << std::setw(2) << std::setfill('0') << static_cast<uint32_t>(static_cast<uint8_t>(salt[i]));
     }
     std::cout << std::dec << std::endl;
     std::cout << "We will store: " << storedPasswd << std::endl;
