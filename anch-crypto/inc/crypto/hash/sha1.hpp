@@ -39,7 +39,7 @@ namespace anch {
 
       friend SHA1 anch::crypto::HMAC<SHA1>(const std::string&, const std::string&);
 
-    private:
+    public:
       /*!
        * SHA1 chunk
        *
@@ -128,9 +128,7 @@ namespace anch {
        * \param data the data bytes
        * \param len the data length
        */
-      SHA1(const uint8_t* data, std::size_t len) {
-      	Hash::digest(data, len);
-      }
+      SHA1(const uint8_t* data, std::size_t len);
       // Constructors -
 
 
@@ -180,140 +178,6 @@ namespace anch {
        * \param buffer The data to process
        */
       void transform(const uint8_t* buffer);
-
-      /*!
-       * Bits rotation of 32 bits integer from a value
-       *
-       * \param value The integer to process
-       * \param shift The number of bits to shift
-       */
-      static inline uint32_t rol32(uint32_t value, unsigned int shift){
-	return ((value << shift) | value >> (32 - shift));
-      }
-
-      /*!
-       * Compute SHA1 word
-       *
-       * \param chunk The SHA1 chunk
-       * \param position The position
-       */
-      static inline uint32_t word(Chunk& chunk, unsigned int position) {
-	return (chunk.words[position & 0xf] = rol32(chunk.words[(position + 13)  & 0xf]
-						    ^ chunk.words[(position + 8) & 0xf]
-						    ^ chunk.words[(position + 2) & 0xf]
-						    ^ chunk.words[(position)     & 0xf],
-						    1));
-      }
-
-      /*!
-       * First core function
-       *
-       * \param chunk The chunk to process
-       * \param position The position
-       * \param v The first parameter
-       * \param w The second parameter
-       * \param x The third parameter
-       * \param y The fourth parameter
-       * \param z The fifth parameter
-       */
-      static inline void round0(Chunk& chunk,
-				const unsigned int position,
-				uint32_t& v,
-				uint32_t& w,
-				uint32_t& x,
-				uint32_t& y,
-				uint32_t& z){
-	z += ((( w & (x ^ y)) ^ y) + chunk.words[position] + 0x5A827999 + rol32(v, 5));
-	w = rol32(w, 30);
-      }
-
-      /*!
-       * Second core function
-       *
-       * \param chunk The chunk to process
-       * \param position The position
-       * \param v The first parameter
-       * \param w The second parameter
-       * \param x The third parameter
-       * \param y The fourth parameter
-       * \param z The fifth parameter
-       */
-      static inline void round1(Chunk& chunk,
-				const unsigned int position,
-				uint32_t& v,
-				uint32_t& w,
-				uint32_t& x,
-				uint32_t& y,
-				uint32_t& z){
-	z += ((( w & (x ^ y)) ^ y) + word(chunk,position) + 0x5A827999 + rol32(v, 5));
-	w = rol32(w, 30);
-      }
-
-      /*!
-       * Third core function
-       *
-       * \param chunk The chunk to process
-       * \param position The position
-       * \param v The first parameter
-       * \param w The second parameter
-       * \param x The third parameter
-       * \param y The fourth parameter
-       * \param z The fifth parameter
-       */
-      static inline void round2(Chunk& chunk,
-				const unsigned int position,
-				uint32_t& v,
-				uint32_t& w,
-				uint32_t& x,
-				uint32_t& y,
-				uint32_t& z){
-	z += (( w ^ x ^ y) + word(chunk, position) + 0x6ED9EBA1 + rol32(v, 5));
-	w = rol32(w, 30);
-      }
-
-      /*!
-       * Fourth core function
-       *
-       * \param chunk The chunk to process
-       * \param position The position
-       * \param v The first parameter
-       * \param w The second parameter
-       * \param x The third parameter
-       * \param y The fourth parameter
-       * \param z The fifth parameter
-       */
-      static inline void round3(Chunk& chunk,
-				const unsigned int position,
-				uint32_t& v,
-				uint32_t& w,
-				uint32_t& x,
-				uint32_t& y,
-				uint32_t& z){
-	z += (((( w | x) & y) | (w & x)) + word(chunk, position) + 0x8F1BBCDC + rol32(v, 5));
-	w = rol32(w, 30);
-      }
-
-      /*!
-       * Fifth core function
-       *
-       * \param chunk The chunk to process
-       * \param position The position
-       * \param v The first parameter
-       * \param w The second parameter
-       * \param x The third parameter
-       * \param y The fourth parameter
-       * \param z The fifth parameter
-       */
-      static inline void round4(Chunk& chunk,
-				const unsigned int position,
-				uint32_t& v,
-				uint32_t& w,
-				uint32_t& x,
-				uint32_t& y,
-				uint32_t& z){
-	z += ((w ^ x ^ y) + word(chunk, position) + 0xCA62C1D6 + rol32(v, 5));
-	w = rol32(w, 30);
-      }
       // Methods -
 
     };

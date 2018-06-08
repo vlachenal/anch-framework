@@ -118,9 +118,7 @@ namespace anch {
        * \param data the data bytes
        * \param len the data length
        */
-      MD5(const uint8_t* data, std::size_t len) {
-      	Hash::digest(data, len);
-      }
+      MD5(const uint8_t* data, std::size_t len);
       // Constructors -
 
       // Destructor +
@@ -166,58 +164,7 @@ namespace anch {
        * Apply transformation
        */
       void transform();
-
-      /*!
-       * Call core function transformation
-       *
-       * \param a The byte to change and the first buffer value
-       * \param b The second buffer value
-       * \param d The third buffer value
-       * \param in The 'offset'
-       * \param bits The number of bits to rotate
-       */
-      template<class Core>
-      static inline void transform(uint32_t& a,
-				   uint32_t b,
-				   uint32_t c,
-				   uint32_t d,
-				   uint32_t in,
-				   int bits) {
-	a += Core::apply(b,c,d) + in;
-	a = (a << bits | a >> (32 - bits)) + b;
-      }
       // Methods -
-
-      // Core functions +
-    private:
-      class Core1 {
-      public:
-	inline static uint32_t apply(uint32_t a, uint32_t b, uint32_t c) {
-	  return (c ^ (a & (b ^ c)));
-	}
-      };
-
-      class Core2 {
-      public:
-	inline static uint32_t apply(uint32_t a, uint32_t b, uint32_t c) {
-	  return Core1::apply(c, a, b);
-	}
-      };
-
-      class Core3 {
-      public:
-	inline static uint32_t apply(uint32_t a, uint32_t b, uint32_t c) {
-	  return (a ^ b ^ c);
-	}
-      };
-
-      class Core4 {
-      public:
-	inline static uint32_t apply(uint32_t a, uint32_t b, uint32_t c) {
-	  return (b ^ (a | ~c));
-	}
-      };
-      // Core functions -
 
     };
 

@@ -29,6 +29,7 @@ using anch::crypto::SHA1;
 template class Hash<20,64>;
 
 
+// Functions +
 /*!
  * Swap byte for endianness conversion
  *
@@ -47,40 +48,171 @@ bytesSwap(uint32_t* buf, uint8_t count) {
   }
 }
 
-// Constructors +
 /*!
- * \ref SHA1 default constructor
+ * Bits rotation of 32 bits integer from a value
+ *
+ * \param value The integer to process
+ * \param shift The number of bits to shift
  */
+inline uint32_t
+rol32(uint32_t value, unsigned int shift){
+  return ((value << shift) | value >> (32 - shift));
+}
+
+/*!
+ * Compute SHA1 word
+ *
+ * \param chunk The SHA1 chunk
+ * \param position The position
+ */
+inline uint32_t
+word(SHA1::Chunk& chunk, unsigned int position) {
+  return (chunk.words[position & 0xf] = rol32(chunk.words[(position + 13)  & 0xf]
+					      ^ chunk.words[(position + 8) & 0xf]
+					      ^ chunk.words[(position + 2) & 0xf]
+					      ^ chunk.words[(position)     & 0xf],
+					      1));
+}
+
+/*!
+ * First core function
+ *
+ * \param chunk The chunk to process
+ * \param position The position
+ * \param v The first parameter
+ * \param w The second parameter
+ * \param x The third parameter
+ * \param y The fourth parameter
+ * \param z The fifth parameter
+ */
+inline void
+round0(SHA1::Chunk& chunk,
+       const unsigned int position,
+       uint32_t& v,
+       uint32_t& w,
+       uint32_t& x,
+       uint32_t& y,
+       uint32_t& z) {
+  z += ((( w & (x ^ y)) ^ y) + chunk.words[position] + 0x5A827999 + rol32(v, 5));
+  w = rol32(w, 30);
+}
+
+/*!
+ * Second core function
+ *
+ * \param chunk The chunk to process
+ * \param position The position
+ * \param v The first parameter
+ * \param w The second parameter
+ * \param x The third parameter
+ * \param y The fourth parameter
+ * \param z The fifth parameter
+ */
+inline void
+round1(SHA1::Chunk& chunk,
+       const unsigned int position,
+       uint32_t& v,
+       uint32_t& w,
+       uint32_t& x,
+       uint32_t& y,
+       uint32_t& z) {
+  z += ((( w & (x ^ y)) ^ y) + word(chunk,position) + 0x5A827999 + rol32(v, 5));
+  w = rol32(w, 30);
+}
+
+/*!
+ * Third core function
+ *
+ * \param chunk The chunk to process
+ * \param position The position
+ * \param v The first parameter
+ * \param w The second parameter
+ * \param x The third parameter
+ * \param y The fourth parameter
+ * \param z The fifth parameter
+ */
+inline void
+round2(SHA1::Chunk& chunk,
+       const unsigned int position,
+       uint32_t& v,
+       uint32_t& w,
+       uint32_t& x,
+       uint32_t& y,
+       uint32_t& z) {
+  z += (( w ^ x ^ y) + word(chunk, position) + 0x6ED9EBA1 + rol32(v, 5));
+  w = rol32(w, 30);
+}
+
+/*!
+ * Fourth core function
+ *
+ * \param chunk The chunk to process
+ * \param position The position
+ * \param v The first parameter
+ * \param w The second parameter
+ * \param x The third parameter
+ * \param y The fourth parameter
+ * \param z The fifth parameter
+ */
+inline void
+round3(SHA1::Chunk& chunk,
+       const unsigned int position,
+       uint32_t& v,
+       uint32_t& w,
+       uint32_t& x,
+       uint32_t& y,
+       uint32_t& z) {
+  z += (((( w | x) & y) | (w & x)) + word(chunk, position) + 0x8F1BBCDC + rol32(v, 5));
+  w = rol32(w, 30);
+}
+
+/*!
+ * Fifth core function
+ *
+ * \param chunk The chunk to process
+ * \param position The position
+ * \param v The first parameter
+ * \param w The second parameter
+ * \param x The third parameter
+ * \param y The fourth parameter
+ * \param z The fifth parameter
+ */
+inline void
+round4(SHA1::Chunk& chunk,
+       const unsigned int position,
+       uint32_t& v,
+       uint32_t& w,
+       uint32_t& x,
+       uint32_t& y,
+       uint32_t& z) {
+  z += ((w ^ x ^ y) + word(chunk, position) + 0xCA62C1D6 + rol32(v, 5));
+  w = rol32(w, 30);
+}
+// Functions -
+
+
+// Constructors +
 SHA1::SHA1() {
   // Nothing to do
+}
+
+SHA1::SHA1(const uint8_t* data, std::size_t len) {
+  Hash::digest(data, len);
 }
 // Constructors -
 
 // Destructors +
-/*!
- * \ref SHA1 destructor
- */
 SHA1::~SHA1() {
   // Nothing to do
 }
 // Destructors -
 
 // Methods +
-/*!
- * Get the SHA1 hash result
- *
- * \return the SHA1 hash result
- */
 const std::array<uint8_t,20>&
 SHA1::digest() const {
   return _context.digest;
 }
 
-/*!
- * Transform SHA1 with the current chunk
- *
- * \param buffer The data to process
- */
 void
 SHA1::transform(const uint8_t* buffer) {
   // Copy state[] to working vars
@@ -190,12 +322,6 @@ SHA1::transform(const uint8_t* buffer) {
   _context.state[4] += e;
 }
 
-/*!
- * Compute hash for data with the current hash
- *
- * \param data The data to add
- * \param len The data length
- */
 void
 SHA1::addData(const uint8_t* data, size_t len) {
   uint32_t rest = static_cast<uint32_t>(_context.size & static_cast<uint64_t>(63));
@@ -220,9 +346,6 @@ SHA1::addData(const uint8_t* data, size_t len) {
   }
 }
 
-/*!
- * Finalize hash
- */
 void
 SHA1::finalize() {
   uint64_t messageSize = _context.size;
