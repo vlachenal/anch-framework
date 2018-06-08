@@ -43,8 +43,8 @@ namespace anch {
      * \author Vincent Lachenal
      */
     template<typename Event>
-    class EventBus: public anch::Singleton<EventBus<Event> > {
-      friend class anch::Singleton<EventBus<Event> >; 
+    class EventBus: public anch::Singleton<EventBus<Event>> {
+      friend class anch::Singleton<EventBus<Event>>;
 
       // Attributes +
     private:
@@ -61,7 +61,7 @@ namespace anch {
       std::queue<Event> _events;
 
       /*! Observers list */
-      std::set<anch::events::Observer<Event>*, anch::LessPtrCompare<Observer<Event> > > _observers;
+      std::set<anch::events::Observer<Event>*, anch::LessPtrCompare<Observer<Event>>> _observers;
       // Attributes -
 
 
@@ -70,21 +70,14 @@ namespace anch {
       /*!
        * \ref EventBus default constructor
        */
-      EventBus(): _eventMutex(), _queueMutex(), _thread(NULL), _events(), _observers() {
-      	// Nothing to do
-      }
+      EventBus();
       // Constructors -
 
       // Destructor +
       /*!
        * \ref EventBus destructor
        */
-      virtual ~EventBus() {
-      	if(_thread != NULL) {
-      	  _thread->join();
-      	  delete _thread;
-      	}
-      }
+      virtual ~EventBus();
       // Destructor -
 
 
@@ -95,108 +88,160 @@ namespace anch {
        *
        * \param observer the \ref Observer to register
        */
-      bool addObserver(anch::events::Observer<Event>& observer) noexcept {
-	std::lock_guard<std::mutex> lock(_eventMutex);
-	bool added = _observers.insert(&observer).second;
-	return added;
-      }
+      bool addObserver(anch::events::Observer<Event>& observer) noexcept;
 
       /*!
        * Retrieve \ref EventBus instance and register \ref Observer to \ref EventBus
        *
        * \param observer the \ref Observer to register
        */
-      static bool AddObserver(anch::events::Observer<Event>& observer) noexcept {
-	return EventBus<Event>::getInstance().addObserver(observer);
-      }
+      static bool AddObserver(anch::events::Observer<Event>& observer) noexcept;
 
       /*!
        * Remove observer for notifications
        *
        * \param observer The observer to remove
        */
-      void removeObserver(anch::events::Observer<Event>& observer) noexcept {
-	std::lock_guard<std::mutex> lock(_eventMutex);
-	_observers.erase(&observer);
-      }
+      void removeObserver(anch::events::Observer<Event>& observer) noexcept;
 
       /*!
        * Retrieve \ref EventBus instance and remove observer for notifications
        *
        * \param observer The observer to remove
        */
-      static void RemoveObserver(anch::events::Observer<Event>& observer) noexcept {
-	EventBus<Event>::getInstance().removeObserver(observer);
-      }
+      static void RemoveObserver(anch::events::Observer<Event>& observer) noexcept;
 
       /*!
        * Notify all observer that an event has been fired
        *
        * \param event the event which has been fired
        */
-      void fireEvent(const Event& event) noexcept {
-	std::lock_guard<std::mutex> lock(_eventMutex);
-	for(anch::events::Observer<Event>* observer : _observers) {
-	  observer->notify(event);
-	}
-      }
+      void fireEvent(const Event& event) noexcept;
 
       /*!
        * Retrieve \ref EventBus instance and notify all observer that an event has been fired
        *
        * \param event the event which has been fired
        */
-      static void FireEvent(const Event& event) noexcept {
-	EventBus<Event>::getInstance().fireEvent(event);
-      }
+      static void FireEvent(const Event& event) noexcept;
 
       /*!
        * Put event in sheduler.
        *
        * \param event the event to process
        */
-      void scheduleDeferred(const Event& event) noexcept {
-	std::lock_guard<std::mutex> lock(_queueMutex);
-	bool empty = _events.empty();
-	_events.push(event);
-	if(empty) {
-	  if(_thread != NULL) {
-	    _thread->join();
-	    delete _thread;
-	  }
-	  _thread = new std::thread(&EventBus<Event>::processEvents,this);
-	}
-      }
+      void scheduleDeferred(const Event& event) noexcept;
 
       /*!
        * Retrieve \ref EventBus instance and put event in sheduler.
        *
        * \param event the event to process
        */
-      static void ScheduleDeferred(const Event& event) noexcept {
-	EventBus<Event>::getInstance().scheduleDeferred(event);
-      }
+      static void ScheduleDeferred(const Event& event) noexcept;
 
     private:
       /*!
        * Process events in queue
        */
-      void processEvents() noexcept {
-	bool empty = false;
-	do {
-	  _queueMutex.lock();
-	  Event event = _events.front();
-	  _events.pop();
-	  empty = _events.empty();
-	  _queueMutex.unlock();
-
-	  fireEvent(event);
-
-	} while(!empty);
-      }
+      void processEvents() noexcept;
       // Methods -
 
     };
+
+
+    // Implementation +
+    template<typename Evt>
+    EventBus<Evt>::EventBus():  _eventMutex(), _queueMutex(), _thread(NULL), _events(), _observers() {
+      // Nothing to do
+    }
+
+    template<typename Evt>
+    EventBus<Evt>::~EventBus() {
+      if(_thread != NULL) {
+	_thread->join();
+	delete _thread;
+      }
+    }
+
+    template<typename Evt>
+    bool
+    EventBus<Evt>::addObserver(anch::events::Observer<Evt>& observer) noexcept {
+      std::lock_guard<std::mutex> lock(_eventMutex);
+      bool added = _observers.insert(&observer).second;
+      return added;
+    }
+
+    template<typename Evt>
+    bool
+    EventBus<Evt>::AddObserver(anch::events::Observer<Evt>& observer) noexcept {
+      return EventBus<Evt>::getInstance().addObserver(observer);
+    }
+
+    template<typename Evt>
+    void
+    EventBus<Evt>::removeObserver(anch::events::Observer<Evt>& observer) noexcept {
+      std::lock_guard<std::mutex> lock(_eventMutex);
+      _observers.erase(&observer);
+    }
+
+    template<typename Evt>
+    void
+    EventBus<Evt>::RemoveObserver(anch::events::Observer<Evt>& observer) noexcept {
+      EventBus<Evt>::getInstance().removeObserver(observer);
+    }
+
+    template<typename Evt>
+    void
+    EventBus<Evt>::fireEvent(const Evt& event) noexcept {
+      std::lock_guard<std::mutex> lock(_eventMutex);
+      for(anch::events::Observer<Evt>* observer : _observers) {
+	observer->notify(event);
+      }
+    }
+
+    template<typename Evt>
+    void
+    EventBus<Evt>::FireEvent(const Evt& event) noexcept {
+      EventBus<Evt>::getInstance().fireEvent(event);
+    }
+
+    template<typename Evt>
+    void
+    EventBus<Evt>::scheduleDeferred(const Evt& event) noexcept {
+      std::lock_guard<std::mutex> lock(_queueMutex);
+      bool empty = _events.empty();
+      _events.push(event);
+      if(empty) {
+	if(_thread != NULL) {
+	  _thread->join();
+	  delete _thread;
+	}
+	_thread = new std::thread(&EventBus<Evt>::processEvents,this);
+      }
+    }
+
+    template<typename Evt>
+    void
+    EventBus<Evt>::ScheduleDeferred(const Evt& event) noexcept {
+      EventBus<Evt>::getInstance().scheduleDeferred(event);
+    }
+
+    template<typename Evt>
+    void
+    EventBus<Evt>::processEvents() noexcept {
+      bool empty = false;
+      do {
+	_queueMutex.lock();
+	Evt event = _events.front();
+	_events.pop();
+	empty = _events.empty();
+	_queueMutex.unlock();
+
+	fireEvent(event);
+
+      } while(!empty);
+    }
+    // Implementation -
 
   }
 }

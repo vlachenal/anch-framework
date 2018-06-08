@@ -56,18 +56,14 @@ namespace anch {
       /*!
        * \ref Observable default constructor
        */
-      Observable(): _observers(), _mutex() {
-	// Nothing to do
-      }
+      Observable();
       // Constructors -
 
       // Destructor +
       /*!
        * \ref Observable destructor
        */
-      virtual ~Observable() {
-	// Nothing to do
-      }
+      virtual ~Observable();
       // Destructor -
 
     public:
@@ -79,39 +75,64 @@ namespace anch {
        *
        * \return \c true if observer has been added, \c false otherwise
        */
-      bool addObserver(anch::events::Observer<Event>& observer) {
-	_mutex.lock();
-	bool added = _observers.insert(&observer).second;
-	_mutex.unlock();
-	return added;
-      }
+      bool addObserver(anch::events::Observer<Event>& observer);
 
       /*!
        * Remove observer for notifications
        *
        * \param observer The observer to remove
        */
-      void removeObserver(anch::events::Observer<Event>& observer) {
-	_mutex.lock();
-	_observers.erase(&observer);
-	_mutex.unlock();
-      }
+      void removeObserver(anch::events::Observer<Event>& observer);
 
       /*!
        * Notify every observer that an event has been fired
        *
        * \param event the event to fire
        */
-      void notifyObservers(const Event& event) {
-	_mutex.lock();
-	for(anch::events::Observer<Event>* observer : _observers) {
-	  observer->notify(event);
-	}
-	_mutex.unlock();
-      }
+      void notifyObservers(const Event& event);
       // Methods -
 
     };
+
+
+    // Implementation +
+    template<typename Evt>
+    Observable<Evt>::Observable(): _observers(), _mutex() {
+      // Nothing to do
+    }
+
+    template<typename Evt>
+    Observable<Evt>::~Observable() {
+      // Nothing to do
+    }
+
+    template<typename Evt>
+    bool
+    Observable<Evt>::addObserver(anch::events::Observer<Evt>& observer) {
+      _mutex.lock();
+      bool added = _observers.insert(&observer).second;
+      _mutex.unlock();
+      return added;
+    }
+
+    template<typename Evt>
+    void
+    Observable<Evt>::removeObserver(anch::events::Observer<Evt>& observer) {
+      _mutex.lock();
+      _observers.erase(&observer);
+      _mutex.unlock();
+    }
+
+    template<typename Evt>
+    void
+    Observable<Evt>::notifyObservers(const Evt& event) {
+      _mutex.lock();
+      for(anch::events::Observer<Evt>* observer : _observers) {
+	observer->notify(event);
+      }
+      _mutex.unlock();
+    }
+    // Implementation -
 
   }
 }

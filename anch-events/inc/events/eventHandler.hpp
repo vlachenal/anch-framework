@@ -55,16 +55,7 @@ namespace anch {
        * \param callbackFunction the callback method to use on notify
        * \param useEventBus if \c true register itself in global \ref EventBus, \c false otherwise (default)
        */
-      EventHandler(const std::function<void(Derived&,const Event&)>& callbackFunction,
-		   bool useEventBus = false): _callbackFunction(callbackFunction) {
-	if(useEventBus) {
-	  anch::events::EventBus<Event>& eventBus = anch::events::EventBus<Event>::getInstance();
-	  eventBus.addObserver(*this);
-	  _eventBus = &eventBus;
-	} else {
-	  _eventBus = NULL;
-	}
-      }
+      EventHandler(const std::function<void(Derived&,const Event&)>& callbackFunction, bool useEventBus = false);
 
       /*!
        * \ref EventHandler constructor.\n
@@ -74,22 +65,13 @@ namespace anch {
        * \param callbackFunction the callback method to use on notify
        * \param eventBus the \ref EventBus to register itself
        */
-      EventHandler(const std::function<void(Derived&,const Event&)>& callbackFunction,
-		   anch::events::EventBus<Event>& eventBus): _callbackFunction(callbackFunction) {
-	//_callbackFunction = callbackFunction;
-	eventBus.addObserver(*this);
-	_eventBus = &eventBus;
-      }
+      EventHandler(const std::function<void(Derived&,const Event&)>& callbackFunction, anch::events::EventBus<Event>& eventBus);
 
       /*!
        * \ref EventHandler destructor.\n
        * Unregister \ref EventHandler from \ref EventBus if needed.
        */
-      virtual ~EventHandler() {
-	if(_eventBus != NULL) {
-	  _eventBus->removeObserver(*this);
-	}
-      }
+      virtual ~EventHandler();
 
     public:
       /*!
@@ -97,11 +79,43 @@ namespace anch {
        *
        * \param event the event which has been fired
        */
-      virtual void notify(const Event& event) noexcept {
-	_callbackFunction(*static_cast<Derived*>(this), event);
-      }
+      virtual void notify(const Event& event) noexcept;
 
     };
+
+
+    // Implementation +
+    template<typename Evt, typename D>
+    EventHandler<Evt,D>::EventHandler(const std::function<void(D&,const Evt&)>& callbackFunction, bool useEventBus): _callbackFunction(callbackFunction) {
+      if(useEventBus) {
+	anch::events::EventBus<Evt>& eventBus = anch::events::EventBus<Evt>::getInstance();
+	eventBus.addObserver(*this);
+	_eventBus = &eventBus;
+      } else {
+	_eventBus = NULL;
+      }
+    }
+
+    template<typename Evt, typename D>
+    EventHandler<Evt,D>::EventHandler(const std::function<void(D&,const Evt&)>& callbackFunction,
+				      anch::events::EventBus<Evt>& eventBus): _callbackFunction(callbackFunction) {
+      eventBus.addObserver(*this);
+      _eventBus = &eventBus;
+    }
+
+    template<typename Evt, typename D>
+    EventHandler<Evt,D>::~EventHandler() {
+      if(_eventBus != NULL) {
+	_eventBus->removeObserver(*this);
+      }
+    }
+
+    template<typename Evt, typename D>
+    void
+    EventHandler<Evt,D>::notify(const Evt& event) noexcept {
+      _callbackFunction(*static_cast<D*>(this), event);
+    }
+    // Implementation -
 
   }
 }
