@@ -37,7 +37,7 @@ LevelFormatter::~LevelFormatter() {
 
 void
 LevelFormatter::formatValue(const void* const value, ostream& out) const noexcept {
-  const Level* const level = static_cast<const anch::logger::Level* const>(value);
+  const Level* const level = static_cast<const anch::logger::Level*>(value);
   out << LEVEL_LABEL.find(*level)->second;
 }
 
