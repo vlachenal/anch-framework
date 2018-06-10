@@ -16,6 +16,7 @@ var searchData=
   ['connection',['Connection',['../classanch_1_1sql_1_1_connection.html#a9de94289ca6259f94ef6aeba3b134a77',1,'anch::sql::Connection::Connection()'],['../classanch_1_1sql_1_1_connection.html#a6ba457795fe611971de58c26709f1114',1,'anch::sql::Connection::Connection(const Connection &amp;)=delete']]],
   ['constantformatter',['ConstantFormatter',['../classanch_1_1date_1_1formatter_1_1_constant_formatter.html#ae7ad2ccc3bb622b54295a8dcf384a37d',1,'anch::date::formatter::ConstantFormatter']]],
   ['constformatter',['ConstFormatter',['../classanch_1_1logger_1_1formatter_1_1_const_formatter.html#a46da8cc4d9dc1a0fd0ad340c420f234e',1,'anch::logger::formatter::ConstFormatter']]],
+  ['context',['Context',['../structanch_1_1crypto_1_1_s_h_a1_1_1_context.html#ab151401aa4059902572f050c7b7e85a8',1,'anch::crypto::SHA1::Context']]],
   ['convert',['convert',['../namespaceanch.html#a7163f06dc31c45480a4fcff1c9cbf22c',1,'anch']]],
   ['createconnection',['createConnection',['../classanch_1_1sql_1_1_sql_connection_factory.html#a148e126d90d3169eda43f15090299e71',1,'anch::sql::SqlConnectionFactory']]],
   ['createdirectory',['createDirectory',['../classanch_1_1file_1_1_file.html#a1247283f8e989774d4dfc5b5def4f972',1,'anch::file::File']]],

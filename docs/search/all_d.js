@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['observable',['Observable',['../classanch_1_1events_1_1_observable.html',1,'anch::events::Observable&lt; Event &gt;'],['../classanch_1_1events_1_1_observable.html#a83bccdde5125b7d7edca0e81fb46cfdd',1,'anch::events::Observable::Observable()']]],
+  ['observable',['Observable',['../classanch_1_1events_1_1_observable.html',1,'anch::events::Observable&lt; Event &gt;'],['../classanch_1_1events_1_1_observable.html#a87773a2e5c9380dea13066241edd8b72',1,'anch::events::Observable::Observable()']]],
   ['observable_3c_20socketevent_20_3e',['Observable&lt; SocketEvent &gt;',['../classanch_1_1events_1_1_observable.html',1,'anch::events']]],
   ['observer',['Observer',['../classanch_1_1events_1_1_observer.html',1,'anch::events']]],
   ['observer_3c_20socketevent_20_3e',['Observer&lt; SocketEvent &gt;',['../classanch_1_1events_1_1_observer.html',1,'anch::events']]],
