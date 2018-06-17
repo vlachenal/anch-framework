@@ -111,6 +111,7 @@ namespace anch {
 
   };
 
+  // Implementation +
   template<typename T, template<typename> typename C>
   Stream<T,C>::Stream(C<T>& values): _values(values), _filters(), _skip(0), _limit(std::numeric_limits<uint64_t>::max()) {
     // Nothing to do
@@ -148,12 +149,14 @@ namespace anch {
     uint64_t idx = 0;
     uint64_t treated = 0;
     for(auto val : _values) {
+      // Check ranges +
       if(treated >= _limit) {
 	break;
       }
       if(idx < _skip) {
 	goto next;
       }
+      // Check ranges -
       // Apply filters +
       for(auto filter : _filters) {
 	if(!filter(val)) {
@@ -167,6 +170,7 @@ namespace anch {
       ++idx;
     }
   }
+  // Implementation -
 
 }
 
