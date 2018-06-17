@@ -167,7 +167,7 @@ namespace anch {
      * \return the new optional
      */
     template<typename U>
-    Optional<U> map(std::function<U(const T&)> mapper);
+    Optional<U> map(std::function<U(const T&)> mapper) const;
     // Methods -
 
   };
@@ -267,7 +267,7 @@ namespace anch {
   template<typename T>
   template<typename U>
   inline Optional<U>
-  Optional<T>::map(std::function<U(const T&)> mapper) {
+  Optional<T>::map(std::function<U(const T&)> mapper) const {
     Optional<U> val;
     if(this->has_value()) {
       val = mapper(this->value());
