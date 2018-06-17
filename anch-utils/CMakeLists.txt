@@ -13,6 +13,11 @@ execute_process(COMMAND ${CMAKE_C_COMPILER} -dumpversion
                 OUTPUT_VARIABLE GCC_VERSION)
 if (GCC_VERSION VERSION_LESS 4.5)
   message(FATAL_ERROR "Version < 4.5. This library is based on C++11 standard. Exit.")
+elseif(GCC_VERSION VERSION_GREATER 7.0 OR GCC_VERSION VERSION_EQUAL 7.0)
+  message(STATUS "Version >= 7.0 use -std=c++17")
+  add_definitions("-std=c++17")
+  add_definitions("-D ANCH_STD_OTP")
+  set(ANCH_OPT true)
 elseif(GCC_VERSION VERSION_GREATER 6.0 OR GCC_VERSION VERSION_EQUAL 6.0)
   message(STATUS "Version >= 6.0 use -std=c++14")
   add_definitions("-std=c++14")
@@ -54,15 +59,15 @@ install(
   FILES_MATCHING PATTERN "*.hpp"
   )
 
-# Unitary tests
-if(ANCH_UTILS_UNITARY_TEST)
+# Unit tests
+if(ANCH_UTILS_UNIT_TEST)
 
   link_directories(
     ${ANCH_DEVICE_LIBRARY_DIR}
     ${ANCH_CRYPTO_LIBRARY_DIR}
   )
 
-  # Build UUID unitary test +
+  # Build UUID unit test +
   file(
     GLOB_RECURSE
     test_uuid
@@ -85,9 +90,9 @@ if(ANCH_UTILS_UNITARY_TEST)
     anch-crypto
     ${CMAKE_THREAD_LIBS_INIT}
   )
-  # Build UUID unitary test -
+  # Build UUID unit test -
 
-  # Build thread pool unitary test +
+  # Build thread pool unit test +
   file(
     GLOB_RECURSE
     test_thread_pool
@@ -104,9 +109,9 @@ if(ANCH_UTILS_UNITARY_TEST)
     anch-thread-pool-test
     ${CMAKE_THREAD_LIBS_INIT}
   )
-  # Build thread pool unitary test -
+  # Build thread pool unit test -
 
-  # Build resource pool unitary test +
+  # Build resource pool unit test +
   file(
     GLOB_RECURSE
     test_res_pool
@@ -123,11 +128,34 @@ if(ANCH_UTILS_UNITARY_TEST)
     anch-res-pool-test
     ${CMAKE_THREAD_LIBS_INIT}
   )
-  # Build resource pool unitary test -
+  # Build resource pool unit test -
 
   enable_testing()
   add_test(anch-uuid-test ${EXECUTABLE_OUTPUT_PATH}/anch-uuid-test main)
   add_test(anch-thread-pool-test ${EXECUTABLE_OUTPUT_PATH}/anch-thread-pool-test main)
   add_test(anch-thread-res-test ${EXECUTABLE_OUTPUT_PATH}/anch-res-pool-test main)
 
-endif(ANCH_UTILS_UNITARY_TEST)
+  if(ANCH_OPT)
+    # Build optional unit test +
+    file(
+      GLOB_RECURSE
+      test_optional
+      inc/*
+      test/testOptional.cpp
+      )
+
+    add_executable(
+      anch-optional-test
+      ${test_optional}
+      )
+
+    target_link_libraries(
+      anch-optional-test
+      ${CMAKE_THREAD_LIBS_INIT}
+      )
+    # Build optional unit test -
+
+    add_test(anch-optional-test ${EXECUTABLE_OUTPUT_PATH}/anch-optional-test main)
+  endif()
+
+endif(ANCH_UTILS_UNIT_TEST)

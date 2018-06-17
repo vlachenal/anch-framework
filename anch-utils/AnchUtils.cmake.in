@@ -13,5 +13,5 @@ set(ANCH_UTILS_COMPILE_FLAGS "-O2 -march=native -pipe")
 set(ANCH_UTILS_INSTALL_INC_DIR "/usr/local/include/anch" CACHE STRING "Header installation path")
 
 # Unitary tests
-set(ANCH_UTILS_UNITARY_TEST ON CACHE BOOL "Anch utils unitary tests")
+set(ANCH_UTILS_UNIT_TEST ON CACHE BOOL "Anch utils unitary tests")
 ## Anch utils configuration -
