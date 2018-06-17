@@ -108,7 +108,6 @@ namespace anch {
     template<typename... Args>
     constexpr explicit Optional(std::in_place_t inplace, Args&&... args);
 
-
     /*!
      * \ref Optional constructor.\n
      * This constructor will initialize containing object with args.
@@ -118,9 +117,7 @@ namespace anch {
      * \param args the \c T type constructor arguments
      */
     template<typename U, typename... Args>
-    constexpr explicit Optional(std::in_place_t inplace,
-				std::initializer_list<U> ilist,
-				Args&&... args);
+    constexpr explicit Optional(std::in_place_t inplace, std::initializer_list<U> ilist, Args&&... args);
 
     /*!
      * \ref Optional constructor.
@@ -157,6 +154,17 @@ namespace anch {
      * \param fallback the treatment to apply when optional has no value
      */
     void ifValueOrElse(std::function<void(const T&)> func, std::function<void()> fallback);
+
+    /*!
+     * Transform optional type to another.\n
+     * It value is not set, return an empty optional.
+     *
+     * \param mapper the mapping function
+     *
+     * \return the new optional
+     */
+    template<typename U>
+    Optional<U> map(std::function<U(const T&)> mapper);
     // Methods -
 
   };
@@ -219,9 +227,8 @@ namespace anch {
 
   template<typename T>
   template<typename U, typename... Args>
-  constexpr Optional<T>::Optional(std::in_place_t inplace,
-				  std::initializer_list<U> ilist,
-				  Args&&... args): std::optional<T>(inplace, ilist, args...) {
+  constexpr Optional<T>::Optional(std::in_place_t inplace, std::initializer_list<U> ilist, Args&&... args)
+    : std::optional<T>(inplace, ilist, args...) {
     // Nothing to do
   }
 
@@ -252,6 +259,17 @@ namespace anch {
     } else {
       fallback();
     }
+  }
+
+  template<typename T>
+  template<typename U>
+  inline Optional<U>
+  Optional<T>::map(std::function<U(const T&)> mapper) {
+    Optional<U> val;
+    if(this->has_value()) {
+      val = mapper(this->value());
+    }
+    return val;
   }
 
 }
