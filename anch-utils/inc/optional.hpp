@@ -21,6 +21,7 @@
 #define _ANCH_OPTIONAL_H_
 
 #ifdef ANCH_STD_OTP
+
 #include <optional>
 #include <functional>
 
@@ -47,6 +48,8 @@ namespace anch {
 
   /*!
    * \brief \c std::optional usefull methods.
+   *
+   * Provides some missing (from my point of view) features to \c std::optional .
    *
    * \since 0.1
    *
