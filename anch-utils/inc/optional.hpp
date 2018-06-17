@@ -276,6 +276,6 @@ namespace anch {
   }
 
 }
-#endif
+#endif // ANCH_STD_OPT
 
-#endif
+#endif // _ANCH_OPTIONAL_H_

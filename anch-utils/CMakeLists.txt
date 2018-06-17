@@ -130,10 +130,30 @@ if(ANCH_UTILS_UNIT_TEST)
   )
   # Build resource pool unit test -
 
+  # Build stream unit test +
+  file(
+    GLOB_RECURSE
+    test_stream
+    inc/*
+    test/testStream.cpp
+  )
+
+  add_executable(
+    anch-stream-test
+    ${test_stream}
+  )
+
+  target_link_libraries(
+    anch-stream-test
+    ${CMAKE_THREAD_LIBS_INIT}
+  )
+  # Build stream unit test -
+
   enable_testing()
   add_test(anch-uuid-test ${EXECUTABLE_OUTPUT_PATH}/anch-uuid-test main)
   add_test(anch-thread-pool-test ${EXECUTABLE_OUTPUT_PATH}/anch-thread-pool-test main)
   add_test(anch-thread-res-test ${EXECUTABLE_OUTPUT_PATH}/anch-res-pool-test main)
+  add_test(anch-stream-test ${EXECUTABLE_OUTPUT_PATH}/anch-stream-test main)
 
   if(ANCH_OPT)
     # Build optional unit test +
