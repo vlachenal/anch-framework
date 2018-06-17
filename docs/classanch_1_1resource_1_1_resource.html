@@ -81,15 +81,20 @@ $(function() {
 <div class="dynheader">
 Collaboration diagram for anch::resource::Resource:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classanch_1_1resource_1_1_resource__coll__graph.svg" width="195" height="132"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="classanch_1_1resource_1_1_resource__coll__graph.svg" width="195" height="162"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a0e5ec475e2601bdb33644468e86f6f10"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1resource_1_1_resource.html#a0e5ec475e2601bdb33644468e86f6f10">~Resource</a> ()</td></tr>
 <tr class="separator:a0e5ec475e2601bdb33644468e86f6f10"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a345adc5c435af0bd44f017c4eda0df0c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1resource_1_1_resource.html#a345adc5c435af0bd44f017c4eda0df0c">getParameter</a> (std::string &amp;value, const std::string &amp;param, const std::string &amp;section=&quot;&quot;) const</td></tr>
+<tr class="memitem:a345adc5c435af0bd44f017c4eda0df0c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1resource_1_1_resource.html#a345adc5c435af0bd44f017c4eda0df0c">getParameter</a> (std::string &amp;value, const std::string &amp;param, const std::string &amp;<a class="el" href="classanch_1_1resource_1_1_resource.html#a93a2023c9306e4c4e70072b9ab652b70">section</a>=&quot;&quot;) const</td></tr>
 <tr class="separator:a345adc5c435af0bd44f017c4eda0df0c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a93a2023c9306e4c4e70072b9ab652b70"><td class="memItemLeft" align="right" valign="top">std::optional&lt; <a class="el" href="classanch_1_1resource_1_1_section.html">anch::resource::Section</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1resource_1_1_resource.html#a93a2023c9306e4c4e70072b9ab652b70">section</a> (const std::string &amp;section) const</td></tr>
+<tr class="separator:a93a2023c9306e4c4e70072b9ab652b70"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a49c4173acd966f4c99c59de1b78f1720"><td class="memItemLeft" align="right" valign="top">std::optional&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1resource_1_1_resource.html#a49c4173acd966f4c99c59de1b78f1720">parameter</a> (const std::string &amp;param) const</td></tr>
+<tr class="separator:a49c4173acd966f4c99c59de1b78f1720"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6fbfbadc89e7ebb4462cd9a2a1c1778f"><td class="memItemLeft" align="right" valign="top">const std::map&lt; std::string, <a class="el" href="classanch_1_1resource_1_1_section.html">anch::resource::Section</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1resource_1_1_resource.html#a6fbfbadc89e7ebb4462cd9a2a1c1778f">getConfiguration</a> () const</td></tr>
 <tr class="separator:a6fbfbadc89e7ebb4462cd9a2a1c1778f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -231,6 +236,58 @@ Static Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The <a class="el" href="classanch_1_1resource_1_1_resource.html">Resource</a> unique instance </dd></dl>
+
+</div>
+</div>
+<a id="a49c4173acd966f4c99c59de1b78f1720"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a49c4173acd966f4c99c59de1b78f1720">&#9670;&nbsp;</a></span>parameter()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::optional&lt; std::string &gt; Resource::parameter </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>param</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Access parameter without section</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">param</td><td>the parameter name</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>the optional result </dd></dl>
+
+</div>
+</div>
+<a id="a93a2023c9306e4c4e70072b9ab652b70"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a93a2023c9306e4c4e70072b9ab652b70">&#9670;&nbsp;</a></span>section()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::optional&lt; <a class="el" href="classanch_1_1resource_1_1_section.html">Section</a> &gt; Resource::section </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>section</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Access section</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">section</td><td>the section name</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>the optional result </dd></dl>
 
 </div>
 </div>
