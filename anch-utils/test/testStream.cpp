@@ -1,7 +1,20 @@
 #include <iostream>
 #include <list>
+#include <sstream>
 
 #include "stream.hpp"
+
+struct A {
+  std::string a;
+  A(): a() {}
+  A(const A& bis): a(bis.a) {}
+};
+
+struct B {
+  std::string b;
+  B(): b() {}
+  B(const B& bis): b(bis.b) {}
+};
 
 int
 main(void) {
@@ -65,6 +78,25 @@ main(void) {
     .concat(stream2)
     .anyMatch([](const int& i) -> bool { return i > 15; });
   std::cout << (match ? "true" : "false") << std::endl;
+
+  std::list<A> as;
+  for(int i = 0 ; i < 10 ; ++i) {
+    A a;
+    std::ostringstream oss;
+    oss << "Test" << i;
+    a.a = oss.str();
+    std::cout << "A " << a.a << std::endl;
+    as.push_back(a);
+  }
+  anch::Stream(as)
+    .map<B>([](const A& a) -> B {
+	      B b;
+	      b.b = a.a;
+	      return b;
+	    })
+    .forEach([](const B& b) {
+	       std::cout << "B " << b.b << std::endl;
+	     });
 
   std::cout << "Exit testStream" << std::endl;
   return 0;

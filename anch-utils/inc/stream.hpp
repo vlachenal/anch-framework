@@ -37,6 +37,9 @@ namespace anch {
     // Attributes +
   private:
     /*! Values */
+    C<T> _internalValues;
+
+    /*! Values */
     C<T>& _values;
 
     /*! Filters to apply on each entry */
@@ -71,6 +74,16 @@ namespace anch {
      * \param container the container
      */
     Stream(C<T>& container);
+
+    /*!
+     * \ref Stream copy constructor
+     */
+    Stream(const Stream& other);
+
+    /*!
+     * \ref Stream move constructor
+     */
+    Stream(Stream&& other);
     // Constructors -
 
     // Destructor +
@@ -138,6 +151,14 @@ namespace anch {
      */
     void forEach(std::function<void(T&)> action);
 
+    /*!
+     * Create a new stream transforming current stream type into another.
+     *
+     * \param mapper the mapping function
+     */
+    template<typename U>
+    Stream<U,std::vector> map(std::function<U(const T&)> mapper);
+
   private:
     /*!
      * Apply treatment for each item in stream
@@ -175,13 +196,38 @@ namespace anch {
 
   // Implementation +
   template<typename T, template<typename> typename C>
-  Stream<T,C>::Stream(C<T>& values): _values(values),
+  Stream<T,C>::Stream(C<T>& values): _internalValues(),
+				     _values(values),
 				     _filters(),
 				     _skip(0),
 				     _limit(std::numeric_limits<uint64_t>::max()),
 				     _index(0),
 				     _treated(0),
 				     _next(NULL) {
+    // Nothing to do
+  }
+
+  template<typename T, template<typename> typename C>
+  Stream<T,C>::Stream(const Stream& other): _internalValues(),
+					    _values(other._values),
+					    _filters(other._filters),
+					    _skip(other._skip),
+					    _limit(other._limit),
+					    _index(0),
+					    _treated(0),
+					    _next(other._next) {
+    // Nothing to do
+  }
+
+  template<typename T, template<typename> typename C>
+  Stream<T,C>::Stream(Stream&& other): _internalValues(other._values),
+				       _values(_internalValues),
+				       _filters(other._filters),
+				       _skip(other._skip),
+				       _limit(other._limit),
+				       _index(0),
+				       _treated(0),
+				       _next(other._next) {
     // Nothing to do
   }
 
@@ -335,6 +381,17 @@ namespace anch {
     }
   }
   // Foreach -
+
+  template<typename T, template<typename> typename C>
+  template<typename U>
+  Stream<U,std::vector>
+  Stream<T,C>::map(std::function<U(const T&)> mapper) {
+    std::vector<U> values;
+    forEach([&values, mapper](const T& val) {
+	      values.push_back(mapper(val));
+	    });
+    return std::move(anch::Stream(values));
+  }
 
   template<typename T, template<typename> typename C>
   inline bool
