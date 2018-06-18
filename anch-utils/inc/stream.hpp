@@ -190,6 +190,7 @@ namespace anch {
     // Nothing to do
   }
 
+  // Filters +
   template<typename T, template<typename> typename C>
   inline Stream<T,C>&
   Stream<T,C>::filter(std::function<bool(const T&)> predicate) {
@@ -222,6 +223,7 @@ namespace anch {
     }
     return *this;
   }
+  // Filters -
 
   template<typename T, template<typename> typename C>
   inline Stream<T,C>&
@@ -234,6 +236,7 @@ namespace anch {
     return *this;
   }
 
+  // All match +
   template<typename T, template<typename> typename C>
   bool
   Stream<T,C>::allMatch(std::function<bool(const T&)> predicate) {
@@ -266,7 +269,9 @@ namespace anch {
     }
     return match;
   }
+  // All match -
 
+  // Any match +
   template<typename T, template<typename> typename C>
   bool
   Stream<T,C>::anyMatch(std::function<bool(const T&)> predicate) {
@@ -299,7 +304,9 @@ namespace anch {
     }
     return match;
   }
+  // Any match -
 
+  // Foreach +
   template<typename T, template<typename> typename C>
   void
   Stream<T,C>::forEach(std::function<void(T&)> action) {
@@ -327,6 +334,7 @@ namespace anch {
       _next->forEach(action, filters);
     }
   }
+  // Foreach -
 
   template<typename T, template<typename> typename C>
   inline bool
