@@ -14,7 +14,23 @@ struct B {
   std::string b;
   B(): b() {}
   B(const B& bis): b(bis.b) {}
+  bool operator==(const B& other) const {
+    return b == other.b;
+  }
+  bool operator<(const B& other) const {
+    return b < other.b;
+  }
 };
+
+namespace std {
+  template<>
+  class hash<::B> {
+  public:
+    size_t operator()(const B& b) const {
+      return hash<string>()(b.b);
+    }
+  };
+}
 
 int
 main(void) {
@@ -97,6 +113,61 @@ main(void) {
     .forEach([](const B& b) {
 	       std::cout << "B " << b.b << std::endl;
 	     });
+
+  std::list<B> resL = anch::Stream(as)
+    .map<B>([](const A& a) -> B {
+	      B b;
+	      b.b = a.a;
+	      return b;
+	    })
+    .collect<std::list>(&anch::Collectors<B>::toList);
+  for(auto b : resL) {
+    std::cout << "ListB " << b.b << std::endl;
+  }
+
+  std::set<B> resS = anch::Stream(as)
+    .map<B>([](const A& a) -> B {
+	      B b;
+	      b.b = a.a;
+	      return b;
+	    })
+    .collect<std::set>(&anch::Collectors<B>::toSet);
+  for(auto b : resS) {
+    std::cout << "SetB " << b.b << std::endl;
+  }
+
+  std::vector<B> resV = anch::Stream(as)
+    .map<B>([](const A& a) -> B {
+	      B b;
+	      b.b = a.a;
+	      return b;
+	    })
+    .collect<std::vector>(&anch::Collectors<B>::toVector);
+  for(auto b : resV) {
+    std::cout << "VectorB " << b.b << std::endl;
+  }
+
+  std::multiset<B> resMS = anch::Stream(as)
+    .map<B>([](const A& a) -> B {
+	      B b;
+	      b.b = a.a;
+	      return b;
+	    })
+    .collect<std::multiset>(&anch::Collectors<B>::toMultiset);
+  for(auto b : resMS) {
+    std::cout << "MSetB " << b.b << std::endl;
+  }
+
+  std::unordered_set<B> resUS = anch::Stream(as)
+    .map<B>([](const A& a) -> B {
+	      B b;
+	      b.b = a.a;
+	      return b;
+	    })
+    .collect<std::unordered_set>(&anch::Collectors<B>::toUnorderedSet);
+  for(auto b : resUS) {
+    std::cout << "USetB " << b.b << std::endl;
+  }
 
   std::cout << "Exit testStream" << std::endl;
   return 0;

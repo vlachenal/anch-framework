@@ -21,6 +21,9 @@
 #define _ANCH_STREAM_H_
 
 #include <vector>
+#include <list>
+#include <set>
+#include <unordered_set>
 #include <functional>
 
 namespace anch {
@@ -37,7 +40,7 @@ namespace anch {
     // Attributes +
   private:
     /*! Values */
-    C<T> _internalValues;
+    C<T>* _internalValues;
 
     /*! Values */
     C<T>& _values;
@@ -159,6 +162,22 @@ namespace anch {
     template<typename U>
     Stream<U,std::vector> map(std::function<U(const T&)> mapper);
 
+    /*!
+     * Collect stream items in container
+     *
+     * \param container the container to fill
+     */
+    template<template<typename> typename D>
+    void collect(D<T>& container, std::function<void(D<T>&,const T&)> collector);
+
+    /*!
+     * Collect stream items in container
+     *
+     * \return the result container
+     */
+    template<template<typename> typename D>
+    D<T> collect(std::function<void(D<T>&,const T&)> collector);
+
   private:
     /*!
      * Apply treatment for each item in stream
@@ -194,9 +213,59 @@ namespace anch {
 
   };
 
+  /*!
+   * \brief Stream collector functions
+   *
+   * It contains collectors for STL container library
+   *
+   * \author Vincent Lachenal
+   */
+  template<typename T>
+  struct Collectors {
+    /*!
+     * Insert value in \c std::vector
+     *
+     * \param container the vector
+     * \param val the value
+     */
+    static void toVector(std::vector<T>& container, const T& val);
+
+    /*!
+     * Insert value in \c std::list
+     *
+     * \param container the list
+     * \param val the value
+     */
+    static void toList(std::list<T>& container, const T& val);
+
+    /*!
+     * Insert value in \c std::set
+     *
+     * \param container the set
+     * \param val the value
+     */
+    static void toSet(std::set<T>& container, const T& val);
+
+    /*!
+     * Insert value in \c std::set
+     *
+     * \param container the set
+     * \param val the value
+     */
+    static void toMultiset(std::multiset<T>& container, const T& val);
+
+    /*!
+     * Insert value in \c std::set
+     *
+     * \param container the set
+     * \param val the value
+     */
+    static void toUnorderedSet(std::unordered_set<T>& container, const T& val);
+  };
+
   // Implementation +
   template<typename T, template<typename> typename C>
-  Stream<T,C>::Stream(C<T>& values): _internalValues(),
+  Stream<T,C>::Stream(C<T>& values): _internalValues(NULL),
 				     _values(values),
 				     _filters(),
 				     _skip(0),
@@ -208,7 +277,7 @@ namespace anch {
   }
 
   template<typename T, template<typename> typename C>
-  Stream<T,C>::Stream(const Stream& other): _internalValues(),
+  Stream<T,C>::Stream(const Stream& other): _internalValues(NULL),
 					    _values(other._values),
 					    _filters(other._filters),
 					    _skip(other._skip),
@@ -220,8 +289,8 @@ namespace anch {
   }
 
   template<typename T, template<typename> typename C>
-  Stream<T,C>::Stream(Stream&& other): _internalValues(other._values),
-				       _values(_internalValues),
+  Stream<T,C>::Stream(Stream&& other): _internalValues(new C<T>(other._values)),
+				       _values(*_internalValues),
 				       _filters(other._filters),
 				       _skip(other._skip),
 				       _limit(other._limit),
@@ -233,7 +302,9 @@ namespace anch {
 
   template<typename T, template<typename> typename C>
   Stream<T,C>::~Stream() {
-    // Nothing to do
+    if(_internalValues != NULL) {
+      delete _internalValues;
+    }
   }
 
   // Filters +
@@ -398,6 +469,58 @@ namespace anch {
   Stream<T,C>::limitReached() const {
     return _treated >= _limit;
   }
+
+  // Collect +
+  template<typename T, template<typename> typename C>
+  template<template<typename> typename D>
+  void
+  Stream<T,C>::collect(D<T>& result, std::function<void(D<T>&,const T&)> collector) {
+    forEach([&result, &collector](const T& val) {
+	      collector(result, val);
+	    });
+  }
+
+  template<typename T, template<typename> typename C>
+  template<template<typename> typename D>
+  inline D<T>
+  Stream<T,C>::collect(std::function<void(D<T>&,const T&)> collector) {
+    D<T> result;
+    collect(result, collector);
+    return result;
+  }
+  // Collect -
+
+  // Collectors +
+  template<typename T>
+  void
+  Collectors<T>::toVector(std::vector<T>& container, const T& val) {
+    container.push_back(val);
+  }
+
+  template<typename T>
+  void
+  Collectors<T>::toList(std::list<T>& container, const T& val) {
+    container.push_back(val);
+  }
+
+  template<typename T>
+  void
+  Collectors<T>::toSet(std::set<T>& container, const T& val) {
+    container.insert(val);
+  }
+
+  template<typename T>
+  void
+  Collectors<T>::toMultiset(std::multiset<T>& container, const T& val) {
+    container.insert(val);
+  }
+
+  template<typename T>
+  void
+  Collectors<T>::toUnorderedSet(std::unordered_set<T>& container, const T& val) {
+    container.insert(val);
+  }
+  // Collectors -
   // Implementation -
 
 }
