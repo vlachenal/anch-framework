@@ -21,17 +21,16 @@
 #define _ANCH_STREAM_H_
 
 #include <vector>
-#include <list>
-#include <set>
-#include <unordered_set>
 #include <functional>
+
 
 namespace anch {
 
   /*!
-   * \brief Java-ish stream class
+   * \brief Java style stream class
    *
-   * Java-ish stream class
+   * \ref Stream aims to lazily apply treatment on container.\n
+   * Every operation is stored until final operation is call. They are applied in their insertion order.
    *
    * \author Vincent Lachenal
    */
@@ -211,56 +210,6 @@ namespace anch {
     bool limitReached() const;
     // Methods -
 
-  };
-
-  /*!
-   * \brief Stream collector functions
-   *
-   * It contains collectors for STL container library
-   *
-   * \author Vincent Lachenal
-   */
-  template<typename T>
-  struct Collectors {
-    /*!
-     * Insert value in \c std::vector
-     *
-     * \param container the vector
-     * \param val the value
-     */
-    static void toVector(std::vector<T>& container, const T& val);
-
-    /*!
-     * Insert value in \c std::list
-     *
-     * \param container the list
-     * \param val the value
-     */
-    static void toList(std::list<T>& container, const T& val);
-
-    /*!
-     * Insert value in \c std::set
-     *
-     * \param container the set
-     * \param val the value
-     */
-    static void toSet(std::set<T>& container, const T& val);
-
-    /*!
-     * Insert value in \c std::set
-     *
-     * \param container the set
-     * \param val the value
-     */
-    static void toMultiset(std::multiset<T>& container, const T& val);
-
-    /*!
-     * Insert value in \c std::set
-     *
-     * \param container the set
-     * \param val the value
-     */
-    static void toUnorderedSet(std::unordered_set<T>& container, const T& val);
   };
 
   // Implementation +
@@ -489,38 +438,6 @@ namespace anch {
     return result;
   }
   // Collect -
-
-  // Collectors +
-  template<typename T>
-  void
-  Collectors<T>::toVector(std::vector<T>& container, const T& val) {
-    container.push_back(val);
-  }
-
-  template<typename T>
-  void
-  Collectors<T>::toList(std::list<T>& container, const T& val) {
-    container.push_back(val);
-  }
-
-  template<typename T>
-  void
-  Collectors<T>::toSet(std::set<T>& container, const T& val) {
-    container.insert(val);
-  }
-
-  template<typename T>
-  void
-  Collectors<T>::toMultiset(std::multiset<T>& container, const T& val) {
-    container.insert(val);
-  }
-
-  template<typename T>
-  void
-  Collectors<T>::toUnorderedSet(std::unordered_set<T>& container, const T& val) {
-    container.insert(val);
-  }
-  // Collectors -
   // Implementation -
 
 }
