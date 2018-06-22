@@ -147,6 +147,13 @@ namespace anch {
     bool anyMatch(std::function<bool(const T&)> predicate);
 
     /*!
+     * Check if there is no item in stream that matches a predicate
+     *
+     * \param predicate the function to use to check items
+     */
+    bool noneMatch(std::function<bool(const T&)> predicate);
+
+    /*!
      * Apply treatment for each item in stream
      *
      * \param action the function to execute on each item
@@ -165,12 +172,15 @@ namespace anch {
      * Collect stream items in container
      *
      * \param container the container to fill
+     * \param collector the collector function
      */
     template<template<typename> typename D>
     void collect(D<T>& container, std::function<void(D<T>&,const T&)> collector);
 
     /*!
      * Collect stream items in container
+     *
+     * \param collector the collector function
      *
      * \return the result container
      */
@@ -201,6 +211,14 @@ namespace anch {
      * \param filters the filters to apply
      */
     bool anyMatch(std::function<bool(const T&)> predicate, const std::vector<std::function<bool(const T&)>>& filters);
+
+    /*!
+     * Check if there is no item in stream that matches a predicate
+     *
+     * \param predicate the function to use to check items
+     * \param filters the filters to apply
+     */
+    bool noneMatch(std::function<bool(const T&)> predicate, const std::vector<std::function<bool(const T&)>>& filters);
 
     /*!
      * Check if limit has been reached
@@ -371,6 +389,41 @@ namespace anch {
     return match;
   }
   // Any match -
+
+  // None match +
+  template<typename T, template<typename> typename C>
+  bool
+  Stream<T,C>::noneMatch(std::function<bool(const T&)> predicate) {
+    _index = 0;
+    _treated = 0;
+    return noneMatch(predicate, _filters);
+  }
+
+  template<typename T, template<typename> typename C>
+  bool
+  Stream<T,C>::noneMatch(std::function<bool(const T&)> predicate, const std::vector<std::function<bool(const T&)>>& filters) {
+    bool match = false;
+    for(auto val : _values) {
+      for(auto filter : filters) {
+	if(!filter(val)) {
+	  goto next;
+	}
+      }
+      if(predicate(val)) {
+	match = true;
+	break;
+      }
+    next:
+      if(limitReached()) {
+	break;
+      }
+    }
+    if(_next != NULL && !match && !limitReached()) {
+      match = _next->noneMatch(predicate, filters);
+    }
+    return !match;
+  }
+  // None match -
 
   // Foreach +
   template<typename T, template<typename> typename C>

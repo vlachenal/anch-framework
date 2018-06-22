@@ -160,6 +160,19 @@ main(int argc, char** argv) {
     }
   }
 
+  if(all || args.find("noneMatch") != args.end()) {
+    std::cout << "Check all even values skipping three first concatenated values and treat at most five values: ";
+    auto stream2 = anch::Stream(ints2);
+    bool match = anch::Stream(ints1)
+      .concat(stream2)
+      .skip(3)
+      .noneMatch([](const int& i) -> bool { return i < 100; });
+    std::cout << (match ? "true" : "false") << std::endl;
+    if(match) {
+      return 1;
+    }
+  }
+
   std::list<A> as;
   std::list<B> expected;
   for(int i = 0 ; i < 10 ; ++i) {
@@ -198,6 +211,7 @@ main(int argc, char** argv) {
 		return b;
 	      })
       .collect<std::list>(&anch::Collectors<B>::toList);
+      //.collect<std::list>(&std::list<B>::push_back);
     for(auto b : resL) {
       std::cout << "ListB " << b.b << std::endl;
     }
@@ -288,6 +302,24 @@ main(int argc, char** argv) {
 		return b;
 	      })
       .collect<std::unordered_set>(&anch::Collectors<B>::toUnorderedSet);
+    for(auto b : resUS) {
+      std::cout << "USetB " << b.b << std::endl;
+    }
+    if(resUS != exp) {
+      std::cerr << "Unexpected result" << std::endl;
+      return 1;
+    }
+  }
+
+  if(all || args.find("collect_unordered_multiset") != args.end()) {
+    std::unordered_multiset<B> exp(expected.cbegin(), expected.cend());
+    std::unordered_multiset<B> resUS = anch::Stream(as)
+      .map<B>([](const A& a) -> B {
+		B b;
+		b.b = a.a;
+		return b;
+	      })
+      .collect<std::unordered_multiset>(&anch::Collectors<B>::toUnorderedMultiset);
     for(auto b : resUS) {
       std::cout << "USetB " << b.b << std::endl;
     }

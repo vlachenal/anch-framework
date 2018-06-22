@@ -75,7 +75,15 @@ namespace anch {
     static void toSet(std::set<T>& container, const T& val);
 
     /*!
-     * Insert value in \c std::set
+     * Insert value in \c std::unordered_set
+     *
+     * \param container the set
+     * \param val the value
+     */
+    static void toUnorderedSet(std::unordered_set<T>& container, const T& val);
+
+    /*!
+     * Insert value in \c std::multiset
      *
      * \param container the set
      * \param val the value
@@ -83,12 +91,12 @@ namespace anch {
     static void toMultiset(std::multiset<T>& container, const T& val);
 
     /*!
-     * Insert value in \c std::set
+     * Insert value in \c std::unordered_multiset
      *
      * \param container the set
      * \param val the value
      */
-    static void toUnorderedSet(std::unordered_set<T>& container, const T& val);
+    static void toUnorderedMultiset(std::unordered_multiset<T>& container, const T& val);
 
     /*!
      * Insert value in \c std::deque
@@ -151,13 +159,19 @@ namespace anch {
 
   template<typename T>
   void
+  Collectors<T>::toUnorderedSet(std::unordered_set<T>& container, const T& val) {
+    container.insert(val);
+  }
+
+  template<typename T>
+  void
   Collectors<T>::toMultiset(std::multiset<T>& container, const T& val) {
     container.insert(val);
   }
 
   template<typename T>
   void
-  Collectors<T>::toUnorderedSet(std::unordered_set<T>& container, const T& val) {
+  Collectors<T>::toUnorderedMultiset(std::unordered_multiset<T>& container, const T& val) {
     container.insert(val);
   }
 
@@ -184,7 +198,6 @@ namespace anch {
   Collectors<T>::toPriorityQueue(std::priority_queue<T>& container, const T& val) {
     container.push(val);
   }
-  // Implementations -
 
 }
 
