@@ -51,6 +51,7 @@ var searchData=
   ['singleton_3c_20sqlconnectionfactory_20_3e',['Singleton&lt; SqlConnectionFactory &gt;',['../classanch_1_1_singleton.html',1,'anch']]],
   ['singleton_3c_20sqlsharedlibraries_20_3e',['Singleton&lt; SQLSharedLibraries &gt;',['../classanch_1_1_singleton.html',1,'anch']]],
   ['size',['size',['../structanch_1_1crypto_1_1_s_h_a1_1_1_context.html#a5b2853f877891b6a2f16f5feb3a5ce31',1,'anch::crypto::SHA1::Context']]],
+  ['skip',['skip',['../classanch_1_1_stream.html#aca57e47b7ddcbb69a8e97ab2e4611664',1,'anch::Stream']]],
   ['socket',['Socket',['../classanch_1_1network_1_1_socket.html',1,'anch::network::Socket'],['../classanch_1_1network_1_1_socket.html#a41a69aaf074cc55cbaa085077e79c4c7',1,'anch::network::Socket::Socket(SocketType type)'],['../classanch_1_1network_1_1_socket.html#a5e704e6e6404b27e5260043e87c0a4da',1,'anch::network::Socket::Socket(const std::string &amp;ipAddress, uint16_t port, SocketType type=SocketType::UNKNOWN)']]],
   ['socketevent',['SocketEvent',['../classanch_1_1network_1_1_socket_event.html',1,'anch::network::SocketEvent'],['../classanch_1_1network_1_1_socket_event.html#ac86703cd0e39259455218e5e55cc802b',1,'anch::network::SocketEvent::SocketEvent(const std::string &amp;message)'],['../classanch_1_1network_1_1_socket_event.html#a492d8988dd4148846afedb06ebf39f1f',1,'anch::network::SocketEvent::SocketEvent(const std::string &amp;message, const sockaddr_storage &amp;address)']]],
   ['sockettype',['SocketType',['../namespaceanch_1_1network.html#aa518b6bd398c963767bf1974e5c113be',1,'anch::network']]],
@@ -68,5 +69,6 @@ var searchData=
   ['starttreatment',['startTreatment',['../classanch_1_1logger_1_1_low_priority_writer.html#a7e592ec45dc888439254f8030dacaf7f',1,'anch::logger::LowPriorityWriter']]],
   ['state',['state',['../structanch_1_1crypto_1_1_s_h_a1_1_1_context.html#a79a7b0b08e35792fdeb0e7ba86431c9c',1,'anch::crypto::SHA1::Context']]],
   ['stop',['stop',['../classanch_1_1_thread_pool.html#a303181831bf04c919f839e4973e9c7b4',1,'anch::ThreadPool']]],
+  ['stream',['Stream',['../classanch_1_1_stream.html',1,'anch::Stream&lt; T, C &gt;'],['../classanch_1_1_stream.html#a3d5eea0bfdc69001b90f15646b507efa',1,'anch::Stream::Stream()=delete'],['../classanch_1_1_stream.html#aa33831c80fbe201b79a818b1ecce0a4a',1,'anch::Stream::Stream(C&lt; T &gt; &amp;container)'],['../classanch_1_1_stream.html#ac4e1ee8eed2317fbbe142b9628610f3c',1,'anch::Stream::Stream(const Stream &amp;other)'],['../classanch_1_1_stream.html#a65d75f164da06d56a64fd84340a8f1b2',1,'anch::Stream::Stream(Stream &amp;&amp;other)']]],
   ['stringformatter',['StringFormatter',['../classanch_1_1logger_1_1formatter_1_1_string_formatter.html',1,'anch::logger::formatter::StringFormatter'],['../classanch_1_1logger_1_1formatter_1_1_string_formatter.html#a44a72490b89aaddafecedfb48e1613ff',1,'anch::logger::formatter::StringFormatter::StringFormatter()']]]
 ];

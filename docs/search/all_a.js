@@ -7,6 +7,7 @@ var searchData=
   ['level',['Level',['../namespaceanch_1_1logger.html#a973cdff92f296b5fba7f68660d4ee41f',1,'anch::logger']]],
   ['level_5flabel',['LEVEL_LABEL',['../namespaceanch_1_1logger.html#acc35b01278b79adb4754b42e579b92ec',1,'anch::logger']]],
   ['levelformatter',['LevelFormatter',['../classanch_1_1logger_1_1formatter_1_1_level_formatter.html',1,'anch::logger::formatter::LevelFormatter'],['../classanch_1_1logger_1_1formatter_1_1_level_formatter.html#a7608228519619190db2158b4daeb13a5',1,'anch::logger::formatter::LevelFormatter::LevelFormatter()']]],
+  ['limit',['limit',['../classanch_1_1_stream.html#a92b0443518561e6ba39cd5aef6c44681',1,'anch::Stream']]],
   ['list',['list',['../classanch_1_1file_1_1_file.html#a88d5dd9ee178f46763d6c7c899b24b88',1,'anch::file::File::list(std::vector&lt; std::string &gt; &amp;files)'],['../classanch_1_1file_1_1_file.html#ad1c1a14cba81f0f02faa3a33f3df5d5d',1,'anch::file::File::list(std::vector&lt; File &gt; &amp;files)']]],
   ['listen',['listen',['../classanch_1_1network_1_1_socket.html#af876dbd03caba60d16306a9b2a784500',1,'anch::network::Socket::listen()'],['../classanch_1_1network_1_1_udp_socket.html#abbf07a5d59531b67f090484f145111d1',1,'anch::network::UdpSocket::listen()']]],
   ['logger',['Logger',['../classanch_1_1logger_1_1_logger.html',1,'anch::logger::Logger'],['../classanch_1_1logger_1_1_logger.html#a5dbfc937adc6a03d66526d5a36bfb597',1,'anch::logger::Logger::Logger()']]],

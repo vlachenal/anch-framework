@@ -7,5 +7,9 @@ var searchData=
   ['addparameter',['addParameter',['../classanch_1_1resource_1_1_section.html#a88108c7101095ee9efc975282dafe6a8',1,'anch::resource::Section']]],
   ['aes',['AES',['../classanch_1_1crypto_1_1_a_e_s.html#a7d67f251777acd4e29c6cad0ed04feed',1,'anch::crypto::AES::AES(const uint8_t key[4 *K])'],['../classanch_1_1crypto_1_1_a_e_s.html#a1365e397364669b067b005cd97d78569',1,'anch::crypto::AES::AES(const AES &amp;other)']]],
   ['after',['after',['../classanch_1_1date_1_1_date.html#a991173104183a55ed5a376092569b120',1,'anch::date::Date']]],
-  ['anchdateformatter',['AnchDateFormatter',['../classanch_1_1logger_1_1formatter_1_1_anch_date_formatter.html#a33c7fc51bdf58b92b82d2fec939c289c',1,'anch::logger::formatter::AnchDateFormatter']]]
+  ['allmatch',['allMatch',['../classanch_1_1_stream.html#a828903da0a521bff60a2f3eea84ee921',1,'anch::Stream']]],
+  ['anchdateformatter',['AnchDateFormatter',['../classanch_1_1logger_1_1formatter_1_1_anch_date_formatter.html#a33c7fc51bdf58b92b82d2fec939c289c',1,'anch::logger::formatter::AnchDateFormatter']]],
+  ['anymatch',['anyMatch',['../classanch_1_1_stream.html#afdfc2459ec59a8fae98ec2ce22cb61df',1,'anch::Stream']]],
+  ['applyifvalue',['applyIfValue',['../namespaceanch.html#a29697be31b4810c4b3a0adf3abd67cb7',1,'anch']]],
+  ['applyifvalueorelse',['applyIfValueOrElse',['../namespaceanch.html#a3f50949a9549a7126422931220af5284',1,'anch']]]
 ];

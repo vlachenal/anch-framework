@@ -31,6 +31,7 @@ var searchData=
   ['sha384_5f512',['SHA384_512',['../classanch_1_1crypto_1_1_s_h_a384__512.html#a0665256d39a68cdfd3bc6bcba7e81419',1,'anch::crypto::SHA384_512::SHA384_512()'],['../classanch_1_1crypto_1_1_s_h_a384__512.html#a627a51ab63b444d1c0a428fbe79c81b1',1,'anch::crypto::SHA384_512::SHA384_512(const std::basic_string&lt; CharT, Traits, Allocator &gt; &amp;data)'],['../classanch_1_1crypto_1_1_s_h_a384__512.html#af655b2071f8802cd85209c24a11a4073',1,'anch::crypto::SHA384_512::SHA384_512(std::basic_istream&lt; CharT, Traits &gt; &amp;stream)']]],
   ['shiftright',['shiftRight',['../classanch_1_1crypto_1_1_s_h_a2.html#a74f3fbd0be61de74d29b2f6557247666',1,'anch::crypto::SHA2']]],
   ['shutdown',['shutdown',['../classanch_1_1network_1_1_socket.html#a46947a5c0cb66da606662f2c2048eb84',1,'anch::network::Socket']]],
+  ['skip',['skip',['../classanch_1_1_stream.html#aca57e47b7ddcbb69a8e97ab2e4611664',1,'anch::Stream']]],
   ['socket',['Socket',['../classanch_1_1network_1_1_socket.html#a41a69aaf074cc55cbaa085077e79c4c7',1,'anch::network::Socket::Socket(SocketType type)'],['../classanch_1_1network_1_1_socket.html#a5e704e6e6404b27e5260043e87c0a4da',1,'anch::network::Socket::Socket(const std::string &amp;ipAddress, uint16_t port, SocketType type=SocketType::UNKNOWN)']]],
   ['socketevent',['SocketEvent',['../classanch_1_1network_1_1_socket_event.html#ac86703cd0e39259455218e5e55cc802b',1,'anch::network::SocketEvent::SocketEvent(const std::string &amp;message)'],['../classanch_1_1network_1_1_socket_event.html#a492d8988dd4148846afedb06ebf39f1f',1,'anch::network::SocketEvent::SocketEvent(const std::string &amp;message, const sockaddr_storage &amp;address)']]],
   ['sqlexception',['SqlException',['../classanch_1_1sql_1_1_sql_exception.html#a5b036ae60c0d1b07442f729dec56f4dc',1,'anch::sql::SqlException']]],
@@ -41,5 +42,6 @@ var searchData=
   ['starttransaction',['startTransaction',['../classanch_1_1sql_1_1_connection.html#a72ccdbab9a5f61208d2ab1e86513cb03',1,'anch::sql::Connection']]],
   ['starttreatment',['startTreatment',['../classanch_1_1logger_1_1_low_priority_writer.html#a7e592ec45dc888439254f8030dacaf7f',1,'anch::logger::LowPriorityWriter']]],
   ['stop',['stop',['../classanch_1_1_thread_pool.html#a303181831bf04c919f839e4973e9c7b4',1,'anch::ThreadPool']]],
+  ['stream',['Stream',['../classanch_1_1_stream.html#a3d5eea0bfdc69001b90f15646b507efa',1,'anch::Stream::Stream()=delete'],['../classanch_1_1_stream.html#aa33831c80fbe201b79a818b1ecce0a4a',1,'anch::Stream::Stream(C&lt; T &gt; &amp;container)'],['../classanch_1_1_stream.html#ac4e1ee8eed2317fbbe142b9628610f3c',1,'anch::Stream::Stream(const Stream &amp;other)'],['../classanch_1_1_stream.html#a65d75f164da06d56a64fd84340a8f1b2',1,'anch::Stream::Stream(Stream &amp;&amp;other)']]],
   ['stringformatter',['StringFormatter',['../classanch_1_1logger_1_1formatter_1_1_string_formatter.html#a44a72490b89aaddafecedfb48e1613ff',1,'anch::logger::formatter::StringFormatter']]]
 ];

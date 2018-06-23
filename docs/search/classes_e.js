@@ -25,5 +25,6 @@ var searchData=
   ['sqlite3resultset',['SQLite3ResultSet',['../classanch_1_1sql_1_1_s_q_lite3_result_set.html',1,'anch::sql']]],
   ['sqlsharedlibraries',['SQLSharedLibraries',['../classanch_1_1sql_1_1_s_q_l_shared_libraries.html',1,'anch::sql']]],
   ['sqlsharedlibrary',['SQLSharedLibrary',['../structanch_1_1sql_1_1_s_q_l_shared_library.html',1,'anch::sql']]],
+  ['stream',['Stream',['../classanch_1_1_stream.html',1,'anch']]],
   ['stringformatter',['StringFormatter',['../classanch_1_1logger_1_1formatter_1_1_string_formatter.html',1,'anch::logger::formatter']]]
 ];

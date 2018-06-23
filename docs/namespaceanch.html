@@ -108,14 +108,23 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1_collectors.html">Collectors</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classanch_1_1_stream.html" title="Java style stream class. ">Stream</a> collector functions.  <a href="classanch_1_1_collectors.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structanch_1_1_less_ptr_compare.html">LessPtrCompare</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Less comparator based on object address.  <a href="structanch_1_1_less_ptr_compare.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1_optional.html">Optional</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><code>std::optional</code> usefull methods.  <a href="classanch_1_1_optional.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1_resource_pool.html">ResourcePool</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generic resource pool utility class.  <a href="classanch_1_1_resource_pool.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1_singleton.html">Singleton</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Meyers' singleton implemtation.  <a href="classanch_1_1_singleton.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1_stream.html">Stream</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Java style stream class.  <a href="classanch_1_1_stream.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1_thread_pool.html">ThreadPool</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Thread pool utility class.  <a href="classanch_1_1_thread_pool.html#details">More...</a><br /></td></tr>
@@ -139,11 +148,116 @@ Functions</h2></td></tr>
 <tr class="separator:a8dff697fb25aed06666b05c8862caa0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4fa5b950902e9a46ee9b5abb6a4c41d9"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceanch.html#a4fa5b950902e9a46ee9b5abb6a4c41d9">isLittleEndian</a> ()</td></tr>
 <tr class="separator:a4fa5b950902e9a46ee9b5abb6a4c41d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a29697be31b4810c4b3a0adf3abd67cb7"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a29697be31b4810c4b3a0adf3abd67cb7"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceanch.html#a29697be31b4810c4b3a0adf3abd67cb7">applyIfValue</a> (std::optional&lt; T &gt; &amp;value, std::function&lt; void(const T &amp;)&gt; func)</td></tr>
+<tr class="separator:a29697be31b4810c4b3a0adf3abd67cb7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3f50949a9549a7126422931220af5284"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a3f50949a9549a7126422931220af5284"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceanch.html#a3f50949a9549a7126422931220af5284">applyIfValueOrElse</a> (std::optional&lt; T &gt; &amp;value, std::function&lt; void(const T &amp;)&gt; func, std::function&lt; void()&gt; fallback)</td></tr>
+<tr class="separator:a3f50949a9549a7126422931220af5284"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>AnCH framework base namespace. </p>
 <p>Contains utility classes from AnCH utils library. </p>
 </div><h2 class="groupheader">Function Documentation</h2>
+<a id="a29697be31b4810c4b3a0adf3abd67cb7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a29697be31b4810c4b3a0adf3abd67cb7">&#9670;&nbsp;</a></span>applyIfValue()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void anch::applyIfValue </td>
+          <td>(</td>
+          <td class="paramtype">std::optional&lt; T &gt; &amp;&#160;</td>
+          <td class="paramname"><em>value</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::function&lt; void(const T &amp;)&gt;&#160;</td>
+          <td class="paramname"><em>func</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Apply treatment if optional has value</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">value</td><td>the optional value </td></tr>
+    <tr><td class="paramname">func</td><td>the treatment to apply when optional has value </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a3f50949a9549a7126422931220af5284"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3f50949a9549a7126422931220af5284">&#9670;&nbsp;</a></span>applyIfValueOrElse()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void anch::applyIfValueOrElse </td>
+          <td>(</td>
+          <td class="paramtype">std::optional&lt; T &gt; &amp;&#160;</td>
+          <td class="paramname"><em>value</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::function&lt; void(const T &amp;)&gt;&#160;</td>
+          <td class="paramname"><em>func</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::function&lt; void()&gt;&#160;</td>
+          <td class="paramname"><em>fallback</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Apply treatment if optional has value or apply fallback treatment</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">value</td><td>the optional value </td></tr>
+    <tr><td class="paramname">func</td><td>the treatment to apply when optional has value </td></tr>
+    <tr><td class="paramname">fallback</td><td>the treatment to apply when optional has no value </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="a174316b4a0cb08ff4099ce8708412f4f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a174316b4a0cb08ff4099ce8708412f4f">&#9670;&nbsp;</a></span>byteSwap()</h2>
 

@@ -2,6 +2,8 @@ var searchData=
 [
   ['idatepartformatter',['IDatePartFormatter',['../classanch_1_1date_1_1formatter_1_1_i_date_part_formatter.html',1,'anch::date::formatter']]],
   ['iformatter',['IFormatter',['../classanch_1_1logger_1_1formatter_1_1_i_formatter.html',1,'anch::logger::formatter']]],
+  ['ifvalue',['ifValue',['../classanch_1_1_optional.html#a802528337249c7884ff0fd37f2d53e05',1,'anch::Optional']]],
+  ['ifvalueorelse',['ifValueOrElse',['../classanch_1_1_optional.html#aa7170e3c225c9c9b76715180724adceb',1,'anch::Optional']]],
   ['info',['info',['../classanch_1_1logger_1_1_logger.html#a8a665671d02104ec06dacdcae7bf0a26',1,'anch::logger::Logger::info()'],['../namespaceanch_1_1logger.html#a973cdff92f296b5fba7f68660d4ee41fa551b723eafd6a31d444fcb2f5920fbd3',1,'anch::logger::INFO()']]],
   ['invalidblockexception',['InvalidBlockException',['../classanch_1_1crypto_1_1_invalid_block_exception.html',1,'anch::crypto::InvalidBlockException'],['../classanch_1_1crypto_1_1_invalid_block_exception.html#a179b25ae851c74ea0e1a8233c7fa8722',1,'anch::crypto::InvalidBlockException::InvalidBlockException()']]],
   ['invalidformatexception',['InvalidFormatException',['../classanch_1_1date_1_1_invalid_format_exception.html',1,'anch::date::InvalidFormatException'],['../classanch_1_1date_1_1_invalid_format_exception.html#a42a2a90d957939c8fff857ce57798d6c',1,'anch::date::InvalidFormatException::InvalidFormatException()']]],

@@ -11,9 +11,9 @@
 <!-- Node0 -->
 <g id="node1" class="node">
 <title>Node0</title>
-<g id="a_node1"><a xlink:href="class_core4.html" target="_top" xlink:title="Core4">
+<g id="a_node1"><a xlink:href="class_core1.html" target="_top" xlink:title="Core1">
 <polygon fill="none" stroke="#000000" points="0,-.5 0,-19.5 45,-19.5 45,-.5 0,-.5"/>
-<text text-anchor="middle" x="22.5" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Core4</text>
+<text text-anchor="middle" x="22.5" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Core1</text>
 </a>
 </g>
 </g>
