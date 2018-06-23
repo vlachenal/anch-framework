@@ -9,9 +9,22 @@
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+  $(document).ready(initResizable);
+/* @license-end */</script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+  $(document).ready(function() { init_search(); });
+/* @license-end */
+</script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
@@ -27,6 +40,21 @@
    </div>
    <div id="projectbrief">Another C++ Hack Framework</div>
   </td>
+   <td>        <div id="MSearchBox" class="MSearchBoxInactive">
+        <span class="left">
+          <img id="MSearchSelect" src="search/mag_sel.png"
+               onmouseover="return searchBox.OnSearchSelectShow()"
+               onmouseout="return searchBox.OnSearchSelectHide()"
+               alt=""/>
+          <input type="text" id="MSearchField" value="Search" accesskey="S"
+               onfocus="searchBox.OnSearchFieldFocus(true)" 
+               onblur="searchBox.OnSearchFieldFocus(false)" 
+               onkeyup="searchBox.OnSearchFieldChange(event)"/>
+          </span><span class="right">
+            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="search/close.png" alt=""/></a>
+          </span>
+        </div>
+</td>
  </tr>
  </tbody>
 </table>
@@ -38,16 +66,23 @@
 var searchBox = new SearchBox("searchBox", "search",false,'Search');
 /* @license-end */
 </script>
-<script type="text/javascript" src="menudata.js"></script>
-<script type="text/javascript" src="menu.js"></script>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
-$(function() {
-  initMenu('',true,false,'search.php','Search');
-  $(document).ready(function() { init_search(); });
-});
-/* @license-end */</script>
-<div id="main-nav"></div>
+$(document).ready(function(){initNavTree('page_events.html','');});
+/* @license-end */
+</script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -62,7 +97,6 @@ $(function() {
 </iframe>
 </div>
 
-</div><!-- top -->
 <div class="header">
   <div class="headertitle">
 <div class="title">AnCH events library documentation </div>  </div>
@@ -134,11 +168,14 @@ Event handler</h2>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &quot;events/eventHandler.hpp&quot;</span></div><div class="line"><span class="preprocessor">#include &quot;events/observable.hpp&quot;</span></div><div class="line"></div><div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div><div class="line"></div><div class="line"><span class="keyword">class </span>Type1 {</div><div class="line"><span class="keyword">private</span>:</div><div class="line">  std::string _message;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">  Type1(<span class="keyword">const</span> std::string&amp; message): _message(message) { }</div><div class="line">  <span class="keyword">inline</span> <span class="keyword">const</span> std::string&amp; getMessage()<span class="keyword"> const </span>{</div><div class="line">    <span class="keywordflow">return</span> _message;</div><div class="line">  }</div><div class="line">};</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> Derived&gt;</div><div class="line"><span class="keyword">class </span>Type1EventHandlerIface: <span class="keyword">public</span> <a class="code" href="classanch_1_1events_1_1_event_handler.html">anch::events::EventHandler</a>&lt;Type1,Derived&gt; {</div><div class="line"><span class="keyword">public</span>:</div><div class="line">  Type1EventHandlerIface(): <a class="code" href="namespaceanch.html">anch</a>::events::EventHandler&lt;Type1,Derived&gt;(&amp;Derived::onType1) { }</div><div class="line">  <span class="keyword">virtual</span> <span class="keywordtype">void</span> onType1(<span class="keyword">const</span> Type1&amp; event) = 0;</div><div class="line">};</div><div class="line"></div><div class="line"><span class="keyword">class </span>Type2 {</div><div class="line"><span class="keyword">private</span>:</div><div class="line">  <span class="keywordtype">int</span> _index;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">  Type2(<span class="keywordtype">int</span> index): _index(index) { }</div><div class="line">  <span class="keyword">inline</span> <span class="keywordtype">int</span> Index()<span class="keyword"> const </span>{</div><div class="line">    <span class="keywordflow">return</span> _index;</div><div class="line">  }</div><div class="line">};</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> Derived&gt;</div><div class="line"><span class="keyword">class </span>Type2EventHandlerIface: <span class="keyword">public</span> <a class="code" href="classanch_1_1events_1_1_event_handler.html">anch::events::EventHandler</a>&lt;Type2,Derived&gt; {</div><div class="line"><span class="keyword">public</span>:</div><div class="line">  Type2EventHandlerIface(): <a class="code" href="namespaceanch.html">anch</a>::events::EventHandler&lt;Type2,Derived&gt;(&amp;Derived::onType2) { }</div><div class="line">  <span class="keyword">virtual</span> <span class="keywordtype">void</span> onType2(<span class="keyword">const</span> Type2&amp; event) = 0;</div><div class="line">};</div><div class="line"></div><div class="line"><span class="keyword">class </span>TypesEventHandler: <span class="keyword">public</span> Type1EventHandlerIface&lt;TypesEventHandler&gt;, <span class="keyword">public</span> Type2EventHandlerIface&lt;TypesEventHandler&gt; {</div><div class="line"><span class="keyword">public</span>:</div><div class="line">  TypesEventHandler(): Type1EventHandlerIface&lt;TypesEventHandler&gt;(), Type2EventHandlerIface&lt;TypesEventHandler&gt;() { }</div><div class="line">  <span class="keyword">virtual</span> <span class="keywordtype">void</span> onType1(<span class="keyword">const</span> Type1&amp; event)<span class="keyword"> override </span>{</div><div class="line">    std::cout &lt;&lt; <span class="stringliteral">&quot;Type1: &quot;</span> &lt;&lt; <span class="keyword">event</span>.getMessage() &lt;&lt; std::endl;</div><div class="line">  }</div><div class="line">  <span class="keyword">virtual</span> <span class="keywordtype">void</span> onType2(<span class="keyword">const</span> Type2&amp; event)<span class="keyword"> override </span>{</div><div class="line">    std::cout &lt;&lt; <span class="stringliteral">&quot;Type2: &quot;</span> &lt;&lt; <span class="keyword">event</span>.Index() &lt;&lt; std::endl;</div><div class="line">  }</div><div class="line">};</div><div class="line"></div><div class="line"><span class="keywordtype">int</span> main(<span class="keywordtype">void</span>) {</div><div class="line">  TypesEventHandler handler;</div><div class="line">  <a class="code" href="classanch_1_1events_1_1_observable.html">anch::events::Observable&lt;Type1&gt;</a> obs1;</div><div class="line">  obs1.<a class="code" href="classanch_1_1events_1_1_observable.html#aa49e6f856e3b36a919efef5e054c398d">addObserver</a>(handler);</div><div class="line">  <a class="code" href="classanch_1_1events_1_1_observable.html">anch::events::Observable&lt;Type2&gt;</a> obs2;</div><div class="line">  obs2.<a class="code" href="classanch_1_1events_1_1_observable.html#aa49e6f856e3b36a919efef5e054c398d">addObserver</a>(handler);</div><div class="line"></div><div class="line">  obs1.<a class="code" href="classanch_1_1events_1_1_observable.html#ae766089219667ddbb9941c9f4a15cb38">notifyObservers</a>(Type1(<span class="stringliteral">&quot;test&quot;</span>));</div><div class="line">  obs2.<a class="code" href="classanch_1_1events_1_1_observable.html#ae766089219667ddbb9941c9f4a15cb38">notifyObservers</a>(Type2(1));</div><div class="line"></div><div class="line">  <span class="keywordflow">return</span> 0;</div><div class="line">}</div></div><!-- fragment --><h2><a class="anchor" id="evt_example_eventbus_sec"></a>
 Event bus</h2>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &quot;events/eventHandler.hpp&quot;</span></div><div class="line"><span class="preprocessor">#include &quot;events/observable.hpp&quot;</span></div><div class="line"></div><div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div><div class="line"></div><div class="line"><span class="keyword">class </span>Type1 {</div><div class="line"><span class="keyword">private</span>:</div><div class="line">  std::string _message;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">  Type1(<span class="keyword">const</span> std::string&amp; message): _message(message) { }</div><div class="line">  <span class="keyword">inline</span> <span class="keyword">const</span> std::string&amp; getMessage()<span class="keyword"> const </span>{</div><div class="line">    <span class="keywordflow">return</span> _message;</div><div class="line">  }</div><div class="line">};</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> Derived&gt;</div><div class="line"><span class="keyword">class </span>Type1EventHandlerIface: <span class="keyword">public</span> <a class="code" href="classanch_1_1events_1_1_event_handler.html">anch::events::EventHandler</a>&lt;Type1,Derived&gt; {</div><div class="line"><span class="keyword">public</span>:</div><div class="line">  Type1EventHandlerIface(): <a class="code" href="namespaceanch.html">anch</a>::events::EventHandler&lt;Type1,Derived&gt;(&amp;Derived::onType1) { }</div><div class="line">  <span class="keyword">virtual</span> <span class="keywordtype">void</span> onType1(<span class="keyword">const</span> Type1&amp; event) = 0;</div><div class="line">};</div><div class="line"></div><div class="line"><span class="keyword">class </span>Type2 {</div><div class="line"><span class="keyword">private</span>:</div><div class="line">  <span class="keywordtype">int</span> _index;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">  Type2(<span class="keywordtype">int</span> index): _index(index) { }</div><div class="line">  <span class="keyword">inline</span> <span class="keywordtype">int</span> Index()<span class="keyword"> const </span>{</div><div class="line">    <span class="keywordflow">return</span> _index;</div><div class="line">  }</div><div class="line">};</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> Derived&gt;</div><div class="line"><span class="keyword">class </span>Type2EventHandlerIface: <span class="keyword">public</span> <a class="code" href="classanch_1_1events_1_1_event_handler.html">anch::events::EventHandler</a>&lt;Type2,Derived&gt; {</div><div class="line"><span class="keyword">public</span>:</div><div class="line">  Type2EventHandlerIface(): <a class="code" href="namespaceanch.html">anch</a>::events::EventHandler&lt;Type2,Derived&gt;(&amp;Derived::onType2) { }</div><div class="line">  <span class="keyword">virtual</span> <span class="keywordtype">void</span> onType2(<span class="keyword">const</span> Type2&amp; event) = 0;</div><div class="line">};</div><div class="line"></div><div class="line"><span class="keyword">class </span>TypesEventHandler: <span class="keyword">public</span> Type1EventHandlerIface&lt;TypesEventHandler&gt;, <span class="keyword">public</span> Type2EventHandlerIface&lt;TypesEventHandler&gt; {</div><div class="line"><span class="keyword">public</span>:</div><div class="line">  <span class="keyword">virtual</span> <span class="keywordtype">void</span> onType1(<span class="keyword">const</span> Type1&amp; event)<span class="keyword"> override </span>{</div><div class="line">    std::cout &lt;&lt; <span class="stringliteral">&quot;Type1: &quot;</span> &lt;&lt; <span class="keyword">event</span>.getMessage() &lt;&lt; std::endl;</div><div class="line">  }</div><div class="line">  <span class="keyword">virtual</span> <span class="keywordtype">void</span> onType2(<span class="keyword">const</span> Type2&amp; event)<span class="keyword"> override </span>{</div><div class="line">    std::cout &lt;&lt; <span class="stringliteral">&quot;Type2: &quot;</span> &lt;&lt; <span class="keyword">event</span>.Index() &lt;&lt; std::endl;</div><div class="line">  }</div><div class="line">};</div><div class="line"></div><div class="line"><span class="keywordtype">int</span> main(<span class="keywordtype">void</span>) {</div><div class="line">  TypesEventHandler handler;</div><div class="line">  <a class="code" href="classanch_1_1events_1_1_event_bus.html#af81359ddb489c9562941757cb31c2344">anch::events::EventBus&lt;Type1&gt;::AddObserver</a>(handler);</div><div class="line">  <a class="code" href="classanch_1_1events_1_1_event_bus.html#ac327637ac56d51d9cc2ef14d32c408bb">anch::events::EventBus&lt;Type1&gt;::ScheduleDeferred</a>(Type1(<span class="stringliteral">&quot;test&quot;</span>));</div><div class="line">  <a class="code" href="classanch_1_1events_1_1_event_bus.html#af81359ddb489c9562941757cb31c2344">anch::events::EventBus&lt;Type2&gt;::AddObserver</a>(handler);</div><div class="line">  <a class="code" href="classanch_1_1events_1_1_event_bus.html#a369921486205a531ba4009a1381f7c59">anch::events::EventBus&lt;Type2&gt;::FireEvent</a>(Type2(1));</div><div class="line">  <a class="code" href="classanch_1_1events_1_1_event_bus.html#a369921486205a531ba4009a1381f7c59">anch::events::EventBus&lt;Type1&gt;::FireEvent</a>(Type1(<span class="stringliteral">&quot;test 2&quot;</span>));</div><div class="line">  <span class="keywordflow">return</span> 0;</div><div class="line">}</div></div><!-- fragment --> </div></div><!-- contents -->
+</div><!-- doc-content -->
 <!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by &#160;<a href="http://www.doxygen.org/index.html">
-<img class="footer" src="doxygen.png" alt="doxygen"/>
-</a> 1.8.14
-</small></address>
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="footer">Generated by
+    <a href="http://www.doxygen.org/index.html">
+    <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.14 </li>
+  </ul>
+</div>
 </body>
 </html>
