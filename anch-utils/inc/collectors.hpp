@@ -20,14 +20,8 @@
 #ifndef _ANCH_COLLECTORS_H_
 #define _ANCH_COLLECTORS_H_
 
-#include <vector>
-#include <list>
-#include <forward_list>
 #include <set>
 #include <unordered_set>
-#include <deque>
-#include <stack>
-#include <queue>
 #include <map>
 
 

@@ -1,8 +1,13 @@
 #include <iostream>
-#include <list>
 #include <sstream>
 #include <map>
 #include <any>
+#include <vector>
+#include <list>
+#include <forward_list>
+#include <deque>
+#include <stack>
+#include <queue>
 
 #include "stream.hpp"
 #include "collectors.hpp"
@@ -418,7 +423,7 @@ main(int argc, char** argv) {
     }
   }
 
-  /*if(all || args.find("collect_map") != args.end()) {
+  if(all || args.find("collect_map") != args.end()) {
     std::map<std::size_t,B> exp;
     std::size_t idx = 0;
     for(const B& b : expected) {
@@ -431,8 +436,7 @@ main(int argc, char** argv) {
 				       b.b = a.a;
 				       return std::pair(idx++,b);
 				     })
-      .collect<std::size_t,B,std::map>([](const std::pair<std::size_t,B>& val) -> const std::size_t& {return val.first;},
-				       [](const std::pair<std::size_t,B>& val) -> const B& {return val.second;});
+      .collect<std::map<std::size_t,B>>([](std::map<std::size_t,B>& res, const std::pair<std::size_t,B>& p) {res.insert(p);});
     for(auto item : resM) {
       std::cout << "Map: " << item.first << '=' << item.second.b << std::endl;
     }
@@ -440,7 +444,7 @@ main(int argc, char** argv) {
       std::cerr << "Unexpected result" << std::endl;
       return 1;
     }
-  }*/
+  }
 
   std::cout << "Exit testStream" << std::endl;
   return 0;
