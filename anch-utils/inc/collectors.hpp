@@ -20,10 +20,6 @@
 #ifndef _ANCH_COLLECTORS_H_
 #define _ANCH_COLLECTORS_H_
 
-#include <set>
-#include <unordered_set>
-#include <map>
-
 
 namespace anch {
 
@@ -38,80 +34,23 @@ namespace anch {
   class Collectors {
   public:
     /*!
-     * Insert value in \c std::set
+     * Insert value in container
      *
      * \param container the set
      * \param val the value
      */
-    static void toSet(std::set<T>& container, const T& val);
-
-    /*!
-     * Insert value in \c std::unordered_set
-     *
-     * \param container the set
-     * \param val the value
-     */
-    static void toUnorderedSet(std::unordered_set<T>& container, const T& val);
-
-    /*!
-     * Insert value in \c std::multiset
-     *
-     * \param container the set
-     * \param val the value
-     */
-    static void toMultiset(std::multiset<T>& container, const T& val);
-
-    /*!
-     * Insert value in \c std::unordered_multiset
-     *
-     * \param container the set
-     * \param val the value
-     */
-    static void toUnorderedMultiset(std::unordered_multiset<T>& container, const T& val);
-
-    // /*!
-    //  * Insert value in \c std::map
-    //  *
-    //  * \param container the map
-    //  * \param val the value
-    //  */
-    // template<typename K, typename V>
-    // static void toMap(std::map<K,V>& container, const T& val);
-
+    template<typename C>
+    static void insert(C& container, const T& val);
   };
 
   // Implementations +
   template<typename T>
+  template<typename C>
   void
-  Collectors<T>::toSet(std::set<T>& container, const T& val) {
+  Collectors<T>::insert(C& container, const T& val) {
     container.insert(val);
   }
-
-  template<typename T>
-  void
-  Collectors<T>::toUnorderedSet(std::unordered_set<T>& container, const T& val) {
-    container.insert(val);
-  }
-
-  template<typename T>
-  void
-  Collectors<T>::toMultiset(std::multiset<T>& container, const T& val) {
-    container.insert(val);
-  }
-
-  template<typename T>
-  void
-  Collectors<T>::toUnorderedMultiset(std::unordered_multiset<T>& container, const T& val) {
-    container.insert(val);
-  }
-
-  // template<typename K, typename V>
-  // template<>
-  // template<typename T>
-  // void
-  // Collectors<T>::toMap(std::map<K,V>& container, const T& val) {
-  //   container.insert(val);
-  // }
+  // Implementations -
 
 }
 

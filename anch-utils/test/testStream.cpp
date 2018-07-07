@@ -8,6 +8,8 @@
 #include <deque>
 #include <stack>
 #include <queue>
+#include <set>
+#include <unordered_set>
 
 #include "stream.hpp"
 #include "collectors.hpp"
@@ -271,7 +273,8 @@ main(int argc, char** argv) {
 		b.b = a.a;
 		return b;
 	      })
-      .collect<std::set<B>>([](std::set<B>& res, const B& b) {res.insert(b);});
+      .collect<std::set<B>>(&anch::Collectors<B>::insert<std::set<B>>);
+    //.collect<std::set<B>>([](std::set<B>& res, const B& b) {res.insert(b);});
     for(auto b : resS) {
       std::cout << "SetB " << b.b << std::endl;
     }
@@ -289,7 +292,8 @@ main(int argc, char** argv) {
 		b.b = a.a;
 		return b;
 	      })
-      .collect<std::multiset<B>>([](std::multiset<B>& res, const B& b) {res.insert(b);});
+      .collect<std::multiset<B>>(&anch::Collectors<B>::insert<std::multiset<B>>);
+    //.collect<std::multiset<B>>([](std::multiset<B>& res, const B& b) {res.insert(b);});
     for(auto b : resMS) {
       std::cout << "MSetB " << b.b << std::endl;
     }
@@ -307,7 +311,8 @@ main(int argc, char** argv) {
 		b.b = a.a;
 		return b;
 	      })
-      .collect<std::unordered_set<B>>([](std::unordered_set<B>& res, const B& b) {res.insert(b);});
+      .collect<std::unordered_set<B>>(&anch::Collectors<B>::insert<std::unordered_set<B>>);
+      //.collect<std::unordered_set<B>>([](std::unordered_set<B>& res, const B& b) {res.insert(b);});
     for(auto b : resUS) {
       std::cout << "USetB " << b.b << std::endl;
     }
@@ -325,8 +330,9 @@ main(int argc, char** argv) {
 		b.b = a.a;
 		return b;
 	      })
-      .collect<std::unordered_multiset<B>>([](std::unordered_multiset<B>& res, const B& b) {res.insert(b);});
-    //.collect(&std::unordered_multiset<B>::insert);
+      //.collect<std::unordered_multiset<B>>(&anch::Collectors<B>::insert<std::unordered_multiset<B>>);
+      //.collect<std::unordered_multiset<B>>([](std::unordered_multiset<B>& res, const B& b) {res.insert(b);});
+      .collect<std::unordered_multiset<B>,std::unordered_multiset<B>::iterator>(&std::unordered_multiset<B>::insert);
     for(auto b : resUS) {
       std::cout << "USetB " << b.b << std::endl;
     }
