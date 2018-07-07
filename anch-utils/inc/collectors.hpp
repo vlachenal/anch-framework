@@ -28,6 +28,7 @@
 #include <deque>
 #include <stack>
 #include <queue>
+#include <map>
 
 
 namespace anch {
@@ -42,30 +43,6 @@ namespace anch {
   template<typename T>
   class Collectors {
   public:
-    /*!
-     * Insert value in \c std::vector
-     *
-     * \param container the vector
-     * \param val the value
-     */
-    static void toVector(std::vector<T>& container, const T& val);
-
-    /*!
-     * Insert value in \c std::list
-     *
-     * \param container the list
-     * \param val the value
-     */
-    static void toList(std::list<T>& container, const T& val);
-
-    /*!
-     * Insert value in \c std::forward_list
-     *
-     * \param container the list
-     * \param val the value
-     */
-    static void toForwardList(std::forward_list<T>& container, const T& val);
-
     /*!
      * Insert value in \c std::set
      *
@@ -98,59 +75,18 @@ namespace anch {
      */
     static void toUnorderedMultiset(std::unordered_multiset<T>& container, const T& val);
 
-    /*!
-     * Insert value in \c std::deque
-     *
-     * \param container the deque
-     * \param val the value
-     */
-    static void toDeque(std::deque<T>& container, const T& val);
-
-    /*!
-     * Insert value in \c std::stack
-     *
-     * \param container the stack
-     * \param val the value
-     */
-    static void toStack(std::stack<T>& container, const T& val);
-
-    /*!
-     * Insert value in \c std::queue
-     *
-     * \param container the queue
-     * \param val the value
-     */
-    static void toQueue(std::queue<T>& container, const T& val);
-
-    /*!
-     * Insert value in \c std::priority_queue
-     *
-     * \param container the queue
-     * \param val the value
-     */
-    static void toPriorityQueue(std::priority_queue<T>& container, const T& val);
+    // /*!
+    //  * Insert value in \c std::map
+    //  *
+    //  * \param container the map
+    //  * \param val the value
+    //  */
+    // template<typename K, typename V>
+    // static void toMap(std::map<K,V>& container, const T& val);
 
   };
 
   // Implementations +
-  template<typename T>
-  void
-  Collectors<T>::toVector(std::vector<T>& container, const T& val) {
-    container.push_back(val);
-  }
-
-  template<typename T>
-  void
-  Collectors<T>::toList(std::list<T>& container, const T& val) {
-    container.push_back(val);
-  }
-
-  template<typename T>
-  void
-  Collectors<T>::toForwardList(std::forward_list<T>& container, const T& val) {
-    container.push_front(val);
-  }
-
   template<typename T>
   void
   Collectors<T>::toSet(std::set<T>& container, const T& val) {
@@ -175,29 +111,13 @@ namespace anch {
     container.insert(val);
   }
 
-  template<typename T>
-  void
-  Collectors<T>::toDeque(std::deque<T>& container, const T& val) {
-    container.push_back(val);
-  }
-
-  template<typename T>
-  void
-  Collectors<T>::toStack(std::stack<T>& container, const T& val) {
-    container.push(val);
-  }
-
-  template<typename T>
-  void
-  Collectors<T>::toQueue(std::queue<T>& container, const T& val) {
-    container.push(val);
-  }
-
-  template<typename T>
-  void
-  Collectors<T>::toPriorityQueue(std::priority_queue<T>& container, const T& val) {
-    container.push(val);
-  }
+  // template<typename K, typename V>
+  // template<>
+  // template<typename T>
+  // void
+  // Collectors<T>::toMap(std::map<K,V>& container, const T& val) {
+  //   container.insert(val);
+  // }
 
 }
 

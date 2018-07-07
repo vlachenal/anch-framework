@@ -174,8 +174,8 @@ namespace anch {
      * \param container the container to fill
      * \param collector the collector function
      */
-    template<template<typename> typename D>
-    void collect(D<T>& container, std::function<void(D<T>&,const T&)> collector);
+    template<typename D>
+    void collect(D& container, std::function<void(D&,const T&)> collector);
 
     /*!
      * Collect stream items in container
@@ -184,8 +184,27 @@ namespace anch {
      *
      * \return the result container
      */
-    template<template<typename> typename D>
-    D<T> collect(std::function<void(D<T>&,const T&)> collector);
+    template<typename D>
+    D collect(std::function<void(D&,const T&)> collector);
+
+    /*!
+     * Collect stream items in container
+     *
+     * \param container the container to fill
+     * \param collector the collector function
+     */
+    template<typename D, typename R>
+    void collect(D& container, R(D::*collector)(const T&));
+
+    /*!
+     * Collect stream items in container
+     *
+     * \param collector the collector function
+     *
+     * \return the result container
+     */
+    template<typename D, typename R>
+    D collect(R(D::*collector)(const T&));
 
   private:
     /*!
@@ -474,19 +493,37 @@ namespace anch {
 
   // Collect +
   template<typename T, template<typename> typename C>
-  template<template<typename> typename D>
+  template<typename D>
   void
-  Stream<T,C>::collect(D<T>& result, std::function<void(D<T>&,const T&)> collector) {
+  Stream<T,C>::collect(D& result, std::function<void(D&,const T&)> collector) {
     forEach([&result, &collector](const T& val) {
 	      collector(result, val);
+  	    });
+  }
+
+  template<typename T, template<typename> typename C>
+  template<typename D>
+  inline D
+  Stream<T,C>::collect(std::function<void(D&,const T&)> collector) {
+    D result;
+    collect(result, collector);
+    return result;
+  }
+
+  template<typename T, template<typename> typename C>
+  template<typename D, typename R>
+  void
+  Stream<T,C>::collect(D& result, R(D::*collector)(const T&)) {
+    forEach([&result, &collector](const T& val) {
+	      (result.*collector)(val);
 	    });
   }
 
   template<typename T, template<typename> typename C>
-  template<template<typename> typename D>
-  inline D<T>
-  Stream<T,C>::collect(std::function<void(D<T>&,const T&)> collector) {
-    D<T> result;
+  template<typename D, typename R>
+  inline D
+  Stream<T,C>::collect(R(D::*collector)(const T&)) {
+    D result;
     collect(result, collector);
     return result;
   }

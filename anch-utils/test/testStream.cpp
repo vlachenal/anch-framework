@@ -1,6 +1,8 @@
 #include <iostream>
 #include <list>
 #include <sstream>
+#include <map>
+#include <any>
 
 #include "stream.hpp"
 #include "collectors.hpp"
@@ -210,8 +212,7 @@ main(int argc, char** argv) {
 		b.b = a.a;
 		return b;
 	      })
-      .collect<std::list>(&anch::Collectors<B>::toList);
-      //.collect<std::list>(&std::list<B>::push_back);
+      .collect(&std::list<B>::push_back);
     for(auto b : resL) {
       std::cout << "ListB " << b.b << std::endl;
     }
@@ -229,29 +230,11 @@ main(int argc, char** argv) {
 		b.b = a.a;
 		return b;
 	      })
-      .collect<std::forward_list>(&anch::Collectors<B>::toForwardList);
+      .collect(&std::forward_list<B>::push_front);
     for(auto b : resFL) {
       std::cout << "ForwardListB " << b.b << std::endl;
     }
     if(resFL != exp) {
-      std::cerr << "Unexpected result" << std::endl;
-      return 1;
-    }
-  }
-
-  if(all || args.find("collect_set") != args.end()) {
-    std::set<B> exp(expected.cbegin(), expected.cend());
-    std::set<B> resS = anch::Stream(as)
-      .map<B>([](const A& a) -> B {
-		B b;
-		b.b = a.a;
-		return b;
-	      })
-      .collect<std::set>(&anch::Collectors<B>::toSet);
-    for(auto b : resS) {
-      std::cout << "SetB " << b.b << std::endl;
-    }
-    if(resS != exp) {
       std::cerr << "Unexpected result" << std::endl;
       return 1;
     }
@@ -265,11 +248,29 @@ main(int argc, char** argv) {
 		b.b = a.a;
 		return b;
 	      })
-      .collect<std::vector>(&anch::Collectors<B>::toVector);
+      .collect(&std::vector<B>::push_back);
     for(auto b : resV) {
       std::cout << "VectorB " << b.b << std::endl;
     }
     if(resV != exp) {
+      std::cerr << "Unexpected result" << std::endl;
+      return 1;
+    }
+  }
+
+  if(all || args.find("collect_set") != args.end()) {
+    std::set<B> exp(expected.cbegin(), expected.cend());
+    std::set<B> resS = anch::Stream(as)
+      .map<B>([](const A& a) -> B {
+		B b;
+		b.b = a.a;
+		return b;
+	      })
+      .collect<std::set<B>>([](std::set<B>& res, const B& b) {res.insert(b);});
+    for(auto b : resS) {
+      std::cout << "SetB " << b.b << std::endl;
+    }
+    if(resS != exp) {
       std::cerr << "Unexpected result" << std::endl;
       return 1;
     }
@@ -283,7 +284,7 @@ main(int argc, char** argv) {
 		b.b = a.a;
 		return b;
 	      })
-      .collect<std::multiset>(&anch::Collectors<B>::toMultiset);
+      .collect<std::multiset<B>>([](std::multiset<B>& res, const B& b) {res.insert(b);});
     for(auto b : resMS) {
       std::cout << "MSetB " << b.b << std::endl;
     }
@@ -301,7 +302,7 @@ main(int argc, char** argv) {
 		b.b = a.a;
 		return b;
 	      })
-      .collect<std::unordered_set>(&anch::Collectors<B>::toUnorderedSet);
+      .collect<std::unordered_set<B>>([](std::unordered_set<B>& res, const B& b) {res.insert(b);});
     for(auto b : resUS) {
       std::cout << "USetB " << b.b << std::endl;
     }
@@ -319,7 +320,8 @@ main(int argc, char** argv) {
 		b.b = a.a;
 		return b;
 	      })
-      .collect<std::unordered_multiset>(&anch::Collectors<B>::toUnorderedMultiset);
+      .collect<std::unordered_multiset<B>>([](std::unordered_multiset<B>& res, const B& b) {res.insert(b);});
+    //.collect(&std::unordered_multiset<B>::insert);
     for(auto b : resUS) {
       std::cout << "USetB " << b.b << std::endl;
     }
@@ -337,7 +339,7 @@ main(int argc, char** argv) {
 		b.b = a.a;
 		return b;
 	      })
-      .collect<std::deque>(&anch::Collectors<B>::toDeque);
+      .collect(&std::deque<B>::push_back);
     for(auto b : resDQ) {
       std::cout << "DequeB " << b.b << std::endl;
     }
@@ -358,7 +360,7 @@ main(int argc, char** argv) {
 		b.b = a.a;
 		return b;
 	      })
-      .collect<std::stack>(&anch::Collectors<B>::toStack);
+      .collect(&std::stack<B>::push);
     if(resSt != exp) {
       std::cerr << "Unexpected result" << std::endl;
       return 1;
@@ -380,7 +382,7 @@ main(int argc, char** argv) {
 		b.b = a.a;
 		return b;
 	      })
-      .collect<std::queue>(&anch::Collectors<B>::toQueue);
+      .collect(&std::queue<B>::push);
     if(resQ != exp) {
       std::cerr << "Unexpected result" << std::endl;
       return 1;
@@ -402,7 +404,7 @@ main(int argc, char** argv) {
 		b.b = a.a;
 		return b;
 	      })
-      .collect<std::priority_queue>(&anch::Collectors<B>::toPriorityQueue);
+      .collect(&std::priority_queue<B>::push);
     bool ok = true;
     while(!resPQ.empty()) {
       std::cout << "PQueueB " << resPQ.top().b << std::endl;
@@ -415,6 +417,30 @@ main(int argc, char** argv) {
       return 1;
     }
   }
+
+  /*if(all || args.find("collect_map") != args.end()) {
+    std::map<std::size_t,B> exp;
+    std::size_t idx = 0;
+    for(const B& b : expected) {
+      exp[idx++] = b;
+    }
+    idx = 0;
+    std::map<std::size_t,B> resM = anch::Stream(as)
+      .map<std::pair<std::size_t,B>>([&idx](const A& a) -> auto {
+				       B b;
+				       b.b = a.a;
+				       return std::pair(idx++,b);
+				     })
+      .collect<std::size_t,B,std::map>([](const std::pair<std::size_t,B>& val) -> const std::size_t& {return val.first;},
+				       [](const std::pair<std::size_t,B>& val) -> const B& {return val.second;});
+    for(auto item : resM) {
+      std::cout << "Map: " << item.first << '=' << item.second.b << std::endl;
+    }
+    if(resM != exp) {
+      std::cerr << "Unexpected result" << std::endl;
+      return 1;
+    }
+  }*/
 
   std::cout << "Exit testStream" << std::endl;
   return 0;
