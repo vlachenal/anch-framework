@@ -311,8 +311,10 @@ main(int argc, char** argv) {
 		b.b = a.a;
 		return b;
 	      })
-      .collect<std::unordered_set<B>>(&anch::Collectors<B>::insert<std::unordered_set<B>>);
+      //.collect<std::unordered_set<B>>(&anch::Collectors<B>::insert<std::unordered_set<B>>);
       //.collect<std::unordered_set<B>>([](std::unordered_set<B>& res, const B& b) {res.insert(b);});
+      .collect<std::unordered_set<B>,std::pair<std::unordered_multiset<B>::iterator,bool>>(&std::unordered_set<B>::insert);
+    //.collect(&std::unordered_set<B>::insert);
     for(auto b : resUS) {
       std::cout << "USetB " << b.b << std::endl;
     }
@@ -326,13 +328,14 @@ main(int argc, char** argv) {
     std::unordered_multiset<B> exp(expected.cbegin(), expected.cend());
     std::unordered_multiset<B> resUS = anch::Stream(as)
       .map<B>([](const A& a) -> B {
-		B b;
+	B	 b;
 		b.b = a.a;
 		return b;
 	      })
       //.collect<std::unordered_multiset<B>>(&anch::Collectors<B>::insert<std::unordered_multiset<B>>);
       //.collect<std::unordered_multiset<B>>([](std::unordered_multiset<B>& res, const B& b) {res.insert(b);});
       .collect<std::unordered_multiset<B>,std::unordered_multiset<B>::iterator>(&std::unordered_multiset<B>::insert);
+      //.collect(&std::unordered_multiset<B>::insert);
     for(auto b : resUS) {
       std::cout << "USetB " << b.b << std::endl;
     }

@@ -497,7 +497,7 @@ namespace anch {
   void
   Stream<T,C>::collect(D& result, std::function<void(D&,const T&)> collector) {
     forEach([&result, &collector](const T& val) {
-	      collector(result, val);
+	      std::invoke(collector, result, val);
   	    });
   }
 
@@ -515,7 +515,7 @@ namespace anch {
   void
   Stream<T,C>::collect(D& result, R(D::*collector)(const T&)) {
     forEach([&result, &collector](const T& val) {
-	      (result.*collector)(val);
+	      std::invoke(collector, result, val);
 	    });
   }
 
@@ -526,7 +526,7 @@ namespace anch {
     D result;
     collect(result, collector);
     return result;
-  }
+    }
   // Collect -
   // Implementation -
 
