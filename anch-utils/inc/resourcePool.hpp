@@ -107,7 +107,8 @@ namespace anch {
    * Resources are automatically released through their destructor.\n
    * If you have only one action to do, you can use pool.borrowResource.get().doAction() ;
    * otherwise you should to keep reference to \c anch::PoolableResource until all actions have been done (with auto res = pool.borrowResource()).\n
-   * You can specifiy an \c std::shared_ptr creation function as third template parameter. By default, \c std::make_shared<T> will be used. It can be usefull for polymorphism dynamic allocation.
+   * You can specifiy an \c std::shared_ptr creation function as third template parameter. By default, \c std::make_shared<T> will be used.
+   * It can be usefull for polymorphism dynamic allocation.
    *
    * \author Vincent Lachenal
    *
@@ -267,14 +268,14 @@ namespace anch {
       _mutex.lock();
       std::shared_ptr<T> ptr;
       if(_availables.empty()) {
-	if(_used.load() < _maxSize) {
+	if(_used < _maxSize) {
 	  try {
 	    ptr = make_ptr(_config);
 	  } catch(...) {
 	    _mutex.unlock();
 	    throw;
 	  }
-	  _used.fetch_add(1);
+	  ++_used;
 	  _mutex.unlock();
 
 	} else {
@@ -284,7 +285,7 @@ namespace anch {
 	    _mutex.lock();
 	    ptr = _availables.front();
 	    _availables.pop_front();
-	    _used.fetch_add(1);
+	    ++_used;
 	    _mutex.unlock();
 	  } else {
 	    throw TimeoutException(_timeout, "Resource could not be retrieved.");
@@ -294,7 +295,7 @@ namespace anch {
       } else {
 	ptr = _availables.front();
 	_availables.pop_front();
-	_used.fetch_add(1);
+	++_used;
 	_mutex.unlock();
       }
       return PoolableResource(*this, ptr);
@@ -309,7 +310,7 @@ namespace anch {
     void returnResource(std::shared_ptr<T> res) {
       std::lock_guard<std::mutex> lock(_mutex);
       _availables.push_back(res);
-      _used.fetch_sub(1);
+      --_used;
       _wait.notify_one();
     }
 
@@ -320,8 +321,9 @@ namespace anch {
      * \param res the resource to invalidate
      */
     void invalidateResource(std::shared_ptr<T> res) {
+      std::lock_guard<std::mutex> lock(_mutex);
       res.reset();
-      _used.fetch_sub(1);
+      --_used;
       try {
 	_availables.push_back(make_ptr(_config));
 	_wait.notify_one();
