@@ -150,12 +150,18 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aff9b6e6310b24704f10139482b3c0508"><td class="memTemplParams" colspan="2">template&lt;typename U &gt; </td></tr>
 <tr class="memitem:aff9b6e6310b24704f10139482b3c0508"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classanch_1_1_stream.html">Stream</a>&lt; U, std::vector &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classanch_1_1_stream.html#aff9b6e6310b24704f10139482b3c0508">map</a> (std::function&lt; U(const T &amp;)&gt; mapper)</td></tr>
 <tr class="separator:aff9b6e6310b24704f10139482b3c0508"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a51a09c8cf05f218a53440176072eaae7"><td class="memTemplParams" colspan="2">template&lt;template&lt; typename &gt; typename D&gt; </td></tr>
-<tr class="memitem:a51a09c8cf05f218a53440176072eaae7"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classanch_1_1_stream.html#a51a09c8cf05f218a53440176072eaae7">collect</a> (D&lt; T &gt; &amp;container, std::function&lt; void(D&lt; T &gt; &amp;, const T &amp;)&gt; collector)</td></tr>
-<tr class="separator:a51a09c8cf05f218a53440176072eaae7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abec3756ed65e5b6449011f3b506450ed"><td class="memTemplParams" colspan="2">template&lt;template&lt; typename &gt; typename D&gt; </td></tr>
-<tr class="memitem:abec3756ed65e5b6449011f3b506450ed"><td class="memTemplItemLeft" align="right" valign="top">D&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classanch_1_1_stream.html#abec3756ed65e5b6449011f3b506450ed">collect</a> (std::function&lt; void(D&lt; T &gt; &amp;, const T &amp;)&gt; collector)</td></tr>
-<tr class="separator:abec3756ed65e5b6449011f3b506450ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a95ec6b2ef67f1e59faceb0904e562ce2"><td class="memTemplParams" colspan="2">template&lt;typename D &gt; </td></tr>
+<tr class="memitem:a95ec6b2ef67f1e59faceb0904e562ce2"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classanch_1_1_stream.html#a95ec6b2ef67f1e59faceb0904e562ce2">collect</a> (D &amp;container, std::function&lt; void(D &amp;, const T &amp;)&gt; collector)</td></tr>
+<tr class="separator:a95ec6b2ef67f1e59faceb0904e562ce2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa15d5dec8bb050bbc561f62c2adaa17a"><td class="memTemplParams" colspan="2">template&lt;typename D &gt; </td></tr>
+<tr class="memitem:aa15d5dec8bb050bbc561f62c2adaa17a"><td class="memTemplItemLeft" align="right" valign="top">D&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classanch_1_1_stream.html#aa15d5dec8bb050bbc561f62c2adaa17a">collect</a> (std::function&lt; void(D &amp;, const T &amp;)&gt; collector)</td></tr>
+<tr class="separator:aa15d5dec8bb050bbc561f62c2adaa17a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3203ba6eb5aed271c0dc54f3b5f2c98d"><td class="memTemplParams" colspan="2">template&lt;typename D , typename R &gt; </td></tr>
+<tr class="memitem:a3203ba6eb5aed271c0dc54f3b5f2c98d"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classanch_1_1_stream.html#a3203ba6eb5aed271c0dc54f3b5f2c98d">collect</a> (D &amp;container, R(D::*collector)(const T &amp;))</td></tr>
+<tr class="separator:a3203ba6eb5aed271c0dc54f3b5f2c98d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0d677f3db47faaa5327a08ddc9dc5950"><td class="memTemplParams" colspan="2">template&lt;typename D , typename R &gt; </td></tr>
+<tr class="memitem:a0d677f3db47faaa5327a08ddc9dc5950"><td class="memTemplItemLeft" align="right" valign="top">D&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classanch_1_1_stream.html#a0d677f3db47faaa5327a08ddc9dc5950">collect</a> (R(D::*collector)(const T &amp;))</td></tr>
+<tr class="separator:a0d677f3db47faaa5327a08ddc9dc5950"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><h3>template&lt;typename T, template&lt; typename &gt; typename C&gt;<br />
@@ -346,26 +352,26 @@ template&lt;typename T , template&lt; typename &gt; typename C&gt; </div>
 
 </div>
 </div>
-<a id="a51a09c8cf05f218a53440176072eaae7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a51a09c8cf05f218a53440176072eaae7">&#9670;&nbsp;</a></span>collect() <span class="overload">[1/2]</span></h2>
+<a id="a95ec6b2ef67f1e59faceb0904e562ce2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a95ec6b2ef67f1e59faceb0904e562ce2">&#9670;&nbsp;</a></span>collect() <span class="overload">[1/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename T , template&lt; typename &gt; typename C&gt; </div>
 <div class="memtemplate">
-template&lt;template&lt; typename &gt; typename D&gt; </div>
+template&lt;typename D &gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">void <a class="el" href="classanch_1_1_stream.html">anch::Stream</a>&lt; T, C &gt;::collect </td>
           <td>(</td>
-          <td class="paramtype">D&lt; T &gt; &amp;&#160;</td>
+          <td class="paramtype">D &amp;&#160;</td>
           <td class="paramname"><em>container</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::function&lt; void(D&lt; T &gt; &amp;, const T &amp;)&gt;&#160;</td>
+          <td class="paramtype">std::function&lt; void(D &amp;, const T &amp;)&gt;&#160;</td>
           <td class="paramname"><em>collector</em>&#160;</td>
         </tr>
         <tr>
@@ -386,23 +392,101 @@ template&lt;template&lt; typename &gt; typename D&gt; </div>
 
 </div>
 </div>
-<a id="abec3756ed65e5b6449011f3b506450ed"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abec3756ed65e5b6449011f3b506450ed">&#9670;&nbsp;</a></span>collect() <span class="overload">[2/2]</span></h2>
+<a id="aa15d5dec8bb050bbc561f62c2adaa17a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa15d5dec8bb050bbc561f62c2adaa17a">&#9670;&nbsp;</a></span>collect() <span class="overload">[2/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename T , template&lt; typename &gt; typename C&gt; </div>
 <div class="memtemplate">
-template&lt;template&lt; typename &gt; typename D&gt; </div>
+template&lt;typename D &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">D&lt; T &gt; <a class="el" href="classanch_1_1_stream.html">anch::Stream</a>&lt; T, C &gt;::collect </td>
+          <td class="memname">D <a class="el" href="classanch_1_1_stream.html">anch::Stream</a>&lt; T, C &gt;::collect </td>
           <td>(</td>
-          <td class="paramtype">std::function&lt; void(D&lt; T &gt; &amp;, const T &amp;)&gt;&#160;</td>
+          <td class="paramtype">std::function&lt; void(D &amp;, const T &amp;)&gt;&#160;</td>
+          <td class="paramname"><em>collector</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Collect stream items in container</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">collector</td><td>the collector function</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>the result container </dd></dl>
+
+</div>
+</div>
+<a id="a3203ba6eb5aed271c0dc54f3b5f2c98d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3203ba6eb5aed271c0dc54f3b5f2c98d">&#9670;&nbsp;</a></span>collect() <span class="overload">[3/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T , template&lt; typename &gt; typename C&gt; </div>
+<div class="memtemplate">
+template&lt;typename D , typename R &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classanch_1_1_stream.html">anch::Stream</a>&lt; T, C &gt;::collect </td>
+          <td>(</td>
+          <td class="paramtype">D &amp;&#160;</td>
+          <td class="paramname"><em>container</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">R(D::*)(const T &amp;)&#160;</td>
+          <td class="paramname"><em>collector</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Collect stream items in container</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">container</td><td>the container to fill </td></tr>
+    <tr><td class="paramname">collector</td><td>the collector function </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a0d677f3db47faaa5327a08ddc9dc5950"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0d677f3db47faaa5327a08ddc9dc5950">&#9670;&nbsp;</a></span>collect() <span class="overload">[4/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T , template&lt; typename &gt; typename C&gt; </div>
+<div class="memtemplate">
+template&lt;typename D , typename R &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">D <a class="el" href="classanch_1_1_stream.html">anch::Stream</a>&lt; T, C &gt;::collect </td>
+          <td>(</td>
+          <td class="paramtype">R(D::*)(const T &amp;)&#160;</td>
           <td class="paramname"><em>collector</em></td><td>)</td>
           <td></td>
         </tr>

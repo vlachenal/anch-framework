@@ -11,5 +11,6 @@ var searchData=
   ['anchdateformatter',['AnchDateFormatter',['../classanch_1_1logger_1_1formatter_1_1_anch_date_formatter.html#a33c7fc51bdf58b92b82d2fec939c289c',1,'anch::logger::formatter::AnchDateFormatter']]],
   ['anymatch',['anyMatch',['../classanch_1_1_stream.html#afdfc2459ec59a8fae98ec2ce22cb61df',1,'anch::Stream']]],
   ['applyifvalue',['applyIfValue',['../namespaceanch.html#a29697be31b4810c4b3a0adf3abd67cb7',1,'anch']]],
-  ['applyifvalueorelse',['applyIfValueOrElse',['../namespaceanch.html#a3f50949a9549a7126422931220af5284',1,'anch']]]
+  ['applyifvalueorelse',['applyIfValueOrElse',['../namespaceanch.html#a3f50949a9549a7126422931220af5284',1,'anch']]],
+  ['awaittermination',['awaitTermination',['../classanch_1_1_thread_pool.html#a045c755831a446a635fd84dc692ea84a',1,'anch::ThreadPool']]]
 ];

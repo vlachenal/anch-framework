@@ -27,6 +27,7 @@ var searchData=
   ['application',['application',['../structanch_1_1sql_1_1_sql_connection_configuration.html#a662de2c81a98c2d2a3297018b183b7b5',1,'anch::sql::SqlConnectionConfiguration']]],
   ['applyifvalue',['applyIfValue',['../namespaceanch.html#a29697be31b4810c4b3a0adf3abd67cb7',1,'anch']]],
   ['applyifvalueorelse',['applyIfValueOrElse',['../namespaceanch.html#a3f50949a9549a7126422931220af5284',1,'anch']]],
+  ['awaittermination',['awaitTermination',['../classanch_1_1_thread_pool.html#a045c755831a446a635fd84dc692ea84a',1,'anch::ThreadPool']]],
   ['crypto',['crypto',['../namespaceanch_1_1crypto.html',1,'anch']]],
   ['date',['date',['../namespaceanch_1_1date.html',1,'anch']]],
   ['device',['device',['../namespaceanch_1_1device.html',1,'anch']]],

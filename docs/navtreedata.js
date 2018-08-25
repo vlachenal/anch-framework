@@ -115,10 +115,10 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "aes128_8hpp_source.html",
-"classanch_1_1date_1_1_date.html",
-"classanch_1_1file_1_1_file_exception.html#a94ca4afe4a9061b789d88e0ebf788611",
-"classanch_1_1sql_1_1_postgre_s_q_l_prepared_statement.html#aa00d2a48d0800034fd84619022494d51",
-"low_priority_writer_8hpp_source.html"
+"classanch_1_1date_1_1_date.html#a40d5826d0023e5919d70ae34ab9a6a18",
+"classanch_1_1logger_1_1_logger.html#ab69d818baa9eb79ddb27a9b309b0b656",
+"classanch_1_1sql_1_1_postgre_s_q_l_result_set.html#ab0e5a7b6e6e48093004eb6ecc420f50c",
+"month_formatter_8hpp_source.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
