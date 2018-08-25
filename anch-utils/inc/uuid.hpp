@@ -407,7 +407,7 @@ namespace anch {
      *
      * \return the random engine
      */
-    static std::mt19937& getRandomEngine();
+    static std::mt19937_64& getRandomEngine();
 
     /*!
      * Distribution sequence getter
@@ -501,8 +501,8 @@ namespace anch {
 
   };
 
-  inline std::mt19937& Uuid::getRandomEngine() {
-    static std::mt19937 engine;
+  inline std::mt19937_64& Uuid::getRandomEngine() {
+    static std::mt19937_64 engine;
     return engine;
   }
 
