@@ -154,7 +154,7 @@ var hierarchy =
     [ "anch::sql::SQLSharedLibrary", "structanch_1_1sql_1_1_s_q_l_shared_library.html", null ],
     [ "anch::Stream< T, C >", "classanch_1_1_stream.html", null ],
     [ "anch::ThreadPool", "classanch_1_1_thread_pool.html", null ],
-    [ "anch::Uuid", "classanch_1_1_uuid.html", null ],
+    [ "anch::UUID", "classanch_1_1_u_u_i_d.html", null ],
     [ "anch::logger::Writer", "classanch_1_1logger_1_1_writer.html", [
       [ "anch::logger::LowPriorityWriter", "classanch_1_1logger_1_1_low_priority_writer.html", null ],
       [ "anch::logger::ThreadSafeWriter", "classanch_1_1logger_1_1_thread_safe_writer.html", null ]

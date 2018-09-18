@@ -9,6 +9,5 @@ var dir_93a8f6893794e44910a3445a915b6d36 =
     [ "resourcePool.hpp", "resource_pool_8hpp_source.html", null ],
     [ "singleton.hpp", "singleton_8hpp_source.html", null ],
     [ "stream.hpp", "stream_8hpp_source.html", null ],
-    [ "threadPool.hpp", "thread_pool_8hpp_source.html", null ],
-    [ "uuid.hpp", "uuid_8hpp_source.html", null ]
+    [ "threadPool.hpp", "thread_pool_8hpp_source.html", null ]
 ];

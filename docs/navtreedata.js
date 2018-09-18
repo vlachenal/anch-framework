@@ -83,6 +83,13 @@ var NAVTREE =
       ] ],
       [ "Example", "page_sql.html#sql_example_sec", null ]
     ] ],
+    [ "AnCH UUID library documentation", "page_uuid.html", [
+      [ "Introduction", "page_uuid.html#uuid_intro_seq", null ],
+      [ "Prerequisites", "page_uuid.html#uuid_prereq_sec", null ],
+      [ "Installation", "page_uuid.html#uuid_install_sec", null ],
+      [ "Conception", "page_uuid.html#uuid_concept_sec", null ],
+      [ "Examples", "page_uuid.html#uuid_example_sec", null ]
+    ] ],
     [ "anch-framework", "md__r_e_a_d_m_e.html", null ],
     [ "Todo List", "todo.html", null ],
     [ "Namespaces", "namespaces.html", [
@@ -115,10 +122,10 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "aes128_8hpp_source.html",
-"classanch_1_1date_1_1_date.html#a40d5826d0023e5919d70ae34ab9a6a18",
-"classanch_1_1logger_1_1_logger.html#ab69d818baa9eb79ddb27a9b309b0b656",
-"classanch_1_1sql_1_1_postgre_s_q_l_result_set.html#ab0e5a7b6e6e48093004eb6ecc420f50c",
-"month_formatter_8hpp_source.html"
+"classanch_1_1crypto_1_1_zero_padding.html#a77f301dab666c8f4b980d51bfb5f0568",
+"classanch_1_1file_1_1_file_exception.html#a3bf330ee84013fa55b55ee6a60300545",
+"classanch_1_1sql_1_1_postgre_s_q_l_prepared_statement.html#a7eb7259d9a4eb7f97c9fb16c2c62850e",
+"logger_8hpp_source.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

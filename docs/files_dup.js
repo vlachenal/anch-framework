@@ -9,5 +9,6 @@ var files_dup =
     [ "anch-network", "dir_09bb273283832a30b18ffd0a4a587cd7.html", "dir_09bb273283832a30b18ffd0a4a587cd7" ],
     [ "anch-resource", "dir_4b070829568b4ded3f537a8365b02fd6.html", "dir_4b070829568b4ded3f537a8365b02fd6" ],
     [ "anch-sql", "dir_d652b84edd2fcc27a00b8ccfe5063ae1.html", "dir_d652b84edd2fcc27a00b8ccfe5063ae1" ],
-    [ "anch-utils", "dir_aa622f8a4d2e92387ac024116b09e8a9.html", "dir_aa622f8a4d2e92387ac024116b09e8a9" ]
+    [ "anch-utils", "dir_aa622f8a4d2e92387ac024116b09e8a9.html", "dir_aa622f8a4d2e92387ac024116b09e8a9" ],
+    [ "anch-uuid", "dir_56ce092e5f2d23712f9ded0bda9ae2a2.html", "dir_56ce092e5f2d23712f9ded0bda9ae2a2" ]
 ];

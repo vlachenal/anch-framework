@@ -77,7 +77,7 @@ var searchData=
   ['_7etimeoutexception',['~TimeoutException',['../classanch_1_1_timeout_exception.html#acfb2d5d315c0c9abfa1db37bfdb0398e',1,'anch::TimeoutException']]],
   ['_7etimestamp',['~Timestamp',['../classanch_1_1sql_1_1_timestamp.html#ae1fc6b2bb504bc0d1536603228f1d493',1,'anch::sql::Timestamp']]],
   ['_7eudpsocket',['~UdpSocket',['../classanch_1_1network_1_1_udp_socket.html#a21264082c78028e2329af26240e9206e',1,'anch::network::UdpSocket']]],
-  ['_7euuid',['~Uuid',['../classanch_1_1_uuid.html#a444d5e46f4e97c22e9828e610a19240c',1,'anch::Uuid']]],
+  ['_7euuid',['~UUID',['../classanch_1_1_u_u_i_d.html#a9898c2cb05549289bf45bcb7331fba0a',1,'anch::UUID']]],
   ['_7ewriter',['~Writer',['../classanch_1_1logger_1_1_writer.html#a6f57399b94731301d267ce10a2f52ea3',1,'anch::logger::Writer']]],
   ['_7eyear2dformatter',['~Year2DFormatter',['../classanch_1_1date_1_1formatter_1_1_year2_d_formatter.html#a218d8722a9e7b571d0c0cf41789e0f78',1,'anch::date::formatter::Year2DFormatter']]],
   ['_7eyear4dformatter',['~Year4DFormatter',['../classanch_1_1date_1_1formatter_1_1_year4_d_formatter.html#a36c3a0b37c76dc3bd8d8323747090aa5',1,'anch::date::formatter::Year4DFormatter']]]

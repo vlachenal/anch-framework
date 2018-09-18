@@ -17,5 +17,5 @@ var namespaceanch =
     [ "Stream", "classanch_1_1_stream.html", "classanch_1_1_stream" ],
     [ "ThreadPool", "classanch_1_1_thread_pool.html", "classanch_1_1_thread_pool" ],
     [ "TimeoutException", "classanch_1_1_timeout_exception.html", "classanch_1_1_timeout_exception" ],
-    [ "Uuid", "classanch_1_1_uuid.html", "classanch_1_1_uuid" ]
+    [ "UUID", "classanch_1_1_u_u_i_d.html", "classanch_1_1_u_u_i_d" ]
 ];
