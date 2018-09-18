@@ -151,12 +151,44 @@ if(ANCH_DEVICE_UNITARY_TEST)
     anch-device-cpu
     ${test_cpu}
     )
+
+  target_link_libraries(
+    anch-device-cpu
+    anch-device
+    anch-uuid
+    )
   # CPU instructions set -
+
+  # UUID +
+  file(
+    GLOB_RECURSE
+    test_uuid
+    test/testUuid.cpp
+    )
+
+  # Includes location
+  include_directories(
+    inc
+    ${ANCH_UUID_INCLUDES_DIR}
+    )
+
+  add_executable(
+    anch-device-uuid
+    ${test_uuid}
+    )
+
+  target_link_libraries(
+    anch-device-uuid
+    anch-device
+    anch-uuid
+    )
+  # UUID -
   # Build parser unitary test -
 
   enable_testing()
   add_test(anch-device-valid-network-interface ${EXECUTABLE_OUTPUT_PATH}/anch-device-valid-network-interface main)
   add_test(anch-device-invalid-network-interface ${EXECUTABLE_OUTPUT_PATH}/anch-device-invalid-network-interface main)
   add_test(anch-device-cpu ${EXECUTABLE_OUTPUT_PATH}/anch-device-cpu main)
+  add_test(anch-device-uuid ${EXECUTABLE_OUTPUT_PATH}/anch-device-uuid main)
 
 endif(ANCH_DEVICE_UNITARY_TEST)
