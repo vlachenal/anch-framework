@@ -35,5 +35,9 @@ main(void) {
   std::cout << "UUID SHA1 address UUID conversion:   " << sha1Str << std::endl;
   std::cout << "UUID SHA1 address string conversion: " << UUID(sha1Str) << std::endl;
 
+  std::string test = "26c280b6-c607-4134-a01b-2468357fd51e";
+  std::cout << "test: " << test << std::endl;
+  std::cout << "UUID: " << UUID(test) << std::endl;
+
   return 0;
 }
