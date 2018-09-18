@@ -19,8 +19,6 @@
 */
 #include "uuid.hpp"
 
-#include <ctime>
-#include <chrono>
 #include <limits>
 
 using anch::UUID;
@@ -93,19 +91,13 @@ UUID::registerProvider(UUID::Version version, std::function<UUID(const std::stri
 void
 UUID::registerRandomUUID() {
   // Initialize random seed if not already done +
-  if(!_seeded) {
-    std::lock_guard<std::mutex> lock(_mutex);
-    if(!_seeded) { // double check locking ... not really great ...
-      // std::chrono::time_point<std::chrono::high_resolution_clock> now = std::chrono::high_resolution_clock::now();
-      // auto epoch = now.time_since_epoch();
-      // int64_t timestamp = std::chrono::duration_cast<std::chrono::nanoseconds>(epoch).count();
-      //getRandomEngine().seed(static_cast<uint64_t>(timestamp));
-      std::random_device r;
-      std::seed_seq seedSeq{r(), r(), r(), r(), r(), r(), r(), r()};
-      getRandomEngine().seed(seedSeq);
-      _providers[UUID::Version::RANDOM] = [](const std::string&) {return UUID::random();};
-      _seeded = true;
-    }
+  std::lock_guard<std::mutex> lock(_mutex);
+  if(!_seeded) { // double check locking ... not really great ...
+    std::random_device rand;
+    std::seed_seq seedSeq{rand(), rand(), rand(), rand(), rand(), rand(), rand(), rand()};
+    getRandomEngine().seed(seedSeq);
+    _providers[UUID::Version::RANDOM] = [](const std::string&) {return UUID::random();};
+    _seeded = true;
   }
   // Initialize random seed if not already done -
 }
