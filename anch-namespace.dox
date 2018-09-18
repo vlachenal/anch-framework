@@ -3,5 +3,5 @@
  *
  * \brief AnCH framework base namespace
  *
- * Contains utility classes from AnCH utils library.
+ * Contains utility classes from AnCH utils and UUID libraries.
  */
