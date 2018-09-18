@@ -186,6 +186,11 @@ namespace anch {
     /*! HMAC SHA1 definition */
     extern template SHA1 HMAC<SHA1>(const std::string&, const std::string&);
 
+    /*!
+     * Register SHA1 UUID provider
+     */
+    void registerSHA1UUIDProvider();
+
   }
 }
 

@@ -1,6 +1,8 @@
 ## Anch crypto configuration +
 # Anch utils path
 set(ANCH_UTILS_INCLUDES_DIR "$ENV{HOME}/projects/anch-framework/anch-utils/inc" CACHE STRING "AnCH utils include directory")
+set(ANCH_UUID_INCLUDES_DIR "$ENV{HOME}/projects/anch-framework/anch-uuid/inc")
+set(ANCH_UUID_LIBRARY_DIR "$ENV{HOME}/projects/anch-framework/anch-uuid/build/lib")
 
 set(ANCH_CRYPTO_COMPILE_FLAGS "-O2 -march=native -pipe" CACHE STRING "Additional compilation flags")
 #set(ANCH_CRYPTO_COMPILE_FLAGS "-g" CACHE STRING "Additional compilation flags")

@@ -42,8 +42,6 @@ add_definitions(${ANCH_UTILS_COMPILE_FLAGS})
 # Includes location
 include_directories(
   inc
-  ${ANCH_DEVICE_INCLUDES_DIR}
-  ${ANCH_CRYPTO_INCLUDES_DIR}
 )
 
 # Retrieve every files in project
@@ -51,7 +49,6 @@ file(
   GLOB_RECURSE
   source_files
   src/*
-  inc/*
 )
 
 install(
@@ -62,41 +59,10 @@ install(
 # Unit tests
 if(ANCH_UTILS_UNIT_TEST)
 
-  link_directories(
-    ${ANCH_DEVICE_LIBRARY_DIR}
-    ${ANCH_CRYPTO_LIBRARY_DIR}
-  )
-
-  # Build UUID unit test +
-  file(
-    GLOB_RECURSE
-    test_uuid
-    inc/*
-    test/testUuid.cpp
-  )
-
-  add_executable(
-    anch-uuid-test
-    ${test_uuid}
-  )
-
-  # Include libraries
-  include(FindThreads)
-  find_package(Threads)
-
-  target_link_libraries(
-    anch-uuid-test
-    anch-device
-    anch-crypto
-    ${CMAKE_THREAD_LIBS_INIT}
-  )
-  # Build UUID unit test -
-
   # Build thread pool unit test +
   file(
     GLOB_RECURSE
     test_thread_pool
-    inc/*
     test/testThreadPool.cpp
   )
 
@@ -115,7 +81,6 @@ if(ANCH_UTILS_UNIT_TEST)
   file(
     GLOB_RECURSE
     test_res_pool
-    inc/*
     test/testResourcedPool.cpp
   )
 
@@ -134,7 +99,6 @@ if(ANCH_UTILS_UNIT_TEST)
   file(
     GLOB_RECURSE
     test_stream
-    inc/*
     test/testStream.cpp
   )
 
@@ -179,7 +143,6 @@ if(ANCH_UTILS_UNIT_TEST)
     file(
       GLOB_RECURSE
       test_optional
-      inc/*
       test/testOptional.cpp
       )
 

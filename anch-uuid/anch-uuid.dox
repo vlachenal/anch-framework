@@ -1,0 +1,61 @@
+/*! \page page_crypto AnCH cryptography library documentation
+ *
+ * \tableofcontents
+ *
+ * \section crypto_intro_seq Introduction
+ *
+ * AnCH cryptography library aims to provide facilities for cryptography.\n
+ * \n
+ * This library is divided in functional parts. For now parts are:
+ * - hash: hash algorithms (MD5, SHA1, SHA2)
+ * - b2t: binary to text algorithms (base64)
+ * - encryption: cipher algorithms (AES)
+ *
+ * There is also some other features like HMAC which depends on hash.
+ *
+ * \section crypto_prereq_sec Prerequisites
+ *
+ * You only need anch-utils library header files to compile this library.
+ *
+ * \section crypto_install_sec Installation
+ *
+ * TODO fill this section
+ *
+ * \section crypto_concept_sec Conception
+ *
+ * \subsection hash_concept_sec Hashes
+ *
+ * Every hash implementation inherits the \ref anch::crypto::Hash class.\n
+ * \ref anch::crypto::Hash "Hash" is a template class which is parameterized by its ouput and block size. These parameters are used to other algorithms based on hash like \ref anch::crypto::HMAC.\n
+ * \n
+ * For now, implemented hashes are:
+ * - \ref anch::crypto::MD5
+ * - \ref anch::crypto::SHA1
+ * - \ref anch::crypto::SHA2 : \ref anch::crypto::SHA224 and \ref anch::crypto::SHA256 which are type defintions of \ref anch::crypto::SHA224_256 ; \ref anch::crypto::SHA384 and \ref anch::crypto::SHA512 which are type defintions of \ref anch::crypto::SHA384_512
+ *
+ * The \ref anch::crypto::SHA384 "SHA384" and \ref anch::crypto::SHA512 "SHA512" are optimized for 64-bits CPU. 32-bits CPU optimization isplanned for later.\n
+ * \n
+ * Every \ref anch::crypto::Hash "Hash" owns its context which is reset on each call.\n
+ * Digest is computed on instanciation or by calling one of the \ref anch::crypto::Hash "Hash" digest methods. Data to hash can be:
+ * - std::basic_string
+ * - uint8_t[] specifying its size
+ * - std::basic_istream
+ *
+ * \ref anch::crypto::Hash "Hash" result will be retrieved by calling method digest (without parameter).
+ *
+ * \subsection cipher_concept_sec Encryption
+ *
+ * Only \ref anch::crypto::AES is implemented for now. Other alogrithms are planned for implementation (DES, Triple DES, Camellia, ...).\n
+ *
+ * \ref anch::crypto::AES "AES" has only 2 methods:
+ * - cipher which takes two uint8_t[16] as input and output parameters.
+ * - decipher which takes two uint8_t[16] as input and output parameters.
+ *
+ * Secret key is expanded on instanciation and is reused for each block (on each call).\n
+ * \n
+ * Future cipher block algorithms will have similar methods to implements different cipher block mode of operation (ECB, CBC, CTR, ...) with parallelization through \ref anch::ThreadPool "ThreadPool".
+ *
+ * \section crypto_example_sec Examples
+ *
+ * TODO fill this section
+ */

@@ -1,10 +1,4 @@
 ## Anch utils configuration +
-# Anch resource path
-set(ANCH_DEVICE_INCLUDES_DIR "$ENV{HOME}/projects/anch-framework/anch-device/inc")
-set(ANCH_DEVICE_LIBRARY_DIR "$ENV{HOME}/projects/anch-framework/anch-device/build/lib")
-set(ANCH_CRYPTO_INCLUDES_DIR "$ENV{HOME}/projects/anch-framework/anch-crypto/inc")
-set(ANCH_CRYPTO_LIBRARY_DIR "$ENV{HOME}/projects/anch-framework/anch-crypto/build/lib")
-
 # Anch utils installation configuration
 set(ANCH_UTILS_COMPILE_FLAGS "-O2 -march=native -pipe")
 #set(ANCH_UTILS_COMPILE_FLAGS "-g")

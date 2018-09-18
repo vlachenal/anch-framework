@@ -42,16 +42,16 @@ find_package(Threads)
 # Includes location
 include_directories(
   inc
+  ${ANCH_UUID_INCLUDES_DIR}
   ${ANCH_UTILS_INCLUDES_DIR}
-)
+  )
 
 # Retrieve every files in project
 file(
   GLOB_RECURSE
   source_files
   src/*
-  inc/*
-)
+  )
 
 # Build objects
 add_library(
@@ -98,11 +98,14 @@ endif(ANCH_CRYPTO_STATIC_LIB)
 # Unitary tests
 if(ANCH_CRYPTO_UNITARY_TEST)
 
+  link_directories(
+    ${ANCH_UUID_LIBRARY_DIR}
+    )
+
   # Build MD5 unitary test +
   file(
     GLOB_RECURSE
     test_md5
-    inc/*
     test/testMD5.cpp
   )
 
@@ -114,6 +117,7 @@ if(ANCH_CRYPTO_UNITARY_TEST)
   target_link_libraries(
     anch-md5-test
     anch-crypto
+    anch-uuid
     ${CMAKE_THREAD_LIBS_INIT}
   )
   # Build MD5 unitary test -
@@ -122,8 +126,6 @@ if(ANCH_CRYPTO_UNITARY_TEST)
   file(
     GLOB_RECURSE
     test_sha1
-    ${ANCH_UTILS_INCLUDES_DIR}/*
-    inc/*
     test/testSHA1.cpp
   )
 
@@ -135,6 +137,7 @@ if(ANCH_CRYPTO_UNITARY_TEST)
   target_link_libraries(
     anch-sha1-test
     anch-crypto
+    anch-uuid
     ${CMAKE_THREAD_LIBS_INIT}
   )
   # Build SHA1 unitary test -
@@ -143,8 +146,6 @@ if(ANCH_CRYPTO_UNITARY_TEST)
   file(
     GLOB_RECURSE
     test_sha2
-    ${ANCH_UTILS_INCLUDES_DIR}/*
-    inc/*
     test/testSHA2.cpp
   )
 
@@ -156,6 +157,7 @@ if(ANCH_CRYPTO_UNITARY_TEST)
   target_link_libraries(
     anch-sha2-test
     anch-crypto
+    anch-uuid
     ${CMAKE_THREAD_LIBS_INIT}
   )
   # Build SHA2 unitary test -
@@ -164,7 +166,6 @@ if(ANCH_CRYPTO_UNITARY_TEST)
   file(
     GLOB_RECURSE
     test_hmac
-    inc/*
     test/testHmac.cpp
   )
 
@@ -176,6 +177,7 @@ if(ANCH_CRYPTO_UNITARY_TEST)
   target_link_libraries(
     anch-hmac-test
     anch-crypto
+    anch-uuid
     ${CMAKE_THREAD_LIBS_INIT}
   )
   # Build HMAC unitary test -
@@ -184,7 +186,6 @@ if(ANCH_CRYPTO_UNITARY_TEST)
   file(
     GLOB_RECURSE
     test_base64
-    inc/*
     test/testBase64.cpp
   )
 
@@ -196,6 +197,7 @@ if(ANCH_CRYPTO_UNITARY_TEST)
   target_link_libraries(
     anch-base64-test
     anch-crypto
+    anch-uuid
     ${CMAKE_THREAD_LIBS_INIT}
   )
   # Build Base64 unitary test -
@@ -204,7 +206,6 @@ if(ANCH_CRYPTO_UNITARY_TEST)
   file(
     GLOB_RECURSE
     test_aes
-    inc/*
     test/testAES.cpp
   )
 
@@ -216,6 +217,7 @@ if(ANCH_CRYPTO_UNITARY_TEST)
   target_link_libraries(
     anch-aes-test
     anch-crypto
+    anch-uuid
     ${CMAKE_THREAD_LIBS_INIT}
   )
   # Build AES unitary test -
@@ -224,7 +226,6 @@ if(ANCH_CRYPTO_UNITARY_TEST)
   file(
     GLOB_RECURSE
     test_padding
-    inc/*
     test/testPadding.cpp
   )
 
@@ -236,6 +237,7 @@ if(ANCH_CRYPTO_UNITARY_TEST)
   target_link_libraries(
     anch-padding-test
     anch-crypto
+    anch-uuid
     ${CMAKE_THREAD_LIBS_INIT}
   )
   # Build padding unitary test -
@@ -244,7 +246,6 @@ if(ANCH_CRYPTO_UNITARY_TEST)
   file(
     GLOB_RECURSE
     test_aes_ecb
-    inc/*
     test/testAesEcb.cpp
   )
 
@@ -256,6 +257,7 @@ if(ANCH_CRYPTO_UNITARY_TEST)
   target_link_libraries(
     anch-aes-ecb-test
     anch-crypto
+    anch-uuid
     ${CMAKE_THREAD_LIBS_INIT}
   )
   # Build AES-ECB unit tests -
@@ -264,7 +266,6 @@ if(ANCH_CRYPTO_UNITARY_TEST)
   file(
     GLOB_RECURSE
     test_aes_cbc
-    inc/*
     test/testAesCbc.cpp
   )
 
@@ -276,6 +277,7 @@ if(ANCH_CRYPTO_UNITARY_TEST)
   target_link_libraries(
     anch-aes-cbc-test
     anch-crypto
+    anch-uuid
     ${CMAKE_THREAD_LIBS_INIT}
   )
   # Build AES-CBC unit tests -
@@ -284,7 +286,6 @@ if(ANCH_CRYPTO_UNITARY_TEST)
   file(
     GLOB_RECURSE
     test_aes_pcbc
-    inc/*
     test/testAesPcbc.cpp
   )
 
@@ -296,6 +297,7 @@ if(ANCH_CRYPTO_UNITARY_TEST)
   target_link_libraries(
     anch-aes-pcbc-test
     anch-crypto
+    anch-uuid
     ${CMAKE_THREAD_LIBS_INIT}
   )
   # Build AES-PCBC unit tests -
@@ -304,7 +306,6 @@ if(ANCH_CRYPTO_UNITARY_TEST)
   file(
     GLOB_RECURSE
     test_aes_ctr
-    inc/*
     test/testAesCtr.cpp
   )
 
@@ -316,6 +317,7 @@ if(ANCH_CRYPTO_UNITARY_TEST)
   target_link_libraries(
     anch-aes-ctr-test
     anch-crypto
+    anch-uuid
     ${CMAKE_THREAD_LIBS_INIT}
   )
   # Build AES-CTR unit tests -
@@ -336,6 +338,7 @@ if(ANCH_CRYPTO_UNITARY_TEST)
   target_link_libraries(
     anch-aes-ofb-test
     anch-crypto
+    anch-uuid
     ${CMAKE_THREAD_LIBS_INIT}
   )
   # Build AES-OFB unit tests -
@@ -344,7 +347,6 @@ if(ANCH_CRYPTO_UNITARY_TEST)
   file(
     GLOB_RECURSE
     test_aes_cfb
-    inc/*
     test/testAesCfb.cpp
   )
 
@@ -356,6 +358,7 @@ if(ANCH_CRYPTO_UNITARY_TEST)
   target_link_libraries(
     anch-aes-cfb-test
     anch-crypto
+    anch-uuid
     ${CMAKE_THREAD_LIBS_INIT}
   )
   # Build AES-CFB unit tests -
@@ -480,7 +483,6 @@ if(ANCH_CRYPTO_UNITARY_TEST)
     file(
       GLOB_RECURSE
       bench_anch_openssl
-      inc/*
       test/benchAnchOpenssl.cpp
     )
 
@@ -492,6 +494,7 @@ if(ANCH_CRYPTO_UNITARY_TEST)
     target_link_libraries(
       anch-bench-openssl
       anch-crypto
+      anch-uuid
       ${OPENSSL_LIBRARIES}
       ${CMAKE_THREAD_LIBS_INIT}
       )
@@ -504,7 +507,6 @@ if(ANCH_CRYPTO_UNITARY_TEST)
     file(
       GLOB_RECURSE
       test_aes_ctr_big_data
-      inc/*
       test/testAesCtrBigData.cpp
       )
 
@@ -516,6 +518,7 @@ if(ANCH_CRYPTO_UNITARY_TEST)
     target_link_libraries(
       anch-aes-ctr-big-data-test
       anch-crypto
+      anch-uuid
       ${OPENSSL_LIBRARIES}
       ${CMAKE_THREAD_LIBS_INIT}
       )

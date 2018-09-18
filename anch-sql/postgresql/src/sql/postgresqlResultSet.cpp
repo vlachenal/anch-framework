@@ -44,7 +44,7 @@ PostgreSQLResultSet::~PostgreSQLResultSet() noexcept {
   if(_result != NULL) {
     PQclear(_result);
   }
-  while((_result = PQgetResult(_conn)) != NULL) {
+  while((_result = PQgetResult(_conn)) != NULL) { // Clear possibility not read result
     PQclear(_result);
   }
 }
@@ -59,7 +59,7 @@ PostgreSQLResultSet::getValue(std::size_t idx, std::string& out) {
     throw SqlException(msg.str(), true);
   }
   bool null = true;
-  if(!PQgetisnull(_result, _currentRow, static_cast<int>(idx))) {
+  if(PQgetisnull(_result, _currentRow, static_cast<int>(idx)) == 1) {
     null = false;
     out = PQgetvalue(_result, _currentRow, static_cast<int>(idx));
   }

@@ -22,9 +22,12 @@
 
 #include <cstring>
 
+#include "uuid.hpp"
+
 
 using anch::crypto::Hash;
 using anch::crypto::SHA1;
+using anch::UUID;
 
 template class Hash<20,64>;
 
@@ -383,3 +386,41 @@ SHA1::finalize() {
   }
 }
 // Methods -
+
+UUID
+generateSHA1UUID(const std::string& data) {
+  SHA1 hash(data);
+  const std::array<uint8_t,20>& digest = hash.digest();
+
+  // Timestamp +
+  uint32_t lowTime = digest[0]
+    + (static_cast<uint32_t>(digest[1]) << 8)
+    + (static_cast<uint32_t>(digest[2]) << 16)
+    + (static_cast<uint32_t>(digest[3]) << 24);
+  uint16_t midTime = static_cast<uint16_t>(digest[4] + (static_cast<uint32_t>(digest[5]) << 8));
+  uint16_t highTime = static_cast<uint16_t>(digest[6] + (static_cast<uint32_t>(digest[7]) << 8));
+  highTime = highTime & UUID::TIME_HIGH_MASK;
+  // Timestamp -
+
+  // Sequence +
+  uint16_t clockSeqLow = digest[9];
+  uint16_t clockSeqHighRes = digest[8];
+  clockSeqHighRes |= 0x80;
+  // Sequence -
+
+  // Node +
+  uint64_t node = digest[10]
+    + (static_cast<uint64_t>(digest[11]) << 8)
+    + (static_cast<uint64_t>(digest[12]) << 16)
+    + (static_cast<uint64_t>(digest[13]) << 24)
+    + (static_cast<uint64_t>(digest[14]) << 32)
+    + (static_cast<uint64_t>(digest[15]) << 40);
+  // Node -
+
+  return UUID(lowTime, midTime, highTime, clockSeqLow, clockSeqHighRes, node, UUID::Version::SHA1_HASH);
+}
+
+void
+anch::crypto::registerSHA1UUIDProvider() {
+  UUID::registerProvider(UUID::Version::SHA1_HASH, &generateSHA1UUID);
+}

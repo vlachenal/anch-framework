@@ -37,6 +37,7 @@ endif()
 # Includes location
 include_directories(
   inc
+  ${ANCH_UUID_INCLUDES_DIR}
 )
 
 # Retrieve every files in project
@@ -44,7 +45,6 @@ file(
   GLOB_RECURSE
   source_files
   src/*
-  inc/*
 )
 
 # Build objects
@@ -91,12 +91,15 @@ endif(ANCH_DEVICE_STATIC_LIB)
 
 if(ANCH_DEVICE_UNITARY_TEST)
 
+  link_directories(
+    ${ANCH_UUID_LIBRARY_DIR}
+    )
+
   # Build parser unitary test +
   # Valid network interface +
   file(
     GLOB_RECURSE
     test_valid_net_files
-    inc/*
     test/testValidNetworkInterface.cpp
   )
 
@@ -108,6 +111,7 @@ if(ANCH_DEVICE_UNITARY_TEST)
   target_link_libraries(
     anch-device-valid-network-interface
     anch-device
+    anch-uuid
   )
   # Valid network interface -
 
@@ -115,7 +119,6 @@ if(ANCH_DEVICE_UNITARY_TEST)
   file(
     GLOB_RECURSE
     test_invalid_net_files
-    inc/*
     test/testInvalidNetworkInterface.cpp
     )
 
@@ -127,6 +130,7 @@ if(ANCH_DEVICE_UNITARY_TEST)
   target_link_libraries(
     anch-device-invalid-network-interface
     anch-device
+    anch-uuid
     )
   # Invalid network interface -
 
@@ -134,8 +138,6 @@ if(ANCH_DEVICE_UNITARY_TEST)
   file(
     GLOB_RECURSE
     test_cpu
-    #${ANCH_UTILS_INCLUDES_DIR}/*
-    #inc/*
     test/testCPU.cpp
     )
 

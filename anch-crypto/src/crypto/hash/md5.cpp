@@ -19,9 +19,12 @@
 */
 #include "crypto/hash/md5.hpp"
 
+#include "uuid.hpp"
+
 
 using anch::crypto::Hash;
 using anch::crypto::MD5;
+using anch::UUID;
 
 
 // Core functions +
@@ -266,3 +269,42 @@ MD5::transform() {
   _context.buffer[3] += d;
 }
 // Methods -
+
+
+UUID
+generateMD5UUID(const std::string& data) {
+  MD5 hash(data);
+  const std::array<uint8_t,16>& digest = hash.digest();
+
+  // Timestamp +
+  uint32_t lowTime = digest[0]
+    + (static_cast<uint32_t>(digest[1]) << 8)
+    + (static_cast<uint32_t>(digest[2]) << 16)
+    + (static_cast<uint32_t>(digest[3]) << 24);
+  uint16_t midTime = static_cast<uint16_t>(digest[4] + (static_cast<uint32_t>(digest[5]) << 8));
+  uint16_t highTime = static_cast<uint16_t>(digest[6] + (static_cast<uint32_t>(digest[7]) << 8));
+  highTime = highTime & UUID::TIME_HIGH_MASK;
+  // Timestamp -
+
+  // Sequence +
+  uint16_t clockSeqLow = digest[9];
+  uint16_t clockSeqHighRes = digest[8];
+  clockSeqHighRes |= 0x80;
+  // Sequence -
+
+  // Node +
+  uint64_t node = digest[10]
+    + (static_cast<uint64_t>(digest[11]) << 8)
+    + (static_cast<uint64_t>(digest[12]) << 16)
+    + (static_cast<uint64_t>(digest[13]) << 24)
+    + (static_cast<uint64_t>(digest[14]) << 32)
+    + (static_cast<uint64_t>(digest[15]) << 40);
+  // Node -
+
+  return UUID(lowTime, midTime, highTime, clockSeqLow, clockSeqHighRes, node, UUID::Version::MD5_HASH);
+}
+
+void
+anch::crypto::registerMD5UUIDProvider() {
+  UUID::registerProvider(UUID::Version::MD5_HASH, &generateMD5UUID);
+}
