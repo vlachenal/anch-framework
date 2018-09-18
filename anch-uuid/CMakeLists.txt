@@ -96,17 +96,6 @@ endif(ANCH_UUID_STATIC_LIB)
 # Unitary tests
 if(ANCH_UUID_UNITARY_TEST)
 
-  include_directories(
-    inc
-    ${ANCH_DEVICE_INCLUDES_DIR}
-    ${ANCH_CRYPTO_INCLUDES_DIR}
-    )
-
-  link_directories(
-    ${ANCH_DEVICE_LIBRARY_DIR}
-    ${ANCH_CRYPTO_LIBRARY_DIR}
-  )
-
   # Build UUID unit test +
   file(
     GLOB_RECURSE
@@ -126,8 +115,6 @@ if(ANCH_UUID_UNITARY_TEST)
   target_link_libraries(
     anch-uuid-test
     anch-uuid
-    anch-device
-    anch-crypto
     ${CMAKE_THREAD_LIBS_INIT}
   )
   # Build UUID unit test -

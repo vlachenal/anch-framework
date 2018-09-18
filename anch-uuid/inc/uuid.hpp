@@ -224,6 +224,12 @@ namespace anch {
      * \return The string representation of \ref UUID
      */
     std::string toString() const;
+
+  private:
+    /*!
+     * Register random UUID if not already done
+     */
+    static void registerRandomUUID();
     // Methods -
 
 

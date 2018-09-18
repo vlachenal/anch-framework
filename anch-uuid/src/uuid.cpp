@@ -90,21 +90,31 @@ UUID::registerProvider(UUID::Version version, std::function<UUID(const std::stri
   _providers[version] = provider;
 }
 
-UUID
-UUID::generateUUID(anch::UUID::Version version, const std::string& data) {
+void
+UUID::registerRandomUUID() {
   // Initialize random seed if not already done +
   if(!_seeded) {
     std::lock_guard<std::mutex> lock(_mutex);
     if(!_seeded) { // double check locking ... not really great ...
-      std::chrono::time_point<std::chrono::high_resolution_clock> now = std::chrono::high_resolution_clock::now();
-      auto epoch = now.time_since_epoch();
-      int64_t timestamp = std::chrono::duration_cast<std::chrono::nanoseconds>(epoch).count();
-      getRandomEngine().seed(static_cast<uint64_t>(timestamp));
+      // std::chrono::time_point<std::chrono::high_resolution_clock> now = std::chrono::high_resolution_clock::now();
+      // auto epoch = now.time_since_epoch();
+      // int64_t timestamp = std::chrono::duration_cast<std::chrono::nanoseconds>(epoch).count();
+      //getRandomEngine().seed(static_cast<uint64_t>(timestamp));
+      std::random_device r;
+      std::seed_seq seedSeq{r(), r(), r(), r(), r(), r(), r(), r()};
+      getRandomEngine().seed(seedSeq);
       _providers[UUID::Version::RANDOM] = [](const std::string&) {return UUID::random();};
       _seeded = true;
     }
   }
   // Initialize random seed if not already done -
+}
+
+UUID
+UUID::generateUUID(anch::UUID::Version version, const std::string& data) {
+  if(!_seeded) {
+    registerRandomUUID();
+  }
 
   if(_providers.find(version) == _providers.end()) {
     throw std::runtime_error("No provider has been registered for this UUID version");
@@ -114,6 +124,10 @@ UUID::generateUUID(anch::UUID::Version version, const std::string& data) {
 
 UUID
 UUID::random() {
+  if(!_seeded) {
+    registerRandomUUID();
+  }
+
   UUID uuid;
   uuid._version = UUID::Version::RANDOM;
   static std::uniform_int_distribution<uint16_t> dist16;
