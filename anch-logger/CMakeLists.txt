@@ -58,7 +58,6 @@ file(
   GLOB_RECURSE
   source_files
   src/*
-  inc/*
 )
 
 # Build objects
@@ -123,7 +122,6 @@ if(ANCH_LOGGER_UNITARY_TEST)
   file(
     GLOB_RECURSE
     test_rotate
-    inc/*
     test/testRotate.cpp
   )
 
@@ -158,7 +156,6 @@ if(ANCH_LOGGER_UNITARY_TEST)
   file(
     GLOB_RECURSE
     test_custom_file
-    inc/*
     test/testCustomFile.cpp
   )
 
@@ -200,7 +197,6 @@ if(ANCH_LOGGER_UNITARY_TEST)
   file(
     GLOB_RECURSE
     test_low_priority_file
-    inc/*
     test/testLowPriority.cpp
   )
 

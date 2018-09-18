@@ -57,7 +57,6 @@ file(
   GLOB_RECURSE
   source_files
   src/*
-  inc/*
 )
 
 # Build objects
@@ -108,7 +107,6 @@ if(ANCH_DATE_UNITARY_TEST)
   file(
     GLOB_RECURSE
     test_date_format
-    inc/*
     test/testDateFormat.cpp
   )
 

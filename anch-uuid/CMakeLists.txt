@@ -132,4 +132,7 @@ if(ANCH_UUID_UNITARY_TEST)
   )
   # Build UUID unit test -
 
+  enable_testing()
+  add_test(anch-uuid-test ${EXECUTABLE_OUTPUT_PATH}/anch-uuid-test main)
+
 endif(ANCH_UUID_UNITARY_TEST)

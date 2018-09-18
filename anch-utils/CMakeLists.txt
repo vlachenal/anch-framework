@@ -59,6 +59,10 @@ install(
 # Unit tests
 if(ANCH_UTILS_UNIT_TEST)
 
+  # Include librairies
+  include(FindThreads)
+  find_package(Threads)
+
   # Build thread pool unit test +
   file(
     GLOB_RECURSE
@@ -114,7 +118,6 @@ if(ANCH_UTILS_UNIT_TEST)
   # Build stream unit test -
 
   enable_testing()
-  add_test(anch-uuid-test ${EXECUTABLE_OUTPUT_PATH}/anch-uuid-test main)
   add_test(anch-thread-pool-test ${EXECUTABLE_OUTPUT_PATH}/anch-thread-pool-test main)
   add_test(anch-thread-res-test ${EXECUTABLE_OUTPUT_PATH}/anch-res-pool-test main)
   add_test(anch-stream-foreach ${EXECUTABLE_OUTPUT_PATH}/anch-stream-test foreach)

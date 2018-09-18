@@ -50,7 +50,6 @@ file(
   GLOB_RECURSE
   source_files
   src/*
-  inc/*
 )
 
 # Build objects
@@ -100,7 +99,6 @@ if(ANCH_NETWORK_UNITARY_TEST)
   file(
     GLOB_RECURSE
     test_tcp_files
-    inc/*
     test/tcpSocketTest.cpp
   )
 
@@ -118,7 +116,6 @@ if(ANCH_NETWORK_UNITARY_TEST)
   file(
     GLOB_RECURSE
     test_udp_files
-    inc/*
     test/udpSocketTest.cpp
   )
 

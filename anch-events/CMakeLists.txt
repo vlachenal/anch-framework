@@ -50,7 +50,6 @@ if(ANCH_EVENTS_UNITARY_TEST)
   file(
     GLOB_RECURSE
     observ_files
-    inc/*
     test/testEvents.cpp
   )
 
@@ -69,7 +68,6 @@ if(ANCH_EVENTS_UNITARY_TEST)
   file(
     GLOB_RECURSE
     handler_files
-    inc/*
     test/testMultiHandler.cpp
   )
 
@@ -88,7 +86,6 @@ if(ANCH_EVENTS_UNITARY_TEST)
   file(
     GLOB_RECURSE
     bus_files
-    inc/*
     test/testEventBus.cpp
   )
 

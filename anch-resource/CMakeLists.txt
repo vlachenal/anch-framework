@@ -56,7 +56,6 @@ file(
   GLOB_RECURSE
   source_files
   src/*
-  inc/*
 )
 
 # Build objects
@@ -107,7 +106,6 @@ if(ANCH_RESOURCE_UNITARY_TEST)
   file(
     GLOB_RECURSE
     test_files
-    inc/*
     test/testResource.cpp
   )
 
