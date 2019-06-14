@@ -28,6 +28,7 @@
 #include <atomic>
 #include <mutex>
 #include <map>
+#include <cinttypes>
 
 
 namespace anch {
@@ -300,13 +301,13 @@ namespace anch {
   UUID::toString() const {
     std::ostringstream out;
     out << std::hex
-	<< std::setfill('0') << std::setw(8) << _lowTime << '-'
-	<< std::setfill('0') << std::setw(4) << _midTime << '-'
-	<< std::setfill('0') << std::setw(1) << static_cast<int>(_version)
-	<< std::setfill('0') << std::setw(3) << _highTime << '-'
-	<< std::setfill('0') << std::setw(2) << _clockSeqHighRes
-	<< std::setfill('0') << std::setw(2) << _clockSeqLow << '-'
-	<< std::setfill('0') << std::setw(12) << _node;
+    	<< std::setfill('0') << std::setw(8) << _lowTime << '-'
+    	<< std::setfill('0') << std::setw(4) << _midTime << '-'
+    	<< std::setfill('0') << std::setw(1) << static_cast<int>(_version)
+    	<< std::setfill('0') << std::setw(3) << _highTime << '-'
+    	<< std::setfill('0') << std::setw(2) << _clockSeqHighRes
+    	<< std::setfill('0') << std::setw(2) << _clockSeqLow << '-'
+    	<< std::setfill('0') << std::setw(12) << _node;
     return out.str();
   }
 
