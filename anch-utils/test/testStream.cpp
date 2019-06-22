@@ -23,7 +23,7 @@ struct A {
 struct B {
   std::string b;
   B(): b() {}
-  B(const B& bis): b(bis.b) {}
+  //B(const B& bis): b(bis.b) {}
   bool operator==(const B& other) const {
     return b == other.b;
   }
