@@ -34,7 +34,6 @@ using std::shared_ptr;
 using std::make_shared;
 
 using anch::file::File;
-using anch::date::Date;
 
 
 // Class static members initialization +
@@ -205,9 +204,15 @@ File::initialize() {
     if(res >= 0) {
       _directory = S_ISDIR(file.st_mode);
       _size = static_cast<uint64_t>(file.st_size);
-      _lastAccess = Date(file.st_atime);
-      _lastModification = Date(file.st_mtime);
-      _lastStatusChange = Date(file.st_ctime);
+#ifdef ANCH_TM_SPEC
+      _lastAccess = anch::date::Date(file.st_atim);
+      _lastModification = anch::date::Date(file.st_mtim);
+      _lastStatusChange = anch::date::Date(file.st_ctim);
+#else
+      _lastAccess = anch::date::Date(file.st_atime);
+      _lastModification = anch::date::Date(file.st_mtime);
+      _lastStatusChange = anch::date::Date(file.st_ctime);
+#endif // ANCH_TM_SPEC
       _readable = (::access(_path.data(), R_OK) == 0);
       _writable = (::access(_path.data(), W_OK) == 0);
       _executable = (::access(_path.data(), X_OK) == 0);
