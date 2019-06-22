@@ -43,6 +43,7 @@ Date::Date(bool init) {
   }
 }
 
+#ifndef ANCH_TM_SPEC
 Date::Date(const Date& date): _timestamp(date._timestamp),
 			      _years(date._years),
 			      _months(date._months),
@@ -57,6 +58,7 @@ Date::Date(const Date& date): _timestamp(date._timestamp),
 			      _nanoseconds(date._nanoseconds) {
   // Nothing to do more => every fields have been initialized
 }
+#endif // ANCH_TM_SPEC
 
 Date::Date(const std::time_t& time) {
   std::chrono::time_point<std::chrono::system_clock> timePoint = std::chrono::system_clock::from_time_t(time);
@@ -75,6 +77,19 @@ Date::Date(const std::tm* const time) {
   initialize(time);
   _mutex.unlock();
 }
+
+#ifdef ANCH_TM_SPEC
+Date::Date(const std::timespec& time) {
+  std::chrono::time_point<std::chrono::system_clock> timePoint = std::chrono::system_clock::from_time_t(time.tv_sec);
+  _timestamp = std::chrono::duration_cast<std::chrono::nanoseconds>(timePoint.time_since_epoch()).count() + time.tv_nsec;
+  _mutex.lock();
+  initialize(localtime(&time.tv_sec));
+  _mutex.unlock();
+  _milliseconds = static_cast<uint16_t>(time.tv_nsec % 1000000);
+  _microseconds = static_cast<uint16_t>(time.tv_nsec % 1000 - _milliseconds * 1000);
+  _nanoseconds = static_cast<uint16_t>(time.tv_nsec - _microseconds * 1000 - _milliseconds * 1000000);
+}
+#endif // ANCH_TM_SPEC
 //Constructors -
 
 // Destructors +

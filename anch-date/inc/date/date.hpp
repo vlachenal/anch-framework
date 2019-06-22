@@ -100,12 +100,14 @@ namespace anch {
        */
       Date(bool init = true);
 
+#ifndef ANCH_TM_SPEC
       /*!
-       * \ref Date private copy constructor
+       * \ref Date copy constructor
        *
        * \param date The \ref Date to copy
        */
       Date(const Date& date);
+#endif // ANCH_TM_SPEC
 
       /*!
        * \ref Date constructor.
@@ -120,6 +122,15 @@ namespace anch {
        * \param time The time to set
        */
       Date(const std::tm* const time);
+
+#ifdef ANCH_TM_SPEC
+      /*!
+       * \ref Date constructor.
+       *
+       * \param time The time to set
+       */
+      Date(const std::timespec& time);
+#endif // ANCH_TM_SPEC
       // Constructors -
 
       // Destructor +
@@ -254,6 +265,15 @@ namespace anch {
        * \return The converted std::tm
        */
       operator std::tm() const noexcept;
+
+#ifdef ANCH_TM_SPEC
+      /*!
+       * Cast operator to std::timespec definition.
+       *
+       * \return The converted std::timespec
+       */
+      operator std::timespec() const noexcept;
+#endif // ANCH_TM_SPEC
       // Operators -
 
     };
@@ -314,6 +334,18 @@ namespace anch {
       computeTm(time);
       return time;
     }
+
+
+#ifdef ANCH_TM_SPEC
+    inline Date::operator std::timespec() const noexcept {
+      std::timespec time;
+      std::tm cal;
+      computeTm(cal);
+      time.tv_sec = std::mktime(&cal);
+      time.tv_nsec = _nanoseconds + 1000 * _microseconds + 1000000 * _milliseconds;
+      return time;
+    }
+#endif // ANCH_TM_SPEC
 
   }
 }
