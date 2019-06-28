@@ -17,8 +17,7 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef _ANCH_CRYPTO_HMAC_
-#define _ANCH_CRYPTO_HMAC_
+#pragma once
 
 #include <sstream>
 #include <array>
@@ -85,5 +84,3 @@ namespace anch {
 
   }
 }
-
-#endif // _ANCH_CRYPTO_HMAC_

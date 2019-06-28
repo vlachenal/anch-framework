@@ -17,8 +17,7 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef _ANCH_CRYPTO_PCBC_H_
-#define _ANCH_CRYPTO_PCBC_H_
+#pragma once
 
 #include "crypto/cipher/bcModOp.hpp"
 
@@ -158,5 +157,3 @@ namespace anch {
 
   }
 }
-
-#endif // _ANCH_CRYPTO_PCBC_H_

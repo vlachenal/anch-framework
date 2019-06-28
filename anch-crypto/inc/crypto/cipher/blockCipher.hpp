@@ -17,8 +17,7 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef _ANCH_CRYPTO_BLOCK_CIPHER_H_
-#define _ANCH_CRYPTO_BLOCK_CIPHER_H_
+#pragma once
 
 #include <stdint.h>
 #include <cstddef>
@@ -90,5 +89,3 @@ namespace anch {
 
   }
 }
-
-#endif // _ANCH_CRYPTO_BLOCK_CIPHER_H_

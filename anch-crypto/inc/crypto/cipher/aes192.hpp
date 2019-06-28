@@ -17,6 +17,8 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
+#pragma once
+
 #include "crypto/cipher/aes.hpp"
 
 #include "crypto/cipher/ecb.hpp"
