@@ -118,7 +118,8 @@ namespace anch {
 
     };
 
-    inline const std::map<std::string,anch::resource::Section>& Resource::getConfiguration() const {
+    inline const std::map<std::string,anch::resource::Section>&
+    Resource::getConfiguration() const {
       return _resources;
     }
   }
