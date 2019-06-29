@@ -17,8 +17,7 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef _ANCH_LOGGER_LOW_PRIORITY_WRITER_H_
-#define _ANCH_LOGGER_LOW_PRIORITY_WRITER_H_
+#pragma once
 
 #include <iostream>
 #include <queue>
@@ -115,5 +114,3 @@ namespace anch {
 
   }
 }
-
-#endif // _ANCH_LOGGER_LOW_PRIORITY_WRITER_H_

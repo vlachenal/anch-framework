@@ -17,8 +17,7 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef _ANCH_LOGGER_FORMATTER_ANCH_DATE_FORMATTER_H_
-#define _ANCH_LOGGER_FORMATTER_ANCH_DATE_FORMATTER_H_
+#pragma once
 
 #include "logger/formatter/iFormatter.hpp"
 
@@ -30,7 +29,7 @@ namespace anch {
     namespace formatter {
 
       /*!
-       * Date formatter with high precision clock 
+       * Date formatter with high precision clock
        *
        * \author Vincent Lachenal
        */
@@ -79,5 +78,3 @@ namespace anch {
     }
   }
 }
-
-#endif // _ANCH_LOGGER_FORMATTER_ANCH_DATE_FORMATTER_H_

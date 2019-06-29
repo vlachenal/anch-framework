@@ -17,8 +17,7 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef _ANCH_LOGGER_LOGGER_FACTORY_H_
-#define _ANCH_LOGGER_LOGGER_FACTORY_H_
+#pragma once
 
 // Add default logger configuration file to anch-logger.conf +
 #ifndef _ANCH_LOGGER_CONFIG_FILE_
@@ -431,5 +430,3 @@ namespace anch {
 
   }
 }
-
-#endif // _ANCH_LOGGER_LOGGER_FACTORY_H_

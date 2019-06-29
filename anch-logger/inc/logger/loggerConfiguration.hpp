@@ -17,8 +17,7 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef _ANCH_LOGGER_LOGGER_CONFIGURATION_H_
-#define _ANCH_LOGGER_LOGGER_CONFIGURATION_H_
+#pragma once
 
 #include <iostream>
 #include <vector>
@@ -106,5 +105,3 @@ namespace anch {
 
   }
 }
-
-#endif // _ANCH_LOGGER_LOGGER_CONFIGURATION_H_
