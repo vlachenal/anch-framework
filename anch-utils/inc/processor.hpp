@@ -17,8 +17,7 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef _ANCH_UTILS_PROCESSOR_H_
-#define _ANCH_UTILS_PROCESSOR_H_
+#pragma once
 
 #include <limits.h>
 
@@ -33,5 +32,3 @@
 
 #endif // ANCH32
 #endif // ANCH64
-
-#endif // _ANCH_UTILS_PROCESSOR_H_
