@@ -17,8 +17,7 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef _ANCH_UUID_H_
-#define _ANCH_UUID_H_
+#pragma once
 
 #include <iostream>
 #include <iomanip>
@@ -376,5 +375,3 @@ operator<<(std::basic_ostream<CharT, Traits>& out, const anch::UUID& uuid) {
   out.flags(flags); // Restore flags
   return out;
 }
-
-#endif // _ANCH_UUID_H_
