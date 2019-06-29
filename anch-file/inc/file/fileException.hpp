@@ -17,8 +17,7 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef _ANCH_FILE_FILE_EXCEPTIOn_H_
-#define _ANCH_FILE_FILE_EXCEPTION_H_
+#pragma once
 
 #include <iostream>
 #include <exception>
@@ -78,5 +77,3 @@ namespace anch {
 
   }
 }
-
-#endif // _ANCH_FILE_FILE_EXCEPTION_H_
