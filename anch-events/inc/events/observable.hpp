@@ -17,8 +17,7 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef _ANCH_EVENTS_OBSERVABLE_H_
-#define _ANCH_EVENTS_OBSERVABLE_H_
+#pragma once
 
 #include <mutex>
 #include <set>
@@ -136,5 +135,3 @@ namespace anch {
 
   }
 }
-
-#endif // _ANCH_EVENTS_OBSERVABLE_H_
