@@ -17,8 +17,7 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef _ANCH_DATE_FORMATTER_HOUR12_FORMATTER_H_
-#define _ANCH_DATE_FORMATTER_HOUR12_FORMATTER_H_
+#pragma once
 
 #include "date/formatter/iDatePartFormatter.hpp"
 
@@ -89,5 +88,3 @@ namespace anch {
     }
   }
 }
-
-#endif // _ANCH_DATE_FORMATTER_HOUR12_FORMATTER_H_
