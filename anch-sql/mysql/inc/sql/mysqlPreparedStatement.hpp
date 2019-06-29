@@ -18,8 +18,7 @@
   along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
 #ifdef ANCH_SQL_MYSQL
-#ifndef _ANCH_SQL_MYSQL_PREPARED_STATEMENT_H_
-#define _ANCH_SQL_MYSQL_PREPARED_STATEMENT_H_
+#pragma once
 
 #include "sql/preparedStatement.hpp"
 #include "sql/mysqlConnection.hpp"
@@ -106,5 +105,4 @@ namespace anch {
   }
 }
 
-#endif // _ANCH_SQL_MYSQL_PREPARED_STATEMENT_H_
 #endif // ANCH_SQL_MYSQL

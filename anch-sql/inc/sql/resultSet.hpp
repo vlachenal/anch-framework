@@ -17,8 +17,7 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef _ANCH_SQL_RESULT_SET_H_
-#define _ANCH_SQL_RESULT_SET_H_
+#pragma once
 
 #include <string>
 #include <vector>
@@ -248,5 +247,3 @@ namespace anch {
 
   }
 }
-
-#endif // _ANCH_SQL_RESULT_SET_H_

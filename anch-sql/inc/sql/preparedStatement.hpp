@@ -17,8 +17,7 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef _ANCH_SQL_PREPARED_STATEMENT_H_
-#define _ANCH_SQL_PREPARED_STATEMENT_H_
+#pragma once
 
 #include <set>
 #include <string>
@@ -229,5 +228,3 @@ namespace anch {
 
   }
 }
-
-#endif // _ANCH_SQL_PREPARED_STATEMENT_H_

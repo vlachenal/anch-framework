@@ -18,8 +18,7 @@
   along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
 #ifdef ANCH_SQL_POSTGRESQL
-#ifndef _ANCH_SQL_PG_RESULT_SET_H_
-#define _ANCH_SQL_PG_RESULT_SET_H_
+#pragma once
 
 #include "sql/resultSet.hpp"
 
@@ -140,5 +139,4 @@ namespace anch {
   }
 }
 
-#endif // _ANCH_SQL_PG_RESULT_SET_H_
 #endif // ANCH_SQL_POSTGRESQL

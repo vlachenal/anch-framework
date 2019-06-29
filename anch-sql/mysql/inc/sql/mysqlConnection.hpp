@@ -18,8 +18,7 @@
   along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
 #ifdef ANCH_SQL_MYSQL
-#ifndef _ANCH_SQL_MYCON_H_
-#define _ANCH_SQL_MYCON_H_
+#pragma once
 
 #include <string>
 #include <functional>
@@ -153,5 +152,4 @@ namespace anch {
   }
 }
 
-#endif // _ANCH_SQL_MYCON_H_
 #endif // ANCH_SQL_MYSQL

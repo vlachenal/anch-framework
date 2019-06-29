@@ -18,8 +18,7 @@
   along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
 #ifdef ANCH_SQL_SQLITE3
-#ifndef _ANCH_SQL_SQLITE3CON_H_
-#define _ANCH_SQL_SQLITE3CON_H_
+#pragma once
 
 #include "sql/connection.hpp"
 
@@ -141,5 +140,4 @@ namespace anch {
   }
 }
 
-#endif // _ANCH_SQL_SQLITE3CON_H_
 #endif // ANCH_SQL_SQLITE3
