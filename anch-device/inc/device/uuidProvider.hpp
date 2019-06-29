@@ -17,8 +17,7 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef _ANCH_DEVICE_UUID_PROV_H_
-#define _ANCH_DEVICE_UUID_PROV_H_
+#pragma once
 
 namespace anch {
   namespace device {
@@ -30,4 +29,3 @@ namespace anch {
 
   }
 }
-#endif // _ANCH_DEVICE_UUID_PROV_H_
