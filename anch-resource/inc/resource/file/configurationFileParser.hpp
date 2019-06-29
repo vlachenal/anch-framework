@@ -17,8 +17,7 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef _ANCH_RESOURCE_FILE_CONFIGURATION_FILE_PARSER_H_
-#define _ANCH_RESOURCE_FILE_CONFIGURATION_FILE_PARSER_H_
+#pragma once
 
 #include <map>
 
@@ -117,5 +116,3 @@ namespace anch {
     }
   }
 }
-
-#endif // _ANCH_RESOURCE_FILE_CONFIGURATION_FILE_PARSER_H_
