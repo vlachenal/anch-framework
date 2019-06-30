@@ -526,6 +526,37 @@ if(ANCH_SQL_UNITARY_TEST)
   endif()
   # Build SQL prepare statement placeholders -
 
+  # Build SELECT builder unit tests +
+  file(
+    GLOB_RECURSE
+    test_select_builder
+    inc/*
+    test/testSelectBuilder.cpp
+    )
+
+  add_executable(
+    anch-select-builder-test
+    ${test_select_builder}
+    )
+
+  if(USE_BOOST_RE)
+    target_link_libraries(
+      anch-select-builder-test
+      anch-sql
+      anch-resource
+      anch-date
+      ${Boost_LIBRARIES}
+      )
+  else()
+    target_link_libraries(
+      anch-select-builder-test
+      anch-sql
+      anch-resource
+      anch-date
+      )
+  endif()
+  # Build SELECT builder unit tests -
+
   configure_file(test/anch.db anch.db COPYONLY)
   configure_file(test/db_con.conf db_con.conf COPYONLY)
   enable_testing()
@@ -542,5 +573,18 @@ if(ANCH_SQL_UNITARY_TEST)
     add_test(SQLConnectionFactorySQLite ${EXECUTABLE_OUTPUT_PATH}anch-sql-connection-factory-test SQLite)
   endif(ANCH_SQL_SQLITE3)
   add_test(SQLPrepareStatementPlaceholders ${EXECUTABLE_OUTPUT_PATH}anch-placeholders-test main)
+  # SELECT builder unit test +
+  add_test(SELECTwithoutFROMnorWHERE ${EXECUTABLE_OUTPUT_PATH}anch-select-builder-test 0_from_no_where)
+  add_test(SELECT1columnFROMtableWhitoutWHERE ${EXECUTABLE_OUTPUT_PATH}anch-select-builder-test 1_from_no_where)
+  add_test(SELECTDISTINCT1columnFROMtableWhitoutWHERE ${EXECUTABLE_OUTPUT_PATH}anch-select-builder-test distinct_1_from_no_where)
+  add_test(SELECT1columnWithAliasFROMtableWhitoutWHERE ${EXECUTABLE_OUTPUT_PATH}anch-select-builder-test 1_as_from_no_where)
+  add_test(SELECT2columnsFROMtableWhitoutWHERE ${EXECUTABLE_OUTPUT_PATH}anch-select-builder-test 2_from_no_where)
+  add_test(SelfJoin ${EXECUTABLE_OUTPUT_PATH}anch-select-builder-test self_join_no_where)
+  add_test(SelfJoinSubquery ${EXECUTABLE_OUTPUT_PATH}anch-select-builder-test self_join_subquery_no_where)
+  add_test(NaturalJoin ${EXECUTABLE_OUTPUT_PATH}anch-select-builder-test natural_join_no_where)
+  add_test(NaturalJoinSubquery ${EXECUTABLE_OUTPUT_PATH}anch-select-builder-test natural_join_subquery_no_where)
+  add_test(CrossJoin ${EXECUTABLE_OUTPUT_PATH}anch-select-builder-test cross_join_no_where)
+  add_test(CrossJoinSubquery ${EXECUTABLE_OUTPUT_PATH}anch-select-builder-test cross_join_subquery_no_where)
+  # SELECT builder unit test -
 
 endif(ANCH_SQL_UNITARY_TEST)
