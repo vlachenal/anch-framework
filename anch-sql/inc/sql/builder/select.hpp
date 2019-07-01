@@ -20,6 +20,7 @@
 #pragma once
 
 #include "sql/builder/selectBuilder.hpp"
+#include "sql/builder/clausesBuilder.hpp"
 
 
 namespace anch {
@@ -31,6 +32,13 @@ namespace anch {
      * \return the new \ref SelectBuilder
      */
     SelectBuilder select();
+
+    /*!
+     * Initialize a new \ref ClausesBuilder
+     *
+     * \return the new \ref ClausesBuilder
+     */
+    ClausesBuilder clauses();
 
   } // sql
 } // anch

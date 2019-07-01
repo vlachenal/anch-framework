@@ -228,7 +228,7 @@ FromBuilder::addJoin(const std::string& join, const SQLQuery& subquery, const st
 
 void
 FromBuilder::addJoin(const std::string& join, const std::string& table, const anch::sql::ClausesBuilder& clauses) {
-  if(clauses._firstClause) {
+  if(!clauses._firstClause) {
     _select._buffer << join << table << " ON " << clauses._buffer.str();
     for(const std::string& value : clauses._values) {
       _select._values.push_back(value);
@@ -238,7 +238,7 @@ FromBuilder::addJoin(const std::string& join, const std::string& table, const an
 
 void
 FromBuilder::addJoin(const std::string& join, const SelectBuilder& subquery, const std::string& alias, const ClausesBuilder& clauses) {
-  if(clauses._firstClause) {
+  if(!clauses._firstClause) {
     _select._buffer << join << '(' << subquery << ") " << alias << " ON " << clauses._buffer.str();
     for(const std::string& value : subquery._values) {
       _select._values.push_back(value);
@@ -251,7 +251,7 @@ FromBuilder::addJoin(const std::string& join, const SelectBuilder& subquery, con
 
 void
 FromBuilder::addJoin(const std::string& join, const SQLQuery& subquery, const std::string& alias, const ClausesBuilder& clauses) {
-  if(clauses._firstClause) {
+  if(!clauses._firstClause) {
     _select._buffer << join << '(' << subquery.getQuery() << ") " << alias << " ON " << clauses._buffer.str();
     for(const std::string& value : subquery.getValues()) {
       _select._values.push_back(value);

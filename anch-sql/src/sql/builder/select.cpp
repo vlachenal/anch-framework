@@ -20,8 +20,14 @@
 #include "sql/builder/select.hpp"
 
 using anch::sql::SelectBuilder;
+using anch::sql::ClausesBuilder;
 
 SelectBuilder
 anch::sql::select() {
   return SelectBuilder();
+}
+
+ClausesBuilder
+anch::sql::clauses() {
+  return ClausesBuilder();
 }

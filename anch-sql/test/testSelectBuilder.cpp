@@ -154,6 +154,19 @@ testQueryCrossJoinWithSubqueryWithoutWhere() {
 }
 
 void
+testQueryInnerJoinWithoutWhere() {
+  SQLQuery query = anch::sql::select()
+    .field("t.titi")
+    .field("u.tata")
+    .from("toto t")
+    .innerJoin("tutu u", anch::sql::clauses().field("t.i").equals().field("u.a"))
+    .build();
+  std::cout << query.getQuery() << std::endl;
+  assert(query.getQuery() == "SELECT t.titi,u.tata FROM toto t INNER JOIN tutu u ON t.i = u.a");
+  assert(query.getValues().size() == 0);
+}
+
+void
 registerTests() {
   TEST_SUITE["0_from_no_where"] = testNoFromNoWhere;
   TEST_SUITE["1_from_no_where"] = testQuerySingleColSingleTableWithoutWhere;
@@ -166,6 +179,7 @@ registerTests() {
   TEST_SUITE["natural_join_subquery_no_where"] = testQueryNaturalJoinWithSubqueryWithoutWhere;
   TEST_SUITE["cross_join_no_where"] = testQueryCrossJoinWithoutWhere;
   TEST_SUITE["cross_join_subquery_no_where"] = testQueryCrossJoinWithSubqueryWithoutWhere;
+  TEST_SUITE["inner_join_no_where"] = testQueryInnerJoinWithoutWhere;
 }
 
 int

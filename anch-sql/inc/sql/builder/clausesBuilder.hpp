@@ -34,6 +34,7 @@ namespace anch {
     class SelectBuilder;
     class FromBuilder;
     class ClausesBuilder;
+    extern ClausesBuilder clauses();
 
     /*!
      * Clause maker function.\n
@@ -58,10 +59,12 @@ namespace anch {
      * \author Vincent Lachenal
      */
     class ClausesBuilder {
+      friend ClausesBuilder anch::sql::clauses();
       friend anch::sql::SelectBuilder;
       friend anch::sql::FromBuilder;
 
       // Attributes +
+    private:
       /*! SQL request string buffer */
       std::ostringstream _buffer;
 
@@ -112,6 +115,7 @@ namespace anch {
 
 
       // SQL commands +
+    public:
       // No check no prepared statement values +
       /*!
        * Add field to clause
