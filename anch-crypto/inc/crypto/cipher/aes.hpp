@@ -45,15 +45,6 @@
 namespace anch {
   namespace crypto {
 
-    /*! Cipher subsitution box */
-    extern const uint8_t ANCH_AES_CIPHER_SBOX[256];
-
-    /*! Decipher subsitution box */
-    extern const uint8_t ANCH_AES_DECIPHER_SBOX[256];
-
-    /*! Round constants */
-    extern const uint32_t ANCH_AES_RCON[11];
-
 #ifdef ANCH_CPU_AES
     template<std::size_t S>
     struct AesniKey {
@@ -159,20 +150,67 @@ namespace anch {
        */
       void aesniDecipher(const std::array<uint8_t,16>& input, std::array<uint8_t,16>& output);
 
+      /*!
+       * AES128 key expansion utility function
+       *
+       * \param temp1 the first block
+       * \param temp2 the second block
+       *
+       * \return the result
+       */
       __m128i aes128assist(__m128i& temp1, __m128i& temp2);
 
+      /*!
+       * Expand AES128 key for AESNI implementation
+       *
+       * \param key the key
+       */
       void aesni128ExpandKey(uint8_t key[4 * K]);
 
+      /*!
+       * AES192 key expansion utility function
+       *
+       * \param temp1 the first block
+       * \param temp2 the second block
+       * \param temp3 the third block
+       */
       void aes192assist(__m128i& temp1, __m128i& temp2, __m128i& temp3);
 
+      /*!
+       * Expand AES192 key for AESNI implementation
+       *
+       * \param key the key
+       */
       void aesni192ExpandKey(uint8_t key[4 * K]);
 
+      /*!
+       * AES256 key expansion utility function
+       *
+       * \param temp1 the first block
+       * \param temp2 the second block
+       */
       void aes256assist1(__m128i& temp1, __m128i& temp2);
 
+      /*!
+       * AES256 key expansion utility function
+       *
+       * \param temp1 the first block
+       * \param temp3 the second block
+       */
       void aes256assist2(__m128i& temp1, __m128i& temp3);
 
+      /*!
+       * Expand AES256 key for AESNI implementation
+       *
+       * \param key the key
+       */
       void aesni256ExpandKey(uint8_t key[4 * K]);
 
+      /*!
+       * Expand key for AESNI implementation
+       *
+       * \param key the key
+       */
       void aesniExpandKey(uint8_t key[4 * K]);
 #endif // ANCH_CPU_AES
 
@@ -615,6 +653,15 @@ namespace anch {
 #endif // ANCH_CPU_AES
 
 #if defined ANCH_CPU_DETECTION || !defined(ANCH_CPU_AES)
+    /*! Cipher subsitution box */
+    extern const uint8_t ANCH_AES_CIPHER_SBOX[256];
+
+    /*! Decipher subsitution box */
+    extern const uint8_t ANCH_AES_DECIPHER_SBOX[256];
+
+    /*! Round constants */
+    extern const uint32_t ANCH_AES_RCON[11];
+
     template<std::size_t K, std::size_t R>
     void
     AES<K,R>::swCipher(const std::array<uint8_t,16>& input, std::array<uint8_t,16>& output) {

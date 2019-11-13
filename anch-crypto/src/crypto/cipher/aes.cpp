@@ -48,6 +48,7 @@ using anch::crypto::ISO7816_4Padding;
 using anch::crypto::PKCS5Padding;
 
 
+#if defined ANCH_CPU_DETECTION || !defined(ANCH_CPU_AES)
 /*! Cipher subsitution box */
 const uint8_t anch::crypto::ANCH_AES_CIPHER_SBOX[256] = {
   0x63, 0x7C, 0x77, 0x7B, 0xF2, 0x6B, 0x6F, 0xC5,
@@ -126,6 +127,7 @@ const uint32_t anch::crypto::ANCH_AES_RCON[11] = {
   0x00000008, 0x00000010, 0x00000020, 0x00000040,
   0x00000080, 0x0000001B, 0x00000036
 };
+#endif // ANCH_CPU_DETECTION || !ANCH_CPU_AES
 
 // AES-128 defintion +
 template class AES<4,10>;
