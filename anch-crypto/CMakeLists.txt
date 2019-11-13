@@ -38,16 +38,31 @@ else()
 endif()
 add_definitions(${ANCH_CRYPTO_COMPILE_FLAGS})
 
+if(ANCH_CPU_AES)
+  add_definitions("-msse4 -maes -D ANCH_CPU_AES")
+elseif(ANCH_CPU_DETECTION)
+  add_definitions("-msse4 -maes -D ANCH_CPU_AES -D ANCH_CPU_DETECTION")
+endif()
+
 # Include librairies
 include(FindThreads)
 find_package(Threads)
 
 # Includes location
-include_directories(
-  inc
-  ${ANCH_UUID_INCLUDES_DIR}
-  ${ANCH_UTILS_INCLUDES_DIR}
-  )
+if(ANCH_CPU_DETECTION)
+  include_directories(
+    inc
+    ${ANCH_UUID_INCLUDES_DIR}
+    ${ANCH_UTILS_INCLUDES_DIR}
+    ${ANCH_DEVICE_INCLUDES_DIR}
+    )
+else()
+  include_directories(
+    inc
+    ${ANCH_UUID_INCLUDES_DIR}
+    ${ANCH_UTILS_INCLUDES_DIR}
+    )
+endif()
 
 # Retrieve every files in project
 file(

@@ -28,6 +28,19 @@
 #include "device/cpu.hpp"
 #endif
 
+#ifdef ANCH_CPU_AES
+#include <wmmintrin.h>
+#include <smmintrin.h>
+#endif
+
+#if !defined (ALIGN16)
+# if defined (__GNUC__)
+# define ALIGN16 __attribute__ ( (aligned (16)))
+# else
+# define ALIGN16 __declspec (align (16))
+# endif
+#endif
+
 
 namespace anch {
   namespace crypto {
@@ -40,6 +53,14 @@ namespace anch {
 
     /*! Round constants */
     extern const uint32_t ANCH_AES_RCON[11];
+
+#ifdef ANCH_CPU_AES
+    template<std::size_t S>
+    struct AesniKey {
+      ALIGN16 __m128i cipherKey[S];
+      ALIGN16 __m128i decipherKey[S];
+    };
+#endif
 
     /*!
      * \brief AES block cipher algorithm implementation.
@@ -55,16 +76,18 @@ namespace anch {
     class AES: public anch::crypto::BlockCipher<16> {
       // Attributes +
     private:
+#if defined ANCH_CPU_DETECTION || !defined(ANCH_CPU_AES)
       /*! Internal state */
       uint8_t _state[4][4];
+#endif
 
       /*! Expanded key */
       union ExpKey {
 #ifdef ANCH_CPU_DETECTION
 	uint32_t swKey[4 * (R + 1)];
-	__m128i hwKey[R + 1];
+	anch::crypto::AesniKey<R + 1> hwKey;
 #elif ANCH_CPU_AES
-	__m128i hwKey[R + 1];
+	anch::crypto::AesniKey<R + 1> hwKey;
 #else
 	uint32_t swKey[4 * (R + 1)];
 #endif
@@ -83,12 +106,16 @@ namespace anch {
       AES(const uint8_t key[4*K]): _state(), _expKey() {
 #ifdef ANCH_CPU_DETECTION
 	if(anch::device::CPU::getInstance().isAES()) {
-	  // \todo call specific AESn key expansion
+	  uint8_t aesKey[4*K];
+	  std::memcpy(aesKey, key, 4*K);
+	  aesniExpandKey(aesKey);
 	} else {
 	  expandKey(key);
 	}
 #elif ANCH_CPU_AES
-	// \todo call specific AESn key expansion
+	uint8_t aesKey[4*K];
+	std::memcpy(aesKey, key, 4*K);
+	aesniExpandKey(aesKey);
 #else
 	expandKey(key);
 #endif
@@ -103,12 +130,14 @@ namespace anch {
       AES(const AES& other): _state(), _expKey() {
 #ifdef ANCH_CPU_DETECTION
 	if(anch::device::CPU::getInstance().isAES()) {
-	  std::memcpy(_expKey.hwKey, other._expKey.hwKey, (R + 1) * sizeof(__m128i));
+	  std::memcpy(_expKey.hwKey.cipherKey, other._expKey.hwKey.cipherKey, (R + 1) * sizeof(__m128i));
+	  std::memcpy(_expKey.hwKey.decipherKey, other._expKey.hwKey.decipherKey, (R + 1) * sizeof(__m128i));
 	} else {
 	  std::memcpy(_expKey.swKey, other._expKey.swKey, 4 * (R + 1) * sizeof(uint32_t));
 	}
 #elif ANCH_CPU_AES
-	std::memcpy(_expKey.hwKey, other._expKey.hwKey, (R + 1) * sizeof(__m128i));
+	std::memcpy(_expKey.hwKey.cipherKey, other._expKey.hwKey.cipherKey, (R + 1) * sizeof(__m128i));
+	std::memcpy(_expKey.hwKey.decipherKey, other._expKey.hwKey.decipherKey, (R + 1) * sizeof(__m128i));
 #else
 	std::memcpy(_expKey.swKey, other._expKey.swKey, 4 * (R + 1) * sizeof(uint32_t));
 #endif
@@ -135,6 +164,294 @@ namespace anch {
        * \param output the ciphered block
        */
       void cipher(const std::array<uint8_t,16>& input, std::array<uint8_t,16>& output) {
+#ifdef ANCH_CPU_DETECTION
+	if(anch::device::CPU::getInstance().isAES()) {
+	  aesniCipher(input, output);
+	} else {
+	  swCipher(input, output);
+	}
+#elif ANCH_CPU_AES
+	aesniCipher(input, output);
+#else
+	swCipher(input, output);
+#endif
+      }
+
+      /*!
+       * Decipher a block
+       *
+       * \param input the block to decipher
+       * \param output the deciphered block
+       */
+      void decipher(const std::array<uint8_t,16>& input, std::array<uint8_t,16>& output) {
+#ifdef ANCH_CPU_DETECTION
+	if(anch::device::CPU::getInstance().isAES()) {
+	  aesniDecipher(input, output);
+	} else {
+	  swDecipher(input, output);
+	}
+#elif ANCH_CPU_AES
+	aesniDecipher(input, output);
+#else
+	swDecipher(input, output);
+#endif
+      }
+
+    private:
+#ifdef ANCH_CPU_AES
+      void aesniCipher(const std::array<uint8_t,16>& input, std::array<uint8_t,16>& output) {
+	__m128i tmp;
+	std::size_t j;
+	ALIGN16 uint8_t in[16];
+	std::memcpy(in, input.data(), 16);
+	ALIGN16 __m128i out[2];
+	for(std::size_t i = 0 ; i < 2 ; ++i) {
+	  tmp = _mm_loadu_si128(&(reinterpret_cast<__m128i*>(in)[i]));
+	  tmp = _mm_xor_si128(tmp, _expKey.hwKey.cipherKey[0]);
+	  for(j = 1 ; j < R ; ++j) {
+	    tmp = _mm_aesenc_si128(tmp, _expKey.hwKey.cipherKey[j]);
+	  }
+	  tmp = _mm_aesenclast_si128(tmp, _expKey.hwKey.cipherKey[j]);
+	  _mm_storeu_si128(&(out[i]), tmp);
+	}
+	std::memcpy(output.data(), reinterpret_cast<uint8_t*>(out), 16);
+      }
+
+      void aesniDecipher(const std::array<uint8_t,16>& input, std::array<uint8_t,16>& output) {
+	__m128i tmp;
+	std::size_t j;
+	ALIGN16 uint8_t in[16];
+	std::memcpy(in, input.data(), 16);
+	ALIGN16 __m128i out[2];
+	for(std::size_t i = 0 ; i < 2 ; ++i) {
+	  tmp = _mm_loadu_si128(&(reinterpret_cast<__m128i*>(in)[i]));
+	  tmp = _mm_xor_si128(tmp, _expKey.hwKey.decipherKey[0]);
+	  for(j = 1 ; j < R ; ++j) {
+	    tmp = _mm_aesdec_si128(tmp, _expKey.hwKey.decipherKey[j]);
+	  }
+	  tmp = _mm_aesdeclast_si128(tmp, _expKey.hwKey.decipherKey[j]);
+	  _mm_storeu_si128(&(out[i]), tmp);
+	}
+	std::memcpy(output.data(), reinterpret_cast<uint8_t*>(out), 16);
+      }
+
+      inline __m128i aes128assist(__m128i& temp1, __m128i& temp2) {
+	__m128i temp3;
+	temp2 = _mm_shuffle_epi32(temp2 ,0xff);
+	temp3 = _mm_slli_si128(temp1, 0x4);
+	temp1 = _mm_xor_si128(temp1, temp3);
+	temp3 = _mm_slli_si128(temp3, 0x4);
+	temp1 = _mm_xor_si128(temp1, temp3);
+	temp3 = _mm_slli_si128(temp3, 0x4);
+	temp1 = _mm_xor_si128(temp1, temp3);
+	temp1 = _mm_xor_si128(temp1, temp2);
+	return temp1;
+      }
+
+      inline void aesni128ExpandKey([[maybe_unused]] uint8_t key[4 * K]) {
+	if constexpr (K == 4) {
+	    __m128i temp1, temp2;
+	    temp1 = _mm_loadu_si128(reinterpret_cast<__m128i*>(key));
+	    _expKey.hwKey.cipherKey[0] = temp1;
+	    temp2 = _mm_aeskeygenassist_si128(temp1, 0x1);
+	    temp1 = aes128assist(temp1, temp2);
+	    _expKey.hwKey.cipherKey[1] = temp1;
+	    temp2 = _mm_aeskeygenassist_si128(temp1, 0x2);
+	    temp1 = aes128assist(temp1, temp2);
+	    _expKey.hwKey.cipherKey[2] = temp1;
+	    temp2 = _mm_aeskeygenassist_si128(temp1, 0x4);
+	    temp1 = aes128assist(temp1, temp2);
+	    _expKey.hwKey.cipherKey[3] = temp1;
+	    temp2 = _mm_aeskeygenassist_si128(temp1, 0x8);
+	    temp1 = aes128assist(temp1, temp2);
+	    _expKey.hwKey.cipherKey[4] = temp1;
+	    temp2 = _mm_aeskeygenassist_si128(temp1, 0x10);
+	    temp1 = aes128assist(temp1, temp2);
+	    _expKey.hwKey.cipherKey[5] = temp1;
+	    temp2 = _mm_aeskeygenassist_si128(temp1, 0x20);
+	    temp1 = aes128assist(temp1, temp2);
+	    _expKey.hwKey.cipherKey[6] = temp1;
+	    temp2 = _mm_aeskeygenassist_si128(temp1, 0x40);
+	    temp1 = aes128assist(temp1, temp2);
+	    _expKey.hwKey.cipherKey[7] = temp1;
+	    temp2 = _mm_aeskeygenassist_si128(temp1, 0x80);
+	    temp1 = aes128assist(temp1, temp2);
+	    _expKey.hwKey.cipherKey[8] = temp1;
+	    temp2 = _mm_aeskeygenassist_si128(temp1, 0x1b);
+	    temp1 = aes128assist(temp1, temp2);
+	    _expKey.hwKey.cipherKey[9] = temp1;
+	    temp2 = _mm_aeskeygenassist_si128(temp1, 0x36);
+	    temp1 = aes128assist(temp1, temp2);
+	    _expKey.hwKey.cipherKey[10] = temp1;
+	  }
+      }
+
+      inline void aes192assist(__m128i& temp1, __m128i& temp2, __m128i& temp3) {
+	__m128i temp4;
+	temp2 = _mm_shuffle_epi32(temp2, 0x55);
+	temp4 = _mm_slli_si128(temp1, 0x4);
+	temp1 = _mm_xor_si128(temp1, temp4);
+	temp4 = _mm_slli_si128(temp4, 0x4);
+	temp1 = _mm_xor_si128(temp1, temp4);
+	temp4 = _mm_slli_si128(temp4, 0x4);
+	temp1 = _mm_xor_si128(temp1, temp4);
+	temp1 = _mm_xor_si128(temp1, temp2);
+	temp2 = _mm_shuffle_epi32(temp1, 0xff);
+	temp4 = _mm_slli_si128(temp3, 0x4);
+	temp3 = _mm_xor_si128(temp3, temp4);
+	temp3 = _mm_xor_si128(temp3, temp2);
+      }
+
+      inline void aesni192ExpandKey([[maybe_unused]] uint8_t key[4 * K]) {
+	if constexpr (K == 6) {
+	    __m128i temp1, temp2, temp3;
+	    temp1 = _mm_loadu_si128(reinterpret_cast<__m128i*>(key));
+	    temp3 = _mm_loadu_si128(reinterpret_cast<__m128i*>((key + 16)));
+	    _expKey.hwKey.cipherKey[0] = temp1;
+	    _expKey.hwKey.cipherKey[1] = temp3;
+	    temp2 = _mm_aeskeygenassist_si128(temp3, 0x1);
+	    aes192assist(temp1, temp2, temp3);
+	    _expKey.hwKey.cipherKey[1] = reinterpret_cast<__m128i>(_mm_shuffle_pd(reinterpret_cast<__m128d>(_expKey.hwKey.cipherKey[1]),
+										  reinterpret_cast<__m128d>(temp1), 0));
+	    _expKey.hwKey.cipherKey[2] = reinterpret_cast<__m128i>(_mm_shuffle_pd(reinterpret_cast<__m128d>(temp1),
+										  reinterpret_cast<__m128d>(temp3), 1));
+	    temp2 = _mm_aeskeygenassist_si128(temp3, 0x2);
+	    aes192assist(temp1, temp2, temp3);
+	    _expKey.hwKey.cipherKey[3] = temp1;
+	    _expKey.hwKey.cipherKey[4] = temp3;
+	    temp2 = _mm_aeskeygenassist_si128(temp3, 0x4);
+	    aes192assist(temp1, temp2, temp3);
+	    _expKey.hwKey.cipherKey[4] = reinterpret_cast<__m128i>(_mm_shuffle_pd(reinterpret_cast<__m128d>(_expKey.hwKey.cipherKey[4]),
+										  reinterpret_cast<__m128d>(temp1), 0));
+	    _expKey.hwKey.cipherKey[5] = reinterpret_cast<__m128i>(_mm_shuffle_pd(reinterpret_cast<__m128d>(temp1),
+										  reinterpret_cast<__m128d>(temp3), 1));
+	    temp2 = _mm_aeskeygenassist_si128(temp3, 0x8);
+	    aes192assist(temp1, temp2, temp3);
+	    _expKey.hwKey.cipherKey[6] = temp1;
+	    _expKey.hwKey.cipherKey[7] = temp3;
+	    temp2 = _mm_aeskeygenassist_si128(temp3, 0x10);
+	    aes192assist(temp1, temp2, temp3);
+	    _expKey.hwKey.cipherKey[7] = reinterpret_cast<__m128i>(_mm_shuffle_pd(reinterpret_cast<__m128d>(_expKey.hwKey.cipherKey[7]),
+										  reinterpret_cast<__m128d>(temp1), 0));
+	    _expKey.hwKey.cipherKey[8] = reinterpret_cast<__m128i>(_mm_shuffle_pd(reinterpret_cast<__m128d>(temp1),
+										  reinterpret_cast<__m128d>(temp3), 1));
+	    temp2 = _mm_aeskeygenassist_si128 (temp3, 0x20);
+	    aes192assist(temp1, temp2, temp3);
+	    _expKey.hwKey.cipherKey[9] = temp1;
+	    _expKey.hwKey.cipherKey[10] = temp3;
+	    temp2 = _mm_aeskeygenassist_si128(temp3, 0x40);
+	    aes192assist(temp1, temp2, temp3);
+	    _expKey.hwKey.cipherKey[10] = reinterpret_cast<__m128i>(_mm_shuffle_pd(reinterpret_cast<__m128d>(_expKey.hwKey.cipherKey[10]),
+										   reinterpret_cast<__m128d>(temp1), 0));
+	    _expKey.hwKey.cipherKey[11] = reinterpret_cast<__m128i>(_mm_shuffle_pd(reinterpret_cast<__m128d>(temp1),
+										   reinterpret_cast<__m128d>(temp3), 1));
+	    temp2 = _mm_aeskeygenassist_si128(temp3, 0x80);
+	    aes192assist(temp1, temp2, temp3);
+	    _expKey.hwKey.cipherKey[12] = temp1;
+	  }
+      }
+
+      inline void aes256assist1(__m128i& temp1, __m128i& temp2) {
+	__m128i temp4;
+	temp2 = _mm_shuffle_epi32(temp2, 0xff);
+	temp4 = _mm_slli_si128(temp1, 0x4);
+	temp1 = _mm_xor_si128(temp1, temp4);
+	temp4 = _mm_slli_si128(temp4, 0x4);
+	temp1 = _mm_xor_si128(temp1, temp4);
+	temp4 = _mm_slli_si128(temp4, 0x4);
+	temp1 = _mm_xor_si128(temp1, temp4);
+	temp1 = _mm_xor_si128(temp1, temp2);
+      }
+
+      inline void aes256assist2(__m128i& temp1, __m128i& temp3) {
+	__m128i temp2,temp4;
+	temp4 = _mm_aeskeygenassist_si128(temp1, 0x0);
+	temp2 = _mm_shuffle_epi32(temp4, 0xaa);
+	temp4 = _mm_slli_si128(temp3, 0x4);
+	temp3 = _mm_xor_si128(temp3, temp4);
+	temp4 = _mm_slli_si128(temp4, 0x4);
+	temp3 = _mm_xor_si128(temp3, temp4);
+	temp4 = _mm_slli_si128(temp4, 0x4);
+	temp3 = _mm_xor_si128(temp3, temp4);
+	temp3 = _mm_xor_si128(temp3, temp2);
+      }
+
+      inline void aesni256ExpandKey([[maybe_unused]] uint8_t key[4 * K]) {
+	if constexpr (K == 8) {
+	    __m128i temp1, temp2, temp3;
+	    temp1 = _mm_loadu_si128(reinterpret_cast<__m128i*>(key));
+	    temp3 = _mm_loadu_si128(reinterpret_cast<__m128i*>(key + 16));
+	    _expKey.hwKey.cipherKey[0] = temp1;
+	    _expKey.hwKey.cipherKey[1] = temp3;
+	    temp2 = _mm_aeskeygenassist_si128(temp3, 0x01);
+	    aes256assist1(temp1, temp2);
+	    _expKey.hwKey.cipherKey[2] = temp1;
+	    aes256assist2(temp1, temp3);
+	    _expKey.hwKey.cipherKey[3] = temp3;
+	    temp2 = _mm_aeskeygenassist_si128(temp3, 0x02);
+	    aes256assist1(temp1, temp2);
+	    _expKey.hwKey.cipherKey[4] = temp1;
+	    aes256assist2(temp1, temp3);
+	    _expKey.hwKey.cipherKey[5] = temp3;
+	    temp2 = _mm_aeskeygenassist_si128(temp3, 0x04);
+	    aes256assist1(temp1, temp2);
+	    _expKey.hwKey.cipherKey[6] = temp1;
+	    aes256assist2(temp1, temp3);
+	    _expKey.hwKey.cipherKey[7] = temp3;
+	    temp2 = _mm_aeskeygenassist_si128(temp3, 0x08);
+	    aes256assist1(temp1, temp2);
+	    _expKey.hwKey.cipherKey[8] = temp1;
+	    aes256assist2(temp1, temp3);
+	    _expKey.hwKey.cipherKey[9] = temp3;
+	    temp2 = _mm_aeskeygenassist_si128(temp3, 0x10);
+	    aes256assist1(temp1, temp2);
+	    _expKey.hwKey.cipherKey[10] = temp1;
+	    aes256assist2(temp1, temp3);
+	    _expKey.hwKey.cipherKey[11] = temp3;
+	    temp2 = _mm_aeskeygenassist_si128(temp3, 0x20);
+	    aes256assist1(temp1, temp2);
+	    _expKey.hwKey.cipherKey[12] = temp1;
+	    aes256assist2(temp1, temp3);
+	    _expKey.hwKey.cipherKey[13] = temp3;
+	    temp2 = _mm_aeskeygenassist_si128(temp3, 0x40);
+	    aes256assist1(temp1, temp2);
+	    _expKey.hwKey.cipherKey[14] = temp1;
+	  }
+      }
+
+      void aesniExpandKey(uint8_t key[4 * K]) {
+	// Compute cipher key +
+	aesni128ExpandKey(key);
+	aesni192ExpandKey(key);
+	aesni256ExpandKey(key);
+	// Compute cipher key -
+
+	// Compute decipher key +
+	_expKey.hwKey.decipherKey[R] = _expKey.hwKey.cipherKey[0];
+	_expKey.hwKey.decipherKey[R - 1] = _mm_aesimc_si128(_expKey.hwKey.cipherKey[1]);
+	_expKey.hwKey.decipherKey[R - 2] = _mm_aesimc_si128(_expKey.hwKey.cipherKey[2]);
+	_expKey.hwKey.decipherKey[R - 3] = _mm_aesimc_si128(_expKey.hwKey.cipherKey[3]);
+	_expKey.hwKey.decipherKey[R - 4] = _mm_aesimc_si128(_expKey.hwKey.cipherKey[4]);
+	_expKey.hwKey.decipherKey[R - 5] = _mm_aesimc_si128(_expKey.hwKey.cipherKey[5]);
+	_expKey.hwKey.decipherKey[R - 6] = _mm_aesimc_si128(_expKey.hwKey.cipherKey[6]);
+	_expKey.hwKey.decipherKey[R - 7] = _mm_aesimc_si128(_expKey.hwKey.cipherKey[7]);
+	_expKey.hwKey.decipherKey[R - 8] = _mm_aesimc_si128(_expKey.hwKey.cipherKey[8]);
+	_expKey.hwKey.decipherKey[R - 9] = _mm_aesimc_si128(_expKey.hwKey.cipherKey[9]);
+	if constexpr (R > 10) {
+	    _expKey.hwKey.decipherKey[R - 10] = _mm_aesimc_si128(_expKey.hwKey.cipherKey[10]);
+	    _expKey.hwKey.decipherKey[R - 11] = _mm_aesimc_si128(_expKey.hwKey.cipherKey[11]);
+	  }
+	if constexpr (R > 12) {
+	    _expKey.hwKey.decipherKey[R - 12] = _mm_aesimc_si128(_expKey.hwKey.cipherKey[12]);
+	    _expKey.hwKey.decipherKey[R - 13] = _mm_aesimc_si128(_expKey.hwKey.cipherKey[13]);
+	  }
+	_expKey.hwKey.decipherKey[0] = _expKey.hwKey.cipherKey[R];
+	// Compute decipher key -
+      }
+#endif // ANCH_CPU_AES
+
+#if defined ANCH_CPU_DETECTION || !defined(ANCH_CPU_AES)
+      void swCipher(const std::array<uint8_t,16>& input, std::array<uint8_t,16>& output) {
 	std::memcpy(&_state, input.data(), 16);
 	unsigned int round = 0;
 
@@ -160,13 +477,7 @@ namespace anch {
 	std::memcpy(output.data(), &_state, 16);
       }
 
-      /*!
-       * Decipher a block
-       *
-       * \param input the block to decipher
-       * \param output the deciphered block
-       */
-      void decipher(const std::array<uint8_t,16>& input, std::array<uint8_t,16>& output) {
+      void swDecipher(const std::array<uint8_t,16>& input, std::array<uint8_t,16>& output) {
 	std::memcpy(&_state, input.data(), 16);
 	unsigned int round = R;
 
@@ -191,11 +502,6 @@ namespace anch {
 
 	std::memcpy(output.data(), &_state, 16);
       }
-
-    private:
-#ifdef ANCH_CPU_AES
-      // \todo implements hardware methods
-#endif // ANCH_CPU_AES
 
       /*!
        * Key expansion generic algorithm
@@ -435,6 +741,7 @@ namespace anch {
 	state[2] ^= key[2];
 	state[3] ^= key[3];
       }
+#endif // ANCH_CPU_DETECTION || !ANCH_CPU_AES
       // Methods -
 
     };
