@@ -1,3 +1,4 @@
 <map id="anch::sql::Time" name="anch::sql::Time">
-<area shape="rect" id="node2" href="$classanch_1_1date_1_1_date.html" title="{anch::date::Date\n|# _timestamp\l# _years\l# _months\l# _ydays\l# _mdays\l# _wdays\l# _hours\l# _minutes\l# _seconds\l# _milliseconds\l# _microseconds\l# _nanoseconds\l# _mutex\l|+ Date()\l+ Date()\l+ Date()\l+ Date()\l+ ~Date()\l+ after()\l+ before()\l+ equals()\l+ operator\&gt;()\l+ operator\&gt;=()\land 6 more...\l}" alt="" coords="5,5,140,405"/>
+<area shape="rect" id="node1" title="SQL time type." alt="" coords="12,453,133,589"/>
+<area shape="rect" id="node2" href="$classanch_1_1date_1_1_date.html" title=" " alt="" coords="5,5,140,405"/>
 </map>

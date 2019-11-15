@@ -1,6 +1,7 @@
 var namespaceanch_1_1crypto =
 [
     [ "AES", "classanch_1_1crypto_1_1_a_e_s.html", "classanch_1_1crypto_1_1_a_e_s" ],
+    [ "AesniKey", "structanch_1_1crypto_1_1_aesni_key.html", "structanch_1_1crypto_1_1_aesni_key" ],
     [ "ANSIX923", "classanch_1_1crypto_1_1_a_n_s_i_x923.html", "classanch_1_1crypto_1_1_a_n_s_i_x923" ],
     [ "Base64", "classanch_1_1crypto_1_1_base64.html", "classanch_1_1crypto_1_1_base64" ],
     [ "BlockCipher", "classanch_1_1crypto_1_1_block_cipher.html", "classanch_1_1crypto_1_1_block_cipher" ],

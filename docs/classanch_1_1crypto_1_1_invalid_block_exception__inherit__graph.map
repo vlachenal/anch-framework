@@ -1,3 +1,4 @@
 <map id="anch::crypto::InvalidBlockException" name="anch::crypto::InvalidBlockException">
-<area shape="rect" id="node2" title="STL class. " alt="" coords="49,5,164,83"/>
+<area shape="rect" id="node1" title="Exception on receiving an invalid block." alt="" coords="5,131,208,252"/>
+<area shape="rect" id="node2" title="STL class." alt="" coords="49,5,164,83"/>
 </map>

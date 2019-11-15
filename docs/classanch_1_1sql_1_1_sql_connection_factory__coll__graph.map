@@ -1,4 +1,5 @@
 <map id="anch::sql::SqlConnectionFactory" name="anch::sql::SqlConnectionFactory">
-<area shape="rect" id="node2" href="$classanch_1_1_singleton.html" title="{anch::Singleton\&lt; SqlConnection\lFactory \&gt;\n||+ getInstance()\l}" alt="" coords="5,145,236,237"/>
-<area shape="rect" id="node3" href="$classanch_1_1_singleton.html" title="Meyers&#39; singleton implemtation. " alt="" coords="41,5,201,83"/>
+<area shape="rect" id="node1" title="SQL connection factory." alt="" coords="30,287,211,393"/>
+<area shape="rect" id="node2" href="$classanch_1_1_singleton.html" title=" " alt="" coords="5,145,236,237"/>
+<area shape="rect" id="node3" href="$classanch_1_1_singleton.html" title="Meyers&#39; singleton implemtation." alt="" coords="41,5,201,83"/>
 </map>

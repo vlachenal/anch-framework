@@ -1,4 +1,3 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classanch_1_1crypto_1_1_block_cipher_mode_of_operation.html" title="anch::crypto::BlockCipher\lModeOfOperation\&lt; CFB\&lt; Cipher\l \&gt;, Cipher \&gt;" alt="" coords="5,5,239,61"/>
-<area shape="rect" id="node2" href="$classanch_1_1crypto_1_1_c_f_b.html" title="Cipher feedback implementation. " alt="" coords="287,13,433,54"/>
+<area shape="rect" id="node1" href="$classanch_1_1crypto_1_1_block_cipher.html" title="Block cipher interface." alt="" coords="5,5,232,32"/>
 </map>

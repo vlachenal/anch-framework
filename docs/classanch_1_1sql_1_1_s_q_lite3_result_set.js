@@ -5,7 +5,7 @@ var classanch_1_1sql_1_1_s_q_lite3_result_set =
     [ "getDateFormatter", "classanch_1_1sql_1_1_s_q_lite3_result_set.html#a00e72bbf21a0ead12b15bd37f7ae4fd1", null ],
     [ "getTimeFormatter", "classanch_1_1sql_1_1_s_q_lite3_result_set.html#a97f8752cb08294ee4a2b12772585fc25", null ],
     [ "getTimestampFormatter", "classanch_1_1sql_1_1_s_q_lite3_result_set.html#a149ff2246024ede481e64924374665ec", null ],
-    [ "getValue", "classanch_1_1sql_1_1_s_q_lite3_result_set.html#aaf277f98a9230843d7a521d231aa28e9", null ],
     [ "getValue", "classanch_1_1sql_1_1_s_q_lite3_result_set.html#a819376794aa59bfbac1b669b8175b26c", null ],
+    [ "getValue", "classanch_1_1sql_1_1_s_q_lite3_result_set.html#aaf277f98a9230843d7a521d231aa28e9", null ],
     [ "next", "classanch_1_1sql_1_1_s_q_lite3_result_set.html#a76196917a027cab11e8e97745d42016a", null ]
 ];

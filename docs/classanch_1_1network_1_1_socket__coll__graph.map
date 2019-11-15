@@ -1,4 +1,5 @@
 <map id="anch::network::Socket" name="anch::network::Socket">
-<area shape="rect" id="node2" href="$classanch_1_1events_1_1_observable.html" title="{anch::events::Observable\l\&lt; SocketEvent \&gt;\n||+ Observable()\l+ ~Observable()\l+ addObserver()\l+ removeObserver()\l+ notifyObservers()\l}" alt="" coords="5,219,192,369"/>
-<area shape="rect" id="node3" href="$classanch_1_1events_1_1_observable.html" title="An observable implementation of the observers/observable design pattern. " alt="" coords="5,5,192,156"/>
+<area shape="rect" id="node1" title=" " alt="" coords="16,419,181,687"/>
+<area shape="rect" id="node2" href="$classanch_1_1events_1_1_observable.html" title=" " alt="" coords="5,219,192,369"/>
+<area shape="rect" id="node3" href="$classanch_1_1events_1_1_observable.html" title="An observable implementation of the observers/observable design pattern." alt="" coords="5,5,192,156"/>
 </map>

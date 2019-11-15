@@ -1,4 +1,5 @@
 <map id="anch::crypto::AES&lt; K, R &gt;" name="anch::crypto::AES&lt; K, R &gt;">
-<area shape="rect" id="node2" href="$classanch_1_1crypto_1_1_block_cipher.html" title="{anch::crypto::BlockCipher\l\&lt; 16 \&gt;\n||+ cipher()\l+ decipher()\l+ getBlockSize()\l}" alt="" coords="25,175,213,296"/>
-<area shape="rect" id="node3" href="$classanch_1_1crypto_1_1_block_cipher.html" title="Block cipher interface. " alt="" coords="5,5,232,112"/>
+<area shape="rect" id="node1" title="AES block cipher algorithm implementation." alt="" coords="45,345,192,496"/>
+<area shape="rect" id="node2" href="$classanch_1_1crypto_1_1_block_cipher.html" title=" " alt="" coords="25,175,213,296"/>
+<area shape="rect" id="node3" href="$classanch_1_1crypto_1_1_block_cipher.html" title="Block cipher interface." alt="" coords="5,5,232,112"/>
 </map>

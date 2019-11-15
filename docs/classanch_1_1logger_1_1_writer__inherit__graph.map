@@ -1,4 +1,5 @@
 <map id="anch::logger::Writer" name="anch::logger::Writer">
-<area shape="rect" id="node2" href="$classanch_1_1logger_1_1_low_priority_writer.html" title="{anch::logger::LowPriority\lWriter\n||+ LowPriorityWriter()\l+ LowPriorityWriter()\l+ ~LowPriorityWriter()\l+ write()\l+ startTreatment()\l}" alt="" coords="5,219,188,369"/>
-<area shape="rect" id="node3" href="$classanch_1_1logger_1_1_thread_safe_writer.html" title="{anch::logger::ThreadSafe\lWriter\n||+ ThreadSafeWriter()\l+ ThreadSafeWriter()\l+ ~ThreadSafeWriter()\l+ write()\l}" alt="" coords="213,226,397,362"/>
+<area shape="rect" id="node1" title=" " alt="" coords="125,5,276,171"/>
+<area shape="rect" id="node2" href="$classanch_1_1logger_1_1_low_priority_writer.html" title=" " alt="" coords="5,219,188,369"/>
+<area shape="rect" id="node3" href="$classanch_1_1logger_1_1_thread_safe_writer.html" title=" " alt="" coords="213,226,397,362"/>
 </map>

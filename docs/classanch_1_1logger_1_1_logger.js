@@ -1,6 +1,6 @@
 var classanch_1_1logger_1_1_logger =
 [
-    [ "Logger", "classanch_1_1logger_1_1_logger.html#a5dbfc937adc6a03d66526d5a36bfb597", null ],
+    [ "Logger", "classanch_1_1logger_1_1_logger.html#ae2878d59c673644d971a31d292bc9b2e", null ],
     [ "~Logger", "classanch_1_1logger_1_1_logger.html#acb668a9e186a25fbaad2e4af6d1ed00a", null ],
     [ "debug", "classanch_1_1logger_1_1_logger.html#a025e8112f470b0148dd66cf175f2bad0", null ],
     [ "error", "classanch_1_1logger_1_1_logger.html#adaacca48afedffb895e06d1f7c6fe660", null ],

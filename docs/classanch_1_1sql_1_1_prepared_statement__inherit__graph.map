@@ -1,5 +1,6 @@
 <map id="anch::sql::PreparedStatement" name="anch::sql::PreparedStatement">
-<area shape="rect" id="node2" href="$classanch_1_1sql_1_1_my_s_q_l_prepared_statement.html" title="MySQL prepared statement implementation. " alt="" coords="5,380,233,516"/>
-<area shape="rect" id="node3" href="$classanch_1_1sql_1_1_postgre_s_q_l_prepared_statement.html" title="PostgreSQL prepared statement implementation. " alt="" coords="258,380,517,516"/>
-<area shape="rect" id="node4" href="$classanch_1_1sql_1_1_s_q_lite3_prepared_statement.html" title="SQLite3 prepared statement implementation. " alt="" coords="541,380,775,516"/>
+<area shape="rect" id="node1" title="SQL prepared statement." alt="" coords="281,5,495,332"/>
+<area shape="rect" id="node2" href="$classanch_1_1sql_1_1_my_s_q_l_prepared_statement.html" title="MySQL prepared statement implementation." alt="" coords="5,380,235,516"/>
+<area shape="rect" id="node3" href="$classanch_1_1sql_1_1_postgre_s_q_l_prepared_statement.html" title="PostgreSQL prepared statement implementation." alt="" coords="259,380,517,516"/>
+<area shape="rect" id="node4" href="$classanch_1_1sql_1_1_s_q_lite3_prepared_statement.html" title="SQLite3 prepared statement implementation." alt="" coords="541,380,776,516"/>
 </map>

@@ -1,5 +1,6 @@
 <map id="anch::crypto::SHA384_512&lt; O, I &gt;" name="anch::crypto::SHA384_512&lt; O, I &gt;">
-<area shape="rect" id="node2" href="$classanch_1_1crypto_1_1_s_h_a2.html" title="{anch::crypto::SHA2\l\&lt; O, 128, uint64_t,\l 80, I \&gt;\n||+ SHA2()\l+ ~SHA2()\l+ digest()\l# shiftRight()\l# rotateLeft()\l# rotateRight()\l}" alt="" coords="13,521,159,701"/>
-<area shape="rect" id="node3" href="$classanch_1_1crypto_1_1_hash.html" title="Hash algorithm abstract class. " alt="" coords="9,5,152,229"/>
-<area shape="rect" id="node4" href="$classanch_1_1crypto_1_1_s_h_a2.html" title="SHA2 abstract class. " alt="" coords="103,279,248,444"/>
+<area shape="rect" id="node1" title="SHA2 384/512 implementation." alt="" coords="5,751,167,887"/>
+<area shape="rect" id="node2" href="$classanch_1_1crypto_1_1_s_h_a2.html" title=" " alt="" coords="13,521,159,701"/>
+<area shape="rect" id="node3" href="$classanch_1_1crypto_1_1_hash.html" title="Hash algorithm abstract class." alt="" coords="9,5,152,229"/>
+<area shape="rect" id="node4" href="$classanch_1_1crypto_1_1_s_h_a2.html" title="SHA2 abstract class." alt="" coords="103,279,248,444"/>
 </map>

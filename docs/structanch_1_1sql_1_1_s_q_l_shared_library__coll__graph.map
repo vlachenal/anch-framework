@@ -1,7 +1,14 @@
 <map id="anch::sql::SQLSharedLibrary" name="anch::sql::SQLSharedLibrary">
-<area shape="rect" id="node2" href="$classanch_1_1sql_1_1_connection.html" title="SQL connection virtual class. " alt="" coords="166,1013,349,1355"/>
-<area shape="rect" id="node4" href="$classanch_1_1sql_1_1_prepared_statement.html" title="SQL prepared statement. " alt="" coords="193,484,407,796"/>
-<area shape="rect" id="node6" title="STL class. " alt="" coords="111,160,198,237"/>
-<area shape="rect" id="node7" title="STL class. " alt="" coords="85,5,224,97"/>
-<area shape="rect" id="node8" title="STL class. " alt="" coords="289,160,423,237"/>
+<area shape="rect" id="node1" title="SQL shared library data." alt="" coords="369,1620,572,1697"/>
+<area shape="rect" id="node2" href="$classanch_1_1sql_1_1_connection.html" title="SQL connection virtual class." alt="" coords="353,1061,535,1403"/>
+<area shape="rect" id="node11" title=" " alt="" coords="187,1465,352,1557"/>
+<area shape="rect" id="node3" title=" " alt="" coords="322,907,566,999"/>
+<area shape="rect" id="node4" href="$classanch_1_1sql_1_1_prepared_statement.html" title="SQL prepared statement." alt="" coords="337,532,551,844"/>
+<area shape="rect" id="node5" title=" " alt="" coords="403,363,551,455"/>
+<area shape="rect" id="node6" title="STL class." alt="" coords="546,160,633,237"/>
+<area shape="rect" id="node7" title="STL class." alt="" coords="520,5,659,97"/>
+<area shape="rect" id="node8" title="STL class." alt="" coords="207,160,342,237"/>
+<area shape="rect" id="node9" title=" " alt="" coords="255,13,294,90"/>
+<area shape="rect" id="node10" title=" " alt="" coords="110,13,149,90"/>
+<area shape="rect" id="node12" title="STL class." alt="" coords="5,261,163,339"/>
 </map>

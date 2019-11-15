@@ -1,5 +1,11 @@
 var searchData=
 [
-  ['version',['Version',['../classanch_1_1_u_u_i_d.html#a6ee815d96c7a3fec3e5ed88f05e600f6',1,'anch::UUID']]],
-  ['version_5fmask',['VERSION_MASK',['../classanch_1_1_u_u_i_d.html#ae415c9e4b83eb44cb969de7006174587',1,'anch::UUID']]]
+  ['udp_509',['UDP',['../namespaceanch_1_1network.html#aa518b6bd398c963767bf1974e5c113beaf5ef036b4d8b630721e51fe23489fbc9',1,'anch::network']]],
+  ['udpsocket_510',['UdpSocket',['../classanch_1_1network_1_1_udp_socket.html',1,'anch::network::UdpSocket'],['../classanch_1_1network_1_1_udp_socket.html#acd386cff2c60fcd786883c8cfa117df8',1,'anch::network::UdpSocket::UdpSocket()'],['../classanch_1_1network_1_1_udp_socket.html#a81c07697524e2f69eb4c749064523589',1,'anch::network::UdpSocket::UdpSocket(const std::string &amp;ipAddress, uint16_t port)']]],
+  ['unionall_511',['unionAll',['../classanch_1_1sql_1_1_select_builder.html#af0272308480ff600f9e444f0ceb63404',1,'anch::sql::SelectBuilder::unionAll()'],['../classanch_1_1sql_1_1_select_builder_part.html#a028e813070b64a2473df3ae3439a2d49',1,'anch::sql::SelectBuilderPart::unionAll()']]],
+  ['uniononce_512',['unionOnce',['../classanch_1_1sql_1_1_select_builder.html#a800d73864c3c4a80742da656759dead0',1,'anch::sql::SelectBuilder::unionOnce()'],['../classanch_1_1sql_1_1_select_builder_part.html#ae8000d48800018469a2da2aea041e9bd',1,'anch::sql::SelectBuilderPart::unionOnce()']]],
+  ['unknown_513',['UNKNOWN',['../namespaceanch_1_1network.html#aa518b6bd398c963767bf1974e5c113bea696b031073e74bf2cb98e5ef201d4aa3',1,'anch::network']]],
+  ['update_514',['update',['../classanch_1_1sql_1_1_connection.html#ab342f819c23a8ad1e763d1bc93f2c7af',1,'anch::sql::Connection::update(const std::string &amp;query)'],['../classanch_1_1sql_1_1_connection.html#ad3ec5cab9f60dece303d571fb185a8e5',1,'anch::sql::Connection::update(const std::string &amp;query, const T &amp;value, const Q &amp;... values)']]],
+  ['user_515',['user',['../structanch_1_1sql_1_1_sql_connection_configuration.html#ad11afc04bcae1a6d4feeace3cfa7a3ad',1,'anch::sql::SqlConnectionConfiguration']]],
+  ['uuid_516',['UUID',['../classanch_1_1_u_u_i_d.html',1,'anch::UUID'],['../classanch_1_1_u_u_i_d.html#a56b6dfa8d38418093502ad169a814dfb',1,'anch::UUID::UUID()'],['../classanch_1_1_u_u_i_d.html#ae73124ebaf76d4774acfa06f48ed3dc6',1,'anch::UUID::UUID(const UUID &amp;uuid)'],['../classanch_1_1_u_u_i_d.html#ab4bddb6ce21aeae6a58b815092e85533',1,'anch::UUID::UUID(const std::string &amp;uuid)'],['../classanch_1_1_u_u_i_d.html#ac860839cc030a0a79cab5b9b7ca50dcb',1,'anch::UUID::UUID(uint32_t lowTime, uint16_t midTime, uint16_t highTime, uint16_t clockSeqLow, uint16_t clockSeqHighRes, uint64_t node, UUID::Version version)']]]
 ];

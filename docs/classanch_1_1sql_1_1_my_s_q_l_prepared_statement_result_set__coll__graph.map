@@ -1,6 +1,10 @@
 <map id="anch::sql::MySQLPreparedStatementResultSet" name="anch::sql::MySQLPreparedStatementResultSet">
-<area shape="rect" id="node2" href="$classanch_1_1sql_1_1_result_set.html" title="SQL result representation. " alt="" coords="23,469,277,811"/>
-<area shape="rect" id="node4" title="STL class. " alt="" coords="40,160,127,237"/>
-<area shape="rect" id="node5" title="STL class. " alt="" coords="14,5,153,97"/>
-<area shape="rect" id="node6" title="STL class. " alt="" coords="151,160,285,237"/>
+<area shape="rect" id="node1" title="MySQL result set implementation for prepared statement ... shitty API." alt="" coords="5,860,296,1055"/>
+<area shape="rect" id="node2" href="$classanch_1_1sql_1_1_result_set.html" title="SQL result representation." alt="" coords="23,469,278,811"/>
+<area shape="rect" id="node3" title=" " alt="" coords="69,315,232,407"/>
+<area shape="rect" id="node4" title="STL class." alt="" coords="41,160,127,237"/>
+<area shape="rect" id="node5" title="STL class." alt="" coords="15,5,153,97"/>
+<area shape="rect" id="node6" title="STL class." alt="" coords="151,160,286,237"/>
+<area shape="rect" id="node7" title=" " alt="" coords="189,13,227,90"/>
+<area shape="rect" id="node8" title=" " alt="" coords="265,13,303,90"/>
 </map>

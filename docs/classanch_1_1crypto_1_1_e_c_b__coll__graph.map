@@ -1,4 +1,5 @@
 <map id="anch::crypto::ECB&lt; Cipher, Padding &gt;" name="anch::crypto::ECB&lt; Cipher, Padding &gt;">
-<area shape="rect" id="node2" href="$classanch_1_1crypto_1_1_block_cipher_mode_of_operation.html" title="{anch::crypto::BlockCipher\lModeOfOperation\&lt; ECB\&lt; Cipher,\l Padding \&gt;, Cipher \&gt;\n||+ cipher()\l+ decipher()\l+ setNbThread()\l# BlockCipherModeOfOperation()\l# ~BlockCipherModeOfOperation()\l# cipherBlock()\l# decipherBlock()\l# reset()\l}" alt="" coords="5,292,256,501"/>
-<area shape="rect" id="node3" href="$classanch_1_1crypto_1_1_block_cipher_mode_of_operation.html" title="Block cipher mode of operation interface. " alt="" coords="5,5,256,215"/>
+<area shape="rect" id="node1" title="Electronic codebook implementation." alt="" coords="57,551,204,701"/>
+<area shape="rect" id="node2" href="$classanch_1_1crypto_1_1_block_cipher_mode_of_operation.html" title=" " alt="" coords="5,292,256,501"/>
+<area shape="rect" id="node3" href="$classanch_1_1crypto_1_1_block_cipher_mode_of_operation.html" title="Block cipher mode of operation interface." alt="" coords="5,5,256,215"/>
 </map>
