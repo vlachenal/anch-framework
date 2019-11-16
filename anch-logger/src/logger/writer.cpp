@@ -20,28 +20,22 @@
 #include <fstream>
 #include <sstream>
 
+#ifdef ANCH_CPP_FS
+#include <filesystem>
+#else
 #include <stdio.h>
+#endif // ANCH_CPP_FS
 
 #include "logger/writer.hpp"
 
-
-using std::string;
-using std::ostream;
-using std::ofstream;
-using std::ifstream;
-using std::ios_base;
-using std::ostringstream;
-using std::cerr;
-using std::endl;
-using std::cout;
 
 using anch::logger::Writer;
 using anch::logger::Level;
 using anch::logger::formatter::MessageFormatter;
 
 
-Writer::Writer(const string& fileName,
-	       const string& linePattern,
+Writer::Writer(const std::string& fileName,
+	       const std::string& linePattern,
 	       unsigned int maxSize,
 	       int maxIndex):  _formatter(linePattern),
 			       _fileName(fileName),
@@ -49,12 +43,12 @@ Writer::Writer(const string& fileName,
 			       _maxIndex(maxIndex),
 			       _fileIndex(0) {
   try {
-    _output = new ofstream(fileName,ios_base::app);
+    _output = new std::ofstream(fileName, std::ios_base::app);
     // Retrieve current file index +
     for(int i = 1 ; i < _maxIndex ; i++) {
-      ostringstream ostr;
+      std::ostringstream ostr;
       ostr << fileName << '.' << i;
-      ifstream file(ostr.str());
+      std::ifstream file(ostr.str());
       if(file) {
 	_fileIndex = i;
 	file.close();
@@ -65,36 +59,36 @@ Writer::Writer(const string& fileName,
     // Retrieve current file index -
 
   } catch(const std::exception& e) {
-    cerr << "Unable to open file. Use standard output." << endl;
-    _output = static_cast<ostream*>(&cout);
+    std::cerr << "Unable to open file. Use standard output." << std::endl;
+    _output = static_cast<std::ostream*>(&std::cout);
     _fileName = "";
     _maxSize = 0;
     _maxIndex = 0;
   }
 }
 
-Writer::Writer(ostream* output,
-	       const string& linePattern): _output(output),
-					   _formatter(linePattern),
-					   _fileName(""),
-					   _maxSize(0),
-					   _maxIndex(0),
-					   _fileIndex(0) {
+Writer::Writer(std::ostream* output,
+	       const std::string& linePattern): _output(output),
+						_formatter(linePattern),
+						_fileName(""),
+						_maxSize(0),
+						_maxIndex(0),
+						_fileIndex(0) {
   // Nothing to do
 }
 
 Writer::~Writer() {
   _output->flush();
   if(_fileName != "") {
-    static_cast<ofstream*>(_output)->close();
+    static_cast<std::ofstream*>(_output)->close();
     delete _output;
   } // else do not delete cout ...
 }
 
 void
-Writer::write(const string& category,
+Writer::write(const std::string& category,
 	      const Level& level,
-	      const string& message) {
+	      const std::string& message) {
   *_output << _formatter.formatMessage(category, level, message) << "\n";
   if(rotate()) {
     rotateFiles();
@@ -104,13 +98,17 @@ Writer::write(const string& category,
 void
 Writer::rotateFiles() {
   _output->flush();
-  static_cast<ofstream*>(_output)->close();
+  static_cast<std::ofstream*>(_output)->close();
   delete _output;
-  ostringstream ostr;
+  std::ostringstream ostr;
   // Remove older file if max index file has been reached +
   if(_fileIndex == _maxIndex) {
     ostr << _fileName << "." << _fileIndex;
-    remove(ostr.str().data());
+#ifdef ANCH_CPP_FS
+    std::filesystem::remove(ostr.str().data());
+#else
+    ::remove(ostr.str().data());
+#endif // ANCH_CPP_FS
     _fileIndex--;
   }
   // Remove older file if max index file has been reached -
@@ -118,14 +116,22 @@ Writer::rotateFiles() {
   for(int i = _fileIndex ; i > 0 ; i--) {
     ostr.str("");
     ostr << _fileName << '.' << i;
-    string oldName = ostr.str();
+    std::string oldName = ostr.str();
     ostr.str("");
     ostr << _fileName << "." << (i + 1);
-    string newName = ostr.str();
-    rename(oldName.data(), newName.data());
+    std::string newName = ostr.str();
+#ifdef ANCH_CPP_FS
+    std::filesystem::rename(oldName.data(), newName.data());
+#else
+    ::rename(oldName.data(), newName.data());
+#endif // ANCH_CPP_FS
   }
-  rename(_fileName.data(), string(_fileName + ".1").data());
+#ifdef ANCH_CPP_FS
+  std::filesystem::rename(_fileName.data(), std::string(_fileName + ".1").data());
+#else
+  ::rename(_fileName.data(), std::string(_fileName + ".1").data());
+#endif // ANCH_CPP_FS
   // Rename every log files -
-  _output = new ofstream(_fileName);
+  _output = new std::ofstream(_fileName);
   _fileIndex++;
 }
