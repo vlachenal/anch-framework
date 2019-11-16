@@ -45,7 +45,7 @@ Writer::Writer(const std::string& fileName,
   try {
     _output = new std::ofstream(fileName, std::ios_base::app);
     // Retrieve current file index +
-    for(int i = 1 ; i < _maxIndex ; i++) {
+    for(int i = 1 ; i < _maxIndex ; ++i) {
       std::ostringstream ostr;
       ostr << fileName << '.' << i;
       std::ifstream file(ostr.str());
@@ -113,7 +113,7 @@ Writer::rotateFiles() {
   }
   // Remove older file if max index file has been reached -
   // Rename every log files +
-  for(int i = _fileIndex ; i > 0 ; i--) {
+  for(int i = _fileIndex ; i > 0 ; --i) {
     ostr.str("");
     ostr << _fileName << '.' << i;
     std::string oldName = ostr.str();
