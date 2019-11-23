@@ -52,10 +52,7 @@ namespace anch {
        * \param nbThread the maximum number of thread to run in parallel (default to 1).
        *                 If is set to 0, it will be set to the number of CPU if found (1 otherwise).
        */
-      ECB(unsigned int nbThread = 1):
-	BlockCipherModeOfOperation<ECB<Cipher,Padding>,Cipher>(true, true, nbThread), _initVect() {
-	// Nothing to do
-      }
+      ECB(unsigned int nbThread = 1);
       // Constructors -
 
 
@@ -63,9 +60,7 @@ namespace anch {
       /*!
        * \ref ECB destructor
        */
-      virtual ~ECB() {
-	// Nothing to do
-      }
+      virtual ~ECB();
       // Destructor -
 
 
@@ -85,13 +80,7 @@ namespace anch {
       virtual std::size_t cipherBlock(std::array<uint8_t,Cipher::getBlockSize()>& input,
 				      std::streamsize nbRead,
 				      std::array<uint8_t,Cipher::getBlockSize()>& output,
-				      uint32_t, Cipher& cipher) override {
-	if(static_cast<std::size_t>(nbRead) != Cipher::getBlockSize()) {
-	  Padding::pad(input.data(), static_cast<std::size_t>(nbRead), Cipher::getBlockSize());
-	}
-	cipher.cipher(input, output);
-	return Cipher::getBlockSize(); // This mode pad data => the number of bytes to write will always be a complete block
-      }
+				      uint32_t, Cipher& cipher) override;
 
       /*!
        * Decipher a block.\n
@@ -110,29 +99,74 @@ namespace anch {
 					std::streamsize nbRead,
 					bool lastBlock,
 					std::array<uint8_t,Cipher::getBlockSize()>& output,
-					uint32_t, Cipher& cipher) override {
-	if(lastBlock && static_cast<std::size_t>(nbRead) != Cipher::getBlockSize()) {
-	  throw InvalidBlockException("Invalid block size");
-	}
-	cipher.decipher(input, output);
-	if(lastBlock) {
-	  return Padding::length(output.data(), Cipher::getBlockSize());
-	} else {
-	  return Cipher::getBlockSize();
-	}
-      }
+					uint32_t, Cipher& cipher) override;
 
       /*!
        * Reset block cipher mode of operation context
        *
        * \return the initial context
        */
-      virtual const std::array<uint8_t,Cipher::getBlockSize()>& reset() {
-	return _initVect;
-      }
+      virtual const std::array<uint8_t,Cipher::getBlockSize()>& reset();
       // Methods -
 
     };
+
+    // Constructors +
+    template<typename Cipher, typename Padding>
+    ECB<Cipher,Padding>::ECB(unsigned int nbThread):
+      BlockCipherModeOfOperation<ECB<Cipher,Padding>,Cipher>(true, true, nbThread), _initVect() {
+      // Nothing to do
+    }
+    // Constructors -
+
+
+    // Destructor +
+    template<typename Cipher, typename Padding>
+    ECB<Cipher,Padding>::~ECB() {
+      // Nothing to do
+    }
+    // Destructor -
+
+
+    // Methods +
+    template<typename Cipher, typename Padding>
+    std::size_t
+    ECB<Cipher,Padding>::cipherBlock(std::array<uint8_t,Cipher::getBlockSize()>& input,
+				     std::streamsize nbRead,
+				     std::array<uint8_t,Cipher::getBlockSize()>& output,
+				     uint32_t, Cipher& cipher) {
+      if(static_cast<std::size_t>(nbRead) != Cipher::getBlockSize()) {
+	Padding::pad(input.data(), static_cast<std::size_t>(nbRead), Cipher::getBlockSize());
+      }
+      cipher.cipher(input, output);
+      return Cipher::getBlockSize(); // This mode pad data => the number of bytes to write will always be a complete block
+    }
+
+    template<typename Cipher, typename Padding>
+    std::size_t
+    ECB<Cipher,Padding>::decipherBlock(std::array<uint8_t,Cipher::getBlockSize()>& input,
+				       std::array<uint8_t,Cipher::getBlockSize()>&,
+				       std::streamsize nbRead,
+				       bool lastBlock,
+				       std::array<uint8_t,Cipher::getBlockSize()>& output,
+				       uint32_t, Cipher& cipher) {
+      if(lastBlock && static_cast<std::size_t>(nbRead) != Cipher::getBlockSize()) {
+	throw InvalidBlockException("Invalid block size");
+      }
+      cipher.decipher(input, output);
+      if(lastBlock) {
+	return Padding::length(output.data(), Cipher::getBlockSize());
+      } else {
+	return Cipher::getBlockSize();
+      }
+    }
+
+    template<typename Cipher, typename Padding>
+    const std::array<uint8_t,Cipher::getBlockSize()>&
+    ECB<Cipher,Padding>::reset() {
+      return _initVect;
+    }
+    // Methods -
 
   }
 }

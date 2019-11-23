@@ -52,11 +52,7 @@ namespace anch {
        * \param nbThread the maximum number of thread to run in parallel (default to 1).
        *                 If is set to 0, it will be set to the number of CPU if found (1 otherwise).
        */
-      CTR(const std::array<uint8_t,Cipher::getBlockSize()>& nonce, unsigned int nbThread = 1):
-	BlockCipherModeOfOperation<CTR<Cipher>,Cipher>(true, true, nbThread),
-	_nonce(nonce) {
-	// Nothing to do
-      }
+      CTR(const std::array<uint8_t,Cipher::getBlockSize()>& nonce, unsigned int nbThread = 1);
       // Constructors -
 
 
@@ -64,9 +60,7 @@ namespace anch {
       /*!
        * \ref CTR destructor
        */
-      virtual ~CTR() {
-	// Nothing to do
-      }
+      virtual ~CTR();
       // Destructor -
 
 
@@ -88,17 +82,7 @@ namespace anch {
 				      std::streamsize nbRead,
 				      std::array<uint8_t,Cipher::getBlockSize()>& output,
 				      uint32_t index,
-				      Cipher& cipher) override {
-	std::array<uint8_t,Cipher::getBlockSize()> ctxtVect(_nonce);
-	uint16_t* counter = reinterpret_cast<uint16_t*>(&ctxtVect.data()[Cipher::getBlockSize() - 2]);
-	*counter = static_cast<uint16_t>(index);
-	std::array<uint8_t,Cipher::getBlockSize()> data;
-	cipher.cipher(ctxtVect, data);
-	for(std::size_t i = 0 ; i < static_cast<std::size_t>(nbRead) ; ++i) {
-	  output[i] = input[i] ^ data[i];
-	}
-	return static_cast<std::size_t>(nbRead);
-      }
+				      Cipher& cipher) override;
 
       /*!
        * Decipher a block.\n
@@ -118,29 +102,81 @@ namespace anch {
 					bool,
 					std::array<uint8_t,Cipher::getBlockSize()>& output,
 					uint32_t index,
-					Cipher& cipher) override {
-	std::array<uint8_t,Cipher::getBlockSize()> ctxtVect(_nonce);
-	uint16_t* counter = reinterpret_cast<uint16_t*>(&ctxtVect.data()[Cipher::getBlockSize() - 2]);
-	*counter = static_cast<uint16_t>(index);
-	std::array<uint8_t,Cipher::getBlockSize()> data;
-	cipher.cipher(ctxtVect, data);
-	for(std::size_t i = 0 ; i < static_cast<std::size_t>(nbRead) ; ++i) {
-	  output[i] = input[i] ^ data[i];
-	}
-	return static_cast<std::size_t>(nbRead);
-      }
+					Cipher& cipher) override;
 
       /*!
        * Reset block cipher mode of operation context
        *
        * \return the initial context
        */
-      virtual const std::array<uint8_t,Cipher::getBlockSize()>& reset() {
-	return _nonce;
-      }
+      virtual const std::array<uint8_t,Cipher::getBlockSize()>& reset();
       // Methods -
 
     };
+
+    // Constructors +
+    template<typename Cipher>
+    CTR<Cipher>::CTR(const std::array<uint8_t,Cipher::getBlockSize()>& nonce, unsigned int nbThread):
+      BlockCipherModeOfOperation<CTR<Cipher>,Cipher>(true, true, nbThread),
+      _nonce(nonce) {
+      // Nothing to do
+    }
+    // Constructors -
+
+
+    // Destructor +
+    template<typename Cipher>
+    CTR<Cipher>::~CTR() {
+      // Nothing to do
+    }
+    // Destructor -
+
+
+    // Methods +
+    template<typename Cipher>
+    std::size_t
+    CTR<Cipher>::cipherBlock(std::array<uint8_t,Cipher::getBlockSize()>& input,
+			     std::streamsize nbRead,
+			     std::array<uint8_t,Cipher::getBlockSize()>& output,
+			     uint32_t index,
+			     Cipher& cipher) {
+      std::array<uint8_t,Cipher::getBlockSize()> ctxtVect(_nonce);
+      uint16_t* counter = reinterpret_cast<uint16_t*>(&ctxtVect.data()[Cipher::getBlockSize() - 2]);
+      *counter = static_cast<uint16_t>(index);
+      std::array<uint8_t,Cipher::getBlockSize()> data;
+      cipher.cipher(ctxtVect, data);
+      for(std::size_t i = 0 ; i < static_cast<std::size_t>(nbRead) ; ++i) {
+	output[i] = input[i] ^ data[i];
+      }
+      return static_cast<std::size_t>(nbRead);
+    }
+
+    template<typename Cipher>
+    std::size_t
+    CTR<Cipher>::decipherBlock(std::array<uint8_t,Cipher::getBlockSize()>& input,
+			       std::array<uint8_t,Cipher::getBlockSize()>&,
+			       std::streamsize nbRead,
+			       bool,
+			       std::array<uint8_t,Cipher::getBlockSize()>& output,
+			       uint32_t index,
+			       Cipher& cipher) {
+      std::array<uint8_t,Cipher::getBlockSize()> ctxtVect(_nonce);
+      uint16_t* counter = reinterpret_cast<uint16_t*>(&ctxtVect.data()[Cipher::getBlockSize() - 2]);
+      *counter = static_cast<uint16_t>(index);
+      std::array<uint8_t,Cipher::getBlockSize()> data;
+      cipher.cipher(ctxtVect, data);
+      for(std::size_t i = 0 ; i < static_cast<std::size_t>(nbRead) ; ++i) {
+	output[i] = input[i] ^ data[i];
+      }
+      return static_cast<std::size_t>(nbRead);
+    }
+
+    template<typename Cipher>
+    const std::array<uint8_t,Cipher::getBlockSize()>&
+    CTR<Cipher>::reset() {
+      return _nonce;
+    }
+    // Methods -
 
   }
 }
