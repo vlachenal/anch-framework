@@ -121,5 +121,6 @@ namespace anch {
     Resource::getConfiguration() const {
       return _resources;
     }
+
   }
 }
