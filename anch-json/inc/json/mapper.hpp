@@ -27,7 +27,6 @@
 #include <list>
 #include <set>
 
-#include "singleton.hpp"
 #include "json/constants.hpp"
 
 
@@ -72,10 +71,10 @@ namespace anch {
       // Attributes +
     private:
       /*! JSON writer functions registry */
-      std::vector<std::function<bool(const T&, std::ostream&)>> writers;
+      std::vector<std::function<bool(const T&, std::ostream&)>> _writers;
 
       /*! JSON reader functions registry */
-      std::map<std::string, std::function<void(T&, std::istream&)>> readers;
+      std::map<std::string, std::function<void(T&, std::istream&)>> _readers;
       // Attributes -
 
       // Constructors +
@@ -227,6 +226,8 @@ namespace anch {
      *
      * JSON primitive types does not have any fields.
      *
+     * \tparam T the object type
+     *
      * \author Vincent Lachenal
      *
      * \since 0.1
@@ -337,6 +338,3 @@ namespace anch {
 }  // anch
 
 #include "json/impl/mapper.hpp"
-#include "json/impl/stringsMapper.hpp"
-#include "json/impl/numericsMapper.hpp"
-#include "json/impl/booleanMapper.hpp"

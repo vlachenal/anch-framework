@@ -19,44 +19,35 @@
 */
 #pragma once
 
-#include "json/mapper.hpp"
 
 namespace anch {
   namespace json {
 
-    template<typename T>
-    constexpr bool isPrimitive();
-
+    /*!
+     * \brief JSON mapper factory
+     *
+     * Each JSON mapper will have only one instance.
+     *
+     * \tparam T the object type
+     *
+     * \author Vincent Lachenal
+     *
+     * \since 0.1
+     */
     template<typename T>
     class JSONFactory {
 
     public:
-      static auto& getInstance() {
-	if constexpr (isPrimitive<T>()) {
-	  static JSONPrimitiveMapper<T> instance;
-	  return instance;
-	} else {
-	  static JSONMapper<T> instance;
-	  return instance;
-	}
-      }
-    };
+      /*!
+       * Get JSON mapper unique instance
+       *
+       * \return the \ref JSONMapper or the \ref JSONPrimitiveMapper unique instance according to type
+       */
+      static auto& getInstance();
 
-    template<typename T>
-    constexpr bool isPrimitive() {
-      return std::is_same<T, std::string>::value
-	|| std::is_same<T, std::string_view>::value
-	|| std::is_same<T, int64_t>::value
-	|| std::is_same<T, uint64_t>::value
-	|| std::is_same<T, int32_t>::value
-	|| std::is_same<T, uint32_t>::value
-	|| std::is_same<T, int16_t>::value
-	|| std::is_same<T, uint16_t>::value
-	|| std::is_same<T, int8_t>::value
-	|| std::is_same<T, uint8_t>::value
-	|| std::is_same<T, bool>::value
-	;
-    }
+    };
 
   }  // json
 }  // anch
+
+#include "json/impl/factory.hpp"

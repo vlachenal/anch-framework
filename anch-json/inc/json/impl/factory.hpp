@@ -19,23 +19,43 @@
 */
 #pragma once
 
-#include <sstream>
-
-#include "json/factory.hpp"
+#include "json/mapper.hpp"
 
 namespace anch {
   namespace json {
 
+    /*!
+     * Check if type is a primitive JSON type
+     *
+     * \tparam T the type to check
+     *
+     * \return \c true if type is a JSON primitive type, \c false otherwise
+     */
     template<typename T>
-    void serialize(const T& value, std::ostream& out) {
-      JSONFactory<T>::getInstance().serialize(value, out);
+    constexpr bool isPrimitive() {
+      return std::is_same<T, std::string>::value
+	|| std::is_same<T, std::string_view>::value
+	|| std::is_same<T, int64_t>::value
+	|| std::is_same<T, uint64_t>::value
+	|| std::is_same<T, int32_t>::value
+	|| std::is_same<T, uint32_t>::value
+	|| std::is_same<T, int16_t>::value
+	|| std::is_same<T, uint16_t>::value
+	|| std::is_same<T, int8_t>::value
+	|| std::is_same<T, uint8_t>::value
+	|| std::is_same<T, bool>::value
+	;
     }
 
     template<typename T>
-    std::string serialize(const T& value) {
-      std::ostringstream out;
-      JSONFactory<T>::getInstance().serialize(value, out);
-      return std::move(out.str());
+    auto& JSONFactory<T>::getInstance() {
+      if constexpr (isPrimitive<T>()) {
+	static anch::json::JSONPrimitiveMapper<T> instance;
+	return instance;
+      } else {
+	static anch::json::JSONMapper<T> instance;
+	return instance;
+      }
     }
 
   }
