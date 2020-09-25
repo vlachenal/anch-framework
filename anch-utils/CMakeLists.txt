@@ -118,6 +118,24 @@ if(ANCH_UTILS_UNIT_TEST)
   )
   # Build stream unit test -
 
+  # Build convert test +
+  file(
+    GLOB_RECURSE
+    test_convert
+    test/testConvert.cpp
+  )
+
+  add_executable(
+    anch-convert-test
+    ${test_convert}
+  )
+
+  target_link_libraries(
+    anch-convert-test
+    ${CMAKE_THREAD_LIBS_INIT}
+  )
+  # Build convert test -
+
   enable_testing()
   add_test(anch-thread-pool-test ${EXECUTABLE_OUTPUT_PATH}/anch-thread-pool-test main)
   add_test(anch-thread-res-test ${EXECUTABLE_OUTPUT_PATH}/anch-res-pool-test main)
@@ -141,6 +159,7 @@ if(ANCH_UTILS_UNIT_TEST)
   add_test(anch-stream-collect-stack ${EXECUTABLE_OUTPUT_PATH}/anch-stream-test collect_stack)
   add_test(anch-stream-collect-queue ${EXECUTABLE_OUTPUT_PATH}/anch-stream-test collect_queue)
   add_test(anch-stream-collect-priority-queue ${EXECUTABLE_OUTPUT_PATH}/anch-stream-test collect_priority_queue)
+  add_test(anch-convert ${EXECUTABLE_OUTPUT_PATH}/anch-convert-test main)
 
   if(ANCH_OPT)
     # Build optional unit test +
