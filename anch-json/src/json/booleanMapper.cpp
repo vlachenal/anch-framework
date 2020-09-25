@@ -17,7 +17,7 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "json/mapper.hpp"
+#include "json/primitiveMapper.hpp"
 
 #include <string>
 #include <set>

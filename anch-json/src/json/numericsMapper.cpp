@@ -17,7 +17,7 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "json/mapper.hpp"
+#include "json/primitiveMapper.hpp"
 
 #include <string>
 #include <set>
@@ -584,3 +584,207 @@ JSONPrimitiveMapper<int8_t>::serialize(const std::set<int8_t>& value, std::ostre
 
 template class JSONPrimitiveMapper<int8_t>;
 // JSONPrimitiveMapper specialization for int8_t -
+
+// JSONPrimitiveMapper specialization for float +
+template<>
+JSONPrimitiveMapper<float>::JSONPrimitiveMapper() {
+  // Nothing to do
+}
+
+template<>
+JSONPrimitiveMapper<float>::~JSONPrimitiveMapper() {
+  // Nothing to do
+}
+
+template<>
+bool
+JSONPrimitiveMapper<float>::serialize(const float& value, std::ostream& out, const std::optional<std::string>& field) {
+  if(field.has_value()) {
+    out << anch::json::STRING_DELIMITER << field.value() << anch::json::STRING_DELIMITER << anch::json::FIELD_VALUE_SEPARATOR;
+  }
+  out << value;
+  return true;
+}
+
+template<>
+bool
+JSONPrimitiveMapper<float>::serialize(const float* const value, std::ostream& out, const std::optional<std::string>& field) {
+  if(value == NULL) {
+    return false;
+  }
+  if(field.has_value()) {
+    out << anch::json::STRING_DELIMITER << field.value() << anch::json::STRING_DELIMITER << anch::json::FIELD_VALUE_SEPARATOR;
+  }
+  out << *value;
+  return true;
+}
+
+template<>
+bool
+JSONPrimitiveMapper<float>::serialize(const std::optional<float>& value, std::ostream& out, const std::optional<std::string>& field) {
+  if(!value.has_value()) {
+    return false;
+  }
+  if(field.has_value()) {
+    out << anch::json::STRING_DELIMITER << field.value() << anch::json::STRING_DELIMITER << anch::json::FIELD_VALUE_SEPARATOR;
+  }
+  out << value.value();
+  return true;
+}
+
+template<>
+bool
+JSONPrimitiveMapper<float>::serialize(const std::vector<float>& value, std::ostream& out, const std::optional<std::string>& field) {
+  return serializeNumericArray(value, out, field);
+}
+
+template<>
+bool
+JSONPrimitiveMapper<float>::serialize(const std::list<float>& value, std::ostream& out, const std::optional<std::string>& field) {
+  return serializeNumericArray(value, out, field);
+}
+
+template<>
+bool
+JSONPrimitiveMapper<float>::serialize(const std::set<float>& value, std::ostream& out, const std::optional<std::string>& field) {
+  return serializeNumericArray(value, out, field);
+}
+
+template class JSONPrimitiveMapper<float>;
+// JSONPrimitiveMapper specialization for float -
+
+// JSONPrimitiveMapper specialization for double +
+template<>
+JSONPrimitiveMapper<double>::JSONPrimitiveMapper() {
+  // Nothing to do
+}
+
+template<>
+JSONPrimitiveMapper<double>::~JSONPrimitiveMapper() {
+  // Nothing to do
+}
+
+template<>
+bool
+JSONPrimitiveMapper<double>::serialize(const double& value, std::ostream& out, const std::optional<std::string>& field) {
+  if(field.has_value()) {
+    out << anch::json::STRING_DELIMITER << field.value() << anch::json::STRING_DELIMITER << anch::json::FIELD_VALUE_SEPARATOR;
+  }
+  out << value;
+  return true;
+}
+
+template<>
+bool
+JSONPrimitiveMapper<double>::serialize(const double* const value, std::ostream& out, const std::optional<std::string>& field) {
+  if(value == NULL) {
+    return false;
+  }
+  if(field.has_value()) {
+    out << anch::json::STRING_DELIMITER << field.value() << anch::json::STRING_DELIMITER << anch::json::FIELD_VALUE_SEPARATOR;
+  }
+  out << *value;
+  return true;
+}
+
+template<>
+bool
+JSONPrimitiveMapper<double>::serialize(const std::optional<double>& value, std::ostream& out, const std::optional<std::string>& field) {
+  if(!value.has_value()) {
+    return false;
+  }
+  if(field.has_value()) {
+    out << anch::json::STRING_DELIMITER << field.value() << anch::json::STRING_DELIMITER << anch::json::FIELD_VALUE_SEPARATOR;
+  }
+  out << value.value();
+  return true;
+}
+
+template<>
+bool
+JSONPrimitiveMapper<double>::serialize(const std::vector<double>& value, std::ostream& out, const std::optional<std::string>& field) {
+  return serializeNumericArray(value, out, field);
+}
+
+template<>
+bool
+JSONPrimitiveMapper<double>::serialize(const std::list<double>& value, std::ostream& out, const std::optional<std::string>& field) {
+  return serializeNumericArray(value, out, field);
+}
+
+template<>
+bool
+JSONPrimitiveMapper<double>::serialize(const std::set<double>& value, std::ostream& out, const std::optional<std::string>& field) {
+  return serializeNumericArray(value, out, field);
+}
+
+template class JSONPrimitiveMapper<double>;
+// JSONPrimitiveMapper specialization for double -
+
+// JSONPrimitiveMapper specialization for long double +
+template<>
+JSONPrimitiveMapper<long double>::JSONPrimitiveMapper() {
+  // Nothing to do
+}
+
+template<>
+JSONPrimitiveMapper<long double>::~JSONPrimitiveMapper() {
+  // Nothing to do
+}
+
+template<>
+bool
+JSONPrimitiveMapper<long double>::serialize(const long double& value, std::ostream& out, const std::optional<std::string>& field) {
+  if(field.has_value()) {
+    out << anch::json::STRING_DELIMITER << field.value() << anch::json::STRING_DELIMITER << anch::json::FIELD_VALUE_SEPARATOR;
+  }
+  out << value;
+  return true;
+}
+
+template<>
+bool
+JSONPrimitiveMapper<long double>::serialize(const long double* const value, std::ostream& out, const std::optional<std::string>& field) {
+  if(value == NULL) {
+    return false;
+  }
+  if(field.has_value()) {
+    out << anch::json::STRING_DELIMITER << field.value() << anch::json::STRING_DELIMITER << anch::json::FIELD_VALUE_SEPARATOR;
+  }
+  out << *value;
+  return true;
+}
+
+template<>
+bool
+JSONPrimitiveMapper<long double>::serialize(const std::optional<long double>& value, std::ostream& out, const std::optional<std::string>& field) {
+  if(!value.has_value()) {
+    return false;
+  }
+  if(field.has_value()) {
+    out << anch::json::STRING_DELIMITER << field.value() << anch::json::STRING_DELIMITER << anch::json::FIELD_VALUE_SEPARATOR;
+  }
+  out << value.value();
+  return true;
+}
+
+template<>
+bool
+JSONPrimitiveMapper<long double>::serialize(const std::vector<long double>& value, std::ostream& out, const std::optional<std::string>& field) {
+  return serializeNumericArray(value, out, field);
+}
+
+template<>
+bool
+JSONPrimitiveMapper<long double>::serialize(const std::list<long double>& value, std::ostream& out, const std::optional<std::string>& field) {
+  return serializeNumericArray(value, out, field);
+}
+
+template<>
+bool
+JSONPrimitiveMapper<long double>::serialize(const std::set<long double>& value, std::ostream& out, const std::optional<std::string>& field) {
+  return serializeNumericArray(value, out, field);
+}
+
+template class JSONPrimitiveMapper<long double>;
+// JSONPrimitiveMapper specialization for long double -

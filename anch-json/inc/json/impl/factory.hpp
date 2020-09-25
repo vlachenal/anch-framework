@@ -20,6 +20,7 @@
 #pragma once
 
 #include "json/mapper.hpp"
+#include "json/primitiveMapper.hpp"
 
 namespace anch {
   namespace json {
