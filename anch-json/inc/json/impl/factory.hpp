@@ -45,6 +45,9 @@ namespace anch {
 	|| std::is_same<T, int8_t>::value
 	|| std::is_same<T, uint8_t>::value
 	|| std::is_same<T, bool>::value
+	|| std::is_same<T, float>::value
+	|| std::is_same<T, double>::value
+	|| std::is_same<T, long double>::value
 	;
     }
 

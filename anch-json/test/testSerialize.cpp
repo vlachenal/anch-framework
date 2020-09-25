@@ -19,6 +19,9 @@ struct Toto {
   uint64_t plap;
   bool plup;
   Tata tata;
+  float plep;
+  double plyp;
+  long double lplyp;
   std::optional<std::string> empty;
   std::string* ptr;
   std::string* null;
@@ -37,6 +40,9 @@ anch::json::registerFields(JSONMapper<Toto>& mapper) {
     .registerField<>("plap", &Toto::plap)
     .registerField<>("plup", &Toto::plup)
     .registerField<>("tata", &Toto::tata)
+    .registerField<>("plep", &Toto::plep)
+    .registerField<>("plyp", &Toto::plyp)
+    .registerField<>("lplyp", &Toto::lplyp)
     .registerField<std::optional<std::string>, std::string>("invisible", &Toto::empty)
     .registerField<>("ptr", &Toto::ptr)
     .registerField<>("null", &Toto::null)
@@ -65,6 +71,9 @@ main(void) {
   toto.plip = std::optional<std::string>("plip");
   toto.plap = 42;
   toto.plup = false;
+  toto.plep = static_cast<float>(2.2);
+  toto.plyp = 3.3;
+  toto.lplyp = 4.4;
   toto.empty = std::optional<std::string>();
   toto.ptr = &toto.plop;
   toto.null = NULL;
