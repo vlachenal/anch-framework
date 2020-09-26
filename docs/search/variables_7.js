@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['make_5fshared_5fconnection_1259',['make_shared_connection',['../structanch_1_1sql_1_1_s_q_l_shared_library.html#ad45d9affe851c859cbbfcd4f92fcd750',1,'anch::sql::SQLSharedLibrary']]]
+  ['hostname_1295',['hostname',['../structanch_1_1sql_1_1_sql_connection_configuration.html#a8541600f17f143e77dda93f05f89c9da',1,'anch::sql::SqlConnectionConfiguration']]]
 ];

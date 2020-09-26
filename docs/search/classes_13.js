@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['zeropadding_748',['ZeroPadding',['../classanch_1_1crypto_1_1_zero_padding.html',1,'anch::crypto']]]
+  ['year2dformatter_770',['Year2DFormatter',['../classanch_1_1date_1_1formatter_1_1_year2_d_formatter.html',1,'anch::date::formatter']]],
+  ['year4dformatter_771',['Year4DFormatter',['../classanch_1_1date_1_1formatter_1_1_year4_d_formatter.html',1,'anch::date::formatter']]]
 ];

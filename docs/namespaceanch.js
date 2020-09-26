@@ -5,6 +5,7 @@ var namespaceanch =
     [ "device", "namespaceanch_1_1device.html", "namespaceanch_1_1device" ],
     [ "events", "namespaceanch_1_1events.html", "namespaceanch_1_1events" ],
     [ "file", "namespaceanch_1_1file.html", "namespaceanch_1_1file" ],
+    [ "json", "namespaceanch_1_1json.html", "namespaceanch_1_1json" ],
     [ "logger", "namespaceanch_1_1logger.html", "namespaceanch_1_1logger" ],
     [ "network", "namespaceanch_1_1network.html", "namespaceanch_1_1network" ],
     [ "resource", "namespaceanch_1_1resource.html", "namespaceanch_1_1resource" ],

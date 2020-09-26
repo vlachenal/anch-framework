@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['sockettype_1293',['SocketType',['../namespaceanch_1_1network.html#aa518b6bd398c963767bf1974e5c113be',1,'anch::network']]]
+  ['sockettype_1336',['SocketType',['../namespaceanch_1_1network.html#aa518b6bd398c963767bf1974e5c113be',1,'anch::network']]]
 ];

@@ -96,6 +96,10 @@ var hierarchy =
       [ "anch::logger::formatter::ThreadIdFormatter", "classanch_1_1logger_1_1formatter_1_1_thread_id_formatter.html", null ]
     ] ],
     [ "anch::crypto::ISO7816_4Padding", "classanch_1_1crypto_1_1_i_s_o7816__4_padding.html", null ],
+    [ "anch::json::JSONFactory< T >", "classanch_1_1json_1_1_j_s_o_n_factory.html", null ],
+    [ "anch::json::JSONMapper< T >", "classanch_1_1json_1_1_j_s_o_n_mapper.html", null ],
+    [ "JSONPrimitiveMapper< T >", "class_j_s_o_n_primitive_mapper.html", null ],
+    [ "anch::json::JSONPrimitiveMapper< T >", "classanch_1_1json_1_1_j_s_o_n_primitive_mapper.html", null ],
     [ "anch::LessPtrCompare< T >", "structanch_1_1_less_ptr_compare.html", null ],
     [ "anch::logger::Logger", "classanch_1_1logger_1_1_logger.html", null ],
     [ "anch::logger::LoggerConfiguration", "classanch_1_1logger_1_1_logger_configuration.html", null ],
@@ -138,16 +142,16 @@ var hierarchy =
       [ "anch::sql::FieldsBuilder", "classanch_1_1sql_1_1_fields_builder.html", null ],
       [ "anch::sql::FromBuilder", "classanch_1_1sql_1_1_from_builder.html", null ]
     ] ],
-    [ "anch::Singleton< T >", "classanch_1_1_singleton.html", null ],
+    [ "anch::Singleton< T >", "classanch_1_1_singleton.html", [
+      [ "anch::logger::LoggerFactory", "classanch_1_1logger_1_1_logger_factory.html", null ]
+    ] ],
     [ "anch::Singleton< CPU >", "classanch_1_1_singleton.html", [
       [ "anch::device::CPU", "classanch_1_1device_1_1_c_p_u.html", null ]
     ] ],
     [ "anch::Singleton< EventBus< Event > >", "classanch_1_1_singleton.html", [
       [ "anch::events::EventBus< Event >", "classanch_1_1events_1_1_event_bus.html", null ]
     ] ],
-    [ "anch::Singleton< LoggerFactory >", "classanch_1_1_singleton.html", [
-      [ "anch::logger::LoggerFactory", "classanch_1_1logger_1_1_logger_factory.html", null ]
-    ] ],
+    [ "anch::Singleton< LoggerFactory >", "classanch_1_1_singleton.html", null ],
     [ "anch::Singleton< MySQLInitializer >", "classanch_1_1_singleton.html", [
       [ "MySQLInitializer", "class_my_s_q_l_initializer.html", null ]
     ] ],

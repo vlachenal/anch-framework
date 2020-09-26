@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['time_5fhigh_5fmask_1272',['TIME_HIGH_MASK',['../classanch_1_1_u_u_i_d.html#a820d16c088d364e538b6f539a5fb4316',1,'anch::UUID']]],
-  ['time_5flow_5fmask_1273',['TIME_LOW_MASK',['../classanch_1_1_u_u_i_d.html#a5d4b83be40ebaa4bb9f969cedf251adb',1,'anch::UUID']]],
-  ['time_5fmid_5fmask_1274',['TIME_MID_MASK',['../classanch_1_1_u_u_i_d.html#a8fd895e32915c2b9b0af229071fb5ff5',1,'anch::UUID']]]
+  ['object_5fbegin_1300',['OBJECT_BEGIN',['../namespaceanch_1_1json.html#a10b0c7119f4cd760f646c66be848df96',1,'anch::json']]],
+  ['object_5fend_1301',['OBJECT_END',['../namespaceanch_1_1json.html#aa2a414018fe5a3b35c84df16ba4ed2fe',1,'anch::json']]]
 ];
