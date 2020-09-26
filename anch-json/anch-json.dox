@@ -39,9 +39,9 @@ template<>
 void
 anch::json::registerFields(JSONMapper<Test>& mapper) {
   mapper
-    .registerField<>("id", &Test::_id)
-    .registerField<>("value", std::function<const std::string&(const Test&)>(&Test::getValue))
-    .registerField<std::vector<int32_t>, int32_t>("nums", &Test::_nums)
+    .registerField("id", &Test::_id)
+    .registerField("value", std::function<const std::string&(const Test&)>(&Test::getValue))
+    .registerField<int32_t>("nums", &Test::_nums)
     ;
 }
 

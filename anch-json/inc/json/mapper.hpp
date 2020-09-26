@@ -110,14 +110,30 @@ namespace anch {
        * Register mapping by field
        *
        * \tparam P the parameter type
-       * \tparam MT the mapper type to use for this parameter (default to type parameter)
        *
        * \param key the JSON key
        * \param value the JSON value in object
        *
        * \return \c this
        */
-      template<typename P, typename MT = P>
+      //template<typename P, typename MT = P>
+      //JSONMapper<T>& registerField(const std::string& key, P T::* value);
+
+      template<typename P>
+      JSONMapper<T>& registerField(const std::string& key, P T::* value);
+
+      /*!
+       * Register mapping by field specifying the mapper to use
+       *
+       * \tparam P the parameter type
+       * \tparam MT the mapper type to use for this parameter
+       *
+       * \param key the JSON key
+       * \param value the JSON value in object
+       *
+       * \return \c this
+       */
+      template<typename MT, typename P>
       JSONMapper<T>& registerField(const std::string& key, P T::* value);
 
       /*!

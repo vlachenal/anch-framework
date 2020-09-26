@@ -112,40 +112,44 @@ namespace anch {
     }
 
     template<typename T>
-    template<typename P, typename MT>
+    template<typename P>
     JSONMapper<T>&
     JSONMapper<T>::registerField(const std::string& key, P T::* value) {
       _writers.push_back(std::function<bool(const T&, std::ostream&)>([=, this](const T& obj, std::ostream& out) -> bool {
-	if constexpr (std::is_same<MT, P>::value) { // Mapper type has not been specified
-
-	  if constexpr (std::is_pointer<P>::value) { // Remove pointer on parameter type to check the main type
-	    if constexpr (isSame<T, std::remove_pointer<P>()>()) { // if same, use direct call to avoid recursive instanciation
-	      return this->serialize(obj.*value, out, std::optional<std::string>(key));
-	    } else { // Use 'unpointered' type
-	      return callMappingFunctionPtr(obj.*value, out, key);
-	    }
-
-	  } else if constexpr (std::is_reference<P>::value) { // Remove reference on parameter type to check the main type
-	    if constexpr (isSame<std::remove_reference<P>(), T>()) { // if same, use direct call to avoid recursive instanciation
-	      return this->serialize(obj.*value, out, std::optional<std::string>(key));
-	    } else { // Use 'unreferenced' type
-	      return callMappingFunctionRef(obj.*value, out, key);
-	    }
-
-	  } else { // Basic type
-	    if constexpr (std::is_same<MT, T>::value) { // if same, use direct call to avoid recursive instanciation
-	      return this->serialize(obj.*value, out, std::optional<std::string>(key));
-	    } else {
-	      return JSONFactory<MT>::getInstance().serialize(obj.*value, out, std::optional<std::string>(key));
-	    }
+	if constexpr (std::is_pointer<P>::value) { // Remove pointer on parameter type to check the main type
+	  if constexpr (isSame<T, std::remove_pointer<P>()>()) { // if same, use direct call to avoid recursive instanciation
+	    return this->serialize(obj.*value, out, std::optional<std::string>(key));
+	  } else { // Use 'unpointered' type
+	    return callMappingFunctionPtr(obj.*value, out, key);
 	  }
 
-	} else { // Parameter type has to be correctly set by caller when specified
-	  if constexpr (std::is_same<MT, T>::value) { // if same, use direct call to avoid recursive instanciation
+	} else if constexpr (std::is_reference<P>::value) { // Remove reference on parameter type to check the main type
+	  if constexpr (isSame<std::remove_reference<P>(), T>()) { // if same, use direct call to avoid recursive instanciation
+	    return this->serialize(obj.*value, out, std::optional<std::string>(key));
+	  } else { // Use 'unreferenced' type
+	    return callMappingFunctionRef(obj.*value, out, key);
+	  }
+
+	} else { // Basic type
+	  if constexpr (std::is_same<P, T>::value) { // if same, use direct call to avoid recursive instanciation
 	    return this->serialize(obj.*value, out, std::optional<std::string>(key));
 	  } else {
-	    return JSONFactory<MT>::getInstance().serialize(obj.*value, out, std::optional<std::string>(key));
+	    return JSONFactory<P>::getInstance().serialize(obj.*value, out, std::optional<std::string>(key));
 	  }
+	}
+      }));
+      return *this;
+    }
+
+    template<typename T>
+    template<typename MT, typename P>
+    JSONMapper<T>&
+    JSONMapper<T>::registerField(const std::string& key, P T::* value) {
+      _writers.push_back(std::function<bool(const T&, std::ostream&)>([=, this](const T& obj, std::ostream& out) -> bool {
+	if constexpr (std::is_same<MT, T>::value) { // if same, use direct call to avoid recursive instanciation
+	  return this->serialize(obj.*value, out, std::optional<std::string>(key));
+	} else {
+	  return JSONFactory<MT>::getInstance().serialize(obj.*value, out, std::optional<std::string>(key));
 	}
       }));
       return *this;

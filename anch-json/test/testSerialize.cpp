@@ -39,19 +39,19 @@ void
 anch::json::registerFields(JSONMapper<Toto>& mapper) {
   std::cout << "Register Toto fields" << std::endl;
   mapper
-    .registerField<>("plop", &Toto::plop)
-    .registerField<std::optional<std::string>, std::string>("plip", &Toto::plip)
-    .registerField<>("plap", &Toto::plap)
-    .registerField<>("plup", &Toto::plup)
-    .registerField<>("tata", &Toto::tata)
-    .registerField<>("plep", &Toto::plep)
-    .registerField<>("plyp", &Toto::plyp)
-    .registerField<>("lplyp", &Toto::lplyp)
-    .registerField<>("self", &Toto::self)
-    .registerField<std::optional<std::string>, std::string>("invisible", &Toto::empty)
-    .registerField<>("ptr", &Toto::ptr)
-    .registerField<>("null", &Toto::null)
-    .registerField<>("class", std::function<std::string(const Toto&)>(&Toto::getClass))
+    .registerField("plop", &Toto::plop)
+    .registerField<std::string>("plip", &Toto::plip)
+    .registerField("plap", &Toto::plap)
+    .registerField("plup", &Toto::plup)
+    .registerField("tata", &Toto::tata)
+    .registerField("plep", &Toto::plep)
+    .registerField("plyp", &Toto::plyp)
+    .registerField("lplyp", &Toto::lplyp)
+    .registerField("self", &Toto::self)
+    .registerField<std::string>("invisible", &Toto::empty)
+    .registerField("ptr", &Toto::ptr)
+    .registerField("null", &Toto::null)
+    .registerField("class", std::function<std::string(const Toto&)>(&Toto::getClass))
     ;
   std::cout << "Toto fields registered" << std::endl;
 }
@@ -61,10 +61,10 @@ void
 anch::json::registerFields(JSONMapper<Tata>& mapper) {
   std::cout << "Register Tata fields" << std::endl;
   mapper
-    .registerField<>("ploum", &Tata::ploum)
-    .registerField<>("view", &Tata::view)
-    .registerField<std::set<uint64_t>,uint64_t>("num_set", &Tata::numSet)
-    .registerField<std::vector<std::string>,std::string>("str_vector", &Tata::strVect)
+    .registerField("ploum", &Tata::ploum)
+    .registerField("view", &Tata::view)
+    .registerField<uint64_t>("num_set", &Tata::numSet)
+    .registerField<std::string>("str_vector", &Tata::strVect)
     ;
   std::cout << "Tata fields registered" << std::endl;
 }
@@ -82,9 +82,9 @@ template<>
 void
 anch::json::registerFields(JSONMapper<Test>& mapper) {
   mapper
-    .registerField<>("id", &Test::_id)
-    .registerField<>("value", std::function<const std::string&(const Test&)>(&Test::getValue))
-    .registerField<std::vector<int32_t>, int32_t>("nums", &Test::_nums)
+    .registerField("id", &Test::_id)
+    .registerField("value", std::function<const std::string&(const Test&)>(&Test::getValue))
+    .registerField<int32_t>("nums", &Test::_nums)
     ;
 }
 
