@@ -1,0 +1,7 @@
+/*!
+ * \namespace anch::json
+ *
+ * \brief JSON namespace.
+ *
+ * Provides serialization and deserialization functions for JSON format.
+ */
