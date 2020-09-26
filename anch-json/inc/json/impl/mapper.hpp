@@ -28,8 +28,6 @@
 
 #include "json/constants.hpp"
 
-#include <iostream> // \todo remove
-
 
 namespace anch {
   namespace json {
@@ -118,52 +116,37 @@ namespace anch {
     JSONMapper<T>&
     JSONMapper<T>::registerField(const std::string& key, P T::* value) {
       _writers.push_back(std::function<bool(const T&, std::ostream&)>([=, this](const T& obj, std::ostream& out) -> bool {
-	//std::cout << "Begin execute func key=" << key << std::endl;
 	if constexpr (std::is_same<MT, P>::value) { // Mapper type has not been specified
-	  //std::cout << "Mapper same type key=" << key << std::endl;
 
 	  if constexpr (std::is_pointer<P>::value) { // Remove pointer on parameter type to check the main type
-	    //std::cout << "Pointer" << std::endl;
 	    if constexpr (isSame<T, std::remove_pointer<P>()>()) { // if same, use direct call to avoid recursive instanciation
-	      //std::cout << "Pointer same type key=" << key << std::endl;
 	      return this->serialize(obj.*value, out, std::optional<std::string>(key));
 	    } else { // Use 'unpointered' type
-	      //std::cout << "Pointer different type key=" << key << std::endl;
 	      return callMappingFunctionPtr(obj.*value, out, key);
 	    }
 
 	  } else if constexpr (std::is_reference<P>::value) { // Remove reference on parameter type to check the main type
-	    //std::cout << "Reference key=" << key << std::endl;
 	    if constexpr (isSame<std::remove_reference<P>(), T>()) { // if same, use direct call to avoid recursive instanciation
-	      //std::cout << "Reference same type key=" << key << std::endl;
 	      return this->serialize(obj.*value, out, std::optional<std::string>(key));
 	    } else { // Use 'unreferenced' type
-	      //std::cout << "Reference different type key=" << key << std::endl;
 	      return callMappingFunctionRef(obj.*value, out, key);
 	    }
 
 	  } else { // Basic type
-	    //std::cout << "Basic key=" << key << std::endl;
 	    if constexpr (std::is_same<MT, T>::value) { // if same, use direct call to avoid recursive instanciation
-	      //std::cout << "Basic same type key=" << key << std::endl;
 	      return this->serialize(obj.*value, out, std::optional<std::string>(key));
 	    } else {
-	      //std::cout << "Basic different type key=" << key << std::endl;
 	      return JSONFactory<MT>::getInstance().serialize(obj.*value, out, std::optional<std::string>(key));
 	    }
 	  }
 
 	} else { // Parameter type has to be correctly set by caller when specified
-	  //std::cout << "Mapper different type key=" << key << std::endl;
 	  if constexpr (std::is_same<MT, T>::value) { // if same, use direct call to avoid recursive instanciation
-	    //std::cout << "Mapper different type and same type key=" << key << std::endl;
 	    return this->serialize(obj.*value, out, std::optional<std::string>(key));
 	  } else {
-	    //std::cout << "Mapper different type and different type key=" << key << std::endl;
 	    return JSONFactory<MT>::getInstance().serialize(obj.*value, out, std::optional<std::string>(key));
 	  }
 	}
-	//std::cout << "End execute func key=" << key << std::endl;
       }));
       return *this;
     }
@@ -185,16 +168,13 @@ namespace anch {
     template<typename T>
     bool
     JSONMapper<T>::serialize(const T& value, std::ostream& out, const std::optional<std::string>& field) {
-      //std::cout << "Begin serialization " << field.value_or("EMPTY") << std::endl;
       JSONMapper<T>& mapper = JSONFactory<T>::getInstance();
       if(field.has_value()) {
 	out << STRING_DELIMITER << field.value() << STRING_DELIMITER << FIELD_VALUE_SEPARATOR;
       }
-      //std::cout << "Field added" << std::endl;
       out << OBJECT_BEGIN;
       auto iter = mapper.getWritterMapping().begin();
       while(true) {
-	//std::cout << "Iterate for key " << field.value_or("EMPTY") << std::endl;
 	bool added = std::invoke(*iter, value, out);
 	if(++iter == mapper.getWritterMapping().end()) {
 	  break;
@@ -204,7 +184,6 @@ namespace anch {
 	}
       }
       out << OBJECT_END;
-      //std::cout << "End serialization " << field.value_or("EMPTY") << std::endl;
       return true;
     }
 
