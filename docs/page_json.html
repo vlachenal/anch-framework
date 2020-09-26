@@ -136,9 +136,9 @@ Examples</h1>
 <div class="line"><span class="keywordtype">void</span></div>
 <div class="line"><a class="code" href="namespaceanch_1_1json.html#a635cdb7872bfdb75389b1a1c9bb6f0f2">anch::json::registerFields</a>(JSONMapper&lt;Test&gt;&amp; mapper) {</div>
 <div class="line">  mapper</div>
-<div class="line">    .registerField&lt;&gt;(<span class="stringliteral">&quot;id&quot;</span>, &amp;Test::_id)</div>
-<div class="line">    .registerField&lt;&gt;(<span class="stringliteral">&quot;value&quot;</span>, std::function&lt;<span class="keyword">const</span> std::string&amp;(<span class="keyword">const</span> Test&amp;)&gt;(&amp;Test::getValue))</div>
-<div class="line">    .registerField&lt;std::vector&lt;int32_t&gt;, int32_t&gt;(<span class="stringliteral">&quot;nums&quot;</span>, &amp;Test::_nums)</div>
+<div class="line">    .registerField(<span class="stringliteral">&quot;id&quot;</span>, &amp;Test::_id)</div>
+<div class="line">    .registerField(<span class="stringliteral">&quot;value&quot;</span>, std::function&lt;<span class="keyword">const</span> std::string&amp;(<span class="keyword">const</span> Test&amp;)&gt;(&amp;Test::getValue))</div>
+<div class="line">    .registerField&lt;int32_t&gt;(<span class="stringliteral">&quot;nums&quot;</span>, &amp;Test::_nums)</div>
 <div class="line">    ;</div>
 <div class="line">}</div>
 <div class="line"> </div>
