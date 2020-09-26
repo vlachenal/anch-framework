@@ -1,0 +1,56 @@
+/*! \page page_json AnCH JSON library documentation
+ *
+ * \tableofcontents
+ *
+ * \section json_intro_seq Introduction
+ *
+ * AnCH JSON library is JSON serialization and deserialization library for JSON format.
+ *
+ * \section json_prereq_sec Prerequisites
+ *
+ * AnCH JSON is a standalone library.
+ *
+ * \section json_install_sec Installation
+ *
+ * make install
+ *
+ * \section json_concept_sec Conception
+ *
+ * Fields which have to be serialized and deserialized have to be declared in application consuming AnCH JSON library.\n
+ * Fields registation is performed by implementing the function \c registerFields(anch::json::JSONMapper<T>&) where \c T is the type of your class/structure. You can regiter fields directly or functions which take a const reference of \c T as unique parameter.\n
+ * For compose type, you have to specified the base type in template (see example below).
+ * \n
+ * Seralization can be performed by calling function \c anch::json::serialize(T&,std::ostream&) or by retrieving the \c JSONMapper through \c JSONFactory
+ *
+ * \section json_example_sec Examples
+ *
+ * Serialize structure into JSON format:
+ * \code{.cpp}
+struct Test {
+  std::string _id;
+  std::string _value;
+  std::vector<int32_t> _nums;
+  inline const std::string& getValue() const {
+    return _value;
+  }
+};
+
+template<>
+void
+anch::json::registerFields(JSONMapper<Test>& mapper) {
+  mapper
+    .registerField<>("id", &Test::_id)
+    .registerField<>("value", std::function<const std::string&(const Test&)>(&Test::getValue))
+    .registerField<std::vector<int32_t>, int32_t>("nums", &Test::_nums)
+    ;
+}
+
+int main(void) {
+  Test test;
+  test._id = "deb94ebc-be28-4899-981a-29199b7a487d";
+  test._value = "this is a value";
+  test._nums = {1,2,3,4};
+  std::string res = anch::json::serialize(test);
+  std::cout << "Serialized test as string: " << res << std::endl;
+}\endcode
+ */

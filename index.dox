@@ -19,6 +19,7 @@
  * - \ref page_sql "anch-sql": provides SQL client abstraction layer implementation for SQLite3, PostgreSQL and MySQL.
  * - anch-utils: provides some utility classes and functions. This 'library' contains header only implementations.
  * - \ref page_uuid "anch-uuid": provides UUID library.
+ * - \ref page_json "anch-json": provides JSON serialization/deserialization library.
  *
  * Each library contains unitary tests which can provide a way to use it.\n
  * \n
@@ -59,6 +60,8 @@
  * - anch-sql:
  *   - anch-utils: SQL connection pool
  *   - anch-resource: SQL database and connection pool configuration
+ * - anch-uuid: nothing
+ * - anch-json: nothing
  *
  * \section install_sec Installation
  *

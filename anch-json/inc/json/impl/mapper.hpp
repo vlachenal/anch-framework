@@ -156,10 +156,36 @@ namespace anch {
     JSONMapper<T>&
     JSONMapper<T>::registerField(const std::string& key, std::function<P(const T&)> getter) {
       _writers.push_back(std::function<bool(const T&, std::ostream&)>([=, this](const T& obj, std::ostream& out) -> bool {
-	if constexpr (std::is_same<MT, T>::value) {
-	  return this->serialize(std::invoke(getter, obj), out, std::optional<std::string>(key));
-	} else {
-	  return JSONFactory<MT>::getInstance().serialize(std::invoke(getter, obj), out, std::optional<std::string>(key));
+	if constexpr (std::is_same<MT, P>::value) { // Mapper type has not been specified
+
+	  if constexpr (std::is_pointer<P>::value) { // Remove pointer on parameter type to check the main type
+	    if constexpr (isSame<T, std::remove_pointer<P>()>()) { // if same, use direct call to avoid recursive instanciation
+	      return this->serialize(std::invoke(getter, obj), out, std::optional<std::string>(key));
+	    } else { // Use 'unpointered' type
+	      return callMappingFunctionPtr(std::invoke(getter, obj), out, key);
+	    }
+
+	  } else if constexpr (std::is_reference<P>::value) { // Remove reference on parameter type to check the main type
+	    if constexpr (isSame<std::remove_reference<P>(), T>()) { // if same, use direct call to avoid recursive instanciation
+	      return this->serialize(std::invoke(getter, obj), out, std::optional<std::string>(key));
+	    } else { // Use 'unreferenced' type
+	      return callMappingFunctionRef(std::invoke(getter, obj), out, key);
+	    }
+
+	  } else { // Basic type
+	    if constexpr (std::is_same<MT, T>::value) { // if same, use direct call to avoid recursive instanciation
+	      return this->serialize(std::invoke(getter, obj), out, std::optional<std::string>(key));
+	    } else {
+	      return JSONFactory<MT>::getInstance().serialize(std::invoke(getter, obj), out, std::optional<std::string>(key));
+	    }
+	  }
+
+	} else { // Parameter type has to be correctly set by caller when specified
+	  if constexpr (std::is_same<MT, T>::value) {
+	    return this->serialize(std::invoke(getter, obj), out, std::optional<std::string>(key));
+	  } else {
+	    return JSONFactory<MT>::getInstance().serialize(std::invoke(getter, obj), out, std::optional<std::string>(key));
+	  }
 	}
       }));
       return *this;

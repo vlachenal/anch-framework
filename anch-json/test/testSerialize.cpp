@@ -65,56 +65,84 @@ anch::json::registerFields(JSONMapper<Tata>& mapper) {
     .registerField<>("view", &Tata::view)
     .registerField<std::set<uint64_t>,uint64_t>("num_set", &Tata::numSet)
     .registerField<std::vector<std::string>,std::string>("str_vector", &Tata::strVect)
-    //.registerField<>("view", &Tata::view)
     ;
   std::cout << "Tata fields registered" << std::endl;
+}
+
+struct Test {
+  std::string _id;
+  std::string _value;
+  std::vector<int32_t> _nums;
+  inline const std::string& getValue() const {
+    return _value;
+  }
+};
+
+template<>
+void
+anch::json::registerFields(JSONMapper<Test>& mapper) {
+  mapper
+    .registerField<>("id", &Test::_id)
+    .registerField<>("value", std::function<const std::string&(const Test&)>(&Test::getValue))
+    .registerField<std::vector<int32_t>, int32_t>("nums", &Test::_nums)
+    ;
 }
 
 int
 main(void) {
   std::cout << "Enter in serialization tests" << std::endl;
-  std::string VIEW = "VIEW";
-  Toto self;
-  self.plop = "self";
-  self.plip = std::optional<std::string>("self_plip");
-  self.plap = 24;
-  self.plup = true;
-  self.plep = static_cast<float>(5.5);
-  self.plyp = 6.6;
-  self.lplyp = 7.7;
-  self.empty = std::optional<std::string>();
-  self.ptr = &self.plop;
-  self.null = NULL;
-  self.self = NULL;
-  Toto toto;
-  toto.plop = "plop";
-  toto.plip = std::optional<std::string>("plip");
-  toto.plap = 42;
-  toto.plup = false;
-  toto.plep = static_cast<float>(2.2);
-  toto.plyp = 3.3;
-  toto.lplyp = 4.4;
-  toto.empty = std::optional<std::string>();
-  toto.ptr = &toto.plop;
-  toto.null = NULL;
-  toto.self = &self;
-  Tata tata;
-  tata.ploum = "ploum";
-  tata.view = std::string_view(VIEW.data());
-  tata.numSet = {1, 2, 3};
-  tata.strVect = {"4","5","6"};
-  toto.tata = tata;
-  std::ostringstream oss;
-  std::cout << "Serialize Toto" << std::endl;
-  anch::json::serialize(toto, oss);
-  std::cout << "Serialized toto: " << oss.str() << std::endl;
-  std::cout << "Serialize Toto as string" << std::endl;
-  std::string res = anch::json::serialize(toto);
-  std::cout << "Serialized toto as string: " << res << std::endl;
+  {
+    std::string VIEW = "VIEW";
+    Toto self;
+    self.plop = "self";
+    self.plip = std::optional<std::string>("self_plip");
+    self.plap = 24;
+    self.plup = true;
+    self.plep = static_cast<float>(5.5);
+    self.plyp = 6.6;
+    self.lplyp = 7.7;
+    self.empty = std::optional<std::string>();
+    self.ptr = &self.plop;
+    self.null = NULL;
+    self.self = NULL;
+    Toto toto;
+    toto.plop = "plop";
+    toto.plip = std::optional<std::string>("plip");
+    toto.plap = 42;
+    toto.plup = false;
+    toto.plep = static_cast<float>(2.2);
+    toto.plyp = 3.3;
+    toto.lplyp = 4.4;
+    toto.empty = std::optional<std::string>();
+    toto.ptr = &toto.plop;
+    toto.null = NULL;
+    toto.self = &self;
+    Tata tata;
+    tata.ploum = "ploum";
+    tata.view = std::string_view(VIEW.data());
+    tata.numSet = {1, 2, 3};
+    tata.strVect = {"4","5","6"};
+    toto.tata = tata;
+    std::ostringstream oss;
+    std::cout << "Serialize Toto" << std::endl;
+    anch::json::serialize(toto, oss);
+    std::cout << "Serialized toto: " << oss.str() << std::endl;
+    std::cout << "Serialize Toto as string" << std::endl;
+    std::string res = anch::json::serialize(toto);
+    std::cout << "Serialized toto as string: " << res << std::endl;
+  }
   /*JSONParser parser;
-  std::string json("{}");
-  std::istringstream iss(json);
-  parser.parse<int>(iss);*/
+    std::string json("{}");
+    std::istringstream iss(json);
+    parser.parse<int>(iss);*/
+  {
+    Test test;
+    test._id = "deb94ebc-be28-4899-981a-29199b7a487d";
+    test._value = "this is a value";
+    test._nums = {1,2,3,4};
+    std::string res = anch::json::serialize(test);
+    std::cout << "Serialized test as string: " << res << std::endl;
+  }
   std::cout << "Exit serialization tests" << std::endl;
   return 0;
 }
