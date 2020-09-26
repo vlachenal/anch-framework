@@ -147,6 +147,9 @@ Examples</h1>
 <div class="line">  test._id = <span class="stringliteral">&quot;deb94ebc-be28-4899-981a-29199b7a487d&quot;</span>;</div>
 <div class="line">  test._value = <span class="stringliteral">&quot;this is a value&quot;</span>;</div>
 <div class="line">  test._nums = {1,2,3,4};</div>
+<div class="line">  std::ostringstream oss;</div>
+<div class="line">  <a class="code" href="namespaceanch_1_1json.html#ab82f65b72182651b50e1a9f50ab9a2fd">anch::json::serialize</a>(test, oss);</div>
+<div class="line">  std::cout &lt;&lt; <span class="stringliteral">&quot;Serialized test: &quot;</span> &lt;&lt; oss.str() &lt;&lt; std::endl;</div>
 <div class="line">  std::string res = <a class="code" href="namespaceanch_1_1json.html#ab82f65b72182651b50e1a9f50ab9a2fd">anch::json::serialize</a>(test);</div>
 <div class="line">  std::cout &lt;&lt; <span class="stringliteral">&quot;Serialized test as string: &quot;</span> &lt;&lt; res &lt;&lt; std::endl;</div>
 <div class="line">}</div>
