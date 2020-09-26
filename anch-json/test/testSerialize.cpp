@@ -11,6 +11,9 @@ using anch::json::JSONFactory;
 struct Tata {
   std::string ploum;
   std::string_view view;
+  std::list<Tata> selfList;
+  std::vector<std::string> strVect;
+  std::set<uint64_t> numSet;
 };
 
 struct Toto {
@@ -22,6 +25,7 @@ struct Toto {
   float plep;
   double plyp;
   long double lplyp;
+  Toto* self;
   std::optional<std::string> empty;
   std::string* ptr;
   std::string* null;
@@ -43,6 +47,7 @@ anch::json::registerFields(JSONMapper<Toto>& mapper) {
     .registerField<>("plep", &Toto::plep)
     .registerField<>("plyp", &Toto::plyp)
     .registerField<>("lplyp", &Toto::lplyp)
+    .registerField<>("self", &Toto::self)
     .registerField<std::optional<std::string>, std::string>("invisible", &Toto::empty)
     .registerField<>("ptr", &Toto::ptr)
     .registerField<>("null", &Toto::null)
@@ -58,6 +63,9 @@ anch::json::registerFields(JSONMapper<Tata>& mapper) {
   mapper
     .registerField<>("ploum", &Tata::ploum)
     .registerField<>("view", &Tata::view)
+    .registerField<std::set<uint64_t>,uint64_t>("num_set", &Tata::numSet)
+    .registerField<std::vector<std::string>,std::string>("str_vector", &Tata::strVect)
+    //.registerField<>("view", &Tata::view)
     ;
   std::cout << "Tata fields registered" << std::endl;
 }
@@ -66,6 +74,18 @@ int
 main(void) {
   std::cout << "Enter in serialization tests" << std::endl;
   std::string VIEW = "VIEW";
+  Toto self;
+  self.plop = "self";
+  self.plip = std::optional<std::string>("self_plip");
+  self.plap = 24;
+  self.plup = true;
+  self.plep = static_cast<float>(5.5);
+  self.plyp = 6.6;
+  self.lplyp = 7.7;
+  self.empty = std::optional<std::string>();
+  self.ptr = &self.plop;
+  self.null = NULL;
+  self.self = NULL;
   Toto toto;
   toto.plop = "plop";
   toto.plip = std::optional<std::string>("plip");
@@ -77,9 +97,12 @@ main(void) {
   toto.empty = std::optional<std::string>();
   toto.ptr = &toto.plop;
   toto.null = NULL;
+  toto.self = &self;
   Tata tata;
   tata.ploum = "ploum";
   tata.view = std::string_view(VIEW.data());
+  tata.numSet = {1, 2, 3};
+  tata.strVect = {"4","5","6"};
   toto.tata = tata;
   std::ostringstream oss;
   std::cout << "Serialize Toto" << std::endl;
