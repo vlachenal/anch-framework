@@ -50,6 +50,9 @@ int main(void) {
   test._id = "deb94ebc-be28-4899-981a-29199b7a487d";
   test._value = "this is a value";
   test._nums = {1,2,3,4};
+  std::ostringstream oss;
+  anch::json::serialize(test, oss);
+  std::cout << "Serialized test: " << oss.str() << std::endl;
   std::string res = anch::json::serialize(test);
   std::cout << "Serialized test as string: " << res << std::endl;
 }\endcode
