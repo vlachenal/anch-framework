@@ -145,7 +145,7 @@ namespace anch {
        * \return \c this
        */
       template<typename P, typename MT = P>
-      JSONMapper<T>& registerField(const std::string& key, std::function<const P&(const T&)> getter);
+      JSONMapper<T>& registerField(const std::string& key, std::function<P(const T&)> getter);
 
       /*!
        * Register mapping by field
@@ -174,7 +174,7 @@ namespace anch {
        * \return \c this
        */
       template<typename P, typename MT = P>
-      JSONMapper<T>& registerField(const std::string& key, std::function<const P&(const T&)> getter, std::function<void(T&, const P&)> setter);
+      JSONMapper<T>& registerField(const std::string& key, std::function<P(const T&)> getter, std::function<void(T&, const P&)> setter);
 
     public:
       /*!

@@ -35,8 +35,8 @@ struct Toto {
   std::optional<std::string> empty;
   std::string* ptr;
   std::string* null;
-  const std::string& getClass() const {
-    return PLOP_TOTO;
+  std::string getClass() const {
+    return "Toto";
   }
 };
 
@@ -57,7 +57,7 @@ anch::json::registerFields(JSONMapper<Toto>& mapper) {
     .registerField<std::string>("invisible", &Toto::empty)
     .registerField("ptr", &Toto::ptr)
     .registerField("null", &Toto::null)
-    .registerField("class", std::function<const std::string&(const Toto&)>(&Toto::getClass))
+    .registerField("class", std::function<std::string(const Toto&)>(&Toto::getClass))
     ;
   std::cout << "Toto fields registered" << std::endl;
 }
@@ -92,8 +92,8 @@ void
 anch::json::registerFields(JSONMapper<Test>& mapper) {
   mapper
     .registerField("id", &Test::_id)
-    //.registerField("value", std::function<const std::string&(const Test&)>(&Test::getValue))
-    .registerField("value", std::function<const std::string&(const Test&)>(&Test::getValue), std::function<void(Test&, const std::string&)>(&Test::setValue))
+    //.registerField("value", std::function<std::string(const Test&)>(&Test::getValue))
+    .registerField("value", std::function<std::string(const Test&)>(&Test::getValue), std::function<void(Test&, const std::string&)>(&Test::setValue))
     //.registerField("value", std::function<void(Test&, const std::string&)>(&Test::setValue))
     .registerField<int32_t>("nums", &Test::_nums)
     ;

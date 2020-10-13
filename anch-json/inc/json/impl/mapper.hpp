@@ -148,7 +148,7 @@ namespace anch {
     template<typename T>
     template<typename P, typename MT>
     JSONMapper<T>&
-    JSONMapper<T>::registerField(const std::string& key, std::function<const P&(const T&)> getter) {
+    JSONMapper<T>::registerField(const std::string& key, std::function<P(const T&)> getter) {
       _writers.push_back(std::function<bool(const T&, std::ostream&)>([=, this](const T& obj, std::ostream& out) -> bool {
 	if constexpr (std::is_same<MT, P>::value) { // Mapper type has not been specified
 
@@ -236,7 +236,7 @@ namespace anch {
     template<typename T>
     template<typename P, typename MT>
     JSONMapper<T>&
-    JSONMapper<T>::registerField(const std::string& key, std::function<const P&(const T&)> getter, std::function<void(T&, const P&)> setter) {
+    JSONMapper<T>::registerField(const std::string& key, std::function<P(const T&)> getter, std::function<void(T&, const P&)> setter) {
       registerField<P,MT>(key, getter);
       return registerField<P,MT>(key, setter);
     }
