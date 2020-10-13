@@ -19,8 +19,22 @@
 */
 #pragma once
 
+#include <type_traits>
+
 #include "json/mapper.hpp"
 #include "json/primitiveMapper.hpp"
+
+#ifdef ANCH_UUID
+#include "uuid.hpp"
+#endif
+
+#ifdef ANCH_DATE
+#include "date/date.hpp"
+#endif
+
+#ifdef ANCH_CRYPTO
+#include <istream>
+#endif
 
 namespace anch {
   namespace json {
@@ -48,6 +62,15 @@ namespace anch {
 	|| std::is_same<T, float>::value
 	|| std::is_same<T, double>::value
 	|| std::is_same<T, long double>::value
+#ifdef ANCH_UUID // \todo UUID mapper implementation in string mapper
+	|| std::is_same<T, anch::UUID>::value
+#endif
+#ifdef ANCH_DATE // \todo UUID date implementation in string mapper
+	|| std::is_same<T, anch::date::Date>::value
+#endif
+#ifdef ANCH_CRYPTO // \todo base64 implementation ... which is a bad idea if my mind
+	|| std::is_same<T, std::istream>::value
+#endif
 	;
     }
 
@@ -56,6 +79,9 @@ namespace anch {
       if constexpr (isPrimitive<T>()) {
 	static anch::json::JSONPrimitiveMapper<T> instance;
 	return instance;
+      } else if constexpr (std::is_enum<T>::value) {
+      	static anch::json::JSONPrimitiveMapper<T> instance; // \todo define JSONEnumMapper
+      	return instance;
       } else {
 	static anch::json::JSONMapper<T> instance;
 	return instance;

@@ -25,8 +25,13 @@
 #include <set>
 #include <map>
 #include <functional>
+#include <type_traits>
 
 #include "json/constants.hpp"
+#include "json/parser.hpp"
+#include "json/mappingError.hpp"
+
+#include <iostream> // \todo remove
 
 
 namespace anch {
@@ -66,68 +71,23 @@ namespace anch {
       return _readers;
     }
 
-    /*!
-     * Check if types are same because type function does not returns a type ?! (GCC bug ?)
-     *
-     * \tparam T1 the first type
-     * \tparam T2 the second type
-     *
-     * \return \c true if types are same, \c false otherwise
-     */
-    template<typename T1, typename T2>
-    constexpr bool isSame() {
-      return std::is_same<T1,T2>();
-    }
-
-    /*!
-     * Call mapping function with value reference because type function does not returns a type ?! (GCC bug ?)
-     *
-     * \tparam T the type to serialize
-     *
-     * \param value the value reference
-     * \param out the output stream to write in
-     * \param key the field key
-     *
-     * \return \c true if value has been serialized, \c false otherwise
-     */
-    template<typename T>
-    bool callMappingFunctionRef(const T& value, std::ostream& out, const std::string& key) {
-      return JSONFactory<T>::getInstance().serialize(value, out, std::optional<std::string>(key));
-    }
-
-    /*!
-     * Call mapping function with value pointer because type function does not returns a type ?! (GCC bug ?)
-     *
-     * \tparam T the type to serialize
-     *
-     * \param value the value pointer
-     * \param out the output stream to write in
-     * \param key the field key
-     *
-     * \return \c true if value has been serialized, \c false otherwise
-     */
-    template<typename T>
-    bool callMappingFunctionPtr(const T* const value, std::ostream& out, const std::string& key) {
-      return JSONFactory<T>::getInstance().serialize(value, out, std::optional<std::string>(key));
-    }
-
     template<typename T>
     template<typename P>
     JSONMapper<T>&
     JSONMapper<T>::registerField(const std::string& key, P T::* value) {
       _writers.push_back(std::function<bool(const T&, std::ostream&)>([=, this](const T& obj, std::ostream& out) -> bool {
 	if constexpr (std::is_pointer<P>::value) { // Remove pointer on parameter type to check the main type
-	  if constexpr (isSame<T, std::remove_pointer<P>()>()) { // if same, use direct call to avoid recursive instanciation
+	  if constexpr (std::is_same<T, typename std::remove_pointer<P>>::value) { // if same, use direct call to avoid recursive instanciation
 	    return this->serialize(obj.*value, out, std::optional<std::string>(key));
 	  } else { // Use 'unpointered' type
-	    return callMappingFunctionPtr(obj.*value, out, key);
+	    return JSONFactory<typename std::remove_pointer<P>::type>::getInstance().serialize(obj.*value, out, std::optional<std::string>(key));
 	  }
 
 	} else if constexpr (std::is_reference<P>::value) { // Remove reference on parameter type to check the main type
-	  if constexpr (isSame<std::remove_reference<P>(), T>()) { // if same, use direct call to avoid recursive instanciation
+	  if constexpr (std::is_same<T, typename std::remove_reference<P>>::value) { // if same, use direct call to avoid recursive instanciation
 	    return this->serialize(obj.*value, out, std::optional<std::string>(key));
 	  } else { // Use 'unreferenced' type
-	    return callMappingFunctionRef(obj.*value, out, key);
+	    return JSONFactory<typename std::decay<P>::type>::getInstance().serialize(obj.*value, out, std::optional<std::string>(key));
 	  }
 
 	} else { // Basic type
@@ -138,6 +98,29 @@ namespace anch {
 	  }
 	}
       }));
+      _readers[key] = std::function<void(T&, std::istream&)>([=, this](T& obj, std::istream& input) -> void {
+	if constexpr (std::is_pointer<P>::value) { // Remove pointer on parameter type to check the main type
+	  if constexpr (std::is_same<T, typename std::remove_pointer<P>>::value) { // if same, use direct call to avoid recursive instanciation
+	    return this->deserialize(obj.*value, input);
+	  } else { // Use 'unpointered' type
+	    return JSONFactory<typename std::remove_pointer<P>::type>::getInstance().deserialize(obj.*value, input);
+	  }
+
+	} else if constexpr (std::is_reference<P>::value) { // Remove reference on parameter type to check the main type
+	  if constexpr (std::is_same<T, typename std::remove_reference<P>>::value) { // if same, use direct call to avoid recursive instanciation
+	    return this->deserialize(obj.*value, input);
+	  } else { // Use 'unreferenced' type
+	    return JSONFactory<typename std::decay<P>::type>::getInstance().deserialize(obj.*value, input);
+	  }
+
+	} else { // Basic type
+	  if constexpr (std::is_same<P, T>::value) { // if same, use direct call to avoid recursive instanciation
+	    return this->deserialize(obj.*value, input);
+	  } else {
+	    return JSONFactory<P>::getInstance().deserialize(obj.*value, input);
+	  }
+	}
+      });
       return *this;
     }
 
@@ -152,28 +135,35 @@ namespace anch {
 	  return JSONFactory<MT>::getInstance().serialize(obj.*value, out, std::optional<std::string>(key));
 	}
       }));
+      _readers[key] = std::function<void(T&, std::istream&)>([=, this](T& obj, std::istream& input) -> void {
+	if constexpr (std::is_same<MT, T>::value) { // if same, use direct call to avoid recursive instanciation
+	  return this->deserialize(obj.*value, input);
+	} else {
+	  return JSONFactory<MT>::getInstance().deserialize(obj.*value, input);
+	}
+      });
       return *this;
     }
 
     template<typename T>
     template<typename P, typename MT>
     JSONMapper<T>&
-    JSONMapper<T>::registerField(const std::string& key, std::function<P(const T&)> getter) {
+    JSONMapper<T>::registerField(const std::string& key, std::function<const P&(const T&)> getter) {
       _writers.push_back(std::function<bool(const T&, std::ostream&)>([=, this](const T& obj, std::ostream& out) -> bool {
 	if constexpr (std::is_same<MT, P>::value) { // Mapper type has not been specified
 
 	  if constexpr (std::is_pointer<P>::value) { // Remove pointer on parameter type to check the main type
-	    if constexpr (isSame<T, std::remove_pointer<P>()>()) { // if same, use direct call to avoid recursive instanciation
+	    if constexpr (std::is_same<T, typename std::remove_pointer<P>>::value) { // if same, use direct call to avoid recursive instanciation
 	      return this->serialize(std::invoke(getter, obj), out, std::optional<std::string>(key));
 	    } else { // Use 'unpointered' type
-	      return callMappingFunctionPtr(std::invoke(getter, obj), out, key);
+	      return JSONFactory<typename std::remove_pointer<P>::type>::getInstance().serialize(std::invoke(getter, obj), out, std::optional<std::string>(key));
 	    }
 
 	  } else if constexpr (std::is_reference<P>::value) { // Remove reference on parameter type to check the main type
-	    if constexpr (isSame<std::remove_reference<P>(), T>()) { // if same, use direct call to avoid recursive instanciation
+	    if constexpr (std::is_same<T, typename std::remove_reference<P>>::value) { // if same, use direct call to avoid recursive instanciation
 	      return this->serialize(std::invoke(getter, obj), out, std::optional<std::string>(key));
 	    } else { // Use 'unreferenced' type
-	      return callMappingFunctionRef(std::invoke(getter, obj), out, key);
+	      return JSONFactory<typename std::decay<P>::type>::getInstance().serialize(std::invoke(getter, obj), out, std::optional<std::string>(key));
 	    }
 
 	  } else { // Basic type
@@ -196,13 +186,69 @@ namespace anch {
     }
 
     template<typename T>
+    template<typename P, typename MT>
+    JSONMapper<T>&
+    JSONMapper<T>::registerField(const std::string& key, std::function<void(T&, const P&)> setter) {
+      _readers[key] = std::function<void(T&, std::istream&)>([=, this](T& obj, std::istream& input) -> void {
+	if constexpr (std::is_same<MT, P>::value) { // Mapper type has not been specified
+
+	  if constexpr (std::is_pointer<P>::value) { // Remove pointer on parameter type to check the main type
+	    if constexpr (std::is_same<T, typename std::remove_pointer<P>>::value) { // if same, use direct call to avoid recursive instanciation
+	      T* inst = new T();
+	      this->deserialize(inst, input);
+	      std::invoke(setter, obj, inst);
+	    } else { // Use 'unpointered' type
+	      P* inst = new P();
+	      JSONFactory<typename std::remove_pointer<P>::type>::getInstance().deserialize(inst, input);
+	      std::invoke(setter, obj, inst);
+	    }
+
+	  } else if constexpr (std::is_reference<P>::value) { // Remove reference on parameter type to check the main type
+	    throw 456789; // \todo error ... can not deserialize reference ...
+
+	  } else { // Basic type
+	    if constexpr (std::is_same<P, T>::value) { // if same, use direct call to avoid recursive instanciation
+	      T inst;
+	      this->deserialize(inst, input);
+	      std::invoke(setter, obj, inst);
+	    } else {
+	      P inst;
+	      JSONFactory<P>::getInstance().deserialize(inst, input);
+	      std::invoke(setter, obj, inst);
+	    }
+	  }
+
+	} else { // Parameter type has to be correctly set by caller when specified
+	  if constexpr (std::is_same<MT, T>::value) {
+	    T inst;
+	    this->deserialize(inst, input);
+	    std::invoke(setter, obj, inst);
+	  } else {
+	    MT inst;
+	    JSONFactory<MT>::getInstance().deserialize(inst, input);
+	    std::invoke(setter, obj, inst);
+	  }
+	}
+      });
+      return *this;
+    }
+
+    template<typename T>
+    template<typename P, typename MT>
+    JSONMapper<T>&
+    JSONMapper<T>::registerField(const std::string& key, std::function<const P&(const T&)> getter, std::function<void(T&, const P&)> setter) {
+      registerField<P,MT>(key, getter);
+      return registerField<P,MT>(key, setter);
+    }
+
+    template<typename T>
     bool
     JSONMapper<T>::serialize(const T& value, std::ostream& out, const std::optional<std::string>& field) {
       JSONMapper<T>& mapper = JSONFactory<T>::getInstance();
       if(field.has_value()) {
-	out << STRING_DELIMITER << field.value() << STRING_DELIMITER << FIELD_VALUE_SEPARATOR;
+	out << anch::json::STRING_DELIMITER << field.value() << anch::json::STRING_DELIMITER << anch::json::FIELD_VALUE_SEPARATOR;
       }
-      out << OBJECT_BEGIN;
+      out << anch::json::OBJECT_BEGIN;
       auto iter = mapper.getWritterMapping().begin();
       while(true) {
 	bool added = std::invoke(*iter, value, out);
@@ -210,10 +256,10 @@ namespace anch {
 	  break;
 	}
 	if(added) {
-	  out << FIELD_SEPARATOR;
+	  out << anch::json::FIELD_SEPARATOR;
 	}
       }
-      out << OBJECT_END;
+      out << anch::json::OBJECT_END;
       return true;
     }
 
@@ -239,13 +285,16 @@ namespace anch {
     bool
     serializeArrayFromContainer(const T& array, std::ostream& out, const std::optional<std::string>& field) {
       if(field.has_value()) {
-	out << STRING_DELIMITER << field.value() << STRING_DELIMITER << FIELD_VALUE_SEPARATOR;
+	out << anch::json::STRING_DELIMITER << field.value() << anch::json::STRING_DELIMITER << anch::json::FIELD_VALUE_SEPARATOR;
       }
-      out << ARRAY_BEGIN;
+      out << anch::json::ARRAY_BEGIN;
       for(auto iter = array.begin() ; iter != array.end() ; ++iter) {
-	out << JSONMapper<T>::serialize(*iter, out, anch::json::EMPTY_FIELD) << FIELD_SEPARATOR; // \todo last ','
+	if(iter != array.begin()) {
+	  out << anch::json::FIELD_SEPARATOR;
+	}
+	out << JSONMapper<T>::serialize(*iter, out, anch::json::EMPTY_FIELD);
       }
-      out << ARRAY_END;
+      out << anch::json::ARRAY_END;
       return true;
     }
 
@@ -265,6 +314,125 @@ namespace anch {
     bool
     JSONMapper<T>::serialize(const std::set<T>& value, std::ostream& out, const std::optional<std::string>& field) {
       return anch::json::serializeArrayFromContainer(value, out, field);
+    }
+
+    template<typename T>
+    void
+    JSONMapper<T>::deserializeNonNull(T& value, std::istream& input) {
+      char expected = anch::json::OBJECT_BEGIN;
+      int current = '\0';
+      while(input) {
+	current = input.get();
+	if(current != expected) {
+	  // \todo raise error
+	}
+	if(current == anch::json::OBJECT_BEGIN) {
+	  std::cout << "Begin object" << std::endl;
+	  expected = anch::json::OBJECT_END;
+	  std::optional<std::string> fieldName = anch::json::getFieldName(input);
+	  while(fieldName.has_value()) {
+	    std::cout << "Found field " << fieldName.value() << std::endl;
+	    auto iter = _readers.find(fieldName.value());
+	    if(iter == _readers.end()) {
+	      // \todo raise error or consumes value according to mapper options
+	      std::cout << "Field " << fieldName.value() << " has not been found." << std::endl;
+	      throw 123456;
+	    } else {
+	      std::invoke(iter->second, value, input);
+	      std::cout << "Field " << fieldName.value() << " has been set" << std::endl;
+	    }
+	    if(!anch::json::hasMoreField(input)) {
+	      break;
+	    }
+	    fieldName = anch::json::getFieldName(input);
+	  }
+	}
+	anch::json::discardChars(input);
+	current = input.get();
+	if(current == anch::json::OBJECT_END) {
+	  break;
+	}
+      }
+      if(current != anch::json::OBJECT_END) {
+	// \todo raise error
+	throw 123;
+      }
+    }
+
+    template<typename T>
+    void
+    JSONMapper<T>::deserialize(T& value, std::istream& input) {
+      if(!anch::json::isNull(input)) { // this function discards 'spaces'
+	deserializeNonNull(value, input);
+      }
+    }
+
+    template<typename T>
+    void
+    JSONMapper<T>::deserialize(std::optional<T>& value, std::istream& input) {
+      if(anch::json::isNull(input)) { // this function discards 'spaces'
+	value.reset();
+      } else {
+	T instance;
+	deserializeNonNull(instance, input);
+	value = std::move(instance);
+      }
+    }
+
+    template<typename T>
+    void
+    JSONMapper<T>::deserialize(T* value, std::istream& input) {
+      if(anch::json::isNull(input)) { // this function discards 'spaces'
+	value = NULL;
+      } else {
+	value = new T();
+	deserializeNonNull(*value, input);
+      }
+    }
+
+    template<typename T>
+    void
+    JSONMapper<T>::deserializeArray(std::istream& input, std::function<void(const T&)> pushFunc) {
+      if(anch::json::isNull(input)) {
+	return;
+      }
+      int current = input.get();
+      if(current != anch::json::ARRAY_BEGIN) {
+	throw 128;
+      }
+      anch::json::discardChars(input);
+      if(input.peek() != anch::json::ARRAY_END) {
+	while(input) {
+	  T num;
+	  deserializeNonNull(num, input);
+	  std::invoke(pushFunc, num);
+	  if(!anch::json::hasMoreField(input)) {
+	    break;
+	  }
+	  anch::json::discardChars(input);
+	}
+      }
+      if(!input || input.get() != anch::json::ARRAY_END) {
+	throw 2048; // \todo error ...
+      }
+    }
+
+    template<typename T>
+    void
+    JSONMapper<T>::deserialize(std::vector<T>& value, std::istream& input) {
+      deserializeArray(input, [&value](const T& obj) -> void { value.push_back(obj); });
+    }
+
+    template<typename T>
+    void
+    JSONMapper<T>::deserialize(std::list<T>& value, std::istream& input) {
+      deserializeArray(input, [&value](const T& obj) -> void { value.push_back(obj); });
+    }
+
+    template<typename T>
+    void
+    JSONMapper<T>::deserialize(std::set<T>& value, std::istream& input) {
+      deserializeArray(input, [&value](const T& obj) -> void { value.insert(obj); });
     }
     // Generic implementations -
 

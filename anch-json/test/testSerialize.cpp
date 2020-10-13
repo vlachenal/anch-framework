@@ -1,5 +1,6 @@
 #include <iostream>
 #include <sstream>
+#include <fstream>
 
 #include "json/json.hpp"
 
@@ -14,7 +15,12 @@ struct Tata {
   std::list<Tata> selfList;
   std::vector<std::string> strVect;
   std::set<uint64_t> numSet;
+  const std::string_view& getView() const {
+    return view;
+  }
 };
+
+const std::string PLOP_TOTO("Toto");
 
 struct Toto {
   std::string plop;
@@ -29,8 +35,8 @@ struct Toto {
   std::optional<std::string> empty;
   std::string* ptr;
   std::string* null;
-  std::string getClass() const {
-    return "Toto";
+  const std::string& getClass() const {
+    return PLOP_TOTO;
   }
 };
 
@@ -51,7 +57,7 @@ anch::json::registerFields(JSONMapper<Toto>& mapper) {
     .registerField<std::string>("invisible", &Toto::empty)
     .registerField("ptr", &Toto::ptr)
     .registerField("null", &Toto::null)
-    .registerField("class", std::function<std::string(const Toto&)>(&Toto::getClass))
+    .registerField("class", std::function<const std::string&(const Toto&)>(&Toto::getClass))
     ;
   std::cout << "Toto fields registered" << std::endl;
 }
@@ -62,7 +68,7 @@ anch::json::registerFields(JSONMapper<Tata>& mapper) {
   std::cout << "Register Tata fields" << std::endl;
   mapper
     .registerField("ploum", &Tata::ploum)
-    .registerField("view", &Tata::view)
+    .registerField("view", std::function<const std::string_view&(const Tata&)>(&Tata::getView))
     .registerField<uint64_t>("num_set", &Tata::numSet)
     .registerField<std::string>("str_vector", &Tata::strVect)
     ;
@@ -76,6 +82,9 @@ struct Test {
   inline const std::string& getValue() const {
     return _value;
   }
+  inline void setValue(const std::string& value) {
+    _value = value;
+  }
 };
 
 template<>
@@ -83,7 +92,9 @@ void
 anch::json::registerFields(JSONMapper<Test>& mapper) {
   mapper
     .registerField("id", &Test::_id)
-    .registerField("value", std::function<const std::string&(const Test&)>(&Test::getValue))
+    //.registerField("value", std::function<const std::string&(const Test&)>(&Test::getValue))
+    .registerField("value", std::function<const std::string&(const Test&)>(&Test::getValue), std::function<void(Test&, const std::string&)>(&Test::setValue))
+    //.registerField("value", std::function<void(Test&, const std::string&)>(&Test::setValue))
     .registerField<int32_t>("nums", &Test::_nums)
     ;
 }
@@ -110,7 +121,7 @@ main(void) {
     toto.plip = std::optional<std::string>("plip");
     toto.plap = 42;
     toto.plup = false;
-    toto.plep = static_cast<float>(2.2);
+    toto.plep = 2.2f;
     toto.plyp = 3.3;
     toto.lplyp = 4.4;
     toto.empty = std::optional<std::string>();
@@ -131,10 +142,6 @@ main(void) {
     std::string res = anch::json::serialize(toto);
     std::cout << "Serialized toto as string: " << res << std::endl;
   }
-  /*JSONParser parser;
-    std::string json("{}");
-    std::istringstream iss(json);
-    parser.parse<int>(iss);*/
   {
     Test test;
     test._id = "deb94ebc-be28-4899-981a-29199b7a487d";
@@ -145,6 +152,48 @@ main(void) {
     std::cout << "Serialized test: " << oss.str() << std::endl;
     std::string res = anch::json::serialize(test);
     std::cout << "Serialized test as string: " << res << std::endl;
+    //std::cout << "Serialized test iomanip: " << anch::json::json_format << test << std::endl;
+  }
+  {
+    Test test;
+    std::string json = "{\"id\":\"deb94ebc-be28-4899-981a-29199b7a487d\",\"nums\":[1,2,3,4]}";
+    std::istringstream iss(json);
+    try {
+      JSONFactory<Test>::getInstance().deserialize(test, iss);
+      std::cout << "id=" << test._id << " ; value=" << test._value << std::endl;
+    } catch(const int& code) {
+      std::cerr << "Fail with code " << code << std::endl;
+      return 1;
+    }
+  }
+  {
+    std::string json = "{\"plop\":\"plop\",\"plip\":\"plip\",\"plap\":42,\"plup\":false,\"tata\":{\"ploum\":\"ploum\",\"num_set\":[1,2,3],\"str_vector\":[\"4\",\"5\",\"6\"]},\"plep\":2.2,\"plyp\":3.3,\"lplyp\":4.4,\"self\":{\"plop\":\"self\",\"plip\":\"self_plip\",\"plap\":24,\"plup\":true,\"tata\":{\"ploum\":\"\",\"num_set\":[],\"str_vector\":[]},\"plep\":5.5,\"plyp\":6.6,\"lplyp\":7.7,\"ptr\":\"self\"},\"ptr\":\"plop\"}";
+    std::istringstream iss(json);
+    Toto toto;
+    try {
+      JSONFactory<Toto>::getInstance().deserialize(toto, iss);
+      //std::cout << "id=" << test._id << " ; value=" << test._value << std::endl;
+    } catch(const std::bad_cast& e) {
+      std::cerr << "Bad cast " << e.what() << std::endl;
+      return 1;
+    } catch(const int& code) {
+      std::cerr << "Fail with code " << code << std::endl;
+      return 1;
+    }
+  }
+  {
+    std::ifstream iss("toto.json");
+    Toto toto;
+    try {
+      JSONFactory<Toto>::getInstance().deserialize(toto, iss);
+      //std::cout << "id=" << test._id << " ; value=" << test._value << std::endl;
+    } catch(const std::bad_cast& e) {
+      std::cerr << "Bad cast " << e.what() << std::endl;
+      return 1;
+    } catch(const int& code) {
+      std::cerr << "Fail with code " << code << std::endl;
+      return 1;
+    }
   }
   std::cout << "Exit serialization tests" << std::endl;
   return 0;

@@ -23,6 +23,7 @@
 #include <vector>
 #include <map>
 #include <ostream>
+#include <istream>
 #include <functional>
 #include <list>
 #include <set>
@@ -115,11 +116,7 @@ namespace anch {
        * \param value the JSON value in object
        *
        * \return \c this
-       */
-      //template<typename P, typename MT = P>
-      //JSONMapper<T>& registerField(const std::string& key, P T::* value);
-
-      template<typename P>
+       */      template<typename P>
       JSONMapper<T>& registerField(const std::string& key, P T::* value);
 
       /*!
@@ -140,7 +137,7 @@ namespace anch {
        * Register mapping by field
        *
        * \tparam P the parameter type
-       * \tparam MT the mapper type to use for this parameter (default to type parameter)
+       * \tparam MT the mapper type to use for this parameter (default to parameter type)
        *
        * \param key the JSON key
        * \param getter the JSON value getter function
@@ -148,7 +145,36 @@ namespace anch {
        * \return \c this
        */
       template<typename P, typename MT = P>
-      JSONMapper<T>& registerField(const std::string& key, std::function<P(const T&)> getter);
+      JSONMapper<T>& registerField(const std::string& key, std::function<const P&(const T&)> getter);
+
+      /*!
+       * Register mapping by field
+       *
+       * \tparam P the parameter type
+       * \tparam MT the mapper type to use for this parameter (default to parameter type)
+       *
+       * \param key the JSON key
+       * \param setter the JSON value setter function
+       *
+       * \return \c this
+       */
+      template<typename P, typename MT = P>
+      JSONMapper<T>& registerField(const std::string& key, std::function<void(T&, const P&)> setter);
+
+      /*!
+       * Register mapping by field
+       *
+       * \tparam P the parameter type
+       * \tparam MT the mapper type to use for this parameter (default to parameter type)
+       *
+       * \param key the JSON key
+       * \param getter the JSON value getter function
+       * \param setter the JSON value setter function
+       *
+       * \return \c this
+       */
+      template<typename P, typename MT = P>
+      JSONMapper<T>& registerField(const std::string& key, std::function<const P&(const T&)> getter, std::function<void(T&, const P&)> setter);
 
     public:
       /*!
@@ -216,6 +242,71 @@ namespace anch {
        * \return \c true
        */
       bool serialize(const std::set<T>& value, std::ostream& out, const std::optional<std::string>& field = EMPTY_FIELD);
+
+      /*!
+       * Deserialize JSON
+       *
+       * \param input the input stream to parse
+       * \param field the field
+       */
+      void deserialize(T& value, std::istream& input);
+
+      /*!
+       * Deserialize JSON
+       *
+       * \param input the input stream to parse
+       * \param field the field
+       */
+      void deserialize(std::optional<T>& value, std::istream& input);
+
+      /*!
+       * Deserialize JSON
+       *
+       * \param input the input stream to parse
+       * \param field the field
+       */
+      void deserialize(T* value, std::istream& input);
+
+      /*!
+       * Deserialize JSON
+       *
+       * \param input the input stream to parse
+       * \param field the field
+       */
+      void deserialize(std::vector<T>& value, std::istream& input);
+
+      /*!
+       * Deserialize JSON
+       *
+       * \param input the input stream to parse
+       * \param field the field
+       */
+      void deserialize(std::list<T>& value, std::istream& input);
+
+      /*!
+       * Deserialize JSON
+       *
+       * \param input the input stream to parse
+       * \param field the field
+       */
+      void deserialize(std::set<T>& value, std::istream& input);
+
+    private:
+      /*!
+       * Deserialize non null JSON object (which should start with '{')
+       *
+       * \param input the input stream to parse
+       * \param field the field
+       */
+      void deserializeNonNull(T& value, std::istream& input);
+
+      /*!
+       * Desrialize array
+       *
+       * \param input the input stream to parse
+       * \param pushFunc the push function to invoke to add item into array
+       */
+      void deserializeArray(std::istream& input, std::function<void(const T&)> pushFunc);
       // Methods -
 
       // Accessors +

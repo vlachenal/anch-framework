@@ -1,0 +1,129 @@
+/*
+  ANCH Framework: ANother C++ Hack is a C++ framework based on C++11 standard
+  Copyright (C) 2020 Vincent Lachenal
+
+  This file is part of ANCH Framework.
+
+  ANCH Framework is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Lesser General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  ANCH Framework is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU Lesser General Public License for more details.
+
+  You should have received a copy of the GNU Lesser General Public License
+  along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
+*/
+#pragma once
+
+#include <istream>
+#include <optional>
+
+#include <functional>
+#include "json/constants.hpp"
+
+namespace anch {
+  namespace json {
+
+    /*!
+     * Consumes discarded characters
+     *
+     * \param input the input stream to consumes
+     *
+     * \throw plop if stream reach its end
+     */
+    void discardChars(std::istream& input);
+
+    /*!
+     * Check if stream starts with 'null' and consumes these characters
+     *
+     * \param input the input stream to consumes
+     *
+     * \return \c true if input stream starts with 'null', \c false otherwise
+     *
+     * \throw plop if stream reach its end
+     */
+    bool isNull(std::istream& input);
+
+    /*!
+     * Parse input to get new field definition.\n
+     * This will consume '"<field name>":'
+     *
+     * \param input the input stream to parse
+     *
+     * \return the field's name if found, \c empty otherwise
+     */
+    std::optional<std::string> getFieldName(std::istream& input);
+
+    /*!
+     * Check if stream starts with ',' and consumes these characters
+     *
+     * \param input the input stream to consumes
+     *
+     * \return \c true if input stream starts with ',', \c false otherwise
+     *
+     * \throw plop if stream reach its end
+     */
+    bool hasMoreField(std::istream& input);
+
+    /*!
+     * JSON array deserialization generic implementation
+     *
+     * \param input the input stream to deserialize
+     * \param pushFunc the push function according to container type
+     * \param deserializeNonNull the non null value deserialization function
+     */
+    template<typename T>
+    void deserializeArray(std::istream& input, std::function<auto(const T&)> pushFunc, std::function<void((T& value, std::istream& input))> deserializeNonNull);
+
+    class JSONParser {
+    private:
+      /*! Input stream to parse */
+      std::istream& _input;
+
+      // Constructors +
+    public:
+      /*!
+       * Forbids \ref JSONParser default constructor
+       */
+      JSONParser() = delete;
+
+      /*!
+       * Forbids \ref JSONParser copy constructor
+       *
+       * \param other the \ref JSONParser not to copy
+       */
+      JSONParser(const JSONParser& other) = delete;
+
+      /*!
+       * Forbids \ref JSONParser move constructor
+       *
+       * \param other the \ref JSONParser not to move
+       */
+      JSONParser(JSONParser&& other) = delete;
+
+      /*!
+       * \ref JSONParser constructor
+       *
+       * \param input the input stream to parse
+       */
+      JSONParser(std::istream& input);
+      // Constructors -
+
+      // Destructor +
+    public:
+      /*!
+       * \ref JSONParser destructor
+       */
+      virtual ~JSONParser();
+      // Destructor +
+
+    };
+
+  }  // json
+}  // anch
+
+#include "json/impl/parser.hpp"

@@ -146,6 +146,54 @@ namespace anch {
        * \return \c true
        */
       bool serialize(const std::set<T>& value, std::ostream& out, const std::optional<std::string>& field = EMPTY_FIELD);
+
+      /*!
+       * Deserialize JSON value
+       *
+       * \param input the input stream to parse
+       * \param field the field
+       */
+      void deserialize(T& value, std::istream& input);
+
+      /*!
+       * Deserialize JSON value
+       *
+       * \param input the input stream to parse
+       * \param field the field
+       */
+      void deserialize(std::optional<T>& value, std::istream& input);
+
+      /*!
+       * Deserialize JSON value
+       *
+       * \param input the input stream to parse
+       * \param field the field
+       */
+      void deserialize(T* value, std::istream& input);
+
+      /*!
+       * Deserialize JSON value
+       *
+       * \param input the input stream to parse
+       * \param field the field
+       */
+      void deserialize(std::vector<T>& value, std::istream& input);
+
+      /*!
+       * Deserialize JSON value
+       *
+       * \param input the input stream to parse
+       * \param field the field
+       */
+      void deserialize(std::list<T>& value, std::istream& input);
+
+      /*!
+       * Deserialize JSON value
+       *
+       * \param input the input stream to parse
+       * \param field the field
+       */
+      void deserialize(std::set<T>& value, std::istream& input);
       // Methods -
 
     };
