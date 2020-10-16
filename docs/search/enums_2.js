@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['level_1335',['Level',['../namespaceanch_1_1logger.html#a973cdff92f296b5fba7f68660d4ee41f',1,'anch::logger']]]
+  ['formattertype_1369',['FormatterType',['../namespaceanch_1_1logger_1_1formatter.html#aa2267d18ecb9df50df9682833db34bdf',1,'anch::logger::formatter']]]
 ];

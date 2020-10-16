@@ -121,32 +121,96 @@ $(document).ready(function(){initNavTree('json_8hpp_source.html',''); initResiza
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; </div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#include &lt;ostream&gt;</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor">#include &lt;string&gt;</span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160; </div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor">#include &quot;json/mapper.hpp&quot;</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#include &lt;iomanip&gt;</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;json/mapper.hpp&quot;</span></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespaceanch.html">anch</a> {</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;  <span class="keyword">namespace </span>json {</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="line"><a name="l00040"></a><span class="lineno"><a class="line" href="namespaceanch_1_1json.html#a635cdb7872bfdb75389b1a1c9bb6f0f2">   40</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="namespaceanch_1_1json.html#a635cdb7872bfdb75389b1a1c9bb6f0f2">registerFields</a>(<a class="code" href="classanch_1_1json_1_1_j_s_o_n_mapper.html">anch::json::JSONMapper&lt;T&gt;</a>&amp; mapper);</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="namespaceanch_1_1json.html#ab82f65b72182651b50e1a9f50ab9a2fd">serialize</a>(<span class="keyword">const</span> T&amp; value, std::ostream&amp; out);</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160; </div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespaceanch.html">anch</a> {</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;  <span class="keyword">namespace </span>json {</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="line"><a name="l00041"></a><span class="lineno"><a class="line" href="namespaceanch_1_1json.html#a635cdb7872bfdb75389b1a1c9bb6f0f2">   41</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="namespaceanch_1_1json.html#a635cdb7872bfdb75389b1a1c9bb6f0f2">registerFields</a>(<a class="code" href="classanch_1_1json_1_1_j_s_o_n_mapper.html">anch::json::JSONMapper&lt;T&gt;</a>&amp; mapper);</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="namespaceanch_1_1json.html#ab82f65b72182651b50e1a9f50ab9a2fd">serialize</a>(<span class="keyword">const</span> T&amp; value, std::ostream&amp; out);</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160; </div>
 <div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    std::string <a class="code" href="namespaceanch_1_1json.html#ab82f65b72182651b50e1a9f50ab9a2fd">serialize</a>(<span class="keyword">const</span> T&amp; value);</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="namespaceanch_1_1json.html#ab82f65b72182651b50e1a9f50ab9a2fd">serialize</a>(<span class="keyword">const</span> std::vector&lt;T&gt;&amp; value, std::ostream&amp; out);</div>
 <div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; </div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;  }  <span class="comment">// json</span></div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;}  <span class="comment">// anch</span></div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160; </div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="preprocessor">#include &quot;json/impl/json.hpp&quot;</span></div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="namespaceanch_1_1json.html#ab82f65b72182651b50e1a9f50ab9a2fd">serialize</a>(<span class="keyword">const</span> std::list&lt;T&gt;&amp; value, std::ostream&amp; out);</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160; </div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="namespaceanch_1_1json.html#ab82f65b72182651b50e1a9f50ab9a2fd">serialize</a>(<span class="keyword">const</span> std::set&lt;T&gt;&amp; value, std::ostream&amp; out);</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160; </div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    std::string <a class="code" href="namespaceanch_1_1json.html#ab82f65b72182651b50e1a9f50ab9a2fd">serialize</a>(<span class="keyword">const</span> T&amp; value);</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160; </div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    std::string <a class="code" href="namespaceanch_1_1json.html#ab82f65b72182651b50e1a9f50ab9a2fd">serialize</a>(<span class="keyword">const</span> std::vector&lt;T&gt;&amp; value);</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160; </div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;    std::string <a class="code" href="namespaceanch_1_1json.html#ab82f65b72182651b50e1a9f50ab9a2fd">serialize</a>(<span class="keyword">const</span> std::list&lt;T&gt;&amp; value);</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160; </div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;    std::string <a class="code" href="namespaceanch_1_1json.html#ab82f65b72182651b50e1a9f50ab9a2fd">serialize</a>(<span class="keyword">const</span> std::set&lt;T&gt;&amp; value);</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160; </div>
+<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="namespaceanch_1_1json.html#a68b67b44dfb705983be74be539a34ae8">deserialize</a>(T&amp; value, std::istream&amp; input);</div>
+<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160; </div>
+<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;    T <a class="code" href="namespaceanch_1_1json.html#a68b67b44dfb705983be74be539a34ae8">deserialize</a>(std::istream&amp; input);</div>
+<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160; </div>
+<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;    <span class="comment">// struct JSONIODecorator {</span></div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;    <span class="comment">// private:</span></div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;    <span class="comment">//   std::ostream &amp; out;</span></div>
+<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;    <span class="comment">// public:</span></div>
+<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;    <span class="comment">//   explicit JSONIODecorator(): out() {}</span></div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;    <span class="comment">//   template&lt;typename Rhs&gt;</span></div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;    <span class="comment">//   friend std::ostream &amp; operator&lt;&lt;(JSONIODecorator const&amp; q, Rhs const&amp; rhs) {</span></div>
+<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;    <span class="comment">//  return q.os &lt;&lt; rhs;</span></div>
+<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;    <span class="comment">//   }</span></div>
+<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160; </div>
+<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;    <span class="comment">//   friend std::ostream&amp; operator&lt;&lt;(JSONIODecorator const&amp; q, std::string const&amp; rhs) {</span></div>
+<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;    <span class="comment">//     return q.os &lt;&lt; &quot;&#39;&quot; &lt;&lt; rhs &lt;&lt; &quot;&#39;&quot;;</span></div>
+<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;    <span class="comment">//   }</span></div>
+<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160; </div>
+<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;    <span class="comment">//   friend std::ostream&amp; operator&lt;&lt;(JSONIODecorator const&amp; q, char const* rhs) {</span></div>
+<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;    <span class="comment">//     return q.os &lt;&lt; &quot;&#39;&quot; &lt;&lt; rhs &lt;&lt; &quot;&#39;&quot;;</span></div>
+<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;    <span class="comment">//   }</span></div>
+<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160; </div>
+<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;    <span class="comment">// };</span></div>
+<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160; </div>
+<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;    <span class="comment">// struct jsonify_creator { } json_format;</span></div>
+<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160; </div>
+<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;    <span class="comment">// JSONIODecorator operator&lt;&lt;(std::ostream &amp; os, jsonify_creator) {</span></div>
+<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;    <span class="comment">//   return JSONIODecorator(os);</span></div>
+<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;    <span class="comment">// }</span></div>
+<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160; </div>
+<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;    <span class="comment">// template&lt;typename T&gt;</span></div>
+<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;    <span class="comment">// std::ostream&amp; JSONIODecorator(std::ostream&amp; out, const T&amp; value) {</span></div>
+<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;    <span class="comment">//   serialize(value, out);</span></div>
+<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;    <span class="comment">//   return out;</span></div>
+<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;    <span class="comment">// }</span></div>
+<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160; </div>
+<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;    <span class="comment">// template&lt;typename T&gt;</span></div>
+<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;    <span class="comment">// std::omanip&lt;T&gt; JSONIODecorator() {</span></div>
+<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;    <span class="comment">//   serialize(value, out);</span></div>
+<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;    <span class="comment">//   return out;</span></div>
+<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;    <span class="comment">// }</span></div>
+<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160; </div>
+<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;  }  <span class="comment">// json</span></div>
+<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;}  <span class="comment">// anch</span></div>
+<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160; </div>
+<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;<span class="preprocessor">#include &quot;json/impl/json.hpp&quot;</span></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <div class="ttc" id="anamespaceanch_1_1json_html_a635cdb7872bfdb75389b1a1c9bb6f0f2"><div class="ttname"><a href="namespaceanch_1_1json.html#a635cdb7872bfdb75389b1a1c9bb6f0f2">anch::json::registerFields</a></div><div class="ttdeci">void registerFields(anch::json::JSONMapper&lt; T &gt; &amp;mapper)</div></div>
 <div class="ttc" id="anamespaceanch_1_1json_html_ab82f65b72182651b50e1a9f50ab9a2fd"><div class="ttname"><a href="namespaceanch_1_1json.html#ab82f65b72182651b50e1a9f50ab9a2fd">anch::json::serialize</a></div><div class="ttdeci">void serialize(const T &amp;value, std::ostream &amp;out)</div><div class="ttdef"><b>Definition:</b> json.hpp:30</div></div>
-<div class="ttc" id="aclassanch_1_1json_1_1_j_s_o_n_mapper_html"><div class="ttname"><a href="classanch_1_1json_1_1_j_s_o_n_mapper.html">anch::json::JSONMapper</a></div><div class="ttdoc">JSON complex object mapper.</div><div class="ttdef"><b>Definition:</b> mapper.hpp:66</div></div>
+<div class="ttc" id="aclassanch_1_1json_1_1_j_s_o_n_mapper_html"><div class="ttname"><a href="classanch_1_1json_1_1_j_s_o_n_mapper.html">anch::json::JSONMapper</a></div><div class="ttdoc">JSON complex object mapper.</div><div class="ttdef"><b>Definition:</b> mapper.hpp:67</div></div>
 <div class="ttc" id="anamespaceanch_html"><div class="ttname"><a href="namespaceanch.html">anch</a></div><div class="ttdoc">AnCH framework base namespace.</div><div class="ttdef"><b>Definition:</b> base64.hpp:27</div></div>
+<div class="ttc" id="anamespaceanch_1_1json_html_a68b67b44dfb705983be74be539a34ae8"><div class="ttname"><a href="namespaceanch_1_1json.html#a68b67b44dfb705983be74be539a34ae8">anch::json::deserialize</a></div><div class="ttdeci">void deserialize(T &amp;value, std::istream &amp;input)</div><div class="ttdef"><b>Definition:</b> json.hpp:78</div></div>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>

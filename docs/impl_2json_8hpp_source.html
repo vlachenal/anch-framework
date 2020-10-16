@@ -132,19 +132,68 @@ $(document).ready(function(){initNavTree('impl_2json_8hpp_source.html',''); init
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    }</div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160; </div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="line"><a name="l00035"></a><span class="lineno"><a class="line" href="namespaceanch_1_1json.html#a023b35f1c0e737e86c375717a3ff4639">   35</a></span>&#160;    std::string <a class="code" href="namespaceanch_1_1json.html#ab82f65b72182651b50e1a9f50ab9a2fd">serialize</a>(<span class="keyword">const</span> T&amp; value) {</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;      std::ostringstream out;</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;      <a class="code" href="classanch_1_1json_1_1_j_s_o_n_factory.html#a9581130c5d239be98159b41dd4356593">JSONFactory&lt;T&gt;::getInstance</a>().serialize(value, out);</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;      <span class="keywordflow">return</span> std::move(out.str());</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    }</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160; </div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;  }</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;}</div>
+<div class="line"><a name="l00035"></a><span class="lineno"><a class="line" href="namespaceanch_1_1json.html#ae246d2bdcce017f5af464536a3e8d88e">   35</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="namespaceanch_1_1json.html#ab82f65b72182651b50e1a9f50ab9a2fd">serialize</a>(<span class="keyword">const</span> std::vector&lt;T&gt;&amp; value, std::ostream&amp; out) {</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;      <a class="code" href="classanch_1_1json_1_1_j_s_o_n_factory.html#a9581130c5d239be98159b41dd4356593">JSONFactory&lt;T&gt;::getInstance</a>().serialize(value, out);</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    }</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160; </div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="line"><a name="l00040"></a><span class="lineno"><a class="line" href="namespaceanch_1_1json.html#a829b61e4f096cd53130af12a185466b9">   40</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="namespaceanch_1_1json.html#ab82f65b72182651b50e1a9f50ab9a2fd">serialize</a>(<span class="keyword">const</span> std::list&lt;T&gt;&amp; value, std::ostream&amp; out) {</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;      <a class="code" href="classanch_1_1json_1_1_j_s_o_n_factory.html#a9581130c5d239be98159b41dd4356593">JSONFactory&lt;T&gt;::getInstance</a>().serialize(value, out);</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    }</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160; </div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="line"><a name="l00045"></a><span class="lineno"><a class="line" href="namespaceanch_1_1json.html#a091a680df36d2add63d0e53d5fdbace4">   45</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="namespaceanch_1_1json.html#ab82f65b72182651b50e1a9f50ab9a2fd">serialize</a>(<span class="keyword">const</span> std::set&lt;T&gt;&amp; value, std::ostream&amp; out) {</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;      <a class="code" href="classanch_1_1json_1_1_j_s_o_n_factory.html#a9581130c5d239be98159b41dd4356593">JSONFactory&lt;T&gt;::getInstance</a>().serialize(value, out);</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    }</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="line"><a name="l00050"></a><span class="lineno"><a class="line" href="namespaceanch_1_1json.html#a023b35f1c0e737e86c375717a3ff4639">   50</a></span>&#160;    std::string <a class="code" href="namespaceanch_1_1json.html#ab82f65b72182651b50e1a9f50ab9a2fd">serialize</a>(<span class="keyword">const</span> T&amp; value) {</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;      std::ostringstream out;</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;      <a class="code" href="classanch_1_1json_1_1_j_s_o_n_factory.html#a9581130c5d239be98159b41dd4356593">JSONFactory&lt;T&gt;::getInstance</a>().serialize(value, out);</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;      <span class="keywordflow">return</span> std::move(out.str());</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    }</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160; </div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="line"><a name="l00057"></a><span class="lineno"><a class="line" href="namespaceanch_1_1json.html#a70697e7a10dd83efd00f6d650ff134a5">   57</a></span>&#160;    std::string <a class="code" href="namespaceanch_1_1json.html#ab82f65b72182651b50e1a9f50ab9a2fd">serialize</a>(<span class="keyword">const</span> std::vector&lt;T&gt;&amp; value) {</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;      std::ostringstream out;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;      <a class="code" href="classanch_1_1json_1_1_j_s_o_n_factory.html#a9581130c5d239be98159b41dd4356593">JSONFactory&lt;T&gt;::getInstance</a>().serialize(value, out);</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;      <span class="keywordflow">return</span> std::move(out.str());</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    }</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="line"><a name="l00064"></a><span class="lineno"><a class="line" href="namespaceanch_1_1json.html#a7913f65ce4017f13d4c46d5baee3489b">   64</a></span>&#160;    std::string <a class="code" href="namespaceanch_1_1json.html#ab82f65b72182651b50e1a9f50ab9a2fd">serialize</a>(<span class="keyword">const</span> std::list&lt;T&gt;&amp; value) {</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;      std::ostringstream out;</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;      <a class="code" href="classanch_1_1json_1_1_j_s_o_n_factory.html#a9581130c5d239be98159b41dd4356593">JSONFactory&lt;T&gt;::getInstance</a>().serialize(value, out);</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;      <span class="keywordflow">return</span> std::move(out.str());</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    }</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160; </div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="line"><a name="l00071"></a><span class="lineno"><a class="line" href="namespaceanch_1_1json.html#aed20de1df2a4fbfdb16f5e21619c864b">   71</a></span>&#160;    std::string <a class="code" href="namespaceanch_1_1json.html#ab82f65b72182651b50e1a9f50ab9a2fd">serialize</a>(<span class="keyword">const</span> std::set&lt;T&gt;&amp; value) {</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;      std::ostringstream out;</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;      <a class="code" href="classanch_1_1json_1_1_j_s_o_n_factory.html#a9581130c5d239be98159b41dd4356593">JSONFactory&lt;T&gt;::getInstance</a>().serialize(value, out);</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;      <span class="keywordflow">return</span> std::move(out.str());</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    }</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160; </div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="line"><a name="l00078"></a><span class="lineno"><a class="line" href="namespaceanch_1_1json.html#a68b67b44dfb705983be74be539a34ae8">   78</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="namespaceanch_1_1json.html#a68b67b44dfb705983be74be539a34ae8">deserialize</a>(T&amp; value, std::istream&amp; input) {</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;      <a class="code" href="classanch_1_1json_1_1_j_s_o_n_factory.html#a9581130c5d239be98159b41dd4356593">JSONFactory&lt;T&gt;::getInstance</a>().deserialize(value, input);</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    }</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160; </div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="line"><a name="l00083"></a><span class="lineno"><a class="line" href="namespaceanch_1_1json.html#a54a2a5c9ac95ee56a3246d50f55b68c7">   83</a></span>&#160;    T <a class="code" href="namespaceanch_1_1json.html#a68b67b44dfb705983be74be539a34ae8">deserialize</a>(std::istream&amp; input) {</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;      T value;</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;      <a class="code" href="classanch_1_1json_1_1_j_s_o_n_factory.html#a9581130c5d239be98159b41dd4356593">JSONFactory&lt;T&gt;::getInstance</a>().deserialize(value, input);</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;      <span class="keywordflow">return</span> value;</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    }</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160; </div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;  }</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
-<div class="ttc" id="aclassanch_1_1json_1_1_j_s_o_n_factory_html_a9581130c5d239be98159b41dd4356593"><div class="ttname"><a href="classanch_1_1json_1_1_j_s_o_n_factory.html#a9581130c5d239be98159b41dd4356593">anch::json::JSONFactory::getInstance</a></div><div class="ttdeci">static auto &amp; getInstance()</div><div class="ttdef"><b>Definition:</b> factory.hpp:55</div></div>
+<div class="ttc" id="aclassanch_1_1json_1_1_j_s_o_n_factory_html_a9581130c5d239be98159b41dd4356593"><div class="ttname"><a href="classanch_1_1json_1_1_j_s_o_n_factory.html#a9581130c5d239be98159b41dd4356593">anch::json::JSONFactory::getInstance</a></div><div class="ttdeci">static auto &amp; getInstance()</div><div class="ttdef"><b>Definition:</b> factory.hpp:78</div></div>
 <div class="ttc" id="anamespaceanch_1_1json_html_ab82f65b72182651b50e1a9f50ab9a2fd"><div class="ttname"><a href="namespaceanch_1_1json.html#ab82f65b72182651b50e1a9f50ab9a2fd">anch::json::serialize</a></div><div class="ttdeci">void serialize(const T &amp;value, std::ostream &amp;out)</div><div class="ttdef"><b>Definition:</b> json.hpp:30</div></div>
 <div class="ttc" id="anamespaceanch_html"><div class="ttname"><a href="namespaceanch.html">anch</a></div><div class="ttdoc">AnCH framework base namespace.</div><div class="ttdef"><b>Definition:</b> base64.hpp:27</div></div>
+<div class="ttc" id="anamespaceanch_1_1json_html_a68b67b44dfb705983be74be539a34ae8"><div class="ttname"><a href="namespaceanch_1_1json.html#a68b67b44dfb705983be74be539a34ae8">anch::json::deserialize</a></div><div class="ttdeci">void deserialize(T &amp;value, std::istream &amp;input)</div><div class="ttdef"><b>Definition:</b> json.hpp:78</div></div>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>

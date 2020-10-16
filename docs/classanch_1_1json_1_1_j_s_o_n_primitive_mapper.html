@@ -111,7 +111,7 @@ $(document).ready(function(){initNavTree('classanch_1_1json_1_1_j_s_o_n_primitiv
 <div id="dynsection-0-summary" class="dynsummary" style="display:block;">
 </div>
 <div id="dynsection-0-content" class="dyncontent" style="display:none;">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classanch_1_1json_1_1_j_s_o_n_primitive_mapper__coll__graph.svg" width="198" height="206"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+<div class="center"><iframe scrolling="no" frameborder="0" src="classanch_1_1json_1_1_j_s_o_n_primitive_mapper__coll__graph.svg" width="198" height="294"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
 </div>
 </div>
 <table class="memberdecls">
@@ -133,6 +133,18 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:af8957e5aed28c5b79108ae55f17ef7ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a17b05883eaef40f48a26b74ed0e4b381"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1json_1_1_j_s_o_n_primitive_mapper.html#a17b05883eaef40f48a26b74ed0e4b381">serialize</a> (const std::set&lt; T &gt; &amp;value, std::ostream &amp;out, const std::optional&lt; std::string &gt; &amp;field=<a class="el" href="namespaceanch_1_1json.html#a038893b61b42ef8079410a8edff31b86">EMPTY_FIELD</a>)</td></tr>
 <tr class="separator:a17b05883eaef40f48a26b74ed0e4b381"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a11cfea3492fac58bd5c6ba64ef741a5f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1json_1_1_j_s_o_n_primitive_mapper.html#a11cfea3492fac58bd5c6ba64ef741a5f">deserialize</a> (T &amp;value, std::istream &amp;input)</td></tr>
+<tr class="separator:a11cfea3492fac58bd5c6ba64ef741a5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6ad8d0efeb8d22c0836400d696d76f89"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1json_1_1_j_s_o_n_primitive_mapper.html#a6ad8d0efeb8d22c0836400d696d76f89">deserialize</a> (std::optional&lt; T &gt; &amp;value, std::istream &amp;input)</td></tr>
+<tr class="separator:a6ad8d0efeb8d22c0836400d696d76f89"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abf183d90c399f2398710497c9d8ee2c3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1json_1_1_j_s_o_n_primitive_mapper.html#abf183d90c399f2398710497c9d8ee2c3">deserialize</a> (T *value, std::istream &amp;input)</td></tr>
+<tr class="separator:abf183d90c399f2398710497c9d8ee2c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a93b63ce5c328972e43a1e5a04c017b0b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1json_1_1_j_s_o_n_primitive_mapper.html#a93b63ce5c328972e43a1e5a04c017b0b">deserialize</a> (std::vector&lt; T &gt; &amp;value, std::istream &amp;input)</td></tr>
+<tr class="separator:a93b63ce5c328972e43a1e5a04c017b0b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8f2ea76e0295d39f2cb5f4e239a9fa87"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1json_1_1_j_s_o_n_primitive_mapper.html#a8f2ea76e0295d39f2cb5f4e239a9fa87">deserialize</a> (std::list&lt; T &gt; &amp;value, std::istream &amp;input)</td></tr>
+<tr class="separator:a8f2ea76e0295d39f2cb5f4e239a9fa87"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aea01bf35529ecb75ac9ae0b6a6368100"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1json_1_1_j_s_o_n_primitive_mapper.html#aea01bf35529ecb75ac9ae0b6a6368100">deserialize</a> (std::set&lt; T &gt; &amp;value, std::istream &amp;input)</td></tr>
+<tr class="separator:aea01bf35529ecb75ac9ae0b6a6368100"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><h3>template&lt;typename T&gt;<br />
@@ -174,7 +186,7 @@ template&lt;typename T &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Forbids <a class="el" href="class_j_s_o_n_primitive_mapper.html">JSONPrimitiveMapper</a> copy constructor </p>
+<p>Forbids <a class="el" href="classanch_1_1json_1_1_j_s_o_n_primitive_mapper.html">JSONPrimitiveMapper</a> copy constructor </p>
 
 </div>
 </div>
@@ -203,11 +215,239 @@ template&lt;typename T &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Forbids <a class="el" href="class_j_s_o_n_primitive_mapper.html">JSONPrimitiveMapper</a> move constructor </p>
+<p>Forbids <a class="el" href="classanch_1_1json_1_1_j_s_o_n_primitive_mapper.html">JSONPrimitiveMapper</a> move constructor </p>
 
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a8f2ea76e0295d39f2cb5f4e239a9fa87"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8f2ea76e0295d39f2cb5f4e239a9fa87">&#9670;&nbsp;</a></span>deserialize() <span class="overload">[1/6]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classanch_1_1json_1_1_j_s_o_n_primitive_mapper.html">anch::json::JSONPrimitiveMapper</a>&lt; T &gt;::deserialize </td>
+          <td>(</td>
+          <td class="paramtype">std::list&lt; T &gt; &amp;&#160;</td>
+          <td class="paramname"><em>value</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::istream &amp;&#160;</td>
+          <td class="paramname"><em>input</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Deserialize JSON value</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">input</td><td>the input stream to parse </td></tr>
+    <tr><td class="paramname">field</td><td>the field </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a6ad8d0efeb8d22c0836400d696d76f89"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6ad8d0efeb8d22c0836400d696d76f89">&#9670;&nbsp;</a></span>deserialize() <span class="overload">[2/6]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classanch_1_1json_1_1_j_s_o_n_primitive_mapper.html">anch::json::JSONPrimitiveMapper</a>&lt; T &gt;::deserialize </td>
+          <td>(</td>
+          <td class="paramtype">std::optional&lt; T &gt; &amp;&#160;</td>
+          <td class="paramname"><em>value</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::istream &amp;&#160;</td>
+          <td class="paramname"><em>input</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Deserialize JSON value</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">input</td><td>the input stream to parse </td></tr>
+    <tr><td class="paramname">field</td><td>the field </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="aea01bf35529ecb75ac9ae0b6a6368100"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aea01bf35529ecb75ac9ae0b6a6368100">&#9670;&nbsp;</a></span>deserialize() <span class="overload">[3/6]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classanch_1_1json_1_1_j_s_o_n_primitive_mapper.html">anch::json::JSONPrimitiveMapper</a>&lt; T &gt;::deserialize </td>
+          <td>(</td>
+          <td class="paramtype">std::set&lt; T &gt; &amp;&#160;</td>
+          <td class="paramname"><em>value</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::istream &amp;&#160;</td>
+          <td class="paramname"><em>input</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Deserialize JSON value</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">input</td><td>the input stream to parse </td></tr>
+    <tr><td class="paramname">field</td><td>the field </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a93b63ce5c328972e43a1e5a04c017b0b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a93b63ce5c328972e43a1e5a04c017b0b">&#9670;&nbsp;</a></span>deserialize() <span class="overload">[4/6]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classanch_1_1json_1_1_j_s_o_n_primitive_mapper.html">anch::json::JSONPrimitiveMapper</a>&lt; T &gt;::deserialize </td>
+          <td>(</td>
+          <td class="paramtype">std::vector&lt; T &gt; &amp;&#160;</td>
+          <td class="paramname"><em>value</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::istream &amp;&#160;</td>
+          <td class="paramname"><em>input</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Deserialize JSON value</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">input</td><td>the input stream to parse </td></tr>
+    <tr><td class="paramname">field</td><td>the field </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a11cfea3492fac58bd5c6ba64ef741a5f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a11cfea3492fac58bd5c6ba64ef741a5f">&#9670;&nbsp;</a></span>deserialize() <span class="overload">[5/6]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classanch_1_1json_1_1_j_s_o_n_primitive_mapper.html">anch::json::JSONPrimitiveMapper</a>&lt; T &gt;::deserialize </td>
+          <td>(</td>
+          <td class="paramtype">T &amp;&#160;</td>
+          <td class="paramname"><em>value</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::istream &amp;&#160;</td>
+          <td class="paramname"><em>input</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Deserialize JSON value</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">input</td><td>the input stream to parse </td></tr>
+    <tr><td class="paramname">field</td><td>the field </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="abf183d90c399f2398710497c9d8ee2c3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abf183d90c399f2398710497c9d8ee2c3">&#9670;&nbsp;</a></span>deserialize() <span class="overload">[6/6]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classanch_1_1json_1_1_j_s_o_n_primitive_mapper.html">anch::json::JSONPrimitiveMapper</a>&lt; T &gt;::deserialize </td>
+          <td>(</td>
+          <td class="paramtype">T *&#160;</td>
+          <td class="paramname"><em>value</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::istream &amp;&#160;</td>
+          <td class="paramname"><em>input</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Deserialize JSON value</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">input</td><td>the input stream to parse </td></tr>
+    <tr><td class="paramname">field</td><td>the field </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="af8957e5aed28c5b79108ae55f17ef7ba"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#af8957e5aed28c5b79108ae55f17ef7ba">&#9670;&nbsp;</a></span>serialize() <span class="overload">[1/6]</span></h2>
 
