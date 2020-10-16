@@ -31,8 +31,6 @@
 #include "json/parser.hpp"
 #include "json/mappingError.hpp"
 
-#include <iostream> // \todo remove
-
 
 namespace anch {
   namespace json {
@@ -320,19 +318,15 @@ namespace anch {
 	  // \todo raise error
 	}
 	if(current == anch::json::OBJECT_BEGIN) {
-	  std::cout << "Begin object" << std::endl;
 	  expected = anch::json::OBJECT_END;
 	  std::optional<std::string> fieldName = anch::json::getFieldName(input);
 	  while(fieldName.has_value()) {
-	    std::cout << "Found field " << fieldName.value() << std::endl;
 	    auto iter = _readers.find(fieldName.value());
 	    if(iter == _readers.end()) {
 	      // \todo raise error or consumes value according to mapper options
-	      std::cout << "Field " << fieldName.value() << " has not been found." << std::endl;
 	      throw 123456;
 	    } else {
 	      std::invoke(iter->second, value, input);
-	      std::cout << "Field " << fieldName.value() << " has been set" << std::endl;
 	    }
 	    if(!anch::json::hasMoreField(input)) {
 	      break;

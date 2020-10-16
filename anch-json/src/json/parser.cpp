@@ -25,8 +25,6 @@
 
 #include "json/constants.hpp"
 
-#include <iostream> // \todo remove
-
 
 namespace anch {
   namespace json {
@@ -40,8 +38,8 @@ namespace anch {
       // \todo manage max discard char ...
       //int discarded = 0;
       while(input && anch::json::isDiscardChar(input.peek())) {
-	std::cout << "Remove left 'spaces'" << std::endl;
 	input.get();
+	// \todo max char
 	//if(++discarded > ANCH_MAX_DISCARD) {
 	//  throw 8;
 	//}
@@ -145,7 +143,6 @@ namespace anch {
 	  value << current;
 	}
       }
-      std::cout << "Found value " << value.str() << std::endl;
     }
 
     void
@@ -163,18 +160,15 @@ namespace anch {
       while(input) {
 	std::ostringstream name;
 	if(current != '"') {
-	  std::cerr << "Expected \" ; found " << current << std::endl;
+	  throw 3; // \todo error
 	}
-	std::cout << "Start field name" << std::endl;
 	while(input) {
 	  current = input.get();
 	  if(current == '"') {
-	    std::cout << "End field name" << std::endl;
 	    break;
 	  }
 	  name << current;
 	}
-	std::cout << "Found field name " << name.str() << std::endl;
 
 	discardChars(input);
 	if(input.get() != ':') {
@@ -204,7 +198,6 @@ namespace anch {
 	current = input.get();
 
 	if(!nullable && isDiscardChar(current)) {
-	  std::cout << "Discard character" << std::endl;
 	  continue;
 	}
 
@@ -220,7 +213,6 @@ namespace anch {
 	  case 2:
 	    break; // wait for 'l'
 	  case 3:
-	    std::cout << "Found null" << std::endl;
 	    goto stopobj; // stop parsing for this object
 	  default:
 	    throw 1024;
@@ -230,11 +222,9 @@ namespace anch {
 	} else if(current == '{') { // start object
 	  T instance;
 	  obj = std::move(instance);
-	  std::cout << "Start object" << std::endl;
 	  parseFields(input);
 
 	} else if(current == '}') { // end object
-	  std::cout << "End object" << std::endl;
 	  if(!obj.has_value()) {
 	    throw 512;
 	  }
