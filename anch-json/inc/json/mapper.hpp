@@ -307,6 +307,9 @@ namespace anch {
        * \param pushFunc the push function to invoke to add item into array
        */
       void deserializeArray(std::istream& input, std::function<void(const T&)> pushFunc);
+
+      template<typename A>
+      bool serializeArrayFromContainer(const A& array, std::ostream& out, const std::optional<std::string>& field);
       // Methods -
 
       // Accessors +

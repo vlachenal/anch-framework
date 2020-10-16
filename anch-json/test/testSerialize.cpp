@@ -143,15 +143,36 @@ main(void) {
     std::cout << "Serialized toto as string: " << res << std::endl;
   }
   {
-    Test test;
-    test._id = "deb94ebc-be28-4899-981a-29199b7a487d";
-    test._value = "this is a value";
-    test._nums = {1,2,3,4};
+    Test test = {
+      ._id = "deb94ebc-be28-4899-981a-29199b7a487d",
+      ._value = "this is a value",
+      ._nums = {1,2,3,4}
+    };
     std::ostringstream oss;
     anch::json::serialize(test, oss);
     std::cout << "Serialized test: " << oss.str() << std::endl;
     std::string res = anch::json::serialize(test);
     std::cout << "Serialized test as string: " << res << std::endl;
+    //std::cout << "Serialized test iomanip: " << anch::json::json_format << test << std::endl;
+  }
+  {
+    Test test = {
+      ._id = "deb94ebc-be28-4899-981a-29199b7a487d",
+      ._value = "this is a value",
+      ._nums = {1,2,3,4}
+    };
+    std::vector<Test> tests = {test, {
+	._id = "44666aab-0b63-47a1-80bb-ae84bc844289",
+	._value = "this is another value",
+	._nums = {5,6,7,8}}
+    };
+    //std::ostringstream oss;
+    std::cout << "Serialized test array: ";
+    anch::json::serialize(tests, std::cout);
+    std::cout << std::endl;
+    //std::cout << "Serialized test array: " << oss.str() << std::endl;
+    std::string res = anch::json::serialize(tests);
+    std::cout << "Serialized test array as string: " << res << std::endl;
     //std::cout << "Serialized test iomanip: " << anch::json::json_format << test << std::endl;
   }
   {
@@ -171,7 +192,7 @@ main(void) {
     std::istringstream iss(json);
     Toto toto;
     try {
-      JSONFactory<Toto>::getInstance().deserialize(toto, iss);
+      anch::json::deserialize(toto, iss);
       //std::cout << "id=" << test._id << " ; value=" << test._value << std::endl;
     } catch(const std::bad_cast& e) {
       std::cerr << "Bad cast " << e.what() << std::endl;
@@ -183,9 +204,9 @@ main(void) {
   }
   {
     std::ifstream iss("toto.json");
-    Toto toto;
+    //Toto toto;
     try {
-      JSONFactory<Toto>::getInstance().deserialize(toto, iss);
+      Toto toto = anch::json::deserialize<Toto>(iss);
       //std::cout << "id=" << test._id << " ; value=" << test._value << std::endl;
     } catch(const std::bad_cast& e) {
       std::cerr << "Bad cast " << e.what() << std::endl;

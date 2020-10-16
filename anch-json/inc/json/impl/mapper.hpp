@@ -99,18 +99,12 @@ namespace anch {
 	}
       }));
       _readers[key] = std::function<void(T&, std::istream&)>([=, this](T& obj, std::istream& input) -> void {
+	static_assert(!std::is_reference<P>::value, "Can not desrialize reference value"); // raise compile-time error if value is a reference
 	if constexpr (std::is_pointer<P>::value) { // Remove pointer on parameter type to check the main type
 	  if constexpr (std::is_same<T, typename std::remove_pointer<P>>::value) { // if same, use direct call to avoid recursive instanciation
 	    return this->deserialize(obj.*value, input);
 	  } else { // Use 'unpointered' type
 	    return JSONFactory<typename std::remove_pointer<P>::type>::getInstance().deserialize(obj.*value, input);
-	  }
-
-	} else if constexpr (std::is_reference<P>::value) { // Remove reference on parameter type to check the main type
-	  if constexpr (std::is_same<T, typename std::remove_reference<P>>::value) { // if same, use direct call to avoid recursive instanciation
-	    return this->deserialize(obj.*value, input);
-	  } else { // Use 'unreferenced' type
-	    return JSONFactory<typename std::decay<P>::type>::getInstance().deserialize(obj.*value, input);
 	  }
 
 	} else { // Basic type
@@ -190,6 +184,7 @@ namespace anch {
     JSONMapper<T>&
     JSONMapper<T>::registerField(const std::string& key, std::function<void(T&, const P&)> setter) {
       _readers[key] = std::function<void(T&, std::istream&)>([=, this](T& obj, std::istream& input) -> void {
+	static_assert(!std::is_reference<P>::value, "Can not desrialize reference value"); // raise compile-time error if value is a reference
 	if constexpr (std::is_same<MT, P>::value) { // Mapper type has not been specified
 
 	  if constexpr (std::is_pointer<P>::value) { // Remove pointer on parameter type to check the main type
@@ -202,9 +197,6 @@ namespace anch {
 	      JSONFactory<typename std::remove_pointer<P>::type>::getInstance().deserialize(inst, input);
 	      std::invoke(setter, obj, inst);
 	    }
-
-	  } else if constexpr (std::is_reference<P>::value) { // Remove reference on parameter type to check the main type
-	    throw 456789; // \todo error ... can not deserialize reference ...
 
 	  } else { // Basic type
 	    if constexpr (std::is_same<P, T>::value) { // if same, use direct call to avoid recursive instanciation
@@ -282,8 +274,9 @@ namespace anch {
     }
 
     template<typename T>
+    template<typename A>
     bool
-    serializeArrayFromContainer(const T& array, std::ostream& out, const std::optional<std::string>& field) {
+    JSONMapper<T>::serializeArrayFromContainer(const A& array, std::ostream& out, const std::optional<std::string>& field) {
       if(field.has_value()) {
 	out << anch::json::STRING_DELIMITER << field.value() << anch::json::STRING_DELIMITER << anch::json::FIELD_VALUE_SEPARATOR;
       }
@@ -292,7 +285,7 @@ namespace anch {
 	if(iter != array.begin()) {
 	  out << anch::json::FIELD_SEPARATOR;
 	}
-	out << JSONMapper<T>::serialize(*iter, out, anch::json::EMPTY_FIELD);
+	serialize(*iter, out, anch::json::EMPTY_FIELD);
       }
       out << anch::json::ARRAY_END;
       return true;
@@ -301,19 +294,19 @@ namespace anch {
     template<typename T>
     bool
     JSONMapper<T>::serialize(const std::vector<T>& value, std::ostream& out, const std::optional<std::string>& field) {
-      return anch::json::serializeArrayFromContainer(value, out, field);
+      return serializeArrayFromContainer(value, out, field);
     }
 
     template<typename T>
     bool
     JSONMapper<T>::serialize(const std::list<T>& value, std::ostream& out, const std::optional<std::string>& field) {
-      return anch::json::serializeArrayFromContainer(value, out, field);
+      return serializeArrayFromContainer(value, out, field);
     }
 
     template<typename T>
     bool
     JSONMapper<T>::serialize(const std::set<T>& value, std::ostream& out, const std::optional<std::string>& field) {
-      return anch::json::serializeArrayFromContainer(value, out, field);
+      return serializeArrayFromContainer(value, out, field);
     }
 
     template<typename T>
