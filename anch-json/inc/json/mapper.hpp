@@ -298,18 +298,15 @@ namespace anch {
        * \param input the input stream to parse
        * \param field the field
        */
-      void deserializeNonNull(T& value, std::istream& input);
+      void deserializeValue(T& value, std::istream& input);
 
       /*!
-       * Desrialize array
+       * Serialize value
        *
-       * \param input the input stream to parse
-       * \param pushFunc the push function to invoke to add item into array
+       * \param value the reference attribute to serialize
+       * \param out the output stream to write the attribute
        */
-      void deserializeArray(std::istream& input, std::function<void(const T&)> pushFunc);
-
-      template<typename A>
-      bool serializeArrayFromContainer(const A& array, std::ostream& out, const std::optional<std::string>& field);
+      void serializeValue(const T& value, std::ostream& out);
       // Methods -
 
       // Accessors +

@@ -42,24 +42,14 @@
 using anch::json::JSONPrimitiveMapper;
 
 template<typename T>
-bool
-serializeStringArray(const T& array, std::ostream& out, const std::optional<std::string>& field) {
-  if(field.has_value()) {
-    out << anch::json::STRING_DELIMITER << field.value() << anch::json::STRING_DELIMITER << anch::json::FIELD_VALUE_SEPARATOR;
-  }
-  out << anch::json::ARRAY_BEGIN;
-  for(auto iter = array.begin() ; iter != array.end() ; ++iter) {
-    if(iter != array.begin()) {
-      out << anch::json::FIELD_SEPARATOR;
-    }
-    out << anch::json::STRING_DELIMITER << *iter << anch::json::STRING_DELIMITER;
-  }
-  out << anch::json::ARRAY_END;
-  return true;
+inline
+void
+serializeValue(const T& value, std::ostream& out) {
+  out << anch::json::STRING_DELIMITER << value << anch::json::STRING_DELIMITER;
 }
 
 void
-deserializeNonNull(std::string& value, std::istream& input) {
+deserializeValue(std::string& value, std::istream& input) {
   // Look for '"'
   int current = input.get();
   if(current != anch::json::STRING_DELIMITER) {
@@ -108,7 +98,7 @@ JSONPrimitiveMapper<std::string>::serialize(const std::string& value, std::ostre
   if(field.has_value()) {
     out << anch::json::STRING_DELIMITER << field.value() << anch::json::STRING_DELIMITER << anch::json::FIELD_VALUE_SEPARATOR;
   }
-  out << anch::json::STRING_DELIMITER << value << anch::json::STRING_DELIMITER;
+  serializeValue(value, out);
   return true;
 }
 
@@ -118,7 +108,7 @@ JSONPrimitiveMapper<std::string>::serialize(const std::string* const value, std:
   if(value == NULL) {
     return false;
   }
-  return this->serialize(*value, out, field);
+  return serialize(*value, out, field);
 }
 
 template<>
@@ -127,32 +117,35 @@ JSONPrimitiveMapper<std::string>::serialize(const std::optional<std::string>& va
   if(!value.has_value()) {
     return false;
   }
-  return this->serialize(value.value(), out, field);
+  return serialize(value.value(), out, field);
 }
 
 template<>
 bool
 JSONPrimitiveMapper<std::string>::serialize(const std::vector<std::string>& value, std::ostream& out, const std::optional<std::string>& field) {
-  return serializeStringArray(value, out, field);
+  anch::json::serializeArray<std::string>(value, out, &serializeValue<std::string>, field);
+  return true;
 }
 
 template<>
 bool
 JSONPrimitiveMapper<std::string>::serialize(const std::list<std::string>& value, std::ostream& out, const std::optional<std::string>& field) {
-  return serializeStringArray(value, out, field);
+  anch::json::serializeArray<std::string>(value, out, &serializeValue<std::string>, field);
+  return true;
 }
 
 template<>
 bool
 JSONPrimitiveMapper<std::string>::serialize(const std::set<std::string>& value, std::ostream& out, const std::optional<std::string>& field) {
-  return serializeStringArray(value, out, field);
+  anch::json::serializeArray<std::string>(value, out, &serializeValue<std::string>, field);
+  return true;
 }
 
 template<>
 void
 JSONPrimitiveMapper<std::string>::deserialize(std::string& value, std::istream& input) {
   if(!anch::json::isNull(input)) {
-    deserializeNonNull(value, input);
+    deserializeValue(value, input);
   }
 }
 
@@ -163,7 +156,7 @@ JSONPrimitiveMapper<std::string>::deserialize(std::optional<std::string>& value,
     value.reset();
   } else {
     std::string parsed;
-    deserializeNonNull(parsed, input);
+    deserializeValue(parsed, input);
     value = std::move(parsed);
   }
 }
@@ -175,7 +168,7 @@ JSONPrimitiveMapper<std::string>::deserialize(std::string* value, std::istream& 
     value = NULL;
   } else {
     value = new std::string();
-    deserializeNonNull(*value, input);
+    deserializeValue(*value, input);
   }
 }
 
@@ -184,7 +177,7 @@ void
 JSONPrimitiveMapper<std::string>::deserialize(std::vector<std::string>& value, std::istream& input) {
   anch::json::deserializeArray<std::string>(input,
 					    [&value](const std::string& str) -> void { value.push_back(str); },
-					    std::function<void(std::string&,std::istream&)>(deserializeNonNull));
+					    std::function<void(std::string&,std::istream&)>(deserializeValue));
 }
 
 template<>
@@ -192,7 +185,7 @@ void
 JSONPrimitiveMapper<std::string>::deserialize(std::list<std::string>& value, std::istream& input) {
   anch::json::deserializeArray<std::string>(input,
 					    [&value](const std::string& str) -> void { value.push_back(str); },
-					    std::function<void(std::string&,std::istream&)>(deserializeNonNull));
+					    std::function<void(std::string&,std::istream&)>(deserializeValue));
 }
 
 template<>
@@ -200,7 +193,7 @@ void
 JSONPrimitiveMapper<std::string>::deserialize(std::set<std::string>& value, std::istream& input) {
   anch::json::deserializeArray<std::string>(input,
 					    [&value](const std::string& str) -> void { value.insert(str); },
-					    std::function<void(std::string&,std::istream&)>(deserializeNonNull));
+					    std::function<void(std::string&,std::istream&)>(deserializeValue));
 }
 
 template class JSONPrimitiveMapper<std::string>;
@@ -223,7 +216,7 @@ JSONPrimitiveMapper<std::string_view>::serialize(const std::string_view& value, 
   if(field.has_value()) {
     out << anch::json::STRING_DELIMITER << field.value() << anch::json::STRING_DELIMITER << anch::json::FIELD_VALUE_SEPARATOR;
   }
-  out << anch::json::STRING_DELIMITER << value << anch::json::STRING_DELIMITER;
+  serializeValue(value, out);
   return true;
 }
 
@@ -233,7 +226,7 @@ JSONPrimitiveMapper<std::string_view>::serialize(const std::string_view* const v
   if(value == NULL) {
     return false;
   }
-  return this->serialize(*value, out, field);
+  return serialize(*value, out, field);
 }
 
 template<>
@@ -242,25 +235,28 @@ JSONPrimitiveMapper<std::string_view>::serialize(const std::optional<std::string
   if(!value.has_value()) {
     return false;
   }
-  return this->serialize(value.value(), out, field);
+  return serialize(value.value(), out, field);
 }
 
 template<>
 bool
 JSONPrimitiveMapper<std::string_view>::serialize(const std::vector<std::string_view>& value, std::ostream& out, const std::optional<std::string>& field) {
-  return serializeStringArray(value, out, field);
+  anch::json::serializeArray<std::string_view>(value, out, &serializeValue<std::string_view>, field);
+  return true;
 }
 
 template<>
 bool
 JSONPrimitiveMapper<std::string_view>::serialize(const std::list<std::string_view>& value, std::ostream& out, const std::optional<std::string>& field) {
-  return serializeStringArray(value, out, field);
+  anch::json::serializeArray<std::string_view>(value, out, &serializeValue<std::string_view>, field);
+  return true;
 }
 
 template<>
 bool
 JSONPrimitiveMapper<std::string_view>::serialize(const std::set<std::string_view>& value, std::ostream& out, const std::optional<std::string>& field) {
-  return serializeStringArray(value, out, field);
+  anch::json::serializeArray<std::string_view>(value, out, &serializeValue<std::string_view>, field);
+  return true;
 }
 
 template<>

@@ -31,21 +31,10 @@
 
 using anch::json::JSONPrimitiveMapper;
 
-template<typename T>
-bool
-serializeBooleanArray(const T& array, std::ostream& out, const std::optional<std::string>& field) {
-  if(field.has_value()) {
-    out << anch::json::STRING_DELIMITER << field.value() << anch::json::STRING_DELIMITER << anch::json::FIELD_VALUE_SEPARATOR;
-  }
-  out << anch::json::ARRAY_BEGIN;
-  for(auto iter = array.begin() ; iter != array.end() ; ++iter) {
-    if(iter != array.begin()) {
-      out << anch::json::FIELD_SEPARATOR;
-    }
-    out << (*iter ? "true" : "false");
-  }
-  out << anch::json::ARRAY_END;
-  return true;
+inline
+void
+serializeValue(const bool& value, std::ostream& out) {
+  out << (value ? "true" : "false");
 }
 
 inline
@@ -63,7 +52,7 @@ isNumericChar(int car) {
 }
 
 void
-deserializeNonNull(bool& value, std::istream& input) {
+deserializeValue(bool& value, std::istream& input) {
   std::ostringstream buffer;
   int current;
   while(input) {
@@ -102,7 +91,7 @@ JSONPrimitiveMapper<bool>::serialize(const bool& value, std::ostream& out, const
   if(field.has_value()) {
     out << anch::json::STRING_DELIMITER << field.value() << anch::json::STRING_DELIMITER << anch::json::FIELD_VALUE_SEPARATOR;
   }
-  out << (value ? "true" : "false");
+  serializeValue(value, out);
   return true;
 }
 
@@ -112,7 +101,7 @@ JSONPrimitiveMapper<bool>::serialize(const bool* const value, std::ostream& out,
   if(value == NULL) {
     return false;
   }
-  return this->serialize(*value, out, field);
+  return serialize(*value, out, field);
 }
 
 template<>
@@ -121,32 +110,35 @@ JSONPrimitiveMapper<bool>::serialize(const std::optional<bool>& value, std::ostr
   if(!value.has_value()) {
     return false;
   }
-  return this->serialize(value.value(), out, field);
+  return serialize(value.value(), out, field);
 }
 
 template<>
 bool
 JSONPrimitiveMapper<bool>::serialize(const std::vector<bool>& value, std::ostream& out, const std::optional<std::string>& field) {
-  return serializeBooleanArray(value, out, field);
+  anch::json::serializeArray<bool>(value, out, &serializeValue, field);
+  return true;
 }
 
 template<>
 bool
 JSONPrimitiveMapper<bool>::serialize(const std::list<bool>& value, std::ostream& out, const std::optional<std::string>& field) {
-  return serializeBooleanArray(value, out, field);
+  anch::json::serializeArray<bool>(value, out, &serializeValue, field);
+  return true;
 }
 
 template<>
 bool
 JSONPrimitiveMapper<bool>::serialize(const std::set<bool>& value, std::ostream& out, const std::optional<std::string>& field) {
-  return serializeBooleanArray(value, out, field);
+  anch::json::serializeArray<bool>(value, out, &serializeValue, field);
+  return true;
 }
 
 template<>
 void
 JSONPrimitiveMapper<bool>::deserialize(bool& value, std::istream& input) {
   if(!anch::json::isNull(input)) {
-    deserializeNonNull(value, input);
+    deserializeValue(value, input);
   }
 }
 
@@ -157,7 +149,7 @@ JSONPrimitiveMapper<bool>::deserialize(std::optional<bool>& value, std::istream&
     value.reset();
   } else {
     bool parsed;
-    deserializeNonNull(parsed, input);
+    deserializeValue(parsed, input);
     value = std::move(parsed);
   }
 }
@@ -169,7 +161,7 @@ JSONPrimitiveMapper<bool>::deserialize(bool* value, std::istream& input) {
     value = NULL;
   } else {
     value = new bool();
-    deserializeNonNull(*value, input);
+    deserializeValue(*value, input);
   }
 }
 
@@ -178,7 +170,7 @@ void
 JSONPrimitiveMapper<bool>::deserialize(std::vector<bool>& value, std::istream& input) {
   anch::json::deserializeArray<bool>(input,
 				     [&value](const bool& str) -> void { value.push_back(str); },
-				     std::function<void(bool&,std::istream&)>(deserializeNonNull));
+				     std::function<void(bool&,std::istream&)>(deserializeValue));
 }
 
 template<>
@@ -186,7 +178,7 @@ void
 JSONPrimitiveMapper<bool>::deserialize(std::list<bool>& value, std::istream& input) {
   anch::json::deserializeArray<bool>(input,
 				     [&value](const bool& str) -> void { value.push_back(str); },
-				     std::function<void(bool&,std::istream&)>(deserializeNonNull));
+				     std::function<void(bool&,std::istream&)>(deserializeValue));
 }
 
 template<>
@@ -194,7 +186,7 @@ void
 JSONPrimitiveMapper<bool>::deserialize(std::set<bool>& value, std::istream& input) {
   anch::json::deserializeArray<bool>(input,
 				     [&value](const bool& str) -> void { value.insert(str); },
-				     std::function<void(bool&,std::istream&)>(deserializeNonNull));
+				     std::function<void(bool&,std::istream&)>(deserializeValue));
 }
 
 template class JSONPrimitiveMapper<bool>;

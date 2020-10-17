@@ -72,12 +72,27 @@ namespace anch {
     /*!
      * JSON array deserialization generic implementation
      *
+     * \tparam T the object type
+     *
      * \param input the input stream to deserialize
      * \param pushFunc the push function according to container type
      * \param deserializeNonNull the non null value deserialization function
      */
     template<typename T>
     void deserializeArray(std::istream& input, std::function<auto(const T&)> pushFunc, std::function<void((T& value, std::istream& input))> deserializeNonNull);
+
+    /*!
+     * JSON array deserialization generic implementation
+     *
+     * \tparam A the container type
+     * \tparam T the object type
+     *
+     * \param array the array to serialize
+     * \param out the output stream to write in
+     * \param serializeFunc the serialization function
+     */
+    template<typename T, typename A>
+    void serializeArray(const A& array, std::ostream& out, std::function<void((const T& value, std::ostream& out))> serializeFunc, const std::optional<std::string>& field);
 
     class JSONParser {
     private:

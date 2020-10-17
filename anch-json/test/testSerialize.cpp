@@ -164,7 +164,8 @@ main(void) {
     std::vector<Test> tests = {test, {
 	._id = "44666aab-0b63-47a1-80bb-ae84bc844289",
 	._value = "this is another value",
-	._nums = {5,6,7,8}}
+	._nums = {5,6,7,8}
+      }
     };
     //std::ostringstream oss;
     std::cout << "Serialized test array: ";
@@ -207,6 +208,22 @@ main(void) {
     //Toto toto;
     try {
       Toto toto = anch::json::deserialize<Toto>(iss);
+      //std::cout << "id=" << test._id << " ; value=" << test._value << std::endl;
+    } catch(const std::bad_cast& e) {
+      std::cerr << "Bad cast " << e.what() << std::endl;
+      return 1;
+    } catch(const int& code) {
+      std::cerr << "Fail with code " << code << std::endl;
+      return 1;
+    }
+  }
+  {
+    std::ifstream iss("totos.json");
+    //Toto toto;
+    try {
+      std::vector<Test> tests;
+      JSONFactory<Test>::getInstance().deserialize(tests, iss);
+      //Toto toto = anch::json::deserialize<Toto>(iss);
       //std::cout << "id=" << test._id << " ; value=" << test._value << std::endl;
     } catch(const std::bad_cast& e) {
       std::cerr << "Bad cast " << e.what() << std::endl;

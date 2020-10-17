@@ -234,22 +234,10 @@ namespace anch {
     template<typename T>
     bool
     JSONMapper<T>::serialize(const T& value, std::ostream& out, const std::optional<std::string>& field) {
-      JSONMapper<T>& mapper = JSONFactory<T>::getInstance();
       if(field.has_value()) {
 	out << anch::json::STRING_DELIMITER << field.value() << anch::json::STRING_DELIMITER << anch::json::FIELD_VALUE_SEPARATOR;
       }
-      out << anch::json::OBJECT_BEGIN;
-      auto iter = mapper.getWritterMapping().begin();
-      while(true) {
-	bool added = std::invoke(*iter, value, out);
-	if(++iter == mapper.getWritterMapping().end()) {
-	  break;
-	}
-	if(added) {
-	  out << anch::json::FIELD_SEPARATOR;
-	}
-      }
-      out << anch::json::OBJECT_END;
+      serializeValue(value, out);
       return true;
     }
 
@@ -259,7 +247,7 @@ namespace anch {
       if(value == NULL) {
 	return false;
       }
-      return this->serialize(*value, out, field);
+      return serialize(*value, out, field);
     }
 
     template<typename T>
@@ -268,48 +256,50 @@ namespace anch {
       if(!value.has_value()) {
 	return false;
       }
-      return this->serialize(value.value(), out, field);
+      return serialize(value.value(), out, field);
     }
 
     template<typename T>
-    template<typename A>
-    bool
-    JSONMapper<T>::serializeArrayFromContainer(const A& array, std::ostream& out, const std::optional<std::string>& field) {
-      if(field.has_value()) {
-	out << anch::json::STRING_DELIMITER << field.value() << anch::json::STRING_DELIMITER << anch::json::FIELD_VALUE_SEPARATOR;
-      }
-      out << anch::json::ARRAY_BEGIN;
-      for(auto iter = array.begin() ; iter != array.end() ; ++iter) {
-	if(iter != array.begin()) {
+    void
+    JSONMapper<T>::serializeValue(const T& value, std::ostream& out) {
+      out << anch::json::OBJECT_BEGIN;
+      auto iter = _writers.begin();
+      while(true) {
+	bool added = std::invoke(*iter, value, out);
+	if(++iter == _writers.end()) {
+	  break;
+	}
+	if(added) {
 	  out << anch::json::FIELD_SEPARATOR;
 	}
-	serialize(*iter, out, anch::json::EMPTY_FIELD);
       }
-      out << anch::json::ARRAY_END;
-      return true;
+      out << anch::json::OBJECT_END;
     }
 
     template<typename T>
     bool
     JSONMapper<T>::serialize(const std::vector<T>& value, std::ostream& out, const std::optional<std::string>& field) {
-      return serializeArrayFromContainer(value, out, field);
+      anch::json::serializeArray<T>(value, out, std::bind_front(&JSONMapper<T>::serializeValue, this), field);
+      return true;
     }
 
     template<typename T>
     bool
     JSONMapper<T>::serialize(const std::list<T>& value, std::ostream& out, const std::optional<std::string>& field) {
-      return serializeArrayFromContainer(value, out, field);
+      anch::json::serializeArray<T>(value, out, std::bind_front(&JSONMapper<T>::serializeValue, this), field);
+      return true;
     }
 
     template<typename T>
     bool
     JSONMapper<T>::serialize(const std::set<T>& value, std::ostream& out, const std::optional<std::string>& field) {
-      return serializeArrayFromContainer(value, out, field);
+      anch::json::serializeArray<T>(value, out, std::bind_front(&JSONMapper<T>::serializeValue, this), field);
+      return true;
     }
 
     template<typename T>
     void
-    JSONMapper<T>::deserializeNonNull(T& value, std::istream& input) {
+    JSONMapper<T>::deserializeValue(T& value, std::istream& input) {
       char expected = anch::json::OBJECT_BEGIN;
       int current = '\0';
       while(input) {
@@ -350,7 +340,7 @@ namespace anch {
     void
     JSONMapper<T>::deserialize(T& value, std::istream& input) {
       if(!anch::json::isNull(input)) { // this function discards 'spaces'
-	deserializeNonNull(value, input);
+	deserializeValue(value, input);
       }
     }
 
@@ -361,7 +351,7 @@ namespace anch {
 	value.reset();
       } else {
 	T instance;
-	deserializeNonNull(instance, input);
+	deserializeValue(instance, input);
 	value = std::move(instance);
       }
     }
@@ -373,53 +363,32 @@ namespace anch {
 	value = NULL;
       } else {
 	value = new T();
-	deserializeNonNull(*value, input);
-      }
-    }
-
-    template<typename T>
-    void
-    JSONMapper<T>::deserializeArray(std::istream& input, std::function<void(const T&)> pushFunc) {
-      if(anch::json::isNull(input)) {
-	return;
-      }
-      int current = input.get();
-      if(current != anch::json::ARRAY_BEGIN) {
-	throw 128;
-      }
-      anch::json::discardChars(input);
-      if(input.peek() != anch::json::ARRAY_END) {
-	while(input) {
-	  T num;
-	  deserializeNonNull(num, input);
-	  std::invoke(pushFunc, num);
-	  if(!anch::json::hasMoreField(input)) {
-	    break;
-	  }
-	  anch::json::discardChars(input);
-	}
-      }
-      if(!input || input.get() != anch::json::ARRAY_END) {
-	throw 2048; // \todo error ...
+	deserializeValue(*value, input);
       }
     }
 
     template<typename T>
     void
     JSONMapper<T>::deserialize(std::vector<T>& value, std::istream& input) {
-      deserializeArray(input, [&value](const T& obj) -> void { value.push_back(obj); });
+      anch::json::deserializeArray<T>(input,
+				      [&value](const T& obj) -> void { value.push_back(obj); },
+				      std::bind_front(&JSONMapper<T>::deserializeValue, this));
     }
 
     template<typename T>
     void
     JSONMapper<T>::deserialize(std::list<T>& value, std::istream& input) {
-      deserializeArray(input, [&value](const T& obj) -> void { value.push_back(obj); });
+      anch::json::deserializeArray<T>(input,
+				      [&value](const T& obj) -> void { value.push_back(obj); },
+				      std::bind_front(&JSONMapper<T>::deserializeValue, this));
     }
 
     template<typename T>
     void
     JSONMapper<T>::deserialize(std::set<T>& value, std::istream& input) {
-      deserializeArray(input, [&value](const T& obj) -> void { value.insert(obj); });
+      anch::json::deserializeArray<T>(input,
+				      [&value](const T& obj) -> void { value.insert(obj); },
+				      std::bind_front(&JSONMapper<T>::deserializeValue, this));
     }
     // Generic implementations -
 

@@ -23,7 +23,7 @@ namespace anch {
   namespace json {
 
     template<typename T>
-    void deserializeArray(std::istream& input, std::function<void(const T&)> pushFunc, std::function<auto((T& value, std::istream& input))> deserializeNonNull) {
+    void deserializeArray(std::istream& input, std::function<void(const T&)> pushFunc, std::function<void((T& value, std::istream& input))> deserializeNonNull) {
       if(anch::json::isNull(input)) {
 	return;
       }
@@ -34,9 +34,9 @@ namespace anch {
       anch::json::discardChars(input);
       if(input.peek() != anch::json::ARRAY_END) {
 	while(input) {
-	  T num;
-	  std::invoke(deserializeNonNull, num, input);
-	  std::invoke(pushFunc, num);
+	  T value;
+	  std::invoke(deserializeNonNull, value, input);
+	  std::invoke(pushFunc, value);
 	  if(!anch::json::hasMoreField(input)) {
 	    break;
 	  }
@@ -46,6 +46,22 @@ namespace anch {
       if(!input || input.get() != anch::json::ARRAY_END) {
 	throw 2048; // \todo error ...
       }
+    }
+
+    template<typename T, typename A>
+    void serializeArray(const A& array, std::ostream& out, std::function<void((const T& value, std::ostream& out))> serializeFunc, const std::optional<std::string>& field) {
+      if(field.has_value()) {
+	out << anch::json::STRING_DELIMITER << field.value() << anch::json::STRING_DELIMITER << anch::json::FIELD_VALUE_SEPARATOR;
+      }
+      out << anch::json::ARRAY_BEGIN;
+      for(auto iter = array.begin() ; iter != array.end() ; ++iter) {
+	if(iter != array.begin()) {
+	  out << anch::json::FIELD_SEPARATOR;
+	}
+	std::invoke(serializeFunc, *iter, out);
+	//serialize(*iter, out, anch::json::EMPTY_FIELD);
+      }
+      out << anch::json::ARRAY_END;
     }
 
   }  // json
