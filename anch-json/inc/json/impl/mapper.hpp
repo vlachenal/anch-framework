@@ -234,29 +234,19 @@ namespace anch {
     template<typename T>
     bool
     JSONMapper<T>::serialize(const T& value, std::ostream& out, const std::optional<std::string>& field) {
-      if(field.has_value()) {
-	out << anch::json::STRING_DELIMITER << field.value() << anch::json::STRING_DELIMITER << anch::json::FIELD_VALUE_SEPARATOR;
-      }
-      serializeValue(value, out);
-      return true;
+      return anch::json::serialize<T>(value, out, std::bind_front(&JSONMapper<T>::serializeValue, this), field);
     }
 
     template<typename T>
     bool
     JSONMapper<T>::serialize(const T* const value, std::ostream& out, const std::optional<std::string>& field) {
-      if(value == NULL) {
-	return false;
-      }
-      return serialize(*value, out, field);
+      return anch::json::serialize<T>(value, out, std::bind_front(&JSONMapper<T>::serializeValue, this), field);
     }
 
     template<typename T>
     bool
     JSONMapper<T>::serialize(const std::optional<T>& value, std::ostream& out, const std::optional<std::string>& field) {
-      if(!value.has_value()) {
-	return false;
-      }
-      return serialize(value.value(), out, field);
+      return anch::json::serialize<T>(value, out, std::bind_front(&JSONMapper<T>::serializeValue, this), field);
     }
 
     template<typename T>
