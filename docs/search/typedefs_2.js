@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['getinstance_1360',['getInstance',['../namespaceanch_1_1date.html#a99d6646cd4a229357c1b15eda79be38a',1,'anch::date']]]
+  ['getinstance_1358',['getInstance',['../namespaceanch_1_1date.html#a99d6646cd4a229357c1b15eda79be38a',1,'anch::date']]]
 ];

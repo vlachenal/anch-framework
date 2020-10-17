@@ -8,8 +8,6 @@ var classanch_1_1json_1_1_j_s_o_n_mapper =
     [ "deserialize", "classanch_1_1json_1_1_j_s_o_n_mapper.html#a97504e0fda2d46accd39f8ce280da8d3", null ],
     [ "deserialize", "classanch_1_1json_1_1_j_s_o_n_mapper.html#a1368e8ba8d1f5588f3d41d825b674fee", null ],
     [ "deserialize", "classanch_1_1json_1_1_j_s_o_n_mapper.html#abff366bf3777c96e41ccb0ff4d7338ac", null ],
-    [ "getReaderMapping", "classanch_1_1json_1_1_j_s_o_n_mapper.html#a3b92cf3a92b37adf1c5adb69bd7d426a", null ],
-    [ "getWritterMapping", "classanch_1_1json_1_1_j_s_o_n_mapper.html#ae45f22da15f82f1ae3ebd065519eda87", null ],
     [ "serialize", "classanch_1_1json_1_1_j_s_o_n_mapper.html#a43921eefd2fdc45c8ab76302436d2a62", null ],
     [ "serialize", "classanch_1_1json_1_1_j_s_o_n_mapper.html#aaafa60819f58075b65fd70cbdac546a0", null ],
     [ "serialize", "classanch_1_1json_1_1_j_s_o_n_mapper.html#a872c6d72647a44c3d4208a44469a409e", null ],

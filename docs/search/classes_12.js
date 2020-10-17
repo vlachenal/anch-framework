@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['writer_790',['Writer',['../classanch_1_1logger_1_1_writer.html',1,'anch::logger']]]
+  ['writer_789',['Writer',['../classanch_1_1logger_1_1_writer.html',1,'anch::logger']]]
 ];
