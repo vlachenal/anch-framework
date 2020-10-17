@@ -2,6 +2,12 @@ var classanch_1_1json_1_1_j_s_o_n_mapper =
 [
     [ "JSONMapper", "classanch_1_1json_1_1_j_s_o_n_mapper.html#ae7083aeb828743e15f33598f74c4642f", null ],
     [ "JSONMapper", "classanch_1_1json_1_1_j_s_o_n_mapper.html#a683591e832c92caf6d4250bc272e6334", null ],
+    [ "deserialize", "classanch_1_1json_1_1_j_s_o_n_mapper.html#ad682f8d0b628997abd94071bc205bba7", null ],
+    [ "deserialize", "classanch_1_1json_1_1_j_s_o_n_mapper.html#a10c92f2ac0dd0019926e5fffb136d47f", null ],
+    [ "deserialize", "classanch_1_1json_1_1_j_s_o_n_mapper.html#af7d42256ba52310c4d9dea4291a0605b", null ],
+    [ "deserialize", "classanch_1_1json_1_1_j_s_o_n_mapper.html#a97504e0fda2d46accd39f8ce280da8d3", null ],
+    [ "deserialize", "classanch_1_1json_1_1_j_s_o_n_mapper.html#a1368e8ba8d1f5588f3d41d825b674fee", null ],
+    [ "deserialize", "classanch_1_1json_1_1_j_s_o_n_mapper.html#abff366bf3777c96e41ccb0ff4d7338ac", null ],
     [ "getReaderMapping", "classanch_1_1json_1_1_j_s_o_n_mapper.html#a3b92cf3a92b37adf1c5adb69bd7d426a", null ],
     [ "getWritterMapping", "classanch_1_1json_1_1_j_s_o_n_mapper.html#ae45f22da15f82f1ae3ebd065519eda87", null ],
     [ "serialize", "classanch_1_1json_1_1_j_s_o_n_mapper.html#a43921eefd2fdc45c8ab76302436d2a62", null ],

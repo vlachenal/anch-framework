@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['sockettype_1336',['SocketType',['../namespaceanch_1_1network.html#aa518b6bd398c963767bf1974e5c113be',1,'anch::network']]]
+  ['level_1370',['Level',['../namespaceanch_1_1logger.html#a973cdff92f296b5fba7f68660d4ee41f',1,'anch::logger']]]
 ];

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['version_1337',['Version',['../classanch_1_1_u_u_i_d.html#a6ee815d96c7a3fec3e5ed88f05e600f6',1,'anch::UUID']]]
+  ['sockettype_1371',['SocketType',['../namespaceanch_1_1network.html#aa518b6bd398c963767bf1974e5c113be',1,'anch::network']]]
 ];
