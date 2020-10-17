@@ -70,16 +70,52 @@ namespace anch {
     bool hasMoreField(std::istream& input);
 
     /*!
-     * JSON array deserialization generic implementation
+     * Serialize JSON value
      *
-     * \tparam T the object type
+     * \tparam the object type
      *
-     * \param input the input stream to deserialize
-     * \param pushFunc the push function according to container type
-     * \param deserializeNonNull the non null value deserialization function
+     * \param value the value to serialize
+     * \param out the output stream to write in
+     * \param serializeFunc the serialization function
+     * \param field the optional field name
      */
     template<typename T>
-    void deserializeArray(std::istream& input, std::function<auto(const T&)> pushFunc, std::function<void((T& value, std::istream& input))> deserializeNonNull);
+    bool serialize(const T& value,
+		   std::ostream& out,
+		   std::function<void((const T& value, std::ostream& out))> serializeFunc,
+		   const std::optional<std::string>& field);
+
+    /*!
+     * Serialize JSON pointer value
+     *
+     * \tparam the object type
+     *
+     * \param value the value to serialize
+     * \param out the output stream to write in
+     * \param serializeFunc the serialization function
+     * \param field the optional field name
+     */
+    template<typename T>
+    bool serialize(const T* const value,
+		   std::ostream& out,
+		   std::function<void((const T& value, std::ostream& out))> serializeFunc,
+		   const std::optional<std::string>& field);
+
+    /*!
+     * Serialize JSON optional value
+     *
+     * \tparam the object type
+     *
+     * \param value the value to serialize
+     * \param out the output stream to write in
+     * \param serializeFunc the serialization function
+     * \param field the optional field name
+     */
+    template<typename T>
+    bool serialize(const std::optional<T>& value,
+		   std::ostream& out,
+		   std::function<void((const T& value, std::ostream& out))> serializeFunc,
+		   const std::optional<std::string>& field);
 
     /*!
      * JSON array deserialization generic implementation
@@ -92,7 +128,24 @@ namespace anch {
      * \param serializeFunc the serialization function
      */
     template<typename T, typename A>
-    void serializeArray(const A& array, std::ostream& out, std::function<void((const T& value, std::ostream& out))> serializeFunc, const std::optional<std::string>& field);
+    void serializeArray(const A& array,
+			std::ostream& out,
+			std::function<void((const T& value, std::ostream& out))> serializeFunc,
+			const std::optional<std::string>& field);
+
+    /*!
+     * JSON array deserialization generic implementation
+     *
+     * \tparam T the object type
+     *
+     * \param input the input stream to deserialize
+     * \param pushFunc the push function according to container type
+     * \param deserializeFunc the value deserialization function
+     */
+    template<typename T>
+    void deserializeArray(std::istream& input,
+			  std::function<auto(const T&)> pushFunc,
+			  std::function<void((T& value, std::istream& input))> deserializeFunc);
 
     class JSONParser {
     private:

@@ -95,29 +95,19 @@ JSONPrimitiveMapper<std::string>::~JSONPrimitiveMapper() {
 template<>
 bool
 JSONPrimitiveMapper<std::string>::serialize(const std::string& value, std::ostream& out, const std::optional<std::string>& field) {
-  if(field.has_value()) {
-    out << anch::json::STRING_DELIMITER << field.value() << anch::json::STRING_DELIMITER << anch::json::FIELD_VALUE_SEPARATOR;
-  }
-  serializeValue(value, out);
-  return true;
+  return anch::json::serialize(value, out, &serializeValue<std::string>, field);
 }
 
 template<>
 bool
 JSONPrimitiveMapper<std::string>::serialize(const std::string* const value, std::ostream& out, const std::optional<std::string>& field) {
-  if(value == NULL) {
-    return false;
-  }
-  return serialize(*value, out, field);
+  return anch::json::serialize(value, out, &serializeValue<std::string>, field);
 }
 
 template<>
 bool
 JSONPrimitiveMapper<std::string>::serialize(const std::optional<std::string>& value, std::ostream& out, const std::optional<std::string>& field) {
-  if(!value.has_value()) {
-    return false;
-  }
-  return serialize(value.value(), out, field);
+  return anch::json::serialize(value, out, &serializeValue<std::string>, field);
 }
 
 template<>
@@ -213,29 +203,19 @@ JSONPrimitiveMapper<std::string_view>::~JSONPrimitiveMapper() {
 template<>
 bool
 JSONPrimitiveMapper<std::string_view>::serialize(const std::string_view& value, std::ostream& out, const std::optional<std::string>& field) {
-  if(field.has_value()) {
-    out << anch::json::STRING_DELIMITER << field.value() << anch::json::STRING_DELIMITER << anch::json::FIELD_VALUE_SEPARATOR;
-  }
-  serializeValue(value, out);
-  return true;
+  return anch::json::serialize(value, out, &serializeValue<std::string_view>, field);
 }
 
 template<>
 bool
 JSONPrimitiveMapper<std::string_view>::serialize(const std::string_view* const value, std::ostream& out, const std::optional<std::string>& field) {
-  if(value == NULL) {
-    return false;
-  }
-  return serialize(*value, out, field);
+  return anch::json::serialize(value, out, &serializeValue<std::string_view>, field);
 }
 
 template<>
 bool
 JSONPrimitiveMapper<std::string_view>::serialize(const std::optional<std::string_view>& value, std::ostream& out, const std::optional<std::string>& field) {
-  if(!value.has_value()) {
-    return false;
-  }
-  return serialize(value.value(), out, field);
+  return anch::json::serialize(value, out, &serializeValue<std::string_view>, field);
 }
 
 template<>

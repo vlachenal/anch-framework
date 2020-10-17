@@ -88,29 +88,19 @@ JSONPrimitiveMapper<bool>::~JSONPrimitiveMapper() {
 template<>
 bool
 JSONPrimitiveMapper<bool>::serialize(const bool& value, std::ostream& out, const std::optional<std::string>& field) {
-  if(field.has_value()) {
-    out << anch::json::STRING_DELIMITER << field.value() << anch::json::STRING_DELIMITER << anch::json::FIELD_VALUE_SEPARATOR;
-  }
-  serializeValue(value, out);
-  return true;
+  return anch::json::serialize<bool>(value, out, &serializeValue, field);
 }
 
 template<>
 bool
 JSONPrimitiveMapper<bool>::serialize(const bool* const value, std::ostream& out, const std::optional<std::string>& field) {
-  if(value == NULL) {
-    return false;
-  }
-  return serialize(*value, out, field);
+  return anch::json::serialize<bool>(value, out, &serializeValue, field);
 }
 
 template<>
 bool
 JSONPrimitiveMapper<bool>::serialize(const std::optional<bool>& value, std::ostream& out, const std::optional<std::string>& field) {
-  if(!value.has_value()) {
-    return false;
-  }
-  return serialize(value.value(), out, field);
+  return anch::json::serialize<bool>(value, out, &serializeValue, field);
 }
 
 template<>

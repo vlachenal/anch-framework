@@ -101,49 +101,39 @@ JSONPrimitiveMapper<uint64_t>::~JSONPrimitiveMapper() {
 template<>
 bool
 JSONPrimitiveMapper<uint64_t>::serialize(const uint64_t& value, std::ostream& out, const std::optional<std::string>& field) {
-  if(field.has_value()) {
-    out << anch::json::STRING_DELIMITER << field.value() << anch::json::STRING_DELIMITER << anch::json::FIELD_VALUE_SEPARATOR;
-  }
-  out << value;
-  return true;
+  return anch::json::serialize(value, out, &serializeValue<uint64_t>, field);
 }
 
 template<>
 bool
 JSONPrimitiveMapper<uint64_t>::serialize(const uint64_t* const value, std::ostream& out, const std::optional<std::string>& field) {
-  if(value == NULL) {
-    return false;
-  }
-  return serialize(*value, out, field);
+  return anch::json::serialize(value, out, &serializeValue<uint64_t>, field);
 }
 
 template<>
 bool
 JSONPrimitiveMapper<uint64_t>::serialize(const std::optional<uint64_t>& value, std::ostream& out, const std::optional<std::string>& field) {
-  if(!value.has_value()) {
-    return false;
-  }
-  return serialize(value.value(), out, field);
+  return anch::json::serialize(value, out, &serializeValue<uint64_t>, field);
 }
 
 template<>
 bool
 JSONPrimitiveMapper<uint64_t>::serialize(const std::vector<uint64_t>& value, std::ostream& out, const std::optional<std::string>& field) {
-  anch::json::serializeArray<uint64_t>(value, out, serializeValue<uint64_t>, field);
+  anch::json::serializeArray<uint64_t>(value, out, &serializeValue<uint64_t>, field);
   return true;
 }
 
 template<>
 bool
 JSONPrimitiveMapper<uint64_t>::serialize(const std::list<uint64_t>& value, std::ostream& out, const std::optional<std::string>& field) {
-  anch::json::serializeArray<uint64_t>(value, out, serializeValue<uint64_t>, field);
+  anch::json::serializeArray<uint64_t>(value, out, &serializeValue<uint64_t>, field);
   return true;
 }
 
 template<>
 bool
 JSONPrimitiveMapper<uint64_t>::serialize(const std::set<uint64_t>& value, std::ostream& out, const std::optional<std::string>& field) {
-  anch::json::serializeArray<uint64_t>(value, out, serializeValue<uint64_t>, field);
+  anch::json::serializeArray<uint64_t>(value, out, &serializeValue<uint64_t>, field);
   return true;
 }
 
@@ -219,49 +209,39 @@ JSONPrimitiveMapper<int64_t>::~JSONPrimitiveMapper() {
 template<>
 bool
 JSONPrimitiveMapper<int64_t>::serialize(const int64_t& value, std::ostream& out, const std::optional<std::string>& field) {
-  if(field.has_value()) {
-    out << anch::json::STRING_DELIMITER << field.value() << anch::json::STRING_DELIMITER << anch::json::FIELD_VALUE_SEPARATOR;
-  }
-  out << value;
-  return true;
+  return anch::json::serialize(value, out, &serializeValue<int64_t>, field);
 }
 
 template<>
 bool
 JSONPrimitiveMapper<int64_t>::serialize(const int64_t* const value, std::ostream& out, const std::optional<std::string>& field) {
-  if(value == NULL) {
-    return false;
-  }
-  return serialize(*value, out, field);
+  return anch::json::serialize(value, out, &serializeValue<int64_t>, field);
 }
 
 template<>
 bool
 JSONPrimitiveMapper<int64_t>::serialize(const std::optional<int64_t>& value, std::ostream& out, const std::optional<std::string>& field) {
-  if(!value.has_value()) {
-    return false;
-  }
-  return serialize(value.value(), out, field);
+  return anch::json::serialize(value, out, &serializeValue<int64_t>, field);
 }
 
 template<>
 bool
 JSONPrimitiveMapper<int64_t>::serialize(const std::vector<int64_t>& value, std::ostream& out, const std::optional<std::string>& field) {
-  anch::json::serializeArray<int64_t>(value, out, serializeValue<int64_t>, field);
+  anch::json::serializeArray<int64_t>(value, out, &serializeValue<int64_t>, field);
   return true;
 }
 
 template<>
 bool
 JSONPrimitiveMapper<int64_t>::serialize(const std::list<int64_t>& value, std::ostream& out, const std::optional<std::string>& field) {
-  anch::json::serializeArray<int64_t>(value, out, serializeValue<int64_t>, field);
+  anch::json::serializeArray<int64_t>(value, out, &serializeValue<int64_t>, field);
   return true;
 }
 
 template<>
 bool
 JSONPrimitiveMapper<int64_t>::serialize(const std::set<int64_t>& value, std::ostream& out, const std::optional<std::string>& field) {
-  anch::json::serializeArray<int64_t>(value, out, serializeValue<int64_t>, field);
+  anch::json::serializeArray<int64_t>(value, out, &serializeValue<int64_t>, field);
   return true;
 }
 
@@ -337,49 +317,39 @@ JSONPrimitiveMapper<uint32_t>::~JSONPrimitiveMapper() {
 template<>
 bool
 JSONPrimitiveMapper<uint32_t>::serialize(const uint32_t& value, std::ostream& out, const std::optional<std::string>& field) {
-  if(field.has_value()) {
-    out << anch::json::STRING_DELIMITER << field.value() << anch::json::STRING_DELIMITER << anch::json::FIELD_VALUE_SEPARATOR;
-  }
-  out << value;
-  return true;
+  return anch::json::serialize(value, out, &serializeValue<uint32_t>, field);
 }
 
 template<>
 bool
 JSONPrimitiveMapper<uint32_t>::serialize(const uint32_t* const value, std::ostream& out, const std::optional<std::string>& field) {
-  if(value == NULL) {
-    return false;
-  }
-  return serialize(*value, out, field);
+  return anch::json::serialize(value, out, &serializeValue<uint32_t>, field);
 }
 
 template<>
 bool
 JSONPrimitiveMapper<uint32_t>::serialize(const std::optional<uint32_t>& value, std::ostream& out, const std::optional<std::string>& field) {
-  if(!value.has_value()) {
-    return false;
-  }
-  return serialize(value.value(), out, field);
+  return anch::json::serialize(value, out, &serializeValue<uint32_t>, field);
 }
 
 template<>
 bool
 JSONPrimitiveMapper<uint32_t>::serialize(const std::vector<uint32_t>& value, std::ostream& out, const std::optional<std::string>& field) {
-  anch::json::serializeArray<uint32_t>(value, out, serializeValue<uint32_t>, field);
+  anch::json::serializeArray<uint32_t>(value, out, &serializeValue<uint32_t>, field);
   return true;
 }
 
 template<>
 bool
 JSONPrimitiveMapper<uint32_t>::serialize(const std::list<uint32_t>& value, std::ostream& out, const std::optional<std::string>& field) {
-  anch::json::serializeArray<uint32_t>(value, out, serializeValue<uint32_t>, field);
+  anch::json::serializeArray<uint32_t>(value, out, &serializeValue<uint32_t>, field);
   return true;
 }
 
 template<>
 bool
 JSONPrimitiveMapper<uint32_t>::serialize(const std::set<uint32_t>& value, std::ostream& out, const std::optional<std::string>& field) {
-  anch::json::serializeArray<uint32_t>(value, out, serializeValue<uint32_t>, field);
+  anch::json::serializeArray<uint32_t>(value, out, &serializeValue<uint32_t>, field);
   return true;
 }
 
@@ -455,49 +425,39 @@ JSONPrimitiveMapper<int32_t>::~JSONPrimitiveMapper() {
 template<>
 bool
 JSONPrimitiveMapper<int32_t>::serialize(const int32_t& value, std::ostream& out, const std::optional<std::string>& field) {
-  if(field.has_value()) {
-    out << anch::json::STRING_DELIMITER << field.value() << anch::json::STRING_DELIMITER << anch::json::FIELD_VALUE_SEPARATOR;
-  }
-  out << value;
-  return true;
+  return anch::json::serialize(value, out, &serializeValue<int32_t>, field);
 }
 
 template<>
 bool
 JSONPrimitiveMapper<int32_t>::serialize(const int32_t* const value, std::ostream& out, const std::optional<std::string>& field) {
-  if(value == NULL) {
-    return false;
-  }
-  return serialize(*value, out, field);
+  return anch::json::serialize(value, out, &serializeValue<int32_t>, field);
 }
 
 template<>
 bool
 JSONPrimitiveMapper<int32_t>::serialize(const std::optional<int32_t>& value, std::ostream& out, const std::optional<std::string>& field) {
-  if(!value.has_value()) {
-    return false;
-  }
-  return serialize(value.value(), out, field);
+  return anch::json::serialize(value, out, &serializeValue<int32_t>, field);
 }
 
 template<>
 bool
 JSONPrimitiveMapper<int32_t>::serialize(const std::vector<int32_t>& value, std::ostream& out, const std::optional<std::string>& field) {
-  anch::json::serializeArray<int32_t>(value, out, serializeValue<int32_t>, field);
+  anch::json::serializeArray<int32_t>(value, out, &serializeValue<int32_t>, field);
   return true;
 }
 
 template<>
 bool
 JSONPrimitiveMapper<int32_t>::serialize(const std::list<int32_t>& value, std::ostream& out, const std::optional<std::string>& field) {
-  anch::json::serializeArray<int32_t>(value, out, serializeValue<int32_t>, field);
+  anch::json::serializeArray<int32_t>(value, out, &serializeValue<int32_t>, field);
   return true;
 }
 
 template<>
 bool
 JSONPrimitiveMapper<int32_t>::serialize(const std::set<int32_t>& value, std::ostream& out, const std::optional<std::string>& field) {
-  anch::json::serializeArray<int32_t>(value, out, serializeValue<int32_t>, field);
+  anch::json::serializeArray<int32_t>(value, out, &serializeValue<int32_t>, field);
   return true;
 }
 
@@ -573,49 +533,39 @@ JSONPrimitiveMapper<uint16_t>::~JSONPrimitiveMapper() {
 template<>
 bool
 JSONPrimitiveMapper<uint16_t>::serialize(const uint16_t& value, std::ostream& out, const std::optional<std::string>& field) {
-  if(field.has_value()) {
-    out << anch::json::STRING_DELIMITER << field.value() << anch::json::STRING_DELIMITER << anch::json::FIELD_VALUE_SEPARATOR;
-  }
-  out << value;
-  return true;
+  return anch::json::serialize(value, out, &serializeValue<uint16_t>, field);
 }
 
 template<>
 bool
 JSONPrimitiveMapper<uint16_t>::serialize(const uint16_t* const value, std::ostream& out, const std::optional<std::string>& field) {
-  if(value == NULL) {
-    return false;
-  }
-  return serialize(*value, out, field);
+  return anch::json::serialize(value, out, &serializeValue<uint16_t>, field);
 }
 
 template<>
 bool
 JSONPrimitiveMapper<uint16_t>::serialize(const std::optional<uint16_t>& value, std::ostream& out, const std::optional<std::string>& field) {
-  if(!value.has_value()) {
-    return false;
-  }
-  return serialize(value.value(), out, field);
+  return anch::json::serialize(value, out, &serializeValue<uint16_t>, field);
 }
 
 template<>
 bool
 JSONPrimitiveMapper<uint16_t>::serialize(const std::vector<uint16_t>& value, std::ostream& out, const std::optional<std::string>& field) {
-  anch::json::serializeArray<uint16_t>(value, out, serializeValue<uint16_t>, field);
+  anch::json::serializeArray<uint16_t>(value, out, &serializeValue<uint16_t>, field);
   return true;
 }
 
 template<>
 bool
 JSONPrimitiveMapper<uint16_t>::serialize(const std::list<uint16_t>& value, std::ostream& out, const std::optional<std::string>& field) {
-  anch::json::serializeArray<uint16_t>(value, out, serializeValue<uint16_t>, field);
+  anch::json::serializeArray<uint16_t>(value, out, &serializeValue<uint16_t>, field);
   return true;
 }
 
 template<>
 bool
 JSONPrimitiveMapper<uint16_t>::serialize(const std::set<uint16_t>& value, std::ostream& out, const std::optional<std::string>& field) {
-  anch::json::serializeArray<uint16_t>(value, out, serializeValue<uint16_t>, field);
+  anch::json::serializeArray<uint16_t>(value, out, &serializeValue<uint16_t>, field);
   return true;
 }
 
@@ -691,49 +641,39 @@ JSONPrimitiveMapper<int16_t>::~JSONPrimitiveMapper() {
 template<>
 bool
 JSONPrimitiveMapper<int16_t>::serialize(const int16_t& value, std::ostream& out, const std::optional<std::string>& field) {
-  if(field.has_value()) {
-    out << anch::json::STRING_DELIMITER << field.value() << anch::json::STRING_DELIMITER << anch::json::FIELD_VALUE_SEPARATOR;
-  }
-  out << value;
-  return true;
+  return anch::json::serialize(value, out, &serializeValue<int16_t>, field);
 }
 
 template<>
 bool
 JSONPrimitiveMapper<int16_t>::serialize(const int16_t* const value, std::ostream& out, const std::optional<std::string>& field) {
-  if(value == NULL) {
-    return false;
-  }
-  return serialize(*value, out, field);
+  return anch::json::serialize(value, out, &serializeValue<int16_t>, field);
 }
 
 template<>
 bool
 JSONPrimitiveMapper<int16_t>::serialize(const std::optional<int16_t>& value, std::ostream& out, const std::optional<std::string>& field) {
-  if(!value.has_value()) {
-    return false;
-  }
-  return serialize(value.value(), out, field);
+  return anch::json::serialize(value, out, &serializeValue<int16_t>, field);
 }
 
 template<>
 bool
 JSONPrimitiveMapper<int16_t>::serialize(const std::vector<int16_t>& value, std::ostream& out, const std::optional<std::string>& field) {
-  anch::json::serializeArray<int16_t>(value, out, serializeValue<int16_t>, field);
+  anch::json::serializeArray<int16_t>(value, out, &serializeValue<int16_t>, field);
   return true;
 }
 
 template<>
 bool
 JSONPrimitiveMapper<int16_t>::serialize(const std::list<int16_t>& value, std::ostream& out, const std::optional<std::string>& field) {
-  anch::json::serializeArray<int16_t>(value, out, serializeValue<int16_t>, field);
+  anch::json::serializeArray<int16_t>(value, out, &serializeValue<int16_t>, field);
   return true;
 }
 
 template<>
 bool
 JSONPrimitiveMapper<int16_t>::serialize(const std::set<int16_t>& value, std::ostream& out, const std::optional<std::string>& field) {
-  anch::json::serializeArray<int16_t>(value, out, serializeValue<int16_t>, field);
+  anch::json::serializeArray<int16_t>(value, out, &serializeValue<int16_t>, field);
   return true;
 }
 
@@ -809,49 +749,39 @@ JSONPrimitiveMapper<uint8_t>::~JSONPrimitiveMapper() {
 template<>
 bool
 JSONPrimitiveMapper<uint8_t>::serialize(const uint8_t& value, std::ostream& out, const std::optional<std::string>& field) {
-  if(field.has_value()) {
-    out << anch::json::STRING_DELIMITER << field.value() << anch::json::STRING_DELIMITER << anch::json::FIELD_VALUE_SEPARATOR;
-  }
-  out << value;
-  return true;
+  return anch::json::serialize(value, out, &serializeValue<uint8_t>, field);
 }
 
 template<>
 bool
 JSONPrimitiveMapper<uint8_t>::serialize(const uint8_t* const value, std::ostream& out, const std::optional<std::string>& field) {
-  if(value == NULL) {
-    return false;
-  }
-  return serialize(*value, out, field);
+  return anch::json::serialize(value, out, &serializeValue<uint8_t>, field);
 }
 
 template<>
 bool
 JSONPrimitiveMapper<uint8_t>::serialize(const std::optional<uint8_t>& value, std::ostream& out, const std::optional<std::string>& field) {
-  if(!value.has_value()) {
-    return false;
-  }
-  return serialize(value.value(), out, field);
+  return anch::json::serialize(value, out, &serializeValue<uint8_t>, field);
 }
 
 template<>
 bool
 JSONPrimitiveMapper<uint8_t>::serialize(const std::vector<uint8_t>& value, std::ostream& out, const std::optional<std::string>& field) {
-  anch::json::serializeArray<uint8_t>(value, out, serializeValue<uint8_t>, field);
+  anch::json::serializeArray<uint8_t>(value, out, &serializeValue<uint8_t>, field);
   return true;
 }
 
 template<>
 bool
 JSONPrimitiveMapper<uint8_t>::serialize(const std::list<uint8_t>& value, std::ostream& out, const std::optional<std::string>& field) {
-  anch::json::serializeArray<uint8_t>(value, out, serializeValue<uint8_t>, field);
+  anch::json::serializeArray<uint8_t>(value, out, &serializeValue<uint8_t>, field);
   return true;
 }
 
 template<>
 bool
 JSONPrimitiveMapper<uint8_t>::serialize(const std::set<uint8_t>& value, std::ostream& out, const std::optional<std::string>& field) {
-  anch::json::serializeArray<uint8_t>(value, out, serializeValue<uint8_t>, field);
+  anch::json::serializeArray<uint8_t>(value, out, &serializeValue<uint8_t>, field);
   return true;
 }
 
@@ -927,49 +857,39 @@ JSONPrimitiveMapper<int8_t>::~JSONPrimitiveMapper() {
 template<>
 bool
 JSONPrimitiveMapper<int8_t>::serialize(const int8_t& value, std::ostream& out, const std::optional<std::string>& field) {
-  if(field.has_value()) {
-    out << anch::json::STRING_DELIMITER << field.value() << anch::json::STRING_DELIMITER << anch::json::FIELD_VALUE_SEPARATOR;
-  }
-  out << value;
-  return true;
+  return anch::json::serialize(value, out, &serializeValue<int8_t>, field);
 }
 
 template<>
 bool
 JSONPrimitiveMapper<int8_t>::serialize(const int8_t* const value, std::ostream& out, const std::optional<std::string>& field) {
-  if(value == NULL) {
-    return false;
-  }
-  return serialize(*value, out, field);
+  return anch::json::serialize(value, out, &serializeValue<int8_t>, field);
 }
 
 template<>
 bool
 JSONPrimitiveMapper<int8_t>::serialize(const std::optional<int8_t>& value, std::ostream& out, const std::optional<std::string>& field) {
-  if(!value.has_value()) {
-    return false;
-  }
-  return serialize(value.value(), out, field);
+  return anch::json::serialize(value, out, &serializeValue<int8_t>, field);
 }
 
 template<>
 bool
 JSONPrimitiveMapper<int8_t>::serialize(const std::vector<int8_t>& value, std::ostream& out, const std::optional<std::string>& field) {
-  anch::json::serializeArray<int8_t>(value, out, serializeValue<int8_t>, field);
+  anch::json::serializeArray<int8_t>(value, out, &serializeValue<int8_t>, field);
   return true;
 }
 
 template<>
 bool
 JSONPrimitiveMapper<int8_t>::serialize(const std::list<int8_t>& value, std::ostream& out, const std::optional<std::string>& field) {
-  anch::json::serializeArray<int8_t>(value, out, serializeValue<int8_t>, field);
+  anch::json::serializeArray<int8_t>(value, out, &serializeValue<int8_t>, field);
   return true;
 }
 
 template<>
 bool
 JSONPrimitiveMapper<int8_t>::serialize(const std::set<int8_t>& value, std::ostream& out, const std::optional<std::string>& field) {
-  anch::json::serializeArray<int8_t>(value, out, serializeValue<int8_t>, field);
+  anch::json::serializeArray<int8_t>(value, out, &serializeValue<int8_t>, field);
   return true;
 }
 
@@ -1045,49 +965,39 @@ JSONPrimitiveMapper<float>::~JSONPrimitiveMapper() {
 template<>
 bool
 JSONPrimitiveMapper<float>::serialize(const float& value, std::ostream& out, const std::optional<std::string>& field) {
-  if(field.has_value()) {
-    out << anch::json::STRING_DELIMITER << field.value() << anch::json::STRING_DELIMITER << anch::json::FIELD_VALUE_SEPARATOR;
-  }
-  out << value;
-  return true;
+  return anch::json::serialize(value, out, &serializeValue<float>, field);
 }
 
 template<>
 bool
 JSONPrimitiveMapper<float>::serialize(const float* const value, std::ostream& out, const std::optional<std::string>& field) {
-  if(value == NULL) {
-    return false;
-  }
-  return serialize(*value, out, field);
+  return anch::json::serialize(value, out, &serializeValue<float>, field);
 }
 
 template<>
 bool
 JSONPrimitiveMapper<float>::serialize(const std::optional<float>& value, std::ostream& out, const std::optional<std::string>& field) {
-  if(!value.has_value()) {
-    return false;
-  }
-  return serialize(value.value(), out, field);
+  return anch::json::serialize(value, out, &serializeValue<float>, field);
 }
 
 template<>
 bool
 JSONPrimitiveMapper<float>::serialize(const std::vector<float>& value, std::ostream& out, const std::optional<std::string>& field) {
-  anch::json::serializeArray<float>(value, out, serializeValue<float>, field);
+  anch::json::serializeArray<float>(value, out, &serializeValue<float>, field);
   return true;
 }
 
 template<>
 bool
 JSONPrimitiveMapper<float>::serialize(const std::list<float>& value, std::ostream& out, const std::optional<std::string>& field) {
-  anch::json::serializeArray<float>(value, out, serializeValue<float>, field);
+  anch::json::serializeArray<float>(value, out, &serializeValue<float>, field);
   return true;
 }
 
 template<>
 bool
 JSONPrimitiveMapper<float>::serialize(const std::set<float>& value, std::ostream& out, const std::optional<std::string>& field) {
-  anch::json::serializeArray<float>(value, out, serializeValue<float>, field);
+  anch::json::serializeArray<float>(value, out, &serializeValue<float>, field);
   return true;
 }
 
@@ -1163,49 +1073,39 @@ JSONPrimitiveMapper<double>::~JSONPrimitiveMapper() {
 template<>
 bool
 JSONPrimitiveMapper<double>::serialize(const double& value, std::ostream& out, const std::optional<std::string>& field) {
-  if(field.has_value()) {
-    out << anch::json::STRING_DELIMITER << field.value() << anch::json::STRING_DELIMITER << anch::json::FIELD_VALUE_SEPARATOR;
-  }
-  out << value;
-  return true;
+  return anch::json::serialize(value, out, &serializeValue<double>, field);
 }
 
 template<>
 bool
 JSONPrimitiveMapper<double>::serialize(const double* const value, std::ostream& out, const std::optional<std::string>& field) {
-  if(value == NULL) {
-    return false;
-  }
-  return serialize(*value, out, field);
+  return anch::json::serialize(value, out, &serializeValue<double>, field);
 }
 
 template<>
 bool
 JSONPrimitiveMapper<double>::serialize(const std::optional<double>& value, std::ostream& out, const std::optional<std::string>& field) {
-  if(!value.has_value()) {
-    return false;
-  }
-  return serialize(value.value(), out, field);
+  return anch::json::serialize(value, out, &serializeValue<double>, field);
 }
 
 template<>
 bool
 JSONPrimitiveMapper<double>::serialize(const std::vector<double>& value, std::ostream& out, const std::optional<std::string>& field) {
-  anch::json::serializeArray<double>(value, out, serializeValue<double>, field);
+  anch::json::serializeArray<double>(value, out, &serializeValue<double>, field);
   return true;
 }
 
 template<>
 bool
 JSONPrimitiveMapper<double>::serialize(const std::list<double>& value, std::ostream& out, const std::optional<std::string>& field) {
-  anch::json::serializeArray<double>(value, out, serializeValue<double>, field);
+  anch::json::serializeArray<double>(value, out, &serializeValue<double>, field);
   return true;
 }
 
 template<>
 bool
 JSONPrimitiveMapper<double>::serialize(const std::set<double>& value, std::ostream& out, const std::optional<std::string>& field) {
-  anch::json::serializeArray<double>(value, out, serializeValue<double>, field);
+  anch::json::serializeArray<double>(value, out, &serializeValue<double>, field);
   return true;
 }
 
@@ -1281,49 +1181,39 @@ JSONPrimitiveMapper<long double>::~JSONPrimitiveMapper() {
 template<>
 bool
 JSONPrimitiveMapper<long double>::serialize(const long double& value, std::ostream& out, const std::optional<std::string>& field) {
-  if(field.has_value()) {
-    out << anch::json::STRING_DELIMITER << field.value() << anch::json::STRING_DELIMITER << anch::json::FIELD_VALUE_SEPARATOR;
-  }
-  out << value;
-  return true;
+  return anch::json::serialize(value, out, &serializeValue<long double>, field);
 }
 
 template<>
 bool
 JSONPrimitiveMapper<long double>::serialize(const long double* const value, std::ostream& out, const std::optional<std::string>& field) {
-  if(value == NULL) {
-    return false;
-  }
-  return serialize(*value, out, field);
+  return anch::json::serialize(value, out, &serializeValue<long double>, field);
 }
 
 template<>
 bool
 JSONPrimitiveMapper<long double>::serialize(const std::optional<long double>& value, std::ostream& out, const std::optional<std::string>& field) {
-  if(!value.has_value()) {
-    return false;
-  }
-  return serialize(value.value(), out, field);
+  return anch::json::serialize(value, out, &serializeValue<long double>, field);
 }
 
 template<>
 bool
 JSONPrimitiveMapper<long double>::serialize(const std::vector<long double>& value, std::ostream& out, const std::optional<std::string>& field) {
-  anch::json::serializeArray<long double>(value, out, serializeValue<long double>, field);
+  anch::json::serializeArray<long double>(value, out, &serializeValue<long double>, field);
   return true;
 }
 
 template<>
 bool
 JSONPrimitiveMapper<long double>::serialize(const std::list<long double>& value, std::ostream& out, const std::optional<std::string>& field) {
-  anch::json::serializeArray<long double>(value, out, serializeValue<long double>, field);
+  anch::json::serializeArray<long double>(value, out, &serializeValue<long double>, field);
   return true;
 }
 
 template<>
 bool
 JSONPrimitiveMapper<long double>::serialize(const std::set<long double>& value, std::ostream& out, const std::optional<std::string>& field) {
-  anch::json::serializeArray<long double>(value, out, serializeValue<long double>, field);
+  anch::json::serializeArray<long double>(value, out, &serializeValue<long double>, field);
   return true;
 }
 

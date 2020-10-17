@@ -23,33 +23,52 @@ namespace anch {
   namespace json {
 
     template<typename T>
-    void deserializeArray(std::istream& input, std::function<void(const T&)> pushFunc, std::function<void((T& value, std::istream& input))> deserializeNonNull) {
-      if(anch::json::isNull(input)) {
-	return;
+    inline
+    bool
+    serialize(const T& value,
+	      std::ostream& out,
+	      std::function<void((const T& value, std::ostream& out))> serializeFunc,
+	      const std::optional<std::string>& field) {
+      if(field.has_value()) {
+	out << anch::json::STRING_DELIMITER << field.value() << anch::json::STRING_DELIMITER << anch::json::FIELD_VALUE_SEPARATOR;
       }
-      int current = input.get();
-      if(current != anch::json::ARRAY_BEGIN) {
-	throw 128;
+      std::invoke(serializeFunc, value, out);
+      return true;
+    }
+
+    template<typename T>
+    inline
+    bool
+    serialize(const T* const value,
+	      std::ostream& out,
+	      std::function<void((const T& value, std::ostream& out))> serializeFunc,
+	      const std::optional<std::string>& field) {
+      if(value == NULL) {
+	return false;
       }
-      anch::json::discardChars(input);
-      if(input.peek() != anch::json::ARRAY_END) {
-	while(input) {
-	  T value;
-	  std::invoke(deserializeNonNull, value, input);
-	  std::invoke(pushFunc, value);
-	  if(!anch::json::hasMoreField(input)) {
-	    break;
-	  }
-	  anch::json::discardChars(input);
-	}
+      return serialize(*value, out, serializeFunc, field);
+    }
+
+    template<typename T>
+    inline
+    bool
+    serialize(const std::optional<T>& value,
+	      std::ostream& out,
+	      std::function<void((const T& value, std::ostream& out))> serializeFunc,
+	      const std::optional<std::string>& field) {
+      if(!value.has_value()) {
+	return false;
       }
-      if(!input || input.get() != anch::json::ARRAY_END) {
-	throw 2048; // \todo error ...
-      }
+      return serialize(value.value(), out, serializeFunc, field);
     }
 
     template<typename T, typename A>
-    void serializeArray(const A& array, std::ostream& out, std::function<void((const T& value, std::ostream& out))> serializeFunc, const std::optional<std::string>& field) {
+    inline
+    void
+    serializeArray(const A& array,
+		   std::ostream& out,
+		   std::function<void((const T& value, std::ostream& out))> serializeFunc,
+		   const std::optional<std::string>& field) {
       if(field.has_value()) {
 	out << anch::json::STRING_DELIMITER << field.value() << anch::json::STRING_DELIMITER << anch::json::FIELD_VALUE_SEPARATOR;
       }
@@ -62,6 +81,36 @@ namespace anch {
 	//serialize(*iter, out, anch::json::EMPTY_FIELD);
       }
       out << anch::json::ARRAY_END;
+    }
+
+    template<typename T>
+    inline
+    void
+    deserializeArray(std::istream& input,
+		     std::function<void(const T&)> pushFunc,
+		     std::function<void((T& value, std::istream& input))> deserializeFunc) {
+      if(anch::json::isNull(input)) {
+	return;
+      }
+      int current = input.get();
+      if(current != anch::json::ARRAY_BEGIN) {
+	throw 128;
+      }
+      anch::json::discardChars(input);
+      if(input.peek() != anch::json::ARRAY_END) {
+	while(input) {
+	  T value;
+	  std::invoke(deserializeFunc, value, input);
+	  std::invoke(pushFunc, value);
+	  if(!anch::json::hasMoreField(input)) {
+	    break;
+	  }
+	  anch::json::discardChars(input);
+	}
+      }
+      if(!input || input.get() != anch::json::ARRAY_END) {
+	throw 2048; // \todo error ...
+      }
     }
 
   }  // json
