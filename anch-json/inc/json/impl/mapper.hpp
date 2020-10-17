@@ -56,20 +56,6 @@ namespace anch {
     }
 
     template<typename T>
-    inline
-    const std::vector<std::function<bool(const T&, std::ostream&)>>&
-    JSONMapper<T>::getWritterMapping() const {
-      return _writers;
-    }
-
-    template<typename T>
-    inline
-    const std::map<std::string, std::function<void(T&, std::istream&)>>&
-    JSONMapper<T>::getReaderMapping() const {
-      return _readers;
-    }
-
-    template<typename T>
     template<typename P>
     JSONMapper<T>&
     JSONMapper<T>::registerField(const std::string& key, P T::* value) {

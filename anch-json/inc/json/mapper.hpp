@@ -309,23 +309,6 @@ namespace anch {
       void serializeValue(const T& value, std::ostream& out);
       // Methods -
 
-      // Accessors +
-    public:
-      /*!
-       * Writter mapping getter
-       *
-       * \return the writter mapping
-       */
-      const std::vector<std::function<bool(const T&, std::ostream&)>>& getWritterMapping() const;
-
-      /*!
-       * Reader mapping getter
-       *
-       * \return the reader mapping
-       */
-      const std::map<std::string, std::function<void(T&, std::istream&)>>& getReaderMapping() const;
-      // Accessors +
-
     };
 
   } // json
