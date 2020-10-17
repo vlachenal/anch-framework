@@ -37,10 +37,6 @@ var hierarchy =
       [ "anch::sql::SQLite3Connection", "classanch_1_1sql_1_1_s_q_lite3_connection.html", null ]
     ] ],
     [ "anch::crypto::SHA1::Context", "structanch_1_1crypto_1_1_s_h_a1_1_1_context.html", null ],
-    [ "Core1", "class_core1.html", null ],
-    [ "Core2", "class_core2.html", null ],
-    [ "Core3", "class_core3.html", null ],
-    [ "Core4", "class_core4.html", null ],
     [ "anch::date::Date", "classanch_1_1date_1_1_date.html", [
       [ "anch::sql::Date", "classanch_1_1sql_1_1_date.html", null ],
       [ "anch::sql::Time", "classanch_1_1sql_1_1_time.html", null ],
@@ -136,9 +132,7 @@ var hierarchy =
       [ "anch::sql::PostgreSQLResultSet", "classanch_1_1sql_1_1_postgre_s_q_l_result_set.html", null ],
       [ "anch::sql::SQLite3ResultSet", "classanch_1_1sql_1_1_s_q_lite3_result_set.html", null ]
     ] ],
-    [ "anch::resource::Section", "classanch_1_1resource_1_1_section.html", [
-      [ "anch::resource::FakeSection", "classanch_1_1resource_1_1_fake_section.html", null ]
-    ] ],
+    [ "anch::resource::Section", "classanch_1_1resource_1_1_section.html", null ],
     [ "anch::sql::SelectBuilder", "classanch_1_1sql_1_1_select_builder.html", null ],
     [ "anch::sql::SelectBuilderPart", "classanch_1_1sql_1_1_select_builder_part.html", [
       [ "anch::sql::FieldsBuilder", "classanch_1_1sql_1_1_fields_builder.html", null ],
@@ -154,9 +148,6 @@ var hierarchy =
       [ "anch::events::EventBus< Event >", "classanch_1_1events_1_1_event_bus.html", null ]
     ] ],
     [ "anch::Singleton< LoggerFactory >", "classanch_1_1_singleton.html", null ],
-    [ "anch::Singleton< MySQLInitializer >", "classanch_1_1_singleton.html", [
-      [ "MySQLInitializer", "class_my_s_q_l_initializer.html", null ]
-    ] ],
     [ "anch::Singleton< SqlConnectionFactory >", "classanch_1_1_singleton.html", [
       [ "anch::sql::SqlConnectionFactory", "classanch_1_1sql_1_1_sql_connection_factory.html", null ]
     ] ],

@@ -111,15 +111,16 @@ $(document).ready(function(){initNavTree('classanch_1_1crypto_1_1_zero_padding.h
 <div id="dynsection-0-summary" class="dynsummary" style="display:block;">
 </div>
 <div id="dynsection-0-content" class="dyncontent" style="display:none;">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classanch_1_1crypto_1_1_zero_padding__coll__graph.svg" width="202" height="103"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="classanch_1_1crypto_1_1_zero_padding__coll__graph.svg" width="202" height="103"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:a77f301dab666c8f4b980d51bfb5f0568"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1crypto_1_1_zero_padding.html#a77f301dab666c8f4b980d51bfb5f0568">pad</a> (uint8_t *data, std::size_t len, std::size_t expLen)</td></tr>
-<tr class="separator:a77f301dab666c8f4b980d51bfb5f0568"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1b4d53db12589ba15a23cd17c2dfb068"><td class="memItemLeft" align="right" valign="top">static std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1crypto_1_1_zero_padding.html#a1b4d53db12589ba15a23cd17c2dfb068">length</a> (uint8_t *data, std::size_t len)</td></tr>
-<tr class="separator:a1b4d53db12589ba15a23cd17c2dfb068"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa2b1b85cb4ed586edfc6efe90488e649"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1crypto_1_1_zero_padding.html#aa2b1b85cb4ed586edfc6efe90488e649">pad</a> (uint8_t *data, std::size_t len, std::size_t expLen)</td></tr>
+<tr class="separator:aa2b1b85cb4ed586edfc6efe90488e649"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a69f1a29262adf230f15cd79f91ae6883"><td class="memItemLeft" align="right" valign="top">static std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1crypto_1_1_zero_padding.html#a69f1a29262adf230f15cd79f91ae6883">length</a> (uint8_t *data, std::size_t len)</td></tr>
+<tr class="separator:a69f1a29262adf230f15cd79f91ae6883"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Zero padding implementation. </p>
@@ -128,8 +129,8 @@ Zero padding may not be reversible when data to pad ends with 0x00 (end of strin
 <dl class="section since"><dt>Since</dt><dd>0.1</dd></dl>
 <dl class="section author"><dt>Author</dt><dd>Vincent Lachenal </dd></dl>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="a1b4d53db12589ba15a23cd17c2dfb068"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1b4d53db12589ba15a23cd17c2dfb068">&#9670;&nbsp;</a></span>length()</h2>
+<a id="a69f1a29262adf230f15cd79f91ae6883"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a69f1a29262adf230f15cd79f91ae6883">&#9670;&nbsp;</a></span>length()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -138,7 +139,7 @@ Zero padding may not be reversible when data to pad ends with 0x00 (end of strin
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::size_t ZeroPadding::length </td>
+          <td class="memname">static std::size_t anch::crypto::ZeroPadding::length </td>
           <td>(</td>
           <td class="paramtype">uint8_t *&#160;</td>
           <td class="paramname"><em>data</em>, </td>
@@ -173,8 +174,8 @@ Zero padding may not be reversible when data to pad ends with 0x00 (end of strin
 
 </div>
 </div>
-<a id="a77f301dab666c8f4b980d51bfb5f0568"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a77f301dab666c8f4b980d51bfb5f0568">&#9670;&nbsp;</a></span>pad()</h2>
+<a id="aa2b1b85cb4ed586edfc6efe90488e649"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa2b1b85cb4ed586edfc6efe90488e649">&#9670;&nbsp;</a></span>pad()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -183,7 +184,7 @@ Zero padding may not be reversible when data to pad ends with 0x00 (end of strin
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void ZeroPadding::pad </td>
+          <td class="memname">static void anch::crypto::ZeroPadding::pad </td>
           <td>(</td>
           <td class="paramtype">uint8_t *&#160;</td>
           <td class="paramname"><em>data</em>, </td>
@@ -224,9 +225,8 @@ Zero padding may not be reversible when data to pad ends with 0x00 (end of strin
 
 </div>
 </div>
-<hr/>The documentation for this class was generated from the following files:<ul>
+<hr/>The documentation for this class was generated from the following file:<ul>
 <li>anch-crypto/inc/crypto/padding/<a class="el" href="zero_padding_8hpp_source.html">zeroPadding.hpp</a></li>
-<li>anch-crypto/src/crypto/padding/zeroPadding.cpp</li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

@@ -164,7 +164,7 @@ $(document).ready(function(){initNavTree('logger_factory_8hpp_source.html',''); 
 <div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="comment"></span>      <a class="code" href="classanch_1_1logger_1_1_logger_factory.html">LoggerFactory</a>(): _loggersConfig() {</div>
 <div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;        <span class="comment">//std::atexit(LoggerFactory::cleanWriters);</span></div>
 <div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;        <span class="keywordflow">try</span> {</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;          <span class="keyword">const</span> <a class="code" href="classanch_1_1resource_1_1_resource.html">anch::resource::Resource</a>&amp; resource = <a class="code" href="classanch_1_1resource_1_1_resource.html#a50ee2e53fca0270104742fc6056a3ab3">anch::resource::Resource::getResource</a>(_ANCH_LOGGER_CONFIG_FILE_);</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;          <span class="keyword">const</span> <a class="code" href="classanch_1_1resource_1_1_resource.html">anch::resource::Resource</a>&amp; resource = <a class="code" href="classanch_1_1resource_1_1_resource.html#af835e72f277ddf8066fa9efd6acb73bd">anch::resource::Resource::getResource</a>(_ANCH_LOGGER_CONFIG_FILE_);</div>
 <div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;          std::map&lt;std::string,anch::logger::Writer*&gt; writers;</div>
 <div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;          initializeWriters(writers, resource);</div>
 <div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;          initializeLoggersConfiguration(writers, resource);</div>
@@ -289,12 +289,12 @@ $(document).ready(function(){initNavTree('logger_factory_8hpp_source.html',''); 
 <div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;        <span class="comment">// Writer QoS configuration +</span></div>
 <div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;        <span class="keywordtype">bool</span> globalThreadSafe = <span class="keyword">true</span>;</div>
 <div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;        std::string paramValue;</div>
-<div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;        <span class="keywordflow">if</span>(resource.<a class="code" href="classanch_1_1resource_1_1_resource.html#a345adc5c435af0bd44f017c4eda0df0c">getParameter</a>(paramValue, <span class="stringliteral">&quot;thread.safe&quot;</span>)) {</div>
+<div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;        <span class="keywordflow">if</span>(resource.<a class="code" href="classanch_1_1resource_1_1_resource.html#a16a32b3fcfdc082694998113429b05ca">getParameter</a>(paramValue, <span class="stringliteral">&quot;thread.safe&quot;</span>)) {</div>
 <div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;          globalThreadSafe = (paramValue == <span class="stringliteral">&quot;1&quot;</span>);</div>
 <div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;        }</div>
 <div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;        paramValue = <span class="stringliteral">&quot;&quot;</span>;</div>
 <div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;        <span class="keywordtype">bool</span> globalLowPriority = <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;        <span class="keywordflow">if</span>(resource.<a class="code" href="classanch_1_1resource_1_1_resource.html#a345adc5c435af0bd44f017c4eda0df0c">getParameter</a>(paramValue, <span class="stringliteral">&quot;low.priority&quot;</span>)) {</div>
+<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;        <span class="keywordflow">if</span>(resource.<a class="code" href="classanch_1_1resource_1_1_resource.html#a16a32b3fcfdc082694998113429b05ca">getParameter</a>(paramValue, <span class="stringliteral">&quot;low.priority&quot;</span>)) {</div>
 <div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;          globalLowPriority = (paramValue == <span class="stringliteral">&quot;1&quot;</span>);</div>
 <div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;        }</div>
 <div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;        paramValue = <span class="stringliteral">&quot;&quot;</span>;</div>
@@ -312,7 +312,7 @@ $(document).ready(function(){initNavTree('logger_factory_8hpp_source.html',''); 
 <div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;            std::string name = writer.substr(8);</div>
 <div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;            <span class="comment">// Retrieve log pattern +</span></div>
 <div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;            std::string pattern;</div>
-<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;            <span class="keywordtype">bool</span> found = resource.<a class="code" href="classanch_1_1resource_1_1_resource.html#a345adc5c435af0bd44f017c4eda0df0c">getParameter</a>(pattern,</div>
+<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;            <span class="keywordtype">bool</span> found = resource.<a class="code" href="classanch_1_1resource_1_1_resource.html#a16a32b3fcfdc082694998113429b05ca">getParameter</a>(pattern,</div>
 <div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;                                               <span class="stringliteral">&quot;writer.pattern&quot;</span>,</div>
 <div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;                                               writer);</div>
 <div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;            <span class="keywordflow">if</span>(!found) {</div>
@@ -322,12 +322,12 @@ $(document).ready(function(){initNavTree('logger_factory_8hpp_source.html',''); 
 <div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160; </div>
 <div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;            <span class="comment">// Writer QoS configuration +</span></div>
 <div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;            <span class="keywordtype">bool</span> threadSafe = globalThreadSafe;</div>
-<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;            <span class="keywordflow">if</span>(resource.<a class="code" href="classanch_1_1resource_1_1_resource.html#a345adc5c435af0bd44f017c4eda0df0c">getParameter</a>(paramValue, <span class="stringliteral">&quot;writer.thread.safe&quot;</span>, writer)) {</div>
+<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;            <span class="keywordflow">if</span>(resource.<a class="code" href="classanch_1_1resource_1_1_resource.html#a16a32b3fcfdc082694998113429b05ca">getParameter</a>(paramValue, <span class="stringliteral">&quot;writer.thread.safe&quot;</span>, writer)) {</div>
 <div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;              threadSafe = (paramValue == <span class="stringliteral">&quot;1&quot;</span>);</div>
 <div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;            }</div>
 <div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;            paramValue = <span class="stringliteral">&quot;&quot;</span>;</div>
 <div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160;            <span class="keywordtype">bool</span> lowPriority = globalLowPriority;</div>
-<div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;            <span class="keywordflow">if</span>(resource.<a class="code" href="classanch_1_1resource_1_1_resource.html#a345adc5c435af0bd44f017c4eda0df0c">getParameter</a>(paramValue, <span class="stringliteral">&quot;writer.low.priority&quot;</span>, writer)) {</div>
+<div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;            <span class="keywordflow">if</span>(resource.<a class="code" href="classanch_1_1resource_1_1_resource.html#a16a32b3fcfdc082694998113429b05ca">getParameter</a>(paramValue, <span class="stringliteral">&quot;writer.low.priority&quot;</span>, writer)) {</div>
 <div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;              lowPriority = (paramValue == <span class="stringliteral">&quot;1&quot;</span>);</div>
 <div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160;            }</div>
 <div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;            <span class="comment">// Writer QoS configuration -</span></div>
@@ -341,13 +341,13 @@ $(document).ready(function(){initNavTree('logger_factory_8hpp_source.html',''); 
 <div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160;            } <span class="keywordflow">else</span> { <span class="comment">// File writer</span></div>
 <div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;              <span class="comment">// File path +</span></div>
 <div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;              std::string path;</div>
-<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;              found = resource.<a class="code" href="classanch_1_1resource_1_1_resource.html#a345adc5c435af0bd44f017c4eda0df0c">getParameter</a>(path, <span class="stringliteral">&quot;writer.filepath&quot;</span>, writer);</div>
+<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;              found = resource.<a class="code" href="classanch_1_1resource_1_1_resource.html#a16a32b3fcfdc082694998113429b05ca">getParameter</a>(path, <span class="stringliteral">&quot;writer.filepath&quot;</span>, writer);</div>
 <div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;              <span class="comment">// File path -</span></div>
 <div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;              <span class="keywordflow">if</span>(found) {</div>
 <div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;                <span class="comment">// Max file size +</span></div>
 <div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160;                std::string maxSizeStr;</div>
 <div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;                <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> maxSize = 0;</div>
-<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;                resource.<a class="code" href="classanch_1_1resource_1_1_resource.html#a345adc5c435af0bd44f017c4eda0df0c">getParameter</a>(maxSizeStr, <span class="stringliteral">&quot;writer.max.size&quot;</span>, writer);</div>
+<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;                resource.<a class="code" href="classanch_1_1resource_1_1_resource.html#a16a32b3fcfdc082694998113429b05ca">getParameter</a>(maxSizeStr, <span class="stringliteral">&quot;writer.max.size&quot;</span>, writer);</div>
 <div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;                <span class="keywordflow">if</span>(regex_search(maxSizeStr, match, sizeRegex)) {</div>
 <div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;                  <span class="keyword">const</span> std::string multStr = std::string(match[2].first,</div>
 <div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;                                                          match[2].second);</div>
@@ -362,7 +362,7 @@ $(document).ready(function(){initNavTree('logger_factory_8hpp_source.html',''); 
 <div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;                <span class="comment">// Max file index on rotate +</span></div>
 <div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;                <span class="keywordtype">int</span> maxIndex = 0;</div>
 <div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;                std::string maxIdxStr;</div>
-<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;                resource.<a class="code" href="classanch_1_1resource_1_1_resource.html#a345adc5c435af0bd44f017c4eda0df0c">getParameter</a>(maxIdxStr,</div>
+<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;                resource.<a class="code" href="classanch_1_1resource_1_1_resource.html#a16a32b3fcfdc082694998113429b05ca">getParameter</a>(maxIdxStr,</div>
 <div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;                                      <span class="stringliteral">&quot;writer.max.rotate.index&quot;</span>,</div>
 <div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160;                                      writer);</div>
 <div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160;                <span class="keywordflow">if</span>(found) {</div>
@@ -398,7 +398,7 @@ $(document).ready(function(){initNavTree('logger_factory_8hpp_source.html',''); 
 <div class="line"><a name="l00354"></a><span class="lineno">  354</span>&#160;            std::string category = iter-&gt;first;</div>
 <div class="line"><a name="l00355"></a><span class="lineno">  355</span>&#160;            std::string name = iter-&gt;first.substr(10);</div>
 <div class="line"><a name="l00356"></a><span class="lineno">  356</span>&#160;            std::string writerStr;</div>
-<div class="line"><a name="l00357"></a><span class="lineno">  357</span>&#160;            <span class="keywordtype">bool</span> found = resource.<a class="code" href="classanch_1_1resource_1_1_resource.html#a345adc5c435af0bd44f017c4eda0df0c">getParameter</a>(writerStr,</div>
+<div class="line"><a name="l00357"></a><span class="lineno">  357</span>&#160;            <span class="keywordtype">bool</span> found = resource.<a class="code" href="classanch_1_1resource_1_1_resource.html#a16a32b3fcfdc082694998113429b05ca">getParameter</a>(writerStr,</div>
 <div class="line"><a name="l00358"></a><span class="lineno">  358</span>&#160;                                              <span class="stringliteral">&quot;logger.writers&quot;</span>,</div>
 <div class="line"><a name="l00359"></a><span class="lineno">  359</span>&#160;                                              category);</div>
 <div class="line"><a name="l00360"></a><span class="lineno">  360</span>&#160;            <span class="keywordflow">if</span>(found) {</div>
@@ -430,7 +430,7 @@ $(document).ready(function(){initNavTree('logger_factory_8hpp_source.html',''); 
 <div class="line"><a name="l00386"></a><span class="lineno">  386</span>&#160; </div>
 <div class="line"><a name="l00387"></a><span class="lineno">  387</span>&#160;              } <span class="keywordflow">else</span> {</div>
 <div class="line"><a name="l00388"></a><span class="lineno">  388</span>&#160;                std::string levelLbl;</div>
-<div class="line"><a name="l00389"></a><span class="lineno">  389</span>&#160;                resource.<a class="code" href="classanch_1_1resource_1_1_resource.html#a345adc5c435af0bd44f017c4eda0df0c">getParameter</a>(levelLbl, <span class="stringliteral">&quot;logger.level&quot;</span>, category);</div>
+<div class="line"><a name="l00389"></a><span class="lineno">  389</span>&#160;                resource.<a class="code" href="classanch_1_1resource_1_1_resource.html#a16a32b3fcfdc082694998113429b05ca">getParameter</a>(levelLbl, <span class="stringliteral">&quot;logger.level&quot;</span>, category);</div>
 <div class="line"><a name="l00390"></a><span class="lineno">  390</span>&#160;                std::transform(levelLbl.begin(),</div>
 <div class="line"><a name="l00391"></a><span class="lineno">  391</span>&#160;                               levelLbl.end(),</div>
 <div class="line"><a name="l00392"></a><span class="lineno">  392</span>&#160;                               levelLbl.begin(),</div>
@@ -473,9 +473,11 @@ $(document).ready(function(){initNavTree('logger_factory_8hpp_source.html',''); 
 <div class="line"><a name="l00432"></a><span class="lineno">  432</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
+<div class="ttc" id="aclassanch_1_1resource_1_1_resource_html_a16a32b3fcfdc082694998113429b05ca"><div class="ttname"><a href="classanch_1_1resource_1_1_resource.html#a16a32b3fcfdc082694998113429b05ca">anch::resource::Resource::getParameter</a></div><div class="ttdeci">bool getParameter(std::string &amp;value, const std::string &amp;param, const std::string &amp;section=&quot;&quot;) const</div></div>
 <div class="ttc" id="aclassanch_1_1resource_1_1_resource_html_a6fbfbadc89e7ebb4462cd9a2a1c1778f"><div class="ttname"><a href="classanch_1_1resource_1_1_resource.html#a6fbfbadc89e7ebb4462cd9a2a1c1778f">anch::resource::Resource::getConfiguration</a></div><div class="ttdeci">const std::map&lt; std::string, anch::resource::Section &gt; &amp; getConfiguration() const</div><div class="ttdef"><b>Definition:</b> resource.hpp:121</div></div>
 <div class="ttc" id="anamespaceanch_1_1logger_html_a973cdff92f296b5fba7f68660d4ee41f"><div class="ttname"><a href="namespaceanch_1_1logger.html#a973cdff92f296b5fba7f68660d4ee41f">anch::logger::Level</a></div><div class="ttdeci">Level</div><div class="ttdef"><b>Definition:</b> levels.hpp:33</div></div>
 <div class="ttc" id="aclassanch_1_1_singleton_html"><div class="ttname"><a href="classanch_1_1_singleton.html">anch::Singleton</a></div><div class="ttdoc">Meyers' singleton implemtation.</div><div class="ttdef"><b>Definition:</b> singleton.hpp:34</div></div>
+<div class="ttc" id="aclassanch_1_1resource_1_1_resource_html_af835e72f277ddf8066fa9efd6acb73bd"><div class="ttname"><a href="classanch_1_1resource_1_1_resource.html#af835e72f277ddf8066fa9efd6acb73bd">anch::resource::Resource::getResource</a></div><div class="ttdeci">static const Resource &amp; getResource(const std::string &amp;filePath)</div></div>
 <div class="ttc" id="aclassanch_1_1logger_1_1_logger_html"><div class="ttname"><a href="classanch_1_1logger_1_1_logger.html">anch::logger::Logger</a></div><div class="ttdef"><b>Definition:</b> logger.hpp:46</div></div>
 <div class="ttc" id="aclassanch_1_1logger_1_1_low_priority_writer_html"><div class="ttname"><a href="classanch_1_1logger_1_1_low_priority_writer.html">anch::logger::LowPriorityWriter</a></div><div class="ttdef"><b>Definition:</b> lowPriorityWriter.hpp:39</div></div>
 <div class="ttc" id="aclassanch_1_1logger_1_1_writer_html"><div class="ttname"><a href="classanch_1_1logger_1_1_writer.html">anch::logger::Writer</a></div><div class="ttdef"><b>Definition:</b> writer.hpp:36</div></div>
@@ -489,9 +491,7 @@ $(document).ready(function(){initNavTree('logger_factory_8hpp_source.html',''); 
 <div class="ttc" id="aclassanch_1_1logger_1_1_logger_configuration_html"><div class="ttname"><a href="classanch_1_1logger_1_1_logger_configuration.html">anch::logger::LoggerConfiguration</a></div><div class="ttdef"><b>Definition:</b> loggerConfiguration.hpp:36</div></div>
 <div class="ttc" id="aclassanch_1_1logger_1_1_logger_configuration_html_a608744ee12295f786e6bb030e3eef614"><div class="ttname"><a href="classanch_1_1logger_1_1_logger_configuration.html#a608744ee12295f786e6bb030e3eef614">anch::logger::LoggerConfiguration::getWriters</a></div><div class="ttdeci">const std::vector&lt; anch::logger::Writer * &gt; &amp; getWriters() const</div><div class="ttdef"><b>Definition:</b> loggerConfiguration.hpp:102</div></div>
 <div class="ttc" id="anamespaceanch_1_1logger_html_a973cdff92f296b5fba7f68660d4ee41fa2d3e4144aa384b18849ab9a8abad74d6"><div class="ttname"><a href="namespaceanch_1_1logger.html#a973cdff92f296b5fba7f68660d4ee41fa2d3e4144aa384b18849ab9a8abad74d6">anch::logger::Level::TRACE</a></div><div class="ttdeci">@ TRACE</div></div>
-<div class="ttc" id="aclassanch_1_1resource_1_1_resource_html_a50ee2e53fca0270104742fc6056a3ab3"><div class="ttname"><a href="classanch_1_1resource_1_1_resource.html#a50ee2e53fca0270104742fc6056a3ab3">anch::resource::Resource::getResource</a></div><div class="ttdeci">static const Resource &amp; getResource(const std::string &amp;filePath)</div><div class="ttdef"><b>Definition:</b> resource.cpp:67</div></div>
 <div class="ttc" id="aclassanch_1_1resource_1_1_resource_html"><div class="ttname"><a href="classanch_1_1resource_1_1_resource.html">anch::resource::Resource</a></div><div class="ttdef"><b>Definition:</b> resource.hpp:39</div></div>
-<div class="ttc" id="aclassanch_1_1resource_1_1_resource_html_a345adc5c435af0bd44f017c4eda0df0c"><div class="ttname"><a href="classanch_1_1resource_1_1_resource.html#a345adc5c435af0bd44f017c4eda0df0c">anch::resource::Resource::getParameter</a></div><div class="ttdeci">bool getParameter(std::string &amp;value, const std::string &amp;param, const std::string &amp;section=&quot;&quot;) const</div><div class="ttdef"><b>Definition:</b> resource.cpp:80</div></div>
 <div class="ttc" id="anamespaceanch_html"><div class="ttname"><a href="namespaceanch.html">anch</a></div><div class="ttdoc">AnCH framework base namespace.</div><div class="ttdef"><b>Definition:</b> base64.hpp:27</div></div>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->

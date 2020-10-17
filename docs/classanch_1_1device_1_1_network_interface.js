@@ -1,7 +1,7 @@
 var classanch_1_1device_1_1_network_interface =
 [
-    [ "NetworkInterface", "classanch_1_1device_1_1_network_interface.html#afa433a6a6deeaee619da52109df10638", null ],
-    [ "~NetworkInterface", "classanch_1_1device_1_1_network_interface.html#adc72badb87b206431e240704e9aaa7c1", null ],
+    [ "NetworkInterface", "classanch_1_1device_1_1_network_interface.html#a8179547a015c4a951a39fc741d976edb", null ],
+    [ "~NetworkInterface", "classanch_1_1device_1_1_network_interface.html#a75dbfd8ad9df5ebff033c85dc5baeb11", null ],
     [ "getBroadcastAddress", "classanch_1_1device_1_1_network_interface.html#aa2db9aebf98a7658589c83f8c916b52e", null ],
     [ "getIpAddress", "classanch_1_1device_1_1_network_interface.html#a7837e8f5e4a094b88d3ed1b17ec10a21", null ],
     [ "getMacAddress", "classanch_1_1device_1_1_network_interface.html#a09cef2613693417ea783ca37df957590", null ],

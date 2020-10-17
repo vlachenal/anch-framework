@@ -1,7 +1,7 @@
 var classanch_1_1logger_1_1formatter_1_1_const_formatter =
 [
-    [ "ConstFormatter", "classanch_1_1logger_1_1formatter_1_1_const_formatter.html#a46da8cc4d9dc1a0fd0ad340c420f234e", null ],
-    [ "~ConstFormatter", "classanch_1_1logger_1_1formatter_1_1_const_formatter.html#a31d78027a938500415557d2ddc8f0661", null ],
-    [ "formatValue", "classanch_1_1logger_1_1formatter_1_1_const_formatter.html#ab6b98c7da67afef614205ec1ed3caf9b", null ],
-    [ "getType", "classanch_1_1logger_1_1formatter_1_1_const_formatter.html#a9114b47d8b0ba4e5226b95d111a8b68b", null ]
+    [ "ConstFormatter", "classanch_1_1logger_1_1formatter_1_1_const_formatter.html#afd509d7c4d5364d1e9faaed52fcb3c6d", null ],
+    [ "~ConstFormatter", "classanch_1_1logger_1_1formatter_1_1_const_formatter.html#a53435ed63eee27c1447a95105e523a43", null ],
+    [ "formatValue", "classanch_1_1logger_1_1formatter_1_1_const_formatter.html#acae826b496d0929df6dfdcc71a7a0e32", null ],
+    [ "getType", "classanch_1_1logger_1_1formatter_1_1_const_formatter.html#a9cf8a0d157605ec9d2fa30b7af51ee1c", null ]
 ];
