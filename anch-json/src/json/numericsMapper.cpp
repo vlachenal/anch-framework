@@ -26,7 +26,7 @@
 #include <ostream>
 #include <functional>
 
-#include "json/parser.hpp"
+#include "json/mappingFunctions.hpp"
 #include "convert.hpp"
 
 

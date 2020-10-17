@@ -36,7 +36,7 @@
 #endif
 
 #include "json/constants.hpp"
-#include "json/parser.hpp"
+#include "json/mappingFunctions.hpp"
 
 
 using anch::json::JSONPrimitiveMapper;

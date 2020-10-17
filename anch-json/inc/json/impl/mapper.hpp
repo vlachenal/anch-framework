@@ -28,7 +28,7 @@
 #include <type_traits>
 
 #include "json/constants.hpp"
-#include "json/parser.hpp"
+#include "json/mappingFunctions.hpp"
 #include "json/mappingError.hpp"
 
 

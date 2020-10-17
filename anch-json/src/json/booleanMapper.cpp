@@ -27,7 +27,7 @@
 #include <istream>
 #include <sstream>
 
-#include "json/parser.hpp"
+#include "json/mappingFunctions.hpp"
 
 using anch::json::JSONPrimitiveMapper;
 
