@@ -134,32 +134,19 @@ JSONPrimitiveMapper<std::string>::serialize(const std::set<std::string>& value, 
 template<>
 void
 JSONPrimitiveMapper<std::string>::deserialize(std::string& value, std::istream& input) {
-  if(!anch::json::isNull(input)) {
-    deserializeValue(value, input);
-  }
+  anch::json::deserialize<std::string>(value, input, &deserializeValue);
 }
 
 template<>
 void
 JSONPrimitiveMapper<std::string>::deserialize(std::optional<std::string>& value, std::istream& input) {
-  if(anch::json::isNull(input)) {
-    value.reset();
-  } else {
-    std::string parsed;
-    deserializeValue(parsed, input);
-    value = std::move(parsed);
-  }
+  anch::json::deserialize<std::string>(value, input, &deserializeValue);
 }
 
 template<>
 void
 JSONPrimitiveMapper<std::string>::deserialize(std::string* value, std::istream& input) {
-  if(anch::json::isNull(input)) {
-    value = NULL;
-  } else {
-    value = new std::string();
-    deserializeValue(*value, input);
-  }
+  anch::json::deserialize<std::string>(value, input, &deserializeValue);
 }
 
 template<>
@@ -167,7 +154,7 @@ void
 JSONPrimitiveMapper<std::string>::deserialize(std::vector<std::string>& value, std::istream& input) {
   anch::json::deserializeArray<std::string>(input,
 					    [&value](const std::string& str) -> void { value.push_back(str); },
-					    std::function<void(std::string&,std::istream&)>(deserializeValue));
+					    &deserializeValue);
 }
 
 template<>
@@ -175,7 +162,7 @@ void
 JSONPrimitiveMapper<std::string>::deserialize(std::list<std::string>& value, std::istream& input) {
   anch::json::deserializeArray<std::string>(input,
 					    [&value](const std::string& str) -> void { value.push_back(str); },
-					    std::function<void(std::string&,std::istream&)>(deserializeValue));
+					    &deserializeValue);
 }
 
 template<>
@@ -183,7 +170,7 @@ void
 JSONPrimitiveMapper<std::string>::deserialize(std::set<std::string>& value, std::istream& input) {
   anch::json::deserializeArray<std::string>(input,
 					    [&value](const std::string& str) -> void { value.insert(str); },
-					    std::function<void(std::string&,std::istream&)>(deserializeValue));
+					    &deserializeValue);
 }
 
 template class JSONPrimitiveMapper<std::string>;

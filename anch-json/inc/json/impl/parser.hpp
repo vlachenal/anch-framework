@@ -23,8 +23,7 @@ namespace anch {
   namespace json {
 
     template<typename T>
-    inline
-    bool
+    inline bool
     serialize(const T& value,
 	      std::ostream& out,
 	      std::function<void((const T& value, std::ostream& out))> serializeFunc,
@@ -37,8 +36,7 @@ namespace anch {
     }
 
     template<typename T>
-    inline
-    bool
+    inline bool
     serialize(const T* const value,
 	      std::ostream& out,
 	      std::function<void((const T& value, std::ostream& out))> serializeFunc,
@@ -50,8 +48,7 @@ namespace anch {
     }
 
     template<typename T>
-    inline
-    bool
+    inline bool
     serialize(const std::optional<T>& value,
 	      std::ostream& out,
 	      std::function<void((const T& value, std::ostream& out))> serializeFunc,
@@ -63,8 +60,7 @@ namespace anch {
     }
 
     template<typename T, typename A>
-    inline
-    void
+    inline void
     serializeArray(const A& array,
 		   std::ostream& out,
 		   std::function<void((const T& value, std::ostream& out))> serializeFunc,
@@ -78,14 +74,49 @@ namespace anch {
 	  out << anch::json::FIELD_SEPARATOR;
 	}
 	std::invoke(serializeFunc, *iter, out);
-	//serialize(*iter, out, anch::json::EMPTY_FIELD);
       }
       out << anch::json::ARRAY_END;
     }
 
     template<typename T>
-    inline
-    void
+    inline void
+    deserialize(T& value,
+		std::istream& input,
+		std::function<void((T& value, std::istream& input))> deserializeFunc) {
+      if(!anch::json::isNull(input)) { // this function discards 'spaces'
+	std::invoke(deserializeFunc, value, input);
+      }
+    }
+
+    template<typename T>
+    inline void
+    deserialize(T* value,
+		std::istream& input,
+		std::function<void((T& value, std::istream& input))> deserializeFunc) {
+      if(anch::json::isNull(input)) { // this function discards 'spaces'
+	value = NULL;
+      } else {
+	value = new T();
+	std::invoke(deserializeFunc, *value, input);
+      }
+    }
+
+    template<typename T>
+    inline void
+    deserialize(std::optional<T>& value,
+		std::istream& input,
+		std::function<void((T& value, std::istream& input))> deserializeFunc) {
+      if(anch::json::isNull(input)) { // this function discards 'spaces'
+	value.reset();
+      } else {
+	T instance;
+	std::invoke(deserializeFunc, instance, input);
+	value = std::move(instance);
+      }
+    }
+
+    template<typename T>
+    inline void
     deserializeArray(std::istream& input,
 		     std::function<void(const T&)> pushFunc,
 		     std::function<void((T& value, std::istream& input))> deserializeFunc) {

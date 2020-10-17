@@ -218,6 +218,23 @@ namespace anch {
     }
 
     template<typename T>
+    void
+    JSONMapper<T>::serializeValue(const T& value, std::ostream& out) {
+      out << anch::json::OBJECT_BEGIN;
+      auto iter = _writers.begin();
+      while(true) {
+	bool added = std::invoke(*iter, value, out);
+	if(++iter == _writers.end()) {
+	  break;
+	}
+	if(added) {
+	  out << anch::json::FIELD_SEPARATOR;
+	}
+      }
+      out << anch::json::OBJECT_END;
+    }
+
+    template<typename T>
     bool
     JSONMapper<T>::serialize(const T& value, std::ostream& out, const std::optional<std::string>& field) {
       return anch::json::serialize<T>(value, out, std::bind_front(&JSONMapper<T>::serializeValue, this), field);
@@ -233,23 +250,6 @@ namespace anch {
     bool
     JSONMapper<T>::serialize(const std::optional<T>& value, std::ostream& out, const std::optional<std::string>& field) {
       return anch::json::serialize<T>(value, out, std::bind_front(&JSONMapper<T>::serializeValue, this), field);
-    }
-
-    template<typename T>
-    void
-    JSONMapper<T>::serializeValue(const T& value, std::ostream& out) {
-      out << anch::json::OBJECT_BEGIN;
-      auto iter = _writers.begin();
-      while(true) {
-	bool added = std::invoke(*iter, value, out);
-	if(++iter == _writers.end()) {
-	  break;
-	}
-	if(added) {
-	  out << anch::json::FIELD_SEPARATOR;
-	}
-      }
-      out << anch::json::OBJECT_END;
     }
 
     template<typename T>
@@ -315,32 +315,19 @@ namespace anch {
     template<typename T>
     void
     JSONMapper<T>::deserialize(T& value, std::istream& input) {
-      if(!anch::json::isNull(input)) { // this function discards 'spaces'
-	deserializeValue(value, input);
-      }
+      anch::json::deserialize<T>(value, input, std::bind_front(&JSONMapper<T>::deserializeValue, this));
     }
 
     template<typename T>
     void
     JSONMapper<T>::deserialize(std::optional<T>& value, std::istream& input) {
-      if(anch::json::isNull(input)) { // this function discards 'spaces'
-	value.reset();
-      } else {
-	T instance;
-	deserializeValue(instance, input);
-	value = std::move(instance);
-      }
+      anch::json::deserialize<T>(value, input, std::bind_front(&JSONMapper<T>::deserializeValue, this));
     }
 
     template<typename T>
     void
     JSONMapper<T>::deserialize(T* value, std::istream& input) {
-      if(anch::json::isNull(input)) { // this function discards 'spaces'
-	value = NULL;
-      } else {
-	value = new T();
-	deserializeValue(*value, input);
-      }
+      anch::json::deserialize<T>(value, input, std::bind_front(&JSONMapper<T>::deserializeValue, this));
     }
 
     template<typename T>

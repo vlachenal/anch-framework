@@ -134,6 +134,42 @@ namespace anch {
 			const std::optional<std::string>& field);
 
     /*!
+     * Deserialize JSON value
+     *
+     * \param value the value to fill
+     * \param input the input stream to parse
+     * \param deserializeFunc the value deserialization function
+     */
+    template<typename T>
+    void deserialize(T& value,
+		     std::istream& input,
+		     std::function<void((T& value, std::istream& input))> deserializeFunc);
+
+    /*!
+     * Deserialize JSON value
+     *
+     * \param value the value to fill
+     * \param input the input stream to parse
+     * \param deserializeFunc the value deserialization function
+     */
+    template<typename T>
+    void deserialize(T* value,
+		     std::istream& input,
+		     std::function<void((T& value, std::istream& input))> deserializeFunc);
+
+    /*!
+     * Deserialize JSON value
+     *
+     * \param value the value to fill
+     * \param input the input stream to parse
+     * \param deserializeFunc the value deserialization function
+     */
+    template<typename T>
+    void deserialize(std::optional<T>& value,
+		     std::istream& input,
+		     std::function<void((T& value, std::istream& input))> deserializeFunc);
+
+    /*!
      * JSON array deserialization generic implementation
      *
      * \tparam T the object type

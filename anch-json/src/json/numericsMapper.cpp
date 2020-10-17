@@ -140,32 +140,19 @@ JSONPrimitiveMapper<uint64_t>::serialize(const std::set<uint64_t>& value, std::o
 template<>
 void
 JSONPrimitiveMapper<uint64_t>::deserialize(uint64_t& value, std::istream& input) {
-  if(!anch::json::isNull(input)) {
-    deserializeValue(value, input);
-  }
+  anch::json::deserialize<uint64_t>(value, input, &deserializeValue<uint64_t>);
 }
 
 template<>
 void
 JSONPrimitiveMapper<uint64_t>::deserialize(std::optional<uint64_t>& value, std::istream& input) {
-  if(anch::json::isNull(input)) {
-    value.reset();
-  } else {
-    uint64_t parsed;
-    deserializeValue(parsed, input);
-    value = std::move(parsed);
-  }
+  anch::json::deserialize<uint64_t>(value, input, &deserializeValue<uint64_t>);
 }
 
 template<>
 void
 JSONPrimitiveMapper<uint64_t>::deserialize(uint64_t* value, std::istream& input) {
-  if(anch::json::isNull(input)) {
-    value = NULL;
-  } else {
-    value = new uint64_t();
-    deserializeValue(*value, input);
-  }
+  anch::json::deserialize<uint64_t>(value, input, &deserializeValue<uint64_t>);
 }
 
 template<>
@@ -173,7 +160,7 @@ void
 JSONPrimitiveMapper<uint64_t>::deserialize(std::vector<uint64_t>& value, std::istream& input) {
   anch::json::deserializeArray<uint64_t>(input,
 					 [&value](const uint64_t& str) -> void { value.push_back(str); },
-					 std::function<void(uint64_t&,std::istream&)>(deserializeValue<uint64_t>));
+					 &deserializeValue<uint64_t>);
 }
 
 template<>
@@ -181,7 +168,7 @@ void
 JSONPrimitiveMapper<uint64_t>::deserialize(std::list<uint64_t>& value, std::istream& input) {
   anch::json::deserializeArray<uint64_t>(input,
 					 [&value](const uint64_t& str) -> void { value.push_back(str); },
-					 std::function<void(uint64_t&,std::istream&)>(deserializeValue<uint64_t>));
+					 &deserializeValue<uint64_t>);
 }
 
 template<>
@@ -189,7 +176,7 @@ void
 JSONPrimitiveMapper<uint64_t>::deserialize(std::set<uint64_t>& value, std::istream& input) {
   anch::json::deserializeArray<uint64_t>(input,
 					 [&value](const uint64_t& str) -> void { value.insert(str); },
-					 std::function<void(uint64_t&,std::istream&)>(deserializeValue<uint64_t>));
+					 &deserializeValue<uint64_t>);
 }
 
 template class JSONPrimitiveMapper<uint64_t>;
@@ -248,32 +235,19 @@ JSONPrimitiveMapper<int64_t>::serialize(const std::set<int64_t>& value, std::ost
 template<>
 void
 JSONPrimitiveMapper<int64_t>::deserialize(int64_t& value, std::istream& input) {
-  if(!anch::json::isNull(input)) {
-    deserializeValue(value, input);
-  }
+  anch::json::deserialize<int64_t>(value, input, &deserializeValue<int64_t>);
 }
 
 template<>
 void
 JSONPrimitiveMapper<int64_t>::deserialize(std::optional<int64_t>& value, std::istream& input) {
-  if(anch::json::isNull(input)) {
-    value.reset();
-  } else {
-    int64_t parsed;
-    deserializeValue(parsed, input);
-    value = std::move(parsed);
-  }
+  anch::json::deserialize<int64_t>(value, input, &deserializeValue<int64_t>);
 }
 
 template<>
 void
 JSONPrimitiveMapper<int64_t>::deserialize(int64_t* value, std::istream& input) {
-  if(anch::json::isNull(input)) {
-    value = NULL;
-  } else {
-    value = new int64_t();
-    deserializeValue(*value, input);
-  }
+  anch::json::deserialize<int64_t>(value, input, &deserializeValue<int64_t>);
 }
 
 template<>
@@ -281,7 +255,7 @@ void
 JSONPrimitiveMapper<int64_t>::deserialize(std::vector<int64_t>& value, std::istream& input) {
   anch::json::deserializeArray<int64_t>(input,
 					[&value](const int64_t& str) -> void { value.push_back(str); },
-					std::function<void(int64_t&,std::istream&)>(deserializeValue<int64_t>));
+					&deserializeValue<int64_t>);
 }
 
 template<>
@@ -289,7 +263,7 @@ void
 JSONPrimitiveMapper<int64_t>::deserialize(std::list<int64_t>& value, std::istream& input) {
   anch::json::deserializeArray<int64_t>(input,
 					[&value](const int64_t& str) -> void { value.push_back(str); },
-					std::function<void(int64_t&,std::istream&)>(deserializeValue<int64_t>));
+					&deserializeValue<int64_t>);
 }
 
 template<>
@@ -297,7 +271,7 @@ void
 JSONPrimitiveMapper<int64_t>::deserialize(std::set<int64_t>& value, std::istream& input) {
   anch::json::deserializeArray<int64_t>(input,
 					[&value](const int64_t& str) -> void { value.insert(str); },
-					std::function<void(int64_t&,std::istream&)>(deserializeValue<int64_t>));
+					&deserializeValue<int64_t>);
 }
 
 template class JSONPrimitiveMapper<int64_t>;
@@ -356,32 +330,19 @@ JSONPrimitiveMapper<uint32_t>::serialize(const std::set<uint32_t>& value, std::o
 template<>
 void
 JSONPrimitiveMapper<uint32_t>::deserialize(uint32_t& value, std::istream& input) {
-  if(!anch::json::isNull(input)) {
-    deserializeValue(value, input);
-  }
+  anch::json::deserialize<uint32_t>(value, input, &deserializeValue<uint32_t>);
 }
 
 template<>
 void
 JSONPrimitiveMapper<uint32_t>::deserialize(std::optional<uint32_t>& value, std::istream& input) {
-  if(anch::json::isNull(input)) {
-    value.reset();
-  } else {
-    uint32_t parsed;
-    deserializeValue(parsed, input);
-    value = std::move(parsed);
-  }
+  anch::json::deserialize<uint32_t>(value, input, &deserializeValue<uint32_t>);
 }
 
 template<>
 void
 JSONPrimitiveMapper<uint32_t>::deserialize(uint32_t* value, std::istream& input) {
-  if(anch::json::isNull(input)) {
-    value = NULL;
-  } else {
-    value = new uint32_t();
-    deserializeValue(*value, input);
-  }
+  anch::json::deserialize<uint32_t>(value, input, &deserializeValue<uint32_t>);
 }
 
 template<>
@@ -389,7 +350,7 @@ void
 JSONPrimitiveMapper<uint32_t>::deserialize(std::vector<uint32_t>& value, std::istream& input) {
   anch::json::deserializeArray<uint32_t>(input,
 					 [&value](const uint32_t& str) -> void { value.push_back(str); },
-					 std::function<void(uint32_t&,std::istream&)>(deserializeValue<uint32_t>));
+					 &deserializeValue<uint32_t>);
 }
 
 template<>
@@ -397,7 +358,7 @@ void
 JSONPrimitiveMapper<uint32_t>::deserialize(std::list<uint32_t>& value, std::istream& input) {
   anch::json::deserializeArray<uint32_t>(input,
 					 [&value](const uint32_t& str) -> void { value.push_back(str); },
-					 std::function<void(uint32_t&,std::istream&)>(deserializeValue<uint32_t>));
+					 &deserializeValue<uint32_t>);
 }
 
 template<>
@@ -405,7 +366,7 @@ void
 JSONPrimitiveMapper<uint32_t>::deserialize(std::set<uint32_t>& value, std::istream& input) {
   anch::json::deserializeArray<uint32_t>(input,
 					 [&value](const uint32_t& str) -> void { value.insert(str); },
-					 std::function<void(uint32_t&,std::istream&)>(deserializeValue<uint32_t>));
+					 &deserializeValue<uint32_t>);
 }
 
 template class JSONPrimitiveMapper<uint32_t>;
@@ -464,32 +425,19 @@ JSONPrimitiveMapper<int32_t>::serialize(const std::set<int32_t>& value, std::ost
 template<>
 void
 JSONPrimitiveMapper<int32_t>::deserialize(int32_t& value, std::istream& input) {
-  if(!anch::json::isNull(input)) {
-    deserializeValue(value, input);
-  }
+  anch::json::deserialize<int32_t>(value, input, &deserializeValue<int32_t>);
 }
 
 template<>
 void
 JSONPrimitiveMapper<int32_t>::deserialize(std::optional<int32_t>& value, std::istream& input) {
-  if(anch::json::isNull(input)) {
-    value.reset();
-  } else {
-    int32_t parsed;
-    deserializeValue(parsed, input);
-    value = std::move(parsed);
-  }
+  anch::json::deserialize<int32_t>(value, input, &deserializeValue<int32_t>);
 }
 
 template<>
 void
 JSONPrimitiveMapper<int32_t>::deserialize(int32_t* value, std::istream& input) {
-  if(anch::json::isNull(input)) {
-    value = NULL;
-  } else {
-    value = new int32_t();
-    deserializeValue(*value, input);
-  }
+  anch::json::deserialize<int32_t>(value, input, &deserializeValue<int32_t>);
 }
 
 template<>
@@ -497,7 +445,7 @@ void
 JSONPrimitiveMapper<int32_t>::deserialize(std::vector<int32_t>& value, std::istream& input) {
   anch::json::deserializeArray<int32_t>(input,
 					[&value](const int32_t& str) -> void { value.push_back(str); },
-					std::function<void(int32_t&,std::istream&)>(deserializeValue<int32_t>));
+					&deserializeValue<int32_t>);
 }
 
 template<>
@@ -505,7 +453,7 @@ void
 JSONPrimitiveMapper<int32_t>::deserialize(std::list<int32_t>& value, std::istream& input) {
   anch::json::deserializeArray<int32_t>(input,
 					[&value](const int32_t& str) -> void { value.push_back(str); },
-					std::function<void(int32_t&,std::istream&)>(deserializeValue<int32_t>));
+					&deserializeValue<int32_t>);
 }
 
 template<>
@@ -513,7 +461,7 @@ void
 JSONPrimitiveMapper<int32_t>::deserialize(std::set<int32_t>& value, std::istream& input) {
   anch::json::deserializeArray<int32_t>(input,
 					[&value](const int32_t& str) -> void { value.insert(str); },
-					std::function<void(int32_t&,std::istream&)>(deserializeValue<int32_t>));
+					&deserializeValue<int32_t>);
 }
 
 template class JSONPrimitiveMapper<int32_t>;
@@ -572,32 +520,19 @@ JSONPrimitiveMapper<uint16_t>::serialize(const std::set<uint16_t>& value, std::o
 template<>
 void
 JSONPrimitiveMapper<uint16_t>::deserialize(uint16_t& value, std::istream& input) {
-  if(!anch::json::isNull(input)) {
-    deserializeValue(value, input);
-  }
+  anch::json::deserialize<uint16_t>(value, input, &deserializeValue<uint16_t>);
 }
 
 template<>
 void
 JSONPrimitiveMapper<uint16_t>::deserialize(std::optional<uint16_t>& value, std::istream& input) {
-  if(anch::json::isNull(input)) {
-    value.reset();
-  } else {
-    uint16_t parsed;
-    deserializeValue(parsed, input);
-    value = std::move(parsed);
-  }
+  anch::json::deserialize<uint16_t>(value, input, &deserializeValue<uint16_t>);
 }
 
 template<>
 void
 JSONPrimitiveMapper<uint16_t>::deserialize(uint16_t* value, std::istream& input) {
-  if(anch::json::isNull(input)) {
-    value = NULL;
-  } else {
-    value = new uint16_t();
-    deserializeValue(*value, input);
-  }
+  anch::json::deserialize<uint16_t>(value, input, &deserializeValue<uint16_t>);
 }
 
 template<>
@@ -605,7 +540,7 @@ void
 JSONPrimitiveMapper<uint16_t>::deserialize(std::vector<uint16_t>& value, std::istream& input) {
   anch::json::deserializeArray<uint16_t>(input,
 					 [&value](const uint16_t& str) -> void { value.push_back(str); },
-					 std::function<void(uint16_t&,std::istream&)>(deserializeValue<uint16_t>));
+					 &deserializeValue<uint16_t>);
 }
 
 template<>
@@ -613,7 +548,7 @@ void
 JSONPrimitiveMapper<uint16_t>::deserialize(std::list<uint16_t>& value, std::istream& input) {
   anch::json::deserializeArray<uint16_t>(input,
 					 [&value](const uint16_t& str) -> void { value.push_back(str); },
-					 std::function<void(uint16_t&,std::istream&)>(deserializeValue<uint16_t>));
+					 &deserializeValue<uint16_t>);
 }
 
 template<>
@@ -621,7 +556,7 @@ void
 JSONPrimitiveMapper<uint16_t>::deserialize(std::set<uint16_t>& value, std::istream& input) {
   anch::json::deserializeArray<uint16_t>(input,
 					 [&value](const uint16_t& str) -> void { value.insert(str); },
-					 std::function<void(uint16_t&,std::istream&)>(deserializeValue<uint16_t>));
+					 &deserializeValue<uint16_t>);
 }
 
 template class JSONPrimitiveMapper<uint16_t>;
@@ -680,32 +615,19 @@ JSONPrimitiveMapper<int16_t>::serialize(const std::set<int16_t>& value, std::ost
 template<>
 void
 JSONPrimitiveMapper<int16_t>::deserialize(int16_t& value, std::istream& input) {
-  if(!anch::json::isNull(input)) {
-    deserializeValue(value, input);
-  }
+  anch::json::deserialize<int16_t>(value, input, &deserializeValue<int16_t>);
 }
 
 template<>
 void
 JSONPrimitiveMapper<int16_t>::deserialize(std::optional<int16_t>& value, std::istream& input) {
-  if(anch::json::isNull(input)) {
-    value.reset();
-  } else {
-    int16_t parsed;
-    deserializeValue(parsed, input);
-    value = std::move(parsed);
-  }
+  anch::json::deserialize<int16_t>(value, input, &deserializeValue<int16_t>);
 }
 
 template<>
 void
 JSONPrimitiveMapper<int16_t>::deserialize(int16_t* value, std::istream& input) {
-  if(anch::json::isNull(input)) {
-    value = NULL;
-  } else {
-    value = new int16_t();
-    deserializeValue(*value, input);
-  }
+  anch::json::deserialize<int16_t>(value, input, &deserializeValue<int16_t>);
 }
 
 template<>
@@ -713,7 +635,7 @@ void
 JSONPrimitiveMapper<int16_t>::deserialize(std::vector<int16_t>& value, std::istream& input) {
   anch::json::deserializeArray<int16_t>(input,
 					[&value](const int16_t& str) -> void { value.push_back(str); },
-					std::function<void(int16_t&,std::istream&)>(deserializeValue<int16_t>));
+					&deserializeValue<int16_t>);
 }
 
 template<>
@@ -721,7 +643,7 @@ void
 JSONPrimitiveMapper<int16_t>::deserialize(std::list<int16_t>& value, std::istream& input) {
   anch::json::deserializeArray<int16_t>(input,
 					[&value](const int16_t& str) -> void { value.push_back(str); },
-					std::function<void(int16_t&,std::istream&)>(deserializeValue<int16_t>));
+					&deserializeValue<int16_t>);
 }
 
 template<>
@@ -729,7 +651,7 @@ void
 JSONPrimitiveMapper<int16_t>::deserialize(std::set<int16_t>& value, std::istream& input) {
   anch::json::deserializeArray<int16_t>(input,
 					[&value](const int16_t& str) -> void { value.insert(str); },
-					std::function<void(int16_t&,std::istream&)>(deserializeValue<int16_t>));
+					&deserializeValue<int16_t>);
 }
 
 template class JSONPrimitiveMapper<int16_t>;
@@ -788,32 +710,19 @@ JSONPrimitiveMapper<uint8_t>::serialize(const std::set<uint8_t>& value, std::ost
 template<>
 void
 JSONPrimitiveMapper<uint8_t>::deserialize(uint8_t& value, std::istream& input) {
-  if(!anch::json::isNull(input)) {
-    deserializeValue(value, input);
-  }
+  anch::json::deserialize<uint8_t>(value, input, &deserializeValue<uint8_t>);
 }
 
 template<>
 void
 JSONPrimitiveMapper<uint8_t>::deserialize(std::optional<uint8_t>& value, std::istream& input) {
-  if(anch::json::isNull(input)) {
-    value.reset();
-  } else {
-    uint8_t parsed;
-    deserializeValue(parsed, input);
-    value = std::move(parsed);
-  }
+  anch::json::deserialize<uint8_t>(value, input, &deserializeValue<uint8_t>);
 }
 
 template<>
 void
 JSONPrimitiveMapper<uint8_t>::deserialize(uint8_t* value, std::istream& input) {
-  if(anch::json::isNull(input)) {
-    value = NULL;
-  } else {
-    value = new uint8_t();
-    deserializeValue(*value, input);
-  }
+  anch::json::deserialize<uint8_t>(value, input, &deserializeValue<uint8_t>);
 }
 
 template<>
@@ -821,7 +730,7 @@ void
 JSONPrimitiveMapper<uint8_t>::deserialize(std::vector<uint8_t>& value, std::istream& input) {
   anch::json::deserializeArray<uint8_t>(input,
 					[&value](const uint8_t& str) -> void { value.push_back(str); },
-					std::function<void(uint8_t&,std::istream&)>(deserializeValue<uint8_t>));
+					&deserializeValue<uint8_t>);
 }
 
 template<>
@@ -829,7 +738,7 @@ void
 JSONPrimitiveMapper<uint8_t>::deserialize(std::list<uint8_t>& value, std::istream& input) {
   anch::json::deserializeArray<uint8_t>(input,
 					[&value](const uint8_t& str) -> void { value.push_back(str); },
-					std::function<void(uint8_t&,std::istream&)>(deserializeValue<uint8_t>));
+					&deserializeValue<uint8_t>);
 }
 
 template<>
@@ -837,7 +746,7 @@ void
 JSONPrimitiveMapper<uint8_t>::deserialize(std::set<uint8_t>& value, std::istream& input) {
   anch::json::deserializeArray<uint8_t>(input,
 					[&value](const uint8_t& str) -> void { value.insert(str); },
-					std::function<void(uint8_t&,std::istream&)>(deserializeValue<uint8_t>));
+					&deserializeValue<uint8_t>);
 }
 
 template class JSONPrimitiveMapper<uint8_t>;
@@ -896,32 +805,19 @@ JSONPrimitiveMapper<int8_t>::serialize(const std::set<int8_t>& value, std::ostre
 template<>
 void
 JSONPrimitiveMapper<int8_t>::deserialize(int8_t& value, std::istream& input) {
-  if(!anch::json::isNull(input)) {
-    deserializeValue(value, input);
-  }
+  anch::json::deserialize<int8_t>(value, input, &deserializeValue<int8_t>);
 }
 
 template<>
 void
 JSONPrimitiveMapper<int8_t>::deserialize(std::optional<int8_t>& value, std::istream& input) {
-  if(anch::json::isNull(input)) {
-    value.reset();
-  } else {
-    int8_t parsed;
-    deserializeValue(parsed, input);
-    value = std::move(parsed);
-  }
+  anch::json::deserialize<int8_t>(value, input, &deserializeValue<int8_t>);
 }
 
 template<>
 void
 JSONPrimitiveMapper<int8_t>::deserialize(int8_t* value, std::istream& input) {
-  if(anch::json::isNull(input)) {
-    value = NULL;
-  } else {
-    value = new int8_t();
-    deserializeValue(*value, input);
-  }
+  anch::json::deserialize<int8_t>(value, input, &deserializeValue<int8_t>);
 }
 
 template<>
@@ -929,7 +825,7 @@ void
 JSONPrimitiveMapper<int8_t>::deserialize(std::vector<int8_t>& value, std::istream& input) {
   anch::json::deserializeArray<int8_t>(input,
 				       [&value](const int8_t& str) -> void { value.push_back(str); },
-				       std::function<void(int8_t&,std::istream&)>(deserializeValue<int8_t>));
+				       &deserializeValue<int8_t>);
 }
 
 template<>
@@ -937,7 +833,7 @@ void
 JSONPrimitiveMapper<int8_t>::deserialize(std::list<int8_t>& value, std::istream& input) {
   anch::json::deserializeArray<int8_t>(input,
 				       [&value](const int8_t& str) -> void { value.push_back(str); },
-				       std::function<void(int8_t&,std::istream&)>(deserializeValue<int8_t>));
+				       &deserializeValue<int8_t>);
 }
 
 template<>
@@ -945,7 +841,7 @@ void
 JSONPrimitiveMapper<int8_t>::deserialize(std::set<int8_t>& value, std::istream& input) {
   anch::json::deserializeArray<int8_t>(input,
 				       [&value](const int8_t& str) -> void { value.insert(str); },
-				       std::function<void(int8_t&,std::istream&)>(deserializeValue<int8_t>));
+				       &deserializeValue<int8_t>);
 }
 
 template class JSONPrimitiveMapper<int8_t>;
@@ -1004,32 +900,19 @@ JSONPrimitiveMapper<float>::serialize(const std::set<float>& value, std::ostream
 template<>
 void
 JSONPrimitiveMapper<float>::deserialize(float& value, std::istream& input) {
-  if(!anch::json::isNull(input)) {
-    deserializeValue(value, input);
-  }
+  anch::json::deserialize<float>(value, input, &deserializeValue<float>);
 }
 
 template<>
 void
 JSONPrimitiveMapper<float>::deserialize(std::optional<float>& value, std::istream& input) {
-  if(anch::json::isNull(input)) {
-    value.reset();
-  } else {
-    float parsed;
-    deserializeValue(parsed, input);
-    value = std::move(parsed);
-  }
+  anch::json::deserialize<float>(value, input, &deserializeValue<float>);
 }
 
 template<>
 void
 JSONPrimitiveMapper<float>::deserialize(float* value, std::istream& input) {
-  if(anch::json::isNull(input)) {
-    value = NULL;
-  } else {
-    value = new float();
-    deserializeValue(*value, input);
-  }
+  anch::json::deserialize<float>(value, input, &deserializeValue<float>);
 }
 
 template<>
@@ -1037,7 +920,7 @@ void
 JSONPrimitiveMapper<float>::deserialize(std::vector<float>& value, std::istream& input) {
   anch::json::deserializeArray<float>(input,
 				      [&value](const float& str) -> void { value.push_back(str); },
-				      std::function<void(float&,std::istream&)>(deserializeValue<float>));
+				      &deserializeValue<float>);
 }
 
 template<>
@@ -1045,7 +928,7 @@ void
 JSONPrimitiveMapper<float>::deserialize(std::list<float>& value, std::istream& input) {
   anch::json::deserializeArray<float>(input,
 				      [&value](const float& str) -> void { value.push_back(str); },
-				      std::function<void(float&,std::istream&)>(deserializeValue<float>));
+				      &deserializeValue<float>);
 }
 
 template<>
@@ -1053,7 +936,7 @@ void
 JSONPrimitiveMapper<float>::deserialize(std::set<float>& value, std::istream& input) {
   anch::json::deserializeArray<float>(input,
 				      [&value](const float& str) -> void { value.insert(str); },
-				      std::function<void(float&,std::istream&)>(deserializeValue<float>));
+				      &deserializeValue<float>);
 }
 
 template class JSONPrimitiveMapper<float>;
@@ -1112,32 +995,19 @@ JSONPrimitiveMapper<double>::serialize(const std::set<double>& value, std::ostre
 template<>
 void
 JSONPrimitiveMapper<double>::deserialize(double& value, std::istream& input) {
-  if(!anch::json::isNull(input)) {
-    deserializeValue(value, input);
-  }
+  anch::json::deserialize<double>(value, input, &deserializeValue<double>);
 }
 
 template<>
 void
 JSONPrimitiveMapper<double>::deserialize(std::optional<double>& value, std::istream& input) {
-  if(anch::json::isNull(input)) {
-    value.reset();
-  } else {
-    double parsed;
-    deserializeValue(parsed, input);
-    value = std::move(parsed);
-  }
+  anch::json::deserialize<double>(value, input, &deserializeValue<double>);
 }
 
 template<>
 void
 JSONPrimitiveMapper<double>::deserialize(double* value, std::istream& input) {
-  if(anch::json::isNull(input)) {
-    value = NULL;
-  } else {
-    value = new double();
-    deserializeValue(*value, input);
-  }
+  anch::json::deserialize<double>(value, input, &deserializeValue<double>);
 }
 
 template<>
@@ -1145,7 +1015,7 @@ void
 JSONPrimitiveMapper<double>::deserialize(std::vector<double>& value, std::istream& input) {
   anch::json::deserializeArray<double>(input,
 				       [&value](const double& str) -> void { value.push_back(str); },
-				       std::function<void(double&,std::istream&)>(deserializeValue<double>));
+				       &deserializeValue<double>);
 }
 
 template<>
@@ -1153,7 +1023,7 @@ void
 JSONPrimitiveMapper<double>::deserialize(std::list<double>& value, std::istream& input) {
   anch::json::deserializeArray<double>(input,
 				       [&value](const double& str) -> void { value.push_back(str); },
-				       std::function<void(double&,std::istream&)>(deserializeValue<double>));
+				       &deserializeValue<double>);
 }
 
 template<>
@@ -1161,7 +1031,7 @@ void
 JSONPrimitiveMapper<double>::deserialize(std::set<double>& value, std::istream& input) {
   anch::json::deserializeArray<double>(input,
 				       [&value](const double& str) -> void { value.insert(str); },
-				       std::function<void(double&,std::istream&)>(deserializeValue<double>));
+				       &deserializeValue<double>);
 }
 
 template class JSONPrimitiveMapper<double>;
@@ -1220,32 +1090,19 @@ JSONPrimitiveMapper<long double>::serialize(const std::set<long double>& value, 
 template<>
 void
 JSONPrimitiveMapper<long double>::deserialize(long double& value, std::istream& input) {
-  if(!anch::json::isNull(input)) {
-    deserializeValue(value, input);
-  }
+  anch::json::deserialize<long double>(value, input, &deserializeValue<long double>);
 }
 
 template<>
 void
 JSONPrimitiveMapper<long double>::deserialize(std::optional<long double>& value, std::istream& input) {
-  if(anch::json::isNull(input)) {
-    value.reset();
-  } else {
-    long double parsed;
-    deserializeValue(parsed, input);
-    value = std::move(parsed);
-  }
+  anch::json::deserialize<long double>(value, input, &deserializeValue<long double>);
 }
 
 template<>
 void
 JSONPrimitiveMapper<long double>::deserialize(long double* value, std::istream& input) {
-  if(anch::json::isNull(input)) {
-    value = NULL;
-  } else {
-    value = new long double();
-    deserializeValue(*value, input);
-  }
+  anch::json::deserialize<long double>(value, input, &deserializeValue<long double>);
 }
 
 template<>
@@ -1253,7 +1110,7 @@ void
 JSONPrimitiveMapper<long double>::deserialize(std::vector<long double>& value, std::istream& input) {
   anch::json::deserializeArray<long double>(input,
 					    [&value](const long double& str) -> void { value.push_back(str); },
-					    std::function<void(long double&,std::istream&)>(deserializeValue<long double>));
+					    &deserializeValue<long double>);
 }
 
 template<>
@@ -1261,7 +1118,7 @@ void
 JSONPrimitiveMapper<long double>::deserialize(std::list<long double>& value, std::istream& input) {
   anch::json::deserializeArray<long double>(input,
 					    [&value](const long double& str) -> void { value.push_back(str); },
-					    std::function<void(long double&,std::istream&)>(deserializeValue<long double>));
+					    &deserializeValue<long double>);
 }
 
 template<>
@@ -1269,7 +1126,7 @@ void
 JSONPrimitiveMapper<long double>::deserialize(std::set<long double>& value, std::istream& input) {
   anch::json::deserializeArray<long double>(input,
 					    [&value](const long double& str) -> void { value.insert(str); },
-					    std::function<void(long double&,std::istream&)>(deserializeValue<long double>));
+					    &deserializeValue<long double>);
 }
 
 template class JSONPrimitiveMapper<long double>;

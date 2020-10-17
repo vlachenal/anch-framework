@@ -127,32 +127,19 @@ JSONPrimitiveMapper<bool>::serialize(const std::set<bool>& value, std::ostream& 
 template<>
 void
 JSONPrimitiveMapper<bool>::deserialize(bool& value, std::istream& input) {
-  if(!anch::json::isNull(input)) {
-    deserializeValue(value, input);
-  }
+  anch::json::deserialize<bool>(value, input, &deserializeValue);
 }
 
 template<>
 void
 JSONPrimitiveMapper<bool>::deserialize(std::optional<bool>& value, std::istream& input) {
-  if(anch::json::isNull(input)) {
-    value.reset();
-  } else {
-    bool parsed;
-    deserializeValue(parsed, input);
-    value = std::move(parsed);
-  }
+  anch::json::deserialize<bool>(value, input, &deserializeValue);
 }
 
 template<>
 void
 JSONPrimitiveMapper<bool>::deserialize(bool* value, std::istream& input) {
-  if(anch::json::isNull(input)) {
-    value = NULL;
-  } else {
-    value = new bool();
-    deserializeValue(*value, input);
-  }
+  anch::json::deserialize<bool>(value, input, &deserializeValue);
 }
 
 template<>
@@ -160,7 +147,7 @@ void
 JSONPrimitiveMapper<bool>::deserialize(std::vector<bool>& value, std::istream& input) {
   anch::json::deserializeArray<bool>(input,
 				     [&value](const bool& str) -> void { value.push_back(str); },
-				     std::function<void(bool&,std::istream&)>(deserializeValue));
+				     &deserializeValue);
 }
 
 template<>
@@ -168,7 +155,7 @@ void
 JSONPrimitiveMapper<bool>::deserialize(std::list<bool>& value, std::istream& input) {
   anch::json::deserializeArray<bool>(input,
 				     [&value](const bool& str) -> void { value.push_back(str); },
-				     std::function<void(bool&,std::istream&)>(deserializeValue));
+				     &deserializeValue);
 }
 
 template<>
@@ -176,7 +163,7 @@ void
 JSONPrimitiveMapper<bool>::deserialize(std::set<bool>& value, std::istream& input) {
   anch::json::deserializeArray<bool>(input,
 				     [&value](const bool& str) -> void { value.insert(str); },
-				     std::function<void(bool&,std::istream&)>(deserializeValue));
+				     &deserializeValue);
 }
 
 template class JSONPrimitiveMapper<bool>;
