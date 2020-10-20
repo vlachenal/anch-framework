@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "json/mappingError.hpp"
+
 namespace anch {
   namespace json {
 
@@ -125,7 +127,7 @@ namespace anch {
       }
       int current = input.get();
       if(current != anch::json::ARRAY_BEGIN) {
-	throw 128;
+	throw anch::json::MappingError(anch::json::ErrorCode::INVALID_FORMAT, input, static_cast<char>(current));
       }
       anch::json::discardChars(input);
       if(input.peek() != anch::json::ARRAY_END) {
@@ -140,7 +142,7 @@ namespace anch {
 	}
       }
       if(!input || input.get() != anch::json::ARRAY_END) {
-	throw 2048; // \todo error ...
+	throw anch::json::MappingError(anch::json::ErrorCode::INVALID_FORMAT, input, static_cast<char>(input.peek()));
       }
     }
 

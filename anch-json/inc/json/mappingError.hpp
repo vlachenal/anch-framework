@@ -19,7 +19,10 @@
 */
 #pragma once
 
+#include <istream>
 #include <exception>
+#include <optional>
+#include <string>
 
 
 namespace anch {
@@ -61,14 +64,30 @@ namespace anch {
     private:
       /*! Error code */
       ErrorCode _code;
+
+      /*! Error message */
+      std::string _msg;
       // Attributes -
 
       // Constructors +
     public:
       /*!
-       * \ref MappingError default constructor
+       * \ref MappingError constructor
+       *
+       * \param code the error code
+       * \param input the input stream
+       * \param context the contextualized sequence which has raised this error (default to no value)
        */
-      MappingError();
+      MappingError(ErrorCode code, std::istream& input, std::optional<std::string> context = std::optional<std::string>());
+
+      /*!
+       * \ref MappingError constructor
+       *
+       * \param code the error code
+       * \param input the input stream
+       * \param context the contextualized character which has raised this error
+       */
+      MappingError(ErrorCode code, std::istream& input, char context);
       // Constructors -
 
       // Destructor +

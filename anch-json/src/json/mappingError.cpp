@@ -19,13 +19,68 @@
 */
 #include "json/mappingError.hpp"
 
+#include <sstream>
+
 using anch::json::MappingError;
 using anch::json::ErrorCode;
 
 
+std::string
+computeErrorMessage(ErrorCode code, std::istream& input, std::optional<std::string> context) {
+  std::streamoff pos = input.tellg();
+  std::ostringstream oss;
+  switch(code) {
+  case ErrorCode::INVALID_FORMAT:
+    oss << "Unexpected character found at " << pos;
+    break;
+  case ErrorCode::UNEXPECTED_FIELD:
+    oss << "Unexpected field found at " << pos;
+    break;
+  case ErrorCode::POTENTIAL_OVERFLOW:
+    return "HACKER !!!";
+  default:
+    oss << "Unexpected error found at " << pos;
+  }
+  if(context.has_value()) {
+    oss << " for '" << context.value() << '\'';
+  }
+  // Try to get 20 characters around current error +
+  oss << " near '";
+  std::streamoff begin = pos - 10;
+  if(begin < 0) {
+    begin = 0;
+  }
+  for(std::streamoff i = begin ; i < pos ; ++i) {
+    try {
+      input.seekg(i);
+    } catch(...) {
+      continue;
+    }
+    oss << static_cast<char>(input.peek());
+  }
+  input.seekg(pos);
+  for(std::streamoff i = 0 ; i < 10 ; ++i) {
+    try {
+      input.seekg(pos + i);
+    } catch(...) {
+      break;
+    }
+    oss << static_cast<char>(input.peek());
+  }
+  // Try to get 20 characters around current error -
+  oss << '\'';
+  return std::move(oss.str());
+}
+
 // Constructors +
-MappingError::MappingError(): std::exception(), _code(ErrorCode::UNKNOWN) {
-  // Nothing to do
+MappingError::MappingError(ErrorCode code, std::istream& input, std::optional<std::string> context): std::exception(), _code(code) {
+  _msg = computeErrorMessage(code, input, context);
+}
+
+MappingError::MappingError(ErrorCode code, std::istream& input, char context): std::exception(), _code(code) {
+  std::ostringstream oss;
+  oss << context;
+  _msg = computeErrorMessage(code, input, std::optional<std::string>(oss.str()));
 }
 // Constructors -
 
@@ -38,6 +93,6 @@ MappingError::~MappingError() {
 // Methods +
 const char*
 MappingError::what() const noexcept {
-  return ""; // \todo format error
+  return _msg.data();
 }
 // Methods -

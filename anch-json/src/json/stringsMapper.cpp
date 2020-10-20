@@ -27,6 +27,10 @@
 #include <ostream>
 #include <sstream>
 
+#include "json/constants.hpp"
+#include "json/mappingFunctions.hpp"
+#include "json/mappingError.hpp"
+
 #ifdef ANCH_UUID
 #include "uuid.hpp"
 #endif
@@ -34,9 +38,6 @@
 #ifdef ANCH_DATE
 #include "date/date.hpp"
 #endif
-
-#include "json/constants.hpp"
-#include "json/mappingFunctions.hpp"
 
 
 using anch::json::JSONPrimitiveMapper;
@@ -53,7 +54,7 @@ deserializeValue(std::string& value, std::istream& input) {
   // Look for '"'
   int current = input.get();
   if(current != anch::json::STRING_DELIMITER) {
-    throw 2;
+    throw anch::json::MappingError(anch::json::ErrorCode::INVALID_FORMAT, input, static_cast<char>(current));
   }
   std::ostringstream buffer;
   while(input) {
@@ -61,7 +62,7 @@ deserializeValue(std::string& value, std::istream& input) {
     current = input.get();
     if(current == '\\') {
       if(!input) {
-	throw 0;
+	throw anch::json::MappingError(anch::json::ErrorCode::INVALID_FORMAT, input);
       }
       int next = input.get();
       if(next == 'u') { // unicode sequence
@@ -76,7 +77,7 @@ deserializeValue(std::string& value, std::istream& input) {
     }
   }
   if(!input && current != anch::json::STRING_DELIMITER) {
-    throw 4096;
+    throw anch::json::MappingError(anch::json::ErrorCode::INVALID_FORMAT, input, static_cast<char>(current));
   }
   value = buffer.str();
 }

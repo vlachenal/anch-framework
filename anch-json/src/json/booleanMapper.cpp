@@ -55,14 +55,15 @@ void
 deserializeValue(bool& value, std::istream& input) {
   std::ostringstream buffer;
   int current;
-  while(input) {
-    // \todo max char in value ...
+  int nbChars = 0;
+  while(input && nbChars < 5) { // maximum 5 characters for 'false'
     current = input.peek();
     if(!isNumericChar(current)) {
       break;
     }
     input.get();
     buffer << static_cast<char>(current);
+    ++nbChars;
   }
   std::string strVal = buffer.str();
   if(strVal == "true") {
@@ -70,7 +71,7 @@ deserializeValue(bool& value, std::istream& input) {
   } else if(strVal == "false") {
     value = false;
   } else {
-    throw 64; // \todo error
+    throw anch::json::MappingError(anch::json::ErrorCode::INVALID_FORMAT, input, std::optional<std::string>(strVal));
   }
 }
 

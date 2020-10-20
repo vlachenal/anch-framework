@@ -281,7 +281,7 @@ namespace anch {
       while(input) {
 	current = input.get();
 	if(current != expected) {
-	  // \todo raise error
+	  throw anch::json::MappingError(anch::json::ErrorCode::INVALID_FORMAT, input, static_cast<char>(current));
 	}
 	if(current == anch::json::OBJECT_BEGIN) {
 	  expected = anch::json::OBJECT_END;
@@ -289,8 +289,7 @@ namespace anch {
 	  while(fieldName.has_value()) {
 	    auto iter = _readers.find(fieldName.value());
 	    if(iter == _readers.end()) {
-	      // \todo raise error or consumes value according to mapper options
-	      throw 123456;
+	      throw anch::json::MappingError(anch::json::ErrorCode::UNEXPECTED_FIELD, input, fieldName.value());
 	    } else {
 	      std::invoke(iter->second, value, input);
 	    }
@@ -307,8 +306,7 @@ namespace anch {
 	}
       }
       if(current != anch::json::OBJECT_END) {
-	// \todo raise error
-	throw 123;
+	throw anch::json::MappingError(anch::json::ErrorCode::INVALID_FORMAT, input, static_cast<char>(current));
       }
     }
 

@@ -45,7 +45,7 @@ namespace anch {
 	//}
       }
       if(!input) {
-	throw 0; // \todo raise another error ...
+	throw anch::json::MappingError(anch::json::ErrorCode::INVALID_FORMAT, input);
       }
     }
 
@@ -74,7 +74,7 @@ namespace anch {
 	  input.get();
 	  ++index;
 	} else if(null) {
-	  throw 4; // \todo raise another error ...
+	  throw anch::json::MappingError(anch::json::ErrorCode::INVALID_FORMAT, input, static_cast<char>(input.peek()));
 	} else {
 	  break;
 	}
@@ -102,7 +102,7 @@ namespace anch {
       }
       anch::json::discardChars(input);
       if(input.get() != anch::json::FIELD_VALUE_SEPARATOR) {
-	throw 256; // \todo raise another error ...
+	throw anch::json::MappingError(anch::json::ErrorCode::INVALID_FORMAT, input, static_cast<char>(input.peek()));
       }
       name = buffer.str();
       return name;
@@ -123,18 +123,16 @@ namespace anch {
     void
     parseField(std::istream& input) {
       discardChars(input);
-      // \todo parse field
-      //char expected = '"';
       int current = input.get();
       if(current != '"') {
-	throw 2;
+	throw anch::json::MappingError(anch::json::ErrorCode::INVALID_FORMAT, input, static_cast<char>(current));
       }
       std::ostringstream value;
       while(input) {
 	current = input.get();
 	if(current == '\\') {
 	  if(!input) {
-	    throw 0;
+	    throw anch::json::MappingError(anch::json::ErrorCode::INVALID_FORMAT, input);
 	  }
 	  value << input.get();
 	} else if(current == '"') {
@@ -149,9 +147,6 @@ namespace anch {
     parseFields(std::istream& input) {
       discardChars(input);
 
-      // \todo parse field
-      // look for field name
-      //char expected = '"';
       int current = input.peek();
       if(current == '}') {
 	return;
@@ -160,7 +155,7 @@ namespace anch {
       while(input) {
 	std::ostringstream name;
 	if(current != '"') {
-	  throw 3; // \todo error
+	  throw anch::json::MappingError(anch::json::ErrorCode::INVALID_FORMAT, input, static_cast<char>(current));
 	}
 	while(input) {
 	  current = input.get();
@@ -172,7 +167,7 @@ namespace anch {
 
 	discardChars(input);
 	if(input.get() != ':') {
-	  throw 256;
+	  throw anch::json::MappingError(anch::json::ErrorCode::INVALID_FORMAT, input, static_cast<char>(input.peek()));
 	}
 	parseField(input);
 	discardChars(input);
@@ -215,7 +210,7 @@ namespace anch {
 	  case 3:
 	    goto stopobj; // stop parsing for this object
 	  default:
-	    throw 1024;
+	    throw anch::json::MappingError(anch::json::ErrorCode::INVALID_FORMAT, input, static_cast<char>(nullBuf));
 	  }
 	  ++nullBuf;
 
@@ -226,12 +221,12 @@ namespace anch {
 
 	} else if(current == '}') { // end object
 	  if(!obj.has_value()) {
-	    throw 512;
+	    throw anch::json::MappingError(anch::json::ErrorCode::INVALID_FORMAT, input, static_cast<char>(current));
 	  }
 	  break;
 
 	} else {
-	  throw 2048;
+	  throw anch::json::MappingError(anch::json::ErrorCode::INVALID_FORMAT, input, static_cast<char>(current));
 	}
 
       }
