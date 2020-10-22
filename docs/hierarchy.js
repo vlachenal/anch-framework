@@ -95,7 +95,6 @@ var hierarchy =
     ] ],
     [ "anch::crypto::ISO7816_4Padding", "classanch_1_1crypto_1_1_i_s_o7816__4_padding.html", null ],
     [ "anch::json::JSONParser", "classanch_1_1json_1_1_j_s_o_n_parser.html", null ],
-    [ "anch::json::JSONPrimitiveMapper< T >", "classanch_1_1json_1_1_j_s_o_n_primitive_mapper.html", null ],
     [ "anch::LessPtrCompare< T >", "structanch_1_1_less_ptr_compare.html", null ],
     [ "anch::logger::Logger", "classanch_1_1logger_1_1_logger.html", null ],
     [ "anch::logger::LoggerConfiguration", "classanch_1_1logger_1_1_logger_configuration.html", null ],
@@ -124,6 +123,7 @@ var hierarchy =
       [ "anch::sql::PostgreSQLPreparedStatement", "classanch_1_1sql_1_1_postgre_s_q_l_prepared_statement.html", null ],
       [ "anch::sql::SQLite3PreparedStatement", "classanch_1_1sql_1_1_s_q_lite3_prepared_statement.html", null ]
     ] ],
+    [ "anch::json::PrimitiveMapper< T >", "classanch_1_1json_1_1_primitive_mapper.html", null ],
     [ "anch::resource::Resource", "classanch_1_1resource_1_1_resource.html", null ],
     [ "anch::ResourcePool< T, C, make_ptr >", "classanch_1_1_resource_pool.html", null ],
     [ "anch::sql::ResultSet", "classanch_1_1sql_1_1_result_set.html", [
