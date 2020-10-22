@@ -83,7 +83,7 @@ namespace anch {
       	static anch::json::JSONPrimitiveMapper<T> instance; // \todo define JSONEnumMapper
       	return instance;
       } else {
-	static anch::json::JSONMapper<T> instance;
+	static anch::json::ObjectMapper<T> instance;
 	return instance;
       }
     }

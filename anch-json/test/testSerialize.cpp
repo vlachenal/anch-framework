@@ -5,7 +5,7 @@
 #include "json/json.hpp"
 
 
-using anch::json::JSONMapper;
+using anch::json::ObjectMapper;
 using anch::json::JSONFactory;
 
 
@@ -42,7 +42,7 @@ struct Toto {
 
 template<>
 void
-anch::json::registerFields(JSONMapper<Toto>& mapper) {
+anch::json::registerFields(ObjectMapper<Toto>& mapper) {
   std::cout << "Register Toto fields" << std::endl;
   mapper
     .registerField("plop", &Toto::plop)
@@ -64,7 +64,7 @@ anch::json::registerFields(JSONMapper<Toto>& mapper) {
 
 template<>
 void
-anch::json::registerFields(JSONMapper<Tata>& mapper) {
+anch::json::registerFields(ObjectMapper<Tata>& mapper) {
   std::cout << "Register Tata fields" << std::endl;
   mapper
     .registerField("ploum", &Tata::ploum)
@@ -89,7 +89,7 @@ struct Test {
 
 template<>
 void
-anch::json::registerFields(JSONMapper<Test>& mapper) {
+anch::json::registerFields(ObjectMapper<Test>& mapper) {
   mapper
     .registerField("id", &Test::_id)
     //.registerField("value", std::function<std::string(const Test&)>(&Test::getValue))

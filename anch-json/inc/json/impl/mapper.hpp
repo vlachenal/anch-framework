@@ -41,24 +41,24 @@ namespace anch {
 
     // JSON mapper early declaration
     template<typename T>
-    class JSONMapper;
+    class ObjectMapper;
 
     // Generic implementations +
     template<typename T>
-    JSONMapper<T>::JSONMapper(): _writers(), _readers() {
+    ObjectMapper<T>::ObjectMapper(): _writers(), _readers() {
       anch::json::registerFields<T>(*this);
       _writers.shrink_to_fit();
     }
 
     template<typename T>
-    JSONMapper<T>::~JSONMapper() {
+    ObjectMapper<T>::~ObjectMapper() {
       // Nothing to do
     }
 
     template<typename T>
     template<typename P>
-    JSONMapper<T>&
-    JSONMapper<T>::registerField(const std::string& key, P T::* value) {
+    ObjectMapper<T>&
+    ObjectMapper<T>::registerField(const std::string& key, P T::* value) {
       _writers.push_back(std::function<bool(const T&, std::ostream&)>([=, this](const T& obj, std::ostream& out) -> bool {
 	if constexpr (std::is_pointer<P>::value) { // Remove pointer on parameter type to check the main type
 	  if constexpr (std::is_same<T, typename std::remove_pointer<P>>::value) { // if same, use direct call to avoid recursive instanciation
@@ -104,8 +104,8 @@ namespace anch {
 
     template<typename T>
     template<typename MT, typename P>
-    JSONMapper<T>&
-    JSONMapper<T>::registerField(const std::string& key, P T::* value) {
+    ObjectMapper<T>&
+    ObjectMapper<T>::registerField(const std::string& key, P T::* value) {
       _writers.push_back(std::function<bool(const T&, std::ostream&)>([=, this](const T& obj, std::ostream& out) -> bool {
 	if constexpr (std::is_same<MT, T>::value) { // if same, use direct call to avoid recursive instanciation
 	  return this->serialize(obj.*value, out, std::optional<std::string>(key));
@@ -125,8 +125,8 @@ namespace anch {
 
     template<typename T>
     template<typename P, typename MT>
-    JSONMapper<T>&
-    JSONMapper<T>::registerField(const std::string& key, std::function<P(const T&)> getter) {
+    ObjectMapper<T>&
+    ObjectMapper<T>::registerField(const std::string& key, std::function<P(const T&)> getter) {
       _writers.push_back(std::function<bool(const T&, std::ostream&)>([=, this](const T& obj, std::ostream& out) -> bool {
 	if constexpr (std::is_same<MT, P>::value) { // Mapper type has not been specified
 
@@ -165,8 +165,8 @@ namespace anch {
 
     template<typename T>
     template<typename P, typename MT>
-    JSONMapper<T>&
-    JSONMapper<T>::registerField(const std::string& key, std::function<void(T&, const P&)> setter) {
+    ObjectMapper<T>&
+    ObjectMapper<T>::registerField(const std::string& key, std::function<void(T&, const P&)> setter) {
       _readers[key] = std::function<void(T&, std::istream&)>([=, this](T& obj, std::istream& input) -> void {
 	static_assert(!std::is_reference<P>::value, "Can not desrialize reference value"); // raise compile-time error if value is a reference
 	if constexpr (std::is_same<MT, P>::value) { // Mapper type has not been specified
@@ -211,15 +211,15 @@ namespace anch {
 
     template<typename T>
     template<typename P, typename MT>
-    JSONMapper<T>&
-    JSONMapper<T>::registerField(const std::string& key, std::function<P(const T&)> getter, std::function<void(T&, const P&)> setter) {
+    ObjectMapper<T>&
+    ObjectMapper<T>::registerField(const std::string& key, std::function<P(const T&)> getter, std::function<void(T&, const P&)> setter) {
       registerField<P,MT>(key, getter);
       return registerField<P,MT>(key, setter);
     }
 
     template<typename T>
     void
-    JSONMapper<T>::serializeValue(const T& value, std::ostream& out) {
+    ObjectMapper<T>::serializeValue(const T& value, std::ostream& out) {
       out << anch::json::OBJECT_BEGIN;
       auto iter = _writers.begin();
       while(true) {
@@ -236,46 +236,46 @@ namespace anch {
 
     template<typename T>
     bool
-    JSONMapper<T>::serialize(const T& value, std::ostream& out, const std::optional<std::string>& field) {
-      return anch::json::serialize<T>(value, out, std::bind_front(&JSONMapper<T>::serializeValue, this), field);
+    ObjectMapper<T>::serialize(const T& value, std::ostream& out, const std::optional<std::string>& field) {
+      return anch::json::serialize<T>(value, out, std::bind_front(&ObjectMapper<T>::serializeValue, this), field);
     }
 
     template<typename T>
     bool
-    JSONMapper<T>::serialize(const T* const value, std::ostream& out, const std::optional<std::string>& field) {
-      return anch::json::serialize<T>(value, out, std::bind_front(&JSONMapper<T>::serializeValue, this), field);
+    ObjectMapper<T>::serialize(const T* const value, std::ostream& out, const std::optional<std::string>& field) {
+      return anch::json::serialize<T>(value, out, std::bind_front(&ObjectMapper<T>::serializeValue, this), field);
     }
 
     template<typename T>
     bool
-    JSONMapper<T>::serialize(const std::optional<T>& value, std::ostream& out, const std::optional<std::string>& field) {
-      return anch::json::serialize<T>(value, out, std::bind_front(&JSONMapper<T>::serializeValue, this), field);
+    ObjectMapper<T>::serialize(const std::optional<T>& value, std::ostream& out, const std::optional<std::string>& field) {
+      return anch::json::serialize<T>(value, out, std::bind_front(&ObjectMapper<T>::serializeValue, this), field);
     }
 
     template<typename T>
     bool
-    JSONMapper<T>::serialize(const std::vector<T>& value, std::ostream& out, const std::optional<std::string>& field) {
-      anch::json::serializeArray<T>(value, out, std::bind_front(&JSONMapper<T>::serializeValue, this), field);
+    ObjectMapper<T>::serialize(const std::vector<T>& value, std::ostream& out, const std::optional<std::string>& field) {
+      anch::json::serializeArray<T>(value, out, std::bind_front(&ObjectMapper<T>::serializeValue, this), field);
       return true;
     }
 
     template<typename T>
     bool
-    JSONMapper<T>::serialize(const std::list<T>& value, std::ostream& out, const std::optional<std::string>& field) {
-      anch::json::serializeArray<T>(value, out, std::bind_front(&JSONMapper<T>::serializeValue, this), field);
+    ObjectMapper<T>::serialize(const std::list<T>& value, std::ostream& out, const std::optional<std::string>& field) {
+      anch::json::serializeArray<T>(value, out, std::bind_front(&ObjectMapper<T>::serializeValue, this), field);
       return true;
     }
 
     template<typename T>
     bool
-    JSONMapper<T>::serialize(const std::set<T>& value, std::ostream& out, const std::optional<std::string>& field) {
-      anch::json::serializeArray<T>(value, out, std::bind_front(&JSONMapper<T>::serializeValue, this), field);
+    ObjectMapper<T>::serialize(const std::set<T>& value, std::ostream& out, const std::optional<std::string>& field) {
+      anch::json::serializeArray<T>(value, out, std::bind_front(&ObjectMapper<T>::serializeValue, this), field);
       return true;
     }
 
     template<typename T>
     void
-    JSONMapper<T>::deserializeValue(T& value, std::istream& input) {
+    ObjectMapper<T>::deserializeValue(T& value, std::istream& input) {
       char expected = anch::json::OBJECT_BEGIN;
       int current = '\0';
       while(input) {
@@ -312,44 +312,44 @@ namespace anch {
 
     template<typename T>
     void
-    JSONMapper<T>::deserialize(T& value, std::istream& input) {
-      anch::json::deserialize<T>(value, input, std::bind_front(&JSONMapper<T>::deserializeValue, this));
+    ObjectMapper<T>::deserialize(T& value, std::istream& input) {
+      anch::json::deserialize<T>(value, input, std::bind_front(&ObjectMapper<T>::deserializeValue, this));
     }
 
     template<typename T>
     void
-    JSONMapper<T>::deserialize(std::optional<T>& value, std::istream& input) {
-      anch::json::deserialize<T>(value, input, std::bind_front(&JSONMapper<T>::deserializeValue, this));
+    ObjectMapper<T>::deserialize(std::optional<T>& value, std::istream& input) {
+      anch::json::deserialize<T>(value, input, std::bind_front(&ObjectMapper<T>::deserializeValue, this));
     }
 
     template<typename T>
     void
-    JSONMapper<T>::deserialize(T* value, std::istream& input) {
-      anch::json::deserialize<T>(value, input, std::bind_front(&JSONMapper<T>::deserializeValue, this));
+    ObjectMapper<T>::deserialize(T* value, std::istream& input) {
+      anch::json::deserialize<T>(value, input, std::bind_front(&ObjectMapper<T>::deserializeValue, this));
     }
 
     template<typename T>
     void
-    JSONMapper<T>::deserialize(std::vector<T>& value, std::istream& input) {
+    ObjectMapper<T>::deserialize(std::vector<T>& value, std::istream& input) {
       anch::json::deserializeArray<T>(input,
 				      [&value](const T& obj) -> void { value.push_back(obj); },
-				      std::bind_front(&JSONMapper<T>::deserializeValue, this));
+				      std::bind_front(&ObjectMapper<T>::deserializeValue, this));
     }
 
     template<typename T>
     void
-    JSONMapper<T>::deserialize(std::list<T>& value, std::istream& input) {
+    ObjectMapper<T>::deserialize(std::list<T>& value, std::istream& input) {
       anch::json::deserializeArray<T>(input,
 				      [&value](const T& obj) -> void { value.push_back(obj); },
-				      std::bind_front(&JSONMapper<T>::deserializeValue, this));
+				      std::bind_front(&ObjectMapper<T>::deserializeValue, this));
     }
 
     template<typename T>
     void
-    JSONMapper<T>::deserialize(std::set<T>& value, std::istream& input) {
+    ObjectMapper<T>::deserialize(std::set<T>& value, std::istream& input) {
       anch::json::deserializeArray<T>(input,
 				      [&value](const T& obj) -> void { value.insert(obj); },
-				      std::bind_front(&JSONMapper<T>::deserializeValue, this));
+				      std::bind_front(&ObjectMapper<T>::deserializeValue, this));
     }
     // Generic implementations -
 

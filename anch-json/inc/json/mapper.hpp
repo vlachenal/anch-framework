@@ -36,7 +36,7 @@ namespace anch {
 
     // JSON mapper early declaration
     template<typename T>
-    class JSONMapper;
+    class ObjectMapper;
 
     // JSON mapper early declaration
     template<typename T>
@@ -46,10 +46,10 @@ namespace anch {
      * Fields registry function\n
      * This function has to be specialized for each class/structure which has to be serialized/deserialized.
      *
-     * \param mapper the \ref JSONMapper to use
+     * \param mapper the \ref ObjectMapper to use
      */
     template<typename T>
-    void registerFields(JSONMapper<T>& mapper);
+    void registerFields(ObjectMapper<T>& mapper);
 
     /*!
      * \brief JSON complex object mapper
@@ -64,10 +64,10 @@ namespace anch {
      * \since 0.1
      */
     template<typename T>
-    class JSONMapper {
+    class ObjectMapper {
       friend anch::json::JSONFactory<T>;
       template<typename U>
-      friend void anch::json::registerFields(JSONMapper<U>&);
+      friend void anch::json::registerFields(ObjectMapper<U>&);
 
       // Attributes +
     private:
@@ -81,28 +81,28 @@ namespace anch {
       // Constructors +
     private:
       /*!
-       * \ref JSONMapper default private constructor
+       * \ref ObjectMapper default private constructor
        */
-      JSONMapper();
+      ObjectMapper();
 
     public:
       /*!
-       * Forbids \ref JSONMapper copy constructor
+       * Forbids \ref ObjectMapper copy constructor
        */
-      JSONMapper(const JSONMapper& other) = delete;
+      ObjectMapper(const ObjectMapper& other) = delete;
 
       /*!
-       * Forbids \ref JSONMapper move constructor
+       * Forbids \ref ObjectMapper move constructor
        */
-      JSONMapper(JSONMapper&& other) = delete;
+      ObjectMapper(ObjectMapper&& other) = delete;
       // Constructors -
 
     private:
       // Destructors +
       /*!
-       * \ref JSONMapper private destructor
+       * \ref ObjectMapper private destructor
        */
-      virtual ~JSONMapper();
+      virtual ~ObjectMapper();
       // Destructors -
 
       // Methods +
@@ -117,7 +117,7 @@ namespace anch {
        *
        * \return \c this
        */      template<typename P>
-      JSONMapper<T>& registerField(const std::string& key, P T::* value);
+      ObjectMapper<T>& registerField(const std::string& key, P T::* value);
 
       /*!
        * Register mapping by field specifying the mapper to use
@@ -131,7 +131,7 @@ namespace anch {
        * \return \c this
        */
       template<typename MT, typename P>
-      JSONMapper<T>& registerField(const std::string& key, P T::* value);
+      ObjectMapper<T>& registerField(const std::string& key, P T::* value);
 
       /*!
        * Register mapping by field
@@ -145,7 +145,7 @@ namespace anch {
        * \return \c this
        */
       template<typename P, typename MT = P>
-      JSONMapper<T>& registerField(const std::string& key, std::function<P(const T&)> getter);
+      ObjectMapper<T>& registerField(const std::string& key, std::function<P(const T&)> getter);
 
       /*!
        * Register mapping by field
@@ -159,7 +159,7 @@ namespace anch {
        * \return \c this
        */
       template<typename P, typename MT = P>
-      JSONMapper<T>& registerField(const std::string& key, std::function<void(T&, const P&)> setter);
+      ObjectMapper<T>& registerField(const std::string& key, std::function<void(T&, const P&)> setter);
 
       /*!
        * Register mapping by field
@@ -174,7 +174,7 @@ namespace anch {
        * \return \c this
        */
       template<typename P, typename MT = P>
-      JSONMapper<T>& registerField(const std::string& key, std::function<P(const T&)> getter, std::function<void(T&, const P&)> setter);
+      ObjectMapper<T>& registerField(const std::string& key, std::function<P(const T&)> getter, std::function<void(T&, const P&)> setter);
 
     public:
       /*!
