@@ -119,60 +119,68 @@ $(document).ready(function(){initNavTree('mapping_error_8hpp_source.html',''); i
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="comment">*/</span></div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor">#pragma once</span></div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; </div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#include &lt;exception&gt;</span></div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160; </div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespaceanch.html">anch</a> {</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;  <span class="keyword">namespace </span>json {</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#include &lt;istream&gt;</span></div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor">#include &lt;exception&gt;</span></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#include &lt;optional&gt;</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor">#include &lt;string&gt;</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
-<div class="line"><a name="l00035"></a><span class="lineno"><a class="line" href="namespaceanch_1_1json.html#a56742fecea7bc19952b3e35c013ad931">   35</a></span>&#160;    <span class="keyword">enum class</span> <a class="code" href="namespaceanch_1_1json.html#a56742fecea7bc19952b3e35c013ad931">ErrorCode</a> {</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;      INVALID_FORMAT = 0,</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160; </div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;      UNEXPECTED_FIELD,</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespaceanch.html">anch</a> {</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;  <span class="keyword">namespace </span>json {</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
+<div class="line"><a name="l00038"></a><span class="lineno"><a class="line" href="namespaceanch_1_1json.html#a56742fecea7bc19952b3e35c013ad931">   38</a></span>&#160;    <span class="keyword">enum class</span> <a class="code" href="namespaceanch_1_1json.html#a56742fecea7bc19952b3e35c013ad931">ErrorCode</a> {</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;      INVALID_FORMAT = 0,</div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;      POTENTIAL_OVERFLOW,</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;      UNEXPECTED_FIELD,</div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160; </div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;      <a class="code" href="namespaceanch_1_1json.html#a56742fecea7bc19952b3e35c013ad931a252d8e34178da47f2208605a66051241">UNKNOWN</a> = 9999</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    };</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
-<div class="line"><a name="l00058"></a><span class="lineno"><a class="line" href="classanch_1_1json_1_1_mapping_error.html">   58</a></span>&#160;    <span class="keyword">class </span><a class="code" href="classanch_1_1json_1_1_mapping_error.html">MappingError</a>: <span class="keyword">public</span> std::exception {</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160; </div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;      <span class="comment">// Attributes +</span></div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="keyword">private</span>:</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;      <a class="code" href="namespaceanch_1_1json.html#a56742fecea7bc19952b3e35c013ad931">ErrorCode</a> _code;</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;      <span class="comment">// Attributes -</span></div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160; </div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;      <span class="comment">// Constructors +</span></div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00071"></a><span class="lineno"><a class="line" href="classanch_1_1json_1_1_mapping_error.html#a81dd3267aee19528ac658336a87f8b33">   71</a></span>&#160;      <a class="code" href="classanch_1_1json_1_1_mapping_error.html#a81dd3267aee19528ac658336a87f8b33">MappingError</a>();</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;      <span class="comment">// Constructors -</span></div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160; </div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;      <span class="comment">// Destructor +</span></div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00079"></a><span class="lineno"><a class="line" href="classanch_1_1json_1_1_mapping_error.html#a5f96cf3d05c051cae6f49a5f14331330">   79</a></span>&#160;      <span class="keyword">virtual</span> <a class="code" href="classanch_1_1json_1_1_mapping_error.html#a5f96cf3d05c051cae6f49a5f14331330">~MappingError</a>();</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;      <span class="comment">// Destructor -</span></div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160; </div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;      <span class="comment">// Methods +</span></div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00089"></a><span class="lineno"><a class="line" href="classanch_1_1json_1_1_mapping_error.html#a21d4a7026fd04292648877f019c5daa8">   89</a></span>&#160;      <span class="keyword">virtual</span> <span class="keyword">const</span> <span class="keywordtype">char</span>* <a class="code" href="classanch_1_1json_1_1_mapping_error.html#a21d4a7026fd04292648877f019c5daa8">what</a>() const noexcept override;</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;      <span class="comment">// Methods -</span></div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160; </div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;      <span class="comment">// Accessors +</span></div>
-<div class="line"><a name="l00098"></a><span class="lineno"><a class="line" href="classanch_1_1json_1_1_mapping_error.html#a6862e4bfd367f1a4ada023e77b711422">   98</a></span>&#160;<span class="comment"></span>      <a class="code" href="namespaceanch.html">anch</a>::json::<a class="code" href="namespaceanch_1_1json.html#a56742fecea7bc19952b3e35c013ad931">ErrorCode</a> <a class="code" href="classanch_1_1json_1_1_mapping_error.html#a6862e4bfd367f1a4ada023e77b711422">getErrorCode</a>() const;</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;      <span class="comment">// Accessors -</span></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;      POTENTIAL_OVERFLOW,</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160; </div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;      <a class="code" href="namespaceanch_1_1json.html#a56742fecea7bc19952b3e35c013ad931a252d8e34178da47f2208605a66051241">UNKNOWN</a> = 9999</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    };</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
+<div class="line"><a name="l00061"></a><span class="lineno"><a class="line" href="classanch_1_1json_1_1_mapping_error.html">   61</a></span>&#160;    <span class="keyword">class </span><a class="code" href="classanch_1_1json_1_1_mapping_error.html">MappingError</a>: <span class="keyword">public</span> std::exception {</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;      <span class="comment">// Attributes +</span></div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <span class="keyword">private</span>:</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;      <a class="code" href="namespaceanch_1_1json.html#a56742fecea7bc19952b3e35c013ad931">ErrorCode</a> _code;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160; </div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;      std::string _msg;</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;      <span class="comment">// Attributes -</span></div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160; </div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;      <span class="comment">// Constructors +</span></div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00081"></a><span class="lineno"><a class="line" href="classanch_1_1json_1_1_mapping_error.html#ae42a933f14d410bb42088454a41e5247">   81</a></span>&#160;      <a class="code" href="classanch_1_1json_1_1_mapping_error.html#ae42a933f14d410bb42088454a41e5247">MappingError</a>(<a class="code" href="namespaceanch_1_1json.html#a56742fecea7bc19952b3e35c013ad931">ErrorCode</a> code, std::istream&amp; input, std::optional&lt;std::string&gt; context = std::optional&lt;std::string&gt;());</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160; </div>
+<div class="line"><a name="l00090"></a><span class="lineno"><a class="line" href="classanch_1_1json_1_1_mapping_error.html#a5b7c92f0ac627b394e54e1fab9910b2f">   90</a></span>&#160;      <a class="code" href="classanch_1_1json_1_1_mapping_error.html#a5b7c92f0ac627b394e54e1fab9910b2f">MappingError</a>(<a class="code" href="namespaceanch_1_1json.html#a56742fecea7bc19952b3e35c013ad931">ErrorCode</a> code, std::istream&amp; input, <span class="keywordtype">char</span> context);</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;      <span class="comment">// Constructors -</span></div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160; </div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;      <span class="comment">// Destructor +</span></div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00098"></a><span class="lineno"><a class="line" href="classanch_1_1json_1_1_mapping_error.html#a5f96cf3d05c051cae6f49a5f14331330">   98</a></span>&#160;      <span class="keyword">virtual</span> <a class="code" href="classanch_1_1json_1_1_mapping_error.html#a5f96cf3d05c051cae6f49a5f14331330">~MappingError</a>();</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;      <span class="comment">// Destructor -</span></div>
 <div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160; </div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    };</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160; </div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;  }  <span class="comment">// json</span></div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;}  <span class="comment">// anch</span></div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160; </div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;<span class="preprocessor">#include &quot;json/impl/mappingError.hpp&quot;</span></div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;      <span class="comment">// Methods +</span></div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00108"></a><span class="lineno"><a class="line" href="classanch_1_1json_1_1_mapping_error.html#a21d4a7026fd04292648877f019c5daa8">  108</a></span>&#160;      <span class="keyword">virtual</span> <span class="keyword">const</span> <span class="keywordtype">char</span>* <a class="code" href="classanch_1_1json_1_1_mapping_error.html#a21d4a7026fd04292648877f019c5daa8">what</a>() const noexcept override;</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;      <span class="comment">// Methods -</span></div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160; </div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;      <span class="comment">// Accessors +</span></div>
+<div class="line"><a name="l00117"></a><span class="lineno"><a class="line" href="classanch_1_1json_1_1_mapping_error.html#a6862e4bfd367f1a4ada023e77b711422">  117</a></span>&#160;<span class="comment"></span>      <a class="code" href="namespaceanch.html">anch</a>::json::<a class="code" href="namespaceanch_1_1json.html#a56742fecea7bc19952b3e35c013ad931">ErrorCode</a> <a class="code" href="classanch_1_1json_1_1_mapping_error.html#a6862e4bfd367f1a4ada023e77b711422">getErrorCode</a>() const;</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;      <span class="comment">// Accessors -</span></div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160; </div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    };</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160; </div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;  }  <span class="comment">// json</span></div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;}  <span class="comment">// anch</span></div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160; </div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;<span class="preprocessor">#include &quot;json/impl/mappingError.hpp&quot;</span></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
-<div class="ttc" id="anamespaceanch_1_1json_html_a56742fecea7bc19952b3e35c013ad931"><div class="ttname"><a href="namespaceanch_1_1json.html#a56742fecea7bc19952b3e35c013ad931">anch::json::ErrorCode</a></div><div class="ttdeci">ErrorCode</div><div class="ttdef"><b>Definition:</b> mappingError.hpp:35</div></div>
-<div class="ttc" id="aclassanch_1_1json_1_1_mapping_error_html"><div class="ttname"><a href="classanch_1_1json_1_1_mapping_error.html">anch::json::MappingError</a></div><div class="ttdoc">Mapping error.</div><div class="ttdef"><b>Definition:</b> mappingError.hpp:58</div></div>
+<div class="ttc" id="aclassanch_1_1json_1_1_mapping_error_html_a5b7c92f0ac627b394e54e1fab9910b2f"><div class="ttname"><a href="classanch_1_1json_1_1_mapping_error.html#a5b7c92f0ac627b394e54e1fab9910b2f">anch::json::MappingError::MappingError</a></div><div class="ttdeci">MappingError(ErrorCode code, std::istream &amp;input, char context)</div></div>
+<div class="ttc" id="anamespaceanch_1_1json_html_a56742fecea7bc19952b3e35c013ad931"><div class="ttname"><a href="namespaceanch_1_1json.html#a56742fecea7bc19952b3e35c013ad931">anch::json::ErrorCode</a></div><div class="ttdeci">ErrorCode</div><div class="ttdef"><b>Definition:</b> mappingError.hpp:38</div></div>
+<div class="ttc" id="aclassanch_1_1json_1_1_mapping_error_html"><div class="ttname"><a href="classanch_1_1json_1_1_mapping_error.html">anch::json::MappingError</a></div><div class="ttdoc">Mapping error.</div><div class="ttdef"><b>Definition:</b> mappingError.hpp:61</div></div>
 <div class="ttc" id="aclassanch_1_1json_1_1_mapping_error_html_a6862e4bfd367f1a4ada023e77b711422"><div class="ttname"><a href="classanch_1_1json_1_1_mapping_error.html#a6862e4bfd367f1a4ada023e77b711422">anch::json::MappingError::getErrorCode</a></div><div class="ttdeci">anch::json::ErrorCode getErrorCode() const</div></div>
-<div class="ttc" id="aclassanch_1_1json_1_1_mapping_error_html_a81dd3267aee19528ac658336a87f8b33"><div class="ttname"><a href="classanch_1_1json_1_1_mapping_error.html#a81dd3267aee19528ac658336a87f8b33">anch::json::MappingError::MappingError</a></div><div class="ttdeci">MappingError()</div></div>
+<div class="ttc" id="aclassanch_1_1json_1_1_mapping_error_html_ae42a933f14d410bb42088454a41e5247"><div class="ttname"><a href="classanch_1_1json_1_1_mapping_error.html#ae42a933f14d410bb42088454a41e5247">anch::json::MappingError::MappingError</a></div><div class="ttdeci">MappingError(ErrorCode code, std::istream &amp;input, std::optional&lt; std::string &gt; context=std::optional&lt; std::string &gt;())</div></div>
 <div class="ttc" id="aclassanch_1_1json_1_1_mapping_error_html_a21d4a7026fd04292648877f019c5daa8"><div class="ttname"><a href="classanch_1_1json_1_1_mapping_error.html#a21d4a7026fd04292648877f019c5daa8">anch::json::MappingError::what</a></div><div class="ttdeci">virtual const char * what() const noexcept override</div></div>
 <div class="ttc" id="anamespaceanch_1_1json_html_a56742fecea7bc19952b3e35c013ad931a252d8e34178da47f2208605a66051241"><div class="ttname"><a href="namespaceanch_1_1json.html#a56742fecea7bc19952b3e35c013ad931a252d8e34178da47f2208605a66051241">anch::json::ErrorCode::INVALID_FORMAT</a></div><div class="ttdeci">@ INVALID_FORMAT</div></div>
 <div class="ttc" id="anamespaceanch_html"><div class="ttname"><a href="namespaceanch.html">anch</a></div><div class="ttdoc">AnCH framework base namespace.</div><div class="ttdef"><b>Definition:</b> base64.hpp:27</div></div>

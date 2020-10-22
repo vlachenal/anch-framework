@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['objectmapper_715',['ObjectMapper',['../classanch_1_1json_1_1_object_mapper.html',1,'anch::json']]],
   ['observable_716',['Observable',['../classanch_1_1events_1_1_observable.html',1,'anch::events']]],
   ['observable_3c_20socketevent_20_3e_717',['Observable&lt; SocketEvent &gt;',['../classanch_1_1events_1_1_observable.html',1,'anch::events']]],
   ['observer_718',['Observer',['../classanch_1_1events_1_1_observer.html',1,'anch::events']]],
