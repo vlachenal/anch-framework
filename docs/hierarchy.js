@@ -54,6 +54,7 @@ var hierarchy =
       [ "anch::sql::SqlException", "classanch_1_1sql_1_1_sql_exception.html", null ],
       [ "anch::TimeoutException", "classanch_1_1_timeout_exception.html", null ]
     ] ],
+    [ "anch::json::Factory< T >", "classanch_1_1json_1_1_factory.html", null ],
     [ "anch::file::File", "classanch_1_1file_1_1_file.html", null ],
     [ "anch::crypto::Hash< O, B >", "classanch_1_1crypto_1_1_hash.html", [
       [ "anch::crypto::SHA2< O, B, W, R, I >", "classanch_1_1crypto_1_1_s_h_a2.html", null ],
@@ -93,8 +94,6 @@ var hierarchy =
       [ "anch::logger::formatter::ThreadIdFormatter", "classanch_1_1logger_1_1formatter_1_1_thread_id_formatter.html", null ]
     ] ],
     [ "anch::crypto::ISO7816_4Padding", "classanch_1_1crypto_1_1_i_s_o7816__4_padding.html", null ],
-    [ "anch::json::JSONFactory< T >", "classanch_1_1json_1_1_j_s_o_n_factory.html", null ],
-    [ "anch::json::JSONMapper< T >", "classanch_1_1json_1_1_j_s_o_n_mapper.html", null ],
     [ "anch::json::JSONParser", "classanch_1_1json_1_1_j_s_o_n_parser.html", null ],
     [ "anch::json::JSONPrimitiveMapper< T >", "classanch_1_1json_1_1_j_s_o_n_primitive_mapper.html", null ],
     [ "anch::LessPtrCompare< T >", "structanch_1_1_less_ptr_compare.html", null ],
@@ -104,6 +103,7 @@ var hierarchy =
     [ "anch::logger::formatter::MessageFormatter", "classanch_1_1logger_1_1formatter_1_1_message_formatter.html", null ],
     [ "anch::device::Network", "classanch_1_1device_1_1_network.html", null ],
     [ "anch::device::NetworkInterface", "classanch_1_1device_1_1_network_interface.html", null ],
+    [ "anch::json::ObjectMapper< T >", "classanch_1_1json_1_1_object_mapper.html", null ],
     [ "anch::events::Observable< Event >", "classanch_1_1events_1_1_observable.html", null ],
     [ "anch::events::Observable< SocketEvent >", "classanch_1_1events_1_1_observable.html", [
       [ "anch::network::Socket", "classanch_1_1network_1_1_socket.html", [

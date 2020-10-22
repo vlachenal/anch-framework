@@ -109,11 +109,8 @@ $(document).ready(function(){initNavTree('namespaceanch_1_1json.html',''); initR
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1json_1_1_j_s_o_n_factory.html">JSONFactory</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">JSON mapper factory.  <a href="classanch_1_1json_1_1_j_s_o_n_factory.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1json_1_1_j_s_o_n_mapper.html">JSONMapper</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">JSON complex object mapper.  <a href="classanch_1_1json_1_1_j_s_o_n_mapper.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1json_1_1_factory.html">Factory</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">JSON mapper factory.  <a href="classanch_1_1json_1_1_factory.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1json_1_1_j_s_o_n_parser.html">JSONParser</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -125,6 +122,9 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structanch_1_1json_1_1_mapping_options.html">MappingOptions</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">JSON mapping options.  <a href="structanch_1_1json_1_1_mapping_options.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1json_1_1_object_mapper.html">ObjectMapper</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">JSON complex object mapper.  <a href="classanch_1_1json_1_1_object_mapper.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
@@ -138,9 +138,9 @@ Enumerations</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a635cdb7872bfdb75389b1a1c9bb6f0f2"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:a635cdb7872bfdb75389b1a1c9bb6f0f2"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceanch_1_1json.html#a635cdb7872bfdb75389b1a1c9bb6f0f2">registerFields</a> (<a class="el" href="classanch_1_1json_1_1_j_s_o_n_mapper.html">anch::json::JSONMapper</a>&lt; T &gt; &amp;mapper)</td></tr>
-<tr class="separator:a635cdb7872bfdb75389b1a1c9bb6f0f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaf8fbe1c8f5cf3231e85e9549b474322"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:aaf8fbe1c8f5cf3231e85e9549b474322"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceanch_1_1json.html#aaf8fbe1c8f5cf3231e85e9549b474322">registerObject</a> (<a class="el" href="classanch_1_1json_1_1_object_mapper.html">anch::json::ObjectMapper</a>&lt; T &gt; &amp;mapper)</td></tr>
+<tr class="separator:aaf8fbe1c8f5cf3231e85e9549b474322"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab82f65b72182651b50e1a9f50ab9a2fd"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
 <tr class="memitem:ab82f65b72182651b50e1a9f50ab9a2fd"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceanch_1_1json.html#ab82f65b72182651b50e1a9f50ab9a2fd">serialize</a> (const T &amp;value, std::ostream &amp;out)</td></tr>
 <tr class="separator:ab82f65b72182651b50e1a9f50ab9a2fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -651,8 +651,8 @@ This will consume '"&lt;field name&gt;":'</p>
 
 </div>
 </div>
-<a id="a635cdb7872bfdb75389b1a1c9bb6f0f2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a635cdb7872bfdb75389b1a1c9bb6f0f2">&#9670;&nbsp;</a></span>registerFields()</h2>
+<a id="aaf8fbe1c8f5cf3231e85e9549b474322"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaf8fbe1c8f5cf3231e85e9549b474322">&#9670;&nbsp;</a></span>registerObject()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -660,9 +660,9 @@ This will consume '"&lt;field name&gt;":'</p>
 template&lt;typename T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">void anch::json::registerFields </td>
+          <td class="memname">void anch::json::registerObject </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classanch_1_1json_1_1_j_s_o_n_mapper.html">anch::json::JSONMapper</a>&lt; T &gt; &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="classanch_1_1json_1_1_object_mapper.html">anch::json::ObjectMapper</a>&lt; T &gt; &amp;&#160;</td>
           <td class="paramname"><em>mapper</em></td><td>)</td>
           <td></td>
         </tr>
@@ -678,7 +678,7 @@ This function has to be specialized for each class/structure which has to be ser
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">mapper</td><td>the <a class="el" href="classanch_1_1json_1_1_j_s_o_n_mapper.html">JSONMapper</a> to use</td></tr>
+    <tr><td class="paramname">mapper</td><td>the <a class="el" href="classanch_1_1json_1_1_object_mapper.html">ObjectMapper</a> to use</td></tr>
   </table>
   </dd>
 </dl>
@@ -686,7 +686,7 @@ This function has to be specialized for each class/structure which has to be ser
 This function has to be specialized for each class/structure which has to be serialized/deserialized.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">mapper</td><td>the <a class="el" href="classanch_1_1json_1_1_j_s_o_n_mapper.html">JSONMapper</a> to use </td></tr>
+    <tr><td class="paramname">mapper</td><td>the <a class="el" href="classanch_1_1json_1_1_object_mapper.html">ObjectMapper</a> to use </td></tr>
   </table>
   </dd>
 </dl>

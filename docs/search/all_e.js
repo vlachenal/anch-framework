@@ -1,7 +1,8 @@
 var searchData=
 [
-  ['object_5fbegin_366',['OBJECT_BEGIN',['../namespaceanch_1_1json.html#a10b0c7119f4cd760f646c66be848df96',1,'anch::json']]],
-  ['object_5fend_367',['OBJECT_END',['../namespaceanch_1_1json.html#aa2a414018fe5a3b35c84df16ba4ed2fe',1,'anch::json']]],
+  ['object_5fbegin_365',['OBJECT_BEGIN',['../namespaceanch_1_1json.html#a10b0c7119f4cd760f646c66be848df96',1,'anch::json']]],
+  ['object_5fend_366',['OBJECT_END',['../namespaceanch_1_1json.html#aa2a414018fe5a3b35c84df16ba4ed2fe',1,'anch::json']]],
+  ['objectmapper_367',['ObjectMapper',['../classanch_1_1json_1_1_object_mapper.html',1,'anch::json::ObjectMapper&lt; T &gt;'],['../classanch_1_1json_1_1_object_mapper.html#af5c3dd95034cb8faae52e58d0ff23634',1,'anch::json::ObjectMapper::ObjectMapper(const ObjectMapper &amp;other)=delete'],['../classanch_1_1json_1_1_object_mapper.html#a588dcdf2d487b81909b4f1f92a0d1f9c',1,'anch::json::ObjectMapper::ObjectMapper(ObjectMapper &amp;&amp;other)=delete']]],
   ['observable_368',['Observable',['../classanch_1_1events_1_1_observable.html',1,'anch::events::Observable&lt; Event &gt;'],['../classanch_1_1events_1_1_observable.html#a87773a2e5c9380dea13066241edd8b72',1,'anch::events::Observable::Observable()']]],
   ['observable_3c_20socketevent_20_3e_369',['Observable&lt; SocketEvent &gt;',['../classanch_1_1events_1_1_observable.html',1,'anch::events']]],
   ['observer_370',['Observer',['../classanch_1_1events_1_1_observer.html',1,'anch::events']]],

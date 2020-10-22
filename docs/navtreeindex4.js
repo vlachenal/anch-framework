@@ -1,5 +1,6 @@
 var NAVTREEINDEX4 =
 {
+"classanch_1_1sql_1_1_sql_exception.html":[16,0,0,9,18],
 "classanch_1_1sql_1_1_sql_exception.html#a04a4447ba4b6c0f284acf82902853bde":[16,0,0,9,18,2],
 "classanch_1_1sql_1_1_sql_exception.html#a7685a733bb9edd7abd8032073c308784":[16,0,0,9,18,3],
 "classanch_1_1sql_1_1_sql_exception.html#ab318d764cca918284f616a6614be0449":[16,0,0,9,18,1],
@@ -188,8 +189,8 @@ var NAVTREEINDEX4 =
 "mysql_result_set_8hpp_source.html":[17,0,9,1,0,0,3],
 "namespaceanch.html":[16,0,0],
 "namespaceanch.html":[15,0,0],
-"namespaceanch_1_1crypto.html":[16,0,0,0],
 "namespaceanch_1_1crypto.html":[15,0,0,0],
+"namespaceanch_1_1crypto.html":[16,0,0,0],
 "namespaceanch_1_1date.html":[16,0,0,1],
 "namespaceanch_1_1date.html":[15,0,0,1],
 "namespaceanch_1_1date_1_1formatter.html":[15,0,0,1,0],
@@ -200,14 +201,14 @@ var NAVTREEINDEX4 =
 "namespaceanch_1_1events.html":[16,0,0,3],
 "namespaceanch_1_1file.html":[15,0,0,4],
 "namespaceanch_1_1file.html":[16,0,0,4],
-"namespaceanch_1_1json.html":[15,0,0,5],
 "namespaceanch_1_1json.html":[16,0,0,5],
+"namespaceanch_1_1json.html":[15,0,0,5],
 "namespaceanch_1_1logger.html":[15,0,0,6],
 "namespaceanch_1_1logger.html":[16,0,0,6],
-"namespaceanch_1_1logger_1_1formatter.html":[15,0,0,6,0],
 "namespaceanch_1_1logger_1_1formatter.html":[16,0,0,6,0],
-"namespaceanch_1_1network.html":[16,0,0,7],
+"namespaceanch_1_1logger_1_1formatter.html":[15,0,0,6,0],
 "namespaceanch_1_1network.html":[15,0,0,7],
+"namespaceanch_1_1network.html":[16,0,0,7],
 "namespaceanch_1_1resource.html":[16,0,0,8],
 "namespaceanch_1_1resource.html":[15,0,0,8],
 "namespaceanch_1_1resource_1_1file.html":[16,0,0,8,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX4 =
 "page_events.html#evt_req_sec":[7,1],
 "page_json.html":[8],
 "page_json.html#json_concept_sec":[8,3],
-"page_json.html#json_example_sec":[8,4],
-"page_json.html#json_install_sec":[8,2]
+"page_json.html#json_example_sec":[8,4]
 };
