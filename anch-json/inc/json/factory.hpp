@@ -35,7 +35,7 @@ namespace anch {
      * \since 0.1
      */
     template<typename T>
-    class JSONFactory {
+    class Factory {
 
     public:
       /*!

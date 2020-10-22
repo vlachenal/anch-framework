@@ -40,7 +40,7 @@ namespace anch {
 
     // JSON mapper early declaration
     template<typename T>
-    class JSONFactory;
+    class Factory;
 
     /*!
      * Fields registry function\n
@@ -65,7 +65,7 @@ namespace anch {
      */
     template<typename T>
     class ObjectMapper {
-      friend anch::json::JSONFactory<T>;
+      friend anch::json::Factory<T>;
       template<typename U>
       friend void anch::json::registerFields(ObjectMapper<U>&);
 

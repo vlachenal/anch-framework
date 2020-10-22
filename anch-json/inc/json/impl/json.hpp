@@ -28,61 +28,61 @@ namespace anch {
 
     template<typename T>
     void serialize(const T& value, std::ostream& out) {
-      JSONFactory<T>::getInstance().serialize(value, out);
+      anch::json::Factory<T>::getInstance().serialize(value, out);
     }
 
     template<typename T>
     void serialize(const std::vector<T>& value, std::ostream& out) {
-      JSONFactory<T>::getInstance().serialize(value, out);
+      anch::json::Factory<T>::getInstance().serialize(value, out);
     }
 
     template<typename T>
     void serialize(const std::list<T>& value, std::ostream& out) {
-      JSONFactory<T>::getInstance().serialize(value, out);
+      anch::json::Factory<T>::getInstance().serialize(value, out);
     }
 
     template<typename T>
     void serialize(const std::set<T>& value, std::ostream& out) {
-      JSONFactory<T>::getInstance().serialize(value, out);
+      anch::json::Factory<T>::getInstance().serialize(value, out);
     }
 
     template<typename T>
     std::string serialize(const T& value) {
       std::ostringstream out;
-      JSONFactory<T>::getInstance().serialize(value, out);
+      anch::json::Factory<T>::getInstance().serialize(value, out);
       return std::move(out.str());
     }
 
     template<typename T>
     std::string serialize(const std::vector<T>& value) {
       std::ostringstream out;
-      JSONFactory<T>::getInstance().serialize(value, out);
+      anch::json::Factory<T>::getInstance().serialize(value, out);
       return std::move(out.str());
     }
 
     template<typename T>
     std::string serialize(const std::list<T>& value) {
       std::ostringstream out;
-      JSONFactory<T>::getInstance().serialize(value, out);
+      anch::json::Factory<T>::getInstance().serialize(value, out);
       return std::move(out.str());
     }
 
     template<typename T>
     std::string serialize(const std::set<T>& value) {
       std::ostringstream out;
-      JSONFactory<T>::getInstance().serialize(value, out);
+      anch::json::Factory<T>::getInstance().serialize(value, out);
       return std::move(out.str());
     }
 
     template<typename T>
     void deserialize(T& value, std::istream& input) {
-      JSONFactory<T>::getInstance().deserialize(value, input);
+      anch::json::Factory<T>::getInstance().deserialize(value, input);
     }
 
     template<typename T>
     T deserialize(std::istream& input) {
       T value;
-      JSONFactory<T>::getInstance().deserialize(value, input);
+      anch::json::Factory<T>::getInstance().deserialize(value, input);
       return value;
     }
 

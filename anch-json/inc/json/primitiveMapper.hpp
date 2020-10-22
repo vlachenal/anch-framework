@@ -35,7 +35,7 @@ namespace anch {
 
     // JSON mapper early declaration
     template<typename T>
-    class JSONFactory;
+    class Factory;
 
     /*!
      * \brief JSON primitive types mapper
@@ -50,7 +50,7 @@ namespace anch {
      */
     template<typename T>
     class JSONPrimitiveMapper {
-      friend anch::json::JSONFactory<T>;
+      friend anch::json::Factory<T>;
 
       // Constructors +
     private:

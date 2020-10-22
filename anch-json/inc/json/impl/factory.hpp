@@ -75,7 +75,7 @@ namespace anch {
     }
 
     template<typename T>
-    auto& JSONFactory<T>::getInstance() {
+    auto& Factory<T>::getInstance() {
       if constexpr (isPrimitive<T>()) {
 	static anch::json::JSONPrimitiveMapper<T> instance;
 	return instance;

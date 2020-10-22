@@ -35,14 +35,6 @@
 namespace anch {
   namespace json {
 
-    // JSON mapper early declaration
-    template<typename T>
-    class JSONFactory;
-
-    // JSON mapper early declaration
-    template<typename T>
-    class ObjectMapper;
-
     // Generic implementations +
     template<typename T>
     ObjectMapper<T>::ObjectMapper(): _writers(), _readers() {
@@ -64,21 +56,21 @@ namespace anch {
 	  if constexpr (std::is_same<T, typename std::remove_pointer<P>>::value) { // if same, use direct call to avoid recursive instanciation
 	    return this->serialize(obj.*value, out, std::optional<std::string>(key));
 	  } else { // Use 'unpointered' type
-	    return JSONFactory<typename std::remove_pointer<P>::type>::getInstance().serialize(obj.*value, out, std::optional<std::string>(key));
+	    return anch::json::Factory<typename std::remove_pointer<P>::type>::getInstance().serialize(obj.*value, out, std::optional<std::string>(key));
 	  }
 
 	} else if constexpr (std::is_reference<P>::value) { // Remove reference on parameter type to check the main type
 	  if constexpr (std::is_same<T, typename std::remove_reference<P>>::value) { // if same, use direct call to avoid recursive instanciation
 	    return this->serialize(obj.*value, out, std::optional<std::string>(key));
 	  } else { // Use 'unreferenced' type
-	    return JSONFactory<typename std::decay<P>::type>::getInstance().serialize(obj.*value, out, std::optional<std::string>(key));
+	    return anch::json::Factory<typename std::decay<P>::type>::getInstance().serialize(obj.*value, out, std::optional<std::string>(key));
 	  }
 
 	} else { // Basic type
 	  if constexpr (std::is_same<P, T>::value) { // if same, use direct call to avoid recursive instanciation
 	    return this->serialize(obj.*value, out, std::optional<std::string>(key));
 	  } else {
-	    return JSONFactory<P>::getInstance().serialize(obj.*value, out, std::optional<std::string>(key));
+	    return anch::json::Factory<P>::getInstance().serialize(obj.*value, out, std::optional<std::string>(key));
 	  }
 	}
       }));
@@ -88,14 +80,14 @@ namespace anch {
 	  if constexpr (std::is_same<T, typename std::remove_pointer<P>>::value) { // if same, use direct call to avoid recursive instanciation
 	    return this->deserialize(obj.*value, input);
 	  } else { // Use 'unpointered' type
-	    return JSONFactory<typename std::remove_pointer<P>::type>::getInstance().deserialize(obj.*value, input);
+	    return anch::json::Factory<typename std::remove_pointer<P>::type>::getInstance().deserialize(obj.*value, input);
 	  }
 
 	} else { // Basic type
 	  if constexpr (std::is_same<P, T>::value) { // if same, use direct call to avoid recursive instanciation
 	    return this->deserialize(obj.*value, input);
 	  } else {
-	    return JSONFactory<P>::getInstance().deserialize(obj.*value, input);
+	    return anch::json::Factory<P>::getInstance().deserialize(obj.*value, input);
 	  }
 	}
       });
@@ -110,14 +102,14 @@ namespace anch {
 	if constexpr (std::is_same<MT, T>::value) { // if same, use direct call to avoid recursive instanciation
 	  return this->serialize(obj.*value, out, std::optional<std::string>(key));
 	} else {
-	  return JSONFactory<MT>::getInstance().serialize(obj.*value, out, std::optional<std::string>(key));
+	  return anch::json::Factory<MT>::getInstance().serialize(obj.*value, out, std::optional<std::string>(key));
 	}
       }));
       _readers[key] = std::function<void(T&, std::istream&)>([=, this](T& obj, std::istream& input) -> void {
 	if constexpr (std::is_same<MT, T>::value) { // if same, use direct call to avoid recursive instanciation
 	  return this->deserialize(obj.*value, input);
 	} else {
-	  return JSONFactory<MT>::getInstance().deserialize(obj.*value, input);
+	  return anch::json::Factory<MT>::getInstance().deserialize(obj.*value, input);
 	}
       });
       return *this;
@@ -134,21 +126,21 @@ namespace anch {
 	    if constexpr (std::is_same<T, typename std::remove_pointer<P>>::value) { // if same, use direct call to avoid recursive instanciation
 	      return this->serialize(std::invoke(getter, obj), out, std::optional<std::string>(key));
 	    } else { // Use 'unpointered' type
-	      return JSONFactory<typename std::remove_pointer<P>::type>::getInstance().serialize(std::invoke(getter, obj), out, std::optional<std::string>(key));
+	      return anch::json::Factory<typename std::remove_pointer<P>::type>::getInstance().serialize(std::invoke(getter, obj), out, std::optional<std::string>(key));
 	    }
 
 	  } else if constexpr (std::is_reference<P>::value) { // Remove reference on parameter type to check the main type
 	    if constexpr (std::is_same<T, typename std::remove_reference<P>>::value) { // if same, use direct call to avoid recursive instanciation
 	      return this->serialize(std::invoke(getter, obj), out, std::optional<std::string>(key));
 	    } else { // Use 'unreferenced' type
-	      return JSONFactory<typename std::decay<P>::type>::getInstance().serialize(std::invoke(getter, obj), out, std::optional<std::string>(key));
+	      return anch::json::Factory<typename std::decay<P>::type>::getInstance().serialize(std::invoke(getter, obj), out, std::optional<std::string>(key));
 	    }
 
 	  } else { // Basic type
 	    if constexpr (std::is_same<MT, T>::value) { // if same, use direct call to avoid recursive instanciation
 	      return this->serialize(std::invoke(getter, obj), out, std::optional<std::string>(key));
 	    } else {
-	      return JSONFactory<MT>::getInstance().serialize(std::invoke(getter, obj), out, std::optional<std::string>(key));
+	      return anch::json::Factory<MT>::getInstance().serialize(std::invoke(getter, obj), out, std::optional<std::string>(key));
 	    }
 	  }
 
@@ -156,7 +148,7 @@ namespace anch {
 	  if constexpr (std::is_same<MT, T>::value) {
 	    return this->serialize(std::invoke(getter, obj), out, std::optional<std::string>(key));
 	  } else {
-	    return JSONFactory<MT>::getInstance().serialize(std::invoke(getter, obj), out, std::optional<std::string>(key));
+	    return anch::json::Factory<MT>::getInstance().serialize(std::invoke(getter, obj), out, std::optional<std::string>(key));
 	  }
 	}
       }));
@@ -178,7 +170,7 @@ namespace anch {
 	      std::invoke(setter, obj, inst);
 	    } else { // Use 'unpointered' type
 	      P* inst = new P();
-	      JSONFactory<typename std::remove_pointer<P>::type>::getInstance().deserialize(inst, input);
+	      anch::json::Factory<typename std::remove_pointer<P>::type>::getInstance().deserialize(inst, input);
 	      std::invoke(setter, obj, inst);
 	    }
 
@@ -189,7 +181,7 @@ namespace anch {
 	      std::invoke(setter, obj, inst);
 	    } else {
 	      P inst;
-	      JSONFactory<P>::getInstance().deserialize(inst, input);
+	      anch::json::Factory<P>::getInstance().deserialize(inst, input);
 	      std::invoke(setter, obj, inst);
 	    }
 	  }
@@ -201,7 +193,7 @@ namespace anch {
 	    std::invoke(setter, obj, inst);
 	  } else {
 	    MT inst;
-	    JSONFactory<MT>::getInstance().deserialize(inst, input);
+	    anch::json::Factory<MT>::getInstance().deserialize(inst, input);
 	    std::invoke(setter, obj, inst);
 	  }
 	}
