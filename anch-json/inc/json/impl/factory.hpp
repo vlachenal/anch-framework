@@ -77,10 +77,10 @@ namespace anch {
     template<typename T>
     auto& Factory<T>::getInstance() {
       if constexpr (isPrimitive<T>()) {
-	static anch::json::JSONPrimitiveMapper<T> instance;
+	static anch::json::PrimitiveMapper<T> instance;
 	return instance;
       } else if constexpr (std::is_enum<T>::value) {
-      	static anch::json::JSONPrimitiveMapper<T> instance; // \todo define JSONEnumMapper
+      	static anch::json::PrimitiveMapper<T> instance; // \todo define JSONEnumMapper
       	return instance;
       } else {
 	static anch::json::ObjectMapper<T> instance;

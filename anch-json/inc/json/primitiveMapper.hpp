@@ -49,34 +49,34 @@ namespace anch {
      * \since 0.1
      */
     template<typename T>
-    class JSONPrimitiveMapper {
+    class PrimitiveMapper {
       friend anch::json::Factory<T>;
 
       // Constructors +
     private:
       /*!
-       * \ref JSONPrimitiveMapper default private constructor
+       * \ref PrimitiveMapper default private constructor
        */
-      JSONPrimitiveMapper();
+      PrimitiveMapper();
 
     public:
       /*!
-       * Forbids \ref JSONPrimitiveMapper copy constructor
+       * Forbids \ref PrimitiveMapper copy constructor
        */
-      JSONPrimitiveMapper(const JSONPrimitiveMapper& other) = delete;
+      PrimitiveMapper(const PrimitiveMapper& other) = delete;
 
       /*!
-       * Forbids \ref JSONPrimitiveMapper move constructor
+       * Forbids \ref PrimitiveMapper move constructor
        */
-      JSONPrimitiveMapper(JSONPrimitiveMapper&& other) = delete;
+      PrimitiveMapper(PrimitiveMapper&& other) = delete;
       // Constructors -
 
     private:
       // Destructors +
       /*!
-       * \ref JSONPrimitiveMapper private destructor
+       * \ref PrimitiveMapper private destructor
        */
-      virtual ~JSONPrimitiveMapper();
+      virtual ~PrimitiveMapper();
       // Destructors -
 
       // Methods +

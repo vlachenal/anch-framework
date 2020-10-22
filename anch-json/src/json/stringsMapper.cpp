@@ -40,7 +40,7 @@
 #endif
 
 
-using anch::json::JSONPrimitiveMapper;
+using anch::json::PrimitiveMapper;
 
 template<typename T>
 inline
@@ -82,77 +82,77 @@ deserializeValue(std::string& value, std::istream& input) {
   value = buffer.str();
 }
 
-// JSONPrimitiveMapper specialization for std::string +
+// PrimitiveMapper specialization for std::string +
 template<>
-JSONPrimitiveMapper<std::string>::JSONPrimitiveMapper() {
+PrimitiveMapper<std::string>::PrimitiveMapper() {
   // Nothing to do
 }
 
 template<>
-JSONPrimitiveMapper<std::string>::~JSONPrimitiveMapper() {
+PrimitiveMapper<std::string>::~PrimitiveMapper() {
   // Nothing to do
 }
 
 template<>
 bool
-JSONPrimitiveMapper<std::string>::serialize(const std::string& value, std::ostream& out, const std::optional<std::string>& field) {
+PrimitiveMapper<std::string>::serialize(const std::string& value, std::ostream& out, const std::optional<std::string>& field) {
   return anch::json::serialize(value, out, &serializeValue<std::string>, field);
 }
 
 template<>
 bool
-JSONPrimitiveMapper<std::string>::serialize(const std::string* const value, std::ostream& out, const std::optional<std::string>& field) {
+PrimitiveMapper<std::string>::serialize(const std::string* const value, std::ostream& out, const std::optional<std::string>& field) {
   return anch::json::serialize(value, out, &serializeValue<std::string>, field);
 }
 
 template<>
 bool
-JSONPrimitiveMapper<std::string>::serialize(const std::optional<std::string>& value, std::ostream& out, const std::optional<std::string>& field) {
+PrimitiveMapper<std::string>::serialize(const std::optional<std::string>& value, std::ostream& out, const std::optional<std::string>& field) {
   return anch::json::serialize(value, out, &serializeValue<std::string>, field);
 }
 
 template<>
 bool
-JSONPrimitiveMapper<std::string>::serialize(const std::vector<std::string>& value, std::ostream& out, const std::optional<std::string>& field) {
+PrimitiveMapper<std::string>::serialize(const std::vector<std::string>& value, std::ostream& out, const std::optional<std::string>& field) {
   anch::json::serializeArray<std::string>(value, out, &serializeValue<std::string>, field);
   return true;
 }
 
 template<>
 bool
-JSONPrimitiveMapper<std::string>::serialize(const std::list<std::string>& value, std::ostream& out, const std::optional<std::string>& field) {
+PrimitiveMapper<std::string>::serialize(const std::list<std::string>& value, std::ostream& out, const std::optional<std::string>& field) {
   anch::json::serializeArray<std::string>(value, out, &serializeValue<std::string>, field);
   return true;
 }
 
 template<>
 bool
-JSONPrimitiveMapper<std::string>::serialize(const std::set<std::string>& value, std::ostream& out, const std::optional<std::string>& field) {
+PrimitiveMapper<std::string>::serialize(const std::set<std::string>& value, std::ostream& out, const std::optional<std::string>& field) {
   anch::json::serializeArray<std::string>(value, out, &serializeValue<std::string>, field);
   return true;
 }
 
 template<>
 void
-JSONPrimitiveMapper<std::string>::deserialize(std::string& value, std::istream& input) {
+PrimitiveMapper<std::string>::deserialize(std::string& value, std::istream& input) {
   anch::json::deserialize<std::string>(value, input, &deserializeValue);
 }
 
 template<>
 void
-JSONPrimitiveMapper<std::string>::deserialize(std::optional<std::string>& value, std::istream& input) {
+PrimitiveMapper<std::string>::deserialize(std::optional<std::string>& value, std::istream& input) {
   anch::json::deserialize<std::string>(value, input, &deserializeValue);
 }
 
 template<>
 void
-JSONPrimitiveMapper<std::string>::deserialize(std::string* value, std::istream& input) {
+PrimitiveMapper<std::string>::deserialize(std::string* value, std::istream& input) {
   anch::json::deserialize<std::string>(value, input, &deserializeValue);
 }
 
 template<>
 void
-JSONPrimitiveMapper<std::string>::deserialize(std::vector<std::string>& value, std::istream& input) {
+PrimitiveMapper<std::string>::deserialize(std::vector<std::string>& value, std::istream& input) {
   anch::json::deserializeArray<std::string>(input,
 					    [&value](const std::string& str) -> void { value.push_back(str); },
 					    &deserializeValue);
@@ -160,7 +160,7 @@ JSONPrimitiveMapper<std::string>::deserialize(std::vector<std::string>& value, s
 
 template<>
 void
-JSONPrimitiveMapper<std::string>::deserialize(std::list<std::string>& value, std::istream& input) {
+PrimitiveMapper<std::string>::deserialize(std::list<std::string>& value, std::istream& input) {
   anch::json::deserializeArray<std::string>(input,
 					    [&value](const std::string& str) -> void { value.push_back(str); },
 					    &deserializeValue);
@@ -168,98 +168,98 @@ JSONPrimitiveMapper<std::string>::deserialize(std::list<std::string>& value, std
 
 template<>
 void
-JSONPrimitiveMapper<std::string>::deserialize(std::set<std::string>& value, std::istream& input) {
+PrimitiveMapper<std::string>::deserialize(std::set<std::string>& value, std::istream& input) {
   anch::json::deserializeArray<std::string>(input,
 					    [&value](const std::string& str) -> void { value.insert(str); },
 					    &deserializeValue);
 }
 
-template class JSONPrimitiveMapper<std::string>;
-// JSONPrimitiveMapper specialization for std::string -
+template class PrimitiveMapper<std::string>;
+// PrimitiveMapper specialization for std::string -
 
-// JSONPrimitiveMapper specialization for std::string_view +
+// PrimitiveMapper specialization for std::string_view +
 template<>
-JSONPrimitiveMapper<std::string_view>::JSONPrimitiveMapper() {
+PrimitiveMapper<std::string_view>::PrimitiveMapper() {
   // Nothing to do
 }
 
 template<>
-JSONPrimitiveMapper<std::string_view>::~JSONPrimitiveMapper() {
+PrimitiveMapper<std::string_view>::~PrimitiveMapper() {
   // Nothing to do
 }
 
 template<>
 bool
-JSONPrimitiveMapper<std::string_view>::serialize(const std::string_view& value, std::ostream& out, const std::optional<std::string>& field) {
+PrimitiveMapper<std::string_view>::serialize(const std::string_view& value, std::ostream& out, const std::optional<std::string>& field) {
   return anch::json::serialize(value, out, &serializeValue<std::string_view>, field);
 }
 
 template<>
 bool
-JSONPrimitiveMapper<std::string_view>::serialize(const std::string_view* const value, std::ostream& out, const std::optional<std::string>& field) {
+PrimitiveMapper<std::string_view>::serialize(const std::string_view* const value, std::ostream& out, const std::optional<std::string>& field) {
   return anch::json::serialize(value, out, &serializeValue<std::string_view>, field);
 }
 
 template<>
 bool
-JSONPrimitiveMapper<std::string_view>::serialize(const std::optional<std::string_view>& value, std::ostream& out, const std::optional<std::string>& field) {
+PrimitiveMapper<std::string_view>::serialize(const std::optional<std::string_view>& value, std::ostream& out, const std::optional<std::string>& field) {
   return anch::json::serialize(value, out, &serializeValue<std::string_view>, field);
 }
 
 template<>
 bool
-JSONPrimitiveMapper<std::string_view>::serialize(const std::vector<std::string_view>& value, std::ostream& out, const std::optional<std::string>& field) {
+PrimitiveMapper<std::string_view>::serialize(const std::vector<std::string_view>& value, std::ostream& out, const std::optional<std::string>& field) {
   anch::json::serializeArray<std::string_view>(value, out, &serializeValue<std::string_view>, field);
   return true;
 }
 
 template<>
 bool
-JSONPrimitiveMapper<std::string_view>::serialize(const std::list<std::string_view>& value, std::ostream& out, const std::optional<std::string>& field) {
+PrimitiveMapper<std::string_view>::serialize(const std::list<std::string_view>& value, std::ostream& out, const std::optional<std::string>& field) {
   anch::json::serializeArray<std::string_view>(value, out, &serializeValue<std::string_view>, field);
   return true;
 }
 
 template<>
 bool
-JSONPrimitiveMapper<std::string_view>::serialize(const std::set<std::string_view>& value, std::ostream& out, const std::optional<std::string>& field) {
+PrimitiveMapper<std::string_view>::serialize(const std::set<std::string_view>& value, std::ostream& out, const std::optional<std::string>& field) {
   anch::json::serializeArray<std::string_view>(value, out, &serializeValue<std::string_view>, field);
   return true;
 }
 
 template<>
 void
-JSONPrimitiveMapper<std::string_view>::deserialize(std::string_view& value, std::istream& input) = delete;
+PrimitiveMapper<std::string_view>::deserialize(std::string_view& value, std::istream& input) = delete;
 
 template<>
 void
-JSONPrimitiveMapper<std::string_view>::deserialize(std::optional<std::string_view>& value, std::istream& input) = delete;
+PrimitiveMapper<std::string_view>::deserialize(std::optional<std::string_view>& value, std::istream& input) = delete;
 
 template<>
 void
-JSONPrimitiveMapper<std::string_view>::deserialize(std::string_view* value, std::istream& input) = delete;
+PrimitiveMapper<std::string_view>::deserialize(std::string_view* value, std::istream& input) = delete;
 
 template<>
 void
-JSONPrimitiveMapper<std::string_view>::deserialize(std::vector<std::string_view>& value, std::istream& input) = delete;
+PrimitiveMapper<std::string_view>::deserialize(std::vector<std::string_view>& value, std::istream& input) = delete;
 
 template<>
 void
-JSONPrimitiveMapper<std::string_view>::deserialize(std::list<std::string_view>& value, std::istream& input) = delete;
+PrimitiveMapper<std::string_view>::deserialize(std::list<std::string_view>& value, std::istream& input) = delete;
 
 template<>
 void
-JSONPrimitiveMapper<std::string_view>::deserialize(std::set<std::string_view>& value, std::istream& input) = delete;
+PrimitiveMapper<std::string_view>::deserialize(std::set<std::string_view>& value, std::istream& input) = delete;
 
-template class JSONPrimitiveMapper<std::string_view>;
-// JSONPrimitiveMapper specialization for std::string_view -
+template class PrimitiveMapper<std::string_view>;
+// PrimitiveMapper specialization for std::string_view -
 
-// JSONPrimitiveMapper specialization for anch::UUID +
+// PrimitiveMapper specialization for anch::UUID +
 #ifdef ANCH_UUID
 #endif
-// JSONPrimitiveMapper specialization for anch::UUID -
+// PrimitiveMapper specialization for anch::UUID -
 
-// JSONPrimitiveMapper specialization for anch::date::Date +
+// PrimitiveMapper specialization for anch::date::Date +
 #ifdef ANCH_DATE
 #endif
-// JSONPrimitiveMapper specialization for anch::date::Date -
+// PrimitiveMapper specialization for anch::date::Date -
