@@ -49,13 +49,13 @@ namespace anch {
      * \param mapper the \ref ObjectMapper to use
      */
     template<typename T>
-    void registerFields(ObjectMapper<T>& mapper);
+    void registerObject(ObjectMapper<T>& mapper);
 
     /*!
      * \brief JSON complex object mapper
      *
      * This is a generic template header implementation.\n
-     * Type has to be a class or a structure. The fields have to be registered through the registerFields function implementation for the specific type.
+     * Type has to be a class or a structure. The fields have to be registered through the registerObject function implementation for the specific type.
      *
      * \tparam T the object type
      *
@@ -67,7 +67,7 @@ namespace anch {
     class ObjectMapper {
       friend anch::json::Factory<T>;
       template<typename U>
-      friend void anch::json::registerFields(ObjectMapper<U>&);
+      friend void anch::json::registerObject(ObjectMapper<U>&);
 
       // Attributes +
     private:

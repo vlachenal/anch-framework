@@ -38,7 +38,7 @@ namespace anch {
     // Generic implementations +
     template<typename T>
     ObjectMapper<T>::ObjectMapper(): _writers(), _readers() {
-      anch::json::registerFields<T>(*this);
+      anch::json::registerObject<T>(*this);
       _writers.shrink_to_fit();
     }
 

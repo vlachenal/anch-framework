@@ -38,7 +38,7 @@ namespace anch {
      * \param mapper the \ref ObjectMapper to use
      */
     template<typename T>
-    void registerFields(anch::json::ObjectMapper<T>& mapper);
+    void registerObject(anch::json::ObjectMapper<T>& mapper);
 
     /*!
      * Serialize object
