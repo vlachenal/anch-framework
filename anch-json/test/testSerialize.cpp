@@ -181,7 +181,8 @@ main(void) {
     std::string json = "{\"id\":\"deb94ebc-be28-4899-981a-29199b7a487d\",\"nums\":[1,2,3,4]}";
     std::istringstream iss(json);
     try {
-      Factory<Test>::getInstance().deserialize(test, iss);
+      anch::json::deserialize(test, iss);
+      //Factory<Test>::getInstance().deserialize(test, iss);
       std::cout << "id=" << test._id << " ; value=" << test._value << std::endl;
     } catch(const int& code) {
       std::cerr << "Fail with code " << code << std::endl;
@@ -222,7 +223,8 @@ main(void) {
     //Toto toto;
     try {
       std::vector<Test> tests;
-      Factory<Test>::getInstance().deserialize(tests, iss);
+      anch::json::deserialize<Test>(tests, iss);
+      //Factory<Test>::getInstance().deserialize(tests, iss);
       //Toto toto = anch::json::deserialize<Toto>(iss);
       //std::cout << "id=" << test._id << " ; value=" << test._value << std::endl;
     } catch(const std::bad_cast& e) {

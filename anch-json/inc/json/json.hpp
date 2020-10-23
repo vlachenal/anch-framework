@@ -155,6 +155,39 @@ namespace anch {
     template<typename T>
     T deserialize(std::istream& input);
 
+    /*!
+     * Deserialize objects
+     *
+     * \tparam T the object type
+     *
+     * \param values the values to fill
+     * \param input the input stream to parse
+     */
+    template<typename T>
+    void deserialize(std::vector<T>& values, std::istream& input);
+
+    /*!
+     * Deserialize objects
+     *
+     * \tparam T the object type
+     *
+     * \param values the values to fill
+     * \param input the input stream to parse
+     */
+    template<typename T>
+    void deserialize(std::list<T>& values, std::istream& input);
+
+    /*!
+     * Deserialize objects
+     *
+     * \tparam T the object type
+     *
+     * \param values the values to fill
+     * \param input the input stream to parse
+     */
+    template<typename T>
+    void deserialize(std::set<T>& values, std::istream& input);
+
     // struct JSONIODecorator {
     // private:
     //   std::ostream & out;
