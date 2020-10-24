@@ -52,7 +52,7 @@ isNumericChar(int car) {
 }
 
 void
-deserializeValue(bool& value, std::istream& input) {
+deserializeValue(bool& value, std::istream& input, [[maybe_unused]] const anch::json::MappingOptions& options) {
   std::ostringstream buffer;
   int current;
   int nbChars = 0;
@@ -127,43 +127,46 @@ PrimitiveMapper<bool>::serialize(const std::set<bool>& value, std::ostream& out,
 
 template<>
 void
-PrimitiveMapper<bool>::deserialize(bool& value, std::istream& input) {
-  anch::json::deserialize<bool>(value, input, &deserializeValue);
+PrimitiveMapper<bool>::deserialize(bool& value, std::istream& input, const anch::json::MappingOptions& options) {
+  anch::json::deserialize<bool>(value, input, options, &deserializeValue);
 }
 
 template<>
 void
-PrimitiveMapper<bool>::deserialize(std::optional<bool>& value, std::istream& input) {
-  anch::json::deserialize<bool>(value, input, &deserializeValue);
+PrimitiveMapper<bool>::deserialize(std::optional<bool>& value, std::istream& input, const anch::json::MappingOptions& options) {
+  anch::json::deserialize<bool>(value, input, options, &deserializeValue);
 }
 
 template<>
 void
-PrimitiveMapper<bool>::deserialize(bool* value, std::istream& input) {
-  anch::json::deserialize<bool>(value, input, &deserializeValue);
+PrimitiveMapper<bool>::deserialize(bool* value, std::istream& input, const anch::json::MappingOptions& options) {
+  anch::json::deserialize<bool>(value, input, options, &deserializeValue);
 }
 
 template<>
 void
-PrimitiveMapper<bool>::deserialize(std::vector<bool>& value, std::istream& input) {
+PrimitiveMapper<bool>::deserialize(std::vector<bool>& value, std::istream& input, const anch::json::MappingOptions& options) {
   anch::json::deserializeArray<bool>(input,
 				     [&value](const bool& str) -> void { value.push_back(str); },
+				     options,
 				     &deserializeValue);
 }
 
 template<>
 void
-PrimitiveMapper<bool>::deserialize(std::list<bool>& value, std::istream& input) {
+PrimitiveMapper<bool>::deserialize(std::list<bool>& value, std::istream& input, const anch::json::MappingOptions& options) {
   anch::json::deserializeArray<bool>(input,
 				     [&value](const bool& str) -> void { value.push_back(str); },
+				     options,
 				     &deserializeValue);
 }
 
 template<>
 void
-PrimitiveMapper<bool>::deserialize(std::set<bool>& value, std::istream& input) {
+PrimitiveMapper<bool>::deserialize(std::set<bool>& value, std::istream& input, const anch::json::MappingOptions& options) {
   anch::json::deserializeArray<bool>(input,
 				     [&value](const bool& str) -> void { value.insert(str); },
+				     options,
 				     &deserializeValue);
 }
 

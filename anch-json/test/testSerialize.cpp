@@ -7,6 +7,7 @@
 
 using anch::json::ObjectMapper;
 using anch::json::Factory;
+using anch::json::MappingError;
 
 
 struct Tata {
@@ -179,18 +180,19 @@ main(void) {
   {
     Test test;
     std::string json = "{\"id\":\"deb94ebc-be28-4899-981a-29199b7a487d\",\"nums\":[1,2,3,4]}";
+    std::cout << "Deserialize " << json << std::endl;
     std::istringstream iss(json);
     try {
       anch::json::deserialize(test, iss);
       //Factory<Test>::getInstance().deserialize(test, iss);
-      std::cout << "id=" << test._id << " ; value=" << test._value << std::endl;
-    } catch(const int& code) {
-      std::cerr << "Fail with code " << code << std::endl;
+    } catch(const MappingError& error) {
+      std::cerr << "Fail with " << error.what() << std::endl;
       return 1;
     }
   }
   {
     std::string json = "{\"plop\":\"plop\",\"plip\":\"plip\",\"plap\":42,\"plup\":false,\"tata\":{\"ploum\":\"ploum\",\"num_set\":[1,2,3],\"str_vector\":[\"4\",\"5\",\"6\"]},\"plep\":2.2,\"plyp\":3.3,\"lplyp\":4.4,\"self\":{\"plop\":\"self\",\"plip\":\"self_plip\",\"plap\":24,\"plup\":true,\"tata\":{\"ploum\":\"\",\"num_set\":[],\"str_vector\":[]},\"plep\":5.5,\"plyp\":6.6,\"lplyp\":7.7,\"ptr\":\"self\"},\"ptr\":\"plop\"}";
+    std::cout << "Deserialize " << json << std::endl;
     std::istringstream iss(json);
     Toto toto;
     try {
@@ -199,39 +201,41 @@ main(void) {
     } catch(const std::bad_cast& e) {
       std::cerr << "Bad cast " << e.what() << std::endl;
       return 1;
-    } catch(const int& code) {
-      std::cerr << "Fail with code " << code << std::endl;
+    } catch(const MappingError& error) {
+      std::cerr << "Fail with " << error.what() << std::endl;
       return 1;
     }
   }
   {
     std::ifstream iss("toto.json");
+    std::cout << "Deserialize toto.json" << std::endl;
     //Toto toto;
     try {
-      Toto toto = anch::json::deserialize<Toto>(iss);
+      Toto toto = anch::json::deserialize<Toto>(iss, {.deserialize_max_discard_char = 128});
       //std::cout << "id=" << test._id << " ; value=" << test._value << std::endl;
     } catch(const std::bad_cast& e) {
       std::cerr << "Bad cast " << e.what() << std::endl;
       return 1;
-    } catch(const int& code) {
-      std::cerr << "Fail with code " << code << std::endl;
+    } catch(const MappingError& error) {
+      std::cerr << "Fail with " << error.what() << std::endl;
       return 1;
     }
   }
   {
     std::ifstream iss("totos.json");
+    std::cout << "Deserialize totos.json" << std::endl;
     //Toto toto;
     try {
       std::vector<Test> tests;
-      anch::json::deserialize<Test>(tests, iss);
+      anch::json::deserialize<Test>(tests, iss, {.deserialize_max_discard_char = 128});
       //Factory<Test>::getInstance().deserialize(tests, iss);
       //Toto toto = anch::json::deserialize<Toto>(iss);
       //std::cout << "id=" << test._id << " ; value=" << test._value << std::endl;
     } catch(const std::bad_cast& e) {
       std::cerr << "Bad cast " << e.what() << std::endl;
       return 1;
-    } catch(const int& code) {
-      std::cerr << "Fail with code " << code << std::endl;
+    } catch(const MappingError& error) {
+      std::cerr << "Fail with " << error.what() << std::endl;
       return 1;
     }
   }

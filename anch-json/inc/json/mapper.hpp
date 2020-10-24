@@ -29,6 +29,7 @@
 #include <set>
 
 #include "json/constants.hpp"
+#include "json/mappingOptions.hpp"
 
 
 namespace anch {
@@ -75,7 +76,7 @@ namespace anch {
       std::vector<std::function<bool(const T&, std::ostream&)>> _writers;
 
       /*! JSON reader functions registry */
-      std::map<std::string, std::function<void(T&, std::istream&)>> _readers;
+      std::map<std::string, std::function<void(T&, std::istream&, const anch::json::MappingOptions&)>> _readers;
       // Attributes -
 
       // Constructors +
@@ -248,48 +249,54 @@ namespace anch {
        *
        * \param input the input stream to parse
        * \param field the field
+       * \param options the options to use
        */
-      void deserialize(T& value, std::istream& input);
+      void deserialize(T& value, std::istream& input, const anch::json::MappingOptions& options);
 
       /*!
        * Deserialize JSON
        *
        * \param input the input stream to parse
        * \param field the field
+       * \param options the options to use
        */
-      void deserialize(std::optional<T>& value, std::istream& input);
+      void deserialize(std::optional<T>& value, std::istream& input, const anch::json::MappingOptions& options);
 
       /*!
        * Deserialize JSON
        *
        * \param input the input stream to parse
        * \param field the field
+       * \param options the options to use
        */
-      void deserialize(T* value, std::istream& input);
+      void deserialize(T* value, std::istream& input, const anch::json::MappingOptions& options);
 
       /*!
        * Deserialize JSON
        *
        * \param input the input stream to parse
        * \param field the field
+       * \param options the options to use
        */
-      void deserialize(std::vector<T>& value, std::istream& input);
+      void deserialize(std::vector<T>& value, std::istream& input, const anch::json::MappingOptions& options);
 
       /*!
        * Deserialize JSON
        *
        * \param input the input stream to parse
        * \param field the field
+       * \param options the options to use
        */
-      void deserialize(std::list<T>& value, std::istream& input);
+      void deserialize(std::list<T>& value, std::istream& input, const anch::json::MappingOptions& options);
 
       /*!
        * Deserialize JSON
        *
        * \param input the input stream to parse
        * \param field the field
+       * \param options the options to use
        */
-      void deserialize(std::set<T>& value, std::istream& input);
+      void deserialize(std::set<T>& value, std::istream& input, const anch::json::MappingOptions& options);
 
     private:
       /*!
@@ -297,8 +304,9 @@ namespace anch {
        *
        * \param input the input stream to parse
        * \param field the field
+       * \param options the options to use
        */
-      void deserializeValue(T& value, std::istream& input);
+      void deserializeValue(T& value, std::istream& input, const anch::json::MappingOptions& options);
 
       /*!
        * Serialize value

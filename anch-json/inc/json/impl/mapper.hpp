@@ -74,20 +74,20 @@ namespace anch {
 	  }
 	}
       }));
-      _readers[key] = std::function<void(T&, std::istream&)>([=, this](T& obj, std::istream& input) -> void {
+      _readers[key] = std::function<void(T&, std::istream&, const anch::json::MappingOptions&)>([=, this](T& obj, std::istream& input, const anch::json::MappingOptions& options) -> void {
 	static_assert(!std::is_reference<P>::value, "Can not desrialize reference value"); // raise compile-time error if value is a reference
 	if constexpr (std::is_pointer<P>::value) { // Remove pointer on parameter type to check the main type
 	  if constexpr (std::is_same<T, typename std::remove_pointer<P>>::value) { // if same, use direct call to avoid recursive instanciation
-	    return this->deserialize(obj.*value, input);
+	    return this->deserialize(obj.*value, input, options);
 	  } else { // Use 'unpointered' type
-	    return anch::json::Factory<typename std::remove_pointer<P>::type>::getInstance().deserialize(obj.*value, input);
+	    return anch::json::Factory<typename std::remove_pointer<P>::type>::getInstance().deserialize(obj.*value, input, options);
 	  }
 
 	} else { // Basic type
 	  if constexpr (std::is_same<P, T>::value) { // if same, use direct call to avoid recursive instanciation
-	    return this->deserialize(obj.*value, input);
+	    return this->deserialize(obj.*value, input, options);
 	  } else {
-	    return anch::json::Factory<P>::getInstance().deserialize(obj.*value, input);
+	    return anch::json::Factory<P>::getInstance().deserialize(obj.*value, input, options);
 	  }
 	}
       });
@@ -105,11 +105,11 @@ namespace anch {
 	  return anch::json::Factory<MT>::getInstance().serialize(obj.*value, out, std::optional<std::string>(key));
 	}
       }));
-      _readers[key] = std::function<void(T&, std::istream&)>([=, this](T& obj, std::istream& input) -> void {
+      _readers[key] = std::function<void(T&, std::istream&, const anch::json::MappingOptions&)>([=, this](T& obj, std::istream& input, const anch::json::MappingOptions& options) -> void {
 	if constexpr (std::is_same<MT, T>::value) { // if same, use direct call to avoid recursive instanciation
-	  return this->deserialize(obj.*value, input);
+	  return this->deserialize(obj.*value, input, options);
 	} else {
-	  return anch::json::Factory<MT>::getInstance().deserialize(obj.*value, input);
+	  return anch::json::Factory<MT>::getInstance().deserialize(obj.*value, input, options);
 	}
       });
       return *this;
@@ -159,29 +159,29 @@ namespace anch {
     template<typename P, typename MT>
     ObjectMapper<T>&
     ObjectMapper<T>::registerField(const std::string& key, std::function<void(T&, const P&)> setter) {
-      _readers[key] = std::function<void(T&, std::istream&)>([=, this](T& obj, std::istream& input) -> void {
+      _readers[key] = std::function<void(T&, std::istream&, const anch::json::MappingOptions&)>([=, this](T& obj, std::istream& input, const anch::json::MappingOptions& options) -> void {
 	static_assert(!std::is_reference<P>::value, "Can not desrialize reference value"); // raise compile-time error if value is a reference
 	if constexpr (std::is_same<MT, P>::value) { // Mapper type has not been specified
 
 	  if constexpr (std::is_pointer<P>::value) { // Remove pointer on parameter type to check the main type
 	    if constexpr (std::is_same<T, typename std::remove_pointer<P>>::value) { // if same, use direct call to avoid recursive instanciation
 	      T* inst = new T();
-	      this->deserialize(inst, input);
+	      this->deserialize(inst, input, options);
 	      std::invoke(setter, obj, inst);
 	    } else { // Use 'unpointered' type
 	      P* inst = new P();
-	      anch::json::Factory<typename std::remove_pointer<P>::type>::getInstance().deserialize(inst, input);
+	      anch::json::Factory<typename std::remove_pointer<P>::type>::getInstance().deserialize(inst, input, options);
 	      std::invoke(setter, obj, inst);
 	    }
 
 	  } else { // Basic type
 	    if constexpr (std::is_same<P, T>::value) { // if same, use direct call to avoid recursive instanciation
 	      T inst;
-	      this->deserialize(inst, input);
+	      this->deserialize(inst, input, options);
 	      std::invoke(setter, obj, inst);
 	    } else {
 	      P inst;
-	      anch::json::Factory<P>::getInstance().deserialize(inst, input);
+	      anch::json::Factory<P>::getInstance().deserialize(inst, input, options);
 	      std::invoke(setter, obj, inst);
 	    }
 	  }
@@ -189,11 +189,11 @@ namespace anch {
 	} else { // Parameter type has to be correctly set by caller when specified
 	  if constexpr (std::is_same<MT, T>::value) {
 	    T inst;
-	    this->deserialize(inst, input);
+	    this->deserialize(inst, input, options);
 	    std::invoke(setter, obj, inst);
 	  } else {
 	    MT inst;
-	    anch::json::Factory<MT>::getInstance().deserialize(inst, input);
+	    anch::json::Factory<MT>::getInstance().deserialize(inst, input, options);
 	    std::invoke(setter, obj, inst);
 	  }
 	}
@@ -267,7 +267,7 @@ namespace anch {
 
     template<typename T>
     void
-    ObjectMapper<T>::deserializeValue(T& value, std::istream& input) {
+    ObjectMapper<T>::deserializeValue(T& value, std::istream& input, const anch::json::MappingOptions& options) {
       char expected = anch::json::OBJECT_BEGIN;
       int current = '\0';
       while(input) {
@@ -277,21 +277,21 @@ namespace anch {
 	}
 	if(current == anch::json::OBJECT_BEGIN) {
 	  expected = anch::json::OBJECT_END;
-	  std::optional<std::string> fieldName = anch::json::getFieldName(input);
+	  std::optional<std::string> fieldName = anch::json::getFieldName(input, options);
 	  while(fieldName.has_value()) {
 	    auto iter = _readers.find(fieldName.value());
 	    if(iter == _readers.end()) {
 	      throw anch::json::MappingError(anch::json::ErrorCode::UNEXPECTED_FIELD, input, fieldName.value());
 	    } else {
-	      std::invoke(iter->second, value, input);
+	      std::invoke(iter->second, value, input, options);
 	    }
-	    if(!anch::json::hasMoreField(input)) {
+	    if(!anch::json::hasMoreField(input, options)) {
 	      break;
 	    }
-	    fieldName = anch::json::getFieldName(input);
+	    fieldName = anch::json::getFieldName(input, options);
 	  }
 	}
-	anch::json::discardChars(input);
+	anch::json::discardChars(input, options);
 	current = input.get();
 	if(current == anch::json::OBJECT_END) {
 	  break;
@@ -304,43 +304,46 @@ namespace anch {
 
     template<typename T>
     void
-    ObjectMapper<T>::deserialize(T& value, std::istream& input) {
-      anch::json::deserialize<T>(value, input, std::bind_front(&ObjectMapper<T>::deserializeValue, this));
+    ObjectMapper<T>::deserialize(T& value, std::istream& input, const anch::json::MappingOptions& options) {
+      anch::json::deserialize<T>(value, input, options, std::bind_front(&ObjectMapper<T>::deserializeValue, this));
     }
 
     template<typename T>
     void
-    ObjectMapper<T>::deserialize(std::optional<T>& value, std::istream& input) {
-      anch::json::deserialize<T>(value, input, std::bind_front(&ObjectMapper<T>::deserializeValue, this));
+    ObjectMapper<T>::deserialize(std::optional<T>& value, std::istream& input, const anch::json::MappingOptions& options) {
+      anch::json::deserialize<T>(value, input, options, std::bind_front(&ObjectMapper<T>::deserializeValue, this));
     }
 
     template<typename T>
     void
-    ObjectMapper<T>::deserialize(T* value, std::istream& input) {
-      anch::json::deserialize<T>(value, input, std::bind_front(&ObjectMapper<T>::deserializeValue, this));
+    ObjectMapper<T>::deserialize(T* value, std::istream& input, const anch::json::MappingOptions& options) {
+      anch::json::deserialize<T>(value, input, options, std::bind_front(&ObjectMapper<T>::deserializeValue, this));
     }
 
     template<typename T>
     void
-    ObjectMapper<T>::deserialize(std::vector<T>& value, std::istream& input) {
+    ObjectMapper<T>::deserialize(std::vector<T>& value, std::istream& input, const anch::json::MappingOptions& options) {
       anch::json::deserializeArray<T>(input,
 				      [&value](const T& obj) -> void { value.push_back(obj); },
+				      options,
 				      std::bind_front(&ObjectMapper<T>::deserializeValue, this));
     }
 
     template<typename T>
     void
-    ObjectMapper<T>::deserialize(std::list<T>& value, std::istream& input) {
+    ObjectMapper<T>::deserialize(std::list<T>& value, std::istream& input, const anch::json::MappingOptions& options) {
       anch::json::deserializeArray<T>(input,
 				      [&value](const T& obj) -> void { value.push_back(obj); },
+				      options,
 				      std::bind_front(&ObjectMapper<T>::deserializeValue, this));
     }
 
     template<typename T>
     void
-    ObjectMapper<T>::deserialize(std::set<T>& value, std::istream& input) {
+    ObjectMapper<T>::deserialize(std::set<T>& value, std::istream& input, const anch::json::MappingOptions& options) {
       anch::json::deserializeArray<T>(input,
 				      [&value](const T& obj) -> void { value.insert(obj); },
+				      options,
 				      std::bind_front(&ObjectMapper<T>::deserializeValue, this));
     }
     // Generic implementations -

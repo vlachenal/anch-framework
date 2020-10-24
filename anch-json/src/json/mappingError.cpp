@@ -37,7 +37,8 @@ computeErrorMessage(ErrorCode code, std::istream& input, std::optional<std::stri
     oss << "Unexpected field found at " << pos;
     break;
   case ErrorCode::POTENTIAL_OVERFLOW:
-    return "HACKER !!!";
+    oss << "Potential overflow at " << pos;
+    break;
   default:
     oss << "Unexpected error found at " << pos;
   }

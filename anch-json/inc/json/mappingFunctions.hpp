@@ -23,7 +23,9 @@
 #include <optional>
 
 #include <functional>
+
 #include "json/constants.hpp"
+#include "json/mappingOptions.hpp"
 
 namespace anch {
   namespace json {
@@ -32,42 +34,46 @@ namespace anch {
      * Consumes discarded characters
      *
      * \param input the input stream to consumes
+     * \param options the options to use
      *
      * \throw plop if stream reach its end
      */
-    void discardChars(std::istream& input);
+    void discardChars(std::istream& input, const anch::json::MappingOptions& options);
 
     /*!
      * Check if stream starts with 'null' and consumes these characters
      *
      * \param input the input stream to consumes
+     * \param options the options to use
      *
      * \return \c true if input stream starts with 'null', \c false otherwise
      *
      * \throw plop if stream reach its end
      */
-    bool isNull(std::istream& input);
+    bool isNull(std::istream& input, const anch::json::MappingOptions& options);
 
     /*!
      * Parse input to get new field definition.\n
      * This will consume '"<field name>":'
      *
      * \param input the input stream to parse
+     * \param options the options to use
      *
      * \return the field's name if found, \c empty otherwise
      */
-    std::optional<std::string> getFieldName(std::istream& input);
+    std::optional<std::string> getFieldName(std::istream& input, const anch::json::MappingOptions& options);
 
     /*!
      * Check if stream starts with ',' and consumes these characters
      *
      * \param input the input stream to consumes
+     * \param options the options to use
      *
      * \return \c true if input stream starts with ',', \c false otherwise
      *
      * \throw plop if stream reach its end
      */
-    bool hasMoreField(std::istream& input);
+    bool hasMoreField(std::istream& input, const anch::json::MappingOptions& options);
 
     /*!
      * Serialize JSON value
@@ -138,36 +144,42 @@ namespace anch {
      *
      * \param value the value to fill
      * \param input the input stream to parse
+     * \param options the options to use
      * \param deserializeFunc the value deserialization function
      */
     template<typename T>
     void deserialize(T& value,
 		     std::istream& input,
-		     std::function<void((T& value, std::istream& input))> deserializeFunc);
+		     const anch::json::MappingOptions& options,
+		     std::function<void((T& value, std::istream& input, const anch::json::MappingOptions& options))> deserializeFunc);
 
     /*!
      * Deserialize JSON value
      *
      * \param value the value to fill
      * \param input the input stream to parse
+     * \param options the options to use
      * \param deserializeFunc the value deserialization function
      */
     template<typename T>
     void deserialize(T* value,
 		     std::istream& input,
-		     std::function<void((T& value, std::istream& input))> deserializeFunc);
+		     const anch::json::MappingOptions& options,
+		     std::function<void((T& value, std::istream& input, const anch::json::MappingOptions& options))> deserializeFunc);
 
     /*!
      * Deserialize JSON value
      *
      * \param value the value to fill
      * \param input the input stream to parse
+     * \param options the options to use
      * \param deserializeFunc the value deserialization function
      */
     template<typename T>
     void deserialize(std::optional<T>& value,
 		     std::istream& input,
-		     std::function<void((T& value, std::istream& input))> deserializeFunc);
+		     const anch::json::MappingOptions& options,
+		     std::function<void((T& value, std::istream& input, const anch::json::MappingOptions& options))> deserializeFunc);
 
     /*!
      * JSON array deserialization generic implementation
@@ -176,12 +188,14 @@ namespace anch {
      *
      * \param input the input stream to deserialize
      * \param pushFunc the push function according to container type
+     * \param options the options to use
      * \param deserializeFunc the value deserialization function
      */
     template<typename T>
     void deserializeArray(std::istream& input,
 			  std::function<auto(const T&)> pushFunc,
-			  std::function<void((T& value, std::istream& input))> deserializeFunc);
+			  const anch::json::MappingOptions& options,
+			  std::function<void((T& value, std::istream& input, const anch::json::MappingOptions& options))> deserializeFunc);
 
     class JSONParser {
     private:

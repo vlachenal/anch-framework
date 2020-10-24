@@ -84,9 +84,10 @@ namespace anch {
     inline void
     deserialize(T& value,
 		std::istream& input,
-		std::function<void((T& value, std::istream& input))> deserializeFunc) {
-      if(!anch::json::isNull(input)) { // this function discards 'spaces'
-	std::invoke(deserializeFunc, value, input);
+		const anch::json::MappingOptions& options,
+		std::function<void((T& value, std::istream& input, const anch::json::MappingOptions& options))> deserializeFunc) {
+      if(!anch::json::isNull(input, options)) { // this function discards 'spaces'
+	std::invoke(deserializeFunc, value, input, options);
       }
     }
 
@@ -94,12 +95,13 @@ namespace anch {
     inline void
     deserialize(T* value,
 		std::istream& input,
-		std::function<void((T& value, std::istream& input))> deserializeFunc) {
-      if(anch::json::isNull(input)) { // this function discards 'spaces'
+		const anch::json::MappingOptions& options,
+		std::function<void((T& value, std::istream& input, const anch::json::MappingOptions& options))> deserializeFunc) {
+      if(anch::json::isNull(input, options)) { // this function discards 'spaces'
 	value = NULL;
       } else {
 	value = new T();
-	std::invoke(deserializeFunc, *value, input);
+	std::invoke(deserializeFunc, *value, input, options);
       }
     }
 
@@ -107,12 +109,13 @@ namespace anch {
     inline void
     deserialize(std::optional<T>& value,
 		std::istream& input,
-		std::function<void((T& value, std::istream& input))> deserializeFunc) {
-      if(anch::json::isNull(input)) { // this function discards 'spaces'
+		const anch::json::MappingOptions& options,
+		std::function<void((T& value, std::istream& input, const anch::json::MappingOptions& options))> deserializeFunc) {
+      if(anch::json::isNull(input, options)) { // this function discards 'spaces'
 	value.reset();
       } else {
 	T instance;
-	std::invoke(deserializeFunc, instance, input);
+	std::invoke(deserializeFunc, instance, input, options);
 	value = std::move(instance);
       }
     }
@@ -121,24 +124,25 @@ namespace anch {
     inline void
     deserializeArray(std::istream& input,
 		     std::function<void(const T&)> pushFunc,
-		     std::function<void((T& value, std::istream& input))> deserializeFunc) {
-      if(anch::json::isNull(input)) {
+		     const anch::json::MappingOptions& options,
+		     std::function<void((T& value, std::istream& input, const anch::json::MappingOptions& options))> deserializeFunc) {
+      if(anch::json::isNull(input, options)) {
 	return;
       }
       int current = input.get();
       if(current != anch::json::ARRAY_BEGIN) {
 	throw anch::json::MappingError(anch::json::ErrorCode::INVALID_FORMAT, input, static_cast<char>(current));
       }
-      anch::json::discardChars(input);
+      anch::json::discardChars(input, options);
       if(input.peek() != anch::json::ARRAY_END) {
 	while(input) {
 	  T value;
-	  std::invoke(deserializeFunc, value, input);
+	  std::invoke(deserializeFunc, value, input, options);
 	  std::invoke(pushFunc, value);
-	  if(!anch::json::hasMoreField(input)) {
+	  if(!anch::json::hasMoreField(input, options)) {
 	    break;
 	  }
-	  anch::json::discardChars(input);
+	  anch::json::discardChars(input, options);
 	}
       }
       if(!input || input.get() != anch::json::ARRAY_END) {

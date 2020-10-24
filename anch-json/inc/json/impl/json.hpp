@@ -84,34 +84,34 @@ namespace anch {
 
     template<typename T>
     inline
-    void deserialize(T& value, std::istream& input) {
-      anch::json::Factory<T>::getInstance().deserialize(value, input);
+    void deserialize(T& value, std::istream& input, const anch::json::MappingOptions& options) {
+      anch::json::Factory<T>::getInstance().deserialize(value, input, options);
     }
 
     template<typename T>
     inline
-    T deserialize(std::istream& input) {
+    T deserialize(std::istream& input, const anch::json::MappingOptions& options) {
       T value;
-      anch::json::Factory<T>::getInstance().deserialize(value, input);
+      anch::json::Factory<T>::getInstance().deserialize(value, input, options);
       return value;
     }
 
     template<typename T>
     inline
-    void deserialize(std::vector<T>& values, std::istream& input) {
-      anch::json::Factory<T>::getInstance().deserialize(values, input);
+    void deserialize(std::vector<T>& values, std::istream& input, const anch::json::MappingOptions& options) {
+      anch::json::Factory<T>::getInstance().deserialize(values, input, options);
     }
 
     template<typename T>
     inline
-    void deserialize(std::list<T>& values, std::istream& input) {
-      anch::json::Factory<T>::getInstance().deserialize(values, input);
+    void deserialize(std::list<T>& values, std::istream& input, const anch::json::MappingOptions& options) {
+      anch::json::Factory<T>::getInstance().deserialize(values, input, options);
     }
 
     template<typename T>
     inline
-    void deserialize(std::set<T>& values, std::istream& input) {
-      anch::json::Factory<T>::getInstance().deserialize(values, input);
+    void deserialize(std::set<T>& values, std::istream& input, const anch::json::MappingOptions& options) {
+      anch::json::Factory<T>::getInstance().deserialize(values, input, options);
     }
 
   }

@@ -139,9 +139,10 @@ namespace anch {
      *
      * \param value the value to fill
      * \param input the input stream to parse
+     * \param options the options to use
      */
     template<typename T>
-    void deserialize(T& value, std::istream& input);
+    void deserialize(T& value, std::istream& input, const anch::json::MappingOptions& options = anch::json::DEFAULT_MAPPING_OPTIONS);
 
     /*!
      * Deserialize object
@@ -149,11 +150,12 @@ namespace anch {
      * \tparam T the object type
      *
      * \param input the input stream to parse
+     * \param options the options to use
      *
      * \return the deserialized object by copy
      */
     template<typename T>
-    T deserialize(std::istream& input);
+    T deserialize(std::istream& input, const anch::json::MappingOptions& options = anch::json::DEFAULT_MAPPING_OPTIONS);
 
     /*!
      * Deserialize objects
@@ -162,9 +164,10 @@ namespace anch {
      *
      * \param values the values to fill
      * \param input the input stream to parse
+     * \param options the options to use
      */
     template<typename T>
-    void deserialize(std::vector<T>& values, std::istream& input);
+    void deserialize(std::vector<T>& values, std::istream& input, const anch::json::MappingOptions& options = anch::json::DEFAULT_MAPPING_OPTIONS);
 
     /*!
      * Deserialize objects
@@ -173,9 +176,10 @@ namespace anch {
      *
      * \param values the values to fill
      * \param input the input stream to parse
+     * \param options the options to use
      */
     template<typename T>
-    void deserialize(std::list<T>& values, std::istream& input);
+    void deserialize(std::list<T>& values, std::istream& input, const anch::json::MappingOptions& options = anch::json::DEFAULT_MAPPING_OPTIONS);
 
     /*!
      * Deserialize objects
@@ -184,9 +188,10 @@ namespace anch {
      *
      * \param values the values to fill
      * \param input the input stream to parse
+     * \param options the options to use
      */
     template<typename T>
-    void deserialize(std::set<T>& values, std::istream& input);
+    void deserialize(std::set<T>& values, std::istream& input, const anch::json::MappingOptions& options = anch::json::DEFAULT_MAPPING_OPTIONS);
 
     // struct JSONIODecorator {
     // private:
