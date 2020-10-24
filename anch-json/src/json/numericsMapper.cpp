@@ -54,18 +54,18 @@ isNumericChar(int car) {
     || car == '9'
     || car == '-'
     || car == '.'
-    || car == 'a'
-    || car == 'A'
-    || car == 'b'
-    || car == 'B'
-    || car == 'c'
-    || car == 'C'
-    || car == 'd'
-    || car == 'D'
-    || car == 'e' // for hexa or exponential
-    || car == 'E' // for hexa or exponential
-    || car == 'f'
-    || car == 'F'
+    || car == 'a' // for hexadecimal format
+    || car == 'A' // for hexadecimal format
+    || car == 'b' // for hexadecimal format
+    || car == 'B' // for hexadecimal format
+    || car == 'c' // for hexadecimal format
+    || car == 'C' // for hexadecimal format
+    || car == 'd' // for hexadecimal format
+    || car == 'D' // for hexadecimal format
+    || car == 'e' // for hexadecimal format or exponential
+    || car == 'E' // for hexadecimal format or exponential
+    || car == 'f' // for hexadecimal format
+    || car == 'F' // for hexadecimal format
     || car == 'x' // for hexadecimal format
     ;
 }
@@ -76,7 +76,7 @@ deserializeValue(T& value, std::istream& input, [[maybe_unused]] const anch::jso
   std::ostringstream buffer;
   int current;
   while(input) {
-    // \todo max char in value ...
+    // \todo max char in value ... 20
     current = input.peek();
     if(!isNumericChar(current)) {
       break;

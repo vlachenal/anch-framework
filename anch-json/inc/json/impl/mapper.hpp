@@ -278,11 +278,15 @@ namespace anch {
 	if(current == anch::json::OBJECT_BEGIN) {
 	  expected = anch::json::OBJECT_END;
 	  std::optional<std::string> fieldName = anch::json::getFieldName(input, options);
-	  while(fieldName.has_value()) {
+	  while(fieldName.has_value()) { // iterate found fields
 	    auto iter = _readers.find(fieldName.value());
-	    if(iter == _readers.end()) {
-	      throw anch::json::MappingError(anch::json::ErrorCode::UNEXPECTED_FIELD, input, fieldName.value());
-	    } else {
+	    if(iter == _readers.end()) { // unknown field
+	      if(!options.deserialize_ignore_unknown_field) {
+		throw anch::json::MappingError(anch::json::ErrorCode::UNEXPECTED_FIELD, input, fieldName.value());
+	      } else {
+		anch::json::consumeUnknownField(input, options);
+	      }
+	    } else { // deserialize known field
 	      std::invoke(iter->second, value, input, options);
 	    }
 	    if(!anch::json::hasMoreField(input, options)) {

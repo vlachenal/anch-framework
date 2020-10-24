@@ -210,6 +210,42 @@ main(void) {
     }
   }
   {
+    Test test;
+    std::string json = "{\"id\":\"deb94ebc-be28-4899-981a-29199b7a487d\",\"unknown\":{\"tot\":{}},\"nums\":[1,2,3,4]}";
+    std::cout << "Deserialize with unknown object and custom mapper " << json << std::endl;
+    std::istringstream iss(json);
+    try {
+      anch::json::deserialize(test, iss, {.deserialize_ignore_unknown_field = true});
+    } catch(const MappingError& error) {
+      std::cerr << "Fail with " << error.what() << std::endl;
+      return 1;
+    }
+  }
+  {
+    Test test;
+    std::string json = "{\"id\":\"deb94ebc-be28-4899-981a-29199b7a487d\",\"unknown\":\"toto\",\"nums\":[1,2,3,4]}";
+    std::cout << "Deserialize with unknown string and custom mapper " << json << std::endl;
+    std::istringstream iss(json);
+    try {
+      anch::json::deserialize(test, iss, {.deserialize_ignore_unknown_field = true});
+    } catch(const MappingError& error) {
+      std::cerr << "Fail with " << error.what() << std::endl;
+      return 1;
+    }
+  }
+  {
+    Test test;
+    std::string json = "{\"id\":\"deb94ebc-be28-4899-981a-29199b7a487d\",\"unknown\":1234,\"nums\":[1,2,3,4]}";
+    std::cout << "Deserialize with unknown integer and custom mapper " << json << std::endl;
+    std::istringstream iss(json);
+    try {
+      anch::json::deserialize(test, iss, {.deserialize_ignore_unknown_field = true});
+    } catch(const MappingError& error) {
+      std::cerr << "Fail with " << error.what() << std::endl;
+      return 1;
+    }
+  }
+  {
     std::string json = "{\"plop\":\"plop\",\"plip\":\"plip\",\"plap\":42,\"plup\":false,\"tata\":{\"ploum\":\"ploum\",\"num_set\":[1,2,3],\"str_vector\":[\"4\",\"5\",\"6\"]},\"plep\":2.2,\"plyp\":3.3,\"lplyp\":4.4,\"self\":{\"plop\":\"self\",\"plip\":\"self_plip\",\"plap\":24,\"plup\":true,\"tata\":{\"ploum\":\"\",\"num_set\":[],\"str_vector\":[]},\"plep\":5.5,\"plyp\":6.6,\"lplyp\":7.7,\"ptr\":\"self\"},\"ptr\":\"plop\"}";
     std::cout << "Deserialize " << json << std::endl;
     std::istringstream iss(json);

@@ -76,6 +76,14 @@ namespace anch {
     bool hasMoreField(std::istream& input, const anch::json::MappingOptions& options);
 
     /*!
+     * Consumes unknown field until next field
+     *
+     * \param input the input stream to parse
+     * \param options the options to use
+     */
+    void consumeUnknownField(std::istream& input, const anch::json::MappingOptions& options);
+
+    /*!
      * Serialize JSON value
      *
      * \tparam the object type
