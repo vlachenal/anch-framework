@@ -8,6 +8,7 @@
 using anch::json::ObjectMapper;
 using anch::json::Factory;
 using anch::json::MappingError;
+using anch::json::ErrorCode;
 
 
 struct Tata {
@@ -172,7 +173,6 @@ main(void) {
     std::cout << "Serialized test array: ";
     anch::json::serialize(tests, std::cout);
     std::cout << std::endl;
-    //std::cout << "Serialized test array: " << oss.str() << std::endl;
     std::string res = anch::json::serialize(tests);
     std::cout << "Serialized test array as string: " << res << std::endl;
     //std::cout << "Serialized test iomanip: " << anch::json::json_format << test << std::endl;
@@ -191,13 +191,31 @@ main(void) {
     }
   }
   {
+    Test test;
+    std::string json = "{\"id\":\"deb94ebc-be28-4899-981a-29199b7a487d\",\"unknown\":1234,\"nums\":[1,2,3,4]}";
+    std::cout << "Deserialize with unknown field and default mapper " << json << std::endl;
+    std::istringstream iss(json);
+    try {
+      anch::json::deserialize(test, iss);
+      std::cerr << "This test should have failed" << std::endl;
+      return 1;
+      //Factory<Test>::getInstance().deserialize(test, iss);
+    } catch(const MappingError& error) {
+      if(error.getErrorCode() == ErrorCode::UNEXPECTED_FIELD) {
+	std::cout << "Fail OK with error " << error.what() << std::endl;
+      } else {
+	std::cerr << "Fail with " << error.what() << std::endl;
+	return 1;
+      }
+    }
+  }
+  {
     std::string json = "{\"plop\":\"plop\",\"plip\":\"plip\",\"plap\":42,\"plup\":false,\"tata\":{\"ploum\":\"ploum\",\"num_set\":[1,2,3],\"str_vector\":[\"4\",\"5\",\"6\"]},\"plep\":2.2,\"plyp\":3.3,\"lplyp\":4.4,\"self\":{\"plop\":\"self\",\"plip\":\"self_plip\",\"plap\":24,\"plup\":true,\"tata\":{\"ploum\":\"\",\"num_set\":[],\"str_vector\":[]},\"plep\":5.5,\"plyp\":6.6,\"lplyp\":7.7,\"ptr\":\"self\"},\"ptr\":\"plop\"}";
     std::cout << "Deserialize " << json << std::endl;
     std::istringstream iss(json);
     Toto toto;
     try {
       anch::json::deserialize(toto, iss);
-      //std::cout << "id=" << test._id << " ; value=" << test._value << std::endl;
     } catch(const std::bad_cast& e) {
       std::cerr << "Bad cast " << e.what() << std::endl;
       return 1;
@@ -212,7 +230,6 @@ main(void) {
     //Toto toto;
     try {
       Toto toto = anch::json::deserialize<Toto>(iss, {.deserialize_max_discard_char = 128});
-      //std::cout << "id=" << test._id << " ; value=" << test._value << std::endl;
     } catch(const std::bad_cast& e) {
       std::cerr << "Bad cast " << e.what() << std::endl;
       return 1;
@@ -228,9 +245,6 @@ main(void) {
     try {
       std::vector<Test> tests;
       anch::json::deserialize<Test>(tests, iss, {.deserialize_max_discard_char = 128});
-      //Factory<Test>::getInstance().deserialize(tests, iss);
-      //Toto toto = anch::json::deserialize<Toto>(iss);
-      //std::cout << "id=" << test._id << " ; value=" << test._value << std::endl;
     } catch(const std::bad_cast& e) {
       std::cerr << "Bad cast " << e.what() << std::endl;
       return 1;
