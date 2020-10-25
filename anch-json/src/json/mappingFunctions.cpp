@@ -151,12 +151,46 @@ consumeStringValue(std::istream& input, [[maybe_unused]] const anch::json::Mappi
 }
 
 void
-consumeRawValue(std::istream& input, [[maybe_unused]] const anch::json::MappingOptions& options) {
+consumeRawValue(std::istream& input) {
   uint8_t nbChar = 0;
-  while(input.get()) {
+  while(input) {
     if(++nbChar > 20) { // max uint64_t is 18446744073709551615 => 20 chars and max int64_t is -9223372036854775806 => 20 chars
       break;
     }
+    int current = input.peek();
+    if(current == anch::json::OBJECT_BEGIN
+       || current == anch::json::OBJECT_END
+       || current == anch::json::ARRAY_BEGIN
+       || current == anch::json::ARRAY_END
+       || current == anch::json::STRING_DELIMITER
+       || current == anch::json::FIELD_VALUE_SEPARATOR
+       || current == anch::json::FIELD_SEPARATOR) {
+      break;
+    }
+    input.get();
+  }
+}
+
+void
+consumeArrayValue(std::istream& input, const anch::json::MappingOptions& options) {
+  int current = input.peek(); // consumes '['
+  anch::json::discardChars(input, options);
+  current = input.peek();
+  if(current == anch::json::ARRAY_END) {
+    input.get();
+    return;
+  }
+  while(input) {
+    anch::json::consumeUnknownField(input, options);
+    if(!anch::json::hasMoreField(input, options)) {
+      break;
+    }
+  }
+  if(input.peek() == anch::json::ARRAY_END) {
+    current = input.get();
+  }
+  if(!input && current != anch::json::ARRAY_END) {
+    throw anch::json::MappingError(anch::json::ErrorCode::INVALID_FORMAT, input, static_cast<char>(current));
   }
 }
 
@@ -168,17 +202,17 @@ anch::json::consumeUnknownField(std::istream& input, const anch::json::MappingOp
     UnknownObject obj;
     anch::json::deserialize(obj, input, options);
   } else if(start == anch::json::ARRAY_BEGIN) {
-    // \todo parse array
+    input.get();
+    consumeArrayValue(input, options);
   } else if(start == anch::json::STRING_DELIMITER) {
     input.get();
     consumeStringValue(input, options);
-    // \todo parse string
   } else if(start == anch::json::OBJECT_END
 	    || start == anch::json::ARRAY_END
 	    || start == anch::json::FIELD_VALUE_SEPARATOR
 	    || start == anch::json::FIELD_SEPARATOR) {
     throw anch::json::MappingError(anch::json::ErrorCode::INVALID_FORMAT, input, static_cast<char>(input.peek()));
   } else {
-    consumeRawValue(input, options);
+    consumeRawValue(input);
   }
 }
