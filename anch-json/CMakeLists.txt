@@ -16,6 +16,9 @@ if (GCC_VERSION VERSION_LESS 4.5)
 elseif(GCC_VERSION VERSION_GREATER 10.0 OR GCC_VERSION VERSION_EQUAL 10.0)
   message(STATUS "Version >= 10.0 use -std=c++20")
   add_definitions("-std=c++20")
+elseif(GCC_VERSION VERSION_GREATER 9.0 OR GCC_VERSION VERSION_EQUAL 9.0)
+  message(STATUS "Version >= 9.0 use -std=c++2a")
+  add_definitions("-std=c++2a -fconcepts")
 elseif(GCC_VERSION VERSION_GREATER 8.0 OR GCC_VERSION VERSION_EQUAL 8.0)
   message(STATUS "Version >= 8.0 use -std=c++17")
   add_definitions("-std=c++17")
@@ -99,6 +102,8 @@ endif(ANCH_JSON_STATIC_LIB)
 
 # Unitary tests
 if(ANCH_JSON_UNITARY_TEST)
+  configure_file(test/toto.json toto.json COPYONLY)
+  configure_file(test/totos.json totos.json COPYONLY)
 
   link_directories(
     ${ANCH_UUID_LIBRARY_DIR}
