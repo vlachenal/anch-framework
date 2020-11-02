@@ -1,0 +1,22 @@
+[
+  {
+    "id": "deb94ebc-be28-4899-981a-29199b7a487d",
+    "value": "this is a value",
+    "nums": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  {
+    "id": "44666aab-0b63-47a1-80bb-ae84bc844289",
+    "value": "this is another value",
+    "nums": [
+      5,
+      6,
+      7,
+      8
+    ]
+  }
+]
