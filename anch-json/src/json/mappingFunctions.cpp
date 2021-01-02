@@ -216,3 +216,15 @@ anch::json::consumeUnknownField(std::istream& input, const anch::json::MappingOp
     consumeRawValue(input);
   }
 }
+
+bool
+anch::json::serializeNull(std::ostream& out, const anch::json::MappingOptions& options, const std::optional<std::string>& field) {
+  if(!options.serialize_null) {
+    return false;
+  }
+  if(field.has_value()) {
+    out << anch::json::STRING_DELIMITER << field.value() << anch::json::STRING_DELIMITER << anch::json::FIELD_VALUE_SEPARATOR;
+  }
+  out << "null";
+  return true;
+}
