@@ -51,26 +51,26 @@ namespace anch {
     template<typename P>
     ObjectMapper<T>&
     ObjectMapper<T>::registerField(const std::string& key, P T::* value) {
-      _writers.push_back(std::function<bool(const T&, std::ostream&)>([=, this](const T& obj, std::ostream& out) -> bool {
+      _writers.push_back(std::function<bool(const T&, std::ostream&, const anch::json::MappingOptions&)>([=, this](const T& obj, std::ostream& out, const anch::json::MappingOptions& options) -> bool {
 	if constexpr (std::is_pointer<P>::value) { // Remove pointer on parameter type to check the main type
 	  if constexpr (std::is_same<T, typename std::remove_pointer<P>>::value) { // if same, use direct call to avoid recursive instanciation
-	    return this->serialize(obj.*value, out, std::optional<std::string>(key));
+	    return this->serialize(obj.*value, out, options, std::optional<std::string>(key));
 	  } else { // Use 'unpointered' type
-	    return anch::json::Factory<typename std::remove_pointer<P>::type>::getInstance().serialize(obj.*value, out, std::optional<std::string>(key));
+	    return anch::json::Factory<typename std::remove_pointer<P>::type>::getInstance().serialize(obj.*value, out, options, std::optional<std::string>(key));
 	  }
 
 	} else if constexpr (std::is_reference<P>::value) { // Remove reference on parameter type to check the main type
 	  if constexpr (std::is_same<T, typename std::remove_reference<P>>::value) { // if same, use direct call to avoid recursive instanciation
-	    return this->serialize(obj.*value, out, std::optional<std::string>(key));
+	    return this->serialize(obj.*value, out, options, std::optional<std::string>(key));
 	  } else { // Use 'unreferenced' type
-	    return anch::json::Factory<typename std::decay<P>::type>::getInstance().serialize(obj.*value, out, std::optional<std::string>(key));
+	    return anch::json::Factory<typename std::decay<P>::type>::getInstance().serialize(obj.*value, out, options, std::optional<std::string>(key));
 	  }
 
 	} else { // Basic type
 	  if constexpr (std::is_same<P, T>::value) { // if same, use direct call to avoid recursive instanciation
-	    return this->serialize(obj.*value, out, std::optional<std::string>(key));
+	    return this->serialize(obj.*value, out, options, std::optional<std::string>(key));
 	  } else {
-	    return anch::json::Factory<P>::getInstance().serialize(obj.*value, out, std::optional<std::string>(key));
+	    return anch::json::Factory<P>::getInstance().serialize(obj.*value, out, options, std::optional<std::string>(key));
 	  }
 	}
       }));
@@ -98,11 +98,11 @@ namespace anch {
     template<typename MT, typename P>
     ObjectMapper<T>&
     ObjectMapper<T>::registerField(const std::string& key, P T::* value) {
-      _writers.push_back(std::function<bool(const T&, std::ostream&)>([=, this](const T& obj, std::ostream& out) -> bool {
+      _writers.push_back(std::function<bool(const T&, std::ostream&, const anch::json::MappingOptions&)>([=, this](const T& obj, std::ostream& out, const anch::json::MappingOptions& options) -> bool {
 	if constexpr (std::is_same<MT, T>::value) { // if same, use direct call to avoid recursive instanciation
-	  return this->serialize(obj.*value, out, std::optional<std::string>(key));
+	  return this->serialize(obj.*value, out, options, std::optional<std::string>(key));
 	} else {
-	  return anch::json::Factory<MT>::getInstance().serialize(obj.*value, out, std::optional<std::string>(key));
+	  return anch::json::Factory<MT>::getInstance().serialize(obj.*value, out, options, std::optional<std::string>(key));
 	}
       }));
       _readers[key] = std::function<void(T&, std::istream&, const anch::json::MappingOptions&)>([=, this](T& obj, std::istream& input, const anch::json::MappingOptions& options) -> void {
@@ -119,36 +119,36 @@ namespace anch {
     template<typename P, typename MT>
     ObjectMapper<T>&
     ObjectMapper<T>::registerField(const std::string& key, std::function<P(const T&)> getter) {
-      _writers.push_back(std::function<bool(const T&, std::ostream&)>([=, this](const T& obj, std::ostream& out) -> bool {
+      _writers.push_back(std::function<bool(const T&, std::ostream&, const anch::json::MappingOptions&)>([=, this](const T& obj, std::ostream& out, const anch::json::MappingOptions& options) -> bool {
 	if constexpr (std::is_same<MT, P>::value) { // Mapper type has not been specified
 
 	  if constexpr (std::is_pointer<P>::value) { // Remove pointer on parameter type to check the main type
 	    if constexpr (std::is_same<T, typename std::remove_pointer<P>>::value) { // if same, use direct call to avoid recursive instanciation
-	      return this->serialize(std::invoke(getter, obj), out, std::optional<std::string>(key));
+	      return this->serialize(std::invoke(getter, obj), out, options, std::optional<std::string>(key));
 	    } else { // Use 'unpointered' type
-	      return anch::json::Factory<typename std::remove_pointer<P>::type>::getInstance().serialize(std::invoke(getter, obj), out, std::optional<std::string>(key));
+	      return anch::json::Factory<typename std::remove_pointer<P>::type>::getInstance().serialize(std::invoke(getter, obj), out, options, std::optional<std::string>(key));
 	    }
 
 	  } else if constexpr (std::is_reference<P>::value) { // Remove reference on parameter type to check the main type
 	    if constexpr (std::is_same<T, typename std::remove_reference<P>>::value) { // if same, use direct call to avoid recursive instanciation
-	      return this->serialize(std::invoke(getter, obj), out, std::optional<std::string>(key));
+	      return this->serialize(std::invoke(getter, obj), out, options, std::optional<std::string>(key));
 	    } else { // Use 'unreferenced' type
-	      return anch::json::Factory<typename std::decay<P>::type>::getInstance().serialize(std::invoke(getter, obj), out, std::optional<std::string>(key));
+	      return anch::json::Factory<typename std::decay<P>::type>::getInstance().serialize(std::invoke(getter, obj), out, options, std::optional<std::string>(key));
 	    }
 
 	  } else { // Basic type
 	    if constexpr (std::is_same<MT, T>::value) { // if same, use direct call to avoid recursive instanciation
-	      return this->serialize(std::invoke(getter, obj), out, std::optional<std::string>(key));
+	      return this->serialize(std::invoke(getter, obj), out, options, std::optional<std::string>(key));
 	    } else {
-	      return anch::json::Factory<MT>::getInstance().serialize(std::invoke(getter, obj), out, std::optional<std::string>(key));
+	      return anch::json::Factory<MT>::getInstance().serialize(std::invoke(getter, obj), out, options, std::optional<std::string>(key));
 	    }
 	  }
 
 	} else { // Parameter type has to be correctly set by caller when specified
 	  if constexpr (std::is_same<MT, T>::value) {
-	    return this->serialize(std::invoke(getter, obj), out, std::optional<std::string>(key));
+	    return this->serialize(std::invoke(getter, obj), out, options, std::optional<std::string>(key));
 	  } else {
-	    return anch::json::Factory<MT>::getInstance().serialize(std::invoke(getter, obj), out, std::optional<std::string>(key));
+	    return anch::json::Factory<MT>::getInstance().serialize(std::invoke(getter, obj), out, options, std::optional<std::string>(key));
 	  }
 	}
       }));
@@ -211,11 +211,11 @@ namespace anch {
 
     template<typename T>
     void
-    ObjectMapper<T>::serializeValue(const T& value, std::ostream& out) {
+    ObjectMapper<T>::serializeValue(const T& value, std::ostream& out, const anch::json::MappingOptions& options) {
       out << anch::json::OBJECT_BEGIN;
       auto iter = _writers.begin();
       while(true) {
-	bool added = std::invoke(*iter, value, out);
+	bool added = std::invoke(*iter, value, out, options);
 	if(++iter == _writers.end()) {
 	  break;
 	}
@@ -228,40 +228,40 @@ namespace anch {
 
     template<typename T>
     bool
-    ObjectMapper<T>::serialize(const T& value, std::ostream& out, const std::optional<std::string>& field) {
-      return anch::json::serialize<T>(value, out, std::bind_front(&ObjectMapper<T>::serializeValue, this), field);
+    ObjectMapper<T>::serialize(const T& value, std::ostream& out, const anch::json::MappingOptions& options, const std::optional<std::string>& field) {
+      return anch::json::serialize<T>(value, out, std::bind_front(&ObjectMapper<T>::serializeValue, this), options, field);
     }
 
     template<typename T>
     bool
-    ObjectMapper<T>::serialize(const T* const value, std::ostream& out, const std::optional<std::string>& field) {
-      return anch::json::serialize<T>(value, out, std::bind_front(&ObjectMapper<T>::serializeValue, this), field);
+    ObjectMapper<T>::serialize(const T* const value, std::ostream& out, const anch::json::MappingOptions& options, const std::optional<std::string>& field) {
+      return anch::json::serialize<T>(value, out, std::bind_front(&ObjectMapper<T>::serializeValue, this), options, field);
     }
 
     template<typename T>
     bool
-    ObjectMapper<T>::serialize(const std::optional<T>& value, std::ostream& out, const std::optional<std::string>& field) {
-      return anch::json::serialize<T>(value, out, std::bind_front(&ObjectMapper<T>::serializeValue, this), field);
+    ObjectMapper<T>::serialize(const std::optional<T>& value, std::ostream& out, const anch::json::MappingOptions& options, const std::optional<std::string>& field) {
+      return anch::json::serialize<T>(value, out, std::bind_front(&ObjectMapper<T>::serializeValue, this), options, field);
     }
 
     template<typename T>
     bool
-    ObjectMapper<T>::serialize(const std::vector<T>& value, std::ostream& out, const std::optional<std::string>& field) {
-      anch::json::serializeArray<T>(value, out, std::bind_front(&ObjectMapper<T>::serializeValue, this), field);
+    ObjectMapper<T>::serialize(const std::vector<T>& value, std::ostream& out, const anch::json::MappingOptions& options, const std::optional<std::string>& field) {
+      anch::json::serializeArray<T>(value, out, std::bind_front(&ObjectMapper<T>::serializeValue, this), options, field);
       return true;
     }
 
     template<typename T>
     bool
-    ObjectMapper<T>::serialize(const std::list<T>& value, std::ostream& out, const std::optional<std::string>& field) {
-      anch::json::serializeArray<T>(value, out, std::bind_front(&ObjectMapper<T>::serializeValue, this), field);
+    ObjectMapper<T>::serialize(const std::list<T>& value, std::ostream& out, const anch::json::MappingOptions& options, const std::optional<std::string>& field) {
+      anch::json::serializeArray<T>(value, out, std::bind_front(&ObjectMapper<T>::serializeValue, this), options, field);
       return true;
     }
 
     template<typename T>
     bool
-    ObjectMapper<T>::serialize(const std::set<T>& value, std::ostream& out, const std::optional<std::string>& field) {
-      anch::json::serializeArray<T>(value, out, std::bind_front(&ObjectMapper<T>::serializeValue, this), field);
+    ObjectMapper<T>::serialize(const std::set<T>& value, std::ostream& out, const anch::json::MappingOptions& options, const std::optional<std::string>& field) {
+      anch::json::serializeArray<T>(value, out, std::bind_front(&ObjectMapper<T>::serializeValue, this), options, field);
       return true;
     }
 

@@ -39,6 +39,20 @@
 namespace anch {
   namespace json {
 
+#ifndef ANCH_JSON_CUSTOM_PRIMITIVES
+    /*!
+     * Default custom primitive implementation.
+     *
+     * \tparam T the type to check
+     *
+     * \return \c false
+     */
+    template<typename T>
+    constexpr bool isCustomPrimitive() {
+      return false;
+    }
+#endif
+
     /*!
      * Check if type is a primitive JSON type
      *
@@ -71,6 +85,7 @@ namespace anch {
 #ifdef ANCH_CRYPTO // \todo base64 implementation ... which is a bad idea if my mind
 	|| std::is_same<T, std::istream>::value
 #endif
+	|| isCustomPrimitive<T>();
 	;
     }
 
@@ -80,7 +95,7 @@ namespace anch {
 	static anch::json::PrimitiveMapper<T> instance;
 	return instance;
       } else if constexpr (std::is_enum<T>::value) {
-      	static anch::json::PrimitiveMapper<T> instance; // \todo define JSONEnumMapper
+      	static anch::json::PrimitiveMapper<T> instance; // \todo define EnumMapper
       	return instance;
       } else {
 	static anch::json::ObjectMapper<T> instance;

@@ -28,12 +28,13 @@ namespace anch {
     inline bool
     serialize(const T& value,
 	      std::ostream& out,
-	      std::function<void((const T& value, std::ostream& out))> serializeFunc,
+	      std::function<void((const T& value, std::ostream& out, const anch::json::MappingOptions& options))> serializeFunc,
+	      const anch::json::MappingOptions& options,
 	      const std::optional<std::string>& field) {
       if(field.has_value()) {
 	out << anch::json::STRING_DELIMITER << field.value() << anch::json::STRING_DELIMITER << anch::json::FIELD_VALUE_SEPARATOR;
       }
-      std::invoke(serializeFunc, value, out);
+      std::invoke(serializeFunc, value, out, options);
       return true;
     }
 
@@ -41,31 +42,34 @@ namespace anch {
     inline bool
     serialize(const T* const value,
 	      std::ostream& out,
-	      std::function<void((const T& value, std::ostream& out))> serializeFunc,
+	      std::function<void((const T& value, std::ostream& out, const anch::json::MappingOptions& options))> serializeFunc,
+	      const anch::json::MappingOptions& options,
 	      const std::optional<std::string>& field) {
       if(value == NULL) {
 	return false;
       }
-      return serialize(*value, out, serializeFunc, field);
+      return serialize(*value, out, serializeFunc, options, field);
     }
 
     template<typename T>
     inline bool
     serialize(const std::optional<T>& value,
 	      std::ostream& out,
-	      std::function<void((const T& value, std::ostream& out))> serializeFunc,
+	      std::function<void((const T& value, std::ostream& out, const anch::json::MappingOptions& options))> serializeFunc,
+	      const anch::json::MappingOptions& options,
 	      const std::optional<std::string>& field) {
       if(!value.has_value()) {
 	return false;
       }
-      return serialize(value.value(), out, serializeFunc, field);
+      return serialize(value.value(), out, serializeFunc, options, field);
     }
 
     template<typename T, typename A>
     inline void
     serializeArray(const A& array,
 		   std::ostream& out,
-		   std::function<void((const T& value, std::ostream& out))> serializeFunc,
+		   std::function<void((const T& value, std::ostream& out, const anch::json::MappingOptions& options))> serializeFunc,
+		   const anch::json::MappingOptions& options,
 		   const std::optional<std::string>& field) {
       if(field.has_value()) {
 	out << anch::json::STRING_DELIMITER << field.value() << anch::json::STRING_DELIMITER << anch::json::FIELD_VALUE_SEPARATOR;
@@ -75,7 +79,7 @@ namespace anch {
 	if(iter != array.begin()) {
 	  out << anch::json::FIELD_SEPARATOR;
 	}
-	std::invoke(serializeFunc, *iter, out);
+	std::invoke(serializeFunc, *iter, out, options);
       }
       out << anch::json::ARRAY_END;
     }

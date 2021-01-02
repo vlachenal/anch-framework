@@ -91,12 +91,14 @@ namespace anch {
      * \param value the value to serialize
      * \param out the output stream to write in
      * \param serializeFunc the serialization function
+     * \param options the options to use
      * \param field the optional field name
      */
     template<typename T>
     bool serialize(const T& value,
 		   std::ostream& out,
-		   std::function<void((const T& value, std::ostream& out))> serializeFunc,
+		   std::function<void((const T& value, std::ostream& out, const anch::json::MappingOptions& options))> serializeFunc,
+		   const anch::json::MappingOptions& options,
 		   const std::optional<std::string>& field);
 
     /*!
@@ -107,12 +109,14 @@ namespace anch {
      * \param value the value to serialize
      * \param out the output stream to write in
      * \param serializeFunc the serialization function
+     * \param options the options to use
      * \param field the optional field name
      */
     template<typename T>
     bool serialize(const T* const value,
 		   std::ostream& out,
-		   std::function<void((const T& value, std::ostream& out))> serializeFunc,
+		   std::function<void((const T& value, std::ostream& out, const anch::json::MappingOptions& options))> serializeFunc,
+		   const anch::json::MappingOptions& options,
 		   const std::optional<std::string>& field);
 
     /*!
@@ -123,12 +127,14 @@ namespace anch {
      * \param value the value to serialize
      * \param out the output stream to write in
      * \param serializeFunc the serialization function
+     * \param options the options to use
      * \param field the optional field name
      */
     template<typename T>
     bool serialize(const std::optional<T>& value,
 		   std::ostream& out,
-		   std::function<void((const T& value, std::ostream& out))> serializeFunc,
+		   std::function<void((const T& value, std::ostream& out, const anch::json::MappingOptions& options))> serializeFunc,
+		   const anch::json::MappingOptions& options,
 		   const std::optional<std::string>& field);
 
     /*!
@@ -139,12 +145,14 @@ namespace anch {
      *
      * \param array the array to serialize
      * \param out the output stream to write in
+     * \param options the options to use
      * \param serializeFunc the serialization function
      */
     template<typename T, typename A>
     void serializeArray(const A& array,
 			std::ostream& out,
-			std::function<void((const T& value, std::ostream& out))> serializeFunc,
+			std::function<void((const T& value, std::ostream& out, const anch::json::MappingOptions& options))> serializeFunc,
+			const anch::json::MappingOptions& options,
 			const std::optional<std::string>& field);
 
     /*!
@@ -204,50 +212,6 @@ namespace anch {
 			  std::function<auto(const T&)> pushFunc,
 			  const anch::json::MappingOptions& options,
 			  std::function<void((T& value, std::istream& input, const anch::json::MappingOptions& options))> deserializeFunc);
-
-    class JSONParser {
-    private:
-      /*! Input stream to parse */
-      std::istream& _input;
-
-      // Constructors +
-    public:
-      /*!
-       * Forbids \ref JSONParser default constructor
-       */
-      JSONParser() = delete;
-
-      /*!
-       * Forbids \ref JSONParser copy constructor
-       *
-       * \param other the \ref JSONParser not to copy
-       */
-      JSONParser(const JSONParser& other) = delete;
-
-      /*!
-       * Forbids \ref JSONParser move constructor
-       *
-       * \param other the \ref JSONParser not to move
-       */
-      JSONParser(JSONParser&& other) = delete;
-
-      /*!
-       * \ref JSONParser constructor
-       *
-       * \param input the input stream to parse
-       */
-      JSONParser(std::istream& input);
-      // Constructors -
-
-      // Destructor +
-    public:
-      /*!
-       * \ref JSONParser destructor
-       */
-      virtual ~JSONParser();
-      // Destructor +
-
-    };
 
   }  // json
 }  // anch

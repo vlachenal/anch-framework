@@ -47,9 +47,10 @@ namespace anch {
      *
      * \param value the object to serialize
      * \param out the output stream to write in
+     * \param options the options to use
      */
     template<typename T>
-    void serialize(const T& value, std::ostream& out);
+    void serialize(const T& value, std::ostream& out, const anch::json::MappingOptions& options = anch::json::DEFAULT_MAPPING_OPTIONS);
 
     /*!
      * Serialize objects
@@ -58,9 +59,10 @@ namespace anch {
      *
      * \param value the objects to serialize
      * \param out the output stream to write in
+     * \param options the options to use
      */
     template<typename T>
-    void serialize(const std::vector<T>& value, std::ostream& out);
+    void serialize(const std::vector<T>& value, std::ostream& out, const anch::json::MappingOptions& options = anch::json::DEFAULT_MAPPING_OPTIONS);
 
     /*!
      * Serialize objects
@@ -69,9 +71,10 @@ namespace anch {
      *
      * \param value the objects to serialize
      * \param out the output stream to write in
+     * \param options the options to use
      */
     template<typename T>
-    void serialize(const std::list<T>& value, std::ostream& out);
+    void serialize(const std::list<T>& value, std::ostream& out, const anch::json::MappingOptions& options = anch::json::DEFAULT_MAPPING_OPTIONS);
 
     /*!
      * Serialize objects
@@ -80,9 +83,10 @@ namespace anch {
      *
      * \param value the objects to serialize
      * \param out the output stream to write in
+     * \param options the options to use
      */
     template<typename T>
-    void serialize(const std::set<T>& value, std::ostream& out);
+    void serialize(const std::set<T>& value, std::ostream& out, const anch::json::MappingOptions& options = anch::json::DEFAULT_MAPPING_OPTIONS);
 
     /*!
      * Serialize object
@@ -90,11 +94,12 @@ namespace anch {
      * \tparam T the object type
      *
      * \param value the object to serialize
+     * \param options the options to use
      *
      * \return the serialized object as \c std::string
      */
     template<typename T>
-    std::string serialize(const T& value);
+    std::string serialize(const T& value, const anch::json::MappingOptions& options = anch::json::DEFAULT_MAPPING_OPTIONS);
 
     /*!
      * Serialize objects
@@ -102,11 +107,12 @@ namespace anch {
      * \tparam T the object type
      *
      * \param out the output stream to write in
+     * \param options the options to use
      *
      * \return the serialized objects as \c std::string
      */
     template<typename T>
-    std::string serialize(const std::vector<T>& value);
+    std::string serialize(const std::vector<T>& value, const anch::json::MappingOptions& options = anch::json::DEFAULT_MAPPING_OPTIONS);
 
     /*!
      * Serialize objects
@@ -114,11 +120,12 @@ namespace anch {
      * \tparam T the object type
      *
      * \param out the output stream to write in
+     * \param options the options to use
      *
      * \return the serialized objects as \c std::string
      */
     template<typename T>
-    std::string serialize(const std::list<T>& value);
+    std::string serialize(const std::list<T>& value, const anch::json::MappingOptions& options = anch::json::DEFAULT_MAPPING_OPTIONS);
 
     /*!
      * Serialize objects
@@ -126,11 +133,12 @@ namespace anch {
      * \tparam T the object type
      *
      * \param out the output stream to write in
+     * \param options the options to use
      *
      * \return the serialized objects as \c std::string
      */
     template<typename T>
-    std::string serialize(const std::set<T>& value);
+    std::string serialize(const std::set<T>& value, const anch::json::MappingOptions& options = anch::json::DEFAULT_MAPPING_OPTIONS);
 
     /*!
      * Deserialize object

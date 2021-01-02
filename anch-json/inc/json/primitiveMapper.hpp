@@ -87,66 +87,90 @@ namespace anch {
        *
        * \param value the reference attribute to serialize
        * \param out the output stream to write the attribute
+       * \param options the options to use
        * \param field the attribute's field name
        *
        * \return \c true
        */
-      bool serialize(const T& value, std::ostream& out, const std::optional<std::string>& field = EMPTY_FIELD);
+      bool serialize(const T& value,
+		     std::ostream& out,
+		     const anch::json::MappingOptions& options,
+		     const std::optional<std::string>& field = EMPTY_FIELD);
 
       /*!
        * Serialize pointer attribute
        *
        * \param value the pointer attribute to serialize
        * \param out the output stream to write the attribute
+       * \param options the options to use
        * \param field the attribute's field name
        *
        * \return \c true if attribute is not \c NULL , \c false otherwise
        */
-      bool serialize(const T* const value, std::ostream& out, const std::optional<std::string>& field = EMPTY_FIELD);
+      bool serialize(const T* const value,
+		     std::ostream& out,
+		     const anch::json::MappingOptions& options,
+		     const std::optional<std::string>& field = EMPTY_FIELD);
 
       /*!
        * Serialize optional attribute
        *
        * \param value the pointer attribute to serialize
        * \param out the output stream to write the attribute
+       * \param options the options to use
        * \param field the attribute's field name
        *
        * \return \c true if attribute is set , \c false otherwise
        */
-      bool serialize(const std::optional<T>& value, std::ostream& out, const std::optional<std::string>& field = EMPTY_FIELD);
+      bool serialize(const std::optional<T>& value,
+		     std::ostream& out,
+		     const anch::json::MappingOptions& options,
+		     const std::optional<std::string>& field = EMPTY_FIELD);
 
       /*!
        * Serialize array (as \c std::vector ) attribute
        *
        * \param value the array attribute to serialize
        * \param out the output stream to write the attribute
+       * \param options the options to use
        * \param field the attribute's field name
        *
        * \return \c true
        */
-      bool serialize(const std::vector<T>& value, std::ostream& out, const std::optional<std::string>& field = EMPTY_FIELD);
+      bool serialize(const std::vector<T>& value,
+		     std::ostream& out,
+		     const anch::json::MappingOptions& options,
+		     const std::optional<std::string>& field = EMPTY_FIELD);
 
       /*!
        * Serialize array (as \c std::list ) attribute
        *
        * \param value the array attribute to serialize
        * \param out the output stream to write the attribute
+       * \param options the options to use
        * \param field the attribute's field name
        *
        * \return \c true
        */
-      bool serialize(const std::list<T>& value, std::ostream& out, const std::optional<std::string>& field = EMPTY_FIELD);
+      bool serialize(const std::list<T>& value,
+		     std::ostream& out,
+		     const anch::json::MappingOptions& options,
+		     const std::optional<std::string>& field = EMPTY_FIELD);
 
       /*!
        * Serialize array (as \c std::set ) attribute
        *
        * \param value the array attribute to serialize
        * \param out the output stream to write the attribute
+       * \param options the options to use
        * \param field the attribute's field name
        *
        * \return \c true
        */
-      bool serialize(const std::set<T>& value, std::ostream& out, const std::optional<std::string>& field = EMPTY_FIELD);
+      bool serialize(const std::set<T>& value,
+		     std::ostream& out,
+		     const anch::json::MappingOptions& options,
+		     const std::optional<std::string>& field = EMPTY_FIELD);
 
       /*!
        * Deserialize JSON value
