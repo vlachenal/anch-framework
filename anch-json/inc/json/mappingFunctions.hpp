@@ -101,6 +101,17 @@ namespace anch {
 		   const anch::json::MappingOptions& options,
 		   const std::optional<std::string>& field);
 
+
+    /*!
+     * Serialize unset value according to options
+     *
+     * \param out the output stream to write in
+     * \param options the options to use
+     * \param field the optional field name
+     */
+    bool
+    serializeNull(std::ostream& out, const anch::json::MappingOptions& options, const std::optional<std::string>& field);
+
     /*!
      * Serialize JSON pointer value
      *
