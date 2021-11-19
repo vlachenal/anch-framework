@@ -1,13 +1,13 @@
 <map id="anch::Singleton&lt; T &gt;" name="anch::Singleton&lt; T &gt;">
-<area shape="rect" id="node1" title="Meyers&#39; singleton implemtation." alt="" coords="583,5,743,83"/>
-<area shape="rect" id="node2" href="$classanch_1_1logger_1_1_logger_factory.html" title="Logger factory." alt="" coords="5,145,207,237"/>
-<area shape="rect" id="node3" href="$classanch_1_1_singleton.html" title=" " alt="" coords="231,153,410,230"/>
-<area shape="rect" id="node5" href="$classanch_1_1_singleton.html" title=" " alt="" coords="435,145,633,237"/>
-<area shape="rect" id="node7" href="$classanch_1_1_singleton.html" title=" " alt="" coords="657,145,888,237"/>
-<area shape="rect" id="node9" href="$classanch_1_1_singleton.html" title=" " alt="" coords="912,145,1119,237"/>
-<area shape="rect" id="node11" href="$classanch_1_1_singleton.html" title=" " alt="" coords="1143,153,1386,230"/>
-<area shape="rect" id="node4" href="$classanch_1_1device_1_1_c_p_u.html" title="CPU features detection." alt="" coords="251,287,390,481"/>
-<area shape="rect" id="node6" href="$classanch_1_1events_1_1_event_bus.html" title="A class which manage global events firing and events QoS." alt="" coords="447,287,621,481"/>
-<area shape="rect" id="node8" href="$classanch_1_1sql_1_1_sql_connection_factory.html" title="SQL connection factory." alt="" coords="682,331,863,437"/>
-<area shape="rect" id="node10" href="$classanch_1_1sql_1_1_s_q_l_shared_libraries.html" title="SQL shared libraries manager." alt="" coords="908,309,1123,459"/>
+<area shape="rect" id="node1" title="Meyers&#39; singleton implemtation." alt="" coords="473,5,633,83"/>
+<area shape="rect" id="node2" href="$classanch_1_1_singleton.html" title=" " alt="" coords="5,153,184,230"/>
+<area shape="rect" id="node4" href="$classanch_1_1_singleton.html" title=" " alt="" coords="209,145,407,237"/>
+<area shape="rect" id="node6" href="$classanch_1_1_singleton.html" title=" " alt="" coords="432,153,675,230"/>
+<area shape="rect" id="node8" href="$classanch_1_1_singleton.html" title=" " alt="" coords="699,145,906,237"/>
+<area shape="rect" id="node10" href="$classanch_1_1_singleton.html" title=" " alt="" coords="930,145,1161,237"/>
+<area shape="rect" id="node3" href="$classanch_1_1device_1_1_c_p_u.html" title="CPU features detection." alt="" coords="25,287,164,481"/>
+<area shape="rect" id="node5" href="$classanch_1_1events_1_1_event_bus.html" title="A class which manage global events firing and events QoS." alt="" coords="221,287,395,481"/>
+<area shape="rect" id="node7" href="$classanch_1_1logger_1_1_logger_factory.html" title="Logger factory." alt="" coords="453,345,654,423"/>
+<area shape="rect" id="node9" href="$classanch_1_1sql_1_1_s_q_l_shared_libraries.html" title="SQL shared libraries manager." alt="" coords="695,309,910,459"/>
+<area shape="rect" id="node11" href="$classanch_1_1sql_1_1_sql_connection_factory.html" title="SQL connection factory." alt="" coords="955,331,1136,437"/>
 </map>

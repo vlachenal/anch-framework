@@ -18,5 +18,11 @@ var namespaceanch =
     [ "Stream", "classanch_1_1_stream.html", "classanch_1_1_stream" ],
     [ "ThreadPool", "classanch_1_1_thread_pool.html", "classanch_1_1_thread_pool" ],
     [ "TimeoutException", "classanch_1_1_timeout_exception.html", "classanch_1_1_timeout_exception" ],
-    [ "UUID", "classanch_1_1_u_u_i_d.html", "classanch_1_1_u_u_i_d" ]
+    [ "UUID", "classanch_1_1_u_u_i_d.html", "classanch_1_1_u_u_i_d" ],
+    [ "applyIfValue", "namespaceanch.html#a29697be31b4810c4b3a0adf3abd67cb7", null ],
+    [ "applyIfValueOrElse", "namespaceanch.html#a3f50949a9549a7126422931220af5284", null ],
+    [ "byteSwap", "namespaceanch.html#a174316b4a0cb08ff4099ce8708412f4f", null ],
+    [ "convert", "namespaceanch.html#a7163f06dc31c45480a4fcff1c9cbf22c", null ],
+    [ "isBigEndian", "namespaceanch.html#a8dff697fb25aed06666b05c8862caa0a", null ],
+    [ "isLittleEndian", "namespaceanch.html#a4fa5b950902e9a46ee9b5abb6a4c41d9", null ]
 ];

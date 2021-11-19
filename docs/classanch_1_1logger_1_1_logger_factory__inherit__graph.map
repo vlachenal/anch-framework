@@ -1,4 +1,5 @@
 <map id="anch::logger::LoggerFactory" name="anch::logger::LoggerFactory">
-<area shape="rect" id="node1" title="Logger factory." alt="" coords="26,131,227,208"/>
-<area shape="rect" id="node2" href="$classanch_1_1_singleton.html" title="Meyers&#39; singleton implemtation." alt="" coords="5,5,248,83"/>
+<area shape="rect" id="node1" title="Logger factory." alt="" coords="26,272,227,349"/>
+<area shape="rect" id="node2" href="$classanch_1_1_singleton.html" title=" " alt="" coords="5,145,248,223"/>
+<area shape="rect" id="node3" href="$classanch_1_1_singleton.html" title="Meyers&#39; singleton implemtation." alt="" coords="47,5,207,83"/>
 </map>

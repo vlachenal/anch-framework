@@ -1,4 +1,4 @@
 var classanch_1_1_singleton =
 [
-    [ "getInstance", "classanch_1_1_singleton.html#a941c27b80f50558eddc028d10538d27e", null ]
+    [ "getInstance", "classanch_1_1_singleton.html#a9bc6135289c49f0e855ae4e73922e53b", null ]
 ];

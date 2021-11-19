@@ -1,7 +1,6 @@
 var hierarchy =
 [
     [ "anch::crypto::AesniKey< S >", "structanch_1_1crypto_1_1_aesni_key.html", null ],
-    [ "anch::crypto::AesniKey< R+1 >", "structanch_1_1crypto_1_1_aesni_key.html", null ],
     [ "anch::crypto::ANSIX923", "classanch_1_1crypto_1_1_a_n_s_i_x923.html", null ],
     [ "anch::crypto::Base64", "classanch_1_1crypto_1_1_base64.html", null ],
     [ "anch::crypto::BlockCipher< B >", "classanch_1_1crypto_1_1_block_cipher.html", null ],
@@ -44,6 +43,7 @@ var hierarchy =
     ] ],
     [ "anch::date::DateFormatter", "classanch_1_1date_1_1_date_formatter.html", null ],
     [ "std::exception", null, [
+      [ "anch::TimeoutException", "classanch_1_1_timeout_exception.html", null ],
       [ "anch::crypto::InvalidBlockException", "classanch_1_1crypto_1_1_invalid_block_exception.html", null ],
       [ "anch::date::InvalidFormatException", "classanch_1_1date_1_1_invalid_format_exception.html", null ],
       [ "anch::device::DeviceException", "classanch_1_1device_1_1_device_exception.html", null ],
@@ -51,19 +51,18 @@ var hierarchy =
       [ "anch::json::MappingError", "classanch_1_1json_1_1_mapping_error.html", null ],
       [ "anch::network::IOException", "classanch_1_1network_1_1_i_o_exception.html", null ],
       [ "anch::resource::file::ResourceFileException", "classanch_1_1resource_1_1file_1_1_resource_file_exception.html", null ],
-      [ "anch::sql::SqlException", "classanch_1_1sql_1_1_sql_exception.html", null ],
-      [ "anch::TimeoutException", "classanch_1_1_timeout_exception.html", null ]
+      [ "anch::sql::SqlException", "classanch_1_1sql_1_1_sql_exception.html", null ]
     ] ],
     [ "anch::json::Factory< T >", "classanch_1_1json_1_1_factory.html", null ],
     [ "anch::file::File", "classanch_1_1file_1_1_file.html", null ],
     [ "anch::crypto::Hash< O, B >", "classanch_1_1crypto_1_1_hash.html", [
-      [ "anch::crypto::SHA2< O, B, W, R, I >", "classanch_1_1crypto_1_1_s_h_a2.html", null ],
+      [ "anch::crypto::SHA2< O, 64, uint32_t, 64, I >", "classanch_1_1crypto_1_1_s_h_a2.html", [
+        [ "anch::crypto::SHA224_256< O, I >", "classanch_1_1crypto_1_1_s_h_a224__256.html", null ]
+      ] ],
       [ "anch::crypto::SHA2< O, 128, uint64_t, 80, I >", "classanch_1_1crypto_1_1_s_h_a2.html", [
         [ "anch::crypto::SHA384_512< O, I >", "classanch_1_1crypto_1_1_s_h_a384__512.html", null ]
       ] ],
-      [ "anch::crypto::SHA2< O, 64, uint32_t, 64, I >", "classanch_1_1crypto_1_1_s_h_a2.html", [
-        [ "anch::crypto::SHA224_256< O, I >", "classanch_1_1crypto_1_1_s_h_a224__256.html", null ]
-      ] ]
+      [ "anch::crypto::SHA2< O, B, W, R, I >", "classanch_1_1crypto_1_1_s_h_a2.html", null ]
     ] ],
     [ "anch::crypto::Hash< 16, 64 >", "classanch_1_1crypto_1_1_hash.html", [
       [ "anch::crypto::MD5", "classanch_1_1crypto_1_1_m_d5.html", null ]
@@ -94,7 +93,7 @@ var hierarchy =
       [ "anch::logger::formatter::ThreadIdFormatter", "classanch_1_1logger_1_1formatter_1_1_thread_id_formatter.html", null ]
     ] ],
     [ "anch::crypto::ISO7816_4Padding", "classanch_1_1crypto_1_1_i_s_o7816__4_padding.html", null ],
-    [ "anch::json::JSONParser", "classanch_1_1json_1_1_j_s_o_n_parser.html", null ],
+    [ "anch::json::JSONMapper", "classanch_1_1json_1_1_j_s_o_n_mapper.html", null ],
     [ "anch::LessPtrCompare< T >", "structanch_1_1_less_ptr_compare.html", null ],
     [ "anch::logger::Logger", "classanch_1_1logger_1_1_logger.html", null ],
     [ "anch::logger::LoggerConfiguration", "classanch_1_1logger_1_1_logger_configuration.html", null ],
@@ -113,8 +112,7 @@ var hierarchy =
     [ "anch::events::Observer< Event >", "classanch_1_1events_1_1_observer.html", [
       [ "anch::events::EventHandler< Event, Derived >", "classanch_1_1events_1_1_event_handler.html", null ]
     ] ],
-    [ "anch::events::Observer< SocketEvent >", "classanch_1_1events_1_1_observer.html", null ],
-    [ "optional", null, [
+    [ "std::optional", null, [
       [ "anch::Optional< T >", "classanch_1_1_optional.html", null ]
     ] ],
     [ "anch::crypto::PKCS5Padding", "classanch_1_1crypto_1_1_p_k_c_s5_padding.html", null ],
@@ -138,16 +136,16 @@ var hierarchy =
       [ "anch::sql::FieldsBuilder", "classanch_1_1sql_1_1_fields_builder.html", null ],
       [ "anch::sql::FromBuilder", "classanch_1_1sql_1_1_from_builder.html", null ]
     ] ],
-    [ "anch::Singleton< T >", "classanch_1_1_singleton.html", [
-      [ "anch::logger::LoggerFactory", "classanch_1_1logger_1_1_logger_factory.html", null ]
-    ] ],
+    [ "anch::Singleton< T >", "classanch_1_1_singleton.html", null ],
     [ "anch::Singleton< CPU >", "classanch_1_1_singleton.html", [
       [ "anch::device::CPU", "classanch_1_1device_1_1_c_p_u.html", null ]
     ] ],
     [ "anch::Singleton< EventBus< Event > >", "classanch_1_1_singleton.html", [
       [ "anch::events::EventBus< Event >", "classanch_1_1events_1_1_event_bus.html", null ]
     ] ],
-    [ "anch::Singleton< LoggerFactory >", "classanch_1_1_singleton.html", null ],
+    [ "anch::Singleton< LoggerFactory >", "classanch_1_1_singleton.html", [
+      [ "anch::logger::LoggerFactory", "classanch_1_1logger_1_1_logger_factory.html", null ]
+    ] ],
     [ "anch::Singleton< SqlConnectionFactory >", "classanch_1_1_singleton.html", [
       [ "anch::sql::SqlConnectionFactory", "classanch_1_1sql_1_1_sql_connection_factory.html", null ]
     ] ],

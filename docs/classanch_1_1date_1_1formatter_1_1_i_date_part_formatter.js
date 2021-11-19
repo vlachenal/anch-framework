@@ -9,7 +9,7 @@ var classanch_1_1date_1_1formatter_1_1_i_date_part_formatter =
     [ "getMinute", "classanch_1_1date_1_1formatter_1_1_i_date_part_formatter.html#a7f23188c047dc1aa29a5b3b1ffbfdb18", null ],
     [ "getMonth", "classanch_1_1date_1_1formatter_1_1_i_date_part_formatter.html#a78262d621ede5dbb1a886aa0163c9b51", null ],
     [ "getNanosecond", "classanch_1_1date_1_1formatter_1_1_i_date_part_formatter.html#a5fe4de2016f8282c8b877f8a454ac305", null ],
-    [ "getPattern", "classanch_1_1date_1_1formatter_1_1_i_date_part_formatter.html#a9c77ccfd3c5e61bb18ed032cb7473614", null ],
+    [ "getPattern", "classanch_1_1date_1_1formatter_1_1_i_date_part_formatter.html#a7f47aabccb3901f9b211757e2a331e74", null ],
     [ "getSecond", "classanch_1_1date_1_1formatter_1_1_i_date_part_formatter.html#a1e0d82ebb5091253bd88d3a79fac9b47", null ],
     [ "getSize", "classanch_1_1date_1_1formatter_1_1_i_date_part_formatter.html#a6a4fac4326c6e9768b3ee863146fad69", null ],
     [ "getYear", "classanch_1_1date_1_1formatter_1_1_i_date_part_formatter.html#aa8d2e4042604ec7740d830f99c47ef65", null ],

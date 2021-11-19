@@ -18,8 +18,6 @@ var classanch_1_1date_1_1_date =
     [ "operator==", "classanch_1_1date_1_1_date.html#a8f7ef790a94dce37c347ce958ceabf37", null ],
     [ "operator>", "classanch_1_1date_1_1_date.html#a2809baefb43af6919dede19f4c62b229", null ],
     [ "operator>=", "classanch_1_1date_1_1_date.html#a5c765545333e076b4c858503bc4e1496", null ],
-    [ "DateFormatter", "classanch_1_1date_1_1_date.html#a6b7ca3149aab97afd41a3445d8b45ba7", null ],
-    [ "formatter::IDatePartFormatter", "classanch_1_1date_1_1_date.html#a8f1204ffe90c73248845e995167273cb", null ],
     [ "_hours", "classanch_1_1date_1_1_date.html#ac89e32ae99996f1630c5b96a5e9ceafd", null ],
     [ "_mdays", "classanch_1_1date_1_1_date.html#a392ba350057a08a1e8dd5ba2e6527e72", null ],
     [ "_microseconds", "classanch_1_1date_1_1_date.html#a8d2fc11e01c51c12db95620e19789aaf", null ],

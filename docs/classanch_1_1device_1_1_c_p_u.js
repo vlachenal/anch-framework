@@ -8,6 +8,5 @@ var classanch_1_1device_1_1_c_p_u =
     [ "isSSE4", "classanch_1_1device_1_1_c_p_u.html#aa7cf421ce05a85e5ce931412492a8f16", null ],
     [ "isSSE4_1", "classanch_1_1device_1_1_c_p_u.html#a2936400b2b99a6ddf338dcd8ec1cb602", null ],
     [ "isSSE4_2", "classanch_1_1device_1_1_c_p_u.html#a4533df5494c0de7f51fe61f39dce3aee", null ],
-    [ "isSSSE3", "classanch_1_1device_1_1_c_p_u.html#a8a6bb46ea5ec3a546991df68d4dfdea8", null ],
-    [ "anch::Singleton< CPU >", "classanch_1_1device_1_1_c_p_u.html#a6217423ad520722999733dfb5efcaace", null ]
+    [ "isSSSE3", "classanch_1_1device_1_1_c_p_u.html#a8a6bb46ea5ec3a546991df68d4dfdea8", null ]
 ];
