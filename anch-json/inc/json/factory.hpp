@@ -41,7 +41,7 @@ namespace anch {
       /*!
        * Get JSON mapper unique instance
        *
-       * \return the \ref JSONMapper or the \ref JSONPrimitiveMapper unique instance according to type
+       * \return the \ref JSONMapper or the \ref PrimitiveMapper unique instance according to type
        */
       static auto& getInstance();
 

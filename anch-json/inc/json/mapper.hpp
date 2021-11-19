@@ -47,6 +47,8 @@ namespace anch {
      * Fields registry function\n
      * This function has to be specialized for each class/structure which has to be serialized/deserialized.
      *
+     * \tparam T the object type
+     *
      * \param mapper the \ref ObjectMapper to use
      */
     template<typename T>
@@ -280,8 +282,8 @@ namespace anch {
       /*!
        * Deserialize JSON
        *
+       * \param value the value to write in
        * \param input the input stream to parse
-       * \param field the field
        * \param options the options to use
        */
       void deserialize(std::optional<T>& value, std::istream& input, const anch::json::MappingOptions& options);
