@@ -106,7 +106,7 @@ namespace anch {
      *
      * \tparam T the object type
      *
-     * \param out the output stream to write in
+     * \param value the object to serialize
      * \param options the options to use
      *
      * \return the serialized objects as \c std::string
@@ -119,7 +119,7 @@ namespace anch {
      *
      * \tparam T the object type
      *
-     * \param out the output stream to write in
+     * \param value the object to serialize
      * \param options the options to use
      *
      * \return the serialized objects as \c std::string
@@ -132,7 +132,7 @@ namespace anch {
      *
      * \tparam T the object type
      *
-     * \param out the output stream to write in
+     * \param value the object to serialize
      * \param options the options to use
      *
      * \return the serialized objects as \c std::string
@@ -304,7 +304,7 @@ namespace anch {
        *
        * \tparam T the object type
        *
-       * \param out the output stream to write in
+       * \param value the object to serialize
        *
        * \return the serialized objects as \c std::string
        */
@@ -316,7 +316,7 @@ namespace anch {
        *
        * \tparam T the object type
        *
-       * \param out the output stream to write in
+       * \param value the object to serialize
        *
        * \return the serialized objects as \c std::string
        */
@@ -328,7 +328,7 @@ namespace anch {
        *
        * \tparam T the object type
        *
-       * \param out the output stream to write in
+       * \param value the object to serialize
        *
        * \return the serialized objects as \c std::string
        */

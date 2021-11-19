@@ -156,8 +156,9 @@ namespace anch {
      *
      * \param array the array to serialize
      * \param out the output stream to write in
-     * \param options the options to use
      * \param serializeFunc the serialization function
+     * \param options the options to use
+     * \param field the optional field name
      */
     template<typename T, typename A>
     void serializeArray(const A& array,
