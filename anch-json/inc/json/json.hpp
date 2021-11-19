@@ -201,6 +201,199 @@ namespace anch {
     template<typename T>
     void deserialize(std::set<T>& values, std::istream& input, const anch::json::MappingOptions& options = anch::json::DEFAULT_MAPPING_OPTIONS);
 
+    /*!
+     * \brief JSON mapper with mapping options
+     *
+     * JSON mapper declaration which will always use same mapping options
+     *
+     * \author Vincent Lachenal
+     *
+     * \since 0.1
+     */
+    class JSONMapper {
+
+      // Attributes +
+    private:
+      /*! Mapping options */
+      anch::json::MappingOptions _options;
+      // Attributes -
+
+      // Constructors +
+    public:
+      /*!
+       * Forbids \ref JSONMapper default constructor
+       */
+      JSONMapper() = delete;
+
+      /*!
+       * \ref JSONMapper constructor
+       *
+       * \param options the mapping options
+       */
+      JSONMapper(const anch::json::MappingOptions& options);
+      // Constructors -
+
+      // Destructor +
+    public:
+      /*!
+       * \ref JSONMapper destructor
+       */
+      virtual ~JSONMapper();
+      // Destructor +
+
+      // Methods +
+    public:
+      /*!
+       * Serialize object
+       *
+       * \tparam T the object type
+       *
+       * \param value the object to serialize
+       * \param out the output stream to write in
+       */
+      template<typename T>
+      void serialize(const T& value, std::ostream& out);
+
+      /*!
+       * Serialize objects
+       *
+       * \tparam T the object type
+       *
+       * \param value the objects to serialize
+       * \param out the output stream to write in
+       */
+      template<typename T>
+      void serialize(const std::vector<T>& value, std::ostream& out);
+
+      /*!
+       * Serialize objects
+       *
+       * \tparam T the object type
+       *
+       * \param value the objects to serialize
+       * \param out the output stream to write in
+       */
+      template<typename T>
+      void serialize(const std::list<T>& value, std::ostream& out);
+
+      /*!
+       * Serialize objects
+       *
+       * \tparam T the object type
+       *
+       * \param value the objects to serialize
+       * \param out the output stream to write in
+       */
+      template<typename T>
+      void serialize(const std::set<T>& value, std::ostream& out);
+
+      /*!
+       * Serialize object
+       *
+       * \tparam T the object type
+       *
+       * \param value the object to serialize
+       *
+       * \return the serialized object as \c std::string
+       */
+      template<typename T>
+      std::string serialize(const T& value);
+
+      /*!
+       * Serialize objects
+       *
+       * \tparam T the object type
+       *
+       * \param out the output stream to write in
+       *
+       * \return the serialized objects as \c std::string
+       */
+      template<typename T>
+      std::string serialize(const std::vector<T>& value);
+
+      /*!
+       * Serialize objects
+       *
+       * \tparam T the object type
+       *
+       * \param out the output stream to write in
+       *
+       * \return the serialized objects as \c std::string
+       */
+      template<typename T>
+      std::string serialize(const std::list<T>& value);
+
+      /*!
+       * Serialize objects
+       *
+       * \tparam T the object type
+       *
+       * \param out the output stream to write in
+       *
+       * \return the serialized objects as \c std::string
+       */
+      template<typename T>
+      std::string serialize(const std::set<T>& value);
+
+      /*!
+       * Deserialize object
+       *
+       * \tparam T the object type
+       *
+       * \param value the value to fill
+       * \param input the input stream to parse
+       */
+      template<typename T>
+      void deserialize(T& value, std::istream& input);
+
+      /*!
+       * Deserialize object
+       *
+       * \tparam T the object type
+       *
+       * \param input the input stream to parse
+       *
+       * \return the deserialized object by copy
+       */
+      template<typename T>
+      T deserialize(std::istream& input);
+
+      /*!
+       * Deserialize objects
+       *
+       * \tparam T the object type
+       *
+       * \param values the values to fill
+       * \param input the input stream to parse
+       */
+      template<typename T>
+      void deserialize(std::vector<T>& values, std::istream& input);
+
+      /*!
+       * Deserialize objects
+       *
+       * \tparam T the object type
+       *
+       * \param values the values to fill
+       * \param input the input stream to parse
+       */
+      template<typename T>
+      void deserialize(std::list<T>& values, std::istream& input);
+
+      /*!
+       * Deserialize objects
+       *
+       * \tparam T the object type
+       *
+       * \param values the values to fill
+       * \param input the input stream to parse
+       */
+      template<typename T>
+      void deserialize(std::set<T>& values, std::istream& input);
+      // Methods -
+
+    };
+
     // struct JSONIODecorator {
     // private:
     //   std::ostream & out;
