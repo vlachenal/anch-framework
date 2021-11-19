@@ -298,6 +298,7 @@ namespace anch {
       /*!
        * Deserialize JSON
        *
+       * \param value the value to write in
        * \param input the input stream to parse
        * \param options the options to use
        */

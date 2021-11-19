@@ -63,11 +63,15 @@ namespace anch {
     public:
       /*!
        * Forbids \ref PrimitiveMapper copy constructor
+       *
+       * \param other the other mapper not to copy
        */
       PrimitiveMapper(const PrimitiveMapper& other) = delete;
 
       /*!
        * Forbids \ref PrimitiveMapper move constructor
+       *
+       * \param other the other mapper not to move
        */
       PrimitiveMapper(PrimitiveMapper&& other) = delete;
       // Constructors -
@@ -175,8 +179,8 @@ namespace anch {
       /*!
        * Deserialize JSON value
        *
+       * \param value the value to set
        * \param input the input stream to parse
-       * \param field the field
        * \param options the options to use
        */
       void deserialize(T& value, std::istream& input, const anch::json::MappingOptions& options);
@@ -184,8 +188,8 @@ namespace anch {
       /*!
        * Deserialize JSON value
        *
+       * \param value the value to set
        * \param input the input stream to parse
-       * \param field the field
        * \param options the options to use
        */
       void deserialize(std::optional<T>& value, std::istream& input, const anch::json::MappingOptions& options);
@@ -193,8 +197,8 @@ namespace anch {
       /*!
        * Deserialize JSON value
        *
+       * \param value the value to set
        * \param input the input stream to parse
-       * \param field the field
        * \param options the options to use
        */
       void deserialize(T* value, std::istream& input, const anch::json::MappingOptions& options);
@@ -202,8 +206,8 @@ namespace anch {
       /*!
        * Deserialize JSON value
        *
+       * \param value the value to set
        * \param input the input stream to parse
-       * \param field the field
        * \param options the options to use
        */
       void deserialize(std::vector<T>& value, std::istream& input, const anch::json::MappingOptions& options);
@@ -211,8 +215,8 @@ namespace anch {
       /*!
        * Deserialize JSON value
        *
+       * \param value the value to set
        * \param input the input stream to parse
-       * \param field the field
        * \param options the options to use
        */
       void deserialize(std::list<T>& value, std::istream& input, const anch::json::MappingOptions& options);
@@ -220,8 +224,8 @@ namespace anch {
       /*!
        * Deserialize JSON value
        *
+       * \param value the value to set
        * \param input the input stream to parse
-       * \param field the field
        * \param options the options to use
        */
       void deserialize(std::set<T>& value, std::istream& input, const anch::json::MappingOptions& options);
