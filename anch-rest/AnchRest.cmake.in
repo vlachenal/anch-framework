@@ -1,0 +1,21 @@
+## Anch rest configuration +
+# Anch utils path
+set(ANCH_UTILS_INCLUDES_DIR "$ENV{HOME}/projects/anch-framework/anch-utils/inc" CACHE STRING "AnCH utils include directory")
+set(ANCH_UUID_INCLUDES_DIR "$ENV{HOME}/projects/anch-framework/anch-uuid/inc")
+set(ANCH_UUID_LIBRARY_DIR "$ENV{HOME}/projects/anch-framework/anch-uuid/build/lib")
+set(ANCH_JSON_INCLUDES_DIR "$ENV{HOME}/projects/anch-framework/anch-json/inc")
+set(ANCH_JSON_LIBRARY_DIR "$ENV{HOME}/projects/anch-framework/anch-json/build/lib")
+
+set(ANCH_REST_COMPILE_FLAGS "-O2 -march=native -pipe" CACHE STRING "Additional compilation flags")
+#set(ANCH_CRYPTO_COMPILE_FLAGS "-g" CACHE STRING "Additional compilation flags")
+
+# Install path
+set(ANCH_REST_INSTALL_INC_DIR "/usr/local/include/anch" CACHE STRING "Header installation path")
+set(ANCH_REST_INSTALL_LIB_DIR "/usr/local/lib/" CACHE STRING "Libraries installation path")
+
+# Static library build
+set(ANCH_REST_STATIC_LIB OFF CACHE BOOL "Build static library")
+
+# Unitary tests
+set(ANCH_REST_UNITARY_TEST ON CACHE BOOL "Anch crypto unitary tests")
+## Anch rest configuration -
