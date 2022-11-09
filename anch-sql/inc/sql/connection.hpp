@@ -196,12 +196,7 @@ namespace anch {
        * \throw SqlException any error
        */
       template<typename T, typename... Q>
-      ResultSet* query(const std::string& query, const T& value, const Q&... values) {
-	PreparedStatement& stmt = prepareStatement(query);
-	std::size_t idx = 1;
-	bindParameters(stmt, idx, value, values...);
-	return stmt.executeQuery();
-      }
+      ResultSet* query(const std::string& query, const T& value, const Q&... values);
 
       /*!
        * Execute query and treat each row of result set
@@ -214,12 +209,7 @@ namespace anch {
        * \throw SqlException any error
        */
       template<typename T, typename... Q>
-      void queryMapRow(const std::string& query, std::function<void(ResultSet&)> rowMapper, const T& value, const Q&... values) {
-	PreparedStatement& stmt = prepareStatement(query);
-	std::size_t idx = 1;
-	Connection::bindParameters(stmt, idx, value, values...);
-	Connection::mapRow(stmt.executeQuery(), rowMapper);
-      }
+      void queryMapRow(const std::string& query, std::function<void(ResultSet&)> rowMapper, const T& value, const Q&... values);
 
       /*!
        * Execute query and extract result set
@@ -232,12 +222,7 @@ namespace anch {
        * \throw SqlException any error
        */
       template<typename T, typename... Q>
-      void queryExtract(const std::string& query, std::function<void(ResultSet&)> resExtractor, const T& value, const Q&... values) {
-	PreparedStatement& stmt = prepareStatement(query);
-	std::size_t idx = 1;
-	Connection::bindParameters(stmt, idx, value, values...);
-	Connection::extract(stmt.executeQuery(), resExtractor);
-      }
+      void queryExtract(const std::string& query, std::function<void(ResultSet&)> resExtractor, const T& value, const Q&... values);
 
       /*!
        * Execute update (INSERT, UPDATE or DELETE) SQL query.
@@ -262,12 +247,7 @@ namespace anch {
        * \throw SqlException any error
        */
       template<typename T, typename... Q>
-      uint64_t update(const std::string& query, const T& value, const Q&... values) {
-	PreparedStatement& stmt = prepareStatement(query);
-	std::size_t idx = 1;
-	bindParameters(stmt, idx, value, values...);
-	return stmt.executeUpdate();
-      }
+      uint64_t update(const std::string& query, const T& value, const Q&... values);
 
       /*!
        * Execute batch prepared statement
@@ -281,15 +261,7 @@ namespace anch {
        * \throw SqlException any error
        */
       template<typename T, typename Iterable>
-      uint64_t batchUpdate(const std::string& query, std::function<void(PreparedStatement&, const T&)> mapper, const Iterable& values) {
-	PreparedStatement& stmt = prepareStatement(query);
-	uint64_t nbRows = 0;
-	for(auto iter = values.cbegin() ; iter != values.cend() ; ++iter) {
-	  mapper(stmt, *iter);
-	  nbRows += stmt.executeUpdate();
-	}
-	return nbRows;
-      }
+      uint64_t batchUpdate(const std::string& query, std::function<void(PreparedStatement&, const T&)> mapper, const Iterable& values);
 
     protected:
       /*!
@@ -378,10 +350,7 @@ namespace anch {
        * \throw SqlException any error
        */
       template<typename T, typename... Q>
-      static inline void bindParameters(PreparedStatement& stmt, std::size_t& idx, const T& value, const Q&... values) {
-	stmt.set(idx, value);
-	bindParameters(stmt, ++idx, values...);
-      }
+      static void bindParameters(PreparedStatement& stmt, std::size_t& idx, const T& value, const Q&... values);
 
       /*!
        * Bind parameters to prepared statement
@@ -393,9 +362,7 @@ namespace anch {
        * \throw SqlException any error
        */
       template<typename T>
-      static inline void bindParameters(PreparedStatement& stmt, std::size_t& idx, const T& value) {
-	stmt.set(idx, value);
-      }
+      static void bindParameters(PreparedStatement& stmt, std::size_t& idx, const T& value);
       // Methods -
 
       // Accessors +
@@ -405,9 +372,7 @@ namespace anch {
        *
        * \return the status
        */
-      inline bool isValid() const noexcept {
-	return _valid;
-      }
+      bool isValid() const noexcept;
 
     protected:
       /*!
@@ -415,12 +380,12 @@ namespace anch {
        *
        * \param valid the status to set
        */
-      inline void setValid(bool valid) noexcept {
-	_valid = valid;
-      }
+      void setValid(bool valid) noexcept;
       // Accessors -
 
     };
 
   }
 }
+
+#include "sql/impl/connection.hpp"
