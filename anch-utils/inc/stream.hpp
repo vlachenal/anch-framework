@@ -21,6 +21,7 @@
 
 #include <vector>
 #include <functional>
+#include <limits>
 
 
 namespace anch {

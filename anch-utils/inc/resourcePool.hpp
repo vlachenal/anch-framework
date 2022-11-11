@@ -96,6 +96,10 @@ namespace anch {
 
   };
 
+  // PoolableResource internal usage class declaration ; you can look at implementation but you should use auto keyword
+  template<typename T, typename C, std::shared_ptr<T>(*make_ptr)(const C&)>
+  class PoolableResource;
+
   /*!
    * \brief Generic resource pool utility class.
    *
@@ -116,62 +120,7 @@ namespace anch {
   template<typename T, typename C, std::shared_ptr<T>(*make_ptr)(const C&) = std::make_shared<T> >
   class ResourcePool {
 
-    /*!
-     * \brief Generic poolable resource
-     *
-     * Poolable resource which ensure return and invalidate to pool
-     *
-     * \author Vincen Lachenal
-     *
-     * \since 0.1
-     */
-    class PoolableResource {
-
-      // Attributes +
-    private:
-      /*! Current resource pool */
-      ResourcePool<T, C, make_ptr>& _pool;
-
-      /*! Resource */
-      std::shared_ptr<T> _ptr;
-      // Attributes -
-
-      // Constructors +
-    public:
-      /*!
-       * \ref PoolableResource constructor
-       */
-      PoolableResource(ResourcePool<T, C, make_ptr>& pool, std::shared_ptr<T> ptr): _pool(pool), _ptr(ptr) {
-	// Nothing to do
-      }
-      // Constructors -
-
-      // Destructor +
-    public:
-      /*!
-       * \ref PoolableResource destructor
-       */
-      virtual ~PoolableResource() {
-	if(_ptr.get()->isValid()) {
-	  _pool.returnResource(_ptr);
-	} else {
-	  _pool.invalidateResource(_ptr);
-	}
-      }
-      // Destructor -
-
-      // Accessors +
-    public:
-      /*!
-       * Smart pointer inner resource reference getter
-       *
-       * \return the resource
-       */
-      inline T& get() {
-	return *(_ptr.get());
-      }
-      // Accessors -
-    };
+    friend class PoolableResource<T,C,make_ptr>;
 
     // Attributes +
   private:
@@ -213,24 +162,7 @@ namespace anch {
     ResourcePool(const C& config,
 		 std::size_t maxSize,
 		 std::size_t initialiSize = 0,
-		 std::chrono::milliseconds timeout = std::chrono::milliseconds(100)):
-      _mutex(),
-      _wait(),
-      _waitex(),
-      _availables(),
-      _maxSize(maxSize),
-      _used(0),
-      _config(config),
-      _timeout(timeout) {
-      for(std::size_t i = 0 ; i < initialiSize && i < maxSize ; ++i) {
-	try {
-	  std::shared_ptr<T> ptr = make_ptr(_config);
-	  _availables.push_back(ptr);
-	} catch(...) {
-	  // Nothing to do => resources will be instanciated later ... or not
-	}
-      }
-    }
+		 std::chrono::milliseconds timeout = std::chrono::milliseconds(100));
 
     /*!
      * Prohibits \ref ResourcePool copy constructor
@@ -244,12 +176,7 @@ namespace anch {
      * \ref ResourcePool destructor\n
      * Destroy every resource in pool.
      */
-    virtual ~ResourcePool() {
-      while(!_availables.empty()) {
-	_availables.front().reset();
-	_availables.pop_front();
-      }
-    }
+    virtual ~ResourcePool();
     // Destructor -
 
     // Methods +
@@ -263,42 +190,7 @@ namespace anch {
      *
      * \return the poolable resource (\c anch::PoolableResource)
      */
-    PoolableResource borrowResource() {
-      _mutex.lock();
-      std::shared_ptr<T> ptr;
-      if(_availables.empty()) {
-	if(_used < _maxSize) {
-	  try {
-	    ptr = make_ptr(_config);
-	  } catch(...) {
-	    _mutex.unlock();
-	    throw;
-	  }
-	  ++_used;
-	  _mutex.unlock();
-
-	} else {
-	  _mutex.unlock();
-	  std::unique_lock<std::mutex> lock(_waitex);
-	  if(_wait.wait_for(lock, _timeout, [this](){return !this->_availables.empty();})) {
-	    _mutex.lock();
-	    ptr = _availables.front();
-	    _availables.pop_front();
-	    ++_used;
-	    _mutex.unlock();
-	  } else {
-	    throw TimeoutException(_timeout, "Resource could not be retrieved.");
-	  }
-	}
-
-      } else {
-	ptr = _availables.front();
-	_availables.pop_front();
-	++_used;
-	_mutex.unlock();
-      }
-      return PoolableResource(*this, ptr);
-    }
+    anch::PoolableResource<T,C,make_ptr> borrowResource();
 
   private:
     /*!
@@ -306,12 +198,7 @@ namespace anch {
      *
      * \param res the resource to push back in pool
      */
-    void returnResource(std::shared_ptr<T> res) {
-      std::lock_guard<std::mutex> lock(_mutex);
-      _availables.push_back(res);
-      --_used;
-      _wait.notify_one();
-    }
+    void returnResource(std::shared_ptr<T> res);
 
     /*!
      * Invalidate valid resource in pool.\n
@@ -319,17 +206,7 @@ namespace anch {
      *
      * \param res the resource to invalidate
      */
-    void invalidateResource(std::shared_ptr<T> res) {
-      std::lock_guard<std::mutex> lock(_mutex);
-      res.reset();
-      --_used;
-      try {
-	_availables.push_back(make_ptr(_config));
-	_wait.notify_one();
-      } catch(...) {
-	// Nothing to do => until resource will be instanciate other waiters will fail on timeout
-      }
-    }
+    void invalidateResource(std::shared_ptr<T> res);
     // Methods -
 
     // Accessors +
@@ -339,11 +216,11 @@ namespace anch {
      *
      * \param timeout the timeout to set
      */
-    inline void setTimeout(const std::chrono::milliseconds timeout) {
-      _timeout = timeout;
-    }
+    void setTimeout(const std::chrono::milliseconds timeout);
     // Accessors -
 
   };
 
 }
+
+#include "impl/resourcePool.hpp"
