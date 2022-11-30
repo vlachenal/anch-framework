@@ -19,25 +19,12 @@
 */
 #pragma once
 
-#include <string>
-#include <algorithm>
+inline void
+anch::toLower(std::string& value) {
+  std::transform(value.begin(), value.end(), value.begin(), [](unsigned char c){ return std::tolower(c); });
+}
 
-namespace anch {
-
-  /*!
-   * Transform input string to lower caser
-   *
-   * \param value the string to transform
-   */
-  void toLower(std::string& value);
-
-  /*!
-   * Transform input string to upper caser
-   *
-   * \param value the string to transform
-   */
-  void toUpper(std::string& value);
-
-}  // anch
-
-#include "impl/stringUtils.hpp"
+inline void
+anch::toUpper(std::string& value) {
+  std::transform(value.begin(), value.end(), value.begin(), [](unsigned char c){ return std::toupper(c); });
+}

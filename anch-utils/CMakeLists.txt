@@ -136,6 +136,19 @@ if(ANCH_UTILS_UNIT_TEST)
   )
   # Build convert test -
 
+  # Build string utils test +
+  file(
+    GLOB_RECURSE
+    test_string_utils
+    test/testStringUtils.cpp
+  )
+
+  add_executable(
+    anch-string-utils-test
+    ${test_string_utils}
+  )
+  # Build string utils test -
+
   enable_testing()
   add_test(anch-thread-pool-test ${EXECUTABLE_OUTPUT_PATH}/anch-thread-pool-test main)
   add_test(anch-thread-res-test ${EXECUTABLE_OUTPUT_PATH}/anch-res-pool-test main)
@@ -160,6 +173,7 @@ if(ANCH_UTILS_UNIT_TEST)
   add_test(anch-stream-collect-queue ${EXECUTABLE_OUTPUT_PATH}/anch-stream-test collect_queue)
   add_test(anch-stream-collect-priority-queue ${EXECUTABLE_OUTPUT_PATH}/anch-stream-test collect_priority_queue)
   add_test(anch-convert ${EXECUTABLE_OUTPUT_PATH}/anch-convert-test main)
+  add_test(anch-string-utils ${EXECUTABLE_OUTPUT_PATH}/anch-string-utils-test main)
 
   if(ANCH_OPT)
     # Build optional unit test +
