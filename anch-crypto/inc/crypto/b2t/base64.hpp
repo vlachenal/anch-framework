@@ -71,18 +71,7 @@ namespace anch {
        * \param data the data stream to encode
        * \param output the stream to write in
        */
-      template<class CharT, class Traits>
-      static void encode(std::basic_istream<CharT,Traits>& data,
-			 std::basic_ostream<CharT,Traits>& output)
-	noexcept {
-	if(data) {
-	  char buffer[1024];
-	  while(!data.eof()) {
-	    data.read(buffer, 1024);
-	    encode(reinterpret_cast<uint8_t*>(buffer), static_cast<uint64_t>(data.gcount()), output);
-	  }
-	}
-      }
+      static void encode(std::istream& data, std::ostream& output) noexcept;
 
       /*!
        * Encode data in base64.
@@ -91,12 +80,7 @@ namespace anch {
        *
        * \return the base64 encoded data
        */
-      template<class CharT, class Traits>
-      static std::string encode(std::basic_istream<CharT,Traits>& data)	noexcept {
-	std::ostringstream out;
-	encode(data, out);
-	return out.str();
-      }
+      static std::string encode(std::istream& data) noexcept;
 
       /*!
        * Encode data in base64.
@@ -104,11 +88,7 @@ namespace anch {
        * \param data the data string to encode
        * \param output the stream to write in
        */
-      template<class CharT, class Traits, class Allocator>
-      static void encode(const std::basic_string<CharT,Traits,Allocator>& data,
-			 std::basic_ostream<CharT,Traits>& output) noexcept {
-	encode(reinterpret_cast<const uint8_t*>(data.data()), data.length(), output);
-      }
+      static void encode(const std::string& data, std::ostream& output) noexcept;
 
       /*!
        * Encode data in base64.
@@ -117,13 +97,7 @@ namespace anch {
        *
        * \return the base64 encoded data
        */
-      template<class CharT, class Traits, class Allocator>
-      static std::string encode(const std::basic_string<CharT,Traits,Allocator>& data)
-	noexcept {
-	std::ostringstream out;
-	encode(data, out);
-	return out.str();
-      }
+      static std::string encode(const std::string& data) noexcept;
 
       /*!
        * Encode data in base64.
@@ -132,19 +106,7 @@ namespace anch {
        * \param length the data length
        * \param output the stream to write in
        */
-      template<class CharT, class Traits>
-      static void encode(const uint8_t* data, uint64_t length,
-			 std::basic_ostream<CharT,Traits>& output)
-	noexcept {
-	char buffer[5];
-	buffer[4] = '\0';
-	while(length > 0) {
-	  uint8_t read = encode(data, length, buffer);
-	  output << buffer;
-	  data += read;
-	  length -= read;
-	}
-      }
+      static void encode(const uint8_t* data, uint64_t length, std::ostream& output) noexcept;
 
       /*!
        * Encode data in base64.
@@ -154,11 +116,7 @@ namespace anch {
        *
        * \return the base64 encoded data
        */
-      static std::string encode(const uint8_t* data, uint64_t length) noexcept {
-	std::ostringstream out;
-	encode(data, length, out);
-	return out.str();
-      }
+      static std::string encode(const uint8_t* data, uint64_t length) noexcept;
 
     private:
       /*!
@@ -182,18 +140,7 @@ namespace anch {
        * \param data the data stream to decode
        * \param output the stream to write in
        */
-      template<class CharT, class Traits>
-      static void decode(std::istream& data,
-			 std::basic_ostream<CharT,Traits>& output)
-	noexcept {
-	if(data) {
-	  char buffer[1024];
-	  while(!data.eof()) {
-	    data.read(buffer, 1024);
-	    decode(buffer, static_cast<uint64_t>(data.gcount()), output);
-	  }
-	}
-      }
+      static void decode(std::istream& data, std::ostream& output) noexcept;
 
       /*!
        * Decode data in base64.
@@ -202,11 +149,7 @@ namespace anch {
        *
        * \return the base64 decoded data
        */
-      static std::string decode(std::istream& data) noexcept {
-	std::ostringstream out;
-	decode(data, out);
-	return out.str();
-      }
+      static std::string decode(std::istream& data) noexcept;
 
       /*!
        * Decode data in base64.
@@ -214,11 +157,7 @@ namespace anch {
        * \param data the data string to decode
        * \param output the stream to write in
        */
-      template<class CharT, class Traits>
-      static void decode(const std::string& data,
-			 std::basic_ostream<CharT,Traits>& output) noexcept {
-	decode(data.data(), static_cast<uint64_t>(data.length()), output);
-      }
+      static void decode(const std::string& data, std::ostream& output) noexcept;
 
       /*!
        * Decode data in base64.
@@ -227,12 +166,7 @@ namespace anch {
        *
        * \return the base64 decoded data
        */
-      static std::string decode(const std::string& data)
-	noexcept {
-	std::ostringstream out;
-	decode(data, out);
-	return out.str();
-      }
+      static std::string decode(const std::string& data) noexcept;
 
       /*!
        * Decode data in base64.
@@ -241,20 +175,7 @@ namespace anch {
        * \param length the data length
        * \param output the stream to write in
        */
-      template<class CharT, class Traits>
-      static void decode(const char* data, uint64_t length,
-			 std::basic_ostream<CharT,Traits>& output)
-	noexcept {
-	uint8_t buffer[4];
-	buffer[3] = '\0';
-	while(length > 0) {
-	  memset(buffer, '\0', 3);
-	  decode(data, length, buffer);
-	  output << buffer;
-	  data += 4;
-	  length -= 4;
-	}
-      }
+      static void decode(const char* data, uint64_t length, std::ostream& output) noexcept;
 
       /*!
        * Decode data in base64.
@@ -264,12 +185,7 @@ namespace anch {
        *
        * \return the base64 decoded data
        */
-      static std::string decode(const char* data, uint64_t length)
-	noexcept {
-	std::ostringstream out;
-	decode(data, length, out);
-	return out.str();
-      }
+      static std::string decode(const char* data, uint64_t length) noexcept;
 
     private:
       /*!

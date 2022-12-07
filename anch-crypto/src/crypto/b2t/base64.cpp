@@ -52,15 +52,55 @@ Base64::~Base64() {
 
 
 // Encoding methods +
-/*!
- * Encode block in base64.
- *
- * \param data the block address to encode
- * \param length the data length
- * \param buffer the buffer to write in
- *
- * \return the number of read bytes
- */
+void
+Base64::encode(std::istream& data, std::ostream& output) noexcept {
+  if(data) {
+    char buffer[1024];
+    while(!data.eof()) {
+      data.read(buffer, 1024);
+      encode(reinterpret_cast<uint8_t*>(buffer), static_cast<uint64_t>(data.gcount()), output);
+    }
+  }
+}
+
+std::string
+Base64::encode(std::istream& data) noexcept {
+  std::ostringstream out;
+  encode(data, out);
+  return out.str();
+}
+
+void
+Base64::encode(const std::string& data, std::ostream& output) noexcept {
+  encode(reinterpret_cast<const uint8_t*>(data.data()), data.length(), output);
+}
+
+std::string
+Base64::encode(const std::string& data) noexcept {
+  std::ostringstream out;
+  encode(data, out);
+  return out.str();
+}
+
+void
+Base64::encode(const uint8_t* data, uint64_t length, std::ostream& output) noexcept {
+  char buffer[5];
+  buffer[4] = '\0';
+  while(length > 0) {
+    uint8_t read = encode(data, length, buffer);
+    output << buffer;
+    data += read;
+    length -= read;
+  }
+}
+
+std::string
+Base64::encode(const uint8_t* data, uint64_t length) noexcept {
+  std::ostringstream out;
+  encode(data, length, out);
+  return out.str();
+}
+
 uint8_t
 Base64::encode(const uint8_t* data, uint64_t length, char* buffer) noexcept {
   uint8_t read = 0;
@@ -88,15 +128,56 @@ Base64::encode(const uint8_t* data, uint64_t length, char* buffer) noexcept {
 // Encoding methods -
 
 // Decoding methods +
-/*!
- * Decode block in base64.
- *
- * \param data the block address to decode
- * \param length the data length
- * \param buffer the buffer to write in
- *
- * \return the number of read bytes
- */
+void
+Base64::decode(std::istream& data, std::ostream& output) noexcept {
+  if(data) {
+    char buffer[1024];
+    while(!data.eof()) {
+      data.read(buffer, 1024);
+      decode(buffer, static_cast<uint64_t>(data.gcount()), output);
+    }
+  }
+}
+
+std::string
+Base64::decode(std::istream& data) noexcept {
+  std::ostringstream out;
+  decode(data, out);
+  return out.str();
+}
+
+void
+Base64::decode(const std::string& data, std::ostream& output) noexcept {
+  decode(data.data(), static_cast<uint64_t>(data.length()), output);
+}
+
+std::string
+Base64::decode(const std::string& data) noexcept {
+  std::ostringstream out;
+  decode(data, out);
+  return out.str();
+}
+
+void
+Base64::decode(const char* data, uint64_t length, std::ostream& output) noexcept {
+  uint8_t buffer[4];
+  buffer[3] = '\0';
+  while(length > 0) {
+    memset(buffer, '\0', 3);
+    decode(data, length, buffer);
+    output << buffer;
+    data += 4;
+    length -= 4;
+  }
+}
+
+std::string
+Base64::decode(const char* data, uint64_t length) noexcept {
+  std::ostringstream out;
+  decode(data, length, out);
+  return out.str();
+}
+
 void
 Base64::decode(const char* data, uint64_t length, uint8_t buffer[4]) noexcept {
   uint8_t current;
