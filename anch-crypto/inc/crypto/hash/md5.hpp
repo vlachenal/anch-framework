@@ -95,8 +95,8 @@ namespace anch {
        *
        * \param data The string data to process
        */
-      template<class CharT, class Traits, class Allocator>
-      MD5(const std::basic_string<CharT,Traits,Allocator>& data) {
+      MD5(const std::string& data) {
+	_digest = &(_context.digest);
 	Hash::digest(data);
       }
 
@@ -105,8 +105,8 @@ namespace anch {
        *
        * \param stream The input stream to process
        */
-      template<class CharT, class Traits>
-      MD5(std::basic_istream<CharT,Traits>& stream) {
+      MD5(std::istream& stream) {
+	_digest = &(_context.digest);
 	Hash::digest(stream);
       }
 

@@ -39,6 +39,10 @@ namespace anch {
     template<std::size_t O, std::size_t B>
     class Hash {
 
+    protected:
+      /*! Digest */
+      std::array<uint8_t,O>* _digest;
+
       // Methods +
     public:
       /*!
@@ -60,7 +64,7 @@ namespace anch {
 	reset();
 	addData(reinterpret_cast<const uint8_t*>(data.data()), data.length());
 	finalize();
-	return digest();
+	return *_digest;
       }
 
       /*!
@@ -170,9 +174,9 @@ namespace anch {
  *
  * \return The output stream
  */
-template<class CharT, class Traits, std::size_t O, std::size_t B>
-std::basic_ostream<CharT, Traits>&
-operator << (std::basic_ostream<CharT, Traits>& out, const anch::crypto::Hash<O,B>& hash) {
+template<std::size_t O, std::size_t B>
+std::ostream&
+operator << (std::ostream& out, const anch::crypto::Hash<O,B>& hash) {
   std::ios_base::fmtflags flags = out.flags(); // Save current flags
   out << std::hex;
   for(const uint8_t& byte : hash.digest()) {

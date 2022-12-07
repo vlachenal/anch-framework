@@ -50,7 +50,7 @@ namespace anch {
        * \ref SHA224_256 default constructor
        */
       SHA224_256(): SHA2<O,64,uint32_t,64,I>() {
-	// Nothing to do
+	Hash<O,64>::_digest = &SHA2<O,64,uint32_t,64,I>::_context.digest;
       }
 
       /*!
@@ -58,9 +58,9 @@ namespace anch {
        *
        * \param data The string data to process
        */
-      template<class CharT, class Traits, class Allocator>
-      SHA224_256(const std::basic_string<CharT,Traits,Allocator>& data):
+      SHA224_256(const std::string& data):
 	SHA2<O,64,uint32_t,64,I>() {
+	Hash<O,64>::_digest = &SHA2<O,64,uint32_t,64,I>::_context.digest;
     	Hash<O,64>::digest(data);
       }
 
@@ -69,9 +69,9 @@ namespace anch {
        *
        * \param stream The input stream to process
        */
-      template<class CharT, class Traits>
-      SHA224_256(std::basic_istream<CharT,Traits>& stream):
+      SHA224_256(std::istream& stream):
 	SHA2<O,64,uint32_t,64,I>() {
+	Hash<O,64>::_digest = &SHA2<O,64,uint32_t,64,I>::_context.digest;
     	Hash<O,64>::digest(stream);
       }
 
@@ -84,6 +84,7 @@ namespace anch {
        */
       SHA224_256(const uint8_t* data, std::size_t len):
       	SHA2<O,64,uint32_t,64,I>() {
+	Hash<O,64>::_digest = &SHA2<O,64,uint32_t,64,I>::_context.digest;
       	Hash<O,64>::digest(data, len);
       }
       // Constructors -

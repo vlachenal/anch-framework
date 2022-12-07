@@ -100,11 +100,12 @@ static inline void applyCore(uint32_t& a,
 
 
 // Constructors +
-MD5::MD5() {
-  // Nothing to do
+MD5::MD5(): Hash() {
+  _digest = &(_context.digest);
 }
 
 MD5::MD5(const uint8_t* data, std::size_t len) {
+  _digest = &(_context.digest);
   Hash::digest(data, len);
 }
 // Constructors -

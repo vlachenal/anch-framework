@@ -49,7 +49,7 @@ namespace anch {
     template<std::size_t O, std::size_t B, typename W, uint32_t R, const std::array<W,8>& I>
     class SHA2: public Hash<O,B> {
 
-    private:
+    protected:
       /*!
        * \ref SHA2 chunk
        *
@@ -99,6 +99,7 @@ namespace anch {
       };
 
       // Attributes +
+    protected:
       /*! \ref SHA2 context */
       Context<I> _context;
       // Attributes -
@@ -110,7 +111,7 @@ namespace anch {
        * \ref SHA2 default constructor
        */
       SHA2(): Hash<O,B>(), _context() {
-	// Nothing to do
+	Hash<O,B>::_digest = &_context.digest;
       }
       // Constructors -
 
@@ -133,7 +134,7 @@ namespace anch {
        * \return the SHA2 hash result
        */
       virtual const std::array<uint8_t,O>& digest() const override {
-	return _context.digest;
+	return *Hash<O,B>::_digest;
       }
 
     protected:
@@ -255,7 +256,7 @@ namespace anch {
        */
       void transform(const uint8_t* buffer) {
 	uint8_t chunkBuffer[B * sizeof(W)];
-	std::memcpy(chunkBuffer, buffer, B * sizeof(W));
+	std::memcpy(chunkBuffer, buffer, B);
 
 	Chunk* chunk = reinterpret_cast<Chunk*>(&chunkBuffer);
 	bytesSwap(chunk->words, B);

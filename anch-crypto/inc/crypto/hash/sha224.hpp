@@ -31,12 +31,12 @@ namespace anch {
      */
     extern template class Hash<28,64>;
     extern template const std::array<uint8_t,28>& Hash<28,64>::digest(const std::string& data);
-    extern template const std::array<uint8_t,28>& Hash<28,64>::digest(const std::wstring& data);
+    //extern template const std::array<uint8_t,28>& Hash<28,64>::digest(const std::wstring& data);
     extern template const std::array<uint8_t,28>& Hash<28,64>::digest(std::istream& stream);
     //extern template const std::array<uint8_t,28>& Hash<28,64>::digest(std::wistream& stream);
     extern template class SHA2<28,64,uint32_t,64,SHA224_VALUES>;
     extern template SHA224_256<28,SHA224_VALUES>::SHA224_256(const std::string& data);
-    extern template SHA224_256<28,SHA224_VALUES>::SHA224_256(const std::wstring& data);
+    //extern template SHA224_256<28,SHA224_VALUES>::SHA224_256(const std::wstring& data);
     extern template SHA224_256<28,SHA224_VALUES>::SHA224_256(std::istream& stream);
     //extern template SHA224_256<28,SHA224_VALUES>::SHA224_256(std::wistream& stream);
     /*!

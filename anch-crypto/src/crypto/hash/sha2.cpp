@@ -37,13 +37,13 @@ using anch::crypto::SHA224_VALUES;
 template class SHA224_256<28,SHA224_VALUES>;
 template class Hash<28,64>;
 template const std::array<uint8_t,28>& Hash<28,64>::digest(const std::string& data);
-template const std::array<uint8_t,28>& Hash<28,64>::digest(const std::wstring& data);
+//template const std::array<uint8_t,28>& Hash<28,64>::digest(const std::wstring& data);
 template const std::array<uint8_t,28>& Hash<28,64>::digest(std::istream& stream);
 //template const std::array<uint8_t,28>& Hash<28,64>::digest(std::wistream& stream);
 template class SHA2<28,64,uint32_t,64,SHA224_VALUES>;
-template SHA224_256<28,SHA224_VALUES>::SHA224_256(const std::string& data);
-template SHA224_256<28,SHA224_VALUES>::SHA224_256(const std::wstring& data);
-template SHA224_256<28,SHA224_VALUES>::SHA224_256(std::istream& stream);
+//template SHA224_256<28,SHA224_VALUES>::SHA224_256(const std::string& data);
+//template SHA224_256<28,SHA224_VALUES>::SHA224_256(const std::wstring& data);
+//template SHA224_256<28,SHA224_VALUES>::SHA224_256(std::istream& stream);
 //template SHA224_256<28,SHA224_VALUES>::SHA224_256(std::wistream& stream);
 // SHA-224 -
 
@@ -55,32 +55,32 @@ std::array<uint32_t,8> anch::crypto::SHA256_VALUES = { {
 using anch::crypto::SHA256_VALUES;
 template class Hash<32,64>;
 template const std::array<uint8_t,32>& Hash<32,64>::digest(const std::string& data);
-template const std::array<uint8_t,32>& Hash<32,64>::digest(const std::wstring& data);
+//template const std::array<uint8_t,32>& Hash<32,64>::digest(const std::wstring& data);
 template const std::array<uint8_t,32>& Hash<32,64>::digest(std::istream& data);
 //template const std::array<uint8_t,32>& Hash<32,64>::digest(std::wistream& data);
 template class SHA2<32,64,uint32_t,64,SHA256_VALUES>;
 template class SHA224_256<32,SHA256_VALUES>;
-template SHA224_256<32,SHA256_VALUES>::SHA224_256(const std::string& data);
-template SHA224_256<32,SHA256_VALUES>::SHA224_256(const std::wstring& data);
-template SHA224_256<32,SHA256_VALUES>::SHA224_256(std::istream& stream);
+//template SHA224_256<32,SHA256_VALUES>::SHA224_256(const std::string& data);
+//template SHA224_256<32,SHA256_VALUES>::SHA224_256(const std::wstring& data);
+//template SHA224_256<32,SHA256_VALUES>::SHA224_256(std::istream& stream);
 //template SHA224_256<32,SHA256_VALUES>::SHA224_256(std::wistream& stream);
 // SHA-256 -
 
 // SHA-384 +
 std::array<uint64_t,8> anch::crypto::SHA384_VALUES = { {
-    0xCBBB9D5DC1059ED8, 0x629A292A367CD507, 0X9159015A3070DD17, 0X152FECD8F70E5939, 
+    0xCBBB9D5DC1059ED8, 0x629A292A367CD507, 0X9159015A3070DD17, 0X152FECD8F70E5939,
     0x67332667FFC00B31, 0x8EB44A8768581511, 0xDB0C2E0D64F98FA7, 0x47B5481DBEFA4FA4
   } };
 using anch::crypto::SHA384_VALUES;
 template class Hash<48,128>;
 template const std::array<uint8_t,48>& Hash<48,128>::digest(const std::string& data);
-template const std::array<uint8_t,48>& Hash<48,128>::digest(const std::wstring& data);
+//template const std::array<uint8_t,48>& Hash<48,128>::digest(const std::wstring& data);
 template const std::array<uint8_t,48>& Hash<48,128>::digest(std::istream& stream);
 //template const std::array<uint8_t,48>& Hash<48,128>::digest(std::wistream& stream);
 template class SHA2<48,128,uint64_t,80,SHA384_VALUES>;
 template class SHA384_512<48,SHA384_VALUES>;
 template SHA384_512<48,SHA384_VALUES>::SHA384_512(const std::string& data);
-template SHA384_512<48,SHA384_VALUES>::SHA384_512(const std::wstring& data);
+//template SHA384_512<48,SHA384_VALUES>::SHA384_512(const std::wstring& data);
 template SHA384_512<48,SHA384_VALUES>::SHA384_512(std::istream& stream);
 //template SHA384_512<48,SHA384_VALUES>::SHA384_512(std::wistream& stream);
 // SHA-384 -
@@ -93,13 +93,13 @@ std::array<uint64_t,8> anch::crypto::SHA512_VALUES = { {
 using anch::crypto::SHA512_VALUES;
 template class Hash<64,128>;
 template const std::array<uint8_t,64>& Hash<64,128>::digest(const std::string& data);
-template const std::array<uint8_t,64>& Hash<64,128>::digest(const std::wstring& data);
+//template const std::array<uint8_t,64>& Hash<64,128>::digest(const std::wstring& data);
 template const std::array<uint8_t,64>& Hash<64,128>::digest(std::istream& stream);
 //template const std::array<uint8_t,64>& Hash<64,128>::digest(std::wistream& stream);
 template class SHA2<64,128,uint64_t,80,SHA512_VALUES>;
 template class SHA384_512<64,SHA512_VALUES>;
 template SHA384_512<64,SHA512_VALUES>::SHA384_512(const std::string& data);
-template SHA384_512<64,SHA512_VALUES>::SHA384_512(const std::wstring& data);
+//template SHA384_512<64,SHA512_VALUES>::SHA384_512(const std::wstring& data);
 template SHA384_512<64,SHA512_VALUES>::SHA384_512(std::istream& stream);;
 //template SHA384_512<64,SHA512_VALUES>::SHA384_512(std::wistream& stream);
 // SHA-512 -

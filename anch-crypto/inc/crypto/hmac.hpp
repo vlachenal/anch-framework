@@ -22,6 +22,8 @@
 #include <sstream>
 #include <array>
 
+#include "crypto/hash/hash.hpp"
+
 
 namespace anch {
   namespace crypto {
@@ -40,6 +42,7 @@ namespace anch {
       const std::size_t block = H::getBlockSize();
       if(key.length() > block) {
 	keyBuf << H(key);
+	//keyBuf << static_cast<anch::crypto::Hash<H::getOutputSize(),H::getBlockSize()> >(H(key));
       } else {
 	keyBuf << key;
       }

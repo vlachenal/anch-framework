@@ -388,8 +388,8 @@ namespace anch {
       std::size_t j;
       ALIGN16 uint8_t in[16];
       std::memcpy(in, input.data(), 16);
-      ALIGN16 __m128i out[2];
-      for(std::size_t i = 0 ; i < 2 ; ++i) {
+      ALIGN16 __m128i out/*[2]*/;
+      /*for(std::size_t i = 0 ; i < 2 ; ++i) {
 	tmp = _mm_loadu_si128(&(reinterpret_cast<__m128i*>(in)[i]));
 	tmp = _mm_xor_si128(tmp, _expKey.hwKey.cipherKey[0]);
 	for(j = 1 ; j < R ; ++j) {
@@ -397,8 +397,15 @@ namespace anch {
 	}
 	tmp = _mm_aesenclast_si128(tmp, _expKey.hwKey.cipherKey[j]);
 	_mm_storeu_si128(&(out[i]), tmp);
+	}*/
+      tmp = _mm_loadu_si128(reinterpret_cast<__m128i*>(in));
+      tmp = _mm_xor_si128(tmp, _expKey.hwKey.cipherKey[0]);
+      for(j = 1 ; j < R ; ++j) {
+	tmp = _mm_aesenc_si128(tmp, _expKey.hwKey.cipherKey[j]);
       }
-      std::memcpy(output.data(), reinterpret_cast<uint8_t*>(out), 16);
+      tmp = _mm_aesenclast_si128(tmp, _expKey.hwKey.cipherKey[j]);
+      _mm_storeu_si128(&out, tmp);
+      std::memcpy(output.data(), reinterpret_cast<uint8_t*>(&out), 16);
     }
 
     template<std::size_t K, std::size_t R>
@@ -408,8 +415,8 @@ namespace anch {
       std::size_t j;
       ALIGN16 uint8_t in[16];
       std::memcpy(in, input.data(), 16);
-      ALIGN16 __m128i out[2];
-      for(std::size_t i = 0 ; i < 2 ; ++i) {
+      ALIGN16 __m128i out/*[2]*/;
+      /*for(std::size_t i = 0 ; i < 2 ; ++i) {
 	tmp = _mm_loadu_si128(&(reinterpret_cast<__m128i*>(in)[i]));
 	tmp = _mm_xor_si128(tmp, _expKey.hwKey.decipherKey[0]);
 	for(j = 1 ; j < R ; ++j) {
@@ -417,8 +424,15 @@ namespace anch {
 	}
 	tmp = _mm_aesdeclast_si128(tmp, _expKey.hwKey.decipherKey[j]);
 	_mm_storeu_si128(&(out[i]), tmp);
+	}*/
+      tmp = _mm_loadu_si128(reinterpret_cast<__m128i*>(in));
+      tmp = _mm_xor_si128(tmp, _expKey.hwKey.decipherKey[0]);
+      for(j = 1 ; j < R ; ++j) {
+	tmp = _mm_aesdec_si128(tmp, _expKey.hwKey.decipherKey[j]);
       }
-      std::memcpy(output.data(), reinterpret_cast<uint8_t*>(out), 16);
+      tmp = _mm_aesdeclast_si128(tmp, _expKey.hwKey.decipherKey[j]);
+      _mm_storeu_si128(&out, tmp);
+      std::memcpy(output.data(), reinterpret_cast<uint8_t*>(&out), 16);
     }
 
     template<std::size_t K, std::size_t R>
