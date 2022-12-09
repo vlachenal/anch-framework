@@ -19,57 +19,25 @@
 */
 #pragma once
 
-#include <cstddef>
-
 
 namespace anch {
 
-  /*!
-   * Switch data endianness.
-   *
-   * \param src the object to convert
-   * \param dest the converted bytes
-   *
-   * \since 0.1
-   *
-   * \author Vincent Lachenal
-   */
   template<typename T>
-  void byteSwap(T src, uint8_t* dest);/* {
+  inline void byteSwap(T src, uint8_t* dest) {
     const uint8_t* words = reinterpret_cast<const uint8_t*>(&src);
     std::size_t size = sizeof(T);
     for(std::size_t i = 0 ; i < size ; i++) {
       dest[i] = words[size - 1 - i];
     }
-    }*/
+  }
 
-  /*!
-   * Check if system is in big endian bytes order.
-   *
-   * \return \c true if system is big endian, \c false otherwise
-   *
-   * \since 0.1
-   *
-   * \author Vincent Lachenal
-   */
-  bool isBigEndian();/* {
+  inline bool isBigEndian() {
     const uint32_t byteOrderTest = 0x01;
     return (reinterpret_cast<const uint8_t*>(&byteOrderTest)[0] == 0);
-    }*/
+  }
 
-  /*!
-   * Check if system is in little endian bytes order.
-   *
-   * \return \c true if system is little endian, \c false otherwise
-   *
-   * \since 0.1
-   *
-   * \author Vincent Lachenal
-   */
-  bool isLittleEndian();/* {
+  inline bool isLittleEndian() {
     return !isBigEndian();
-    }*/
+  }
 
 }
-
-#include "impl/endianness.hpp"
