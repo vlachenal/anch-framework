@@ -24,183 +24,301 @@
 
 #include <string.h>
 
-namespace anch {
-  namespace crypto {
+namespace anch::crypto {
+
+  /*!
+   * \brief Base64 algorithm implementation.
+   *
+   * \ref Base64 is a common algorithm to encode binary data into text.
+   *
+   * \since 0.1
+   *
+   * \author Vincent Lachenal
+   */
+  class Base64 {
+    // Attributes +
+  public:
+    /*! Base64 classic aplhabet flag */
+    static const uint8_t STD;
+
+    /*! Base64 URL aplhabet flag */
+    static const uint8_t URL;
+
+    /*! Base64 padding with '=' flag */
+    static const uint8_t PADDING;
+
+    /*! Base64 no padding flag */
+    static const uint8_t NOPADDING;
+    // Attributes -
+
+    // Constructors +
+  private:
+    /*!
+     * \ref Base64 private constructor
+     */
+    Base64();
+    // Constructors -
+
+    // Destructor +
+  public:
+    /*!
+     * \ref Base64 destructor
+     */
+    virtual ~Base64();
+    // Destructor -
+
+
+    // Encoding methods +
+  public:
+    /*!
+     * Encode data in base64.
+     *
+     * \param data the data stream to encode
+     * \param output the stream to write in
+     * \param options the encoding options
+     */
+    static void encode(std::istream& data, std::ostream& output, uint8_t options = STD | PADDING) noexcept;
 
     /*!
-     * \brief Base64 algorithm implementation.
+     * Encode data in base64.
      *
-     * \ref Base64 is a common algorithm to encode binary data into text.
+     * \param data the data stream to encode
+     * \param options the encoding options
      *
-     * \since 0.1
-     *
-     * \author Vincent Lachenal
+     * \return the base64 encoded data
      */
-    class Base64 {
-      // Attributes +
-    private:
-      /*! \ref Base64 alphabet */
-      const static char _alphabet[];
+    static std::string encode(std::istream& data, uint8_t options = STD | PADDING) noexcept;
 
-      /*! \ref Base64 padding character */
-      const static char _padding;
-      // Attributes -
+    /*!
+     * Encode data in base64.
+     *
+     * \param data the data string to encode
+     * \param output the stream to write in
+     * \param options the encoding options
+     */
+    static void encode(const std::string& data, std::ostream& output, uint8_t options = STD | PADDING) noexcept;
 
-      // Constructors +
-    private:
-      /*!
-       * \ref Base64 private constructor
-       */
-      Base64();
-      // Constructors -
+    /*!
+     * Encode data in base64.
+     *
+     * \param data the data string to encode
+     * \param options the encoding options
+     *
+     * \return the base64 encoded data
+     */
+    static std::string encode(const std::string& data, uint8_t options = STD | PADDING) noexcept;
 
-      // Destructor +
-    public:
-      /*!
-       * \ref Base64 destructor
-       */
-      virtual ~Base64();
-      // Destructor -
+    /*!
+     * Encode data in base64.
+     *
+     * \param data the data bytes to encode
+     * \param length the data length
+     * \param output the stream to write in
+     * \param options the encoding options
+     */
+    static void encode(const uint8_t* data, uint64_t length, std::ostream& output, uint8_t options = STD | PADDING) noexcept;
+
+    /*!
+     * Encode data in base64.
+     *
+     * \param data the data bytes to encode
+     * \param length the data length
+     * \param options the encoding options
+     *
+     * \return the base64 encoded data
+     */
+    static std::string encode(const uint8_t* data, uint64_t length, uint8_t options = STD | PADDING) noexcept;
+
+    /*!
+     * Encode data in base64 URI.
+     *
+     * \param data the data stream to encode
+     * \param output the stream to write in
+     */
+    static void encodeURI(std::istream& data, std::ostream& output) noexcept;
+
+    /*!
+     * Encode data in base64 URI.
+     *
+     * \param data the data stream to encode
+     *
+     * \return the base64 encoded data
+     */
+    static std::string encodeURI(std::istream& data) noexcept;
+
+    /*!
+     * Encode data in base64 URI.
+     *
+     * \param data the data string to encode
+     * \param output the stream to write in
+     */
+    static void encodeURI(const std::string& data, std::ostream& output) noexcept;
+
+    /*!
+     * Encode data in base64 URI.
+     *
+     * \param data the data string to encode
+     *
+     * \return the base64 encoded data
+     */
+    static std::string encodeURI(const std::string& data) noexcept;
+
+    /*!
+     * Encode data in base64 URI.
+     *
+     * \param data the data bytes to encode
+     * \param length the data length
+     * \param output the stream to write in
+     */
+    static void encodeURI(const uint8_t* data, uint64_t length, std::ostream& output) noexcept;
+
+    /*!
+     * Encode data in base64 URI.
+     *
+     * \param data the data bytes to encode
+     * \param length the data length
+     *
+     * \return the base64 encoded data
+     */
+    static std::string encodeURI(const uint8_t* data, uint64_t length) noexcept;
+    // Encoding methods -
 
 
-      // Encoding methods +
-    public:
-      /*!
-       * Encode data in base64.
-       *
-       * \param data the data stream to encode
-       * \param output the stream to write in
-       */
-      static void encode(std::istream& data, std::ostream& output) noexcept;
+    // Decoding methods +
+  public:
+    /*!
+     * Decode data in base64.
+     *
+     * \param data the data stream to decode
+     * \param output the stream to write in
+     *
+     * \throw std::bad_cast invalid base 64 stream
+     */
+    static void decode(std::istream& data, std::ostream& output, uint8_t options = STD | PADDING);
 
-      /*!
-       * Encode data in base64.
-       *
-       * \param data the data stream to encode
-       *
-       * \return the base64 encoded data
-       */
-      static std::string encode(std::istream& data) noexcept;
+    /*!
+     * Decode data in base64.
+     *
+     * \param data the data stream to decode
+     *
+     * \return the base64 decoded data
+     *
+     * \throw std::bad_cast invalid base 64 stream
+     */
+    static std::string decode(std::istream& data, uint8_t options = STD | PADDING);
 
-      /*!
-       * Encode data in base64.
-       *
-       * \param data the data string to encode
-       * \param output the stream to write in
-       */
-      static void encode(const std::string& data, std::ostream& output) noexcept;
+    /*!
+     * Decode data in base64.
+     *
+     * \param data the data string to decode
+     * \param output the stream to write in
+     *
+     * \throw std::bad_cast invalid base 64 stream
+     */
+    static void decode(const std::string& data, std::ostream& output, uint8_t options = STD | PADDING);
 
-      /*!
-       * Encode data in base64.
-       *
-       * \param data the data string to encode
-       *
-       * \return the base64 encoded data
-       */
-      static std::string encode(const std::string& data) noexcept;
+    /*!
+     * Decode data in base64.
+     *
+     * \param data the data string to decode
+     *
+     * \return the base64 decoded data
+     *
+     * \throw std::bad_cast invalid base 64 stream
+     */
+    static std::string decode(const std::string& data, uint8_t options = STD | PADDING);
 
-      /*!
-       * Encode data in base64.
-       *
-       * \param data the data bytes to encode
-       * \param length the data length
-       * \param output the stream to write in
-       */
-      static void encode(const uint8_t* data, uint64_t length, std::ostream& output) noexcept;
+    /*!
+     * Decode data in base64.
+     *
+     * \param data the data bytes to decode
+     * \param length the data length
+     * \param output the stream to write in
+     *
+     * \throw std::bad_cast invalid base 64 stream
+     */
+    static void decode(const char* data, uint64_t length, std::ostream& output, uint8_t options = STD | PADDING);
 
-      /*!
-       * Encode data in base64.
-       *
-       * \param data the data bytes to encode
-       * \param length the data length
-       *
-       * \return the base64 encoded data
-       */
-      static std::string encode(const uint8_t* data, uint64_t length) noexcept;
+    /*!
+     * Decode data in base64.
+     *
+     * \param data the data bytes to decode
+     * \param length the data length
+     *
+     * \return the base64 decoded data
+     *
+     * \throw std::bad_cast invalid base 64 stream
+     */
+    static std::string decode(const char* data, uint64_t length, uint8_t options = STD | PADDING);
 
-    private:
-      /*!
-       * Encode block in base64.
-       *
-       * \param data the block address to encode
-       * \param length the data length
-       * \param buffer the buffer to write in
-       *
-       * \return the number of read bytes
-       */
-      static uint8_t encode(const uint8_t* data, uint64_t length, char* buffer) noexcept;
-      // Encoding methods -
+    /*!
+     * Decode data in base64.
+     *
+     * \param data the data stream to decode
+     * \param output the stream to write in
+     *
+     * \throw std::bad_cast invalid base 64 stream
+     */
+    static void decodeURI(std::istream& data, std::ostream& output);
 
+    /*!
+     * Decode data in base64.
+     *
+     * \param data the data stream to decode
+     *
+     * \return the base64 decoded data
+     *
+     * \throw std::bad_cast invalid base 64 stream
+     */
+    static std::string decodeURI(std::istream& data);
 
-      // Decoding methods +
-    public:
-      /*!
-       * Decode data in base64.
-       *
-       * \param data the data stream to decode
-       * \param output the stream to write in
-       */
-      static void decode(std::istream& data, std::ostream& output) noexcept;
+    /*!
+     * Decode data in base64.
+     *
+     * \param data the data string to decode
+     * \param output the stream to write in
+     *
+     * \throw std::bad_cast invalid base 64 stream
+     */
+    static void decodeURI(const std::string& data, std::ostream& output);
 
-      /*!
-       * Decode data in base64.
-       *
-       * \param data the data stream to decode
-       *
-       * \return the base64 decoded data
-       */
-      static std::string decode(std::istream& data) noexcept;
+    /*!
+     * Decode data in base64.
+     *
+     * \param data the data string to decode
+     *
+     * \return the base64 decoded data
+     *
+     * \throw std::bad_cast invalid base 64 stream
+     */
+    static std::string decodeURI(const std::string& data);
 
-      /*!
-       * Decode data in base64.
-       *
-       * \param data the data string to decode
-       * \param output the stream to write in
-       */
-      static void decode(const std::string& data, std::ostream& output) noexcept;
+    /*!
+     * Decode data in base64.
+     *
+     * \param data the data bytes to decode
+     * \param length the data length
+     * \param output the stream to write in
+     *
+     * \throw std::bad_cast invalid base 64 stream
+     */
+    static void decodeURI(const char* data, uint64_t length, std::ostream& output);
 
-      /*!
-       * Decode data in base64.
-       *
-       * \param data the data string to decode
-       *
-       * \return the base64 decoded data
-       */
-      static std::string decode(const std::string& data) noexcept;
+    /*!
+     * Decode data in base64.
+     *
+     * \param data the data bytes to decode
+     * \param length the data length
+     *
+     * \return the base64 decoded data
+     *
+     * \throw std::bad_cast invalid base 64 stream
+     */
+    static std::string decodeURI(const char* data, uint64_t length);
+    // Decoding methods -
 
-      /*!
-       * Decode data in base64.
-       *
-       * \param data the data bytes to decode
-       * \param length the data length
-       * \param output the stream to write in
-       */
-      static void decode(const char* data, uint64_t length, std::ostream& output) noexcept;
+  };
 
-      /*!
-       * Decode data in base64.
-       *
-       * \param data the data bytes to decode
-       * \param length the data length
-       *
-       * \return the base64 decoded data
-       */
-      static std::string decode(const char* data, uint64_t length) noexcept;
-
-    private:
-      /*!
-       * Encode block in base64.
-       *
-       * \param data the block address to encode
-       * \param length the data length
-       * \param buffer the buffer to write in
-       *
-       * \return the number of read bytes
-       */
-      static void decode(const char* data, uint64_t length, uint8_t buffer[4]) noexcept;
-      // Decoding methods -
-
-    };
-
-  }
 }
+
+#include "crypto/b2t/impl/base64.hpp"
