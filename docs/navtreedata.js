@@ -117,7 +117,7 @@ var NAVTREE =
       [ "Class Members", "functions.html", [
         [ "All", "functions.html", "functions_dup" ],
         [ "Functions", "functions_func.html", "functions_func" ],
-        [ "Variables", "functions_vars.html", null ],
+        [ "Variables", "functions_vars.html", "functions_vars" ],
         [ "Enumerations", "functions_enum.html", null ],
         [ "Related Functions", "functions_rela.html", null ]
       ] ]
@@ -131,16 +131,17 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "aes128_8hpp_source.html",
-"classanch_1_1crypto_1_1_block_cipher_mode_of_operation.html#a330dcd2d64a6442847f2837ba09f2841",
-"classanch_1_1date_1_1_date.html#a991173104183a55ed5a376092569b120",
-"classanch_1_1date_1_1formatter_1_1_second_formatter.html#ad3600cfb6dcd72e0897b130f505b090f",
-"classanch_1_1json_1_1_mapping_error.html#a5f96cf3d05c051cae6f49a5f14331330",
-"classanch_1_1network_1_1_socket.html#a414a66820860f113c0acee1f70b667d6",
-"classanch_1_1sql_1_1_connection.html#a6b0d219dafbfe23945396b5c50816cdd",
-"classanch_1_1sql_1_1_postgre_s_q_l_result_set.html#a33c4e6cd659cbe134bfb2740cec320b7",
-"classanch_1_1sql_1_1_time.html#aec34d01b615e3fcaf2fbefb2739df597",
-"namespaceanch_1_1json.html#a9b313f4714d21dfb2363add9ad7ae607",
-"unionanch_1_1crypto_1_1_s_h_a1_1_1_chunk.html#aa7de42a957d2f4f2a75dc6a687044f74"
+"classanch_1_1crypto_1_1_base64.html#aa38b6672a6e867ca5b6b1782f3c01375",
+"classanch_1_1date_1_1_date.html#a12a4ce40c726862c624cb53edcd57485",
+"classanch_1_1date_1_1formatter_1_1_minute_formatter.html#ae553acf8fad0a9972f2001f2db866a17",
+"classanch_1_1json_1_1_j_s_o_n_mapper.html",
+"classanch_1_1logger_1_1formatter_1_1_string_formatter.html#a77911bb6ad921b2fd3c71784bbd2b6af",
+"classanch_1_1rest_1_1_request_1_1_builder.html#a89a5c2a4890aef34f11b015f1abf900a",
+"classanch_1_1sql_1_1_from_builder.html#a6ff56cc253e3aadc0739fe85bf29e2c5",
+"classanch_1_1sql_1_1_s_q_l_query.html#a81397ee21e5d9e6399e687b0346ee39d",
+"file_exception_8hpp_source.html",
+"namespaceanch_1_1sql.html#aa187281d827526594dc93e2a5036923c",
+"structanch_1_1rest_1_1_common_headers.html#ab601f4a3edf6149a3f3aaffb4f75e3c8"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

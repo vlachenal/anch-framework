@@ -1,4 +1,12 @@
 <map id="anch::sql::MySQLConnection" name="anch::sql::MySQLConnection">
-<area shape="rect" id="node1" title="MySQL connection." alt="" coords="5,409,212,619"/>
-<area shape="rect" id="node2" href="$classanch_1_1sql_1_1_connection.html" title="SQL connection virtual class." alt="" coords="17,5,200,361"/>
+<area shape="rect" id="node1" title="MySQL connection." alt="" coords="101,1253,316,1440"/>
+<area shape="rect" id="node2" href="$classanch_1_1sql_1_1_connection.html" title="SQL connection virtual class." alt="" coords="117,871,300,1204"/>
+<area shape="rect" id="node3" title=" " alt="" coords="87,753,331,808"/>
+<area shape="rect" id="node4" title=" " alt="" coords="224,123,319,163"/>
+<area shape="rect" id="node7" title=" " alt="" coords="164,240,320,309"/>
+<area shape="rect" id="node5" title=" " alt="" coords="198,5,345,60"/>
+<area shape="rect" id="node6" href="$classanch_1_1sql_1_1_prepared_statement.html" title="SQL prepared statement." alt="" coords="97,387,320,691"/>
+<area shape="rect" id="node8" title=" " alt="" coords="5,123,148,163"/>
+<area shape="rect" id="node9" title=" " alt="" coords="37,13,76,53"/>
+<area shape="rect" id="node10" title=" " alt="" coords="113,13,152,53"/>
 </map>

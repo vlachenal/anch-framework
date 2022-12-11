@@ -1,5 +1,5 @@
 <map id="anch::crypto::CFB&lt; Cipher &gt;" name="anch::crypto::CFB&lt; Cipher &gt;">
-<area shape="rect" id="node1" title="Cipher feedback implementation." alt="" coords="57,536,204,687"/>
-<area shape="rect" id="node2" href="$classanch_1_1crypto_1_1_block_cipher_mode_of_operation.html" title=" " alt="" coords="5,277,256,487"/>
-<area shape="rect" id="node3" href="$classanch_1_1crypto_1_1_block_cipher_mode_of_operation.html" title="Block cipher mode of operation interface." alt="" coords="5,5,256,215"/>
+<area shape="rect" id="node1" title="Cipher feedback implementation." alt="" coords="53,491,208,619"/>
+<area shape="rect" id="node2" href="$classanch_1_1crypto_1_1_block_cipher_mode_of_operation.html" title=" " alt="" coords="5,255,256,441"/>
+<area shape="rect" id="node3" href="$classanch_1_1crypto_1_1_block_cipher_mode_of_operation.html" title="Block cipher mode of operation interface." alt="" coords="5,5,256,192"/>
 </map>

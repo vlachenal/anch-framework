@@ -1,6 +1,7 @@
 var searchData=
 [
-  ['time_5fhigh_5fmask_0',['TIME_HIGH_MASK',['../classanch_1_1_u_u_i_d.html#a820d16c088d364e538b6f539a5fb4316',1,'anch::UUID']]],
-  ['time_5flow_5fmask_1',['TIME_LOW_MASK',['../classanch_1_1_u_u_i_d.html#a5d4b83be40ebaa4bb9f969cedf251adb',1,'anch::UUID']]],
-  ['time_5fmid_5fmask_2',['TIME_MID_MASK',['../classanch_1_1_u_u_i_d.html#a8fd895e32915c2b9b0af229071fb5ff5',1,'anch::UUID']]]
+  ['object_5fbegin_0',['OBJECT_BEGIN',['../namespaceanch_1_1json.html#a10b0c7119f4cd760f646c66be848df96',1,'anch::json']]],
+  ['object_5fend_1',['OBJECT_END',['../namespaceanch_1_1json.html#aa2a414018fe5a3b35c84df16ba4ed2fe',1,'anch::json']]],
+  ['options_2',['OPTIONS',['../structanch_1_1rest_1_1_verb.html#a5ee8b000fc053e3496c31e1ff54eb680',1,'anch::rest::Verb']]],
+  ['origin_3',['ORIGIN',['../structanch_1_1rest_1_1_common_headers.html#a74eb5d460721aa280cfb0014e3b098f2',1,'anch::rest::CommonHeaders']]]
 ];

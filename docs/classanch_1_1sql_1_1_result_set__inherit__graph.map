@@ -1,7 +1,7 @@
 <map id="anch::sql::ResultSet" name="anch::sql::ResultSet">
-<area shape="rect" id="node1" title="SQL result representation." alt="" coords="385,5,640,288"/>
-<area shape="rect" id="node2" href="$classanch_1_1sql_1_1_my_s_q_l_prepared_statement_result_set.html" title="MySQL result set implementation for prepared statement ... shitty API." alt="" coords="5,336,265,560"/>
-<area shape="rect" id="node3" href="$classanch_1_1sql_1_1_my_s_q_l_result_set.html" title="MySQL result set implementation." alt="" coords="289,358,496,538"/>
-<area shape="rect" id="node4" href="$classanch_1_1sql_1_1_postgre_s_q_l_result_set.html" title="PostgreSQL result set implementation." alt="" coords="521,358,745,538"/>
-<area shape="rect" id="node5" href="$classanch_1_1sql_1_1_s_q_lite3_result_set.html" title="SQLite3 result set implementation." alt="" coords="769,358,976,538"/>
+<area shape="rect" id="node1" title="SQL result representation." alt="" coords="387,5,641,280"/>
+<area shape="rect" id="node2" href="$classanch_1_1sql_1_1_my_s_q_l_prepared_statement_result_set.html" title="MySQL result set implementation for prepared statement ... shitty API." alt="" coords="5,328,265,529"/>
+<area shape="rect" id="node3" href="$classanch_1_1sql_1_1_my_s_q_l_result_set.html" title="MySQL result set implementation." alt="" coords="289,350,496,507"/>
+<area shape="rect" id="node4" href="$classanch_1_1sql_1_1_postgre_s_q_l_result_set.html" title="PostgreSQL result set implementation." alt="" coords="521,350,753,507"/>
+<area shape="rect" id="node5" href="$classanch_1_1sql_1_1_s_q_lite3_result_set.html" title="SQLite3 result set implementation." alt="" coords="777,350,985,507"/>
 </map>

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['zeropadding_0',['ZeroPadding',['../classanch_1_1crypto_1_1_zero_padding.html',1,'anch::crypto']]]
+  ['writer_0',['Writer',['../classanch_1_1logger_1_1_writer.html',1,'anch::logger']]]
 ];

@@ -1,4 +1,10 @@
 <map id="anch::sql::MySQLPreparedStatement" name="anch::sql::MySQLPreparedStatement">
-<area shape="rect" id="node1" title="MySQL prepared statement implementation." alt="" coords="5,380,235,516"/>
-<area shape="rect" id="node2" href="$classanch_1_1sql_1_1_prepared_statement.html" title="SQL prepared statement." alt="" coords="13,5,227,332"/>
+<area shape="rect" id="node1" title="MySQL prepared statement implementation." alt="" coords="35,725,264,839"/>
+<area shape="rect" id="node2" href="$classanch_1_1sql_1_1_prepared_statement.html" title="SQL prepared statement." alt="" coords="38,372,261,676"/>
+<area shape="rect" id="node3" title=" " alt="" coords="71,240,227,309"/>
+<area shape="rect" id="node4" title=" " alt="" coords="31,123,126,163"/>
+<area shape="rect" id="node5" title=" " alt="" coords="5,5,152,60"/>
+<area shape="rect" id="node6" title=" " alt="" coords="150,123,293,163"/>
+<area shape="rect" id="node7" title=" " alt="" coords="189,13,227,53"/>
+<area shape="rect" id="node8" title=" " alt="" coords="265,13,303,53"/>
 </map>

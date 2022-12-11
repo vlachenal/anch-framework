@@ -102,6 +102,23 @@ var annotated_dup =
         [ "Resource", "classanch_1_1resource_1_1_resource.html", "classanch_1_1resource_1_1_resource" ],
         [ "Section", "classanch_1_1resource_1_1_section.html", "classanch_1_1resource_1_1_section" ]
       ] ],
+      [ "rest", null, [
+        [ "CommonHeaders", "structanch_1_1rest_1_1_common_headers.html", "structanch_1_1rest_1_1_common_headers" ],
+        [ "EndPoint", "classanch_1_1rest_1_1_end_point.html", "classanch_1_1rest_1_1_end_point" ],
+        [ "EndpointFunc", "classanch_1_1rest_1_1_endpoint_func.html", "classanch_1_1rest_1_1_endpoint_func" ],
+        [ "EndpointParamsFunc", "classanch_1_1rest_1_1_endpoint_params_func.html", "classanch_1_1rest_1_1_endpoint_params_func" ],
+        [ "EndpointSimpleFunc", "classanch_1_1rest_1_1_endpoint_simple_func.html", "classanch_1_1rest_1_1_endpoint_simple_func" ],
+        [ "GlobalMapperRegistry", "classanch_1_1rest_1_1_global_mapper_registry.html", null ],
+        [ "Headers", "classanch_1_1rest_1_1_headers.html", "classanch_1_1rest_1_1_headers" ],
+        [ "MapperException", "classanch_1_1rest_1_1_mapper_exception.html", "classanch_1_1rest_1_1_mapper_exception" ],
+        [ "MapperRegistry", "classanch_1_1rest_1_1_mapper_registry.html", "classanch_1_1rest_1_1_mapper_registry" ],
+        [ "MediaType", "structanch_1_1rest_1_1_media_type.html", "structanch_1_1rest_1_1_media_type" ],
+        [ "Request", "classanch_1_1rest_1_1_request.html", "classanch_1_1rest_1_1_request" ],
+        [ "Response", "classanch_1_1rest_1_1_response.html", "classanch_1_1rest_1_1_response" ],
+        [ "Router", "classanch_1_1rest_1_1_router.html", "classanch_1_1rest_1_1_router" ],
+        [ "RouterException", "classanch_1_1rest_1_1_router_exception.html", "classanch_1_1rest_1_1_router_exception" ],
+        [ "Verb", "structanch_1_1rest_1_1_verb.html", "structanch_1_1rest_1_1_verb" ]
+      ] ],
       [ "sql", "namespaceanch_1_1sql.html", [
         [ "ClausesBuilder", "classanch_1_1sql_1_1_clauses_builder.html", "classanch_1_1sql_1_1_clauses_builder" ],
         [ "Connection", "classanch_1_1sql_1_1_connection.html", "classanch_1_1sql_1_1_connection" ],
@@ -134,6 +151,7 @@ var annotated_dup =
       [ "Collectors", "classanch_1_1_collectors.html", "classanch_1_1_collectors" ],
       [ "LessPtrCompare", "structanch_1_1_less_ptr_compare.html", "structanch_1_1_less_ptr_compare" ],
       [ "Optional", "classanch_1_1_optional.html", "classanch_1_1_optional" ],
+      [ "PoolableResource", "classanch_1_1_poolable_resource.html", null ],
       [ "ResourcePool", "classanch_1_1_resource_pool.html", "classanch_1_1_resource_pool" ],
       [ "Singleton", "classanch_1_1_singleton.html", "classanch_1_1_singleton" ],
       [ "Stream", "classanch_1_1_stream.html", "classanch_1_1_stream" ],

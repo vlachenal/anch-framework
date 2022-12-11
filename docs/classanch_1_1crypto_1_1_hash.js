@@ -9,5 +9,6 @@ var classanch_1_1crypto_1_1_hash =
     [ "finalize", "classanch_1_1crypto_1_1_hash.html#a685230aa5c3357a1051f9217ea15f857", null ],
     [ "getBlockSize", "classanch_1_1crypto_1_1_hash.html#a395a4d30ed1a271d6a2c1f67d0aaa919", null ],
     [ "getOutputSize", "classanch_1_1crypto_1_1_hash.html#aaa24875ca5589272d71c37aaf68d2b66", null ],
-    [ "reset", "classanch_1_1crypto_1_1_hash.html#a561904d3a7b845563ba7fb1dd050a780", null ]
+    [ "reset", "classanch_1_1crypto_1_1_hash.html#a561904d3a7b845563ba7fb1dd050a780", null ],
+    [ "_digest", "classanch_1_1crypto_1_1_hash.html#ac3ecbeb5c6ef67ee0483751d4aae1a2c", null ]
 ];

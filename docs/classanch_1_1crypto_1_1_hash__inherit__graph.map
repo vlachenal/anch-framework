@@ -1,12 +1,12 @@
 <map id="anch::crypto::Hash&lt; O, B &gt;" name="anch::crypto::Hash&lt; O, B &gt;">
-<area shape="rect" id="node1" title="Hash algorithm abstract class." alt="" coords="343,5,485,229"/>
-<area shape="rect" id="node2" href="$classanch_1_1crypto_1_1_s_h_a2.html" title=" " alt="" coords="5,601,188,766"/>
-<area shape="rect" id="node4" href="$classanch_1_1crypto_1_1_s_h_a2.html" title=" " alt="" coords="215,593,360,773"/>
-<area shape="rect" id="node6" href="$classanch_1_1crypto_1_1_s_h_a2.html" title="SHA2 abstract class." alt="" coords="195,321,340,487"/>
-<area shape="rect" id="node7" href="$classanch_1_1crypto_1_1_hash.html" title=" " alt="" coords="452,292,595,516"/>
-<area shape="rect" id="node9" href="$classanch_1_1crypto_1_1_hash.html" title=" " alt="" coords="619,292,761,516"/>
-<area shape="rect" id="node3" href="$classanch_1_1crypto_1_1_s_h_a224__256.html" title="SHA2 224/256 implementation." alt="" coords="16,823,177,959"/>
-<area shape="rect" id="node5" href="$classanch_1_1crypto_1_1_s_h_a384__512.html" title="SHA2 384/512 implementation." alt="" coords="207,823,368,959"/>
-<area shape="rect" id="node8" href="$classanch_1_1crypto_1_1_m_d5.html" title="MD5 hash algorithm implementation." alt="" coords="453,593,593,773"/>
-<area shape="rect" id="node10" href="$classanch_1_1crypto_1_1_s_h_a1.html" title="SHA1 hash algorithm implementation." alt="" coords="617,593,763,773"/>
+<area shape="rect" id="node1" title="Hash algorithm abstract class." alt="" coords="340,5,491,221"/>
+<area shape="rect" id="node2" href="$classanch_1_1crypto_1_1_s_h_a2.html" title=" " alt="" coords="5,585,188,742"/>
+<area shape="rect" id="node4" href="$classanch_1_1crypto_1_1_s_h_a2.html" title=" " alt="" coords="256,577,409,749"/>
+<area shape="rect" id="node6" href="$classanch_1_1crypto_1_1_s_h_a2.html" title="SHA2 abstract class." alt="" coords="192,313,345,471"/>
+<area shape="rect" id="node7" href="$classanch_1_1crypto_1_1_hash.html" title=" " alt="" coords="453,284,604,500"/>
+<area shape="rect" id="node9" href="$classanch_1_1crypto_1_1_hash.html" title=" " alt="" coords="628,284,779,500"/>
+<area shape="rect" id="node3" href="$classanch_1_1crypto_1_1_s_h_a224__256.html" title="SHA2 224/256 implementation." alt="" coords="12,799,181,912"/>
+<area shape="rect" id="node5" href="$classanch_1_1crypto_1_1_s_h_a384__512.html" title="SHA2 384/512 implementation." alt="" coords="248,799,417,912"/>
+<area shape="rect" id="node8" href="$classanch_1_1crypto_1_1_m_d5.html" title="MD5 hash algorithm implementation." alt="" coords="455,585,603,742"/>
+<area shape="rect" id="node10" href="$classanch_1_1crypto_1_1_s_h_a1.html" title="SHA1 hash algorithm implementation." alt="" coords="627,585,780,742"/>
 </map>

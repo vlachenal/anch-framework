@@ -1,3 +1,10 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classanch_1_1network_1_1_socket_event.html" title=" " alt="" coords="5,5,208,32"/>
+<area shape="rect" id="node1" href="$classanch_1_1logger_1_1formatter_1_1_i_formatter.html" title=" " alt="" coords="5,197,177,237"/>
+<area shape="rect" id="node2" href="$classanch_1_1logger_1_1formatter_1_1_anch_date_formatter.html" title=" " alt="" coords="225,5,397,45"/>
+<area shape="rect" id="node3" href="$classanch_1_1logger_1_1formatter_1_1_category_formatter.html" title=" " alt="" coords="225,69,397,109"/>
+<area shape="rect" id="node4" href="$classanch_1_1logger_1_1formatter_1_1_const_formatter.html" title=" " alt="" coords="225,133,397,173"/>
+<area shape="rect" id="node5" href="$classanch_1_1logger_1_1formatter_1_1_date_formatter.html" title=" " alt="" coords="225,197,397,237"/>
+<area shape="rect" id="node6" href="$classanch_1_1logger_1_1formatter_1_1_level_formatter.html" title=" " alt="" coords="225,261,397,301"/>
+<area shape="rect" id="node7" href="$classanch_1_1logger_1_1formatter_1_1_string_formatter.html" title=" " alt="" coords="225,325,397,365"/>
+<area shape="rect" id="node8" href="$classanch_1_1logger_1_1formatter_1_1_thread_id_formatter.html" title=" " alt="" coords="225,389,397,429"/>
 </map>

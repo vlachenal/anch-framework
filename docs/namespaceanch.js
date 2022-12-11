@@ -13,6 +13,7 @@ var namespaceanch =
     [ "Collectors", "classanch_1_1_collectors.html", "classanch_1_1_collectors" ],
     [ "LessPtrCompare", "structanch_1_1_less_ptr_compare.html", "structanch_1_1_less_ptr_compare" ],
     [ "Optional", "classanch_1_1_optional.html", "classanch_1_1_optional" ],
+    [ "PoolableResource", "classanch_1_1_poolable_resource.html", null ],
     [ "ResourcePool", "classanch_1_1_resource_pool.html", "classanch_1_1_resource_pool" ],
     [ "Singleton", "classanch_1_1_singleton.html", "classanch_1_1_singleton" ],
     [ "Stream", "classanch_1_1_stream.html", "classanch_1_1_stream" ],
@@ -24,5 +25,7 @@ var namespaceanch =
     [ "byteSwap", "namespaceanch.html#a174316b4a0cb08ff4099ce8708412f4f", null ],
     [ "convert", "namespaceanch.html#a7163f06dc31c45480a4fcff1c9cbf22c", null ],
     [ "isBigEndian", "namespaceanch.html#a8dff697fb25aed06666b05c8862caa0a", null ],
-    [ "isLittleEndian", "namespaceanch.html#a4fa5b950902e9a46ee9b5abb6a4c41d9", null ]
+    [ "isLittleEndian", "namespaceanch.html#a4fa5b950902e9a46ee9b5abb6a4c41d9", null ],
+    [ "toLower", "namespaceanch.html#a076ca536c9623533b33cd90c2db4f5e6", null ],
+    [ "toUpper", "namespaceanch.html#a2848ba09e5716aadd983708833dfa30d", null ]
 ];

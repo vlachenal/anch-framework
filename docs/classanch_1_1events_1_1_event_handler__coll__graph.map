@@ -1,4 +1,4 @@
 <map id="anch::events::EventHandler&lt; Event, Derived &gt;" name="anch::events::EventHandler&lt; Event, Derived &gt;">
-<area shape="rect" id="node1" title="An event handler." alt="" coords="5,145,207,281"/>
-<area shape="rect" id="node2" href="$classanch_1_1events_1_1_observer.html" title="An observer interface of the observers/observable design pattern." alt="" coords="20,5,192,97"/>
+<area shape="rect" id="node1" title="An event handler." alt="" coords="5,123,215,236"/>
+<area shape="rect" id="node2" href="$classanch_1_1events_1_1_observer.html" title="An observer interface of the observers/observable design pattern." alt="" coords="20,5,200,75"/>
 </map>
