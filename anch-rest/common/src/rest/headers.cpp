@@ -28,7 +28,9 @@ using anch::rest::Headers;
 
 std::optional<std::vector<std::string>>
 Headers::get(const std::string& key) {
-  auto iter = find(anch::toLower(key));
+  std::string header(key);
+  anch::toLower(header);
+  auto iter = find(header);
   if(iter == end()) {
     return std::optional<std::vector<std::string>>();
   } else {
@@ -38,7 +40,9 @@ Headers::get(const std::string& key) {
 
 const std::optional<const std::vector<std::string>>
 Headers::get(const std::string& key) const {
-  auto iter = const_cast<Headers*>(this)->find(anch::toLower(key));
+  std::string header(key);
+  anch::toLower(header);
+  auto iter = const_cast<Headers*>(this)->find(header);
   if(iter == cend()) {
     return std::optional<const std::vector<std::string>>();
   } else {
@@ -48,44 +52,53 @@ Headers::get(const std::string& key) const {
 
 bool
 Headers::has(const std::string& key) const {
-  return contains(anch::toLower(key));
+  std::string header(key);
+  anch::toLower(header);
+  return contains(header);
 }
 
 bool
 Headers::add(const std::string& name, const std::vector<std::string>& values) {
-  return insert({anch::toLower(name), values}).second;
+  std::string header(name);
+  anch::toLower(header);
+  return insert({header, values}).second;
 }
 
 bool
 Headers::add(const std::string& name, const std::string& value) {
-  return insert({anch::toLower(name), { value } }).second;
+  std::string header(name);
+  anch::toLower(header);
+  return insert({header, { value } }).second;
 }
 
 void
 Headers::put(const std::string& name, const std::vector<std::string>& values) {
-  std::string key = anch::toLower(name);
-  auto iter = find(key);
+  std::string header(name);
+  anch::toLower(header);
+  auto iter = find(header);
   if(iter != end()) {
     iter->second = values;
   } else {
-    insert({key, values}).first;
+    insert({header, values}).first;
   }
 }
 
 void
 Headers::put(const std::string& name, const std::string& value) {
-  std::string key = anch::toLower(name);
-  auto iter = find(key);
+  std::string header(name);
+  anch::toLower(header);
+  auto iter = find(header);
   if(iter != end()) {
     iter->second = { value };
   } else {
-    insert({key, { value } }).first;
+    insert({header, { value } }).first;
   }
 }
 
 std::optional<std::string>
 Headers::format(const std::string& name) const {
-  std::string lname = anch::toLower(name);
+  std::string lname(name);
+  anch::toLower(lname);
   auto header = find(lname);
   if(header == end() || header->second.empty()) {
     return std::optional<std::string>();

@@ -54,7 +54,7 @@ namespace anch::rest {
   private:
     // Attributes +
     /*! Path pattern to remove wild card */
-    static std::regex PATH_PATTERN;
+    static std::regex PATH_PATTERN; // \todo replace with common constants
 
     /*! Path regular expression */
     std::regex _pathRegex;

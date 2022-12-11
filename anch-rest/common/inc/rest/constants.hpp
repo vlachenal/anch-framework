@@ -21,6 +21,7 @@
 
 #include <string>
 #include <vector>
+#include <regex>
 
 namespace anch {
   namespace rest {
@@ -534,10 +535,13 @@ namespace anch {
     // Common headers -
 
     /*! Empty value */
-    static const std::string EMPTY_VALUE;
+    extern const std::string EMPTY_VALUE;
 
     /*! Empty vector value ... */
-    static const std::vector<std::string> EMPTY_VEC/* = {MediaType::ALL}*/;
+    extern const std::vector<std::string> EMPTY_VEC; // \todo check if used
+
+    /*! Path pattern placeholder */
+    extern const std::regex PATH_PATTERN;
 
   }  // rest
 }  // anch

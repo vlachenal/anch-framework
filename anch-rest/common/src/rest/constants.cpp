@@ -191,3 +191,7 @@ const std::string CommonHeaders::X_UA_COMPATIBLE("x-ua-compatible");
 const std::string CommonHeaders::X_XSS_PROTECTION("x-xss-protection");
 // Common response -
 // Common headers -
+
+const std::string anch::rest::EMPTY_VALUE;
+const std::vector<std::string> anch::rest::EMPTY_VEC;
+const std::regex anch::rest::PATH_PATTERN("\\{\\}");
