@@ -394,44 +394,6 @@ namespace anch {
 
     };
 
-    // struct JSONIODecorator {
-    // private:
-    //   std::ostream & out;
-    // public:
-    //   explicit JSONIODecorator(): out() {}
-    //   template<typename Rhs>
-    //   friend std::ostream & operator<<(JSONIODecorator const& q, Rhs const& rhs) {
-    // 	return q.os << rhs;
-    //   }
-
-    //   friend std::ostream& operator<<(JSONIODecorator const& q, std::string const& rhs) {
-    //     return q.os << "'" << rhs << "'";
-    //   }
-
-    //   friend std::ostream& operator<<(JSONIODecorator const& q, char const* rhs) {
-    //     return q.os << "'" << rhs << "'";
-    //   }
-
-    // };
-
-    // struct jsonify_creator { } json_format;
-
-    // JSONIODecorator operator<<(std::ostream & os, jsonify_creator) {
-    //   return JSONIODecorator(os);
-    // }
-
-    // template<typename T>
-    // std::ostream& JSONIODecorator(std::ostream& out, const T& value) {
-    //   serialize(value, out);
-    //   return out;
-    // }
-
-    // template<typename T>
-    // std::omanip<T> JSONIODecorator() {
-    //   serialize(value, out);
-    //   return out;
-    // }
-
   }  // json
 }  // anch
 
