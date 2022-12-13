@@ -22,32 +22,30 @@
 #include <cstdint>
 
 
-namespace anch {
-  namespace events {
+namespace anch::events {
 
+  /*!
+   * \brief An observer interface of the observers/observable design pattern.
+   *
+   * It has to be implemented to handle events correctly.
+   *
+   * \since 0.1
+   *
+   * \author Vincent Lachenal
+   */
+  template<typename Event>
+  class Observer {
+
+  public:
+    // Methods +
     /*!
-     * \brief An observer interface of the observers/observable design pattern.
+     * Receive event notification
      *
-     * It has to be implemented to handle events correctly.
-     *
-     * \since 0.1
-     *
-     * \author Vincent Lachenal
+     * \param event The event to receive
      */
-    template<typename Event>
-    class Observer {
+    virtual void notify(const Event& event) noexcept = 0;
+    // Methods -
 
-    public:
-      // Methods +
-      /*!
-       * Receive event notification
-       *
-       * \param event The event to receive
-       */
-      virtual void notify(const Event& event) noexcept = 0;
-      // Methods -
+  };
 
-    };
-
-  }
 }

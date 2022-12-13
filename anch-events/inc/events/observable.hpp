@@ -26,112 +26,72 @@
 #include "lessPtrCompare.hpp"
 
 
-namespace anch {
-  namespace events {
+namespace anch::events {
+
+  /*!
+   * \brief An observable implementation of the observers/observable design pattern.
+   *
+   * This class maintains an observer list which have to be notified on event.
+   *
+   * \since 0.1
+   *
+   * \author Vincent Lachenal
+   */
+  template<typename Event>
+  class Observable {
+
+  private:
+    // Attributes +
+    /*! Observers list */
+    std::set<anch::events::Observer<Event>*, anch::LessPtrCompare<Observer<Event> > > _observers;
+
+    /*! Mutex */
+    std::mutex _mutex;
+    // Attributes -
+
+  public:
+    // Constructors +
+    /*!
+     * \ref Observable default constructor
+     */
+    Observable();
+    // Constructors -
+
+    // Destructor +
+    /*!
+     * \ref Observable destructor
+     */
+    virtual ~Observable();
+    // Destructor -
+
+  public:
+    // Methods +
+    /*!
+     * Add observer for notifications
+     *
+     * \param observer The observer to add
+     *
+     * \return \c true if observer has been added, \c false otherwise
+     */
+    bool addObserver(anch::events::Observer<Event>& observer);
 
     /*!
-     * \brief An observable implementation of the observers/observable design pattern.
+     * Remove observer for notifications
      *
-     * This class maintains an observer list which have to be notified on event.
-     *
-     * \since 0.1
-     *
-     * \author Vincent Lachenal
+     * \param observer The observer to remove
      */
-    template<typename Event>
-    class Observable {
+    void removeObserver(anch::events::Observer<Event>& observer);
 
-    private:
-      // Attributes +
-      /*! Observers list */
-      std::set<anch::events::Observer<Event>*, anch::LessPtrCompare<Observer<Event> > > _observers;
+    /*!
+     * Notify every observer that an event has been fired
+     *
+     * \param event the event to fire
+     */
+    void notifyObservers(const Event& event);
+    // Methods -
 
-      /*! Mutex */
-      std::mutex _mutex;
-      // Attributes -
+  };
 
-    public:
-      // Constructors +
-      /*!
-       * \ref Observable default constructor
-       */
-      Observable();
-      // Constructors -
-
-      // Destructor +
-      /*!
-       * \ref Observable destructor
-       */
-      virtual ~Observable();
-      // Destructor -
-
-    public:
-      // Methods +
-      /*!
-       * Add observer for notifications
-       *
-       * \param observer The observer to add
-       *
-       * \return \c true if observer has been added, \c false otherwise
-       */
-      bool addObserver(anch::events::Observer<Event>& observer);
-
-      /*!
-       * Remove observer for notifications
-       *
-       * \param observer The observer to remove
-       */
-      void removeObserver(anch::events::Observer<Event>& observer);
-
-      /*!
-       * Notify every observer that an event has been fired
-       *
-       * \param event the event to fire
-       */
-      void notifyObservers(const Event& event);
-      // Methods -
-
-    };
-
-
-    // Implementation +
-    template<typename Evt>
-    Observable<Evt>::Observable(): _observers(), _mutex() {
-      // Nothing to do
-    }
-
-    template<typename Evt>
-    Observable<Evt>::~Observable() {
-      // Nothing to do
-    }
-
-    template<typename Evt>
-    bool
-    Observable<Evt>::addObserver(anch::events::Observer<Evt>& observer) {
-      _mutex.lock();
-      bool added = _observers.insert(&observer).second;
-      _mutex.unlock();
-      return added;
-    }
-
-    template<typename Evt>
-    void
-    Observable<Evt>::removeObserver(anch::events::Observer<Evt>& observer) {
-      _mutex.lock();
-      _observers.erase(&observer);
-      _mutex.unlock();
-    }
-
-    template<typename Evt>
-    void
-    Observable<Evt>::notifyObservers(const Evt& event) {
-      _mutex.lock();
-      for(anch::events::Observer<Evt>* observer : _observers) {
-	observer->notify(event);
-      }
-      _mutex.unlock();
-    }
-    // Implementation -
-
-  }
 }
+
+#include "events/impl/observable.hpp"
