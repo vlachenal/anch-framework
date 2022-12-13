@@ -296,59 +296,6 @@ namespace anch {
 
   };
 
-  inline std::string
-  UUID::toString() const {
-    std::ostringstream out;
-    out << std::hex
-    	<< std::setfill('0') << std::setw(8) << _lowTime << '-'
-    	<< std::setfill('0') << std::setw(4) << _midTime << '-'
-    	<< std::setfill('0') << std::setw(1) << static_cast<int>(_version)
-    	<< std::setfill('0') << std::setw(3) << _highTime << '-'
-    	<< std::setfill('0') << std::setw(2) << _clockSeqHighRes
-    	<< std::setfill('0') << std::setw(2) << _clockSeqLow << '-'
-    	<< std::setfill('0') << std::setw(12) << _node;
-    return out.str();
-  }
-
-  inline UUID::operator std::string() const {
-    return toString();
-  }
-
-  inline uint32_t
-  UUID::getLowTime() const {
-    return _lowTime;
-  }
-
-  inline uint16_t
-  UUID::getMidTime() const {
-    return _midTime;
-  }
-
-  inline uint16_t
-  UUID::getHighTime() const {
-    return _highTime;
-  }
-
-  inline uint16_t
-  UUID::getClockSeqLow() const {
-    return _clockSeqLow;
-  }
-
-  inline uint16_t
-  UUID::getClockSeqHighRes() const {
-    return _clockSeqHighRes;
-  }
-
-  inline uint64_t
-  UUID::getNode() const {
-    return _node;
-  }
-
-  inline anch::UUID::Version
-  UUID::getVersion() const {
-    return _version;
-  }
-
 }
 
 /*!
@@ -362,16 +309,6 @@ namespace anch {
  */
 template<class CharT, class Traits>
 std::basic_ostream<CharT, Traits>&
-operator<<(std::basic_ostream<CharT, Traits>& out, const anch::UUID& uuid) {
-  std::ios_base::fmtflags flags = out.flags(); // Save current flags
-  out << std::hex
-      << std::setfill('0') << std::setw(8) << uuid.getLowTime() << '-'
-      << std::setfill('0') << std::setw(4) << uuid.getMidTime() << '-'
-      << std::setfill('0') << std::setw(1) << static_cast<int>(uuid.getVersion())
-      << std::setfill('0') << std::setw(3) << uuid.getHighTime() << '-'
-      << std::setfill('0') << std::setw(2) << uuid.getClockSeqHighRes()
-      << std::setfill('0') << std::setw(2) << uuid.getClockSeqLow() << '-'
-      << std::setfill('0') << std::setw(12) << uuid.getNode();
-  out.flags(flags); // Restore flags
-  return out;
-}
+operator<<(std::basic_ostream<CharT, Traits>& out, const anch::UUID& uuid);
+
+#include "impl/uuid.hpp"
