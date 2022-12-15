@@ -22,51 +22,47 @@
 #include "logger/formatter/iFormatter.hpp"
 
 
-namespace anch {
-  namespace logger {
-    namespace formatter {
+namespace anch::logger::formatter {
 
-      /*!
-       * Category formatter
-       *
-       * \author Vincent Lachenal
-       */
-      class CategoryFormatter: public anch::logger::formatter::IFormatter {
-      public:
-	// Constructors +
-	/*!
-	 * \ref CategoryFormatter default constructor
-	 */
-	CategoryFormatter();
-	// Constructors -
+  /*!
+   * Category formatter
+   *
+   * \author Vincent Lachenal
+   */
+  class CategoryFormatter: public anch::logger::formatter::IFormatter {
+  public:
+    // Constructors +
+    /*!
+     * \ref CategoryFormatter default constructor
+     */
+    CategoryFormatter();
+    // Constructors -
 
-	// Destructor +
-	/*!
-	 * \ref CategoryFormatter destructor
-	 */
-	~CategoryFormatter();
-	// Destructor -
+    // Destructor +
+    /*!
+     * \ref CategoryFormatter destructor
+     */
+    virtual ~CategoryFormatter();
+    // Destructor -
 
-      public:
-	/*!
-	 * Return the input string
-	 *
-	 * \param value The input string
-	 * \param out The output stream to write in
-	 */
-	virtual void formatValue(const void* const value,
-				 std::ostream& out)
-	  const noexcept;
+  public:
+    /*!
+     * Return the input string
+     *
+     * \param value The input string
+     * \param out The output stream to write in
+     */
+    virtual void formatValue(const void* const value,
+			     std::ostream& out)
+      const noexcept;
 
-	/*!
-	 * Get the formatter type
-	 *
-	 * \return The formatter type
-	 */
-	virtual anch::logger::formatter::FormatterType getType() const noexcept;
+    /*!
+     * Get the formatter type
+     *
+     * \return The formatter type
+     */
+    virtual anch::logger::formatter::FormatterType getType() const noexcept;
 
-      };
+  };
 
-    }
-  }
 }

@@ -22,51 +22,47 @@
 #include "logger/formatter/iFormatter.hpp"
 
 
-namespace anch {
-  namespace logger {
-    namespace formatter {
+namespace anch::logger::formatter {
 
-      /*!
-       * String formatter
-       *
-       * \author Vincent Lachenal
-       */
-      class ThreadIdFormatter: public anch::logger::formatter::IFormatter {
-      public:
-	// Constructors +
-	/*!
-	 * \ref ThreadIdFormatter default constructor
-	 */
-	ThreadIdFormatter();
-	// Constructors -
+  /*!
+   * String formatter
+   *
+   * \author Vincent Lachenal
+   */
+  class ThreadIdFormatter: public anch::logger::formatter::IFormatter {
+  public:
+    // Constructors +
+    /*!
+     * \ref ThreadIdFormatter default constructor
+     */
+    ThreadIdFormatter();
+    // Constructors -
 
-	// Destructor +
-	/*!
-	 * \ref ThreadIdFormatter destructor
-	 */
-	~ThreadIdFormatter();
-	// Destructor -
+    // Destructor +
+    /*!
+     * \ref ThreadIdFormatter destructor
+     */
+    virtual ~ThreadIdFormatter();
+    // Destructor -
 
-      public:
-	/*!
-	 * Return the input string
-	 *
-	 * \param value The input string
-	 * \param out The output stream to write in
-	 */
-	virtual void formatValue(const void* const value,
-				 std::ostream& out)
-	  const noexcept;
+  public:
+    /*!
+     * Return the input string
+     *
+     * \param value The input string
+     * \param out The output stream to write in
+     */
+    virtual void formatValue(const void* const value,
+			     std::ostream& out)
+      const noexcept;
 
-	/*!
-	 * Get the formatter type
-	 *
-	 * \return The formatter type
-	 */
-	virtual anch::logger::formatter::FormatterType getType() const noexcept;
+    /*!
+     * Get the formatter type
+     *
+     * \return The formatter type
+     */
+    virtual anch::logger::formatter::FormatterType getType() const noexcept;
 
-      };
+  };
 
-    }
-  }
 }

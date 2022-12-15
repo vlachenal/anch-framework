@@ -25,98 +25,94 @@
 #include "logger/formatter/messageFormatter.hpp"
 
 
-namespace anch {
-  namespace logger {
+namespace anch::logger {
+
+  /*!
+   * File writer which is not thread safe
+   *
+   * \author Vincent Lachenal
+   */
+  class Writer {
+    // Attributes +
+  protected:
+    /*! Ouput file stream */
+    std::ostream* _output;
+
+    /*! Message formatter */
+    anch::logger::formatter::MessageFormatter _formatter;
+
+  private:
+    /*! File name */
+    std::string _fileName;
+
+    /*! Maximum file size */
+    unsigned int _maxSize;
+
+    /*! Maximum file index */
+    int _maxIndex;
+
+    /*! Current file index */
+    int _fileIndex;
+    // Attributes -
+
+  public:
+    // Constructors +
+    /*!
+     * \ref Writer constructor
+     *
+     * \param fileName The file name
+     * \param linePattern The line pattern
+     * \param maxSize The file maximum size before file rotation
+     * \param maxIndex The maximum number of log files to keep
+     */
+    Writer(const std::string& fileName,
+	   const std::string& linePattern,
+	   unsigned int maxSize = 0,
+	   int maxIndex = 0);
 
     /*!
-     * File writer which is not thread safe
+     * \ref Writer constructor
      *
-     * \author Vincent Lachenal
+     * \param output The output to use
+     * \param linePattern The line pattern
      */
-    class Writer {
-      // Attributes +
-    protected:
-      /*! Ouput file stream */
-      std::ostream* _output;
+    Writer(std::ostream* output, const std::string& linePattern);
+    // Constructors -
 
-      /*! Message formatter */
-      anch::logger::formatter::MessageFormatter _formatter;
+    // Destructor +
+    /*!
+     * \ref Writer destructor
+     */
+    virtual ~Writer();
+    // Destructor -
 
-    private:
-      /*! File name */
-      std::string _fileName;
+  public:
+    /*!
+     * Write message in the file
+     *
+     * \param category The logger category
+     * \param level The message level
+     * \param message Message to write
+     */
+    virtual void write(const std::string& category,
+		       const anch::logger::Level& level,
+		       const std::string& message);
 
-      /*! Maximum file size */
-      unsigned int _maxSize;
+  protected:
+    /*!
+     * Check if file has to be rotate according to configuration and its size
+     *
+     * \return true or false
+     */
+    bool rotate() const;
 
-      /*! Maximum file index */
-      int _maxIndex;
+    /*!
+     * Rotate files when current reachs the maximum file length.
+     */
+    void rotateFiles();
 
-      /*! Current file index */
-      int _fileIndex;
-      // Attributes -
+  };
 
-    public:
-      // Constructors +
-      /*!
-       * \ref Writer constructor
-       *
-       * \param fileName The file name
-       * \param linePattern The line pattern
-       * \param maxSize The file maximum size before file rotation
-       * \param maxIndex The maximum number of log files to keep
-       */
-      Writer(const std::string& fileName,
-	     const std::string& linePattern,
-	     unsigned int maxSize = 0,
-	     int maxIndex = 0);
-
-      /*!
-       * \ref Writer constructor
-       *
-       * \param output The output to use
-       * \param linePattern The line pattern
-       */
-      Writer(std::ostream* output, const std::string& linePattern);
-      // Constructors -
-
-      // Destructor +
-      /*!
-       * \ref Writer destructor
-       */
-      virtual ~Writer();
-      // Destructor -
-
-    public:
-      /*!
-       * Write message in the file
-       *
-       * \param category The logger category
-       * \param level The message level
-       * \param message Message to write
-       */
-      virtual void write(const std::string& category,
-			 const anch::logger::Level& level,
-			 const std::string& message);
-
-    protected:
-      /*!
-       * Check if file has to be rotate according to configuration and its size
-       *
-       * \return true or false
-       */
-      bool rotate() const;
-
-      /*!
-       * Rotate files when current reachs the maximum file length.
-       */
-      void rotateFiles();
-
-    };
-
-    inline bool Writer::rotate() const {
-      return (_maxSize > 0 && _fileName != "" && _output->tellp() >= _maxSize);
-    }
-
-  }
 }
+
+#include "logger/impl/writter.hpp"

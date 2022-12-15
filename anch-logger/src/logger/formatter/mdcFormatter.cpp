@@ -17,30 +17,33 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "logger/formatter/threadIdFormatter.hpp"
+#include "logger/formatter/mdcFormatter.hpp"
 
 #include "logger/mdc.hpp"
 
-using std::string;
-using std::ostream;
-
-using anch::logger::formatter::ThreadIdFormatter;
+using anch::logger::formatter::MDCFormatter;
 using anch::logger::formatter::FormatterType;
 
-ThreadIdFormatter::ThreadIdFormatter() {
+MDCFormatter::MDCFormatter(const std::string& key): _key(key) {
   // Nothing to do
 }
 
-ThreadIdFormatter::~ThreadIdFormatter() {
+MDCFormatter::~MDCFormatter() {
   // Nothing to do
 }
 
 void
-ThreadIdFormatter::formatValue(const void* const, ostream& out) const noexcept {
-  out << anch::logger::MDC.get().find(anch::logger::MDC_THREAD_ID)->second;
+MDCFormatter::formatValue([[ maybe_unused ]] const void* const value, std::ostream& out) const noexcept {
+  auto mdc =  anch::logger::MDC.get();
+  auto iter = mdc.find(_key);
+  if(iter ==  mdc.end()) {
+    out << "undefined";
+  } else {
+    out << iter->second;
+  }
 }
 
 FormatterType
-ThreadIdFormatter::getType() const noexcept {
-  return FormatterType::THREAD_ID;
+MDCFormatter::getType() const noexcept {
+  return FormatterType::MDC;
 }

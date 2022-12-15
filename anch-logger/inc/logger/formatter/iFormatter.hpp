@@ -21,58 +21,55 @@
 
 #include <iostream>
 
-namespace anch {
-  namespace logger {
-    namespace formatter {
+namespace anch::logger::formatter {
 
-      /*!
-       * Formatter types
-       *
-       * \author Vincent Lachenal
-       */
-      enum class FormatterType {
-	LEVEL,
-	CONST,
-	STRING,
-	CATEGORY,
-	THREAD_ID,
-	DATE,
-	ANCH_DATE
-      };
+  /*!
+   * Formatter types
+   *
+   * \author Vincent Lachenal
+   */
+  enum class FormatterType {
+    LEVEL,
+    CONST,
+    STRING,
+    CATEGORY,
+    THREAD_ID,
+    DATE,
+    ANCH_DATE,
+    MDC
+  };
 
-      /*!
-       * Provide an interface for every item which will be format
-       *
-       * \author Vincent Lachenal
-       */
-      class IFormatter {
-      public:
-	/*!
-	 * \ref IFormatter destructor
-	 */
-	virtual ~IFormatter() {
-	  // Nothing to do
-	}
-
-      public:
-	/*!
-	 * Get the formatter type
-	 *
-	 * \return The formatter type
-	 */
-	virtual anch::logger::formatter::FormatterType getType() const noexcept = 0;
-
-	/*!
-	 * Format value
-	 *
-	 * \param value The value to format
-	 * \param out The output stream to write in
-	 */
-	virtual void formatValue(const void* const value,
-				 std::ostream& out)
-	  const noexcept = 0;
-      };
-
+  /*!
+   * Provide an interface for every item which will be format
+   *
+   * \author Vincent Lachenal
+   */
+  class IFormatter {
+  public:
+    /*!
+     * \ref IFormatter destructor
+     */
+    virtual ~IFormatter() {
+      // Nothing to do
     }
-  }
+
+  public:
+    /*!
+     * Get the formatter type
+     *
+     * \return The formatter type
+     */
+    virtual anch::logger::formatter::FormatterType getType() const noexcept = 0;
+
+    /*!
+     * Format value
+     *
+     * \param value The value to format
+     * \param out The output stream to write in
+     */
+    virtual void formatValue(const void* const value,
+			     std::ostream& out)
+      const noexcept = 0;
+  };
+
 }

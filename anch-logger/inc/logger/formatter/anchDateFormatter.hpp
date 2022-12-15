@@ -24,57 +24,51 @@
 #include "date/dateFormatter.hpp"
 
 
-namespace anch {
-  namespace logger {
-    namespace formatter {
+namespace anch::logger::formatter {
 
-      /*!
-       * Date formatter with high precision clock
-       *
-       * \author Vincent Lachenal
-       */
-      class AnchDateFormatter: public anch::logger::formatter::IFormatter {
-      private:
-	// Attributes +
-	/*! Date format pattern */
-	anch::date::DateFormatter _dateFormat;
-	// Attributes -
+  /*!
+   * Date formatter with high precision clock
+   *
+   * \author Vincent Lachenal
+   */
+  class AnchDateFormatter: public anch::logger::formatter::IFormatter {
+  private:
+    // Attributes +
+    /*! Date format pattern */
+    anch::date::DateFormatter _dateFormat;
+    // Attributes -
 
-      public:
-	// Constructors +
-	/*!
-	 * \ref AnchDateFormatter default constructor
-	 */
-	AnchDateFormatter(const std::string& dateFormat);
-	// Constructors -
+  public:
+    // Constructors +
+    /*!
+     * \ref AnchDateFormatter default constructor
+     */
+    AnchDateFormatter(const std::string& dateFormat);
+    // Constructors -
 
-	// Destructor +
-	/*!
-	 * \ref AnchDateFormatter destructor
-	 */
-	~AnchDateFormatter();
-	// Destructor -
+    // Destructor +
+    /*!
+     * \ref AnchDateFormatter destructor
+     */
+    virtual ~AnchDateFormatter();
+    // Destructor -
 
-      public:
-	/*!
-	 * Return the input string
-	 *
-	 * \param value The input string
-	 * \param out The output stream to write in
-	 */
-	virtual void formatValue(const void* const value,
-				 std::ostream& out)
-	  const noexcept;
+  public:
+    /*!
+     * Return the input string
+     *
+     * \param value The input string
+     * \param out The output stream to write in
+     */
+    virtual void formatValue(const void* const value, std::ostream& out) const noexcept;
 
-	/*!
-	 * Get the formatter type
-	 *
-	 * \return The formatter type
-	 */
-	virtual anch::logger::formatter::FormatterType getType() const noexcept;
+    /*!
+     * Get the formatter type
+     *
+     * \return The formatter type
+     */
+    virtual anch::logger::formatter::FormatterType getType() const noexcept;
 
-      };
+  };
 
-    }
-  }
 }

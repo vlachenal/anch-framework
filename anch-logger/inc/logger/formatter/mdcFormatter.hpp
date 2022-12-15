@@ -21,48 +21,46 @@
 
 #include "logger/formatter/iFormatter.hpp"
 
+#include <string>
 
 namespace anch::logger::formatter {
 
   /*!
-   * Constant string formatter
+   * MDC value formatter
    *
    * \author Vincent Lachenal
    */
-  class ConstFormatter: public anch::logger::formatter::IFormatter {
+  class MDCFormatter: public anch::logger::formatter::IFormatter {
+
   private:
     // Attributes +
-    /*! The string to print */
-    std::string _strToPrint;
+    /*! MDC key */
+    std::string _key;
     // Attributes -
 
   public:
-    // Constructor +
+    // Constructors +
     /*!
-     * \ref ConstFormatter constructor
-     *
-     * \param strToPrint The string to print
+     * \ref MDCFormatter default constructor
      */
-    ConstFormatter(const std::string strToPrint);
-    // Constructor -
+    MDCFormatter(const std::string& key);
+    // Constructors -
 
     // Destructor +
     /*!
-     * \ref ConstFormatter destructor
+     * \ref MDCFormatter destructor
      */
-    virtual ~ConstFormatter();
+    virtual ~MDCFormatter();
     // Destructor -
 
   public:
     /*!
-     * Return the constant string
+     * Return the input string
      *
-     * \param value Nothing (NULL will be passed every time)
+     * \param value The input string
      * \param out The output stream to write in
      */
-    virtual void formatValue(const void* const value,
-			     std::ostream& out)
-      const noexcept;
+    virtual void formatValue(const void* const value, std::ostream& out) const noexcept;
 
     /*!
      * Get the formatter type

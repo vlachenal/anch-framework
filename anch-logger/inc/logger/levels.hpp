@@ -19,64 +19,40 @@
 */
 #pragma once
 
-#include <iostream>
+#include <string>
 #include <map>
 
-namespace anch {
-  namespace logger {
+namespace anch::logger {
 
-    /*!
-     * Logging levels definitions
-     *
-     * \author Vincent Lachenal
-     */
-    enum class Level {
-      /*! Trace logging level */
-      TRACE = 0,
+  /*!
+   * Logging levels declaration
+   *
+   * \author Vincent Lachenal
+   */
+  enum class Level {
+    /*! Trace logging level */
+    TRACE = 0,
 
-      /*! Debug logging level */
-      DEBUG = 10,
+    /*! Debug logging level */
+    DEBUG = 10,
 
-      /*! Information logging level */
-      INFO = 20,
+    /*! Information logging level */
+    INFO = 20,
 
-      /*! Warning logging level */
-      WARN = 30,
+    /*! Warning logging level */
+    WARN = 30,
 
-      /*! Error logging level */
-      ERROR = 40,
+    /*! Error logging level */
+    ERROR = 40,
 
-      /*! Fatal logging level */
-      FATAL = 50
-    };
+    /*! Fatal logging level */
+    FATAL = 50
+  };
 
-    /*!
-     * Level labels for logging facilities
-     *
-     * \author Vincent Lachenal
-     */
-    const std::map<const Level,const std::string> LEVEL_LABEL = {
-      {Level::TRACE,"TRACE"},
-      {Level::DEBUG,"DEBUG"},
-      {Level::INFO,"INFO"},
-      {Level::WARN,"WARN"},
-      {Level::ERROR,"ERROR"},
-      {Level::FATAL,"FATAL"},
-    };
+  /*! Level->labels for logging defintion */
+  extern const std::map<const Level, const std::string> LEVEL_LABEL;
 
-    /*!
-     * Level labels for logging facilities
-     *
-     * \author Vincent Lachenal
-     */
-    const std::map<const std::string,const Level> LABEL_LEVEL = {
-      {"TRACE",Level::TRACE},
-      {"DEBUG",Level::DEBUG},
-      {"INFO",Level::INFO},
-      {"WARN",Level::WARN},
-      {"ERROR",Level::ERROR},
-      {"FATAL",Level::FATAL},
-    };
+  /*! Labels->levels for logging definition */
+  extern const std::map<const std::string, const Level> LABEL_LEVEL;
 
-  }
 }

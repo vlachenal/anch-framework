@@ -25,83 +25,71 @@
 #include "logger/levels.hpp"
 #include "logger/writer.hpp"
 
-namespace anch {
-  namespace logger {
+namespace anch::logger {
+
+  /*!
+   * Loggers configuration extract from configuration file
+   *
+   * \author Vincent Lachenal
+   */
+  class LoggerConfiguration {
+  private:
+    /*! Logger category */
+    std::string _category;
+
+    /*! Logging level */
+    anch::logger::Level _level;
+
+    /*! Writers */
+    std::vector<anch::logger::Writer*> _writers;
+
+  public:
+    // Constructor +
+    /*!
+     * \ref LoggerConfiguration constructor
+     *
+     * \param category The category
+     * \param level The logging level
+     * \param writers The writers
+     */
+    LoggerConfiguration(const std::string& category,
+			const anch::logger::Level& level,
+			const std::vector<anch::logger::Writer*>& writers);
+    // Constructor -
+
+    // Destructor +
+    /*!
+     * \ref LoggerConfiguration destructor
+     */
+    ~LoggerConfiguration();
+    // Destructor -
+
+  public:
+    // Accessors +
+    /*!
+     * Category getter
+     *
+     * \return The category
+     */
+    const std::string& getCategory() const;
 
     /*!
-     * Loggers configuration extract from configuration file
+     * Logging level getter
      *
-     * \author Vincent Lachenal
+     * \return The logging level
      */
-    class LoggerConfiguration {
-    private:
-      /*! Logger category */
-      std::string _category;
+    const anch::logger::Level& getLevel() const;
 
-      /*! Logging level */
-      anch::logger::Level _level;
+    /*!
+     * Writers getter
+     *
+     * \return The writers
+     */
+    const std::vector<anch::logger::Writer*>& getWriters() const;
+    // Accessors -
 
-      /*! Writers */
-      std::vector<anch::logger::Writer*> _writers;
+  };
 
-    public:
-      // Constructor +
-      /*!
-       * \ref LoggerConfiguration constructor
-       *
-       * \param category The category
-       * \param level The logging level
-       * \param writers The writers
-       */
-      LoggerConfiguration(const std::string& category,
-			  const anch::logger::Level& level,
-			  const std::vector<anch::logger::Writer*>& writers);
-      // Constructor -
-
-      // Destructor +
-      /*!
-       * \ref LoggerConfiguration destructor
-       */
-      ~LoggerConfiguration();
-      // Destructor -
-
-    public:
-      // Accessors +
-      /*!
-       * Category getter
-       *
-       * \return The category
-       */
-      const std::string& getCategory() const;
-
-      /*!
-       * Logging level getter
-       *
-       * \return The logging level
-       */
-      const anch::logger::Level& getLevel() const;
-
-      /*!
-       * Writers getter
-       *
-       * \return The writers
-       */
-      const std::vector<anch::logger::Writer*>& getWriters() const;
-      // Accessors -
-
-    };
-
-    inline const std::string& LoggerConfiguration::getCategory() const {
-      return _category;
-    }
-
-    inline const anch::logger::Level& LoggerConfiguration::getLevel() const {
-      return _level;
-    }
-
-    inline const std::vector<anch::logger::Writer*>& LoggerConfiguration::getWriters() const {
-      return _writers;
-    }
-
-  }
 }
+
+#include "logger/impl/loggerConfiguration.hpp"

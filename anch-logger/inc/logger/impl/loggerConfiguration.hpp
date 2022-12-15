@@ -17,30 +17,23 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "logger/formatter/threadIdFormatter.hpp"
+#pragma once
 
-#include "logger/mdc.hpp"
+namespace anch::logger {
 
-using std::string;
-using std::ostream;
+  inline const std::string&
+  LoggerConfiguration::getCategory() const {
+    return _category;
+  }
 
-using anch::logger::formatter::ThreadIdFormatter;
-using anch::logger::formatter::FormatterType;
+  inline const anch::logger::Level&
+  LoggerConfiguration::getLevel() const {
+    return _level;
+  }
 
-ThreadIdFormatter::ThreadIdFormatter() {
-  // Nothing to do
-}
+  inline const std::vector<anch::logger::Writer*>&
+  LoggerConfiguration::getWriters() const {
+    return _writers;
+  }
 
-ThreadIdFormatter::~ThreadIdFormatter() {
-  // Nothing to do
-}
-
-void
-ThreadIdFormatter::formatValue(const void* const, ostream& out) const noexcept {
-  out << anch::logger::MDC.get().find(anch::logger::MDC_THREAD_ID)->second;
-}
-
-FormatterType
-ThreadIdFormatter::getType() const noexcept {
-  return FormatterType::THREAD_ID;
 }

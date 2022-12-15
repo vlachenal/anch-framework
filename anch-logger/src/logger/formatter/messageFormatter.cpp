@@ -28,19 +28,7 @@
 #include "logger/formatter/threadIdFormatter.hpp"
 #include "logger/formatter/dateFormatter.hpp"
 #include "logger/formatter/anchDateFormatter.hpp"
-
-using std::string;
-using std::ostringstream;
-
-#ifdef ANCH_BOOST_REGEX
-using boost::regex;
-using boost::smatch;
-using boost::regex_search;
-#else
-using std::regex;
-using std::smatch;
-using std::regex_search;
-#endif
+#include "logger/formatter/mdcFormatter.hpp"
 
 using anch::logger::formatter::MessageFormatter;
 using anch::logger::formatter::IFormatter;
@@ -52,20 +40,21 @@ using anch::logger::formatter::CategoryFormatter;
 using anch::logger::formatter::ThreadIdFormatter;
 using anch::logger::formatter::DateFormatter;
 using anch::logger::formatter::AnchDateFormatter;
+using anch::logger::formatter::MDCFormatter;
 
 
 // Static initialization +
-const regex MessageFormatter::CONFIG_PATTERN = regex(R"(^((\$d\{[^\}]+\})|(\$D\{[^\}]+\})|(\$m)|(\$c)|(\$p)|(\$t)|([^\$]+)))");
+const std::regex MessageFormatter::CONFIG_PATTERN = std::regex(R"(^((\$d\{[^\}]+\})|(\$D\{[^\}]+\})|(\$C\{[^\}]+\})|(\$m)|(\$c)|(\$p)|(\$t)|([^\$]+)))");
 // Static initialization -
 
-MessageFormatter::MessageFormatter(const string& linePattern): _formatters() {
-  smatch match;
-  string line = linePattern;
+MessageFormatter::MessageFormatter(const std::string& linePattern): _formatters() {
+  std::smatch match;
+  std::string line = linePattern;
   bool ok = true;
   while(!line.empty() && ok) {
-    if(regex_search(line, match, CONFIG_PATTERN)) {
-      addFormatter(string(match[0].first, match[0].second));
-      line = string(match.suffix().first, match.suffix().second);
+    if(std::regex_search(line, match, CONFIG_PATTERN)) {
+      addFormatter(std::string(match[0].first, match[0].second));
+      line = std::string(match.suffix().first, match.suffix().second);
 
     } else {
       ok = false;
@@ -82,17 +71,20 @@ MessageFormatter::~MessageFormatter() {
 
 
 void
-MessageFormatter::addFormatter(const string& strFormatter) {
+MessageFormatter::addFormatter(const std::string& strFormatter) {
   if(strFormatter.length() == 1) {
     _formatters.push_back(new ConstFormatter(strFormatter));
 
   } else {
-    const string pattern = strFormatter.substr(0,2);
+    const std::string pattern = strFormatter.substr(0,2);
     if(pattern == "$d") {
       _formatters.push_back(new DateFormatter(strFormatter.substr(3, strFormatter.length() - 4)));
 
     } else if(pattern == "$D") {
       _formatters.push_back(new AnchDateFormatter(strFormatter.substr(3, strFormatter.length() - 4)));
+
+    } else if(pattern == "$C") {
+      _formatters.push_back(new MDCFormatter(strFormatter.substr(3, strFormatter.length() - 4)));
 
     } else if(pattern == "$m") {
       _formatters.push_back(new StringFormatter());
@@ -114,10 +106,10 @@ MessageFormatter::addFormatter(const string& strFormatter) {
 }
 
 const std::string
-MessageFormatter::formatMessage(const string& category,
+MessageFormatter::formatMessage(const std::string& category,
 				const Level& level,
-				const string& message) const {
-  ostringstream out;
+				const std::string& message) const {
+  std::ostringstream out;
   for(size_t i = 0 ; i < _formatters.size() ; i++) {
     const IFormatter* formatter = _formatters[i];
     switch(formatter->getType()) {
@@ -137,6 +129,7 @@ MessageFormatter::formatMessage(const string& category,
     case FormatterType::CONST:
     case FormatterType::DATE:
     case FormatterType::ANCH_DATE:
+    case FormatterType::MDC:
       formatter->formatValue(NULL, out);
       break;
 

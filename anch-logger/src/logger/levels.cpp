@@ -17,30 +17,24 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "logger/formatter/threadIdFormatter.hpp"
+#include "logger/levels.hpp"
 
-#include "logger/mdc.hpp"
+using anch::logger::Level;
 
-using std::string;
-using std::ostream;
+const std::map<const Level, const std::string> anch::logger::LEVEL_LABEL = {
+  {Level::TRACE, "TRACE"},
+  {Level::DEBUG, "DEBUG"},
+  {Level::INFO, "INFO"},
+  {Level::WARN, "WARN"},
+  {Level::ERROR, "ERROR"},
+  {Level::FATAL, "FATAL"},
+};
 
-using anch::logger::formatter::ThreadIdFormatter;
-using anch::logger::formatter::FormatterType;
-
-ThreadIdFormatter::ThreadIdFormatter() {
-  // Nothing to do
-}
-
-ThreadIdFormatter::~ThreadIdFormatter() {
-  // Nothing to do
-}
-
-void
-ThreadIdFormatter::formatValue(const void* const, ostream& out) const noexcept {
-  out << anch::logger::MDC.get().find(anch::logger::MDC_THREAD_ID)->second;
-}
-
-FormatterType
-ThreadIdFormatter::getType() const noexcept {
-  return FormatterType::THREAD_ID;
-}
+const std::map<const std::string, const anch::logger::Level> anch::logger::LABEL_LEVEL = {
+  {"TRACE", Level::TRACE},
+  {"DEBUG", Level::DEBUG},
+  {"INFO", Level::INFO},
+  {"WARN", Level::WARN},
+  {"ERROR", Level::ERROR},
+  {"FATAL", Level::FATAL},
+};

@@ -22,57 +22,53 @@
 #include "logger/formatter/iFormatter.hpp"
 
 
-namespace anch {
-  namespace logger {
-    namespace formatter {
+namespace anch::logger::formatter {
 
-      /*!
-       * String formatter
-       *
-       * \author Vincent Lachenal
-       */
-      class DateFormatter: public anch::logger::formatter::IFormatter {
-      private:
-	// Attributes +
-	/*! Date format pattern */
-	std::string _dateFormat;
-	// Attributes -
+  /*!
+   * String formatter
+   *
+   * \author Vincent Lachenal
+   */
+  class DateFormatter: public anch::logger::formatter::IFormatter {
+  private:
+    // Attributes +
+    /*! Date format pattern */
+    std::string _dateFormat;
+    // Attributes -
 
-      public:
-	// Constructors +
-	/*!
-	 * \ref DateFormatter default constructor
-	 */
-	DateFormatter(const std::string& dateFormat);
-	// Constructors -
+  public:
+    // Constructors +
+    /*!
+     * \ref DateFormatter default constructor
+     */
+    DateFormatter(const std::string& dateFormat);
+    // Constructors -
 
-	// Destructor +
-	/*!
-	 * \ref DateFormatter destructor
-	 */
-	~DateFormatter();
-	// Destructor -
+    // Destructor +
+    /*!
+     * \ref DateFormatter destructor
+     */
+    ~DateFormatter();
+    // Destructor -
 
-      public:
-	/*!
-	 * Return the input string
-	 *
-	 * \param value The input string
-	 * \param out The output stream to write in
-	 */
-	virtual void formatValue(const void* const value,
-				 std::ostream& out)
-	  const noexcept;
+  public:
+    /*!
+     * Return the input string
+     *
+     * \param value The input string
+     * \param out The output stream to write in
+     */
+    virtual void formatValue(const void* const value,
+			     std::ostream& out)
+      const noexcept;
 
-	/*!
-	 * Get the formatter type
-	 *
-	 * \return The formatter type
-	 */
-	virtual anch::logger::formatter::FormatterType getType() const noexcept;
+    /*!
+     * Get the formatter type
+     *
+     * \return The formatter type
+     */
+    virtual anch::logger::formatter::FormatterType getType() const noexcept;
 
-      };
+  };
 
-    }
-  }
 }
