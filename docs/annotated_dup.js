@@ -76,6 +76,7 @@ var annotated_dup =
           [ "DateFormatter", "classanch_1_1logger_1_1formatter_1_1_date_formatter.html", "classanch_1_1logger_1_1formatter_1_1_date_formatter" ],
           [ "IFormatter", "classanch_1_1logger_1_1formatter_1_1_i_formatter.html", "classanch_1_1logger_1_1formatter_1_1_i_formatter" ],
           [ "LevelFormatter", "classanch_1_1logger_1_1formatter_1_1_level_formatter.html", "classanch_1_1logger_1_1formatter_1_1_level_formatter" ],
+          [ "MDCFormatter", "classanch_1_1logger_1_1formatter_1_1_m_d_c_formatter.html", "classanch_1_1logger_1_1formatter_1_1_m_d_c_formatter" ],
           [ "MessageFormatter", "classanch_1_1logger_1_1formatter_1_1_message_formatter.html", "classanch_1_1logger_1_1formatter_1_1_message_formatter" ],
           [ "StringFormatter", "classanch_1_1logger_1_1formatter_1_1_string_formatter.html", "classanch_1_1logger_1_1formatter_1_1_string_formatter" ],
           [ "ThreadIdFormatter", "classanch_1_1logger_1_1formatter_1_1_thread_id_formatter.html", "classanch_1_1logger_1_1formatter_1_1_thread_id_formatter" ]
@@ -84,6 +85,7 @@ var annotated_dup =
         [ "LoggerConfiguration", "classanch_1_1logger_1_1_logger_configuration.html", "classanch_1_1logger_1_1_logger_configuration" ],
         [ "LoggerFactory", "classanch_1_1logger_1_1_logger_factory.html", "classanch_1_1logger_1_1_logger_factory" ],
         [ "LowPriorityWriter", "classanch_1_1logger_1_1_low_priority_writer.html", "classanch_1_1logger_1_1_low_priority_writer" ],
+        [ "MapDiagnosticContext", "classanch_1_1logger_1_1_map_diagnostic_context.html", "classanch_1_1logger_1_1_map_diagnostic_context" ],
         [ "ThreadSafeWriter", "classanch_1_1logger_1_1_thread_safe_writer.html", "classanch_1_1logger_1_1_thread_safe_writer" ],
         [ "Writer", "classanch_1_1logger_1_1_writer.html", "classanch_1_1logger_1_1_writer" ]
       ] ],

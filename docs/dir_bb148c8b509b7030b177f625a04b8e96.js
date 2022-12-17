@@ -6,6 +6,7 @@ var dir_bb148c8b509b7030b177f625a04b8e96 =
     [ "loggerConfiguration.hpp", "logger_configuration_8hpp_source.html", null ],
     [ "loggerFactory.hpp", "logger_factory_8hpp_source.html", null ],
     [ "lowPriorityWriter.hpp", "low_priority_writer_8hpp_source.html", null ],
+    [ "mdc.hpp", "mdc_8hpp_source.html", null ],
     [ "threadSafeWriter.hpp", "thread_safe_writer_8hpp_source.html", null ],
     [ "writer.hpp", "writer_8hpp_source.html", null ]
 ];

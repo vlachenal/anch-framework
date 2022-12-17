@@ -123,43 +123,41 @@ $(document).ready(function(){initNavTree('i_formatter_8hpp_source.html',''); ini
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &lt;iostream&gt;</span></div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceanch.html">anch</a> {</div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>  <span class="keyword">namespace </span>logger {</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>    <span class="keyword">namespace </span>formatter {</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno"><a class="line" href="namespaceanch_1_1logger_1_1formatter.html#aa2267d18ecb9df50df9682833db34bdf">   33</a></span>      <span class="keyword">enum class</span> <a class="code hl_enumeration" href="namespaceanch_1_1logger_1_1formatter.html#aa2267d18ecb9df50df9682833db34bdf">FormatterType</a> {</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>        LEVEL,</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>        CONST,</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>        STRING,</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>        CATEGORY,</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>        THREAD_ID,</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>        DATE,</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>        ANCH_DATE</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>      };</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span> </div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno"><a class="line" href="classanch_1_1logger_1_1formatter_1_1_i_formatter.html">   48</a></span>      <span class="keyword">class </span><a class="code hl_class" href="classanch_1_1logger_1_1formatter_1_1_i_formatter.html">IFormatter</a> {</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>      <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno"><a class="line" href="classanch_1_1logger_1_1formatter_1_1_i_formatter.html#a9445bf5a76a0b76f496161789bd23e98">   53</a></span>        <span class="keyword">virtual</span> <a class="code hl_function" href="classanch_1_1logger_1_1formatter_1_1_i_formatter.html#a9445bf5a76a0b76f496161789bd23e98">~IFormatter</a>() {</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>          <span class="comment">// Nothing to do</span></div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>        }</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span> </div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>      <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno"><a class="line" href="classanch_1_1logger_1_1formatter_1_1_i_formatter.html#a5ffb99dabf2e01ef39a77ee5486d4fdf">   63</a></span>        <span class="keyword">virtual</span> <a class="code hl_enumeration" href="namespaceanch_1_1logger_1_1formatter.html#aa2267d18ecb9df50df9682833db34bdf">anch::logger::formatter::FormatterType</a> <a class="code hl_function" href="classanch_1_1logger_1_1formatter_1_1_i_formatter.html#a5ffb99dabf2e01ef39a77ee5486d4fdf">getType</a>() const noexcept = 0;</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span> </div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno"><a class="line" href="classanch_1_1logger_1_1formatter_1_1_i_formatter.html#a2805e51c2c796de8a9b9edcfc99aaf3b">   71</a></span>        virtual <span class="keywordtype">void</span> <a class="code hl_function" href="classanch_1_1logger_1_1formatter_1_1_i_formatter.html#a2805e51c2c796de8a9b9edcfc99aaf3b">formatValue</a>(const <span class="keywordtype">void</span>* const value,</div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>                                 std::ostream&amp; out)</div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>          const noexcept = 0;</div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>      };</div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span> </div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    }</div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>  }</div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>}</div>
-<div class="ttc" id="aclassanch_1_1logger_1_1formatter_1_1_i_formatter_html"><div class="ttname"><a href="classanch_1_1logger_1_1formatter_1_1_i_formatter.html">anch::logger::formatter::IFormatter</a></div><div class="ttdef"><b>Definition:</b> iFormatter.hpp:48</div></div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceanch_1_1logger_1_1formatter.html">anch::logger::formatter</a> {</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno"><a class="line" href="namespaceanch_1_1logger_1_1formatter.html#aa2267d18ecb9df50df9682833db34bdf">   31</a></span>  <span class="keyword">enum class</span> <a class="code hl_enumeration" href="namespaceanch_1_1logger_1_1formatter.html#aa2267d18ecb9df50df9682833db34bdf">FormatterType</a> {</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>    LEVEL,</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    CONST,</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    STRING,</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    CATEGORY,</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    THREAD_ID,</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    DATE,</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    ANCH_DATE,</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    <a class="code hl_variable" href="namespaceanch_1_1logger.html#ae10f9097d62967f460eb38cde32a4ad4">MDC</a></div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>  };</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno"><a class="line" href="classanch_1_1logger_1_1formatter_1_1_i_formatter.html">   47</a></span>  <span class="keyword">class </span><a class="code hl_class" href="classanch_1_1logger_1_1formatter_1_1_i_formatter.html">IFormatter</a> {</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>  <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno"><a class="line" href="classanch_1_1logger_1_1formatter_1_1_i_formatter.html#a9445bf5a76a0b76f496161789bd23e98">   52</a></span>    <span class="keyword">virtual</span> <a class="code hl_function" href="classanch_1_1logger_1_1formatter_1_1_i_formatter.html#a9445bf5a76a0b76f496161789bd23e98">~IFormatter</a>() {</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>      <span class="comment">// Nothing to do</span></div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    }</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span> </div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>  <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno"><a class="line" href="classanch_1_1logger_1_1formatter_1_1_i_formatter.html#a5ffb99dabf2e01ef39a77ee5486d4fdf">   62</a></span>    <span class="keyword">virtual</span> <a class="code hl_enumeration" href="namespaceanch_1_1logger_1_1formatter.html#aa2267d18ecb9df50df9682833db34bdf">anch::logger::formatter::FormatterType</a> <a class="code hl_function" href="classanch_1_1logger_1_1formatter_1_1_i_formatter.html#a5ffb99dabf2e01ef39a77ee5486d4fdf">getType</a>() const noexcept = 0;</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span> </div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno"><a class="line" href="classanch_1_1logger_1_1formatter_1_1_i_formatter.html#a2805e51c2c796de8a9b9edcfc99aaf3b">   70</a></span>    virtual <span class="keywordtype">void</span> <a class="code hl_function" href="classanch_1_1logger_1_1formatter_1_1_i_formatter.html#a2805e51c2c796de8a9b9edcfc99aaf3b">formatValue</a>(const <span class="keywordtype">void</span>* const value,</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>                             std::ostream&amp; out)</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>      const noexcept = 0;</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>  };</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span> </div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>}</div>
+<div class="ttc" id="aclassanch_1_1logger_1_1formatter_1_1_i_formatter_html"><div class="ttname"><a href="classanch_1_1logger_1_1formatter_1_1_i_formatter.html">anch::logger::formatter::IFormatter</a></div><div class="ttdef"><b>Definition:</b> iFormatter.hpp:47</div></div>
 <div class="ttc" id="aclassanch_1_1logger_1_1formatter_1_1_i_formatter_html_a2805e51c2c796de8a9b9edcfc99aaf3b"><div class="ttname"><a href="classanch_1_1logger_1_1formatter_1_1_i_formatter.html#a2805e51c2c796de8a9b9edcfc99aaf3b">anch::logger::formatter::IFormatter::formatValue</a></div><div class="ttdeci">virtual void formatValue(const void *const value, std::ostream &amp;out) const noexcept=0</div></div>
 <div class="ttc" id="aclassanch_1_1logger_1_1formatter_1_1_i_formatter_html_a5ffb99dabf2e01ef39a77ee5486d4fdf"><div class="ttname"><a href="classanch_1_1logger_1_1formatter_1_1_i_formatter.html#a5ffb99dabf2e01ef39a77ee5486d4fdf">anch::logger::formatter::IFormatter::getType</a></div><div class="ttdeci">virtual anch::logger::formatter::FormatterType getType() const noexcept=0</div></div>
-<div class="ttc" id="aclassanch_1_1logger_1_1formatter_1_1_i_formatter_html_a9445bf5a76a0b76f496161789bd23e98"><div class="ttname"><a href="classanch_1_1logger_1_1formatter_1_1_i_formatter.html#a9445bf5a76a0b76f496161789bd23e98">anch::logger::formatter::IFormatter::~IFormatter</a></div><div class="ttdeci">virtual ~IFormatter()</div><div class="ttdef"><b>Definition:</b> iFormatter.hpp:53</div></div>
-<div class="ttc" id="anamespaceanch_1_1logger_1_1formatter_html_aa2267d18ecb9df50df9682833db34bdf"><div class="ttname"><a href="namespaceanch_1_1logger_1_1formatter.html#aa2267d18ecb9df50df9682833db34bdf">anch::logger::formatter::FormatterType</a></div><div class="ttdeci">FormatterType</div><div class="ttdef"><b>Definition:</b> iFormatter.hpp:33</div></div>
-<div class="ttc" id="anamespaceanch_html"><div class="ttname"><a href="namespaceanch.html">anch</a></div><div class="ttdoc">AnCH framework base namespace.</div><div class="ttdef"><b>Definition:</b> base64.hpp:27</div></div>
+<div class="ttc" id="aclassanch_1_1logger_1_1formatter_1_1_i_formatter_html_a9445bf5a76a0b76f496161789bd23e98"><div class="ttname"><a href="classanch_1_1logger_1_1formatter_1_1_i_formatter.html#a9445bf5a76a0b76f496161789bd23e98">anch::logger::formatter::IFormatter::~IFormatter</a></div><div class="ttdeci">virtual ~IFormatter()</div><div class="ttdef"><b>Definition:</b> iFormatter.hpp:52</div></div>
+<div class="ttc" id="anamespaceanch_1_1logger_1_1formatter_html"><div class="ttname"><a href="namespaceanch_1_1logger_1_1formatter.html">anch::logger::formatter</a></div><div class="ttdoc">Logger formatter internalnamespace.</div><div class="ttdef"><b>Definition:</b> anchDateFormatter.hpp:27</div></div>
+<div class="ttc" id="anamespaceanch_1_1logger_1_1formatter_html_aa2267d18ecb9df50df9682833db34bdf"><div class="ttname"><a href="namespaceanch_1_1logger_1_1formatter.html#aa2267d18ecb9df50df9682833db34bdf">anch::logger::formatter::FormatterType</a></div><div class="ttdeci">FormatterType</div><div class="ttdef"><b>Definition:</b> iFormatter.hpp:31</div></div>
+<div class="ttc" id="anamespaceanch_1_1logger_html_ae10f9097d62967f460eb38cde32a4ad4"><div class="ttname"><a href="namespaceanch_1_1logger.html#ae10f9097d62967f460eb38cde32a4ad4">anch::logger::MDC</a></div><div class="ttdeci">thread_local MapDiagnosticContext MDC</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

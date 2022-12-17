@@ -174,8 +174,8 @@ Static Public Member Functions</h2></td></tr>
 <tr class="separator:a94689a1fa6ec4b669691117a15aa4227"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a64079d65e69e6e5416a4fb1f9f1e6ec6"><td class="memItemLeft" align="right" valign="top">static uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1_u_u_i_d.html#a64079d65e69e6e5416a4fb1f9f1e6ec6">getUtcTimestamp</a> ()</td></tr>
 <tr class="separator:a64079d65e69e6e5416a4fb1f9f1e6ec6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7696db4f32626373648022cc3d961404"><td class="memItemLeft" align="right" valign="top">static std::mt19937_64 &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1_u_u_i_d.html#a7696db4f32626373648022cc3d961404">getRandomEngine</a> ()</td></tr>
-<tr class="separator:a7696db4f32626373648022cc3d961404"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a06716c6b98735c675928239e003fc72c"><td class="memItemLeft" align="right" valign="top">static std::random_device &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1_u_u_i_d.html#a06716c6b98735c675928239e003fc72c">getRandomEngine</a> ()</td></tr>
+<tr class="separator:a06716c6b98735c675928239e003fc72c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a215ba761b88e83ed87df2aaba0f227b9"><td class="memItemLeft" align="right" valign="top">static std::uniform_int_distribution&lt; uint16_t &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1_u_u_i_d.html#a215ba761b88e83ed87df2aaba0f227b9">getDistSeq</a> ()</td></tr>
 <tr class="separator:a215ba761b88e83ed87df2aaba0f227b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -469,9 +469,6 @@ This class needs anch-crypto and anch-device libraries.</p>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">uint16_t anch::UUID::getClockSeqHighRes </td>
@@ -480,11 +477,6 @@ This class needs anch-crypto and anch-device libraries.</p>
           <td> const</td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 <p >The clock sequence high value and reserved value getter</p>
 <dl class="section return"><dt>Returns</dt><dd>The clock sequence high value and reserved value </dd></dl>
@@ -496,9 +488,6 @@ This class needs anch-crypto and anch-device libraries.</p>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">uint16_t anch::UUID::getClockSeqLow </td>
@@ -507,11 +496,6 @@ This class needs anch-crypto and anch-device libraries.</p>
           <td> const</td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 <p >The clock sequence low value getter</p>
 <dl class="section return"><dt>Returns</dt><dd>The clock sequence low value </dd></dl>
@@ -550,9 +534,6 @@ This class needs anch-crypto and anch-device libraries.</p>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">uint16_t anch::UUID::getHighTime </td>
@@ -561,11 +542,6 @@ This class needs anch-crypto and anch-device libraries.</p>
           <td> const</td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 <p >The timestamp high value getter</p>
 <dl class="section return"><dt>Returns</dt><dd>The timestamp high value </dd></dl>
@@ -577,9 +553,6 @@ This class needs anch-crypto and anch-device libraries.</p>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">uint32_t anch::UUID::getLowTime </td>
@@ -588,11 +561,6 @@ This class needs anch-crypto and anch-device libraries.</p>
           <td> const</td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 <p >The timestamp low value getter</p>
 <dl class="section return"><dt>Returns</dt><dd>The timestamp low value </dd></dl>
@@ -604,9 +572,6 @@ This class needs anch-crypto and anch-device libraries.</p>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">uint16_t anch::UUID::getMidTime </td>
@@ -615,11 +580,6 @@ This class needs anch-crypto and anch-device libraries.</p>
           <td> const</td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 <p >The timestamp mid value getter</p>
 <dl class="section return"><dt>Returns</dt><dd>The timestamp mid value </dd></dl>
@@ -631,9 +591,6 @@ This class needs anch-crypto and anch-device libraries.</p>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">uint64_t anch::UUID::getNode </td>
@@ -642,19 +599,14 @@ This class needs anch-crypto and anch-device libraries.</p>
           <td> const</td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 <p >The node getter</p>
 <dl class="section return"><dt>Returns</dt><dd>The node </dd></dl>
 
 </div>
 </div>
-<a id="a7696db4f32626373648022cc3d961404" name="a7696db4f32626373648022cc3d961404"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7696db4f32626373648022cc3d961404">&#9670;&#160;</a></span>getRandomEngine()</h2>
+<a id="a06716c6b98735c675928239e003fc72c" name="a06716c6b98735c675928239e003fc72c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a06716c6b98735c675928239e003fc72c">&#9670;&#160;</a></span>getRandomEngine()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -663,7 +615,7 @@ This class needs anch-crypto and anch-device libraries.</p>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static std::mt19937_64 &amp; anch::UUID::getRandomEngine </td>
+          <td class="memname">static std::random_device &amp; anch::UUID::getRandomEngine </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -712,9 +664,6 @@ This class needs anch-crypto and anch-device libraries.</p>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="classanch_1_1_u_u_i_d.html#a6ee815d96c7a3fec3e5ed88f05e600f6">anch::UUID::Version</a> anch::UUID::getVersion </td>
@@ -723,11 +672,6 @@ This class needs anch-crypto and anch-device libraries.</p>
           <td> const</td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 <p >Version getter</p>
 <dl class="section return"><dt>Returns</dt><dd>The version </dd></dl>
@@ -752,7 +696,7 @@ This class needs anch-crypto and anch-device libraries.</p>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">explicit</span></span>  </td>
+<span class="mlabels"><span class="mlabel">explicit</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -836,9 +780,6 @@ This class needs anch-crypto and anch-device libraries.</p>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">std::string anch::UUID::toString </td>
@@ -847,11 +788,6 @@ This class needs anch-crypto and anch-device libraries.</p>
           <td> const</td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 <p >Convert <a class="el" href="classanch_1_1_u_u_i_d.html">UUID</a> to std::string</p>
 <dl class="section return"><dt>Returns</dt><dd>The string representation of <a class="el" href="classanch_1_1_u_u_i_d.html">UUID</a> </dd></dl>

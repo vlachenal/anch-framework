@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['label_5flevel_0',['LABEL_LEVEL',['../namespaceanch_1_1logger.html#a0d9275be5a44a69c462d8cea7c8e8e55',1,'anch::logger']]],
+  ['label_5flevel_0',['LABEL_LEVEL',['../namespaceanch_1_1logger.html#a9efd696a261d3cb2dfb89dc1f29ac9a8',1,'anch::logger']]],
   ['last_5fmodified_1',['LAST_MODIFIED',['../structanch_1_1rest_1_1_common_headers.html#a55d248a06840ed8c726bcc742bb58d17',1,'anch::rest::CommonHeaders']]],
   ['layer_2',['layer',['../structanch_1_1sql_1_1_s_q_l_shared_library.html#ace13344d3a21cbd5104084f99e846892',1,'anch::sql::SQLSharedLibrary']]],
   ['leftjoin_3',['leftJoin',['../classanch_1_1sql_1_1_from_builder.html#a616b940a71a3d4d5d48bed910c62049d',1,'anch::sql::FromBuilder::leftJoin(const anch::sql::SelectBuilder &amp;subquery, const std::string &amp;alias, const anch::sql::ClausesBuilder &amp;clauses)'],['../classanch_1_1sql_1_1_from_builder.html#a3f642010610f4c1cd4474942799373d6',1,'anch::sql::FromBuilder::leftJoin(const anch::sql::SQLQuery &amp;subquery, const std::string &amp;alias, const anch::sql::ClausesBuilder &amp;clauses)'],['../classanch_1_1sql_1_1_from_builder.html#a45d4cf0d476db21cd860ecd3de1c175d',1,'anch::sql::FromBuilder::leftJoin(const std::string &amp;table, const anch::sql::ClausesBuilder &amp;clauses)']]],
@@ -10,7 +10,7 @@ var searchData=
   ['lesserequals_7',['lesserEquals',['../namespaceanch_1_1sql.html#aa187281d827526594dc93e2a5036923c',1,'anch::sql::lesserEquals()'],['../classanch_1_1sql_1_1_clauses_builder.html#a602deac94289295fbec9e6fca42c8c20',1,'anch::sql::ClausesBuilder::lesserEquals()']]],
   ['lessptrcompare_8',['LessPtrCompare',['../structanch_1_1_less_ptr_compare.html',1,'anch']]],
   ['level_9',['Level',['../namespaceanch_1_1logger.html#a973cdff92f296b5fba7f68660d4ee41f',1,'anch::logger']]],
-  ['level_5flabel_10',['LEVEL_LABEL',['../namespaceanch_1_1logger.html#acc35b01278b79adb4754b42e579b92ec',1,'anch::logger']]],
+  ['level_5flabel_10',['LEVEL_LABEL',['../namespaceanch_1_1logger.html#a8bd7c9347f11b16a3ad8c4e373136d33',1,'anch::logger']]],
   ['levelformatter_11',['LevelFormatter',['../classanch_1_1logger_1_1formatter_1_1_level_formatter.html',1,'anch::logger::formatter::LevelFormatter'],['../classanch_1_1logger_1_1formatter_1_1_level_formatter.html#a4595287f18a66f9c6aa173111dcddbff',1,'anch::logger::formatter::LevelFormatter::LevelFormatter()']]],
   ['like_12',['like',['../namespaceanch_1_1sql.html#aba042a9eeaba85d4222d44132b8d64f5',1,'anch::sql::like()'],['../classanch_1_1sql_1_1_clauses_builder.html#a35ad9167c5f3e7c3ba4ef5515fb85feb',1,'anch::sql::ClausesBuilder::like()']]],
   ['limit_13',['limit',['../classanch_1_1_stream.html#a92b0443518561e6ba39cd5aef6c44681',1,'anch::Stream']]],

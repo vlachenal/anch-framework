@@ -103,6 +103,7 @@ var hierarchy =
       [ "anch::logger::formatter::ConstFormatter", "classanch_1_1logger_1_1formatter_1_1_const_formatter.html", null ],
       [ "anch::logger::formatter::DateFormatter", "classanch_1_1logger_1_1formatter_1_1_date_formatter.html", null ],
       [ "anch::logger::formatter::LevelFormatter", "classanch_1_1logger_1_1formatter_1_1_level_formatter.html", null ],
+      [ "anch::logger::formatter::MDCFormatter", "classanch_1_1logger_1_1formatter_1_1_m_d_c_formatter.html", null ],
       [ "anch::logger::formatter::StringFormatter", "classanch_1_1logger_1_1formatter_1_1_string_formatter.html", null ],
       [ "anch::logger::formatter::ThreadIdFormatter", "classanch_1_1logger_1_1formatter_1_1_thread_id_formatter.html", null ]
     ] ],
@@ -114,6 +115,7 @@ var hierarchy =
     [ "std::map< K, T >", null, [
       [ "anch::rest::Headers", "classanch_1_1rest_1_1_headers.html", null ]
     ] ],
+    [ "anch::logger::MapDiagnosticContext", "classanch_1_1logger_1_1_map_diagnostic_context.html", null ],
     [ "anch::rest::MapperRegistry", "classanch_1_1rest_1_1_mapper_registry.html", [
       [ "anch::rest::GlobalMapperRegistry", "classanch_1_1rest_1_1_global_mapper_registry.html", null ]
     ] ],

@@ -6,6 +6,7 @@ var namespaceanch_1_1logger_1_1formatter =
     [ "DateFormatter", "classanch_1_1logger_1_1formatter_1_1_date_formatter.html", "classanch_1_1logger_1_1formatter_1_1_date_formatter" ],
     [ "IFormatter", "classanch_1_1logger_1_1formatter_1_1_i_formatter.html", "classanch_1_1logger_1_1formatter_1_1_i_formatter" ],
     [ "LevelFormatter", "classanch_1_1logger_1_1formatter_1_1_level_formatter.html", "classanch_1_1logger_1_1formatter_1_1_level_formatter" ],
+    [ "MDCFormatter", "classanch_1_1logger_1_1formatter_1_1_m_d_c_formatter.html", "classanch_1_1logger_1_1formatter_1_1_m_d_c_formatter" ],
     [ "MessageFormatter", "classanch_1_1logger_1_1formatter_1_1_message_formatter.html", "classanch_1_1logger_1_1formatter_1_1_message_formatter" ],
     [ "StringFormatter", "classanch_1_1logger_1_1formatter_1_1_string_formatter.html", "classanch_1_1logger_1_1formatter_1_1_string_formatter" ],
     [ "ThreadIdFormatter", "classanch_1_1logger_1_1formatter_1_1_thread_id_formatter.html", "classanch_1_1logger_1_1formatter_1_1_thread_id_formatter" ],
@@ -16,6 +17,7 @@ var namespaceanch_1_1logger_1_1formatter =
       [ "CATEGORY", "namespaceanch_1_1logger_1_1formatter.html#aa2267d18ecb9df50df9682833db34bdfae38583f3a073fa2a86a841b672aba548", null ],
       [ "THREAD_ID", "namespaceanch_1_1logger_1_1formatter.html#aa2267d18ecb9df50df9682833db34bdfa7357f16006a5da1aec211f71da0c4f7f", null ],
       [ "DATE", "namespaceanch_1_1logger_1_1formatter.html#aa2267d18ecb9df50df9682833db34bdfa633a6c7a6b9958f8174250094daf1e6a", null ],
-      [ "ANCH_DATE", "namespaceanch_1_1logger_1_1formatter.html#aa2267d18ecb9df50df9682833db34bdfaceef817fe7ddd2b768a1218e01be67e7", null ]
+      [ "ANCH_DATE", "namespaceanch_1_1logger_1_1formatter.html#aa2267d18ecb9df50df9682833db34bdfaceef817fe7ddd2b768a1218e01be67e7", null ],
+      [ "MDC", "namespaceanch_1_1logger_1_1formatter.html#aa2267d18ecb9df50df9682833db34bdfa40735821c5e2543f32a79546718a2bdc", null ]
     ] ]
 ];

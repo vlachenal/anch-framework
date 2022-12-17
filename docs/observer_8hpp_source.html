@@ -124,24 +124,22 @@ $(document).ready(function(){initNavTree('observer_8hpp_source.html',''); initRe
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &lt;cstdint&gt;</span></div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span> </div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceanch.html">anch</a> {</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>  <span class="keyword">namespace </span>events {</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> Event&gt;</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno"><a class="line" href="classanch_1_1events_1_1_observer.html">   38</a></span>    <span class="keyword">class </span><a class="code hl_class" href="classanch_1_1events_1_1_observer.html">Observer</a> {</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>      <span class="comment">// Methods +</span></div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno"><a class="line" href="classanch_1_1events_1_1_observer.html#ab54289b243cf4a5e3879adca527b5940">   47</a></span><span class="comment"></span>      <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classanch_1_1events_1_1_observer.html#ab54289b243cf4a5e3879adca527b5940">notify</a>(<span class="keyword">const</span> Event&amp; event) <span class="keyword">noexcept</span> = 0;</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>      <span class="comment">// Methods -</span></div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span> </div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    };</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span> </div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>  }</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>}</div>
-<div class="ttc" id="aclassanch_1_1events_1_1_observer_html"><div class="ttname"><a href="classanch_1_1events_1_1_observer.html">anch::events::Observer</a></div><div class="ttdoc">An observer interface of the observers/observable design pattern.</div><div class="ttdef"><b>Definition:</b> observer.hpp:38</div></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceanch_1_1events.html">anch::events</a> {</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>  <span class="keyword">template</span>&lt;<span class="keyword">typename</span> Event&gt;</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno"><a class="line" href="classanch_1_1events_1_1_observer.html">   37</a></span>  <span class="keyword">class </span><a class="code hl_class" href="classanch_1_1events_1_1_observer.html">Observer</a> {</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span> </div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>  <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    <span class="comment">// Methods +</span></div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno"><a class="line" href="classanch_1_1events_1_1_observer.html#ab54289b243cf4a5e3879adca527b5940">   46</a></span><span class="comment"></span>    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classanch_1_1events_1_1_observer.html#ab54289b243cf4a5e3879adca527b5940">notify</a>(<span class="keyword">const</span> Event&amp; event) <span class="keyword">noexcept</span> = 0;</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    <span class="comment">// Methods -</span></div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>  };</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>}</div>
+<div class="ttc" id="aclassanch_1_1events_1_1_observer_html"><div class="ttname"><a href="classanch_1_1events_1_1_observer.html">anch::events::Observer</a></div><div class="ttdoc">An observer interface of the observers/observable design pattern.</div><div class="ttdef"><b>Definition:</b> observer.hpp:37</div></div>
 <div class="ttc" id="aclassanch_1_1events_1_1_observer_html_ab54289b243cf4a5e3879adca527b5940"><div class="ttname"><a href="classanch_1_1events_1_1_observer.html#ab54289b243cf4a5e3879adca527b5940">anch::events::Observer::notify</a></div><div class="ttdeci">virtual void notify(const Event &amp;event) noexcept=0</div></div>
-<div class="ttc" id="anamespaceanch_html"><div class="ttname"><a href="namespaceanch.html">anch</a></div><div class="ttdoc">AnCH framework base namespace.</div><div class="ttdef"><b>Definition:</b> base64.hpp:27</div></div>
+<div class="ttc" id="anamespaceanch_1_1events_html"><div class="ttname"><a href="namespaceanch_1_1events.html">anch::events</a></div><div class="ttdoc">Events management namespace.</div><div class="ttdef"><b>Definition:</b> eventBus.hpp:32</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

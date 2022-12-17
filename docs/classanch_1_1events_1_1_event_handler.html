@@ -131,10 +131,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ab62f33d4cbd4925d47f44faa367ebeeb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a62ed072ac8b9c23cee8312b0f836c74f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1events_1_1_event_handler.html#a62ed072ac8b9c23cee8312b0f836c74f">EventHandler</a> (const std::function&lt; void(Derived &amp;, const Event &amp;)&gt; &amp;callbackFunction, <a class="el" href="classanch_1_1events_1_1_event_bus.html">anch::events::EventBus</a>&lt; Event &gt; &amp;eventBus)</td></tr>
 <tr class="separator:a62ed072ac8b9c23cee8312b0f836c74f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acf13214a74363060e155bce2ddc23057"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1events_1_1_event_handler.html#acf13214a74363060e155bce2ddc23057">~EventHandler</a> ()</td></tr>
-<tr class="separator:acf13214a74363060e155bce2ddc23057"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab8111cff54f5e0250185632ad40134fc"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1events_1_1_event_handler.html#ab8111cff54f5e0250185632ad40134fc">notify</a> (const Event &amp;event) noexcept</td></tr>
-<tr class="separator:ab8111cff54f5e0250185632ad40134fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae33d79ee2fc490ac3969254a536d293d"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1events_1_1_event_handler.html#ae33d79ee2fc490ac3969254a536d293d">~EventHandler</a> ()</td></tr>
+<tr class="separator:ae33d79ee2fc490ac3969254a536d293d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abdb16ec9eea92a9ead52582393515fde"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1events_1_1_event_handler.html#abdb16ec9eea92a9ead52582393515fde">notify</a> (const Event &amp;event) noexcept</td></tr>
+<tr class="separator:abdb16ec9eea92a9ead52582393515fde"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab54289b243cf4a5e3879adca527b5940"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1events_1_1_observer.html#ab54289b243cf4a5e3879adca527b5940">notify</a> (const Event &amp;event) noexcept=0</td></tr>
 <tr class="separator:ab54289b243cf4a5e3879adca527b5940"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -225,19 +225,22 @@ Register itself in <a class="el" href="classanch_1_1events_1_1_event_bus.html">E
 
 </div>
 </div>
-<a id="acf13214a74363060e155bce2ddc23057" name="acf13214a74363060e155bce2ddc23057"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acf13214a74363060e155bce2ddc23057">&#9670;&#160;</a></span>~EventHandler()</h2>
+<a id="ae33d79ee2fc490ac3969254a536d293d" name="ae33d79ee2fc490ac3969254a536d293d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae33d79ee2fc490ac3969254a536d293d">&#9670;&#160;</a></span>~EventHandler()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename Evt , typename D &gt; </div>
+template&lt;typename Event , typename Derived &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classanch_1_1events_1_1_event_handler.html">anch::events::EventHandler</a>&lt; Evt, D &gt;::~<a class="el" href="classanch_1_1events_1_1_event_handler.html">EventHandler</a></td>
+          <td class="memname">virtual <a class="el" href="classanch_1_1events_1_1_event_handler.html">anch::events::EventHandler</a>&lt; Event, Derived &gt;::~<a class="el" href="classanch_1_1events_1_1_event_handler.html">EventHandler</a> </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
         </tr>
       </table>
   </td>
@@ -252,8 +255,8 @@ Unregister <a class="el" href="classanch_1_1events_1_1_event_handler.html">Event
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="ab8111cff54f5e0250185632ad40134fc" name="ab8111cff54f5e0250185632ad40134fc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab8111cff54f5e0250185632ad40134fc">&#9670;&#160;</a></span>notify()</h2>
+<a id="abdb16ec9eea92a9ead52582393515fde" name="abdb16ec9eea92a9ead52582393515fde"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abdb16ec9eea92a9ead52582393515fde">&#9670;&#160;</a></span>notify()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -264,7 +267,7 @@ template&lt;typename Event , typename Derived &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="classanch_1_1events_1_1_event_handler.html">anch::events::EventHandler</a>&lt; Evt, D &gt;::notify </td>
+          <td class="memname">virtual void <a class="el" href="classanch_1_1events_1_1_event_handler.html">anch::events::EventHandler</a>&lt; Event, Derived &gt;::notify </td>
           <td>(</td>
           <td class="paramtype">const Event &amp;&#160;</td>
           <td class="paramname"><em>event</em></td><td>)</td>

@@ -135,13 +135,13 @@ var NAVTREEINDEX =
 "classanch_1_1date_1_1_date.html#a12a4ce40c726862c624cb53edcd57485",
 "classanch_1_1date_1_1formatter_1_1_minute_formatter.html#ae553acf8fad0a9972f2001f2db866a17",
 "classanch_1_1json_1_1_j_s_o_n_mapper.html",
-"classanch_1_1logger_1_1formatter_1_1_string_formatter.html#a77911bb6ad921b2fd3c71784bbd2b6af",
-"classanch_1_1rest_1_1_request_1_1_builder.html#a89a5c2a4890aef34f11b015f1abf900a",
-"classanch_1_1sql_1_1_from_builder.html#a6ff56cc253e3aadc0739fe85bf29e2c5",
-"classanch_1_1sql_1_1_s_q_l_query.html#a81397ee21e5d9e6399e687b0346ee39d",
-"file_exception_8hpp_source.html",
-"namespaceanch_1_1sql.html#aa187281d827526594dc93e2a5036923c",
-"structanch_1_1rest_1_1_common_headers.html#ab601f4a3edf6149a3f3aaffb4f75e3c8"
+"classanch_1_1logger_1_1formatter_1_1_level_formatter.html",
+"classanch_1_1rest_1_1_mapper_exception.html#add9a14678df64b9b55f78f15ef808bc7",
+"classanch_1_1sql_1_1_from_builder.html#a0d9f10800085ffd2f5ec134675d98f86",
+"classanch_1_1sql_1_1_result_set.html#a4e56826a4fe55b917dfefae4a4659e63",
+"dir_ade8ebded6dda0b76b64d8dcf280bb78.html",
+"namespaceanch_1_1logger.html#a973cdff92f296b5fba7f68660d4ee41f",
+"structanch_1_1rest_1_1_common_headers.html#a6ca68fe439d0c7c6ed3d4088aef05449"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
