@@ -209,7 +209,7 @@ namespace anch {
      *
      * \return the random engine
      */
-    static std::mt19937_64& getRandomEngine();
+    static std::random_device& getRandomEngine();
 
     /*!
      * Distribution sequence getter

@@ -94,8 +94,6 @@ UUID::registerRandomUUID() {
   std::lock_guard<std::mutex> lock(_mutex);
   if(!_seeded) { // double check locking ... not really great ...
     std::random_device rand;
-    std::seed_seq seedSeq{rand(), rand(), rand(), rand(), rand(), rand(), rand(), rand()};
-    getRandomEngine().seed(seedSeq);
     _providers[UUID::Version::RANDOM] = [](const std::string&) {return UUID::random();};
     _seeded = true;
   }
@@ -154,9 +152,9 @@ UUID::getUtcTimestamp() {
   return UTC_OFFSET + (uint64_t)timestamp;
 }
 
-std::mt19937_64&
+std::random_device&
 UUID::getRandomEngine() {
-  static std::mt19937_64 engine;
+  static std::random_device engine;
   return engine;
 }
 

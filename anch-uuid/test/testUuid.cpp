@@ -4,6 +4,7 @@
 #include <chrono>
 #include <list>
 #include <cstring>
+#include <set>
 
 using anch::UUID;
 
@@ -11,6 +12,7 @@ int
 main(int argc, char** argv) {
 
   bool perf = (argc == 2 && strcmp("perf", argv[1]) == 0);
+  bool collision = (argc == 2 && strcmp("collision", argv[1]) == 0);
 
   if(perf) {
     std::cout << "Enter in UUID performance test" << std::endl;
@@ -46,6 +48,18 @@ main(int argc, char** argv) {
       totalTime += dur.count();
     }
     std::cout << "Average UUID from string convertion time: " << totalTime / 1000 << "s" << std::endl;
+
+  } else if(collision) {
+    std::set<std::string> uuids;
+    for(std::size_t i = 0 ; i < 1000000 ; ++i) {
+      std::string random = UUID::random().toString();
+      if(uuids.find(random) != uuids.end()) {
+	std::cerr << "UUID " << random << " has already been generated" << std::endl;
+      } else {
+	uuids.insert(random);
+      }
+    }
+    std::cout << uuids.size() << " different UUIDs have been generated" << std::endl;
 
   } else {
     UUID random = UUID::random();
