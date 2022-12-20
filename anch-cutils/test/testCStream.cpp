@@ -69,7 +69,21 @@ serialize1500() {
   std::cout << std::endl;
 }
 
-std::string json("{\"toto\":\"toto\",\"titi\":42}");
+void
+serialize25() {
+  std::cout << "serialize25" << std::endl;
+  Test plop = {
+    .toto = "toto",
+    .titi = 42
+  };
+  { // in block for flush before std::endl;
+    COStream cos({.data = NULL, .size = 25, .handle = &printBuffer});
+    anch::json::serialize(plop, cos);
+  }
+  std::cout << std::endl;
+}
+
+std::string json("{\"toto\":\"toto\",\"titi\":42}"); // 25 characters
 std::size_t offset = 0;
 
 std::size_t
@@ -119,6 +133,16 @@ deserialize1500() {
   std::cout << "plop.toto=" << plop.toto << ", plop.titi=" << plop.titi << std::endl;
 }
 
+void
+deserialize25() {
+  std::cout << "deserialize25" << std::endl;
+  offset = 0;
+  CIStream cis({.data = NULL, .size = 25, .handle = &readBuffer});
+  Test plop;
+  anch::json::deserialize(plop, cis);
+  std::cout << "plop.toto=" << plop.toto << ", plop.titi=" << plop.titi << std::endl;
+}
+
 int
 main(int argc, char* argv[]) {
   std::map<std::string, std::function<void(void)>> tests = {
@@ -127,7 +151,9 @@ main(int argc, char* argv[]) {
     {"serialize1", std::function<void(void)>(&serialize1)},
     {"deserialize1", std::function<void(void)>(&deserialize1)},
     {"serialize1500", std::function<void(void)>(&serialize1500)},
-    {"deserialize1500", std::function<void(void)>(&deserialize1500)}
+    {"deserialize1500", std::function<void(void)>(&deserialize1500)},
+    {"serialize25", std::function<void(void)>(&serialize25)},
+    {"deserialize25", std::function<void(void)>(&deserialize25)}
   };
   if(argc > 1) {
     auto iter = tests.find(argv[1]);
