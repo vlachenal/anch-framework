@@ -1,4 +1,10 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" title=" " alt="" coords="5,5,108,31"/>
-<area shape="rect" id="node2" href="$classanch_1_1_optional.html" title="std::optional usefull methods." alt="" coords="156,5,311,31"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,45,112,70"/>
+<area shape="rect" id="node2" title=" " alt="" coords="160,45,331,70"/>
+<area shape="rect" id="node3" title=" " alt="" coords="381,5,522,45"/>
+<area shape="rect" id="node6" title=" " alt="" coords="379,69,524,109"/>
+<area shape="rect" id="node4" title=" " alt="" coords="574,13,674,38"/>
+<area shape="rect" id="node5" href="$classanch_1_1cutils_1_1_c_i_stream.html" title=" " alt="" coords="727,13,891,38"/>
+<area shape="rect" id="node7" title=" " alt="" coords="572,77,676,102"/>
+<area shape="rect" id="node8" href="$classanch_1_1cutils_1_1_c_o_stream.html" title=" " alt="" coords="724,77,895,102"/>
 </map>

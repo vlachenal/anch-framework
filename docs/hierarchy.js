@@ -29,6 +29,7 @@ var hierarchy =
     ] ],
     [ "anch::rest::Request::Builder", "classanch_1_1rest_1_1_request_1_1_builder.html", null ],
     [ "anch::rest::Response::Builder", "classanch_1_1rest_1_1_response_1_1_builder.html", null ],
+    [ "anch::cutils::cbuffer", "structanch_1_1cutils_1_1cbuffer.html", null ],
     [ "anch::crypto::SHA1::Chunk", "unionanch_1_1crypto_1_1_s_h_a1_1_1_chunk.html", null ],
     [ "anch::crypto::SHA2< O, B, W, R, I >::Chunk", "unionanch_1_1crypto_1_1_s_h_a2_1_1_chunk.html", null ],
     [ "anch::sql::ClausesBuilder", "classanch_1_1sql_1_1_clauses_builder.html", null ],
@@ -106,6 +107,20 @@ var hierarchy =
       [ "anch::logger::formatter::MDCFormatter", "classanch_1_1logger_1_1formatter_1_1_m_d_c_formatter.html", null ],
       [ "anch::logger::formatter::StringFormatter", "classanch_1_1logger_1_1formatter_1_1_string_formatter.html", null ],
       [ "anch::logger::formatter::ThreadIdFormatter", "classanch_1_1logger_1_1formatter_1_1_thread_id_formatter.html", null ]
+    ] ],
+    [ "std::ios_base", null, [
+      [ "std::basic_ios< Char >", null, [
+        [ "std::basic_istream< Char >", null, [
+          [ "std::istream", null, [
+            [ "anch::cutils::CIStream", "classanch_1_1cutils_1_1_c_i_stream.html", null ]
+          ] ]
+        ] ],
+        [ "std::basic_ostream< Char >", null, [
+          [ "std::ostream", null, [
+            [ "anch::cutils::COStream", "classanch_1_1cutils_1_1_c_o_stream.html", null ]
+          ] ]
+        ] ]
+      ] ]
     ] ],
     [ "anch::crypto::ISO7816_4Padding", "classanch_1_1crypto_1_1_i_s_o7816__4_padding.html", null ],
     [ "anch::json::JSONMapper", "classanch_1_1json_1_1_j_s_o_n_mapper.html", null ],
@@ -188,6 +203,9 @@ var hierarchy =
     [ "anch::sql::SQLQuery", "classanch_1_1sql_1_1_s_q_l_query.html", null ],
     [ "anch::sql::SQLSharedLibrary", "structanch_1_1sql_1_1_s_q_l_shared_library.html", null ],
     [ "anch::Stream< T, C >", "classanch_1_1_stream.html", null ],
+    [ "std::streambuf", null, [
+      [ "anch::cutils::CStreambuf", "classanch_1_1cutils_1_1_c_streambuf.html", null ]
+    ] ],
     [ "anch::ThreadPool", "classanch_1_1_thread_pool.html", null ],
     [ "anch::UUID", "classanch_1_1_u_u_i_d.html", null ],
     [ "anch::rest::Verb", "structanch_1_1rest_1_1_verb.html", null ],

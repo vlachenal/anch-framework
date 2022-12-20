@@ -3,8 +3,8 @@ var searchData=
   ['scheduledeferred_0',['scheduleDeferred',['../classanch_1_1events_1_1_event_bus.html#ac0a198f346254f075ea3d58e7bd12808',1,'anch::events::EventBus']]],
   ['scheduledeferred_1',['ScheduleDeferred',['../classanch_1_1events_1_1_event_bus.html#a35d533d54191f5d7f9470afb33c6c704',1,'anch::events::EventBus']]],
   ['secondformatter_2',['SecondFormatter',['../classanch_1_1date_1_1formatter_1_1_second_formatter.html#a5439122bab41cf2237dc33e13d103706',1,'anch::date::formatter::SecondFormatter']]],
-  ['section_3',['section',['../classanch_1_1resource_1_1_resource.html#a2a6e93392c8f2f53d0c73b9ba399cdb5',1,'anch::resource::Resource']]],
-  ['section_4',['Section',['../classanch_1_1resource_1_1_section.html#a1f24919e42b813a3b46736d009ea6077',1,'anch::resource::Section::Section()'],['../classanch_1_1resource_1_1_section.html#a51ab2df985e73919e90c0e752db827e5',1,'anch::resource::Section::Section(const Section &amp;section)']]],
+  ['section_3',['Section',['../classanch_1_1resource_1_1_section.html#a1f24919e42b813a3b46736d009ea6077',1,'anch::resource::Section::Section()'],['../classanch_1_1resource_1_1_section.html#a51ab2df985e73919e90c0e752db827e5',1,'anch::resource::Section::Section(const Section &amp;section)']]],
+  ['section_4',['section',['../classanch_1_1resource_1_1_resource.html#a2a6e93392c8f2f53d0c73b9ba399cdb5',1,'anch::resource::Resource']]],
   ['select_5',['select',['../namespaceanch_1_1sql.html#a4b5b10f57796745c3c1f178af405326f',1,'anch::sql']]],
   ['selectbuilderpart_6',['SelectBuilderPart',['../classanch_1_1sql_1_1_select_builder_part.html#a47e5d5eae8cf0cf6ef05e0bd02163029',1,'anch::sql::SelectBuilderPart::SelectBuilderPart(anch::sql::SelectBuilder &amp;select)'],['../classanch_1_1sql_1_1_select_builder_part.html#a45793499519637f7e3b5ef55c7797612',1,'anch::sql::SelectBuilderPart::SelectBuilderPart()=delete']]],
   ['selfjoin_7',['selfJoin',['../classanch_1_1sql_1_1_from_builder.html#a416114dc1fc959ae53541eb6f74b5242',1,'anch::sql::FromBuilder::selfJoin(const std::string &amp;table)'],['../classanch_1_1sql_1_1_from_builder.html#a3a45df728456f41b09e36fd9a2cf4705',1,'anch::sql::FromBuilder::selfJoin(const anch::sql::SQLQuery &amp;subquery, const std::string &amp;alias)'],['../classanch_1_1sql_1_1_from_builder.html#aba04278dd6d31a9219b69e9f2caca7da',1,'anch::sql::FromBuilder::selfJoin(const anch::sql::SelectBuilder &amp;subquery, const std::string &amp;alias)']]],
@@ -61,5 +61,6 @@ var searchData=
   ['status_58',['status',['../classanch_1_1rest_1_1_response_1_1_builder.html#a7d2a559818162c2c0cb15b4ba43b2428',1,'anch::rest::Response::Builder']]],
   ['stop_59',['stop',['../classanch_1_1_thread_pool.html#a303181831bf04c919f839e4973e9c7b4',1,'anch::ThreadPool']]],
   ['stream_60',['Stream',['../classanch_1_1_stream.html#a65d75f164da06d56a64fd84340a8f1b2',1,'anch::Stream::Stream(Stream &amp;&amp;other)'],['../classanch_1_1_stream.html#ac4e1ee8eed2317fbbe142b9628610f3c',1,'anch::Stream::Stream(const Stream &amp;other)'],['../classanch_1_1_stream.html#aa33831c80fbe201b79a818b1ecce0a4a',1,'anch::Stream::Stream(C&lt; T &gt; &amp;container)'],['../classanch_1_1_stream.html#a3d5eea0bfdc69001b90f15646b507efa',1,'anch::Stream::Stream()=delete']]],
-  ['stringformatter_61',['StringFormatter',['../classanch_1_1logger_1_1formatter_1_1_string_formatter.html#a77911bb6ad921b2fd3c71784bbd2b6af',1,'anch::logger::formatter::StringFormatter']]]
+  ['stringformatter_61',['StringFormatter',['../classanch_1_1logger_1_1formatter_1_1_string_formatter.html#a77911bb6ad921b2fd3c71784bbd2b6af',1,'anch::logger::formatter::StringFormatter']]],
+  ['sync_62',['sync',['../classanch_1_1cutils_1_1_c_streambuf.html#ace923f6d50e3676cb3c2ab900d567b14',1,'anch::cutils::CStreambuf']]]
 ];
