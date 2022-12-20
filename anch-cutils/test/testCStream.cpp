@@ -28,56 +28,14 @@ printBuffer(char* data, std::size_t size) {
 }
 
 void
-serialize() {
-  std::cout << "serialize" << std::endl;
+serialize(std::size_t size) {
+  std::cout << "serialize" << size << std::endl;
   Test plop = {
     .toto = "toto",
     .titi = 42
   };
   { // in block for flush before std::endl;
-    COStream cos({.data = NULL, .size = 4, .handle = &printBuffer});
-    anch::json::serialize(plop, cos);
-  }
-  std::cout << std::endl;
-}
-
-void
-serialize1() {
-  std::cout << "serialize1" << std::endl;
-  Test plop = {
-    .toto = "toto",
-    .titi = 42
-  };
-  { // in block for flush before std::endl;
-    COStream cos({.data = NULL, .size = 1, .handle = &printBuffer});
-    anch::json::serialize(plop, cos);
-  }
-  std::cout << std::endl;
-}
-
-void
-serialize1500() {
-  std::cout << "serialize1500" << std::endl;
-  Test plop = {
-    .toto = "toto",
-    .titi = 42
-  };
-  { // in block for flush before std::endl;
-    COStream cos({.data = NULL, .size = 1500, .handle = &printBuffer});
-    anch::json::serialize(plop, cos);
-  }
-  std::cout << std::endl;
-}
-
-void
-serialize25() {
-  std::cout << "serialize25" << std::endl;
-  Test plop = {
-    .toto = "toto",
-    .titi = 42
-  };
-  { // in block for flush before std::endl;
-    COStream cos({.data = NULL, .size = 25, .handle = &printBuffer});
+    COStream cos({.data = NULL, .size = size, .handle = &printBuffer});
     anch::json::serialize(plop, cos);
   }
   std::cout << std::endl;
@@ -104,40 +62,10 @@ readBuffer(char* data, std::size_t size) {
 }
 
 void
-deserialize() {
-  std::cout << "deserialize" << std::endl;
+deserialize(std::size_t size) {
+  std::cout << "deserialize" << size << std::endl;
   offset = 0;
-  CIStream cis({.data = NULL, .size = 4, .handle = &readBuffer});
-  Test plop;
-  anch::json::deserialize(plop, cis);
-  std::cout << "plop.toto=" << plop.toto << ", plop.titi=" << plop.titi << std::endl;
-}
-
-void
-deserialize1() {
-  std::cout << "deserialize1" << std::endl;
-  offset = 0;
-  CIStream cis({.data = NULL, .size = 1, .handle = &readBuffer});
-  Test plop;
-  anch::json::deserialize(plop, cis);
-  std::cout << "plop.toto=" << plop.toto << ", plop.titi=" << plop.titi << std::endl;
-}
-
-void
-deserialize1500() {
-  std::cout << "deserialize1500" << std::endl;
-  offset = 0;
-  CIStream cis({.data = NULL, .size = 1500, .handle = &readBuffer});
-  Test plop;
-  anch::json::deserialize(plop, cis);
-  std::cout << "plop.toto=" << plop.toto << ", plop.titi=" << plop.titi << std::endl;
-}
-
-void
-deserialize25() {
-  std::cout << "deserialize25" << std::endl;
-  offset = 0;
-  CIStream cis({.data = NULL, .size = 25, .handle = &readBuffer});
+  CIStream cis({.data = NULL, .size = size, .handle = &readBuffer});
   Test plop;
   anch::json::deserialize(plop, cis);
   std::cout << "plop.toto=" << plop.toto << ", plop.titi=" << plop.titi << std::endl;
@@ -146,14 +74,14 @@ deserialize25() {
 int
 main(int argc, char* argv[]) {
   std::map<std::string, std::function<void(void)>> tests = {
-    {"serialize", std::function<void(void)>(&serialize)},
-    {"deserialize", std::function<void(void)>(&deserialize)},
-    {"serialize1", std::function<void(void)>(&serialize1)},
-    {"deserialize1", std::function<void(void)>(&deserialize1)},
-    {"serialize1500", std::function<void(void)>(&serialize1500)},
-    {"deserialize1500", std::function<void(void)>(&deserialize1500)},
-    {"serialize25", std::function<void(void)>(&serialize25)},
-    {"deserialize25", std::function<void(void)>(&deserialize25)}
+    {"serialize", std::bind(&serialize, 4)},
+    {"deserialize", std::bind(&deserialize, 4)},
+    {"serialize1", std::bind(&serialize, 1)},
+    {"deserialize1", std::bind(&deserialize, 1)},
+    {"serialize1500", std::bind(&serialize, 1500)},
+    {"deserialize1500", std::bind(&deserialize, 1500)},
+    {"serialize25", std::bind(&serialize, 25)},
+    {"deserialize25", std::bind(&deserialize, 25)}
   };
   if(argc > 1) {
     auto iter = tests.find(argv[1]);
