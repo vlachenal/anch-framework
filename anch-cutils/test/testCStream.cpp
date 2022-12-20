@@ -16,13 +16,15 @@ struct Test {
 template<>
 void
 anch::json::registerObject<Test>(anch::json::ObjectMapper<Test>& mapper) {
-  mapper.registerField("toto", &Test::toto).registerField("titi", &Test::titi);
+  mapper
+    .registerField("toto", &Test::toto)
+    .registerField("titi", &Test::titi);
 }
 
 std::size_t
-printBuffer(char* data, std::size_t bufferSize) {
-  std::cout << std::string(data, bufferSize);
-  return bufferSize;
+printBuffer(char* data, std::size_t size) {
+  std::cout << std::string(data, size);
+  return size;
 }
 
 void
@@ -38,11 +40,27 @@ serialize() {
   std::cout << std::endl;
 }
 
+void
+serialize1() {
+  Test plop = {
+    .toto = "toto",
+    .titi = 42
+  };
+  { // in block for flush before std::endl;
+    COStream cos({.data = NULL, .size = 1, .handle = &printBuffer});
+    anch::json::serialize(plop, cos);
+  }
+  std::cout << std::endl;
+}
+
+std::string json("{\"toto\":\"toto\",\"titi\":42}");
+std::size_t offset = 0;
+
 std::size_t
 readBuffer(char* data, std::size_t size) {
-  static std::string json("{\"toto\":\"toto\",\"titi\":42}");
-  static std::size_t offset = 0;
-  if(offset + size > json.length()) {
+  if(offset + size == json.length() + 1) {
+    return 0;
+  } else if(offset + size > json.length() + 1) {
     ::strncpy(data, json.substr(offset).data(), json.length() - offset);
     return json.length() - size - offset;
   } else {
@@ -54,7 +72,17 @@ readBuffer(char* data, std::size_t size) {
 
 void
 deserialize() {
+  offset = 0;
   CIStream cis({.data = NULL, .size = 4, .handle = &readBuffer});
+  Test plop;
+  anch::json::deserialize(plop, cis);
+  std::cout << "plop.toto=" << plop.toto << ", plop.titi=" << plop.titi << std::endl;
+}
+
+void
+deserialize1() {
+  offset = 0;
+  CIStream cis({.data = NULL, .size = 1, .handle = &readBuffer});
   Test plop;
   anch::json::deserialize(plop, cis);
   std::cout << "plop.toto=" << plop.toto << ", plop.titi=" << plop.titi << std::endl;
@@ -64,7 +92,9 @@ int
 main(int argc, char* argv[]) {
   std::map<std::string, std::function<void(void)>> tests = {
     {"serialize", std::function<void(void)>(&serialize)},
-    {"deserialize", std::function<void(void)>(&deserialize)}
+    {"deserialize", std::function<void(void)>(&deserialize)},
+    {"serialize1", std::function<void(void)>(&serialize1)},
+    {"deserialize1", std::function<void(void)>(&deserialize1)}
   };
   if(argc > 1) {
     auto iter = tests.find(argv[1]);

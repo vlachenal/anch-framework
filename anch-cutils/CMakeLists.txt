@@ -126,6 +126,9 @@ if(ANCH_CUTILS_UNITARY_TEST)
 
   enable_testing()
 
-  add_test(cstream-output ${EXECUTABLE_OUTPUT_PATH}/anch-cstream-test serialize)
+  add_test(cstream-output-jsonser ${EXECUTABLE_OUTPUT_PATH}/anch-cstream-test serialize)
+  add_test(cstream-output-jsondeser ${EXECUTABLE_OUTPUT_PATH}/anch-cstream-test deserialize)
+  add_test(cstream-output-jsonser-1char ${EXECUTABLE_OUTPUT_PATH}/anch-cstream-test serialize1)
+  add_test(cstream-output-jsondeser-1char ${EXECUTABLE_OUTPUT_PATH}/anch-cstream-test deserialize1)
 
 endif(ANCH_CUTILS_UNITARY_TEST)
