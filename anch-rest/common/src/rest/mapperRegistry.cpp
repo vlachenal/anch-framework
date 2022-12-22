@@ -29,3 +29,11 @@ MapperRegistry::MapperRegistry(): _mappers() {
 MapperRegistry::~MapperRegistry() {
   // Nothing to do
 }
+
+GlobalMapperRegistry::GlobalMapperRegistry(): MapperRegistry() {
+  // Nothing to do
+}
+
+GlobalMapperRegistry::~GlobalMapperRegistry() {
+  // Nothing to do
+}

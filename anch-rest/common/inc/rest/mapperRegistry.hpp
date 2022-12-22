@@ -122,12 +122,27 @@ namespace anch::rest {
 
   };
 
+  /*!
+   * Global \ref MapperRegistry
+   *
+   * \since 0.1
+   *
+   * \author Vincent Lachenal
+   */
   class GlobalMapperRegistry: public MapperRegistry, public anch::Singleton<GlobalMapperRegistry> {
     friend anch::Singleton<GlobalMapperRegistry>;
+
   private:
-    GlobalMapperRegistry(): MapperRegistry() {
-    }
-    ~GlobalMapperRegistry() {}
+    /*!
+     * \ref GlobalMapperRegistry private constructor
+     */
+    GlobalMapperRegistry(): MapperRegistry();
+
+    /*!
+     * \ref GlobalMapperRegistry private destructor
+     */
+    virtual ~GlobalMapperRegistry();
+
   };
 
 }  // anch::rest
