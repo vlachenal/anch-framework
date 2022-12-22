@@ -42,6 +42,8 @@ namespace anch::logger::formatter {
     // Constructors +
     /*!
      * \ref MDCFormatter default constructor
+     *
+     * \param key the MDC key
      */
     MDCFormatter(const std::string& key);
     // Constructors -
