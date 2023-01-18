@@ -1,7 +1,0 @@
-/*!
- * \namespace anch::file
- *
- * \brief Files and directories management namespace.
- *
- * It contains classes for POSIX (for now) file and directories management.
- */
