@@ -5,6 +5,7 @@ var searchData=
   ['endpointfunc_2',['EndpointFunc',['../classanch_1_1rest_1_1_endpoint_func.html',1,'anch::rest']]],
   ['endpointparamsfunc_3',['EndpointParamsFunc',['../classanch_1_1rest_1_1_endpoint_params_func.html',1,'anch::rest']]],
   ['endpointsimplefunc_4',['EndpointSimpleFunc',['../classanch_1_1rest_1_1_endpoint_simple_func.html',1,'anch::rest']]],
-  ['eventbus_5',['EventBus',['../classanch_1_1events_1_1_event_bus.html',1,'anch::events']]],
-  ['eventhandler_6',['EventHandler',['../classanch_1_1events_1_1_event_handler.html',1,'anch::events']]]
+  ['event_5',['Event',['../structanch_1_1events_1_1_event.html',1,'anch::events']]],
+  ['eventbus_6',['EventBus',['../classanch_1_1events_1_1_event_bus.html',1,'anch::events']]],
+  ['eventhandler_7',['EventHandler',['../classanch_1_1events_1_1_event_handler.html',1,'anch::events']]]
 ];

@@ -1,8 +1,8 @@
 <map id="anch::logger::Writer" name="anch::logger::Writer">
-<area shape="rect" id="node1" title=" " alt="" coords="101,449,259,577"/>
-<area shape="rect" id="node2" title=" " alt="" coords="39,317,151,357"/>
-<area shape="rect" id="node3" title=" " alt="" coords="18,184,171,239"/>
-<area shape="rect" id="node4" title=" " alt="" coords="5,95,184,135"/>
-<area shape="rect" id="node5" title=" " alt="" coords="37,5,152,45"/>
-<area shape="rect" id="node6" href="$classanch_1_1logger_1_1formatter_1_1_message_formatter.html" title=" " alt="" coords="175,288,355,387"/>
+<area shape="rect" id="node1" title=" " alt="" coords="99,584,250,735"/>
+<area shape="rect" id="node2" title=" " alt="" coords="39,422,143,499"/>
+<area shape="rect" id="node3" title=" " alt="" coords="18,259,163,351"/>
+<area shape="rect" id="node4" title=" " alt="" coords="5,132,176,209"/>
+<area shape="rect" id="node5" title=" " alt="" coords="37,5,144,83"/>
+<area shape="rect" id="node6" href="$classanch_1_1logger_1_1formatter_1_1_message_formatter.html" title=" " alt="" coords="167,400,347,521"/>
 </map>

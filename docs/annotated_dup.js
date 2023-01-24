@@ -57,14 +57,11 @@ var annotated_dup =
         [ "NetworkInterface", "classanch_1_1device_1_1_network_interface.html", "classanch_1_1device_1_1_network_interface" ]
       ] ],
       [ "events", "namespaceanch_1_1events.html", [
+        [ "Event", "structanch_1_1events_1_1_event.html", "structanch_1_1events_1_1_event" ],
         [ "EventBus", "classanch_1_1events_1_1_event_bus.html", "classanch_1_1events_1_1_event_bus" ],
         [ "EventHandler", "classanch_1_1events_1_1_event_handler.html", "classanch_1_1events_1_1_event_handler" ],
         [ "Observable", "classanch_1_1events_1_1_observable.html", "classanch_1_1events_1_1_observable" ],
         [ "Observer", "classanch_1_1events_1_1_observer.html", "classanch_1_1events_1_1_observer" ]
-      ] ],
-      [ "file", "namespaceanch_1_1file.html", [
-        [ "File", "classanch_1_1file_1_1_file.html", "classanch_1_1file_1_1_file" ],
-        [ "FileException", "classanch_1_1file_1_1_file_exception.html", "classanch_1_1file_1_1_file_exception" ]
       ] ],
       [ "json", "namespaceanch_1_1json.html", [
         [ "Factory", "classanch_1_1json_1_1_factory.html", "classanch_1_1json_1_1_factory" ],

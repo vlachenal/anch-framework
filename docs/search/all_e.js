@@ -3,7 +3,7 @@ var searchData=
   ['object_5fbegin_0',['OBJECT_BEGIN',['../namespaceanch_1_1json.html#a10b0c7119f4cd760f646c66be848df96',1,'anch::json']]],
   ['object_5fend_1',['OBJECT_END',['../namespaceanch_1_1json.html#aa2a414018fe5a3b35c84df16ba4ed2fe',1,'anch::json']]],
   ['objectmapper_2',['ObjectMapper',['../classanch_1_1json_1_1_object_mapper.html',1,'anch::json::ObjectMapper&lt; T &gt;'],['../classanch_1_1json_1_1_object_mapper.html#a588dcdf2d487b81909b4f1f92a0d1f9c',1,'anch::json::ObjectMapper::ObjectMapper(ObjectMapper &amp;&amp;other)=delete'],['../classanch_1_1json_1_1_object_mapper.html#af5c3dd95034cb8faae52e58d0ff23634',1,'anch::json::ObjectMapper::ObjectMapper(const ObjectMapper &amp;other)=delete']]],
-  ['observable_3',['Observable',['../classanch_1_1events_1_1_observable.html',1,'anch::events::Observable&lt; Event &gt;'],['../classanch_1_1events_1_1_observable.html#a83bccdde5125b7d7edca0e81fb46cfdd',1,'anch::events::Observable::Observable()']]],
+  ['observable_3',['Observable',['../classanch_1_1events_1_1_observable.html',1,'anch::events::Observable&lt; T &gt;'],['../classanch_1_1events_1_1_observable.html#a9b5edac28fb1e7fdf7be358113e644b9',1,'anch::events::Observable::Observable()']]],
   ['observable_3c_20socketevent_20_3e_4',['Observable&lt; SocketEvent &gt;',['../classanch_1_1events_1_1_observable.html',1,'anch::events']]],
   ['observer_5',['Observer',['../classanch_1_1events_1_1_observer.html',1,'anch::events']]],
   ['observer_3c_20socketevent_20_3e_6',['Observer&lt; SocketEvent &gt;',['../classanch_1_1events_1_1_observer.html',1,'anch::events']]],

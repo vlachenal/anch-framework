@@ -55,12 +55,12 @@ var hierarchy =
       [ "anch::rest::EndpointParamsFunc< T >", "classanch_1_1rest_1_1_endpoint_params_func.html", null ],
       [ "anch::rest::EndpointSimpleFunc", "classanch_1_1rest_1_1_endpoint_simple_func.html", null ]
     ] ],
+    [ "anch::events::Event< T >", "structanch_1_1events_1_1_event.html", null ],
     [ "std::exception", null, [
       [ "anch::TimeoutException", "classanch_1_1_timeout_exception.html", null ],
       [ "anch::crypto::InvalidBlockException", "classanch_1_1crypto_1_1_invalid_block_exception.html", null ],
       [ "anch::date::InvalidFormatException", "classanch_1_1date_1_1_invalid_format_exception.html", null ],
       [ "anch::device::DeviceException", "classanch_1_1device_1_1_device_exception.html", null ],
-      [ "anch::file::FileException", "classanch_1_1file_1_1_file_exception.html", null ],
       [ "anch::json::MappingError", "classanch_1_1json_1_1_mapping_error.html", null ],
       [ "anch::network::IOException", "classanch_1_1network_1_1_i_o_exception.html", null ],
       [ "anch::resource::file::ResourceFileException", "classanch_1_1resource_1_1file_1_1_resource_file_exception.html", null ],
@@ -69,7 +69,6 @@ var hierarchy =
       [ "anch::sql::SqlException", "classanch_1_1sql_1_1_sql_exception.html", null ]
     ] ],
     [ "anch::json::Factory< T >", "classanch_1_1json_1_1_factory.html", null ],
-    [ "anch::file::File", "classanch_1_1file_1_1_file.html", null ],
     [ "anch::crypto::Hash< O, B >", "classanch_1_1crypto_1_1_hash.html", [
       [ "anch::crypto::SHA2< O, 64, uint32_t, 64, I >", "classanch_1_1crypto_1_1_s_h_a2.html", [
         [ "anch::crypto::SHA224_256< O, I >", "classanch_1_1crypto_1_1_s_h_a224__256.html", null ]
@@ -140,15 +139,15 @@ var hierarchy =
     [ "anch::device::Network", "classanch_1_1device_1_1_network.html", null ],
     [ "anch::device::NetworkInterface", "classanch_1_1device_1_1_network_interface.html", null ],
     [ "anch::json::ObjectMapper< T >", "classanch_1_1json_1_1_object_mapper.html", null ],
-    [ "anch::events::Observable< Event >", "classanch_1_1events_1_1_observable.html", null ],
+    [ "anch::events::Observable< T >", "classanch_1_1events_1_1_observable.html", null ],
     [ "anch::events::Observable< SocketEvent >", "classanch_1_1events_1_1_observable.html", [
       [ "anch::network::Socket", "classanch_1_1network_1_1_socket.html", [
         [ "anch::network::TcpSocket", "classanch_1_1network_1_1_tcp_socket.html", null ],
         [ "anch::network::UdpSocket", "classanch_1_1network_1_1_udp_socket.html", null ]
       ] ]
     ] ],
-    [ "anch::events::Observer< Event >", "classanch_1_1events_1_1_observer.html", [
-      [ "anch::events::EventHandler< Event, Derived >", "classanch_1_1events_1_1_event_handler.html", null ]
+    [ "anch::events::Observer< T >", "classanch_1_1events_1_1_observer.html", [
+      [ "anch::events::EventHandler< T, Derived >", "classanch_1_1events_1_1_event_handler.html", null ]
     ] ],
     [ "anch::events::Observer< SocketEvent >", "classanch_1_1events_1_1_observer.html", null ],
     [ "std::optional", null, [
@@ -183,8 +182,8 @@ var hierarchy =
     [ "anch::Singleton< CPU >", "classanch_1_1_singleton.html", [
       [ "anch::device::CPU", "classanch_1_1device_1_1_c_p_u.html", null ]
     ] ],
-    [ "anch::Singleton< EventBus< Event > >", "classanch_1_1_singleton.html", [
-      [ "anch::events::EventBus< Event >", "classanch_1_1events_1_1_event_bus.html", null ]
+    [ "anch::Singleton< EventBus< T > >", "classanch_1_1_singleton.html", [
+      [ "anch::events::EventBus< T >", "classanch_1_1events_1_1_event_bus.html", null ]
     ] ],
     [ "anch::Singleton< GlobalMapperRegistry >", "classanch_1_1_singleton.html", [
       [ "anch::rest::GlobalMapperRegistry", "classanch_1_1rest_1_1_global_mapper_registry.html", null ]

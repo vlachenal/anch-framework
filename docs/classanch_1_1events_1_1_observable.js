@@ -1,8 +1,9 @@
 var classanch_1_1events_1_1_observable =
 [
-    [ "Observable", "classanch_1_1events_1_1_observable.html#a83bccdde5125b7d7edca0e81fb46cfdd", null ],
-    [ "~Observable", "classanch_1_1events_1_1_observable.html#a4afc96497e9b166ab6b47f85263126a8", null ],
-    [ "addObserver", "classanch_1_1events_1_1_observable.html#a2ea3656ceb0792cca320d94c691630bb", null ],
-    [ "notifyObservers", "classanch_1_1events_1_1_observable.html#a43d7db84f8531abeea8b331baa179533", null ],
-    [ "removeObserver", "classanch_1_1events_1_1_observable.html#acd9033d1d1d0248d37d6c36a37c30b27", null ]
+    [ "Observable", "classanch_1_1events_1_1_observable.html#a9b5edac28fb1e7fdf7be358113e644b9", null ],
+    [ "~Observable", "classanch_1_1events_1_1_observable.html#a48dda1a1f78b09e94f8afe8a5f25454c", null ],
+    [ "addObserver", "classanch_1_1events_1_1_observable.html#aef74c37acf4892541c9fe3a2fbc96bd6", null ],
+    [ "notifyObservers", "classanch_1_1events_1_1_observable.html#af2e67e49e3cb2ef1732ef9bea3395729", null ],
+    [ "notifyObservers", "classanch_1_1events_1_1_observable.html#ac75587729af13725e97278d3eb847e80", null ],
+    [ "removeObserver", "classanch_1_1events_1_1_observable.html#a38496a3958f7a7f062ac26b3182780d6", null ]
 ];

@@ -1,10 +1,10 @@
 <map id="anch::crypto::SHA2&lt; O, B, W, R, I &gt;" name="anch::crypto::SHA2&lt; O, B, W, R, I &gt;">
-<area shape="rect" id="node1" title="SHA2 abstract class." alt="" coords="41,881,195,1024"/>
-<area shape="rect" id="node2" href="$classanch_1_1crypto_1_1_hash.html" title="Hash algorithm abstract class." alt="" coords="5,480,156,681"/>
-<area shape="rect" id="node3" title=" " alt="" coords="84,211,269,265"/>
-<area shape="rect" id="node6" href="$structanch_1_1crypto_1_1_s_h_a2_1_1_context.html" title=" " alt="" coords="165,705,388,819"/>
-<area shape="rect" id="node8" href="$structanch_1_1crypto_1_1_s_h_a2_1_1_context.html" title=" " alt="" coords="257,328,445,456"/>
-<area shape="rect" id="node4" title=" " alt="" coords="207,108,338,148"/>
-<area shape="rect" id="node7" title=" " alt="" coords="293,211,444,265"/>
-<area shape="rect" id="node5" title=" " alt="" coords="253,5,292,45"/>
+<area shape="rect" id="node1" title="SHA2 abstract class." alt="" coords="40,1017,185,1183"/>
+<area shape="rect" id="node2" href="$classanch_1_1crypto_1_1_hash.html" title="Hash algorithm abstract class." alt="" coords="5,585,148,809"/>
+<area shape="rect" id="node3" title=" " alt="" coords="80,285,257,363"/>
+<area shape="rect" id="node6" href="$structanch_1_1crypto_1_1_s_h_a2_1_1_context.html" title=" " alt="" coords="159,833,381,955"/>
+<area shape="rect" id="node8" href="$structanch_1_1crypto_1_1_s_h_a2_1_1_context.html" title=" " alt="" coords="249,425,437,561"/>
+<area shape="rect" id="node4" title=" " alt="" coords="199,145,322,223"/>
+<area shape="rect" id="node7" title=" " alt="" coords="281,285,424,363"/>
+<area shape="rect" id="node5" title=" " alt="" coords="241,5,280,83"/>
 </map>
