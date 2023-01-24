@@ -21,6 +21,8 @@
 
 #include <mutex>
 #include <set>
+#include <map>
+#include <string>
 
 #include "events/observer.hpp"
 #include "lessPtrCompare.hpp"
@@ -37,13 +39,13 @@ namespace anch::events {
    *
    * \author Vincent Lachenal
    */
-  template<typename Event>
+  template<typename T>
   class Observable {
 
   private:
     // Attributes +
     /*! Observers list */
-    std::set<anch::events::Observer<Event>*, anch::LessPtrCompare<Observer<Event> > > _observers;
+    std::set<anch::events::Observer<T>*, anch::LessPtrCompare<anch::events::Observer<T> > > _observers;
 
     /*! Mutex */
     std::mutex _mutex;
@@ -73,21 +75,22 @@ namespace anch::events {
      *
      * \return \c true if observer has been added, \c false otherwise
      */
-    bool addObserver(anch::events::Observer<Event>& observer);
+    bool addObserver(anch::events::Observer<T>& observer);
 
     /*!
      * Remove observer for notifications
      *
      * \param observer The observer to remove
      */
-    void removeObserver(anch::events::Observer<Event>& observer);
+    void removeObserver(anch::events::Observer<T>& observer);
 
     /*!
      * Notify every observer that an event has been fired
      *
      * \param event the event to fire
+     * \param headers the event's headers (default to empty)
      */
-    void notifyObservers(const Event& event);
+    void notifyObservers(const T& event, const std::map<std::string,std::string>& headers = {});
     // Methods -
 
   };

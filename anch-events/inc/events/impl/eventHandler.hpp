@@ -21,10 +21,10 @@
 
 namespace anch::events {
 
-  template<typename Evt, typename D>
-  EventHandler<Evt,D>::EventHandler(const std::function<void(D&,const Evt&)>& callbackFunction, bool useEventBus): _callbackFunction(callbackFunction) {
+  template<typename T, typename D>
+  EventHandler<T,D>::EventHandler(const std::function<void(D&,const anch::events::Event<T>&)>& callbackFunction, bool useEventBus): _callbackFunction(callbackFunction) {
     if(useEventBus) {
-      anch::events::EventBus<Evt>& eventBus = anch::events::EventBus<Evt>::getInstance();
+      anch::events::EventBus<T>& eventBus = anch::events::EventBus<T>::getInstance();
       eventBus.addObserver(*this);
       _eventBus = &eventBus;
     } else {
@@ -32,23 +32,23 @@ namespace anch::events {
     }
   }
 
-  template<typename Evt, typename D>
-  EventHandler<Evt,D>::EventHandler(const std::function<void(D&,const Evt&)>& callbackFunction,
-				    anch::events::EventBus<Evt>& eventBus): _callbackFunction(callbackFunction) {
+  template<typename T, typename D>
+  EventHandler<T,D>::EventHandler(const std::function<void(D&,const anch::events::Event<T>&)>& callbackFunction,
+				  anch::events::EventBus<T>& eventBus): _callbackFunction(callbackFunction) {
     eventBus.addObserver(*this);
     _eventBus = &eventBus;
   }
 
-  template<typename Evt, typename D>
-  EventHandler<Evt,D>::~EventHandler() {
+  template<typename T, typename D>
+  EventHandler<T,D>::~EventHandler() {
     if(_eventBus != NULL) {
       _eventBus->removeObserver(*this);
     }
   }
 
-  template<typename Evt, typename D>
+  template<typename T, typename D>
   void
-  EventHandler<Evt,D>::notify(const Evt& event) noexcept {
+  EventHandler<T,D>::handle(const anch::events::Event<T>& event) noexcept {
     _callbackFunction(*static_cast<D*>(this), event);
   }
 

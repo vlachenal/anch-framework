@@ -23,6 +23,8 @@
 
 #include <functional>
 
+#include "events/event.hpp"
+
 
 namespace anch::events {
 
@@ -35,14 +37,14 @@ namespace anch::events {
    *
    * \author Vincent Lachenal
    */
-  template<typename Event, typename Derived>
-  class EventHandler: public Observer<Event> {
+  template<typename T, typename Derived>
+  class EventHandler: public Observer<T> {
   private:
     /*! Callback method to call on event */
-    std::function<void(Derived&,const Event&)> _callbackFunction;
+    std::function<void(Derived&,const anch::events::Event<T>&)> _callbackFunction;
 
     /*! \ref EventBus registration */
-    anch::events::EventBus<Event>* _eventBus;
+    anch::events::EventBus<T>* _eventBus;
 
   public:
     /*!
@@ -53,7 +55,7 @@ namespace anch::events {
      * \param callbackFunction the callback method to use on notify
      * \param useEventBus if \c true register itself in global \ref EventBus, \c false otherwise (default)
      */
-    EventHandler(const std::function<void(Derived&,const Event&)>& callbackFunction, bool useEventBus = false);
+    EventHandler(const std::function<void(Derived&,const anch::events::Event<T>&)>& callbackFunction, bool useEventBus = false);
 
     /*!
      * \ref EventHandler constructor.\n
@@ -63,7 +65,7 @@ namespace anch::events {
      * \param callbackFunction the callback method to use on notify
      * \param eventBus the \ref EventBus to register itself
      */
-    EventHandler(const std::function<void(Derived&,const Event&)>& callbackFunction, anch::events::EventBus<Event>& eventBus);
+    EventHandler(const std::function<void(Derived&,const anch::events::Event<T>&)>& callbackFunction, anch::events::EventBus<T>& eventBus);
 
     /*!
      * \ref EventHandler destructor.\n
@@ -77,7 +79,7 @@ namespace anch::events {
      *
      * \param event the event which has been fired
      */
-    virtual void notify(const Event& event) noexcept;
+    virtual void handle(const anch::events::Event<T>& event) noexcept;
 
   };
 

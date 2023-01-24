@@ -24,8 +24,8 @@ public:
 class EventObserver: public Observer<Evt> {
 public:
   EventObserver() {}
-  virtual void notify(const Evt& event) noexcept override {
-    cout << event.getMessage() << endl;
+  virtual void handle(const anch::events::Event<Evt>& event) noexcept override {
+    cout << event.body.getMessage() << endl;
   }
 };
 
@@ -34,14 +34,14 @@ template<typename D>
 class EventHandlerIface: public anch::events::EventHandler<Evt,D> {
 public:
   EventHandlerIface(bool useEventBus = true): anch::events::EventHandler<Evt,D>(&D::onMessage,useEventBus) {}
-  virtual void onMessage(const Evt& event) noexcept = 0;
+  virtual void onMessage(const anch::events::Event<Evt>& event) noexcept = 0;
 };
 
 class EventHandler: public EventHandlerIface<EventHandler> {
 public:
   EventHandler(): EventHandlerIface<EventHandler>() {}
-  virtual void onMessage(const Evt& event) noexcept override {
-    cout << "HANDLER : " << event.getMessage() << endl;
+  virtual void onMessage(const anch::events::Event<Evt>& event) noexcept override {
+    cout << "HANDLER : " << event.body.getMessage() << endl;
   }
 };
 

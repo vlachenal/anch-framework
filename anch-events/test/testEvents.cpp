@@ -10,13 +10,13 @@ using anch::events::Observable;
 using anch::events::Observer;
 
 
-class Event {
+class Evt {
 
 private:
   string _message;
 
 public:
-  Event(const string& message): _message(message) {
+  Evt(const string& message): _message(message) {
     // Nothing to do
   }
 
@@ -26,7 +26,7 @@ public:
 
 };
 
-class StrObserver : public Observer<Event> {
+class StrObserver : public Observer<Evt> {
 
 public:
   StrObserver() {
@@ -38,8 +38,8 @@ public:
   }
 
 public:
-  virtual void notify(const Event& event) noexcept {
-    cout << "Observer receive event: " << event.str() << endl;
+  virtual void handle(const anch::events::Event<Evt>& event) noexcept {
+    cout << "Observer receive event: " << event.body.str() << endl;
   }
 
 };
@@ -47,7 +47,7 @@ public:
 
 int
 main(void) {
-  Observable<Event> handler;
+  Observable<Evt> handler;
 
   cout << "Add observer" << endl;
   // Add observers +
@@ -55,7 +55,7 @@ main(void) {
   handler.addObserver(obs1);
   cout << "Notify" << endl;
   // Send event +
-  handler.notifyObservers(Event("TUTUTUTUTUTU"));
+  handler.notifyObservers(Evt("TUTUTUTUTUTU"));
   // Send event -
 
   cout << "Add observer" << endl;
@@ -74,7 +74,7 @@ main(void) {
 
   cout << "Notify" << endl;
   // Send event +
-  handler.notifyObservers(Event("TOTOTOTOTOTO"));
+  handler.notifyObservers(Evt("TOTOTOTOTOTO"));
   // Send event -
 
   cout << "Remove observer by reference" << endl;
@@ -82,7 +82,7 @@ main(void) {
 
   cout << "Notify" << endl;
   // Send event +
-  handler.notifyObservers(Event("TITITITITITI"));
+  handler.notifyObservers(Evt("TITITITITITI"));
   // Send event -
 
   return 0;

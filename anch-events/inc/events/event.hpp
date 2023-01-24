@@ -19,35 +19,29 @@
 */
 #pragma once
 
-#include <cstdint>
-
-#include "events/event.hpp"
-
+#include <map>
+#include <string>
 
 namespace anch::events {
 
   /*!
-   * \brief An observer interface of the observers/observable design pattern.
+   * \brief Event representation
    *
-   * It has to be implemented to handle events correctly.
-   *
-   * \since 0.1
+   * Event is represented by body and context (\c headers )
    *
    * \author Vincent Lachenal
+   *
+   * \since 0.1
    */
   template<typename T>
-  class Observer {
+  struct Event {
 
-  public:
-    // Methods +
-    /*!
-     * Receive event notification
-     *
-     * \param event The event to receive
-     */
-    virtual void handle(const anch::events::Event<T>& event) noexcept = 0;
-    // Methods -
+    /*! Event's context */
+    std::map<std::string,std::string> headers;
+
+    /*! Event's body */
+    T body;
 
   };
 
-}
+}  // anch::events

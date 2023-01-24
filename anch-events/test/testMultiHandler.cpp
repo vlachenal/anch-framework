@@ -27,7 +27,7 @@ template<typename D>
 class MessageEventHandler: public EventHandler<Message,D> {
 public:
   MessageEventHandler(): EventHandler<Message,D>(&D::onMessage) {}
-  virtual void onMessage(const Message& event) noexcept = 0;
+  virtual void onMessage(const anch::events::Event<Message>& event) noexcept = 0;
 };
 
 /*!
@@ -36,8 +36,8 @@ public:
 class SingleMsgHandler: public MessageEventHandler<SingleMsgHandler> {
 public:
   SingleMsgHandler(): MessageEventHandler<SingleMsgHandler>() {}
-  virtual void onMessage(const Message& event) noexcept {
-    std::cout << event.getMessage() << std::endl;
+  virtual void onMessage(const anch::events::Event<Message>& event) noexcept {
+    std::cout << event.body.getMessage() << std::endl;
   }
 };
 
@@ -49,7 +49,7 @@ template<typename D>
 class StringEventHandler: public EventHandler<std::string,D> {
 public:
   StringEventHandler(): EventHandler<std::string,D>(&D::onString) {}
-  virtual void onString(const std::string& event) noexcept = 0;
+  virtual void onString(const anch::events::Event<std::string>& event) noexcept = 0;
 };
 
 /*!
@@ -58,11 +58,11 @@ public:
 class MultiEventHandler: public MessageEventHandler<MultiEventHandler>, public StringEventHandler<MultiEventHandler> {
 public:
   MultiEventHandler(): MessageEventHandler<MultiEventHandler>(), StringEventHandler<MultiEventHandler>() {}
-  virtual void onMessage(const Message& event) noexcept {
-    std::cout << "MULTI : " << event.getMessage() << std::endl;
+  virtual void onMessage(const anch::events::Event<Message>& event) noexcept {
+    std::cout << "MULTI : " << event.body.getMessage() << std::endl;
   }
-  virtual void onString(const std::string& event) noexcept {
-    std::cout << "MULTI : " << event << std::endl;
+  virtual void onString(const anch::events::Event<std::string>& event) noexcept {
+    std::cout << "MULTI : " << event.body << std::endl;
   }
 };
 

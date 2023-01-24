@@ -21,94 +21,94 @@
 
 namespace anch::events {
 
-  template<typename Evt>
-  EventBus<Evt>::EventBus():  _eventMutex(), _queueMutex(), _thread(NULL), _events(), _observers() {
+  template<typename T>
+  EventBus<T>::EventBus():  _eventMutex(), _queueMutex(), _thread(NULL), _events(), _observers() {
     // Nothing to do
   }
 
-  template<typename Evt>
-  EventBus<Evt>::~EventBus() {
+  template<typename T>
+  EventBus<T>::~EventBus() {
     if(_thread != NULL) {
       _thread->join();
       delete _thread;
     }
   }
 
-  template<typename Evt>
+  template<typename T>
   bool
-  EventBus<Evt>::addObserver(anch::events::Observer<Evt>& observer) noexcept {
+  EventBus<T>::addObserver(anch::events::Observer<T>& observer) noexcept {
     std::lock_guard<std::mutex> lock(_eventMutex);
     bool added = _observers.insert(&observer).second;
     return added;
   }
 
-  template<typename Evt>
+  template<typename T>
   bool
-  EventBus<Evt>::AddObserver(anch::events::Observer<Evt>& observer) noexcept {
-    return EventBus<Evt>::getInstance().addObserver(observer);
+  EventBus<T>::AddObserver(anch::events::Observer<T>& observer) noexcept {
+    return EventBus<T>::getInstance().addObserver(observer);
   }
 
-  template<typename Evt>
+  template<typename T>
   void
-  EventBus<Evt>::removeObserver(anch::events::Observer<Evt>& observer) noexcept {
+  EventBus<T>::removeObserver(anch::events::Observer<T>& observer) noexcept {
     std::lock_guard<std::mutex> lock(_eventMutex);
     _observers.erase(&observer);
   }
 
-  template<typename Evt>
+  template<typename T>
   void
-  EventBus<Evt>::RemoveObserver(anch::events::Observer<Evt>& observer) noexcept {
-    EventBus<Evt>::getInstance().removeObserver(observer);
+  EventBus<T>::RemoveObserver(anch::events::Observer<T>& observer) noexcept {
+    EventBus<T>::getInstance().removeObserver(observer);
   }
 
-  template<typename Evt>
+  template<typename T>
   void
-  EventBus<Evt>::fireEvent(const Evt& event) noexcept {
+  EventBus<T>::fireEvent(const T& event, const std::map<std::string,std::string>& headers) noexcept {
     std::lock_guard<std::mutex> lock(_eventMutex);
-    for(anch::events::Observer<Evt>* observer : _observers) {
-      observer->notify(event);
+    for(anch::events::Observer<T>* observer : _observers) {
+      observer->handle({.headers = headers, .body = event});
     }
   }
 
-  template<typename Evt>
+  template<typename T>
   void
-  EventBus<Evt>::FireEvent(const Evt& event) noexcept {
-    EventBus<Evt>::getInstance().fireEvent(event);
+  EventBus<T>::FireEvent(const T& event, const std::map<std::string,std::string>& headers) noexcept {
+    EventBus<T>::getInstance().fireEvent(event, headers);
   }
 
-  template<typename Evt>
+  template<typename T>
   void
-  EventBus<Evt>::scheduleDeferred(const Evt& event) noexcept {
+  EventBus<T>::scheduleDeferred(const T& event, const std::map<std::string,std::string>& headers) noexcept {
     std::lock_guard<std::mutex> lock(_queueMutex);
     bool empty = _events.empty();
-    _events.push(event);
+    _events.push({.headers = headers, .body = event});
     if(empty) {
       if(_thread != NULL) {
 	_thread->join();
 	delete _thread;
       }
-      _thread = new std::thread(&EventBus<Evt>::processEvents,this);
+      _thread = new std::thread(&EventBus<T>::processEvents,this);
     }
   }
 
-  template<typename Evt>
+  template<typename T>
   void
-  EventBus<Evt>::ScheduleDeferred(const Evt& event) noexcept {
-    EventBus<Evt>::getInstance().scheduleDeferred(event);
+  EventBus<T>::ScheduleDeferred(const T& event, const std::map<std::string,std::string>& headers) noexcept {
+    EventBus<T>::getInstance().scheduleDeferred(event, headers);
   }
 
-  template<typename Evt>
+  template<typename T>
   void
-  EventBus<Evt>::processEvents() noexcept {
+  EventBus<T>::processEvents() noexcept {
     bool empty = false;
     do {
       _queueMutex.lock();
-      Evt event = _events.front();
+      anch::events::Event<T> event = _events.front();
       _events.pop();
       empty = _events.empty();
       _queueMutex.unlock();
 
-      fireEvent(event);
+      fireEvent(event.body, event.headers);
 
     } while(!empty);
   }

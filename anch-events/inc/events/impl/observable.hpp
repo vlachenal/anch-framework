@@ -21,39 +21,40 @@
 
 namespace anch::events {
 
-  template<typename Evt>
-  Observable<Evt>::Observable(): _observers(), _mutex() {
+  template<typename T>
+  Observable<T>::Observable(): _observers(), _mutex() {
     // Nothing to do
   }
 
-  template<typename Evt>
-  Observable<Evt>::~Observable() {
+  template<typename T>
+  Observable<T>::~Observable() {
     // Nothing to do
   }
 
-  template<typename Evt>
+  template<typename T>
   bool
-  Observable<Evt>::addObserver(anch::events::Observer<Evt>& observer) {
+  Observable<T>::addObserver(anch::events::Observer<T>& observer) {
     _mutex.lock();
     bool added = _observers.insert(&observer).second;
     _mutex.unlock();
     return added;
   }
 
-  template<typename Evt>
+  template<typename T>
   void
-  Observable<Evt>::removeObserver(anch::events::Observer<Evt>& observer) {
+  Observable<T>::removeObserver(anch::events::Observer<T>& observer) {
     _mutex.lock();
     _observers.erase(&observer);
     _mutex.unlock();
   }
 
-  template<typename Evt>
+  template<typename T>
   void
-  Observable<Evt>::notifyObservers(const Evt& event) {
+  Observable<T>::notifyObservers(const T& event, const std::map<std::string,std::string>& headers) {
+    anch::events::Event<T> evt = {.headers = headers, .body = event};
     _mutex.lock();
-    for(anch::events::Observer<Evt>* observer : _observers) {
-      observer->notify(event);
+    for(anch::events::Observer<T>* observer : _observers) {
+      observer->handle(evt);
     }
     _mutex.unlock();
   }

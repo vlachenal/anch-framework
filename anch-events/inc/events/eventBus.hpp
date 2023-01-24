@@ -25,6 +25,7 @@
 #include <set>
 
 #include "events/observer.hpp"
+#include "events/event.hpp"
 #include "lessPtrCompare.hpp"
 #include "singleton.hpp"
 
@@ -40,9 +41,9 @@ namespace anch::events {
    *
    * \author Vincent Lachenal
    */
-  template<typename Event>
-  class EventBus: public anch::Singleton<EventBus<Event>> {
-    friend class anch::Singleton<EventBus<Event>>;
+  template<typename T>
+  class EventBus: public anch::Singleton<EventBus<T>> {
+    friend class anch::Singleton<EventBus<T>>;
 
     // Attributes +
   private:
@@ -56,10 +57,10 @@ namespace anch::events {
     std::thread* _thread;
 
     /*! Waiting event queue */
-    std::queue<Event> _events;
+    std::queue<anch::events::Event<T>> _events;
 
     /*! Observers list */
-    std::set<anch::events::Observer<Event>*, anch::LessPtrCompare<Observer<Event>>> _observers;
+    std::set<anch::events::Observer<T>*, anch::LessPtrCompare<anch::events::Observer<T>>> _observers;
     // Attributes -
 
 
@@ -86,56 +87,60 @@ namespace anch::events {
      *
      * \param observer the \ref Observer to register
      */
-    bool addObserver(anch::events::Observer<Event>& observer) noexcept;
+    bool addObserver(anch::events::Observer<T>& observer) noexcept;
 
     /*!
      * Retrieve \ref EventBus instance and register \ref Observer to \ref EventBus
      *
      * \param observer the \ref Observer to register
      */
-    static bool AddObserver(anch::events::Observer<Event>& observer) noexcept;
+    static bool AddObserver(anch::events::Observer<T>& observer) noexcept;
 
     /*!
      * Remove observer for notifications
      *
      * \param observer The observer to remove
      */
-    void removeObserver(anch::events::Observer<Event>& observer) noexcept;
+    void removeObserver(anch::events::Observer<T>& observer) noexcept;
 
     /*!
      * Retrieve \ref EventBus instance and remove observer for notifications
      *
      * \param observer The observer to remove
      */
-    static void RemoveObserver(anch::events::Observer<Event>& observer) noexcept;
+    static void RemoveObserver(anch::events::Observer<T>& observer) noexcept;
 
     /*!
      * Notify all observer that an event has been fired
      *
      * \param event the event which has been fired
+     * \param headers the event's context
      */
-    void fireEvent(const Event& event) noexcept;
+    void fireEvent(const T& event, const std::map<std::string,std::string>& headers = {}) noexcept;
 
     /*!
      * Retrieve \ref EventBus instance and notify all observer that an event has been fired
      *
      * \param event the event which has been fired
+     * \param headers the event's context
      */
-    static void FireEvent(const Event& event) noexcept;
+    static void FireEvent(const T& event, const std::map<std::string,std::string>& headers = {}) noexcept;
 
     /*!
      * Put event in sheduler.
      *
      * \param event the event to process
+     * \param headers the event's context
      */
-    void scheduleDeferred(const Event& event) noexcept;
+    void scheduleDeferred(const T& event, const std::map<std::string,std::string>& headers = {}) noexcept;
 
     /*!
      * Retrieve \ref EventBus instance and put event in sheduler.
      *
      * \param event the event to process
+     * \param headers the event's context
      */
-    static void ScheduleDeferred(const Event& event) noexcept;
+    static void ScheduleDeferred(const T& event, const std::map<std::string,std::string>& headers = {}) noexcept;
 
   private:
     /*!
