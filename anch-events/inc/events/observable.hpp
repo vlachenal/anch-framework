@@ -25,6 +25,7 @@
 #include <string>
 
 #include "events/observer.hpp"
+#include "events/event.hpp"
 #include "lessPtrCompare.hpp"
 
 
@@ -91,6 +92,13 @@ namespace anch::events {
      * \param headers the event's headers (default to empty)
      */
     void notifyObservers(const T& event, const std::map<std::string,std::string>& headers = {});
+
+    /*!
+     * Notify every observer that an event has been fired
+     *
+     * \param event the event to fire
+     */
+    void notifyObservers(const anch::events::Event<T>& event);
     // Methods -
 
   };

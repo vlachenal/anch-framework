@@ -51,10 +51,15 @@ namespace anch::events {
   template<typename T>
   void
   Observable<T>::notifyObservers(const T& event, const std::map<std::string,std::string>& headers) {
-    anch::events::Event<T> evt = {.headers = headers, .body = event};
+    notifyObservers({.headers = headers, .body = event});
+  }
+
+  template<typename T>
+  void
+  Observable<T>::notifyObservers(const anch::events::Event<T>& event) {
     _mutex.lock();
     for(anch::events::Observer<T>* observer : _observers) {
-      observer->handle(evt);
+      observer->handle(event);
     }
     _mutex.unlock();
   }

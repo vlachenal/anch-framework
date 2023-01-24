@@ -119,12 +119,26 @@ namespace anch::events {
     void fireEvent(const T& event, const std::map<std::string,std::string>& headers = {}) noexcept;
 
     /*!
+     * Notify all observer that an event has been fired
+     *
+     * \param event the event which has been fired
+     */
+    void fireEvent(const anch::events::Event<T>& event) noexcept;
+
+    /*!
      * Retrieve \ref EventBus instance and notify all observer that an event has been fired
      *
      * \param event the event which has been fired
      * \param headers the event's context
      */
     static void FireEvent(const T& event, const std::map<std::string,std::string>& headers = {}) noexcept;
+
+    /*!
+     * Retrieve \ref EventBus instance and notify all observer that an event has been fired
+     *
+     * \param event the event which has been fired
+     */
+    static void FireEvent(const anch::events::Event<T>& event) noexcept;
 
     /*!
      * Put event in sheduler.
@@ -135,12 +149,26 @@ namespace anch::events {
     void scheduleDeferred(const T& event, const std::map<std::string,std::string>& headers = {}) noexcept;
 
     /*!
+     * Put event in sheduler.
+     *
+     * \param event the event to process
+     */
+    void scheduleDeferred(const anch::events::Event<T>& event) noexcept;
+
+    /*!
      * Retrieve \ref EventBus instance and put event in sheduler.
      *
      * \param event the event to process
      * \param headers the event's context
      */
     static void ScheduleDeferred(const T& event, const std::map<std::string,std::string>& headers = {}) noexcept;
+
+    /*!
+     * Retrieve \ref EventBus instance and put event in sheduler.
+     *
+     * \param event the event to process
+     */
+    static void ScheduleDeferred(const anch::events::Event<T>& event) noexcept;
 
   private:
     /*!
