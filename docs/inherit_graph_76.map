@@ -1,5 +1,6 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classanch_1_1sql_1_1_select_builder_part.html" title="SQL select query part builder." alt="" coords="5,31,204,56"/>
-<area shape="rect" id="node2" href="$classanch_1_1sql_1_1_fields_builder.html" title="Field builder." alt="" coords="252,5,424,31"/>
-<area shape="rect" id="node3" href="$classanch_1_1sql_1_1_from_builder.html" title=" " alt="" coords="255,55,421,80"/>
+<area shape="rect" id="node1" href="$classanch_1_1sql_1_1_prepared_statement.html" title="SQL prepared statement." alt="" coords="5,77,220,102"/>
+<area shape="rect" id="node2" href="$classanch_1_1sql_1_1_my_s_q_l_prepared_statement.html" title="MySQL prepared statement implementation." alt="" coords="283,5,473,45"/>
+<area shape="rect" id="node3" href="$classanch_1_1sql_1_1_postgre_s_q_l_prepared_statement.html" title="PostgreSQL prepared statement implementation." alt="" coords="268,69,488,109"/>
+<area shape="rect" id="node4" href="$classanch_1_1sql_1_1_s_q_lite3_prepared_statement.html" title="SQLite3 prepared statement implementation." alt="" coords="280,133,476,173"/>
 </map>

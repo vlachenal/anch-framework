@@ -1,5 +1,6 @@
 var files_dup =
 [
+    [ "anch-cli", "dir_66fd3e422064a3d6afe303059f58b9f2.html", "dir_66fd3e422064a3d6afe303059f58b9f2" ],
     [ "anch-crypto", "dir_8a1d991af08af6013fcc57ed2fb56895.html", "dir_8a1d991af08af6013fcc57ed2fb56895" ],
     [ "anch-cutils", "dir_a53953f93c986bd2fc5fb9508207697e.html", "dir_a53953f93c986bd2fc5fb9508207697e" ],
     [ "anch-date", "dir_c8883d3de28c42cdad45f254c2037fb7.html", "dir_c8883d3de28c42cdad45f254c2037fb7" ],

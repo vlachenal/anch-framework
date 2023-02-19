@@ -1,13 +1,3 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" title=" " alt="" coords="5,259,120,284"/>
-<area shape="rect" id="node2" href="$classanch_1_1_timeout_exception.html" title="Timeout exception." alt="" coords="189,5,368,31"/>
-<area shape="rect" id="node3" href="$classanch_1_1crypto_1_1_invalid_block_exception.html" title="Exception on receiving an invalid block." alt="" coords="183,55,374,95"/>
-<area shape="rect" id="node4" href="$classanch_1_1date_1_1_invalid_format_exception.html" title="Invalid date format error." alt="" coords="185,119,373,159"/>
-<area shape="rect" id="node5" href="$classanch_1_1device_1_1_device_exception.html" title=" " alt="" coords="168,184,389,209"/>
-<area shape="rect" id="node6" href="$classanch_1_1json_1_1_mapping_error.html" title="Mapping error." alt="" coords="187,233,370,259"/>
-<area shape="rect" id="node7" href="$classanch_1_1network_1_1_i_o_exception.html" title=" " alt="" coords="179,283,379,308"/>
-<area shape="rect" id="node8" href="$classanch_1_1resource_1_1file_1_1_resource_file_exception.html" title=" " alt="" coords="190,333,367,373"/>
-<area shape="rect" id="node9" href="$classanch_1_1rest_1_1_mapper_exception.html" title=" " alt="" coords="175,397,382,423"/>
-<area shape="rect" id="node10" href="$classanch_1_1rest_1_1_router_exception.html" title="REST router exception class." alt="" coords="178,447,379,472"/>
-<area shape="rect" id="node11" href="$classanch_1_1sql_1_1_sql_exception.html" title="SQL exception." alt="" coords="193,496,365,521"/>
+<area shape="rect" id="node1" href="$classanch_1_1_stream.html" title="Java style stream class." alt="" coords="5,5,168,31"/>
 </map>
