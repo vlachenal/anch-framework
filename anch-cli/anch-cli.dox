@@ -1,61 +1,49 @@
-/*! \page page_uuid AnCH UUID library documentation
+/*! \page page_cli AnCH CLI library documentation
  *
  * \tableofcontents
  *
- * \section uuid_intro_seq Introduction
+ * \section cli_intro_seq Introduction
  *
- * AnCH UUID library aims to provide facilities for generating and parsing UUID.
+ * AnCH CLI library aims to provide facilities for parsing CLI arguments (and more in future ...)
  *
- * \section uuid_prereq_sec Prerequisites
+ * \section cli_prereq_sec Prerequisites
  *
- * AnCH UUID is a standalone library as long as you only parse UUID or generate random UUID.\n
- * For generating MD5 and SHA1 UUIDs, \ref page_crypto anch-crypto library is required.\n
- * For generating MAC UUIDs, anch-device library is required.
+ * AnCH CLI is a standalone library as long as you only parse CLI arguments
  *
- * \section uuid_install_sec Installation
+ * \section cli_install_sec Installation
  *
  * make install
  *
- * \section uuid_concept_sec Conception
+ * \section cli_concept_sec Conception
  *
- * AnCH UUID library contains only one class: \ref anch::UUID "UUID".\n
- * Each UUID version should have a provider for UUID generation. This library provides the random version implementation (version 4).\n
- * \n
- * \ref page_crypto anch-crypto library provides MD5 (version 3) and SHA1 (version 5) implementations. They have to be registered to be used:
+ * AnCH CLI library main class is: \ref anch::cli::ArgHandler "ArgHandler".\n
+ * AnCH CLI library contains common bindings in \c cli/utils.hpp .
+ *
+ * \section cli_example_sec Examples
+ *
+ * Generate and parse CLIs:
  * \code{.cpp}
- anch::crypto::registerMD5UUIDProvider(); // md5.hpp
- anch::crypto::registerSHA1UUIDProvider(); // sha1.hpp\endcode
- *
- * anch-device library provides MAC address (version 1) implementation. It has to be registered to be used:
- * \code{.cpp}
- anch::device::registerMACAddressUUIDProvider(); // uuidProvider.hpp\endcode
- *
- * \section uuid_example_sec Examples
- *
- * Generate and parse UUIDs:
- * \code{.cpp}
-  anch::device::registerMACAddressUUIDProvider();
-  anch::crypto::registerMD5UUIDProvider();
-  anch::crypto::registerSHA1UUIDProvider();
-
-  UUID mac = UUID::generateUUID(UUID::Version::MAC_ADDRESS);
-  std::cout << "MAC address UUID: " << mac << std::endl;
-  UUID md5 = UUID::generateUUID(UUID::Version::MD5_HASH, "Ta mère suce des bites en enfer !");
-  std::cout << "MD5 hash UUID:    " << md5 << std::endl;
-  UUID random = UUID::random();
-  std::cout << "Random UUID:      " << random << std::endl;
-  UUID sha1 = UUID::generateUUID(UUID::Version::SHA1_HASH, "Ta mère suce des bites en enfer !");
-  std::cout << "SHA1 hash UUID:   " << sha1 << std::endl;
-  std::string macStr = static_cast<std::string>(mac);
-  std::cout << "UUID MAC address UUID conversion:   " << macStr << std::endl;
-  std::cout << "UUID MAC address string conversion: " << UUID(macStr) << std::endl;
-  std::string md5Str = static_cast<std::string>(md5);
-  std::cout << "UUID MD5 address UUID conversion:   " << md5Str << std::endl;
-  std::cout << "UUID MD5 address string conversion: " << UUID(md5Str) << std::endl;
-  std::string randomStr = static_cast<std::string>(random);
-  std::cout << "UUID RANDOM address UUID conversion:   " << randomStr << std::endl;
-  std::cout << "UUID RANDOM address string conversion: " << UUID(randomStr) << std::endl;
-  std::string sha1Str = static_cast<std::string>(sha1);
-  std::cout << "UUID SHA1 address UUID conversion:   " << sha1Str << std::endl;
-  std::cout << "UUID SHA1 address string conversion: " << UUID(sha1Str) << std::endl;\endcode
+  App application = {
+    .name = "toto",
+    .version = "0.1 alpha 42",
+    .author = "Vincent Lachenal",
+    .copyright = "No copyrigth - it is a fuking unit test",
+    .licence = "WTFPL 2.0",
+    .banner = "Ceci est une bannière",
+    .bannerPath = "/etc/fstab"
+  };
+  // Application options are declared ...
+  Options opts;
+  {
+    ArgHandler handler(application, {
+        {.handler = anch::cli::bindTrue(opts.verbose), .sopt = 'v', .lopt = "verbose", .description = "Verbose mode"},
+        {.handler = anch::cli::bindStr(opts.str), .sopt = 'p', .lopt = "plop", .value = true, .name = "trestreslong", .description = "plop arg", .example = "PLOP!!!"},
+        {.handler = anch::cli::bindStr(opts.str2), .lopt = "plip", .value = true, .description = "plip arg"},
+        {.handler = anch::cli::bindStr(opts.pos), .value = true, .name = "POS1", .description = "pos"},
+        {.handler = anch::cli::bindStr(opts.pos2), .value = true, .name = "POS2", .description = "pos2"},
+        {.handler = anch::cli::bindCol(opts.multPos), .value = true, .name = "POSM", .multi = true, .description = "pos-mult"}
+      });
+    handler.printBanner(std::cerr);
+    handler.handle(argc, argv);
+  }\endcode
  */
