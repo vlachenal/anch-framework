@@ -1,6 +1,6 @@
 <map id="anch::network::TcpSocket" name="anch::network::TcpSocket">
-<area shape="rect" id="node1" title=" " alt="" coords="5,683,200,825"/>
-<area shape="rect" id="node2" href="$classanch_1_1network_1_1_socket.html" title=" " alt="" coords="16,373,189,633"/>
-<area shape="rect" id="node3" href="$classanch_1_1events_1_1_observable.html" title=" " alt="" coords="5,196,200,324"/>
-<area shape="rect" id="node4" href="$classanch_1_1events_1_1_observable.html" title="An observable implementation of the observers/observable design pattern." alt="" coords="5,5,200,133"/>
+<area shape="rect" id="node1" title=" " alt="" coords="25,751,211,916"/>
+<area shape="rect" id="node2" href="$classanch_1_1network_1_1_socket.html" title=" " alt="" coords="35,433,201,701"/>
+<area shape="rect" id="node3" href="$classanch_1_1events_1_1_observable.html" title=" " alt="" coords="25,219,211,384"/>
+<area shape="rect" id="node4" href="$classanch_1_1events_1_1_observable.html" title="An observable implementation of the observers/observable design pattern." alt="" coords="5,5,231,156"/>
 </map>

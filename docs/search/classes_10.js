@@ -12,7 +12,7 @@ var searchData=
   ['sha384_5f512_9',['SHA384_512',['../classanch_1_1crypto_1_1_s_h_a384__512.html',1,'anch::crypto']]],
   ['singleton_10',['Singleton',['../classanch_1_1_singleton.html',1,'anch']]],
   ['singleton_3c_20cpu_20_3e_11',['Singleton&lt; CPU &gt;',['../classanch_1_1_singleton.html',1,'anch']]],
-  ['singleton_3c_20eventbus_3c_20event_20_3e_20_3e_12',['Singleton&lt; EventBus&lt; Event &gt; &gt;',['../classanch_1_1_singleton.html',1,'anch']]],
+  ['singleton_3c_20eventbus_3c_20t_20_3e_20_3e_12',['Singleton&lt; EventBus&lt; T &gt; &gt;',['../classanch_1_1_singleton.html',1,'anch']]],
   ['singleton_3c_20globalmapperregistry_20_3e_13',['Singleton&lt; GlobalMapperRegistry &gt;',['../classanch_1_1_singleton.html',1,'anch']]],
   ['singleton_3c_20loggerfactory_20_3e_14',['Singleton&lt; LoggerFactory &gt;',['../classanch_1_1_singleton.html',1,'anch']]],
   ['singleton_3c_20sqlconnectionfactory_20_3e_15',['Singleton&lt; SqlConnectionFactory &gt;',['../classanch_1_1_singleton.html',1,'anch']]],

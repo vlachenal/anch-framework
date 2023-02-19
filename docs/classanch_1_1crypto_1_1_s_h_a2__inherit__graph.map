@@ -1,8 +1,8 @@
 <map id="anch::crypto::SHA2&lt; O, B, W, R, I &gt;" name="anch::crypto::SHA2&lt; O, B, W, R, I &gt;">
-<area shape="rect" id="node1" title="SHA2 abstract class." alt="" coords="116,271,269,428"/>
-<area shape="rect" id="node3" href="$classanch_1_1crypto_1_1_s_h_a2.html" title=" " alt="" coords="5,513,188,670"/>
-<area shape="rect" id="node5" href="$classanch_1_1crypto_1_1_s_h_a2.html" title=" " alt="" coords="212,505,365,677"/>
-<area shape="rect" id="node2" href="$classanch_1_1crypto_1_1_hash.html" title="Hash algorithm abstract class." alt="" coords="117,5,268,221"/>
-<area shape="rect" id="node4" href="$classanch_1_1crypto_1_1_s_h_a224__256.html" title="SHA2 224/256 implementation." alt="" coords="11,727,180,840"/>
-<area shape="rect" id="node6" href="$classanch_1_1crypto_1_1_s_h_a384__512.html" title="SHA2 384/512 implementation." alt="" coords="204,727,373,840"/>
+<area shape="rect" id="node1" title="SHA2 abstract class." alt="" coords="117,279,263,444"/>
+<area shape="rect" id="node3" href="$classanch_1_1crypto_1_1_s_h_a2.html" title=" " alt="" coords="5,529,188,694"/>
+<area shape="rect" id="node5" href="$classanch_1_1crypto_1_1_s_h_a2.html" title=" " alt="" coords="212,521,357,701"/>
+<area shape="rect" id="node2" href="$classanch_1_1crypto_1_1_hash.html" title="Hash algorithm abstract class." alt="" coords="119,5,261,229"/>
+<area shape="rect" id="node4" href="$classanch_1_1crypto_1_1_s_h_a224__256.html" title="SHA2 224/256 implementation." alt="" coords="16,751,177,887"/>
+<area shape="rect" id="node6" href="$classanch_1_1crypto_1_1_s_h_a384__512.html" title="SHA2 384/512 implementation." alt="" coords="204,751,365,887"/>
 </map>

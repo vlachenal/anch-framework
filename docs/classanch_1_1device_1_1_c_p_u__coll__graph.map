@@ -1,5 +1,5 @@
 <map id="anch::device::CPU" name="anch::device::CPU">
-<area shape="rect" id="node1" title="CPU features detection." alt="" coords="25,227,172,399"/>
-<area shape="rect" id="node2" href="$classanch_1_1_singleton.html" title=" " alt="" coords="5,123,192,177"/>
-<area shape="rect" id="node3" href="$classanch_1_1_singleton.html" title="Meyers&#39; singleton implemtation." alt="" coords="15,5,183,60"/>
+<area shape="rect" id="node1" title="CPU features detection." alt="" coords="25,272,164,467"/>
+<area shape="rect" id="node2" href="$classanch_1_1_singleton.html" title=" " alt="" coords="5,145,184,223"/>
+<area shape="rect" id="node3" href="$classanch_1_1_singleton.html" title="Meyers&#39; singleton implemtation." alt="" coords="15,5,175,83"/>
 </map>

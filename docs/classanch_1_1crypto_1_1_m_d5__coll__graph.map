@@ -1,8 +1,8 @@
 <map id="anch::crypto::MD5" name="anch::crypto::MD5">
-<area shape="rect" id="node1" title="MD5 hash algorithm implementation." alt="" coords="24,843,172,1000"/>
-<area shape="rect" id="node2" href="$classanch_1_1crypto_1_1_hash.html" title=" " alt="" coords="23,592,173,793"/>
-<area shape="rect" id="node3" title=" " alt="" coords="5,211,191,265"/>
-<area shape="rect" id="node6" href="$classanch_1_1crypto_1_1_hash.html" title="Hash algorithm abstract class." alt="" coords="164,328,315,529"/>
-<area shape="rect" id="node4" title=" " alt="" coords="33,108,163,148"/>
-<area shape="rect" id="node5" title=" " alt="" coords="79,5,117,45"/>
+<area shape="rect" id="node1" title="MD5 hash algorithm implementation." alt="" coords="24,985,164,1165"/>
+<area shape="rect" id="node2" href="$classanch_1_1crypto_1_1_hash.html" title=" " alt="" coords="23,712,165,936"/>
+<area shape="rect" id="node3" title=" " alt="" coords="5,285,183,363"/>
+<area shape="rect" id="node6" href="$classanch_1_1crypto_1_1_hash.html" title="Hash algorithm abstract class." alt="" coords="160,425,303,649"/>
+<area shape="rect" id="node4" title=" " alt="" coords="33,145,155,223"/>
+<area shape="rect" id="node5" title=" " alt="" coords="75,5,113,83"/>
 </map>

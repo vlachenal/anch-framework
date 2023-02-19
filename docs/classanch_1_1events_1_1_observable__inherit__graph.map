@@ -1,7 +1,7 @@
-<map id="anch::events::Observable&lt; Event &gt;" name="anch::events::Observable&lt; Event &gt;">
-<area shape="rect" id="node1" title="An observable implementation of the observers/observable design pattern." alt="" coords="116,5,311,133"/>
-<area shape="rect" id="node2" href="$classanch_1_1events_1_1_observable.html" title=" " alt="" coords="116,196,311,324"/>
-<area shape="rect" id="node3" href="$classanch_1_1network_1_1_socket.html" title=" " alt="" coords="127,373,300,633"/>
-<area shape="rect" id="node4" href="$classanch_1_1network_1_1_tcp_socket.html" title=" " alt="" coords="5,712,200,855"/>
-<area shape="rect" id="node5" href="$classanch_1_1network_1_1_udp_socket.html" title=" " alt="" coords="225,683,423,884"/>
+<map id="anch::events::Observable&lt; T &gt;" name="anch::events::Observable&lt; T &gt;">
+<area shape="rect" id="node1" title="An observable implementation of the observers/observable design pattern." alt="" coords="93,5,318,156"/>
+<area shape="rect" id="node2" href="$classanch_1_1events_1_1_observable.html" title=" " alt="" coords="112,219,299,384"/>
+<area shape="rect" id="node3" href="$classanch_1_1network_1_1_socket.html" title=" " alt="" coords="123,433,288,701"/>
+<area shape="rect" id="node4" href="$classanch_1_1network_1_1_tcp_socket.html" title=" " alt="" coords="5,780,192,945"/>
+<area shape="rect" id="node5" href="$classanch_1_1network_1_1_udp_socket.html" title=" " alt="" coords="217,751,407,975"/>
 </map>
