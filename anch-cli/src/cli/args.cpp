@@ -26,7 +26,6 @@
 #include <fstream>
 
 using anch::cli::ArgHandler;
-//using anch::cli::ArgHandler::RegisteredArg;
 using anch::cli::Arg;
 using anch::cli::App;
 
@@ -398,7 +397,7 @@ ArgHandler::printBanner(std::ostream& out) {
   }
 }
 
-ArgHandler&
+void
 ArgHandler::build(const std::string& arg0) {
   if(!_app.name.has_value()) {
     std::filesystem::path path(arg0);
@@ -440,7 +439,6 @@ ArgHandler::build(const std::string& arg0) {
     }
   }
   // Register version argument -
-  return *this;
 }
 
 void
@@ -454,7 +452,7 @@ ArgHandler::printAppVersion(std::ostream& out) {
 
 bool
 ArgHandler::printUsage(std::ostream& out) {
-  out << "Usage: " << _app.name.value();// << " [OPTIONS]\n"; // \todo add potisional args ...
+  out << "Usage: " << _app.name.value();
   bool opts = false;
   if(!_sopts.empty() || !_lopts.empty()) {
     opts = true;

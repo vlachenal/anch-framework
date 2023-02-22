@@ -163,7 +163,7 @@ namespace anch::cli {
      *
      * \return reference to \c this
      */
-    anch::cli::ArgHandler& build(const std::string& arg0);
+    void build(const std::string& arg0);
 
     /*!
      * Print application name and its version

@@ -102,17 +102,5 @@ main(int argc, char** argv) {
     return 1;
   }
   std::invoke(tests[test]);
-  // {
-  //   ArgHandler handler(application, {
-  // 	{.handler = anch::cli::bindTrue(opts.verbose), .sopt = 'v', .lopt = "verbose", .description = "Verbose mode"},
-  // 	{.handler = anch::cli::bindStr(opts.str), .sopt = 'p', .lopt = "plop", .value = true, .name = "trestreslong", .description = "plop arg", .example = "PLOP!!!"},
-  // 	{.handler = anch::cli::bindStr(opts.str2), .lopt = "plip", .value = true, .description = "plip arg"},
-  // 	{.handler = anch::cli::bindStr(opts.pos), .value = true, .name = "POS1", .description = "pos"},
-  // 	{.handler = anch::cli::bindStr(opts.pos2), .value = true, .name = "POS2", .description = "pos2"},
-  // 	{.handler = anch::cli::bindCol(opts.multPos), .value = true, .name = "POSM", .multi = true, .description = "pos-mult"}
-  //     });
-  //   handler.printBanner(std::cerr);
-  //   handler.handle(argc, argv);
-  // }
   return 0;
 }
