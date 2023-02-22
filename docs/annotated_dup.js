@@ -1,6 +1,11 @@
 var annotated_dup =
 [
     [ "anch", "namespaceanch.html", [
+      [ "cli", null, [
+        [ "App", "structanch_1_1cli_1_1_app.html", "structanch_1_1cli_1_1_app" ],
+        [ "Arg", "structanch_1_1cli_1_1_arg.html", "structanch_1_1cli_1_1_arg" ],
+        [ "ArgHandler", "classanch_1_1cli_1_1_arg_handler.html", "classanch_1_1cli_1_1_arg_handler" ]
+      ] ],
       [ "crypto", "namespaceanch_1_1crypto.html", [
         [ "AES", "classanch_1_1crypto_1_1_a_e_s.html", "classanch_1_1crypto_1_1_a_e_s" ],
         [ "AesniKey", "structanch_1_1crypto_1_1_aesni_key.html", null ],

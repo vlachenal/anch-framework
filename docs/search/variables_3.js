@@ -15,5 +15,6 @@ var searchData=
   ['contenttype_12',['contentType',['../classanch_1_1rest_1_1_end_point.html#a90e3ee76dea4a122a260f0dbefd9656b',1,'anch::rest::EndPoint']]],
   ['cookie_13',['COOKIE',['../structanch_1_1rest_1_1_common_headers.html#a403a2f1cc74eb3d7449e5f6395a5d3e5',1,'anch::rest::CommonHeaders']]],
   ['copy_14',['COPY',['../structanch_1_1rest_1_1_verb.html#a62a8b3add0d9c0c05ddf5ca54c60e9fb',1,'anch::rest::Verb']]],
-  ['create_15',['create',['../structanch_1_1sql_1_1_s_q_l_shared_library.html#aae3e0210c78aec638733c217de40c0d2',1,'anch::sql::SQLSharedLibrary']]]
+  ['copyright_15',['copyright',['../structanch_1_1cli_1_1_app.html#acfed076394f8655aaf9c211d1d29a4a2',1,'anch::cli::App']]],
+  ['create_16',['create',['../structanch_1_1sql_1_1_s_q_l_shared_library.html#aae3e0210c78aec638733c217de40c0d2',1,'anch::sql::SQLSharedLibrary']]]
 ];

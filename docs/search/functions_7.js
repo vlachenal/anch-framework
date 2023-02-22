@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['handle_0',['handle',['../classanch_1_1events_1_1_observer.html#a08925dfe7c022024a50f5e71c1740410',1,'anch::events::Observer::handle()'],['../classanch_1_1events_1_1_event_handler.html#abb6454f8574143f1426faa0daad58de0',1,'anch::events::EventHandler::handle()']]],
+  ['handle_0',['handle',['../classanch_1_1events_1_1_event_handler.html#abb6454f8574143f1426faa0daad58de0',1,'anch::events::EventHandler::handle()'],['../classanch_1_1events_1_1_observer.html#a08925dfe7c022024a50f5e71c1740410',1,'anch::events::Observer::handle()'],['../classanch_1_1cli_1_1_arg_handler.html#a352a0a087769f308ace7439a2d99f68a',1,'anch::cli::ArgHandler::handle()']]],
   ['has_1',['has',['../classanch_1_1rest_1_1_headers.html#ae4f03d84c9d1ea82dc14997a2c3aacfb',1,'anch::rest::Headers']]],
   ['hasmorefield_2',['hasMoreField',['../namespaceanch_1_1json.html#ad43f17f4807494eca4f77b8da8e215e9',1,'anch::json']]],
   ['having_3',['having',['../classanch_1_1sql_1_1_select_builder.html#a376545d60d5e766cb000f05fad68a7ea',1,'anch::sql::SelectBuilder::having()'],['../classanch_1_1sql_1_1_select_builder_part.html#a06e611181432dbe607e9a90a6e579380',1,'anch::sql::SelectBuilderPart::having()']]],

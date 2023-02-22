@@ -1,4 +1,4 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classanch_1_1crypto_1_1_hash.html" title=" " alt="" coords="5,5,148,45"/>
-<area shape="rect" id="node2" href="$classanch_1_1crypto_1_1_m_d5.html" title="MD5 hash algorithm implementation." alt="" coords="196,13,336,38"/>
+<area shape="rect" id="node1" href="$classanch_1_1crypto_1_1_block_cipher_mode_of_operation.html" title=" " alt="" coords="5,5,244,60"/>
+<area shape="rect" id="node2" href="$classanch_1_1crypto_1_1_e_c_b.html" title="Electronic codebook implementation." alt="" coords="292,13,439,53"/>
 </map>

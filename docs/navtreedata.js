@@ -31,6 +31,13 @@ var NAVTREE =
     [ "Installation", "index.html#install_sec", null ],
     [ "Versions", "index.html#version_sec", null ],
     [ "TODO list", "index.html#todo_sec", null ],
+    [ "AnCH CLI library documentation", "page_cli.html", [
+      [ "Introduction", "page_cli.html#cli_intro_seq", null ],
+      [ "Prerequisites", "page_cli.html#cli_prereq_sec", null ],
+      [ "Installation", "page_cli.html#cli_install_sec", null ],
+      [ "Conception", "page_cli.html#cli_concept_sec", null ],
+      [ "Examples", "page_cli.html#cli_example_sec", null ]
+    ] ],
     [ "AnCH cryptography library documentation", "page_crypto.html", [
       [ "Introduction", "page_crypto.html#crypto_intro_seq", null ],
       [ "Prerequisites", "page_crypto.html#crypto_prereq_sec", null ],
@@ -131,17 +138,17 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "aes128_8hpp_source.html",
-"classanch_1_1crypto_1_1_base64.html#aa38b6672a6e867ca5b6b1782f3c01375",
-"classanch_1_1cutils_1_1_c_o_stream.html#a459efde16974364ffe5a6cd984c7d4b6",
-"classanch_1_1date_1_1formatter_1_1_minute_formatter.html",
-"classanch_1_1json_1_1_mapping_error.html#a5f96cf3d05c051cae6f49a5f14331330",
-"classanch_1_1logger_1_1formatter_1_1_thread_id_formatter.html#a3ec58088899ae0a6a592c63edc527323",
-"classanch_1_1rest_1_1_response.html#a066b5ab91c6ce0a1e02f1917dfd55d92",
-"classanch_1_1sql_1_1_from_builder.html#a946724a8ec4b3c4fa7f497bbe29f5fc1",
-"classanch_1_1sql_1_1_s_q_l_shared_libraries.html#a57100a6e1875ca4f3503aaf4ae9876a3",
-"functions_e.html",
-"namespaceanch_1_1sql.html#aae0ece47e7d377e1d19c9a68cfb9e903",
-"structanch_1_1rest_1_1_common_headers.html#aab4d2dce6062008b23d0ce81e4b09330"
+"classanch_1_1crypto_1_1_base64.html#a5af52bd3b7cece5fda820da24508c56c",
+"classanch_1_1crypto_1_1_s_h_a384__512.html#af655b2071f8802cd85209c24a11a4073",
+"classanch_1_1date_1_1formatter_1_1_millisecond_formatter.html#a21e5b034b3ef10ab412065592af62f1f",
+"classanch_1_1json_1_1_j_s_o_n_mapper.html#adf39acee998b916406f2d5d6074f01d4",
+"classanch_1_1logger_1_1formatter_1_1_string_formatter.html",
+"classanch_1_1rest_1_1_request.html#afb660febe2fed54c62e8a8559248f0c9",
+"classanch_1_1sql_1_1_from_builder.html#a590a45623a39f48950db31ce4ba4f626",
+"classanch_1_1sql_1_1_s_q_l_query.html#a1c9895d939e3bb07ab1e9f108f5fed24",
+"ecb_8hpp_source.html",
+"namespaceanch_1_1network.html#aa518b6bd398c963767bf1974e5c113be",
+"structanch_1_1rest_1_1_common_headers.html#a457a8a09652324078fd03a1a0c3fe627"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

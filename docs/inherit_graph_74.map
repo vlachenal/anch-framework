@@ -1,7 +1,3 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classanch_1_1sql_1_1_result_set.html" title="SQL result representation." alt="" coords="5,95,156,121"/>
-<area shape="rect" id="node2" href="$classanch_1_1sql_1_1_my_s_q_l_prepared_statement_result_set.html" title="MySQL result set implementation for prepared statement ... shitty API." alt="" coords="221,5,411,45"/>
-<area shape="rect" id="node3" href="$classanch_1_1sql_1_1_my_s_q_l_result_set.html" title="MySQL result set implementation." alt="" coords="219,70,413,95"/>
-<area shape="rect" id="node4" href="$classanch_1_1sql_1_1_postgre_s_q_l_result_set.html" title="PostgreSQL result set implementation." alt="" coords="204,119,428,145"/>
-<area shape="rect" id="node5" href="$classanch_1_1sql_1_1_s_q_lite3_result_set.html" title="SQLite3 result set implementation." alt="" coords="216,169,416,194"/>
+<area shape="rect" id="node1" href="$classanch_1_1sql_1_1_clauses_builder.html" title="SQL clauses builder." alt="" coords="5,5,191,31"/>
 </map>
