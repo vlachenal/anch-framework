@@ -22,7 +22,7 @@
 using anch::cli::BindArg;
 
 void
-setTrue(bool& dest, [[maybe_unused]] const std::string& val) {
+setTrue(bool& dest, const std::string&) {
   dest = true;
 }
 
@@ -32,7 +32,7 @@ anch::cli::bindTrue(bool& dest) {
 }
 
 void
-setFalse(bool& dest, [[maybe_unused]] const std::string& val) {
+setFalse(bool& dest, const std::string&) {
   dest = false;
 }
 

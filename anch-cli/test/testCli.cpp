@@ -7,6 +7,7 @@
 #include <vector>
 #include <filesystem>
 #include <functional>
+#include <cstring>
 
 using anch::cli::App;
 using anch::cli::Arg;
@@ -22,43 +23,21 @@ struct Options {
 };
 
 void
-setVerbose(Options& options, const std::string&) {
-  options.verbose = true;
+parseArgs(const App& application, Options& opts, int argc, char** argv) {
+  ArgHandler handler(application, {
+      {.handler = anch::cli::bindTrue(opts.verbose), .sopt = 'v', .lopt = "verbose", .description = "Verbose mode"},
+      {.handler = anch::cli::bindStr(opts.str), .sopt = 'p', .lopt = "plop", .value = true, .name = "trestreslong", .description = "plop arg", .example = "PLOP!!!"},
+      {.handler = anch::cli::bindStr(opts.str2), .lopt = "plip", .value = true, .description = "plip arg"},
+      {.handler = anch::cli::bindStr(opts.pos), .value = true, .name = "POS1", .description = "pos"},
+      {.handler = anch::cli::bindStr(opts.pos2), .value = true, .name = "POS2", .description = "pos2"},
+      {.handler = anch::cli::bindCol(opts.multPos), .value = true, .name = "POSM", .multi = true, .description = "pos-mult"}
+    });
+  handler.printBanner(std::cerr);
+  handler.handle(argc, argv);
 }
 
-int
-main(int argc, char** argv) {
-  App application = {
-    .name = "toto",
-    .version = "0.1 alpha 42",
-    .author = "Vincent Lachenal",
-    .copyright = "No copyrigth - it is a fuking unit test",
-    .licence = "WTFPL 2.0",
-    .banner = "Ceci est une bannière",
-    .bannerPath = "/etc/fstab"
-  };
-  Options opts;
-  {
-    // std::vector<Arg> args = {
-    //   {.handler = anch::cli::bindTrue(opts.verbose), .sopt = 'v', .lopt = "verbose", .description = "Verbose mode"},
-    //   {.handler = anch::cli::bindStr(opts.str), .sopt = 'p', .lopt = "plop", .value = true, .name = "trestreslong", .description = "plop arg", .example = "PLOP!!!"},
-    //   {.handler = anch::cli::bindStr(opts.str2), .lopt = "plip", .value = true, .description = "plip arg"},
-    //   {.handler = anch::cli::bindStr(opts.pos), .value = true, .name = "POS1", .description = "pos"},
-    //   {.handler = anch::cli::bindStr(opts.pos2), .value = true, .name = "POS2", .description = "pos2"},
-    //   {.handler = anch::cli::bindCol(opts.multPos), .value = true, .name = "POSM", .multi = true, .description = "pos-mult"}
-    // };
-    // ArgHandler handler(application, args);
-    ArgHandler handler(application, {
-	{.handler = anch::cli::bindTrue(opts.verbose), .sopt = 'v', .lopt = "verbose", .description = "Verbose mode"},
-	{.handler = anch::cli::bindStr(opts.str), .sopt = 'p', .lopt = "plop", .value = true, .name = "trestreslong", .description = "plop arg", .example = "PLOP!!!"},
-	{.handler = anch::cli::bindStr(opts.str2), .lopt = "plip", .value = true, .description = "plip arg"},
-	{.handler = anch::cli::bindStr(opts.pos), .value = true, .name = "POS1", .description = "pos"},
-	{.handler = anch::cli::bindStr(opts.pos2), .value = true, .name = "POS2", .description = "pos2"},
-	{.handler = anch::cli::bindCol(opts.multPos), .value = true, .name = "POSM", .multi = true, .description = "pos-mult"}
-      });
-    handler.printBanner(std::cerr);
-    handler.handle(argc, argv);
-  }
+void
+printOptions(const Options& opts) {
   std::cout << "Parsed values:" << std::endl;
   std::cout << "Verbose: " << opts.verbose << std::endl;
   std::cout << "Str: " << (opts.str.has_value() ? opts.str.value() : "not set") << std::endl;
@@ -77,5 +56,65 @@ main(int argc, char** argv) {
     }
   }
   std::cout << std::endl;
+}
+
+void
+testOK(const App& application, Options& opts, int argc, char** argv) {
+  parseArgs(application, opts, argc, argv);
+  printOptions(opts);
+}
+
+int
+main(int argc, char** argv) {
+  App application = {
+    .name = "toto",
+    .version = "0.1 alpha 42",
+    .author = "Vincent Lachenal",
+    .copyright = "No copyrigth - it is a fuking unit test",
+    .licence = "WTFPL 2.0",
+    .banner = "Ceci est une bannière",
+    .bannerPath = "/etc/hostname"
+  };
+  Options opts;
+  if(argc == 1) {
+    std::cerr << "missing arg ..." << std::endl;
+    return 1;
+  }
+  char** args = new char*[static_cast<std::size_t>(argc - 1)];
+  int tidx = 0;
+  std::string test;
+  for(int i = 0 ; i < argc ; ++i) {
+    if(i == 1) {
+      test = argv[i];
+      continue;
+    }
+    char* arg = new char[strlen(argv[i])];
+    strcpy(arg, argv[i]);
+    args[tidx] = arg;
+    ++tidx;
+  }
+  std::cout << "Unit test: " << test << std::endl;
+  int argcc = argc - 1;
+  std::map<std::string, std::function<void(void)>> tests = {
+    {"help", std::bind(testOK, application, opts, argcc, args)},
+    {"version", std::bind(testOK, application, opts, argcc, args)}
+  };
+  if(!tests.contains(test)) {
+    std::cerr << "Unknown test: " << test << std::endl;
+    return 1;
+  }
+  std::invoke(tests[test]);
+  // {
+  //   ArgHandler handler(application, {
+  // 	{.handler = anch::cli::bindTrue(opts.verbose), .sopt = 'v', .lopt = "verbose", .description = "Verbose mode"},
+  // 	{.handler = anch::cli::bindStr(opts.str), .sopt = 'p', .lopt = "plop", .value = true, .name = "trestreslong", .description = "plop arg", .example = "PLOP!!!"},
+  // 	{.handler = anch::cli::bindStr(opts.str2), .lopt = "plip", .value = true, .description = "plip arg"},
+  // 	{.handler = anch::cli::bindStr(opts.pos), .value = true, .name = "POS1", .description = "pos"},
+  // 	{.handler = anch::cli::bindStr(opts.pos2), .value = true, .name = "POS2", .description = "pos2"},
+  // 	{.handler = anch::cli::bindCol(opts.multPos), .value = true, .name = "POSM", .multi = true, .description = "pos-mult"}
+  //     });
+  //   handler.printBanner(std::cerr);
+  //   handler.handle(argc, argv);
+  // }
   return 0;
 }

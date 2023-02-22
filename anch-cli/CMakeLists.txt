@@ -113,6 +113,11 @@ if(ANCH_CLI_UNITARY_TEST)
   # Build CLI unit test -
 
   enable_testing()
-  add_test(anch-cli-test ${EXECUTABLE_OUTPUT_PATH}/anch-cli-test -h)
+  add_test(anch-cli-h-test ${EXECUTABLE_OUTPUT_PATH}/anch-cli-test help -h)
+  add_test(anch-cli--help-test ${EXECUTABLE_OUTPUT_PATH}/anch-cli-test help --help)
+  add_test(anch-cli--version-test ${EXECUTABLE_OUTPUT_PATH}/anch-cli-test version --version)
+  add_test(anch-cli-v-test ${EXECUTABLE_OUTPUT_PATH}/anch-cli-test version -v)
+
+  set_tests_properties(anch-cli-v-test PROPERTIES WILL_FAIL TRUE)
 
 endif(ANCH_CLI_UNITARY_TEST)
