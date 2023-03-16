@@ -25,6 +25,7 @@
 #include <string>
 #include <optional>
 #include <functional>
+#include <memory>
 
 namespace anch::cli {
 
@@ -93,5 +94,12 @@ namespace anch::cli {
    * \return the binding function
    */
   BindArg bindCol(std::set<std::string>& dest);
+
+  /*!
+   * Bind \c std::cin to input stream
+   *
+   * \param dest the destination input stream
+   */
+  std::function<void(std::istream&)> bindPipe(std::shared_ptr<std::istream>& dest);
 
 }  // anch::cli

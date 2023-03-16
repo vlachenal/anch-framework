@@ -6,6 +6,9 @@
 #include <filesystem>
 #include <functional>
 #include <cstring>
+#include <fstream>
+#include <memory>
+#include <filesystem>
 
 using anch::cli::App;
 using anch::cli::Arg;
@@ -18,10 +21,15 @@ struct Options {
   std::optional<std::string> pos;
   std::optional<std::string> pos2;
   std::vector<std::string> multPos;
+  std::shared_ptr<std::istream> pipeopt;
 };
 
 void
 parseArgs(const App& application, Options& opts, int argc, char** argv) {
+  std::cout << "Parse arguments for application " << argv[0] << std::endl;
+  for(int i = 1 ; i < argc ; ++i) {
+    std::cout << "arg[" << i << "] = " << argv[i] << std::endl;
+  }
   ArgHandler handler(application, {
       {.handler = anch::cli::bindTrue(opts.verbose), .sopt = 'v', .lopt = "verbose", .description = "Verbose mode"},
       {.handler = anch::cli::bindStr(opts.str), .sopt = 'p', .lopt = "plop", .value = true, .name = "trestreslong", .description = "plop arg", .example = "PLOP!!!"},
@@ -30,7 +38,7 @@ parseArgs(const App& application, Options& opts, int argc, char** argv) {
       {.handler = anch::cli::bindStr(opts.pos2), .value = true, .name = "POS2", .description = "pos2"},
       {.handler = anch::cli::bindCol(opts.multPos), .value = true, .name = "POSM", .multi = true, .description = "pos-mult"}
     });
-  handler.printBanner(std::cerr);
+  handler.printBanner(std::cout);
   handler.handle(argc, argv);
 }
 
@@ -54,11 +62,105 @@ printOptions(const Options& opts) {
     }
   }
   std::cout << std::endl;
+  if(opts.pipeopt) {
+    std::cout << "pipeopt:" << std::endl;
+    std::cout << opts.pipeopt->rdbuf() << std::endl;
+  } else {
+    std::cout << "pipeopt: not set" << std::endl;
+  }
+  std::cout << std::endl;
 }
 
 void
 testOK(const App& application, Options& opts, int argc, char** argv) {
   parseArgs(application, opts, argc, argv);
+  printOptions(opts);
+}
+
+void
+testPlop(const App& application, Options& opts, int argc, char** argv) {
+  parseArgs(application, opts, argc, argv);
+  printOptions(opts);
+  if(!opts.str.has_value()) {
+    std::cerr << "Plop has no value" << std::endl;
+    std::exit(1);
+  }
+}
+
+void
+testPlip(const App& application, Options& opts, int argc, char** argv) {
+  parseArgs(application, opts, argc, argv);
+  printOptions(opts);
+  if(!opts.str2.has_value()) {
+    std::cerr << "Plip has no value" << std::endl;
+    std::exit(1);
+  }
+}
+
+void
+testPos1(const App& application, Options& opts, int argc, char** argv) {
+  parseArgs(application, opts, argc, argv);
+  printOptions(opts);
+  if(!opts.pos.has_value()) {
+    std::cerr << "pos has no value" << std::endl;
+    std::exit(1);
+  }
+}
+
+void
+testPos2(const App& application, Options& opts, int argc, char** argv) {
+  parseArgs(application, opts, argc, argv);
+  printOptions(opts);
+  if(!opts.pos2.has_value()) {
+    std::cerr << "pos2 has no value" << std::endl;
+    std::exit(1);
+  }
+}
+
+void
+testPosmMulti(const App& application, Options& opts, int argc, char** argv) {
+  parseArgs(application, opts, argc, argv);
+  printOptions(opts);
+  if(opts.multPos.empty()) {
+    std::cerr << "multPos has no value" << std::endl;
+    std::exit(1);
+  }
+}
+
+void
+setPath(std::shared_ptr<std::istream>& input, const std::string& val) {
+  std::filesystem::path path(val);
+  if(!std::filesystem::exists(path)) {
+    std::cerr << "File path " << val << " does not exists" << std::endl;
+    std::exit(1);
+  }
+  if(!std::filesystem::is_regular_file(path)) {
+    std::cerr << "File path " << val << " is not a regular file" << std::endl;
+    std::exit(1);
+  }
+  input = std::make_shared<std::ifstream>(path);
+}
+
+void
+parsePipeArgs(const App& application, Options& opts, int argc, char** argv) {
+  std::cout << "Parse arguments for application " << argv[0] << std::endl;
+  for(int i = 1 ; i < argc ; ++i) {
+    std::cout << "arg[" << i << "] = " << argv[i] << std::endl;
+  }
+  ArgHandler handler(application, {
+      {.handler = std::bind_front(setPath, std::ref(opts.pipeopt)), .sopt = 'i', .lopt = "input", .value = true, .name = "IS", .mandatory = true, .pipe = anch::cli::bindPipe(opts.pipeopt), .description = "input stream"}
+    });
+  handler.printBanner(std::cout);
+  handler.handle(argc, argv);
+}
+
+void
+testPipe(const App& application, Options& opts, int argc, char** argv) {
+  parsePipeArgs(application, opts, argc, argv);
+  if(!opts.pipeopt) {
+    std::cerr << "pipeopt has no value" << std::endl;
+    std::exit(1);
+  }
   printOptions(opts);
 }
 
@@ -95,7 +197,14 @@ main(int argc, char** argv) {
   int argcc = argc - 1;
   std::map<std::string, std::function<void(void)>> tests = {
     {"help", std::bind(testOK, application, opts, argcc, args)},
-    {"version", std::bind(testOK, application, opts, argcc, args)}
+    {"version", std::bind(testOK, application, opts, argcc, args)},
+    {"plop", std::bind(testPlop, application, opts, argcc, args)},
+    {"plip", std::bind(testPlip, application, opts, argcc, args)},
+    {"missing", std::bind(testOK, application, opts, argcc, args)},
+    {"pos1", std::bind(testPos1, application, opts, argcc, args)},
+    {"pos2", std::bind(testPos2, application, opts, argcc, args)},
+    {"posm", std::bind(testPosmMulti, application, opts, argcc, args)},
+    {"stream", std::bind(testPipe, application, opts, argcc, args)}
   };
   if(!tests.contains(test)) {
     std::cerr << "Unknown test: " << test << std::endl;

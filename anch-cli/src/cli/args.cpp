@@ -116,7 +116,6 @@ namespace anch::cli {
     }
     // Destructor -
 
-
   };
 
 }  // anch::cli
@@ -189,16 +188,6 @@ ArgHandler::arg(anch::cli::Arg& arg) {
   if(option->state->positional) {
     option->arg->value = true;
     option->arg->mandatory = true;
-    if(!_positionals.empty()) {
-      for(auto opt : _positionals) {
-	if(opt->arg->multi) {
-	  std::ostringstream oss;
-	  oss << "Multiple positional argument has already been defined.\n"
-	      << "Multiple positional must be defined at last position";
-	  throw std::invalid_argument(oss.str());
-	}
-      }
-    }
     _positionals.push_back(option);
   }
   // Positional -
@@ -333,9 +322,16 @@ ArgHandler::check() {
   bool error = false;
   std::ostringstream oss;
   for(auto option : _options) {
+    // Check mandatory state
     if(!option->arg->mandatory || option->state->found) {
       continue;
     }
+    // Check pipe option
+    if(!option->state->found && option->arg->pipe) {
+      std::invoke(option->arg->pipe, std::cin);
+      continue;
+    }
+    // Format error +
     if(option->arg->sopt != '\0' || option->arg->lopt.has_value()) {
       if(option->arg->sopt != '\0') {
 	oss << " -" << option->arg->sopt;
@@ -351,11 +347,14 @@ ArgHandler::check() {
     }
     oss << ',';
     error = true;
+    // Format error -
   }
+  // Format and raise error +
   if(error) {
     std::string errors = oss.str();
     throw std::invalid_argument(errors.substr(1, errors.length() - 2));
   }
+  // Format and raise error +
 }
 
 void
@@ -399,10 +398,35 @@ ArgHandler::printBanner(std::ostream& out) {
 
 void
 ArgHandler::build(const std::string& arg0) {
+  // Set default application name to first argument when not set +
   if(!_app.name.has_value()) {
     std::filesystem::path path(arg0);
     _app.name = path.filename();
   }
+  // Set default application name to first argument when not set -
+  // Check multiple positinal options and piped options +
+  bool multipos = false;
+  bool piped = false;
+  for(auto iter = _options.cbegin() ; iter != _options.cend() ; ++iter) {
+    if((*iter)->state->positional && (*iter)->arg->multi) {
+      if(!multipos) {
+	multipos = true;
+      } else {
+	std::ostringstream oss;
+	oss << "Multiple positional argument has already been defined.\n"
+	    << "Multiple positional must be defined at last position";
+	throw std::invalid_argument(oss.str());
+      }
+    }
+    if((*iter)->arg->pipe) {
+      if(!piped) {
+	piped = true;
+      } else {
+	throw std::invalid_argument("Only one 'pipe' option can be declared");
+      }
+    }
+  }
+  // Check multiple positinal options and piped options -
   // Register help argument +
   if(!_sopts.contains('h') || !_lopts.contains("help")) {
     anch::cli::Arg help;
@@ -524,7 +548,7 @@ ArgHandler::printOptions(std::ostream& out) {
     }
     out << "  ";
     if(iter->second->arg->multi) {
-      out << "[+] ";
+      out << "+ ";
     }
     if(iter->second->arg->description.has_value()) {
       out << iter->second->arg->description.value();

@@ -22,11 +22,10 @@
 #include <optional>
 #include <string>
 #include <functional>
+#include <istream>
 
 
 namespace anch::cli {
-
-  class ArgHandler;
 
   /*!
    * \brief Argument
@@ -40,7 +39,7 @@ namespace anch::cli {
   struct Arg {
 
     /*! Argument function handler */
-    std::function<void(const std::string&)> handler;/* = std::function<void(const std::string&)>();*/
+    std::function<void(const std::string&)> handler;
 
     /*! Short option (starts with '-' and have only one character) */
     char sopt = '\0';
@@ -59,6 +58,9 @@ namespace anch::cli {
 
     /*! Multiple occurence argument flag (default to \c false ) */
     bool multi = false;
+
+    /*! Input stream setter (mandatory with pipe option ; default not set) */
+    std::function<void(std::istream&)> pipe = std::function<void(std::istream&)>();
 
     /*! Description */
     std::optional<std::string> description = std::optional<std::string>();

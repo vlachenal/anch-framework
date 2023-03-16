@@ -37,7 +37,7 @@ namespace anch::cli {
    * \brief CLI arguments handler
    *
    * This class aims to register, parse and check arguments.\n
-   * If not defined, \ref ArgHandler will add help (\c -h and/or \c --help ) and version options (\c --version ).
+   * If not defined, \ref ArgHandler will add help (\c -h and/or \c --help ) and version options (\c -v and/or \c --version ).
    *
    * \since 0.1
    *

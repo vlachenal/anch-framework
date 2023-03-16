@@ -19,6 +19,8 @@
 */
 #include "cli/utils.hpp"
 
+#include <iostream>
+
 using anch::cli::BindArg;
 
 void
@@ -89,4 +91,14 @@ pushSet(std::set<std::string>& dest, const std::string& val) {
 BindArg
 anch::cli::bindCol(std::set<std::string>& dest) {
   return std::bind_front(pushSet, std::ref(dest));
+}
+
+void
+setInputStream(std::shared_ptr<std::istream>& dest, std::istream& in) {
+  dest = std::make_shared<std::istream>(in.rdbuf());
+}
+
+std::function<void(std::istream&)>
+anch::cli::bindPipe(std::shared_ptr<std::istream>& dest) {
+  return std::bind_front(setInputStream, std::ref(dest));
 }
