@@ -26,6 +26,7 @@
 #include <optional>
 #include <functional>
 #include <memory>
+#include <fstream>
 
 namespace anch::cli {
 
@@ -94,6 +95,15 @@ namespace anch::cli {
    * \return the binding function
    */
   BindArg bindCol(std::set<std::string>& dest);
+
+  /*!
+   * Add value to set
+   *
+   * \param dest the \c sdt::set to fill
+   *
+   * \return the binding function
+   */
+  BindArg bindIFS(std::shared_ptr<std::istream>& dest);
 
   /*!
    * Bind \c std::cin to input stream

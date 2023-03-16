@@ -20,6 +20,10 @@
 #include "cli/utils.hpp"
 
 #include <iostream>
+#include <filesystem>
+#include <sstream>
+#include <stdexcept>
+
 
 using anch::cli::BindArg;
 
@@ -91,6 +95,22 @@ pushSet(std::set<std::string>& dest, const std::string& val) {
 BindArg
 anch::cli::bindCol(std::set<std::string>& dest) {
   return std::bind_front(pushSet, std::ref(dest));
+}
+
+void
+setIFS(std::shared_ptr<std::istream>& dest, const std::string& val) {
+  std::filesystem::path path(val);
+  if(!std::filesystem::exists(path)) {
+    std::ostringstream oss;
+    oss << path << " does not exist";
+    throw std::invalid_argument(oss.str());
+  }
+  dest = std::make_shared<std::ifstream>(path);
+}
+
+BindArg
+anch::cli::bindIFS(std::shared_ptr<std::istream>& dest) {
+  return std::bind_front(setIFS, std::ref(dest));
 }
 
 void

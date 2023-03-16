@@ -132,6 +132,7 @@ if(ANCH_CLI_UNITARY_TEST)
   add_test(anch-cli-posm-test ${EXECUTABLE_OUTPUT_PATH}/anch-cli-test posm titi tutu tata tutu toto)
   add_test(anch-cli-stream-i-test ${EXECUTABLE_OUTPUT_PATH}/anch-cli-test stream -i Makefile)
   add_test(anch-cli-stream--input-test ${EXECUTABLE_OUTPUT_PATH}/anch-cli-test stream --input Makefile)
+  add_test(anch-cli-stream--input-notexist-test ${EXECUTABLE_OUTPUT_PATH}/anch-cli-test stream --input Makefil)
   # Check if pipe works with 'cat Makefile | bin/anch-cli-test stream'
   message("Check if pipe works with 'cat Makefile | bin/anch-cli-test stream'")
 
@@ -140,5 +141,6 @@ if(ANCH_CLI_UNITARY_TEST)
   set_tests_properties(anch-cli-pos1-test PROPERTIES WILL_FAIL TRUE)
   set_tests_properties(anch-cli-pos2-test PROPERTIES WILL_FAIL TRUE)
   set_tests_properties(anch-cli-plip-p-test PROPERTIES WILL_FAIL TRUE)
+  set_tests_properties(anch-cli-stream--input-notexist-test PROPERTIES WILL_FAIL TRUE)
 
 endif(ANCH_CLI_UNITARY_TEST)

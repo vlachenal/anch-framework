@@ -148,7 +148,7 @@ parsePipeArgs(const App& application, Options& opts, int argc, char** argv) {
     std::cout << "arg[" << i << "] = " << argv[i] << std::endl;
   }
   ArgHandler handler(application, {
-      {.handler = std::bind_front(setPath, std::ref(opts.pipeopt)), .sopt = 'i', .lopt = "input", .value = true, .name = "IS", .mandatory = true, .pipe = anch::cli::bindPipe(opts.pipeopt), .description = "input stream"}
+      {.handler = anch::cli::bindIFS(opts.pipeopt), .sopt = 'i', .lopt = "input", .value = true, .name = "IS", .mandatory = true, .pipe = anch::cli::bindPipe(opts.pipeopt), .description = "input stream"}
     });
   handler.printBanner(std::cout);
   handler.handle(argc, argv);
