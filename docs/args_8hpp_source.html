@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.6"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>AnCH Framework: anch-cli/inc/cli/cli.hpp Source File</title>
+<title>AnCH Framework: anch-cli/inc/cli/args.hpp Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -71,7 +71,7 @@ var searchBox = new SearchBox("searchBox", "search/",'.html');
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(document).ready(function(){initNavTree('cli_8hpp_source.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('args_8hpp_source.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -97,7 +97,7 @@ $(document).ready(function(){initNavTree('cli_8hpp_source.html',''); initResizab
 </div>
 
 <div class="header">
-  <div class="headertitle"><div class="title">cli.hpp</div></div>
+  <div class="headertitle"><div class="title">args.hpp</div></div>
 </div><!--header-->
 <div class="contents">
 <div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/*</span></div>
@@ -178,7 +178,7 @@ $(document).ready(function(){initNavTree('cli_8hpp_source.html',''); initResizab
 <div class="line"><a id="l00155" name="l00155"></a><span class="lineno"><a class="line" href="classanch_1_1cli_1_1_arg_handler.html#a96b1e32b99324dcdc38e3819c87b3ec5">  155</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classanch_1_1cli_1_1_arg_handler.html#a96b1e32b99324dcdc38e3819c87b3ec5">printBanner</a>(std::ostream&amp; out);</div>
 <div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span> </div>
 <div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>  <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>    <a class="code hl_class" href="classanch_1_1cli_1_1_arg_handler.html">anch::cli::ArgHandler</a>&amp; build(<span class="keyword">const</span> std::string&amp; arg0);</div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>    <span class="keywordtype">void</span> build(<span class="keyword">const</span> std::string&amp; arg0);</div>
 <div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span> </div>
 <div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>    <span class="keywordtype">void</span> printAppVersion(std::ostream&amp; out);</div>
 <div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span> </div>
@@ -190,7 +190,7 @@ $(document).ready(function(){initNavTree('cli_8hpp_source.html',''); initResizab
 <div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>  };</div>
 <div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span> </div>
 <div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>}</div>
-<div class="ttc" id="aclassanch_1_1cli_1_1_arg_handler_html"><div class="ttname"><a href="classanch_1_1cli_1_1_arg_handler.html">anch::cli::ArgHandler</a></div><div class="ttdoc">CLI arguments handler.</div><div class="ttdef"><b>Definition:</b> cli.hpp:46</div></div>
+<div class="ttc" id="aclassanch_1_1cli_1_1_arg_handler_html"><div class="ttname"><a href="classanch_1_1cli_1_1_arg_handler.html">anch::cli::ArgHandler</a></div><div class="ttdoc">CLI arguments handler.</div><div class="ttdef"><b>Definition:</b> args.hpp:46</div></div>
 <div class="ttc" id="aclassanch_1_1cli_1_1_arg_handler_html_a156261cb1b9ed1275ea17e69d9109ef1"><div class="ttname"><a href="classanch_1_1cli_1_1_arg_handler.html#a156261cb1b9ed1275ea17e69d9109ef1">anch::cli::ArgHandler::ArgHandler</a></div><div class="ttdeci">ArgHandler(const std::vector&lt; anch::cli::Arg &gt; &amp;options)</div></div>
 <div class="ttc" id="aclassanch_1_1cli_1_1_arg_handler_html_a352a0a087769f308ace7439a2d99f68a"><div class="ttname"><a href="classanch_1_1cli_1_1_arg_handler.html#a352a0a087769f308ace7439a2d99f68a">anch::cli::ArgHandler::handle</a></div><div class="ttdeci">void handle(int argc, char **argv)</div></div>
 <div class="ttc" id="aclassanch_1_1cli_1_1_arg_handler_html_a735d5c19c41b1e3b3d7051b3afa23e0c"><div class="ttname"><a href="classanch_1_1cli_1_1_arg_handler.html#a735d5c19c41b1e3b3d7051b3afa23e0c">anch::cli::ArgHandler::parse</a></div><div class="ttdeci">void parse(int argc, char **argv)</div></div>
@@ -202,13 +202,13 @@ $(document).ready(function(){initNavTree('cli_8hpp_source.html',''); initResizab
 <div class="ttc" id="aclassanch_1_1cli_1_1_arg_handler_html_aca95ec015c30455cb23de1699253ef34"><div class="ttname"><a href="classanch_1_1cli_1_1_arg_handler.html#aca95ec015c30455cb23de1699253ef34">anch::cli::ArgHandler::printVersion</a></div><div class="ttdeci">void printVersion(std::ostream &amp;out)</div></div>
 <div class="ttc" id="aclassanch_1_1cli_1_1_arg_handler_html_af2f917fd2eaf8efc06d9b0959a651782"><div class="ttname"><a href="classanch_1_1cli_1_1_arg_handler.html#af2f917fd2eaf8efc06d9b0959a651782">anch::cli::ArgHandler::printHelp</a></div><div class="ttdeci">void printHelp(std::ostream &amp;out)</div></div>
 <div class="ttc" id="astructanch_1_1cli_1_1_app_html"><div class="ttname"><a href="structanch_1_1cli_1_1_app.html">anch::cli::App</a></div><div class="ttdoc">Application summary.</div><div class="ttdef"><b>Definition:</b> app.hpp:39</div></div>
-<div class="ttc" id="astructanch_1_1cli_1_1_arg_html"><div class="ttname"><a href="structanch_1_1cli_1_1_arg.html">anch::cli::Arg</a></div><div class="ttdoc">Argument.</div><div class="ttdef"><b>Definition:</b> arg.hpp:40</div></div>
+<div class="ttc" id="astructanch_1_1cli_1_1_arg_html"><div class="ttname"><a href="structanch_1_1cli_1_1_arg.html">anch::cli::Arg</a></div><div class="ttdoc">Argument.</div><div class="ttdef"><b>Definition:</b> arg.hpp:39</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_66fd3e422064a3d6afe303059f58b9f2.html">anch-cli</a></li><li class="navelem"><a class="el" href="dir_cae6a5a0708292edce742259bc4dcb63.html">inc</a></li><li class="navelem"><a class="el" href="dir_20de24d6f7cad4cc657f44a51d6f25d8.html">cli</a></li><li class="navelem"><b>cli.hpp</b></li>
+    <li class="navelem"><a class="el" href="dir_66fd3e422064a3d6afe303059f58b9f2.html">anch-cli</a></li><li class="navelem"><a class="el" href="dir_cae6a5a0708292edce742259bc4dcb63.html">inc</a></li><li class="navelem"><a class="el" href="dir_20de24d6f7cad4cc657f44a51d6f25d8.html">cli</a></li><li class="navelem"><b>args.hpp</b></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.6 </li>
   </ul>
 </div>
