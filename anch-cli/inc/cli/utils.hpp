@@ -26,6 +26,7 @@
 #include <optional>
 #include <functional>
 #include <memory>
+#include <filesystem>
 #include <fstream>
 
 namespace anch::cli {
@@ -97,13 +98,40 @@ namespace anch::cli {
   BindArg bindCol(std::set<std::string>& dest);
 
   /*!
-   * Add value to set
+   * Bind input file stream
    *
-   * \param dest the \c sdt::set to fill
+   * \param dest the \c std::filesystem::path to fill
+   *
+   * \return the binding function
+   */
+  BindArg bindPath(std::filesystem::path& dest);
+
+  /*!
+   * Bind input file stream
+   *
+   * \param dest the \c std::istream to fill
    *
    * \return the binding function
    */
   BindArg bindIFS(std::shared_ptr<std::istream>& dest);
+
+  /*!
+   * Bind output file stream
+   *
+   * \param dest the \c std::ostream to fill
+   *
+   * \return the binding function
+   */
+  BindArg bindOFS(std::shared_ptr<std::ostream>& dest);
+
+  /*!
+   * Bind output file stream
+   *
+   * \param dest the \c std::ofstream to fill
+   *
+   * \return the binding function
+   */
+  BindArg bindOFS(std::shared_ptr<std::ofstream>& dest, std::ios_base::openmode mode = std::ios_base::out);
 
   /*!
    * Bind \c std::cin to input stream

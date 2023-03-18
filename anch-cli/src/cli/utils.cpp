@@ -20,9 +20,9 @@
 #include "cli/utils.hpp"
 
 #include <iostream>
-#include <filesystem>
 #include <sstream>
 #include <stdexcept>
+#include <fstream>
 
 
 using anch::cli::BindArg;
@@ -98,11 +98,26 @@ anch::cli::bindCol(std::set<std::string>& dest) {
 }
 
 void
+setPath(std::filesystem::path& dest, const std::string& val) {
+  dest = std::filesystem::path(val);
+}
+
+BindArg
+anch::cli::bindPath(std::filesystem::path& dest) {
+  return std::bind_front(setPath, std::ref(dest));
+}
+
+void
 setIFS(std::shared_ptr<std::istream>& dest, const std::string& val) {
   std::filesystem::path path(val);
   if(!std::filesystem::exists(path)) {
     std::ostringstream oss;
     oss << path << " does not exist";
+    throw std::invalid_argument(oss.str());
+  }
+  if(!std::filesystem::is_regular_file(path)) {
+    std::ostringstream oss;
+    oss <<  "File path " << val << " is not a regular file";
     throw std::invalid_argument(oss.str());
   }
   dest = std::make_shared<std::ifstream>(path);
@@ -111,6 +126,26 @@ setIFS(std::shared_ptr<std::istream>& dest, const std::string& val) {
 BindArg
 anch::cli::bindIFS(std::shared_ptr<std::istream>& dest) {
   return std::bind_front(setIFS, std::ref(dest));
+}
+
+void
+setOS(std::shared_ptr<std::ostream>& dest, const std::string& val) {
+  dest = std::make_shared<std::ofstream>(std::filesystem::path(val));
+}
+
+BindArg
+anch::cli::bindOFS(std::shared_ptr<std::ostream>& dest) {
+  return std::bind_front(setOS, std::ref(dest));
+}
+
+void
+setOFS(std::shared_ptr<std::ofstream>& dest, std::ios_base::openmode mode, const std::string& val) {
+  dest = std::make_shared<std::ofstream>(std::filesystem::path(val), mode);
+}
+
+BindArg
+anch::cli::bindOFS(std::shared_ptr<std::ofstream>& dest, std::ios_base::openmode mode) {
+  return std::bind_front(setOFS, std::ref(dest), mode);
 }
 
 void

@@ -9,6 +9,7 @@
 #include <fstream>
 #include <memory>
 #include <filesystem>
+#include <ostream>
 
 using anch::cli::App;
 using anch::cli::Arg;
@@ -22,6 +23,7 @@ struct Options {
   std::optional<std::string> pos2;
   std::vector<std::string> multPos;
   std::shared_ptr<std::istream> pipeopt;
+  std::shared_ptr<std::ostream> out;// = std::shared_ptr<std::ostream>(&std::cout);
 };
 
 void
@@ -67,6 +69,11 @@ printOptions(const Options& opts) {
     std::cout << opts.pipeopt->rdbuf() << std::endl;
   } else {
     std::cout << "pipeopt: not set" << std::endl;
+  }
+  if(opts.out) {
+    *opts.out << opts.str.value() << std::endl;
+  } else {
+    std::cout << "out: not set" << std::endl;
   }
   std::cout << std::endl;
 }
@@ -164,6 +171,33 @@ testPipe(const App& application, Options& opts, int argc, char** argv) {
   printOptions(opts);
 }
 
+void
+parseOutArgs(const App& application, Options& opts, int argc, char** argv) {
+  std::cout << "Parse arguments for application " << argv[0] << std::endl;
+  for(int i = 1 ; i < argc ; ++i) {
+    std::cout << "arg[" << i << "] = " << argv[i] << std::endl;
+  }
+  ArgHandler handler(application, {
+      {.handler = anch::cli::bindStr(opts.str), .sopt = 'p', .lopt = "plop", .value = true, .name = "trestreslong", .mandatory = true, .description = "plop arg", .example = "PLOP!!!"},
+      {.handler = anch::cli::bindOFS(opts.out), .sopt = 'o', .lopt = "output", .value = true, .name = "OS", .description = "output stream"}
+    });
+  handler.printBanner(std::cout);
+  handler.handle(argc, argv);
+  if(!opts.out) {
+    opts.out = std::make_shared<std::ostream>(std::cout.rdbuf());
+  }
+}
+
+void
+testOut(const App& application, Options& opts, int argc, char** argv) {
+  parseOutArgs(application, opts, argc, argv);
+  if(!opts.out) {
+    std::cerr << "out has no value" << std::endl;
+    std::exit(1);
+  }
+  printOptions(opts);
+}
+
 int
 main(int argc, char** argv) {
   App application = {
@@ -204,7 +238,8 @@ main(int argc, char** argv) {
     {"pos1", std::bind(testPos1, application, opts, argcc, args)},
     {"pos2", std::bind(testPos2, application, opts, argcc, args)},
     {"posm", std::bind(testPosmMulti, application, opts, argcc, args)},
-    {"stream", std::bind(testPipe, application, opts, argcc, args)}
+    {"istream", std::bind(testPipe, application, opts, argcc, args)},
+    {"ostream", std::bind(testOut, application, opts, argcc, args)}
   };
   if(!tests.contains(test)) {
     std::cerr << "Unknown test: " << test << std::endl;
