@@ -113,6 +113,7 @@ if(ANCH_CLI_UNITARY_TEST)
   # Build CLI unit test -
 
   enable_testing()
+  ## Check basic options +
   add_test(anch-cli-h-test ${EXECUTABLE_OUTPUT_PATH}/anch-cli-test help -h)
   add_test(anch-cli--help-test ${EXECUTABLE_OUTPUT_PATH}/anch-cli-test help --help)
   add_test(anch-cli--version-test ${EXECUTABLE_OUTPUT_PATH}/anch-cli-test version --version)
@@ -130,14 +131,19 @@ if(ANCH_CLI_UNITARY_TEST)
   add_test(anch-cli-pos2-ok-test ${EXECUTABLE_OUTPUT_PATH}/anch-cli-test pos2 titi tutu tata)
   add_test(anch-cli-posm1-test ${EXECUTABLE_OUTPUT_PATH}/anch-cli-test posm titi tutu tata)
   add_test(anch-cli-posm-test ${EXECUTABLE_OUTPUT_PATH}/anch-cli-test posm titi tutu tata tutu toto)
+  ## Check basic options
+  ## Check input stream option +
   add_test(anch-cli-istream-i-test ${EXECUTABLE_OUTPUT_PATH}/anch-cli-test istream -i Makefile)
   add_test(anch-cli-istream--input-test ${EXECUTABLE_OUTPUT_PATH}/anch-cli-test istream --input Makefile)
   add_test(anch-cli-istream--input-notexist-test ${EXECUTABLE_OUTPUT_PATH}/anch-cli-test istream --input Makefil)
-  add_test(anch-cli-istream-o-test ${EXECUTABLE_OUTPUT_PATH}/anch-cli-test ostream -p "option o" -o o.res)
-  add_test(anch-cli-istream--output-test ${EXECUTABLE_OUTPUT_PATH}/anch-cli-test ostream -p "option output" --output output.res)
-  add_test(anch-cli-istream-cout-test ${EXECUTABLE_OUTPUT_PATH}/anch-cli-test ostream -p "cout")
-  # Check if pipe works with 'cat Makefile | bin/anch-cli-test stream'
-  message("Check if pipe works with 'cat Makefile | bin/anch-cli-test stream'")
+  # Check if pipe works with 'cat Makefile | bin/anch-cli-test istream'
+  message("Check if pipe works with 'cat Makefile | bin/anch-cli-test istream'")
+  ## Check input stream option -
+  ## Check output stream option +
+  add_test(anch-cli-ostream-o-test ${EXECUTABLE_OUTPUT_PATH}/anch-cli-test ostream -p "option o" -o o.res)
+  add_test(anch-cli-ostream--output-test ${EXECUTABLE_OUTPUT_PATH}/anch-cli-test ostream -p "option output" --output output.res)
+  add_test(anch-cli-ostream-cout-test ${EXECUTABLE_OUTPUT_PATH}/anch-cli-test ostream -p "cout")
+  ## Check output stream option -
 
   set_tests_properties(anch-cli-v-test PROPERTIES WILL_FAIL TRUE)
   set_tests_properties(anch-cli-test PROPERTIES WILL_FAIL TRUE)

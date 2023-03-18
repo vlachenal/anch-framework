@@ -23,7 +23,7 @@ struct Options {
   std::optional<std::string> pos2;
   std::vector<std::string> multPos;
   std::shared_ptr<std::istream> pipeopt;
-  std::shared_ptr<std::ostream> out;// = std::shared_ptr<std::ostream>(&std::cout);
+  std::shared_ptr<std::ostream> out;
 };
 
 void
