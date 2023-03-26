@@ -3,6 +3,7 @@
 
 #include "network/tcpSocket.hpp"
 #include "events/observer.hpp"
+#include "events/event.hpp"
 
 
 using anch::network::TcpSocket;
@@ -20,8 +21,8 @@ public:
   ~ServerObs() {};
 
 public:
-  virtual void notify(const SocketEvent& evt) noexcept {
-    std::cout << "Server receive " + evt.getMessage() << std::endl;
+  virtual void handle(const anch::events::Event<SocketEvent>& evt) noexcept override {
+    std::cout << "Server receive " + evt.body.getMessage() << std::endl;
   }
 
 };
@@ -33,8 +34,8 @@ public:
   ~ClientObs() {};
 
 public:
-  virtual void notify(const SocketEvent& evt) noexcept {
-    std::cout << "Client receive " + evt.getMessage() << std::endl;
+  virtual void handle(const anch::events::Event<SocketEvent>& evt) noexcept override {
+    std::cout << "Client receive " + evt.body.getMessage() << std::endl;
   }
 
 };

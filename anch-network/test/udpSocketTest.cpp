@@ -23,11 +23,11 @@ public:
   ~ServerObs() {};
 
 public:
-  virtual void notify(const SocketEvent& evt) noexcept {
-    std::cout << "Server receive " + evt.getMessage() << std::endl;
+  virtual void handle(const anch::events::Event<SocketEvent>& evt) noexcept override {
+    std::cout << "Server receive " + evt.body.getMessage() << std::endl;
     std::cout << "Server send response" << std::endl;
     try {
-      _sock->send("Bye bye !", evt.getAddress());
+      _sock->send("Bye bye !", evt.body.getAddress());
     } catch(const IOException& e) {
       std::cerr << "Server " << e.what() << std::endl;
     }
@@ -42,8 +42,8 @@ public:
   ~ClientObs() {};
 
 public:
-  virtual void notify(const SocketEvent& evt) noexcept {
-    std::cout << "Client receive " + evt.getMessage() << std::endl;
+  virtual void handle(const anch::events::Event<SocketEvent>& evt) noexcept override {
+    std::cout << "Client receive " + evt.body.getMessage() << std::endl;
   }
 
 };
