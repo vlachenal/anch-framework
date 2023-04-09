@@ -20,6 +20,7 @@
 #include "rest/mapperRegistry.hpp"
 
 using anch::rest::MapperRegistry;
+using anch::rest::GlobalMapperRegistry;
 
 
 MapperRegistry::MapperRegistry(): _mappers() {

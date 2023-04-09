@@ -136,7 +136,7 @@ namespace anch::rest {
     /*!
      * \ref GlobalMapperRegistry private constructor
      */
-    GlobalMapperRegistry(): MapperRegistry();
+    GlobalMapperRegistry();
 
     /*!
      * \ref GlobalMapperRegistry private destructor
