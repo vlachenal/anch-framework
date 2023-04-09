@@ -389,12 +389,12 @@ if(ANCH_CRYPTO_UNITARY_TEST)
   )
 
   add_executable(
-    anch-uuid-test
+    anch-crypto-uuid-test
     ${test_uuid}
   )
 
   target_link_libraries(
-    anch-uuid-test
+    anch-crypto-uuid-test
     anch-crypto
     anch-uuid
     ${CMAKE_THREAD_LIBS_INIT}
@@ -513,8 +513,8 @@ if(ANCH_CRYPTO_UNITARY_TEST)
   add_test(Aes256Cfb-seq ${EXECUTABLE_OUTPUT_PATH}/anch-aes-cfb-test 256 sequential)
   add_test(Aes256Cfb-para ${EXECUTABLE_OUTPUT_PATH}/anch-aes-cfb-test 256 parallel)
 
-  add_test(UUID-MD5 ${EXECUTABLE_OUTPUT_PATH}/anch-uuid-test MD5)
-  add_test(UUID-SHA1 ${EXECUTABLE_OUTPUT_PATH}/anch-uuid-test SHA1)
+  add_test(UUID-MD5 ${EXECUTABLE_OUTPUT_PATH}/anch-crypto-uuid-test MD5)
+  add_test(UUID-SHA1 ${EXECUTABLE_OUTPUT_PATH}/anch-crypto-uuid-test SHA1)
 
   find_package(OpenSSL)
   if(OpenSSL_FOUND)
