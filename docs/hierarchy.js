@@ -69,7 +69,8 @@ var hierarchy =
       [ "anch::resource::file::ResourceFileException", "classanch_1_1resource_1_1file_1_1_resource_file_exception.html", null ],
       [ "anch::rest::MapperException", "classanch_1_1rest_1_1_mapper_exception.html", null ],
       [ "anch::rest::RouterException", "classanch_1_1rest_1_1_router_exception.html", null ],
-      [ "anch::sql::SqlException", "classanch_1_1sql_1_1_sql_exception.html", null ]
+      [ "anch::sql::SqlException", "classanch_1_1sql_1_1_sql_exception.html", null ],
+      [ "anch::ut::AssertException", "classanch_1_1ut_1_1_assert_exception.html", null ]
     ] ],
     [ "anch::json::Factory< T >", "classanch_1_1json_1_1_factory.html", null ],
     [ "anch::crypto::Hash< O, B >", "classanch_1_1crypto_1_1_hash.html", [
@@ -175,6 +176,9 @@ var hierarchy =
       [ "anch::sql::SQLite3ResultSet", "classanch_1_1sql_1_1_s_q_lite3_result_set.html", null ]
     ] ],
     [ "anch::rest::Router", "classanch_1_1rest_1_1_router.html", null ],
+    [ "anch::ut::Runner", "classanch_1_1ut_1_1_runner.html", [
+      [ "anch::ut::DefaultRunner", "classanch_1_1ut_1_1_default_runner.html", null ]
+    ] ],
     [ "anch::resource::Section", "classanch_1_1resource_1_1_section.html", null ],
     [ "anch::sql::SelectBuilder", "classanch_1_1sql_1_1_select_builder.html", null ],
     [ "anch::sql::SelectBuilderPart", "classanch_1_1sql_1_1_select_builder_part.html", [
@@ -209,6 +213,7 @@ var hierarchy =
       [ "anch::cutils::CStreambuf", "classanch_1_1cutils_1_1_c_streambuf.html", null ]
     ] ],
     [ "anch::ThreadPool", "classanch_1_1_thread_pool.html", null ],
+    [ "anch::ut::UnitTests", "classanch_1_1ut_1_1_unit_tests.html", null ],
     [ "anch::UUID", "classanch_1_1_u_u_i_d.html", null ],
     [ "anch::rest::Verb", "structanch_1_1rest_1_1_verb.html", null ],
     [ "anch::logger::Writer", "classanch_1_1logger_1_1_writer.html", [
