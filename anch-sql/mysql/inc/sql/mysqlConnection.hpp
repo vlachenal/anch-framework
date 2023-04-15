@@ -25,7 +25,8 @@
 
 #include "sql/connection.hpp"
 
-typedef struct st_mysql MYSQL;
+//typedef struct st_mysql MYSQL;
+struct MYSQL;
 
 namespace anch {
   namespace sql {

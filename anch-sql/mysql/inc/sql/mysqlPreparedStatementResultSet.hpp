@@ -25,8 +25,8 @@
 #include <list>
 
 
-typedef struct st_mysql_stmt MYSQL_STMT;
-typedef struct st_mysql_bind MYSQL_BIND;
+//typedef struct st_mysql_bind MYSQL_BIND;
+struct MYSQL_BIND;
 
 namespace anch {
   namespace sql {
@@ -51,7 +51,8 @@ namespace anch {
       long unsigned int* _lengths;
 
       /*! Columns null */
-      char* _nulls;
+      //char* _nulls;
+      bool* _nulls;
 
       /*! MySQL result binding */
       MYSQL_BIND* _binds;

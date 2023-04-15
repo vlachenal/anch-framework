@@ -24,7 +24,8 @@
 
 #include <list>
 
-typedef struct st_mysql_res MYSQL_RES;
+//typedef struct st_mysql_res MYSQL_RES;
+struct MYSQL_RES;
 
 
 namespace anch {

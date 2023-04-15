@@ -48,7 +48,8 @@ MySQLPreparedStatementResultSet::MySQLPreparedStatementResultSet(MYSQL_STMT* stm
   _binds = new MYSQL_BIND[nbFields];
   std::memset(_binds, 0, sizeof(*_binds) * nbFields);
   _lengths = new long unsigned int[nbFields];
-  _nulls = new char[nbFields];
+  //_nulls = new char[nbFields];
+  _nulls = new bool[nbFields];
   for(unsigned int i = 0 ; i < nbFields ; ++i) {
     MYSQL_BIND* bind = &_binds[i];
     MYSQL_FIELD* field = mysql_fetch_field(result);
