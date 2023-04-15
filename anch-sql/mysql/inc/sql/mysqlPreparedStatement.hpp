@@ -24,9 +24,10 @@
 #include "sql/mysqlConnection.hpp"
 
 #include <atomic>
+#include "mysql.h"
 
 //typedef struct st_mysql_stmt MYSQL_STMT;
-struct MYSQL_STMT;
+//struct MYSQL_STMT;
 
 namespace anch {
   namespace sql {

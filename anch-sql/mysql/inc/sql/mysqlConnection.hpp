@@ -22,11 +22,12 @@
 
 #include <string>
 #include <functional>
+#include "mysql.h"
 
 #include "sql/connection.hpp"
 
 //typedef struct st_mysql MYSQL;
-struct MYSQL;
+//struct MYSQL;
 
 namespace anch {
   namespace sql {

@@ -19,7 +19,7 @@
 */
 #ifdef ANCH_SQL_MYSQL
 
-#include "mysql.h"
+//#include "mysql.h"
 
 #include "sql/mysqlResultSet.hpp"
 

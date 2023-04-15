@@ -20,13 +20,14 @@
 #ifdef ANCH_SQL_MYSQL
 #pragma once
 
+#include "mysql.h"
 #include "sql/resultSet.hpp"
 
 #include <list>
 
 
 //typedef struct st_mysql_bind MYSQL_BIND;
-struct MYSQL_BIND;
+//struct MYSQL_BIND;
 
 namespace anch {
   namespace sql {

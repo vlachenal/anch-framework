@@ -20,12 +20,13 @@
 #ifdef ANCH_SQL_MYSQL
 #pragma once
 
+#include "mysql.h"
 #include "sql/resultSet.hpp"
 
 #include <list>
 
 //typedef struct st_mysql_res MYSQL_RES;
-struct MYSQL_RES;
+//struct MYSQL_RES;
 
 
 namespace anch {
