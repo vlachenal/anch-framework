@@ -53,7 +53,7 @@ namespace anch {
 
       /*! Columns null */
       //char* _nulls;
-      bool* _nulls;
+      my_bool* _nulls;
 
       /*! MySQL result binding */
       MYSQL_BIND* _binds;

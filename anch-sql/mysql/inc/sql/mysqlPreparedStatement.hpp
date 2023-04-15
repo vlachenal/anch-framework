@@ -56,7 +56,7 @@ namespace anch {
       /*! MySQL statement */
       MYSQL_STMT* _stmt;
 
-      /** MySQL statement identifier */
+      /*! MySQL statement identifier */
       std::string _stmtId;
       // Attributes -
 
