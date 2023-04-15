@@ -29,6 +29,10 @@
 //typedef struct st_mysql_bind MYSQL_BIND;
 //struct MYSQL_BIND;
 
+#ifndef my_bool
+typedef bool my_bool;
+#endif
+
 namespace anch {
   namespace sql {
 
