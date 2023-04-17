@@ -29,7 +29,7 @@
 //typedef struct st_mysql_bind MYSQL_BIND;
 //struct MYSQL_BIND;
 
-#ifndef my_bool
+#ifndef LIBMARIADB
 typedef bool my_bool;
 #endif
 
