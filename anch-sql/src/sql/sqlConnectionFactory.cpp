@@ -45,7 +45,7 @@ anch::sql::make_shared_connection(const SqlConnectionConfiguration& config) {
 
 // Constructors +
 SqlConnectionFactory::SqlConnectionFactory(): _configs(), _pools() {
-  const Resource& resource = Resource::getResource("db_con.conf");
+  auto resource = Resource::getResource("db_con.conf");
   auto conf = resource.getConfiguration();
   for(auto iter = conf.cbegin() ; iter != conf.cend() ; ++iter) {
     const std::string name = iter->first;

@@ -51,25 +51,6 @@ namespace anch {
       /*!
        * \ref PostgreSQLConnection constructor
        *
-       * \param host the PostgreSQL server hostname
-       * \param user the datase user login
-       * \param password the database login password
-       * \param database the database name
-       * \param port the database access port
-       * \param app the application name
-       *
-       * \throw SqlException fail to create connection
-       */
-      PostgreSQLConnection(const std::string& host,
-			   const std::string& user,
-			   const std::string& password,
-			   const std::string& database,
-			   int port,
-			   const std::string& app = "");
-
-      /*!
-       * \ref PostgreSQLConnection constructor
-       *
        * \param connStr the PostgreSQL connection string
        *
        * \throw SqlException fail to create connection

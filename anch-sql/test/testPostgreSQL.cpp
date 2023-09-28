@@ -40,11 +40,13 @@ main(void) {
   std::cout << "Enter in PostgreSQL unit tests" << std::endl << std::endl;
 
   try {
-    PostgreSQLConnection dbCon("localhost",
-			       "anch",
-			       "anch",
-			       "anch_test",
-			       5432);
+    PostgreSQLConnection dbCon({
+	.database = "anch_test",
+	.hostname = "localhost",
+	.port = 5432,
+	.user = "anch",
+	.password = "anch"
+      });
     std::cout << "Connected to database" << std::endl;
 
     std::cout << std::endl;

@@ -63,6 +63,7 @@ SQLite3Connection::SQLite3Connection(const SqlConnectionConfiguration& config): 
 
 // Destructor +
 SQLite3Connection::~SQLite3Connection() {
+  release();
   for(auto iter = _stmts.begin() ; iter != _stmts.end() ; ++iter) {
     delete iter->second;
   }
@@ -94,6 +95,7 @@ SQLite3Connection::executeUpdate(const std::string& query) {
   char* errMsg = NULL;
   int res = sqlite3_exec(_conn, query.data(), emptyCB, 0, &errMsg);
   if(res != SQLITE_OK) {
+    _errors = true;
     std::ostringstream msg;
     msg << "Error while executing update: " << errMsg;
     sqlite3_free(errMsg);

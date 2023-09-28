@@ -40,51 +40,6 @@ using anch::sql::PostgreSQLPreparedStatement;
 
 
 // Constructors +
-PostgreSQLConnection::PostgreSQLConnection(const std::string& host,
-					   const std::string& user,
-					   const std::string& password,
-					   const std::string& database,
-					   int port,
-					   const std::string& app):
-  Connection(),
-  _conn(NULL) {
-  std::ostringstream conninfo;
-  conninfo << "postgresql://";
-  if(!user.empty()) {
-    conninfo << user;
-    if(!password.empty()) {
-      conninfo << ":";
-      conninfo << password;
-    }
-    conninfo << "@";
-  }
-  if(!host.empty()) {
-    conninfo << host;
-  }
-  if(port > 0) {
-    conninfo << ":";
-    conninfo << port;
-  }
-  if(!database.empty()) {
-    conninfo << "/";
-    conninfo << database;
-  }
-  conninfo << "?keepalives=1";
-  if(!app.empty()) {
-    conninfo << "&application_name=";
-    conninfo << app;
-  }
-  _conn = PQconnectdb(conninfo.str().data());
-  if(PQstatus(_conn) != CONNECTION_OK) {
-    _valid = false;
-    std::ostringstream msg;
-    msg << "Fail to connect PostgreSQL database " << database
-	<< ":" << port << " with user " << user << ": " << PQerrorMessage(_conn);
-    PQfinish(_conn);
-    throw SqlException(msg.str(), _valid);
-  }
-}
-
 PostgreSQLConnection::PostgreSQLConnection(const std::string& connStr): _conn() {
   _conn = PQconnectdb(connStr.data());
   if(PQstatus(_conn) != CONNECTION_OK) {
@@ -140,6 +95,7 @@ PostgreSQLConnection::PostgreSQLConnection(const SqlConnectionConfiguration& con
 // Destructor +
 PostgreSQLConnection::~PostgreSQLConnection() noexcept {
   if(_conn != NULL) {
+    release();
     PQfinish(_conn);
   }
 }
@@ -203,6 +159,7 @@ uint64_t
 PostgreSQLConnection::executeUpdate(const std::string& query) {
   PGresult* res = PQexec(_conn, query.data());
   if(res == NULL) {
+    _errors = true;
     _valid = (PQstatus(_conn) == CONNECTION_OK);
     std::ostringstream msg;
     msg << "Unable to execute query " << query << ": " << PQerrorMessage(_conn);
@@ -219,6 +176,7 @@ PostgreSQLConnection::executeUpdate(const std::string& query) {
   case PGRES_COPY_IN:
   case PGRES_COPY_BOTH:
     {
+      _errors = true;
       std::ostringstream msg;
       msg << "Unexpected update query: " << query;
       PQclear(res);
@@ -230,6 +188,7 @@ PostgreSQLConnection::executeUpdate(const std::string& query) {
     [[fallthrough]];
   default:
     {
+      _errors = true;
       std::ostringstream msg;
       msg << "Unable to execute query " << query << ": " << PQerrorMessage(_conn);
       PQclear(res);

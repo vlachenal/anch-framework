@@ -76,28 +76,7 @@ private:
 };
 
 // Constructors +
-MySQLConnection::MySQLConnection(const std::string& host,
-				 const std::string& user,
-				 const std::string& password,
-				 const std::string& database,
-				 int port,
-				 const std::string& app) {
-
-  MySQLInitializer::getInstance(); // Initialize MySQL library if not already done
-
-  _mysql = new MYSQL;
-  mysql_init(_mysql);
-  mysql_options(_mysql, MYSQL_READ_DEFAULT_GROUP, app.data());
-  MYSQL* res = mysql_real_connect(_mysql, host.data(), user.data(), password.data(), database.data(), static_cast<unsigned int>(port), NULL, 0);
-  if(res == NULL) {
-    _valid = false;
-    std::ostringstream msg;
-    msg << "Failed to connect to database. Error: " << mysql_error(_mysql);
-    throw SqlException(msg.str(), _valid);
-  }
-}
-
-MySQLConnection::MySQLConnection(const SqlConnectionConfiguration& config) {
+MySQLConnection::MySQLConnection(const SqlConnectionConfiguration& config): Connection() {
 
   MySQLInitializer::getInstance(); // Initialize MySQL library if not already done
 
@@ -121,6 +100,7 @@ MySQLConnection::MySQLConnection(const SqlConnectionConfiguration& config) {
 
 // Destructor +
 MySQLConnection::~MySQLConnection() noexcept {
+  release();
   mysql_close(_mysql);
   delete _mysql;
 }
@@ -189,6 +169,7 @@ MySQLConnection::executeUpdate(const std::string& query) {
   int res = mysql_query(_mysql, query.data());
   if(res != 0) {
     _valid = res != CR_SERVER_GONE_ERROR && res != CR_SERVER_LOST;
+    _errors = true;
     std::ostringstream out;
     out << "Error while executing query " << query << " ; message="
 	<< mysql_error(_mysql);
@@ -196,6 +177,7 @@ MySQLConnection::executeUpdate(const std::string& query) {
   }
   my_ulonglong nbRow = mysql_affected_rows(_mysql);
   if(nbRow == static_cast<my_ulonglong>(-1)) {
+    _errors = true;
     std::ostringstream out;
     out << "Query " << query << " is not an update query " << query
 	<< " ; message=" << mysql_error(_mysql);

@@ -22,6 +22,11 @@
 namespace anch {
   namespace sql {
 
+    inline void
+    Connection::begin() {
+      startTransaction();
+    }
+
     template<typename T, typename... Q>
     ResultSet*
     Connection::query(const std::string& query, const T& value, const Q&... values) {

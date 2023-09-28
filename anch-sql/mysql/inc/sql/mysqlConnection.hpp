@@ -54,25 +54,6 @@ namespace anch {
       /*!
        * \ref MySQLConnection constructor
        *
-       * \param host the MySQL server host
-       * \param user the connection user
-       * \param password the connection password
-       * \param database the database name
-       * \param port the connection port
-       * \param app the client application (default: AnCH) ; used to retrieve configuration per application if declared in my.cnf
-       *
-       * \throw SqlException any error
-       */
-      MySQLConnection(const std::string& host,
-		      const std::string& user,
-		      const std::string& password,
-		      const std::string& database,
-		      int port,
-		      const std::string& app = "AnCH");
-
-      /*!
-       * \ref MySQLConnection constructor
-       *
        * \param config the MySQL database configuration
        *
        * \throw SqlException any error

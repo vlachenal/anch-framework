@@ -25,7 +25,7 @@ using anch::sql::PreparedStatement;
 
 
 // Constructors +
-Connection::Connection(): _valid(true), _transaction(false), _stmts() {
+Connection::Connection(): _valid(true), _transaction(false), _stmts(), _errors(false) {
   // Nothing to do
 }
 // Constructors -
@@ -63,6 +63,23 @@ Connection::startTransaction() {
     sendStartTransaction();
     _transaction = true;
   }
+}
+
+void
+Connection::release() noexcept {
+  if(!_valid) {
+    return;
+  }
+  try {
+    if(_errors) {
+      rollback();
+    } else {
+      commit();
+    }
+  } catch(...) {
+    // nothing to do
+  }
+  _errors = false;
 }
 
 ResultSet*

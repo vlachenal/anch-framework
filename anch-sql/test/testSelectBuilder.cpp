@@ -5,6 +5,7 @@
 #include <functional>
 #include <iostream>
 #include <assert.h>
+#include <any>
 
 using anch::sql::SQLQuery;
 
@@ -169,12 +170,14 @@ testQueryInnerJoinWithoutWhere() {
 
 void
 testQueryJoinWithoutValidClause() {
+  //std::string val("");
   SQLQuery query = anch::sql::select()
     .field("t.titi")
     .field("u.tata")
     .from("toto t")
     .innerJoin("tutu u", anch::sql::clauses().field("t.i").equals().field("u.a"))
-    //.leftOuterJoin("tata a", anch::sql::clauses("a.a", anch::sql::equals, ""))
+    //.leftOuterJoin("tata a", anch::sql::clauses("a.a", anch::sql::equals, std::string("")))
+    //.leftOuterJoin("tata a", anch::sql::clauses("a.a", anch::sql::equals, std::optional<std::string>()))
     .build();
   std::cout << query.getQuery() << std::endl;
   assert(query.getQuery() == "SELECT t.titi,u.tata FROM toto t INNER JOIN tutu u ON t.i = u.a");
@@ -195,6 +198,7 @@ registerTests() {
   TEST_SUITE["cross_join_no_where"] = testQueryCrossJoinWithoutWhere;
   TEST_SUITE["cross_join_subquery_no_where"] = testQueryCrossJoinWithSubqueryWithoutWhere;
   TEST_SUITE["inner_join_no_where"] = testQueryInnerJoinWithoutWhere;
+  TEST_SUITE["inner_join_without_valid_clause"] = testQueryJoinWithoutValidClause;
 }
 
 int

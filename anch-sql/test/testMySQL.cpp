@@ -40,11 +40,15 @@ main(void) {
   std::cout << "Enter in MySQL unit tests" << std::endl << std::endl;
 
   try {
-    MySQLConnection dbCon("localhost",
-			  "anch",
-			  "anch",
-			  "anch_test",
-			  3306);
+    MySQLConnection dbCon({
+	.driver = "",
+	.database = "anch_test",
+	.hostname = "localhost",
+	.port = 3306,
+	.user = "anch",
+	.password = "anch",
+	.application = "mysql"
+      });
     std::cout << "Connected to database" << std::endl;
 
     std::cout << std::endl;

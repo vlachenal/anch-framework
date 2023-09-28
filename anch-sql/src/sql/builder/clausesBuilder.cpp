@@ -22,6 +22,8 @@
 #include "sql/builder/selectBuilder.hpp"
 #include "sql/builder/fromBuilder.hpp"
 
+#include "stream.hpp"
+
 
 using anch::sql::ClausesBuilder;
 using anch::sql::SelectBuilder;
@@ -32,6 +34,14 @@ using anch::sql::ValueChecker;
 
 
 ClausesBuilder::ClausesBuilder(): _buffer(), _values(), _firstClause(true) {
+  // Nothing to do
+}
+
+ClausesBuilder::ClausesBuilder(const ClausesBuilder& other): _buffer(), _values(other._values), _firstClause(other._firstClause) {
+  _buffer << other._buffer.str();
+}
+
+ClausesBuilder::~ClausesBuilder() {
   // Nothing to do
 }
 
@@ -217,4 +227,40 @@ ClausesBuilder::addBooleanAggregator(const std::string& boolAgg) {
 ClausesBuilder&
 ClausesBuilder::checkAndAddClauses(const std::string& boolAgg, ClausesProvider clauses) {
   return checkAndAddClauses(boolAgg, clauses());
+}
+
+template<>
+std::optional<std::string>
+anch::sql::isValidValue<anch::sql::SelectBuilder>(anch::sql::SelectBuilder& value) {
+  std::ostringstream oss;
+  oss << '(' << value << ')';
+  return std::optional(oss.str());
+}
+
+template<>
+std::optional<std::string>
+anch::sql::isValidValue<anch::sql::SQLQuery>(anch::sql::SQLQuery& value) {
+  std::ostringstream oss;
+  oss << '(' << value.getQuery() << ')';
+  return std::optional(oss.str());
+}
+
+template<>
+std::optional<std::string>
+anch::sql::isValidValue<std::string>(std::string& value) {
+  return value.empty() ? std::optional<std::string>() : std::optional(value);
+}
+
+template<>
+std::optional<std::string>
+anch::sql::isValidValue<std::optional<std::string>>(std::optional<std::string>& value) {
+  return value;
+}
+
+template<>
+std::optional<std::string>
+anch::sql::isValidValue<anch::Stream<std::string, std::list>>(anch::Stream<std::string, std::list>& value) {
+  std::ostringstream oss;
+  value.forEach([&oss](std::string& val) { oss << ',' << val; });
+  return std::optional(oss.str());
 }

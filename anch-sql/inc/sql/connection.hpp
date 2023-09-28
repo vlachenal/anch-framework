@@ -40,7 +40,7 @@ namespace anch {
      */
     struct SqlConnectionConfiguration {
       /*! SQL connection database type */
-      std::string driver;
+      std::string driver = "";
 
       /*! SQL database name */
       std::string database;
@@ -58,7 +58,7 @@ namespace anch {
       std::string password;
 
       /*! Client application */
-      std::string application;
+      std::string application = "AnCH";
     };
 
     /*!
@@ -82,6 +82,9 @@ namespace anch {
 
       /*! Prepared statements */
       std::map<std::string, PreparedStatement*> _stmts;
+
+      /*! Error on current calls */
+      bool _errors;
       // Attributes -
 
       // Constructors +
@@ -122,9 +125,7 @@ namespace anch {
        *
        * \throw SqlException any error
        */
-      inline void begin() {
-	startTransaction();
-      }
+      void begin();
 
       /*!
        * Commit current SQL transaction.\n
@@ -141,6 +142,11 @@ namespace anch {
        * \throw SqlException any error
        */
       void rollback();
+
+      /*!
+       * Release connection (used for connections' pool)
+       */
+      void release() noexcept;
 
       /*!
        * Prepare SQL statement if not already done.
