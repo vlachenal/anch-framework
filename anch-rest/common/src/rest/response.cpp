@@ -73,7 +73,7 @@ Response::operator=(Response&& other) {
 // Methods +
 Response::Builder
 Response::builder() {
-  return std::move(Response::Builder());
+  return Response::Builder();
 }
 
 void

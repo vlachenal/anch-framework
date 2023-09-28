@@ -330,7 +330,8 @@ testResponseOKJSON() {
 
 Response
 GET_api_istream(const Request&) {
-  return Response::builder().status(static_cast<uint16_t>(StatusCode::OK)).contentType(MediaType::TXT_PLAIN).body(std::move(std::ifstream("/home/winz/projects/anch-framework/anch-rest/build/Makefile"))).build();
+  std::ifstream is("/home/winz/projects/anch-framework/anch-rest/build/Makefile");
+  return Response::builder().status(static_cast<uint16_t>(StatusCode::OK)).contentType(MediaType::TXT_PLAIN).body(std::move(is)).build();
 }
 
 void

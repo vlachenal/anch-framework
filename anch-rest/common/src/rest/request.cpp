@@ -53,7 +53,7 @@ Request::~Request() {
 // Methods +
 Request::Builder
 Request::builder() {
-  return std::move(Request::Builder());
+  return Request::Builder();
 }
 // Methods -
 

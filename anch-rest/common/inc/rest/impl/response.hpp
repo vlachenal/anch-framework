@@ -59,7 +59,17 @@ namespace anch::rest {
   template<typename T>
   void
   Response::setBody(T body) {
-    if constexpr (std::is_same<std::string, T>::value
+    if constexpr (std::is_base_of<std::istream, T>::value) {
+      _input = std::make_shared<T>(std::move(body));
+      _bodyWriter =
+          std::function<void(std::ostream &)>([this](std::ostream &out) {
+            int read = _input->get();
+            while (*_input) {
+              out << static_cast<uint8_t>(read);
+              read = _input->get();
+            }
+          });
+    } else if constexpr (std::is_same<std::string, T>::value
 		  || std::is_same<std::string&, T>::value
 		  || std::is_same<const std::string&, T>::value
 		  || std::is_same<const char*, T>::value
@@ -70,15 +80,6 @@ namespace anch::rest {
 		  || std::is_same<uint8_t*, T>::value) {
       _bodyWriter = std::function<void(std::ostream&)>([body](std::ostream& out) {
 	out << body;
-      });
-    } else if constexpr (std::is_base_of<std::istream, T>::value) {
-      _input = std::make_shared<T>(std::move(body));
-      _bodyWriter = std::function<void(std::ostream&)>([this](std::ostream& out) {
-	int read = _input->get();
-	while(*_input) {
-	  out << static_cast<uint8_t>(read);
-	  read = _input->get();
-	}
       });
     } else {
       MapperRegistry* reg = _registry;
@@ -96,6 +97,8 @@ namespace anch::rest {
   Response::Builder::body(T body) {
     if constexpr (std::is_base_of<std::istream, T>::value) {
       _response.setBody(std::move(body));
+    } else if constexpr (std::is_base_of<std::istream*, T>::value) {
+      _response.setBody(body);
     } else {
       _response.setBody(body);
     }
