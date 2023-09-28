@@ -56,7 +56,7 @@ namespace anch {
     std::string serialize(const T& value, const anch::json::MappingOptions& options) {
       std::ostringstream out;
       anch::json::Factory<T>::getInstance().serialize(value, out, options);
-      return std::move(out.str());
+      return out.str();
     }
 
     template<typename T>
@@ -64,7 +64,7 @@ namespace anch {
     std::string serialize(const std::vector<T>& value, const anch::json::MappingOptions& options) {
       std::ostringstream out;
       anch::json::Factory<T>::getInstance().serialize(value, out, options);
-      return std::move(out.str());
+      return out.str();
     }
 
     template<typename T>
@@ -72,7 +72,7 @@ namespace anch {
     std::string serialize(const std::list<T>& value, const anch::json::MappingOptions& options) {
       std::ostringstream out;
       anch::json::Factory<T>::getInstance().serialize(value, out, options);
-      return std::move(out.str());
+      return out.str();
     }
 
     template<typename T>
@@ -80,7 +80,7 @@ namespace anch {
     std::string serialize(const std::set<T>& value, const anch::json::MappingOptions& options) {
       std::ostringstream out;
       anch::json::Factory<T>::getInstance().serialize(value, out, options);
-      return std::move(out.str());
+      return out.str();
     }
 
     template<typename T>

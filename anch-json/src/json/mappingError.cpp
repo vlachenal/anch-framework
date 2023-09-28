@@ -70,7 +70,7 @@ computeErrorMessage(ErrorCode code, std::istream& input, std::optional<std::stri
   }
   // Try to get 20 characters around current error -
   oss << '\'';
-  return std::move(oss.str());
+  return oss.str();
 }
 
 // Constructors +

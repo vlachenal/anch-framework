@@ -25,6 +25,7 @@
 #include <list>
 #include <ostream>
 #include <functional>
+#include <cstdint>
 
 #include "json/mappingFunctions.hpp"
 #include "convert.hpp"

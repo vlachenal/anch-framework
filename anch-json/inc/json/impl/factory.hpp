@@ -20,6 +20,7 @@
 #pragma once
 
 #include <type_traits>
+#include <cstdint>
 
 #include "json/mapper.hpp"
 #include "json/primitiveMapper.hpp"

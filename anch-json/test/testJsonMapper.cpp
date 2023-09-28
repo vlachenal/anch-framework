@@ -1,6 +1,7 @@
 #include <iostream>
 #include <sstream>
 #include <fstream>
+#include <chrono>
 
 #include "json/json.hpp"
 
@@ -102,9 +103,31 @@ anch::json::registerObject(ObjectMapper<Test>& mapper) {
     ;
 }
 
+namespace plop {
+  struct json_proxy {
+    explicit json_proxy(std::ostream & os):os(os){}
+
+    template<typename T>
+    friend std::ostream & operator<<(const json_proxy& q,
+				     const T& rhs) {
+      anch::json::serialize(rhs, q.os);
+      return q.os;
+    }
+
+  private:
+    std::ostream & os;
+  };
+
+  struct json_creator { } jsonify;
+  json_proxy operator<<(std::ostream& os, json_creator) {
+    return json_proxy(os);
+  }
+}
 
 int
 main(void) {
+  std::chrono::time_point<std::chrono::high_resolution_clock> start = std::chrono::high_resolution_clock::now();//, end;
+  //std::chrono::microseconds duration;
   std::cout << "Enter in serialization tests" << std::endl;
   {
     anch::json::JSONMapper mapper(anch::json::DEFAULT_MAPPING_OPTIONS);
@@ -345,6 +368,16 @@ main(void) {
       return 1;
     }
   }
-  std::cout << "Exit serialization tests" << std::endl;
+  {
+    Test test = {
+      ._id = "deb94ebc-be28-4899-981a-29199b7a487d",
+      ._value = "this is a value",
+      ._nums = {1,2,3,4}
+    };
+    std::cout << "As iomanip: " << plop::jsonify << test << std::endl;
+  }
+  std::chrono::time_point<std::chrono::high_resolution_clock> end = std::chrono::high_resolution_clock::now();
+  std::chrono::microseconds duration = std::chrono::duration_cast<std::chrono::microseconds>(end.time_since_epoch()) - std::chrono::duration_cast<std::chrono::microseconds>(start.time_since_epoch());
+  std::cout << "Exit serialization tests in " << duration.count() << " µs" << std::endl;
   return 0;
 }
