@@ -11,7 +11,7 @@ using anch::logger::Logger;
 int
 main(void) {
 
-  const Logger& LOG = LoggerFactory::getLogger("anch::logger::Logger");
+  auto LOG = LoggerFactory::getLogger("anch::logger::Logger");
 
   LOG.info(_ANCH_LOGGER_CONFIG_FILE_);
   for(int i = 0 ; i < 200 ; i++) {

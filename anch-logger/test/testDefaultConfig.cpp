@@ -6,7 +6,7 @@ using anch::logger::Logger;
 
 int
 main(void) {
-  const Logger& LOG = LoggerFactory::getLogger("anch::logger::Logger");
+  auto LOG = LoggerFactory::getLogger("anch::logger::Logger");
   LOG.info("Message with default configuration");
   return 0;
 }

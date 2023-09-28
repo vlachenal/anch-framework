@@ -72,7 +72,7 @@ namespace anch::logger {
     LoggerFactory(): _loggersConfig() {
       //std::atexit(LoggerFactory::cleanWriters);
       try {
-	const anch::resource::Resource& resource = anch::resource::Resource::getResource(_ANCH_LOGGER_CONFIG_FILE_);
+	auto resource = anch::resource::Resource::getResource(_ANCH_LOGGER_CONFIG_FILE_);
 	std::map<std::string,anch::logger::Writer*> writers;
 	initializeWriters(writers, resource);
 	initializeLoggersConfiguration(writers, resource);

@@ -22,7 +22,7 @@ testMultiThread(const Logger& log) {
 int
 main(void) {
 
-  const Logger& LOG = LoggerFactory::getLogger("anch::logger::Logger");
+  auto LOG = LoggerFactory::getLogger("anch::logger::Logger");
   LOG.info(_ANCH_LOGGER_CONFIG_FILE_);
 
   thread th = thread(testMultiThread,LOG);
