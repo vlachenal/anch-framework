@@ -11,7 +11,7 @@ main(void) {
   std::cout << "Enter in test resource" << std::endl;
 
   std::cout << "Parse file" << std::endl;
-  const Resource& res = Resource::getResource("../test/test.ini");
+  auto res = Resource::getResource("../test/test.ini");
   std::cout << "File has been parsed" << std::endl;
 
   {
