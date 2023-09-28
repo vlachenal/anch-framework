@@ -21,6 +21,7 @@
 
 #include <iostream>
 #include <sstream>
+#include <cstdint>
 
 #include <string.h>
 

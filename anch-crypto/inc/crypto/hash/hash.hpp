@@ -23,6 +23,7 @@
 #include <ostream>
 #include <iomanip>
 #include <array>
+#include <cstdint>
 
 
 namespace anch {

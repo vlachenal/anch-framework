@@ -71,7 +71,7 @@ namespace anch {
       for(std::size_t i = 0 ; i < msgLen ; ++i) {
 	inPad[i + block] = msg[i];
       }
-      const std::array<uint8_t,H::getOutputSize()>& inDigest = H(inPad, inSize).digest();
+      auto inDigest = H(inPad, inSize).digest();
       delete[] inPad;
       // First hash -
 
