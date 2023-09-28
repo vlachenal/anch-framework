@@ -22,6 +22,7 @@
 #include <vector>
 #include <functional>
 #include <limits>
+#include <cstdint>
 
 
 namespace anch {
@@ -482,7 +483,8 @@ namespace anch {
     forEach([&values, mapper](const T& val) {
 	      values.push_back(mapper(val));
 	    });
-    return std::move(anch::Stream(values));
+    anch::Stream stream(values);
+    return std::move(stream);
   }
 
   template<typename T, template<typename> typename C>

@@ -25,6 +25,7 @@
 #include <condition_variable>
 #include <deque>
 #include <atomic>
+#include <string>
 
 
 namespace anch {
