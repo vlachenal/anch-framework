@@ -19,23 +19,21 @@
 */
 #pragma once
 
-#include <cstdint>
-
 #include "ut/runner.hpp"
 #include "ut/unit.hpp"
 
 namespace anch::ut {
 
   /*!
-   * \brief Default unit tests runner
+   * \brief Socket client unit tests runner
    *
-   * This runner will execute test synchronously.
+   * This runner will execute test on receive messages
    *
    * \since 0.1
    *
    * \author Vincent Lachenal
    */
-  class DefaultRunner: public anch::ut::Runner {
+  class SocketClientRunner: public anch::ut::Runner {
 
   private:
     /*! Unit tests */
@@ -43,21 +41,27 @@ namespace anch::ut {
 
   public:
     /*!
-     * Forbids \ref DefaultRunner default constructor
+     * Forbids \ref SocketClientRunner default constructor
      */
-    DefaultRunner() = delete;
+    SocketClientRunner() = delete;
 
     /*!
-     * Forbids \ref DefaultRunner copy constructor
+     * Forbids \ref SocketClientRunner copy constructor
      */
-    DefaultRunner(const DefaultRunner&) = delete;
+    SocketClientRunner(const SocketClientRunner&) = delete;
 
     /*!
-     * \ref DefaultRunner constructor
+     * \ref SocketClientRunner constructor
      *
-     * \param tests the units tests declaration
+     * \param uri the socket URI
      */
-    DefaultRunner(const anch::ut::UnitTests& tests);
+    SocketClientRunner(const std::string& uri);
+
+  public:
+    /*!
+     * \brief SocketClientRunner destructor
+     */
+    ~SocketClientRunner();
 
   public:
     /*!

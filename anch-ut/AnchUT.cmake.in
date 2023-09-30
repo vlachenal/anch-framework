@@ -2,6 +2,10 @@
 # Anch utils path
 set(ANCH_CLI_INCLUDES_DIR "$ENV{HOME}/projects/anch-framework/anch-cli/inc")
 set(ANCH_CLI_LIBRARY_DIR "$ENV{HOME}/projects/anch-framework/anch-cli/build/lib")
+set(ANCH_EVT_INCLUDES_DIR "$ENV{HOME}/projects/anch-framework/anch-events/inc")
+set(ANCH_EVT_LIBRARY_DIR "$ENV{HOME}/projects/anch-framework/anch-events/build/lib")
+set(ANCH_NET_INCLUDES_DIR "$ENV{HOME}/projects/anch-framework/anch-network/inc")
+set(ANCH_NET_LIBRARY_DIR "$ENV{HOME}/projects/anch-framework/anch-network/build/lib")
 
 # Anch unit installation configuration
 set(ANCH_UNIT_COMPILE_FLAGS "-O2")

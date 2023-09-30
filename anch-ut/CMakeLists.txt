@@ -45,6 +45,8 @@ add_definitions(${ANCH_UNIT_COMPILE_FLAGS})
 include_directories(
   inc
   ${ANCH_CLI_INCLUDES_DIR}
+  ${ANCH_EVT_INCLUDES_DIR}
+  ${ANCH_NET_INCLUDES_DIR}
   )
 
 # Retrieve every files in project
