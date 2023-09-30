@@ -40,6 +40,13 @@ namespace anch::ut {
    */
   void assertFalse(bool check, const std::string& message = "");
 
+  /*!
+   * Test has been failed ...
+   *
+   * \param message the assertion message (default to empty string)
+   */
+  void fail(const std::string& message = "");
+
 #ifdef ANCH_PLOP
   template<typename... T>
   void assert(bool check, const std::string_view& message, const T&... args);
