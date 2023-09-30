@@ -1,8 +1,10 @@
 #include "cutils/iostream.hpp"
+#include "ut/unit.hpp"
 
 #include <iostream>
 
 #include "json/json.hpp"
+#include "ut/assert.hpp"
 
 using anch::cutils::CStreambuf;
 using anch::cutils::CIStream;
@@ -71,29 +73,19 @@ deserialize(std::size_t size) {
   std::cout << "plop.toto=" << plop.toto << ", plop.titi=" << plop.titi << std::endl;
 }
 
-int
-main(int argc, char* argv[]) {
-  std::map<std::string, std::function<void(void)>> tests = {
-    {"serialize", std::bind(&serialize, 4)},
-    {"deserialize", std::bind(&deserialize, 4)},
-    {"serialize1", std::bind(&serialize, 1)},
-    {"deserialize1", std::bind(&deserialize, 1)},
-    {"serialize1500", std::bind(&serialize, 1500)},
-    {"deserialize1500", std::bind(&deserialize, 1500)},
-    {"serialize25", std::bind(&serialize, 25)},
-    {"deserialize25", std::bind(&deserialize, 25)}
-  };
-  if(argc > 1) {
-    auto iter = tests.find(argv[1]);
-    if(iter == tests.end()) {
-      std::cerr << "Test " << argv[1] << " not found" << std::endl;
-      return 1;
-    }
-    iter->second();
-  } else {
-    for(auto iter = tests.cbegin() ; iter != tests.cend() ; ++iter) {
-      iter->second();
-    }
-  }
-  return 0;
+
+void
+anch::ut::setup(anch::ut::UnitTests& tests) {
+  tests
+    .name("AnCH CStream unit tests")
+    .description("Test AnCH CStream unit tests library")
+    .add("serialize", std::bind(&serialize, 4))
+    .add("deserialize", std::bind(&deserialize, 4))
+    .add("serialize1", std::bind(&serialize, 1))
+    .add("deserialize1", std::bind(&deserialize, 1))
+    .add("serialize1500", std::bind(&serialize, 1500))
+    .add("deserialize1500", std::bind(&deserialize, 1500))
+    .add("serialize25", std::bind(&serialize, 25))
+    .add("deserialize25", std::bind(&deserialize, 25))
+    ;
 }

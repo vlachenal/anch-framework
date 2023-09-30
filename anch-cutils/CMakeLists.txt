@@ -98,13 +98,17 @@ if(ANCH_CUTILS_UNITARY_TEST)
     inc
     ${ANCH_UTILS_INCLUDES_DIR}
     ${ANCH_JSON_INCLUDES_DIR}
+    ${ANCH_UT_INCLUDES_DIR}
+    ${ANCH_CLI_INCLUDES_DIR}
     )
 
   link_directories(
     ${ANCH_JSON_LIBRARY_DIR}
+    ${ANCH_UT_LIBRARY_DIR}
+    ${ANCH_CLI_LIBRARY_DIR}
     )
 
-  # Build router unit tests +
+  # CStream unit tests +
   file(
     GLOB_RECURSE
     test_cstream
@@ -120,19 +124,21 @@ if(ANCH_CUTILS_UNITARY_TEST)
     anch-cstream-test
     anch-cutils
     anch-json
+    anch-unit
+    anch-cli
     ${CMAKE_THREAD_LIBS_INIT}
     )
-  # Build router unit tests -
+  # CStream unit tests -
 
   enable_testing()
 
-  add_test(cstream-output-jsonser ${EXECUTABLE_OUTPUT_PATH}/anch-cstream-test serialize)
-  add_test(cstream-output-jsondeser ${EXECUTABLE_OUTPUT_PATH}/anch-cstream-test deserialize)
-  add_test(cstream-output-jsonser-1char ${EXECUTABLE_OUTPUT_PATH}/anch-cstream-test serialize1)
-  add_test(cstream-output-jsondeser-1char ${EXECUTABLE_OUTPUT_PATH}/anch-cstream-test deserialize1)
-  add_test(cstream-output-jsonser-1500char ${EXECUTABLE_OUTPUT_PATH}/anch-cstream-test serialize1500)
-  add_test(cstream-output-jsondeser-1500char ${EXECUTABLE_OUTPUT_PATH}/anch-cstream-test deserialize1500)
-  add_test(cstream-output-jsonser-25char ${EXECUTABLE_OUTPUT_PATH}/anch-cstream-test serialize25)
-  add_test(cstream-output-jsondeser-25char ${EXECUTABLE_OUTPUT_PATH}/anch-cstream-test deserialize25)
+  add_test(cstream-output-jsonser ${EXECUTABLE_OUTPUT_PATH}/anch-cstream-test --test serialize)
+  add_test(cstream-output-jsondeser ${EXECUTABLE_OUTPUT_PATH}/anch-cstream-test --test deserialize)
+  add_test(cstream-output-jsonser-1char ${EXECUTABLE_OUTPUT_PATH}/anch-cstream-test --test serialize1)
+  add_test(cstream-output-jsondeser-1char ${EXECUTABLE_OUTPUT_PATH}/anch-cstream-test --test deserialize1)
+  add_test(cstream-output-jsonser-1500char ${EXECUTABLE_OUTPUT_PATH}/anch-cstream-test --test serialize1500)
+  add_test(cstream-output-jsondeser-1500char ${EXECUTABLE_OUTPUT_PATH}/anch-cstream-test --test deserialize1500)
+  add_test(cstream-output-jsonser-25char ${EXECUTABLE_OUTPUT_PATH}/anch-cstream-test --test serialize25)
+  add_test(cstream-output-jsondeser-25char ${EXECUTABLE_OUTPUT_PATH}/anch-cstream-test --test deserialize25)
 
 endif(ANCH_CUTILS_UNITARY_TEST)

@@ -3,6 +3,10 @@
 set(ANCH_UTILS_INCLUDES_DIR "$ENV{HOME}/projects/anch-framework/anch-utils/inc" CACHE STRING "AnCH utils include directory")
 set(ANCH_JSON_INCLUDES_DIR "$ENV{HOME}/projects/anch-framework/anch-json/inc")
 set(ANCH_JSON_LIBRARY_DIR "$ENV{HOME}/projects/anch-framework/anch-json/build/lib")
+set(ANCH_UT_INCLUDES_DIR "$ENV{HOME}/projects/anch-framework/anch-ut/inc")
+set(ANCH_UT_LIBRARY_DIR "$ENV{HOME}/projects/anch-framework/anch-ut/build/lib")
+set(ANCH_CLI_INCLUDES_DIR "$ENV{HOME}/projects/anch-framework/anch-cli/inc")
+set(ANCH_CLI_LIBRARY_DIR "$ENV{HOME}/projects/anch-framework/anch-cli/build/lib")
 
 set(ANCH_CUTILS_COMPILE_FLAGS "-O2 -march=native -pipe" CACHE STRING "Additional compilation flags")
 #set(ANCH_CUTILS_COMPILE_FLAGS "-g" CACHE STRING "Additional compilation flags")
