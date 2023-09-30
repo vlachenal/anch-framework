@@ -17,6 +17,7 @@ var classanch_1_1sql_1_1_connection =
     [ "queryExtract", "classanch_1_1sql_1_1_connection.html#a7d80a549d5f15247a258719086c27e02", null ],
     [ "queryMapRow", "classanch_1_1sql_1_1_connection.html#a4450e4f4c4e41ddb1ae49023b2755edb", null ],
     [ "queryMapRow", "classanch_1_1sql_1_1_connection.html#a390a1dbd0f930770a9df5d9dc698587a", null ],
+    [ "release", "classanch_1_1sql_1_1_connection.html#acd326c720ce84c1d9e5e9c48d9c12efa", null ],
     [ "rollback", "classanch_1_1sql_1_1_connection.html#a03dd1d91e38f6051b68b7973fd5903dc", null ],
     [ "sendCommit", "classanch_1_1sql_1_1_connection.html#a08ed70337ffef4525fd401bbf8ebbab4", null ],
     [ "sendRollback", "classanch_1_1sql_1_1_connection.html#a6b0d219dafbfe23945396b5c50816cdd", null ],
@@ -25,6 +26,7 @@ var classanch_1_1sql_1_1_connection =
     [ "startTransaction", "classanch_1_1sql_1_1_connection.html#a1ccc5bb6d2a36c927625c155ae35e23a", null ],
     [ "update", "classanch_1_1sql_1_1_connection.html#a104eaa16b2b443da5a6eb50c0562cb28", null ],
     [ "update", "classanch_1_1sql_1_1_connection.html#ad3ec5cab9f60dece303d571fb185a8e5", null ],
+    [ "_errors", "classanch_1_1sql_1_1_connection.html#a8301f123a651173c79f092dc5413e9ee", null ],
     [ "_stmts", "classanch_1_1sql_1_1_connection.html#ab35f3d23f97a63c1d479bf094d537dcf", null ],
     [ "_transaction", "classanch_1_1sql_1_1_connection.html#aa8d608cc64a33ac023006d778bd22500", null ],
     [ "_valid", "classanch_1_1sql_1_1_connection.html#ad2775ca00279b54856dc0cdcb87c17d0", null ]

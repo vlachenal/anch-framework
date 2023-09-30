@@ -1,4 +1,5 @@
 <map id="anch::sql::SQLite3PreparedStatement" name="anch::sql::SQLite3PreparedStatement">
-<area shape="rect" id="node1" title="SQLite3 prepared statement implementation." alt="" coords="5,380,240,516"/>
-<area shape="rect" id="node2" href="$classanch_1_1sql_1_1_prepared_statement.html" title="SQL prepared statement." alt="" coords="15,5,230,332"/>
+<area shape="rect" id="Node000001" title="SQLite3 prepared statement implementation." alt="" coords="5,485,228,636"/>
+<area shape="rect" id="Node000002" href="$classanch_1_1sql_1_1_prepared_statement.html" title="SQL prepared statement." alt="" coords="14,5,219,437"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="119,452,119,486,114,486,114,452"/>
 </map>

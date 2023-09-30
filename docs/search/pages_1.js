@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['todo_20list_0',['Todo List',['../todo.html',1,'']]]
+  ['cli_20library_20documentation_0',['AnCH CLI library documentation',['../page_cli.html',1,'']]],
+  ['cryptography_20library_20documentation_1',['AnCH cryptography library documentation',['../page_crypto.html',1,'']]]
 ];

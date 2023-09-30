@@ -1,5 +1,7 @@
 <map id="anch::events::Observer&lt; T &gt;" name="anch::events::Observer&lt; T &gt;">
-<area shape="rect" id="node1" title="An observer interface of the observers/observable design pattern." alt="" coords="106,5,317,83"/>
-<area shape="rect" id="node2" href="$classanch_1_1events_1_1_event_handler.html" title="An event handler." alt="" coords="5,145,207,281"/>
-<area shape="rect" id="node3" href="$classanch_1_1events_1_1_observer.html" title=" " alt="" coords="231,167,403,259"/>
+<area shape="rect" id="Node000001" title="An observer interface of the observers/observable design pattern." alt="" coords="101,5,302,75"/>
+<area shape="rect" id="Node000002" href="$classanch_1_1events_1_1_event_handler.html" title="An event handler." alt="" coords="5,140,197,290"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="177,89,146,141,142,139,172,86"/>
+<area shape="rect" id="Node000003" href="$classanch_1_1events_1_1_observer.html" title=" " alt="" coords="221,172,384,258"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="231,86,280,171,276,173,226,89"/>
 </map>

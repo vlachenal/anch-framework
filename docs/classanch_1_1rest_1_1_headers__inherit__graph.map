@@ -1,4 +1,5 @@
 <map id="anch::rest::Headers" name="anch::rest::Headers">
-<area shape="rect" id="node1" title="HTTP headers." alt="" coords="5,145,153,325"/>
-<area shape="rect" id="node2" title=" " alt="" coords="12,5,147,97"/>
+<area shape="rect" id="Node000001" title="HTTP headers." alt="" coords="5,144,144,363"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="12,5,137,96"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="77,111,77,144,72,144,72,111"/>
 </map>

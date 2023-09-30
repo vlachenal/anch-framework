@@ -1,8 +1,14 @@
 <map id="anch::crypto::MD5" name="anch::crypto::MD5">
-<area shape="rect" id="node1" title="MD5 hash algorithm implementation." alt="" coords="24,985,164,1165"/>
-<area shape="rect" id="node2" href="$classanch_1_1crypto_1_1_hash.html" title=" " alt="" coords="23,712,165,936"/>
-<area shape="rect" id="node3" title=" " alt="" coords="5,285,183,363"/>
-<area shape="rect" id="node6" href="$classanch_1_1crypto_1_1_hash.html" title="Hash algorithm abstract class." alt="" coords="160,425,303,649"/>
-<area shape="rect" id="node4" title=" " alt="" coords="33,145,155,223"/>
-<area shape="rect" id="node5" title=" " alt="" coords="75,5,113,83"/>
+<area shape="rect" id="Node000001" title="MD5 hash algorithm implementation." alt="" coords="24,1080,155,1299"/>
+<area shape="rect" id="Node000002" href="$classanch_1_1crypto_1_1_hash.html" title=" " alt="" coords="23,752,156,1031"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="92,1046,92,1080,87,1080,87,1046"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,274,173,343"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="88,343,83,408,81,577,84,735,79,735,75,577,78,408,83,343"/>
+<area shape="rect" id="Node000006" href="$classanch_1_1crypto_1_1_hash.html" title="Hash algorithm abstract class." alt="" coords="155,408,288,687"/>
+<area shape="poly" id="edge6_Node000006_Node000003" title=" " alt="" coords="110,342,149,411,144,414,105,344"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="33,140,146,209"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="92,224,92,274,87,274,87,224"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="79,5,100,75"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="92,75,92,122,87,122,87,75"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="165,702,145,753,140,751,160,700"/>
 </map>

@@ -1,5 +1,7 @@
 <map id="anch::events::EventBus&lt; T &gt;" name="anch::events::EventBus&lt; T &gt;">
-<area shape="rect" id="node1" title="A class which manage global events firing and events QoS." alt="" coords="5,287,217,525"/>
-<area shape="rect" id="node2" href="$classanch_1_1_singleton.html" title=" " alt="" coords="12,145,211,237"/>
-<area shape="rect" id="node3" href="$classanch_1_1_singleton.html" title="Meyers&#39; singleton implemtation." alt="" coords="31,5,191,83"/>
+<area shape="rect" id="Node000001" title="A class which manage global events firing and events QoS." alt="" coords="5,276,208,580"/>
+<area shape="rect" id="Node000002" href="$classanch_1_1_singleton.html" title=" " alt="" coords="12,140,201,226"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="109,241,109,276,104,276,104,241"/>
+<area shape="rect" id="Node000003" href="$classanch_1_1_singleton.html" title="Meyers&#39; singleton implemtation." alt="" coords="31,5,182,75"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="109,90,109,140,104,140,104,90"/>
 </map>

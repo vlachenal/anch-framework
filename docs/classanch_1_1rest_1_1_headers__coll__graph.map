@@ -1,6 +1,9 @@
 <map id="anch::rest::Headers" name="anch::rest::Headers">
-<area shape="rect" id="node1" title="HTTP headers." alt="" coords="5,272,153,452"/>
-<area shape="rect" id="node2" title=" " alt="" coords="12,145,147,223"/>
-<area shape="rect" id="node3" title=" " alt="" coords="23,5,61,83"/>
-<area shape="rect" id="node4" title=" " alt="" coords="99,5,137,83"/>
+<area shape="rect" id="Node000001" title="HTTP headers." alt="" coords="5,258,144,477"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="12,140,137,209"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="77,224,77,259,72,259,72,224"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="27,5,48,75"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="37,74,42,115,45,124,40,125,36,116,32,75"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="103,5,124,75"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="106,75,92,124,87,123,101,74"/>
 </map>

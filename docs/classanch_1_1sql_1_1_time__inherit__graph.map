@@ -1,4 +1,5 @@
 <map id="anch::sql::Time" name="anch::sql::Time">
-<area shape="rect" id="node1" title="SQL time type." alt="" coords="12,453,133,589"/>
-<area shape="rect" id="node2" href="$classanch_1_1date_1_1_date.html" title=" " alt="" coords="5,5,140,405"/>
+<area shape="rect" id="Node000001" title="SQL time type." alt="" coords="11,592,123,747"/>
+<area shape="rect" id="Node000002" href="$classanch_1_1date_1_1_date.html" title=" " alt="" coords="5,5,128,544"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="69,559,69,592,64,592,64,559"/>
 </map>

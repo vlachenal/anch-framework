@@ -1,14 +1,12 @@
 var classanch_1_1sql_1_1_clauses_builder =
 [
+    [ "ClausesBuilder", "classanch_1_1sql_1_1_clauses_builder.html#ab3e6df04de7174d65ab0204d569caa27", null ],
     [ "AND", "classanch_1_1sql_1_1_clauses_builder.html#ad0c609f72e69f74b9886483e46bf61d7", null ],
-    [ "AND", "classanch_1_1sql_1_1_clauses_builder.html#ad67de78099d795e9e7f0e510e719295b", null ],
-    [ "AND", "classanch_1_1sql_1_1_clauses_builder.html#ad7bb56ef0d223adcc3f602a7e669e425", null ],
+    [ "AND", "classanch_1_1sql_1_1_clauses_builder.html#ae45fe0d5fb570ea6e166152c08552c51", null ],
     [ "AND", "classanch_1_1sql_1_1_clauses_builder.html#a9fcad2adda98eaebcfec48ae533e167d", null ],
     [ "AND", "classanch_1_1sql_1_1_clauses_builder.html#a577577ea82fd2a7b83c7065c315bcf52", null ],
-    [ "AND", "classanch_1_1sql_1_1_clauses_builder.html#a79edbc5b3c63cd067ab3a009db3a05b3", null ],
-    [ "AND", "classanch_1_1sql_1_1_clauses_builder.html#ab4c93cb16a3bb3a348c036705ce33d6d", null ],
-    [ "AND", "classanch_1_1sql_1_1_clauses_builder.html#a2d56476aa37e9d1645ddf21a8d4a8829", null ],
-    [ "AND", "classanch_1_1sql_1_1_clauses_builder.html#afd0daa0ab3454c5bbf7f86a1fb57741f", null ],
+    [ "AND", "classanch_1_1sql_1_1_clauses_builder.html#a8aaa5fa5663a99b00b3a604c15441adb", null ],
+    [ "AND", "classanch_1_1sql_1_1_clauses_builder.html#a63ea5f504d17f622cadda789f571dec0", null ],
     [ "between", "classanch_1_1sql_1_1_clauses_builder.html#a6a247a21320ff121144fa426fc08dcdf", null ],
     [ "equals", "classanch_1_1sql_1_1_clauses_builder.html#a45dfba7162dd17e4c7cdf06e73a2d1ec", null ],
     [ "exists", "classanch_1_1sql_1_1_clauses_builder.html#a5517d1c9192400a9a3c0c2ca8c4c23e9", null ],
@@ -34,11 +32,8 @@ var classanch_1_1sql_1_1_clauses_builder =
     [ "operator||", "classanch_1_1sql_1_1_clauses_builder.html#a7e785117396bfd95083a7297ee84a9e9", null ],
     [ "OR", "classanch_1_1sql_1_1_clauses_builder.html#a4a8fa8fcb46ed80a1f77c65071123845", null ],
     [ "OR", "classanch_1_1sql_1_1_clauses_builder.html#af372d2db3aad902161e1df537e7881cd", null ],
-    [ "OR", "classanch_1_1sql_1_1_clauses_builder.html#a841c562bceb6f628e2d8e27ef125567a", null ],
-    [ "OR", "classanch_1_1sql_1_1_clauses_builder.html#ad4e4091874a081c611e62294e59c9c3d", null ],
+    [ "OR", "classanch_1_1sql_1_1_clauses_builder.html#ae00ab7cc46b801c0b2e0550261e8a707", null ],
     [ "OR", "classanch_1_1sql_1_1_clauses_builder.html#a03248822032b8bee415ae0c646a15964", null ],
-    [ "OR", "classanch_1_1sql_1_1_clauses_builder.html#a8256a3dab199cdb6bc30ce7cb34ba2c7", null ],
-    [ "OR", "classanch_1_1sql_1_1_clauses_builder.html#a13e6af20d304adfcd36f51745e9d733d", null ],
-    [ "OR", "classanch_1_1sql_1_1_clauses_builder.html#a41304984568613b5024ea195dfb6f60d", null ],
-    [ "OR", "classanch_1_1sql_1_1_clauses_builder.html#adcd80b4e3513d957661e713078730ff0", null ]
+    [ "OR", "classanch_1_1sql_1_1_clauses_builder.html#aa96be7d39e6deaf7d9e513dc816a9b69", null ],
+    [ "OR", "classanch_1_1sql_1_1_clauses_builder.html#a7727bc286a1c9fbb42c2c7ebf70b4764", null ]
 ];

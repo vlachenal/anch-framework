@@ -1,5 +1,7 @@
 <map id="anch::resource::Section" name="anch::resource::Section">
-<area shape="rect" id="node1" title=" " alt="" coords="5,287,179,467"/>
-<area shape="rect" id="node2" title=" " alt="" coords="49,147,135,224"/>
-<area shape="rect" id="node3" title=" " alt="" coords="23,5,161,97"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,276,169,494"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="49,141,126,211"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="90,210,90,259,85,259,85,210"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="23,5,152,92"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="90,107,90,141,85,141,85,107"/>
 </map>

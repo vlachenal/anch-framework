@@ -1,5 +1,7 @@
 <map id="anch::rest::MediaType" name="anch::rest::MediaType">
-<area shape="rect" id="node1" title="Media type." alt="" coords="5,433,273,628"/>
-<area shape="rect" id="node2" title=" " alt="" coords="96,147,183,224"/>
-<area shape="rect" id="node3" title=" " alt="" coords="70,5,209,97"/>
+<area shape="rect" id="Node000001" title="Media type." alt="" coords="5,446,263,686"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="95,141,173,211"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="137,211,137,429,131,429,131,211"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="69,5,199,92"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="137,107,137,141,131,141,131,107"/>
 </map>

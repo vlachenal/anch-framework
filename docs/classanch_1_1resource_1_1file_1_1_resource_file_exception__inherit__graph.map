@@ -1,4 +1,5 @@
 <map id="anch::resource::file::ResourceFileException" name="anch::resource::file::ResourceFileException">
-<area shape="rect" id="node1" title=" " alt="" coords="5,131,211,252"/>
-<area shape="rect" id="node2" title=" " alt="" coords="51,5,165,83"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,123,200,252"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="50,5,155,75"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="105,90,105,123,100,123,100,90"/>
 </map>

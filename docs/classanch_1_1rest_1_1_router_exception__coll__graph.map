@@ -1,4 +1,5 @@
 <map id="anch::rest::RouterException" name="anch::rest::RouterException">
-<area shape="rect" id="node1" title="REST router exception class." alt="" coords="5,131,207,237"/>
-<area shape="rect" id="node2" title=" " alt="" coords="49,5,163,83"/>
+<area shape="rect" id="Node000001" title="REST router exception class." alt="" coords="5,123,197,235"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="49,5,154,75"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="104,90,104,123,99,123,99,90"/>
 </map>

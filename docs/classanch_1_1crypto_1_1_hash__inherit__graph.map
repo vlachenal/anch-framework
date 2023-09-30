@@ -1,12 +1,23 @@
 <map id="anch::crypto::Hash&lt; O, B &gt;" name="anch::crypto::Hash&lt; O, B &gt;">
-<area shape="rect" id="node1" title="Hash algorithm abstract class." alt="" coords="343,5,485,229"/>
-<area shape="rect" id="node2" href="$classanch_1_1crypto_1_1_s_h_a2.html" title=" " alt="" coords="5,601,188,766"/>
-<area shape="rect" id="node4" href="$classanch_1_1crypto_1_1_s_h_a2.html" title=" " alt="" coords="215,593,360,773"/>
-<area shape="rect" id="node6" href="$classanch_1_1crypto_1_1_s_h_a2.html" title="SHA2 abstract class." alt="" coords="195,321,340,487"/>
-<area shape="rect" id="node7" href="$classanch_1_1crypto_1_1_hash.html" title=" " alt="" coords="452,292,595,516"/>
-<area shape="rect" id="node9" href="$classanch_1_1crypto_1_1_hash.html" title=" " alt="" coords="619,292,761,516"/>
-<area shape="rect" id="node3" href="$classanch_1_1crypto_1_1_s_h_a224__256.html" title="SHA2 224/256 implementation." alt="" coords="16,823,177,959"/>
-<area shape="rect" id="node5" href="$classanch_1_1crypto_1_1_s_h_a384__512.html" title="SHA2 384/512 implementation." alt="" coords="207,823,368,959"/>
-<area shape="rect" id="node8" href="$classanch_1_1crypto_1_1_m_d5.html" title="MD5 hash algorithm implementation." alt="" coords="453,593,593,773"/>
-<area shape="rect" id="node10" href="$classanch_1_1crypto_1_1_s_h_a1.html" title="SHA1 hash algorithm implementation." alt="" coords="617,593,763,773"/>
+<area shape="rect" id="Node000001" title="Hash algorithm abstract class." alt="" coords="340,5,473,284"/>
+<area shape="rect" id="Node000002" href="$classanch_1_1crypto_1_1_s_h_a2.html" title=" " alt="" coords="5,722,179,916"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="330,199,290,229,250,265,213,306,182,350,160,396,141,444,115,543,101,639,95,723,89,722,95,638,110,542,136,442,155,393,178,348,209,302,247,261,287,225,326,194"/>
+<area shape="rect" id="Node000004" href="$classanch_1_1crypto_1_1_s_h_a2.html" title=" " alt="" coords="209,714,345,924"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="430,299,434,389,431,488,418,589,406,639,390,687,372,723,347,755,343,752,367,720,386,685,401,637,413,588,426,487,429,389,425,299"/>
+<area shape="rect" id="Node000006" href="$classanch_1_1crypto_1_1_s_h_a2.html" title="SHA2 abstract class." alt="" coords="192,392,328,585"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="344,299,303,393,299,391,339,297"/>
+<area shape="rect" id="Node000007" href="$classanch_1_1crypto_1_1_hash.html" title=" " alt="" coords="444,349,577,628"/>
+<area shape="poly" id="edge8_Node000001_Node000007" title=" " alt="" coords="456,297,471,349,466,350,450,299"/>
+<area shape="rect" id="Node000009" href="$classanch_1_1crypto_1_1_hash.html" title=" " alt="" coords="601,349,735,628"/>
+<area shape="poly" id="edge10_Node000001_Node000009" title=" " alt="" coords="486,222,539,282,591,347,604,365,599,368,587,351,535,285,482,225"/>
+<area shape="rect" id="Node000003" href="$classanch_1_1crypto_1_1_s_h_a224__256.html" title="SHA2 224/256 implementation." alt="" coords="16,978,168,1128"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="95,931,95,978,89,978,89,931"/>
+<area shape="rect" id="Node000005" href="$classanch_1_1crypto_1_1_s_h_a384__512.html" title="SHA2 384/512 implementation." alt="" coords="201,978,353,1128"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="280,939,280,978,275,978,275,939"/>
+<area shape="poly" id="edge6_Node000006_Node000002" title=" " alt="" coords="185,581,161,616,140,653,114,723,109,721,136,651,157,613,181,578"/>
+<area shape="poly" id="edge7_Node000006_Node000004" title=" " alt="" coords="262,600,265,686,267,714,262,714,259,686,256,600"/>
+<area shape="rect" id="Node000008" href="$classanch_1_1crypto_1_1_m_d5.html" title="MD5 hash algorithm implementation." alt="" coords="445,710,576,928"/>
+<area shape="poly" id="edge9_Node000007_Node000008" title=" " alt="" coords="513,642,513,710,508,710,508,642"/>
+<area shape="rect" id="Node000010" href="$classanch_1_1crypto_1_1_s_h_a1.html" title="SHA1 hash algorithm implementation." alt="" coords="600,710,736,928"/>
+<area shape="poly" id="edge11_Node000009_Node000010" title=" " alt="" coords="671,642,671,710,665,710,665,642"/>
 </map>

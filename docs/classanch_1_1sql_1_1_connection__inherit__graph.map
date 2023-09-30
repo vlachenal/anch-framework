@@ -1,6 +1,9 @@
 <map id="anch::sql::Connection" name="anch::sql::Connection">
-<area shape="rect" id="node1" title="SQL connection virtual class." alt="" coords="263,5,445,361"/>
-<area shape="rect" id="node2" href="$classanch_1_1sql_1_1_my_s_q_l_connection.html" title="MySQL connection." alt="" coords="5,417,212,626"/>
-<area shape="rect" id="node3" href="$classanch_1_1sql_1_1_postgre_s_q_l_connection.html" title="PostgreSQL connection." alt="" coords="237,409,471,633"/>
-<area shape="rect" id="node4" href="$classanch_1_1sql_1_1_s_q_lite3_connection.html" title="SQLite3 connection." alt="" coords="495,417,706,626"/>
+<area shape="rect" id="Node000001" title="SQL connection virtual class." alt="" coords="254,5,426,501"/>
+<area shape="rect" id="Node000002" href="$classanch_1_1sql_1_1_my_s_q_l_connection.html" title="MySQL connection." alt="" coords="5,560,203,800"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="249,423,172,561,168,559,245,421"/>
+<area shape="rect" id="Node000003" href="$classanch_1_1sql_1_1_postgre_s_q_l_connection.html" title="PostgreSQL connection." alt="" coords="227,549,453,811"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="343,516,343,550,337,550,337,516"/>
+<area shape="rect" id="Node000004" href="$classanch_1_1sql_1_1_s_q_lite3_connection.html" title="SQLite3 connection." alt="" coords="477,549,678,811"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="435,420,507,548,503,551,431,422"/>
 </map>

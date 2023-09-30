@@ -10,5 +10,5 @@ var searchData=
   ['blockciphermodeofoperation_3c_20ecb_3c_20cipher_2c_20padding_20_3e_2c_20cipher_20_3e_7',['BlockCipherModeOfOperation&lt; ECB&lt; Cipher, Padding &gt;, Cipher &gt;',['../classanch_1_1crypto_1_1_block_cipher_mode_of_operation.html',1,'anch::crypto']]],
   ['blockciphermodeofoperation_3c_20ofb_3c_20cipher_20_3e_2c_20cipher_20_3e_8',['BlockCipherModeOfOperation&lt; OFB&lt; Cipher &gt;, Cipher &gt;',['../classanch_1_1crypto_1_1_block_cipher_mode_of_operation.html',1,'anch::crypto']]],
   ['blockciphermodeofoperation_3c_20pcbc_3c_20cipher_2c_20padding_20_3e_2c_20cipher_20_3e_9',['BlockCipherModeOfOperation&lt; PCBC&lt; Cipher, Padding &gt;, Cipher &gt;',['../classanch_1_1crypto_1_1_block_cipher_mode_of_operation.html',1,'anch::crypto']]],
-  ['builder_10',['Builder',['../classanch_1_1rest_1_1_request_1_1_builder.html',1,'anch::rest::Request::Builder'],['../classanch_1_1rest_1_1_response_1_1_builder.html',1,'anch::rest::Response::Builder']]]
+  ['builder_10',['builder',['../classanch_1_1rest_1_1_request_1_1_builder.html',1,'anch::rest::Request::Builder'],['../classanch_1_1rest_1_1_response_1_1_builder.html',1,'anch::rest::Response::Builder']]]
 ];

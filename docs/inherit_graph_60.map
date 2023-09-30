@@ -1,5 +1,7 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classanch_1_1rest_1_1_mapper_registry.html" title=" " alt="" coords="21,5,218,31"/>
-<area shape="rect" id="node2" href="$classanch_1_1rest_1_1_global_mapper_registry.html" title=" " alt="" coords="281,27,467,67"/>
-<area shape="rect" id="node3" href="$classanch_1_1_singleton.html" title=" " alt="" coords="5,55,233,95"/>
+<area shape="rect" id="Node000000" href="$classanch_1_1rest_1_1_mapper_registry.html" title=" " alt="" coords="21,5,217,33"/>
+<area shape="rect" id="Node000001" href="$classanch_1_1rest_1_1_global_mapper_registry.html" title=" " alt="" coords="281,28,465,72"/>
+<area shape="poly" id="edge45_Node000000_Node000001" title=" " alt="" coords="233,30,281,36,280,41,233,36"/>
+<area shape="rect" id="Node000002" href="$classanch_1_1_singleton.html" title=" " alt="" coords="5,57,233,102"/>
+<area shape="poly" id="edge46_Node000002_Node000001" title=" " alt="" coords="248,62,280,58,281,63,249,67"/>
 </map>

@@ -30,14 +30,17 @@ var namespaceanch_1_1sql =
     [ "ClauseMaker", "namespaceanch_1_1sql.html#af233be4a022cbeb061f13d33e7eabac0", null ],
     [ "ClausesProvider", "namespaceanch_1_1sql.html#aae0ece47e7d377e1d19c9a68cfb9e903", null ],
     [ "SqlConnectionPool", "namespaceanch_1_1sql.html#abfa39a35ff9a908e59466440e6e45cf8", null ],
-    [ "ValueChecker", "namespaceanch_1_1sql.html#abb940892a4f21fcdabec45fbb13979f5", null ],
+    [ "ValueChecker", "namespaceanch_1_1sql.html#a7da47381da4edcba58a2564ca9989e6c", null ],
     [ "between", "namespaceanch_1_1sql.html#a7f56b8f5ba69be8f030a0c91d2f7bd5a", null ],
-    [ "clauses", "namespaceanch_1_1sql.html#ab0798891db4f534b6f6d7ca3539242c2", null ],
+    [ "clauses", "namespaceanch_1_1sql.html#a2c90ea1e609940f772573f50fc71bf3e", null ],
+    [ "clauses", "namespaceanch_1_1sql.html#a2c1b88bed1ada1a05f33139edf521bbb", null ],
+    [ "clauses", "namespaceanch_1_1sql.html#ae9e16fe2154e76d8732f4c4a8c82ac9f", null ],
     [ "equals", "namespaceanch_1_1sql.html#af53bcf90daa6aca27302328cb24c97ee", null ],
     [ "exists", "namespaceanch_1_1sql.html#a96bec0ddc99bc8774fc14c5010b56442", null ],
     [ "greater", "namespaceanch_1_1sql.html#aa2f46987e3b40b27ea7c2468a94b84e2", null ],
     [ "greaterEquals", "namespaceanch_1_1sql.html#a6b14586ac3267f03012f8b67f36f5aa4", null ],
     [ "in", "namespaceanch_1_1sql.html#aef694628d04403d9bda8b89e7c0005c7", null ],
+    [ "isValidValue", "namespaceanch_1_1sql.html#a0c852e8a39657a1fac57b31ee124108f", null ],
     [ "lesser", "namespaceanch_1_1sql.html#aada08ba84e1a80002c4a7992b150ad20", null ],
     [ "lesserEquals", "namespaceanch_1_1sql.html#aa187281d827526594dc93e2a5036923c", null ],
     [ "like", "namespaceanch_1_1sql.html#aba042a9eeaba85d4222d44132b8d64f5", null ],
@@ -47,5 +50,5 @@ var namespaceanch_1_1sql =
     [ "notExists", "namespaceanch_1_1sql.html#ab05eed09ef11918cbd7f164b0f2187cf", null ],
     [ "notIn", "namespaceanch_1_1sql.html#a1eaa89fa4ffb44702f142553f33f14df", null ],
     [ "notLike", "namespaceanch_1_1sql.html#ac0d58abaca992f078573a634fca9e035", null ],
-    [ "select", "namespaceanch_1_1sql.html#a4b5b10f57796745c3c1f178af405326f", null ]
+    [ "select", "namespaceanch_1_1sql.html#a7fdff1ec77f6fdf268b440957eafa965", null ]
 ];

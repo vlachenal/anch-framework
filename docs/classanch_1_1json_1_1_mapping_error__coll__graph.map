@@ -1,4 +1,5 @@
 <map id="anch::json::MappingError" name="anch::json::MappingError">
-<area shape="rect" id="node1" title="Mapping error." alt="" coords="5,131,188,267"/>
-<area shape="rect" id="node2" title=" " alt="" coords="39,5,154,83"/>
+<area shape="rect" id="Node000001" title="Mapping error." alt="" coords="5,123,179,277"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="39,5,145,75"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="95,90,95,123,89,123,89,90"/>
 </map>

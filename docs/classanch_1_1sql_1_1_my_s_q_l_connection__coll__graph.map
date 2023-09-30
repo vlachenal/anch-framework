@@ -1,12 +1,23 @@
 <map id="anch::sql::MySQLConnection" name="anch::sql::MySQLConnection">
-<area shape="rect" id="node1" title="MySQL connection." alt="" coords="104,1404,311,1613"/>
-<area shape="rect" id="node2" href="$classanch_1_1sql_1_1_connection.html" title="SQL connection virtual class." alt="" coords="116,1013,299,1355"/>
-<area shape="rect" id="node3" title=" " alt="" coords="85,859,329,951"/>
-<area shape="rect" id="node4" title=" " alt="" coords="224,160,311,237"/>
-<area shape="rect" id="node7" title=" " alt="" coords="167,315,315,407"/>
-<area shape="rect" id="node5" title=" " alt="" coords="198,5,337,97"/>
-<area shape="rect" id="node6" href="$classanch_1_1sql_1_1_prepared_statement.html" title="SQL prepared statement." alt="" coords="100,484,315,796"/>
-<area shape="rect" id="node8" title=" " alt="" coords="5,160,140,237"/>
-<area shape="rect" id="node9" title=" " alt="" coords="36,13,75,90"/>
-<area shape="rect" id="node10" title=" " alt="" coords="112,13,151,90"/>
+<area shape="rect" id="Node000001" title="MySQL connection." alt="" coords="105,1628,303,1868"/>
+<area shape="rect" id="Node000002" href="$classanch_1_1sql_1_1_connection.html" title="SQL connection virtual class." alt="" coords="118,1104,290,1579"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="207,1594,207,1629,201,1629,201,1594"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="87,953,321,1039"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="207,1039,207,1087,201,1087,201,1039"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="221,157,299,226"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="300,215,316,231,328,249,330,267,328,284,331,377,339,456,358,592,363,657,361,725,348,801,321,889,306,918,284,943,280,940,301,915,316,887,342,800,355,724,358,657,353,592,334,457,326,377,323,284,325,267,323,251,312,234,296,219"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="168,308,307,395"/>
+<area shape="poly" id="edge7_Node000007_Node000004" title=" " alt="" coords="256,227,252,251,246,292,241,291,247,250,251,226"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="195,5,325,92"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="263,107,263,157,257,157,257,107"/>
+<area shape="rect" id="Node000006" href="$classanch_1_1sql_1_1_prepared_statement.html" title="SQL prepared statement." alt="" coords="101,477,307,888"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="207,888,207,936,201,936,201,888"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="236,395,229,460,224,460,230,395"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="5,157,131,226"/>
+<area shape="poly" id="edge11_Node000003_Node000008" title=" " alt="" coords="59,241,37,361,29,440,24,526,26,618,36,710,57,801,73,845,92,886,116,921,146,951,142,955,112,925,87,889,68,847,52,803,31,711,20,618,19,526,23,439,32,360,54,240"/>
+<area shape="poly" id="edge8_Node000007_Node000008" title=" " alt="" coords="94,238,109,261,127,282,170,314,167,319,124,286,105,264,89,241"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="48,14,69,83"/>
+<area shape="poly" id="edge9_Node000008_Node000009" title=" " alt="" coords="61,83,63,133,64,140,58,140,58,133,56,83"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="124,14,145,83"/>
+<area shape="poly" id="edge10_Node000008_Node000010" title=" " alt="" coords="127,84,108,134,103,144,98,141,103,132,123,82"/>
 </map>

@@ -1,4 +1,5 @@
 <map id="anch::sql::SqlException" name="anch::sql::SqlException">
-<area shape="rect" id="node1" title="SQL exception." alt="" coords="5,131,177,252"/>
-<area shape="rect" id="node2" title=" " alt="" coords="34,5,149,83"/>
+<area shape="rect" id="Node000001" title="SQL exception." alt="" coords="5,123,168,256"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="34,5,139,75"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="89,90,89,123,84,123,84,90"/>
 </map>

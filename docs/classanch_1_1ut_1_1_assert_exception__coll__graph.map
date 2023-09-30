@@ -1,4 +1,5 @@
 <map id="anch::ut::AssertException" name="anch::ut::AssertException">
-<area shape="rect" id="node1" title="Unit test assertion error." alt="" coords="5,131,192,237"/>
-<area shape="rect" id="node2" title=" " alt="" coords="41,5,156,83"/>
+<area shape="rect" id="Node000001" title="Unit test assertion error." alt="" coords="5,123,183,235"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="41,5,147,75"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="97,90,97,123,91,123,91,90"/>
 </map>

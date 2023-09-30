@@ -1,4 +1,5 @@
 <map id="anch::ut::Runner" name="anch::ut::Runner">
-<area shape="rect" id="node1" title="Unit tests runner." alt="" coords="29,5,157,112"/>
-<area shape="rect" id="node2" href="$classanch_1_1ut_1_1_default_runner.html" title="Default unit tests runner." alt="" coords="5,160,181,311"/>
+<area shape="rect" id="Node000001" title="Unit tests runner." alt="" coords="29,5,148,117"/>
+<area shape="rect" id="Node000002" href="$classanch_1_1ut_1_1_default_runner.html" title="Default unit tests runner." alt="" coords="5,165,172,341"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="91,132,91,166,86,166,86,132"/>
 </map>
