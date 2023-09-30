@@ -102,6 +102,18 @@ endif(ANCH_UUID_STATIC_LIB)
 # Unitary tests
 if(ANCH_UUID_UNITARY_TEST)
 
+  include_directories(
+    inc
+    ${ANCH_UT_INCLUDES_DIR}
+    )
+
+  link_directories(
+    ${ANCH_UUID_LIBRARY_DIR}
+    ${ANCH_CLI_LIBRARY_DIR}
+    ${ANCH_UT_LIBRARY_DIR}
+    ${ANCH_JSON_LIBRARY_DIR}
+    )
+
   # Build UUID unit test +
   file(
     GLOB_RECURSE
@@ -121,11 +133,16 @@ if(ANCH_UUID_UNITARY_TEST)
   target_link_libraries(
     anch-uuid-test
     anch-uuid
+    anch-cli
+    anch-unit
+    anch-json
     ${CMAKE_THREAD_LIBS_INIT}
   )
   # Build UUID unit test -
 
   enable_testing()
-  add_test(anch-uuid-test ${EXECUTABLE_OUTPUT_PATH}/anch-uuid-test main)
+  add_test(anch-uuid-single-test ${EXECUTABLE_OUTPUT_PATH}/anch-uuid-test -t uuid-single)
+  add_test(anch-uuid-collision-test ${EXECUTABLE_OUTPUT_PATH}/anch-uuid-test -t uuid-collision)
+  add_test(anch-uuid-perf-test ${EXECUTABLE_OUTPUT_PATH}/anch-uuid-test -t uuid-perf)
 
 endif(ANCH_UUID_UNITARY_TEST)
