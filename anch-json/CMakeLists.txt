@@ -96,8 +96,18 @@ if(ANCH_JSON_UNITARY_TEST)
   configure_file(test/toto.json toto.json COPYONLY)
   configure_file(test/totos.json totos.json COPYONLY)
 
+  include_directories(
+    inc
+    ${ANCH_UTILS_INCLUDES_DIR}
+    ${ANCH_JSON_INCLUDES_DIR}
+    ${ANCH_CLI_INCLUDES_DIR}
+    ${ANCH_UT_INCLUDES_DIR}
+    )
+
   link_directories(
     ${ANCH_UUID_LIBRARY_DIR}
+    ${ANCH_CLI_LIBRARY_DIR}
+    ${ANCH_UT_LIBRARY_DIR}
     )
 
   # Build JSON serialization unit tests +
@@ -132,6 +142,8 @@ if(ANCH_JSON_UNITARY_TEST)
   target_link_libraries(
     anch-json-mapper-test
     anch-json
+    anch-cli
+    anch-unit
     anch-uuid
   )
   # Build JSON serialization unit tests -
@@ -139,6 +151,19 @@ if(ANCH_JSON_UNITARY_TEST)
   enable_testing()
 
   add_test(json-serializer ${EXECUTABLE_OUTPUT_PATH}/anch-json-serializer-test main)
-  add_test(json-mapper ${EXECUTABLE_OUTPUT_PATH}/anch-json-mapper-test main)
+
+  add_test(json-ser-full ${EXECUTABLE_OUTPUT_PATH}/anch-json-mapper-test -t json-ser-full)
+  add_test(json-deser-list ${EXECUTABLE_OUTPUT_PATH}/anch-json-mapper-test -t json-deser-list)
+  add_test(json-deser-unf-field ${EXECUTABLE_OUTPUT_PATH}/anch-json-mapper-test -t json-deser-unf-field)
+  add_test(json-deser-unf-str ${EXECUTABLE_OUTPUT_PATH}/anch-json-mapper-test -t json-deser-unf-str)
+  add_test(json-deser-unf ${EXECUTABLE_OUTPUT_PATH}/anch-json-mapper-test -t json-deser-unf)
+  add_test(json-deser-unf-int ${EXECUTABLE_OUTPUT_PATH}/anch-json-mapper-test -t json-deser-unf-int)
+  add_test(json-deser-unf-empty-col ${EXECUTABLE_OUTPUT_PATH}/anch-json-mapper-test -t json-deser-unf-empty-col)
+  add_test(json-deser-unf-int-col ${EXECUTABLE_OUTPUT_PATH}/anch-json-mapper-test -t json-deser-unf-int-col)
+  add_test(json-deser-unf-wtf-col ${EXECUTABLE_OUTPUT_PATH}/anch-json-mapper-test -t json-deser-unf-wtf-col)
+  add_test(json-full-deser-default ${EXECUTABLE_OUTPUT_PATH}/anch-json-mapper-test -t json-full-deser-default)
+  add_test(json-deser-discard128 ${EXECUTABLE_OUTPUT_PATH}/anch-json-mapper-test -t json-deser-discard128)
+  add_test(json-deser-discard128-col ${EXECUTABLE_OUTPUT_PATH}/anch-json-mapper-test -t json-deser-discard128-col)
+  add_test(json-iomanip ${EXECUTABLE_OUTPUT_PATH}/anch-json-mapper-test -t json-iomanip)
 
 endif(ANCH_JSON_UNITARY_TEST)
