@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.10)
 
 # Project anch CLI
 # ANother C++ Harsh/Huge/Hack
