@@ -53,6 +53,7 @@ namespace anch::ut {
 }  // anch::ut
 
 struct UnitOptions {
+  bool list = false;
   bool start = false;
   bool shutdown = false;
   bool genCTEST = false;
@@ -64,6 +65,7 @@ struct UnitOptions {
 void
 parseArgs(int argc, char** argv, UnitOptions& opts) {
   std::vector<anch::cli::Arg> args = {
+    {.handler = anch::cli::bindTrue(opts.list), .sopt = 'l', .lopt = "list-tests", .description = "List tests"},
     {.handler = anch::cli::bindTrue(opts.start), .lopt = "start", .description = "Start runner (error if runner is not defined)"},
     {.handler = anch::cli::bindTrue(opts.shutdown), .lopt = "shutdown", .description = "Shutdown runner (error if runner is not defined)"},
     {.handler = anch::cli::bindTrue(opts.genCTEST), .lopt = "gen-ctest", .description = "Genrate Ctest file"},
@@ -91,6 +93,13 @@ main(int argc, char** argv) {
   // Parse options from command line arguments +
   UnitOptions opts;
   parseArgs(argc, argv, opts);
+  if(opts.list) {
+    std::cout << "Unit tests:" << std::endl;
+    for(auto iter = tests.getTests().cbegin() ; iter != tests.getTests().cend() ; ++iter) {
+      std::cout << " - " << iter->first << std::endl;
+    }
+    std::exit(EXIT_SUCCESS);
+  }
   if(opts.tests.contains("all")) {
     std::set<std::string> ts;
     for(auto iter = tests.getTests().cbegin() ; iter != tests.getTests().cend() ; ++iter) {
