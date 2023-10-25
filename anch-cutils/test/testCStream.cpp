@@ -9,6 +9,7 @@
 using anch::cutils::CStreambuf;
 using anch::cutils::CIStream;
 using anch::cutils::COStream;
+using anch::cutils::CIOStream;
 
 struct Test {
   std::string toto;
@@ -37,7 +38,7 @@ serialize(std::size_t size) {
     .titi = 42
   };
   { // in block for flush before std::endl;
-    COStream cos({.data = NULL, .size = size, .handle = &printBuffer});
+    COStream cos({.data = NULL, .size = size, .write = &printBuffer});
     anch::json::serialize(plop, cos);
   }
   std::cout << std::endl;
@@ -67,10 +68,29 @@ void
 deserialize(std::size_t size) {
   std::cout << "deserialize" << size << std::endl;
   offset = 0;
-  CIStream cis({.data = NULL, .size = size, .handle = &readBuffer});
+  CIStream cis({.data = NULL, .size = size, .read = &readBuffer});
   Test plop;
   anch::json::deserialize(plop, cis);
   std::cout << "plop.toto=" << plop.toto << ", plop.titi=" << plop.titi << std::endl;
+}
+
+void
+serdser(std::size_t size) {
+  std::cout << "serdser" << size << std::endl;
+  Test plop = {
+    .toto = "toto",
+    .titi = 42
+  };
+  { // in block for flush before std::endl;
+    CIOStream cios({.data = NULL, .size = size, .read = &readBuffer, .write = &printBuffer});
+    anch::json::serialize(plop, cios);
+    cios.flush();
+    std::cout << std::endl;
+    Test plip;
+    anch::json::deserialize(plip, cios);
+    std::cout << "plip.toto=" << plip.toto << ", plip.titi=" << plip.titi;
+  }
+  std::cout << std::endl;
 }
 
 
@@ -87,5 +107,7 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("deserialize1500", std::bind(&deserialize, 1500))
     .add("serialize25", std::bind(&serialize, 25))
     .add("deserialize25", std::bind(&deserialize, 25))
+    .add("serdser1500", std::bind(&serdser, 1500))
+    .add("serdser4", std::bind(&serdser, 4))
     ;
 }

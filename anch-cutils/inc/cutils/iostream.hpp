@@ -26,6 +26,26 @@
 namespace anch::cutils {
 
   /*!
+   * Stream direction enum
+   *
+   * \author Vincent Lachenal
+   *
+   * \since 0.1
+   */
+  enum class Direction {
+
+    /*! in */
+    IN = 0b01,
+
+    /*! out */
+    OUT = 0b10,
+
+    /*! inout */
+    INOUT = 0b11,
+
+  };
+
+  /*!
    * \brief C buffer
    *
    * \c data is optional: when \c NULL , it will be allocated/deallocated by \ref CStreambuf constructor/destructor.
@@ -42,8 +62,11 @@ namespace anch::cutils {
     /*! Buffer size */
     std::size_t size;
 
-    /*! Handle data function */
-    std::size_t(*handle)(char*,std::size_t);
+    /*! Read data function */
+    std::size_t(*read)(char*,std::size_t) = NULL;
+
+    /*! Write data function */
+    std::size_t(*write)(char*,std::size_t) = NULL;
 
   };
 
@@ -71,8 +94,11 @@ namespace anch::cutils {
      * \ref CStreambuf constructor
      *
      * \param cbuffer the \ref cbuffer to user
+     * \param dir stream direction
+     *
+     * \throw std::invalid_argument \c cbuffer definition according to \c dir
      */
-    CStreambuf(anch::cutils::cbuffer cbuffer);
+    CStreambuf(anch::cutils::cbuffer cbuffer, anch::cutils::Direction dir);
     // Constructors -
 
     // Destructor +
@@ -166,6 +192,36 @@ namespace anch::cutils {
      * \ref COStream destructor
      */
     virtual ~COStream();
+    // Destructor -
+
+  };
+
+  /*!
+   * C input and output stream buffer
+   *
+   * \since 0.1
+   *
+   * \author Vincent Lachenal
+   */
+  class CIOStream: public std::iostream {
+
+    // Constructors +
+  public:
+    /*!
+     * \ref CIOStream constructor
+     *
+     * \param cbuffer the buffer to consume
+     */
+    CIOStream(anch::cutils::cbuffer cbuffer);
+    // Constructors -
+
+
+    // Destructor +
+  public:
+    /*!
+     * \ref CIOStream destructor
+     */
+    virtual ~CIOStream();
     // Destructor -
 
   };

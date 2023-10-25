@@ -19,20 +19,41 @@
 */
 #include "cutils/iostream.hpp"
 
+#include <stdexcept>
+
 using anch::cutils::CStreambuf;
 using anch::cutils::CIStream;
 using anch::cutils::COStream;
+using anch::cutils::CIOStream;
 
 // CStreambuf +
-CStreambuf::CStreambuf(anch::cutils::cbuffer cbuffer):
+CStreambuf::CStreambuf(anch::cutils::cbuffer cbuffer, anch::cutils::Direction dir):
   _buffer(cbuffer), _deleteBuffer(false) {
+  // Check buffer options according to direction +
+  if((static_cast<short>(dir) ^ static_cast<short>(anch::cutils::Direction::IN)) == 0) {
+    _buffer.write = NULL;
+  }
+  if((static_cast<short>(dir) ^ static_cast<short>(anch::cutils::Direction::OUT)) == 0) {
+    _buffer.read = NULL;
+  }
+  if(static_cast<short>(dir) & static_cast<short>(anch::cutils::Direction::IN) && _buffer.read == NULL) {
+    throw std::invalid_argument("input stream and null read function");
+  }
+  if(static_cast<short>(dir) & static_cast<short>(anch::cutils::Direction::OUT) && _buffer.write == NULL) {
+    throw std::invalid_argument("output stream and null write function");
+  }
+  // Check buffer options according to direction -
+  // Intialize buffer if needed +
   if(_buffer.data == NULL) {
     _buffer.data = new char[_buffer.size];
     std::memset(_buffer.data, 0, _buffer.size);
     _deleteBuffer = true;
   }
+  // Intialize buffer if needed -
+  // Set ready +
   setg(0, 0, 0);
   setp(_buffer.data, _buffer.data + _buffer.size);
+  // Set ready -
 }
 
 CStreambuf::~CStreambuf() {
@@ -44,7 +65,7 @@ CStreambuf::~CStreambuf() {
 
 std::streambuf::int_type
 CStreambuf::underflow() {
-  std::size_t read = _buffer.handle(_buffer.data, _buffer.size);
+  std::size_t read = _buffer.read(_buffer.data, _buffer.size);
   if(read == 0) {
     return traits_type::eof();
   }
@@ -56,7 +77,7 @@ std::streambuf::int_type
 CStreambuf::overflow(std::streambuf::int_type value) {
   long write = pptr() - pbase();
   if(write) {
-    _buffer.handle(_buffer.data, static_cast<std::size_t>(write));
+    _buffer.write(_buffer.data, static_cast<std::size_t>(write));
   }
   setp(_buffer.data, _buffer.data + _buffer.size);
   if(!traits_type::eq_int_type(value, traits_type::eof())) {
@@ -74,7 +95,7 @@ CStreambuf::sync() {
 
 // CIStream +
 CIStream::CIStream(anch::cutils::cbuffer cbuffer):
-  std::istream(new CStreambuf(cbuffer)) {
+  std::istream(new CStreambuf(cbuffer, anch::cutils::Direction::IN)) {
   // Nothing to do
 }
 
@@ -85,7 +106,7 @@ CIStream::~CIStream() {
 
 // COStream +
 COStream::COStream(anch::cutils::cbuffer cbuffer):
-  std::ostream(new CStreambuf(cbuffer)) {
+  std::ostream(new CStreambuf(cbuffer, anch::cutils::Direction::OUT)) {
   // Nothing to do
 }
 
@@ -93,3 +114,14 @@ COStream::~COStream() {
   delete rdbuf();
 }
 // COStream -
+
+// CIOStream +
+CIOStream::CIOStream(anch::cutils::cbuffer cbuffer):
+  std::iostream(new CStreambuf(cbuffer, anch::cutils::Direction::INOUT)) {
+  // Nothing to do
+}
+
+CIOStream::~CIOStream() {
+  delete rdbuf();
+}
+// CIOStream -

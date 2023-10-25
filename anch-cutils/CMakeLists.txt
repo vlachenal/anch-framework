@@ -140,5 +140,7 @@ if(ANCH_CUTILS_UNITARY_TEST)
   add_test(cstream-output-jsondeser-1500char ${EXECUTABLE_OUTPUT_PATH}/anch-cstream-test --test deserialize1500)
   add_test(cstream-output-jsonser-25char ${EXECUTABLE_OUTPUT_PATH}/anch-cstream-test --test serialize25)
   add_test(cstream-output-jsondeser-25char ${EXECUTABLE_OUTPUT_PATH}/anch-cstream-test --test deserialize25)
+  add_test(cstream-inout-json-1500char ${EXECUTABLE_OUTPUT_PATH}/anch-cstream-test --test serdser1500)
+  add_test(cstream-inout-json-4char ${EXECUTABLE_OUTPUT_PATH}/anch-cstream-test --test serdser4)
 
 endif(ANCH_CUTILS_UNITARY_TEST)
