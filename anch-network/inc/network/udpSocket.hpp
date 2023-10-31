@@ -22,114 +22,112 @@
 #include "network/socket.hpp"
 
 
-namespace anch {
-  namespace network {
+namespace anch::network {
+
+  /*!
+   * UDP socket implementation
+   *
+   * \author Vincent Lachenal
+   */
+  class UdpSocket: public Socket {
+
+  public:
+    // Constructors +
+    /*!
+     * \ref UdpSocket default constructor
+     */
+    UdpSocket();
 
     /*!
-     * UDP socket implementation
+     * \ref UdpSocket constructor
      *
-     * \author Vincent Lachenal
+     * \param ipAddress The IP address
+     * \param port The port number
+     *
+     * \throw anch::network::IOException Error while creating the socket
      */
-    class UdpSocket: public Socket {
+    UdpSocket(const std::string& ipAddress, uint16_t port);
+    // Constructors -
 
-    public:
-      // Constructors +
-      /*!
-       * \ref UdpSocket default constructor
-       */
-      UdpSocket();
+    // Destructors +
+    /*!
+     * \ref UdpSocket destructor
+     */
+    virtual ~UdpSocket() noexcept;
+    // Destructors -
 
-      /*!
-       * \ref UdpSocket constructor
-       *
-       * \param ipAddress The IP address
-       * \param port The port number
-       *
-       * \throw anch::network::IOException Error while creating the socket
-       */
-      UdpSocket(const std::string& ipAddress, uint16_t port);
-      // Constructors -
+  public:
+    // Methods +
+    /*!
+     * Listen on socket
+     *
+     * \throw anch::network::IOException Error while listening on the socket
+     */
+    virtual void listen();
 
-      // Destructors +
-      /*!
-       * \ref UdpSocket destructor
-       */
-      virtual ~UdpSocket() noexcept;
-      // Destructors -
+    /*!
+     * Connect to remote socket.\n
+     * This method do nothing since UDP is not connected.
+     *
+     * \throw anch::network::IOException Never on UDP socket
+     */
+    virtual void connect();
 
-    public:
-      // Methods +
-      /*!
-       * Listen on socket
-       *
-       * \throw anch::network::IOException Error while listening on the socket
-       */
-      virtual void listen();
+    /*!
+     * Accept client connection.\n
+     * This method do nothing since UDP is not connected
+     *
+     * \param socket The socket which describes client connection
+     *
+     * \throw anch::network::IOException Never on UDP socket
+     */
+    virtual void accept(Socket& socket);
 
-      /*!
-       * Connect to remote socket.\n
-       * This method do nothing since UDP is not connected.
-       *
-       * \throw anch::network::IOException Never on UDP socket
-       */
-      virtual void connect();
+    /*!
+     * Send a message on socket
+     *
+     * \param message The message to send
+     *
+     * \throw anch::network::IOException Network error while sending message
+     */
+    virtual void send(const std::string& message);
 
-      /*!
-       * Accept client connection.\n
-       * This method do nothing since UDP is not connected
-       *
-       * \param socket The socket which describes client connection
-       *
-       * \throw anch::network::IOException Never on UDP socket
-       */
-      virtual void accept(Socket& socket);
+    /*!
+     * Send a message on socket
+     *
+     * \param message The message to send
+     * \param peerAddr The address where the message has to be sent
+     *
+     * \throw anch::network::IOException Network error while sending message
+     */
+    virtual void send(const std::string& message, const sockaddr_storage& peerAddr);
 
-      /*!
-       * Send a message on socket
-       *
-       * \param message The message to send
-       *
-       * \throw anch::network::IOException Network error while sending message
-       */
-      virtual void send(const std::string& message);
+    /*!
+     * Receive a message on socket
+     *
+     * \param message The string where to write the message
+     *
+     * \throw anch::network::IOException Network error while receiving message
+     */
+    virtual void receive(std::string& message);
+    // Methods -
 
-      /*!
-       * Send a message on socket
-       *
-       * \param message The message to send
-       * \param peerAddr The address where the message has to be sent
-       *
-       * \throw anch::network::IOException Network error while sending message
-       */
-      virtual void send(const std::string& message, const sockaddr_storage& peerAddr);
+    // Accessors +
+    /*!
+     * Get the socket domain
+     *
+     * \return The POSIX socket domain
+     */
+    virtual int getDomain() const;
 
-      /*!
-       * Receive a message on socket
-       *
-       * \param message The string where to write the message
-       *
-       * \throw anch::network::IOException Network error while receiving message
-       */
-      virtual void receive(std::string& message);
-      // Methods -
+    /*!
+     * Get the socket service type
+     *
+     * \return The POSIX socket service type
+     */
+    virtual int getType() const;
+    // Accessors -
 
-      // Accessors +
-      /*!
-       * Get the socket domain
-       *
-       * \return The POSIX socket domain
-       */
-      virtual int getDomain() const;
+  };
 
-      /*!
-       * Get the socket service type
-       *
-       * \return The POSIX socket service type
-       */
-      virtual int getType() const;
-      // Accessors -
-
-    };
-
-  }
 }

@@ -21,79 +21,85 @@
 
 #include "network/socket.hpp"
 
-namespace anch {
-  namespace network {
+namespace anch::network {
+
+  class TcpStream;
+
+  /*!
+   * TCP socket implementation
+   *
+   * \author Vincent Lachenal
+   */
+  class TcpSocket: public anch::network::Socket {
+
+    friend anch::network::TcpStream;
+
+  public:
+    // Constructors +
+    /*!
+     * \ref TcpSocket default constructor
+     */
+    TcpSocket();
 
     /*!
-     * TCP socket implementation
+     * \ref TcpSocket constructor
      *
-     * \author Vincent Lachenal
+     * \param ipAddress the IP address
+     * \param port the port number
+     *
+     * \throw anch::network::IOException Error while creating the socket
      */
-    class TcpSocket: public Socket {
+    TcpSocket(const std::string& ipAddress, uint16_t port);
+    // Constructors -
 
-    public:
-      // Constructors +
-      /*!
-       * \ref TcpSocket default constructor
-       */
-      TcpSocket();
+    // Destructor +
+    /*!
+     * \ref TcpSocket destructor
+     */
+    virtual ~TcpSocket() noexcept;
+    // Destructor -
 
-      /*!
-       * \ref TcpSocket constructor
-       *
-       * \param ipAddress The IP address
-       * \param port The port number
-       *
-       * \throw anch::network::IOException Error while creating the socket
-       */
-      TcpSocket(const std::string& ipAddress, uint16_t port);
-      // Constructors -
+  public:
+    // Methods +
+    /*!
+     * Send a message on socket
+     *
+     * \param message the message to send
+     *
+     * \throw anch::network::IOException Network error while sending message
+     */
+    virtual void send(const std::string& message);
 
-      // Destructors +
-      /*!
-       * \ref TcpSocket destructor
-       */
-      virtual ~TcpSocket() noexcept;
-      // Destructors -
+    /*!
+     * Receive a message on socket
+     *
+     * \param message the string where to write the message
+     *
+     * \throw anch::network::IOException Network error while receiving message
+     */
+    virtual void receive(std::string& message);
 
-    public:
-      // Methods +
-      /*!
-       * Send a message on socket
-       *
-       * \param message The message to send
-       *
-       * \throw anch::network::IOException Network error while sending message
-       */
-      virtual void send(const std::string& message);
+  private:
+    std::size_t write(const char* buffer, std::size_t size);
+    std::size_t read(char* buffer, std::size_t size);
+    // Methods -
 
-      /*!
-       * Receive a message on socket
-       *
-       * \param message The string where to write the message
-       *
-       * \throw anch::network::IOException Network error while receiving message
-       */
-      virtual void receive(std::string& message);
-      // Methods -
+    // Accessors +
+    /*!
+     * Get the socket domain
+     *
+     * \return the POSIX socket domain
+     */
+    virtual int getDomain() const;
 
-      // Accessors +
-      /*!
-       * Get the socket domain
-       *
-       * \return The POSIX socket domain
-       */
-      virtual int getDomain() const;
+    /*!
+     * Get the socket service type
+     *
+     * \return the POSIX socket service type
+     */
+    virtual int getType() const;
+    // Accessors -
 
-      /*!
-       * Get the socket service type
-       *
-       * \return The POSIX socket service type
-       */
-      virtual int getType() const;
-      // Accessors -
+  };
 
-    };
-
-  }
 }

@@ -2,6 +2,8 @@
 # Anch resource path
 set(ANCH_EVENTS_INCLUDES_DIR "$ENV{HOME}/projects/anch-framework/anch-events/inc")
 set(ANCH_UTILS_INCLUDES_DIR "$ENV{HOME}/projects/anch-framework/anch-utils/inc")
+set(ANCH_CUTILS_INCLUDES_DIR "$ENV{HOME}/projects/anch-framework/anch-cutils/inc")
+set(ANCH_CUTILS_LIBRARY_DIR "$ENV{HOME}/projects/anch-framework/anch-cutils/build/lib")
 
 set(ANCH_NETWORK_COMPILE_FLAGS "-O2 -pipe -march=native")
 #set(ANCH_NETWORK_COMPILE_FLAGS "-g")

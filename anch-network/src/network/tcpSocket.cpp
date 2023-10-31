@@ -66,20 +66,42 @@ TcpSocket::receive(std::string& message) {
   // Receive message +
   char buffer[BUFFER_SIZE];
   std::memset(&buffer, 0, BUFFER_SIZE);
-  ssize_t res = 0;
+  /*ssize_t res = 0;
   while((res = ::recv(_sock, buffer, sizeof(buffer) - 1, 0)) > 0) {
     message += buffer;
     std::memset(&buffer, 0, BUFFER_SIZE);
   }
   if(res == SOCKET_ERROR) {
     throw IOException("Error on recv()");
-  }
+    }*/
   // '\0' character is automatically append by std::string
+  while(read(buffer, BUFFER_SIZE) > 0) {
+    message += buffer;
+    std::memset(&buffer, 0, BUFFER_SIZE);
+  }
   // Receive message -
 
   // Notify everybody that a message has been received +
   notifyObservers(SocketEvent(message));
   // Notify everybody that a message has been received -
+}
+
+std::size_t
+TcpSocket::write(const char* buffer, std::size_t size) {
+  ssize_t res = ::send(_sock, buffer, size, 0);
+  if(res == SOCKET_ERROR) {
+    throw IOException("Error on send()");
+  }
+  return static_cast<std::size_t>(res);
+}
+
+std::size_t
+TcpSocket::read(char* buffer, std::size_t size) {
+  ssize_t res = ::recv(_sock, buffer, size, 0);
+  if(res == SOCKET_ERROR) {
+    throw IOException("Error on recv()");
+  }
+  return static_cast<std::size_t>(res);
 }
 // Methods -
 

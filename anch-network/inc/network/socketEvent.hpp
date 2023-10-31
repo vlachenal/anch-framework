@@ -25,72 +25,70 @@
 #include <netdb.h>
 #endif
 
-namespace anch {
-  namespace network {
+namespace anch::network {
+
+  /*!
+   * Socket event
+   *
+   * \author Vincent Lachenal
+   */
+  class SocketEvent {
+
+  private:
+    // Attributes +
+    /*! The message received on socket */
+    std::string _message;
+
+    /*! Sock address */
+    sockaddr_storage _address;
+    // Attributes -
+
+  public:
+    // Constructors +
+    /*!
+     * \ref SocketEvent constructor
+     *
+     * \param message The message received on socket
+     */
+    SocketEvent(const std::string& message);
 
     /*!
-     * Socket event
+     * \ref SocketEvent constructor
      *
-     * \author Vincent Lachenal
+     * \param message The message received on socket
+     * \param address The address where the message has been sent
      */
-    class SocketEvent {
+    SocketEvent(const std::string& message, const sockaddr_storage& address);
+    // Constructors -
 
-    private:
-      // Attributes +
-      /*! The message received on socket */
-      std::string _message;
+    // Destructor +
+    /*!
+     * \ref SocketEvent destructor
+     */
+    virtual ~SocketEvent();
+    // Destructor -
 
-      /*! Sock address */
-      sockaddr_storage _address;
-      // Attributes -
-
-    public:
-      // Constructors +
-      /*!
-       * \ref SocketEvent constructor
-       *
-       * \param message The message received on socket
-       */
-      SocketEvent(const std::string& message);
-
-      /*!
-       * \ref SocketEvent constructor
-       *
-       * \param message The message received on socket
-       * \param address The address where the message has been sent
-       */
-      SocketEvent(const std::string& message, const sockaddr_storage& address);
-      // Constructors -
-
-      // Destructor +
-      /*!
-       * \ref SocketEvent destructor
-       */
-      virtual ~SocketEvent();
-      // Destructor -
-
-    public:
-      // Accessors +
-      /*!
-       * Get the event message
-       *
-       * \return The message
-       */
-      inline const std::string& getMessage() const {
-	return _message;
-      };
-
-      /*!
-       * Get the event message
-       *
-       * \return The message
-       */
-      inline const sockaddr_storage& getAddress() const {
-	return _address;
-      };
-      // Accessors -
-
+  public:
+    // Accessors +
+    /*!
+     * Get the event message
+     *
+     * \return The message
+     */
+    inline const std::string& getMessage() const {
+      return _message;
     };
 
-  }
+    /*!
+     * Get the event message
+     *
+     * \return The message
+     */
+    inline const sockaddr_storage& getAddress() const {
+      return _address;
+    };
+    // Accessors -
+
+  };
+
 }

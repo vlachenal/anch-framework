@@ -19,54 +19,51 @@
 */
 #pragma once
 
-#include <iostream>
-#include <exception>
+#include "network/tcpSocket.hpp"
+#include "cutils/iostream.hpp"
 
 namespace anch::network {
 
   /*!
-   * Network input/output error management by exception
+   * TCP stream
    *
    * \author Vincent Lachenal
+   *
+   * \since 0.1
    */
-  class IOException : public std::exception {
+  class TcpStream: public anch::cutils::CIOStream {
+
+    // Attributes +
   private:
-    /*! Error message */
-    std::string _message;
+    /*! The TCP socket */
+    anch::network::TcpSocket _socket;
 
-  public:
+    /*! I/O buffer */
+    anch::cutils::cbuffer _buffer;
+    // Attributes -
+
     // Constructors +
+  public:
     /*!
-     * \ref IOException constructor
+     * \ref TcpStream constructor
      *
-     * \param message The error message
-     */
-    IOException(const std::string& message);
-
-    /*!
-     * \ref IOException constructor
+     * \param ipAddress the IP address
+     * \param port the port number
+     * \param bufSize the buffer size in byte (default = 1500)
      *
-     * \param message The error message
-     * \param errorCode The error code (from \c getinfoaddr)
+     * \throw anch::network::IOException Error while creating the socket
      */
-    IOException(const std::string& message, int errorCode);
+    TcpStream(const std::string& ipAddress, uint16_t port, std::size_t bufSize = 1500);
     // Constructors -
 
     // Destructor +
-    /*!
-     * \ref IOException destructor
-     */
-    virtual ~IOException() noexcept;
-    // Destructor -
-
   public:
     /*!
-     * Return the error message
-     *
-     * \return The error message
+     * \ref TcpStream destructor
      */
-    virtual const char* what() const noexcept;
+    virtual ~TcpStream() noexcept;
+    // Destructor -
 
   };
 
-}
+}  // anch::network
