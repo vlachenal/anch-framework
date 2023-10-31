@@ -22,6 +22,7 @@
 #include <streambuf>
 #include <cstring>
 #include <sstream>
+#include <functional>
 
 namespace anch::cutils {
 
@@ -63,12 +64,18 @@ namespace anch::cutils {
     std::size_t size;
 
     /*! Read data function */
-    std::size_t(*read)(char*,std::size_t) = NULL;
+    std::function<std::size_t(char*,std::size_t)> read = nullptr;
 
     /*! Write data function */
-    std::size_t(*write)(char*,std::size_t) = NULL;
+    std::function<std::size_t(char*,std::size_t)> write = nullptr;
 
   };
+
+  // Classes declaration for \c friend usage +
+  class CIStream;
+  class COStream;
+  class CIOStream;
+  // Classes declaration for \c friend usage -
 
   /*!
    * C stream buffer implementation
@@ -78,6 +85,10 @@ namespace anch::cutils {
    * \author Vincent Lachenal
    */
   class CStreambuf: public std::streambuf {
+
+    friend anch::cutils::CIStream;
+    friend anch::cutils::COStream;
+    friend anch::cutils::CIOStream;
 
     // Attributes +
   private:
@@ -99,6 +110,12 @@ namespace anch::cutils {
      * \throw std::invalid_argument \c cbuffer definition according to \c dir
      */
     CStreambuf(anch::cutils::cbuffer cbuffer, anch::cutils::Direction dir);
+
+  protected:
+    /*!
+     * \ref CStreambuf default protected constructor
+     */
+    CStreambuf() noexcept;
     // Constructors -
 
     // Destructor +
@@ -133,6 +150,12 @@ namespace anch::cutils {
      * \return plop
      */
     virtual int sync();
+
+  private:
+    /*!
+     * Initiliaze buffer
+     */
+    void initBuffer();
     // Methods -
 
   };
@@ -152,8 +175,16 @@ namespace anch::cutils {
      * \ref CIStream constructor
      *
      * \param cbuffer the buffer to write into
+     *
+     * \throw std::invalid_argument buffer does not reach input stream requirements
      */
     CIStream(anch::cutils::cbuffer cbuffer);
+
+  protected:
+    /*!
+     * \ref CIStream protected default constructor
+     */
+    CIStream();
     // Constructors -
 
     // Destructor +
@@ -163,6 +194,18 @@ namespace anch::cutils {
      */
     virtual ~CIStream();
     // Destructor -
+
+    // Methods +
+  protected:
+    /*!
+     * Set stream buffer
+     *
+     * \param cbuffer the buffer to use
+     *
+     * \throw std::invalid_argument buffer does not reach input stream requirements
+     */
+    void setBuffer(anch::cutils::cbuffer cbuffer);
+    // Methods -
 
   };
 
@@ -181,8 +224,16 @@ namespace anch::cutils {
      * \ref COStream constructor
      *
      * \param cbuffer the buffer to consume
+     *
+     * \throw std::invalid_argument buffer does not reach output stream requirements
      */
     COStream(anch::cutils::cbuffer cbuffer);
+
+  protected:
+    /*!
+     * \ref COStream protected default constructor
+     */
+    COStream();
     // Constructors -
 
 
@@ -193,6 +244,18 @@ namespace anch::cutils {
      */
     virtual ~COStream();
     // Destructor -
+
+    // Methods +
+  protected:
+    /*!
+     * Set stream buffer
+     *
+     * \param cbuffer the buffer to use
+     *
+     * \throw std::invalid_argument buffer does not reach output stream requirements
+     */
+    void setBuffer(anch::cutils::cbuffer cbuffer);
+    // Methods -
 
   };
 
@@ -211,8 +274,16 @@ namespace anch::cutils {
      * \ref CIOStream constructor
      *
      * \param cbuffer the buffer to consume
+     *
+     * \throw std::invalid_argument buffer does not reach in-out-put stream requirements
      */
     CIOStream(anch::cutils::cbuffer cbuffer);
+
+  protected:
+    /*!
+     * \ref CIOStream protected default constructor
+     */
+    CIOStream();
     // Constructors -
 
 
@@ -223,6 +294,18 @@ namespace anch::cutils {
      */
     virtual ~CIOStream();
     // Destructor -
+
+    // Methods +
+  protected:
+    /*!
+     * Set stream buffer
+     *
+     * \param cbuffer the buffer to use
+     *
+     * \throw std::invalid_argument buffer does not reach in-out-put stream requirements
+     */
+    void setBuffer(anch::cutils::cbuffer cbuffer);
+    // Methods -
 
   };
 
