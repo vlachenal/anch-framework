@@ -132,10 +132,6 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a0cd74db5e52b189605fda1a4c72d8a21"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a200aedf59a4cad0818389f00cd703650" id="r_a200aedf59a4cad0818389f00cd703650"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1network_1_1_tcp_socket.html#a200aedf59a4cad0818389f00cd703650">receive</a> (std::string &amp;message)</td></tr>
 <tr class="separator:a200aedf59a4cad0818389f00cd703650"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9a8947d99e5fe84e9b5950d0e867418f" id="r_a9a8947d99e5fe84e9b5950d0e867418f"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1network_1_1_tcp_socket.html#a9a8947d99e5fe84e9b5950d0e867418f">getDomain</a> () const</td></tr>
-<tr class="separator:a9a8947d99e5fe84e9b5950d0e867418f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad70e16200be1d6f0f49a01092efca237" id="r_ad70e16200be1d6f0f49a01092efca237"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1network_1_1_tcp_socket.html#ad70e16200be1d6f0f49a01092efca237">getType</a> () const</td></tr>
-<tr class="separator:ad70e16200be1d6f0f49a01092efca237"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classanch_1_1network_1_1_socket"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classanch_1_1network_1_1_socket')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classanch_1_1network_1_1_socket.html">anch::network::Socket</a></td></tr>
 <tr class="memitem:a7b3e7da68b1132e834d9cb07a1813392 inherit pub_methods_classanch_1_1network_1_1_socket" id="r_a7b3e7da68b1132e834d9cb07a1813392"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1network_1_1_socket.html#a7b3e7da68b1132e834d9cb07a1813392">Socket</a> (const std::string &amp;ipAddress, uint16_t port, <a class="el" href="namespaceanch_1_1network.html#aa518b6bd398c963767bf1974e5c113be">SocketType</a> type=<a class="el" href="namespaceanch_1_1network.html#aa518b6bd398c963767bf1974e5c113bea696b031073e74bf2cb98e5ef201d4aa3">SocketType::UNKNOWN</a>)</td></tr>
 <tr class="separator:a7b3e7da68b1132e834d9cb07a1813392 inherit pub_methods_classanch_1_1network_1_1_socket"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -248,8 +244,8 @@ Additional Inherited Members</h2></td></tr>
 <p><a class="el" href="classanch_1_1network_1_1_tcp_socket.html">TcpSocket</a> constructor</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">ipAddress</td><td>The IP address </td></tr>
-    <tr><td class="paramname">port</td><td>The port number</td></tr>
+    <tr><td class="paramname">ipAddress</td><td>the IP address </td></tr>
+    <tr><td class="paramname">port</td><td>the port number</td></tr>
   </table>
   </dd>
 </dl>
@@ -289,64 +285,6 @@ Additional Inherited Members</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a9a8947d99e5fe84e9b5950d0e867418f" name="a9a8947d99e5fe84e9b5950d0e867418f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9a8947d99e5fe84e9b5950d0e867418f">&#9670;&#160;</a></span>getDomain()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual int anch::network::TcpSocket::getDomain </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Get the socket domain</p>
-<dl class="section return"><dt>Returns</dt><dd>The POSIX socket domain </dd></dl>
-
-<p>Implements <a class="el" href="classanch_1_1network_1_1_socket.html#a414a66820860f113c0acee1f70b667d6">anch::network::Socket</a>.</p>
-
-</div>
-</div>
-<a id="ad70e16200be1d6f0f49a01092efca237" name="ad70e16200be1d6f0f49a01092efca237"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad70e16200be1d6f0f49a01092efca237">&#9670;&#160;</a></span>getType()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual int anch::network::TcpSocket::getType </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Get the socket service type</p>
-<dl class="section return"><dt>Returns</dt><dd>The POSIX socket service type </dd></dl>
-
-<p>Implements <a class="el" href="classanch_1_1network_1_1_socket.html#a607a4f52b82a9bf956438a5ca7b8c1fe">anch::network::Socket</a>.</p>
-
-</div>
-</div>
 <a id="a200aedf59a4cad0818389f00cd703650" name="a200aedf59a4cad0818389f00cd703650"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a200aedf59a4cad0818389f00cd703650">&#9670;&#160;</a></span>receive()</h2>
 
@@ -373,7 +311,7 @@ Additional Inherited Members</h2></td></tr>
 <p>Receive a message on socket</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">message</td><td>The string where to write the message</td></tr>
+    <tr><td class="paramname">message</td><td>the string where to write the message</td></tr>
   </table>
   </dd>
 </dl>
@@ -414,7 +352,7 @@ Additional Inherited Members</h2></td></tr>
 <p>Send a message on socket</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">message</td><td>The message to send</td></tr>
+    <tr><td class="paramname">message</td><td>the message to send</td></tr>
   </table>
   </dd>
 </dl>

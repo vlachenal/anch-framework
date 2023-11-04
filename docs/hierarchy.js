@@ -37,6 +37,7 @@ var hierarchy =
     [ "anch::crypto::SHA2< O, B, W, R, I >::Chunk", "unionanch_1_1crypto_1_1_s_h_a2_1_1_chunk.html", null ],
     [ "anch::sql::ClausesBuilder", "classanch_1_1sql_1_1_clauses_builder.html", null ],
     [ "anch::Collectors< T >", "classanch_1_1_collectors.html", null ],
+    [ "anch::ut::CommandMessage", "structanch_1_1ut_1_1_command_message.html", null ],
     [ "anch::rest::CommonHeaders", "structanch_1_1rest_1_1_common_headers.html", null ],
     [ "anch::resource::file::ConfigurationFileParser", "classanch_1_1resource_1_1file_1_1_configuration_file_parser.html", null ],
     [ "anch::sql::Connection", "classanch_1_1sql_1_1_connection.html", [
@@ -125,6 +126,11 @@ var hierarchy =
         ] ]
       ] ]
     ] ],
+    [ "std::iostream", null, [
+      [ "anch::cutils::CIOStream", "classanch_1_1cutils_1_1_c_i_o_stream.html", [
+        [ "anch::network::TcpStream", "classanch_1_1network_1_1_tcp_stream.html", null ]
+      ] ]
+    ] ],
     [ "anch::crypto::ISO7816_4Padding", "classanch_1_1crypto_1_1_i_s_o7816__4_padding.html", null ],
     [ "anch::json::JSONMapper", "classanch_1_1json_1_1_j_s_o_n_mapper.html", null ],
     [ "anch::LessPtrCompare< T >", "structanch_1_1_less_ptr_compare.html", null ],
@@ -153,6 +159,9 @@ var hierarchy =
     [ "anch::events::Observer< T >", "classanch_1_1events_1_1_observer.html", [
       [ "anch::events::EventHandler< T, Derived >", "classanch_1_1events_1_1_event_handler.html", null ]
     ] ],
+    [ "anch::events::Observer< anch::network::SocketEvent >", "classanch_1_1events_1_1_observer.html", [
+      [ "anch::ut::SocketServerRunner", "classanch_1_1ut_1_1_socket_server_runner.html", null ]
+    ] ],
     [ "anch::events::Observer< SocketEvent >", "classanch_1_1events_1_1_observer.html", null ],
     [ "std::optional", null, [
       [ "anch::Optional< T >", "classanch_1_1_optional.html", null ]
@@ -177,7 +186,10 @@ var hierarchy =
     ] ],
     [ "anch::rest::Router", "classanch_1_1rest_1_1_router.html", null ],
     [ "anch::ut::Runner", "classanch_1_1ut_1_1_runner.html", [
-      [ "anch::ut::DefaultRunner", "classanch_1_1ut_1_1_default_runner.html", null ]
+      [ "anch::ut::DefaultRunner", "classanch_1_1ut_1_1_default_runner.html", [
+        [ "anch::ut::SocketServerRunner", "classanch_1_1ut_1_1_socket_server_runner.html", null ]
+      ] ],
+      [ "anch::ut::SocketClientRunner", "classanch_1_1ut_1_1_socket_client_runner.html", null ]
     ] ],
     [ "anch::resource::Section", "classanch_1_1resource_1_1_section.html", null ],
     [ "anch::sql::SelectBuilder", "classanch_1_1sql_1_1_select_builder.html", null ],

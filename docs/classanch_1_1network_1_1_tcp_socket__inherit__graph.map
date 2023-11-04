@@ -1,5 +1,5 @@
 <map id="anch::network::TcpSocket" name="anch::network::TcpSocket">
-<area shape="rect" id="Node000001" title=" " alt="" coords="25,885,202,1082"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="25,885,202,1040"/>
 <area shape="rect" id="Node000002" href="$classanch_1_1network_1_1_socket.html" title=" " alt="" coords="35,489,191,836"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="116,851,116,885,111,885,111,851"/>
 <area shape="rect" id="Node000003" href="$classanch_1_1events_1_1_observable.html" title=" " alt="" coords="25,246,202,440"/>

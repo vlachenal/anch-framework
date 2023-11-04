@@ -170,26 +170,22 @@ var sectionId = 'dynsection-0';
 <g id="Node000004" class="node">
 <title>Node4</title>
 <g id="a_Node000004"><a xlink:href="classanch_1_1network_1_1_tcp_socket.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="none" points="133,-180 0,-180 0,-32 133,-32 133,-180"/>
-<text text-anchor="start" x="5" y="-166.5" font-family="Helvetica,sans-Serif" font-size="10.00">anch::network::TcpSocket</text>
-<text text-anchor="start" x="65" y="-150.5" font-family="Helvetica,sans-Serif" font-size="10.00"> </text>
-<text text-anchor="start" x="16.38" y="-134.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="41" y="-134.5" font-family="Helvetica,sans-Serif" font-size="10.00">TcpSocket()</text>
+<polygon fill="white" stroke="none" points="133,-164 0,-164 0,-48 133,-48 133,-164"/>
+<text text-anchor="start" x="5" y="-150.5" font-family="Helvetica,sans-Serif" font-size="10.00">anch::network::TcpSocket</text>
+<text text-anchor="start" x="65" y="-134.5" font-family="Helvetica,sans-Serif" font-size="10.00"> </text>
 <text text-anchor="start" x="16.38" y="-118.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
 <text text-anchor="start" x="41" y="-118.5" font-family="Helvetica,sans-Serif" font-size="10.00">TcpSocket()</text>
 <text text-anchor="start" x="16.38" y="-102.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="41" y="-102.5" font-family="Helvetica,sans-Serif" font-size="10.00">~TcpSocket()</text>
+<text text-anchor="start" x="41" y="-102.5" font-family="Helvetica,sans-Serif" font-size="10.00">TcpSocket()</text>
 <text text-anchor="start" x="16.38" y="-86.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="41" y="-86.5" font-family="Helvetica,sans-Serif" font-size="10.00">send()</text>
+<text text-anchor="start" x="41" y="-86.5" font-family="Helvetica,sans-Serif" font-size="10.00">~TcpSocket()</text>
 <text text-anchor="start" x="16.38" y="-70.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="41" y="-70.5" font-family="Helvetica,sans-Serif" font-size="10.00">receive()</text>
+<text text-anchor="start" x="41" y="-70.5" font-family="Helvetica,sans-Serif" font-size="10.00">send()</text>
 <text text-anchor="start" x="16.38" y="-54.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="41" y="-54.5" font-family="Helvetica,sans-Serif" font-size="10.00">getDomain()</text>
-<text text-anchor="start" x="16.38" y="-38.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="41" y="-38.5" font-family="Helvetica,sans-Serif" font-size="10.00">getType()</text>
-<polygon fill="#666666" stroke="#666666" points="0,-162 0,-162 133,-162 133,-162 0,-162"/>
+<text text-anchor="start" x="41" y="-54.5" font-family="Helvetica,sans-Serif" font-size="10.00">receive()</text>
 <polygon fill="#666666" stroke="#666666" points="0,-146 0,-146 133,-146 133,-146 0,-146"/>
-<polygon fill="none" stroke="#666666" points="0,-32 0,-180 133,-180 133,-32 0,-32"/>
+<polygon fill="#666666" stroke="#666666" points="0,-130 0,-130 133,-130 133,-130 0,-130"/>
+<polygon fill="none" stroke="#666666" points="0,-48 0,-164 133,-164 133,-48 0,-48"/>
 </a>
 </g>
 </g>
@@ -197,7 +193,7 @@ var sectionId = 'dynsection-0';
 <g id="edge3_Node000003_Node000004" class="edge">
 <title>Node3&#45;&gt;Node4</title>
 <g id="a_edge3_Node000003_Node000004"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M103.33,-238.31C97.64,-218.04 91.99,-197.9 86.89,-179.69"/>
+<path fill="none" stroke="#63b8ff" d="M103.33,-238.32C95.92,-211.9 88.57,-185.69 82.4,-163.71"/>
 <polygon fill="none" stroke="#63b8ff" points="99.91,-239.11 105.98,-247.79 106.65,-237.22 99.91,-239.11"/>
 </a>
 </g>
