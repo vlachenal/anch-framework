@@ -80,7 +80,24 @@ namespace anch::network {
     virtual void receive(std::string& message);
 
   private:
+    /*!
+     * Write message in buffer
+     *
+     * \param buffer the buffer
+     * \param size the number of bytes to write
+     *
+     * \return the number of wroten bytes
+     */
     std::size_t write(const char* buffer, std::size_t size);
+
+    /*!
+     * Read message from buffer
+     *
+     * \param buffer the buffer
+     * \param size the number of bytes to read
+     *
+     * \return the number of read bytes
+     */
     std::size_t read(char* buffer, std::size_t size);
     // Methods -
 

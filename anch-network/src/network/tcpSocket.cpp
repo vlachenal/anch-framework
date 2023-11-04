@@ -66,14 +66,6 @@ TcpSocket::receive(std::string& message) {
   // Receive message +
   char buffer[BUFFER_SIZE];
   std::memset(&buffer, 0, BUFFER_SIZE);
-  /*ssize_t res = 0;
-  while((res = ::recv(_sock, buffer, sizeof(buffer) - 1, 0)) > 0) {
-    message += buffer;
-    std::memset(&buffer, 0, BUFFER_SIZE);
-  }
-  if(res == SOCKET_ERROR) {
-    throw IOException("Error on recv()");
-    }*/
   // '\0' character is automatically append by std::string
   while(read(buffer, BUFFER_SIZE) > 0) {
     message += buffer;
