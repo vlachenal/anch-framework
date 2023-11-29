@@ -20,99 +20,79 @@
 #pragma once
 
 #include <map>
-
-#ifdef ANCH_BOOST_REGEX
-#include <boost/regex.hpp>
-#else
 #include <regex>
-#endif
 
 #include "resourceFileException.hpp"
 #include "resource/section.hpp"
 
-namespace anch {
-  namespace resource {
-    namespace file {
+namespace anch::resource::file {
 
-      /*!
-       * Configuration file parser\n
-       * \n
-       * Classic configuration file paser\n
-       * Sections are declared following pattern ^\[[-a-zA-Z0-9_]+\]\n
-       * Options are declared following pattern ^[-a-zA-Z0-9_]+=.*\n
-       * Comments are declared following pattern ([^\]#).*\n
-       * \n
-       * If empty section is found, every of its options will be store with no section.\n
-       * Errors in configuration file will be ignored.
-       *
-       * \author Vincent Lachenal
-       */
-      class ConfigurationFileParser {
-      private:
-	// Attributes +
-#ifdef ANCH_BOOST_REGEX
-	/*! Section regular expression */
-	static const boost::regex _sectionPattern;
+  /*!
+   * Configuration file parser\n
+   * \n
+   * Classic configuration file paser\n
+   * Sections are declared following pattern ^\[[-a-zA-Z0-9_]+\]\n
+   * Options are declared following pattern ^[-a-zA-Z0-9_]+=.*\n
+   * Comments are declared following pattern ([^\]#).*\n
+   * \n
+   * If empty section is found, every of its options will be store with no section.\n
+   * Errors in configuration file will be ignored.
+   *
+   * \author Vincent Lachenal
+   */
+  class ConfigurationFileParser {
+  private:
+    // Attributes +
+    /*! Section regular expression */
+    static const std::regex _sectionPattern;
 
-	/*! Option regular expression */
-	static const boost::regex _optionPattern;
+    /*! Option regular expression */
+    static const std::regex _optionPattern;
 
-	/*! Comments regular expression */
-	static const boost::regex _commentPattern;
-#else
-	/*! Section regular expression */
-	static const std::regex _sectionPattern;
+    /*! Comments regular expression */
+    static const std::regex _commentPattern;
 
-	/*! Option regular expression */
-	static const std::regex _optionPattern;
+    /*! The configuration file path */
+    std::string _filePath;
+    // Attributes -
 
-	/*! Comments regular expression */
-	static const std::regex _commentPattern;
-#endif
+  public:
+    // Constructors +
+    /*!
+     * \ref ConfigurationFileParser constructor
+     *
+     * \param filePath The configuration file path
+     */
+    ConfigurationFileParser(const std::string& filePath);
+    // Constructors -
 
-	/*! The configuration file path */
-	std::string _filePath;
-	// Attributes -
+    // Destructor +
+    /*!
+     * \ref ConfigurationFileParser destructor
+     */
+    virtual ~ConfigurationFileParser();
+    // Destructor -
 
-      public:
-	// Constructors +
-	/*!
-	 * \ref ConfigurationFileParser constructor
-	 *
-	 * \param filePath The configuration file path
-	 */
-	ConfigurationFileParser(const std::string& filePath);
-	// Constructors -
+  public:
+    /*!
+     * Get configuration from file
+     *
+     * \param config The current configuration
+     */
+    void getConfiguration(std::map<std::string,anch::resource::Section>& config) const;
 
-	// Destructor +
-	/*!
-	 * \ref ConfigurationFileParser destructor
-	 */
-	virtual ~ConfigurationFileParser();
-	// Destructor -
+  private:
+    /*!
+     * Parse a line and store information in result map if needed
+     *
+     * \param line The line to parse
+     * \param currentSection The current section
+     * \param config The result map
+     */
+    void parseLine(const std::string& line,
+		   std::string& currentSection,
+		   std::map<std::string,anch::resource::Section>& config) const;
 
-      public:
-	/*!
-	 * Get configuration from file
-	 *
-	 * \param config The current configuration
-	 */
-	void getConfiguration(std::map<std::string,anch::resource::Section>& config) const;
+  };
 
-      private:
-	/*!
-	 * Parse a line and store information in result map if needed
-	 *
-	 * \param line The line to parse
-	 * \param currentSection The current section
-	 * \param config The result map
-	 */
-	void parseLine(const std::string& line,
-		       std::string& currentSection,
-		       std::map<std::string,anch::resource::Section>& config) const;
-
-      };
-
-    }
-  }
 }

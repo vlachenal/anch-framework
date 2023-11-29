@@ -21,106 +21,96 @@
 
 #include <map>
 #include <mutex>
-
-#ifdef ANCH_STD_OTP
 #include <optional>
-#endif
 
 #include "resource/section.hpp"
 
-namespace anch {
-  namespace resource {
+namespace anch::resource {
+
+  /*!
+   * Resource manager
+   *
+   * \author Vincent Lachenal
+   */
+  class Resource {
+  private:
+    // Attributes +
+    /*! Cached resources */
+    static std::map<std::string,Resource> RESOURCES;
+
+    /*! Mutex */
+    static std::mutex MUTEX;
+
+    /*! Resources */
+    std::map<std::string,anch::resource::Section> _resources;
+    // Attributes -
+
+  private:
+    // Constructors +
+    /*!
+     * \ref Resource private constructor
+     */
+    Resource();
+    // Constructors -
+
+  public:
+    // Destructor +
+    /*!
+     * \ref Resource destructor
+     */
+    virtual ~Resource();
+    // Destructor -
+
+  public:
+    /*!
+     * Get Resource instance from file
+     *
+     * \param filePath The resource file path
+     *
+     * \return The \ref Resource unique instance
+     */
+    static const Resource& getResource(const std::string& filePath);
 
     /*!
-     * Resource manager
+     * Get parameter value from its name and section
      *
-     * \author Vincent Lachenal
+     * \param value The value to set
+     * \param param The parameter to find
+     * \param section The parameter section (optional)
+     *
+     * \return \c true if value has been found, \c false otherwise.
      */
-    class Resource {
-    private:
-      // Attributes +
-      /*! Cached resources */
-      static std::map<std::string,Resource> RESOURCES;
+    bool getParameter(std::string& value,
+		      const std::string& param,
+		      const std::string& section = "") const;
 
-      /*! Mutex */
-      static std::mutex MUTEX;
+    /*!
+     * Access section
+     *
+     * \param section the section name
+     *
+     * \return the optional result
+     */
+    std::optional<anch::resource::Section> section(const std::string& section) const;
 
-      /*! Resources */
-      std::map<std::string,anch::resource::Section> _resources;
-      // Attributes -
+    /*!
+     * Access parameter without section
+     *
+     * \param param the parameter name
+     *
+     * \return the optional result
+     */
+    std::optional<std::string> parameter(const std::string& param) const;
 
-    private:
-      // Constructors +
-      /*!
-       * \ref Resource private constructor
-       */
-      Resource();
-      // Constructors -
+    /*!
+     * Get resource configuration
+     *
+     * \return The configuration
+     */
+    const std::map<std::string,anch::resource::Section>& getConfiguration() const;
 
-    public:
-      // Destructor +
-      /*!
-       * \ref Resource destructor
-       */
-      virtual ~Resource();
-      // Destructor -
+  };
 
-    public:
-      /*!
-       * Get Resource instance from file
-       *
-       * \param filePath The resource file path
-       *
-       * \return The \ref Resource unique instance
-       */
-      static const Resource& getResource(const std::string& filePath);
-
-      /*!
-       * Get parameter value from its name and section
-       *
-       * \param value The value to set
-       * \param param The parameter to find
-       * \param section The parameter section (optional)
-       *
-       * \return \c true if value has been found, \c false otherwise.
-       */
-      bool getParameter(std::string& value,
-			const std::string& param,
-			const std::string& section = "") const;
-
-#ifdef ANCH_STD_OTP
-      /*!
-       * Access section
-       *
-       * \param section the section name
-       *
-       * \return the optional result
-       */
-      std::optional<anch::resource::Section> section(const std::string& section) const;
-
-      /*!
-       * Access parameter without section
-       *
-       * \param param the parameter name
-       *
-       * \return the optional result
-       */
-      std::optional<std::string> parameter(const std::string& param) const;
-#endif
-
-      /*!
-       * Get resource configuration
-       *
-       * \return The configuration
-       */
-      const std::map<std::string,anch::resource::Section>& getConfiguration() const;
-
-    };
-
-    inline const std::map<std::string,anch::resource::Section>&
-    Resource::getConfiguration() const {
-      return _resources;
-    }
-
-  }
 }
+
+#include "resource/impl/resource.hpp"

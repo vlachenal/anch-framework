@@ -21,52 +21,47 @@
 
 #include <string>
 
-namespace anch {
-  namespace resource {
-    namespace file {
+namespace anch::resource::file {
 
-      /*!
-       * File not found exception
-       *
-       * \author Vincent Lachenal
-       */
-      class ResourceFileException: public std::exception {
+  /*!
+   * File not found exception
+   *
+   * \author Vincent Lachenal
+   */
+  class ResourceFileException: public std::exception {
 
-      private:
-	// Attributes +
-	/*! Exception message */
-	std::string _message;
-	// Attributes -
+  private:
+    // Attributes +
+    /*! Exception message */
+    std::string _message;
+    // Attributes -
 
-      public:
-	// Constructors +
-	/*!
-	 * \ref ResourceFileException constructor
-	 *
-	 * \param filePath The file path
-	 * \param error The error
-	 */
-	ResourceFileException(const std::string& filePath,
-			      const std::string& error);
-	// Constructors -
+  public:
+    // Constructors +
+    /*!
+     * \ref ResourceFileException constructor
+     *
+     * \param filePath The file path
+     * \param error The error
+     */
+    ResourceFileException(const std::string& filePath, const std::string& error);
+    // Constructors -
 
-	// Destructor +
-	/*!
-	 * \ref ResourceFileException} destructor
-	 */
-	virtual ~ResourceFileException() noexcept;
-	// Destructor -
+    // Destructor +
+    /*!
+     * \ref ResourceFileException} destructor
+     */
+    virtual ~ResourceFileException() noexcept;
+    // Destructor -
 
-      public:
-	/*!
-	 * Retrieve the complete error message
-	 *
-	 * \return The error message
-	 */
-	const char* what() const noexcept;
+  public:
+    /*!
+     * Retrieve the complete error message
+     *
+     * \return The error message
+     */
+    const char* what() const noexcept;
 
-      };
+  };
 
-    }
-  }
 }

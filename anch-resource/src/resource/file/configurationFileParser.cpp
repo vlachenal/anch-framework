@@ -24,35 +24,19 @@
 
 #include "resource/section.hpp"
 
-using std::string;
-using std::map;
-using std::pair;
-using std::ifstream;
-using std::getline;
-
-#ifdef ANCH_BOOST_REGEX
-using boost::regex;
-using boost::smatch;
-using boost::regex_search;
-#else
-using std::regex;
-using std::smatch;
-using std::regex_search;
-#endif
-
 using anch::resource::file::ConfigurationFileParser;
 using anch::resource::file::ResourceFileException;
 using anch::resource::Section;
 
 
 // Static intialization +
-const regex ConfigurationFileParser::_sectionPattern = regex("^\\[([^# \t]+)\\]");
-const regex ConfigurationFileParser::_optionPattern = regex("^([^# \t]+)( |\t)*=( |\t)*(.+)");
-const regex ConfigurationFileParser::_commentPattern = regex("( |\t)*([^\\\\]#).*");
+const std::regex ConfigurationFileParser::_sectionPattern = std::regex("^\\[([^# \t]+)\\]");
+const std::regex ConfigurationFileParser::_optionPattern = std::regex("^([^# \t]+)( |\t)*=( |\t)*(.+)");
+const std::regex ConfigurationFileParser::_commentPattern = std::regex("( |\t)*([^\\\\]#).*");
 // Static intialization -
 
 
-ConfigurationFileParser::ConfigurationFileParser(const string& filePath):
+ConfigurationFileParser::ConfigurationFileParser(const std::string& filePath):
   _filePath(filePath) {
   // Nothing to do
 }
@@ -62,19 +46,19 @@ ConfigurationFileParser::~ConfigurationFileParser() {
 }
 
 void
-ConfigurationFileParser::getConfiguration(map<string, Section>& config) const {
+ConfigurationFileParser::getConfiguration(std::map<std::string, Section>& config) const {
   // Open file +
-  ifstream file(_filePath);
+  std::ifstream file(_filePath);
   if(!file.is_open()) {
     throw ResourceFileException(_filePath, "File is not readable");
   }
   // Open file -
 
   // Parse file +
-  string section;
+  std::string section;
   do {
-    string out;
-    getline(file, out);
+    std::string out;
+    std::getline(file, out);
     parseLine(out, section, config);
 
   } while(!file.eof());
@@ -84,22 +68,22 @@ ConfigurationFileParser::getConfiguration(map<string, Section>& config) const {
 }
 
 void
-ConfigurationFileParser::parseLine(const string& line,
-				   string& currentSection,
-				   map<string,Section>& config) const {
-  smatch match;
-  if(regex_search(line, match, _sectionPattern)) {
+ConfigurationFileParser::parseLine(const std::string& line,
+				   std::string& currentSection,
+				   std::map<std::string,Section>& config) const {
+  std::smatch match;
+  if(std::regex_search(line, match, _sectionPattern)) {
     currentSection = match[1];
 
-  } else if(regex_search(line, match, _optionPattern)) {
-    const string& option = match[1];
-    string value = match[4];
-    if(regex_search(value, match, _commentPattern)) {
+  } else if(std::regex_search(line, match, _optionPattern)) {
+    const std::string& option = match[1];
+    std::string value = match[4];
+    if(std::regex_search(value, match, _commentPattern)) {
       value = match.prefix();
     }
     auto iter = config.find(currentSection);
     if(iter == config.end()) {
-      iter = config.insert(pair<string,Section>(currentSection, Section())).first;
+      iter = config.insert(std::pair<std::string,Section>(currentSection, Section())).first;
     }
     iter->second.addParameter(option, value);
   }

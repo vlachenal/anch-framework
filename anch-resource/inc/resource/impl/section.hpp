@@ -17,21 +17,20 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "resource/file/resourceFileException.hpp"
+#pragma once
 
-using anch::resource::file::ResourceFileException;
+namespace anch::resource {
 
+  inline const std::map<std::string,std::string>& Section::getParameters() const {
+    return _parameters;
+  }
 
-ResourceFileException::ResourceFileException(const std::string& filePath,
-					     const std::string& error) {
-  _message = std::string("Error while on ") + filePath + std::string(" treatment: ") + error;
-}
+  inline void Section::setParameters(const std::map<std::string,std::string>& parameters) {
+    _parameters = parameters;
+  }
 
-ResourceFileException::~ResourceFileException() noexcept {
-  // Nothing to do
-}
+  inline void Section::addParameter(const std::string& param, const std::string& value) {
+    _parameters[param] = value;
+  }
 
-const char*
-ResourceFileException::what() const noexcept {
-  return _message.data();
 }

@@ -20,12 +20,11 @@
 #include "resource/section.hpp"
 
 
-using std::string;
 using anch::resource::Section;
 
 
 // Static initialization +
-string Section::DEFAULT_VALUE = "";
+std::string Section::DEFAULT_VALUE = "";
 // Static initialization -
 
 
@@ -56,7 +55,6 @@ Section::getParameter(const std::string& parameterName) const {
   }
 }
 
-#ifdef ANCH_STD_OTP
 std::optional<std::string>
 Section::parameter(const std::string& param) const {
   std::optional<std::string> value;
@@ -66,5 +64,4 @@ Section::parameter(const std::string& param) const {
   }
   return value;
 }
-#endif
 // Methods -

@@ -21,35 +21,26 @@
 
 #include "resource/file/configurationFileParser.hpp"
 
-using std::mutex;
-using std::string;
-using std::pair;
-using std::map;
-
 using anch::resource::Resource;
 using anch::resource::Section;
 using anch::resource::file::ConfigurationFileParser;
 
-namespace anch {
-  namespace resource {
-    class FakeSection: public Section {
-      virtual const std::string& getParameter(const std::string&) const override {
-	return Section::DEFAULT_VALUE;
-      }
-#ifdef ANCH_STD_OTP
-      virtual std::optional<std::string> parameter(const std::string&) const override {
-	return std::optional<std::string>();
-      }
-#endif
-    };
-  }
+namespace anch::resource {
+  class FakeSection: public Section {
+    virtual const std::string& getParameter(const std::string&) const override {
+      return Section::DEFAULT_VALUE;
+    }
+    virtual std::optional<std::string> parameter(const std::string&) const override {
+      return std::optional<std::string>();
+    }
+  };
 }
 
 using anch::resource::FakeSection;
 
 // Static initialization +
-map<string,Resource> Resource::RESOURCES;
-mutex Resource::MUTEX;
+std::map<std::string,Resource> Resource::RESOURCES;
+std::mutex Resource::MUTEX;
 
 FakeSection FAKE_SEC;
 // Static initialization -
@@ -64,22 +55,22 @@ Resource::~Resource() {
 }
 
 const Resource&
-Resource::getResource(const string& filePath) {
-  std::lock_guard<mutex> lock(MUTEX);
+Resource::getResource(const std::string& filePath) {
+  std::lock_guard<std::mutex> lock(MUTEX);
   auto iter = RESOURCES.find(filePath);
   if(iter == RESOURCES.cend()) {
     Resource res;
     ConfigurationFileParser configParser(filePath);
     configParser.getConfiguration(res._resources);
-    iter = RESOURCES.insert(pair<string, Resource>(filePath,res)).first;
+    iter = RESOURCES.insert(std::pair<std::string, Resource>(filePath,res)).first;
   }
   return iter->second;
 }
 
 bool
-Resource::getParameter(string& value,
-		       const string& param,
-		       const string& section) const {
+Resource::getParameter(std::string& value,
+		       const std::string& param,
+		       const std::string& section) const {
   bool found = false;
   auto iterSection = _resources.find(section);
   if(iterSection != _resources.end()) {
@@ -91,7 +82,6 @@ Resource::getParameter(string& value,
   return found;
 }
 
-#ifdef ANCH_STD_OTP
 std::optional<Section>
 Resource::section(const std::string& section) const {
   std::optional<Section> value;
@@ -106,4 +96,3 @@ std::optional<std::string>
 Resource::parameter(const std::string& param) const {
   return section("").value_or(FAKE_SEC).parameter(param);
 }
-#endif

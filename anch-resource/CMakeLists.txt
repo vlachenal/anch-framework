@@ -9,30 +9,18 @@ set(LIBRARY_OUTPUT_PATH lib/${CMAKE_BUILD_TYPE})
 include(AnchResource.cmake.in)
 
 # Check GCC version +
-execute_process(COMMAND ${CMAKE_C_COMPILER} -dumpversion
-                OUTPUT_VARIABLE GCC_VERSION)
+execute_process(COMMAND ${CMAKE_C_COMPILER} -dumpversion OUTPUT_VARIABLE GCC_VERSION)
 if (GCC_VERSION VERSION_LESS 4.5)
   message(FATAL_ERROR "Version < 4.5. This library is based on C++11 standard. Exit.")
-elseif(GCC_VERSION VERSION_GREATER 7.0 OR GCC_VERSION VERSION_EQUAL 7.0)
-  message(STATUS "Version >= 7.0 use -std=c++17")
-  add_definitions("-std=c++17")
-  add_definitions("-D ANCH_STD_OTP")
-elseif(GCC_VERSION VERSION_GREATER 6.0 OR GCC_VERSION VERSION_EQUAL 6.0)
-  message(STATUS "Version >= 6.0 use -std=c++14")
-  add_definitions("-std=c++14")
-elseif(GCC_VERSION VERSION_GREATER 4.9 OR GCC_VERSION VERSION_EQUAL 4.9)
-  message(STATUS "Version >= 4.9 use -std=c++11")
-  add_definitions("-std=c++11")
-elseif(GCC_VERSION VERSION_GREATER 4.7 OR GCC_VERSION VERSION_EQUAL 4.7)
-  message(STATUS "Version >= 4.7 and < 4.9 use -std=c++11 with boost regular expression")
-  add_definitions("-std=c++11")
-  add_definitions("-D ANCH_BOOST_REGEX")
-  set(USE_BOOST_RE true)
+elseif(GCC_VERSION VERSION_GREATER 10.0 OR GCC_VERSION VERSION_EQUAL 10.0)
+  message(STATUS "Version >= 10.0 use -std=c++20")
+  add_definitions("-std=c++20")
+elseif(GCC_VERSION VERSION_GREATER 9.0 OR GCC_VERSION VERSION_EQUAL 9.0)
+  message(STATUS "Version >= 9.0 use -std=c++2a")
+  add_definitions("-std=c++2a -fconcepts")
 else()
   message(STATUS "4.5 <= Version < 4.7 use -std=c++0x")
   add_definitions("-std=c++0x")
-  add_defintions("-D ANCH_BOOST_REGEX")
-  set(USE_BOOST_RE true)
 endif()
 # Check GCC version -
 
@@ -40,23 +28,15 @@ endif()
 add_definitions("-Wall -Wextra -Werror -Wuninitialized -Wconversion -Wsign-conversion -Wformat-security -fstack-protector-all -Wstack-protector --param ssp-buffer-size=4 -ftrapv  -z relro,now -fPIC -D_FORTIFY_SOURCE=2")
 add_definitions(${ANCH_RESOURCE_COMPILE_FLAGS})
 
-# Include librairies
-include(FindThreads)
-find_package(Threads)
-
 # Includes location
 include_directories(inc)
-if(USE_BOOST_RE)
-  find_package(Boost COMPONENTS regex)
-  include_directories(${Boost_INCLUDE_DIRS})
-endif()
 
 # Retrieve every files in project
 file(
   GLOB_RECURSE
   source_files
   src/*
-)
+  )
 
 # Build objects
 add_library(
@@ -102,37 +82,44 @@ endif(ANCH_RESOURCE_STATIC_LIB)
 
 if(ANCH_RESOURCE_UNITARY_TEST)
 
+  include_directories(
+    inc
+    ${ANCH_CLI_INCLUDES_DIR}
+    ${ANCH_UT_INCLUDES_DIR}
+    )
+
+  link_directories(
+    ${ANCH_CLI_LIBRARY_DIR}
+    ${ANCH_UT_LIBRARY_DIR}
+    )
+
+  configure_file(test/test.ini test.ini COPYONLY)
   # Build parser unitary test +
   file(
     GLOB_RECURSE
     test_files
     test/testResource.cpp
-  )
+    )
 
   add_executable(
     anch-resource-parse
     ${test_files}
-  )
-
-  if(USE_BOOST_RE)
-    link_directories(${Boost_LIBRARY_DIRS})
-
-    target_link_libraries(
-      anch-resource-parse
-      anch-resource
-      ${CMAKE_THREAD_LIBS_INIT}
-      ${Boost_LIBRARIES}
     )
-  else()
-    target_link_libraries(
-      anch-resource-parse
-      anch-resource
-      ${CMAKE_THREAD_LIBS_INIT}
+
+  target_link_libraries(
+    anch-resource-parse
+    anch-resource
+    anch-cli
+    anch-unit
     )
-  endif()
   # Build parser unitary test -
 
   enable_testing()
-  add_test(anch-resource-parse ${EXECUTABLE_OUTPUT_PATH}/anch-resource-parse main)
+  add_test(anch-resource-get-TOTO-toto ${EXECUTABLE_OUTPUT_PATH}/anch-resource-parse -t get-TOTO-toto)
+  add_test(anch-resource-get-opt-TOTO-toto ${EXECUTABLE_OUTPUT_PATH}/anch-resource-parse -t get-opt-TOTO-toto)
+  add_test(anch-resource-get-opt-tata ${EXECUTABLE_OUTPUT_PATH}/anch-resource-parse -t get-opt-tata)
+  add_test(anch-resource-get-opt-toto ${EXECUTABLE_OUTPUT_PATH}/anch-resource-parse -t get-opt-toto)
+  add_test(anch-resource-get-tata ${EXECUTABLE_OUTPUT_PATH}/anch-resource-parse -t get-tata)
+  add_test(anch-resource-get-toto ${EXECUTABLE_OUTPUT_PATH}/anch-resource-parse -t get-toto)
 
 endif(ANCH_RESOURCE_UNITARY_TEST)

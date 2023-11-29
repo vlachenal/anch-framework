@@ -21,110 +21,93 @@
 
 #include <map>
 #include <string>
-
-#ifdef ANCH_STD_OTP
 #include <optional>
-#endif
 
-namespace anch {
-  namespace resource {
+namespace anch::resource {
+
+  /*!
+   * Parameters defined in a section
+   *
+   * \author Vincent Lachenal
+   */
+  class Section {
+
+  public:
+    // Attributes +
+    /*! Parameter default value when not found */
+    static std::string DEFAULT_VALUE;
+
+  private:
+    /*! Parameters map */
+    std::map<std::string,std::string> _parameters;
+    // Attributes -
+
+  public:
+    // Constructors +
+    /*!
+     * \ref Section default constructor
+     */
+    Section();
 
     /*!
-     * Parameters defined in a section
-     *
-     * \author Vincent Lachenal
+     * \ref Section copy constructor
      */
-    class Section {
+    Section(const Section& section);
+    // Constructors -
 
-    public:
-      // Attributes +
-      /*! Parameter default value when not found */
-      static std::string DEFAULT_VALUE;
+    // Destructor +
+    /*!
+     * \ref Section destructor
+     */
+    ~Section();
+    // Destructor -
 
-    private:
-      /*! Parameters map */
-      std::map<std::string,std::string> _parameters;
-      // Attributes -
+  public:
+    // Accessors +
+    /*!
+     * Parameters getter
+     *
+     * \return The parameters
+     */
+    const std::map<std::string,std::string>& getParameters() const;
 
-    public:
-      // Constructors +
-      /*!
-       * \ref Section default constructor
-       */
-      Section();
+    /*!
+     * Parameters setter
+     *
+     * \param parameters The parameters
+     */
+    void setParameters(const std::map<std::string,std::string>& parameters);
 
-      /*!
-       * \ref Section copy constructor
-       */
-      Section(const Section& section);
-      // Constructors -
+    /*!
+     * Add parameter to section
+     *
+     * \param param The parameter
+     * \param value The associated value
+     */
+    void addParameter(const std::string& param, const std::string& value);
 
-      // Destructor +
-      /*!
-       * \ref Section destructor
-       */
-      ~Section();
-      // Destructor -
+    /*!
+     * Parameter getter.\n
+     * Search a parameter value by parameter name. If not found, an empty string will be returned.
+     *
+     * \param parameterName The parameter's name
+     *
+     * \return The parameter value or empty if not found
+     */
+    virtual const std::string& getParameter(const std::string& parameterName) const;
 
-    public:
-      // Accessors +
-      /*!
-       * Parameters getter
-       *
-       * \return The parameters
-       */
-      const std::map<std::string,std::string>& getParameters() const;
+    /*!
+     * Access parameter
+     *
+     * \param param the parameter name
+     *
+     * \return the optional result
+     */
+    virtual std::optional<std::string> parameter(const std::string& param) const;
+    // Accessors -
 
-      /*!
-       * Parameters setter
-       *
-       * \param parameters The parameters
-       */
-      void setParameters(const std::map<std::string,std::string>& parameters);
+  };
 
-      /*!
-       * Add parameter to section
-       *
-       * \param param The parameter
-       * \param value The associated value
-       */
-      void addParameter(const std::string& param, const std::string& value);
-
-      /*!
-       * Parameter getter.\n
-       * Search a parameter value by parameter name. If not found, an empty string will be returned.
-       *
-       * \param parameterName The parameter's name
-       *
-       * \return The parameter value or empty if not found
-       */
-      virtual const std::string& getParameter(const std::string& parameterName) const;
-
-#ifdef ANCH_STD_OTP
-      /*!
-       * Access parameter
-       *
-       * \param param the parameter name
-       *
-       * \return the optional result
-       */
-      virtual std::optional<std::string> parameter(const std::string& param) const;
-#endif
-      // Accessors -
-
-    };
-
-    inline const std::map<std::string,std::string>& Section::getParameters() const {
-      return _parameters;
-    }
-
-    inline void Section::setParameters(const std::map<std::string,std::string>& parameters) {
-      _parameters = parameters;
-    }
-
-    inline void Section::addParameter(const std::string& param, const std::string& value) {
-      _parameters[param] = value;
-    }
-
-  }
 }
+
+#include "resource/impl/section.hpp"
