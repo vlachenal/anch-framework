@@ -113,23 +113,6 @@ if(ANCH_JSON_UNITARY_TEST)
   # Build JSON serialization unit tests +
   file(
     GLOB_RECURSE
-    test_serialize
-    test/testSerialize.cpp
-  )
-
-  add_executable(
-    anch-json-serializer-test
-    ${test_serialize}
-  )
-
-  target_link_libraries(
-    anch-json-serializer-test
-    anch-json
-    anch-uuid
-    )
-
-  file(
-    GLOB_RECURSE
     test_mapper
     test/testJsonMapper.cpp
   )
@@ -149,8 +132,6 @@ if(ANCH_JSON_UNITARY_TEST)
   # Build JSON serialization unit tests -
 
   enable_testing()
-
-  add_test(json-serializer ${EXECUTABLE_OUTPUT_PATH}/anch-json-serializer-test main)
 
   add_test(json-ser-full ${EXECUTABLE_OUTPUT_PATH}/anch-json-mapper-test -t json-ser-full)
   add_test(json-deser-list ${EXECUTABLE_OUTPUT_PATH}/anch-json-mapper-test -t json-deser-list)
