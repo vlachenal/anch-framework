@@ -21,9 +21,36 @@
 
 namespace anch::device {
 
-  /*!
-   * Register MAC address UUID (version) provider
-   */
-  void registerMACAddressUUIDProvider();
+  inline const std::string& NetworkInterface::getName() const {
+    return _name;
+  }
+
+  inline const std::string& NetworkInterface::getIpAddress() const {
+    return _ipAddress;
+  }
+
+  inline const std::string& NetworkInterface::getMacAddress() const {
+    return _macAddress;
+  }
+
+  inline const std::string& NetworkInterface::getBroadcastAddress() const {
+    return _broadcastAddress;
+  }
+
+  inline const std::string& NetworkInterface::getNetmask() const {
+    return _netmask;
+  }
+
+  inline int NetworkInterface::getMtu() const {
+    return _mtu;
+  }
+
+  inline int NetworkInterface::getMetric() const {
+    return _metric;
+  }
+
+  inline bool NetworkInterface::isLocalhost() const {
+    return _localhost;
+  }
 
 }

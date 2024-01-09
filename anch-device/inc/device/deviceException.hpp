@@ -22,55 +22,53 @@
 #include <iostream>
 #include <exception>
 
-namespace anch {
-  namespace device {
+namespace anch::device {
+
+  /*!
+   * Device exception class.
+   *
+   * \author Vincent Lachenal
+   */
+  class DeviceException : public std::exception {
+  private:
+    /*! Exception message */
+    std::string _message;
+
+  public:
+    // Constructors +
+    /*!
+     * \ref DeviceException constructor
+     *
+     * \param message The error message
+     */
+    DeviceException(const std::string& message) noexcept;
 
     /*!
-     * Device exception class.
+     * \ref DeviceException constructor
      *
-     * \author Vincent Lachenal
+     * \param message The error message
+     * \param errorCode The error code
      */
-    class DeviceException : public std::exception {
-    private:
-      /*! Exception message */
-      std::string _message;
+    DeviceException(const std::string& message, int errorCode) noexcept;
+    // Constructors -
 
-    public:
-      // Constructors +
-      /*!
-       * \ref DeviceException constructor
-       *
-       * \param message The error message
-       */
-      DeviceException(const std::string& message) noexcept;
+    // Destructor +
+    /*!
+     * \ref DeviceException destructor
+     */
+    virtual ~DeviceException() noexcept;
+    // Destructor -
 
-      /*!
-       * \ref DeviceException constructor
-       *
-       * \param message The error message
-       * \param errorCode The error code
-       */
-      DeviceException(const std::string& message, int errorCode) noexcept;
-      // Constructors -
+  public:
+    // Methods +
+    /*!
+     * Return the error message
+     *
+     * \return The error message
+     */
+    virtual const char* what() const noexcept;
+    // Methods -
 
-      // Destructor +
-      /*!
-       * \ref DeviceException destructor
-       */
-      virtual ~DeviceException() noexcept;
-      // Destructor -
+  };
 
-    public:
-      // Methods +
-      /*!
-       * Return the error message
-       *
-       * \return The error message
-       */
-      virtual const char* what() const noexcept;
-      // Methods -
-
-    };
-
-  }
 }

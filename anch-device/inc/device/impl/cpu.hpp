@@ -21,9 +21,40 @@
 
 namespace anch::device {
 
-  /*!
-   * Register MAC address UUID (version) provider
-   */
-  void registerMACAddressUUIDProvider();
+  inline bool CPU::isAES() const {
+    return _aes;
+  }
+
+  inline bool CPU::isMMX() const {
+    return _mmx;
+  }
+
+  inline bool CPU::isSSE() const {
+    return _sse;
+  }
+
+  inline bool CPU::isSSE2() const {
+    return _sse2;
+  }
+
+  inline bool CPU::isSSE3() const {
+    return _sse3;
+  }
+
+  inline bool CPU::isSSSE3() const {
+    return _ssse3;
+  }
+
+  inline bool CPU::isSSE4() const {
+    return _sse4;
+  }
+
+  inline bool CPU::isSSE4_1() const {
+    return _sse4_1;
+  }
+
+  inline bool CPU::isSSE4_2() const {
+    return _sse4_2;
+  }
 
 }
