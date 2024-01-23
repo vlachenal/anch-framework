@@ -239,7 +239,7 @@ namespace anch::json {
    */
   template<typename T>
   void deserializeArray(std::istream& input,
-			std::function<auto(const T&)> pushFunc,
+			std::function<void(const T&)> pushFunc,
 			const anch::json::MappingOptions& options,
 			std::function<void((T& value, std::istream& input, const anch::json::MappingOptions& options))> deserializeFunc);
 
