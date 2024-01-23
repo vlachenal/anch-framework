@@ -37,72 +37,70 @@
 #include <istream>
 #endif
 
-namespace anch {
-  namespace json {
+namespace anch::json {
 
 #ifndef ANCH_JSON_CUSTOM_PRIMITIVES
-    /*!
-     * Default custom primitive implementation.
-     *
-     * \tparam T the type to check
-     *
-     * \return \c false
-     */
-    template<typename T>
-    constexpr bool isCustomPrimitive() {
-      return false;
-    }
+  /*!
+   * Default custom primitive implementation.
+   *
+   * \tparam T the type to check
+   *
+   * \return \c false
+   */
+  template<typename T>
+  constexpr bool isCustomPrimitive() {
+    return false;
+  }
 #endif
 
-    /*!
-     * Check if type is a primitive JSON type
-     *
-     * \tparam T the type to check
-     *
-     * \return \c true if type is a JSON primitive type, \c false otherwise
-     */
-    template<typename T>
-    constexpr bool isPrimitive() {
-      return std::is_same<T, std::string>::value
-	|| std::is_same<T, std::string_view>::value
-	|| std::is_same<T, int64_t>::value
-	|| std::is_same<T, uint64_t>::value
-	|| std::is_same<T, int32_t>::value
-	|| std::is_same<T, uint32_t>::value
-	|| std::is_same<T, int16_t>::value
-	|| std::is_same<T, uint16_t>::value
-	|| std::is_same<T, int8_t>::value
-	|| std::is_same<T, uint8_t>::value
-	|| std::is_same<T, bool>::value
-	|| std::is_same<T, float>::value
-	|| std::is_same<T, double>::value
-	|| std::is_same<T, long double>::value
+  /*!
+   * Check if type is a primitive JSON type
+   *
+   * \tparam T the type to check
+   *
+   * \return \c true if type is a JSON primitive type, \c false otherwise
+   */
+  template<typename T>
+  constexpr bool isPrimitive() {
+    return std::is_same<T, std::string>::value
+      || std::is_same<T, std::string_view>::value
+      || std::is_same<T, int64_t>::value
+      || std::is_same<T, uint64_t>::value
+      || std::is_same<T, int32_t>::value
+      || std::is_same<T, uint32_t>::value
+      || std::is_same<T, int16_t>::value
+      || std::is_same<T, uint16_t>::value
+      || std::is_same<T, int8_t>::value
+      || std::is_same<T, uint8_t>::value
+      || std::is_same<T, bool>::value
+      || std::is_same<T, float>::value
+      || std::is_same<T, double>::value
+      || std::is_same<T, long double>::value
 #ifdef ANCH_UUID // \todo UUID mapper implementation in string mapper
-	|| std::is_same<T, anch::UUID>::value
+      || std::is_same<T, anch::UUID>::value
 #endif
 #ifdef ANCH_DATE // \todo UUID date implementation in string mapper
-	|| std::is_same<T, anch::date::Date>::value
+      || std::is_same<T, anch::date::Date>::value
 #endif
 #ifdef ANCH_CRYPTO // \todo base64 implementation ... which is a bad idea if my mind
-	|| std::is_same<T, std::istream>::value
+      || std::is_same<T, std::istream>::value
 #endif
-	|| isCustomPrimitive<T>();
-	;
-    }
-
-    template<typename T>
-    auto& Factory<T>::getInstance() {
-      if constexpr (isPrimitive<T>()) {
-	static anch::json::PrimitiveMapper<T> instance;
-	return instance;
-      } else if constexpr (std::is_enum<T>::value) {
-      	static anch::json::PrimitiveMapper<T> instance; // \todo define EnumMapper
-      	return instance;
-      } else {
-	static anch::json::ObjectMapper<T> instance;
-	return instance;
-      }
-    }
-
+      || isCustomPrimitive<T>();
+    ;
   }
+
+  template<typename T>
+  auto& Factory<T>::getInstance() {
+    if constexpr (isPrimitive<T>()) {
+      static anch::json::PrimitiveMapper<T> instance;
+      return instance;
+    } else if constexpr (std::is_enum<T>::value) {
+      static anch::json::PrimitiveMapper<T> instance; // \todo define EnumMapper
+      return instance;
+    } else {
+      static anch::json::ObjectMapper<T> instance;
+      return instance;
+    }
+  }
+
 }

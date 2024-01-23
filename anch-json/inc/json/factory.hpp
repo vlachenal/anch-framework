@@ -20,34 +20,32 @@
 #pragma once
 
 
-namespace anch {
-  namespace json {
+namespace anch::json {
 
+  /*!
+   * \brief JSON mapper factory
+   *
+   * Each JSON mapper will have only one instance.
+   *
+   * \tparam T the object type
+   *
+   * \author Vincent Lachenal
+   *
+   * \since 0.1
+   */
+  template<typename T>
+  class Factory {
+
+  public:
     /*!
-     * \brief JSON mapper factory
+     * Get JSON mapper unique instance
      *
-     * Each JSON mapper will have only one instance.
-     *
-     * \tparam T the object type
-     *
-     * \author Vincent Lachenal
-     *
-     * \since 0.1
+     * \return the \ref JSONMapper or the \ref PrimitiveMapper unique instance according to type
      */
-    template<typename T>
-    class Factory {
+    static auto& getInstance();
 
-    public:
-      /*!
-       * Get JSON mapper unique instance
-       *
-       * \return the \ref JSONMapper or the \ref PrimitiveMapper unique instance according to type
-       */
-      static auto& getInstance();
+  };
 
-    };
-
-  }  // json
-}  // anch
+}  // anch::json
 
 #include "json/impl/factory.hpp"

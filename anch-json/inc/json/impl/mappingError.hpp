@@ -19,14 +19,12 @@
 */
 #pragma once
 
-namespace anch {
-  namespace json {
+namespace anch::json {
 
-    inline
-    anch::json::ErrorCode
-    MappingError::getErrorCode() const {
-      return _code;
-    }
+  inline
+  anch::json::ErrorCode
+  MappingError::getErrorCode() const {
+    return _code;
+  }
 
-  }  // json
-}  // anch
+}  // anch::json

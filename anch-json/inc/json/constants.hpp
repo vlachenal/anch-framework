@@ -22,32 +22,30 @@
 #include <string>
 #include <optional>
 
-namespace anch {
-  namespace json {
+namespace anch::json {
 
-    /*! JSON caracters string delimiter ('"') */
-    extern const char STRING_DELIMITER;
+  /*! JSON caracters string delimiter ('"') */
+  extern const char STRING_DELIMITER;
 
-    /*! JSON fields delimiter (',') */
-    extern const char FIELD_SEPARATOR;
+  /*! JSON fields delimiter (',') */
+  extern const char FIELD_SEPARATOR;
 
-    /*! JSON fiel/value delimiter (':') */
-    extern const char FIELD_VALUE_SEPARATOR;
+  /*! JSON fiel/value delimiter (':') */
+  extern const char FIELD_VALUE_SEPARATOR;
 
-    /*! JSON start object ('{') */
-    extern const char OBJECT_BEGIN;
+  /*! JSON start object ('{') */
+  extern const char OBJECT_BEGIN;
 
-    /*! JSON end object ('}') */
-    extern const char OBJECT_END;
+  /*! JSON end object ('}') */
+  extern const char OBJECT_END;
 
-    /*! JSON start array ('[') */
-    extern const char ARRAY_BEGIN;
+  /*! JSON start array ('[') */
+  extern const char ARRAY_BEGIN;
 
-    /*! JSON start array (']') */
-    extern const char ARRAY_END;
+  /*! JSON start array (']') */
+  extern const char ARRAY_END;
 
-    /*! No field name constant value */
-    extern const std::optional<std::string> EMPTY_FIELD;
+  /*! No field name constant value */
+  extern const std::optional<std::string> EMPTY_FIELD;
 
-  }  // json
-}  // anch
+}  // json::anch

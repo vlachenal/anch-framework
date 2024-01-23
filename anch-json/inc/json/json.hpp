@@ -26,8 +26,7 @@
 #include "json/mapper.hpp"
 
 
-namespace anch {
-  namespace json {
+namespace anch::json {
 
     /*!
      * Fields registry function\n
@@ -394,7 +393,6 @@ namespace anch {
 
     };
 
-  }  // json
-}  // anch
+}  // anch::json
 
 #include "json/impl/json.hpp"

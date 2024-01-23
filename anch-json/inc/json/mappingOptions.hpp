@@ -19,46 +19,44 @@
 */
 #pragma once
 
-namespace anch {
-  namespace json {
+namespace anch::json {
 
-    /*!
-     * \brief JSON mapping options
-     *
-     * Options are used to serialization options and deserialization behavior on unexcepted input stream
-     *
-     * \author Vincent Lachenal
-     *
-     * \since 0.1
-     */
-    struct MappingOptions {
+  /*!
+   * \brief JSON mapping options
+   *
+   * Options are used to serialization options and deserialization behavior on unexcepted input stream
+   *
+   * \author Vincent Lachenal
+   *
+   * \since 0.1
+   */
+  struct MappingOptions {
 
-      // Serialization +
-      /*! Serialize empty character' string as \c "" . Default to \c true ; std::optional or pointer can be used */
-      bool serialize_empty_string = true;
+    // Serialization +
+    /*! Serialize empty character' string as \c "" . Default to \c true ; std::optional or pointer can be used */
+    bool serialize_empty_string = true;
 
-      /*! Serialize empty collection as \c [] . Default to \c true ; std::optional or pointer can be used */
-      bool serialize_empty_array = true;
+    /*! Serialize empty collection as \c [] . Default to \c true ; std::optional or pointer can be used */
+    bool serialize_empty_array = true;
 
-      /*! Serialize null or empty string as \c null . Default to \c false */
-      bool serialize_null = false;
-      // Serialization -
+    /*! Serialize null or empty string as \c null . Default to \c false */
+    bool serialize_null = false;
+    // Serialization -
 
-      // Deserialization +
-      /*! Unknown will not raise error if \c true ; it can be usefull for client side implementation */
-      bool deserialize_ignore_unknown_field = false;
+    // Deserialization +
+    /*! Unknown will not raise error if \c true ; it can be usefull for client side implementation */
+    bool deserialize_ignore_unknown_field = false;
 
-      /*! Maximum discard characters before raising error. Use \c -1 value for unlimited discard characters. It can be usefull at development stage */
-      int deserialize_max_discard_char = 0;
+    /*! Maximum discard characters before raising error. Use \c -1 value for unlimited discard characters. It can be usefull at development stage */
+    int deserialize_max_discard_char = 0;
 
-      /*! Maximum field characters before raising error. Use \c -1 value for unlimited field's value characters */
-      int deserialize_max_field_char = 512;
-      // Deserialization -
+    /*! Maximum field characters before raising error. Use \c -1 value for unlimited field's value characters */
+    int deserialize_max_field_char = 512;
+    // Deserialization -
 
-    };
+  };
 
-    /*! Default mapping options. It is not a constant so it can be changed in your application initialization. */
-    extern MappingOptions DEFAULT_MAPPING_OPTIONS;
+  /*! Default mapping options. It is not a constant so it can be changed in your application initialization. */
+  extern MappingOptions DEFAULT_MAPPING_OPTIONS;
 
-  }  // json
-}  // anch
+}  // anch::json

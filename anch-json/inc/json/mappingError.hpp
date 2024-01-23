@@ -25,101 +25,99 @@
 #include <string>
 
 
-namespace anch {
-  namespace json {
+namespace anch::json {
+
+  /*!
+   * JSON mapping error code
+   *
+   * \author Vincent Lachenal
+   *
+   * \since 0.1
+   */
+  enum class ErrorCode {
+    /*! Invalid format */
+    INVALID_FORMAT = 0,
+
+    /*! Found unexpected field (and parsing options disallow it) */
+    UNEXPECTED_FIELD,
+
+    /*! Found too many space characters or charcters in field name (according to parsing option) */
+    POTENTIAL_OVERFLOW,
+
+    /*! Unexpected error code */
+    UNKNOWN = 9999
+  };
+
+  /*!
+   * \brief Mapping error
+   *
+   * Error which can be raised while parsing JSON input stream
+   *
+   * \author Vincent Lachenal
+   *
+   * \since 0.1
+   */
+  class MappingError: public std::exception {
+
+    // Attributes +
+  private:
+    /*! Error code */
+    ErrorCode _code;
+
+    /*! Error message */
+    std::string _msg;
+    // Attributes -
+
+    // Constructors +
+  public:
+    /*!
+     * \ref MappingError constructor
+     *
+     * \param code the error code
+     * \param input the input stream
+     * \param context the contextualized sequence which has raised this error (default to no value)
+     */
+    MappingError(ErrorCode code, std::istream& input, std::optional<std::string> context = std::optional<std::string>());
 
     /*!
-     * JSON mapping error code
+     * \ref MappingError constructor
      *
-     * \author Vincent Lachenal
-     *
-     * \since 0.1
+     * \param code the error code
+     * \param input the input stream
+     * \param context the contextualized character which has raised this error
      */
-    enum class ErrorCode {
-      /*! Invalid format */
-      INVALID_FORMAT = 0,
+    MappingError(ErrorCode code, std::istream& input, char context);
+    // Constructors -
 
-      /*! Found unexpected field (and parsing options disallow it) */
-      UNEXPECTED_FIELD,
-
-      /*! Found too many space characters or charcters in field name (according to parsing option) */
-      POTENTIAL_OVERFLOW,
-
-      /*! Unexpected error code */
-      UNKNOWN = 9999
-    };
-
+    // Destructor +
+  public:
     /*!
-     * \brief Mapping error
-     *
-     * Error which can be raised while parsing JSON input stream
-     *
-     * \author Vincent Lachenal
-     *
-     * \since 0.1
+     * \ref MappingError destructor
      */
-    class MappingError: public std::exception {
+    virtual ~MappingError();
+    // Destructor -
 
-      // Attributes +
-    private:
-      /*! Error code */
-      ErrorCode _code;
+    // Methods +
+  public:
+    /*!
+     * Error message getter
+     *
+     * \return the error message
+     */
+    virtual const char* what() const noexcept override;
+    // Methods -
 
-      /*! Error message */
-      std::string _msg;
-      // Attributes -
+    // Accessors +
+    /*!
+     * Error code getter
+     *
+     * \return the error code
+     */
+    anch::json::ErrorCode getErrorCode() const;
+    // Accessors -
 
-      // Constructors +
-    public:
-      /*!
-       * \ref MappingError constructor
-       *
-       * \param code the error code
-       * \param input the input stream
-       * \param context the contextualized sequence which has raised this error (default to no value)
-       */
-      MappingError(ErrorCode code, std::istream& input, std::optional<std::string> context = std::optional<std::string>());
+  };
 
-      /*!
-       * \ref MappingError constructor
-       *
-       * \param code the error code
-       * \param input the input stream
-       * \param context the contextualized character which has raised this error
-       */
-      MappingError(ErrorCode code, std::istream& input, char context);
-      // Constructors -
-
-      // Destructor +
-    public:
-      /*!
-       * \ref MappingError destructor
-       */
-      virtual ~MappingError();
-      // Destructor -
-
-      // Methods +
-    public:
-      /*!
-       * Error message getter
-       *
-       * \return the error message
-       */
-      virtual const char* what() const noexcept override;
-      // Methods -
-
-      // Accessors +
-      /*!
-       * Error code getter
-       *
-       * \return the error code
-       */
-      anch::json::ErrorCode getErrorCode() const;
-      // Accessors -
-
-    };
-
-  }  // json
-}  // anch
+}  // anch::json
 
 #include "json/impl/mappingError.hpp"

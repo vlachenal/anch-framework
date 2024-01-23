@@ -31,207 +31,205 @@
 #include "json/mappingOptions.hpp"
 
 
-namespace anch {
-  namespace json {
+namespace anch::json {
 
-    // JSON mapper early declaration
-    template<typename T>
-    class Factory;
+  // JSON mapper early declaration
+  template<typename T>
+  class Factory;
+
+  /*!
+   * \brief JSON primitive types mapper
+   *
+   * JSON primitive types does not have any fields.
+   *
+   * \tparam T the object type
+   *
+   * \author Vincent Lachenal
+   *
+   * \since 0.1
+   */
+  template<typename T>
+  class PrimitiveMapper {
+    friend anch::json::Factory<T>;
+
+    // Constructors +
+  private:
+    /*!
+     * \ref PrimitiveMapper default private constructor
+     */
+    PrimitiveMapper();
+
+  public:
+    /*!
+     * Forbids \ref PrimitiveMapper copy constructor
+     *
+     * \param other the other mapper not to copy
+     */
+    PrimitiveMapper(const PrimitiveMapper& other) = delete;
 
     /*!
-     * \brief JSON primitive types mapper
+     * Forbids \ref PrimitiveMapper move constructor
      *
-     * JSON primitive types does not have any fields.
-     *
-     * \tparam T the object type
-     *
-     * \author Vincent Lachenal
-     *
-     * \since 0.1
+     * \param other the other mapper not to move
      */
-    template<typename T>
-    class PrimitiveMapper {
-      friend anch::json::Factory<T>;
+    PrimitiveMapper(PrimitiveMapper&& other) = delete;
+    // Constructors -
 
-      // Constructors +
-    private:
-      /*!
-       * \ref PrimitiveMapper default private constructor
-       */
-      PrimitiveMapper();
+  private:
+    // Destructors +
+    /*!
+     * \ref PrimitiveMapper private destructor
+     */
+    virtual ~PrimitiveMapper();
+    // Destructors -
 
-    public:
-      /*!
-       * Forbids \ref PrimitiveMapper copy constructor
-       *
-       * \param other the other mapper not to copy
-       */
-      PrimitiveMapper(const PrimitiveMapper& other) = delete;
+    // Methods +
+  public:
+    /*!
+     * Serialize reference attribute
+     *
+     * \param value the reference attribute to serialize
+     * \param out the output stream to write the attribute
+     * \param options the options to use
+     * \param field the attribute's field name
+     *
+     * \return \c true
+     */
+    bool serialize(const T& value,
+		   std::ostream& out,
+		   const anch::json::MappingOptions& options,
+		   const std::optional<std::string>& field = EMPTY_FIELD);
 
-      /*!
-       * Forbids \ref PrimitiveMapper move constructor
-       *
-       * \param other the other mapper not to move
-       */
-      PrimitiveMapper(PrimitiveMapper&& other) = delete;
-      // Constructors -
+    /*!
+     * Serialize pointer attribute
+     *
+     * \param value the pointer attribute to serialize
+     * \param out the output stream to write the attribute
+     * \param options the options to use
+     * \param field the attribute's field name
+     *
+     * \return \c true if attribute is not \c NULL , \c false otherwise
+     */
+    bool serialize(const T* const value,
+		   std::ostream& out,
+		   const anch::json::MappingOptions& options,
+		   const std::optional<std::string>& field = EMPTY_FIELD);
 
-    private:
-      // Destructors +
-      /*!
-       * \ref PrimitiveMapper private destructor
-       */
-      virtual ~PrimitiveMapper();
-      // Destructors -
+    /*!
+     * Serialize optional attribute
+     *
+     * \param value the pointer attribute to serialize
+     * \param out the output stream to write the attribute
+     * \param options the options to use
+     * \param field the attribute's field name
+     *
+     * \return \c true if attribute is set , \c false otherwise
+     */
+    bool serialize(const std::optional<T>& value,
+		   std::ostream& out,
+		   const anch::json::MappingOptions& options,
+		   const std::optional<std::string>& field = EMPTY_FIELD);
 
-      // Methods +
-    public:
-      /*!
-       * Serialize reference attribute
-       *
-       * \param value the reference attribute to serialize
-       * \param out the output stream to write the attribute
-       * \param options the options to use
-       * \param field the attribute's field name
-       *
-       * \return \c true
-       */
-      bool serialize(const T& value,
-		     std::ostream& out,
-		     const anch::json::MappingOptions& options,
-		     const std::optional<std::string>& field = EMPTY_FIELD);
+    /*!
+     * Serialize array (as \c std::vector ) attribute
+     *
+     * \param value the array attribute to serialize
+     * \param out the output stream to write the attribute
+     * \param options the options to use
+     * \param field the attribute's field name
+     *
+     * \return \c true
+     */
+    bool serialize(const std::vector<T>& value,
+		   std::ostream& out,
+		   const anch::json::MappingOptions& options,
+		   const std::optional<std::string>& field = EMPTY_FIELD);
 
-      /*!
-       * Serialize pointer attribute
-       *
-       * \param value the pointer attribute to serialize
-       * \param out the output stream to write the attribute
-       * \param options the options to use
-       * \param field the attribute's field name
-       *
-       * \return \c true if attribute is not \c NULL , \c false otherwise
-       */
-      bool serialize(const T* const value,
-		     std::ostream& out,
-		     const anch::json::MappingOptions& options,
-		     const std::optional<std::string>& field = EMPTY_FIELD);
+    /*!
+     * Serialize array (as \c std::list ) attribute
+     *
+     * \param value the array attribute to serialize
+     * \param out the output stream to write the attribute
+     * \param options the options to use
+     * \param field the attribute's field name
+     *
+     * \return \c true
+     */
+    bool serialize(const std::list<T>& value,
+		   std::ostream& out,
+		   const anch::json::MappingOptions& options,
+		   const std::optional<std::string>& field = EMPTY_FIELD);
 
-      /*!
-       * Serialize optional attribute
-       *
-       * \param value the pointer attribute to serialize
-       * \param out the output stream to write the attribute
-       * \param options the options to use
-       * \param field the attribute's field name
-       *
-       * \return \c true if attribute is set , \c false otherwise
-       */
-      bool serialize(const std::optional<T>& value,
-		     std::ostream& out,
-		     const anch::json::MappingOptions& options,
-		     const std::optional<std::string>& field = EMPTY_FIELD);
+    /*!
+     * Serialize array (as \c std::set ) attribute
+     *
+     * \param value the array attribute to serialize
+     * \param out the output stream to write the attribute
+     * \param options the options to use
+     * \param field the attribute's field name
+     *
+     * \return \c true
+     */
+    bool serialize(const std::set<T>& value,
+		   std::ostream& out,
+		   const anch::json::MappingOptions& options,
+		   const std::optional<std::string>& field = EMPTY_FIELD);
 
-      /*!
-       * Serialize array (as \c std::vector ) attribute
-       *
-       * \param value the array attribute to serialize
-       * \param out the output stream to write the attribute
-       * \param options the options to use
-       * \param field the attribute's field name
-       *
-       * \return \c true
-       */
-      bool serialize(const std::vector<T>& value,
-		     std::ostream& out,
-		     const anch::json::MappingOptions& options,
-		     const std::optional<std::string>& field = EMPTY_FIELD);
+    /*!
+     * Deserialize JSON value
+     *
+     * \param value the value to set
+     * \param input the input stream to parse
+     * \param options the options to use
+     */
+    void deserialize(T& value, std::istream& input, const anch::json::MappingOptions& options);
 
-      /*!
-       * Serialize array (as \c std::list ) attribute
-       *
-       * \param value the array attribute to serialize
-       * \param out the output stream to write the attribute
-       * \param options the options to use
-       * \param field the attribute's field name
-       *
-       * \return \c true
-       */
-      bool serialize(const std::list<T>& value,
-		     std::ostream& out,
-		     const anch::json::MappingOptions& options,
-		     const std::optional<std::string>& field = EMPTY_FIELD);
+    /*!
+     * Deserialize JSON value
+     *
+     * \param value the value to set
+     * \param input the input stream to parse
+     * \param options the options to use
+     */
+    void deserialize(std::optional<T>& value, std::istream& input, const anch::json::MappingOptions& options);
 
-      /*!
-       * Serialize array (as \c std::set ) attribute
-       *
-       * \param value the array attribute to serialize
-       * \param out the output stream to write the attribute
-       * \param options the options to use
-       * \param field the attribute's field name
-       *
-       * \return \c true
-       */
-      bool serialize(const std::set<T>& value,
-		     std::ostream& out,
-		     const anch::json::MappingOptions& options,
-		     const std::optional<std::string>& field = EMPTY_FIELD);
+    /*!
+     * Deserialize JSON value
+     *
+     * \param value the value to set
+     * \param input the input stream to parse
+     * \param options the options to use
+     */
+    void deserialize(T* value, std::istream& input, const anch::json::MappingOptions& options);
 
-      /*!
-       * Deserialize JSON value
-       *
-       * \param value the value to set
-       * \param input the input stream to parse
-       * \param options the options to use
-       */
-      void deserialize(T& value, std::istream& input, const anch::json::MappingOptions& options);
+    /*!
+     * Deserialize JSON value
+     *
+     * \param value the value to set
+     * \param input the input stream to parse
+     * \param options the options to use
+     */
+    void deserialize(std::vector<T>& value, std::istream& input, const anch::json::MappingOptions& options);
 
-      /*!
-       * Deserialize JSON value
-       *
-       * \param value the value to set
-       * \param input the input stream to parse
-       * \param options the options to use
-       */
-      void deserialize(std::optional<T>& value, std::istream& input, const anch::json::MappingOptions& options);
+    /*!
+     * Deserialize JSON value
+     *
+     * \param value the value to set
+     * \param input the input stream to parse
+     * \param options the options to use
+     */
+    void deserialize(std::list<T>& value, std::istream& input, const anch::json::MappingOptions& options);
 
-      /*!
-       * Deserialize JSON value
-       *
-       * \param value the value to set
-       * \param input the input stream to parse
-       * \param options the options to use
-       */
-      void deserialize(T* value, std::istream& input, const anch::json::MappingOptions& options);
+    /*!
+     * Deserialize JSON value
+     *
+     * \param value the value to set
+     * \param input the input stream to parse
+     * \param options the options to use
+     */
+    void deserialize(std::set<T>& value, std::istream& input, const anch::json::MappingOptions& options);
+    // Methods -
 
-      /*!
-       * Deserialize JSON value
-       *
-       * \param value the value to set
-       * \param input the input stream to parse
-       * \param options the options to use
-       */
-      void deserialize(std::vector<T>& value, std::istream& input, const anch::json::MappingOptions& options);
+  };
 
-      /*!
-       * Deserialize JSON value
-       *
-       * \param value the value to set
-       * \param input the input stream to parse
-       * \param options the options to use
-       */
-      void deserialize(std::list<T>& value, std::istream& input, const anch::json::MappingOptions& options);
-
-      /*!
-       * Deserialize JSON value
-       *
-       * \param value the value to set
-       * \param input the input stream to parse
-       * \param options the options to use
-       */
-      void deserialize(std::set<T>& value, std::istream& input, const anch::json::MappingOptions& options);
-      // Methods -
-
-    };
-
-  } // json
-}  // anch
+}  // anch::json
