@@ -157,6 +157,16 @@ PrimitiveMapper<uint64_t>::serialize(const std::set<uint64_t>& value,
 }
 
 template<>
+bool
+PrimitiveMapper<uint64_t>::serialize(const std::map<std::string,uint64_t>& value,
+				     std::ostream& out,
+				     const anch::json::MappingOptions& options,
+				     const std::optional<std::string>& field) {
+  anch::json::serializeMap<uint64_t>(value, out, &serializeValue<uint64_t>, options, field);
+  return true;
+}
+
+template<>
 void
 PrimitiveMapper<uint64_t>::deserialize(uint64_t& value, std::istream& input, const anch::json::MappingOptions& options) {
   anch::json::deserialize<uint64_t>(value, input, options, &deserializeValue<uint64_t>);
@@ -199,6 +209,15 @@ PrimitiveMapper<uint64_t>::deserialize(std::set<uint64_t>& value, std::istream& 
 					 [&value](const uint64_t& str) -> void { value.insert(str); },
 					 options,
 					 &deserializeValue<uint64_t>);
+}
+
+template<>
+void
+PrimitiveMapper<uint64_t>::deserialize(std::map<std::string,uint64_t>& value, std::istream& input, const anch::json::MappingOptions& options) {
+  anch::json::deserializeMap<uint64_t>(input,
+				       [&value](const std::pair<std::string,uint64_t>& str) -> void { value.insert(str); },
+				       options,
+				       &deserializeValue<uint64_t>);
 }
 
 template class PrimitiveMapper<uint64_t>;
@@ -273,6 +292,16 @@ PrimitiveMapper<int64_t>::serialize(const std::set<int64_t>& value,
 }
 
 template<>
+bool
+PrimitiveMapper<int64_t>::serialize(const std::map<std::string,int64_t>& value,
+				    std::ostream& out,
+				    const anch::json::MappingOptions& options,
+				    const std::optional<std::string>& field) {
+  anch::json::serializeMap<int64_t>(value, out, &serializeValue<int64_t>, options, field);
+  return true;
+}
+
+template<>
 void
 PrimitiveMapper<int64_t>::deserialize(int64_t& value, std::istream& input, const anch::json::MappingOptions& options) {
   anch::json::deserialize<int64_t>(value, input, options, &deserializeValue<int64_t>);
@@ -315,6 +344,15 @@ PrimitiveMapper<int64_t>::deserialize(std::set<int64_t>& value, std::istream& in
 					[&value](const int64_t& str) -> void { value.insert(str); },
 					options,
 					&deserializeValue<int64_t>);
+}
+
+template<>
+void
+PrimitiveMapper<int64_t>::deserialize(std::map<std::string,int64_t>& value, std::istream& input, const anch::json::MappingOptions& options) {
+  anch::json::deserializeMap<int64_t>(input,
+				      [&value](const std::pair<std::string,int64_t>& str) -> void { value.insert(str); },
+				      options,
+				      &deserializeValue<int64_t>);
 }
 
 template class PrimitiveMapper<int64_t>;
@@ -389,6 +427,16 @@ PrimitiveMapper<uint32_t>::serialize(const std::set<uint32_t>& value,
 }
 
 template<>
+bool
+PrimitiveMapper<uint32_t>::serialize(const std::map<std::string,uint32_t>& value,
+				     std::ostream& out,
+				     const anch::json::MappingOptions& options,
+				     const std::optional<std::string>& field) {
+  anch::json::serializeMap<uint32_t>(value, out, &serializeValue<uint32_t>, options, field);
+  return true;
+}
+
+template<>
 void
 PrimitiveMapper<uint32_t>::deserialize(uint32_t& value, std::istream& input, const anch::json::MappingOptions& options) {
   anch::json::deserialize<uint32_t>(value, input, options, &deserializeValue<uint32_t>);
@@ -431,6 +479,15 @@ PrimitiveMapper<uint32_t>::deserialize(std::set<uint32_t>& value, std::istream& 
 					 [&value](const uint32_t& str) -> void { value.insert(str); },
 					 options,
 					 &deserializeValue<uint32_t>);
+}
+
+template<>
+void
+PrimitiveMapper<uint32_t>::deserialize(std::map<std::string,uint32_t>& value, std::istream& input, const anch::json::MappingOptions& options) {
+  anch::json::deserializeMap<uint32_t>(input,
+				       [&value](const std::pair<std::string,uint32_t>& str) -> void { value.insert(str); },
+				       options,
+				       &deserializeValue<uint32_t>);
 }
 
 template class PrimitiveMapper<uint32_t>;
@@ -505,6 +562,16 @@ PrimitiveMapper<int32_t>::serialize(const std::set<int32_t>& value,
 }
 
 template<>
+bool
+PrimitiveMapper<int32_t>::serialize(const std::map<std::string,int32_t>& value,
+				    std::ostream& out,
+				    const anch::json::MappingOptions& options,
+				    const std::optional<std::string>& field) {
+  anch::json::serializeMap<int32_t>(value, out, &serializeValue<int32_t>, options, field);
+  return true;
+}
+
+template<>
 void
 PrimitiveMapper<int32_t>::deserialize(int32_t& value, std::istream& input, const anch::json::MappingOptions& options) {
   anch::json::deserialize<int32_t>(value, input, options, &deserializeValue<int32_t>);
@@ -547,6 +614,15 @@ PrimitiveMapper<int32_t>::deserialize(std::set<int32_t>& value, std::istream& in
 					[&value](const int32_t& str) -> void { value.insert(str); },
 					options,
 					&deserializeValue<int32_t>);
+}
+
+template<>
+void
+PrimitiveMapper<int32_t>::deserialize(std::map<std::string,int32_t>& value, std::istream& input, const anch::json::MappingOptions& options) {
+  anch::json::deserializeMap<int32_t>(input,
+				      [&value](const std::pair<std::string,int32_t>& str) -> void { value.insert(str); },
+				      options,
+				      &deserializeValue<int32_t>);
 }
 
 template class PrimitiveMapper<int32_t>;
@@ -621,6 +697,16 @@ PrimitiveMapper<uint16_t>::serialize(const std::set<uint16_t>& value,
 }
 
 template<>
+bool
+PrimitiveMapper<uint16_t>::serialize(const std::map<std::string,uint16_t>& value,
+				     std::ostream& out,
+				     const anch::json::MappingOptions& options,
+				     const std::optional<std::string>& field) {
+  anch::json::serializeMap<uint16_t>(value, out, &serializeValue<uint16_t>, options, field);
+  return true;
+}
+
+template<>
 void
 PrimitiveMapper<uint16_t>::deserialize(uint16_t& value, std::istream& input, const anch::json::MappingOptions& options) {
   anch::json::deserialize<uint16_t>(value, input, options, &deserializeValue<uint16_t>);
@@ -663,6 +749,15 @@ PrimitiveMapper<uint16_t>::deserialize(std::set<uint16_t>& value, std::istream& 
 					 [&value](const uint16_t& str) -> void { value.insert(str); },
 					 options,
 					 &deserializeValue<uint16_t>);
+}
+
+template<>
+void
+PrimitiveMapper<uint16_t>::deserialize(std::map<std::string,uint16_t>& value, std::istream& input, const anch::json::MappingOptions& options) {
+  anch::json::deserializeMap<uint16_t>(input,
+				       [&value](const std::pair<std::string,uint16_t>& str) -> void { value.insert(str); },
+				       options,
+				       &deserializeValue<uint16_t>);
 }
 
 template class PrimitiveMapper<uint16_t>;
@@ -737,6 +832,16 @@ PrimitiveMapper<int16_t>::serialize(const std::set<int16_t>& value,
 }
 
 template<>
+bool
+PrimitiveMapper<int16_t>::serialize(const std::map<std::string,int16_t>& value,
+				    std::ostream& out,
+				    const anch::json::MappingOptions& options,
+				    const std::optional<std::string>& field) {
+  anch::json::serializeMap<int16_t>(value, out, &serializeValue<int16_t>, options, field);
+  return true;
+}
+
+template<>
 void
 PrimitiveMapper<int16_t>::deserialize(int16_t& value, std::istream& input, const anch::json::MappingOptions& options) {
   anch::json::deserialize<int16_t>(value, input, options, &deserializeValue<int16_t>);
@@ -779,6 +884,15 @@ PrimitiveMapper<int16_t>::deserialize(std::set<int16_t>& value, std::istream& in
 					[&value](const int16_t& str) -> void { value.insert(str); },
 					options,
 					&deserializeValue<int16_t>);
+}
+
+template<>
+void
+PrimitiveMapper<int16_t>::deserialize(std::map<std::string,int16_t>& value, std::istream& input, const anch::json::MappingOptions& options) {
+  anch::json::deserializeMap<int16_t>(input,
+				      [&value](const std::pair<std::string,int16_t>& str) -> void { value.insert(str); },
+				      options,
+				      &deserializeValue<int16_t>);
 }
 
 template class PrimitiveMapper<int16_t>;
@@ -853,6 +967,16 @@ PrimitiveMapper<uint8_t>::serialize(const std::set<uint8_t>& value,
 }
 
 template<>
+bool
+PrimitiveMapper<uint8_t>::serialize(const std::map<std::string,uint8_t>& value,
+				    std::ostream& out,
+				    const anch::json::MappingOptions& options,
+				    const std::optional<std::string>& field) {
+  anch::json::serializeMap<uint8_t>(value, out, &serializeValue<uint8_t>, options, field);
+  return true;
+}
+
+template<>
 void
 PrimitiveMapper<uint8_t>::deserialize(uint8_t& value, std::istream& input, const anch::json::MappingOptions& options) {
   anch::json::deserialize<uint8_t>(value, input, options, &deserializeValue<uint8_t>);
@@ -895,6 +1019,15 @@ PrimitiveMapper<uint8_t>::deserialize(std::set<uint8_t>& value, std::istream& in
 					[&value](const uint8_t& str) -> void { value.insert(str); },
 					options,
 					&deserializeValue<uint8_t>);
+}
+
+template<>
+void
+PrimitiveMapper<uint8_t>::deserialize(std::map<std::string,uint8_t>& value, std::istream& input, const anch::json::MappingOptions& options) {
+  anch::json::deserializeMap<uint8_t>(input,
+				      [&value](const std::pair<std::string,uint8_t>& str) -> void { value.insert(str); },
+				      options,
+				      &deserializeValue<uint8_t>);
 }
 
 template class PrimitiveMapper<uint8_t>;
@@ -969,6 +1102,16 @@ PrimitiveMapper<int8_t>::serialize(const std::set<int8_t>& value,
 }
 
 template<>
+bool
+PrimitiveMapper<int8_t>::serialize(const std::map<std::string,int8_t>& value,
+				   std::ostream& out,
+				   const anch::json::MappingOptions& options,
+				   const std::optional<std::string>& field) {
+  anch::json::serializeMap<int8_t>(value, out, &serializeValue<int8_t>, options, field);
+  return true;
+}
+
+template<>
 void
 PrimitiveMapper<int8_t>::deserialize(int8_t& value, std::istream& input, const anch::json::MappingOptions& options) {
   anch::json::deserialize<int8_t>(value, input, options, &deserializeValue<int8_t>);
@@ -1011,6 +1154,15 @@ PrimitiveMapper<int8_t>::deserialize(std::set<int8_t>& value, std::istream& inpu
 				       [&value](const int8_t& str) -> void { value.insert(str); },
 				       options,
 				       &deserializeValue<int8_t>);
+}
+
+template<>
+void
+PrimitiveMapper<int8_t>::deserialize(std::map<std::string,int8_t>& value, std::istream& input, const anch::json::MappingOptions& options) {
+  anch::json::deserializeMap<int8_t>(input,
+				     [&value](const std::pair<std::string,int8_t>& str) -> void { value.insert(str); },
+				     options,
+				     &deserializeValue<int8_t>);
 }
 
 template class PrimitiveMapper<int8_t>;
@@ -1085,6 +1237,16 @@ PrimitiveMapper<float>::serialize(const std::set<float>& value,
 }
 
 template<>
+bool
+PrimitiveMapper<float>::serialize(const std::map<std::string,float>& value,
+				  std::ostream& out,
+				  const anch::json::MappingOptions& options,
+				  const std::optional<std::string>& field) {
+  anch::json::serializeMap<float>(value, out, &serializeValue<float>, options, field);
+  return true;
+}
+
+template<>
 void
 PrimitiveMapper<float>::deserialize(float& value, std::istream& input, const anch::json::MappingOptions& options) {
   anch::json::deserialize<float>(value, input, options, &deserializeValue<float>);
@@ -1127,6 +1289,15 @@ PrimitiveMapper<float>::deserialize(std::set<float>& value, std::istream& input,
 				      [&value](const float& str) -> void { value.insert(str); },
 				      options,
 				      &deserializeValue<float>);
+}
+
+template<>
+void
+PrimitiveMapper<float>::deserialize(std::map<std::string,float>& value, std::istream& input, const anch::json::MappingOptions& options) {
+  anch::json::deserializeMap<float>(input,
+				    [&value](const std::pair<std::string,float>& str) -> void { value.insert(str); },
+				    options,
+				    &deserializeValue<float>);
 }
 
 template class PrimitiveMapper<float>;
@@ -1201,6 +1372,16 @@ PrimitiveMapper<double>::serialize(const std::set<double>& value,
 }
 
 template<>
+bool
+PrimitiveMapper<double>::serialize(const std::map<std::string,double>& value,
+				   std::ostream& out,
+				   const anch::json::MappingOptions& options,
+				   const std::optional<std::string>& field) {
+  anch::json::serializeMap<double>(value, out, &serializeValue<double>, options, field);
+  return true;
+}
+
+template<>
 void
 PrimitiveMapper<double>::deserialize(double& value, std::istream& input, const anch::json::MappingOptions& options) {
   anch::json::deserialize<double>(value, input, options, &deserializeValue<double>);
@@ -1243,6 +1424,15 @@ PrimitiveMapper<double>::deserialize(std::set<double>& value, std::istream& inpu
 				       [&value](const double& str) -> void { value.insert(str); },
 				       options,
 				       &deserializeValue<double>);
+}
+
+template<>
+void
+PrimitiveMapper<double>::deserialize(std::map<std::string,double>& value, std::istream& input, const anch::json::MappingOptions& options) {
+  anch::json::deserializeMap<double>(input,
+				     [&value](const std::pair<std::string,double>& str) -> void { value.insert(str); },
+				     options,
+				     &deserializeValue<double>);
 }
 
 template class PrimitiveMapper<double>;
@@ -1317,6 +1507,16 @@ PrimitiveMapper<long double>::serialize(const std::set<long double>& value,
 }
 
 template<>
+bool
+PrimitiveMapper<long double>::serialize(const std::map<std::string,long double>& value,
+					std::ostream& out,
+					const anch::json::MappingOptions& options,
+					const std::optional<std::string>& field) {
+  anch::json::serializeMap<long double>(value, out, &serializeValue<long double>, options, field);
+  return true;
+}
+
+template<>
 void
 PrimitiveMapper<long double>::deserialize(long double& value, std::istream& input, const anch::json::MappingOptions& options) {
   anch::json::deserialize<long double>(value, input, options, &deserializeValue<long double>);
@@ -1359,6 +1559,15 @@ PrimitiveMapper<long double>::deserialize(std::set<long double>& value, std::ist
 					    [&value](const long double& str) -> void { value.insert(str); },
 					    options,
 					    &deserializeValue<long double>);
+}
+
+template<>
+void
+PrimitiveMapper<long double>::deserialize(std::map<std::string,long double>& value, std::istream& input, const anch::json::MappingOptions& options) {
+  anch::json::deserializeMap<long double>(input,
+					  [&value](const std::pair<std::string,long double>& str) -> void { value.insert(str); },
+					  options,
+					  &deserializeValue<long double>);
 }
 
 template class PrimitiveMapper<long double>;

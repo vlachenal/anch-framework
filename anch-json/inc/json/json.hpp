@@ -287,6 +287,17 @@ namespace anch::json {
       void serialize(const std::set<T>& value, std::ostream& out);
 
       /*!
+       * Serialize objects
+       *
+       * \tparam T the object type
+       *
+       * \param value the objects to serialize
+       * \param out the output stream to write in
+       */
+      template<typename T>
+      void serialize(const std::map<std::string,T>& value, std::ostream& out);
+
+      /*!
        * Serialize object
        *
        * \tparam T the object type
@@ -333,6 +344,18 @@ namespace anch::json {
        */
       template<typename T>
       std::string serialize(const std::set<T>& value);
+
+      /*!
+       * Serialize objects
+       *
+       * \tparam T the object type
+       *
+       * \param value the object to serialize
+       *
+       * \return the serialized objects as \c std::string
+       */
+      template<typename T>
+      std::string serialize(const std::map<std::string,T>& value);
 
       /*!
        * Deserialize object
@@ -389,6 +412,17 @@ namespace anch::json {
        */
       template<typename T>
       void deserialize(std::set<T>& values, std::istream& input);
+
+      /*!
+       * Deserialize objects
+       *
+       * \tparam T the object type
+       *
+       * \param values the values to fill
+       * \param input the input stream to parse
+       */
+      template<typename T>
+      void deserialize(std::map<std::string,T>& values, std::istream& input);
       // Methods -
 
     };

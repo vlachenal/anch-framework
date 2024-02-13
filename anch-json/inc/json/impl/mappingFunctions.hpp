@@ -174,4 +174,35 @@ namespace anch::json {
     }
   }
 
+  template<typename T>
+  void deserializeMap(std::istream& input,
+		      [[maybe_unused]] std::function<void(const std::pair<std::string,T>&)> pushFunc,
+		      const anch::json::MappingOptions& options,
+		      [[maybe_unused]] std::function<void((T& value, std::istream& input, const anch::json::MappingOptions& options))> deserializeFunc) {
+    if(anch::json::isNull(input, options)) {
+      return;
+    }
+    int current = input.get();
+    if(current != anch::json::OBJECT_BEGIN) {
+      throw anch::json::MappingError(anch::json::ErrorCode::INVALID_FORMAT, input, static_cast<char>(current));
+    }
+    anch::json::discardChars(input, options);
+    if(!input || input.get() != anch::json::OBJECT_END) {
+      throw anch::json::MappingError(anch::json::ErrorCode::INVALID_FORMAT, input, static_cast<char>(input.peek()));
+    }
+  }
+
+    // if(field.has_value()) {
+    //   out << anch::json::STRING_DELIMITER << field.value() << anch::json::STRING_DELIMITER << anch::json::FIELD_VALUE_SEPARATOR;
+    // }
+    // out << anch::json::OBJECT_BEGIN;
+    // for(auto iter = map.cbegin() ; iter != map.cend() ; ++iter) {
+    //   if(iter != map.cbegin()) {
+    // 	out << anch::json::FIELD_SEPARATOR;
+    //   }
+    //   out << anch::json::STRING_DELIMITER << iter->first << anch::json::STRING_DELIMITER << anch::json::FIELD_VALUE_SEPARATOR;
+    //   std::invoke(serializeFunc, iter->second, out, options);
+    // }
+    // out << anch::json::OBJECT_END;
+
 }  // anch::json

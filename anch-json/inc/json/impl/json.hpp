@@ -52,6 +52,12 @@ namespace anch::json {
 
   template<typename T>
   inline
+  void serialize(const std::map<std::string,T>& value, std::ostream& out, const anch::json::MappingOptions& options) {
+    anch::json::Factory<T>::getInstance().serialize(value, out, options);
+  }
+
+  template<typename T>
+  inline
   std::string serialize(const T& value, const anch::json::MappingOptions& options) {
     std::ostringstream out;
     anch::json::Factory<T>::getInstance().serialize(value, out, options);
@@ -77,6 +83,14 @@ namespace anch::json {
   template<typename T>
   inline
   std::string serialize(const std::set<T>& value, const anch::json::MappingOptions& options) {
+    std::ostringstream out;
+    anch::json::Factory<T>::getInstance().serialize(value, out, options);
+    return out.str();
+  }
+
+  template<typename T>
+  inline
+  std::string serialize(const std::map<std::string,T>& value, const anch::json::MappingOptions& options) {
     std::ostringstream out;
     anch::json::Factory<T>::getInstance().serialize(value, out, options);
     return out.str();
@@ -111,6 +125,12 @@ namespace anch::json {
   template<typename T>
   inline
   void deserialize(std::set<T>& values, std::istream& input, const anch::json::MappingOptions& options) {
+    anch::json::Factory<T>::getInstance().deserialize(values, input, options);
+  }
+
+  template<typename T>
+  inline
+  void deserialize(std::map<std::string,T>& values, std::istream& input, const anch::json::MappingOptions& options) {
     anch::json::Factory<T>::getInstance().deserialize(values, input, options);
   }
   // Serialization/deserialization fonctions -

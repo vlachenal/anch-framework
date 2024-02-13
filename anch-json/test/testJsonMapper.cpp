@@ -406,6 +406,72 @@ testIOManip() {
   std::cout << "As iomanip: " << plop::jsonify << test << std::endl;
 }
 
+struct TestMap {
+  std::map<std::string,std::string> _strMap;
+  std::map<std::string,bool> _boolMap;
+  std::map<std::string,int64_t> _intMap;
+  std::map<std::string,double> _doubleMap;
+  std::map<std::string,Test> _testMap;
+};
+
+template<>
+void
+anch::json::registerObject(ObjectMapper<TestMap>& mapper) {
+  mapper
+    .registerField<std::string>("strMap", &TestMap::_strMap)
+    .registerField<bool>("boolMap", &TestMap::_boolMap)
+    .registerField<int64_t>("intMap", &TestMap::_intMap)
+    .registerField<double>("doubleMap", &TestMap::_doubleMap)
+    //.registerField<std::string>("testMap", &TestMap::_testMap)
+    ;
+}
+
+void
+testSerializeMap() {
+  anch::json::JSONMapper mapper(anch::json::DEFAULT_MAPPING_OPTIONS);
+  TestMap test = {
+    ._strMap = {
+      {"a","b"},
+      {"1","2"},
+      {"toto","tata"},
+      {"plip","plop"}
+    },
+    ._boolMap = {
+      {"a",true},
+      {"1",false},
+      {"toto",true},
+      {"plip",false}
+    },
+    ._intMap = {
+      {"a",123},
+      {"1",456},
+      {"toto",789},
+      {"plip",123456789}
+    },
+    ._doubleMap = {
+      {"a",3.14158},
+      {"1",0.01234},
+      {"toto",123.456},
+      {"plip",789.123}
+    },
+    ._testMap = {
+      {"test1", {
+	  ._id = "deb94ebc-be28-4899-981a-29199b7a487d",
+	  ._value = "this is a value",
+	  ._nums = {1,2,3,4}
+	}
+      }
+    }
+  };
+  std::ostringstream oss;
+  std::cout << "Serialize TestMap" << std::endl;
+  mapper.serialize(test, oss);
+  std::cout << "Serialized test: " << oss.str() << std::endl;
+  std::cout << "Serialize TestMap as string" << std::endl;
+  std::string res = mapper.serialize(test);
+  std::cout << "Serialized test as string: " << res << std::endl;
+}
+
 void
 anch::ut::setup(anch::ut::UnitTests& tests) {
   tests
@@ -424,5 +490,6 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("json-deser-discard128", testFulDeserDiscard128)
     .add("json-deser-discard128-col", testFulDeserDiscard128Col)
     .add("json-iomanip", testIOManip)
+    .add("json-sermap", testSerializeMap)
     ;
 }

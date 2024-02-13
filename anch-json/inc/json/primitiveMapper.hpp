@@ -26,6 +26,7 @@
 #include <functional>
 #include <list>
 #include <set>
+#include <map>
 
 #include "json/constants.hpp"
 #include "json/mappingOptions.hpp"
@@ -176,6 +177,21 @@ namespace anch::json {
 		   const std::optional<std::string>& field = EMPTY_FIELD);
 
     /*!
+     * Serialize map (as \c std::map ) attribute
+     *
+     * \param value the map attribute to serialize
+     * \param out the output stream to write the attribute
+     * \param options the options to use
+     * \param field the attribute's field name
+     *
+     * \return \c true
+     */
+    bool serialize(const std::map<std::string,T>& value,
+		   std::ostream& out,
+		   const anch::json::MappingOptions& options,
+		   const std::optional<std::string>& field = EMPTY_FIELD);
+
+    /*!
      * Deserialize JSON value
      *
      * \param value the value to set
@@ -228,6 +244,15 @@ namespace anch::json {
      * \param options the options to use
      */
     void deserialize(std::set<T>& value, std::istream& input, const anch::json::MappingOptions& options);
+
+    /*!
+     * Deserialize JSON value
+     *
+     * \param value the value to set
+     * \param input the input stream to parse
+     * \param options the options to use
+     */
+    void deserialize(std::map<std::string,T>& value, std::istream& input, const anch::json::MappingOptions& options);
     // Methods -
 
   };

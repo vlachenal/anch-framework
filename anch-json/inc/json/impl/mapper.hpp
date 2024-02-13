@@ -357,6 +357,15 @@ namespace anch::json {
 				    options,
 				    std::bind_front(&ObjectMapper<T>::deserializeValue, this));
   }
+
+  template<typename T>
+  void
+  ObjectMapper<T>::deserialize(std::map<std::string,T>& value, std::istream& input, const anch::json::MappingOptions& options) {
+    anch::json::deserializeMap<T>(input,
+				  [&value](const std::pair<std::string,T>& obj) -> void { value.insert(obj); },
+				  options,
+				  std::bind_front(&ObjectMapper<T>::deserializeValue, this));
+  }
   // Generic implementations -
 
 }  // anch::json

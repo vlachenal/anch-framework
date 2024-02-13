@@ -144,6 +144,16 @@ PrimitiveMapper<bool>::serialize(const std::set<bool>& value,
 }
 
 template<>
+bool
+PrimitiveMapper<bool>::serialize(const std::map<std::string,bool>& value,
+				 std::ostream& out,
+				 const anch::json::MappingOptions& options,
+				 const std::optional<std::string>& field) {
+  anch::json::serializeMap<bool>(value, out, &serializeValue, options, field);
+  return true;
+}
+
+template<>
 void
 PrimitiveMapper<bool>::deserialize(bool& value, std::istream& input, const anch::json::MappingOptions& options) {
   anch::json::deserialize<bool>(value, input, options, &deserializeValue);
@@ -186,6 +196,15 @@ PrimitiveMapper<bool>::deserialize(std::set<bool>& value, std::istream& input, c
 				     [&value](const bool& str) -> void { value.insert(str); },
 				     options,
 				     &deserializeValue);
+}
+
+template<>
+void
+PrimitiveMapper<bool>::deserialize(std::map<std::string,bool>& value, std::istream& input, const anch::json::MappingOptions& options) {
+  anch::json::deserializeMap<bool>(input,
+				   [&value](const std::pair<std::string,bool>& str) -> void { value.insert(str); },
+				   options,
+				   &deserializeValue);
 }
 
 template class PrimitiveMapper<bool>;

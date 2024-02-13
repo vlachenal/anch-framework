@@ -339,6 +339,15 @@ namespace anch::json {
      */
     void deserialize(std::set<T>& value, std::istream& input, const anch::json::MappingOptions& options);
 
+    /*!
+     * Deserialize JSON
+     *
+     * \param value the value to write in
+     * \param input the input stream to parse
+     * \param options the options to use
+     */
+    void deserialize(std::map<std::string,T>& value, std::istream& input, const anch::json::MappingOptions& options);
+
   private:
     /*!
      * Deserialize non null JSON object (which should start with '{')

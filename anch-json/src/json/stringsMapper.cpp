@@ -24,6 +24,7 @@
 #include <set>
 #include <vector>
 #include <list>
+#include <map>
 #include <ostream>
 #include <sstream>
 
@@ -151,6 +152,16 @@ PrimitiveMapper<std::string>::serialize(const std::set<std::string>& value,
 }
 
 template<>
+bool
+PrimitiveMapper<std::string>::serialize(const std::map<std::string,std::string>& value,
+					std::ostream& out,
+					const anch::json::MappingOptions& options,
+					const std::optional<std::string>& field) {
+  anch::json::serializeMap<std::string>(value, out, &serializeValue<std::string>, options, field);
+  return true;
+}
+
+template<>
 void
 PrimitiveMapper<std::string>::deserialize(std::string& value, std::istream& input, const anch::json::MappingOptions& options) {
   anch::json::deserialize<std::string>(value, input, options, &deserializeValue);
@@ -193,6 +204,15 @@ PrimitiveMapper<std::string>::deserialize(std::set<std::string>& value, std::ist
 					    [&value](const std::string& str) -> void { value.insert(str); },
 					    options,
 					    &deserializeValue);
+}
+
+template<>
+void
+PrimitiveMapper<std::string>::deserialize(std::map<std::string,std::string>& value, std::istream& input, const anch::json::MappingOptions& options) {
+  anch::json::deserializeMap<std::string>(input,
+					  [&value](const std::pair<std::string,std::string>& str) -> void { value.insert(str); },
+					  options,
+					  &deserializeValue);
 }
 
 template class PrimitiveMapper<std::string>;
