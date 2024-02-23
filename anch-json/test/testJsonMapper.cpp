@@ -179,8 +179,6 @@ testDeserList() {
   try {
     mapper.deserialize(test, iss);
   } catch(const MappingError& error) {
-    //std::cerr << "Fail with " << error.what() << std::endl;
-    //return 1;
     std::ostringstream oss;
     oss << "Fail with " << error.what();
     anch::ut::fail(oss.str());
@@ -196,17 +194,13 @@ testDeserUnknownFieldStructFail() {
   std::istringstream iss(json);
   try {
     mapper.deserialize(test, iss);
-    //std::cerr << "This test should have failed" << std::endl;
     std::ostringstream oss;
     oss << "This test should have failed" << std::endl;
     anch::ut::fail(oss.str());
-    //return 1;
   } catch(const MappingError& error) {
     if(error.getErrorCode() == ErrorCode::UNEXPECTED_FIELD) {
       std::cout << "Fail OK with error " << error.what() << std::endl;
     } else {
-      // std::cerr << "Fail with " << error.what() << std::endl;
-      // return 1;
       std::ostringstream oss;
       oss << "Fail with " << error.what() << std::endl;
       anch::ut::fail(oss.str());
@@ -224,8 +218,6 @@ testDeserUnknownFieldStructOK() {
   try {
     mapper.deserialize(test, iss);
   } catch(const MappingError& error) {
-    // std::cerr << "Fail with " << error.what() << std::endl;
-    // return 1;
     std::ostringstream oss;
     oss << "Fail with " << error.what();
     anch::ut::fail(oss.str());
@@ -242,8 +234,6 @@ testDeserUnknownFieldOK() {
   try {
     mapper.deserialize(test, iss);
   } catch(const MappingError& error) {
-    // std::cerr << "Fail with " << error.what() << std::endl;
-    // return 1;
     std::ostringstream oss;
     oss << "Fail with " << error.what();
     anch::ut::fail(oss.str());
@@ -260,8 +250,6 @@ testDeserUnknownFieldIntOK() {
   try {
     mapper.deserialize(test, iss);
   } catch(const MappingError& error) {
-    // std::cerr << "Fail with " << error.what() << std::endl;
-    // return 1;
     std::ostringstream oss;
     oss << "Fail with " << error.what();
     anch::ut::fail(oss.str());
@@ -279,8 +267,6 @@ testDeserUnknownFieldEmptyColOK() {
   try {
     mapper.deserialize(test, iss);
   } catch(const MappingError& error) {
-    // std::cerr << "Fail with " << error.what() << std::endl;
-    // return 1;
     std::ostringstream oss;
     oss << "Fail with " << error.what();
     anch::ut::fail(oss.str());
@@ -298,8 +284,6 @@ testDeserUnknownFielIntColOK() {
   try {
     mapper.deserialize(test, iss);
   } catch(const MappingError& error) {
-    // std::cerr << "Fail with " << error.what() << std::endl;
-    // return 1;
     std::ostringstream oss;
     oss << "Fail with " << error.what();
     anch::ut::fail(oss.str());
@@ -317,8 +301,6 @@ testDeserUnknownFielWTFColOK() {
   try {
     mapper.deserialize(test, iss);
   } catch(const MappingError& error) {
-    // std::cerr << "Fail with " << error.what() << std::endl;
-    // return 1;
     std::ostringstream oss;
     oss << "Fail with " << error.what();
     anch::ut::fail(oss.str());
@@ -336,14 +318,10 @@ testFullDeserDefaultOptions() {
   try {
     mapper.deserialize(toto, iss);
   } catch(const std::bad_cast& e) {
-    // std::cerr << "Bad cast " << e.what() << std::endl;
-    // return 1;
     std::ostringstream oss;
     oss << "Bad cast " << e.what();
     anch::ut::fail(oss.str());
   } catch(const MappingError& error) {
-    // std::cerr << "Fail with " << error.what() << std::endl;
-    // return 1;
     std::ostringstream oss;
     oss << "Fail with " << error.what();
     anch::ut::fail(oss.str());
@@ -355,41 +333,32 @@ testFulDeserDiscard128() {
   anch::json::JSONMapper mapper({.deserialize_max_discard_char = 128});
   std::ifstream iss("toto.json");
   std::cout << "Deserialize toto.json" << std::endl;
-  //Toto toto;
   try {
     Toto toto = mapper.deserialize<Toto>(iss);
   } catch(const std::bad_cast& e) {
-    // std::cerr << "Bad cast " << e.what() << std::endl;
-    // return 1;
     std::ostringstream oss;
     oss << "Bad cast  " << e.what();
     anch::ut::fail(oss.str());
   } catch(const MappingError& error) {
-    // std::cerr << "Fail with " << error.what() << std::endl;
-    // return 1;
     std::ostringstream oss;
     oss << "Fail with " << error.what();
     anch::ut::fail(oss.str());
   }
 }
+
 void
 testFulDeserDiscard128Col() {
   anch::json::JSONMapper mapper({.deserialize_max_discard_char = 128});
   std::ifstream iss("totos.json");
   std::cout << "Deserialize totos.json" << std::endl;
-  //Toto toto;
   try {
     std::vector<Test> tests;
     mapper.deserialize<Test>(tests, iss);
   } catch(const std::bad_cast& e) {
-    // std::cerr << "Bad cast " << e.what() << std::endl;
-    // return 1;
     std::ostringstream oss;
     oss << "Bad cast " << e.what();
     anch::ut::fail(oss.str());
   } catch(const MappingError& error) {
-    // std::cerr << "Fail with " << error.what() << std::endl;
-    // return 1;
     std::ostringstream oss;
     oss << "Fail with " << error.what();
     anch::ut::fail(oss.str());
@@ -422,7 +391,7 @@ anch::json::registerObject(ObjectMapper<TestMap>& mapper) {
     .registerField<bool>("boolMap", &TestMap::_boolMap)
     .registerField<int64_t>("intMap", &TestMap::_intMap)
     .registerField<double>("doubleMap", &TestMap::_doubleMap)
-    //.registerField<std::string>("testMap", &TestMap::_testMap)
+    .registerField<Test>("testMap", &TestMap::_testMap)
     ;
 }
 
@@ -460,6 +429,12 @@ testSerializeMap() {
 	  ._value = "this is a value",
 	  ._nums = {1,2,3,4}
 	}
+      },
+      {"test2", {
+	  ._id = "toto",
+	  ._value = "this is another value",
+	  ._nums = {5,6,7,8}
+	}
       }
     }
   };
@@ -470,6 +445,28 @@ testSerializeMap() {
   std::cout << "Serialize TestMap as string" << std::endl;
   std::string res = mapper.serialize(test);
   std::cout << "Serialized test as string: " << res << std::endl;
+}
+
+void
+testDeserializeMap() {
+  std::string json("{\"strMap\":{\"1\":\"2\",\"a\":\"b\",\"plip\":\"plop\",\"toto\":\"tata\"},\"boolMap\":{\"1\":false,\"a\":true,\"plip\":false,\"toto\":true},\"intMap\":{\"1\":456,\"a\":123,\"plip\":123456789,\"toto\":789},\"doubleMap\":{\"1\":0.01234,\"a\":3.14158,\"plip\":789.123,\"toto\":123.456},\"testMap\":{\"test1\":{\"id\":\"deb94ebc-be28-4899-981a-29199b7a487d\",\"value\":\"this is a value\",\"nums\":[1,2,3,4]},\"test2\":{\"id\":\"toto\",\"value\":\"this is another value\",\"nums\":[5,6,7,8]}}}");
+  anch::json::JSONMapper mapper({.deserialize_max_discard_char = 128});
+  std::cout << "Deserialize TestMap: " << json << std::endl;
+  try {
+    auto iss = std::istringstream(json);
+    TestMap toto = mapper.deserialize<TestMap>(iss);
+    std::ostringstream oss;
+    mapper.serialize(toto, oss);
+    std::cout << "Serialized TestMap:  " << oss.str() << std::endl;
+  } catch(const std::bad_cast& e) {
+    std::ostringstream oss;
+    oss << "Bad cast  " << e.what();
+    anch::ut::fail(oss.str());
+  } catch(const MappingError& error) {
+    std::ostringstream oss;
+    oss << "Fail with " << error.what();
+    anch::ut::fail(oss.str());
+  }
 }
 
 void
@@ -491,5 +488,6 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("json-deser-discard128-col", testFulDeserDiscard128Col)
     .add("json-iomanip", testIOManip)
     .add("json-sermap", testSerializeMap)
+    .add("json-desermap", testDeserializeMap)
     ;
 }
