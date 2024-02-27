@@ -12,21 +12,15 @@ include(AnchUtils.cmake.in)
 execute_process(COMMAND ${CMAKE_C_COMPILER} -dumpversion
                 OUTPUT_VARIABLE GCC_VERSION)
 if (GCC_VERSION VERSION_LESS 4.5)
-  message(FATAL_ERROR "Version < 4.5. This library is based on C++11 standard. Exit.")
-elseif(GCC_VERSION VERSION_GREATER 7.0 OR GCC_VERSION VERSION_EQUAL 7.0)
-  message(STATUS "Version >= 7.0 use -std=c++17")
+  message(FATAL_ERROR "Version < 8.0. This library is based on C++17 standard. Exit.")
+elseif(GCC_VERSION VERSION_GREATER 10.0 OR GCC_VERSION VERSION_EQUAL 10.0)
+  message(STATUS "Version >= 10.0 use -std=c++20")
+  add_definitions("-std=c++20")
+  add_definitions("-D ANCH_STD_OTP")
+else()
+  message(STATUS "Version >= 8.0 use -std=c++17")
   add_definitions("-std=c++17")
   add_definitions("-D ANCH_STD_OTP")
-  set(ANCH_OPT true)
-elseif(GCC_VERSION VERSION_GREATER 6.0 OR GCC_VERSION VERSION_EQUAL 6.0)
-  message(STATUS "Version >= 6.0 use -std=c++14")
-  add_definitions("-std=c++14")
-elseif(GCC_VERSION VERSION_GREATER 4.7 OR GCC_VERSION VERSION_EQUAL 4.7)
-  message(STATUS "Version >= 4.7 use -std=c++11")
-  add_definitions("-std=c++11")
-else()
-  message(STATUS "4.5 <= Version < 4.7 use -std=c++0x")
-  add_definitions("-std=c++0x")
 endif()
 # Check GCC version -
 
@@ -60,10 +54,6 @@ install(
 # Unit tests
 if(ANCH_UTILS_UNIT_TEST)
 
-  # Include librairies
-  include(FindThreads)
-  find_package(Threads)
-
   # Build thread pool unit test +
   file(
     GLOB_RECURSE
@@ -78,7 +68,6 @@ if(ANCH_UTILS_UNIT_TEST)
 
   target_link_libraries(
     anch-thread-pool-test
-    ${CMAKE_THREAD_LIBS_INIT}
   )
   # Build thread pool unit test -
 
@@ -96,7 +85,6 @@ if(ANCH_UTILS_UNIT_TEST)
 
   target_link_libraries(
     anch-res-pool-test
-    ${CMAKE_THREAD_LIBS_INIT}
   )
   # Build resource pool unit test -
 
@@ -114,7 +102,6 @@ if(ANCH_UTILS_UNIT_TEST)
 
   target_link_libraries(
     anch-stream-test
-    ${CMAKE_THREAD_LIBS_INIT}
   )
   # Build stream unit test -
 
@@ -132,7 +119,6 @@ if(ANCH_UTILS_UNIT_TEST)
 
   target_link_libraries(
     anch-convert-test
-    ${CMAKE_THREAD_LIBS_INIT}
   )
   # Build convert test -
 
@@ -175,26 +161,23 @@ if(ANCH_UTILS_UNIT_TEST)
   add_test(anch-convert ${EXECUTABLE_OUTPUT_PATH}/anch-convert-test main)
   add_test(anch-string-utils ${EXECUTABLE_OUTPUT_PATH}/anch-string-utils-test main)
 
-  if(ANCH_OPT)
-    # Build optional unit test +
-    file(
-      GLOB_RECURSE
-      test_optional
-      test/testOptional.cpp
-      )
+  # Build optional unit test +
+  file(
+    GLOB_RECURSE
+    test_optional
+    test/testOptional.cpp
+    )
 
-    add_executable(
-      anch-optional-test
-      ${test_optional}
-      )
+  add_executable(
+    anch-optional-test
+    ${test_optional}
+    )
 
-    target_link_libraries(
-      anch-optional-test
-      ${CMAKE_THREAD_LIBS_INIT}
-      )
-    # Build optional unit test -
+  target_link_libraries(
+    anch-optional-test
+    )
+  # Build optional unit test -
 
-    add_test(anch-optional-test ${EXECUTABLE_OUTPUT_PATH}/anch-optional-test main)
-  endif()
+  add_test(anch-optional-test ${EXECUTABLE_OUTPUT_PATH}/anch-optional-test main)
 
 endif(ANCH_UTILS_UNIT_TEST)

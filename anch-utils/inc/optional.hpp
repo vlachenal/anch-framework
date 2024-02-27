@@ -19,8 +19,6 @@
 */
 #pragma once
 
-#ifdef ANCH_STD_OTP
-
 #include <optional>
 #include <functional>
 
@@ -275,4 +273,3 @@ namespace anch {
   }
 
 }
-#endif // ANCH_STD_OPT
