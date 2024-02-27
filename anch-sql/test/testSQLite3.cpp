@@ -51,7 +51,6 @@ main(void) {
     const std::string nullStr("NULL");
     while(res->next()) {
       std::cout << "Row " << row << std::endl;
-#ifdef ANCH_STD_OTP
       std::optional<uint32_t> id = res->get<uint32_t>(0);
       std::cout << "id=";
       if(!id) {
@@ -68,19 +67,6 @@ main(void) {
       std::cout << "birth date=" << (!bDate ? nullStr : bDate.value()) << std::endl;
       std::optional<std::string> email = res->get<std::string>(4);
       std::cout << "email=" << (!email ? nullStr : email.value()) << std::endl;
-#else // ANCH_STD_OTP
-      Person pers;
-      res.get<uint32_t>(0,pers._id);
-      res.get<std::string>(1, pers._firstName);
-      res.get<std::string>(2, pers._lastName);
-      res.get<std::string>(3, pers._birthDate);
-      res.get<std::string>(4, pers._email);
-      std::cout << "Person " << pers._id << ":" << std::endl;
-      std::cout << "first name: " << pers._firstName << std::endl;
-      std::cout << "last name: " << pers._lastName << std::endl;
-      std::cout << "birth data: " << pers._birthDate << std::endl;
-      std::cout << "email: " << pers._email << std::endl;
-#endif // ANCH_STD_OTP
       row++;
     }
     delete res;
@@ -162,7 +148,6 @@ main(void) {
     row = 0;
     while(res->next()) {
       std::cout << "Row " << row << std::endl;
-#ifdef ANCH_STD_OTP
       std::optional<uint32_t> id = res->get<uint32_t>(0);
       std::cout << "id=";
       if(!id) {
@@ -179,19 +164,6 @@ main(void) {
       std::cout << "birth date=" << (!bDate ? nullStr : bDate.value()) << std::endl;
       std::optional<std::string> email = res->get<std::string>(4);
       std::cout << "email=" << (!email ? nullStr : email.value()) << std::endl;
-#else // ANCH_STD_OTP
-      Person pers;
-      res.get<uint32_t>(0,pers._id);
-      res.get<std::string>(1, pers._firstName);
-      res.get<std::string>(2, pers._lastName);
-      res.get<std::string>(3, pers._birthDate);
-      res.get<std::string>(4, pers._email);
-      std::cout << "Person " << pers._id << ":" << std::endl;
-      std::cout << "first name: " << pers._firstName << std::endl;
-      std::cout << "last name: " << pers._lastName << std::endl;
-      std::cout << "birth data: " << pers._birthDate << std::endl;
-      std::cout << "email: " << pers._email << std::endl;
-#endif // ANCH_STD_OTP
       row++;
     }
     delete res;

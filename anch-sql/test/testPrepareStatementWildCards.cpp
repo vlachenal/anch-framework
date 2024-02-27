@@ -13,13 +13,6 @@ public:
   ~PrepareStatementMock() {}
   virtual ResultSet* executeQuery() override {return NULL;}
   virtual std::size_t executeUpdate() override {return 0;}
-  virtual void set(std::size_t, int16_t) {}
-  virtual void set(std::size_t, uint16_t) {}
-  virtual void set(std::size_t, int32_t) {}
-  virtual void set(std::size_t, uint32_t) {}
-  virtual void set(std::size_t, int64_t) {}
-  virtual void set(std::size_t, uint64_t) {}
-  virtual void set(std::size_t, const std::string&) {}
   std::set<std::size_t> getPositions(const std::string& query) const {
     return getPlaceholders(query);
   }

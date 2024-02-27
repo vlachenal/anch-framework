@@ -19,7 +19,6 @@
 */
 #ifdef ANCH_SQL_MYSQL
 
-//#include "mysql.h"
 #include "errmsg.h"
 
 #include "sql/mysqlConnection.hpp"

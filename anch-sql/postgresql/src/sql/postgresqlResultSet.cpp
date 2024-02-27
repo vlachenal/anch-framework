@@ -66,7 +66,6 @@ PostgreSQLResultSet::getValue(std::size_t idx, std::string& out) {
   return null;
 }
 
-#ifdef ANCH_STD_OTP
 std::optional<std::string>
 PostgreSQLResultSet::getValue(std::size_t idx) {
   if(static_cast<int>(idx) >= _nbFields) {
@@ -80,7 +79,6 @@ PostgreSQLResultSet::getValue(std::size_t idx) {
   }
   return res;
 }
-#endif // ANCH_STD_OTP
 
 bool
 PostgreSQLResultSet::next() {

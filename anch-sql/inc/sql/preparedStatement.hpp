@@ -29,202 +29,200 @@
 #include "sql/types/timestamp.hpp"
 
 
-namespace anch {
-  namespace sql {
+namespace anch::sql {
+
+  /*!
+   * \brief SQL prepared statement
+   *
+   * Virtual class for SQL prepared statement management.
+   *
+   * \author Vincent Lachenal
+   *
+   * \since 0.1
+   */
+  class PreparedStatement {
+
+    // Attributes +
+  protected:
+    /*! Statement values */
+    std::map<std::size_t,std::string> _values;
+
+    /*! Number of placeholders in SQL query */
+    std::size_t _nbPlaceholders;
+    // Attributes -
+
+    // Constructors +
+  public:
+    /*!
+     * \ref PreparedStatement constructor
+     */
+    PreparedStatement() noexcept;
+    // Constructors -
+
+    // Destructor +
+  public:
+    /*!
+     * \ref PreparedStatement destructor
+     */
+    virtual ~PreparedStatement() noexcept;
+    // Destructor -
+
+    // Methods +
+  public:
+    /*!
+     * Execute prepared statement for SELECT statement
+     *
+     * \return the result set
+     *
+     * \throw SqlException any error
+     */
+    virtual ResultSet* executeQuery() = 0;
 
     /*!
-     * \brief SQL prepared statement
+     * Execute prepared statement for update database (INSERT, UPDATE, DELETE)
      *
-     * Virtual class for SQL prepared statement management.
+     * \return the number of affected rows
      *
-     * \author Vincent Lachenal
-     *
-     * \since 0.1
+     * \throw SqlException any error
      */
-    class PreparedStatement {
+    virtual uint64_t executeUpdate() = 0;
 
-      // Attributes +
-    protected:
-      /*! Statement values */
-      std::map<std::size_t,std::string> _values;
+    /*!
+     * Bind 16 bits signed integer value to prepared statement
+     *
+     * \param idx the prepared statement index parameter
+     * \param value the value to bind
+     *
+     * \throw SqlException any error
+     */
+    void set(std::size_t idx, int16_t value);
 
-      /*! Number of placeholders in SQL query */
-      std::size_t _nbPlaceholders;
-      // Attributes -
+    /*!
+     * Bind 16 bits unsigned integer value to prepared statement
+     *
+     * \param idx the prepared statement index parameter
+     * \param value the value to bind
+     *
+     * \throw SqlException any error
+     */
+    void set(std::size_t idx, uint16_t value);
 
-      // Constructors +
-    public:
-      /*!
-       * \ref PreparedStatement constructor
-       */
-      PreparedStatement() noexcept;
-      // Constructors -
+    /*!
+     * Bind 32 bits signed integer value to prepared statement
+     *
+     * \param idx the prepared statement index parameter
+     * \param value the value to bind
+     *
+     * \throw SqlException any error
+     */
+    void set(std::size_t idx, int32_t value);
 
-      // Destructor +
-    public:
-      /*!
-       * \ref PreparedStatement destructor
-       */
-      virtual ~PreparedStatement() noexcept;
-      // Destructor -
+    /*!
+     * Bind 32 bits unsigned integer value to prepared statement
+     *
+     * \param idx the prepared statement index parameter
+     * \param value the value to bind
+     *
+     * \throw SqlException any error
+     */
+    void set(std::size_t idx, uint32_t value);
 
-      // Methods +
-    public:
-      /*!
-       * Execute prepared statement for SELECT statement
-       *
-       * \return the result set
-       *
-       * \throw SqlException any error
-       */
-      virtual ResultSet* executeQuery() = 0;
+    /*!
+     * Bind 64 bits signed integer value to prepared statement
+     *
+     * \param idx the prepared statement index parameter
+     * \param value the value to bind
+     *
+     * \throw SqlException any error
+     */
+    void set(std::size_t idx, int64_t value);
 
-      /*!
-       * Execute prepared statement for update database (INSERT, UPDATE, DELETE)
-       *
-       * \return the number of affected rows
-       *
-       * \throw SqlException any error
-       */
-      virtual uint64_t executeUpdate() = 0;
+    /*!
+     * Bind 64 bits unsigned integer value to prepared statement
+     *
+     * \param idx the prepared statement index parameter
+     * \param value the value to bind
+     *
+     * \throw SqlException any error
+     */
+    void set(std::size_t idx, uint64_t value);
 
-      /*!
-       * Bind 16 bits signed integer value to prepared statement
-       *
-       * \param idx the prepared statement index parameter
-       * \param value the value to bind
-       *
-       * \throw SqlException any error
-       */
-      void set(std::size_t idx, int16_t value);
+    /*!
+     * Bind string value to prepared statement
+     *
+     * \param idx the prepared statement index parameter
+     * \param value the value to bind
+     *
+     * \throw SqlException any error
+     */
+    void set(std::size_t idx, const std::string& value);
 
-      /*!
-       * Bind 16 bits unsigned integer value to prepared statement
-       *
-       * \param idx the prepared statement index parameter
-       * \param value the value to bind
-       *
-       * \throw SqlException any error
-       */
-      void set(std::size_t idx, uint16_t value);
+    /*!
+     * Bind character array value to prepared statement
+     *
+     * \param idx the prepared statement index parameter
+     * \param value the value to bind
+     *
+     * \throw SqlException any error
+     */
+    void set(std::size_t idx, const char* const value);
 
-      /*!
-       * Bind 32 bits signed integer value to prepared statement
-       *
-       * \param idx the prepared statement index parameter
-       * \param value the value to bind
-       *
-       * \throw SqlException any error
-       */
-      void set(std::size_t idx, int32_t value);
+    /*!
+     * Bind SQL date value to prepared statement
+     *
+     * \param idx the prepared statement index parameter
+     * \param value the value to bind
+     *
+     * \throw SqlException any error
+     */
+    virtual void set(std::size_t idx, const anch::sql::Date& value);
 
-      /*!
-       * Bind 32 bits unsigned integer value to prepared statement
-       *
-       * \param idx the prepared statement index parameter
-       * \param value the value to bind
-       *
-       * \throw SqlException any error
-       */
-      void set(std::size_t idx, uint32_t value);
+    /*!
+     * Bind SQL time value to prepared statement
+     *
+     * \param idx the prepared statement index parameter
+     * \param value the value to bind
+     *
+     * \throw SqlException any error
+     */
+    virtual void set(std::size_t idx, const anch::sql::Time& value);
 
-      /*!
-       * Bind 64 bits signed integer value to prepared statement
-       *
-       * \param idx the prepared statement index parameter
-       * \param value the value to bind
-       *
-       * \throw SqlException any error
-       */
-      void set(std::size_t idx, int64_t value);
+    /*!
+     * Bind SQL timestamp value to prepared statement
+     *
+     * \param idx the prepared statement index parameter
+     * \param value the value to bind
+     *
+     * \throw SqlException any error
+     */
+    virtual void set(std::size_t idx, const anch::sql::Timestamp& value);
 
-      /*!
-       * Bind 64 bits unsigned integer value to prepared statement
-       *
-       * \param idx the prepared statement index parameter
-       * \param value the value to bind
-       *
-       * \throw SqlException any error
-       */
-      void set(std::size_t idx, uint64_t value);
+  protected:
+    /*!
+     * Retrieve placeholders positions ('?') in SQL query
+     *
+     * \param query the SQL query
+     *
+     * \return the placeholders' position
+     */
+    std::set<std::size_t> getPlaceholders(const std::string& query) const;
 
-      /*!
-       * Bind string value to prepared statement
-       *
-       * \param idx the prepared statement index parameter
-       * \param value the value to bind
-       *
-       * \throw SqlException any error
-       */
-      void set(std::size_t idx, const std::string& value);
-
-      /*!
-       * Bind character array value to prepared statement
-       *
-       * \param idx the prepared statement index parameter
-       * \param value the value to bind
-       *
-       * \throw SqlException any error
-       */
-      void set(std::size_t idx, const char* const value);
-
-      /*!
-       * Bind SQL date value to prepared statement
-       *
-       * \param idx the prepared statement index parameter
-       * \param value the value to bind
-       *
-       * \throw SqlException any error
-       */
-      virtual void set(std::size_t idx, const anch::sql::Date& value);
-
-      /*!
-       * Bind SQL time value to prepared statement
-       *
-       * \param idx the prepared statement index parameter
-       * \param value the value to bind
-       *
-       * \throw SqlException any error
-       */
-      virtual void set(std::size_t idx, const anch::sql::Time& value);
-
-      /*!
-       * Bind SQL timestamp value to prepared statement
-       *
-       * \param idx the prepared statement index parameter
-       * \param value the value to bind
-       *
-       * \throw SqlException any error
-       */
-      virtual void set(std::size_t idx, const anch::sql::Timestamp& value);
-
-    protected:
-      /*!
-       * Retrieve placeholders positions ('?') in SQL query
-       *
-       * \param query the SQL query
-       *
-       * \return the placeholders' position
-       */
-      std::set<std::size_t> getPlaceholders(const std::string& query) const;
-
-      /*!
-       * Check index value
-       *
-       * \param index the index to check
-       *
-       * \throw SqlException the index is upper than number of wildcards
-       */
-      inline void checkIndex(std::size_t index) const {
-	if(index > _nbPlaceholders) {
-	  std::ostringstream oss;
-	  oss << "Index " << index << " is upper than number of wildcards " << _nbPlaceholders;
-	  throw SqlException(oss.str(), true);
-	}
+    /*!
+     * Check index value
+     *
+     * \param index the index to check
+     *
+     * \throw SqlException the index is upper than number of wildcards
+     */
+    inline void checkIndex(std::size_t index) const {
+      if(index > _nbPlaceholders) {
+	std::ostringstream oss;
+	oss << "Index " << index << " is upper than number of wildcards " << _nbPlaceholders;
+	throw SqlException(oss.str(), true);
       }
-      // Methods -
+    }
+    // Methods -
 
-    };
+  };
 
-  }
 }

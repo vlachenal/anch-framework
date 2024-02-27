@@ -25,10 +25,6 @@
 
 #include <list>
 
-
-//typedef struct st_mysql_bind MYSQL_BIND;
-//struct MYSQL_BIND;
-
 #ifndef LIBMARIADB
 typedef bool my_bool;
 #endif
@@ -104,7 +100,6 @@ namespace anch {
        */
       virtual bool getValue(std::size_t idx, std::string& out) override;
 
-#ifdef ANCH_STD_OTP
       /*!
        * Retrieve string value from result set according to SQL database engine.
        *
@@ -115,7 +110,6 @@ namespace anch {
        * \throw SqlException any error
        */
       virtual std::optional<std::string> getValue(std::size_t idx) override;
-#endif // ANCH_STD_OTP
 
       /*!
        * Retrieve SQL date formatter

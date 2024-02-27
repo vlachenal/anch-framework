@@ -19,7 +19,6 @@
 */
 #ifdef ANCH_SQL_MYSQL
 
-//#include "mysql.h"
 #include "errmsg.h"
 
 #include "sql/mysqlPreparedStatementResultSet.hpp"
@@ -99,7 +98,6 @@ MySQLPreparedStatementResultSet::getValue(std::size_t idx, std::string& out) {
   return null;
 }
 
-#ifdef ANCH_STD_OTP
 std::optional<std::string>
 MySQLPreparedStatementResultSet::getValue(std::size_t idx) {
   if(idx >= _fields.size()) {
@@ -113,7 +111,6 @@ MySQLPreparedStatementResultSet::getValue(std::size_t idx) {
   }
   return res;
 }
-#endif // ANCH_STD_OTP
 
 bool
 MySQLPreparedStatementResultSet::next() {

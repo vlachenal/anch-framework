@@ -23,10 +23,7 @@
 #include <vector>
 #include <sstream>
 #include <map>
-
-#ifdef ANCH_STD_OTP
 #include <optional>
-#endif // ANCH_STD_OTP
 
 #include "sql/sqlException.hpp"
 
@@ -121,7 +118,6 @@ namespace anch {
 	return get<T>(search->second, out);
       }
 
-#ifdef ANCH_STD_OTP
       /*!
        * Get field value by index.
        *
@@ -165,7 +161,6 @@ namespace anch {
 	}
 	return get<T>(search->second);
       }
-#endif // ANCH_STD_OTP
 
       /*!
        * Retrieve next row
@@ -187,7 +182,6 @@ namespace anch {
        */
       virtual bool getValue(std::size_t idx, std::string& out) = 0;
 
-#ifdef ANCH_STD_OTP
       /*!
        * Retrieve string value from result set according to SQL database engine.
        *
@@ -198,7 +192,6 @@ namespace anch {
        * \throw SqlException any error
        */
       virtual std::optional<std::string> getValue(std::size_t idx) = 0;
-#endif
 
       /*!
        * Retrieve SQL date formatter

@@ -62,7 +62,6 @@ SQLite3ResultSet::getValue(std::size_t idx, std::string& out) {
   return null;
 }
 
-#ifdef ANCH_STD_OTP
 std::optional<std::string>
 SQLite3ResultSet::getValue(std::size_t idx) {
   if(static_cast<int>(idx) >= _nbFields) {
@@ -77,7 +76,6 @@ SQLite3ResultSet::getValue(std::size_t idx) {
   }
   return res;
 }
-#endif // ANCH_STD_OTP
 
 bool
 SQLite3ResultSet::next() {

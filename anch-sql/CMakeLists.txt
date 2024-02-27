@@ -11,28 +11,14 @@ include(AnchSQL.cmake.in)
 # Check GCC version +
 execute_process(COMMAND ${CMAKE_C_COMPILER} -dumpversion
                 OUTPUT_VARIABLE GCC_VERSION)
-if (GCC_VERSION VERSION_LESS 4.5)
-  message(FATAL_ERROR "Version < 4.5. This library is based on C++11 standard. Exit.")
-elseif(GCC_VERSION VERSION_GREATER 7.0 OR GCC_VERSION VERSION_EQUAL 7.0)
-  message(STATUS "Version >= 7.0 use -std=c++17")
-  add_definitions("-std=c++17")
-  add_definitions("-D ANCH_STD_OTP")
-  add_definitions("-D ANCH_TM_SPEC")
-elseif(GCC_VERSION VERSION_GREATER 6.0 OR GCC_VERSION VERSION_EQUAL 6.0)
-  message(STATUS "Version >= 6.0 use -std=c++14")
-  add_definitions("-std=c++14")
-elseif(GCC_VERSION VERSION_GREATER 4.9 OR GCC_VERSION VERSION_EQUAL 4.9)
-  message(STATUS "Version >= 4.7 use -std=c++11")
-  add_definitions("-std=c++11")
-  set(USE_BOOST_RE false)
-elseif(GCC_VERSION VERSION_GREATER 4.7 OR GCC_VERSION VERSION_EQUAL 4.7)
-  message(STATUS "Version >= 4.7 use -std=c++11")
-  add_definitions("-std=c++11")
-  set(USE_BOOST_RE true)
+if (GCC_VERSION VERSION_LESS 8.0)
+  message(FATAL_ERROR "Version < 8.0. This library is based on C++17 standard. Exit.")
+elseif(GCC_VERSION VERSION_GREATER 10.0 OR GCC_VERSION VERSION_EQUAL 10.0)
+  message(STATUS "Version >= 10.0 use -std=c++20")
+  add_definitions("-std=c++20")
 else()
-  message(STATUS "4.5 <= Version < 4.7 use -std=c++0x")
-  add_definitions("-std=c++0x")
-  set(USE_BOOST_RE true)
+  message(STATUS "Version >= 8.0 use -std=c++17")
+  add_definitions("-std=c++17")
 endif()
 # Check GCC version -
 
@@ -339,19 +325,10 @@ endif(ANCH_SQL_SQLITE3)
 # Unitary tests
 if(ANCH_SQL_UNITARY_TEST)
 
-  if(USE_BOOST_RE)
-    find_package(Boost COMPONENTS regex)
-    link_directories(
-      ${Boost_LIBRARY_DIRS}
-      ${ANCH_RES_LIBRARY_DIR}
-      ${ANCH_DATE_LIBRARY_DIR}
-      )
-  else()
-    link_directories(
-      ${ANCH_RES_LIBRARY_DIR}
-      ${ANCH_DATE_LIBRARY_DIR}
-      )
-  endif()
+  link_directories(
+    ${ANCH_RES_LIBRARY_DIR}
+    ${ANCH_DATE_LIBRARY_DIR}
+    )
 
   # Build MySQL unitary test +
   if(ANCH_SQL_MYSQL)
@@ -367,26 +344,14 @@ if(ANCH_SQL_UNITARY_TEST)
       ${test_mysql}
       )
 
-    if(USE_BOOST_RE)
-      target_link_libraries(
-	anch-mysql-test
-	anch-sql
-	anch-mysql
-	anch-resource
-	anch-date
-	${Boost_LIBRARIES}
-	${MySQL_LIBRARIES}
-	)
-    else()
-      target_link_libraries(
-	anch-mysql-test
-	anch-sql
-	anch-mysql
-	anch-resource
-	anch-date
-	${MySQL_LIBRARIES}
-	)
-    endif()
+    target_link_libraries(
+      anch-mysql-test
+      anch-sql
+      anch-mysql
+      anch-resource
+      anch-date
+      ${MySQL_LIBRARIES}
+      )
   endif(ANCH_SQL_MYSQL)
   # Build MySQL unitary test -
 
@@ -404,26 +369,14 @@ if(ANCH_SQL_UNITARY_TEST)
       ${test_postgresql}
       )
 
-    if(USE_BOOST_RE)
-      target_link_libraries(
-	anch-postgresql-test
-	anch-sql
-	anch-postgresql
-	anch-resource
-	anch-date
-	${Boost_LIBRARIES}
-	${PostgreSQL_LIBRARIES}
-	)
-    else()
-      target_link_libraries(
-	anch-postgresql-test
-	anch-sql
-	anch-postgresql
-	anch-resource
-	anch-date
-	${PostgreSQL_LIBRARIES}
-	)
-    endif()
+    target_link_libraries(
+      anch-postgresql-test
+      anch-sql
+      anch-postgresql
+      anch-resource
+      anch-date
+      ${PostgreSQL_LIBRARIES}
+      )
   endif(ANCH_SQL_POSTGRESQL)
   # Build PostgreSQL unitary test -
 
@@ -441,26 +394,14 @@ if(ANCH_SQL_UNITARY_TEST)
       ${test_sqlite3}
       )
 
-    if(USE_BOOST_RE)
-      target_link_libraries(
-	anch-sqlite3-test
-	anch-sql
-	anch-sqlite
-	anch-resource
-	anch-date
-	${Boost_LIBRARIES}
-	${SQLite3_LIBRARIES}
-	)
-    else()
-      target_link_libraries(
-	anch-sqlite3-test
-	anch-sql
-	anch-sqlite
-	anch-resource
-	anch-date
-	${SQLite3_LIBRARIES}
-	)
-    endif()
+    target_link_libraries(
+      anch-sqlite3-test
+      anch-sql
+      anch-sqlite
+      anch-resource
+      anch-date
+      ${SQLite3_LIBRARIES}
+      )
   endif(ANCH_SQL_SQLITE3)
   # Build SQLite3 unitary test -
 
@@ -477,22 +418,12 @@ if(ANCH_SQL_UNITARY_TEST)
     ${test_sqlfactory}
     )
 
-  if(USE_BOOST_RE)
-    target_link_libraries(
-      anch-sql-connection-factory-test
-      anch-sql
-      anch-resource
-      anch-date
-      ${Boost_LIBRARIES}
-      )
-  else()
-    target_link_libraries(
-      anch-sql-connection-factory-test
-      anch-sql
-      anch-resource
-      anch-date
-      )
-  endif()
+  target_link_libraries(
+    anch-sql-connection-factory-test
+    anch-sql
+    anch-resource
+    anch-date
+    )
   # Build SQL connection factory test -
 
   # Build SQL prepare statement placeholders +
@@ -508,22 +439,12 @@ if(ANCH_SQL_UNITARY_TEST)
     ${test_placeholders}
     )
 
-  if(USE_BOOST_RE)
-    target_link_libraries(
-      anch-placeholders-test
-      anch-sql
-      anch-resource
-      anch-date
-      ${Boost_LIBRARIES}
-      )
-  else()
-    target_link_libraries(
-      anch-placeholders-test
-      anch-sql
-      anch-resource
-      anch-date
-      )
-  endif()
+  target_link_libraries(
+    anch-placeholders-test
+    anch-sql
+    anch-resource
+    anch-date
+    )
   # Build SQL prepare statement placeholders -
 
   # Build SELECT builder unit tests +
@@ -539,22 +460,12 @@ if(ANCH_SQL_UNITARY_TEST)
     ${test_select_builder}
     )
 
-  if(USE_BOOST_RE)
-    target_link_libraries(
-      anch-select-builder-test
-      anch-sql
-      anch-resource
-      anch-date
-      ${Boost_LIBRARIES}
-      )
-  else()
-    target_link_libraries(
-      anch-select-builder-test
-      anch-sql
-      anch-resource
-      anch-date
-      )
-  endif()
+  target_link_libraries(
+    anch-select-builder-test
+    anch-sql
+    anch-resource
+    anch-date
+    )
   # Build SELECT builder unit tests -
 
   configure_file(test/anch.db anch.db COPYONLY)

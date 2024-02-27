@@ -19,8 +19,6 @@
 */
 #ifdef ANCH_SQL_MYSQL
 
-//#include "mysql.h"
-
 #include "sql/mysqlResultSet.hpp"
 
 using anch::sql::MySQLResultSet;
@@ -61,7 +59,6 @@ MySQLResultSet::getValue(std::size_t idx, std::string& out) {
   return null;
 }
 
-#ifdef ANCH_STD_OTP
 std::optional<std::string>
 MySQLResultSet::getValue(std::size_t idx) {
   if(idx >= _fields.size()) {
@@ -75,7 +72,6 @@ MySQLResultSet::getValue(std::size_t idx) {
   }
   return res;
 }
-#endif // ANCH_STD_OTP
 
 bool
 MySQLResultSet::next() {
