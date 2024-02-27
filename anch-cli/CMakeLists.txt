@@ -11,8 +11,8 @@ include(AnchCLI.cmake.in)
 # Check GCC version +
 execute_process(COMMAND ${CMAKE_C_COMPILER} -dumpversion
                 OUTPUT_VARIABLE GCC_VERSION)
-if (GCC_VERSION VERSION_LESS 8.0)
-  message(FATAL_ERROR "Version < 8.0. This library is based on C++17 standard. Exit.")
+if (GCC_VERSION VERSION_LESS 10.0)
+  message(FATAL_ERROR "Version < 10.0. This library is based on C++17 standard. Exit.")
 else()
   add_definitions("-std=c++20")
 endif()
@@ -27,10 +27,6 @@ else()
   add_definitions("-D ANCH_POSIX")
 endif()
 add_definitions(${ANCH_CLI_COMPILE_FLAGS})
-
-# Include librairies
-include(FindThreads)
-find_package(Threads)
 
 # Includes location
 include_directories(
@@ -101,14 +97,9 @@ if(ANCH_CLI_UNITARY_TEST)
     ${test_cli}
   )
 
-  # Include libraries
-  include(FindThreads)
-  find_package(Threads)
-
   target_link_libraries(
     anch-cli-test
     anch-cli
-    ${CMAKE_THREAD_LIBS_INIT}
   )
   # Build CLI unit test -
 
