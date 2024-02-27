@@ -11,17 +11,11 @@ include(AnchJson.cmake.in)
 # Check GCC version +
 execute_process(COMMAND ${CMAKE_C_COMPILER} -dumpversion
                 OUTPUT_VARIABLE GCC_VERSION)
-if (GCC_VERSION VERSION_LESS 4.5)
-  message(FATAL_ERROR "Version < 4.5. This library is based on C++11 standard. Exit.")
-elseif(GCC_VERSION VERSION_GREATER 10.0 OR GCC_VERSION VERSION_EQUAL 10.0)
+if (GCC_VERSION VERSION_LESS 10.0)
+  message(FATAL_ERROR "Version < 10.0. This library is based on C++20 standard. Exit.")
+else()
   message(STATUS "Version >= 10.0 use -std=c++20")
   add_definitions("-std=c++20")
-elseif(GCC_VERSION VERSION_GREATER 9.0 OR GCC_VERSION VERSION_EQUAL 9.0)
-  message(STATUS "Version >= 9.0 use -std=c++2a")
-  add_definitions("-std=c++2a -fconcepts")
-else()
-  message(STATUS "4.5 <= Version < 4.7 use -std=c++0x")
-  add_definitions("-std=c++0x")
 endif()
 # Check GCC version -
 
@@ -146,5 +140,7 @@ if(ANCH_JSON_UNITARY_TEST)
   add_test(json-deser-discard128 ${EXECUTABLE_OUTPUT_PATH}/anch-json-mapper-test -t json-deser-discard128)
   add_test(json-deser-discard128-col ${EXECUTABLE_OUTPUT_PATH}/anch-json-mapper-test -t json-deser-discard128-col)
   add_test(json-iomanip ${EXECUTABLE_OUTPUT_PATH}/anch-json-mapper-test -t json-iomanip)
+  add_test(json-ser-map ${EXECUTABLE_OUTPUT_PATH}/anch-json-mapper-test -t json-sermap)
+  add_test(json-deser-map ${EXECUTABLE_OUTPUT_PATH}/anch-json-mapper-test -t json-desermap)
 
 endif(ANCH_JSON_UNITARY_TEST)
