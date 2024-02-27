@@ -11,37 +11,20 @@ include(AnchLogger.cmake.in)
 # Check GCC version +
 execute_process(COMMAND ${CMAKE_C_COMPILER} -dumpversion
                 OUTPUT_VARIABLE GCC_VERSION)
-if (GCC_VERSION VERSION_LESS 4.5)
-  message(FATAL_ERROR "Version < 4.5. This library is based on C++11 standard. Exit.")
+if (GCC_VERSION VERSION_LESS 8.0)
+  message(FATAL_ERROR "Version < 8.0. This library is based on C++17 standard. Exit.")
+elseif(GCC_VERSION VERSION_GREATER 10.0 OR GCC_VERSION VERSION_EQUAL 10.0)
+  message(STATUS "Version >= 10.0 use -std=c++20")
+  add_definitions("-std=c++20")
 elseif(GCC_VERSION VERSION_GREATER 8.0 OR GCC_VERSION VERSION_EQUAL 8.0)
   message(STATUS "Version >= 8.0 use -std=c++17")
-  add_definitions("-std=c++17 -DANCH_CPP_FS")
-elseif(GCC_VERSION VERSION_GREATER 6.0 OR GCC_VERSION VERSION_EQUAL 6.0)
-  message(STATUS "Version >= 6.0 use -std=c++14")
-  add_definitions("-std=c++14")
-elseif(GCC_VERSION VERSION_GREATER 4.9 OR GCC_VERSION VERSION_EQUAL 4.9)
-  message(STATUS "Version >= 4.9 use -std=c++11")
-  add_definitions("-std=c++11")
-elseif(GCC_VERSION VERSION_GREATER 4.7 OR GCC_VERSION VERSION_EQUAL 4.7)
-  message(STATUS "Version >= 4.7 and < 4.9 use -std=c++11 with boost regular expression")
-  add_definitions("-std=c++11")
-  add_definitions("-D ANCH_BOOST_REGEX")
-  set(USE_BOOST_RE true)
-else()
-  message(STATUS "4.5 <= Version < 4.7 use -std=c++0x")
-  add_definitions("-std=c++0x")
-  add_defintions("-D ANCH_BOOST_REGEX")
-  set(USE_BOOST_RE true)
+  add_definitions("-std=c++17")
 endif()
 # Check GCC version -
 
 # Add GCC definitions
 add_definitions("-Wall -Wextra -Werror -Wuninitialized -Wconversion -Wsign-conversion -Wformat-security -fstack-protector-all -Wstack-protector --param ssp-buffer-size=4 -ftrapv  -z relro,now -fPIC -D_FORTIFY_SOURCE=2")
 add_definitions(${ANCH_LOGGER_COMPILE_FLAGS})
-
-# Include librairies
-include(FindThreads)
-find_package(Threads)
 
 # Includes location
 include_directories(
@@ -50,11 +33,6 @@ include_directories(
   ${ANCH_DATE_INCLUDES_DIR}
   ${ANCH_UTILS_INCLUDES_DIR}
 )
-
-if(USE_BOOST_RE)
-  find_package(Boost COMPONENTS regex)
-  include_directories(${Boost_INCLUDE_DIRS})
-endif()
 
 # Retrieve every files in project
 file(
@@ -108,18 +86,10 @@ endif(ANCH_LOGGER_STATIC_LIB)
 # Unitary tests
 if(ANCH_LOGGER_UNITARY_TEST)
 
-  if(USE_BOOST_RE)
-    link_directories(
-      ${Boost_LIBRARY_DIRS}
-      ${ANCH_RESOURCE_LIBRARY_DIR}
-      ${ANCH_DATE_LIBRARY_DIR}
+  link_directories(
+    ${ANCH_RESOURCE_LIBRARY_DIR}
+    ${ANCH_DATE_LIBRARY_DIR}
     )
-  else()
-    link_directories(
-      ${ANCH_RESOURCE_LIBRARY_DIR}
-      ${ANCH_DATE_LIBRARY_DIR}
-    )
-  endif()
 
   # build rotate test +
   file(
@@ -133,24 +103,12 @@ if(ANCH_LOGGER_UNITARY_TEST)
     ${test_rotate}
   )
 
-  if(USE_BOOST_RE)
-    target_link_libraries(
-      anch-logger-rotate
-      anch-logger
-      anch-resource
-      anch-date
-      ${CMAKE_THREAD_LIBS_INIT}
-      ${Boost_LIBRARIES}
+  target_link_libraries(
+    anch-logger-rotate
+    anch-logger
+    anch-resource
+    anch-date
     )
-  else()
-    target_link_libraries(
-      anch-logger-rotate
-      anch-logger
-      anch-resource
-      anch-date
-      ${CMAKE_THREAD_LIBS_INIT}
-    )
-  endif()
 
   configure_file(test/anch-logger.conf anch-logger.conf COPYONLY)
   # build rotate test -
@@ -174,24 +132,12 @@ if(ANCH_LOGGER_UNITARY_TEST)
     COMPILE_DEFINITIONS "${custom_file_def}"
   )
 
-  if(USE_BOOST_RE)
-    target_link_libraries(
-      anch-logger-custom-file
-      anch-logger
-      anch-resource
-      anch-date
-      ${CMAKE_THREAD_LIBS_INIT}
-      ${Boost_LIBRARIES}
+  target_link_libraries(
+    anch-logger-custom-file
+    anch-logger
+    anch-resource
+    anch-date
     )
-  else()
-    target_link_libraries(
-      anch-logger-custom-file
-      anch-logger
-      anch-resource
-      anch-date
-      ${CMAKE_THREAD_LIBS_INIT}
-    )
-  endif()
 
   configure_file(test/customFile.ini customFile.ini COPYONLY)
   # build custom file test -
@@ -215,24 +161,12 @@ if(ANCH_LOGGER_UNITARY_TEST)
     COMPILE_DEFINITIONS "${low_priority_file_def}"
   )
 
-  if(USE_BOOST_RE)
-    target_link_libraries(
-      anch-logger-low-priority
-      anch-logger
-      anch-resource
-      anch-date
-      ${CMAKE_THREAD_LIBS_INIT}
-      ${Boost_LIBRARIES}
+  target_link_libraries(
+    anch-logger-low-priority
+    anch-logger
+    anch-resource
+    anch-date
     )
-  else()
-    target_link_libraries(
-      anch-logger-low-priority
-      anch-logger
-      anch-resource
-      anch-date
-      ${CMAKE_THREAD_LIBS_INIT}
-    )
-  endif()
 
   configure_file(test/low-priority-logger.conf low-priority-logger.conf COPYONLY)
   # build low priority file test -
@@ -257,24 +191,12 @@ if(ANCH_LOGGER_UNITARY_TEST)
     COMPILE_DEFINITIONS "${default_conf_def}"
   )
 
-  if(USE_BOOST_RE)
-    target_link_libraries(
-      anch-logger-default-config
-      anch-logger
-      anch-resource
-      anch-date
-      ${CMAKE_THREAD_LIBS_INIT}
-      ${Boost_LIBRARIES}
+  target_link_libraries(
+    anch-logger-default-config
+    anch-logger
+    anch-resource
+    anch-date
     )
-  else()
-    target_link_libraries(
-      anch-logger-default-config
-      anch-logger
-      anch-resource
-      anch-date
-      ${CMAKE_THREAD_LIBS_INIT}
-    )
-  endif()
   # build default configuration test -
 
   enable_testing()

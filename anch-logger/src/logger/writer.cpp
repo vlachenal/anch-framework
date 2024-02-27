@@ -20,11 +20,7 @@
 #include <fstream>
 #include <sstream>
 
-#ifdef ANCH_CPP_FS
 #include <filesystem>
-#else
-#include <stdio.h>
-#endif // ANCH_CPP_FS
 
 #include "logger/writer.hpp"
 
@@ -104,12 +100,8 @@ Writer::rotateFiles() {
   // Remove older file if max index file has been reached +
   if(_fileIndex == _maxIndex) {
     ostr << _fileName << "." << _fileIndex;
-#ifdef ANCH_CPP_FS
     std::filesystem::remove(ostr.str().data());
-#else
-    ::remove(ostr.str().data());
-#endif // ANCH_CPP_FS
-    _fileIndex--;
+    --_fileIndex;
   }
   // Remove older file if max index file has been reached -
   // Rename every log files +
@@ -120,17 +112,9 @@ Writer::rotateFiles() {
     ostr.str("");
     ostr << _fileName << "." << (i + 1);
     std::string newName = ostr.str();
-#ifdef ANCH_CPP_FS
     std::filesystem::rename(oldName.data(), newName.data());
-#else
-    ::rename(oldName.data(), newName.data());
-#endif // ANCH_CPP_FS
   }
-#ifdef ANCH_CPP_FS
   std::filesystem::rename(_fileName.data(), std::string(_fileName + ".1").data());
-#else
-  ::rename(_fileName.data(), std::string(_fileName + ".1").data());
-#endif // ANCH_CPP_FS
   // Rename every log files -
   _output = new std::ofstream(_fileName);
   _fileIndex++;
