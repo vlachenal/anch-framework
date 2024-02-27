@@ -11,14 +11,11 @@ include(AnchRest.cmake.in)
 # Check GCC version +
 execute_process(COMMAND ${CMAKE_C_COMPILER} -dumpversion
   OUTPUT_VARIABLE GCC_VERSION)
-if (GCC_VERSION VERSION_LESS 9.3)
-  message(FATAL_ERROR "Version < 9.3. This library is based on C++20 standard. Exit.")
-elseif(GCC_VERSION VERSION_GREATER 10.0 OR GCC_VERSION VERSION_EQUAL 10.0)
+if (GCC_VERSION VERSION_LESS 10.0)
+  message(FATAL_ERROR "Version < 10.0. This library is based on C++20 standard. Exit.")
+else()
   message(STATUS "Version >= 10.0 use -std=c++20")
   add_definitions("-std=c++20")
-elseif(GCC_VERSION VERSION_GREATER 9.3 OR GCC_VERSION VERSION_EQUAL 9.3)
-  message(STATUS "Version >= 9.3 use -std=c++2a")
-  add_definitions("-std=c++2a")
 endif()
 # Check GCC version -
 
@@ -31,10 +28,6 @@ else()
   add_definitions("-D ANCH_POSIX")
 endif()
 add_definitions(${ANCH_REST_COMPILE_FLAGS})
-
-# Include librairies
-include(FindThreads)
-find_package(Threads)
 
 ## Common library +
 # Includes location
@@ -250,7 +243,6 @@ if(ANCH_REST_UNITARY_TEST)
       anch-rest-router
       anch-uuid
       anch-json
-      ${CMAKE_THREAD_LIBS_INIT}
       )
     # Build router unit tests -
 
@@ -270,7 +262,6 @@ if(ANCH_REST_UNITARY_TEST)
       anch-rest-common
       anch-uuid
       anch-json
-      ${CMAKE_THREAD_LIBS_INIT}
       )
   endif(ANCH_REST_SERVER_LIB)
 
