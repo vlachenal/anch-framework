@@ -10,17 +10,11 @@ include(AnchResource.cmake.in)
 
 # Check GCC version +
 execute_process(COMMAND ${CMAKE_C_COMPILER} -dumpversion OUTPUT_VARIABLE GCC_VERSION)
-if (GCC_VERSION VERSION_LESS 4.5)
-  message(FATAL_ERROR "Version < 4.5. This library is based on C++11 standard. Exit.")
-elseif(GCC_VERSION VERSION_GREATER 10.0 OR GCC_VERSION VERSION_EQUAL 10.0)
+if (GCC_VERSION VERSION_LESS 10.0)
+  message(FATAL_ERROR "Version < 10.0. This library is based on C++20 standard. Exit.")
+else()
   message(STATUS "Version >= 10.0 use -std=c++20")
   add_definitions("-std=c++20")
-elseif(GCC_VERSION VERSION_GREATER 9.0 OR GCC_VERSION VERSION_EQUAL 9.0)
-  message(STATUS "Version >= 9.0 use -std=c++2a")
-  add_definitions("-std=c++2a -fconcepts")
-else()
-  message(STATUS "4.5 <= Version < 4.7 use -std=c++0x")
-  add_definitions("-std=c++0x")
 endif()
 # Check GCC version -
 
