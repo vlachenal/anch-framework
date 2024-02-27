@@ -11,20 +11,14 @@ include(AnchCrypto.cmake.in)
 # Check GCC version +
 execute_process(COMMAND ${CMAKE_C_COMPILER} -dumpversion
                 OUTPUT_VARIABLE GCC_VERSION)
-if (GCC_VERSION VERSION_LESS 4.5)
-  message(FATAL_ERROR "Version < 4.5. This library is based on C++11 standard. Exit.")
+if (GCC_VERSION VERSION_LESS 8.0)
+  message(FATAL_ERROR "Version < 8.0. This library is based on C++17 standard. Exit.")
+elseif(GCC_VERSION VERSION_GREATER 10.0 OR GCC_VERSION VERSION_EQUAL 10.0)
+  message(STATUS "Version >= 10.0 use -std=c++20")
+  add_definitions("-std=c++20")
 elseif(GCC_VERSION VERSION_GREATER 8.0 OR GCC_VERSION VERSION_EQUAL 8.0)
   message(STATUS "Version >= 8.0 use -std=c++17")
   add_definitions("-std=c++17")
-elseif(GCC_VERSION VERSION_GREATER 6.0 OR GCC_VERSION VERSION_EQUAL 6.0)
-  message(STATUS "Version >= 6.0 use -std=c++14")
-  add_definitions("-std=c++14")
-elseif(GCC_VERSION VERSION_GREATER 4.7 OR GCC_VERSION VERSION_EQUAL 4.7)
-  message(STATUS "Version >= 4.7 use -std=c++11")
-  add_definitions("-std=c++11")
-else()
-  message(STATUS "4.5 <= Version < 4.7 use -std=c++0x")
-  add_definitions("-std=c++0x")
 endif()
 # Check GCC version -
 
@@ -43,10 +37,6 @@ if(ANCH_CPU_AES)
 elseif(ANCH_CPU_DETECTION)
   add_definitions("-msse4 -maes -D ANCH_CPU_AES -D ANCH_CPU_DETECTION")
 endif()
-
-# Include librairies
-include(FindThreads)
-find_package(Threads)
 
 # Includes location
 if(ANCH_CPU_DETECTION)
@@ -136,7 +126,6 @@ if(ANCH_CRYPTO_UNITARY_TEST)
     anch-md5-test
     anch-crypto
     anch-uuid
-    ${CMAKE_THREAD_LIBS_INIT}
   )
   # Build MD5 unitary test -
 
@@ -156,7 +145,6 @@ if(ANCH_CRYPTO_UNITARY_TEST)
     anch-sha1-test
     anch-crypto
     anch-uuid
-    ${CMAKE_THREAD_LIBS_INIT}
   )
   # Build SHA1 unitary test -
 
@@ -176,7 +164,6 @@ if(ANCH_CRYPTO_UNITARY_TEST)
     anch-sha2-test
     anch-crypto
     anch-uuid
-    ${CMAKE_THREAD_LIBS_INIT}
   )
   # Build SHA2 unitary test -
 
@@ -196,7 +183,6 @@ if(ANCH_CRYPTO_UNITARY_TEST)
     anch-hmac-test
     anch-crypto
     anch-uuid
-    ${CMAKE_THREAD_LIBS_INIT}
   )
   # Build HMAC unitary test -
 
@@ -216,7 +202,6 @@ if(ANCH_CRYPTO_UNITARY_TEST)
     anch-base64-test
     anch-crypto
     anch-uuid
-    ${CMAKE_THREAD_LIBS_INIT}
   )
   # Build Base64 unitary test -
 
@@ -236,7 +221,6 @@ if(ANCH_CRYPTO_UNITARY_TEST)
     anch-aes-test
     anch-crypto
     anch-uuid
-    ${CMAKE_THREAD_LIBS_INIT}
   )
   # Build AES unitary test -
 
@@ -256,7 +240,6 @@ if(ANCH_CRYPTO_UNITARY_TEST)
     anch-padding-test
     anch-crypto
     anch-uuid
-    ${CMAKE_THREAD_LIBS_INIT}
   )
   # Build padding unitary test -
 
@@ -276,7 +259,6 @@ if(ANCH_CRYPTO_UNITARY_TEST)
     anch-aes-ecb-test
     anch-crypto
     anch-uuid
-    ${CMAKE_THREAD_LIBS_INIT}
   )
   # Build AES-ECB unit tests -
 
@@ -296,7 +278,6 @@ if(ANCH_CRYPTO_UNITARY_TEST)
     anch-aes-cbc-test
     anch-crypto
     anch-uuid
-    ${CMAKE_THREAD_LIBS_INIT}
   )
   # Build AES-CBC unit tests -
 
@@ -316,7 +297,6 @@ if(ANCH_CRYPTO_UNITARY_TEST)
     anch-aes-pcbc-test
     anch-crypto
     anch-uuid
-    ${CMAKE_THREAD_LIBS_INIT}
   )
   # Build AES-PCBC unit tests -
 
@@ -336,7 +316,6 @@ if(ANCH_CRYPTO_UNITARY_TEST)
     anch-aes-ctr-test
     anch-crypto
     anch-uuid
-    ${CMAKE_THREAD_LIBS_INIT}
   )
   # Build AES-CTR unit tests -
 
@@ -357,7 +336,6 @@ if(ANCH_CRYPTO_UNITARY_TEST)
     anch-aes-ofb-test
     anch-crypto
     anch-uuid
-    ${CMAKE_THREAD_LIBS_INIT}
   )
   # Build AES-OFB unit tests -
 
@@ -377,7 +355,6 @@ if(ANCH_CRYPTO_UNITARY_TEST)
     anch-aes-cfb-test
     anch-crypto
     anch-uuid
-    ${CMAKE_THREAD_LIBS_INIT}
   )
   # Build AES-CFB unit tests -
 
@@ -397,7 +374,6 @@ if(ANCH_CRYPTO_UNITARY_TEST)
     anch-crypto-uuid-test
     anch-crypto
     anch-uuid
-    ${CMAKE_THREAD_LIBS_INIT}
   )
   # Build UUID unit tests -
 
@@ -537,7 +513,6 @@ if(ANCH_CRYPTO_UNITARY_TEST)
       anch-crypto
       anch-uuid
       ${OPENSSL_LIBRARIES}
-      ${CMAKE_THREAD_LIBS_INIT}
       )
 
     add_test(BenchOpenssl ${EXECUTABLE_OUTPUT_PATH}/anch-bench-openssl main)
@@ -561,7 +536,6 @@ if(ANCH_CRYPTO_UNITARY_TEST)
       anch-crypto
       anch-uuid
       ${OPENSSL_LIBRARIES}
-      ${CMAKE_THREAD_LIBS_INIT}
       )
     # Build AES-CTR unit tests -
 
