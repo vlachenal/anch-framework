@@ -11,23 +11,14 @@ include(AnchUUID.cmake.in)
 # Check GCC version +
 execute_process(COMMAND ${CMAKE_C_COMPILER} -dumpversion
                 OUTPUT_VARIABLE GCC_VERSION)
-if (GCC_VERSION VERSION_LESS 4.5)
-  message(FATAL_ERROR "Version < 4.5. This library is based on C++11 standard. Exit.")
+if (GCC_VERSION VERSION_LESS 8.0)
+  message(FATAL_ERROR "Version < 8.0. This library is based on C++17 standard. Exit.")
 elseif(GCC_VERSION VERSION_GREATER 10.0 OR GCC_VERSION VERSION_EQUAL 10.0)
   message(STATUS "Version >= 10.0 use -std=c++20")
   add_definitions("-std=c++20")
-elseif(GCC_VERSION VERSION_GREATER 8.0 OR GCC_VERSION VERSION_EQUAL 8.0)
+else()
   message(STATUS "Version >= 8.0 use -std=c++17")
   add_definitions("-std=c++17")
-elseif(GCC_VERSION VERSION_GREATER 6.0 OR GCC_VERSION VERSION_EQUAL 6.0)
-  message(STATUS "Version >= 6.0 use -std=c++14")
-  add_definitions("-std=c++14")
-elseif(GCC_VERSION VERSION_GREATER 4.7 OR GCC_VERSION VERSION_EQUAL 4.7)
-  message(STATUS "Version >= 4.7 use -std=c++11")
-  add_definitions("-std=c++11")
-else()
-  message(STATUS "4.5 <= Version < 4.7 use -std=c++0x")
-  add_definitions("-std=c++0x")
 endif()
 # Check GCC version -
 
@@ -40,10 +31,6 @@ else()
   add_definitions("-D ANCH_POSIX")
 endif()
 add_definitions(${ANCH_UUID_COMPILE_FLAGS})
-
-# Include librairies
-include(FindThreads)
-find_package(Threads)
 
 # Includes location
 include_directories(
@@ -126,17 +113,12 @@ if(ANCH_UUID_UNITARY_TEST)
     ${test_uuid}
   )
 
-  # Include libraries
-  include(FindThreads)
-  find_package(Threads)
-
   target_link_libraries(
     anch-uuid-test
     anch-uuid
     anch-cli
     anch-unit
     anch-json
-    ${CMAKE_THREAD_LIBS_INIT}
   )
   # Build UUID unit test -
 
