@@ -13,7 +13,7 @@ execute_process(COMMAND ${CMAKE_C_COMPILER} -dumpversion
                 OUTPUT_VARIABLE GCC_VERSION)
 if (GCC_VERSION VERSION_LESS 10.0)
   message(FATAL_ERROR "Version < 10.0. This library is based on C++20 standard. Exit.")
-elseif(GCC_VERSION VERSION_GREATER 10.0 OR GCC_VERSION VERSION_EQUAL 10.0)
+else()
   message(STATUS "Version >= 10.0 use -std=c++20")
   add_definitions("-std=c++20")
 endif()
@@ -107,7 +107,6 @@ if(ANCH_UNIT_UNITARY_TEST)
     anch-unit-test
     anch-unit
     anch-cli
-    ${CMAKE_THREAD_LIBS_INIT}
     )
   # Build unit format unitary test -
 
