@@ -11,28 +11,14 @@ include(AnchDate.cmake.in)
 # Check GCC version +
 execute_process(COMMAND ${CMAKE_C_COMPILER} -dumpversion
                 OUTPUT_VARIABLE GCC_VERSION)
-if (GCC_VERSION VERSION_LESS 4.5)
-  message(FATAL_ERROR "Version < 4.5. This library is based on C++11 standard. Exit.")
-elseif(GCC_VERSION VERSION_GREATER 8.0 OR GCC_VERSION VERSION_EQUAL 8.0)
+if (GCC_VERSION VERSION_LESS 8.0)
+  message(FATAL_ERROR "Version < 8.0. This library is based on C++17 standard. Exit.")
+elseif(GCC_VERSION VERSION_GREATER 10.0 OR GCC_VERSION VERSION_EQUAL 10.0)
+  message(STATUS "Version >= 10.0 use -std=c++20")
+  add_definitions("-std=c++20")
+else()
   message(STATUS "Version >= 8.0 use -std=c++17")
   add_definitions("-std=c++17")
-  add_definitions("-D ANCH_TM_SPEC")
-elseif(GCC_VERSION VERSION_GREATER 6.0 OR GCC_VERSION VERSION_EQUAL 6.0)
-  message(STATUS "Version >= 6.0 use -std=c++14")
-  add_definitions("-std=c++14")
-elseif(GCC_VERSION VERSION_GREATER 4.9 OR GCC_VERSION VERSION_EQUAL 4.9)
-  message(STATUS "Version >= 4.9 use -std=c++11")
-  add_definitions("-std=c++11")
-elseif(GCC_VERSION VERSION_GREATER 4.7 OR GCC_VERSION VERSION_EQUAL 4.7)
-  message(STATUS "Version >= 4.7 and < 4.9 use -std=c++11 with boost regular expression")
-  add_definitions("-std=c++11")
-  add_definitions("-D ANCH_BOOST_REGEX")
-  set(USE_BOOST_RE true)
-else()
-  message(STATUS "4.5 <= Version < 4.7 use -std=c++0x")
-  add_definitions("-std=c++0x")
-  add_defintions("-D ANCH_BOOST_REGEX")
-  set(USE_BOOST_RE true)
 endif()
 # Check GCC version -
 
@@ -45,16 +31,8 @@ else()
 endif()
 add_definitions(${ANCH_DATE_COMPILE_FLAGS})
 
-# Include librairies
-include(FindThreads)
-find_package(Threads)
-
 # Includes location
 include_directories(inc)
-if(USE_BOOST_RE)
-  find_package(Boost COMPONENTS regex)
-  include_directories(${Boost_INCLUDE_DIRS})
-endif()
 
 # Retrieve every files in project
 file(
@@ -117,24 +95,12 @@ if(ANCH_DATE_UNITARY_TEST)
   add_executable(
     anch-date-format-test
     ${test_date_format}
-  )
-
-  if(USE_BOOST_RE)
-    link_directories(${Boost_LIBRARY_DIRS})
-
-    target_link_libraries(
-      anch-date-format-test
-      anch-date
-      ${CMAKE_THREAD_LIBS_INIT}
-      ${Boost_LIBRARIES}
     )
-  else()
-    target_link_libraries(
-      anch-date-format-test
-      anch-date
-      ${CMAKE_THREAD_LIBS_INIT}
+
+  target_link_libraries(
+    anch-date-format-test
+    anch-date
     )
-  endif()
   # Build date format unitary test -
 
   enable_testing()

@@ -36,23 +36,13 @@
 #include "date/formatter/year2dFormatter.hpp"
 #include "date/formatter/year4dFormatter.hpp"
 
-#ifdef ANCH_BOOST_REGEX
-using boost::regex;
-using boost::smatch;
-using boost::regex_search;
-#else
-using std::regex;
-using std::smatch;
-using std::regex_search;
-#endif
-
 using anch::date::Date;
 using anch::date::DateFormatter;
 using anch::date::getInstance;
 
 
 // Static initialization +
-const regex DateFormatter::DATE_PATTERN = regex(R"(^((%.)|([^%]+)))");
+const std::regex DateFormatter::DATE_PATTERN = std::regex(R"(^((%.)|([^%]+)))");
 // Static initialization -
 
 std::map<std::string, getInstance>&
@@ -77,9 +67,9 @@ getFormatters() {
 DateFormatter::DateFormatter(const std::string& dateFormat) noexcept: _formatters(), _size(0) {
   std::string remain = dateFormat;
   bool ok = true;
-  smatch match;
+  std::smatch match;
   while(!remain.empty() && ok) {
-    if(regex_search(remain, match, DATE_PATTERN)) {
+    if(std::regex_search(remain, match, DATE_PATTERN)) {
       addFormatter(std::string(match[0].first, match[0].second));
       remain = std::string(match.suffix().first, match.suffix().second);
 
