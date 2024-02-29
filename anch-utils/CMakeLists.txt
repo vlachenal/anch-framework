@@ -11,7 +11,7 @@ include(AnchUtils.cmake.in)
 # Check GCC version +
 execute_process(COMMAND ${CMAKE_C_COMPILER} -dumpversion
                 OUTPUT_VARIABLE GCC_VERSION)
-if (GCC_VERSION VERSION_LESS 4.5)
+if (GCC_VERSION VERSION_LESS 8.0)
   message(FATAL_ERROR "Version < 8.0. This library is based on C++17 standard. Exit.")
 elseif(GCC_VERSION VERSION_GREATER 10.0 OR GCC_VERSION VERSION_EQUAL 10.0)
   message(STATUS "Version >= 10.0 use -std=c++20")
