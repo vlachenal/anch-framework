@@ -115,7 +115,12 @@ var annotated_dup =
         [ "Section", "classanch_1_1resource_1_1_section.html", "classanch_1_1resource_1_1_section" ]
       ] ],
       [ "rest", null, [
+        [ "Authentication", "classanch_1_1rest_1_1_authentication.html", "classanch_1_1rest_1_1_authentication" ],
+        [ "BasicAuthentication", "classanch_1_1rest_1_1_basic_authentication.html", "classanch_1_1rest_1_1_basic_authentication" ],
+        [ "ClientConfg", "structanch_1_1rest_1_1_client_confg.html", null ],
+        [ "ClientIface", "classanch_1_1rest_1_1_client_iface.html", "classanch_1_1rest_1_1_client_iface" ],
         [ "CommonHeaders", "structanch_1_1rest_1_1_common_headers.html", "structanch_1_1rest_1_1_common_headers" ],
+        [ "CURLClient", "classanch_1_1rest_1_1_c_u_r_l_client.html", "classanch_1_1rest_1_1_c_u_r_l_client" ],
         [ "EndPoint", "classanch_1_1rest_1_1_end_point.html", "classanch_1_1rest_1_1_end_point" ],
         [ "EndpointFunc", "classanch_1_1rest_1_1_endpoint_func.html", "classanch_1_1rest_1_1_endpoint_func" ],
         [ "EndpointParamsFunc", "classanch_1_1rest_1_1_endpoint_params_func.html", "classanch_1_1rest_1_1_endpoint_params_func" ],
@@ -125,11 +130,13 @@ var annotated_dup =
         [ "MapperException", "classanch_1_1rest_1_1_mapper_exception.html", "classanch_1_1rest_1_1_mapper_exception" ],
         [ "MapperRegistry", "classanch_1_1rest_1_1_mapper_registry.html", "classanch_1_1rest_1_1_mapper_registry" ],
         [ "MediaType", "structanch_1_1rest_1_1_media_type.html", "structanch_1_1rest_1_1_media_type" ],
+        [ "ProxyConfig", "structanch_1_1rest_1_1_proxy_config.html", null ],
         [ "Request", "classanch_1_1rest_1_1_request.html", "classanch_1_1rest_1_1_request" ],
         [ "Response", "classanch_1_1rest_1_1_response.html", "classanch_1_1rest_1_1_response" ],
         [ "Router", "classanch_1_1rest_1_1_router.html", "classanch_1_1rest_1_1_router" ],
         [ "RouterException", "classanch_1_1rest_1_1_router_exception.html", "classanch_1_1rest_1_1_router_exception" ],
-        [ "Verb", "structanch_1_1rest_1_1_verb.html", "structanch_1_1rest_1_1_verb" ]
+        [ "Verb", "structanch_1_1rest_1_1_verb.html", "structanch_1_1rest_1_1_verb" ],
+        [ "WebClient", "classanch_1_1rest_1_1_web_client.html", "classanch_1_1rest_1_1_web_client" ]
       ] ],
       [ "sql", "namespaceanch_1_1sql.html", [
         [ "ClausesBuilder", "classanch_1_1sql_1_1_clauses_builder.html", "classanch_1_1sql_1_1_clauses_builder" ],
@@ -179,5 +186,6 @@ var annotated_dup =
       [ "ThreadPool", "classanch_1_1_thread_pool.html", "classanch_1_1_thread_pool" ],
       [ "TimeoutException", "classanch_1_1_timeout_exception.html", "classanch_1_1_timeout_exception" ],
       [ "UUID", "classanch_1_1_u_u_i_d.html", "classanch_1_1_u_u_i_d" ]
-    ] ]
+    ] ],
+    [ "ngx_anch_bootstrap_conf_t", "structngx__anch__bootstrap__conf__t.html", null ]
 ];

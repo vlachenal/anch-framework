@@ -1,5 +1,5 @@
 var searchData=
 [
   ['join_0',['join',['../classanch_1_1sql_1_1_from_builder.html#a35df9ff863ca3c54b0d2f72d42db9e35',1,'anch::sql::FromBuilder::join(const std::string &amp;table, const anch::sql::ClausesBuilder &amp;clauses)'],['../classanch_1_1sql_1_1_from_builder.html#a946724a8ec4b3c4fa7f497bbe29f5fc1',1,'anch::sql::FromBuilder::join(const anch::sql::SQLQuery &amp;subquery, const std::string &amp;alias, const anch::sql::ClausesBuilder &amp;clauses)'],['../classanch_1_1sql_1_1_from_builder.html#aa6337a626b7f67eaeafbbee3af3608ce',1,'anch::sql::FromBuilder::join(const anch::sql::SelectBuilder &amp;subquery, const std::string &amp;alias, const anch::sql::ClausesBuilder &amp;clauses)']]],
-  ['jsonmapper_1',['jsonmapper',['../classanch_1_1json_1_1_j_s_o_n_mapper.html#aa7b5ae030439169fa1a54d7a2d70c268',1,'anch::json::JSONMapper::JSONMapper()=delete'],['../classanch_1_1json_1_1_j_s_o_n_mapper.html#a30f2f0acff52d72606e67e4b282596f0',1,'anch::json::JSONMapper::JSONMapper(const anch::json::MappingOptions &amp;options)']]]
+  ['jsonmapper_1',['JSONMapper',['../classanch_1_1json_1_1_j_s_o_n_mapper.html#aa7b5ae030439169fa1a54d7a2d70c268',1,'anch::json::JSONMapper::JSONMapper()=delete'],['../classanch_1_1json_1_1_j_s_o_n_mapper.html#a30f2f0acff52d72606e67e4b282596f0',1,'anch::json::JSONMapper::JSONMapper(const anch::json::MappingOptions &amp;options)']]]
 ];

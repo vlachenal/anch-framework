@@ -1,3 +1,7 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$classanch_1_1_thread_pool.html" title="Thread pool utility class." alt="" coords="5,5,139,33"/>
+<area shape="rect" id="Node000000" href="$classanch_1_1sql_1_1_select_builder_part.html" title="SQL select query part builder." alt="" coords="5,32,204,60"/>
+<area shape="rect" id="Node000001" href="$classanch_1_1sql_1_1_fields_builder.html" title="Field builder." alt="" coords="252,5,423,33"/>
+<area shape="poly" id="edge68_Node000000_Node000001" title=" " alt="" coords="219,30,251,26,251,32,220,35"/>
+<area shape="rect" id="Node000002" href="$classanch_1_1sql_1_1_from_builder.html" title=" " alt="" coords="254,57,421,85"/>
+<area shape="poly" id="edge69_Node000000_Node000002" title=" " alt="" coords="220,56,254,59,253,65,219,61"/>
 </map>

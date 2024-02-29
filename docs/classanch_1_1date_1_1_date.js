@@ -1,7 +1,6 @@
 var classanch_1_1date_1_1_date =
 [
     [ "Date", "classanch_1_1date_1_1_date.html#a67ebc88fe2e013b0127fe727ccd7c656", null ],
-    [ "Date", "classanch_1_1date_1_1_date.html#af535190e075f8f44ea743fd6d567ebb2", null ],
     [ "Date", "classanch_1_1date_1_1_date.html#a3a25eb2bdb4902c4a9cbe99e7521012c", null ],
     [ "Date", "classanch_1_1date_1_1_date.html#a40ab0e7288401cb579fbede0b5aa4963", null ],
     [ "Date", "classanch_1_1date_1_1_date.html#ae58294e80a578db8993b203a080bfdc7", null ],

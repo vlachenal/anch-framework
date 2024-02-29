@@ -6,6 +6,9 @@ var hierarchy =
     [ "anch::cli::App", "structanch_1_1cli_1_1_app.html", null ],
     [ "anch::cli::Arg", "structanch_1_1cli_1_1_arg.html", null ],
     [ "anch::cli::ArgHandler", "classanch_1_1cli_1_1_arg_handler.html", null ],
+    [ "anch::rest::Authentication", "classanch_1_1rest_1_1_authentication.html", [
+      [ "anch::rest::BasicAuthentication", "classanch_1_1rest_1_1_basic_authentication.html", null ]
+    ] ],
     [ "anch::crypto::Base64", "classanch_1_1crypto_1_1_base64.html", null ],
     [ "anch::crypto::BlockCipher< B >", "classanch_1_1crypto_1_1_block_cipher.html", null ],
     [ "anch::crypto::BlockCipher< 16 >", "classanch_1_1crypto_1_1_block_cipher.html", [
@@ -36,6 +39,10 @@ var hierarchy =
     [ "anch::crypto::SHA1::Chunk", "unionanch_1_1crypto_1_1_s_h_a1_1_1_chunk.html", null ],
     [ "anch::crypto::SHA2< O, B, W, R, I >::Chunk", "unionanch_1_1crypto_1_1_s_h_a2_1_1_chunk.html", null ],
     [ "anch::sql::ClausesBuilder", "classanch_1_1sql_1_1_clauses_builder.html", null ],
+    [ "anch::rest::ClientConfg", "structanch_1_1rest_1_1_client_confg.html", null ],
+    [ "anch::rest::ClientIface", "classanch_1_1rest_1_1_client_iface.html", [
+      [ "anch::rest::CURLClient", "classanch_1_1rest_1_1_c_u_r_l_client.html", null ]
+    ] ],
     [ "anch::Collectors< T >", "classanch_1_1_collectors.html", null ],
     [ "anch::ut::CommandMessage", "structanch_1_1ut_1_1_command_message.html", null ],
     [ "anch::rest::CommonHeaders", "structanch_1_1rest_1_1_common_headers.html", null ],
@@ -148,6 +155,7 @@ var hierarchy =
     [ "anch::logger::formatter::MessageFormatter", "classanch_1_1logger_1_1formatter_1_1_message_formatter.html", null ],
     [ "anch::device::Network", "classanch_1_1device_1_1_network.html", null ],
     [ "anch::device::NetworkInterface", "classanch_1_1device_1_1_network_interface.html", null ],
+    [ "ngx_anch_bootstrap_conf_t", "structngx__anch__bootstrap__conf__t.html", null ],
     [ "anch::json::ObjectMapper< T >", "classanch_1_1json_1_1_object_mapper.html", null ],
     [ "anch::events::Observable< T >", "classanch_1_1events_1_1_observable.html", null ],
     [ "anch::events::Observable< SocketEvent >", "classanch_1_1events_1_1_observable.html", [
@@ -174,6 +182,7 @@ var hierarchy =
       [ "anch::sql::SQLite3PreparedStatement", "classanch_1_1sql_1_1_s_q_lite3_prepared_statement.html", null ]
     ] ],
     [ "anch::json::PrimitiveMapper< T >", "classanch_1_1json_1_1_primitive_mapper.html", null ],
+    [ "anch::rest::ProxyConfig", "structanch_1_1rest_1_1_proxy_config.html", null ],
     [ "anch::rest::Request", "classanch_1_1rest_1_1_request.html", null ],
     [ "anch::resource::Resource", "classanch_1_1resource_1_1_resource.html", null ],
     [ "anch::ResourcePool< T, C, make_ptr >", "classanch_1_1_resource_pool.html", null ],
@@ -228,6 +237,7 @@ var hierarchy =
     [ "anch::ut::UnitTests", "classanch_1_1ut_1_1_unit_tests.html", null ],
     [ "anch::UUID", "classanch_1_1_u_u_i_d.html", null ],
     [ "anch::rest::Verb", "structanch_1_1rest_1_1_verb.html", null ],
+    [ "anch::rest::WebClient", "classanch_1_1rest_1_1_web_client.html", null ],
     [ "anch::logger::Writer", "classanch_1_1logger_1_1_writer.html", [
       [ "anch::logger::LowPriorityWriter", "classanch_1_1logger_1_1_low_priority_writer.html", null ],
       [ "anch::logger::ThreadSafeWriter", "classanch_1_1logger_1_1_thread_safe_writer.html", null ]

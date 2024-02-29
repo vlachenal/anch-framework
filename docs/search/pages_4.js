@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['framework_0',['framework',['../index.html',1,'AnCH Framework'],['../md__r_e_a_d_m_e.html',1,'anch-framework']]]
+  ['framework_0',['AnCH Framework',['../index.html',1,'']]],
+  ['framework_1',['anch-framework',['../md__r_e_a_d_m_e.html',1,'']]]
 ];

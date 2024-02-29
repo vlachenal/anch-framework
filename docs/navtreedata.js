@@ -89,6 +89,15 @@ var NAVTREE =
       [ "Conception", "page_res.html#res_concept_sec", null ],
       [ "Example", "page_res.html#res_example_sec", null ]
     ] ],
+    [ "AnCH REST library documentation", "page_rest.html", [
+      [ "Introduction", "page_rest.html#rest_intro_seq", null ],
+      [ "Prerequisites", "page_rest.html#rest_prereq_sec", null ],
+      [ "Installation", "page_rest.html#rest_install_sec", null ],
+      [ "Conception", "page_rest.html#rest_concept_sec", [
+        [ "REST connection pool", "page_rest.html#rest_conception_pool_sec", null ]
+      ] ],
+      [ "Example", "page_rest.html#rest_example_sec", null ]
+    ] ],
     [ "AnCH SQL library documentation", "page_sql.html", [
       [ "Introduction", "page_sql.html#sql_intro_seq", null ],
       [ "Prerequisites", "page_sql.html#sql_prereq_sec", null ],
@@ -137,18 +146,19 @@ var NAVTREE =
 
 var NAVTREEINDEX =
 [
-"aes128_8hpp_source.html",
-"classanch_1_1crypto_1_1_base64.html#a5623b5a8640a5d0eb3a74b0f5612d272",
-"classanch_1_1crypto_1_1_s_h_a384__512.html#a6aa931610abac9c49f03d1be65c3327d",
-"classanch_1_1date_1_1formatter_1_1_marker_formatter.html#a63c1040300b4a67d5f26620b437aef3d",
-"classanch_1_1json_1_1_j_s_o_n_mapper.html#a74ffe674bc0208cde925920c01db78bd",
-"classanch_1_1logger_1_1formatter_1_1_m_d_c_formatter.html#aa536888b38efbe9326fc86492c9bb5a7",
-"classanch_1_1rest_1_1_request.html#a4802c6f426185954a38176fc5e2eeac1",
-"classanch_1_1sql_1_1_from_builder.html#a3f642010610f4c1cd4474942799373d6",
-"classanch_1_1sql_1_1_s_q_l_query.html",
-"dir_3144ad20eaaabf0a1258464eb1272e0d.html",
-"namespaceanch_1_1json.html#a7865c94e32fc802a83f5e1ae2a237497",
-"structanch_1_1crypto_1_1_s_h_a2_1_1_context.html#a59208d42ea637140f2cbdc545a0ff79d"
+"_nginx_router_8hpp_source.html",
+"classanch_1_1crypto_1_1_base64.html#a4d02264d1599834d1cf7d5291dc4e95c",
+"classanch_1_1crypto_1_1_s_h_a384__512.html#a0665256d39a68cdfd3bc6bcba7e81419",
+"classanch_1_1date_1_1formatter_1_1_marker_formatter.html#a471481a3427526dfddc4ee525fd19fbb",
+"classanch_1_1json_1_1_j_s_o_n_mapper.html#a5a5a80cc28a5fe24553e2630ce08b6b9",
+"classanch_1_1logger_1_1formatter_1_1_level_formatter.html",
+"classanch_1_1rest_1_1_client_iface.html#adc57f0c503587c7178c66b6a87743754",
+"classanch_1_1sql_1_1_connection.html#a84eef94d63f28f41e552275de7ae5313",
+"classanch_1_1sql_1_1_prepared_statement.html#a0c69c1db4440ef85341a96675a11e570",
+"classanch_1_1ut_1_1_assert_exception.html#a0d1c4468c0d9ce434b0bbd39c151a302",
+"logger_factory_8hpp_source.html",
+"pages.html",
+"structanch_1_1rest_1_1_media_type.html#acb707e7a45d1a82631db733b5452f428"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
