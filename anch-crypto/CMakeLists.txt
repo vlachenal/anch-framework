@@ -11,14 +11,11 @@ include(AnchCrypto.cmake.in)
 # Check GCC version +
 execute_process(COMMAND ${CMAKE_C_COMPILER} -dumpversion
                 OUTPUT_VARIABLE GCC_VERSION)
-if (GCC_VERSION VERSION_LESS 8.0)
-  message(FATAL_ERROR "Version < 8.0. This library is based on C++17 standard. Exit.")
+if (GCC_VERSION VERSION_LESS 10.0)
+  message(FATAL_ERROR "Version < 10.0. This library is based on C++20 standard. Exit.")
 elseif(GCC_VERSION VERSION_GREATER 10.0 OR GCC_VERSION VERSION_EQUAL 10.0)
   message(STATUS "Version >= 10.0 use -std=c++20")
   add_definitions("-std=c++20")
-else()
-  message(STATUS "Version >= 8.0 use -std=c++17")
-  add_definitions("-std=c++17")
 endif()
 # Check GCC version -
 
@@ -106,8 +103,18 @@ endif(ANCH_CRYPTO_STATIC_LIB)
 # Unitary tests
 if(ANCH_CRYPTO_UNITARY_TEST)
 
+  include_directories(
+    inc
+    ${ANCH_UUID_INCLUDES_DIR}
+    ${ANCH_UTILS_INCLUDES_DIR}
+    ${ANCH_UT_INCLUDES_DIR}
+    ${ANCH_CLI_INCLUDES_DIR}
+    )
+
   link_directories(
     ${ANCH_UUID_LIBRARY_DIR}
+    ${ANCH_UT_LIBRARY_DIR}
+    ${ANCH_CLI_LIBRARY_DIR}
     )
 
   # Build MD5 unitary test +
@@ -125,6 +132,8 @@ if(ANCH_CRYPTO_UNITARY_TEST)
   target_link_libraries(
     anch-md5-test
     anch-crypto
+    anch-cli
+    anch-unit
     anch-uuid
   )
   # Build MD5 unitary test -
@@ -145,6 +154,8 @@ if(ANCH_CRYPTO_UNITARY_TEST)
     anch-sha1-test
     anch-crypto
     anch-uuid
+    anch-cli
+    anch-unit
   )
   # Build SHA1 unitary test -
 
@@ -163,6 +174,8 @@ if(ANCH_CRYPTO_UNITARY_TEST)
   target_link_libraries(
     anch-sha2-test
     anch-crypto
+    anch-cli
+    anch-unit
     anch-uuid
   )
   # Build SHA2 unitary test -
@@ -182,6 +195,8 @@ if(ANCH_CRYPTO_UNITARY_TEST)
   target_link_libraries(
     anch-hmac-test
     anch-crypto
+    anch-cli
+    anch-unit
     anch-uuid
   )
   # Build HMAC unitary test -
@@ -201,6 +216,8 @@ if(ANCH_CRYPTO_UNITARY_TEST)
   target_link_libraries(
     anch-base64-test
     anch-crypto
+    anch-cli
+    anch-unit
     anch-uuid
   )
   # Build Base64 unitary test -
@@ -220,6 +237,8 @@ if(ANCH_CRYPTO_UNITARY_TEST)
   target_link_libraries(
     anch-aes-test
     anch-crypto
+    anch-cli
+    anch-unit
     anch-uuid
   )
   # Build AES unitary test -
@@ -239,6 +258,8 @@ if(ANCH_CRYPTO_UNITARY_TEST)
   target_link_libraries(
     anch-padding-test
     anch-crypto
+    anch-cli
+    anch-unit
     anch-uuid
   )
   # Build padding unitary test -
@@ -258,6 +279,8 @@ if(ANCH_CRYPTO_UNITARY_TEST)
   target_link_libraries(
     anch-aes-ecb-test
     anch-crypto
+    anch-cli
+    anch-unit
     anch-uuid
   )
   # Build AES-ECB unit tests -
@@ -277,6 +300,8 @@ if(ANCH_CRYPTO_UNITARY_TEST)
   target_link_libraries(
     anch-aes-cbc-test
     anch-crypto
+    anch-cli
+    anch-unit
     anch-uuid
   )
   # Build AES-CBC unit tests -
@@ -296,6 +321,8 @@ if(ANCH_CRYPTO_UNITARY_TEST)
   target_link_libraries(
     anch-aes-pcbc-test
     anch-crypto
+    anch-cli
+    anch-unit
     anch-uuid
   )
   # Build AES-PCBC unit tests -
@@ -315,6 +342,8 @@ if(ANCH_CRYPTO_UNITARY_TEST)
   target_link_libraries(
     anch-aes-ctr-test
     anch-crypto
+    anch-cli
+    anch-unit
     anch-uuid
   )
   # Build AES-CTR unit tests -
@@ -335,6 +364,8 @@ if(ANCH_CRYPTO_UNITARY_TEST)
   target_link_libraries(
     anch-aes-ofb-test
     anch-crypto
+    anch-cli
+    anch-unit
     anch-uuid
   )
   # Build AES-OFB unit tests -
@@ -354,6 +385,8 @@ if(ANCH_CRYPTO_UNITARY_TEST)
   target_link_libraries(
     anch-aes-cfb-test
     anch-crypto
+    anch-cli
+    anch-unit
     anch-uuid
   )
   # Build AES-CFB unit tests -
@@ -373,124 +406,180 @@ if(ANCH_CRYPTO_UNITARY_TEST)
   target_link_libraries(
     anch-crypto-uuid-test
     anch-crypto
+    anch-cli
+    anch-unit
     anch-uuid
   )
   # Build UUID unit tests -
 
   enable_testing()
-  add_test(MD5 ${EXECUTABLE_OUTPUT_PATH}/anch-md5-test main)
-  add_test(SHA1 ${EXECUTABLE_OUTPUT_PATH}/anch-sha1-test main)
+  # MD5 tests +
+  add_test(md5-exorciste ${EXECUTABLE_OUTPUT_PATH}/anch-md5-test --test md5-str)
+  add_test(md5-1Ma ${EXECUTABLE_OUTPUT_PATH}/anch-md5-test --test md5-1Ma)
+  add_test(md5-makefile ${EXECUTABLE_OUTPUT_PATH}/anch-md5-test --test md5-makefile)
+  # MD5 tests -
 
-  add_test(SHA2-224 ${EXECUTABLE_OUTPUT_PATH}/anch-sha2-test 224)
-  add_test(SHA2-256 ${EXECUTABLE_OUTPUT_PATH}/anch-sha2-test 256)
-  add_test(SHA2-384 ${EXECUTABLE_OUTPUT_PATH}/anch-sha2-test 384)
-  add_test(SHA2-512 ${EXECUTABLE_OUTPUT_PATH}/anch-sha2-test 512)
+  # SHA1 tests +
+  add_test(sha1-abc ${EXECUTABLE_OUTPUT_PATH}/anch-sha1-test --test sha1-abc)
+  add_test(sha1-plop ${EXECUTABLE_OUTPUT_PATH}/anch-sha1-test --test sha1-plop)
+  add_test(sha1-1Ma ${EXECUTABLE_OUTPUT_PATH}/anch-sha1-test --test sha1-1Ma)
+  add_test(sha1-sec-password ${EXECUTABLE_OUTPUT_PATH}/anch-sha1-test --test sha1-sec-password)
+  # SHA1 tests -
 
-  add_test(HMAC ${EXECUTABLE_OUTPUT_PATH}/anch-hmac-test main)
-  add_test(Base64 ${EXECUTABLE_OUTPUT_PATH}/anch-base64-test main)
+  # SHA2 tests +
+  add_test(sha2-224 ${EXECUTABLE_OUTPUT_PATH}/anch-sha2-test -t sha2-224)
+  add_test(sha2-256 ${EXECUTABLE_OUTPUT_PATH}/anch-sha2-test -t sha2-256)
+  add_test(sha2-384 ${EXECUTABLE_OUTPUT_PATH}/anch-sha2-test -t sha2-384)
+  add_test(sha2-512 ${EXECUTABLE_OUTPUT_PATH}/anch-sha2-test -t sha2-512)
+  # SHA2 tests -
 
-  add_test(AES128 ${EXECUTABLE_OUTPUT_PATH}/anch-aes-test 128)
-  add_test(AES192 ${EXECUTABLE_OUTPUT_PATH}/anch-aes-test 192)
-  add_test(AES256 ${EXECUTABLE_OUTPUT_PATH}/anch-aes-test 256)
+  # HMAC tests +
+  add_test(hmac-md5 ${EXECUTABLE_OUTPUT_PATH}/anch-hmac-test -t hmac-md5)
+  add_test(hmac-sha1 ${EXECUTABLE_OUTPUT_PATH}/anch-hmac-test -t hmac-sha1)
+  add_test(hmac-sha224 ${EXECUTABLE_OUTPUT_PATH}/anch-hmac-test -t hmac-sha224)
+  add_test(hmac-sha256 ${EXECUTABLE_OUTPUT_PATH}/anch-hmac-test -t hmac-sha256)
+  #add_test(hmac-sha384 ${EXECUTABLE_OUTPUT_PATH}/anch-hmac-test -t hmac-sha384)
+  add_test(hmac-sha512 ${EXECUTABLE_OUTPUT_PATH}/anch-hmac-test -t hmac-sha512)
+  # HMAC tests -
 
-  add_test(Padding-ANSIX923 ${EXECUTABLE_OUTPUT_PATH}/anch-padding-test ANSIX923)
-  add_test(Padding-PKCS7 ${EXECUTABLE_OUTPUT_PATH}/anch-padding-test "PKCS#7")
-  add_test(Padding-ISO7816_4 ${EXECUTABLE_OUTPUT_PATH}/anch-padding-test ISO7816_4)
-  add_test(Padding-zero ${EXECUTABLE_OUTPUT_PATH}/anch-padding-test zero)
+  # Base64 tests +
+  add_test(base64-enc-empty ${EXECUTABLE_OUTPUT_PATH}/anch-base64-test -t base64-enc-empty)
+  add_test(base64-enc-f ${EXECUTABLE_OUTPUT_PATH}/anch-base64-test -t base64-enc-f)
+  add_test(base64-enc-fo ${EXECUTABLE_OUTPUT_PATH}/anch-base64-test -t base64-enc-fo)
+  add_test(base64-enc-foo ${EXECUTABLE_OUTPUT_PATH}/anch-base64-test -t base64-enc-foo)
+  add_test(base64-enc-foob ${EXECUTABLE_OUTPUT_PATH}/anch-base64-test -t base64-enc-foob)
+  add_test(base64-enc-fooba ${EXECUTABLE_OUTPUT_PATH}/anch-base64-test -t base64-enc-fooba)
+  add_test(base64-enc-foobar ${EXECUTABLE_OUTPUT_PATH}/anch-base64-test -t base64-enc-foobar)
+  add_test(base64-dec-empty ${EXECUTABLE_OUTPUT_PATH}/anch-base64-test -t base64-dec-empty)
+  add_test(base64-dec-f ${EXECUTABLE_OUTPUT_PATH}/anch-base64-test -t base64-dec-f)
+  add_test(base64-dec-fo ${EXECUTABLE_OUTPUT_PATH}/anch-base64-test -t base64-dec-fo)
+  add_test(base64-dec-foo ${EXECUTABLE_OUTPUT_PATH}/anch-base64-test -t base64-dec-foo)
+  add_test(base64-dec-foob ${EXECUTABLE_OUTPUT_PATH}/anch-base64-test -t base64-dec-foob)
+  add_test(base64-dec-fooba ${EXECUTABLE_OUTPUT_PATH}/anch-base64-test -t base64-dec-fooba)
+  add_test(base64-dec-foobar ${EXECUTABLE_OUTPUT_PATH}/anch-base64-test -t base64-dec-foobar)
+  add_test(base64-enc-makefile ${EXECUTABLE_OUTPUT_PATH}/anch-base64-test -t base64-enc-makefile)
+  # Base64 tests -
 
-  add_test(Aes128Ecb-ISO7816_4-seq ${EXECUTABLE_OUTPUT_PATH}/anch-aes-ecb-test ISO7816_4 sequential 128)
-  add_test(Aes128Ecb-ISO7816_4-para ${EXECUTABLE_OUTPUT_PATH}/anch-aes-ecb-test ISO7816_4 parallel 128)
-  add_test(Aes128Ecb-PKCS7-seq ${EXECUTABLE_OUTPUT_PATH}/anch-aes-ecb-test "PKCS#7" sequential 128)
-  add_test(Aes128Ecb-PKCS7-para ${EXECUTABLE_OUTPUT_PATH}/anch-aes-ecb-test "PKCS#7" parallel 128)
-  add_test(Aes128Ecb-zero-seq ${EXECUTABLE_OUTPUT_PATH}/anch-aes-ecb-test zero sequential 128)
-  add_test(Aes128Ecb-zero-para ${EXECUTABLE_OUTPUT_PATH}/anch-aes-ecb-test zero parallel 128)
-  add_test(Aes128Ecb-ANSIX923-seq ${EXECUTABLE_OUTPUT_PATH}/anch-aes-ecb-test ANSIX923 sequential 128)
-  add_test(Aes128Ecb-ANSIX923-para ${EXECUTABLE_OUTPUT_PATH}/anch-aes-ecb-test ANSIX923 parallel 128)
+  # AES single block tests +
+  add_test(AES128 ${EXECUTABLE_OUTPUT_PATH}/anch-aes-test -t 128)
+  add_test(AES192 ${EXECUTABLE_OUTPUT_PATH}/anch-aes-test -t 192)
+  add_test(AES256 ${EXECUTABLE_OUTPUT_PATH}/anch-aes-test -t 256)
+  # AES single block tests -
 
-  add_test(Aes192Ecb-ISO7816_4-seq ${EXECUTABLE_OUTPUT_PATH}/anch-aes-ecb-test ISO7816_4 sequential 192)
-  add_test(Aes192Ecb-ISO7816_4-para ${EXECUTABLE_OUTPUT_PATH}/anch-aes-ecb-test ISO7816_4 parallel 192)
-  add_test(Aes192Ecb-PKCS7-seq ${EXECUTABLE_OUTPUT_PATH}/anch-aes-ecb-test "PKCS#7" sequential 192)
-  add_test(Aes192Ecb-PKCS7-para ${EXECUTABLE_OUTPUT_PATH}/anch-aes-ecb-test "PKCS#7" parallel 192)
-  add_test(Aes192Ecb-zero-seq ${EXECUTABLE_OUTPUT_PATH}/anch-aes-ecb-test zero sequential 192)
-  add_test(Aes192Ecb-zero-para ${EXECUTABLE_OUTPUT_PATH}/anch-aes-ecb-test zero parallel 192)
-  add_test(Aes192Ecb-ANSIX923-seq ${EXECUTABLE_OUTPUT_PATH}/anch-aes-ecb-test ANSIX923 sequential 192)
-  add_test(Aes192Ecb-ANSIX923-para ${EXECUTABLE_OUTPUT_PATH}/anch-aes-ecb-test ANSIX923 parallel 192)
+  # Paddings tests +
+  add_test(Padding-ANSIX923 ${EXECUTABLE_OUTPUT_PATH}/anch-padding-test -t ANSIX923)
+  add_test(Padding-PKCS7 ${EXECUTABLE_OUTPUT_PATH}/anch-padding-test -t PKCS7)
+  add_test(Padding-ISO7816_4 ${EXECUTABLE_OUTPUT_PATH}/anch-padding-test -t ISO7816_4)
+  add_test(Padding-zero ${EXECUTABLE_OUTPUT_PATH}/anch-padding-test -t zero)
+  # Paddings tests -
 
-  add_test(Aes256Ecb-ISO7816_4-seq ${EXECUTABLE_OUTPUT_PATH}/anch-aes-ecb-test ISO7816_4 sequential 256)
-  add_test(Aes256Ecb-ISO7816_4-para ${EXECUTABLE_OUTPUT_PATH}/anch-aes-ecb-test ISO7816_4 parallel 256)
-  add_test(Aes256Ecb-PKCS7-seq ${EXECUTABLE_OUTPUT_PATH}/anch-aes-ecb-test "PKCS#7" sequential 256)
-  add_test(Aes256Ecb-PKCS7-para ${EXECUTABLE_OUTPUT_PATH}/anch-aes-ecb-test "PKCS#7" parallel 256)
-  add_test(Aes256Ecb-zero-seq ${EXECUTABLE_OUTPUT_PATH}/anch-aes-ecb-test zero sequential 256)
-  add_test(Aes256Ecb-zero-para ${EXECUTABLE_OUTPUT_PATH}/anch-aes-ecb-test zero parallel 256)
-  add_test(Aes256Ecb-ANSIX923-seq ${EXECUTABLE_OUTPUT_PATH}/anch-aes-ecb-test ANSIX923 sequential 256)
-  add_test(Aes256Ecb-ANSIX923-para ${EXECUTABLE_OUTPUT_PATH}/anch-aes-ecb-test ANSIX923 parallel 256)
+  # AES ECB tests +
+  add_test(Aes128Ecb-ISO7816_4-seq ${EXECUTABLE_OUTPUT_PATH}/anch-aes-ecb-test -t ISO7816_4-sequential-128)
+  add_test(Aes128Ecb-ISO7816_4-para ${EXECUTABLE_OUTPUT_PATH}/anch-aes-ecb-test -t ISO7816_4-parallel-128)
+  add_test(Aes128Ecb-PKCS7-seq ${EXECUTABLE_OUTPUT_PATH}/anch-aes-ecb-test -t PKCS7-sequential-128)
+  add_test(Aes128Ecb-PKCS7-para ${EXECUTABLE_OUTPUT_PATH}/anch-aes-ecb-test -t PKCS7-parallel-128)
+  add_test(Aes128Ecb-zero-seq ${EXECUTABLE_OUTPUT_PATH}/anch-aes-ecb-test -t 0-sequential-128)
+  add_test(Aes128Ecb-zero-para ${EXECUTABLE_OUTPUT_PATH}/anch-aes-ecb-test -t 0-parallel-128)
+  add_test(Aes128Ecb-ANSIX923-seq ${EXECUTABLE_OUTPUT_PATH}/anch-aes-ecb-test -t ANSIX923-sequential-128)
+  add_test(Aes128Ecb-ANSIX923-para ${EXECUTABLE_OUTPUT_PATH}/anch-aes-ecb-test -t ANSIX923-parallel-128)
 
-  add_test(Aes128Cbc-ISO7816_4-seq ${EXECUTABLE_OUTPUT_PATH}/anch-aes-cbc-test ISO7816_4 sequential 128)
-  add_test(Aes128Cbc-ISO7816_4-para ${EXECUTABLE_OUTPUT_PATH}/anch-aes-cbc-test ISO7816_4 parallel 128)
-  add_test(Aes128Cbc-PKCS7-seq ${EXECUTABLE_OUTPUT_PATH}/anch-aes-cbc-test "PKCS#7" sequential 128)
-  add_test(Aes128Cbc-PKCS7-para ${EXECUTABLE_OUTPUT_PATH}/anch-aes-cbc-test "PKCS#7" parallel 128)
-  add_test(Aes128Cbc-zero-seq ${EXECUTABLE_OUTPUT_PATH}/anch-aes-cbc-test zero sequential 128)
-  add_test(Aes128Cbc-zero-para ${EXECUTABLE_OUTPUT_PATH}/anch-aes-cbc-test zero parallel 128)
-  add_test(Aes128Cbc-ANSIX923-seq ${EXECUTABLE_OUTPUT_PATH}/anch-aes-cbc-test ANSIX923 sequential 128)
-  add_test(Aes128Cbc-ANSIX923-para ${EXECUTABLE_OUTPUT_PATH}/anch-aes-cbc-test ANSIX923 parallel 128)
+  add_test(Aes192Ecb-ISO7816_4-seq ${EXECUTABLE_OUTPUT_PATH}/anch-aes-ecb-test -t ISO7816_4-sequential-192)
+  add_test(Aes192Ecb-ISO7816_4-para ${EXECUTABLE_OUTPUT_PATH}/anch-aes-ecb-test -t ISO7816_4-parallel-192)
+  add_test(Aes192Ecb-PKCS7-seq ${EXECUTABLE_OUTPUT_PATH}/anch-aes-ecb-test -t PKCS7-sequential-192)
+  add_test(Aes192Ecb-PKCS7-para ${EXECUTABLE_OUTPUT_PATH}/anch-aes-ecb-test -t PKCS7-parallel-192)
+  add_test(Aes192Ecb-zero-seq ${EXECUTABLE_OUTPUT_PATH}/anch-aes-ecb-test -t 0-sequential-192)
+  add_test(Aes192Ecb-zero-para ${EXECUTABLE_OUTPUT_PATH}/anch-aes-ecb-test -t 0-parallel-192)
+  add_test(Aes192Ecb-ANSIX923-seq ${EXECUTABLE_OUTPUT_PATH}/anch-aes-ecb-test -t ANSIX923-sequential-192)
+  add_test(Aes192Ecb-ANSIX923-para ${EXECUTABLE_OUTPUT_PATH}/anch-aes-ecb-test -t ANSIX923-parallel-192)
 
-  add_test(Aes192Cbc-ISO7816_4-seq ${EXECUTABLE_OUTPUT_PATH}/anch-aes-cbc-test ISO7816_4 sequential 192)
-  add_test(Aes192Cbc-ISO7816_4-para ${EXECUTABLE_OUTPUT_PATH}/anch-aes-cbc-test ISO7816_4 parallel 192)
-  add_test(Aes192Cbc-PKCS7-seq ${EXECUTABLE_OUTPUT_PATH}/anch-aes-cbc-test "PKCS#7" sequential 192)
-  add_test(Aes192Cbc-PKCS7-para ${EXECUTABLE_OUTPUT_PATH}/anch-aes-cbc-test "PKCS#7" parallel 192)
-  add_test(Aes192Cbc-zero-seq ${EXECUTABLE_OUTPUT_PATH}/anch-aes-cbc-test zero sequential 192)
-  add_test(Aes192Cbc-zero-para ${EXECUTABLE_OUTPUT_PATH}/anch-aes-cbc-test zero parallel 192)
-  add_test(Aes192Cbc-ANSIX923-seq ${EXECUTABLE_OUTPUT_PATH}/anch-aes-cbc-test ANSIX923 sequential 192)
-  add_test(Aes192Cbc-ANSIX923-para ${EXECUTABLE_OUTPUT_PATH}/anch-aes-cbc-test ANSIX923 parallel 192)
+  add_test(Aes256Ecb-ISO7816_4-seq ${EXECUTABLE_OUTPUT_PATH}/anch-aes-ecb-test -t ISO7816_4-sequential-256)
+  add_test(Aes256Ecb-ISO7816_4-para ${EXECUTABLE_OUTPUT_PATH}/anch-aes-ecb-test -t ISO7816_4-parallel-256)
+  add_test(Aes256Ecb-PKCS7-seq ${EXECUTABLE_OUTPUT_PATH}/anch-aes-ecb-test -t PKCS7-sequential-256)
+  add_test(Aes256Ecb-PKCS7-para ${EXECUTABLE_OUTPUT_PATH}/anch-aes-ecb-test -t PKCS7-parallel-256)
+  add_test(Aes256Ecb-zero-seq ${EXECUTABLE_OUTPUT_PATH}/anch-aes-ecb-test -t 0-sequential-256)
+  add_test(Aes256Ecb-zero-para ${EXECUTABLE_OUTPUT_PATH}/anch-aes-ecb-test -t 0-parallel-256)
+  add_test(Aes256Ecb-ANSIX923-seq ${EXECUTABLE_OUTPUT_PATH}/anch-aes-ecb-test -t ANSIX923-sequential-256)
+  add_test(Aes256Ecb-ANSIX923-para ${EXECUTABLE_OUTPUT_PATH}/anch-aes-ecb-test -t ANSIX923-parallel-256)
+  # AES ECB tests -
 
-  add_test(Aes256Cbc-ISO7816_4-seq ${EXECUTABLE_OUTPUT_PATH}/anch-aes-cbc-test ISO7816_4 sequential 256)
-  add_test(Aes256Cbc-ISO7816_4-para ${EXECUTABLE_OUTPUT_PATH}/anch-aes-cbc-test ISO7816_4 parallel 256)
-  add_test(Aes256Cbc-PKCS7-seq ${EXECUTABLE_OUTPUT_PATH}/anch-aes-cbc-test "PKCS#7" sequential 256)
-  add_test(Aes256Cbc-PKCS7-para ${EXECUTABLE_OUTPUT_PATH}/anch-aes-cbc-test "PKCS#7" parallel 256)
-  add_test(Aes256Cbc-zero-seq ${EXECUTABLE_OUTPUT_PATH}/anch-aes-cbc-test zero sequential 256)
-  add_test(Aes256Cbc-zero-para ${EXECUTABLE_OUTPUT_PATH}/anch-aes-cbc-test zero parallel 256)
-  add_test(Aes256Cbc-ANSIX923-seq ${EXECUTABLE_OUTPUT_PATH}/anch-aes-cbc-test ANSIX923 sequential 256)
-  add_test(Aes256Cbc-ANSIX923-para ${EXECUTABLE_OUTPUT_PATH}/anch-aes-cbc-test ANSIX923 parallel 256)
+  # AES CBC tests +
+  add_test(Aes128Cbc-ISO7816_4-seq ${EXECUTABLE_OUTPUT_PATH}/anch-aes-cbc-test -t ISO7816_4-sequential-128)
+  add_test(Aes128Cbc-ISO7816_4-para ${EXECUTABLE_OUTPUT_PATH}/anch-aes-cbc-test -t ISO7816_4-parallel-128)
+  add_test(Aes128Cbc-PKCS7-seq ${EXECUTABLE_OUTPUT_PATH}/anch-aes-cbc-test -t PKCS7-sequential-128)
+  add_test(Aes128Cbc-PKCS7-para ${EXECUTABLE_OUTPUT_PATH}/anch-aes-cbc-test -t PKCS7-parallel-128)
+  add_test(Aes128Cbc-zero-seq ${EXECUTABLE_OUTPUT_PATH}/anch-aes-cbc-test -t 0-sequential-128)
+  add_test(Aes128Cbc-zero-para ${EXECUTABLE_OUTPUT_PATH}/anch-aes-cbc-test -t 0-parallel-128)
+  add_test(Aes128Cbc-ANSIX923-seq ${EXECUTABLE_OUTPUT_PATH}/anch-aes-cbc-test -t ANSIX923-sequential-128)
+  add_test(Aes128Cbc-ANSIX923-para ${EXECUTABLE_OUTPUT_PATH}/anch-aes-cbc-test -t ANSIX923-parallel-128)
 
-  add_test(Aes128Pcbc-ISO7816_4 ${EXECUTABLE_OUTPUT_PATH}/anch-aes-pcbc-test ISO7816_4 128)
-  add_test(Aes128Pcbc-PKCS7 ${EXECUTABLE_OUTPUT_PATH}/anch-aes-pcbc-test "PKCS#7" 128)
-  add_test(Aes128Pcbc-zero ${EXECUTABLE_OUTPUT_PATH}/anch-aes-pcbc-test zero 128)
-  add_test(Aes128Pcbc-ANSIX923 ${EXECUTABLE_OUTPUT_PATH}/anch-aes-pcbc-test ANSIX923 128)
+  add_test(Aes192Cbc-ISO7816_4-seq ${EXECUTABLE_OUTPUT_PATH}/anch-aes-cbc-test -t ISO7816_4-sequential-192)
+  add_test(Aes192Cbc-ISO7816_4-para ${EXECUTABLE_OUTPUT_PATH}/anch-aes-cbc-test -t ISO7816_4-parallel-192)
+  add_test(Aes192Cbc-PKCS7-seq ${EXECUTABLE_OUTPUT_PATH}/anch-aes-cbc-test -t PKCS7-sequential-192)
+  add_test(Aes192Cbc-PKCS7-para ${EXECUTABLE_OUTPUT_PATH}/anch-aes-cbc-test -t PKCS7-parallel-192)
+  add_test(Aes192Cbc-zero-seq ${EXECUTABLE_OUTPUT_PATH}/anch-aes-cbc-test -t 0-sequential-192)
+  add_test(Aes192Cbc-zero-para ${EXECUTABLE_OUTPUT_PATH}/anch-aes-cbc-test -t 0-parallel-192)
+  add_test(Aes192Cbc-ANSIX923-seq ${EXECUTABLE_OUTPUT_PATH}/anch-aes-cbc-test -t ANSIX923-sequential-192)
+  add_test(Aes192Cbc-ANSIX923-para ${EXECUTABLE_OUTPUT_PATH}/anch-aes-cbc-test -t ANSIX923-parallel-192)
 
-  add_test(Aes192Pcbc-ISO7816_4 ${EXECUTABLE_OUTPUT_PATH}/anch-aes-pcbc-test ISO7816_4 192)
-  add_test(Aes192Pcbc-PKCS7 ${EXECUTABLE_OUTPUT_PATH}/anch-aes-pcbc-test "PKCS#7" 192)
-  add_test(Aes192Pcbc-zero ${EXECUTABLE_OUTPUT_PATH}/anch-aes-pcbc-test zero 192)
-  add_test(Aes192Pcbc-ANSIX923 ${EXECUTABLE_OUTPUT_PATH}/anch-aes-pcbc-test ANSIX923 192)
+  add_test(Aes256Cbc-ISO7816_4-seq ${EXECUTABLE_OUTPUT_PATH}/anch-aes-cbc-test -t ISO7816_4-sequential-256)
+  add_test(Aes256Cbc-ISO7816_4-para ${EXECUTABLE_OUTPUT_PATH}/anch-aes-cbc-test -t ISO7816_4-parallel-256)
+  add_test(Aes256Cbc-PKCS7-seq ${EXECUTABLE_OUTPUT_PATH}/anch-aes-cbc-test -t PKCS7-sequential-256)
+  add_test(Aes256Cbc-PKCS7-para ${EXECUTABLE_OUTPUT_PATH}/anch-aes-cbc-test -t PKCS7-parallel-256)
+  add_test(Aes256Cbc-zero-seq ${EXECUTABLE_OUTPUT_PATH}/anch-aes-cbc-test -t 0-sequential-256)
+  add_test(Aes256Cbc-zero-para ${EXECUTABLE_OUTPUT_PATH}/anch-aes-cbc-test -t 0-parallel-256)
+  add_test(Aes256Cbc-ANSIX923-seq ${EXECUTABLE_OUTPUT_PATH}/anch-aes-cbc-test -t ANSIX923-sequential-256)
+  add_test(Aes256Cbc-ANSIX923-para ${EXECUTABLE_OUTPUT_PATH}/anch-aes-cbc-test -t ANSIX923-parallel-256)
+  # AES CBC tests -
 
-  add_test(Aes256Pcbc-ISO7816_4 ${EXECUTABLE_OUTPUT_PATH}/anch-aes-pcbc-test ISO7816_4 256)
-  add_test(Aes256Pcbc-PKCS7 ${EXECUTABLE_OUTPUT_PATH}/anch-aes-pcbc-test "PKCS#7" 256)
-  add_test(Aes256Pcbc-zero ${EXECUTABLE_OUTPUT_PATH}/anch-aes-pcbc-test zero 256)
-  add_test(Aes256Pcbc-ANSIX923 ${EXECUTABLE_OUTPUT_PATH}/anch-aes-pcbc-test ANSIX923 256)
+  # AES PCBC tests +
+  add_test(Aes128Pcbc-ISO7816_4 ${EXECUTABLE_OUTPUT_PATH}/anch-aes-pcbc-test -t ISO7816_4-128)
+  add_test(Aes128Pcbc-PKCS7 ${EXECUTABLE_OUTPUT_PATH}/anch-aes-pcbc-test -t PKCS7-128)
+  add_test(Aes128Pcbc-zero ${EXECUTABLE_OUTPUT_PATH}/anch-aes-pcbc-test -t 0-128)
+  add_test(Aes128Pcbc-ANSIX923 ${EXECUTABLE_OUTPUT_PATH}/anch-aes-pcbc-test -t ANSIX923-128)
 
-  add_test(Aes128Ctr-seq ${EXECUTABLE_OUTPUT_PATH}/anch-aes-ctr-test 128 sequential)
-  add_test(Aes128Ctr-para ${EXECUTABLE_OUTPUT_PATH}/anch-aes-ctr-test 128 parallel)
+  add_test(Aes192Pcbc-ISO7816_4 ${EXECUTABLE_OUTPUT_PATH}/anch-aes-pcbc-test -t ISO7816_4-192)
+  add_test(Aes192Pcbc-PKCS7 ${EXECUTABLE_OUTPUT_PATH}/anch-aes-pcbc-test -t PKCS7-192)
+  add_test(Aes192Pcbc-zero ${EXECUTABLE_OUTPUT_PATH}/anch-aes-pcbc-test -t 0-192)
+  add_test(Aes192Pcbc-ANSIX923 ${EXECUTABLE_OUTPUT_PATH}/anch-aes-pcbc-test -t ANSIX923-192)
 
-  add_test(Aes192Ctr-seq ${EXECUTABLE_OUTPUT_PATH}/anch-aes-ctr-test 256 sequential)
-  add_test(Aes192Ctr-para ${EXECUTABLE_OUTPUT_PATH}/anch-aes-ctr-test 192 parallel)
+  add_test(Aes256Pcbc-ISO7816_4 ${EXECUTABLE_OUTPUT_PATH}/anch-aes-pcbc-test -t ISO7816_4-256)
+  add_test(Aes256Pcbc-PKCS7 ${EXECUTABLE_OUTPUT_PATH}/anch-aes-pcbc-test -t PKCS7-256)
+  add_test(Aes256Pcbc-zero ${EXECUTABLE_OUTPUT_PATH}/anch-aes-pcbc-test -t 0-256)
+  add_test(Aes256Pcbc-ANSIX923 ${EXECUTABLE_OUTPUT_PATH}/anch-aes-pcbc-test -t ANSIX923-256)
+  # AES PCBC tests -
 
-  add_test(Aes256Ctr-seq ${EXECUTABLE_OUTPUT_PATH}/anch-aes-ctr-test 192 sequential)
-  add_test(Aes256Ctr-para ${EXECUTABLE_OUTPUT_PATH}/anch-aes-ctr-test 256 parallel)
+  # AES CTR tests +
+  add_test(Aes128Ctr-seq ${EXECUTABLE_OUTPUT_PATH}/anch-aes-ctr-test -t sequential-128)
+  add_test(Aes128Ctr-para ${EXECUTABLE_OUTPUT_PATH}/anch-aes-ctr-test -t parallel-128)
 
-  add_test(Aes128Ofb ${EXECUTABLE_OUTPUT_PATH}/anch-aes-ofb-test 128)
-  add_test(Aes192Ofb ${EXECUTABLE_OUTPUT_PATH}/anch-aes-ofb-test 192)
-  add_test(Aes256Ofb ${EXECUTABLE_OUTPUT_PATH}/anch-aes-ofb-test 256)
+  add_test(Aes192Ctr-seq ${EXECUTABLE_OUTPUT_PATH}/anch-aes-ctr-test -t sequential-192)
+  add_test(Aes192Ctr-para ${EXECUTABLE_OUTPUT_PATH}/anch-aes-ctr-test -t parallel-192)
 
-  add_test(Aes128Cfb-seq ${EXECUTABLE_OUTPUT_PATH}/anch-aes-cfb-test 128 sequential)
-  add_test(Aes128Cfb-para ${EXECUTABLE_OUTPUT_PATH}/anch-aes-cfb-test 128 parallel)
+  add_test(Aes256Ctr-seq ${EXECUTABLE_OUTPUT_PATH}/anch-aes-ctr-test -t sequential-256)
+  add_test(Aes256Ctr-para ${EXECUTABLE_OUTPUT_PATH}/anch-aes-ctr-test -t parallel-256)
+  # AES CTR tests -
 
-  add_test(Aes192Cfb-seq ${EXECUTABLE_OUTPUT_PATH}/anch-aes-cfb-test 192 sequential)
-  add_test(Aes192Cfb-para ${EXECUTABLE_OUTPUT_PATH}/anch-aes-cfb-test 192 parallel)
+  # AES OFB tests +
+  add_test(Aes128Ofb ${EXECUTABLE_OUTPUT_PATH}/anch-aes-ofb-test -t 128)
+  add_test(Aes192Ofb ${EXECUTABLE_OUTPUT_PATH}/anch-aes-ofb-test -t 192)
+  add_test(Aes256Ofb ${EXECUTABLE_OUTPUT_PATH}/anch-aes-ofb-test -t 256)
+  # AES OFB tests -
 
-  add_test(Aes256Cfb-seq ${EXECUTABLE_OUTPUT_PATH}/anch-aes-cfb-test 256 sequential)
-  add_test(Aes256Cfb-para ${EXECUTABLE_OUTPUT_PATH}/anch-aes-cfb-test 256 parallel)
+  # AES OFB tests +
+  add_test(Aes128Cfb-seq ${EXECUTABLE_OUTPUT_PATH}/anch-aes-cfb-test -t 128-sequential)
+  add_test(Aes128Cfb-para ${EXECUTABLE_OUTPUT_PATH}/anch-aes-cfb-test -t 128-parallel)
 
-  add_test(UUID-MD5 ${EXECUTABLE_OUTPUT_PATH}/anch-crypto-uuid-test MD5)
-  add_test(UUID-SHA1 ${EXECUTABLE_OUTPUT_PATH}/anch-crypto-uuid-test SHA1)
+  add_test(Aes192Cfb-seq ${EXECUTABLE_OUTPUT_PATH}/anch-aes-cfb-test -t 192-sequential)
+  add_test(Aes192Cfb-para ${EXECUTABLE_OUTPUT_PATH}/anch-aes-cfb-test -t 192-parallel)
+
+  add_test(Aes256Cfb-seq ${EXECUTABLE_OUTPUT_PATH}/anch-aes-cfb-test -t 256-sequential)
+  add_test(Aes256Cfb-para ${EXECUTABLE_OUTPUT_PATH}/anch-aes-cfb-test -t 256-parallel)
+  # AES OFB tests -
+
+  # UUID tests +
+  add_test(UUID-MD5 ${EXECUTABLE_OUTPUT_PATH}/anch-crypto-uuid-test -t MD5)
+  add_test(UUID-SHA1 ${EXECUTABLE_OUTPUT_PATH}/anch-crypto-uuid-test -t SHA1)
+  # UUID tests -
 
   find_package(OpenSSL)
   if(OpenSSL_FOUND)

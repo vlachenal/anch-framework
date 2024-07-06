@@ -2,140 +2,152 @@
 
 #include <fstream>
 
-using std::string;
-using std::cout;
-using std::cerr;
-using std::endl;
-using std::ifstream;
+#include "ut/assert.hpp"
+#include "ut/unit.hpp"
 
 using anch::crypto::Base64;
 
-int
-main(void) {
-  cout << "Enter in base 64 test cases" << endl;
+void
+testEncEmpty() {
+  std::cout << "Encode empty string" << std::endl;
+  std::string res = Base64::encode(std::string(""));
+  anch::ut::assertTrue(res == "");
+  std::cout << "Found " << res << std::endl;
+}
 
-  cout << "Encode empty string" << endl;
-  string res = Base64::encode(string(""));
-  if(res != "") {
-    cerr << "Found " << res << " instead of empty string" << endl;
-    return 1;
-  }
-  cout << "Found " << res << endl;
+void
+testEncF() {
+  std::cout << "Encode f" << std::endl;
+  std::string res = Base64::encode(std::string("f"));
+  anch::ut::assertTrue(res == "Zg==");
+  std::cout << "Found " << res << std::endl;
+}
 
-  cout << "Encode f" << endl;
-  res = Base64::encode(string("f"));
-  if(res != "Zg==") {
-    cerr << "Found " << res << " instead of Zg==" << endl;
-    return 1;
-  }
-  cout << "Found " << res << endl;
+void
+testEncFo() {
+  std::cout << "Encode fo" << std::endl;
+  std::string res = Base64::encode(std::string("fo"));
+  anch::ut::assertTrue(res == "Zm8=");
+  std::cout << "Found " << res << std::endl;
+}
 
-  cout << "Encode fo" << endl;
-  res = Base64::encode(string("fo"));
-  if(res != "Zm8=") {
-    cerr << "Found " << res << " instead of Zm8=" << endl;
-    return 1;
-  }
-  cout << "Found " << res << endl;
+void
+testEncFoo() {
+  std::cout << "Encode foo" << std::endl;
+  std::string res = Base64::encode(std::string("foo"));
+  anch::ut::assertTrue(res == "Zm9v");
+  std::cout << "Found " << res << std::endl;
+}
 
-  cout << "Encode foo" << endl;
-  res = Base64::encode(string("foo"));
-  if(res != "Zm9v") {
-    cerr << "Found " << res << " instead of Zm9v" << endl;
-    return 1;
-  }
-  cout << "Found " << res << endl;
+void
+testEncFoob() {
+  std::cout << "Encode foob" << std::endl;
+  std::string res = Base64::encode(std::string("foob"));
+  anch::ut::assertTrue(res == "Zm9vYg==");
+  std::cout << "Found " << res << std::endl;
+}
 
-  cout << "Encode foob" << endl;
-  res = Base64::encode(string("foob"));
-  if(res != "Zm9vYg==") {
-    cerr << "Found " << res << " instead of Zm9vYg==" << endl;
-    return 1;
-  }
-  cout << "Found " << res << endl;
+void
+testEncFooba() {
+  std::cout << "Encode fooba" << std::endl;
+  std::string res = Base64::encode(std::string("fooba"));
+  anch::ut::assertTrue(res == "Zm9vYmE=");
+  std::cout << "Found " << res << std::endl;
+}
 
-  cout << "Encode fooba" << endl;
-  res = Base64::encode(string("fooba"));
-  if(res != "Zm9vYmE=") {
-    cerr << "Found " << res << " instead of Zm9vYmE=" << endl;
-    return 1;
-  }
-  cout << "Found " << res << endl;
+void
+testEncFoobar() {
+  std::cout << "Encode foobar" << std::endl;
+  std::string res = Base64::encode(std::string("foobar"));
+  anch::ut::assertTrue(res == "Zm9vYmFy");
+  std::cout << "Found " << res << std::endl;
+}
 
-  cout << "Encode foobar" << endl;
-  res = Base64::encode(string("foobar"));
-  if(res != "Zm9vYmFy") {
-    cerr << "Found " << res << " instead of Zm9vYmFy" << endl;
-    return 1;
-  }
-  cout << "Found " << res << endl;
+void
+testDecEmpty() {
+  std::cout << "Decode empty string" << std::endl;
+  std::string res = Base64::decode(std::string(""));
+  anch::ut::assertTrue(res == "");
+  std::cout << "Found " << res << std::endl;
+}
 
-  {
-    cout << "Encode Makefile" << endl;
-    ifstream file("Makefile");
-    Base64::encode(file, cout);
-    cout << endl;
-    cout << "You can check result manually using base64 command" << endl;
-    file.close();
-  }
+void
+testDecF() {
+  std::cout << "Decode Zg==" << std::endl;
+  std::string res = Base64::decode(std::string("Zg=="));
+  anch::ut::assertTrue(res == "f");
+  std::cout << "Found " << res << std::endl;
+}
 
-  cout << "Decode empty string" << endl;
-  res = Base64::decode(string(""));
-  if(res != "") {
-    cerr << "Found " << res << " instead of empty string" << endl;
-    return 1;
-  }
-  cout << "Found " << res << endl;
+void
+testDecFo() {
+  std::cout << "Decode Zm8=" << std::endl;
+  std::string res = Base64::decode(std::string("Zm8="));
+  anch::ut::assertTrue(res == "fo");
+  std::cout << "Found " << res << std::endl;
+}
 
-  cout << "Decode Zg==" << endl;
-  res = Base64::decode(string("Zg=="));
-  if(res != "f") {
-    cerr << "Found " << res << " instead of f" << endl;
-    return 1;
-  }
-  cout << "Found " << res << endl;
+void
+testDecFoo() {
+  std::cout << "Decode Zm9v" << std::endl;
+  std::string res = Base64::decode(std::string("Zm9v"));
+  anch::ut::assertTrue(res == "foo");
+  std::cout << "Found " << res << std::endl;
+}
 
-  cout << "Decode Zm8=" << endl;
-  res = Base64::decode(string("Zm8="));
-  if(res != "fo") {
-    cerr << "Found " << res << " instead of fo" << endl;
-    return 1;
-  }
-  cout << "Found " << res << endl;
+void
+testDecFoob() {
+  std::cout << "Decode Zm9vYg==" << std::endl;
+  std::string res = Base64::decode(std::string("Zm9vYg=="));
+  anch::ut::assertTrue(res == "foob");
+  std::cout << "Found " << res << std::endl;
+}
 
-  cout << "Decode Zm9v" << endl;
-  res = Base64::decode(string("Zm9v"));
-  if(res != "foo") {
-    cerr << "Found " << res << " instead of foo" << endl;
-    return 1;
-  }
-  cout << "Found " << res << endl;
+void
+testDecFooba() {
+  std::cout << "Decode Zm9vYmE=" << std::endl;
+  std::string res = Base64::decode(std::string("Zm9vYmE="));
+  anch::ut::assertTrue(res == "fooba");
+  std::cout << "Found " << res << std::endl;
+}
 
-  cout << "Decode Zm9vYg==" << endl;
-  res = Base64::decode(string("Zm9vYg=="));
-  if(res != "foob") {
-    cerr << "Found " << res << " instead of foob" << endl;
-    return 1;
-  }
-  cout << "Found " << res << endl;
+void
+testDecFoobar() {
+  std::cout << "Decode Zm9vYmFy" << std::endl;
+  std::string res = Base64::decode(std::string("Zm9vYmFy"));
+  anch::ut::assertTrue(res == "foobar");
+  std::cout << "Found " << res << std::endl;
+}
 
-  cout << "Decode Zm9vYmE=" << endl;
-  res = Base64::decode(string("Zm9vYmE="));
-  if(res != "fooba") {
-    cerr << "Found " << res << " instead of fooba" << endl;
-    return 1;
-  }
-  cout << "Found " << res << endl;
+void
+testEncMakefile() {
+  std::cout << "Encode Makefile" << std::endl;
+  std::ifstream file("Makefile");
+  Base64::encode(file, std::cout);
+  std::cout << std::endl;
+  std::cout << "You can check result manually using base64 command" << std::endl;
+  file.close();
+}
 
-  cout << "Decode Zm9vYmFy" << endl;
-  std::ostringstream out;
-  Base64::decode(string("Zm9vYmFy"), out);
-  res = out.str();
-  if(res != "foobar") {
-    cerr << "Found " << res << " instead of foobar" << endl;
-    return 1;
-  }
-  cout << "Found " << res << endl;
-
-  return 0;
+void
+anch::ut::setup(anch::ut::UnitTests& tests) {
+  tests
+    .name("AnCH base64 unit tests")
+    .description("Test AnCH base64 library")
+    .add("base64-enc-empty", testEncEmpty)
+    .add("base64-enc-f", testEncF)
+    .add("base64-enc-fo", testEncFo)
+    .add("base64-enc-foo", testEncFoo)
+    .add("base64-enc-foob", testEncFoob)
+    .add("base64-enc-fooba", testEncFooba)
+    .add("base64-enc-foobar", testEncFoobar)
+    .add("base64-dec-empty", testDecEmpty)
+    .add("base64-dec-f", testDecF)
+    .add("base64-dec-fo", testDecFo)
+    .add("base64-dec-foo", testDecFoo)
+    .add("base64-dec-foob", testDecFoob)
+    .add("base64-dec-fooba", testDecFooba)
+    .add("base64-dec-foobar", testDecFoobar)
+    .add("base64-enc-makefile", testEncMakefile)
+    ;
 }

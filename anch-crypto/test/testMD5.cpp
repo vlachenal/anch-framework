@@ -12,12 +12,10 @@
 #include <string.h>
 #include <stdint.h>
 
+#include "ut/assert.hpp"
+#include "ut/unit.hpp"
 
 using anch::crypto::MD5;
-using std::cout;
-using std::cerr;
-using std::endl;
-using std::string;
 
 
 // Wikipedia example algorithm +
@@ -153,7 +151,7 @@ void md5(const uint8_t *initial_msg, size_t initial_len) {
 
 }
 
-void md5(const char* msg, string& result) {
+void md5(const char* msg, std::string& result) {
 
   size_t len = strlen(msg);
 
@@ -217,132 +215,149 @@ void md5(const char* msg, std::array<uint8_t,16>& result) {
 }
 // Wikipedia example algorithm -
 
-int
-main(void) {
-  cout << "Enter in MD5 test" << endl;
-
+void
+testMD5string() {
   std::chrono::time_point<std::chrono::high_resolution_clock> start, end;
 
-  MD5 init(string("")); // Initialize MD5 static context to perform bench in correct condition
-  // String test
-  {
-    string msg("\"Ta mère suce des bites en enfer\" - Linda Blair - L'Exorciste - 1973");
-    cout << "Hash message: " << msg << endl;
-    start = std::chrono::high_resolution_clock::now();
-    MD5 hash(msg);
-    const std::array<uint8_t,16>& res = hash.digest();
-    end = std::chrono::high_resolution_clock::now();
-    std::chrono::microseconds anchDuration = std::chrono::duration_cast<std::chrono::microseconds>(end.time_since_epoch()) - std::chrono::duration_cast<std::chrono::microseconds>(start.time_since_epoch());
+  std::string msg("\"Ta mère suce des bites en enfer\" - Linda Blair - L'Exorciste - 1973");
+  std::cout << "Hash message: " << msg << std::endl;
+  start = std::chrono::high_resolution_clock::now();
+  MD5 hash(msg);
+  const std::array<uint8_t,16>& res = hash.digest();
+  end = std::chrono::high_resolution_clock::now();
+  std::chrono::microseconds anchDuration = std::chrono::duration_cast<std::chrono::microseconds>(end.time_since_epoch()) - std::chrono::duration_cast<std::chrono::microseconds>(start.time_since_epoch());
 
-    std::array<uint8_t,16> sum;
-    start = std::chrono::high_resolution_clock::now();
-    md5(msg.data(), sum);
-    end = std::chrono::high_resolution_clock::now();
-    std::chrono::microseconds md5Duration = std::chrono::duration_cast<std::chrono::microseconds>(end.time_since_epoch()) - std::chrono::duration_cast<std::chrono::microseconds>(start.time_since_epoch());
+  std::array<uint8_t,16> sum;
+  start = std::chrono::high_resolution_clock::now();
+  md5(msg.data(), sum);
+  end = std::chrono::high_resolution_clock::now();
+  std::chrono::microseconds md5Duration = std::chrono::duration_cast<std::chrono::microseconds>(end.time_since_epoch()) - std::chrono::duration_cast<std::chrono::microseconds>(start.time_since_epoch());
 
-    std::ostringstream out;
-    out << hash;
-    string strRes = out.str();
-    if(res != sum) {
-      char digest[33];
-      sprintf(digest,"%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x",
-	      sum[0],sum[1],sum[2],sum[3],sum[4],sum[5],sum[6],sum[7],sum[8],sum[9],sum[10],sum[11],sum[12],sum[13],sum[14],sum[15]);
-      cerr << "Hash are differents:" << endl;
-      cerr << "AnCH result: " << strRes << endl;
-      cerr << "Instead of:  " << digest << endl;
-      return 1;
-    } else {
-      cout << "Found value: " << strRes << endl;
-      cout << "AnCH implementation time:      " << anchDuration.count() << " µs" << endl;
-      cout << "Reference implementation time: " << md5Duration.count() << " µs" << endl << endl;
+  std::ostringstream out;
+  out << hash;
+  std::string strRes = out.str();
+  anch::ut::assertTrue(res == sum);
+  // if(res != sum) {
+  //   char digest[33];
+  //   sprintf(digest,"%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x",
+  // 	    sum[0],sum[1],sum[2],sum[3],sum[4],sum[5],sum[6],sum[7],sum[8],sum[9],sum[10],sum[11],sum[12],sum[13],sum[14],sum[15]);
+  //   std::cerr << "Hash are differents:" << std::endl;
+  //   std::cerr << "AnCH result: " << strRes << std::endl;
+  //   std::cerr << "Instead of:  " << digest << std::endl;
+  //   return 1;
+  // } else {
+  //   std::cout << "Found value: " << strRes << std::endl;
+  //   std::cout << "AnCH implementation time:      " << anchDuration.count() << " µs" << std::endl;
+  //   std::cout << "Reference implementation time: " << md5Duration.count() << " µs" << std::endl << std::endl;
+  // }
+  std::cout << "Found value: " << strRes << std::endl;
+  std::cout << "AnCH implementation time:      " << anchDuration.count() << " µs" << std::endl;
+  std::cout << "Reference implementation time: " << md5Duration.count() << " µs" << std::endl << std::endl;
+}
+
+void
+testMillionA() {
+  std::chrono::time_point<std::chrono::high_resolution_clock> start, end;
+
+  std::ostringstream in;
+  for(int i = 0 ; i < 1000000 ; i++) {
+    in << 'a';
+  }
+  std::string msg = in.str();
+  std::cout << "Hash message: a million of 'a'" << std::endl;
+  start = std::chrono::high_resolution_clock::now();
+  MD5 hash(msg);
+  const std::array<uint8_t,16>& res = hash.digest();
+  end = std::chrono::high_resolution_clock::now();
+  std::chrono::microseconds anchDuration = std::chrono::duration_cast<std::chrono::microseconds>(end.time_since_epoch()) - std::chrono::duration_cast<std::chrono::microseconds>(start.time_since_epoch());
+
+  std::array<uint8_t,16> sum;
+  start = std::chrono::high_resolution_clock::now();
+  md5(msg.data(), sum);
+  end = std::chrono::high_resolution_clock::now();
+  std::chrono::microseconds md5Duration = std::chrono::duration_cast<std::chrono::microseconds>(end.time_since_epoch()) - std::chrono::duration_cast<std::chrono::microseconds>(start.time_since_epoch());
+
+  std::ostringstream out;
+  out << hash;
+  std::string strRes = out.str();
+  anch::ut::assertTrue(res == sum);
+  // if(res != sum) {
+  //   char digest[33];
+  //   sprintf(digest,"%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x",
+  // 	    sum[0],sum[1],sum[2],sum[3],sum[4],sum[5],sum[6],sum[7],sum[8],sum[9],sum[10],sum[11],sum[12],sum[13],sum[14],sum[15]);
+  //   std::cerr << "Hash are differents:" << std::endl;
+  //   std::cerr << "AnCH result: " << strRes << std::endl;
+  //   std::cerr << "Instead of:  " << digest << std::endl;
+  //   return 1;
+  // } else {
+  //   std::cout << "Found value: " << strRes << std::endl;
+  //   std::cout << "AnCH implementation time:      " << anchDuration.count() << " µs" << std::endl;
+  //   std::cout << "Reference implementation time: " << md5Duration.count() << " µs" << std::endl << std::endl;
+  // }
+  std::cout << "Found value: " << strRes << std::endl;
+  std::cout << "AnCH implementation time:      " << anchDuration.count() << " µs" << std::endl;
+  std::cout << "Reference implementation time: " << md5Duration.count() << " µs" << std::endl << std::endl;
+}
+
+void
+testMakefile() {
+  std::chrono::time_point<std::chrono::high_resolution_clock> start, end;
+
+  std::cout << "Hash file Makefile" << std::endl;
+  std::ifstream file("Makefile");
+  start = std::chrono::high_resolution_clock::now();
+  MD5 hash(file);
+  file.close();
+  const std::array<uint8_t,16>& res = hash.digest();
+  end = std::chrono::high_resolution_clock::now();
+  std::chrono::microseconds anchDuration = std::chrono::duration_cast<std::chrono::microseconds>(end.time_since_epoch()) - std::chrono::duration_cast<std::chrono::microseconds>(start.time_since_epoch());
+
+  std::ifstream fileBis("Makefile");
+  std::ostringstream msg;
+  start = std::chrono::high_resolution_clock::now();
+  char buffer[1024];
+  while(!fileBis.eof()) {
+    fileBis.read(buffer, 1024);
+    for(int i = 0 ; i < fileBis.gcount() ; ++i) {
+      msg << buffer[i];
     }
   }
+  fileBis.close();
 
-  // Million of 'a'
-  {
-    std::ostringstream in;
-    for(int i = 0 ; i < 1000000 ; i++) {
-      in << 'a';
-    }
-    string msg = in.str();
-    cout << "Hash message: a million of 'a'" << endl;
-    start = std::chrono::high_resolution_clock::now();
-    MD5 hash(msg);
-    const std::array<uint8_t,16>& res = hash.digest();
-    end = std::chrono::high_resolution_clock::now();
-    std::chrono::microseconds anchDuration = std::chrono::duration_cast<std::chrono::microseconds>(end.time_since_epoch()) - std::chrono::duration_cast<std::chrono::microseconds>(start.time_since_epoch());
+  std::array<uint8_t,16> sum;
+  md5(msg.str().data(), sum);
+  end = std::chrono::high_resolution_clock::now();
+  std::chrono::microseconds md5Duration = std::chrono::duration_cast<std::chrono::microseconds>(end.time_since_epoch()) - std::chrono::duration_cast<std::chrono::microseconds>(start.time_since_epoch());
 
-    std::array<uint8_t,16> sum;
-    start = std::chrono::high_resolution_clock::now();
-    md5(msg.data(), sum);
-    end = std::chrono::high_resolution_clock::now();
-    std::chrono::microseconds md5Duration = std::chrono::duration_cast<std::chrono::microseconds>(end.time_since_epoch()) - std::chrono::duration_cast<std::chrono::microseconds>(start.time_since_epoch());
+  std::ostringstream out;
+  out << hash;
+  std::string strRes = out.str();
+  anch::ut::assertTrue(res == sum);
+  // if(res != sum) {
+  //   char digest[33];
+  //   sprintf(digest,"%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x",
+  // 	    sum[0],sum[1],sum[2],sum[3],sum[4],sum[5],sum[6],sum[7],sum[8],sum[9],sum[10],sum[11],sum[12],sum[13],sum[14],sum[15]);
+  //   std::cerr << "Hash are differents:" << std::endl;
+  //   std::cerr << "AnCH result: " << strRes << std::endl;
+  //   std::cerr << "Instead of:  " << digest << std::endl;
+  //   return 1;
+  // } else {
+  //   std::cout << "Found value: " << strRes << std::endl;
+  //   std::cout << "AnCH implementation time:      " << anchDuration.count() << " µs" << std::endl;
+  //   std::cout << "Reference implementation time: " << md5Duration.count() << " µs" << std::endl << std::endl;
+  // }
+  std::cout << "Found value: " << strRes << std::endl;
+  std::cout << "AnCH implementation time:      " << anchDuration.count() << " µs" << std::endl;
+  std::cout << "Reference implementation time: " << md5Duration.count() << " µs" << std::endl << std::endl;
+}
 
-    std::ostringstream out;
-    out << hash;
-    string strRes = out.str();
-    if(res != sum) {
-      char digest[33];
-      sprintf(digest,"%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x",
-	      sum[0],sum[1],sum[2],sum[3],sum[4],sum[5],sum[6],sum[7],sum[8],sum[9],sum[10],sum[11],sum[12],sum[13],sum[14],sum[15]);
-      cerr << "Hash are differents:" << endl;
-      cerr << "AnCH result: " << strRes << endl;
-      cerr << "Instead of:  " << digest << endl;
-      return 1;
-    } else {
-      cout << "Found value: " << strRes << endl;
-      cout << "AnCH implementation time:      " << anchDuration.count() << " µs" << endl;
-      cout << "Reference implementation time: " << md5Duration.count() << " µs" << endl << endl;
-    }
-  }
-
-  // File test
-  {
-    cout << "Hash file Makefile" << endl;
-    std::ifstream file("Makefile");
-    start = std::chrono::high_resolution_clock::now();
-    MD5 hash(file);
-    file.close();
-    const std::array<uint8_t,16>& res = hash.digest();
-    end = std::chrono::high_resolution_clock::now();
-    std::chrono::microseconds anchDuration = std::chrono::duration_cast<std::chrono::microseconds>(end.time_since_epoch()) - std::chrono::duration_cast<std::chrono::microseconds>(start.time_since_epoch());
-
-    std::ifstream fileBis("Makefile");
-    std::ostringstream msg;
-    start = std::chrono::high_resolution_clock::now();
-    char buffer[1024];
-    while(!fileBis.eof()) {
-      fileBis.read(buffer, 1024);
-      for(int i = 0 ; i < fileBis.gcount() ; ++i) {
-	msg << buffer[i];
-      }
-    }
-    fileBis.close();
-
-    std::array<uint8_t,16> sum;
-    md5(msg.str().data(), sum);
-    end = std::chrono::high_resolution_clock::now();
-    std::chrono::microseconds md5Duration = std::chrono::duration_cast<std::chrono::microseconds>(end.time_since_epoch()) - std::chrono::duration_cast<std::chrono::microseconds>(start.time_since_epoch());
-
-    std::ostringstream out;
-    out << hash;
-    string strRes = out.str();
-    if(res != sum) {
-      char digest[33];
-      sprintf(digest,"%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x%2.2x",
-	      sum[0],sum[1],sum[2],sum[3],sum[4],sum[5],sum[6],sum[7],sum[8],sum[9],sum[10],sum[11],sum[12],sum[13],sum[14],sum[15]);
-      cerr << "Hash are differents:" << endl;
-      cerr << "AnCH result: " << strRes << endl;
-      cerr << "Instead of:  " << digest << endl;
-      return 1;
-    } else {
-      cout << "Found value: " << strRes << endl;
-      cout << "AnCH implementation time:      " << anchDuration.count() << " µs" << endl;
-      cout << "Reference implementation time: " << md5Duration.count() << " µs" << endl << endl;
-    }
-  }
-
-  cout << "Exit MD5 test" << endl;
-
-  return 0;
+void
+anch::ut::setup(anch::ut::UnitTests& tests) {
+  tests
+    .name("AnCH MD5 unit tests")
+    .description("Test AnCH MD5 library")
+    .add("md5-str", testMD5string)
+    .add("md5-1Ma", testMillionA)
+    .add("md5-makefile", testMakefile)
+    ;
 }
