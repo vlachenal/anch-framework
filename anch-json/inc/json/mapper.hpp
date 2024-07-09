@@ -119,8 +119,9 @@ namespace anch::json {
      * \param value the JSON value in object
      *
      * \return \c this
-     */      template<typename P>
-     ObjectMapper<T>& registerField(const std::string& key, P T::* value);
+     */
+    template<typename P>
+    ObjectMapper<T>& registerField(const std::string& key, P T::* value);
 
     /*!
      * Register mapping by field specifying the mapper to use
