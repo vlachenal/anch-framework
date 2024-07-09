@@ -19,7 +19,7 @@
 */
 #pragma once
 
-#include "crypto/hash/sha224_256.hpp"
+#include "crypto/hash/impl/sha224_256.hpp"
 
 namespace anch {
   namespace crypto {
