@@ -1,11 +1,11 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
 <area shape="rect" id="Node000000" href="$classanch_1_1sql_1_1_result_set.html" title="SQL result representation." alt="" coords="5,100,155,128"/>
 <area shape="rect" id="Node000001" href="$classanch_1_1sql_1_1_my_s_q_l_prepared_statement_result_set.html" title="MySQL result set implementation for prepared statement ... shitty API." alt="" coords="219,5,410,50"/>
-<area shape="poly" id="edge64_Node000000_Node000001" title=" " alt="" coords="125,92,202,60,236,48,238,53,204,65,127,96"/>
+<area shape="poly" id="edge60_Node000000_Node000001" title=" " alt="" coords="125,92,202,60,236,48,238,53,204,65,127,96"/>
 <area shape="rect" id="Node000002" href="$classanch_1_1sql_1_1_my_s_q_l_result_set.html" title="MySQL result set implementation." alt="" coords="217,74,412,102"/>
-<area shape="poly" id="edge65_Node000000_Node000002" title=" " alt="" coords="170,101,217,96,217,101,171,107"/>
+<area shape="poly" id="edge61_Node000000_Node000002" title=" " alt="" coords="170,101,217,96,217,101,171,107"/>
 <area shape="rect" id="Node000003" href="$classanch_1_1sql_1_1_postgre_s_q_l_result_set.html" title="PostgreSQL result set implementation." alt="" coords="203,126,426,154"/>
-<area shape="poly" id="edge66_Node000000_Node000003" title=" " alt="" coords="171,121,202,125,202,130,170,127"/>
+<area shape="poly" id="edge62_Node000000_Node000003" title=" " alt="" coords="171,121,202,125,202,130,170,127"/>
 <area shape="rect" id="Node000004" href="$classanch_1_1sql_1_1_s_q_lite3_result_set.html" title="SQLite3 result set implementation." alt="" coords="215,178,414,206"/>
-<area shape="poly" id="edge67_Node000000_Node000004" title=" " alt="" coords="126,132,204,162,247,175,245,180,202,168,124,137"/>
+<area shape="poly" id="edge63_Node000000_Node000004" title=" " alt="" coords="126,132,204,162,247,175,245,180,202,168,124,137"/>
 </map>

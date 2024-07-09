@@ -1,13 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$classanch_1_1crypto_1_1_hash.html" title="Hash algorithm abstract class." alt="" coords="5,83,148,127"/>
-<area shape="rect" id="Node000001" href="$classanch_1_1crypto_1_1_s_h_a2.html" title=" " alt="" coords="196,5,378,50"/>
-<area shape="poly" id="edge10_Node000000_Node000001" title=" " alt="" coords="153,74,223,48,225,53,155,79"/>
-<area shape="rect" id="Node000003" href="$classanch_1_1crypto_1_1_s_h_a2.html" title=" " alt="" coords="215,74,359,136"/>
-<area shape="poly" id="edge12_Node000000_Node000003" title=" " alt="" coords="163,102,214,102,214,108,163,108"/>
-<area shape="rect" id="Node000005" href="$classanch_1_1crypto_1_1_s_h_a2.html" title="SHA2 abstract class." alt="" coords="215,160,359,205"/>
-<area shape="poly" id="edge14_Node000000_Node000005" title=" " alt="" coords="155,131,225,157,223,162,153,136"/>
-<area shape="rect" id="Node000002" href="$classanch_1_1crypto_1_1_s_h_a224__256.html" title="SHA2 224/256 implementation." alt="" coords="426,5,586,50"/>
-<area shape="poly" id="edge11_Node000001_Node000002" title=" " alt="" coords="393,25,425,25,425,30,393,30"/>
-<area shape="rect" id="Node000004" href="$classanch_1_1crypto_1_1_s_h_a384__512.html" title="SHA2 384/512 implementation." alt="" coords="426,83,586,127"/>
-<area shape="poly" id="edge13_Node000003_Node000004" title=" " alt="" coords="374,102,425,102,425,108,374,108"/>
+<area shape="rect" id="Node000000" href="$classanch_1_1crypto_1_1_hash.html" title="Hash algorithm abstract class." alt="" coords="5,5,148,50"/>
+<area shape="rect" id="Node000001" href="$classanch_1_1crypto_1_1_s_h_a2.html" title="SHA2 abstract class." alt="" coords="196,5,340,50"/>
+<area shape="poly" id="edge10_Node000000_Node000001" title=" " alt="" coords="163,25,196,25,196,30,163,30"/>
 </map>

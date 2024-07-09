@@ -26,8 +26,6 @@ var annotated_dup =
         [ "PKCS5Padding", "classanch_1_1crypto_1_1_p_k_c_s5_padding.html", "classanch_1_1crypto_1_1_p_k_c_s5_padding" ],
         [ "SHA1", "classanch_1_1crypto_1_1_s_h_a1.html", "classanch_1_1crypto_1_1_s_h_a1" ],
         [ "SHA2", "classanch_1_1crypto_1_1_s_h_a2.html", "classanch_1_1crypto_1_1_s_h_a2" ],
-        [ "SHA224_256", "classanch_1_1crypto_1_1_s_h_a224__256.html", "classanch_1_1crypto_1_1_s_h_a224__256" ],
-        [ "SHA384_512", "classanch_1_1crypto_1_1_s_h_a384__512.html", "classanch_1_1crypto_1_1_s_h_a384__512" ],
         [ "ZeroPadding", "classanch_1_1crypto_1_1_zero_padding.html", "classanch_1_1crypto_1_1_zero_padding" ]
       ] ],
       [ "cutils", null, [

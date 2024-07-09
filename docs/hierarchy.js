@@ -80,12 +80,6 @@ var hierarchy =
     ] ],
     [ "anch::json::Factory< T >", "classanch_1_1json_1_1_factory.html", null ],
     [ "anch::crypto::Hash< O, B >", "classanch_1_1crypto_1_1_hash.html", [
-      [ "anch::crypto::SHA2< O, 64, uint32_t, 64, I >", "classanch_1_1crypto_1_1_s_h_a2.html", [
-        [ "anch::crypto::SHA224_256< O, I >", "classanch_1_1crypto_1_1_s_h_a224__256.html", null ]
-      ] ],
-      [ "anch::crypto::SHA2< O, 128, uint64_t, 80, I >", "classanch_1_1crypto_1_1_s_h_a2.html", [
-        [ "anch::crypto::SHA384_512< O, I >", "classanch_1_1crypto_1_1_s_h_a384__512.html", null ]
-      ] ],
       [ "anch::crypto::SHA2< O, B, W, R, I >", "classanch_1_1crypto_1_1_s_h_a2.html", null ]
     ] ],
     [ "anch::crypto::Hash< 16, 64 >", "classanch_1_1crypto_1_1_hash.html", [

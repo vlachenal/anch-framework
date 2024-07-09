@@ -146,9 +146,9 @@ $(function(){initNavTree('thread_pool_8hpp_source.html',''); initResizable(true)
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    std::mutex _mutex;</div>
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> _maxThreads;</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    uint32_t _maxThreads;</div>
 <div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span> </div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    std::atomic&lt;unsigned int&gt; _available;</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    std::atomic&lt;uint32_t&gt; _available;</div>
 <div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span> </div>
 <div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    <span class="keywordtype">bool</span> _running;</div>
 <div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span> </div>
@@ -159,7 +159,7 @@ $(function(){initNavTree('thread_pool_8hpp_source.html',''); initResizable(true)
 <div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span> </div>
 <div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    <span class="comment">// Constructors +</span></div>
 <div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>  <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno"><a class="line" href="classanch_1_1_thread_pool.html#a85eb4ca5a3f8e28e799d8717a9ffe462">   77</a></span>    <a class="code hl_function" href="classanch_1_1_thread_pool.html#a85eb4ca5a3f8e28e799d8717a9ffe462">ThreadPool</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> maxThreads = 0);</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno"><a class="line" href="classanch_1_1_thread_pool.html#a41186a3b6cb2ce80c4bbffed05e76507">   77</a></span>    <a class="code hl_function" href="classanch_1_1_thread_pool.html#a41186a3b6cb2ce80c4bbffed05e76507">ThreadPool</a>(uint32_t maxThreads = 0);</div>
 <div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    <span class="comment">// Constructors -</span></div>
 <div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span> </div>
 <div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    <span class="comment">// Destructor +</span></div>
@@ -196,8 +196,8 @@ $(function(){initNavTree('thread_pool_8hpp_source.html',''); initResizable(true)
 <div class="ttc" id="aclassanch_1_1_thread_pool_html"><div class="ttname"><a href="classanch_1_1_thread_pool.html">anch::ThreadPool</a></div><div class="ttdoc">Thread pool utility class.</div><div class="ttdef"><b>Definition</b> threadPool.hpp:45</div></div>
 <div class="ttc" id="aclassanch_1_1_thread_pool_html_a045c755831a446a635fd84dc692ea84a"><div class="ttname"><a href="classanch_1_1_thread_pool.html#a045c755831a446a635fd84dc692ea84a">anch::ThreadPool::awaitTermination</a></div><div class="ttdeci">void awaitTermination(std::chrono::duration&lt; R, P &gt; duration)</div></div>
 <div class="ttc" id="aclassanch_1_1_thread_pool_html_a303181831bf04c919f839e4973e9c7b4"><div class="ttname"><a href="classanch_1_1_thread_pool.html#a303181831bf04c919f839e4973e9c7b4">anch::ThreadPool::stop</a></div><div class="ttdeci">void stop()</div></div>
+<div class="ttc" id="aclassanch_1_1_thread_pool_html_a41186a3b6cb2ce80c4bbffed05e76507"><div class="ttname"><a href="classanch_1_1_thread_pool.html#a41186a3b6cb2ce80c4bbffed05e76507">anch::ThreadPool::ThreadPool</a></div><div class="ttdeci">ThreadPool(uint32_t maxThreads=0)</div></div>
 <div class="ttc" id="aclassanch_1_1_thread_pool_html_a6463ee860fa799d447afa6ab15e0748e"><div class="ttname"><a href="classanch_1_1_thread_pool.html#a6463ee860fa799d447afa6ab15e0748e">anch::ThreadPool::add</a></div><div class="ttdeci">void add(Func function, Args... args)</div></div>
-<div class="ttc" id="aclassanch_1_1_thread_pool_html_a85eb4ca5a3f8e28e799d8717a9ffe462"><div class="ttname"><a href="classanch_1_1_thread_pool.html#a85eb4ca5a3f8e28e799d8717a9ffe462">anch::ThreadPool::ThreadPool</a></div><div class="ttdeci">ThreadPool(unsigned int maxThreads=0)</div></div>
 <div class="ttc" id="aclassanch_1_1_thread_pool_html_a9c884cd9ffa8e69bc30899bf6264eb6b"><div class="ttname"><a href="classanch_1_1_thread_pool.html#a9c884cd9ffa8e69bc30899bf6264eb6b">anch::ThreadPool::~ThreadPool</a></div><div class="ttdeci">virtual ~ThreadPool()</div></div>
 <div class="ttc" id="aclassanch_1_1_thread_pool_html_af7f5fb3c76b5d0535e8ac0436fa7fb95"><div class="ttname"><a href="classanch_1_1_thread_pool.html#af7f5fb3c76b5d0535e8ac0436fa7fb95">anch::ThreadPool::start</a></div><div class="ttdeci">void start()</div></div>
 <div class="ttc" id="anamespaceanch_html"><div class="ttname"><a href="namespaceanch.html">anch</a></div><div class="ttdoc">AnCH framework base namespace.</div><div class="ttdef"><b>Definition</b> app.hpp:28</div></div>
