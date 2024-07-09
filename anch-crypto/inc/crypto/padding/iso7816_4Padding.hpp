@@ -23,42 +23,40 @@
 #include <stdint.h>
 
 
-namespace anch {
-  namespace crypto {
+namespace anch::crypto {
+
+  /*!
+   * \brief ISO/IEC 7816-4 padding implementation.
+   *
+   * Padding used in ISO/IEC 7816-4 standard for identification cards.\n
+   * Note that this algorithm will always work on plain text encoded in US ASCII.
+   *
+   * \since 0.1
+   *
+   * \author Vincent Lachenal
+   */
+  class ISO7816_4Padding {
+
+  public:
+    /*!
+     * Pad data
+     *
+     * \param data the data to pad
+     * \param len the data length
+     * \param expLen the expected length
+     */
+    static void pad(uint8_t* data, std::size_t len, std::size_t expLen);
 
     /*!
-     * \brief ISO/IEC 7816-4 padding implementation.
+     * Unpad data
      *
-     * Padding used in ISO/IEC 7816-4 standard for identification cards.\n
-     * Note that this algorithm will always work on plain text encoded in US ASCII.
+     * \param data the data to unpad
+     * \param len the block length
      *
-     * \since 0.1
-     *
-     * \author Vincent Lachenal
+     * \return the data length
      */
-    class ISO7816_4Padding {
+    static std::size_t length(uint8_t* data, std::size_t len);
 
-    public:
-      /*!
-       * Pad data
-       *
-       * \param data the data to pad
-       * \param len the data length
-       * \param expLen the expected length
-       */
-      static void pad(uint8_t* data, std::size_t len, std::size_t expLen);
+  };
 
-      /*!
-       * Unpad data
-       *
-       * \param data the data to unpad
-       * \param len the block length
-       *
-       * \return the data length
-       */
-      static std::size_t length(uint8_t* data, std::size_t len);
-
-    };
-
-  }
 }

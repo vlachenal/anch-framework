@@ -23,42 +23,40 @@
 #include <stdint.h>
 
 
-namespace anch {
-  namespace crypto {
+namespace anch::crypto {
+
+  /*!
+   * \brief Zero padding implementation.
+   *
+   * Add 0x00 until the end of the block.\n
+   * Zero padding may not be reversible when data to pad ends with 0x00 (end of string).
+   *
+   * \since 0.1
+   *
+   * \author Vincent Lachenal
+   */
+  class ZeroPadding {
+
+  public:
+    /*!
+     * Pad data
+     *
+     * \param data the data to pad
+     * \param len the data length
+     * \param expLen the expected length
+     */
+    static void pad(uint8_t* data, std::size_t len, std::size_t expLen);
 
     /*!
-     * \brief Zero padding implementation.
+     * Unpad data
      *
-     * Add 0x00 until the end of the block.\n
-     * Zero padding may not be reversible when data to pad ends with 0x00 (end of string).
+     * \param data the data to unpad
+     * \param len the block length
      *
-     * \since 0.1
-     *
-     * \author Vincent Lachenal
+     * \return the data length
      */
-    class ZeroPadding {
+    static std::size_t length(uint8_t* data, std::size_t len);
 
-    public:
-      /*!
-       * Pad data
-       *
-       * \param data the data to pad
-       * \param len the data length
-       * \param expLen the expected length
-       */
-      static void pad(uint8_t* data, std::size_t len, std::size_t expLen);
+  };
 
-      /*!
-       * Unpad data
-       *
-       * \param data the data to unpad
-       * \param len the block length
-       *
-       * \return the data length
-       */
-      static std::size_t length(uint8_t* data, std::size_t len);
-
-    };
-
-  }
 }

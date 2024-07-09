@@ -23,42 +23,40 @@
 #include <stdint.h>
 
 
-namespace anch {
-  namespace crypto {
+namespace anch::crypto {
+
+  /*!
+   * \brief ANSI X.923 padding implementation.
+   *
+   * This padding method add fill 0x00 to block. The last byte is equals to
+   * the number of padded bytes.
+   *
+   * \since 0.1
+   *
+   * \author Vincent Lachenal
+   */
+  class ANSIX923 {
+
+  public:
+    /*!
+     * Pad data
+     *
+     * \param data the data to pad
+     * \param len the data length
+     * \param expLen the expected length
+     */
+    static void pad(uint8_t* data, std::size_t len, std::size_t expLen);
 
     /*!
-     * \brief ANSI X.923 padding implementation.
+     * Unpad data
      *
-     * This padding method add fill 0x00 to block. The last byte is equals to
-     * the number of padded bytes.
+     * \param data the data to unpad
+     * \param len the block length
      *
-     * \since 0.1
-     *
-     * \author Vincent Lachenal
+     * \return the data length
      */
-    class ANSIX923 {
+    static std::size_t length(uint8_t* data, std::size_t len);
 
-    public:
-      /*!
-       * Pad data
-       *
-       * \param data the data to pad
-       * \param len the data length
-       * \param expLen the expected length
-       */
-      static void pad(uint8_t* data, std::size_t len, std::size_t expLen);
+  };
 
-      /*!
-       * Unpad data
-       *
-       * \param data the data to unpad
-       * \param len the block length
-       *
-       * \return the data length
-       */
-      static std::size_t length(uint8_t* data, std::size_t len);
-
-    };
-
-  }
 }

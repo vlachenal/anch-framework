@@ -23,41 +23,39 @@
 #include <stdint.h>
 
 
-namespace anch {
-  namespace crypto {
+namespace anch::crypto {
+
+  /*!
+   * \brief PKCS5 padding implementation.
+   *
+   * Padding used in PKCS5 public-key cryptography standard.
+   *
+   * \since 0.1
+   *
+   * \author Vincent Lachenal
+   */
+  class PKCS5Padding {
+
+  public:
+    /*!
+     * Pad data
+     *
+     * \param data the data to pad
+     * \param len the data length
+     * \param expLen the expected length
+     */
+    static void pad(uint8_t* data, std::size_t len, std::size_t expLen);
 
     /*!
-     * \brief PKCS5 padding implementation.
+     * Unpad data
      *
-     * Padding used in PKCS5 public-key cryptography standard.
+     * \param data the data to unpad
+     * \param len the block length
      *
-     * \since 0.1
-     *
-     * \author Vincent Lachenal
+     * \return the data length
      */
-    class PKCS5Padding {
+    static std::size_t length(uint8_t* data, std::size_t len);
 
-    public:
-      /*!
-       * Pad data
-       *
-       * \param data the data to pad
-       * \param len the data length
-       * \param expLen the expected length
-       */
-      static void pad(uint8_t* data, std::size_t len, std::size_t expLen);
+  };
 
-      /*!
-       * Unpad data
-       *
-       * \param data the data to unpad
-       * \param len the block length
-       *
-       * \return the data length
-       */
-      static std::size_t length(uint8_t* data, std::size_t len);
-
-    };
-
-  }
 }
