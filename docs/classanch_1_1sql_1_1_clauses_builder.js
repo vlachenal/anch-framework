@@ -1,6 +1,7 @@
 var classanch_1_1sql_1_1_clauses_builder =
 [
     [ "ClausesBuilder", "classanch_1_1sql_1_1_clauses_builder.html#ab3e6df04de7174d65ab0204d569caa27", null ],
+    [ "~ClausesBuilder", "classanch_1_1sql_1_1_clauses_builder.html#a2abb48c5d3d5f381a98e17b7afbb9818", null ],
     [ "AND", "classanch_1_1sql_1_1_clauses_builder.html#ad0c609f72e69f74b9886483e46bf61d7", null ],
     [ "AND", "classanch_1_1sql_1_1_clauses_builder.html#ae45fe0d5fb570ea6e166152c08552c51", null ],
     [ "AND", "classanch_1_1sql_1_1_clauses_builder.html#a9fcad2adda98eaebcfec48ae533e167d", null ],

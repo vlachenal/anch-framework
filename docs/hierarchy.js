@@ -36,7 +36,6 @@ var hierarchy =
     [ "anch::rest::Request::Builder", "classanch_1_1rest_1_1_request_1_1_builder.html", null ],
     [ "anch::rest::Response::Builder", "classanch_1_1rest_1_1_response_1_1_builder.html", null ],
     [ "anch::cutils::cbuffer", "structanch_1_1cutils_1_1cbuffer.html", null ],
-    [ "anch::crypto::SHA1::Chunk", "unionanch_1_1crypto_1_1_s_h_a1_1_1_chunk.html", null ],
     [ "anch::crypto::SHA2< O, B, W, R, I >::Chunk", "unionanch_1_1crypto_1_1_s_h_a2_1_1_chunk.html", null ],
     [ "anch::sql::ClausesBuilder", "classanch_1_1sql_1_1_clauses_builder.html", null ],
     [ "anch::rest::ClientConfg", "structanch_1_1rest_1_1_client_confg.html", null ],
@@ -52,7 +51,6 @@ var hierarchy =
       [ "anch::sql::PostgreSQLConnection", "classanch_1_1sql_1_1_postgre_s_q_l_connection.html", null ],
       [ "anch::sql::SQLite3Connection", "classanch_1_1sql_1_1_s_q_lite3_connection.html", null ]
     ] ],
-    [ "anch::crypto::SHA1::Context", "structanch_1_1crypto_1_1_s_h_a1_1_1_context.html", null ],
     [ "anch::crypto::SHA2< O, B, W, R, I >::Context< Init >", "structanch_1_1crypto_1_1_s_h_a2_1_1_context.html", null ],
     [ "anch::crypto::SHA2< O, B, W, R, I >::Context< I >", "structanch_1_1crypto_1_1_s_h_a2_1_1_context.html", null ],
     [ "anch::date::Date", "classanch_1_1date_1_1_date.html", [

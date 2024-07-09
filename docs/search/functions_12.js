@@ -12,6 +12,6 @@ var searchData=
   ['tolower_9',['toLower',['../namespaceanch.html#a076ca536c9623533b33cd90c2db4f5e6',1,'anch']]],
   ['tostring_10',['toString',['../classanch_1_1_u_u_i_d.html#a36736e2206df28396b345d625804368e',1,'anch::UUID']]],
   ['toupper_11',['toUpper',['../namespaceanch.html#a2848ba09e5716aadd983708833dfa30d',1,'anch']]],
-  ['trace_12',['trace',['../classanch_1_1logger_1_1_logger.html#ab69d818baa9eb79ddb27a9b309b0b656',1,'anch::logger::Logger']]],
-  ['trace_13',['TRACE',['../classanch_1_1rest_1_1_web_client.html#a7d78925dba1a2e2a3be2daf70d2a7f39',1,'anch::rest::WebClient::TRACE()'],['../classanch_1_1rest_1_1_client_iface.html#aaf1872724af83b67d9dfc9bbb42b9f4f',1,'anch::rest::ClientIface::TRACE()'],['../classanch_1_1rest_1_1_c_u_r_l_client.html#ae822f5bab1fa9a28562fb7a955bea8ea',1,'anch::rest::CURLClient::TRACE()']]]
+  ['trace_12',['TRACE',['../classanch_1_1rest_1_1_web_client.html#a7d78925dba1a2e2a3be2daf70d2a7f39',1,'anch::rest::WebClient::TRACE()'],['../classanch_1_1rest_1_1_client_iface.html#aaf1872724af83b67d9dfc9bbb42b9f4f',1,'anch::rest::ClientIface::TRACE()'],['../classanch_1_1rest_1_1_c_u_r_l_client.html#ae822f5bab1fa9a28562fb7a955bea8ea',1,'anch::rest::CURLClient::TRACE()']]],
+  ['trace_13',['trace',['../classanch_1_1logger_1_1_logger.html#ab69d818baa9eb79ddb27a9b309b0b656',1,'anch::logger::Logger']]]
 ];

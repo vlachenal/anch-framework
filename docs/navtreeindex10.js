@@ -1,5 +1,7 @@
 var NAVTREEINDEX10 =
 {
+"logger_8hpp_source.html":[19,0,7,0,0,2],
+"logger_configuration_8hpp_source.html":[19,0,7,0,0,3],
 "logger_factory_8hpp_source.html":[19,0,7,0,0,4],
 "low_priority_writer_8hpp_source.html":[19,0,7,0,0,5],
 "mapper_8hpp_source.html":[19,0,6,0,0,3],
@@ -247,7 +249,5 @@ var NAVTREEINDEX10 =
 "page_uuid.html":[14],
 "page_uuid.html#uuid_concept_sec":[14,3],
 "page_uuid.html#uuid_example_sec":[14,4],
-"page_uuid.html#uuid_install_sec":[14,2],
-"page_uuid.html#uuid_intro_seq":[14,0],
-"page_uuid.html#uuid_prereq_sec":[14,1]
+"page_uuid.html#uuid_install_sec":[14,2]
 };
