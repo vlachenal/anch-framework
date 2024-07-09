@@ -52,10 +52,10 @@ namespace anch {
     std::mutex _mutex;
 
     /*! Maximum number of running threads */
-    unsigned int _maxThreads;
+    uint32_t _maxThreads;
 
     /*! Remaining threads */
-    std::atomic<unsigned int> _available;
+    std::atomic<uint32_t> _available;
 
     /*! Thread pool internal state */
     bool _running;
@@ -74,7 +74,7 @@ namespace anch {
      *
      * \param maxThreads the maximum number of alive threads (default number of processor or 1 if not defined)
      */
-    ThreadPool(unsigned int maxThreads = 0);
+    ThreadPool(uint32_t maxThreads = 0);
     // Constructors -
 
     // Destructor +

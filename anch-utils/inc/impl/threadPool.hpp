@@ -22,20 +22,19 @@
 namespace anch {
 
   // Constructors +
-  ThreadPool::ThreadPool(unsigned int maxThreads):
+  ThreadPool::ThreadPool(uint32_t maxThreads):
     _threads(),
     _mutex(),
+    _maxThreads(maxThreads),
     _available(0),
     _running(false),
     _terminating(false),
     _termCV() {
-    if(maxThreads == 0) {
+    if(_maxThreads == 0) {
       _maxThreads = std::thread::hardware_concurrency();
       if(_maxThreads == 0) { // Check if maximum number of thread is at least 1 to execute at least one thread
 	_maxThreads = 1;
       }
-    } else {
-      _maxThreads = maxThreads;
     }
   }
   // Constructors -

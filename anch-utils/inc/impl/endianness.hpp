@@ -26,7 +26,7 @@ namespace anch {
   inline void byteSwap(T src, uint8_t* dest) {
     const uint8_t* words = reinterpret_cast<const uint8_t*>(&src);
     std::size_t size = sizeof(T);
-    for(std::size_t i = 0 ; i < size ; i++) {
+    for(std::size_t i = 0 ; i < size ; ++i) {
       dest[i] = words[size - 1 - i];
     }
   }
