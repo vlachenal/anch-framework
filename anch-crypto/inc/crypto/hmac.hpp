@@ -25,65 +25,18 @@
 #include "crypto/hash/hash.hpp"
 
 
-namespace anch {
-  namespace crypto {
+namespace anch::crypto {
 
-    /*!
-     * Compute HMAC according to hash algorithm, key and message.\n
-     * This function uses C++ string for key and message.
-     *
-     * \param key the key to use
-     * \param message the message to use
-     */
-    template<typename H>
-    H HMAC(const std::string& key, const std::string& message) {
-      // Treatment on key +
-      std::ostringstream keyBuf;
-      const std::size_t block = H::getBlockSize();
-      if(key.length() > block) {
-	keyBuf << H(key);
-	//keyBuf << static_cast<anch::crypto::Hash<H::getOutputSize(),H::getBlockSize()> >(H(key));
-      } else {
-	keyBuf << key;
-      }
-      std::array<uint8_t,block> keyArray;
-      keyArray.fill(0x00);
-      const std::string& buffer = keyBuf.str();
-      for(std::size_t i = 0 ; i < buffer.length() ; ++i) {
-	keyArray[i] = static_cast<uint8_t>(buffer[i]);
-      }
-      // Treatment on key -
+  /*!
+   * Compute HMAC according to hash algorithm, key and message.\n
+   * This function uses C++ string for key and message.
+   *
+   * \param key the key to use
+   * \param message the message to use
+   */
+  template<typename H>
+  H HMAC(const std::string& key, const std::string& message);
 
-      // Compute paddings +
-      std::size_t msgLen = message.length();
-      std::size_t inSize = block + msgLen;
-      uint8_t* inPad = new uint8_t[inSize];
-      std::array<uint8_t, (block + H::getOutputSize())> outPad;
-      // 'Magic numbers' 0x36 and 0x5c are specified in RFC2104 to have a large hamming distance
-      for(std::size_t i = 0 ; i < block ; ++i) {
-	inPad[i] = static_cast<uint8_t>(0x36) ^ keyArray[i];
-	outPad[i] = static_cast<uint8_t>(0x5c) ^ keyArray[i];
-      }
-      // Compute paddings -
-
-      // First hash +
-      const uint8_t* msg = reinterpret_cast<const uint8_t*>(message.c_str());
-      for(std::size_t i = 0 ; i < msgLen ; ++i) {
-	inPad[i + block] = msg[i];
-      }
-      auto inDigest = H(inPad, inSize).digest();
-      delete[] inPad;
-      // First hash -
-
-      // Second hash +
-      std::size_t idx = block;
-      for(uint8_t byte : inDigest) {
-	outPad[idx] = byte;
-	++idx;
-      }
-      return H(outPad.data(), outPad.size());
-      // Second hash -
-    }
-
-  }
 }
+
+#include "crypto/impl/hmac.hpp"

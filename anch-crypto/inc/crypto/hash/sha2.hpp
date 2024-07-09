@@ -215,7 +215,10 @@ namespace anch {
 	  anch::byteSwap(messageSize << 3, sizeInBits);
 	} else {
 	  uint64_t tmp = messageSize << 3;
-	  std::memcpy(sizeInBits, &tmp, sizeof(W) * 2);
+	  const uint8_t* words = reinterpret_cast<const uint8_t*>(&tmp);
+	  for(std::size_t i = 0 ; i < sizeof(W) * 2 ; ++i) {
+	    sizeInBits[i] = words[i];
+	  }
 	}
 
 	addData((const uint8_t*)"\200", 1);

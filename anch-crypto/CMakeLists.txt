@@ -438,7 +438,7 @@ if(ANCH_CRYPTO_UNITARY_TEST)
   add_test(hmac-sha1 ${EXECUTABLE_OUTPUT_PATH}/anch-hmac-test -t hmac-sha1)
   add_test(hmac-sha224 ${EXECUTABLE_OUTPUT_PATH}/anch-hmac-test -t hmac-sha224)
   add_test(hmac-sha256 ${EXECUTABLE_OUTPUT_PATH}/anch-hmac-test -t hmac-sha256)
-  #add_test(hmac-sha384 ${EXECUTABLE_OUTPUT_PATH}/anch-hmac-test -t hmac-sha384)
+  add_test(hmac-sha384 ${EXECUTABLE_OUTPUT_PATH}/anch-hmac-test -t hmac-sha384)
   add_test(hmac-sha512 ${EXECUTABLE_OUTPUT_PATH}/anch-hmac-test -t hmac-sha512)
   # HMAC tests -
 
