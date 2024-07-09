@@ -32,6 +32,14 @@ using anch::UUID;
 template class Hash<20,64>;
 
 
+typedef union {
+  /*! Bytes */
+  uint8_t bytes[64];
+
+  /*! Words */
+  uint32_t words[16];
+} SHA1Chunk;
+
 // Functions +
 /*!
  * Swap byte for endianness conversion
@@ -69,7 +77,7 @@ rol32(uint32_t value, unsigned int shift){
  * \param position The position
  */
 inline uint32_t
-word(SHA1::Chunk& chunk, unsigned int position) {
+word(SHA1Chunk& chunk, unsigned int position) {
   return (chunk.words[position & 0xf] = rol32(chunk.words[(position + 13)  & 0xf]
 					      ^ chunk.words[(position + 8) & 0xf]
 					      ^ chunk.words[(position + 2) & 0xf]
@@ -89,7 +97,7 @@ word(SHA1::Chunk& chunk, unsigned int position) {
  * \param z The fifth parameter
  */
 inline void
-round0(SHA1::Chunk& chunk,
+round0(SHA1Chunk& chunk,
        const unsigned int position,
        uint32_t& v,
        uint32_t& w,
@@ -112,7 +120,7 @@ round0(SHA1::Chunk& chunk,
  * \param z The fifth parameter
  */
 inline void
-round1(SHA1::Chunk& chunk,
+round1(SHA1Chunk& chunk,
        const unsigned int position,
        uint32_t& v,
        uint32_t& w,
@@ -135,7 +143,7 @@ round1(SHA1::Chunk& chunk,
  * \param z The fifth parameter
  */
 inline void
-round2(SHA1::Chunk& chunk,
+round2(SHA1Chunk& chunk,
        const unsigned int position,
        uint32_t& v,
        uint32_t& w,
@@ -158,7 +166,7 @@ round2(SHA1::Chunk& chunk,
  * \param z The fifth parameter
  */
 inline void
-round3(SHA1::Chunk& chunk,
+round3(SHA1Chunk& chunk,
        const unsigned int position,
        uint32_t& v,
        uint32_t& w,
@@ -181,7 +189,7 @@ round3(SHA1::Chunk& chunk,
  * \param z The fifth parameter
  */
 inline void
-round4(SHA1::Chunk& chunk,
+round4(SHA1Chunk& chunk,
        const unsigned int position,
        uint32_t& v,
        uint32_t& w,
@@ -193,10 +201,28 @@ round4(SHA1::Chunk& chunk,
 }
 // Functions -
 
+SHA1::Context::Context() {
+  reset();
+}
+
+void
+SHA1::Context::reset() {
+  state = { {0x67452301,0xEFCDAB89,0x98BADCFE,0x10325476,0xC3D2E1F0} };
+  size = 0;
+}
+
 
 // Constructors +
 SHA1::SHA1() {
   // Nothing to do
+}
+
+SHA1::SHA1(const std::string& data) {
+  Hash::digest(data);
+}
+
+SHA1::SHA1(std::istream& stream) {
+  Hash::digest(stream);
 }
 
 SHA1::SHA1(const uint8_t* data, std::size_t len) {
@@ -228,7 +254,7 @@ SHA1::transform(const uint8_t* buffer) {
   uint8_t chunkBuffer[64];
   std::memcpy(chunkBuffer, buffer, 64);
 
-  Chunk* chunk = reinterpret_cast<Chunk*>(&chunkBuffer);
+  SHA1Chunk* chunk = reinterpret_cast<SHA1Chunk*>(&chunkBuffer);
 
   bytesSwap(chunk->words, 16);
 
@@ -347,6 +373,11 @@ SHA1::addData(const uint8_t* data, size_t len) {
 
     std::memcpy(&_context.buffer[0], &data[i], len - i);
   }
+}
+
+void
+SHA1::reset() {
+  _context.reset();
 }
 
 void

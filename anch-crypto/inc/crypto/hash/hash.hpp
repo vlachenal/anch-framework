@@ -19,9 +19,7 @@
 */
 #pragma once
 
-#include <iostream>
 #include <ostream>
-#include <iomanip>
 #include <array>
 #include <cstdint>
 
@@ -59,13 +57,7 @@ namespace anch::crypto {
      *
      * \return the hash result
      */
-    template<class CharT, class Traits, class Allocator>
-    const std::array<uint8_t,O>& digest(const std::basic_string<CharT,Traits,Allocator>& data) {
-      reset();
-      addData(reinterpret_cast<const uint8_t*>(data.data()), data.length());
-      finalize();
-      return *_digest;
-    }
+    const std::array<uint8_t,O>& digest(const std::string& data);
 
     /*!
      * Reset current hash context and compute hash for string
@@ -75,12 +67,7 @@ namespace anch::crypto {
      * \return the hash result
      */
     template<std::size_t N>
-    const std::array<uint8_t,O>& digest(const std::array<uint8_t,N>& data) {
-      reset();
-      addData(data.data(), N);
-      finalize();
-      return digest();
-    }
+    const std::array<uint8_t,O>& digest(const std::array<uint8_t,N>& data);
 
     /*!
      * Reset current hash context and compute hash for string
@@ -90,12 +77,7 @@ namespace anch::crypto {
      *
      * \return the hash result
      */
-    const std::array<uint8_t,O>& digest(const uint8_t* data, std::size_t len) {
-      reset();
-      addData(data, len);
-      finalize();
-      return digest();
-    }
+    const std::array<uint8_t,O>& digest(const uint8_t* data, std::size_t len);
 
     /*!
      * Reset current hash context and compute hash for stream
@@ -104,19 +86,7 @@ namespace anch::crypto {
      *
      * \return the hash result
      */
-    template<class CharT, class Traits>
-    const std::array<uint8_t,O>& digest(std::basic_istream<CharT,Traits>& stream) {
-      reset();
-      if(stream) {
-	char data[1024];
-	while(!stream.eof()) {
-	  stream.read(data, 1024);
-	  addData(reinterpret_cast<uint8_t*>(data), static_cast<std::size_t>(stream.gcount()));
-	}
-	finalize();
-      }
-      return digest();
-    }
+    const std::array<uint8_t,O>& digest(std::istream& stream);
 
   protected:
     /*!
@@ -175,12 +145,6 @@ namespace anch::crypto {
  */
 template<std::size_t O, std::size_t B>
 std::ostream&
-operator << (std::ostream& out, const anch::crypto::Hash<O,B>& hash) {
-  std::ios_base::fmtflags flags = out.flags(); // Save current flags
-  out << std::hex;
-  for(const uint8_t& byte : hash.digest()) {
-    out << std::setfill('0') << std::setw(2) << static_cast<uint16_t>(byte);
-  }
-  out.flags(flags); // Restore flags
-  return out;
-}
+operator << (std::ostream& out, const anch::crypto::Hash<O,B>& hash);
+
+#include "crypto/hash/impl/hash.hpp"

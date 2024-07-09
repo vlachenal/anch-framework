@@ -24,7 +24,6 @@
 
 namespace anch::crypto {
 
-  // #ifdef ANCH64
   /*! SHA512 initial values */
   extern std::array<uint64_t,8> SHA512_VALUES;
   /*
@@ -32,15 +31,13 @@ namespace anch::crypto {
    */
   extern template class Hash<64,128>;
   extern template const std::array<uint8_t,64>& Hash<64,128>::digest(const std::string& data);
-  extern template const std::array<uint8_t,64>& Hash<64,128>::digest(const std::wstring& data);
   extern template const std::array<uint8_t,64>& Hash<64,128>::digest(std::istream& stream);
-  //extern template const std::array<uint8_t,64>& Hash<64,128>::digest(std::wistream& stream);
+
   extern template class SHA2<64,128,uint64_t,80,SHA512_VALUES>;
   extern template class SHA384_512<64,SHA512_VALUES>;
   extern template SHA384_512<64,SHA512_VALUES>::SHA384_512(const std::string& data);
   extern template SHA384_512<64,SHA512_VALUES>::SHA384_512(const std::wstring& data);
   extern template SHA384_512<64,SHA512_VALUES>::SHA384_512(std::istream& stream);
-  //extern template SHA384_512<64,SHA512_VALUES>::SHA384_512(std::wistream& stream);
   /*!
    * SHA512 defintion
    */
@@ -48,15 +45,5 @@ namespace anch::crypto {
 
   /*! HMAC SHA512 definition */
   extern template SHA512 HMAC<SHA512>(const std::string&, const std::string&);
-  // #else
-  //     // TODO implements 32 bits version
-  //     /*! SHA512 initial values */
-  //     extern std::array<uint64_t,8> SHA512_VALUES;
-  //     /*!
-  //      * SHA512 defintion
-  //      */
-  //     extern template class SHA384_512<64,SHA512_VALUES>;
-  //     using SHA512 = SHA384_512<64,SHA512_VALUES>;
-  // #endif // ANCH64
 
 }

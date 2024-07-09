@@ -19,6 +19,8 @@
 */
 #include "crypto/hash/md5.hpp"
 
+#include <cstring>
+
 #include "uuid.hpp"
 
 
@@ -98,10 +100,31 @@ static inline void applyCore(uint32_t& a,
   a = (a << bits | a >> (32 - bits)) + b;
 }
 
+MD5::Context::Context() {
+  reset();
+}
+
+void
+MD5::Context::reset() {
+  static uint32_t HANDLE_INIT[2] = { 0, 0 };
+  std::memcpy(handle, HANDLE_INIT, 2 * sizeof(uint32_t));
+  static uint32_t BUFFER_INIT[4] = { 0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476, };
+  std::memcpy(buffer, BUFFER_INIT, 4 * sizeof(uint32_t));
+}
 
 // Constructors +
 MD5::MD5(): Hash() {
   _digest = &(_context.digest);
+}
+
+MD5::MD5(const std::string& data) {
+  _digest = &(_context.digest);
+  Hash::digest(data);
+}
+
+MD5::MD5(std::istream& stream) {
+  _digest = &(_context.digest);
+  Hash::digest(stream);
 }
 
 MD5::MD5(const uint8_t* data, std::size_t len) {
@@ -157,6 +180,11 @@ MD5::addData(const uint8_t* data, size_t len) {
     std::memcpy(_context.input,
 		reinterpret_cast<const uint32_t*>(data), len);
   }
+}
+
+void
+MD5::reset() {
+  _context.reset();
 }
 
 void
