@@ -48,24 +48,24 @@
  * - anch-resource: nothing
  * - anch-date: nothing
  * - anch-logger:
- *   - anch-resource: parse anch-logger configuration file
+ *   - \ref page_res "anch-resource": parse anch-logger configuration file
  *   - anch-date: high resolution clock (up to nanosecond)
  *   - anch-utils: Meyer's singleton
  * - anch-events:
  *   - anch-utils: object instance address comparator and Meyers' singleton
  * - anch-crypto:
- *   - anch-uuid: to provide MD5 and SHA1 UUID variants implementations
+ *   - \ref page_uuid "anch-uuid": to provide MD5 and SHA1 UUID variants implementations
  * - anch-device:
- *   - anch-uuid: to provide MAC UUID variant implementation
+ *   - \ref page_uuid "anch-uuid": to provide MAC UUID variant implementation
  * - anch-network: nothing
  * - anch-sql:
  *   - anch-utils: SQL connection pool
- *   - anch-resource: SQL database and connection pool configuration
+ *   - \ref page_res "anch-resource": SQL database and connection pool configuration
  * - anch-uuid: nothing
  * - anch-json: nothing
  * - anch-cli: nothing
  * - anch-ut:
- *   - anch-cli: parsing tests arguments
+ *   - \ref page_cli "anch-cli": parsing tests arguments
  *
  * \section install_sec Installation
  *

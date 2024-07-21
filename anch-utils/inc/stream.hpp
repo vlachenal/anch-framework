@@ -120,7 +120,7 @@ namespace anch {
     /*!
      * Set limit
      *
-     * \param func the number maximum of elements to treat
+     * \param limit the number maximum of elements to treat
      *
      * \return the current \ref Stream
      */
