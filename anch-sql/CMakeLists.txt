@@ -456,6 +456,8 @@ if(ANCH_SQL_UNITARY_TEST)
     anch-sql
     anch-resource
     anch-date
+    anch-unit
+    anch-cli
     )
   # Build SQL prepare statement placeholders -
 
@@ -514,7 +516,6 @@ if(ANCH_SQL_UNITARY_TEST)
   endif(ANCH_SQL_POSTGRESQL)
 
   if(ANCH_SQL_SQLITE3)
-    #add_test(SQLite3 ${EXECUTABLE_OUTPUT_PATH}/anch-sqlite3-test main)
     add_test(SQLite3-query-manual-handling ${EXECUTABLE_OUTPUT_PATH}/anch-sqlite3-test -t query-manual-handling)
     add_test(SQLite3-query-row-result-handling ${EXECUTABLE_OUTPUT_PATH}/anch-sqlite3-test -t query-row-result-handling)
     add_test(SQLite3-query-result-set-handling ${EXECUTABLE_OUTPUT_PATH}/anch-sqlite3-test -t query-result-set-handling)
@@ -525,12 +526,12 @@ if(ANCH_SQL_UNITARY_TEST)
     add_test(SQLite3-update-stmt ${EXECUTABLE_OUTPUT_PATH}/anch-sqlite3-test -t update-stmt)
     add_test(SQLite3-transactions ${EXECUTABLE_OUTPUT_PATH}/anch-sqlite3-test -t transactions)
 
-
     add_test(SQLConnectionFactorySQLite ${EXECUTABLE_OUTPUT_PATH}anch-sql-connection-factory-test SQLite)
     set_tests_properties(SQLConnectionFactorySQLite PROPERTIES ENVIRONMENT "LD_LIBRARY_PATH=./lib")
   endif(ANCH_SQL_SQLITE3)
 
-  add_test(SQLPrepareStatementPlaceholders ${EXECUTABLE_OUTPUT_PATH}anch-placeholders-test main)
+  add_test(SQLPrepareStatementPlaceholders ${EXECUTABLE_OUTPUT_PATH}anch-placeholders-test)
+
   # SELECT builder unit test +
   add_test(SELECTwithoutFROMnorWHERE ${EXECUTABLE_OUTPUT_PATH}anch-select-builder-test 0_from_no_where)
   add_test(SELECT1columnFROMtableWhitoutWHERE ${EXECUTABLE_OUTPUT_PATH}anch-select-builder-test 1_from_no_where)
