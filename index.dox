@@ -53,8 +53,10 @@
  *   - anch-utils: Meyer's singleton
  * - anch-events:
  *   - anch-utils: object instance address comparator and Meyers' singleton
- * - anch-crypto: nothing
- * - anch-device: nothing
+ * - anch-crypto:
+ *   - anch-uuid: to provide MD5 and SHA1 UUID variants implementations
+ * - anch-device:
+ *   - anch-uuid: to provide MAC UUID variant implementation
  * - anch-network: nothing
  * - anch-sql:
  *   - anch-utils: SQL connection pool
