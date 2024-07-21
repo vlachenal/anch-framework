@@ -5,7 +5,7 @@
  * \section intro_sec Introduction
  *
  * AnCH framework aims to provide utility classes for most common programming features. Features are implemented to be used as simply as possible.\n
- * This framework was initially a way to test new C++ specifications (C+11) and to test C++ design patterns and tricks. So be sure to have a recent C++ compiler.\n
+ * This framework was initially a way to test new C++ specifications and to test C++ design patterns and tricks. So be sure to have a recent C++ compiler.\n
  * Only POSIX systems are supported for now. Others could be supported later.\n
  * \n
  * Features are splitted into small libraries. Some of them are only header files :
@@ -21,6 +21,7 @@
  * - \ref page_uuid "anch-uuid": provides UUID library.
  * - \ref page_json "anch-json": provides JSON serialization/deserialization library.
  * - \ref page_cli "anch-cli": provides command line interface utilities (parse arguments only for now).
+ * - anch-ut: provides unit tests library (see other libraries unit tests for usage for now).
  *
  * Each library contains unitary tests which can provide a way to use it.\n
  * \n
@@ -36,7 +37,7 @@
  *
  * AnCH libraries have various requirements.\n
  * To use AnCH Framework in its totallity, you need:
- * - recent C++ compiler (such as gcc 4.8.1 or later)
+ * - recent C++ compiler (such as gcc 10.x or later)
  * - boost library (until standard C++ library implements regular expression)
  * - CMake
  * - POSIX system
@@ -44,15 +45,12 @@
  * \section anch_lib_sec Libraries dependencies
  *
  * - anch-utils: Dependends on the feature (see class and function description)
- * - anch-resource:
- *   - boost (until standard C++ library implements regular expression => gcc 5 or later)
- * - anch-date:
- *   - boost (until standard C++ library implements regular expression => gcc 5 or later)
+ * - anch-resource: nothing
+ * - anch-date: nothing
  * - anch-logger:
  *   - anch-resource: parse anch-logger configuration file
  *   - anch-date: high resolution clock (up to nanosecond)
  *   - anch-utils: Meyer's singleton
- *   - boost (until standard C++ library implements regular expression => gcc 5 or later)
  * - anch-events:
  *   - anch-utils: object instance address comparator and Meyers' singleton
  * - anch-crypto: nothing
@@ -63,6 +61,9 @@
  *   - anch-resource: SQL database and connection pool configuration
  * - anch-uuid: nothing
  * - anch-json: nothing
+ * - anch-cli: nothing
+ * - anch-ut:
+ *   - anch-cli: parsing tests arguments
  *
  * \section install_sec Installation
  *

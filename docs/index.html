@@ -119,7 +119,7 @@ $(function(){initNavTree('index.html',''); initResizable(true); });
 <div class="textblock"><h1><a class="anchor" id="intro_sec"></a>
 Introduction</h1>
 <p>AnCH framework aims to provide utility classes for most common programming features. Features are implemented to be used as simply as possible.<br  />
-This framework was initially a way to test new C++ specifications (C+11) and to test C++ design patterns and tricks. So be sure to have a recent C++ compiler.<br  />
+This framework was initially a way to test new C++ specifications and to test C++ design patterns and tricks. So be sure to have a recent C++ compiler.<br  />
 Only POSIX systems are supported for now. Others could be supported later.<br  />
 <br  />
 Features are splitted into small libraries. Some of them are only header files :</p><ul>
@@ -135,6 +135,7 @@ Features are splitted into small libraries. Some of them are only header files :
 <li><a class="el" href="page_uuid.html">anch-uuid</a>: provides UUID library.</li>
 <li><a class="el" href="page_json.html">anch-json</a>: provides JSON serialization/deserialization library.</li>
 <li><a class="el" href="page_cli.html">anch-cli</a>: provides command line interface utilities (parse arguments only for now).</li>
+<li>anch-ut: provides unit tests library (see other libraries unit tests for usage for now).</li>
 </ul>
 <p>Each library contains unitary tests which can provide a way to use it.<br  />
 <br  />
@@ -149,7 +150,7 @@ I have other projects (unfinished) and I wanted to share my work with these libr
 Prerequisites</h1>
 <p>AnCH libraries have various requirements.<br  />
 To use AnCH Framework in its totallity, you need:</p><ul>
-<li>recent C++ compiler (such as gcc 4.8.1 or later)</li>
+<li>recent C++ compiler (such as gcc 10.x or later)</li>
 <li>boost library (until standard C++ library implements regular expression)</li>
 <li>CMake</li>
 <li>POSIX system</li>
@@ -158,19 +159,12 @@ To use AnCH Framework in its totallity, you need:</p><ul>
 Libraries dependencies</h1>
 <ul>
 <li>anch-utils: Dependends on the feature (see class and function description)</li>
-<li>anch-resource:<ul>
-<li>boost (until standard C++ library implements regular expression =&gt; gcc 5 or later)</li>
-</ul>
-</li>
-<li>anch-date:<ul>
-<li>boost (until standard C++ library implements regular expression =&gt; gcc 5 or later)</li>
-</ul>
-</li>
+<li>anch-resource: nothing</li>
+<li>anch-date: nothing</li>
 <li>anch-logger:<ul>
 <li>anch-resource: parse anch-logger configuration file</li>
 <li>anch-date: high resolution clock (up to nanosecond)</li>
 <li>anch-utils: Meyer's singleton</li>
-<li>boost (until standard C++ library implements regular expression =&gt; gcc 5 or later)</li>
 </ul>
 </li>
 <li>anch-events:<ul>
@@ -187,6 +181,11 @@ Libraries dependencies</h1>
 </li>
 <li>anch-uuid: nothing</li>
 <li>anch-json: nothing</li>
+<li>anch-cli: nothing</li>
+<li>anch-ut:<ul>
+<li>anch-cli: parsing tests arguments</li>
+</ul>
+</li>
 </ul>
 <h1><a class="anchor" id="install_sec"></a>
 Installation</h1>
