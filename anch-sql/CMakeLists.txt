@@ -23,14 +23,13 @@ endif()
 # Check GCC version -
 
 # Add GCC definitions
-add_definitions("-Wall -Wextra -Werror -Wuninitialized -Wconversion -Wsign-conversion -Wformat-security -fstack-protector-all -Wstack-protector --param ssp-buffer-size=4 -ftrapv  -z relro,now -fPIC -D_FORTIFY_SOURCE=2")
-#add_definitions("-Wall -Wextra -Werror -Wuninitialized -Wconversion -Wsign-conversion -Wformat-security -fstack-protector-all -Wstack-protector --param ssp-buffer-size=4 -ftrapv  -z relro,now -fPIC")
+add_definitions("-Wall -Wextra -Werror -Wuninitialized -Wconversion -Wsign-conversion -Wformat-security -fstack-protector-all -Wstack-protector --param ssp-buffer-size=4 -ftrapv  -z relro,now -fPIC")
 if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
   add_definitions("-D ANCH_WINDOWS")
 else()
   add_definitions("-D ANCH_POSIX")
 endif()
-add_definitions(${ANCH_SQL_COMPILE_FLAGS})
+add_definitions(" ${ANCH_SQL_COMPILE_FLAGS}")
 
 # Includes location
 include_directories(
@@ -325,9 +324,16 @@ endif(ANCH_SQL_SQLITE3)
 # Unitary tests
 if(ANCH_SQL_UNITARY_TEST)
 
+  include_directories(
+    ${ANCH_UT_INCLUDES_DIR}
+    ${ANCH_CLI_INCLUDES_DIR}
+    )
+
   link_directories(
     ${ANCH_RES_LIBRARY_DIR}
     ${ANCH_DATE_LIBRARY_DIR}
+    ${ANCH_UT_LIBRARY_DIR}
+    ${ANCH_CLI_LIBRARY_DIR}
     )
 
   # Build MySQL unitary test +
@@ -350,6 +356,8 @@ if(ANCH_SQL_UNITARY_TEST)
       anch-mysql
       anch-resource
       anch-date
+      anch-unit
+      anch-cli
       ${MySQL_LIBRARIES}
       )
   endif(ANCH_SQL_MYSQL)
@@ -375,6 +383,8 @@ if(ANCH_SQL_UNITARY_TEST)
       anch-postgresql
       anch-resource
       anch-date
+      anch-unit
+      anch-cli
       ${PostgreSQL_LIBRARIES}
       )
   endif(ANCH_SQL_POSTGRESQL)
@@ -400,6 +410,8 @@ if(ANCH_SQL_UNITARY_TEST)
       anch-sqlite
       anch-resource
       anch-date
+      anch-unit
+      anch-cli
       ${SQLite3_LIBRARIES}
       )
   endif(ANCH_SQL_SQLITE3)
@@ -472,20 +484,52 @@ if(ANCH_SQL_UNITARY_TEST)
   configure_file(test/db_con.conf db_con.conf COPYONLY)
   enable_testing()
   if(ANCH_SQL_MYSQL)
-    add_test(MySQL ${EXECUTABLE_OUTPUT_PATH}/anch-mysql-test main)
+    add_test(MySQL-query-manual-handling ${EXECUTABLE_OUTPUT_PATH}/anch-mysql-test -t 01-query-manual-handling)
+    add_test(MySQL-query-row-result-handling ${EXECUTABLE_OUTPUT_PATH}/anch-mysql-test -t 02-query-row-result-handling)
+    add_test(MySQL-query-result-set-handling ${EXECUTABLE_OUTPUT_PATH}/anch-mysql-test -t 03-query-result-set-handling)
+    add_test(MySQL-insert ${EXECUTABLE_OUTPUT_PATH}/anch-mysql-test -t 04-insert)
+    add_test(MySQL-update ${EXECUTABLE_OUTPUT_PATH}/anch-mysql-test -t 05-update)
+    add_test(MySQL-query-stmt-row-result-handling ${EXECUTABLE_OUTPUT_PATH}/anch-mysql-test -t 07-query-stmt-row-result-handling)
+    add_test(MySQL-insert-stmt ${EXECUTABLE_OUTPUT_PATH}/anch-mysql-test -t 08-insert-stmt)
+    add_test(MySQL-update-stmt ${EXECUTABLE_OUTPUT_PATH}/anch-mysql-test -t 09-update-stmt)
+    add_test(MySQL-transactions ${EXECUTABLE_OUTPUT_PATH}/anch-mysql-test -t 10-transactions)
+
     add_test(SQLConnectionFactoryMySQL ${EXECUTABLE_OUTPUT_PATH}anch-sql-connection-factory-test MySQL)
     set_tests_properties(SQLConnectionFactoryMySQL PROPERTIES ENVIRONMENT "LD_LIBRARY_PATH=./lib")
   endif(ANCH_SQL_MYSQL)
+
   if(ANCH_SQL_POSTGRESQL)
-    add_test(PostgreSQL ${EXECUTABLE_OUTPUT_PATH}/anch-postgresql-test main)
+    add_test(PostgreSQL-query-manual-handling ${EXECUTABLE_OUTPUT_PATH}/anch-postgresql-test -t 01-query-manual-handling)
+    add_test(PostgreSQL-query-row-result-handling ${EXECUTABLE_OUTPUT_PATH}/anch-postgresql-test -t 02-query-row-result-handling)
+    add_test(PostgreSQL-query-result-set-handling ${EXECUTABLE_OUTPUT_PATH}/anch-postgresql-test -t 03-query-result-set-handling)
+    add_test(PostgreSQL-insert ${EXECUTABLE_OUTPUT_PATH}/anch-postgresql-test -t 04-insert)
+    add_test(PostgreSQL-update ${EXECUTABLE_OUTPUT_PATH}/anch-postgresql-test -t 05-update)
+    add_test(PostgreSQL-query-stmt-row-result-handling ${EXECUTABLE_OUTPUT_PATH}/anch-postgresql-test -t 07-query-stmt-row-result-handling)
+    add_test(PostgreSQL-insert-stmt ${EXECUTABLE_OUTPUT_PATH}/anch-postgresql-test -t 08-insert-stmt)
+    add_test(PostgreSQL-update-stmt ${EXECUTABLE_OUTPUT_PATH}/anch-postgresql-test -t 09-update-stmt)
+    add_test(PostgreSQL-transactions ${EXECUTABLE_OUTPUT_PATH}/anch-postgresql-test -t 10-transactions)
+
     add_test(SQLConnectionFactoryPostgreSQL ${EXECUTABLE_OUTPUT_PATH}anch-sql-connection-factory-test PostgreSQL)
     set_tests_properties(SQLConnectionFactoryPostgreSQL PROPERTIES ENVIRONMENT "LD_LIBRARY_PATH=./lib")
   endif(ANCH_SQL_POSTGRESQL)
+
   if(ANCH_SQL_SQLITE3)
-    add_test(SQLite3 ${EXECUTABLE_OUTPUT_PATH}/anch-sqlite3-test main)
+    #add_test(SQLite3 ${EXECUTABLE_OUTPUT_PATH}/anch-sqlite3-test main)
+    add_test(SQLite3-query-manual-handling ${EXECUTABLE_OUTPUT_PATH}/anch-sqlite3-test -t query-manual-handling)
+    add_test(SQLite3-query-row-result-handling ${EXECUTABLE_OUTPUT_PATH}/anch-sqlite3-test -t query-row-result-handling)
+    add_test(SQLite3-query-result-set-handling ${EXECUTABLE_OUTPUT_PATH}/anch-sqlite3-test -t query-result-set-handling)
+    add_test(SQLite3-insert ${EXECUTABLE_OUTPUT_PATH}/anch-sqlite3-test -t insert)
+    add_test(SQLite3-update ${EXECUTABLE_OUTPUT_PATH}/anch-sqlite3-test -t update)
+    add_test(SQLite3-query-stmt-row-result-handling ${EXECUTABLE_OUTPUT_PATH}/anch-sqlite3-test -t query-stmt-row-result-handling)
+    add_test(SQLite3-insert-stmt ${EXECUTABLE_OUTPUT_PATH}/anch-sqlite3-test -t insert-stmt)
+    add_test(SQLite3-update-stmt ${EXECUTABLE_OUTPUT_PATH}/anch-sqlite3-test -t update-stmt)
+    add_test(SQLite3-transactions ${EXECUTABLE_OUTPUT_PATH}/anch-sqlite3-test -t transactions)
+
+
     add_test(SQLConnectionFactorySQLite ${EXECUTABLE_OUTPUT_PATH}anch-sql-connection-factory-test SQLite)
     set_tests_properties(SQLConnectionFactorySQLite PROPERTIES ENVIRONMENT "LD_LIBRARY_PATH=./lib")
   endif(ANCH_SQL_SQLITE3)
+
   add_test(SQLPrepareStatementPlaceholders ${EXECUTABLE_OUTPUT_PATH}anch-placeholders-test main)
   # SELECT builder unit test +
   add_test(SELECTwithoutFROMnorWHERE ${EXECUTABLE_OUTPUT_PATH}anch-select-builder-test 0_from_no_where)
@@ -497,7 +541,7 @@ if(ANCH_SQL_UNITARY_TEST)
   add_test(SelfJoinSubquery ${EXECUTABLE_OUTPUT_PATH}anch-select-builder-test self_join_subquery_no_where)
   add_test(NaturalJoin ${EXECUTABLE_OUTPUT_PATH}anch-select-builder-test natural_join_no_where)
   add_test(NaturalJoinSubquery ${EXECUTABLE_OUTPUT_PATH}anch-select-builder-test natural_join_subquery_no_where)
-  add_test(CrossJoin ${EXECUTABLE_OUTPUT_PATH}anch-select-builder-test cross_join_no_where)
+  add_test(CrossJoin ${EXECUTABLE_OUTPUT_PAmainTH}anch-select-builder-test cross_join_no_where)
   add_test(CrossJoinSubquery ${EXECUTABLE_OUTPUT_PATH}anch-select-builder-test cross_join_subquery_no_where)
   # SELECT builder unit test -
 
