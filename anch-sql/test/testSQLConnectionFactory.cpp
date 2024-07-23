@@ -6,6 +6,9 @@
 #include <functional>
 #include <string.h>
 
+#include "ut/assert.hpp"
+#include "ut/unit.hpp"
+
 using anch::sql::Connection;
 using anch::sql::SqlConnectionFactory;
 using anch::sql::SqlConnectionPool;
@@ -59,14 +62,23 @@ mapPersonRows(ResultSet& resSet, std::list<Person>& persons) {
   persons.push_back(person);
 }
 
-int
-main(int argc, char** argv) {
+SqlConnectionFactory* fact;
+
+void
+beforeAll() {
   std::cout << "Enter in SQL connection factory unit test" << std::endl;
+  fact = &(SqlConnectionFactory::getInstance());
+  std::cout << "Factory has been correctly initialized" << std::endl;
+}
 
+void
+afterAll() {
+  std::cout << "Exit SQL connection factory unit test" << std::endl;
+}
+
+void
+testSQLFactory(const std::string& db) {
   try {
-    SqlConnectionFactory& fact = SqlConnectionFactory::getInstance();
-    std::cout << "Factory has been correctly initialized" << std::endl;
-
     std::list<Person> values;
     values.push_back(Person("Batch Insert 1", "BATCH INSERT 1", "1990-01-01", "batch.insert1@yopmail.com"));
     values.push_back(Person("Batch Insert 2", "BATCH INSERT 2", "1990-02-02", "batch.insert2@yopmail.com"));
@@ -81,316 +93,114 @@ main(int argc, char** argv) {
     values.push_back(Person("Batch Insert 11", "BATCH INSERT 11", "1990-11-11", "batch.insert11@yopmail.com"));
     values.push_back(Person("Batch Insert 12", "BATCH INSERT 12", "1990-12-12", "batch.insert12@yopmail.com"));
 
-    bool all = true;
-    if(argc == 2) {
-      all = false;
-    }
-
     std::list<Person> persons;
-#ifdef ANCH_SQL_MYSQL
-    if(all || strcmp("MySQL", argv[1]) == 0) {
-      SqlConnectionPool& myPool = fact.getPool("anch_mysql");
-      std::cout << "Execute 'SELECT id,first_name,last_name,birth_date,email FROM T_Test' on MySQL database" << std::endl;
-      auto mysqlFct = std::bind(mapPersonRows, std::placeholders::_1, std::ref(persons));
-      myPool.borrowResource().get().queryMapRow("SELECT id,first_name,last_name,birth_date,email FROM T_Test", mysqlFct);
-      std::cout << "Found " << persons.size() << " persons." << std::endl;
-      for(const Person& pers : persons) {
-	std::cout << "Person " << pers._id << ":" << std::endl;
-	std::cout << "first name: " << pers._firstName << std::endl;
-	std::cout << "last name: " << pers._lastName << std::endl;
-	std::cout << "birth data: " << pers._birthDate << std::endl;
-	std::cout << "email: " << pers._email << std::endl;
-      }
 
-      std::cout << std::endl;
+    SqlConnectionPool& pool = fact->getPool(db);
 
-      persons.clear();
-      myPool.borrowResource().get().queryMapRow("SELECT id,first_name,last_name,birth_date,email FROM T_Test WHERE id IN (?,?,?)",
-						mysqlFct, // Row mapping function
-						1, 2, 3); // Parameters to bind to statement
-      std::cout << "Found " << persons.size() << " persons." << std::endl;
-      for(const Person& pers : persons) {
-	std::cout << "Person " << pers._id << ":" << std::endl;
-	std::cout << "first name: " << pers._firstName << std::endl;
-	std::cout << "last name: " << pers._lastName << std::endl;
-	std::cout << "birth data: " << pers._birthDate << std::endl;
-	std::cout << "email: " << pers._email << std::endl;
-      }
-
-      std::cout << std::endl;
-
-      myPool.borrowResource().get().batchUpdate<Person>("INSERT INTO T_Test (first_name,last_name,birth_date,email) VALUES (?,?,?,?)", [](PreparedStatement& stmt, const Person& pers) {
-	  stmt.set(1, pers._firstName);
-	  stmt.set(2, pers._lastName);
-	  stmt.set(3, pers._birthDate);
-	  stmt.set(4, pers._email);
-	}, values);
-
-      std::cout << std::endl;
-
-      persons.clear();
-      myPool.borrowResource().get().queryMapRow("SELECT id,first_name,last_name,birth_date,email FROM T_Test WHERE first_name LIKE 'Batch Insert %'", mysqlFct);
-      std::cout << "Found " << persons.size() << " persons." << std::endl;
-      for(const Person& pers : persons) {
-	std::cout << "Person " << pers._id << ":" << std::endl;
-	std::cout << "first name: " << pers._firstName << std::endl;
-	std::cout << "last name: " << pers._lastName << std::endl;
-	std::cout << "birth data: " << pers._birthDate << std::endl;
-	std::cout << "email: " << pers._email << std::endl;
-      }
-
-      std::cout << std::endl;
-
-      myPool.borrowResource().get().batchUpdate<Person>("UPDATE T_Test SET first_name = ?, last_name = ? WHERE id = ?", [](PreparedStatement& stmt, const Person& pers) {
-	  Person p;
-	  p._id = pers._id;
-	  p._firstName = pers._firstName;
-	  p._lastName = pers._lastName;
-	  stmt.set(1, p._firstName.replace(p._firstName.find_first_of(std::string("I")), 6, "Update"));
-	  stmt.set(2, p._lastName.replace(p._lastName.find_first_of(std::string("I")), 6, "UPDATE"));
-	  stmt.set(3, p._id);
-	}, persons);
-
-      std::cout << std::endl;
-
-      persons.clear();
-      myPool.borrowResource().get().queryMapRow("SELECT id,first_name,last_name,birth_date,email FROM T_Test WHERE first_name LIKE 'Batch Update %'", mysqlFct);
-      std::cout << "Found " << persons.size() << " persons." << std::endl;
-      for(const Person& pers : persons) {
-	std::cout << "Person " << pers._id << ":" << std::endl;
-	std::cout << "first name: " << pers._firstName << std::endl;
-	std::cout << "last name: " << pers._lastName << std::endl;
-	std::cout << "birth data: " << pers._birthDate << std::endl;
-	std::cout << "email: " << pers._email << std::endl;
-      }
-
-      std::cout << std::endl;
-
-      myPool.borrowResource().get().batchUpdate<Person>("DELETE FROM T_Test WHERE id = ?", [](PreparedStatement& stmt, const Person& pers) {
-	  stmt.set(1, pers._id);
-	}, persons);
-
-      std::cout << std::endl;
-
+    std::cout << "Execute 'SELECT id,first_name,last_name,birth_date,email FROM T_Test' on " << db << " database" << std::endl;
+    auto func = std::bind(mapPersonRows, std::placeholders::_1, std::ref(persons));
+    pool.borrowResource().get().queryMapRow("SELECT id,first_name,last_name,birth_date,email FROM T_Test", func);
+    std::cout << "Found " << persons.size() << " persons." << std::endl;
+    for(const Person& pers : persons) {
+      std::cout << "Person " << pers._id << ":" << std::endl;
+      std::cout << "first name: " << pers._firstName << std::endl;
+      std::cout << "last name: " << pers._lastName << std::endl;
+      std::cout << "birth data: " << pers._birthDate << std::endl;
+      std::cout << "email: " << pers._email << std::endl;
     }
-#endif // ANCH_SQL_MYSQL
 
-#ifdef ANCH_SQL_POSTGRESQL
-    if(all || strcmp("PostgreSQL", argv[1]) == 0) {
-      SqlConnectionPool& pgPool = fact.getPool("anch_pgsql");
-      persons.clear();
-      std::cout << "Execute 'SELECT id,first_name,last_name,birth_date,email FROM T_Test' on PostgreSQL database" << std::endl;
-      pgPool.borrowResource().get().queryMapRow("SELECT id,first_name,last_name,birth_date,email FROM T_Test", [&persons](ResultSet& resSet) {
-	  Person person;
-	  resSet.get<uint32_t>(0,person._id);
-	  resSet.get<std::string>(1,person._firstName);
-	  resSet.get<std::string>(2,person._lastName);
-	  resSet.get<std::string>(3,person._birthDate);
-	  resSet.get<std::string>(4,person._email);
-	  persons.push_back(person);
-	});
-      std::cout << "Found " << persons.size() << " persons." << std::endl;
-      for(const Person& pers : persons) {
-	std::cout << "Person " << pers._id << ":" << std::endl;
-	std::cout << "first name: " << pers._firstName << std::endl;
-	std::cout << "last name: " << pers._lastName << std::endl;
-	std::cout << "birth data: " << pers._birthDate << std::endl;
-	std::cout << "email: " << pers._email << std::endl;
-      }
+    std::cout << std::endl;
 
-      std::cout << std::endl;
-
-      persons.clear();
-      std::cout << "Execute 'SELECT id,first_name,last_name,birth_date,email FROM T_Test' on PostgreSQL database" << std::endl;
-      pgPool.borrowResource().get().queryMapRow("SELECT id,first_name,last_name,birth_date,email FROM T_Test WHERE id IN (?,?,?)", [&persons](ResultSet& resSet) {
-	  Person person;
-	  resSet.get<uint32_t>(0,person._id);
-	  resSet.get<std::string>(1,person._firstName);
-	  resSet.get<std::string>(2,person._lastName);
-	  resSet.get<std::string>(3,person._birthDate);
-	  resSet.get<std::string>(4,person._email);
-	  persons.push_back(person);
-	},
-	1, 2, 3);
-      std::cout << "Found " << persons.size() << " persons." << std::endl;
-      for(const Person& pers : persons) {
-	std::cout << "Person " << pers._id << ":" << std::endl;
-	std::cout << "first name: " << pers._firstName << std::endl;
-	std::cout << "last name: " << pers._lastName << std::endl;
-	std::cout << "birth data: " << pers._birthDate << std::endl;
-	std::cout << "email: " << pers._email << std::endl;
-      }
-
-      std::cout << std::endl;
-
-      pgPool.borrowResource().get().batchUpdate<Person>("INSERT INTO T_Test (first_name,last_name,birth_date,email) VALUES (?,?,?,?)", [](PreparedStatement& stmt, const Person& pers) {
-	  stmt.set(1, pers._firstName);
-	  stmt.set(2, pers._lastName);
-	  stmt.set(3, pers._birthDate);
-	  stmt.set(4, pers._email);
-	}, values);
-
-      std::cout << std::endl;
-
-      auto pgsqlFct = std::bind(mapPersonRows, std::placeholders::_1, std::ref(persons));
-      persons.clear();
-      pgPool.borrowResource().get().queryMapRow("SELECT id,first_name,last_name,birth_date,email FROM T_Test WHERE first_name LIKE 'Batch Insert %'", pgsqlFct);
-      std::cout << "Found " << persons.size() << " persons." << std::endl;
-      for(const Person& pers : persons) {
-	std::cout << "Person " << pers._id << ":" << std::endl;
-	std::cout << "first name: " << pers._firstName << std::endl;
-	std::cout << "last name: " << pers._lastName << std::endl;
-	std::cout << "birth data: " << pers._birthDate << std::endl;
-	std::cout << "email: " << pers._email << std::endl;
-      }
-
-      std::cout << std::endl;
-
-      pgPool.borrowResource().get().batchUpdate<Person>("UPDATE T_Test SET first_name = ?, last_name = ? WHERE id = ?", [](PreparedStatement& stmt, const Person& pers) {
-	  Person p;
-	  p._id = pers._id;
-	  p._firstName = pers._firstName;
-	  p._lastName = pers._lastName;
-	  stmt.set(1, p._firstName.replace(p._firstName.find_first_of(std::string("I")), 6, "Update"));
-	  stmt.set(2, p._lastName.replace(p._lastName.find_first_of(std::string("I")), 6, "UPDATE"));
-	  stmt.set(3, p._id);
-	}, persons);
-
-      std::cout << std::endl;
-
-      persons.clear();
-      pgPool.borrowResource().get().queryMapRow("SELECT id,first_name,last_name,birth_date,email FROM T_Test WHERE first_name LIKE 'Batch Update %'", pgsqlFct);
-      std::cout << "Found " << persons.size() << " persons." << std::endl;
-      for(const Person& pers : persons) {
-	std::cout << "Person " << pers._id << ":" << std::endl;
-	std::cout << "first name: " << pers._firstName << std::endl;
-	std::cout << "last name: " << pers._lastName << std::endl;
-	std::cout << "birth data: " << pers._birthDate << std::endl;
-	std::cout << "email: " << pers._email << std::endl;
-      }
-
-      std::cout << std::endl;
-
-      pgPool.borrowResource().get().batchUpdate<Person>("DELETE FROM T_Test WHERE id = ?", [](PreparedStatement& stmt, const Person& pers) {
-	  stmt.set(1, pers._id);
-	}, persons);
-
-      std::cout << std::endl;
-
+    persons.clear();
+    pool.borrowResource().get().queryMapRow("SELECT id,first_name,last_name,birth_date,email FROM T_Test WHERE id IN (?,?,?)",
+					    func, // Row mapping function
+					    1, 2, 3); // Parameters to bind to statement
+    std::cout << "Found " << persons.size() << " persons." << std::endl;
+    for(const Person& pers : persons) {
+      std::cout << "Person " << pers._id << ":" << std::endl;
+      std::cout << "first name: " << pers._firstName << std::endl;
+      std::cout << "last name: " << pers._lastName << std::endl;
+      std::cout << "birth data: " << pers._birthDate << std::endl;
+      std::cout << "email: " << pers._email << std::endl;
     }
-#endif // ANCH_SQL_POSTGRESQL
 
-#ifdef ANCH_SQL_SQLITE3
-    if(all || strcmp("SQLite", argv[1]) == 0) {
-      Connection* sqliteCon = fact.createConnection("anch_sqlite");
-      persons.clear();
-      std::cout << "Execute 'SELECT id,first_name,last_name,birth_date,email FROM T_Test' on SQLite3 database" << std::endl;
-      sqliteCon->queryMapRow("SELECT id,first_name,last_name,birth_date,email FROM T_Test", [&persons](ResultSet& resSet) {
-	  Person person;
-	  resSet.get<uint32_t>(0,person._id);
-	  resSet.get<std::string>(1,person._firstName);
-	  resSet.get<std::string>(2,person._lastName);
-	  resSet.get<std::string>(3,person._birthDate);
-	  resSet.get<std::string>(4,person._email);
-	  persons.push_back(person);
-	});
-      std::cout << "Found " << persons.size() << " persons." << std::endl;
-      for(const Person& pers : persons) {
-	std::cout << "Person " << pers._id << ":" << std::endl;
-	std::cout << "first name: " << pers._firstName << std::endl;
-	std::cout << "last name: " << pers._lastName << std::endl;
-	std::cout << "birth data: " << pers._birthDate << std::endl;
-	std::cout << "email: " << pers._email << std::endl;
-      }
+    std::cout << std::endl;
 
-      std::cout << std::endl;
+    pool.borrowResource().get().batchUpdate<Person>("INSERT INTO T_Test (first_name,last_name,birth_date,email) VALUES (?,?,?,?)", [](PreparedStatement& stmt, const Person& pers) {
+      stmt.set(1, pers._firstName);
+      stmt.set(2, pers._lastName);
+      stmt.set(3, pers._birthDate);
+      stmt.set(4, pers._email);
+    }, values);
 
-      persons.clear();
-      std::cout << "Execute 'SELECT id,first_name,last_name,birth_date,email FROM T_Test' on PostgreSQL database" << std::endl;
-      sqliteCon->queryMapRow("SELECT id,first_name,last_name,birth_date,email FROM T_Test WHERE id IN (?,?,?)", [&persons](ResultSet& resSet) {
-	  Person person;
-	  resSet.get<uint32_t>(0,person._id);
-	  resSet.get<std::string>(1,person._firstName);
-	  resSet.get<std::string>(2,person._lastName);
-	  resSet.get<std::string>(3,person._birthDate);
-	  resSet.get<std::string>(4,person._email);
-	  persons.push_back(person);
-	},
-	1, 2, 3);
-      std::cout << "Found " << persons.size() << " persons." << std::endl;
-      for(const Person& pers : persons) {
-	std::cout << "Person " << pers._id << ":" << std::endl;
-	std::cout << "first name: " << pers._firstName << std::endl;
-	std::cout << "last name: " << pers._lastName << std::endl;
-	std::cout << "birth data: " << pers._birthDate << std::endl;
-	std::cout << "email: " << pers._email << std::endl;
-      }
+    std::cout << std::endl;
 
-      std::cout << std::endl;
-
-      sqliteCon->batchUpdate<Person>("INSERT INTO T_Test (first_name,last_name,birth_date,email) VALUES (?,?,?,?)", [](PreparedStatement& stmt, const Person& pers) {
-	  stmt.set(1, pers._firstName);
-	  stmt.set(2, pers._lastName);
-	  stmt.set(3, pers._birthDate);
-	  stmt.set(4, pers._email);
-	}, values);
-
-      std::cout << std::endl;
-
-      auto sqliteFct = std::bind(mapPersonRows, std::placeholders::_1, std::ref(persons));
-      persons.clear();
-      sqliteCon->queryMapRow("SELECT id,first_name,last_name,birth_date,email FROM T_Test WHERE first_name LIKE 'Batch Insert %'", sqliteFct);
-      std::cout << "Found " << persons.size() << " persons." << std::endl;
-      for(const Person& pers : persons) {
-	std::cout << "Person " << pers._id << ":" << std::endl;
-	std::cout << "first name: " << pers._firstName << std::endl;
-	std::cout << "last name: " << pers._lastName << std::endl;
-	std::cout << "birth data: " << pers._birthDate << std::endl;
-	std::cout << "email: " << pers._email << std::endl;
-      }
-
-      std::cout << std::endl;
-
-      sqliteCon->batchUpdate<Person>("UPDATE T_Test SET first_name = ?, last_name = ? WHERE id = ?", [](PreparedStatement& stmt, const Person& pers) {
-	  Person p;
-	  p._id = pers._id;
-	  p._firstName = pers._firstName;
-	  p._lastName = pers._lastName;
-	  stmt.set(1, p._firstName.replace(p._firstName.find_first_of(std::string("I")), 6, "Update"));
-	  stmt.set(2, p._lastName.replace(p._lastName.find_first_of(std::string("I")), 6, "UPDATE"));
-	  stmt.set(3, p._id);
-	}, persons);
-
-      std::cout << std::endl;
-
-      persons.clear();
-      sqliteCon->queryMapRow("SELECT id,first_name,last_name,birth_date,email FROM T_Test WHERE first_name LIKE 'Batch Update %'", sqliteFct);
-      std::cout << "Found " << persons.size() << " persons." << std::endl;
-      for(const Person& pers : persons) {
-	std::cout << "Person " << pers._id << ":" << std::endl;
-	std::cout << "first name: " << pers._firstName << std::endl;
-	std::cout << "last name: " << pers._lastName << std::endl;
-	std::cout << "birth data: " << pers._birthDate << std::endl;
-	std::cout << "email: " << pers._email << std::endl;
-      }
-
-      std::cout << std::endl;
-
-      sqliteCon->batchUpdate<Person>("DELETE FROM T_Test WHERE id = ?", [](PreparedStatement& stmt, const Person& pers) {
-	  stmt.set(1, pers._id);
-	}, persons);
-
-      std::cout << std::endl;
-
-      delete sqliteCon;
+    persons.clear();
+    pool.borrowResource().get().queryMapRow("SELECT id,first_name,last_name,birth_date,email FROM T_Test WHERE first_name LIKE 'Batch Insert %'", func);
+    std::cout << "Found " << persons.size() << " persons." << std::endl;
+    for(const Person& pers : persons) {
+      std::cout << "Person " << pers._id << ":" << std::endl;
+      std::cout << "first name: " << pers._firstName << std::endl;
+      std::cout << "last name: " << pers._lastName << std::endl;
+      std::cout << "birth data: " << pers._birthDate << std::endl;
+      std::cout << "email: " << pers._email << std::endl;
     }
-#endif // ANCH_SQL_SQLITE3
+
+    std::cout << std::endl;
+
+    pool.borrowResource().get().batchUpdate<Person>("UPDATE T_Test SET first_name = ?, last_name = ? WHERE id = ?", [](PreparedStatement& stmt, const Person& pers) {
+      Person p;
+      p._id = pers._id;
+      p._firstName = pers._firstName;
+      p._lastName = pers._lastName;
+      stmt.set(1, p._firstName.replace(p._firstName.find_first_of(std::string("I")), 6, "Update"));
+      stmt.set(2, p._lastName.replace(p._lastName.find_first_of(std::string("I")), 6, "UPDATE"));
+      stmt.set(3, p._id);
+    }, persons);
+
+    std::cout << std::endl;
+
+    persons.clear();
+    pool.borrowResource().get().queryMapRow("SELECT id,first_name,last_name,birth_date,email FROM T_Test WHERE first_name LIKE 'Batch Update %'", func);
+    std::cout << "Found " << persons.size() << " persons." << std::endl;
+    for(const Person& pers : persons) {
+      std::cout << "Person " << pers._id << ":" << std::endl;
+      std::cout << "first name: " << pers._firstName << std::endl;
+      std::cout << "last name: " << pers._lastName << std::endl;
+      std::cout << "birth data: " << pers._birthDate << std::endl;
+      std::cout << "email: " << pers._email << std::endl;
+    }
+
+    std::cout << std::endl;
+
+    pool.borrowResource().get().batchUpdate<Person>("DELETE FROM T_Test WHERE id = ?", [](PreparedStatement& stmt, const Person& pers) {
+      stmt.set(1, pers._id);
+    }, persons);
+
+    std::cout << std::endl;
 
   } catch(const SqlException& e) {
-    std::cerr << "Error: " << e.what() << std::endl;
-    return 1;
+    std::ostringstream oss;
+    oss << "Error: " << e.what();
+    anch::ut::fail(oss.str());
   }
+}
 
-  std::cout << "Exit SQL connection factory unit test" << std::endl;
-  return 0;
+void
+anch::ut::setup(anch::ut::UnitTests& tests) {
+  tests
+    .name("AnCH SQL factory unit tests")
+    .description("Test AnCH SQL factory library")
+    .initialize(beforeAll)
+    .uninitialize(afterAll)
+#ifdef ANCH_SQL_MYSQL
+    .add("sql-factory-mysql", std::bind(testSQLFactory, "anch_mysql"))
+#endif
+#ifdef ANCH_SQL_POSTGRESQL
+    .add("sql-factory-postgresql", std::bind(testSQLFactory, "anch_pgsql"))
+#endif
+#ifdef ANCH_SQL_SQLITE3
+    .add("sql-factory-sqlite3", std::bind(testSQLFactory, "anch_sqlite"))
+#endif
+    ;
 }

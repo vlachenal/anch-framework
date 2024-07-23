@@ -435,6 +435,8 @@ if(ANCH_SQL_UNITARY_TEST)
     anch-sql
     anch-resource
     anch-date
+    anch-unit
+    anch-cli
     )
   # Build SQL connection factory test -
 
@@ -496,7 +498,7 @@ if(ANCH_SQL_UNITARY_TEST)
     add_test(MySQL-update-stmt ${EXECUTABLE_OUTPUT_PATH}/anch-mysql-test -t 09-update-stmt)
     add_test(MySQL-transactions ${EXECUTABLE_OUTPUT_PATH}/anch-mysql-test -t 10-transactions)
 
-    add_test(SQLConnectionFactoryMySQL ${EXECUTABLE_OUTPUT_PATH}anch-sql-connection-factory-test MySQL)
+    add_test(SQLConnectionFactoryMySQL ${EXECUTABLE_OUTPUT_PATH}anch-sql-connection-factory-test -t sql-factory-mysql)
     set_tests_properties(SQLConnectionFactoryMySQL PROPERTIES ENVIRONMENT "LD_LIBRARY_PATH=./lib")
   endif(ANCH_SQL_MYSQL)
 
@@ -511,7 +513,7 @@ if(ANCH_SQL_UNITARY_TEST)
     add_test(PostgreSQL-update-stmt ${EXECUTABLE_OUTPUT_PATH}/anch-postgresql-test -t 09-update-stmt)
     add_test(PostgreSQL-transactions ${EXECUTABLE_OUTPUT_PATH}/anch-postgresql-test -t 10-transactions)
 
-    add_test(SQLConnectionFactoryPostgreSQL ${EXECUTABLE_OUTPUT_PATH}anch-sql-connection-factory-test PostgreSQL)
+    add_test(SQLConnectionFactoryPostgreSQL ${EXECUTABLE_OUTPUT_PATH}anch-sql-connection-factory-test -t sql-factory-postgresql)
     set_tests_properties(SQLConnectionFactoryPostgreSQL PROPERTIES ENVIRONMENT "LD_LIBRARY_PATH=./lib")
   endif(ANCH_SQL_POSTGRESQL)
 
@@ -526,10 +528,11 @@ if(ANCH_SQL_UNITARY_TEST)
     add_test(SQLite3-update-stmt ${EXECUTABLE_OUTPUT_PATH}/anch-sqlite3-test -t update-stmt)
     add_test(SQLite3-transactions ${EXECUTABLE_OUTPUT_PATH}/anch-sqlite3-test -t transactions)
 
-    add_test(SQLConnectionFactorySQLite ${EXECUTABLE_OUTPUT_PATH}anch-sql-connection-factory-test SQLite)
+    add_test(SQLConnectionFactorySQLite ${EXECUTABLE_OUTPUT_PATH}anch-sql-connection-factory-test -t sql-factory-sqlite3)
     set_tests_properties(SQLConnectionFactorySQLite PROPERTIES ENVIRONMENT "LD_LIBRARY_PATH=./lib")
   endif(ANCH_SQL_SQLITE3)
 
+  # Prepared statement placeholders +
   add_test(SqlStmtWC-select-2-wildcards ${EXECUTABLE_OUTPUT_PATH}anch-placeholders-test -t select-2-wildcards)
   add_test(SqlStmtWC-select-2-wildcards-1-fixed ${EXECUTABLE_OUTPUT_PATH}anch-placeholders-test -t select-2-wildcards-1-fixed)
   add_test(SqlStmtWC-select-1-wildcard-1-fixed-1-wildcard ${EXECUTABLE_OUTPUT_PATH}anch-placeholders-test -t select-1-wildcard-1-fixed-1-wildcard)
@@ -548,6 +551,7 @@ if(ANCH_SQL_UNITARY_TEST)
   add_test(SqlStmtWC-select-in ${EXECUTABLE_OUTPUT_PATH}anch-placeholders-test -t select-in)
   add_test(SqlStmtWC-select-in-1F ${EXECUTABLE_OUTPUT_PATH}anch-placeholders-test -t select-in-1F)
   add_test(SqlStmtWC-select-postgres ${EXECUTABLE_OUTPUT_PATH}anch-placeholders-test -t select-postgres)
+  # Prepared statement placeholders -
 
   # SELECT builder unit test +
   add_test(SELECTwithoutFROMnorWHERE ${EXECUTABLE_OUTPUT_PATH}anch-select-builder-test 0_from_no_where)
