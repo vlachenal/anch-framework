@@ -7,9 +7,12 @@
 #include <assert.h>
 #include <any>
 
+#include "ut/assert.hpp"
+#include "ut/unit.hpp"
+
 using anch::sql::SQLQuery;
 
-std::map<std::string, std::function<void()>> TEST_SUITE;
+// std::map<std::string, std::function<void()>> TEST_SUITE;
 
 
 void
@@ -185,49 +188,22 @@ testQueryJoinWithoutValidClause() {
 }
 
 void
-registerTests() {
-  TEST_SUITE["0_from_no_where"] = testNoFromNoWhere;
-  TEST_SUITE["1_from_no_where"] = testQuerySingleColSingleTableWithoutWhere;
-  TEST_SUITE["distinct_1_from_no_where"] = testQueryDistinctSingleColSingleTableWithoutWhere;
-  TEST_SUITE["1_as_from_no_where"] = testQuerySingleColWithAliasSingleTableWithoutWhere;
-  TEST_SUITE["2_from_no_where"] = testQuerySingleTableWithoutWhere;
-  TEST_SUITE["self_join_no_where"] = testQueryWithoutWhere;
-  TEST_SUITE["self_join_subquery_no_where"] = testQueryWithSubqueryWithoutWhere;
-  TEST_SUITE["natural_join_no_where"] = testQueryNaturalJoinWithoutWhere;
-  TEST_SUITE["natural_join_subquery_no_where"] = testQueryNaturalJoinWithSubqueryWithoutWhere;
-  TEST_SUITE["cross_join_no_where"] = testQueryCrossJoinWithoutWhere;
-  TEST_SUITE["cross_join_subquery_no_where"] = testQueryCrossJoinWithSubqueryWithoutWhere;
-  TEST_SUITE["inner_join_no_where"] = testQueryInnerJoinWithoutWhere;
-  TEST_SUITE["inner_join_without_valid_clause"] = testQueryJoinWithoutValidClause;
-}
-
-int
-main(int argc, char** argv) {
-  registerTests();
-
-  bool allTests = true;
-  if(argc > 1) {
-    allTests = false;
-  }
-
-  if(allTests) {
-    std::cout << "Run all tests" << std::endl;
-    for(auto iter = TEST_SUITE.cbegin() ; iter != TEST_SUITE.cend() ; ++iter) {
-      std::cout << "Run unit test: " << iter->first << std::endl;
-      iter->second();
-    }
-
-  } else {
-    for(int i = 1 ; i < argc ; ++i) {
-      std::cout << "Run unit test: " << argv[i] << std::endl;
-      auto iter = TEST_SUITE.find(argv[i]);
-      if(iter == TEST_SUITE.cend()) {
-	std::cout << "Test " << argv[i] << " does not exist. CONTINUE." << std::endl;
-      } else {
-	iter->second();
-      }
-    }
-  }
-
-  return 0;
+anch::ut::setup(anch::ut::UnitTests& tests) {
+  tests
+    .name("AnCH select builder unit tests")
+    .description("Test AnCH select builder library")
+    .add("0_from_no_where", testNoFromNoWhere)
+    .add("1_from_no_where", testQuerySingleColSingleTableWithoutWhere)
+    .add("distinct_1_from_no_where", testQueryDistinctSingleColSingleTableWithoutWhere)
+    .add("1_as_from_no_where", testQuerySingleColWithAliasSingleTableWithoutWhere)
+    .add("2_from_no_where", testQuerySingleTableWithoutWhere)
+    .add("self_join_no_where", testQueryWithoutWhere)
+    .add("self_join_subquery_no_where", testQueryWithSubqueryWithoutWhere)
+    .add("natural_join_no_where", testQueryNaturalJoinWithoutWhere)
+    .add("natural_join_subquery_no_where", testQueryNaturalJoinWithSubqueryWithoutWhere)
+    .add("cross_join_no_where", testQueryCrossJoinWithoutWhere)
+    .add("cross_join_subquery_no_where", testQueryCrossJoinWithSubqueryWithoutWhere)
+    .add("inner_join_no_where", testQueryInnerJoinWithoutWhere)
+    .add("inner_join_without_valid_clause", testQueryJoinWithoutValidClause)
+    ;
 }
