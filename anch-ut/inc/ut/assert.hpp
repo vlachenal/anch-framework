@@ -21,7 +21,6 @@
 
 #include <string>
 #include <string_view>
-#include <format>
 
 namespace anch::ut {
 

@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include <format>
+
 #include "ut/error.hpp"
 
 namespace anch::ut {
