@@ -36,13 +36,11 @@ namespace anch::ut {
     assertTrue(false, message);
   }
 
-#ifdef ANCH_PLOP
   template<typename... T>
-  assert(bool check, const std::string_view& message, const T&... args) {
+  void assert(bool check, std::string_view message, const T&... args) {
     if(!check) {
-      throw anch::ut::AssertException(std::format(message, args));
+      anch::ut::fail(std::vformat(message, std::make_format_args(args...)));
     }
   }
-#endif
 
 }

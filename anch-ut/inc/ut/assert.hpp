@@ -21,6 +21,7 @@
 
 #include <string>
 #include <string_view>
+#include <format>
 
 namespace anch::ut {
 
@@ -47,10 +48,17 @@ namespace anch::ut {
    */
   void fail(const std::string& message = "");
 
-#ifdef ANCH_PLOP
+  /*!
+   * Assert clause with error message formatting
+   *
+   * \tparam T the arguments
+   *
+   * \param check \c true if test is OK, \c false otherwise
+   * \param message the message which have to be formatted
+   * \param args the message's arguments
+   */
   template<typename... T>
-  void assert(bool check, const std::string_view& message, const T&... args);
-#endif
+  void assert(bool check, std::string_view message, const T&... args);
 
 }  // anch::ut
 

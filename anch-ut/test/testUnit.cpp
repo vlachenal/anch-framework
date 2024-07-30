@@ -41,6 +41,12 @@ testAssert() {
 }
 
 void
+testAssertFormat() {
+  std::cout << "Assert" << std::endl;
+  anch::ut::assert(false, "format message: int={}, float={}, str={}", 2, 3.14, "toto");
+}
+
+void
 anch::ut::setup(anch::ut::UnitTests& tests) {
   tests
     .name("AnCH unit tests")
@@ -52,5 +58,6 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("nothing", testNothing)
     .add("exception", testException)
     .add("assert", testAssert)
+    .add("assert-format", testAssertFormat)
     ;
 }

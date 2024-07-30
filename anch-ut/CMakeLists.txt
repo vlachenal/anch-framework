@@ -116,10 +116,12 @@ if(ANCH_UNIT_UNITARY_TEST)
   add_test(anch-unit-test-nothing ${EXECUTABLE_OUTPUT_PATH}/anch-unit-test -t nothing)
   add_test(anch-unit-test-exception ${EXECUTABLE_OUTPUT_PATH}/anch-unit-test -t exception)
   add_test(anch-unit-test-assert ${EXECUTABLE_OUTPUT_PATH}/anch-unit-test -t assert)
+  add_test(anch-unit-test-assert-format ${EXECUTABLE_OUTPUT_PATH}/anch-unit-test -t assert-format)
 
   set_tests_properties(anch-unit-test PROPERTIES WILL_FAIL TRUE)
   set_tests_properties(anch-unit-test-all PROPERTIES WILL_FAIL TRUE)
   set_tests_properties(anch-unit-test-exception PROPERTIES WILL_FAIL TRUE)
   set_tests_properties(anch-unit-test-assert PROPERTIES WILL_FAIL TRUE)
+  set_tests_properties(anch-unit-test-assert-format PROPERTIES WILL_FAIL TRUE)
 
 endif(ANCH_UNIT_UNITARY_TEST)
