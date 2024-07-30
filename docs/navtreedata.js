@@ -107,6 +107,13 @@ var NAVTREE =
       ] ],
       [ "Example", "page_sql.html#sql_example_sec", null ]
     ] ],
+    [ "AnCH unit tests library documentation", "page_ut.html", [
+      [ "Introduction", "page_ut.html#ut_intro_seq", null ],
+      [ "Prerequisites", "page_ut.html#ut_prereq_sec", null ],
+      [ "Installation", "page_ut.html#ut_install_sec", null ],
+      [ "Conception", "page_ut.html#ut_concept_sec", null ],
+      [ "Examples", "page_ut.html#ut_example_sec", null ]
+    ] ],
     [ "AnCH UUID library documentation", "page_uuid.html", [
       [ "Introduction", "page_uuid.html#uuid_intro_seq", null ],
       [ "Prerequisites", "page_uuid.html#uuid_prereq_sec", null ],
@@ -157,8 +164,8 @@ var NAVTREEINDEX =
 "classanch_1_1sql_1_1_prepared_statement.html#a599db5c625e6978aa0f17ed2a31e8bf6",
 "classanch_1_1ut_1_1_socket_client_runner.html#a37b634c90717e5fc3373f66a1389ce8a",
 "mysql_prepared_statement_8hpp_source.html",
-"second_formatter_8hpp_source.html",
-"structanch_1_1sql_1_1_sql_connection_configuration.html#a1bf43aadc0328ac47863c6848ee20518"
+"resource_pool_8hpp_source.html",
+"structanch_1_1sql_1_1_s_q_l_shared_library.html#aae3e0210c78aec638733c217de40c0d2"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

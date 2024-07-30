@@ -1,0 +1,103 @@
+/*! \page page_ut AnCH unit tests library documentation
+ *
+ * \tableofcontents
+ *
+ * \section ut_intro_seq Introduction
+ *
+ * AnCH unit tests library is unit tests library which provides utility class and functions to generate unit tests.
+ *
+ * \section ut_prereq_sec Prerequisites
+ *
+ * AnCH unit tests depends on anch-cli library to parse unit tests executable.
+ *
+ * \section ut_install_sec Installation
+ *
+ * make install
+ *
+ * \section ut_concept_sec Conception
+ *
+ * AnCH unit tests library provides \c main function which will execute the following calls:
+ * - a function before all tests: \c anch::ut::UnitTests::initialize
+ * - a function before each test: \c anch::ut::UnitTests::beforeTest
+ * - the test(s): \c anch::ut::UnitTests::add
+ * - a function after each test: \c anch::ut::UnitTests::afterTest
+ * - a function after all tests: \c anch::ut::UnitTests::uninitialize
+ *
+ * These functions can be registered with the following signature \c std::function<void()> and can throw exceptions which will be caught by the library.\n
+ * To register tests, function \c anch::ut::setup(anch::ut::UnitTests&) has to be declared.\n
+ *\n
+ * Unit tests name and description can be registered in this function with \c name and \c description \c anch::ut::UnitTests methods.\n
+ *\n
+ * It will make executable with \c help argument (\c -h or \c --help for help): \c -l or \c --list-tests to list registered unit test, \c -t or \c --test <the test to run> to run a specific test and nothing to run all tests.\n
+ *\n
+ * \c anch::ut::assert function is based on \c std::format function with \c {} paceholders.
+ *
+ * \section ut_example_sec Examples
+ *
+ * Serialize structure into JSON format:
+ * \code{.cpp}
+ #include "ut/unit.hpp"
+
+#include <iostream>
+#include "ut/assert.hpp"
+
+void
+startup() {
+  std::cout << "Initialize tests suite" << std::endl;
+}
+
+void
+before() {
+  std::cout << "Before test" << std::endl;
+}
+
+void
+after() {
+  std::cout << "After test" << std::endl;
+}
+
+void
+shutdown() {
+  std::cout << "Uninitialize tests suite" << std::endl;
+}
+
+void
+testNothing() {
+  std::cout << "Nothing" << std::endl;
+}
+
+void
+testException() {
+  std::cout << "Exception" << std::endl;
+  throw std::exception();
+}
+
+void
+testAssert() {
+  std::cout << "Assert" << std::endl;
+  anch::ut::assertFalse(true, "ASSERT !!!");
+}
+
+void
+testAssertFormat() {
+  std::cout << "Assert" << std::endl;
+  anch::ut::assert(false, "format message: int={}, float={}, str={}", 2, 3.14, "toto");
+}
+
+void
+anch::ut::setup(anch::ut::UnitTests& tests) {
+  tests
+    .name("AnCH unit tests")
+    .description("Test AnCH unit tests library")
+    .initialize(startup)
+    .beforeTest(before)
+    .afterTest(after)
+    .uninitialize(shutdown)
+    .add("nothing", testNothing)
+    .add("exception", testException)
+    .add("assert", testAssert)
+    .add("assert-format", testAssertFormat)
+    ;
+}
+\endcode
+ */

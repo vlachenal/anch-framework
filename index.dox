@@ -21,7 +21,7 @@
  * - \ref page_uuid "anch-uuid": provides UUID library.
  * - \ref page_json "anch-json": provides JSON serialization/deserialization library.
  * - \ref page_cli "anch-cli": provides command line interface utilities (parse arguments only for now).
- * - anch-ut: provides unit tests library (see other libraries unit tests for usage for now).
+ * - \ref page_ut "anch-ut": provides unit tests library.
  *
  * Each library contains unitary tests which can provide a way to use it.\n
  * \n

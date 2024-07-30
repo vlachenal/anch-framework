@@ -10,5 +10,6 @@ var searchData=
   ['anch_20resource_20library_20documentation_7',['AnCH resource library documentation',['../page_res.html',1,'']]],
   ['anch_20rest_20library_20documentation_8',['AnCH REST library documentation',['../page_rest.html',1,'']]],
   ['anch_20sql_20library_20documentation_9',['AnCH SQL library documentation',['../page_sql.html',1,'']]],
-  ['anch_20uuid_20library_20documentation_10',['AnCH UUID library documentation',['../page_uuid.html',1,'']]]
+  ['anch_20unit_20tests_20library_20documentation_10',['AnCH unit tests library documentation',['../page_ut.html',1,'']]],
+  ['anch_20uuid_20library_20documentation_11',['AnCH UUID library documentation',['../page_uuid.html',1,'']]]
 ];
