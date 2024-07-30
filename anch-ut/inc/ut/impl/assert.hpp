@@ -21,11 +21,6 @@
 
 #include "ut/error.hpp"
 
-#ifdef ANCH_PLOP
-#include <string_view>
-#include <format>
-#endif
-
 namespace anch::ut {
 
   inline void assertFalse(bool check, const std::string& message) {
