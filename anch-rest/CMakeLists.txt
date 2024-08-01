@@ -219,9 +219,16 @@ endif(ANCH_REST_CLIENT_LIB)
 # Unitary tests
 if(ANCH_REST_UNITARY_TEST)
 
+  include_directories(
+    ${ANCH_UT_INCLUDES_DIR}
+    ${ANCH_CLI_INCLUDES_DIR}
+    )
+
   link_directories(
     ${ANCH_UUID_LIBRARY_DIR}
     ${ANCH_JSON_LIBRARY_DIR}
+    ${ANCH_CLI_LIBRARY_DIR}
+    ${ANCH_UT_LIBRARY_DIR}
     )
 
   if(ANCH_REST_SERVER_LIB)
@@ -243,6 +250,8 @@ if(ANCH_REST_UNITARY_TEST)
       anch-rest-router
       anch-uuid
       anch-json
+      anch-cli
+      anch-unit
       )
     # Build router unit tests -
 
@@ -262,29 +271,38 @@ if(ANCH_REST_UNITARY_TEST)
       anch-rest-common
       anch-uuid
       anch-json
+      anch-cli
+      anch-unit
       )
   endif(ANCH_REST_SERVER_LIB)
 
   enable_testing()
 
-  add_test(mapper-JSON ${EXECUTABLE_OUTPUT_PATH}/anch-mapper-registry-test plop)
+  add_test(mapper-tata-json-ok ${EXECUTABLE_OUTPUT_PATH}/anch-mapper-registry-test -t test_ser_tata_json)
+  add_test(mapper-tata-txt-ko ${EXECUTABLE_OUTPUT_PATH}/anch-mapper-registry-test -t test_ser_tata_txt)
+  add_test(mapper-toto-json-ko ${EXECUTABLE_OUTPUT_PATH}/anch-mapper-registry-test -t test_ser_toto_json)
+  add_test(mapper-toto-txt-ko ${EXECUTABLE_OUTPUT_PATH}/anch-mapper-registry-test -t test_ser_toto_txt)
+
+  set_tests_properties(mapper-tata-txt-ko PROPERTIES WILL_FAIL TRUE)
+  set_tests_properties(mapper-toto-json-ko PROPERTIES WILL_FAIL TRUE)
+  set_tests_properties(mapper-toto-txt-ko PROPERTIES WILL_FAIL TRUE)
 
   if(ANCH_REST_SERVER_LIB)
-    add_test(router-GET-no-param-no-body-OK ${EXECUTABLE_OUTPUT_PATH}/anch-router-test test_no_param_no_body_ok)
-    add_test(router-GET-1-param-no-body-OK ${EXECUTABLE_OUTPUT_PATH}/anch-router-test test_1_param_no_body_ok)
-    add_test(router-GET-1-int-param-no-body-OK ${EXECUTABLE_OUTPUT_PATH}/anch-router-test test_1_int_param_no_body_ok)
-    add_test(router-GET-1-int-param-no-body-KO ${EXECUTABLE_OUTPUT_PATH}/anch-router-test test_1_int_param_no_body_ko)
-    add_test(router-GET-1-view-param-no-body-OK ${EXECUTABLE_OUTPUT_PATH}/anch-router-test test_1_view_param_no_body_ok)
-    add_test(router-POST-error-405 ${EXECUTABLE_OUTPUT_PATH}/anch-router-test test_error_405)
-    add_test(router-GET-error-406 ${EXECUTABLE_OUTPUT_PATH}/anch-router-test test_error_406)
-    add_test(router-GET-error-415 ${EXECUTABLE_OUTPUT_PATH}/anch-router-test test_error_415)
-    add_test(router-GET-error-404 ${EXECUTABLE_OUTPUT_PATH}/anch-router-test test_error_404)
-    add_test(router-GET-uuid-ok ${EXECUTABLE_OUTPUT_PATH}/anch-router-test test_uuid_ok)
-    add_test(router-GET-uuid-400 ${EXECUTABLE_OUTPUT_PATH}/anch-router-test test_uuid_ko)
-    add_test(router-GET-multi-parameters-ok ${EXECUTABLE_OUTPUT_PATH}/anch-router-test test_multi_ok)
-    add_test(router-GET-lambda-ok ${EXECUTABLE_OUTPUT_PATH}/anch-router-test test_lambda_ok)
-    add_test(router-GET-json-ok ${EXECUTABLE_OUTPUT_PATH}/anch-router-test test_res_json_ok)
-    add_test(router-GET-istream-ok ${EXECUTABLE_OUTPUT_PATH}/anch-router-test test_res_istream_ok)
+    add_test(router-GET-no-param-no-body-OK ${EXECUTABLE_OUTPUT_PATH}/anch-router-test -t test_0_param_no_body_ok)
+    add_test(router-GET-1-param-no-body-OK ${EXECUTABLE_OUTPUT_PATH}/anch-router-test -t test_1_param_no_body_ok)
+    add_test(router-GET-1-int-param-no-body-OK ${EXECUTABLE_OUTPUT_PATH}/anch-router-test -t test_1_int_param_no_body_ok)
+    add_test(router-GET-1-int-param-no-body-KO ${EXECUTABLE_OUTPUT_PATH}/anch-router-test -t test_1_int_param_no_body_ko)
+    add_test(router-GET-1-view-param-no-body-OK ${EXECUTABLE_OUTPUT_PATH}/anch-router-test -t test_1_view_param_no_body_ok)
+    add_test(router-POST-error-405 ${EXECUTABLE_OUTPUT_PATH}/anch-router-test -t test_error_405)
+    add_test(router-GET-error-406 ${EXECUTABLE_OUTPUT_PATH}/anch-router-test -t test_error_406)
+    add_test(router-GET-error-415 ${EXECUTABLE_OUTPUT_PATH}/anch-router-test -t test_error_415)
+    add_test(router-GET-error-404 ${EXECUTABLE_OUTPUT_PATH}/anch-router-test -t test_error_404)
+    add_test(router-GET-uuid-ok ${EXECUTABLE_OUTPUT_PATH}/anch-router-test -t test_uuid_ok)
+    add_test(router-GET-uuid-400 ${EXECUTABLE_OUTPUT_PATH}/anch-router-test -t test_uuid_ko)
+    add_test(router-GET-multi-parameters-ok ${EXECUTABLE_OUTPUT_PATH}/anch-router-test -t test_multi_ok)
+    add_test(router-GET-lambda-ok ${EXECUTABLE_OUTPUT_PATH}/anch-router-test -t test_lambda_ok)
+    add_test(router-GET-json-ok ${EXECUTABLE_OUTPUT_PATH}/anch-router-test -t test_res_json_ok)
+    add_test(router-GET-istream-ok ${EXECUTABLE_OUTPUT_PATH}/anch-router-test -t test_res_istream_ok)
   endif(ANCH_REST_SERVER_LIB)
 
   if(ANCH_REST_CLIENT_LIB)

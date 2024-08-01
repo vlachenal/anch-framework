@@ -1,7 +1,6 @@
 #include <iostream>
 #include <map>
 #include <functional>
-#include <cassert>
 #include <csignal>
 #include <sstream>
 #include <fstream>
@@ -11,6 +10,9 @@
 #include "rest/constants.hpp"
 #include "json/json.hpp"
 #include "uuid.hpp"
+
+#include "ut/assert.hpp"
+#include "ut/unit.hpp"
 
 using anch::rest::Router;
 using anch::rest::Request;
@@ -57,7 +59,7 @@ testNoParam() {
   std::cout << "Request initialized" << std::endl;
   Response res = router.execute(req);
   std::cout << "Method executed: " << res.getStatus() << std::endl;
-  assert(res.getStatus() == static_cast<uint16_t>(StatusCode::OK));
+  anch::ut::assertTrue(res.getStatus() == static_cast<uint16_t>(StatusCode::OK));
   std::cout << "Exit testNoParam" << std::endl;
 }
 
@@ -80,7 +82,7 @@ testPathParam() {
   std::cout << "Request initialized" << std::endl;
   Response res = router.execute(req);
   std::cout << "Method executed: " << res.getStatus() << std::endl;
-  assert(res.getStatus() == static_cast<uint16_t>(StatusCode::OK));
+  anch::ut::assertTrue(res.getStatus() == static_cast<uint16_t>(StatusCode::OK));
   std::cout << "Exit testPathParam" << std::endl;
 }
 
@@ -102,7 +104,7 @@ testPathIntParam() {
     .build();
   Response res = router.execute(req);
   std::cout << "Method executed: " << res.getStatus() << std::endl;
-  assert(res.getStatus() == static_cast<uint16_t>(StatusCode::OK));
+  anch::ut::assertTrue(res.getStatus() == static_cast<uint16_t>(StatusCode::OK));
   std::cout << "Exit testPathIntParam" << std::endl;
 }
 
@@ -116,7 +118,7 @@ testPathIntParamKO() {
   std::cout << "Request initialized" << std::endl;
   Response res = router.execute(req);
   std::cout << "Method executed: " << res.getStatus() << std::endl;
-  assert(res.getStatus() == static_cast<uint16_t>(StatusCode::BAD_REQUEST));
+  anch::ut::assertTrue(res.getStatus() == static_cast<uint16_t>(StatusCode::BAD_REQUEST));
   std::cout << "Exit testPathIntParamKO" << std::endl;
 }
 
@@ -139,7 +141,7 @@ testPathViewParam() {
   std::cout << "Request initialized" << std::endl;
   Response res = router.execute(req);
   std::cout << "Method executed: " << res.getStatus() << std::endl;
-  assert(res.getStatus() == static_cast<uint16_t>(StatusCode::OK));
+  anch::ut::assertTrue(res.getStatus() == static_cast<uint16_t>(StatusCode::OK));
   std::cout << "Exit testPathViewParam" << std::endl;
 }
 
@@ -163,7 +165,7 @@ testPathErrorMethod() {
   std::cout << "Request initialized" << std::endl;
   Response res = router.execute(req);
   std::cout << "Method executed: " << res.getStatus() << std::endl;
-  assert(res.getStatus() == static_cast<uint16_t>(StatusCode::METHOD_NOT_ALLOWED));
+  anch::ut::assertTrue(res.getStatus() == static_cast<uint16_t>(StatusCode::METHOD_NOT_ALLOWED));
   std::cout << "Exit testPathErrorMethod" << std::endl;
 }
 
@@ -178,7 +180,7 @@ testPathErrorAccept() {
   std::cout << "Request initialized" << std::endl;
   Response res = router.execute(req);
   std::cout << "Method executed: " << res.getStatus() << std::endl;
-  assert(res.getStatus() == static_cast<uint16_t>(StatusCode::NOT_ACCEPTABLE));
+  anch::ut::assertTrue(res.getStatus() == static_cast<uint16_t>(StatusCode::NOT_ACCEPTABLE));
   std::cout << "Exit testPathErrorAccept" << std::endl;
 }
 
@@ -193,7 +195,7 @@ testPathErrorContent() {
   std::cout << "Request initialized" << std::endl;
   Response res = router.execute(req);
   std::cout << "Method executed: " << res.getStatus() << std::endl;
-  assert(res.getStatus() == static_cast<uint16_t>(StatusCode::UNSUPPORTED_MEDIA_TYPE));
+  anch::ut::assertTrue(res.getStatus() == static_cast<uint16_t>(StatusCode::UNSUPPORTED_MEDIA_TYPE));
   std::cout << "Exit testPathErrorContent" << std::endl;
 }
 
@@ -208,7 +210,7 @@ testPathErrorNotFound() {
   std::cout << "Request initialized" << std::endl;
   Response res = router.execute(req);
   std::cout << "Method executed: " << res.getStatus() << std::endl;
-  assert(res.getStatus() == static_cast<uint16_t>(StatusCode::NOT_FOUND));
+  anch::ut::assertTrue(res.getStatus() == static_cast<uint16_t>(StatusCode::NOT_FOUND));
   std::cout << "Exit testPathErrorNotFound" << std::endl;
 }
 
@@ -232,7 +234,7 @@ testPathUUID() {
   std::cout << "Request initialized" << std::endl;
   Response res = router.execute(req);
   std::cout << "Method executed: " << res.getStatus() << std::endl;
-  assert(res.getStatus() == static_cast<uint16_t>(StatusCode::OK));
+  anch::ut::assertTrue(res.getStatus() == static_cast<uint16_t>(StatusCode::OK));
   std::cout << "Exit testPathUUID" << std::endl;
 }
 
@@ -247,7 +249,7 @@ testPathUUIDko() {
   std::cout << "Request initialized" << std::endl;
   Response res = router.execute(req);
   std::cout << "Method executed: " << res.getStatus() << std::endl;
-  assert(res.getStatus() == static_cast<uint16_t>(StatusCode::BAD_REQUEST));
+  anch::ut::assertTrue(res.getStatus() == static_cast<uint16_t>(StatusCode::BAD_REQUEST));
   std::cout << "Exit testPathUUIDko" << std::endl;
 }
 
@@ -271,7 +273,7 @@ testPathMultiOK() {
   std::cout << "Request initialized" << std::endl;
   Response res = router.execute(req);
   std::cout << "Method executed: " << res.getStatus() << std::endl;
-  assert(res.getStatus() == static_cast<uint16_t>(StatusCode::OK));
+  anch::ut::assertTrue(res.getStatus() == static_cast<uint16_t>(StatusCode::OK));
   std::cout << "Exit testPathMultiOK" << std::endl;
 }
 
@@ -286,7 +288,7 @@ testPathMultiLambdaOK() {
   std::cout << "Request initialized" << std::endl;
   Response res = router.execute(req);
   std::cout << "Method executed: " << res.getStatus() << std::endl;
-  assert(res.getStatus() == static_cast<uint16_t>(StatusCode::OK));
+  anch::ut::assertTrue(res.getStatus() == static_cast<uint16_t>(StatusCode::OK));
   std::cout << "Exit testPathMultiLambdaOK" << std::endl;
 }
 
@@ -322,7 +324,7 @@ testResponseOKJSON() {
   std::cout << "Request initialized" << std::endl;
   Response res = router.execute(req);
   std::cout << "Method executed: " << res.getStatus() << std::endl;
-  assert(res.getStatus() == static_cast<uint16_t>(StatusCode::OK));
+  anch::ut::assertTrue(res.getStatus() == static_cast<uint16_t>(StatusCode::OK));
   res.writeBody(std::cout);
   std::cout << std::endl;
   std::cout << "Exit testResponseOKJSON" << std::endl;
@@ -344,33 +346,14 @@ testResponseOKistream() {
   std::cout << "Request initialized" << std::endl;
   Response res = router.execute(req);
   std::cout << "Method executed: " << res.getStatus() << std::endl;
-  assert(res.getStatus() == static_cast<uint16_t>(StatusCode::OK));
+  anch::ut::assertTrue(res.getStatus() == static_cast<uint16_t>(StatusCode::OK));
   res.writeBody(std::cout);
   std::cout << std::endl;
   std::cout << "Exit testResponseOKistream" << std::endl;
 }
 
 void
-registerTests() {
-  TEST_SUITE["test_0_param_no_body_ok"] = testNoParam;
-  TEST_SUITE["test_1_param_no_body_ok"] = testPathParam;
-  TEST_SUITE["test_1_int_param_no_body_ok"] = testPathIntParam;
-  TEST_SUITE["test_1_int_param_no_body_ko"] = testPathIntParamKO;
-  TEST_SUITE["test_1_view_param_no_body_ok"] = testPathViewParam;
-  TEST_SUITE["test_error_405"] = testPathErrorMethod;
-  TEST_SUITE["test_error_406"] = testPathErrorAccept;
-  TEST_SUITE["test_error_415"] = testPathErrorContent;
-  TEST_SUITE["test_error_404"] = testPathErrorNotFound;
-  TEST_SUITE["test_uuid_ok"] = testPathUUID;
-  TEST_SUITE["test_uuid_ko"] = testPathUUIDko;
-  TEST_SUITE["test_multi_ok"] = testPathMultiOK;
-  TEST_SUITE["test_lambda_ok"] = testPathMultiLambdaOK;
-  TEST_SUITE["test_res_json_ok"] = testResponseOKJSON;
-  TEST_SUITE["test_res_istream_ok"] = testResponseOKistream;
-}
-
-int
-main(int argc, char** argv) {
+beforeAll() {
   std::cout << "Enter in router unit tests" << std::endl;
 
   try {
@@ -395,18 +378,11 @@ main(int argc, char** argv) {
       .add(std::function<Response(const Request&)>(GET_api_istream), "/api/res-istream", Verb::GET, {}, { MediaType::TXT_PLAIN })
       ;
   } catch(const std::exception& e) {
-    std::cerr << "Error while registering routes: " << e.what() << std::endl;
-    return 1;
+    std::ostringstream oss;
+    oss << "Error while registering routes: " << e.what();
+    anch::ut::fail(oss.str());
   } catch(...) {
-    std::cerr << "Error while registering routes" << std::endl;
-    return 1;
-  }
-
-  registerTests();
-
-  bool allTests = true;
-  if(argc > 1) {
-    allTests = false;
+    anch::ut::fail("Error while registering routes");
   }
 
   auto prevHandler = std::signal(SIGABRT, noCoredumpOnAbort);
@@ -414,26 +390,34 @@ main(int argc, char** argv) {
     std::cerr << "Setup failed\n";
     std::_Exit(EXIT_FAILURE);
   }
+}
 
-  if(allTests) {
-    std::cout << "Run all tests" << std::endl;
-    for(auto iter = TEST_SUITE.cbegin() ; iter != TEST_SUITE.cend() ; ++iter) {
-      std::cout << "Run unit test: " << iter->first << std::endl;
-      iter->second();
-    }
-
-  } else {
-    for(int i = 1 ; i < argc ; ++i) {
-      std::cout << "Run unit test: " << argv[i] << std::endl;
-      auto iter = TEST_SUITE.find(argv[i]);
-      if(iter == TEST_SUITE.cend()) {
-	std::cout << "Test " << argv[i] << " does not exist. CONTINUE." << std::endl;
-      } else {
-	iter->second();
-      }
-    }
-  }
-
+void
+afterAll() {
   std::cout << "Exit router unit tests" << std::endl;
-  return 0;
+}
+
+void
+anch::ut::setup(anch::ut::UnitTests& tests) {
+  tests
+    .name("AnCH router unit tests")
+    .description("Test AnCH router library")
+    .initialize(beforeAll)
+    .uninitialize(afterAll)
+    .add("test_0_param_no_body_ok", testNoParam)
+    .add("test_1_param_no_body_ok", testPathParam)
+    .add("test_1_int_param_no_body_ok", testPathIntParam)
+    .add("test_1_int_param_no_body_ko", testPathIntParamKO)
+    .add("test_1_view_param_no_body_ok", testPathViewParam)
+    .add("test_error_405", testPathErrorMethod)
+    .add("test_error_406", testPathErrorAccept)
+    .add("test_error_415", testPathErrorContent)
+    .add("test_error_404", testPathErrorNotFound)
+    .add("test_uuid_ok", testPathUUID)
+    .add("test_uuid_ko", testPathUUIDko)
+    .add("test_multi_ok", testPathMultiOK)
+    .add("test_lambda_ok", testPathMultiLambdaOK)
+    .add("test_res_json_ok", testResponseOKJSON)
+    .add("test_res_istream_ok", testResponseOKistream)
+    ;
 }

@@ -21,53 +21,51 @@
 
 #include "rest/routerException.hpp"
 
-namespace anch {
-  namespace rest {
+namespace anch::rest {
 
-    template<typename... P>
-    Router&
-    Router::add(std::function<anch::rest::Response(const anch::rest::Request&, P...)> func,
-		const std::string& path,
-		const std::string& verb,
-		const std::vector<std::string>& consumes,
-		const std::vector<std::string>& produces) {
-      std::vector<std::string> cons(consumes);
-      if(cons.empty()) {
-	cons.push_back(MediaType::NONE);
-      }
-      std::vector<std::string> pros(produces);
-      if(pros.empty()) {
-	pros.push_back(MediaType::NONE);
-      }
-      for(const std::string& ctype : cons) {
-	for(const std::string& ptype : pros) {
-	  EndPoint endpoint;
-	  endpoint.pathPattern = path;
-	  endpoint.verb = verb;
-	  endpoint.contentType = ctype;
-	  endpoint.accept = ptype;
-	  endpoint.build();
-	  add(endpoint, func);
-	}
-      }
-      return *this;
+  template<typename... P>
+  Router&
+  Router::add(std::function<anch::rest::Response(const anch::rest::Request&, P...)> func,
+	      const std::string& path,
+	      const std::string& verb,
+	      const std::vector<std::string>& consumes,
+	      const std::vector<std::string>& produces) {
+    std::vector<std::string> cons(consumes);
+    if(cons.empty()) {
+      cons.push_back(MediaType::NONE);
     }
-
-    template<typename... P>
-    Router&
-    Router::add(EndPoint& endpoint, std::function<anch::rest::Response(const anch::rest::Request&, P...)> func) {
-      auto found = _routes.find(endpoint);
-      if(found != _routes.end()) {
-	throw anch::rest::RouterException("Endpoint already exists");
-      }
-      endpoint.build();
-      if constexpr (sizeof...(P) == 0) {
-	_routes[endpoint] = new EndpointSimpleFunc(func);
-      } else {
-	_routes[endpoint] = new EndpointParamsFunc<P...>(func);
-      }
-      return *this;
+    std::vector<std::string> pros(produces);
+    if(pros.empty()) {
+      pros.push_back(MediaType::NONE);
     }
+    for(const std::string& ctype : cons) {
+      for(const std::string& ptype : pros) {
+	EndPoint endpoint;
+	endpoint.pathPattern = path;
+	endpoint.verb = verb;
+	endpoint.contentType = ctype;
+	endpoint.accept = ptype;
+	endpoint.build();
+	add(endpoint, func);
+      }
+    }
+    return *this;
+  }
 
-  } // rest
-} // anch
+  template<typename... P>
+  Router&
+  Router::add(EndPoint& endpoint, std::function<anch::rest::Response(const anch::rest::Request&, P...)> func) {
+    auto found = _routes.find(endpoint);
+    if(found != _routes.end()) {
+      throw anch::rest::RouterException("Endpoint already exists");
+    }
+    endpoint.build();
+    if constexpr (sizeof...(P) == 0) {
+      _routes[endpoint] = new EndpointSimpleFunc(func);
+    } else {
+      _routes[endpoint] = new EndpointParamsFunc<P...>(func);
+    }
+    return *this;
+  }
+
+} // anch::rest

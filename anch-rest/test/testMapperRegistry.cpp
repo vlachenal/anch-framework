@@ -1,6 +1,10 @@
 #include "rest/mapperRegistry.hpp"
 
 #include <iostream>
+#include <sstream>
+
+#include "ut/assert.hpp"
+#include "ut/unit.hpp"
 
 using anch::rest::MapperRegistry;
 using anch::json::JSONMapper;
@@ -50,49 +54,66 @@ anch::json::registerObject([[maybe_unused]] ObjectMapper<Toto>& mapper) {
   throw std::bad_cast();
 }
 
-int
-main(void) {
-  MapperRegistry reg;
+MapperRegistry reg;
+
+void
+beforeAll() {
   JSONMapper json(anch::json::DEFAULT_MAPPING_OPTIONS);
   reg.registerMapper("application/json", std::move(json));
   std::optional<JSONMapper> mapper = reg.mapper<JSONMapper>(MediaType::APP_JSON);
   if(!mapper.has_value()) {
-    std::cout << "KO" << std::endl;
-    return 1;
+    std::cerr << "Unable to register app/json serializer" << std::endl;
+    anch::ut::fail("Unable to register app/json serializer");
   }
+}
 
+void
+testSerializeTata(const std::string& contentType) {
+  std::cout << "Enter in testSerializeTata into " << contentType << std::endl;
   std::string VIEW = "VIEW";
   Tata tata;
   tata.ploum = "ploum";
   tata.view = std::string_view(VIEW.data());
   tata.numSet = {1, 2, 3};
   tata.strVect = {"4","5","6"};
-  reg.serialize(MediaType::APP_JSON, tata, std::cout);
-  std::cout << std::endl;
-
   try {
-    reg.serialize("text/plain", tata, std::cout);
+    reg.serialize(contentType, tata, std::cout);
     std::cout << std::endl;
   } catch(const anch::rest::MapperException& e) {
-    std::cout << "Error while serializing: " << e.what() << std::endl;
-
+    std::ostringstream oss;
+    oss << "Error while serializing: " << e.what();
+    anch::ut::fail(oss.str());
   }
+}
 
+void
+testSerializeToto(const std::string& contentType) {
+  std::cout << "Enter in testSerializeToto into " << contentType << std::endl;
   Toto toto;
   try {
-    reg.serialize("text/plain", toto, std::cout);
+    reg.serialize(contentType, toto, std::cout);
     std::cout << std::endl;
   } catch(const anch::rest::MapperException& e) {
-    std::cout << "Error while serializing: " << e.what() << std::endl;
-  }
-
-  try {
-    reg.serialize("application/json", toto, std::cout);
-    std::cout << std::endl;
+    std::ostringstream oss;
+    oss << "Error while serializing: " << e.what();
+    anch::ut::fail(oss.str());
   } catch(std::bad_cast&) {
-    std::cout << "Error while serializing application/json which is not supported for Toto" << std::endl;
+    std::ostringstream oss;
+    oss << "Error while serializing: " << contentType << " which is not supported for Toto";
+    anch::ut::fail(oss.str());
   }
 
-  std::cout << "OK" << std::endl;
-  return 0;
+}
+
+void
+anch::ut::setup(anch::ut::UnitTests& tests) {
+  tests
+    .name("AnCH router mapper registry tests")
+    .description("Test AnCH router mapper registry library")
+    .initialize(beforeAll)
+    .add("test_ser_tata_txt", std::bind(testSerializeTata, "text/plain"))
+    .add("test_ser_tata_json", std::bind(testSerializeTata, "application/json"))
+    .add("test_ser_toto_txt", std::bind(testSerializeToto, "text/plain"))
+    .add("test_ser_toto_json", std::bind(testSerializeToto, "application/json"))
+    ;
 }
