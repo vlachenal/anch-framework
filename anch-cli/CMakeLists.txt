@@ -103,6 +103,24 @@ if(ANCH_CLI_UNITARY_TEST)
   )
   # Build CLI unit test -
 
+  # Build formatter unit test +
+  file(
+    GLOB_RECURSE
+    test_format
+    test/testFormatter.cpp
+  )
+
+  add_executable(
+    anch-format-test
+    ${test_format}
+  )
+
+  target_link_libraries(
+    anch-format-test
+    anch-cli
+  )
+  # Build formatter unit test -
+
   enable_testing()
   ## Check basic options +
   add_test(anch-cli-h-test ${EXECUTABLE_OUTPUT_PATH}/anch-cli-test help -h)
@@ -142,5 +160,12 @@ if(ANCH_CLI_UNITARY_TEST)
   set_tests_properties(anch-cli-pos2-test PROPERTIES WILL_FAIL TRUE)
   set_tests_properties(anch-cli-plip-p-test PROPERTIES WILL_FAIL TRUE)
   set_tests_properties(anch-cli-istream--input-notexist-test PROPERTIES WILL_FAIL TRUE)
+
+  ## Format console +
+  add_test(anch-format-fg-blue-test ${EXECUTABLE_OUTPUT_PATH}/anch-format-test fg_blue)
+  add_test(anch-format-bg-blue-test ${EXECUTABLE_OUTPUT_PATH}/anch-format-test bg_blue)
+  add_test(anch-format-underline-test ${EXECUTABLE_OUTPUT_PATH}/anch-format-test underline)
+  add_test(anch-format-mix1-test ${EXECUTABLE_OUTPUT_PATH}/anch-format-test mix1)
+  ## Format console -
 
 endif(ANCH_CLI_UNITARY_TEST)
