@@ -129,6 +129,7 @@ var NAVTREEINDEX9 =
 "factory_8hpp_source.html":[20,0,6,0,0,1],
 "fields_builder_8hpp_source.html":[20,0,11,0,0,0,2],
 "files.html":[20,0],
+"formatter_8hpp_source.html":[20,0,0,0,0,3],
 "from_builder_8hpp_source.html":[20,0,11,0,0,0,3],
 "functions.html":[19,3,0],
 "functions.html":[19,3,0,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX9 =
 "message_formatter_8hpp_source.html":[20,0,7,0,0,0,7],
 "millisecond_formatter_8hpp_source.html":[20,0,3,0,0,0,6],
 "minute_formatter_8hpp_source.html":[20,0,3,0,0,0,7],
-"month_formatter_8hpp_source.html":[20,0,3,0,0,0,8],
-"mysql_connection_8hpp_source.html":[20,0,11,1,0,0,0]
+"month_formatter_8hpp_source.html":[20,0,3,0,0,0,8]
 };
