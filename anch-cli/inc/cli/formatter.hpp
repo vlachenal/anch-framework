@@ -32,15 +32,34 @@ namespace anch::cli {
    * \author Vincent Lachenal
    */
   enum class Color {
+
+    /*! Black */
     BLACK = 0,
+
+    /*! Red */
     RED = 1,
+
+    /*! Green */
     GREEN = 2,
+
+    /*! Yellow */
     YELLOW = 3,
+
+    /*! Blue */
     BLUE = 4,
+
+    /*! Magenta */
     MAGENTA = 5,
+
+    /*! Cyan */
     CYAN = 6,
+
+    /*! White */
     WHITE = 7,
+
+    /*! Default color console */
     DEFAULT = 9
+
   };
 
   /*!
