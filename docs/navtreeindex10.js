@@ -1,5 +1,6 @@
 var NAVTREEINDEX10 =
 {
+"mysql_connection_8hpp_source.html":[20,0,11,1,0,0,0],
 "mysql_prepared_statement_8hpp_source.html":[20,0,11,1,0,0,1],
 "mysql_prepared_statement_result_set_8hpp_source.html":[20,0,11,1,0,0,2],
 "mysql_result_set_8hpp_source.html":[20,0,11,1,0,0,3],
@@ -248,6 +249,5 @@ var NAVTREEINDEX10 =
 "primitive_mapper_8hpp_source.html":[20,0,6,0,0,7],
 "processor_8hpp_source.html":[20,0,13,0,5],
 "request_8hpp_source.html":[20,0,10,1,0,0,4],
-"resource_8hpp_source.html":[20,0,9,0,0,1],
-"resource_file_exception_8hpp_source.html":[20,0,9,0,0,0,1]
+"resource_8hpp_source.html":[20,0,9,0,0,1]
 };

@@ -79,6 +79,7 @@ var hierarchy =
       [ "anch::ut::AssertException", "classanch_1_1ut_1_1_assert_exception.html", null ]
     ] ],
     [ "anch::json::Factory< T >", "classanch_1_1json_1_1_factory.html", null ],
+    [ "anch::cli::Formatter", "structanch_1_1cli_1_1_formatter.html", null ],
     [ "anch::crypto::Hash< O, B >", "classanch_1_1crypto_1_1_hash.html", [
       [ "anch::crypto::SHA2< O, B, W, R, I >", "classanch_1_1crypto_1_1_s_h_a2.html", null ]
     ] ],

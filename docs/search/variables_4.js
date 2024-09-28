@@ -12,6 +12,7 @@ var searchData=
   ['deserialize_5fmax_5fdiscard_5fchar_9',['deserialize_max_discard_char',['../structanch_1_1json_1_1_mapping_options.html#acefa03fa013aac7745b394f07c17dc65',1,'anch::json::MappingOptions']]],
   ['deserialize_5fmax_5ffield_5fchar_10',['deserialize_max_field_char',['../structanch_1_1json_1_1_mapping_options.html#ac498c98a7c6723b5c27861ce0b9a2619',1,'anch::json::MappingOptions']]],
   ['digest_11',['digest',['../structanch_1_1crypto_1_1_s_h_a2_1_1_context.html#af33098c985dfb8e47620a03c7d613f1d',1,'anch::crypto::SHA2::Context']]],
-  ['dnt_12',['DNT',['../structanch_1_1rest_1_1_common_headers.html#acd40605b6a421a4310efd00c354e3169',1,'anch::rest::CommonHeaders']]],
-  ['driver_13',['driver',['../structanch_1_1sql_1_1_sql_connection_configuration.html#a1bf43aadc0328ac47863c6848ee20518',1,'anch::sql::SqlConnectionConfiguration']]]
+  ['disabled_12',['DISABLED',['../structanch_1_1cli_1_1_formatter.html#a7e8de4a40a51310c63ce1cbf1c3d9c83',1,'anch::cli::Formatter']]],
+  ['dnt_13',['DNT',['../structanch_1_1rest_1_1_common_headers.html#acd40605b6a421a4310efd00c354e3169',1,'anch::rest::CommonHeaders']]],
+  ['driver_14',['driver',['../structanch_1_1sql_1_1_sql_connection_configuration.html#a1bf43aadc0328ac47863c6848ee20518',1,'anch::sql::SqlConnectionConfiguration']]]
 ];
