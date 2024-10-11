@@ -4,6 +4,8 @@
 #include <random>
 #include <thread>
 
+#include "ut/unit.hpp"
+
 class TestConfig {
 public:
   virtual ~TestConfig() {
@@ -118,26 +120,40 @@ doStuff2(Test2Pool* const pool) {
   }
 }
 
-int
-main(void) {
+// Anch unit tests +
+void
+testPool1() {
+  std::cout << "Enter in testPool1 test" << std::endl;
   TestConfig config;
-  {
-    TestPool pool(config, 10, 5);
-    for(int i = 0 ; i < 15 ; ++i) {
-      std::thread t(doStuff, &pool);
-      t.detach();
-    }
-    std::this_thread::sleep_for(std::chrono::seconds(2));
+  TestPool pool(config, 10, 5);
+  for(int i = 0 ; i < 15 ; ++i) {
+    std::thread t(doStuff, &pool);
+    t.detach();
   }
-
-  {
-    Test2Pool pool2(config, 10, 5);
-    for(int i = 0 ; i < 15 ; ++i) {
-      std::thread t(doStuff2, &pool2);
-      t.detach();
-    }
-    std::this_thread::sleep_for(std::chrono::seconds(2));
-  }
-
-  return 0;
+  std::this_thread::sleep_for(std::chrono::seconds(2));
+  std::cout << "Exit testPool1 test" << std::endl;
 }
+
+void
+testPool2() {
+  std::cout << "Enter in testPool2 test" << std::endl;
+  TestConfig config;
+  Test2Pool pool2(config, 10, 5);
+  for(int i = 0 ; i < 15 ; ++i) {
+    std::thread t(doStuff2, &pool2);
+    t.detach();
+  }
+  std::this_thread::sleep_for(std::chrono::seconds(2));
+  std::cout << "Exit testPool2 test" << std::endl;
+}
+
+void
+anch::ut::setup(anch::ut::UnitTests& tests) {
+  tests
+    .name("AnCH resource pool unit tests")
+    .description("Test AnCH resource pool utiliy class")
+    .add("res-pool1", testPool1)
+    .add("res-pool2", testPool2)
+    ;
+}
+// Anch unit tests -

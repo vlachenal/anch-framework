@@ -54,6 +54,17 @@ install(
 # Unit tests
 if(ANCH_UTILS_UNIT_TEST)
 
+  # Includes location
+  include_directories(
+    inc
+    ${ANCH_UT_INCLUDES_DIR}
+    )
+
+  link_directories(
+    ${ANCH_UT_LIBRARY_DIR}
+    ${ANCH_CLI_LIBRARY_DIR}
+    )
+
   # Build thread pool unit test +
   file(
     GLOB_RECURSE
@@ -68,6 +79,8 @@ if(ANCH_UTILS_UNIT_TEST)
 
   target_link_libraries(
     anch-thread-pool-test
+    anch-unit
+    anch-cli
   )
   # Build thread pool unit test -
 
@@ -85,6 +98,8 @@ if(ANCH_UTILS_UNIT_TEST)
 
   target_link_libraries(
     anch-res-pool-test
+    anch-unit
+    anch-cli
   )
   # Build resource pool unit test -
 
@@ -119,6 +134,8 @@ if(ANCH_UTILS_UNIT_TEST)
 
   target_link_libraries(
     anch-convert-test
+    anch-unit
+    anch-cli
   )
   # Build convert test -
 
@@ -136,30 +153,53 @@ if(ANCH_UTILS_UNIT_TEST)
   # Build string utils test -
 
   enable_testing()
-  add_test(anch-thread-pool-test ${EXECUTABLE_OUTPUT_PATH}/anch-thread-pool-test main)
-  add_test(anch-thread-res-test ${EXECUTABLE_OUTPUT_PATH}/anch-res-pool-test main)
-  add_test(anch-stream-foreach ${EXECUTABLE_OUTPUT_PATH}/anch-stream-test foreach)
-  add_test(anch-stream-filter ${EXECUTABLE_OUTPUT_PATH}/anch-stream-test filter)
-  add_test(anch-stream-skip ${EXECUTABLE_OUTPUT_PATH}/anch-stream-test skip)
-  add_test(anch-stream-limit ${EXECUTABLE_OUTPUT_PATH}/anch-stream-test limit)
-  add_test(anch-stream-concat ${EXECUTABLE_OUTPUT_PATH}/anch-stream-test concat)
-  add_test(anch-stream-all-match ${EXECUTABLE_OUTPUT_PATH}/anch-stream-test allMatch)
-  add_test(anch-stream-any-match ${EXECUTABLE_OUTPUT_PATH}/anch-stream-test anyMatch)
-  add_test(anch-stream-any-match ${EXECUTABLE_OUTPUT_PATH}/anch-stream-test noneMatch)
-  add_test(anch-stream-map ${EXECUTABLE_OUTPUT_PATH}/anch-stream-test map)
-  add_test(anch-stream-collect-list ${EXECUTABLE_OUTPUT_PATH}/anch-stream-test collect_list)
-  add_test(anch-stream-collect-forward-list ${EXECUTABLE_OUTPUT_PATH}/anch-stream-test collect_forward_list)
-  add_test(anch-stream-collect-set ${EXECUTABLE_OUTPUT_PATH}/anch-stream-test collect_set)
-  add_test(anch-stream-collect-vector ${EXECUTABLE_OUTPUT_PATH}/anch-stream-test collect_vector)
-  add_test(anch-stream-collect-multiset ${EXECUTABLE_OUTPUT_PATH}/anch-stream-test collect_multiset)
-  add_test(anch-stream-collect-unordered-set ${EXECUTABLE_OUTPUT_PATH}/anch-stream-test collect_unordered_set)
-  add_test(anch-stream-collect-unordered-multiset ${EXECUTABLE_OUTPUT_PATH}/anch-stream-test collect_unordered_multiset)
-  add_test(anch-stream-collect-deque ${EXECUTABLE_OUTPUT_PATH}/anch-stream-test collect_deque)
-  add_test(anch-stream-collect-stack ${EXECUTABLE_OUTPUT_PATH}/anch-stream-test collect_stack)
-  add_test(anch-stream-collect-queue ${EXECUTABLE_OUTPUT_PATH}/anch-stream-test collect_queue)
-  add_test(anch-stream-collect-priority-queue ${EXECUTABLE_OUTPUT_PATH}/anch-stream-test collect_priority_queue)
-  add_test(anch-convert ${EXECUTABLE_OUTPUT_PATH}/anch-convert-test main)
+  # Thread pool +
+  add_test(anch-thread-pool-sleep2s-test ${EXECUTABLE_OUTPUT_PATH}/anch-thread-pool-test -t thread-pool-sleep2s)
+  add_test(anch-thread-pool-class-test ${EXECUTABLE_OUTPUT_PATH}/anch-thread-pool-test -t thread-pool-class)
+  # Thread pool -
+
+  # Resource pool +
+  add_test(anch-res-pool1-test ${EXECUTABLE_OUTPUT_PATH}/anch-res-pool-test -t res-pool1)
+  add_test(anch-res-pool2-test ${EXECUTABLE_OUTPUT_PATH}/anch-res-pool-test -t res-pool2)
+  # Resource pool -
+
+  # Fluent +
+  add_test(anch-fluent-foreach ${EXECUTABLE_OUTPUT_PATH}/anch-stream-test foreach)
+  add_test(anch-fluent-filter ${EXECUTABLE_OUTPUT_PATH}/anch-stream-test filter)
+  add_test(anch-fluent-skip ${EXECUTABLE_OUTPUT_PATH}/anch-stream-test skip)
+  add_test(anch-fluent-limit ${EXECUTABLE_OUTPUT_PATH}/anch-stream-test limit)
+  add_test(anch-fluent-concat ${EXECUTABLE_OUTPUT_PATH}/anch-stream-test concat)
+  add_test(anch-fluent-all-match ${EXECUTABLE_OUTPUT_PATH}/anch-stream-test allMatch)
+  add_test(anch-fluent-any-match ${EXECUTABLE_OUTPUT_PATH}/anch-stream-test anyMatch)
+  add_test(anch-fluent-any-match ${EXECUTABLE_OUTPUT_PATH}/anch-stream-test noneMatch)
+  add_test(anch-fluent-map ${EXECUTABLE_OUTPUT_PATH}/anch-stream-test map)
+  add_test(anch-fluent-collect-list ${EXECUTABLE_OUTPUT_PATH}/anch-stream-test collect_list)
+  add_test(anch-fluent-collect-forward-list ${EXECUTABLE_OUTPUT_PATH}/anch-stream-test collect_forward_list)
+  add_test(anch-fluent-collect-set ${EXECUTABLE_OUTPUT_PATH}/anch-stream-test collect_set)
+  add_test(anch-fluent-collect-vector ${EXECUTABLE_OUTPUT_PATH}/anch-stream-test collect_vector)
+  add_test(anch-fluent-collect-multiset ${EXECUTABLE_OUTPUT_PATH}/anch-stream-test collect_multiset)
+  add_test(anch-fluent-collect-unordered-set ${EXECUTABLE_OUTPUT_PATH}/anch-stream-test collect_unordered_set)
+  add_test(anch-fluent-collect-unordered-multiset ${EXECUTABLE_OUTPUT_PATH}/anch-stream-test collect_unordered_multiset)
+  add_test(anch-fluent-collect-deque ${EXECUTABLE_OUTPUT_PATH}/anch-stream-test collect_deque)
+  add_test(anch-fluent-collect-stack ${EXECUTABLE_OUTPUT_PATH}/anch-stream-test collect_stack)
+  add_test(anch-fluent-collect-queue ${EXECUTABLE_OUTPUT_PATH}/anch-stream-test collect_queue)
+  add_test(anch-fluent-collect-priority-queue ${EXECUTABLE_OUTPUT_PATH}/anch-stream-test collect_priority_queue)
+  # Fluent -
+
+  # Convert +
+  add_test(anch-convert--32-as-short ${EXECUTABLE_OUTPUT_PATH}/anch-convert-test -t conv--32-as-short)
+  add_test(anch-convert--32-as-ushort ${EXECUTABLE_OUTPUT_PATH}/anch-convert-test -t conv--32-as-ushort)
+  add_test(anch-convert--32.2-as-ushort ${EXECUTABLE_OUTPUT_PATH}/anch-convert-test -t conv--32.2-as-ushort)
+  add_test(anch-convert-32-as-short ${EXECUTABLE_OUTPUT_PATH}/anch-convert-test -t conv-32-as-short)
+  add_test(anch-convert-32-as-ushort ${EXECUTABLE_OUTPUT_PATH}/anch-convert-test -t conv-32-as-ushort)
+  add_test(anch-convert-32.2-as-short ${EXECUTABLE_OUTPUT_PATH}/anch-convert-test -t conv-32.2-as-short)
+  add_test(anch-convert-32e-1-as-short ${EXECUTABLE_OUTPUT_PATH}/anch-convert-test -t conv-32e-1-as-short)
+  add_test(anch-convert-32e-1-as-ushort ${EXECUTABLE_OUTPUT_PATH}/anch-convert-test -t conv-32e-1-as-ushort)
+  # Convert -
+
+  # String +
   add_test(anch-string-utils ${EXECUTABLE_OUTPUT_PATH}/anch-string-utils-test main)
+  # String -
 
   # Build optional unit test +
   file(

@@ -2,6 +2,8 @@
 
 #include <iostream>
 
+#include "ut/unit.hpp"
+
 using anch::ThreadPool;
 
 class Test {
@@ -57,9 +59,10 @@ sleepFor2s(int index) {
   std::cout << "End thread " << index << " execution in thread " << std::this_thread::get_id() << std::endl;
 }
 
-int
-main(void) {
-  std::cout << "Begin ThreadPool unitary test in thread " << std::this_thread::get_id() << std::endl;
+// Anch unit tests +
+void
+testSleep2s() {
+  std::cout << "Enter in testSleep2s test" << std::endl;
   ThreadPool pool(4);
   pool.start();
   for(int i = 0 ; i < 10 ; ++i) {
@@ -69,11 +72,25 @@ main(void) {
   }
   std::this_thread::sleep_for(std::chrono::seconds(5));
   pool.stop();
+  std::cout << "Exit testSleep2s test" << std::endl;
+}
 
+void
+testClass() {
+  std::cout << "Enter in testClass" << std::endl;
   std::cout << "Test for class method" << std::endl;
   Test test;
   test.test();
-
-  std::cout << "Exit ThreadPool unitary test in thread " << std::this_thread::get_id() << std::endl;
-  return 0;
+  std::cout << "Exit testClass" << std::endl;
 }
+
+void
+anch::ut::setup(anch::ut::UnitTests& tests) {
+  tests
+    .name("AnCH TheadPool unit tests")
+    .description("Test AnCH TheadPool utiliy class")
+    .add("thread-pool-sleep2s", testSleep2s)
+    .add("thread-pool-class", testClass)
+    ;
+}
+// Anch unit tests -
