@@ -103,22 +103,24 @@ if(ANCH_UTILS_UNIT_TEST)
   )
   # Build resource pool unit test -
 
-  # Build stream unit test +
+  # Build fluent unit test +
   file(
     GLOB_RECURSE
-    test_stream
+    test_fluent
     test/testStream.cpp
   )
 
   add_executable(
-    anch-stream-test
-    ${test_stream}
+    anch-fluent-test
+    ${test_fluent}
   )
 
   target_link_libraries(
-    anch-stream-test
+    anch-fluent-test
+    anch-unit
+    anch-cli
   )
-  # Build stream unit test -
+  # Build fluent unit test -
 
   # Build convert test +
   file(
@@ -150,6 +152,12 @@ if(ANCH_UTILS_UNIT_TEST)
     anch-string-utils-test
     ${test_string_utils}
   )
+
+  target_link_libraries(
+    anch-string-utils-test
+    anch-unit
+    anch-cli
+  )
   # Build string utils test -
 
   enable_testing()
@@ -164,26 +172,26 @@ if(ANCH_UTILS_UNIT_TEST)
   # Resource pool -
 
   # Fluent +
-  add_test(anch-fluent-foreach ${EXECUTABLE_OUTPUT_PATH}/anch-stream-test foreach)
-  add_test(anch-fluent-filter ${EXECUTABLE_OUTPUT_PATH}/anch-stream-test filter)
-  add_test(anch-fluent-skip ${EXECUTABLE_OUTPUT_PATH}/anch-stream-test skip)
-  add_test(anch-fluent-limit ${EXECUTABLE_OUTPUT_PATH}/anch-stream-test limit)
-  add_test(anch-fluent-concat ${EXECUTABLE_OUTPUT_PATH}/anch-stream-test concat)
-  add_test(anch-fluent-all-match ${EXECUTABLE_OUTPUT_PATH}/anch-stream-test allMatch)
-  add_test(anch-fluent-any-match ${EXECUTABLE_OUTPUT_PATH}/anch-stream-test anyMatch)
-  add_test(anch-fluent-any-match ${EXECUTABLE_OUTPUT_PATH}/anch-stream-test noneMatch)
-  add_test(anch-fluent-map ${EXECUTABLE_OUTPUT_PATH}/anch-stream-test map)
-  add_test(anch-fluent-collect-list ${EXECUTABLE_OUTPUT_PATH}/anch-stream-test collect_list)
-  add_test(anch-fluent-collect-forward-list ${EXECUTABLE_OUTPUT_PATH}/anch-stream-test collect_forward_list)
-  add_test(anch-fluent-collect-set ${EXECUTABLE_OUTPUT_PATH}/anch-stream-test collect_set)
-  add_test(anch-fluent-collect-vector ${EXECUTABLE_OUTPUT_PATH}/anch-stream-test collect_vector)
-  add_test(anch-fluent-collect-multiset ${EXECUTABLE_OUTPUT_PATH}/anch-stream-test collect_multiset)
-  add_test(anch-fluent-collect-unordered-set ${EXECUTABLE_OUTPUT_PATH}/anch-stream-test collect_unordered_set)
-  add_test(anch-fluent-collect-unordered-multiset ${EXECUTABLE_OUTPUT_PATH}/anch-stream-test collect_unordered_multiset)
-  add_test(anch-fluent-collect-deque ${EXECUTABLE_OUTPUT_PATH}/anch-stream-test collect_deque)
-  add_test(anch-fluent-collect-stack ${EXECUTABLE_OUTPUT_PATH}/anch-stream-test collect_stack)
-  add_test(anch-fluent-collect-queue ${EXECUTABLE_OUTPUT_PATH}/anch-stream-test collect_queue)
-  add_test(anch-fluent-collect-priority-queue ${EXECUTABLE_OUTPUT_PATH}/anch-stream-test collect_priority_queue)
+  add_test(anch-fluent-foreach ${EXECUTABLE_OUTPUT_PATH}/anch-fluent-test -t foreach)
+  add_test(anch-fluent-filter ${EXECUTABLE_OUTPUT_PATH}/anch-fluent-test -t filter)
+  add_test(anch-fluent-skip ${EXECUTABLE_OUTPUT_PATH}/anch-fluent-test -t skip)
+  add_test(anch-fluent-limit ${EXECUTABLE_OUTPUT_PATH}/anch-fluent-test -t limit)
+  add_test(anch-fluent-concat ${EXECUTABLE_OUTPUT_PATH}/anch-fluent-test -t concat)
+  add_test(anch-fluent-all-match ${EXECUTABLE_OUTPUT_PATH}/anch-fluent-test -t all-match)
+  add_test(anch-fluent-any-match ${EXECUTABLE_OUTPUT_PATH}/anch-fluent-test -t any-match)
+  add_test(anch-fluent-none-match ${EXECUTABLE_OUTPUT_PATH}/anch-fluent-test -t none-match)
+  add_test(anch-fluent-map ${EXECUTABLE_OUTPUT_PATH}/anch-fluent-test -t map)
+  add_test(anch-fluent-collect-list ${EXECUTABLE_OUTPUT_PATH}/anch-fluent-test -t collect-list)
+  add_test(anch-fluent-collect-forward-list ${EXECUTABLE_OUTPUT_PATH}/anch-fluent-test -t collect-forward-list)
+  add_test(anch-fluent-collect-set ${EXECUTABLE_OUTPUT_PATH}/anch-fluent-test -t collect-set)
+  add_test(anch-fluent-collect-vector ${EXECUTABLE_OUTPUT_PATH}/anch-fluent-test -t collect-vector)
+  add_test(anch-fluent-collect-multiset ${EXECUTABLE_OUTPUT_PATH}/anch-fluent-test -t collect-multiset)
+  add_test(anch-fluent-collect-unordered-set ${EXECUTABLE_OUTPUT_PATH}/anch-fluent-test -t collect-unordered-set)
+  add_test(anch-fluent-collect-unordered-multiset ${EXECUTABLE_OUTPUT_PATH}/anch-fluent-test -t collect-unordered-multiset)
+  add_test(anch-fluent-collect-deque ${EXECUTABLE_OUTPUT_PATH}/anch-fluent-test -t collect-deque)
+  add_test(anch-fluent-collect-stack ${EXECUTABLE_OUTPUT_PATH}/anch-fluent-test -t collect-stack)
+  add_test(anch-fluent-collect-queue ${EXECUTABLE_OUTPUT_PATH}/anch-fluent-test -t collect-queue)
+  add_test(anch-fluent-collect-priority-queue ${EXECUTABLE_OUTPUT_PATH}/anch-fluent-test -t collect-priority-queue)
   # Fluent -
 
   # Convert +
@@ -198,7 +206,8 @@ if(ANCH_UTILS_UNIT_TEST)
   # Convert -
 
   # String +
-  add_test(anch-string-utils ${EXECUTABLE_OUTPUT_PATH}/anch-string-utils-test main)
+  add_test(anch-string-utils-upper ${EXECUTABLE_OUTPUT_PATH}/anch-string-utils-test -t to-upper)
+  add_test(anch-string-utils-lower ${EXECUTABLE_OUTPUT_PATH}/anch-string-utils-test -t to-lowwer)
   # String -
 
   # Build optional unit test +
