@@ -8,7 +8,7 @@ var searchData=
   ['next_5',['next',['../classanch_1_1sql_1_1_result_set.html#a96e5c9c17cbb7f61694f8fb014aef354',1,'anch::sql::ResultSet::next()'],['../classanch_1_1sql_1_1_my_s_q_l_prepared_statement_result_set.html#a3828fd09459cb913c802669304e99528',1,'anch::sql::MySQLPreparedStatementResultSet::next()'],['../classanch_1_1sql_1_1_my_s_q_l_result_set.html#ae68c9df740ff2936edc2fd20dbc2dc38',1,'anch::sql::MySQLResultSet::next()'],['../classanch_1_1sql_1_1_postgre_s_q_l_result_set.html#a8cb8d0b14079a2a4b72518fd8f092b6f',1,'anch::sql::PostgreSQLResultSet::next()'],['../classanch_1_1sql_1_1_s_q_lite3_result_set.html#a3e8cb6b0b762a565f73caf2ea6f41d73',1,'anch::sql::SQLite3ResultSet::next()']]],
   ['ngx_5fanch_5fbootstrap_5fconf_5ft_6',['ngx_anch_bootstrap_conf_t',['../structngx__anch__bootstrap__conf__t.html',1,'']]],
   ['none_7',['NONE',['../structanch_1_1rest_1_1_media_type.html#a79fc279319486ac4abc61ce7719a5535',1,'anch::rest::MediaType']]],
-  ['nonematch_8',['noneMatch',['../classanch_1_1_stream.html#a4bcd316beb0b7db1cf81e2fed4fe1cb0',1,'anch::Stream']]],
+  ['nonematch_8',['noneMatch',['../classanch_1_1_fluent.html#abc69b8466a06817c01b1b99b77d25c30',1,'anch::Fluent']]],
   ['nopadding_9',['NOPADDING',['../classanch_1_1crypto_1_1_base64.html#aa8d3d99bcb486e4434d1cc81a4f4ee91',1,'anch::crypto::Base64']]],
   ['not_10',['NOT',['../classanch_1_1sql_1_1_clauses_builder.html#a8f3107a894ae66579f31f4a584799aa1',1,'anch::sql::ClausesBuilder']]],
   ['notbetween_11',['notBetween',['../classanch_1_1sql_1_1_clauses_builder.html#ab3aabb22ecc604b21c44cc61db480584',1,'anch::sql::ClausesBuilder::notBetween()'],['../namespaceanch_1_1sql.html#af6749b09fcc7a3d5bfeaf81a3dfea56b',1,'anch::sql::notBetween()']]],

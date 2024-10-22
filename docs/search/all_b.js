@@ -16,7 +16,7 @@ var searchData=
   ['library_20documentation_13',['library documentation',['../page_cli.html',1,'AnCH CLI library documentation'],['../page_crypto.html',1,'AnCH cryptography library documentation'],['../page_events.html',1,'AnCH events library documentation'],['../page_json.html',1,'AnCH JSON library documentation'],['../page_logger.html',1,'AnCH logger library documentation'],['../page_res.html',1,'AnCH resource library documentation'],['../page_rest.html',1,'AnCH REST library documentation'],['../page_sql.html',1,'AnCH SQL library documentation'],['../page_ut.html',1,'AnCH unit tests library documentation'],['../page_uuid.html',1,'AnCH UUID library documentation']]],
   ['licence_14',['licence',['../structanch_1_1cli_1_1_app.html#adadf68fcf477f7d83c74362b1fa1efa2',1,'anch::cli::App']]],
   ['like_15',['like',['../classanch_1_1sql_1_1_clauses_builder.html#a35ad9167c5f3e7c3ba4ef5515fb85feb',1,'anch::sql::ClausesBuilder::like()'],['../namespaceanch_1_1sql.html#aba042a9eeaba85d4222d44132b8d64f5',1,'anch::sql::like()']]],
-  ['limit_16',['limit',['../classanch_1_1_stream.html#a92b0443518561e6ba39cd5aef6c44681',1,'anch::Stream']]],
+  ['limit_16',['limit',['../classanch_1_1_fluent.html#a0cf31a2bcaa210030eac3d057fa3a83e',1,'anch::Fluent']]],
   ['link_17',['LINK',['../structanch_1_1rest_1_1_common_headers.html#ab8a2ed233107694865039f3bc3a1bb63',1,'anch::rest::CommonHeaders']]],
   ['list_18',['Todo List',['../todo.html',1,'']]],
   ['list_19',['TODO list',['../index.html#todo_sec',1,'']]],

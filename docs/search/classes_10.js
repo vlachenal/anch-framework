@@ -26,6 +26,5 @@ var searchData=
   ['sqlquery_23',['SQLQuery',['../classanch_1_1sql_1_1_s_q_l_query.html',1,'anch::sql']]],
   ['sqlsharedlibraries_24',['SQLSharedLibraries',['../classanch_1_1sql_1_1_s_q_l_shared_libraries.html',1,'anch::sql']]],
   ['sqlsharedlibrary_25',['SQLSharedLibrary',['../structanch_1_1sql_1_1_s_q_l_shared_library.html',1,'anch::sql']]],
-  ['stream_26',['Stream',['../classanch_1_1_stream.html',1,'anch']]],
-  ['stringformatter_27',['StringFormatter',['../classanch_1_1logger_1_1formatter_1_1_string_formatter.html',1,'anch::logger::formatter']]]
+  ['stringformatter_26',['StringFormatter',['../classanch_1_1logger_1_1formatter_1_1_string_formatter.html',1,'anch::logger::formatter']]]
 ];
