@@ -103,6 +103,25 @@ if(ANCH_UTILS_UNIT_TEST)
   )
   # Build resource pool unit test -
 
+  # Build singleton unit test +
+  file(
+    GLOB_RECURSE
+    test_singleton
+    test/testSingleton.cpp
+  )
+
+  add_executable(
+    anch-singleton-test
+    ${test_singleton}
+  )
+
+  target_link_libraries(
+    anch-singleton-test
+    anch-unit
+    anch-cli
+  )
+  # Build singleton unit test -
+
   # Build fluent unit test +
   file(
     GLOB_RECURSE
@@ -160,6 +179,25 @@ if(ANCH_UTILS_UNIT_TEST)
   )
   # Build string utils test -
 
+  # Build optional unit test +
+  file(
+    GLOB_RECURSE
+    test_optional
+    test/testOptional.cpp
+    )
+
+  add_executable(
+    anch-optional-test
+    ${test_optional}
+    )
+
+  target_link_libraries(
+    anch-optional-test
+    anch-unit
+    anch-cli
+    )
+  # Build optional unit test -
+
   enable_testing()
   # Thread pool +
   add_test(anch-thread-pool-sleep2s-test ${EXECUTABLE_OUTPUT_PATH}/anch-thread-pool-test -t thread-pool-sleep2s)
@@ -207,26 +245,17 @@ if(ANCH_UTILS_UNIT_TEST)
 
   # String +
   add_test(anch-string-utils-upper ${EXECUTABLE_OUTPUT_PATH}/anch-string-utils-test -t to-upper)
-  add_test(anch-string-utils-lower ${EXECUTABLE_OUTPUT_PATH}/anch-string-utils-test -t to-lowwer)
+  add_test(anch-string-utils-lower ${EXECUTABLE_OUTPUT_PATH}/anch-string-utils-test -t to-lower)
   # String -
 
-  # Build optional unit test +
-  file(
-    GLOB_RECURSE
-    test_optional
-    test/testOptional.cpp
-    )
+  # Singleton +
+  add_test(anch-singleton-seq-no-wait ${EXECUTABLE_OUTPUT_PATH}/anch-singleton-test -t seq-no-wait)
+  add_test(anch-singleton-parallel-wait ${EXECUTABLE_OUTPUT_PATH}/anch-singleton-test -t parallel-wait)
+  # Singleton -
 
-  add_executable(
-    anch-optional-test
-    ${test_optional}
-    )
-
-  target_link_libraries(
-    anch-optional-test
-    )
-  # Build optional unit test -
-
-  add_test(anch-optional-test ${EXECUTABLE_OUTPUT_PATH}/anch-optional-test main)
+  # Optional +
+  add_test(anch-optional-functions-test ${EXECUTABLE_OUTPUT_PATH}/anch-optional-test -t opt-func)
+  add_test(anch-optional-class-test ${EXECUTABLE_OUTPUT_PATH}/anch-optional-test -t opt-class)
+  # Optional -
 
 endif(ANCH_UTILS_UNIT_TEST)

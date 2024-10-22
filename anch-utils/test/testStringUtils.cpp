@@ -44,6 +44,6 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .description("Test AnCH string utils utiliy class")
     .beforeTest(beforeEach)
     .add("to-upper", testToUpper)
-    .add("to-lowwer", testToLower)
+    .add("to-lower", testToLower)
     ;
 }

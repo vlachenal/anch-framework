@@ -21,27 +21,11 @@
 
 namespace anch {
 
-  /*!
-   * \brief Meyers' singleton implemtation.
-   *
-   * In C++11, this singleton is thread safe according to the standard.
-   *
-   * \since 0.1
-   *
-   * \author Vincent Lachenal
-   */
   template<typename T>
-  class Singleton {
-
-  public:
-    /*!
-     * Get unique instance of a class.
-     *
-     * \return the unique instance
-     */
-    static T& getInstance();
-
-  };
+  T&
+  Singleton<T>::getInstance() {
+    static T instance;
+    return instance;
+  }
 
 }
-#include "impl/singleton.hpp"
