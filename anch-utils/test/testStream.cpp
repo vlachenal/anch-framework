@@ -11,7 +11,7 @@
 #include <set>
 #include <unordered_set>
 
-#include "stream.hpp"
+#include "fluent.hpp"
 #include "collectors.hpp"
 
 #include "ut/unit.hpp"
@@ -74,7 +74,7 @@ testForeach() {
   std::cout << "Enter in testForeach" << std::endl;
   std::cout << "Values:";
   std::list<int> res;
-  anch::Stream(ints)
+  anch::Fluent(ints)
     .forEach([&res](int& i) { std::cout << " " << i; res.push_back(i); });
   std::cout << std::endl;
   anch::ut::assert(res == ints, "Unexpected result");
@@ -86,7 +86,7 @@ testFilter() {
   std::cout << "Enter in testFilter" << std::endl;
   std::cout << "Even values:";
   std::list<int>  res;
-  anch::Stream(ints)
+  anch::Fluent(ints)
     .filter([](const int& i) -> bool { return (i % 2) == 0; })
     .forEach([&res](int& i) { std::cout << " " << i; res.push_back(i); });
   std::cout << std::endl;
@@ -99,7 +99,7 @@ testSkip() {
   std::cout << "Enter in testSkip" << std::endl;
   std::cout << "Even values skipping three first values:";
   std::list<int> res;
-  anch::Stream(ints)
+  anch::Fluent(ints)
     .skip(3)
     .filter([](const int& i) -> bool { return (i % 2) == 0; })
     .forEach([&res](int& i) { std::cout << " " << i; res.push_back(i); });
@@ -113,7 +113,7 @@ testLimit() {
   std::cout << "Enter in testLimit" << std::endl;
   std::cout << "Even values skipping three first values and treat at most five values:";
   std::list<int> res;
-  anch::Stream(ints)
+  anch::Fluent(ints)
     .skip(3)
     .limit(5)
     .filter([](const int& i) -> bool { return (i % 2) == 0; })
@@ -128,8 +128,8 @@ testConcat() {
   std::cout << "Enter in testConcat" << std::endl;
   std::cout << "Even values skipping three first concatenated values and treat at most five values:";
   std::list<int> res;
-  auto stream2 = anch::Stream(ints2);
-  anch::Stream(ints1)
+  auto stream2 = anch::Fluent(ints2);
+  anch::Fluent(ints1)
     .concat(stream2)
     .skip(3)
     .filter([](const int& i) -> bool { return (i % 2) == 0; })
@@ -144,8 +144,8 @@ void
 testAllMatch() {
   std::cout << "Enter in testAllMatch" << std::endl;
   std::cout << "Check all even values skipping three first concatenated values and treat at most five values: ";
-  auto stream2 = anch::Stream(ints2);
-  bool match = anch::Stream(ints1)
+  auto stream2 = anch::Fluent(ints2);
+  bool match = anch::Fluent(ints1)
     .concat(stream2)
     .skip(3)
     .filter([](const int& i) -> bool { return (i % 2) == 0; })
@@ -160,14 +160,14 @@ void
 testAnyMatch() {
   std::cout << "Enter in testAnyMatch" << std::endl;
   std::cout << "Check if contains values > 15: ";
-  auto stream2 = anch::Stream(ints2);
-  bool match = anch::Stream(ints1)
+  auto stream2 = anch::Fluent(ints2);
+  bool match = anch::Fluent(ints1)
     .anyMatch([](const int& i) -> bool { return i > 15; });
   std::cout << (match ? "true" : "false") << std::endl;
   anch::ut::assertFalse(match);
 
   std::cout << "Check if contains values > 15: ";
-  match = anch::Stream(ints1)
+  match = anch::Fluent(ints1)
     .concat(stream2)
     .anyMatch([](const int& i) -> bool { return i > 15; });
   std::cout << (match ? "true" : "false") << std::endl;
@@ -179,8 +179,8 @@ void
 testNoneMatch() {
   std::cout << "Enter in testNoneMatch" << std::endl;
   std::cout << "Check all even values skipping three first concatenated values and treat at most five values: ";
-  auto stream2 = anch::Stream(ints2);
-  bool match = anch::Stream(ints1)
+  auto stream2 = anch::Fluent(ints2);
+  bool match = anch::Fluent(ints1)
     .concat(stream2)
     .skip(3)
     .noneMatch([](const int& i) -> bool { return i < 100; });
@@ -193,7 +193,7 @@ void
 testMap() {
   std::cout << "Enter in testMap" << std::endl;
   std::list<B> res;
-  anch::Stream(as)
+  anch::Fluent(as)
     .map<B>([](const A& a) -> B {
       B b;
       b.b = a.a;
@@ -210,7 +210,7 @@ testMap() {
 void
 testCollectList() {
   std::cout << "Enter in testCollectList" << std::endl;
-  std::list<B> resL = anch::Stream(as)
+  std::list<B> resL = anch::Fluent(as)
     .map<B>([](const A& a) -> B {
       B b;
       b.b = a.a;
@@ -228,7 +228,7 @@ void
 testCollectForwardList() {
   std::cout << "Enter in testCollectForwardList" << std::endl;
   std::forward_list<B> exp(expected.crbegin(), expected.crend());
-  std::forward_list<B> resFL = anch::Stream(as)
+  std::forward_list<B> resFL = anch::Fluent(as)
     .map<B>([](const A& a) -> B {
       B b;
       b.b = a.a;
@@ -246,7 +246,7 @@ void
 testCollectVector() {
   std::cout << "Enter in testCollectVector" << std::endl;
   std::vector<B> exp(expected.cbegin(), expected.cend());
-  std::vector<B> resV = anch::Stream(as)
+  std::vector<B> resV = anch::Fluent(as)
     .map<B>([](const A& a) -> B {
       B b;
       b.b = a.a;
@@ -264,7 +264,7 @@ void
 testCollectSet() {
   std::cout << "Enter in testCollectSet" << std::endl;
   std::set<B> exp(expected.cbegin(), expected.cend());
-  std::set<B> resS = anch::Stream(as)
+  std::set<B> resS = anch::Fluent(as)
     .map<B>([](const A& a) -> B {
       B b;
       b.b = a.a;
@@ -283,7 +283,7 @@ void
 testCollectMultiSet() {
   std::cout << "Enter in testCollectMultiSet" << std::endl;
   std::multiset<B> exp(expected.cbegin(), expected.cend());
-  std::multiset<B> resMS = anch::Stream(as)
+  std::multiset<B> resMS = anch::Fluent(as)
     .map<B>([](const A& a) -> B {
       B b;
       b.b = a.a;
@@ -302,7 +302,7 @@ void
 testCollectUnorderedSet() {
   std::cout << "Enter in testCollectUnorderedSet" << std::endl;
   std::unordered_set<B> exp(expected.cbegin(), expected.cend());
-  std::unordered_set<B> resUS = anch::Stream(as)
+  std::unordered_set<B> resUS = anch::Fluent(as)
     .map<B>([](const A& a) -> B {
       B b;
       b.b = a.a;
@@ -323,7 +323,7 @@ void
 testCollectUnorderedMultiset() {
   std::cout << "Enter in testCollectUnorderedMultiset" << std::endl;
   std::unordered_multiset<B> exp(expected.cbegin(), expected.cend());
-  std::unordered_multiset<B> resUS = anch::Stream(as)
+  std::unordered_multiset<B> resUS = anch::Fluent(as)
     .map<B>([](const A& a) -> B {
       B	 b;
       b.b = a.a;
@@ -344,7 +344,7 @@ void
 testCollectDeque() {
   std::cout << "Enter in testCollectDeque" << std::endl;
   std::deque<B> exp(expected.cbegin(), expected.cend());
-  std::deque<B> resDQ = anch::Stream(as)
+  std::deque<B> resDQ = anch::Fluent(as)
     .map<B>([](const A& a) -> B {
       B b;
       b.b = a.a;
@@ -365,7 +365,7 @@ testCollectStack() {
   for(const B& b : expected) {
     exp.push(b);
   }
-  std::stack<B> resSt = anch::Stream(as)
+  std::stack<B> resSt = anch::Fluent(as)
     .map<B>([](const A& a) -> B {
       B b;
       b.b = a.a;
@@ -387,7 +387,7 @@ testCollectQueue() {
   for(const B& b : expected) {
     exp.push(b);
   }
-  std::queue<B> resQ = anch::Stream(as)
+  std::queue<B> resQ = anch::Fluent(as)
     .map<B>([](const A& a) -> B {
       B b;
       b.b = a.a;
@@ -409,7 +409,7 @@ testCollectPriorityQueue() {
   for(const B& b : expected) {
     exp.push(b);
   }
-  std::priority_queue<B> resPQ = anch::Stream(as)
+  std::priority_queue<B> resPQ = anch::Fluent(as)
     .map<B>([](const A& a) -> B {
       B b;
       b.b = a.a;
@@ -436,7 +436,7 @@ testCollectMap() {
     exp[idx++] = b;
   }
   idx = 0;
-  std::map<std::size_t,B> resM = anch::Stream(as)
+  std::map<std::size_t,B> resM = anch::Fluent(as)
     .map<std::pair<std::size_t,B>>([&idx](const A& a) -> auto {
       B b;
       b.b = a.a;

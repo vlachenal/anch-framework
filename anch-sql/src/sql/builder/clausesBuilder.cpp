@@ -22,7 +22,7 @@
 #include "sql/builder/selectBuilder.hpp"
 #include "sql/builder/fromBuilder.hpp"
 
-#include "stream.hpp"
+#include "fluent.hpp"
 
 
 using anch::sql::ClausesBuilder;
@@ -259,7 +259,7 @@ anch::sql::isValidValue<std::optional<std::string>>(std::optional<std::string>& 
 
 template<>
 std::optional<std::string>
-anch::sql::isValidValue<anch::Stream<std::string, std::list>>(anch::Stream<std::string, std::list>& value) {
+anch::sql::isValidValue<anch::Fluent<std::string, std::list>>(anch::Fluent<std::string, std::list>& value) {
   std::ostringstream oss;
   value.forEach([&oss](std::string& val) { oss << ',' << val; });
   return std::optional(oss.str());
