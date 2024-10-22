@@ -1,0 +1,11 @@
+<map id="anch::logger::LoggerFactory::getLogger" name="anch::logger::LoggerFactory::getLogger">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,109,206,154"/>
+<area shape="rect" id="Node000002" href="$classanch_1_1logger_1_1_logger_configuration.html#a89ed0eb102b0ca1cb77c3cfe9f974d50" title=" " alt="" coords="254,5,494,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="149,106,253,60,273,53,275,58,255,65,151,111"/>
+<area shape="rect" id="Node000003" href="$classanch_1_1_singleton.html#a9bc6135289c49f0e855ae4e73922e53b" title=" " alt="" coords="260,75,488,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="206,116,244,111,245,116,206,121"/>
+<area shape="rect" id="Node000004" href="$classanch_1_1logger_1_1_logger_configuration.html#af106b71c7848f5d89d2e5dc390f1e8ad" title=" " alt="" coords="254,144,494,189"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="206,142,238,146,238,151,206,147"/>
+<area shape="rect" id="Node000005" href="$classanch_1_1logger_1_1_logger_configuration.html#a608744ee12295f786e6bb030e3eef614" title=" " alt="" coords="254,213,494,258"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="151,152,255,199,275,206,273,211,253,203,149,157"/>
+</map>
