@@ -4,11 +4,11 @@
  *
  * \section cli_intro_seq Introduction
  *
- * AnCH CLI library aims to provide facilities for parsing CLI arguments (and more in future ...)
+ * AnCH CLI library aims to provide facilities for parsing CLI arguments and CLI formatter
  *
  * \section cli_prereq_sec Prerequisites
  *
- * AnCH CLI is a standalone library as long as you only parse CLI arguments
+ * AnCH CLI is a standalone library for now
  *
  * \section cli_install_sec Installation
  *

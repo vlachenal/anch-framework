@@ -18,6 +18,7 @@
   along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "cli/args.hpp"
+#include "cli/formatter.hpp"
 
 #include <sstream>
 #include <stdexcept>
@@ -28,10 +29,15 @@
 using anch::cli::ArgHandler;
 using anch::cli::Arg;
 using anch::cli::App;
+using anch::cli::Formatter;
+using anch::cli::Color;
 
 const std::string ANCH_CLI_NOARG;
 const std::regex SREGEX("^-([^-]+)$");
 const std::regex LREGEX("^--(.+)$");
+
+const Formatter ERROR = Formatter::format().fgColor(Color::RED);
+const Formatter INFO = Formatter::format().fgColor(Color::BLUE);
 
 namespace anch::cli {
 
@@ -92,6 +98,12 @@ namespace anch::cli {
 
     /*! The argument defintion pointer */
     std::shared_ptr<anch::cli::Arg> arg;
+
+    /*! Unformatted argument length */
+    std::size_t length;
+
+    /*! Formatted argument length (will be set on print help) */
+    std::size_t formattedLength;
     // Attributes -
 
   public:
@@ -101,9 +113,18 @@ namespace anch::cli {
      *
      * \param arg the argument to register
      */
-    RegisteredArg(const anch::cli::Arg& arg) {
+    RegisteredArg(const anch::cli::Arg& arg): length(0), formattedLength(0) {
       this->arg = std::make_shared<anch::cli::Arg>(arg);
       this->state = std::make_shared<anch::cli::ArgState>();
+      if(arg.sopt != '\0') {
+	length += 2; // '-' + 1 character
+      }
+      if(arg.lopt.has_value()) {
+	length += 2 + arg.lopt.value().length(); // '--' + option length
+      }
+      if(arg.sopt != '\0' && arg.lopt.has_value()) { // add '|' beetwwen options
+	++length;
+      }
     }
     // Constructors -
 
@@ -115,6 +136,35 @@ namespace anch::cli {
       // Nothing to do
     }
     // Destructor -
+
+    // Accessors +
+    /*!
+     * Get console length
+     *
+     * \return the length
+     */
+    inline std::size_t getLength() const {
+      return length;
+    }
+
+    /*!
+     * Get console formatted length
+     *
+     * \return the length
+     */
+    inline std::size_t getFormattedLength() const {
+      return formattedLength;
+    }
+
+    /*!
+     * Set console formatted length
+     *
+     * \param length the length to set
+     */
+    inline void setFormattedLength(std::size_t length) {
+      formattedLength = length;
+    }
+    // Accessors -
 
   };
 
@@ -208,12 +258,13 @@ std::string
 formatArg(const anch::cli::Arg& arg) {
   std::ostringstream oss;
   if(arg.sopt != '\0' && arg.lopt.has_value()) {
-    oss << '-' << arg.sopt << "|--" << arg.lopt.value();
+    oss << anch::cli::UNDERLINE << '-' << arg.sopt << anch::cli::UNUNDERLINE << '|' << anch::cli::UNDERLINE << "--" << arg.lopt.value() << anch::cli::UNUNDERLINE;
   } else if(arg.sopt != '\0') {
-    oss << '-' << arg.sopt;
+    oss << anch::cli::UNDERLINE << '-' << arg.sopt << anch::cli::UNUNDERLINE;
   } else {
-    oss << "--" << arg.lopt.value();
+    oss << anch::cli::UNDERLINE << "--" << arg.lopt.value() << anch::cli::UNUNDERLINE;
   }
+  oss << anch::cli::RESET;
   return oss.str();
 }
 
@@ -467,16 +518,16 @@ ArgHandler::build(const std::string& arg0) {
 
 void
 ArgHandler::printAppVersion(std::ostream& out) {
-  out << _app.name.value();
+  out << Formatter::format().fgColor(Color::CYAN) << _app.name.value();
   if(_app.version.has_value()) {
     out << ", version " << _app.version.value();
   }
-  out << '\n';
+  out << anch::cli::RESET << '\n';
 }
 
 bool
 ArgHandler::printUsage(std::ostream& out) {
-  out << "Usage: " << _app.name.value();
+  out << INFO << "Usage: " << _app.name.value();
   bool opts = false;
   if(!_sopts.empty() || !_lopts.empty()) {
     opts = true;
@@ -498,13 +549,13 @@ ArgHandler::printUsage(std::ostream& out) {
       out << '+';
     }
   }
-  out << '\n';
+  out << '\n' << anch::cli::RESET;
   return opts;
 }
 
 void
 ArgHandler::printOptions(std::ostream& out) {
-  out << "OPTIONS:";
+  out << anch::cli::UNDERLINE << "OPTIONS:" << anch::cli::UNUNDERLINE;
   std::size_t optLen = 0;
   std::size_t valLen = 0;
   std::map<std::string,std::shared_ptr<anch::cli::RegisteredArg>> opts;
@@ -513,9 +564,10 @@ ArgHandler::printOptions(std::ostream& out) {
       continue;
     }
     // Register option max length +
-    std::string helpStr = formatArg(*(option->arg));
-    if(helpStr.length() > optLen) {
-      optLen = helpStr.length();
+    auto helpStr = formatArg(*(option->arg));
+    option->setFormattedLength(helpStr.length());
+    if(option->getLength() > optLen) {
+      optLen = option->getLength();
     }
     // Register option max length -
     // Register option's value max length +
@@ -535,21 +587,20 @@ ArgHandler::printOptions(std::ostream& out) {
   // Print options +
   std::string expad(6 + optLen + valLen, ' ');
   for(auto iter = opts.begin() ; iter != opts.end() ; ++iter) {
-    out << "\n  " << std::left << std::setw(static_cast<int>(optLen)) << iter->first
-	<< "  " << std::left << std::setw(static_cast<int>(valLen));
+    out << "\n  " << std::left << std::setw(static_cast<int>(optLen + iter->second->getFormattedLength() - iter->second->getLength())) << iter->first << "  " << std::left << std::setw(static_cast<int>(valLen));
     if(iter->second->arg->value) {
       if(iter->second->arg->name.has_value()) {
 	out << iter->second->arg->name.value();
       } else {
 	out << "ARG";
       }
+      if(iter->second->arg->multi) {
+	out << "+ ";
+      }
     } else {
       out << "";
     }
     out << "  ";
-    if(iter->second->arg->multi) {
-      out << "+ ";
-    }
     if(iter->second->arg->description.has_value()) {
       out << iter->second->arg->description.value();
     }
@@ -577,6 +628,7 @@ ArgHandler::printHelp(std::ostream& out) {
 void
 ArgHandler::printVersion(std::ostream& out) {
   printAppVersion(out);
+  out << Formatter::format().fgColor({127,127,127});
   if(_app.copyright.has_value()) {
     out << '\n' << "Copyright © " << _app.copyright.value();
   }
@@ -586,5 +638,5 @@ ArgHandler::printVersion(std::ostream& out) {
   if(_app.author.has_value()) {
     out << '\n' << "Author: " << _app.author.value();
   }
-  out << std::endl;
+  out << anch::cli::RESET << std::endl;
 }
