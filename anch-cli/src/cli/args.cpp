@@ -104,6 +104,9 @@ namespace anch::cli {
 
     /*! Formatted argument length (will be set on print help) */
     std::size_t formattedLength;
+
+    /*! Value length */
+    std::size_t valLength;
     // Attributes -
 
   public:
@@ -113,7 +116,7 @@ namespace anch::cli {
      *
      * \param arg the argument to register
      */
-    RegisteredArg(const anch::cli::Arg& arg): length(0), formattedLength(0) {
+    RegisteredArg(const anch::cli::Arg& arg): length(0), formattedLength(0), valLength(0) {
       this->arg = std::make_shared<anch::cli::Arg>(arg);
       this->state = std::make_shared<anch::cli::ArgState>();
       if(arg.sopt != '\0') {
@@ -124,6 +127,15 @@ namespace anch::cli {
       }
       if(arg.sopt != '\0' && arg.lopt.has_value()) { // add '|' beetwwen options
 	++length;
+      }
+      if(arg.value) {
+	valLength = 3; // ARG
+	if(arg.name.has_value()) {
+	  valLength = arg.name.value().length();
+	}
+	if(arg.multi) {
+	  ++valLength;
+	}
       }
     }
     // Constructors -
@@ -164,7 +176,45 @@ namespace anch::cli {
     inline void setFormattedLength(std::size_t length) {
       formattedLength = length;
     }
+
+    /*!
+     * Get console value length
+     *
+     * \return the length
+     */
+    inline std::size_t getValLength() const {
+      return valLength;
+    }
     // Accessors -
+
+    // Methods +
+    /*!
+     * Format value
+     *
+     * \return the formatted value
+     */
+    std::string formatVal() {
+      std::ostringstream out;
+      if(arg->value) {
+	if(arg->name.has_value()) {
+	  if(arg->multi) {
+	    out << (arg->name.value() + "+");
+	  } else {
+	    out << arg->name.value();
+	  }
+	} else {
+	  if(arg->multi) {
+	    out << "ARG+";
+	  } else {
+	    out << "ARG";
+	  }
+	}
+      } else {
+	out << "";
+      }
+      return out.str();
+    }
+    // Methods -
 
   };
 
@@ -571,14 +621,8 @@ ArgHandler::printOptions(std::ostream& out) {
     }
     // Register option max length -
     // Register option's value max length +
-    if(option->arg->value) {
-      std::size_t curLen = 3; // length for 'ARG'
-      if(option->arg->name.has_value()) {
-	curLen = option->arg->name.value().length();
-      }
-      if(curLen > valLen) {
-	valLen = curLen;
-      }
+    if(option->getValLength() > valLen) {
+      valLen = option->getValLength();
     }
     // Register option's value max length -
     opts[helpStr] = option;
@@ -587,20 +631,8 @@ ArgHandler::printOptions(std::ostream& out) {
   // Print options +
   std::string expad(6 + optLen + valLen, ' ');
   for(auto iter = opts.begin() ; iter != opts.end() ; ++iter) {
-    out << "\n  " << std::left << std::setw(static_cast<int>(optLen + iter->second->getFormattedLength() - iter->second->getLength())) << iter->first << "  " << std::left << std::setw(static_cast<int>(valLen));
-    if(iter->second->arg->value) {
-      if(iter->second->arg->name.has_value()) {
-	out << iter->second->arg->name.value();
-      } else {
-	out << "ARG";
-      }
-      if(iter->second->arg->multi) {
-	out << "+ ";
-      }
-    } else {
-      out << "";
-    }
-    out << "  ";
+    out << "\n  " << std::left << std::setw(static_cast<int>(optLen + iter->second->getFormattedLength() - iter->second->getLength()))
+	<< iter->first << "  " << std::left << std::setw(static_cast<int>(valLen)) << iter->second->formatVal() << "  ";
     if(iter->second->arg->description.has_value()) {
       out << iter->second->arg->description.value();
     }
