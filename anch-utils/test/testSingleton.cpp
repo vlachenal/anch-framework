@@ -49,14 +49,23 @@ testSeqNoWait() {
 void
 testParallelWait() {
   std::cout << "Enter in testParallelWait" << std::endl;
-  std::atomic<int> nb = 0;
-  for(int i = 0 ; i < 10 ; ++i) {
-    std::thread thread([&nb]() { nb += SlowTest::getInstance().getNb(); });
+  std::atomic<int32_t> nb = 0;
+  std::atomic<int64_t> time = 0;
+  int16_t nbThread = 20;
+  for(int16_t i = 0 ; i < nbThread ; ++i) {
+    const std::chrono::time_point<std::chrono::high_resolution_clock> start = std::chrono::high_resolution_clock::now();
+    std::thread thread([&]() {
+      const auto end = std::chrono::high_resolution_clock::now();
+      time += std::chrono::duration_cast<std::chrono::microseconds>(end.time_since_epoch()).count()
+	- std::chrono::duration_cast<std::chrono::microseconds>(start.time_since_epoch()).count();
+      nb += SlowTest::getInstance().getNb();
+    });
     thread.detach();
   }
   std::this_thread::sleep_for(std::chrono::milliseconds(50));
   std::cout << "Add instances nb: " << nb << std::endl;
-  anch::ut::assertTrue(nb == 10);
+  anch::ut::assertTrue(nb == nbThread);
+  std::cout << "Average thread spawn time: " << (time / nbThread) << "µs" << std::endl;
   std::cout << "Exit testParallelWait" << std::endl;
 }
 

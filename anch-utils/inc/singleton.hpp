@@ -22,7 +22,7 @@
 namespace anch {
 
   /*!
-   * \brief Meyers' singleton implemtation.
+   * \brief Meyers' singleton implementation.
    *
    * In C++11, this singleton is thread safe according to the standard.
    *
