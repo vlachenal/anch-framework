@@ -126,7 +126,7 @@ if(ANCH_UTILS_UNIT_TEST)
   file(
     GLOB_RECURSE
     test_fluent
-    test/testStream.cpp
+    test/testFluent.cpp
   )
 
   add_executable(
