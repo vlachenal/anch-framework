@@ -83,7 +83,7 @@
 <!-- Node4 -->
 <g id="Node000004" class="node">
 <title>Node4</title>
-<g id="a_Node000004"><a xlink:href="classanch_1_1_singleton.html" target="_top" xlink:title="Meyers&#39; singleton implemtation.">
+<g id="a_Node000004"><a xlink:href="classanch_1_1_singleton.html" target="_top" xlink:title="Meyers&#39; singleton implementation.">
 <polygon fill="white" stroke="none" points="298,-318.75 185,-318.75 185,-266.75 298,-266.75 298,-318.75"/>
 <text text-anchor="start" x="189.75" y="-305.25" font-family="Helvetica,sans-Serif" font-size="10.00">anch::Singleton&lt; T &gt;</text>
 <text text-anchor="start" x="240" y="-289.25" font-family="Helvetica,sans-Serif" font-size="10.00"> </text>

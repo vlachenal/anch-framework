@@ -11,7 +11,7 @@
 <!-- Node1 -->
 <g id="Node000001" class="node">
 <title>Node1</title>
-<g id="a_Node000001"><a xlink:title="Meyers&#39; singleton implemtation.">
+<g id="a_Node000001"><a xlink:title="Meyers&#39; singleton implementation.">
 <polygon fill="#999999" stroke="none" points="113,-52 0,-52 0,0 113,0 113,-52"/>
 <text text-anchor="start" x="4.75" y="-38.5" font-family="Helvetica,sans-Serif" font-size="10.00">anch::Singleton&lt; T &gt;</text>
 <text text-anchor="start" x="55" y="-22.5" font-family="Helvetica,sans-Serif" font-size="10.00"> </text>
