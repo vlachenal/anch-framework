@@ -53,7 +53,7 @@ testParallelWait() {
   std::atomic<int64_t> time = 0;
   int16_t nbThread = 20;
   for(int16_t i = 0 ; i < nbThread ; ++i) {
-    const std::chrono::time_point<std::chrono::high_resolution_clock> start = std::chrono::high_resolution_clock::now();
+    const auto start = std::chrono::high_resolution_clock::now();
     std::thread thread([&]() {
       const auto end = std::chrono::high_resolution_clock::now();
       time += std::chrono::duration_cast<std::chrono::microseconds>(end.time_since_epoch()).count()
