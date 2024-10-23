@@ -81,6 +81,20 @@ namespace anch::cli {
 
   };
 
+  std::string
+  formatArg(const anch::cli::Arg& arg) {
+    std::ostringstream oss;
+    if(arg.sopt != '\0' && arg.lopt.has_value()) {
+      oss << anch::cli::UNDERLINE << '-' << arg.sopt << anch::cli::UNUNDERLINE << '|' << anch::cli::UNDERLINE << "--" << arg.lopt.value() << anch::cli::UNUNDERLINE;
+    } else if(arg.sopt != '\0') {
+      oss << anch::cli::UNDERLINE << '-' << arg.sopt << anch::cli::UNUNDERLINE;
+    } else {
+      oss << anch::cli::UNDERLINE << "--" << arg.lopt.value() << anch::cli::UNUNDERLINE;
+    }
+    oss << anch::cli::RESET;
+    return oss.str();
+  }
+
   /*!
    * Registered argument (declaration + state)
    *
@@ -193,7 +207,7 @@ namespace anch::cli {
      *
      * \return the formatted value
      */
-    std::string formatVal() {
+    std::string formatVal() const {
       std::ostringstream out;
       if(arg->value) {
 	if(arg->name.has_value()) {
@@ -213,6 +227,15 @@ namespace anch::cli {
 	out << "";
       }
       return out.str();
+    }
+
+    /*!
+     * Format argument
+     *
+     * \return the formatted argument
+     */
+    inline std::string formatArg() const {
+      return anch::cli::formatArg(*arg);
     }
     // Methods -
 
@@ -302,20 +325,6 @@ hasMoreArg(int argc, int idx, const O& option) {
     oss << "No more argument for option " << option << " which needs value";
     throw std::invalid_argument(oss.str());
   }
-}
-
-std::string
-formatArg(const anch::cli::Arg& arg) {
-  std::ostringstream oss;
-  if(arg.sopt != '\0' && arg.lopt.has_value()) {
-    oss << anch::cli::UNDERLINE << '-' << arg.sopt << anch::cli::UNUNDERLINE << '|' << anch::cli::UNDERLINE << "--" << arg.lopt.value() << anch::cli::UNUNDERLINE;
-  } else if(arg.sopt != '\0') {
-    oss << anch::cli::UNDERLINE << '-' << arg.sopt << anch::cli::UNUNDERLINE;
-  } else {
-    oss << anch::cli::UNDERLINE << "--" << arg.lopt.value() << anch::cli::UNUNDERLINE;
-  }
-  oss << anch::cli::RESET;
-  return oss.str();
 }
 
 void
@@ -614,7 +623,7 @@ ArgHandler::printOptions(std::ostream& out) {
       continue;
     }
     // Register option max length +
-    auto helpStr = formatArg(*(option->arg));
+    auto helpStr = option->formatArg();
     option->setFormattedLength(helpStr.length());
     if(option->getLength() > optLen) {
       optLen = option->getLength();
