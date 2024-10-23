@@ -79,6 +79,7 @@ var hierarchy =
       [ "anch::ut::AssertException", "classanch_1_1ut_1_1_assert_exception.html", null ]
     ] ],
     [ "anch::json::Factory< T >", "classanch_1_1json_1_1_factory.html", null ],
+    [ "anch::Fluent< T, C >", "classanch_1_1_fluent.html", null ],
     [ "anch::cli::Formatter", "structanch_1_1cli_1_1_formatter.html", null ],
     [ "anch::crypto::Hash< O, B >", "classanch_1_1crypto_1_1_hash.html", [
       [ "anch::crypto::SHA2< O, B, W, R, I >", "classanch_1_1crypto_1_1_s_h_a2.html", null ]
@@ -222,7 +223,6 @@ var hierarchy =
     [ "anch::sql::SqlConnectionConfiguration", "structanch_1_1sql_1_1_sql_connection_configuration.html", null ],
     [ "anch::sql::SQLQuery", "classanch_1_1sql_1_1_s_q_l_query.html", null ],
     [ "anch::sql::SQLSharedLibrary", "structanch_1_1sql_1_1_s_q_l_shared_library.html", null ],
-    [ "anch::Stream< T, C >", "classanch_1_1_stream.html", null ],
     [ "std::streambuf", null, [
       [ "anch::cutils::CStreambuf", "classanch_1_1cutils_1_1_c_streambuf.html", null ]
     ] ],

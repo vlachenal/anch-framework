@@ -129,6 +129,7 @@ var NAVTREEINDEX9 =
 "factory_8hpp_source.html":[20,0,6,0,0,1],
 "fields_builder_8hpp_source.html":[20,0,11,0,0,0,2],
 "files.html":[20,0],
+"fluent_8hpp_source.html":[20,0,13,0,3],
 "formatter_8hpp_source.html":[20,0,0,0,0,3],
 "from_builder_8hpp_source.html":[20,0,11,0,0,0,3],
 "functions.html":[19,3,0],
@@ -228,7 +229,7 @@ var NAVTREEINDEX9 =
 "iostream_8hpp_source.html":[20,0,2,0,0,0],
 "iso7816__4_padding_8hpp_source.html":[20,0,1,0,0,3,1],
 "json_8hpp_source.html":[20,0,6,0,0,2],
-"less_ptr_compare_8hpp_source.html":[20,0,13,0,3],
+"less_ptr_compare_8hpp_source.html":[20,0,13,0,4],
 "level_formatter_8hpp_source.html":[20,0,7,0,0,0,5],
 "levels_8hpp_source.html":[20,0,7,0,0,1],
 "logger_8hpp_source.html":[20,0,7,0,0,2],
@@ -248,6 +249,5 @@ var NAVTREEINDEX9 =
 "mdc_formatter_8hpp_source.html":[20,0,7,0,0,0,6],
 "message_formatter_8hpp_source.html":[20,0,7,0,0,0,7],
 "millisecond_formatter_8hpp_source.html":[20,0,3,0,0,0,6],
-"minute_formatter_8hpp_source.html":[20,0,3,0,0,0,7],
-"month_formatter_8hpp_source.html":[20,0,3,0,0,0,8]
+"minute_formatter_8hpp_source.html":[20,0,3,0,0,0,7]
 };

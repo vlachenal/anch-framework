@@ -176,12 +176,12 @@ var annotated_dup =
         [ "UnitTests", "classanch_1_1ut_1_1_unit_tests.html", "classanch_1_1ut_1_1_unit_tests" ]
       ] ],
       [ "Collectors", "classanch_1_1_collectors.html", "classanch_1_1_collectors" ],
+      [ "Fluent", "classanch_1_1_fluent.html", "classanch_1_1_fluent" ],
       [ "LessPtrCompare", "structanch_1_1_less_ptr_compare.html", "structanch_1_1_less_ptr_compare" ],
       [ "Optional", "classanch_1_1_optional.html", "classanch_1_1_optional" ],
       [ "PoolableResource", "classanch_1_1_poolable_resource.html", null ],
       [ "ResourcePool", "classanch_1_1_resource_pool.html", "classanch_1_1_resource_pool" ],
       [ "Singleton", "classanch_1_1_singleton.html", "classanch_1_1_singleton" ],
-      [ "Stream", "classanch_1_1_stream.html", "classanch_1_1_stream" ],
       [ "ThreadPool", "classanch_1_1_thread_pool.html", "classanch_1_1_thread_pool" ],
       [ "TimeoutException", "classanch_1_1_timeout_exception.html", "classanch_1_1_timeout_exception" ],
       [ "UUID", "classanch_1_1_u_u_i_d.html", "classanch_1_1_u_u_i_d" ]

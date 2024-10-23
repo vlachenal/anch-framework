@@ -7,7 +7,7 @@ var searchData=
   ['lesserequals_4',['lesserEquals',['../classanch_1_1sql_1_1_clauses_builder.html#a602deac94289295fbec9e6fca42c8c20',1,'anch::sql::ClausesBuilder::lesserEquals()'],['../namespaceanch_1_1sql.html#aa187281d827526594dc93e2a5036923c',1,'anch::sql::lesserEquals()']]],
   ['levelformatter_5',['LevelFormatter',['../classanch_1_1logger_1_1formatter_1_1_level_formatter.html#a4595287f18a66f9c6aa173111dcddbff',1,'anch::logger::formatter::LevelFormatter']]],
   ['like_6',['like',['../classanch_1_1sql_1_1_clauses_builder.html#a35ad9167c5f3e7c3ba4ef5515fb85feb',1,'anch::sql::ClausesBuilder::like()'],['../namespaceanch_1_1sql.html#aba042a9eeaba85d4222d44132b8d64f5',1,'anch::sql::like()']]],
-  ['limit_7',['limit',['../classanch_1_1_stream.html#a92b0443518561e6ba39cd5aef6c44681',1,'anch::Stream']]],
+  ['limit_7',['limit',['../classanch_1_1_fluent.html#a0cf31a2bcaa210030eac3d057fa3a83e',1,'anch::Fluent']]],
   ['listen_8',['listen',['../classanch_1_1network_1_1_socket.html#a2c0eb83ab9414ed52544a5b06ce29ffa',1,'anch::network::Socket::listen()'],['../classanch_1_1network_1_1_udp_socket.html#a29ca5ff47ca44e942f1bb36e38b4b6a6',1,'anch::network::UdpSocket::listen()']]],
   ['logger_9',['Logger',['../classanch_1_1logger_1_1_logger.html#a7d53282e024b10b5fd5841b0b0c2db5c',1,'anch::logger::Logger']]],
   ['loggerconfiguration_10',['LoggerConfiguration',['../classanch_1_1logger_1_1_logger_configuration.html#a47002fe519dd61992d6e402db221c41b',1,'anch::logger::LoggerConfiguration']]],

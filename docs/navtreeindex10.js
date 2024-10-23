@@ -1,5 +1,6 @@
 var NAVTREEINDEX10 =
 {
+"month_formatter_8hpp_source.html":[20,0,3,0,0,0,8],
 "mysql_connection_8hpp_source.html":[20,0,11,1,0,0,0],
 "mysql_prepared_statement_8hpp_source.html":[20,0,11,1,0,0,1],
 "mysql_prepared_statement_result_set_8hpp_source.html":[20,0,11,1,0,0,2],
@@ -165,7 +166,7 @@ var NAVTREEINDEX10 =
 "observable_8hpp_source.html":[20,0,5,0,0,3],
 "observer_8hpp_source.html":[20,0,5,0,0,4],
 "ofb_8hpp_source.html":[20,0,1,0,0,1,11],
-"optional_8hpp_source.html":[20,0,13,0,4],
+"optional_8hpp_source.html":[20,0,13,0,5],
 "page_cli.html":[6],
 "page_cli.html#cli_concept_sec":[6,3],
 "page_cli.html#cli_example_sec":[6,4],
@@ -247,7 +248,6 @@ var NAVTREEINDEX10 =
 "postgresql_result_set_8hpp_source.html":[20,0,11,2,0,0,2],
 "prepared_statement_8hpp_source.html":[20,0,11,0,0,3],
 "primitive_mapper_8hpp_source.html":[20,0,6,0,0,7],
-"processor_8hpp_source.html":[20,0,13,0,5],
-"request_8hpp_source.html":[20,0,10,1,0,0,4],
-"resource_8hpp_source.html":[20,0,9,0,0,1]
+"processor_8hpp_source.html":[20,0,13,0,6],
+"request_8hpp_source.html":[20,0,10,1,0,0,4]
 };
