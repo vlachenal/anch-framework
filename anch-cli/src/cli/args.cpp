@@ -554,6 +554,19 @@ ArgHandler::build(const std::string& arg0) {
     arg(help);
   }
   // Register help argument -
+  // Register no color argument +
+  if(!_lopts.contains("no-term-format")) {
+    anch::cli::Arg nc;
+    nc.description = "Disable AnCH CLI formatting";
+    if(!_lopts.contains("no-term-fmt")) {
+      nc.lopt = "no-term-fmt";
+    }
+    nc.handler = [this](const std::string&) {
+      anch::cli::Formatter::DISABLED = true;
+    };
+    arg(nc);
+  }
+  // Register no color argument -
   // Register version argument +
   if(_app.version.has_value()) {
     if(!_sopts.contains('v') || !_lopts.contains("version")) {
