@@ -164,7 +164,7 @@ anch::cli::bindPipe(std::shared_ptr<std::istream>& dest) {
 void
 anch::cli::manageEnvNoFormat() {
   if(const char* envNoFmt = std::getenv("ANCH_CLI_NO_FMT")) {
-    if(envNoColor != NULL && std::strcmp(envNoFmt, "1") == 0) {
+    if(envNoFmt != NULL && std::strcmp(envNoFmt, "1") == 0) {
       anch::cli::Formatter::DISABLED = true;
     }
   }
