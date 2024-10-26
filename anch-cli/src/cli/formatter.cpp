@@ -19,8 +19,6 @@
 */
 #include "cli/formatter.hpp"
 
-#include <iostream> // \todo remove
-
 using anch::cli::Formatter;
 using anch::cli::Color;
 

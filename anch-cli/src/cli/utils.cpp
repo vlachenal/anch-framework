@@ -18,11 +18,14 @@
   along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "cli/utils.hpp"
+#include "cli/formatter.hpp"
 
 #include <iostream>
 #include <sstream>
 #include <stdexcept>
 #include <fstream>
+#include <cstdlib>
+#include <cstring>
 
 
 using anch::cli::BindArg;
@@ -156,4 +159,13 @@ setInputStream(std::shared_ptr<std::istream>& dest, std::istream& in) {
 std::function<void(std::istream&)>
 anch::cli::bindPipe(std::shared_ptr<std::istream>& dest) {
   return std::bind_front(setInputStream, std::ref(dest));
+}
+
+void
+anch::cli::manageEnvNoFormat() {
+  if(const char* envNoFmt = std::getenv("ANCH_CLI_NO_FMT")) {
+    if(envNoColor != NULL && std::strcmp(envNoFmt, "1") == 0) {
+      anch::cli::Formatter::DISABLED = true;
+    }
+  }
 }

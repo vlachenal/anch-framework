@@ -19,6 +19,7 @@
 */
 #include "cli/args.hpp"
 #include "cli/formatter.hpp"
+#include "cli/utils.hpp"
 
 #include <sstream>
 #include <stdexcept>
@@ -508,6 +509,7 @@ ArgHandler::printBanner(std::ostream& out) {
 
 void
 ArgHandler::build(const std::string& arg0) {
+  anch::cli::manageEnvNoFormat();
   // Set default application name to first argument when not set +
   if(!_app.name.has_value()) {
     std::filesystem::path path(arg0);

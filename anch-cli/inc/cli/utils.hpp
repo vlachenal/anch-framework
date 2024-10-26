@@ -140,4 +140,9 @@ namespace anch::cli {
    */
   std::function<void(std::istream&)> bindPipe(std::shared_ptr<std::istream>& dest);
 
+  /*!
+   * Disable console formatting when environment variable \c ANCH_CLI_NO_FMT is set to \c 1
+   */
+  void manageEnvNoFormat();
+
 }  // anch::cli
