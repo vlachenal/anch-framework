@@ -86,123 +86,51 @@ endif(ANCH_LOGGER_STATIC_LIB)
 # Unitary tests
 if(ANCH_LOGGER_UNITARY_TEST)
 
+  # Includes location
+  include_directories(
+    inc
+    ${ANCH_UT_INCLUDES_DIR}
+    )
+
   link_directories(
+    inc
     ${ANCH_RESOURCE_LIBRARY_DIR}
     ${ANCH_DATE_LIBRARY_DIR}
+    ${ANCH_UT_LIBRARY_DIR}
+    ${ANCH_CLI_LIBRARY_DIR}
     )
 
-  # build rotate test +
+  # build logger test +
   file(
     GLOB_RECURSE
-    test_rotate
-    test/testRotate.cpp
+    test_logger_conf
+    test/testLogger.cpp
   )
 
   add_executable(
-    anch-logger-rotate
-    ${test_rotate}
+    anch-logger-test
+    ${test_logger_conf}
   )
 
   target_link_libraries(
-    anch-logger-rotate
+    anch-logger-test
     anch-logger
     anch-resource
     anch-date
+    anch-unit
+    anch-cli
     )
-
   configure_file(test/anch-logger.conf anch-logger.conf COPYONLY)
-  # build rotate test -
-
-  # build custom file test +
-  file(
-    GLOB_RECURSE
-    test_custom_file
-    test/testCustomFile.cpp
-  )
-
-  add_executable(
-    anch-logger-custom-file
-    ${test_custom_file}
-  )
-
-  list(APPEND custom_file_def "_ANCH_LOGGER_CONFIG_FILE_=\"customFile.ini\"")
-  set_target_properties(
-    anch-logger-custom-file
-    PROPERTIES
-    COMPILE_DEFINITIONS "${custom_file_def}"
-  )
-
-  target_link_libraries(
-    anch-logger-custom-file
-    anch-logger
-    anch-resource
-    anch-date
-    )
-
   configure_file(test/customFile.ini customFile.ini COPYONLY)
-  # build custom file test -
-
-  # build low priority file test +
-  file(
-    GLOB_RECURSE
-    test_low_priority_file
-    test/testLowPriority.cpp
-  )
-
-  add_executable(
-    anch-logger-low-priority
-    ${test_low_priority_file}
-  )
-
-  list(APPEND low_priority_file_def "_ANCH_LOGGER_CONFIG_FILE_=\"low-priority-logger.conf\"")
-  set_target_properties(
-    anch-logger-low-priority
-    PROPERTIES
-    COMPILE_DEFINITIONS "${low_priority_file_def}"
-  )
-
-  target_link_libraries(
-    anch-logger-low-priority
-    anch-logger
-    anch-resource
-    anch-date
-    )
-
   configure_file(test/low-priority-logger.conf low-priority-logger.conf COPYONLY)
-  # build low priority file test -
-
-  # build default configuration test +
-  file(
-    GLOB_RECURSE
-    test_default_conf
-    inc/*
-    test/testDefaultConfig.cpp
-  )
-
-  add_executable(
-    anch-logger-default-config
-    ${test_default_conf}
-  )
-
-  list(APPEND default_conf_def "_ANCH_LOGGER_CONFIG_FILE_=\"invalid.conf\"")
-  set_target_properties(
-    anch-logger-default-config
-    PROPERTIES
-    COMPILE_DEFINITIONS "${default_conf_def}"
-  )
-
-  target_link_libraries(
-    anch-logger-default-config
-    anch-logger
-    anch-resource
-    anch-date
-    )
-  # build default configuration test -
+  # build logger test -
 
   enable_testing()
-  add_test(anch-logger-rotate ${EXECUTABLE_OUTPUT_PATH}/anch-logger-rotate main)
-  add_test(anch-logger-custom-file ${EXECUTABLE_OUTPUT_PATH}/anch-logger-custom-file main)
-  add_test(anch-logger-low-priority ${EXECUTABLE_OUTPUT_PATH}/anch-logger-low-priority main)
-  add_test(anch-logger-default-config ${EXECUTABLE_OUTPUT_PATH}/anch-logger-default-config main)
+  add_test(anch-logger-rotate ${EXECUTABLE_OUTPUT_PATH}/anch-logger-test -t rotate)
+  add_test(anch-logger-custom-file ${EXECUTABLE_OUTPUT_PATH}/anch-logger-test -t custom-file)
+  add_test(anch-logger-low-priority ${EXECUTABLE_OUTPUT_PATH}/anch-logger-test -t low-priority)
+  add_test(anch-logger-default-config ${EXECUTABLE_OUTPUT_PATH}/anch-logger-test -t default)
+
+  message(WARNING "anch-logger-test has to be launch one by one")
 
 endif(ANCH_LOGGER_UNITARY_TEST)
