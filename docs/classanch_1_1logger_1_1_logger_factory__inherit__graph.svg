@@ -25,11 +25,13 @@
 <g id="a_Node000001"><a xlink:title="Logger factory.">
 <polygon fill="#999999" stroke="none" points="159.5,-52 15.5,-52 15.5,0 159.5,0 159.5,-52"/>
 <text text-anchor="start" x="20.38" y="-38.5" font-family="Helvetica,sans-Serif" font-size="10.00">anch::logger::LoggerFactory</text>
-<text text-anchor="start" x="86" y="-22.5" font-family="Helvetica,sans-Serif" font-size="10.00"> </text>
+<text text-anchor="start" x="36.38" y="-22.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="65.5" y="-22.5" font-family="Helvetica,sans-Serif" font-size="10.00">CONF_FILE</text>
 <text text-anchor="start" x="36.38" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
 <text text-anchor="start" x="65.5" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00">getLogger()</text>
 <polygon fill="#666666" stroke="#666666" points="15.5,-34 15.5,-34 159.5,-34 159.5,-34 15.5,-34"/>
-<polygon fill="#666666" stroke="#666666" points="15.5,-18 15.5,-18 159.5,-18 159.5,-18 15.5,-18"/>
+<polygon fill="#666666" stroke="#666666" points="15.5,-18 15.5,-18 63.5,-18 63.5,-18 15.5,-18"/>
+<polygon fill="#666666" stroke="#666666" points="63.5,-18 63.5,-18 159.5,-18 159.5,-18 63.5,-18"/>
 <polygon fill="none" stroke="#666666" points="15.5,0 15.5,-52 159.5,-52 159.5,0 15.5,0"/>
 </a>
 </g>
