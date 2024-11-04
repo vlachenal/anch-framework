@@ -67,8 +67,8 @@ parseArgs(int argc, char** argv, UnitOptions& opts) {
   std::vector<anch::cli::Arg> args = {
     {.handler = anch::cli::bindTrue(opts.list), .sopt = 'l', .lopt = "list-tests", .description = "List tests"},
     {.handler = anch::cli::bindTrue(opts.start), .lopt = "start", .description = "Start runner (error if runner is not defined)"},
-    {.handler = anch::cli::bindTrue(opts.shutdown), .lopt = "shutdown", .description = "Shutdown runner (error if runner is not defined)"},
-    {.handler = anch::cli::bindTrue(opts.genCTEST), .lopt = "gen-ctest", .description = "Genrate Ctest file"},
+    {.handler = anch::cli::bindTrue(opts.shutdown), .lopt = "stop", .description = "Stop runner (error if runner is not defined)"},
+    {.handler = anch::cli::bindTrue(opts.genCTEST), .lopt = "gen-ctest", .description = "Generate CTest file"},
     {.handler = anch::cli::bindStr(opts.runner), .sopt = 'r', .lopt = "runner", .value = true, .name = "RUNNER", .description = "Use specific runner with URI specific (udp, tcp and file supported for now)", .example = "file://./test.sock or tcp://localhost:54321 or udp://mydomain.com:54321"},
     {.handler = anch::cli::bindCol(opts.tests), .sopt = 't', .lopt = "test", .value = true, .name = "TEST", .multi = true, .description = "Test to run (can be defind several time) ; 'all' will run all tests"}
   };
