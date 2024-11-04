@@ -43,6 +43,7 @@ namespace anch::logger {
    * \author Vincent Lachenal
    */
   class Logger {
+    // Attributes +
   private:
     /*! Logger name */
     std::string _name;
@@ -52,7 +53,9 @@ namespace anch::logger {
 
     /*! Logger writers */
     std::vector<anch::logger::Writer*> _writers;
+    // Attributes -
 
+    // Constructors +
   public:
     /*!
      * \ref Logger constructor.
@@ -64,12 +67,16 @@ namespace anch::logger {
     Logger(const std::string& name,
 	   const anch::logger::Level level,
 	   const std::vector<anch::logger::Writer*>& writers);
+    // Constructors -
 
+    // Destructor +
     /*!
      * \ref Logger destructor
      */
     virtual ~Logger();
+    // Destructor -
 
+    // Methods +
   public:
     /*!
      * Concatenate message and log it in TRACE level
@@ -164,6 +171,7 @@ namespace anch::logger {
 	     std::ostringstream& out,
 	     const T& value,
 	     const Q&... values) const noexcept;
+    // Methods -
 
   };
 
