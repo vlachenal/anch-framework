@@ -1,0 +1,25 @@
+## Anch unit configuration +
+# Anch utils path
+set(ANCH_CLI_INCLUDES_DIR "$ENV{HOME}/projects/anch-framework/anch-cli/inc")
+set(ANCH_CLI_LIBRARY_DIR "$ENV{HOME}/projects/anch-framework/anch-cli/build/lib")
+set(ANCH_JSON_INCLUDES_DIR "$ENV{HOME}/projects/anch-framework/anch-json/inc")
+set(ANCH_JSON_LIBRARY_DIR "$ENV{HOME}/projects/anch-framework/anch-json/build/lib")
+#set(ANCH_EVT_INCLUDES_DIR "$ENV{HOME}/projects/anch-framework/anch-events/inc")
+#set(ANCH_EVT_LIBRARY_DIR "$ENV{HOME}/projects/anch-framework/anch-events/build/lib")
+#set(ANCH_NET_INCLUDES_DIR "$ENV{HOME}/projects/anch-framework/anch-network/inc")
+#set(ANCH_NET_LIBRARY_DIR "$ENV{HOME}/projects/anch-framework/anch-network/build/lib")
+
+# Anch unit installation configuration
+set(ANCH_OAS_COMPILE_FLAGS "-O2")
+#set(ANCH_OAS_COMPILE_FLAGS "-g")
+
+# Install path
+set(ANCH_OAS_INSTALL_INC_DIR "/usr/local/include/anch" CACHE STRING "Header installation path")
+set(ANCH_OAS_INSTALL_LIB_DIR "/usr/local/lib/" CACHE STRING "Libraries installation path")
+
+# Static library build
+set(ANCH_OAS_STATIC_LIB OFF CACHE BOOL "Build static library")
+
+# Unitary tests
+set(ANCH_OAS_UNITARY_TEST OFF CACHE BOOL "Anch Open API specification tests")
+## Anch utils configuration -
