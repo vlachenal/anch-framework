@@ -1,0 +1,24 @@
+/*! \page page_cache AnCH CACHE library documentation
+ *
+ * \tableofcontents
+ *
+ * \section cache_intro_seq Introduction
+ *
+ * AnCH CACHE library is cache absatrction library.
+ *
+ * \section cache_prereq_sec Prerequisites
+ *
+ * AnCH CACHE is NOT a standalone library.
+ *
+ * \section cache_install_sec Installation
+ *
+ * make install
+ *
+ * \section cache_concept_sec Conception
+ *
+ * \section cache_example_sec Examples
+ *
+ * Serialize structure into CACHE format:
+ * \code{.cpp}
+ \endcode
+ */
