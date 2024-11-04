@@ -34,7 +34,7 @@ namespace anch::network {
   class TcpStream: public anch::cutils::CIOStream {
 
     // Attributes +
-  private:
+  protected:
     /*! The TCP socket */
     anch::network::TcpSocket _socket;
 
@@ -62,6 +62,77 @@ namespace anch::network {
      * \ref TcpStream destructor
      */
     virtual ~TcpStream() noexcept;
+    // Destructor -
+
+  public:
+    inline bool addObserver(anch::events::Observer<anch::network::SocketEvent>& observer) {
+      return _socket.addObserver(observer);
+    }
+
+  };
+
+  /*!
+   * \brief TCP stream server
+   *
+   * \author Vincent Lachenal
+   *
+   * \since 0.1
+   */
+  class TcpStreamServer: public TcpStream {
+
+    // Constructors +
+  public:
+    /*!
+     * \ref TcpStreamServer constructor
+     *
+     * \param ipAddress the IP address
+     * \param port the port number
+     * \param bufSize the buffer size in byte (default = 1500)
+     *
+     * \throw anch::network::IOException Error while creating the socket
+     */
+    TcpStreamServer(const std::string& ipAddress, uint16_t port, std::size_t bufSize = 1500);
+    // Constructors -
+
+    // Destructor +
+  public:
+    /*!
+     * \ref TcpStreamServer destructor
+     */
+    virtual ~TcpStreamServer() noexcept;
+    // Destructor -
+
+  };
+
+  /*!
+   * \brief TCP stream client
+   *
+   * \author Vincent Lachenal
+   *
+   * \since 0.1
+   */
+  class TcpStreamClient: public TcpStream {
+
+    // Constructors +
+  public:
+    /*!
+     * \ref TcpStreamClient constructor
+     *
+     * \param ipAddress the IP address
+     * \param port the port number
+     * \param bufSize the buffer size in byte (default = 1500)
+     *
+     * \throw anch::network::IOException Error while creating the socket
+     */
+    TcpStreamClient(const std::string& ipAddress, uint16_t port, std::size_t bufSize = 1500);
+    // Constructors -
+
+    // Destructor +
+  public:
+    /*!
+     * \ref TcpStreamClient destructor
+     */
+    virtual ~TcpStreamClient() noexcept;
     // Destructor -
 
   };

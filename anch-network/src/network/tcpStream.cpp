@@ -22,9 +22,11 @@
 #include <functional>
 
 using anch::network::TcpStream;
+using anch::network::TcpStreamServer;
+using anch::network::TcpStreamClient;
 using anch::network::TcpSocket;
 
-
+// TcpStream +
 TcpStream::TcpStream(const std::string& ipAddress, uint16_t port, std::size_t bufSize):
   anch::cutils::CIOStream(),
   _socket(ipAddress, port),
@@ -38,5 +40,29 @@ TcpStream::TcpStream(const std::string& ipAddress, uint16_t port, std::size_t bu
 }
 
 TcpStream::~TcpStream() noexcept {
+  _socket.close();
+}
+// TcpStream -
+
+// TcpStreamServer +
+TcpStreamServer::TcpStreamServer(const std::string& ipAddress, uint16_t port, std::size_t bufSize):
+  TcpStream(ipAddress, port, bufSize) {
+  _socket.bind();
+  _socket.listen();
+}
+
+TcpStreamServer::~TcpStreamServer() noexcept {
+  // Nothing to do ?
+}
+// TcpStreamServer -
+
+// TcpStreamClient +
+TcpStreamClient::TcpStreamClient(const std::string& ipAddress, uint16_t port, std::size_t bufSize):
+  TcpStream(ipAddress, port, bufSize) {
+  _socket.connect();
+}
+
+TcpStreamClient::~TcpStreamClient() noexcept {
   // Nothing to do
 }
+// TcpStreamClient -

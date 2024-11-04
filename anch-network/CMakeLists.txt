@@ -10,15 +10,12 @@ include(AnchNetwork.cmake.in)
 
 # Check GCC version +
 execute_process(COMMAND ${CMAKE_C_COMPILER} -dumpversion
-                OUTPUT_VARIABLE GCC_VERSION)
+  OUTPUT_VARIABLE GCC_VERSION)
 if (GCC_VERSION VERSION_LESS 9.3)
-  message(FATAL_ERROR "Version < 9.3. This library is based on C++20 standard. Exit.")
-elseif(GCC_VERSION VERSION_GREATER 10.0 OR GCC_VERSION VERSION_EQUAL 10.0)
+  message(FATAL_ERROR "Version < 10.0. This library is based on C++20 standard. Exit.")
+else()
   message(STATUS "Version >= 10.0 use -std=c++20")
   add_definitions("-std=c++20")
-elseif(GCC_VERSION VERSION_GREATER 9.3 OR GCC_VERSION VERSION_EQUAL 9.3)
-  message(STATUS "Version >= 9.3 use -std=c++2a")
-  add_definitions("-std=c++2a")
 endif()
 # Check GCC version -
 
@@ -31,24 +28,20 @@ else()
 endif()
 add_definitions(${ANCH_NETWORK_COMPILE_FLAGS})
 
-# Include librairies
-include(FindThreads)
-find_package(Threads)
-
 # Includes location
 include_directories(
   inc
   ${ANCH_EVENTS_INCLUDES_DIR}
   ${ANCH_UTILS_INCLUDES_DIR}
   ${ANCH_CUTILS_INCLUDES_DIR}
-)
+  )
 
 # Retrieve every files in project
 file(
   GLOB_RECURSE
   source_files
   src/*
-)
+  )
 
 # Build objects
 add_library(
@@ -93,50 +86,84 @@ endif(ANCH_NETWORK_STATIC_LIB)
 
 if(ANCH_NETWORK_UNITARY_TEST)
 
-  link_directories(
-    ${ANCH_CUTILS_LIBRARY_DIR}
+  include_directories(
+    inc
+    ${ANCH_EVENTS_INCLUDES_DIR}
+    ${ANCH_UTILS_INCLUDES_DIR}
+    ${ANCH_CUTILS_INCLUDES_DIR}
+    ${ANCH_UT_INCLUDES_DIR}
     )
 
-  # Build parser unitary test +
+  link_directories(
+    ${ANCH_CUTILS_LIBRARY_DIR}
+    ${ANCH_CLI_LIBRARY_DIR}
+    ${ANCH_UT_LIBRARY_DIR}
+    )
+
+  ## Build network unitary test +
+  # TCP socket tests +
   file(
     GLOB_RECURSE
     test_tcp_files
     test/tcpSocketTest.cpp
-  )
+    )
 
   add_executable(
     anch-network-test-tcp
     ${test_tcp_files}
-  )
+    )
 
   target_link_libraries(
     anch-network-test-tcp
-    ${CMAKE_THREAD_LIBS_INIT}
     anch-cutils
     anch-network
-  )
+    )
+  # TCP socket tests -
 
+  # UDP socket tests +
   file(
     GLOB_RECURSE
     test_udp_files
     test/udpSocketTest.cpp
-  )
+    )
 
   add_executable(
     anch-network-test-udp
     ${test_udp_files}
-  )
+    )
 
   target_link_libraries(
     anch-network-test-udp
-    ${CMAKE_THREAD_LIBS_INIT}
     anch-cutils
     anch-network
-  )
-  # Build parser unitary test -
+    )
+  # UDP socket tests -
+
+  # TCP stream tests +
+  file(
+    GLOB_RECURSE
+    test_tcp_stream_files
+    test/tcpStreamTest.cpp
+    )
+
+  add_executable(
+    anch-network-test-tcp-stream
+    ${test_tcp_stream_files}
+    )
+
+  target_link_libraries(
+    anch-network-test-tcp-stream
+    anch-cutils
+    anch-cli
+    anch-unit
+    anch-network
+    )
+  # TCP stream tests -
+  ## Build network unitary test -
 
   enable_testing()
   add_test(anch-network-test-tcp ${EXECUTABLE_OUTPUT_PATH}/anch-network-test-tcp main)
   add_test(anch-network-test-udp ${EXECUTABLE_OUTPUT_PATH}/anch-network-test-udp main)
+  #add_test(anch-network-test-tcp-stream ${EXECUTABLE_OUTPUT_PATH}/anch-network-test-tcp-stream)
 
 endif(ANCH_NETWORK_UNITARY_TEST)

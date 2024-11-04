@@ -59,6 +59,10 @@ TcpSocket::send(const std::string& message) {
   if(res == SOCKET_ERROR) {
     throw IOException("Error on send()");
   }
+
+  // Notify everybody that a message has been received +
+  notifyObservers(SocketEvent(message));
+  // Notify everybody that a message has been received -
 }
 
 void
@@ -84,6 +88,10 @@ TcpSocket::write(const char* buffer, std::size_t size) {
   if(res == SOCKET_ERROR) {
     throw IOException("Error on send()");
   }
+
+  // Notify everybody that a message has been received +
+  notifyObservers(SocketEvent(buffer));
+  // Notify everybody that a message has been received -
   return static_cast<std::size_t>(res);
 }
 
@@ -93,6 +101,10 @@ TcpSocket::read(char* buffer, std::size_t size) {
   if(res == SOCKET_ERROR) {
     throw IOException("Error on recv()");
   }
+
+  // Notify everybody that a message has been received +
+  notifyObservers(SocketEvent(buffer));
+  // Notify everybody that a message has been received -
   return static_cast<std::size_t>(res);
 }
 // Methods -
