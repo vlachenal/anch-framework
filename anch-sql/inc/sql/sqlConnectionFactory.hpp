@@ -29,88 +29,86 @@
 #include <map>
 
 
-namespace anch {
-  namespace sql {
+namespace anch::sql {
+
+  /*!
+   * Create a new shared pointer on SQL connection.
+   *
+   * \param config the SQL database configuration
+   *
+   * \return the connection
+   *
+   * \throw SqlException any error
+   */
+  extern std::shared_ptr<Connection> make_shared_connection(const SqlConnectionConfiguration& config);
+
+  /*! SQL connections pool definition */
+  using SqlConnectionPool = anch::ResourcePool<Connection, SqlConnectionConfiguration, make_shared_connection>;
+
+  /*!
+   * \brief SQL connection factory
+   *
+   * \author Vincent Lachenal
+   *
+   * \since 0.1
+   */
+  class SqlConnectionFactory: public anch::Singleton<SqlConnectionFactory> {
+    friend anch::Singleton<SqlConnectionFactory>;
+
+    // Attributes +
+  private:
+    /*! SQL database configurations */
+    std::map<std::string, SqlConnectionConfiguration> _configs;
+
+    /*! SQL database pools */
+    std::map<std::string, SqlConnectionPool* > _pools;
+    // Attributes -
+
+    // Constructors +
+  private:
+    /*!
+     * \ref SqlConnectionFactory private constructor.\n
+     * Read databases configuration file and create database configurations.
+     */
+    SqlConnectionFactory();
 
     /*!
-     * Create a new shared pointer on SQL connection.
+     * Prohibits \ref SqlConnectionFactory copy constructor
      *
-     * \param config the SQL database configuration
-     *
-     * \return the connection
-     *
-     * \throw SqlException any error
+     * \param other the \ref SqlConnectionFactory to copy
      */
-    extern std::shared_ptr<Connection> make_shared_connection(const SqlConnectionConfiguration& config);
+    SqlConnectionFactory(const SqlConnectionFactory& other) = delete;
+    // Constructors -
 
-    /*! SQL connections pool definition */
-    using SqlConnectionPool = anch::ResourcePool<Connection, SqlConnectionConfiguration, make_shared_connection>;
+    // Destructor +
+  private:
+    /*!
+     * \ref SqlConnectionFactory private destructor
+     */
+    virtual ~SqlConnectionFactory();
+    // Destructor -
+
+    // Methods +
+  public:
+    /*!
+     * Create a new database connection.
+     *
+     * \param name the connection name
+     *
+     * \return the SQL database connection
+     */
+    Connection* createConnection(const std::string& name);
 
     /*!
-     * \brief SQL connection factory
+     * Retrieve SQL connection pool
      *
-     * \author Vincent Lachenal
+     * \param name the pool name
      *
-     * \since 0.1
+     * \return the pool
      */
-    class SqlConnectionFactory: public anch::Singleton<SqlConnectionFactory> {
-      friend anch::Singleton<SqlConnectionFactory>;
+    SqlConnectionPool& getPool(const std::string& name);
+    // Methods -
 
-      // Attributes +
-    private:
-      /*! SQL database configurations */
-      std::map<std::string, SqlConnectionConfiguration> _configs;
+  };
 
-      /*! SQL database pools */
-      std::map<std::string, SqlConnectionPool* > _pools;
-      // Attributes -
-
-      // Constructors +
-    private:
-      /*!
-       * \ref SqlConnectionFactory private constructor.\n
-       * Read databases configuration file and create database configurations.
-       */
-      SqlConnectionFactory();
-
-      /*!
-       * Prohibits \ref SqlConnectionFactory copy constructor
-       *
-       * \param other the \ref SqlConnectionFactory to copy
-       */
-      SqlConnectionFactory(const SqlConnectionFactory& other) = delete;
-      // Constructors -
-
-      // Destructor +
-    private:
-      /*!
-       * \ref SqlConnectionFactory private destructor
-       */
-      virtual ~SqlConnectionFactory();
-      // Destructor -
-
-      // Methods +
-    public:
-      /*!
-       * Create a new database connection.
-       *
-       * \param name the connection name
-       *
-       * \return the SQL database connection
-       */
-      Connection* createConnection(const std::string& name);
-
-      /*!
-       * Retrieve SQL connection pool
-       *
-       * \param name the pool name
-       *
-       * \return the pool
-       */
-      SqlConnectionPool& getPool(const std::string& name);
-      // Methods -
-
-    };
-
-  }
 }

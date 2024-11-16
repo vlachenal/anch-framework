@@ -1,3 +1,6 @@
+-- createuser -d -R -S anch
+-- createdb -O anch anch_test
+
 CREATE TABLE T_Test (
        id SERIAL PRIMARY KEY,
        first_name VARCHAR(256) NOT NULL DEFAULT 'John',

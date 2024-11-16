@@ -1,9 +1,9 @@
-CREATE DATABASE IF NOT EXISTS anch_test;
-CREATE USER 'anch'@'localhost' IDENTIFIED BY 'anch';
-GRANT ALL PRIVILEGES ON anch_test.* TO 'anch'@'localhost';
-FLUSH PRIVILEGES;
-
-USE anch_test;
+--CREATE DATABASE IF NOT EXISTS anch_test;
+--CREATE USER 'anch'@'localhost' IDENTIFIED BY 'anch';
+--GRANT ALL PRIVILEGES ON anch_test.* TO 'anch'@'localhost';
+--FLUSH PRIVILEGES;
+--
+--USE anch_test;
 
 CREATE TABLE IF NOT EXISTS  T_Test (
        id INTEGER NOT NULL AUTO_INCREMENT,

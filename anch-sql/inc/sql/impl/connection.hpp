@@ -19,88 +19,86 @@
 */
 #pragma once
 
-namespace anch {
-  namespace sql {
+namespace anch::sql {
 
-    inline void
-    Connection::begin() {
-      startTransaction();
-    }
-
-    template<typename T, typename... Q>
-    ResultSet*
-    Connection::query(const std::string& query, const T& value, const Q&... values) {
-      PreparedStatement& stmt = prepareStatement(query);
-      std::size_t idx = 1;
-      bindParameters(stmt, idx, value, values...);
-      return stmt.executeQuery();
-    }
-
-    template<typename T, typename... Q>
-    void
-    Connection::queryMapRow(const std::string& query, std::function<void(ResultSet&)> rowMapper, const T& value, const Q&... values) {
-      PreparedStatement& stmt = prepareStatement(query);
-      std::size_t idx = 1;
-      Connection::bindParameters(stmt, idx, value, values...);
-      Connection::mapRow(stmt.executeQuery(), rowMapper);
-    }
-
-    template<typename T, typename... Q>
-    void
-    Connection::queryExtract(const std::string& query, std::function<void(ResultSet&)> resExtractor, const T& value, const Q&... values) {
-      PreparedStatement& stmt = prepareStatement(query);
-      std::size_t idx = 1;
-      Connection::bindParameters(stmt, idx, value, values...);
-      Connection::extract(stmt.executeQuery(), resExtractor);
-    }
-
-    template<typename T, typename... Q>
-    uint64_t
-    Connection::update(const std::string& query, const T& value, const Q&... values) {
-      PreparedStatement& stmt = prepareStatement(query);
-      std::size_t idx = 1;
-      bindParameters(stmt, idx, value, values...);
-      return stmt.executeUpdate();
-    }
-
-    template<typename T, typename Iterable>
-    uint64_t
-    Connection::batchUpdate(const std::string& query, std::function<void(PreparedStatement&, const T&)> mapper, const Iterable& values) {
-      PreparedStatement& stmt = prepareStatement(query);
-      uint64_t nbRows = 0;
-      for(auto iter = values.cbegin() ; iter != values.cend() ; ++iter) {
-	mapper(stmt, *iter);
-	nbRows += stmt.executeUpdate();
-      }
-      return nbRows;
-    }
-
-    template<typename T, typename... Q>
-    inline
-    void
-    Connection::bindParameters(PreparedStatement& stmt, std::size_t& idx, const T& value, const Q&... values) {
-      stmt.set(idx, value);
-      bindParameters(stmt, ++idx, values...);
-    }
-
-    template<typename T>
-    inline
-    void
-    Connection::bindParameters(PreparedStatement& stmt, std::size_t& idx, const T& value) {
-      stmt.set(idx, value);
-    }
-
-    inline
-    bool
-    Connection::isValid() const noexcept {
-      return _valid;
-    }
-
-    inline
-    void
-    Connection::setValid(bool valid) noexcept {
-      _valid = valid;
-    }
-
+  inline void
+  Connection::begin() {
+    startTransaction();
   }
+
+  template<typename T, typename... Q>
+  ResultSet*
+  Connection::query(const std::string& query, const T& value, const Q&... values) {
+    PreparedStatement& stmt = prepareStatement(query);
+    std::size_t idx = 1;
+    bindParameters(stmt, idx, value, values...);
+    return stmt.executeQuery();
+  }
+
+  template<typename T, typename... Q>
+  void
+  Connection::queryMapRow(const std::string& query, std::function<void(ResultSet&)> rowMapper, const T& value, const Q&... values) {
+    PreparedStatement& stmt = prepareStatement(query);
+    std::size_t idx = 1;
+    Connection::bindParameters(stmt, idx, value, values...);
+    Connection::mapRow(stmt.executeQuery(), rowMapper);
+  }
+
+  template<typename T, typename... Q>
+  void
+  Connection::queryExtract(const std::string& query, std::function<void(ResultSet&)> resExtractor, const T& value, const Q&... values) {
+    PreparedStatement& stmt = prepareStatement(query);
+    std::size_t idx = 1;
+    Connection::bindParameters(stmt, idx, value, values...);
+    Connection::extract(stmt.executeQuery(), resExtractor);
+  }
+
+  template<typename T, typename... Q>
+  uint64_t
+  Connection::update(const std::string& query, const T& value, const Q&... values) {
+    PreparedStatement& stmt = prepareStatement(query);
+    std::size_t idx = 1;
+    bindParameters(stmt, idx, value, values...);
+    return stmt.executeUpdate();
+  }
+
+  template<typename T, typename Iterable>
+  uint64_t
+  Connection::batchUpdate(const std::string& query, std::function<void(PreparedStatement&, const T&)> mapper, const Iterable& values) {
+    PreparedStatement& stmt = prepareStatement(query);
+    uint64_t nbRows = 0;
+    for(auto iter = values.cbegin() ; iter != values.cend() ; ++iter) {
+      mapper(stmt, *iter);
+      nbRows += stmt.executeUpdate();
+    }
+    return nbRows;
+  }
+
+  template<typename T, typename... Q>
+  inline
+  void
+  Connection::bindParameters(PreparedStatement& stmt, std::size_t& idx, const T& value, const Q&... values) {
+    stmt.set(idx, value);
+    bindParameters(stmt, ++idx, values...);
+  }
+
+  template<typename T>
+  inline
+  void
+  Connection::bindParameters(PreparedStatement& stmt, std::size_t& idx, const T& value) {
+    stmt.set(idx, value);
+  }
+
+  inline
+  bool
+  Connection::isValid() const noexcept {
+    return _valid;
+  }
+
+  inline
+  void
+  Connection::setValid(bool valid) noexcept {
+    _valid = valid;
+  }
+
 }

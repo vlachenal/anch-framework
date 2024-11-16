@@ -37,6 +37,8 @@ using anch::sql::SQLSharedLibraries;
 using anch::resource::Resource;
 using anch::resource::Section;
 
+const std::string NAME_PREFIX("anch::sql::");
+
 
 std::shared_ptr<Connection>
 anch::sql::make_shared_connection(const SqlConnectionConfiguration& config) {
@@ -48,7 +50,13 @@ SqlConnectionFactory::SqlConnectionFactory(): _configs(), _pools() {
   auto resource = Resource::getResource("db_con.conf");
   auto conf = resource.getConfiguration();
   for(auto iter = conf.cbegin() ; iter != conf.cend() ; ++iter) {
-    const std::string name = iter->first;
+    std::string name = iter->first;
+    // Check if section is about anch::sql +
+    if(!name.starts_with(NAME_PREFIX)) {
+      continue;
+    }
+    name = name.substr(NAME_PREFIX.size());
+    // Check if section is about anch::sql -
     const Section& conf = iter->second;
     // Connection configuration +
     SqlConnectionConfiguration conConf;
