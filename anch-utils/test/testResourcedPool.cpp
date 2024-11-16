@@ -147,6 +147,19 @@ testPool2() {
   std::cout << "Exit testPool2 test" << std::endl;
 }
 
+/*
+class Notvalid {
+};
+
+void
+testPoolNotValid() {
+  std::cout << "Enter in testPoolNotValid test" << std::endl;
+  anch::ResourcePool<Notvalid, TestConfig> pool;
+  std::cout << pool << std::endl;
+  std::cout << "Exit testPoolNotValid test" << std::endl;
+}
+*/
+
 void
 anch::ut::setup(anch::ut::UnitTests& tests) {
   tests

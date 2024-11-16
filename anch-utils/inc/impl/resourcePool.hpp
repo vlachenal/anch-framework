@@ -30,7 +30,7 @@ namespace anch {
    *
    * \since 0.1
    */
-  template<typename T, typename C, std::shared_ptr<T>(*make_ptr)(const C&)>
+  template<anch::Validable T, typename C, std::shared_ptr<T>(*make_ptr)(const C&)>
   class PoolableResource {
 
     // Attributes +
@@ -80,7 +80,7 @@ namespace anch {
   };
 
 
-  template<typename T, typename C, std::shared_ptr<T>(*make_ptr)(const C&)>
+  template<anch::Validable T, typename C, std::shared_ptr<T>(*make_ptr)(const C&)>
   ResourcePool<T,C,make_ptr>::ResourcePool(const C& config,
 					   std::size_t maxSize,
 					   std::size_t initialiSize,
@@ -103,7 +103,7 @@ namespace anch {
     }
   }
 
-  template<typename T, typename C, std::shared_ptr<T>(*make_ptr)(const C&)>
+  template<anch::Validable T, typename C, std::shared_ptr<T>(*make_ptr)(const C&)>
   ResourcePool<T,C,make_ptr>::~ResourcePool() {
     while(!_availables.empty()) {
       _availables.front().reset();
@@ -111,7 +111,7 @@ namespace anch {
     }
   }
 
-  template<typename T, typename C, std::shared_ptr<T>(*make_ptr)(const C&)>
+  template<anch::Validable T, typename C, std::shared_ptr<T>(*make_ptr)(const C&)>
   anch::PoolableResource<T,C,make_ptr>
   ResourcePool<T,C,make_ptr>::borrowResource() {
     _mutex.lock();
@@ -150,7 +150,7 @@ namespace anch {
     return anch::PoolableResource<T,C,make_ptr>(*this, ptr);
   }
 
-  template<typename T, typename C, std::shared_ptr<T>(*make_ptr)(const C&)>
+  template<anch::Validable T, typename C, std::shared_ptr<T>(*make_ptr)(const C&)>
   void
   ResourcePool<T,C,make_ptr>::returnResource(std::shared_ptr<T> res) {
     std::lock_guard<std::mutex> lock(_mutex);
@@ -159,7 +159,7 @@ namespace anch {
     _wait.notify_one();
   }
 
-  template<typename T, typename C, std::shared_ptr<T>(*make_ptr)(const C&)>
+  template<anch::Validable T, typename C, std::shared_ptr<T>(*make_ptr)(const C&)>
   void
   ResourcePool<T,C,make_ptr>::invalidateResource(std::shared_ptr<T> res) {
     std::lock_guard<std::mutex> lock(_mutex);
@@ -173,7 +173,7 @@ namespace anch {
     }
   }
 
-  template<typename T, typename C, std::shared_ptr<T>(*make_ptr)(const C&)>
+  template<anch::Validable T, typename C, std::shared_ptr<T>(*make_ptr)(const C&)>
   inline
   void
   ResourcePool<T,C,make_ptr>::setTimeout(const std::chrono::milliseconds timeout) {

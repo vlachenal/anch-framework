@@ -31,6 +31,20 @@
 namespace anch {
 
   /*!
+   * Concept used to validate resource.\n
+   * Objects in resource pool must implements this follwind methods:
+   * - \code{bool isValid()}
+   *
+   * \author Vincent Lachenal
+   *
+   * \since 0.1
+   */
+  template<typename T>
+  concept Validable = requires(const T& object) {
+    {object.isValid()} -> std::convertible_to<bool>;
+  };
+
+  /*!
    * \brief Timeout exception
    *
    * Timeout error
@@ -98,7 +112,7 @@ namespace anch {
   };
 
   // PoolableResource internal usage class declaration ; you can look at implementation but you should use auto keyword
-  template<typename T, typename C, std::shared_ptr<T>(*make_ptr)(const C&)>
+  template<anch::Validable T, typename C, std::shared_ptr<T>(*make_ptr)(const C&)>
   class PoolableResource;
 
   /*!
@@ -109,8 +123,8 @@ namespace anch {
    * Resources will be instanciated with their configuration.\n
    * If no resource is available, pool will wait until timeout (default to 100ms) is reached.\n
    * Resources are automatically released through their destructor.\n
-   * If you have only one action to do, you can use pool.borrowResource.get().doAction() ;
-   * otherwise you should to keep reference to \c anch::PoolableResource until all actions have been done (with auto res = pool.borrowResource()).\n
+   * If you have only one action to do, you can use \code{pool.borrowResource.get().doAction()} ;
+   * otherwise you should to keep reference to \c anch::PoolableResource until all actions have been done (with \code{auto res = pool.borrowResource()}).\n
    * You can specifiy an \c std::shared_ptr creation function as third template parameter. By default, \c std::make_shared<T> will be used.
    * It can be usefull for polymorphism dynamic allocation.
    *
@@ -118,7 +132,7 @@ namespace anch {
    *
    * \since 0.1
    */
-  template<typename T, typename C, std::shared_ptr<T>(*make_ptr)(const C&) = std::make_shared<T> >
+  template<anch::Validable T, typename C, std::shared_ptr<T>(*make_ptr)(const C&) = std::make_shared<T> >
   class ResourcePool {
 
     friend class PoolableResource<T,C,make_ptr>;
