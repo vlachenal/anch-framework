@@ -89,6 +89,7 @@ endif(ANCH_JSON_STATIC_LIB)
 if(ANCH_JSON_UNITARY_TEST)
   configure_file(test/toto.json toto.json COPYONLY)
   configure_file(test/totos.json totos.json COPYONLY)
+  configure_file(test/data_set.json data_set.json COPYONLY)
 
   include_directories(
     inc
@@ -124,6 +125,25 @@ if(ANCH_JSON_UNITARY_TEST)
     anch-uuid
   )
   # Build JSON serialization unit tests -
+
+  # Build JSON bench unit tests +
+  file(
+    GLOB_RECURSE
+    test_mapper
+    test/benchJson.cpp
+  )
+
+  add_executable(
+    anch-json-bench
+    ${test_mapper}
+  )
+
+  target_link_libraries(
+    anch-json-bench
+    anch-json
+    anch-cli
+  )
+  # Build JSON bench unit tests -
 
   enable_testing()
 
