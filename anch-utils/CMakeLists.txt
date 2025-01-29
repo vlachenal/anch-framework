@@ -198,6 +198,25 @@ if(ANCH_UTILS_UNIT_TEST)
     )
   # Build optional unit test -
 
+  # Build flux unit test +
+  file(
+    GLOB_RECURSE
+    test_flux
+    test/testFlux.cpp
+    )
+
+  add_executable(
+    anch-flux-test
+    ${test_flux}
+    )
+
+  target_link_libraries(
+    anch-flux-test
+    anch-unit
+    anch-cli
+    )
+  # Build flux unit test -
+
   enable_testing()
   # Thread pool +
   add_test(anch-thread-pool-sleep2s-test ${EXECUTABLE_OUTPUT_PATH}/anch-thread-pool-test -t thread-pool-sleep2s)
@@ -257,5 +276,10 @@ if(ANCH_UTILS_UNIT_TEST)
   add_test(anch-optional-functions-test ${EXECUTABLE_OUTPUT_PATH}/anch-optional-test -t opt-func)
   add_test(anch-optional-class-test ${EXECUTABLE_OUTPUT_PATH}/anch-optional-test -t opt-class)
   # Optional -
+
+  # Flux +
+  add_test(anch-flux-push-ok-test ${EXECUTABLE_OUTPUT_PATH}/anch-flux-test -t push-ok)
+  add_test(anch-flux-push-ko-test ${EXECUTABLE_OUTPUT_PATH}/anch-flux-test -t push-ko)
+  # Flux -
 
 endif(ANCH_UTILS_UNIT_TEST)
