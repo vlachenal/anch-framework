@@ -1,7 +1,7 @@
 <map id="anch::sql::SelectBuilderPart" name="anch::sql::SelectBuilderPart">
-<area shape="rect" id="Node000001" title="SQL select query part builder." alt="" coords="84,5,273,352"/>
-<area shape="rect" id="Node000002" href="$classanch_1_1sql_1_1_fields_builder.html" title="Field builder." alt="" coords="5,453,168,629"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="134,367,111,454,106,453,129,365"/>
-<area shape="rect" id="Node000003" href="$classanch_1_1sql_1_1_from_builder.html" title=" " alt="" coords="192,400,349,683"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="229,365,238,400,232,401,224,367"/>
+<area shape="rect" id="Node000001" title="SQL select query part builder." alt="" coords="78,5,253,352"/>
+<area shape="rect" id="Node000002" href="$classanch_1_1sql_1_1_fields_builder.html" title="Field builder." alt="" coords="5,453,155,629"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="124,367,103,454,98,453,119,366"/>
+<area shape="rect" id="Node000003" href="$classanch_1_1sql_1_1_from_builder.html" title=" " alt="" coords="179,400,323,683"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="212,366,220,400,215,401,207,367"/>
 </map>

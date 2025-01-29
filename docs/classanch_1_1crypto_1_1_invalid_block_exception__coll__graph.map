@@ -1,5 +1,5 @@
 <map id="anch::crypto::InvalidBlockException" name="anch::crypto::InvalidBlockException">
-<area shape="rect" id="Node000001" title="Exception on receiving an invalid block." alt="" coords="5,123,196,252"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="48,5,153,75"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="103,90,103,123,98,123,98,90"/>
+<area shape="rect" id="Node000001" title="Exception on receiving an invalid block." alt="" coords="5,123,173,251"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="42,5,137,75"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="92,89,92,123,87,123,87,89"/>
 </map>

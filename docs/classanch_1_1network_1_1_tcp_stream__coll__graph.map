@@ -1,7 +1,17 @@
 <map id="anch::network::TcpStream" name="anch::network::TcpStream">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,304,187,395"/>
-<area shape="rect" id="Node000002" href="$classanch_1_1cutils_1_1_c_i_o_stream.html" title=" " alt="" coords="13,123,179,256"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="99,271,99,304,93,304,93,271"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="47,5,145,75"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="99,90,99,123,93,123,93,90"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="183,1101,349,1213"/>
+<area shape="rect" id="Node000002" href="$classanch_1_1cutils_1_1_c_i_o_stream.html" title=" " alt="" coords="5,893,159,1027"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="156,1035,217,1100,213,1104,152,1039"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="37,625,127,695"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="85,709,85,894,79,894,79,709"/>
+<area shape="rect" id="Node000004" href="$classanch_1_1network_1_1_tcp_socket.html" title=" " alt="" coords="183,883,349,1037"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="269,1037,269,1085,263,1085,263,1037"/>
+<area shape="rect" id="Node000005" href="$classanch_1_1network_1_1_socket.html" title=" " alt="" coords="194,487,338,833"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="269,848,269,883,263,883,263,848"/>
+<area shape="rect" id="Node000006" href="$classanch_1_1events_1_1_observable.html" title=" " alt="" coords="185,245,347,437"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="269,452,269,487,263,487,263,452"/>
+<area shape="rect" id="Node000007" href="$classanch_1_1events_1_1_observable.html" title="An observable implementation of the observers/observable design pattern." alt="" coords="169,5,363,181"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="269,196,269,246,263,246,263,196"/>
+<area shape="rect" id="Node000008" href="$structanch_1_1cutils_1_1cbuffer.html" title="C buffer." alt="" coords="373,893,500,1027"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="382,1028,327,1091,323,1087,378,1024"/>
 </map>

@@ -47,7 +47,7 @@
   </g>
 </defs>
 <script type="application/ecmascript">
-var viewWidth = 177;
+var viewWidth = 166;
 var viewHeight = 612;
 var sectionId = 'dynsection-0';
 </script>
@@ -59,32 +59,32 @@ var sectionId = 'dynsection-0';
 <g id="Node000001" class="node">
 <title>Node1</title>
 <g id="a_Node000001"><a xlink:title="PostgreSQL connection.">
-<polygon fill="#999999" stroke="none" points="169,-196 0,-196 0,0 169,0 169,-196"/>
-<text text-anchor="start" x="4.62" y="-182.5" font-family="Helvetica,sans-Serif" font-size="10.00">anch::sql::PostgreSQLConnection</text>
-<text text-anchor="start" x="83" y="-166.5" font-family="Helvetica,sans-Serif" font-size="10.00"> </text>
-<text text-anchor="start" x="9.38" y="-150.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<polygon fill="#999999" stroke="none" points="158,-196 0,-196 0,0 158,0 158,-196"/>
+<text text-anchor="start" x="4.75" y="-182.5" font-family="Helvetica,sans-Serif" font-size="10.00">anch::sql::PostgreSQLConnection</text>
+<text text-anchor="start" x="77.5" y="-166.5" font-family="Helvetica,sans-Serif" font-size="10.00"> </text>
+<text text-anchor="start" x="10.5" y="-150.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
 <text text-anchor="start" x="27" y="-150.5" font-family="Helvetica,sans-Serif" font-size="10.00">PostgreSQLConnection()</text>
-<text text-anchor="start" x="9.38" y="-134.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="10.5" y="-134.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
 <text text-anchor="start" x="27" y="-134.5" font-family="Helvetica,sans-Serif" font-size="10.00">PostgreSQLConnection()</text>
-<text text-anchor="start" x="9.38" y="-118.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="10.5" y="-118.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
 <text text-anchor="start" x="27" y="-118.5" font-family="Helvetica,sans-Serif" font-size="10.00">PostgreSQLConnection()</text>
-<text text-anchor="start" x="9.38" y="-102.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="10.5" y="-102.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
 <text text-anchor="start" x="27" y="-102.5" font-family="Helvetica,sans-Serif" font-size="10.00">~PostgreSQLConnection()</text>
-<text text-anchor="start" x="9.38" y="-86.5" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
+<text text-anchor="start" x="10.88" y="-86.5" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
 <text text-anchor="start" x="27" y="-86.5" font-family="Helvetica,sans-Serif" font-size="10.00">executeQuery()</text>
-<text text-anchor="start" x="9.38" y="-70.5" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
+<text text-anchor="start" x="10.88" y="-70.5" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
 <text text-anchor="start" x="27" y="-70.5" font-family="Helvetica,sans-Serif" font-size="10.00">executeUpdate()</text>
-<text text-anchor="start" x="9.38" y="-54.5" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
+<text text-anchor="start" x="10.88" y="-54.5" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
 <text text-anchor="start" x="27" y="-54.5" font-family="Helvetica,sans-Serif" font-size="10.00">sendCommit()</text>
-<text text-anchor="start" x="9.38" y="-38.5" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
+<text text-anchor="start" x="10.88" y="-38.5" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
 <text text-anchor="start" x="27" y="-38.5" font-family="Helvetica,sans-Serif" font-size="10.00">sendRollback()</text>
-<text text-anchor="start" x="9.38" y="-22.5" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
+<text text-anchor="start" x="10.88" y="-22.5" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
 <text text-anchor="start" x="27" y="-22.5" font-family="Helvetica,sans-Serif" font-size="10.00">sendStartTransaction()</text>
-<text text-anchor="start" x="9.38" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
+<text text-anchor="start" x="10.88" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
 <text text-anchor="start" x="27" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00">makePrepared()</text>
-<polygon fill="#666666" stroke="#666666" points="0,-178 0,-178 169,-178 169,-178 0,-178"/>
-<polygon fill="#666666" stroke="#666666" points="0,-162 0,-162 169,-162 169,-162 0,-162"/>
-<polygon fill="none" stroke="#666666" points="0,0 0,-196 169,-196 169,0 0,0"/>
+<polygon fill="#666666" stroke="#666666" points="0,-178 0,-178 158,-178 158,-178 0,-178"/>
+<polygon fill="#666666" stroke="#666666" points="0,-162 0,-162 158,-162 158,-162 0,-162"/>
+<polygon fill="none" stroke="#666666" points="0,0 0,-196 158,-196 158,0 0,0"/>
 </a>
 </g>
 </g>
@@ -92,55 +92,55 @@ var sectionId = 'dynsection-0';
 <g id="Node000002" class="node">
 <title>Node2</title>
 <g id="a_Node000002"><a xlink:href="classanch_1_1sql_1_1_connection.html" target="_top" xlink:title="SQL connection virtual class.">
-<polygon fill="white" stroke="none" points="149,-604 20,-604 20,-232 149,-232 149,-604"/>
-<text text-anchor="start" x="32.38" y="-590.5" font-family="Helvetica,sans-Serif" font-size="10.00">anch::sql::Connection</text>
-<text text-anchor="start" x="23.88" y="-574.5" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
-<text text-anchor="start" x="36" y="-574.5" font-family="Helvetica,sans-Serif" font-size="10.00">_valid</text>
-<text text-anchor="start" x="23.88" y="-558.5" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
-<text text-anchor="start" x="36" y="-558.5" font-family="Helvetica,sans-Serif" font-size="10.00">_transaction</text>
-<text text-anchor="start" x="23.88" y="-542.5" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
-<text text-anchor="start" x="36" y="-542.5" font-family="Helvetica,sans-Serif" font-size="10.00">_stmts</text>
-<text text-anchor="start" x="23.88" y="-526.5" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
-<text text-anchor="start" x="36" y="-526.5" font-family="Helvetica,sans-Serif" font-size="10.00">_errors</text>
-<text text-anchor="start" x="23.88" y="-510.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="36" y="-510.5" font-family="Helvetica,sans-Serif" font-size="10.00">Connection()</text>
-<text text-anchor="start" x="23.88" y="-494.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="36" y="-494.5" font-family="Helvetica,sans-Serif" font-size="10.00">Connection()</text>
-<text text-anchor="start" x="23.88" y="-478.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="36" y="-478.5" font-family="Helvetica,sans-Serif" font-size="10.00">~Connection()</text>
-<text text-anchor="start" x="23.88" y="-462.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="36" y="-462.5" font-family="Helvetica,sans-Serif" font-size="10.00">startTransaction()</text>
-<text text-anchor="start" x="23.88" y="-446.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="36" y="-446.5" font-family="Helvetica,sans-Serif" font-size="10.00">begin()</text>
-<text text-anchor="start" x="23.88" y="-430.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="36" y="-430.5" font-family="Helvetica,sans-Serif" font-size="10.00">commit()</text>
-<text text-anchor="start" x="23.88" y="-414.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="36" y="-414.5" font-family="Helvetica,sans-Serif" font-size="10.00">rollback()</text>
-<text text-anchor="start" x="23.88" y="-398.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="36" y="-398.5" font-family="Helvetica,sans-Serif" font-size="10.00">release()</text>
-<text text-anchor="start" x="23.88" y="-382.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="36" y="-382.5" font-family="Helvetica,sans-Serif" font-size="10.00">prepareStatement()</text>
-<text text-anchor="start" x="23.88" y="-366.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="36" y="-366.5" font-family="Helvetica,sans-Serif" font-size="10.00">query()</text>
-<text text-anchor="start" x="36" y="-350.5" font-family="Helvetica,sans-Serif" font-size="10.00">and 9 more...</text>
-<text text-anchor="start" x="23.88" y="-334.5" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
-<text text-anchor="start" x="36" y="-334.5" font-family="Helvetica,sans-Serif" font-size="10.00">executeQuery()</text>
-<text text-anchor="start" x="23.88" y="-318.5" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
-<text text-anchor="start" x="36" y="-318.5" font-family="Helvetica,sans-Serif" font-size="10.00">executeUpdate()</text>
-<text text-anchor="start" x="23.88" y="-302.5" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
-<text text-anchor="start" x="36" y="-302.5" font-family="Helvetica,sans-Serif" font-size="10.00">sendStartTransaction()</text>
-<text text-anchor="start" x="23.88" y="-286.5" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
-<text text-anchor="start" x="36" y="-286.5" font-family="Helvetica,sans-Serif" font-size="10.00">sendCommit()</text>
-<text text-anchor="start" x="23.88" y="-270.5" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
-<text text-anchor="start" x="36" y="-270.5" font-family="Helvetica,sans-Serif" font-size="10.00">sendRollback()</text>
-<text text-anchor="start" x="23.88" y="-254.5" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
-<text text-anchor="start" x="36" y="-254.5" font-family="Helvetica,sans-Serif" font-size="10.00">makePrepared()</text>
-<text text-anchor="start" x="23.88" y="-238.5" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
-<text text-anchor="start" x="36" y="-238.5" font-family="Helvetica,sans-Serif" font-size="10.00">setValid()</text>
-<polygon fill="#666666" stroke="#666666" points="20,-586 20,-586 149,-586 149,-586 20,-586"/>
-<polygon fill="#666666" stroke="#666666" points="20,-522 20,-522 34,-522 34,-522 20,-522"/>
-<polygon fill="#666666" stroke="#666666" points="34,-522 34,-522 149,-522 149,-522 34,-522"/>
-<polygon fill="none" stroke="#666666" points="20,-232 20,-604 149,-604 149,-232 20,-232"/>
+<polygon fill="white" stroke="none" points="137.5,-604 20.5,-604 20.5,-232 137.5,-232 137.5,-604"/>
+<text text-anchor="start" x="31.38" y="-590.5" font-family="Helvetica,sans-Serif" font-size="10.00">anch::sql::Connection</text>
+<text text-anchor="start" x="24.88" y="-574.5" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
+<text text-anchor="start" x="34.5" y="-574.5" font-family="Helvetica,sans-Serif" font-size="10.00">_valid</text>
+<text text-anchor="start" x="24.88" y="-558.5" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
+<text text-anchor="start" x="34.5" y="-558.5" font-family="Helvetica,sans-Serif" font-size="10.00">_transaction</text>
+<text text-anchor="start" x="24.88" y="-542.5" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
+<text text-anchor="start" x="34.5" y="-542.5" font-family="Helvetica,sans-Serif" font-size="10.00">_stmts</text>
+<text text-anchor="start" x="24.88" y="-526.5" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
+<text text-anchor="start" x="34.5" y="-526.5" font-family="Helvetica,sans-Serif" font-size="10.00">_errors</text>
+<text text-anchor="start" x="24.5" y="-510.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="34.5" y="-510.5" font-family="Helvetica,sans-Serif" font-size="10.00">Connection()</text>
+<text text-anchor="start" x="24.5" y="-494.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="34.5" y="-494.5" font-family="Helvetica,sans-Serif" font-size="10.00">Connection()</text>
+<text text-anchor="start" x="24.5" y="-478.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="34.5" y="-478.5" font-family="Helvetica,sans-Serif" font-size="10.00">~Connection()</text>
+<text text-anchor="start" x="24.5" y="-462.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="34.5" y="-462.5" font-family="Helvetica,sans-Serif" font-size="10.00">startTransaction()</text>
+<text text-anchor="start" x="24.5" y="-446.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="34.5" y="-446.5" font-family="Helvetica,sans-Serif" font-size="10.00">begin()</text>
+<text text-anchor="start" x="24.5" y="-430.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="34.5" y="-430.5" font-family="Helvetica,sans-Serif" font-size="10.00">commit()</text>
+<text text-anchor="start" x="24.5" y="-414.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="34.5" y="-414.5" font-family="Helvetica,sans-Serif" font-size="10.00">rollback()</text>
+<text text-anchor="start" x="24.5" y="-398.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="34.5" y="-398.5" font-family="Helvetica,sans-Serif" font-size="10.00">release()</text>
+<text text-anchor="start" x="24.5" y="-382.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="34.5" y="-382.5" font-family="Helvetica,sans-Serif" font-size="10.00">prepareStatement()</text>
+<text text-anchor="start" x="24.5" y="-366.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="34.5" y="-366.5" font-family="Helvetica,sans-Serif" font-size="10.00">query()</text>
+<text text-anchor="start" x="34.5" y="-350.5" font-family="Helvetica,sans-Serif" font-size="10.00">and 9 more...</text>
+<text text-anchor="start" x="24.88" y="-334.5" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
+<text text-anchor="start" x="34.5" y="-334.5" font-family="Helvetica,sans-Serif" font-size="10.00">executeQuery()</text>
+<text text-anchor="start" x="24.88" y="-318.5" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
+<text text-anchor="start" x="34.5" y="-318.5" font-family="Helvetica,sans-Serif" font-size="10.00">executeUpdate()</text>
+<text text-anchor="start" x="24.88" y="-302.5" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
+<text text-anchor="start" x="34.5" y="-302.5" font-family="Helvetica,sans-Serif" font-size="10.00">sendStartTransaction()</text>
+<text text-anchor="start" x="24.88" y="-286.5" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
+<text text-anchor="start" x="34.5" y="-286.5" font-family="Helvetica,sans-Serif" font-size="10.00">sendCommit()</text>
+<text text-anchor="start" x="24.88" y="-270.5" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
+<text text-anchor="start" x="34.5" y="-270.5" font-family="Helvetica,sans-Serif" font-size="10.00">sendRollback()</text>
+<text text-anchor="start" x="24.88" y="-254.5" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
+<text text-anchor="start" x="34.5" y="-254.5" font-family="Helvetica,sans-Serif" font-size="10.00">makePrepared()</text>
+<text text-anchor="start" x="24.88" y="-238.5" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
+<text text-anchor="start" x="34.5" y="-238.5" font-family="Helvetica,sans-Serif" font-size="10.00">setValid()</text>
+<polygon fill="#666666" stroke="#666666" points="20.5,-586 20.5,-586 137.5,-586 137.5,-586 20.5,-586"/>
+<polygon fill="#666666" stroke="#666666" points="20.5,-522 20.5,-522 32.5,-522 32.5,-522 20.5,-522"/>
+<polygon fill="#666666" stroke="#666666" points="32.5,-522 32.5,-522 137.5,-522 137.5,-522 32.5,-522"/>
+<polygon fill="none" stroke="#666666" points="20.5,-232 20.5,-604 137.5,-604 137.5,-232 20.5,-232"/>
 </a>
 </g>
 </g>
@@ -148,8 +148,8 @@ var sectionId = 'dynsection-0';
 <g id="edge1_Node000001_Node000002" class="edge">
 <title>Node2&#45;&gt;Node1</title>
 <g id="a_edge1_Node000001_Node000002"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M84.5,-220.72C84.5,-212.19 84.5,-203.81 84.5,-195.69"/>
-<polygon fill="none" stroke="#63b8ff" points="81,-220.5 84.5,-230.5 88,-220.5 81,-220.5"/>
+<path fill="none" stroke="#63b8ff" d="M79,-220.72C79,-212.19 79,-203.81 79,-195.69"/>
+<polygon fill="none" stroke="#63b8ff" points="75.5,-220.5 79,-230.5 82.5,-220.5 75.5,-220.5"/>
 </a>
 </g>
 </g>

@@ -1,5 +1,5 @@
 <map id="anch::crypto::SHA2&lt; O, B, W, R, I &gt;" name="anch::crypto::SHA2&lt; O, B, W, R, I &gt;">
-<area shape="rect" id="Node000001" title="SHA2 abstract class." alt="" coords="5,332,141,525"/>
-<area shape="rect" id="Node000002" href="$classanch_1_1crypto_1_1_hash.html" title="Hash algorithm abstract class." alt="" coords="7,5,140,284"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="76,299,76,332,71,332,71,299"/>
+<area shape="rect" id="Node000001" title="SHA2 abstract class." alt="" coords="5,331,133,523"/>
+<area shape="rect" id="Node000002" href="$classanch_1_1crypto_1_1_hash.html" title="Hash algorithm abstract class." alt="" coords="7,5,131,283"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="72,298,72,331,67,331,67,298"/>
 </map>

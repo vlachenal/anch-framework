@@ -1,9 +1,9 @@
 <map id="anch::date::formatter::Hour24Formatter" name="anch::date::formatter::Hour24Formatter">
-<area shape="rect" id="Node000001" title=" " alt="" coords="59,613,218,828"/>
-<area shape="rect" id="Node000002" href="$classanch_1_1date_1_1formatter_1_1_i_date_part_formatter.html" title=" " alt="" coords="5,141,176,548"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="121,563,128,613,122,613,116,563"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="200,310,277,379"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="233,380,191,549,177,598,172,596,185,547,228,378"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="174,5,303,92"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="241,106,241,310,236,310,236,106"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="34,609,171,823"/>
+<area shape="rect" id="Node000002" href="$classanch_1_1date_1_1formatter_1_1_i_date_part_formatter.html" title=" " alt="" coords="5,140,157,545"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="96,560,99,610,94,610,91,560"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="182,308,253,377"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="214,378,197,455,172,546,155,594,150,593,167,545,191,454,208,377"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="159,5,276,91"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="220,106,220,308,215,308,215,106"/>
 </map>

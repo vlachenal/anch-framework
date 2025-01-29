@@ -1,11 +1,11 @@
 <map id="anch::events::Observable&lt; T &gt;" name="anch::events::Observable&lt; T &gt;">
-<area shape="rect" id="Node000001" title="An observable implementation of the observers/observable design pattern." alt="" coords="87,5,303,181"/>
-<area shape="rect" id="Node000002" href="$classanch_1_1events_1_1_observable.html" title=" " alt="" coords="107,246,284,440"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="198,196,198,246,193,246,193,196"/>
-<area shape="rect" id="Node000003" href="$classanch_1_1network_1_1_socket.html" title=" " alt="" coords="117,489,273,836"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="198,454,198,489,193,489,193,454"/>
-<area shape="rect" id="Node000004" href="$classanch_1_1network_1_1_tcp_socket.html" title=" " alt="" coords="5,949,183,1104"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="146,851,118,950,113,949,141,849"/>
-<area shape="rect" id="Node000005" href="$classanch_1_1network_1_1_udp_socket.html" title=" " alt="" coords="207,885,389,1168"/>
-<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="251,849,261,885,256,886,246,851"/>
+<area shape="rect" id="Node000001" title="An observable implementation of the observers/observable design pattern." alt="" coords="86,5,279,181"/>
+<area shape="rect" id="Node000002" href="$classanch_1_1events_1_1_observable.html" title=" " alt="" coords="102,245,263,437"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="185,196,185,246,180,246,180,196"/>
+<area shape="rect" id="Node000003" href="$classanch_1_1network_1_1_socket.html" title=" " alt="" coords="111,487,255,833"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="185,452,185,487,180,487,180,452"/>
+<area shape="rect" id="Node000004" href="$classanch_1_1network_1_1_tcp_socket.html" title=" " alt="" coords="5,947,171,1101"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="136,848,110,948,105,946,131,847"/>
+<area shape="rect" id="Node000005" href="$classanch_1_1network_1_1_udp_socket.html" title=" " alt="" coords="195,883,363,1165"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="235,847,244,882,239,884,230,848"/>
 </map>

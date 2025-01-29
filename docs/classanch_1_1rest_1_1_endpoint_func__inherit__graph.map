@@ -1,7 +1,7 @@
 <map id="anch::rest::EndpointFunc" name="anch::rest::EndpointFunc">
-<area shape="rect" id="Node000001" title="Endpoint function interface." alt="" coords="127,5,299,96"/>
-<area shape="rect" id="Node000002" href="$classanch_1_1rest_1_1_endpoint_params_func.html" title=" " alt="" coords="5,144,195,295"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="177,109,152,146,148,143,173,106"/>
-<area shape="rect" id="Node000003" href="$classanch_1_1rest_1_1_endpoint_simple_func.html" title=" " alt="" coords="219,153,437,286"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="254,106,285,151,281,154,250,109"/>
+<area shape="rect" id="Node000001" title="Endpoint function interface." alt="" coords="119,5,277,96"/>
+<area shape="rect" id="Node000002" href="$classanch_1_1rest_1_1_endpoint_params_func.html" title=" " alt="" coords="5,144,180,293"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="164,110,141,146,137,143,160,107"/>
+<area shape="rect" id="Node000003" href="$classanch_1_1rest_1_1_endpoint_simple_func.html" title=" " alt="" coords="204,152,403,285"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="236,107,264,151,260,154,232,110"/>
 </map>

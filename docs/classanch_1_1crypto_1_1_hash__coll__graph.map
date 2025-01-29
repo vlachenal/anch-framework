@@ -1,9 +1,9 @@
 <map id="anch::crypto::Hash&lt; O, B &gt;" name="anch::crypto::Hash&lt; O, B &gt;">
-<area shape="rect" id="Node000001" title="Hash algorithm abstract class." alt="" coords="23,408,156,687"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="5,274,173,343"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="92,343,92,392,87,392,87,343"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="33,140,146,209"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="92,224,92,274,87,274,87,224"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="79,5,100,75"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="92,75,92,122,87,122,87,75"/>
+<area shape="rect" id="Node000001" title="Hash algorithm abstract class." alt="" coords="18,405,142,683"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,272,155,341"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="83,341,83,388,77,388,77,341"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="31,139,129,208"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="83,223,83,272,77,272,77,223"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="69,5,91,75"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="83,75,83,122,77,122,77,75"/>
 </map>

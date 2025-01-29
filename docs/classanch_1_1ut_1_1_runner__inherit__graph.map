@@ -1,9 +1,9 @@
 <map id="anch::ut::Runner" name="anch::ut::Runner">
-<area shape="rect" id="Node000001" title="Unit tests runner." alt="" coords="152,5,271,117"/>
-<area shape="rect" id="Node000002" href="$classanch_1_1ut_1_1_default_runner.html" title="Default unit tests runner." alt="" coords="24,176,191,352"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="178,132,155,177,150,175,173,130"/>
-<area shape="rect" id="Node000004" href="$classanch_1_1ut_1_1_socket_client_runner.html" title="Socket client unit tests runner." alt="" coords="215,165,415,363"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="249,129,267,164,262,167,244,132"/>
-<area shape="rect" id="Node000003" href="$classanch_1_1ut_1_1_socket_server_runner.html" title="Socket server unit tests runner." alt="" coords="5,411,209,565"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="110,367,110,411,105,411,105,367"/>
+<area shape="rect" id="Node000001" title="Unit tests runner." alt="" coords="141,5,251,117"/>
+<area shape="rect" id="Node000002" href="$classanch_1_1ut_1_1_default_runner.html" title="Default unit tests runner." alt="" coords="24,176,176,352"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="166,132,144,177,139,175,161,130"/>
+<area shape="rect" id="Node000004" href="$classanch_1_1ut_1_1_socket_client_runner.html" title="Socket client unit tests runner." alt="" coords="201,165,386,363"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="232,130,248,164,244,167,227,132"/>
+<area shape="rect" id="Node000003" href="$classanch_1_1ut_1_1_socket_server_runner.html" title="Socket server unit tests runner." alt="" coords="5,411,195,565"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="103,367,103,411,97,411,97,367"/>
 </map>

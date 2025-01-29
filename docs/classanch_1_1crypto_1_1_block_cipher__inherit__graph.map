@@ -1,7 +1,16 @@
 <map id="anch::crypto::BlockCipher&lt; B &gt;" name="anch::crypto::BlockCipher&lt; B &gt;">
-<area shape="rect" id="Node000001" title="Block cipher interface." alt="" coords="5,5,223,117"/>
-<area shape="rect" id="Node000002" href="$classanch_1_1crypto_1_1_block_cipher.html" title=" " alt="" coords="25,182,203,312"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="117,132,117,183,111,183,111,132"/>
-<area shape="rect" id="Node000003" href="$classanch_1_1crypto_1_1_a_e_s.html" title="AES block cipher algorithm implementation." alt="" coords="45,361,183,533"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="117,327,117,361,111,361,111,327"/>
+<area shape="rect" id="Node000001" title="Block cipher interface." alt="" coords="72,5,269,117"/>
+<area shape="rect" id="Node000002" href="$classanch_1_1crypto_1_1_block_cipher.html" title=" " alt="" coords="89,181,253,309"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="173,132,173,181,168,181,168,132"/>
+<area shape="rect" id="Node000003" href="$classanch_1_1crypto_1_1_a_e_s.html" title=" " alt="" coords="5,593,133,871"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="145,324,135,359,109,479,90,594,84,593,103,478,129,358,140,322"/>
+<area shape="rect" id="Node000004" href="$classanch_1_1crypto_1_1_a_e_s.html" title=" " alt="" coords="328,593,456,871"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="265,314,301,357,331,413,354,474,371,535,382,593,377,594,365,536,349,475,326,416,296,360,261,318"/>
+<area shape="rect" id="Node000005" href="$classanch_1_1crypto_1_1_a_e_s.html" title=" " alt="" coords="165,593,293,871"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="154,324,145,379,140,441,141,506,152,569,168,614,163,616,147,570,136,506,135,441,140,378,149,324"/>
+<area shape="rect" id="Node000006" href="$classanch_1_1crypto_1_1_a_e_s.html" title="AES block cipher algorithm implementation." alt="" coords="159,359,287,529"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="194,323,203,358,198,360,189,325"/>
+<area shape="poly" id="edge6_Node000006_Node000003" title=" " alt="" coords="171,544,165,555,136,610,131,608,161,552,167,541"/>
+<area shape="poly" id="edge7_Node000006_Node000004" title=" " alt="" coords="284,541,290,552,330,620,326,623,286,555,279,543"/>
+<area shape="poly" id="edge8_Node000006_Node000005" title=" " alt="" coords="228,544,229,593,223,593,222,544"/>
 </map>

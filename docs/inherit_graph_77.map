@@ -1,5 +1,9 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$classanch_1_1_singleton.html" title=" " alt="" coords="5,5,235,50"/>
-<area shape="rect" id="Node000001" href="$classanch_1_1sql_1_1_sql_connection_factory.html" title="SQL connection factory." alt="" coords="283,5,463,50"/>
-<area shape="poly" id="edge52_Node000000_Node000001" title=" " alt="" coords="250,25,282,25,282,30,250,30"/>
+<area shape="rect" id="Node000000" href="$classanch_1_1sql_1_1_connection.html" title="SQL connection virtual class." alt="" coords="5,56,154,83"/>
+<area shape="rect" id="Node000001" href="$classanch_1_1sql_1_1_my_s_q_l_connection.html" title="MySQL connection." alt="" coords="215,5,408,32"/>
+<area shape="poly" id="edge57_Node000000_Node000001" title=" " alt="" coords="158,50,246,30,248,35,159,55"/>
+<area shape="rect" id="Node000002" href="$classanch_1_1sql_1_1_postgre_s_q_l_connection.html" title="PostgreSQL connection." alt="" coords="202,56,421,83"/>
+<area shape="poly" id="edge58_Node000000_Node000002" title=" " alt="" coords="169,67,201,67,201,72,169,72"/>
+<area shape="rect" id="Node000003" href="$classanch_1_1sql_1_1_s_q_lite3_connection.html" title="SQLite3 connection." alt="" coords="214,107,409,133"/>
+<area shape="poly" id="edge59_Node000000_Node000003" title=" " alt="" coords="159,84,248,103,246,109,158,89"/>
 </map>

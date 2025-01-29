@@ -1,5 +1,5 @@
 <map id="anch::crypto::OFB::cipherBlock" name="anch::crypto::OFB::cipherBlock">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,150,50"/>
-<area shape="rect" id="Node000002" href="$classanch_1_1crypto_1_1_block_cipher_mode_of_operation.html#a91402866dbf181ed1377e1ab89510e72" title=" " alt="" coords="198,5,385,50"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="150,25,182,25,182,30,150,30"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,13,142,56"/>
+<area shape="rect" id="Node000002" href="$classanch_1_1crypto_1_1_block_cipher_mode_of_operation.html#a91402866dbf181ed1377e1ab89510e72" title=" " alt="" coords="190,5,402,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="142,32,174,32,174,37,142,37"/>
 </map>

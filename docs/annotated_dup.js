@@ -103,6 +103,8 @@ var annotated_dup =
         [ "SocketEvent", "classanch_1_1network_1_1_socket_event.html", "classanch_1_1network_1_1_socket_event" ],
         [ "TcpSocket", "classanch_1_1network_1_1_tcp_socket.html", "classanch_1_1network_1_1_tcp_socket" ],
         [ "TcpStream", "classanch_1_1network_1_1_tcp_stream.html", "classanch_1_1network_1_1_tcp_stream" ],
+        [ "TcpStreamClient", "classanch_1_1network_1_1_tcp_stream_client.html", "classanch_1_1network_1_1_tcp_stream_client" ],
+        [ "TcpStreamServer", "classanch_1_1network_1_1_tcp_stream_server.html", "classanch_1_1network_1_1_tcp_stream_server" ],
         [ "UdpSocket", "classanch_1_1network_1_1_udp_socket.html", "classanch_1_1network_1_1_udp_socket" ]
       ] ],
       [ "resource", "namespaceanch_1_1resource.html", [
@@ -177,13 +179,11 @@ var annotated_dup =
       ] ],
       [ "Collectors", "classanch_1_1_collectors.html", "classanch_1_1_collectors" ],
       [ "Fluent", "classanch_1_1_fluent.html", "classanch_1_1_fluent" ],
+      [ "Flux", "classanch_1_1_flux.html", "classanch_1_1_flux" ],
       [ "LessPtrCompare", "structanch_1_1_less_ptr_compare.html", "structanch_1_1_less_ptr_compare" ],
       [ "Optional", "classanch_1_1_optional.html", "classanch_1_1_optional" ],
-      [ "PoolableResource", "classanch_1_1_poolable_resource.html", null ],
-      [ "ResourcePool", "classanch_1_1_resource_pool.html", "classanch_1_1_resource_pool" ],
       [ "Singleton", "classanch_1_1_singleton.html", "classanch_1_1_singleton" ],
       [ "ThreadPool", "classanch_1_1_thread_pool.html", "classanch_1_1_thread_pool" ],
-      [ "TimeoutException", "classanch_1_1_timeout_exception.html", "classanch_1_1_timeout_exception" ],
       [ "UUID", "classanch_1_1_u_u_i_d.html", "classanch_1_1_u_u_i_d" ]
     ] ],
     [ "ngx_anch_bootstrap_conf_t", "structngx__anch__bootstrap__conf__t.html", null ]

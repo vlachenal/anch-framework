@@ -1,7 +1,7 @@
 <map id="anch::crypto::PCBC&lt; Cipher, Padding &gt;" name="anch::crypto::PCBC&lt; Cipher, Padding &gt;">
-<area shape="rect" id="Node000001" title="Propagating cipher&#45;block chaining implementation." alt="" coords="53,643,197,815"/>
-<area shape="rect" id="Node000002" href="$classanch_1_1crypto_1_1_block_cipher_mode_of_operation.html" title=" " alt="" coords="5,341,245,594"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="128,609,128,643,123,643,123,609"/>
-<area shape="rect" id="Node000003" href="$classanch_1_1crypto_1_1_block_cipher_mode_of_operation.html" title="Block cipher mode of operation interface." alt="" coords="5,5,245,259"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="128,274,128,341,123,341,123,274"/>
+<area shape="rect" id="Node000001" title="Propagating cipher&#45;block chaining implementation." alt="" coords="46,636,177,807"/>
+<area shape="rect" id="Node000002" href="$classanch_1_1crypto_1_1_block_cipher_mode_of_operation.html" title=" " alt="" coords="5,336,217,587"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="114,601,114,636,109,636,109,601"/>
+<area shape="rect" id="Node000003" href="$classanch_1_1crypto_1_1_block_cipher_mode_of_operation.html" title="Block cipher mode of operation interface." alt="" coords="5,5,217,256"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="114,270,114,336,109,336,109,270"/>
 </map>

@@ -4,6 +4,7 @@ var dir_93a8f6893794e44910a3445a915b6d36 =
     [ "convert.hpp", "convert_8hpp_source.html", null ],
     [ "endianness.hpp", "endianness_8hpp_source.html", null ],
     [ "fluent.hpp", "fluent_8hpp_source.html", null ],
+    [ "flux.hpp", "flux_8hpp_source.html", null ],
     [ "lessPtrCompare.hpp", "less_ptr_compare_8hpp_source.html", null ],
     [ "optional.hpp", "optional_8hpp_source.html", null ],
     [ "processor.hpp", "processor_8hpp_source.html", null ],

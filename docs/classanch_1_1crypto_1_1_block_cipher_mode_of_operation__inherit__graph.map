@@ -1,27 +1,27 @@
 <map id="anch::crypto::BlockCipherModeOfOperation&lt; Derived, Cipher &gt;" name="anch::crypto::BlockCipherModeOfOperation&lt; Derived, Cipher &gt;">
-<area shape="rect" id="Node000001" title="Block cipher mode of operation interface." alt="" coords="652,5,892,259"/>
-<area shape="rect" id="Node000002" href="$classanch_1_1crypto_1_1_block_cipher_mode_of_operation.html" title=" " alt="" coords="5,341,245,594"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="638,160,559,180,472,207,385,242,303,285,266,312,231,343,228,339,263,308,301,280,383,237,471,202,557,175,637,155"/>
-<area shape="rect" id="Node000004" href="$classanch_1_1crypto_1_1_block_cipher_mode_of_operation.html" title=" " alt="" coords="269,341,509,594"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="640,189,565,231,530,256,497,285,473,312,451,342,447,339,469,309,493,281,526,252,562,227,637,184"/>
-<area shape="rect" id="Node000006" href="$classanch_1_1crypto_1_1_block_cipher_mode_of_operation.html" title=" " alt="" coords="533,341,773,594"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="699,273,695,284,678,342,673,340,690,282,694,272"/>
-<area shape="rect" id="Node000008" href="$classanch_1_1crypto_1_1_block_cipher_mode_of_operation.html" title=" " alt="" coords="797,341,1037,594"/>
-<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="872,271,877,282,897,340,892,342,872,284,867,273"/>
-<area shape="rect" id="Node000010" href="$classanch_1_1crypto_1_1_block_cipher_mode_of_operation.html" title=" " alt="" coords="1061,341,1301,594"/>
-<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="906,185,983,228,1055,281,1083,309,1108,339,1104,343,1079,312,1052,285,980,232,904,190"/>
-<area shape="rect" id="Node000012" href="$classanch_1_1crypto_1_1_block_cipher_mode_of_operation.html" title=" " alt="" coords="1325,341,1565,594"/>
-<area shape="poly" id="edge11_Node000001_Node000012" title=" " alt="" coords="907,151,993,170,1087,197,1183,234,1273,280,1311,307,1346,339,1342,343,1308,312,1271,285,1181,239,1086,202,991,175,906,156"/>
-<area shape="rect" id="Node000003" href="$classanch_1_1crypto_1_1_c_b_c.html" title="Cipher&#45;block chaining implementation." alt="" coords="56,643,195,815"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="128,609,128,643,123,643,123,609"/>
-<area shape="rect" id="Node000005" href="$classanch_1_1crypto_1_1_c_f_b.html" title="Cipher feedback implementation." alt="" coords="321,643,458,815"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="392,609,392,643,387,643,387,609"/>
-<area shape="rect" id="Node000007" href="$classanch_1_1crypto_1_1_c_t_r.html" title="Counter implementation." alt="" coords="585,643,722,815"/>
-<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="656,609,656,643,651,643,651,609"/>
-<area shape="rect" id="Node000009" href="$classanch_1_1crypto_1_1_e_c_b.html" title="Electronic codebook implementation." alt="" coords="849,643,986,815"/>
-<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="920,609,920,643,915,643,915,609"/>
-<area shape="rect" id="Node000011" href="$classanch_1_1crypto_1_1_o_f_b.html" title="Output feedback implementation." alt="" coords="1112,643,1251,815"/>
-<area shape="poly" id="edge10_Node000010_Node000011" title=" " alt="" coords="1184,609,1184,643,1179,643,1179,609"/>
-<area shape="rect" id="Node000013" href="$classanch_1_1crypto_1_1_p_c_b_c.html" title="Propagating cipher&#45;block chaining implementation." alt="" coords="1373,643,1517,815"/>
-<area shape="poly" id="edge12_Node000012_Node000013" title=" " alt="" coords="1448,609,1448,643,1443,643,1443,609"/>
+<area shape="rect" id="Node000001" title="Block cipher mode of operation interface." alt="" coords="585,5,797,256"/>
+<area shape="rect" id="Node000002" href="$classanch_1_1crypto_1_1_block_cipher_mode_of_operation.html" title=" " alt="" coords="5,336,217,587"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="571,157,498,177,417,203,337,238,262,282,229,308,200,338,196,334,226,304,258,278,334,234,415,198,496,172,570,152"/>
+<area shape="rect" id="Node000004" href="$classanch_1_1crypto_1_1_block_cipher_mode_of_operation.html" title=" " alt="" coords="241,336,453,587"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="574,186,504,228,471,254,441,282,419,308,401,338,396,335,415,305,437,278,467,250,501,224,571,182"/>
+<area shape="rect" id="Node000006" href="$classanch_1_1crypto_1_1_block_cipher_mode_of_operation.html" title=" " alt="" coords="477,336,689,587"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="621,271,618,281,603,337,598,336,613,279,616,269"/>
+<area shape="rect" id="Node000008" href="$classanch_1_1crypto_1_1_block_cipher_mode_of_operation.html" title=" " alt="" coords="713,336,925,587"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="777,268,782,279,800,336,795,337,777,281,772,270"/>
+<area shape="rect" id="Node000010" href="$classanch_1_1crypto_1_1_block_cipher_mode_of_operation.html" title=" " alt="" coords="949,336,1161,587"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="812,184,881,226,945,278,992,335,988,338,941,282,878,231,809,189"/>
+<area shape="rect" id="Node000012" href="$classanch_1_1crypto_1_1_block_cipher_mode_of_operation.html" title=" " alt="" coords="1185,336,1397,587"/>
+<area shape="poly" id="edge11_Node000001_Node000012" title=" " alt="" coords="812,151,889,170,974,197,1060,233,1139,278,1173,304,1204,334,1200,338,1170,308,1137,282,1057,237,972,202,888,175,811,156"/>
+<area shape="rect" id="Node000003" href="$classanch_1_1crypto_1_1_c_b_c.html" title="Cipher&#45;block chaining implementation." alt="" coords="47,636,176,807"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="114,601,114,636,109,636,109,601"/>
+<area shape="rect" id="Node000005" href="$classanch_1_1crypto_1_1_c_f_b.html" title="Cipher feedback implementation." alt="" coords="283,636,411,807"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="350,601,350,636,345,636,345,601"/>
+<area shape="rect" id="Node000007" href="$classanch_1_1crypto_1_1_c_t_r.html" title="Counter implementation." alt="" coords="519,636,648,807"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="586,601,586,636,581,636,581,601"/>
+<area shape="rect" id="Node000009" href="$classanch_1_1crypto_1_1_e_c_b.html" title="Electronic codebook implementation." alt="" coords="755,636,884,807"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="822,601,822,636,817,636,817,601"/>
+<area shape="rect" id="Node000011" href="$classanch_1_1crypto_1_1_o_f_b.html" title="Output feedback implementation." alt="" coords="991,636,1119,807"/>
+<area shape="poly" id="edge10_Node000010_Node000011" title=" " alt="" coords="1058,601,1058,636,1053,636,1053,601"/>
+<area shape="rect" id="Node000013" href="$classanch_1_1crypto_1_1_p_c_b_c.html" title="Propagating cipher&#45;block chaining implementation." alt="" coords="1226,636,1357,807"/>
+<area shape="poly" id="edge12_Node000012_Node000013" title=" " alt="" coords="1294,601,1294,636,1289,636,1289,601"/>
 </map>

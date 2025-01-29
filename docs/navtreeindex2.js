@@ -1,17 +1,5 @@
 var NAVTREEINDEX2 =
 {
-"classanch_1_1cutils_1_1_c_i_stream.html#aa8288efedd837320d1c7265853610ef5":[19,0,0,2,2,0],
-"classanch_1_1cutils_1_1_c_i_stream.html#adca38f08f11810cc646eceb3dea5d289":[19,0,0,2,2,1],
-"classanch_1_1cutils_1_1_c_i_stream.html#aeffbd77d209f855ae794ef19d53ecbe5":[19,0,0,2,2,2],
-"classanch_1_1cutils_1_1_c_o_stream.html":[19,0,0,2,3],
-"classanch_1_1cutils_1_1_c_o_stream.html#a168bb93d2422423581d740b5c0a88172":[19,0,0,2,3,1],
-"classanch_1_1cutils_1_1_c_o_stream.html#a264cdf64c25f4de9fb079a1170bb4e39":[19,0,0,2,3,2],
-"classanch_1_1cutils_1_1_c_o_stream.html#a459efde16974364ffe5a6cd984c7d4b6":[19,0,0,2,3,0],
-"classanch_1_1cutils_1_1_c_o_stream.html#a7dd7a015d07c86064f70e52f23ed6c96":[19,0,0,2,3,3],
-"classanch_1_1cutils_1_1_c_streambuf.html":[19,0,0,2,4],
-"classanch_1_1cutils_1_1_c_streambuf.html#a0ae3e3333fe4fbff76fe2eaf81d28d95":[19,0,0,2,4,5],
-"classanch_1_1cutils_1_1_c_streambuf.html#a403e422ceb3e3d2005fdc12a2b027ab3":[19,0,0,2,4,0],
-"classanch_1_1cutils_1_1_c_streambuf.html#a9efe27da0e857606e414fcb4dbc574a2":[19,0,0,2,4,3],
 "classanch_1_1cutils_1_1_c_streambuf.html#ace923f6d50e3676cb3c2ab900d567b14":[19,0,0,2,4,4],
 "classanch_1_1cutils_1_1_c_streambuf.html#aceb6298da1b9a38501f44fd4c0cc6135":[19,0,0,2,4,2],
 "classanch_1_1cutils_1_1_c_streambuf.html#adba933a80104959fdf3d8511a66f6afb":[19,0,0,2,4,1],
@@ -249,5 +237,17 @@ var NAVTREEINDEX2 =
 "classanch_1_1date_1_1formatter_1_1_millisecond_formatter.html#a4e63da71cdd3fdf16e7749ea4f552d81":[19,0,0,3,0,6,1],
 "classanch_1_1date_1_1formatter_1_1_millisecond_formatter.html#a642637a596c26e341bbb9670d39cb460":[18,0,0,1,0,6,0],
 "classanch_1_1date_1_1formatter_1_1_millisecond_formatter.html#a642637a596c26e341bbb9670d39cb460":[19,0,0,3,0,6,0],
-"classanch_1_1date_1_1formatter_1_1_millisecond_formatter.html#a98a5259909078990e9798ad1c2ed7c8d":[18,0,0,1,0,6,6]
+"classanch_1_1date_1_1formatter_1_1_millisecond_formatter.html#a98a5259909078990e9798ad1c2ed7c8d":[18,0,0,1,0,6,6],
+"classanch_1_1date_1_1formatter_1_1_millisecond_formatter.html#a98a5259909078990e9798ad1c2ed7c8d":[19,0,0,3,0,6,6],
+"classanch_1_1date_1_1formatter_1_1_millisecond_formatter.html#abe023e9719fe62923566098489089129":[18,0,0,1,0,6,4],
+"classanch_1_1date_1_1formatter_1_1_millisecond_formatter.html#abe023e9719fe62923566098489089129":[19,0,0,3,0,6,4],
+"classanch_1_1date_1_1formatter_1_1_millisecond_formatter.html#af5fceab3077973be0fd4562506b4b0ed":[18,0,0,1,0,6,3],
+"classanch_1_1date_1_1formatter_1_1_millisecond_formatter.html#af5fceab3077973be0fd4562506b4b0ed":[19,0,0,3,0,6,3],
+"classanch_1_1date_1_1formatter_1_1_minute_formatter.html":[18,0,0,1,0,7],
+"classanch_1_1date_1_1formatter_1_1_minute_formatter.html":[19,0,0,3,0,7],
+"classanch_1_1date_1_1formatter_1_1_minute_formatter.html#a2ad932042e125fa630c9bb9a31a00316":[18,0,0,1,0,7,1],
+"classanch_1_1date_1_1formatter_1_1_minute_formatter.html#a2ad932042e125fa630c9bb9a31a00316":[19,0,0,3,0,7,1],
+"classanch_1_1date_1_1formatter_1_1_minute_formatter.html#a91b7b72065af18613e6619c5c358271a":[18,0,0,1,0,7,2],
+"classanch_1_1date_1_1formatter_1_1_minute_formatter.html#a91b7b72065af18613e6619c5c358271a":[19,0,0,3,0,7,2],
+"classanch_1_1date_1_1formatter_1_1_minute_formatter.html#a9b011dc7c04eed367f8a6c27865762d8":[18,0,0,1,0,7,6]
 };

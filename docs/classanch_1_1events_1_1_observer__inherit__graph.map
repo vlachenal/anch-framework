@@ -1,11 +1,11 @@
 <map id="anch::events::Observer&lt; T &gt;" name="anch::events::Observer&lt; T &gt;">
-<area shape="rect" id="Node000001" title="An observer interface of the observers/observable design pattern." alt="" coords="202,5,403,75"/>
-<area shape="rect" id="Node000002" href="$classanch_1_1events_1_1_event_handler.html" title="An event handler." alt="" coords="5,140,197,290"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="254,86,189,142,186,138,251,82"/>
-<area shape="rect" id="Node000003" href="$classanch_1_1events_1_1_observer.html" title=" " alt="" coords="221,172,384,258"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="305,90,305,172,300,172,300,90"/>
-<area shape="rect" id="Node000004" href="$classanch_1_1events_1_1_observer.html" title=" " alt="" coords="409,172,631,258"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="399,80,424,97,462,132,494,170,490,174,459,136,421,101,396,84"/>
-<area shape="rect" id="Node000005" href="$classanch_1_1ut_1_1_socket_server_runner.html" title="Socket server unit tests runner." alt="" coords="418,340,622,494"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="523,273,523,340,517,340,517,273"/>
+<area shape="rect" id="Node000001" title="An observer interface of the observers/observable design pattern." alt="" coords="189,5,369,75"/>
+<area shape="rect" id="Node000002" href="$classanch_1_1events_1_1_event_handler.html" title="An event handler." alt="" coords="5,139,180,288"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="233,87,174,141,171,137,230,83"/>
+<area shape="rect" id="Node000003" href="$classanch_1_1events_1_1_observer.html" title=" " alt="" coords="205,171,354,256"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="282,90,282,171,277,171,277,90"/>
+<area shape="rect" id="Node000004" href="$classanch_1_1events_1_1_observer.html" title=" " alt="" coords="379,171,580,256"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="366,80,389,97,425,132,454,169,450,172,421,136,386,101,363,84"/>
+<area shape="rect" id="Node000005" href="$classanch_1_1ut_1_1_socket_server_runner.html" title="Socket server unit tests runner." alt="" coords="385,337,574,492"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="482,271,482,338,477,338,477,271"/>
 </map>

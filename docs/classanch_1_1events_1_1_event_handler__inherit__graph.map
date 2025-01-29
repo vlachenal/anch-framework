@@ -1,5 +1,5 @@
 <map id="anch::events::EventHandler&lt; T, Derived &gt;" name="anch::events::EventHandler&lt; T, Derived &gt;">
-<area shape="rect" id="Node000001" title="An event handler." alt="" coords="10,123,202,273"/>
-<area shape="rect" id="Node000002" href="$classanch_1_1events_1_1_observer.html" title="An observer interface of the observers/observable design pattern." alt="" coords="5,5,207,75"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="109,90,109,123,103,123,103,90"/>
+<area shape="rect" id="Node000001" title="An event handler." alt="" coords="8,123,183,272"/>
+<area shape="rect" id="Node000002" href="$classanch_1_1events_1_1_observer.html" title="An observer interface of the observers/observable design pattern." alt="" coords="5,5,185,75"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="98,90,98,123,93,123,93,90"/>
 </map>

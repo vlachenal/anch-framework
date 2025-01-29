@@ -154,19 +154,19 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "_nginx_router_8hpp_source.html",
-"classanch_1_1crypto_1_1_base64.html#a4d02264d1599834d1cf7d5291dc4e95c",
-"classanch_1_1cutils_1_1_c_i_stream.html#aa8288efedd837320d1c7265853610ef5",
-"classanch_1_1date_1_1formatter_1_1_millisecond_formatter.html#a98a5259909078990e9798ad1c2ed7c8d",
-"classanch_1_1json_1_1_j_s_o_n_mapper.html#adf39acee998b916406f2d5d6074f01d4",
-"classanch_1_1logger_1_1formatter_1_1_m_d_c_formatter.html#abab61ee501e17bdaa59fb77e7c42ac3e",
-"classanch_1_1rest_1_1_endpoint_func.html#a7d5ddb0d641bdc9c10ccbce796f7a113",
-"classanch_1_1sql_1_1_connection.html#ad3ec5cab9f60dece303d571fb185a8e5",
-"classanch_1_1sql_1_1_prepared_statement.html#a44525e33ea1e0f7da07cca8a841843e5",
-"classanch_1_1ut_1_1_socket_client_runner.html#a1bde55de014b37dc55b7258b8d79fb9c",
-"millisecond_formatter_8hpp_source.html",
-"processor_8hpp_source.html",
-"structanch_1_1rest_1_1_proxy_config.html"
+"classanch_1_1crypto_1_1_base64.html#a8bce400abc6cf04ae7fd047bfbb1b35a",
+"classanch_1_1cutils_1_1_c_streambuf.html#ace923f6d50e3676cb3c2ab900d567b14",
+"classanch_1_1date_1_1formatter_1_1_minute_formatter.html#a9b011dc7c04eed367f8a6c27865762d8",
+"classanch_1_1json_1_1_mapping_error.html#a5f96cf3d05c051cae6f49a5f14331330",
+"classanch_1_1logger_1_1formatter_1_1_string_formatter.html#a204cf8ff0ba4616b401408e307385b64",
+"classanch_1_1rest_1_1_end_point.html#adfb749bc3bd090810507a1b3e1b113e2",
+"classanch_1_1sql_1_1_connection.html#acd326c720ce84c1d9e5e9c48d9c12efa",
+"classanch_1_1sql_1_1_prepared_statement.html#a343e4ad1387a33a28f9cdfeb1aa37a79",
+"classanch_1_1ut_1_1_runner.html#a7623d902838ad934b4aa245b7e77ad36",
+"md5_8hpp_source.html",
+"postgresql_connection_8hpp_source.html",
+"structanch_1_1rest_1_1_media_type.html#ab396567f0e292178a9180063d6e04e1d"
 ];
 
-var SYNCONMSG = 'click to disable panel synchronisation';
-var SYNCOFFMSG = 'click to enable panel synchronisation';
+var SYNCONMSG = 'click to disable panel synchronization';
+var SYNCOFFMSG = 'click to enable panel synchronization';

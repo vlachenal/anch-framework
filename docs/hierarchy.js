@@ -1,7 +1,6 @@
 var hierarchy =
 [
     [ "anch::crypto::AesniKey< S >", "structanch_1_1crypto_1_1_aesni_key.html", null ],
-    [ "anch::crypto::AesniKey< R+1 >", "structanch_1_1crypto_1_1_aesni_key.html", null ],
     [ "anch::crypto::ANSIX923", "classanch_1_1crypto_1_1_a_n_s_i_x923.html", null ],
     [ "anch::cli::App", "structanch_1_1cli_1_1_app.html", null ],
     [ "anch::cli::Arg", "structanch_1_1cli_1_1_arg.html", null ],
@@ -12,6 +11,9 @@ var hierarchy =
     [ "anch::crypto::Base64", "classanch_1_1crypto_1_1_base64.html", null ],
     [ "anch::crypto::BlockCipher< B >", "classanch_1_1crypto_1_1_block_cipher.html", null ],
     [ "anch::crypto::BlockCipher< 16 >", "classanch_1_1crypto_1_1_block_cipher.html", [
+      [ "anch::crypto::AES< 4, 10 >", "classanch_1_1crypto_1_1_a_e_s.html", null ],
+      [ "anch::crypto::AES< 6, 12 >", "classanch_1_1crypto_1_1_a_e_s.html", null ],
+      [ "anch::crypto::AES< 8, 14 >", "classanch_1_1crypto_1_1_a_e_s.html", null ],
       [ "anch::crypto::AES< K, R >", "classanch_1_1crypto_1_1_a_e_s.html", null ]
     ] ],
     [ "anch::crypto::BlockCipherModeOfOperation< Derived, Cipher >", "classanch_1_1crypto_1_1_block_cipher_mode_of_operation.html", null ],
@@ -52,7 +54,6 @@ var hierarchy =
       [ "anch::sql::SQLite3Connection", "classanch_1_1sql_1_1_s_q_lite3_connection.html", null ]
     ] ],
     [ "anch::crypto::SHA2< O, B, W, R, I >::Context< Init >", "structanch_1_1crypto_1_1_s_h_a2_1_1_context.html", null ],
-    [ "anch::crypto::SHA2< O, B, W, R, I >::Context< I >", "structanch_1_1crypto_1_1_s_h_a2_1_1_context.html", null ],
     [ "anch::date::Date", "classanch_1_1date_1_1_date.html", [
       [ "anch::sql::Date", "classanch_1_1sql_1_1_date.html", null ],
       [ "anch::sql::Time", "classanch_1_1sql_1_1_time.html", null ],
@@ -66,7 +67,6 @@ var hierarchy =
     ] ],
     [ "anch::events::Event< T >", "structanch_1_1events_1_1_event.html", null ],
     [ "std::exception", null, [
-      [ "anch::TimeoutException", "classanch_1_1_timeout_exception.html", null ],
       [ "anch::crypto::InvalidBlockException", "classanch_1_1crypto_1_1_invalid_block_exception.html", null ],
       [ "anch::date::InvalidFormatException", "classanch_1_1date_1_1_invalid_format_exception.html", null ],
       [ "anch::device::DeviceException", "classanch_1_1device_1_1_device_exception.html", null ],
@@ -80,6 +80,7 @@ var hierarchy =
     ] ],
     [ "anch::json::Factory< T >", "classanch_1_1json_1_1_factory.html", null ],
     [ "anch::Fluent< T, C >", "classanch_1_1_fluent.html", null ],
+    [ "anch::Flux< T >", "classanch_1_1_flux.html", null ],
     [ "anch::cli::Formatter", "structanch_1_1cli_1_1_formatter.html", null ],
     [ "anch::crypto::Hash< O, B >", "classanch_1_1crypto_1_1_hash.html", [
       [ "anch::crypto::SHA2< O, B, W, R, I >", "classanch_1_1crypto_1_1_s_h_a2.html", null ]
@@ -129,7 +130,10 @@ var hierarchy =
     ] ],
     [ "std::iostream", null, [
       [ "anch::cutils::CIOStream", "classanch_1_1cutils_1_1_c_i_o_stream.html", [
-        [ "anch::network::TcpStream", "classanch_1_1network_1_1_tcp_stream.html", null ]
+        [ "anch::network::TcpStream", "classanch_1_1network_1_1_tcp_stream.html", [
+          [ "anch::network::TcpStreamClient", "classanch_1_1network_1_1_tcp_stream_client.html", null ],
+          [ "anch::network::TcpStreamServer", "classanch_1_1network_1_1_tcp_stream_server.html", null ]
+        ] ]
       ] ]
     ] ],
     [ "anch::crypto::ISO7816_4Padding", "classanch_1_1crypto_1_1_i_s_o7816__4_padding.html", null ],
@@ -164,12 +168,10 @@ var hierarchy =
     [ "anch::events::Observer< anch::network::SocketEvent >", "classanch_1_1events_1_1_observer.html", [
       [ "anch::ut::SocketServerRunner", "classanch_1_1ut_1_1_socket_server_runner.html", null ]
     ] ],
-    [ "anch::events::Observer< SocketEvent >", "classanch_1_1events_1_1_observer.html", null ],
     [ "std::optional", null, [
       [ "anch::Optional< T >", "classanch_1_1_optional.html", null ]
     ] ],
     [ "anch::crypto::PKCS5Padding", "classanch_1_1crypto_1_1_p_k_c_s5_padding.html", null ],
-    [ "anch::PoolableResource< T, C, make_ptr >", "classanch_1_1_poolable_resource.html", null ],
     [ "anch::sql::PreparedStatement", "classanch_1_1sql_1_1_prepared_statement.html", [
       [ "anch::sql::MySQLPreparedStatement", "classanch_1_1sql_1_1_my_s_q_l_prepared_statement.html", null ],
       [ "anch::sql::PostgreSQLPreparedStatement", "classanch_1_1sql_1_1_postgre_s_q_l_prepared_statement.html", null ],
@@ -179,7 +181,6 @@ var hierarchy =
     [ "anch::rest::ProxyConfig", "structanch_1_1rest_1_1_proxy_config.html", null ],
     [ "anch::rest::Request", "classanch_1_1rest_1_1_request.html", null ],
     [ "anch::resource::Resource", "classanch_1_1resource_1_1_resource.html", null ],
-    [ "anch::ResourcePool< T, C, make_ptr >", "classanch_1_1_resource_pool.html", null ],
     [ "anch::rest::Response", "classanch_1_1rest_1_1_response.html", null ],
     [ "anch::sql::ResultSet", "classanch_1_1sql_1_1_result_set.html", [
       [ "anch::sql::MySQLPreparedStatementResultSet", "classanch_1_1sql_1_1_my_s_q_l_prepared_statement_result_set.html", null ],

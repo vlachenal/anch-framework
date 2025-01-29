@@ -1,7 +1,7 @@
 <map id="anch::sql::Timestamp" name="anch::sql::Timestamp">
-<area shape="rect" id="Node000001" title="SQL timestamp type." alt="" coords="5,706,159,861"/>
-<area shape="rect" id="Node000002" href="$classanch_1_1date_1_1_date.html" title=" " alt="" coords="21,140,143,657"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="85,672,85,707,79,707,79,672"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="41,5,123,75"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="85,74,85,123,79,123,79,74"/>
+<area shape="rect" id="Node000001" title="SQL timestamp type." alt="" coords="5,705,144,860"/>
+<area shape="rect" id="Node000002" href="$classanch_1_1date_1_1_date.html" title=" " alt="" coords="19,139,131,656"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="77,671,77,706,72,706,72,671"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="37,5,112,75"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="77,74,77,122,72,122,72,74"/>
 </map>

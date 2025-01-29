@@ -47,7 +47,7 @@
   </g>
 </defs>
 <script type="application/ecmascript">
-var viewWidth = 266;
+var viewWidth = 246;
 var viewHeight = 516;
 var sectionId = 'dynsection-0';
 </script>
@@ -59,42 +59,42 @@ var sectionId = 'dynsection-0';
 <g id="Node000001" class="node">
 <title>Node1</title>
 <g id="a_Node000001"><a xlink:title="SQL select query part builder.">
-<polygon fill="#999999" stroke="none" points="201,-508 59,-508 59,-248 201,-248 201,-508"/>
-<text text-anchor="start" x="63.62" y="-494.5" font-family="Helvetica,sans-Serif" font-size="10.00">anch::sql::SelectBuilderPart</text>
-<text text-anchor="start" x="63.88" y="-478.5" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
-<text text-anchor="start" x="77" y="-478.5" font-family="Helvetica,sans-Serif" font-size="10.00">_select</text>
-<text text-anchor="start" x="63.88" y="-462.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="77" y="-462.5" font-family="Helvetica,sans-Serif" font-size="10.00">groupBy()</text>
-<text text-anchor="start" x="63.88" y="-446.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="77" y="-446.5" font-family="Helvetica,sans-Serif" font-size="10.00">orderBy()</text>
-<text text-anchor="start" x="63.88" y="-430.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="77" y="-430.5" font-family="Helvetica,sans-Serif" font-size="10.00">having()</text>
-<text text-anchor="start" x="63.88" y="-414.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="77" y="-414.5" font-family="Helvetica,sans-Serif" font-size="10.00">unionOnce()</text>
-<text text-anchor="start" x="63.88" y="-398.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="77" y="-398.5" font-family="Helvetica,sans-Serif" font-size="10.00">unionAll()</text>
-<text text-anchor="start" x="63.88" y="-382.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="77" y="-382.5" font-family="Helvetica,sans-Serif" font-size="10.00">offset()</text>
-<text text-anchor="start" x="63.88" y="-366.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="77" y="-366.5" font-family="Helvetica,sans-Serif" font-size="10.00">fetch()</text>
-<text text-anchor="start" x="63.88" y="-350.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="77" y="-350.5" font-family="Helvetica,sans-Serif" font-size="10.00">windowByRowNumber()</text>
-<text text-anchor="start" x="63.88" y="-334.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="77" y="-334.5" font-family="Helvetica,sans-Serif" font-size="10.00">windowByRank()</text>
-<text text-anchor="start" x="63.88" y="-318.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="77" y="-318.5" font-family="Helvetica,sans-Serif" font-size="10.00">done()</text>
-<text text-anchor="start" x="63.88" y="-302.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="77" y="-302.5" font-family="Helvetica,sans-Serif" font-size="10.00">build()</text>
-<text text-anchor="start" x="63.88" y="-286.5" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
-<text text-anchor="start" x="77" y="-286.5" font-family="Helvetica,sans-Serif" font-size="10.00">SelectBuilderPart()</text>
-<text text-anchor="start" x="63.88" y="-270.5" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
-<text text-anchor="start" x="77" y="-270.5" font-family="Helvetica,sans-Serif" font-size="10.00">SelectBuilderPart()</text>
-<text text-anchor="start" x="63.88" y="-254.5" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
-<text text-anchor="start" x="77" y="-254.5" font-family="Helvetica,sans-Serif" font-size="10.00">~SelectBuilderPart()</text>
-<polygon fill="#666666" stroke="#666666" points="59,-490 59,-490 201,-490 201,-490 59,-490"/>
-<polygon fill="#666666" stroke="#666666" points="59,-474 59,-474 75,-474 75,-474 59,-474"/>
-<polygon fill="#666666" stroke="#666666" points="75,-474 75,-474 201,-474 201,-474 75,-474"/>
-<polygon fill="none" stroke="#666666" points="59,-248 59,-508 201,-508 201,-248 59,-248"/>
+<polygon fill="#999999" stroke="none" points="185.5,-508 54.5,-508 54.5,-248 185.5,-248 185.5,-508"/>
+<text text-anchor="start" x="59.25" y="-494.5" font-family="Helvetica,sans-Serif" font-size="10.00">anch::sql::SelectBuilderPart</text>
+<text text-anchor="start" x="60.88" y="-478.5" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
+<text text-anchor="start" x="72.5" y="-478.5" font-family="Helvetica,sans-Serif" font-size="10.00">_select</text>
+<text text-anchor="start" x="60.5" y="-462.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="72.5" y="-462.5" font-family="Helvetica,sans-Serif" font-size="10.00">groupBy()</text>
+<text text-anchor="start" x="60.5" y="-446.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="72.5" y="-446.5" font-family="Helvetica,sans-Serif" font-size="10.00">orderBy()</text>
+<text text-anchor="start" x="60.5" y="-430.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="72.5" y="-430.5" font-family="Helvetica,sans-Serif" font-size="10.00">having()</text>
+<text text-anchor="start" x="60.5" y="-414.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="72.5" y="-414.5" font-family="Helvetica,sans-Serif" font-size="10.00">unionOnce()</text>
+<text text-anchor="start" x="60.5" y="-398.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="72.5" y="-398.5" font-family="Helvetica,sans-Serif" font-size="10.00">unionAll()</text>
+<text text-anchor="start" x="60.5" y="-382.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="72.5" y="-382.5" font-family="Helvetica,sans-Serif" font-size="10.00">offset()</text>
+<text text-anchor="start" x="60.5" y="-366.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="72.5" y="-366.5" font-family="Helvetica,sans-Serif" font-size="10.00">fetch()</text>
+<text text-anchor="start" x="60.5" y="-350.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="72.5" y="-350.5" font-family="Helvetica,sans-Serif" font-size="10.00">windowByRowNumber()</text>
+<text text-anchor="start" x="60.5" y="-334.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="72.5" y="-334.5" font-family="Helvetica,sans-Serif" font-size="10.00">windowByRank()</text>
+<text text-anchor="start" x="60.5" y="-318.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="72.5" y="-318.5" font-family="Helvetica,sans-Serif" font-size="10.00">done()</text>
+<text text-anchor="start" x="60.5" y="-302.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="72.5" y="-302.5" font-family="Helvetica,sans-Serif" font-size="10.00">build()</text>
+<text text-anchor="start" x="60.88" y="-286.5" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
+<text text-anchor="start" x="72.5" y="-286.5" font-family="Helvetica,sans-Serif" font-size="10.00">SelectBuilderPart()</text>
+<text text-anchor="start" x="60.88" y="-270.5" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
+<text text-anchor="start" x="72.5" y="-270.5" font-family="Helvetica,sans-Serif" font-size="10.00">SelectBuilderPart()</text>
+<text text-anchor="start" x="60.88" y="-254.5" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
+<text text-anchor="start" x="72.5" y="-254.5" font-family="Helvetica,sans-Serif" font-size="10.00">~SelectBuilderPart()</text>
+<polygon fill="#666666" stroke="#666666" points="54.5,-490 54.5,-490 185.5,-490 185.5,-490 54.5,-490"/>
+<polygon fill="#666666" stroke="#666666" points="54.5,-474 54.5,-474 70.5,-474 70.5,-474 54.5,-474"/>
+<polygon fill="#666666" stroke="#666666" points="70.5,-474 70.5,-474 185.5,-474 185.5,-474 70.5,-474"/>
+<polygon fill="none" stroke="#666666" points="54.5,-248 54.5,-508 185.5,-508 185.5,-248 54.5,-248"/>
 </a>
 </g>
 </g>
@@ -102,24 +102,24 @@ var sectionId = 'dynsection-0';
 <g id="Node000002" class="node">
 <title>Node2</title>
 <g id="a_Node000002"><a xlink:href="classanch_1_1sql_1_1_fields_builder.html" target="_top" xlink:title="Field builder.">
-<polygon fill="white" stroke="none" points="122,-172 0,-172 0,-40 122,-40 122,-172"/>
-<text text-anchor="start" x="4.75" y="-158.5" font-family="Helvetica,sans-Serif" font-size="10.00">anch::sql::FieldsBuilder</text>
-<text text-anchor="start" x="59.5" y="-142.5" font-family="Helvetica,sans-Serif" font-size="10.00"> </text>
-<text text-anchor="start" x="9.88" y="-126.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="28" y="-126.5" font-family="Helvetica,sans-Serif" font-size="10.00">~FieldsBuilder()</text>
-<text text-anchor="start" x="9.88" y="-110.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="28" y="-110.5" font-family="Helvetica,sans-Serif" font-size="10.00">field()</text>
-<text text-anchor="start" x="9.88" y="-94.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="28" y="-94.5" font-family="Helvetica,sans-Serif" font-size="10.00">as()</text>
-<text text-anchor="start" x="9.88" y="-78.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="28" y="-78.5" font-family="Helvetica,sans-Serif" font-size="10.00">asc()</text>
-<text text-anchor="start" x="9.88" y="-62.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="28" y="-62.5" font-family="Helvetica,sans-Serif" font-size="10.00">desc()</text>
-<text text-anchor="start" x="9.88" y="-46.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="28" y="-46.5" font-family="Helvetica,sans-Serif" font-size="10.00">from()</text>
-<polygon fill="#666666" stroke="#666666" points="0,-154 0,-154 122,-154 122,-154 0,-154"/>
-<polygon fill="#666666" stroke="#666666" points="0,-138 0,-138 122,-138 122,-138 0,-138"/>
-<polygon fill="none" stroke="#666666" points="0,-40 0,-172 122,-172 122,-40 0,-40"/>
+<polygon fill="white" stroke="none" points="112,-172 0,-172 0,-40 112,-40 112,-172"/>
+<text text-anchor="start" x="5" y="-158.5" font-family="Helvetica,sans-Serif" font-size="10.00">anch::sql::FieldsBuilder</text>
+<text text-anchor="start" x="54.5" y="-142.5" font-family="Helvetica,sans-Serif" font-size="10.00"> </text>
+<text text-anchor="start" x="10.5" y="-126.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="27" y="-126.5" font-family="Helvetica,sans-Serif" font-size="10.00">~FieldsBuilder()</text>
+<text text-anchor="start" x="10.5" y="-110.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="27" y="-110.5" font-family="Helvetica,sans-Serif" font-size="10.00">field()</text>
+<text text-anchor="start" x="10.5" y="-94.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="27" y="-94.5" font-family="Helvetica,sans-Serif" font-size="10.00">as()</text>
+<text text-anchor="start" x="10.5" y="-78.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="27" y="-78.5" font-family="Helvetica,sans-Serif" font-size="10.00">asc()</text>
+<text text-anchor="start" x="10.5" y="-62.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="27" y="-62.5" font-family="Helvetica,sans-Serif" font-size="10.00">desc()</text>
+<text text-anchor="start" x="10.5" y="-46.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="27" y="-46.5" font-family="Helvetica,sans-Serif" font-size="10.00">from()</text>
+<polygon fill="#666666" stroke="#666666" points="0,-154 0,-154 112,-154 112,-154 0,-154"/>
+<polygon fill="#666666" stroke="#666666" points="0,-138 0,-138 112,-138 112,-138 0,-138"/>
+<polygon fill="none" stroke="#666666" points="0,-40 0,-172 112,-172 112,-40 0,-40"/>
 </a>
 </g>
 </g>
@@ -127,8 +127,8 @@ var sectionId = 'dynsection-0';
 <g id="edge1_Node000001_Node000002" class="edge">
 <title>Node1&#45;&gt;Node2</title>
 <g id="a_edge1_Node000001_Node000002"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M94.34,-237.46C88.49,-214.58 82.69,-191.88 77.61,-171.98"/>
-<polygon fill="none" stroke="#63b8ff" points="90.87,-238.04 96.74,-246.86 97.66,-236.3 90.87,-238.04"/>
+<path fill="none" stroke="#63b8ff" d="M86.85,-237.14C81.45,-214.37 76.1,-191.79 71.4,-171.98"/>
+<polygon fill="none" stroke="#63b8ff" points="83.44,-237.93 89.15,-246.85 90.25,-236.32 83.44,-237.93"/>
 </a>
 </g>
 </g>
@@ -136,33 +136,33 @@ var sectionId = 'dynsection-0';
 <g id="Node000003" class="node">
 <title>Node3</title>
 <g id="a_Node000003"><a xlink:href="classanch_1_1sql_1_1_from_builder.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="none" points="258,-212 140,-212 140,0 258,0 258,-212"/>
-<text text-anchor="start" x="144.62" y="-198.5" font-family="Helvetica,sans-Serif" font-size="10.00">anch::sql::FromBuilder</text>
-<text text-anchor="start" x="197.5" y="-182.5" font-family="Helvetica,sans-Serif" font-size="10.00"> </text>
-<text text-anchor="start" x="149.38" y="-166.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="167" y="-166.5" font-family="Helvetica,sans-Serif" font-size="10.00">FromBuilder()</text>
-<text text-anchor="start" x="149.38" y="-150.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="167" y="-150.5" font-family="Helvetica,sans-Serif" font-size="10.00">FromBuilder()</text>
-<text text-anchor="start" x="149.38" y="-134.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="167" y="-134.5" font-family="Helvetica,sans-Serif" font-size="10.00">FromBuilder()</text>
-<text text-anchor="start" x="149.38" y="-118.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="167" y="-118.5" font-family="Helvetica,sans-Serif" font-size="10.00">FromBuilder()</text>
-<text text-anchor="start" x="149.38" y="-102.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="167" y="-102.5" font-family="Helvetica,sans-Serif" font-size="10.00">FromBuilder()</text>
-<text text-anchor="start" x="149.38" y="-86.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="167" y="-86.5" font-family="Helvetica,sans-Serif" font-size="10.00">FromBuilder()</text>
-<text text-anchor="start" x="149.38" y="-70.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="167" y="-70.5" font-family="Helvetica,sans-Serif" font-size="10.00">~FromBuilder()</text>
-<text text-anchor="start" x="149.38" y="-54.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="167" y="-54.5" font-family="Helvetica,sans-Serif" font-size="10.00">selfJoin()</text>
-<text text-anchor="start" x="149.38" y="-38.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="167" y="-38.5" font-family="Helvetica,sans-Serif" font-size="10.00">selfJoin()</text>
-<text text-anchor="start" x="149.38" y="-22.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text text-anchor="start" x="167" y="-22.5" font-family="Helvetica,sans-Serif" font-size="10.00">selfJoin()</text>
-<text text-anchor="start" x="167" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00">and 31 more...</text>
-<polygon fill="#666666" stroke="#666666" points="140,-194 140,-194 258,-194 258,-194 140,-194"/>
-<polygon fill="#666666" stroke="#666666" points="140,-178 140,-178 258,-178 258,-178 140,-178"/>
-<polygon fill="none" stroke="#666666" points="140,0 140,-212 258,-212 258,0 140,0"/>
+<polygon fill="white" stroke="none" points="238,-212 130,-212 130,0 238,0 238,-212"/>
+<text text-anchor="start" x="134.88" y="-198.5" font-family="Helvetica,sans-Serif" font-size="10.00">anch::sql::FromBuilder</text>
+<text text-anchor="start" x="182.5" y="-182.5" font-family="Helvetica,sans-Serif" font-size="10.00"> </text>
+<text text-anchor="start" x="140.5" y="-166.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="157" y="-166.5" font-family="Helvetica,sans-Serif" font-size="10.00">FromBuilder()</text>
+<text text-anchor="start" x="140.5" y="-150.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="157" y="-150.5" font-family="Helvetica,sans-Serif" font-size="10.00">FromBuilder()</text>
+<text text-anchor="start" x="140.5" y="-134.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="157" y="-134.5" font-family="Helvetica,sans-Serif" font-size="10.00">FromBuilder()</text>
+<text text-anchor="start" x="140.5" y="-118.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="157" y="-118.5" font-family="Helvetica,sans-Serif" font-size="10.00">FromBuilder()</text>
+<text text-anchor="start" x="140.5" y="-102.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="157" y="-102.5" font-family="Helvetica,sans-Serif" font-size="10.00">FromBuilder()</text>
+<text text-anchor="start" x="140.5" y="-86.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="157" y="-86.5" font-family="Helvetica,sans-Serif" font-size="10.00">FromBuilder()</text>
+<text text-anchor="start" x="140.5" y="-70.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="157" y="-70.5" font-family="Helvetica,sans-Serif" font-size="10.00">~FromBuilder()</text>
+<text text-anchor="start" x="140.5" y="-54.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="157" y="-54.5" font-family="Helvetica,sans-Serif" font-size="10.00">selfJoin()</text>
+<text text-anchor="start" x="140.5" y="-38.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="157" y="-38.5" font-family="Helvetica,sans-Serif" font-size="10.00">selfJoin()</text>
+<text text-anchor="start" x="140.5" y="-22.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text text-anchor="start" x="157" y="-22.5" font-family="Helvetica,sans-Serif" font-size="10.00">selfJoin()</text>
+<text text-anchor="start" x="157" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00">and 31 more...</text>
+<polygon fill="#666666" stroke="#666666" points="130,-194 130,-194 238,-194 238,-194 130,-194"/>
+<polygon fill="#666666" stroke="#666666" points="130,-178 130,-178 238,-178 238,-178 130,-178"/>
+<polygon fill="none" stroke="#666666" points="130,0 130,-212 238,-212 238,0 130,0"/>
 </a>
 </g>
 </g>
@@ -170,8 +170,8 @@ var sectionId = 'dynsection-0';
 <g id="edge2_Node000001_Node000003" class="edge">
 <title>Node1&#45;&gt;Node3</title>
 <g id="a_edge2_Node000001_Node000003"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M165.67,-237.43C167.87,-228.83 170.06,-220.26 172.21,-211.85"/>
-<polygon fill="none" stroke="#63b8ff" points="162.34,-236.3 163.26,-246.86 169.13,-238.04 162.34,-236.3"/>
+<path fill="none" stroke="#63b8ff" d="M153.15,-237.14C155.17,-228.64 157.18,-220.16 159.15,-211.85"/>
+<polygon fill="none" stroke="#63b8ff" points="149.75,-236.32 150.85,-246.85 156.56,-237.93 149.75,-236.32"/>
 </a>
 </g>
 </g>
