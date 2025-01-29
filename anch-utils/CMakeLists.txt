@@ -280,6 +280,8 @@ if(ANCH_UTILS_UNIT_TEST)
   # Flux +
   add_test(anch-flux-push-ok-test ${EXECUTABLE_OUTPUT_PATH}/anch-flux-test -t push-ok)
   add_test(anch-flux-push-ko-test ${EXECUTABLE_OUTPUT_PATH}/anch-flux-test -t push-ko)
+  add_test(anch-flux-push-multi-ok-test ${EXECUTABLE_OUTPUT_PATH}/anch-flux-test -t push-ok-multi)
+  add_test(anch-flux-push-multi-ko-test ${EXECUTABLE_OUTPUT_PATH}/anch-flux-test -t push-ko-multi)
   # Flux -
 
 endif(ANCH_UTILS_UNIT_TEST)

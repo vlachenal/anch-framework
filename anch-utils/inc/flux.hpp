@@ -33,13 +33,13 @@ namespace anch {
    *
    * \author Vincent Lachenal
    */
-  template<typename T>
+  template<typename... T>
   class Flux {
 
     // Attributes +
   private:
     /*! Consume object function */
-    std::function<void(const T&)> _consume;
+    std::function<void(const T&...)> _consume;
     // Attributes -
 
     // Constructors +
@@ -54,7 +54,7 @@ namespace anch {
      *
      * \param consume the consume object function to use
      */
-    Flux(std::function<void(const T&)> consume);
+    Flux(std::function<void(const T&...)> consume);
     // Constructors -
 
     // Destructor +
@@ -72,7 +72,7 @@ namespace anch {
      *
      * \param object the object to push in stream
      */
-    void push(const T& object);
+    void push(const T&... object);
 
     /*!
      * \brief Handle error

@@ -21,29 +21,29 @@
 
 namespace anch {
 
-  template<typename T>
-  Flux<T>::Flux(std::function<void(const T&)> consume): _consume(consume) {
+  template<typename... T>
+  Flux<T...>::Flux(std::function<void(const T&...)> consume): _consume(consume) {
     // Nothing to do
   }
 
-  template<typename T>
-  Flux<T>::~Flux() {
+  template<typename... T>
+  Flux<T...>::~Flux() {
     // Nothing to do
   }
 
-  template<typename T>
+  template<typename... T>
   void
-  Flux<T>::push(const T& object) {
+  Flux<T...>::push(const T&... object) {
     try {
-      std::invoke(_consume, object);
+      std::invoke(_consume, object...);
     } catch(...) {
       handleError();
     }
   }
 
-  template<typename T>
+  template<typename... T>
   void
-  Flux<T>::handleError() {
+  Flux<T...>::handleError() {
     throw;
   }
 
