@@ -62,7 +62,7 @@ namespace anch {
     /*!
      * \ref Flux destructor
      */
-    ~Flux();
+    virtual ~Flux();
     // Destructor -
 
     // Methods +
