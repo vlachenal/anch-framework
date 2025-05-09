@@ -47,6 +47,9 @@ namespace anch::cli {
 
     // Attributes +
   private:
+    /*! Executable name */
+    std::string _exeName;
+
     /*! Application inforations */
     anch::cli::App _app;
 

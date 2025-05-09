@@ -41,7 +41,7 @@ namespace anch::cli {
     /*! Application name (if not set, it will be set to executable name) */
     std::optional<std::string> name = std::optional<std::string>();
 
-    /*! Version */
+    /*! Description */
     std::optional<std::string> description = std::optional<std::string>();
 
     /*! Version */

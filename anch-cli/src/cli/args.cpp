@@ -245,6 +245,7 @@ namespace anch::cli {
 }  // anch::cli
 
 ArgHandler::ArgHandler(const App& app, const std::vector<Arg>& options):
+  _exeName(),
   _app(app),
   _options(),
   _sopts(),
@@ -256,6 +257,7 @@ ArgHandler::ArgHandler(const App& app, const std::vector<Arg>& options):
 }
 
 ArgHandler::ArgHandler(const std::vector<Arg>& options):
+  _exeName(),
   _app(),
   _options(),
   _sopts(),
@@ -510,10 +512,11 @@ ArgHandler::printBanner(std::ostream& out) {
 void
 ArgHandler::build(const std::string& arg0) {
   anch::cli::manageEnvNoFormat();
+  std::filesystem::path path(arg0);
+  _exeName = path.filename();
   // Set default application name to first argument when not set +
   if(!_app.name.has_value()) {
-    std::filesystem::path path(arg0);
-    _app.name = path.filename();
+    _app.name = _exeName;
   }
   // Set default application name to first argument when not set -
   // Check multiple positinal options and piped options +
@@ -601,7 +604,7 @@ ArgHandler::printAppVersion(std::ostream& out) {
 
 bool
 ArgHandler::printUsage(std::ostream& out) {
-  out << INFO << "Usage: " << _app.name.value();
+  out << INFO << "Usage: " << _exeName;
   bool opts = false;
   if(!_sopts.empty() || !_lopts.empty()) {
     opts = true;
