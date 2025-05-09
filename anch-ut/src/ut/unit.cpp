@@ -21,6 +21,7 @@
 
 #include <stdexcept>
 #include <sstream>
+#include <iostream>
 
 using anch::ut::UnitTests;
 

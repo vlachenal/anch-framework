@@ -20,8 +20,10 @@
 #include "ut/defaultRunner.hpp"
 
 #include <iostream>
+#include <chrono>
 
 #include "ut/error.hpp"
+#include "cli/formatter.hpp"
 
 using anch::ut::DefaultRunner;
 
@@ -62,25 +64,47 @@ DefaultRunner::shutdown() {
   return ok;
 }
 
+void
+printEnd(const std::string& name, std::chrono::time_point<std::chrono::high_resolution_clock> start) {
+  std::chrono::time_point<std::chrono::high_resolution_clock> end = std::chrono::high_resolution_clock::now();
+  std::chrono::microseconds duration = std::chrono::duration_cast<std::chrono::microseconds>(end.time_since_epoch()) - std::chrono::duration_cast<std::chrono::microseconds>(start.time_since_epoch());
+  std::cout << std::endl << "Time: " << duration.count() << " µs" << std::endl;
+  std::cout << anch::cli::Formatter::format().fgColor(anch::cli::Color::BLUE)
+	    << "-- " << name << " --" << anch::cli::RESET << std::endl << std::endl;
+}
+
 uint16_t
 DefaultRunner::test(const std::string& test) {
+  std::chrono::time_point<std::chrono::high_resolution_clock> start = std::chrono::high_resolution_clock::now();
   auto iter = _tests.getTests().find(test);
   if(iter == _tests.getTests().end()) {
     std::cout << test << " has not been registered" << std::endl;
+    printEnd(test, start);
     return 1;
   }
 
+  std::cout << anch::cli::Formatter::format().fgColor(anch::cli::Color::BLUE)
+	    << "-- " << test << " --" << anch::cli::RESET << std::endl;
   // Before test function +
   try {
     _tests.before();
   } catch(const anch::ut::AssertException& e) {
-    std::cout << "Unit test " << iter->first << " initialization failed on assertion: " << e.what() << std::endl;
+    std::cout << anch::cli::Formatter::format().fgColor(anch::cli::Color::RED)
+	      << "Unit test " << test << " initialization failed on assertion: " << e.what()
+	      << anch::cli::RESET << std::endl;
+    printEnd(test, start);
     return 2;
   } catch(const std::exception& e) {
-    std::cout << "Unit test " << iter->first << " initialization failed: " << e.what() << std::endl;
+    std::cout << anch::cli::Formatter::format().fgColor(anch::cli::Color::RED)
+	      << "Unit test " << test << " initialization failed: " << e.what()
+	      << anch::cli::RESET << std::endl;
+    printEnd(test, start);
     return 2;
   } catch(...) {
-    std::cout << "Unit test " << iter->first << " initialization failed" << std::endl;
+    std::cout << anch::cli::Formatter::format().fgColor(anch::cli::Color::RED)
+	      << "Unit test " << test << " initialization failed"
+	      << anch::cli::RESET << std::endl;
+    printEnd(test, start);
     return 2;
   }
   // Before test function -
@@ -91,11 +115,17 @@ DefaultRunner::test(const std::string& test) {
     std::invoke(iter->second);
     passed = true;
   } catch(const anch::ut::AssertException& e) {
-    std::cout << "Unit test " << iter->first << " execution failed on assertion: " << e.what() << std::endl;
+    std::cout << anch::cli::Formatter::format().fgColor(anch::cli::Color::RED)
+	      << "Unit test " << test << " execution failed on assertion: " << e.what()
+	      << anch::cli::RESET << std::endl;
   } catch(const std::exception& e) {
-    std::cout << "Unit test " << iter->first << " execution failed: " << e.what() << std::endl;
+    std::cout << anch::cli::Formatter::format().fgColor(anch::cli::Color::RED)
+	      << "Unit test " << test << " execution failed: " << e.what()
+	      << anch::cli::RESET << std::endl;
   } catch(...) {
-    std::cout << "Unit test " << iter->first << " execution failed" << std::endl;
+    std::cout << anch::cli::Formatter::format().fgColor(anch::cli::Color::RED)
+	      << "Unit test " << test << " execution failed"
+	      << anch::cli::RESET << std::endl;
   }
   // Call test function -
 
@@ -105,13 +135,21 @@ DefaultRunner::test(const std::string& test) {
     _tests.after();
     after = true;
   } catch(const anch::ut::AssertException& e) {
-    std::cout << "Unit test " << iter->first << " uninitialization failed on assertion: " << e.what() << std::endl;
+    std::cout << anch::cli::Formatter::format().fgColor(anch::cli::Color::RED)
+	      << "Unit test " << test << " uninitialization failed on assertion: " << e.what()
+	      << anch::cli::RESET << std::endl;
   } catch(const std::exception& e) {
-    std::cout << "Unit test " << iter->first << " uninitialization failed: " << e.what() << std::endl;
+    std::cout << anch::cli::Formatter::format().fgColor(anch::cli::Color::RED)
+	      << "Unit test " << test << " uninitialization failed: " << e.what()
+	      << anch::cli::RESET << std::endl;
   } catch(...) {
-    std::cout << "Unit test " << iter->first << " uninitialization failed" << std::endl;
+    std::cout << anch::cli::Formatter::format().fgColor(anch::cli::Color::RED)
+	      << "Unit test " << test << " uninitialization failed"
+	      << anch::cli::RESET << std::endl;
   }
   // After test function -
+
+  printEnd(test, start);
 
   if(!passed) {
     return 3;

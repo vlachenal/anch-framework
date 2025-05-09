@@ -21,6 +21,11 @@
 
 #include <string>
 #include <string_view>
+#include <iostream>
+#include <optional>
+#include <list>
+#include <set>
+#include <vector>
 
 namespace anch::ut {
 
@@ -58,6 +63,96 @@ namespace anch::ut {
    */
   template<typename... T>
   void assert(bool check, std::string_view message, const T&... args);
+
+  /*!
+   * Check if optional value is equals to expected pointer value ; print the field and expected versus current value when \c false ; return the result
+   *
+   * \tparam T the value type
+   *
+   * \param field the field name
+   * \param expected the expected value
+   * \param value the current value
+   * \param out the output stream to print in when \c false (default to \c{std::cout})
+   *
+   * \return \c true when expect equals to value, \c false otherwise
+   */
+  template<typename T>
+  bool equals(const char* const field, const std::set<T>& expected, const std::set<T>& value, std::ostream& out = std::cout);
+
+  /*!
+   * Check if optional value is equals to expected pointer value ; print the field and expected versus current value when \c false ; return the result
+   *
+   * \tparam T the value type
+   *
+   * \param field the field name
+   * \param expected the expected value
+   * \param value the current value
+   * \param out the output stream to print in when \c false (default to \c{std::cout})
+   *
+   * \return \c true when expect equals to value, \c false otherwise
+   */
+  template<typename T>
+  bool equals(const char* const field, const std::list<T>& expected, const std::list<T>& value, std::ostream& out = std::cout);
+
+  /*!
+   * Check if optional value is equals to expected pointer value ; print the field and expected versus current value when \c false ; return the result
+   *
+   * \tparam T the value type
+   *
+   * \param field the field name
+   * \param expected the expected value
+   * \param value the current value
+   * \param out the output stream to print in when \c false (default to \c{std::cout})
+   *
+   * \return \c true when expect equals to value, \c false otherwise
+   */
+  template<typename T>
+  bool equals(const char* const field, const std::vector<T>& expected, const std::vector<T>& value, std::ostream& out = std::cout);
+
+  /*!
+   * Check if optional value is equals to expected pointer value ; print the field and expected versus current value when \c false ; return the result
+   *
+   * \tparam T the value type
+   *
+   * \param field the field name
+   * \param expected the expected value
+   * \param value the current value
+   * \param out the output stream to print in when \c false (default to \c{std::cout})
+   *
+   * \return \c true when expect equals to value, \c false otherwise
+   */
+  template<typename T>
+  bool equals(const char* const field, const std::optional<T>& expected, const std::optional<T>& value, std::ostream& out = std::cout);
+
+  /*!
+   * Check if pointer value is equals to expected pointer value ; print the field and expected versus current value when \c false ; return the result
+   *
+   * \tparam T the value type
+   *
+   * \param field the field name
+   * \param expected the expected value
+   * \param value the current value
+   * \param out the output stream to print in when \c false (default to \c{std::cout})
+   *
+   * \return \c true when expect equals to value, \c false otherwise
+   */
+  template<typename T>
+  bool equalsPtr(const char* const field, const T* const expected, const T* const value, std::ostream& out = std::cout);
+
+  /*!
+   * Check if value is equals to expected value ; print the field and expected versus current value when \c false ; return the result
+   *
+   * \tparam T the value type
+   *
+   * \param field the field name
+   * \param expected the expected value
+   * \param value the current value
+   * \param out the output stream to print in when \c false (default to \c{std::cout})
+   *
+   * \return \c true when expect equals to value, \c false otherwise
+   */
+  template<typename T>
+  bool equals(const char* const field, const T& expected, const T& value, std::ostream& out = std::cout);
 
 }  // anch::ut
 
