@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['getinstance_0',['getInstance',['../namespaceanch_1_1date.html#af85db6a264face0c02563a7be70703c4',1,'anch::date']]]
+  ['deserializefn_0',['DeserializeFn',['../namespaceanch_1_1json.html#a01c5143d504903660f8ad90d5a6f53fe',1,'anch::json']]]
 ];

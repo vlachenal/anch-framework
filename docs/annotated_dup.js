@@ -70,11 +70,14 @@ var annotated_dup =
       ] ],
       [ "json", "namespaceanch_1_1json.html", [
         [ "Factory", "classanch_1_1json_1_1_factory.html", "classanch_1_1json_1_1_factory" ],
+        [ "JSONItem", "classanch_1_1json_1_1_j_s_o_n_item.html", "classanch_1_1json_1_1_j_s_o_n_item" ],
         [ "JSONMapper", "classanch_1_1json_1_1_j_s_o_n_mapper.html", "classanch_1_1json_1_1_j_s_o_n_mapper" ],
         [ "MappingError", "classanch_1_1json_1_1_mapping_error.html", "classanch_1_1json_1_1_mapping_error" ],
         [ "MappingOptions", "structanch_1_1json_1_1_mapping_options.html", "structanch_1_1json_1_1_mapping_options" ],
         [ "ObjectMapper", "classanch_1_1json_1_1_object_mapper.html", "classanch_1_1json_1_1_object_mapper" ],
-        [ "PrimitiveMapper", "classanch_1_1json_1_1_primitive_mapper.html", "classanch_1_1json_1_1_primitive_mapper" ]
+        [ "PrimitiveMapper", "classanch_1_1json_1_1_primitive_mapper.html", "classanch_1_1json_1_1_primitive_mapper" ],
+        [ "Reader", "classanch_1_1json_1_1_reader.html", "classanch_1_1json_1_1_reader" ],
+        [ "ReaderContext", "classanch_1_1json_1_1_reader_context.html", "classanch_1_1json_1_1_reader_context" ]
       ] ],
       [ "logger", "namespaceanch_1_1logger.html", [
         [ "formatter", "namespaceanch_1_1logger_1_1formatter.html", [

@@ -1,11 +1,11 @@
 <map id="anch::cutils::COStream" name="anch::cutils::COStream">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,491,155,624"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="37,373,123,443"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="83,458,83,491,77,491,77,458"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="18,240,142,325"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="83,340,83,374,77,374,77,340"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="7,123,153,192"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="83,207,83,240,77,240,77,207"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="35,5,125,75"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="83,90,83,123,77,123,77,90"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,491,153,624"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="37,373,121,443"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="82,458,82,491,76,491,76,458"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="18,240,140,325"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="82,340,82,374,76,374,76,340"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="7,123,151,192"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="82,207,82,240,76,240,76,207"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="35,5,124,75"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="82,90,82,123,76,123,76,90"/>
 </map>

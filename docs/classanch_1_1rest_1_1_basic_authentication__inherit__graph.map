@@ -1,5 +1,5 @@
 <map id="anch::rest::BasicAuthentication" name="anch::rest::BasicAuthentication">
-<area shape="rect" id="Node000001" title="Basic authentication." alt="" coords="5,123,200,256"/>
-<area shape="rect" id="Node000002" href="$classanch_1_1rest_1_1_authentication.html" title="HTTP authentication." alt="" coords="22,5,183,75"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="105,90,105,123,100,123,100,90"/>
+<area shape="rect" id="Node000001" title="Basic authentication." alt="" coords="5,123,198,256"/>
+<area shape="rect" id="Node000002" href="$classanch_1_1rest_1_1_authentication.html" title="HTTP authentication." alt="" coords="22,5,182,75"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="104,90,104,123,99,123,99,90"/>
 </map>

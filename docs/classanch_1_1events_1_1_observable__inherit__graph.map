@@ -1,11 +1,21 @@
 <map id="anch::events::Observable&lt; T &gt;" name="anch::events::Observable&lt; T &gt;">
-<area shape="rect" id="Node000001" title="An observable implementation of the observers/observable design pattern." alt="" coords="86,5,279,181"/>
-<area shape="rect" id="Node000002" href="$classanch_1_1events_1_1_observable.html" title=" " alt="" coords="102,245,263,437"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="185,196,185,246,180,246,180,196"/>
-<area shape="rect" id="Node000003" href="$classanch_1_1network_1_1_socket.html" title=" " alt="" coords="111,487,255,833"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="185,452,185,487,180,487,180,452"/>
-<area shape="rect" id="Node000004" href="$classanch_1_1network_1_1_tcp_socket.html" title=" " alt="" coords="5,947,171,1101"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="136,848,110,948,105,946,131,847"/>
-<area shape="rect" id="Node000005" href="$classanch_1_1network_1_1_udp_socket.html" title=" " alt="" coords="195,883,363,1165"/>
-<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="235,847,244,882,239,884,230,848"/>
+<area shape="rect" id="Node000001" title="An observable implementation of the observers/observable design pattern." alt="" coords="279,5,470,181"/>
+<area shape="rect" id="Node000002" href="$classanch_1_1events_1_1_observable.html" title=" " alt="" coords="5,245,170,437"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="266,125,195,158,162,180,133,207,120,226,109,247,104,244,115,223,129,204,158,176,192,153,264,120"/>
+<area shape="rect" id="Node000004" href="$classanch_1_1events_1_1_observable.html" title=" " alt="" coords="194,245,354,437"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="306,196,301,206,289,246,284,245,297,204,301,194"/>
+<area shape="rect" id="Node000005" href="$classanch_1_1events_1_1_observable.html" title=" " alt="" coords="378,245,558,437"/>
+<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="421,194,425,204,439,245,434,246,420,206,416,196"/>
+<area shape="rect" id="Node000006" href="$classanch_1_1events_1_1_observable.html" title=" " alt="" coords="581,245,741,437"/>
+<area shape="poly" id="edge7_Node000001_Node000006" title=" " alt="" coords="484,125,550,157,581,179,608,204,635,244,631,247,604,207,577,183,547,162,482,130"/>
+<area shape="rect" id="Node000003" href="$classanch_1_1json_1_1_reader.html" title="JSON reader based on events." alt="" coords="214,561,335,759"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="153,449,219,560,215,563,149,452"/>
+<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="277,452,277,561,272,561,272,452"/>
+<area shape="poly" id="edge6_Node000005_Node000003" title=" " alt="" coords="404,451,336,563,332,560,400,448"/>
+<area shape="rect" id="Node000007" href="$classanch_1_1network_1_1_socket.html" title=" " alt="" coords="590,487,732,833"/>
+<area shape="poly" id="edge8_Node000006_Node000007" title=" " alt="" coords="664,452,664,487,658,487,658,452"/>
+<area shape="rect" id="Node000008" href="$classanch_1_1network_1_1_tcp_socket.html" title=" " alt="" coords="485,947,648,1101"/>
+<area shape="poly" id="edge9_Node000007_Node000008" title=" " alt="" coords="615,848,589,948,584,946,610,847"/>
+<area shape="rect" id="Node000009" href="$classanch_1_1network_1_1_udp_socket.html" title=" " alt="" coords="672,883,837,1165"/>
+<area shape="poly" id="edge10_Node000007_Node000009" title=" " alt="" coords="712,847,721,882,716,884,707,848"/>
 </map>

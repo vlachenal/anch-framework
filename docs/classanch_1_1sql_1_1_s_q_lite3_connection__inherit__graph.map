@@ -1,5 +1,5 @@
 <map id="anch::sql::SQLite3Connection" name="anch::sql::SQLite3Connection">
-<area shape="rect" id="Node000001" title="SQLite3 connection." alt="" coords="5,549,192,811"/>
-<area shape="rect" id="Node000002" href="$classanch_1_1sql_1_1_connection.html" title="SQL connection virtual class." alt="" coords="21,5,177,501"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="101,516,101,550,96,550,96,516"/>
+<area shape="rect" id="Node000001" title="SQLite3 connection." alt="" coords="5,549,190,811"/>
+<area shape="rect" id="Node000002" href="$classanch_1_1sql_1_1_connection.html" title="SQL connection virtual class." alt="" coords="20,5,176,501"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="100,516,100,550,95,550,95,516"/>
 </map>

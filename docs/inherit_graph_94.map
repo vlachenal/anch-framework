@@ -1,5 +1,11 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" title=" " alt="" coords="5,5,98,32"/>
-<area shape="rect" id="Node000001" href="$classanch_1_1_optional.html" title="std::optional usefull methods." alt="" coords="146,5,282,32"/>
-<area shape="poly" id="edge91_Node000000_Node000001" title=" " alt="" coords="113,16,146,16,146,21,113,21"/>
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,47,103,73"/>
+<area shape="rect" id="Node000001" href="$classanch_1_1cutils_1_1_c_i_o_stream.html" title=" " alt="" coords="151,47,313,73"/>
+<area shape="poly" id="edge90_Node000000_Node000001" title=" " alt="" coords="118,57,150,57,150,63,118,63"/>
+<area shape="rect" id="Node000002" href="$classanch_1_1network_1_1_tcp_stream.html" title=" " alt="" coords="361,47,535,73"/>
+<area shape="poly" id="edge91_Node000001_Node000002" title=" " alt="" coords="328,57,360,57,360,63,328,63"/>
+<area shape="rect" id="Node000003" href="$classanch_1_1network_1_1_tcp_stream_client.html" title="TCP stream client." alt="" coords="583,5,758,48"/>
+<area shape="poly" id="edge92_Node000002_Node000003" title=" " alt="" coords="550,42,582,37,583,42,551,47"/>
+<area shape="rect" id="Node000004" href="$classanch_1_1network_1_1_tcp_stream_server.html" title="TCP stream server." alt="" coords="583,72,758,115"/>
+<area shape="poly" id="edge93_Node000002_Node000004" title=" " alt="" coords="551,73,583,78,582,83,550,78"/>
 </map>

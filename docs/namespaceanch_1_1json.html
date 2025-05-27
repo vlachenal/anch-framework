@@ -106,6 +106,7 @@ $(function(){initNavTree('namespaceanch_1_1json.html',''); initResizable(true); 
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
+<a href="#typedef-members">Typedefs</a> &#124;
 <a href="#enum-members">Enumerations</a> &#124;
 <a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
@@ -120,6 +121,8 @@ $(function(){initNavTree('namespaceanch_1_1json.html',''); initResizable(true); 
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1json_1_1_factory.html">Factory</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">JSON mapper factory.  <a href="classanch_1_1json_1_1_factory.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1json_1_1_j_s_o_n_item.html">JSONItem</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1json_1_1_j_s_o_n_mapper.html">JSONMapper</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">JSON mapper with mapping options.  <a href="classanch_1_1json_1_1_j_s_o_n_mapper.html#details">More...</a><br /></td></tr>
@@ -136,6 +139,33 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1json_1_1_primitive_mapper.html">PrimitiveMapper</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">JSON primitive types mapper.  <a href="classanch_1_1json_1_1_primitive_mapper.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1json_1_1_reader.html">Reader</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">JSON reader based on events.  <a href="classanch_1_1json_1_1_reader.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanch_1_1json_1_1_reader_context.html">ReaderContext</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">JSON mapper context.  <a href="classanch_1_1json_1_1_reader_context.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:aef5200835f47d92a47999ca767182c77" id="r_aef5200835f47d92a47999ca767182c77"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aef5200835f47d92a47999ca767182c77">LexFunc</a> = std::function&lt;bool(<a class="el" href="classanch_1_1json_1_1_reader_context.html">anch::json::ReaderContext</a>&amp;)&gt;</td></tr>
+<tr class="separator:aef5200835f47d92a47999ca767182c77"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa3b29cb26696a279ca3cbaea46b9f83c" id="r_aa3b29cb26696a279ca3cbaea46b9f83c"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa3b29cb26696a279ca3cbaea46b9f83c">AddItem</a> = std::function&lt;bool(<a class="el" href="classanch_1_1json_1_1_reader_context.html">anch::json::ReaderContext</a>&amp;)&gt;</td></tr>
+<tr class="separator:aa3b29cb26696a279ca3cbaea46b9f83c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a864b8710b205d77ef15731a261ccd0f8" id="r_a864b8710b205d77ef15731a261ccd0f8"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a864b8710b205d77ef15731a261ccd0f8">PushItem</a> = std::function&lt;void(const std::string&amp;, <a class="el" href="classanch_1_1json_1_1_reader_context.html">anch::json::ReaderContext</a>&amp;)&gt;</td></tr>
+<tr class="separator:a864b8710b205d77ef15731a261ccd0f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abb678d9725242b11dbcf9c9df879c613" id="r_abb678d9725242b11dbcf9c9df879c613"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abb678d9725242b11dbcf9c9df879c613">jint</a> = int64_t</td></tr>
+<tr class="separator:abb678d9725242b11dbcf9c9df879c613"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afc9335cba145b0db80937210418fc7e0" id="r_afc9335cba145b0db80937210418fc7e0"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afc9335cba145b0db80937210418fc7e0">juint</a> = uint64_t</td></tr>
+<tr class="separator:afc9335cba145b0db80937210418fc7e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a871132154645e4f4b89c34ea060afcc7" id="r_a871132154645e4f4b89c34ea060afcc7"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a871132154645e4f4b89c34ea060afcc7">jfloat</a> = long double</td></tr>
+<tr class="separator:a871132154645e4f4b89c34ea060afcc7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9a15dc6e71c3cc7c6eed0ee21c01b8a1" id="r_a9a15dc6e71c3cc7c6eed0ee21c01b8a1"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
+<tr class="memitem:a9a15dc6e71c3cc7c6eed0ee21c01b8a1"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a9a15dc6e71c3cc7c6eed0ee21c01b8a1">SerializeFn</a> = std::function&lt;void(const T&amp;, std::ostream&amp;, const <a class="el" href="structanch_1_1json_1_1_mapping_options.html">anch::json::MappingOptions</a>&amp;)&gt;</td></tr>
+<tr class="separator:a9a15dc6e71c3cc7c6eed0ee21c01b8a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a01c5143d504903660f8ad90d5a6f53fe" id="r_a01c5143d504903660f8ad90d5a6f53fe"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
+<tr class="memitem:a01c5143d504903660f8ad90d5a6f53fe"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a01c5143d504903660f8ad90d5a6f53fe">DeserializeFn</a> = std::function&lt;bool(T&amp;, <a class="el" href="classanch_1_1json_1_1_reader_context.html">anch::json::ReaderContext</a>&amp;)&gt;</td></tr>
+<tr class="separator:a01c5143d504903660f8ad90d5a6f53fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
 Enumerations</h2></td></tr>
@@ -145,9 +175,29 @@ Enumerations</h2></td></tr>
 , <a class="el" href="#a56742fecea7bc19952b3e35c013ad931a696b031073e74bf2cb98e5ef201d4aa3">UNKNOWN</a> = 9999
  }</td></tr>
 <tr class="separator:a56742fecea7bc19952b3e35c013ad931"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa39e48b07b65032096fb6d205da99f4b" id="r_aa39e48b07b65032096fb6d205da99f4b"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa39e48b07b65032096fb6d205da99f4b">EventType</a> { <br />
+&#160;&#160;<a class="el" href="#aa39e48b07b65032096fb6d205da99f4ba933815b48a60fd3ece2576e52727cbd9">VNULL</a> = 0
+, <a class="el" href="#aa39e48b07b65032096fb6d205da99f4bac0d83f0b82a6b30de8811e69e6d95c61">TRUE</a>
+, <a class="el" href="#aa39e48b07b65032096fb6d205da99f4ba946003f97ccc52d5d3b54ac0ec31bbfc">FALSE</a>
+, <a class="el" href="#aa39e48b07b65032096fb6d205da99f4ba552a541802e89c9f535247f725bd1c0d">FIELD</a>
+, <br />
+&#160;&#160;<a class="el" href="#aa39e48b07b65032096fb6d205da99f4ba34f55eca38e0605a84f169ff61a2a396">NUMBER</a>
+, <a class="el" href="#aa39e48b07b65032096fb6d205da99f4ba63b588d5559f64f89a416e656880b949">STRING</a>
+, <a class="el" href="#aa39e48b07b65032096fb6d205da99f4ba3442ecc27afa18289e475facda5150ab">BEGIN_OBJECT</a>
+, <a class="el" href="#aa39e48b07b65032096fb6d205da99f4babed6d3a6ae2870caee4c047c15e7cb2b">END_OBJECT</a>
+, <br />
+&#160;&#160;<a class="el" href="#aa39e48b07b65032096fb6d205da99f4ba149db99349b09ddc7523e181c78e70d0">BEGIN_ARRAY</a>
+, <a class="el" href="#aa39e48b07b65032096fb6d205da99f4ba225a0518a9013b9e99cb86ba9009a14f">END_ARRAY</a>
+<br />
+ }</td></tr>
+<tr class="separator:aa39e48b07b65032096fb6d205da99f4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:a0a98011ef62818836029ae7fc284f7a5" id="r_a0a98011ef62818836029ae7fc284f7a5"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
+<tr class="memitem:a0a98011ef62818836029ae7fc284f7a5"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a0a98011ef62818836029ae7fc284f7a5">isPrimitive</a> ()</td></tr>
+<tr class="memdesc:a0a98011ef62818836029ae7fc284f7a5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if type is a primitive JSON type.  <br /></td></tr>
+<tr class="separator:a0a98011ef62818836029ae7fc284f7a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaf8fbe1c8f5cf3231e85e9549b474322" id="r_aaf8fbe1c8f5cf3231e85e9549b474322"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
 <tr class="memitem:aaf8fbe1c8f5cf3231e85e9549b474322"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#aaf8fbe1c8f5cf3231e85e9549b474322">registerObject</a> (<a class="el" href="classanch_1_1json_1_1_object_mapper.html">anch::json::ObjectMapper</a>&lt; T &gt; &amp;mapper)</td></tr>
 <tr class="separator:aaf8fbe1c8f5cf3231e85e9549b474322"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -190,64 +240,104 @@ Functions</h2></td></tr>
 <tr class="memitem:a46e8ab272147eb185b81be3fd0927e23" id="r_a46e8ab272147eb185b81be3fd0927e23"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
 <tr class="memitem:a46e8ab272147eb185b81be3fd0927e23"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a46e8ab272147eb185b81be3fd0927e23">deserialize</a> (std::set&lt; T &gt; &amp;values, std::istream &amp;input, const <a class="el" href="structanch_1_1json_1_1_mapping_options.html">anch::json::MappingOptions</a> &amp;options=<a class="el" href="#aa7e486a58287e946e65821fb429efa2c">anch::json::DEFAULT_MAPPING_OPTIONS</a>)</td></tr>
 <tr class="separator:a46e8ab272147eb185b81be3fd0927e23"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1db238048a4a87df3380932ff10a076f" id="r_a1db238048a4a87df3380932ff10a076f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1db238048a4a87df3380932ff10a076f">discardChars</a> (std::istream &amp;input, const <a class="el" href="structanch_1_1json_1_1_mapping_options.html">anch::json::MappingOptions</a> &amp;options)</td></tr>
-<tr class="separator:a1db238048a4a87df3380932ff10a076f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afc6d63bfaa1c53167a9db1475145b0ae" id="r_afc6d63bfaa1c53167a9db1475145b0ae"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afc6d63bfaa1c53167a9db1475145b0ae">isNull</a> (std::istream &amp;input, const <a class="el" href="structanch_1_1json_1_1_mapping_options.html">anch::json::MappingOptions</a> &amp;options)</td></tr>
-<tr class="separator:afc6d63bfaa1c53167a9db1475145b0ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:add3dad4e78ae6a043b868be0594c69c0" id="r_add3dad4e78ae6a043b868be0594c69c0"><td class="memItemLeft" align="right" valign="top">std::optional&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#add3dad4e78ae6a043b868be0594c69c0">getFieldName</a> (std::istream &amp;input, const <a class="el" href="structanch_1_1json_1_1_mapping_options.html">anch::json::MappingOptions</a> &amp;options)</td></tr>
-<tr class="separator:add3dad4e78ae6a043b868be0594c69c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad43f17f4807494eca4f77b8da8e215e9" id="r_ad43f17f4807494eca4f77b8da8e215e9"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad43f17f4807494eca4f77b8da8e215e9">hasMoreField</a> (std::istream &amp;input, const <a class="el" href="structanch_1_1json_1_1_mapping_options.html">anch::json::MappingOptions</a> &amp;options)</td></tr>
-<tr class="separator:ad43f17f4807494eca4f77b8da8e215e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7e1f38d1d509739885cee52fb290660c" id="r_a7e1f38d1d509739885cee52fb290660c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7e1f38d1d509739885cee52fb290660c">consumeUnknownField</a> (std::istream &amp;input, const <a class="el" href="structanch_1_1json_1_1_mapping_options.html">anch::json::MappingOptions</a> &amp;options)</td></tr>
-<tr class="separator:a7e1f38d1d509739885cee52fb290660c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab9456765068ac0b28517f53bd16cd9d5" id="r_ab9456765068ac0b28517f53bd16cd9d5"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
-<tr class="memitem:ab9456765068ac0b28517f53bd16cd9d5"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ab9456765068ac0b28517f53bd16cd9d5">serialize</a> (const T &amp;value, std::ostream &amp;out, std::function&lt; void((const T &amp;value, std::ostream &amp;out, const <a class="el" href="structanch_1_1json_1_1_mapping_options.html">anch::json::MappingOptions</a> &amp;options))&gt; serializeFunc, const <a class="el" href="structanch_1_1json_1_1_mapping_options.html">anch::json::MappingOptions</a> &amp;options, const std::optional&lt; std::string &gt; &amp;field)</td></tr>
-<tr class="separator:ab9456765068ac0b28517f53bd16cd9d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2f812b2021d81115b2f2724aa51cac46" id="r_a2f812b2021d81115b2f2724aa51cac46"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2f812b2021d81115b2f2724aa51cac46">lexTrue</a> (<a class="el" href="classanch_1_1json_1_1_reader_context.html">anch::json::ReaderContext</a> &amp;context)</td></tr>
+<tr class="separator:a2f812b2021d81115b2f2724aa51cac46"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a20f66f58dc0398558d29c7a5c861e271" id="r_a20f66f58dc0398558d29c7a5c861e271"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a20f66f58dc0398558d29c7a5c861e271">lexFalse</a> (<a class="el" href="classanch_1_1json_1_1_reader_context.html">anch::json::ReaderContext</a> &amp;context)</td></tr>
+<tr class="separator:a20f66f58dc0398558d29c7a5c861e271"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af4d03a7ecdab93f7b86d49cc9839941d" id="r_af4d03a7ecdab93f7b86d49cc9839941d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af4d03a7ecdab93f7b86d49cc9839941d">lexBoolean</a> (bool &amp;value, <a class="el" href="classanch_1_1json_1_1_reader_context.html">anch::json::ReaderContext</a> &amp;context)</td></tr>
+<tr class="separator:af4d03a7ecdab93f7b86d49cc9839941d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae31c0dd310507cbd4a1c1eda3db41cd6" id="r_ae31c0dd310507cbd4a1c1eda3db41cd6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae31c0dd310507cbd4a1c1eda3db41cd6">parseDecimal</a> (<a class="el" href="classanch_1_1json_1_1_reader_context.html">anch::json::ReaderContext</a> &amp;context)</td></tr>
+<tr class="separator:ae31c0dd310507cbd4a1c1eda3db41cd6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a29aab1ba208108aa0f3d3813e5fd700e" id="r_a29aab1ba208108aa0f3d3813e5fd700e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a29aab1ba208108aa0f3d3813e5fd700e">lexInteger</a> (<a class="el" href="#abb678d9725242b11dbcf9c9df879c613">anch::json::jint</a> &amp;value, <a class="el" href="classanch_1_1json_1_1_reader_context.html">anch::json::ReaderContext</a> &amp;context)</td></tr>
+<tr class="separator:a29aab1ba208108aa0f3d3813e5fd700e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab8d1b9703986225449f7c2c0ea47445d" id="r_ab8d1b9703986225449f7c2c0ea47445d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab8d1b9703986225449f7c2c0ea47445d">lexUInteger</a> (<a class="el" href="#afc9335cba145b0db80937210418fc7e0">anch::json::juint</a> &amp;value, <a class="el" href="classanch_1_1json_1_1_reader_context.html">anch::json::ReaderContext</a> &amp;context)</td></tr>
+<tr class="separator:ab8d1b9703986225449f7c2c0ea47445d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af41663c33a6427ba46b8cdeeadb90166" id="r_af41663c33a6427ba46b8cdeeadb90166"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af41663c33a6427ba46b8cdeeadb90166">parseNumber</a> (<a class="el" href="classanch_1_1json_1_1_reader_context.html">anch::json::ReaderContext</a> &amp;context)</td></tr>
+<tr class="separator:af41663c33a6427ba46b8cdeeadb90166"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1d79047e8becf8d6a4149e251f536ee1" id="r_a1d79047e8becf8d6a4149e251f536ee1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1d79047e8becf8d6a4149e251f536ee1">lexNumber</a> (double &amp;value, <a class="el" href="classanch_1_1json_1_1_reader_context.html">anch::json::ReaderContext</a> &amp;context)</td></tr>
+<tr class="separator:a1d79047e8becf8d6a4149e251f536ee1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ada9514b5182773c1aa708e7f8249db22" id="r_ada9514b5182773c1aa708e7f8249db22"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ada9514b5182773c1aa708e7f8249db22">lexStringContent</a> (<a class="el" href="classanch_1_1json_1_1_reader_context.html">anch::json::ReaderContext</a> &amp;context)</td></tr>
+<tr class="separator:ada9514b5182773c1aa708e7f8249db22"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae4803c49f2b0ceee7a8f005fb275e0c8" id="r_ae4803c49f2b0ceee7a8f005fb275e0c8"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae4803c49f2b0ceee7a8f005fb275e0c8">lexString</a> (std::string &amp;value, <a class="el" href="classanch_1_1json_1_1_reader_context.html">anch::json::ReaderContext</a> &amp;context)</td></tr>
+<tr class="separator:ae4803c49f2b0ceee7a8f005fb275e0c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae18820e7250822525711e46a0b92ad53" id="r_ae18820e7250822525711e46a0b92ad53"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae18820e7250822525711e46a0b92ad53">lexField</a> (std::string &amp;field, <a class="el" href="classanch_1_1json_1_1_reader_context.html">anch::json::ReaderContext</a> &amp;context)</td></tr>
+<tr class="separator:ae18820e7250822525711e46a0b92ad53"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac05d1e060de2a8cc00bd43b5019f0ab9" id="r_ac05d1e060de2a8cc00bd43b5019f0ab9"><td class="memItemLeft" align="right" valign="top">char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac05d1e060de2a8cc00bd43b5019f0ab9">discardFail</a> (<a class="el" href="classanch_1_1json_1_1_reader_context.html">anch::json::ReaderContext</a> &amp;context)</td></tr>
+<tr class="separator:ac05d1e060de2a8cc00bd43b5019f0ab9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a39ce800f60845478d2c7530edd97b251" id="r_a39ce800f60845478d2c7530edd97b251"><td class="memItemLeft" align="right" valign="top">char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a39ce800f60845478d2c7530edd97b251">lexDiscard</a> (<a class="el" href="classanch_1_1json_1_1_reader_context.html">anch::json::ReaderContext</a> &amp;context)</td></tr>
+<tr class="separator:a39ce800f60845478d2c7530edd97b251"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab634797b158c82813d54f5785584eceb" id="r_ab634797b158c82813d54f5785584eceb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab634797b158c82813d54f5785584eceb">lexNull</a> (<a class="el" href="classanch_1_1json_1_1_reader_context.html">anch::json::ReaderContext</a> &amp;context)</td></tr>
+<tr class="separator:ab634797b158c82813d54f5785584eceb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a09c93e5b43f51f0d0e72d182c8acba7c" id="r_a09c93e5b43f51f0d0e72d182c8acba7c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a09c93e5b43f51f0d0e72d182c8acba7c">objectHasValueLex</a> (<a class="el" href="classanch_1_1json_1_1_reader_context.html">anch::json::ReaderContext</a> &amp;context)</td></tr>
+<tr class="separator:a09c93e5b43f51f0d0e72d182c8acba7c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa0a3dcae72285b35f3a5f2f752cec0f4" id="r_aa0a3dcae72285b35f3a5f2f752cec0f4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa0a3dcae72285b35f3a5f2f752cec0f4">lexObject</a> (const std::map&lt; std::string, <a class="el" href="#aef5200835f47d92a47999ca767182c77">anch::json::LexFunc</a> &gt; &amp;readers, std::set&lt; std::string &gt; &amp;fields, <a class="el" href="classanch_1_1json_1_1_reader_context.html">anch::json::ReaderContext</a> &amp;context)</td></tr>
+<tr class="separator:aa0a3dcae72285b35f3a5f2f752cec0f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4f90ea8ad3c0c5de59a630fcd12b249b" id="r_a4f90ea8ad3c0c5de59a630fcd12b249b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4f90ea8ad3c0c5de59a630fcd12b249b">lexArray</a> (<a class="el" href="#aa3b29cb26696a279ca3cbaea46b9f83c">anch::json::AddItem</a> addFunc, <a class="el" href="classanch_1_1json_1_1_reader_context.html">anch::json::ReaderContext</a> &amp;context)</td></tr>
+<tr class="separator:a4f90ea8ad3c0c5de59a630fcd12b249b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6f769f8ae361c283d5016534bce30f4a" id="r_a6f769f8ae361c283d5016534bce30f4a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6f769f8ae361c283d5016534bce30f4a">lexMap</a> (<a class="el" href="#a864b8710b205d77ef15731a261ccd0f8">anch::json::PushItem</a> pushFunc, <a class="el" href="classanch_1_1json_1_1_reader_context.html">anch::json::ReaderContext</a> &amp;context)</td></tr>
+<tr class="separator:a6f769f8ae361c283d5016534bce30f4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa3605b275f02faa0866a6f774481e719" id="r_aa3605b275f02faa0866a6f774481e719"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa3605b275f02faa0866a6f774481e719">lexUnknown</a> (<a class="el" href="classanch_1_1json_1_1_reader_context.html">anch::json::ReaderContext</a> &amp;context)</td></tr>
+<tr class="separator:aa3605b275f02faa0866a6f774481e719"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a90cd440d816680996f5b17b3e8274d32" id="r_a90cd440d816680996f5b17b3e8274d32"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a90cd440d816680996f5b17b3e8274d32">lexUnknownFail</a> (<a class="el" href="classanch_1_1json_1_1_reader_context.html">anch::json::ReaderContext</a> &amp;context)</td></tr>
+<tr class="separator:a90cd440d816680996f5b17b3e8274d32"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaf17ec37314269443c74e08fd23d05ea" id="r_aaf17ec37314269443c74e08fd23d05ea"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aaf17ec37314269443c74e08fd23d05ea">serializeFieldName</a> (std::ostream &amp;out, const std::optional&lt; std::string &gt; &amp;field)</td></tr>
+<tr class="separator:aaf17ec37314269443c74e08fd23d05ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af6718a3a34a9df46b0600d0260713b98" id="r_af6718a3a34a9df46b0600d0260713b98"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af6718a3a34a9df46b0600d0260713b98">serializeFieldName</a> (std::ostream &amp;out, const std::string &amp;field)</td></tr>
+<tr class="separator:af6718a3a34a9df46b0600d0260713b98"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0af98c1dbb57f24a0a19f13174ea5af9" id="r_a0af98c1dbb57f24a0a19f13174ea5af9"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
+<tr class="memitem:a0af98c1dbb57f24a0a19f13174ea5af9"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a0af98c1dbb57f24a0a19f13174ea5af9">serialize</a> (const T &amp;value, std::ostream &amp;out, <a class="el" href="#a9a15dc6e71c3cc7c6eed0ee21c01b8a1">anch::json::SerializeFn</a>&lt; T &gt; serializeFunc, const <a class="el" href="structanch_1_1json_1_1_mapping_options.html">anch::json::MappingOptions</a> &amp;options, const std::optional&lt; std::string &gt; &amp;field)</td></tr>
+<tr class="separator:a0af98c1dbb57f24a0a19f13174ea5af9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeb3740d8cfcf6f4232728ad2b0681051" id="r_aeb3740d8cfcf6f4232728ad2b0681051"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aeb3740d8cfcf6f4232728ad2b0681051">serializeNull</a> (std::ostream &amp;out, const <a class="el" href="structanch_1_1json_1_1_mapping_options.html">anch::json::MappingOptions</a> &amp;options, const std::optional&lt; std::string &gt; &amp;field)</td></tr>
 <tr class="separator:aeb3740d8cfcf6f4232728ad2b0681051"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ada7cbe956d0a1de3a2a9a281dd19b086" id="r_ada7cbe956d0a1de3a2a9a281dd19b086"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
-<tr class="memitem:ada7cbe956d0a1de3a2a9a281dd19b086"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ada7cbe956d0a1de3a2a9a281dd19b086">serialize</a> (const T *const value, std::ostream &amp;out, std::function&lt; void((const T &amp;value, std::ostream &amp;out, const <a class="el" href="structanch_1_1json_1_1_mapping_options.html">anch::json::MappingOptions</a> &amp;options))&gt; serializeFunc, const <a class="el" href="structanch_1_1json_1_1_mapping_options.html">anch::json::MappingOptions</a> &amp;options, const std::optional&lt; std::string &gt; &amp;field)</td></tr>
-<tr class="separator:ada7cbe956d0a1de3a2a9a281dd19b086"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa8153023ac9257157c9290aaa83614ac" id="r_aa8153023ac9257157c9290aaa83614ac"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
-<tr class="memitem:aa8153023ac9257157c9290aaa83614ac"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#aa8153023ac9257157c9290aaa83614ac">serialize</a> (const std::optional&lt; T &gt; &amp;value, std::ostream &amp;out, std::function&lt; void((const T &amp;value, std::ostream &amp;out, const <a class="el" href="structanch_1_1json_1_1_mapping_options.html">anch::json::MappingOptions</a> &amp;options))&gt; serializeFunc, const <a class="el" href="structanch_1_1json_1_1_mapping_options.html">anch::json::MappingOptions</a> &amp;options, const std::optional&lt; std::string &gt; &amp;field)</td></tr>
-<tr class="separator:aa8153023ac9257157c9290aaa83614ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aec9caeea2be8317d388745be2f3091f5" id="r_aec9caeea2be8317d388745be2f3091f5"><td class="memTemplParams" colspan="2">template&lt;typename T, typename A&gt; </td></tr>
-<tr class="memitem:aec9caeea2be8317d388745be2f3091f5"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#aec9caeea2be8317d388745be2f3091f5">serializeArray</a> (const A &amp;array, std::ostream &amp;out, std::function&lt; void((const T &amp;value, std::ostream &amp;out, const <a class="el" href="structanch_1_1json_1_1_mapping_options.html">anch::json::MappingOptions</a> &amp;options))&gt; serializeFunc, const <a class="el" href="structanch_1_1json_1_1_mapping_options.html">anch::json::MappingOptions</a> &amp;options, const std::optional&lt; std::string &gt; &amp;field)</td></tr>
-<tr class="separator:aec9caeea2be8317d388745be2f3091f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8fb10cdcb5215f6e68f6fc6e80c06ded" id="r_a8fb10cdcb5215f6e68f6fc6e80c06ded"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
-<tr class="memitem:a8fb10cdcb5215f6e68f6fc6e80c06ded"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a8fb10cdcb5215f6e68f6fc6e80c06ded">serializeMap</a> (const std::map&lt; std::string, T &gt; &amp;map, std::ostream &amp;out, std::function&lt; void((const T &amp;value, std::ostream &amp;out, const <a class="el" href="structanch_1_1json_1_1_mapping_options.html">anch::json::MappingOptions</a> &amp;options))&gt; serializeFunc, const <a class="el" href="structanch_1_1json_1_1_mapping_options.html">anch::json::MappingOptions</a> &amp;options, const std::optional&lt; std::string &gt; &amp;field)</td></tr>
-<tr class="separator:a8fb10cdcb5215f6e68f6fc6e80c06ded"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a053492414a6a0faa21446ed8a7bd33d5" id="r_a053492414a6a0faa21446ed8a7bd33d5"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
-<tr class="memitem:a053492414a6a0faa21446ed8a7bd33d5"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a053492414a6a0faa21446ed8a7bd33d5">deserialize</a> (T &amp;value, std::istream &amp;input, const <a class="el" href="structanch_1_1json_1_1_mapping_options.html">anch::json::MappingOptions</a> &amp;options, std::function&lt; void((T &amp;value, std::istream &amp;input, const <a class="el" href="structanch_1_1json_1_1_mapping_options.html">anch::json::MappingOptions</a> &amp;options))&gt; deserializeFunc)</td></tr>
-<tr class="separator:a053492414a6a0faa21446ed8a7bd33d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abb2f00dbc28eda4c10fd1e8fd8376fae" id="r_abb2f00dbc28eda4c10fd1e8fd8376fae"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
-<tr class="memitem:abb2f00dbc28eda4c10fd1e8fd8376fae"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#abb2f00dbc28eda4c10fd1e8fd8376fae">deserialize</a> (T *value, std::istream &amp;input, const <a class="el" href="structanch_1_1json_1_1_mapping_options.html">anch::json::MappingOptions</a> &amp;options, std::function&lt; void((T &amp;value, std::istream &amp;input, const <a class="el" href="structanch_1_1json_1_1_mapping_options.html">anch::json::MappingOptions</a> &amp;options))&gt; deserializeFunc)</td></tr>
-<tr class="separator:abb2f00dbc28eda4c10fd1e8fd8376fae"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a90136ad2aefd36f11a8ca55f7e95a468" id="r_a90136ad2aefd36f11a8ca55f7e95a468"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
-<tr class="memitem:a90136ad2aefd36f11a8ca55f7e95a468"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a90136ad2aefd36f11a8ca55f7e95a468">deserialize</a> (std::optional&lt; T &gt; &amp;value, std::istream &amp;input, const <a class="el" href="structanch_1_1json_1_1_mapping_options.html">anch::json::MappingOptions</a> &amp;options, std::function&lt; void((T &amp;value, std::istream &amp;input, const <a class="el" href="structanch_1_1json_1_1_mapping_options.html">anch::json::MappingOptions</a> &amp;options))&gt; deserializeFunc)</td></tr>
-<tr class="separator:a90136ad2aefd36f11a8ca55f7e95a468"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8b69f7e8a7496e8912031f637e23bda9" id="r_a8b69f7e8a7496e8912031f637e23bda9"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
-<tr class="memitem:a8b69f7e8a7496e8912031f637e23bda9"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a8b69f7e8a7496e8912031f637e23bda9">deserializeArray</a> (std::istream &amp;input, std::function&lt; void(const T &amp;)&gt; pushFunc, const <a class="el" href="structanch_1_1json_1_1_mapping_options.html">anch::json::MappingOptions</a> &amp;options, std::function&lt; void((T &amp;value, std::istream &amp;input, const <a class="el" href="structanch_1_1json_1_1_mapping_options.html">anch::json::MappingOptions</a> &amp;options))&gt; deserializeFunc)</td></tr>
-<tr class="separator:a8b69f7e8a7496e8912031f637e23bda9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3b19d2865b53c88b65e957ec49d0359f" id="r_a3b19d2865b53c88b65e957ec49d0359f"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
-<tr class="memitem:a3b19d2865b53c88b65e957ec49d0359f"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a3b19d2865b53c88b65e957ec49d0359f">deserializeMap</a> (std::istream &amp;input, std::function&lt; void(const std::pair&lt; std::string, T &gt; &amp;)&gt; pushFunc, const <a class="el" href="structanch_1_1json_1_1_mapping_options.html">anch::json::MappingOptions</a> &amp;options, std::function&lt; void((T &amp;value, std::istream &amp;input, const <a class="el" href="structanch_1_1json_1_1_mapping_options.html">anch::json::MappingOptions</a> &amp;options))&gt; deserializeFunc)</td></tr>
-<tr class="separator:a3b19d2865b53c88b65e957ec49d0359f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a30a3bea66ae70a165c49aefb0964e956" id="r_a30a3bea66ae70a165c49aefb0964e956"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
+<tr class="memitem:a30a3bea66ae70a165c49aefb0964e956"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a30a3bea66ae70a165c49aefb0964e956">serialize</a> (const T *const value, std::ostream &amp;out, <a class="el" href="#a9a15dc6e71c3cc7c6eed0ee21c01b8a1">anch::json::SerializeFn</a>&lt; T &gt; serializeFunc, const <a class="el" href="structanch_1_1json_1_1_mapping_options.html">anch::json::MappingOptions</a> &amp;options, const std::optional&lt; std::string &gt; &amp;field)</td></tr>
+<tr class="separator:a30a3bea66ae70a165c49aefb0964e956"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae7eb253467a5354b88bd5a72f666a8da" id="r_ae7eb253467a5354b88bd5a72f666a8da"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
+<tr class="memitem:ae7eb253467a5354b88bd5a72f666a8da"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ae7eb253467a5354b88bd5a72f666a8da">serialize</a> (const std::optional&lt; T &gt; &amp;value, std::ostream &amp;out, <a class="el" href="#a9a15dc6e71c3cc7c6eed0ee21c01b8a1">anch::json::SerializeFn</a>&lt; T &gt; serializeFunc, const <a class="el" href="structanch_1_1json_1_1_mapping_options.html">anch::json::MappingOptions</a> &amp;options, const std::optional&lt; std::string &gt; &amp;field)</td></tr>
+<tr class="separator:ae7eb253467a5354b88bd5a72f666a8da"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac9d6a57c6761f16e3015bafbf4be695d" id="r_ac9d6a57c6761f16e3015bafbf4be695d"><td class="memTemplParams" colspan="2">template&lt;typename T, typename A&gt; </td></tr>
+<tr class="memitem:ac9d6a57c6761f16e3015bafbf4be695d"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ac9d6a57c6761f16e3015bafbf4be695d">serializeArray</a> (const A &amp;array, std::ostream &amp;out, <a class="el" href="#a01c5143d504903660f8ad90d5a6f53fe">anch::json::DeserializeFn</a>&lt; T &gt; serializeFunc, const <a class="el" href="structanch_1_1json_1_1_mapping_options.html">anch::json::MappingOptions</a> &amp;options, const std::optional&lt; std::string &gt; &amp;field)</td></tr>
+<tr class="separator:ac9d6a57c6761f16e3015bafbf4be695d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a04f013d99e71e91bcc9d11b4eb332302" id="r_a04f013d99e71e91bcc9d11b4eb332302"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
+<tr class="memitem:a04f013d99e71e91bcc9d11b4eb332302"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a04f013d99e71e91bcc9d11b4eb332302">serializeMap</a> (const std::map&lt; std::string, T &gt; &amp;map, std::ostream &amp;out, <a class="el" href="#a9a15dc6e71c3cc7c6eed0ee21c01b8a1">anch::json::SerializeFn</a>&lt; T &gt; serializeFunc, const <a class="el" href="structanch_1_1json_1_1_mapping_options.html">anch::json::MappingOptions</a> &amp;options, const std::optional&lt; std::string &gt; &amp;field)</td></tr>
+<tr class="separator:a04f013d99e71e91bcc9d11b4eb332302"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af30ab5ff75ebbdd03ee983ae83e3b8df" id="r_af30ab5ff75ebbdd03ee983ae83e3b8df"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
+<tr class="memitem:af30ab5ff75ebbdd03ee983ae83e3b8df"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#af30ab5ff75ebbdd03ee983ae83e3b8df">deserialize</a> (T &amp;value, <a class="el" href="classanch_1_1json_1_1_reader_context.html">anch::json::ReaderContext</a> &amp;context, <a class="el" href="#a01c5143d504903660f8ad90d5a6f53fe">anch::json::DeserializeFn</a>&lt; T &gt; deserializeFunc)</td></tr>
+<tr class="separator:af30ab5ff75ebbdd03ee983ae83e3b8df"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8d1f774e8d27dcdf8f97770da88bb216" id="r_a8d1f774e8d27dcdf8f97770da88bb216"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
+<tr class="memitem:a8d1f774e8d27dcdf8f97770da88bb216"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a8d1f774e8d27dcdf8f97770da88bb216">deserialize</a> (T *value, <a class="el" href="classanch_1_1json_1_1_reader_context.html">anch::json::ReaderContext</a> &amp;context, <a class="el" href="#a01c5143d504903660f8ad90d5a6f53fe">anch::json::DeserializeFn</a>&lt; T &gt; deserializeFunc)</td></tr>
+<tr class="separator:a8d1f774e8d27dcdf8f97770da88bb216"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a249d7cfaae94907ee6426e139e599c8a" id="r_a249d7cfaae94907ee6426e139e599c8a"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
+<tr class="memitem:a249d7cfaae94907ee6426e139e599c8a"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a249d7cfaae94907ee6426e139e599c8a">deserialize</a> (std::optional&lt; T &gt; &amp;value, <a class="el" href="classanch_1_1json_1_1_reader_context.html">anch::json::ReaderContext</a> &amp;context, <a class="el" href="#a01c5143d504903660f8ad90d5a6f53fe">anch::json::DeserializeFn</a>&lt; T &gt; deserializeFunc)</td></tr>
+<tr class="separator:a249d7cfaae94907ee6426e139e599c8a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5cc03ed2658cca345c652d825becd6c2" id="r_a5cc03ed2658cca345c652d825becd6c2"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
+<tr class="memitem:a5cc03ed2658cca345c652d825becd6c2"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a5cc03ed2658cca345c652d825becd6c2">addToVector</a> (std::vector&lt; T &gt; &amp;value, <a class="el" href="#a01c5143d504903660f8ad90d5a6f53fe">anch::json::DeserializeFn</a>&lt; T &gt; deser, <a class="el" href="classanch_1_1json_1_1_reader_context.html">anch::json::ReaderContext</a> &amp;context)</td></tr>
+<tr class="separator:a5cc03ed2658cca345c652d825becd6c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0e4e3cffdf0b212af90c45bc1adf1e36" id="r_a0e4e3cffdf0b212af90c45bc1adf1e36"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
+<tr class="memitem:a0e4e3cffdf0b212af90c45bc1adf1e36"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a0e4e3cffdf0b212af90c45bc1adf1e36">addToList</a> (std::list&lt; T &gt; &amp;value, <a class="el" href="#a01c5143d504903660f8ad90d5a6f53fe">anch::json::DeserializeFn</a>&lt; T &gt; deser, <a class="el" href="classanch_1_1json_1_1_reader_context.html">anch::json::ReaderContext</a> &amp;context)</td></tr>
+<tr class="separator:a0e4e3cffdf0b212af90c45bc1adf1e36"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac2054ac8f0b25d1184aa30713f4df9a9" id="r_ac2054ac8f0b25d1184aa30713f4df9a9"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
+<tr class="memitem:ac2054ac8f0b25d1184aa30713f4df9a9"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ac2054ac8f0b25d1184aa30713f4df9a9">addToSet</a> (std::set&lt; T &gt; &amp;value, <a class="el" href="#a01c5143d504903660f8ad90d5a6f53fe">anch::json::DeserializeFn</a>&lt; T &gt; deser, <a class="el" href="classanch_1_1json_1_1_reader_context.html">anch::json::ReaderContext</a> &amp;context)</td></tr>
+<tr class="separator:ac2054ac8f0b25d1184aa30713f4df9a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1ef290de5a755cbac6b517a13800e89e" id="r_a1ef290de5a755cbac6b517a13800e89e"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
+<tr class="memitem:a1ef290de5a755cbac6b517a13800e89e"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a1ef290de5a755cbac6b517a13800e89e">deserializeMap</a> (std::function&lt; void(const std::pair&lt; std::string, T &gt; &amp;)&gt; pushFunc, <a class="el" href="classanch_1_1json_1_1_reader_context.html">anch::json::ReaderContext</a> &amp;context, <a class="el" href="#a01c5143d504903660f8ad90d5a6f53fe">anch::json::DeserializeFn</a>&lt; T &gt; deserializeFunc)</td></tr>
+<tr class="separator:a1ef290de5a755cbac6b517a13800e89e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:a6f0f7c7dce90dfd75b3d67ec70fcb693" id="r_a6f0f7c7dce90dfd75b3d67ec70fcb693"><td class="memItemLeft" align="right" valign="top">const char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6f0f7c7dce90dfd75b3d67ec70fcb693">STRING_DELIMITER</a></td></tr>
+<tr class="memitem:a6f0f7c7dce90dfd75b3d67ec70fcb693" id="r_a6f0f7c7dce90dfd75b3d67ec70fcb693"><td class="memItemLeft" align="right" valign="top">const char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6f0f7c7dce90dfd75b3d67ec70fcb693">STRING_DELIMITER</a> = '&quot;'</td></tr>
 <tr class="separator:a6f0f7c7dce90dfd75b3d67ec70fcb693"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2fe572f6ce203cfa01514a18e69fe9a3" id="r_a2fe572f6ce203cfa01514a18e69fe9a3"><td class="memItemLeft" align="right" valign="top">const char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2fe572f6ce203cfa01514a18e69fe9a3">FIELD_SEPARATOR</a></td></tr>
+<tr class="memitem:a2fe572f6ce203cfa01514a18e69fe9a3" id="r_a2fe572f6ce203cfa01514a18e69fe9a3"><td class="memItemLeft" align="right" valign="top">const char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2fe572f6ce203cfa01514a18e69fe9a3">FIELD_SEPARATOR</a> = ','</td></tr>
 <tr class="separator:a2fe572f6ce203cfa01514a18e69fe9a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9d0fb5b8350ce651db9cbb4a398937c1" id="r_a9d0fb5b8350ce651db9cbb4a398937c1"><td class="memItemLeft" align="right" valign="top">const char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9d0fb5b8350ce651db9cbb4a398937c1">FIELD_VALUE_SEPARATOR</a></td></tr>
+<tr class="memitem:a9d0fb5b8350ce651db9cbb4a398937c1" id="r_a9d0fb5b8350ce651db9cbb4a398937c1"><td class="memItemLeft" align="right" valign="top">const char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9d0fb5b8350ce651db9cbb4a398937c1">FIELD_VALUE_SEPARATOR</a> = ':'</td></tr>
 <tr class="separator:a9d0fb5b8350ce651db9cbb4a398937c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a10b0c7119f4cd760f646c66be848df96" id="r_a10b0c7119f4cd760f646c66be848df96"><td class="memItemLeft" align="right" valign="top">const char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a10b0c7119f4cd760f646c66be848df96">OBJECT_BEGIN</a></td></tr>
+<tr class="memitem:a10b0c7119f4cd760f646c66be848df96" id="r_a10b0c7119f4cd760f646c66be848df96"><td class="memItemLeft" align="right" valign="top">const char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a10b0c7119f4cd760f646c66be848df96">OBJECT_BEGIN</a> = '{'</td></tr>
 <tr class="separator:a10b0c7119f4cd760f646c66be848df96"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa2a414018fe5a3b35c84df16ba4ed2fe" id="r_aa2a414018fe5a3b35c84df16ba4ed2fe"><td class="memItemLeft" align="right" valign="top">const char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa2a414018fe5a3b35c84df16ba4ed2fe">OBJECT_END</a></td></tr>
+<tr class="memitem:aa2a414018fe5a3b35c84df16ba4ed2fe" id="r_aa2a414018fe5a3b35c84df16ba4ed2fe"><td class="memItemLeft" align="right" valign="top">const char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa2a414018fe5a3b35c84df16ba4ed2fe">OBJECT_END</a> = '}'</td></tr>
 <tr class="separator:aa2a414018fe5a3b35c84df16ba4ed2fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0216cc459829f5957a799ffa4a91ce5d" id="r_a0216cc459829f5957a799ffa4a91ce5d"><td class="memItemLeft" align="right" valign="top">const char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0216cc459829f5957a799ffa4a91ce5d">ARRAY_BEGIN</a></td></tr>
+<tr class="memitem:a0216cc459829f5957a799ffa4a91ce5d" id="r_a0216cc459829f5957a799ffa4a91ce5d"><td class="memItemLeft" align="right" valign="top">const char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0216cc459829f5957a799ffa4a91ce5d">ARRAY_BEGIN</a> = '['</td></tr>
 <tr class="separator:a0216cc459829f5957a799ffa4a91ce5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3a305bac5e5abec8d3de745d27061c15" id="r_a3a305bac5e5abec8d3de745d27061c15"><td class="memItemLeft" align="right" valign="top">const char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3a305bac5e5abec8d3de745d27061c15">ARRAY_END</a></td></tr>
+<tr class="memitem:a3a305bac5e5abec8d3de745d27061c15" id="r_a3a305bac5e5abec8d3de745d27061c15"><td class="memItemLeft" align="right" valign="top">const char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3a305bac5e5abec8d3de745d27061c15">ARRAY_END</a> =']'</td></tr>
 <tr class="separator:a3a305bac5e5abec8d3de745d27061c15"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9b313f4714d21dfb2363add9ad7ae607" id="r_a9b313f4714d21dfb2363add9ad7ae607"><td class="memItemLeft" align="right" valign="top">const std::optional&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9b313f4714d21dfb2363add9ad7ae607">EMPTY_FIELD</a></td></tr>
 <tr class="separator:a9b313f4714d21dfb2363add9ad7ae607"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -257,7 +347,132 @@ Variables</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>JSON namespace. </p>
 <p>Provides serialization and deserialization functions for JSON format. </p>
-</div><h2 class="groupheader">Enumeration Type Documentation</h2>
+</div><h2 class="groupheader">Typedef Documentation</h2>
+<a id="aa3b29cb26696a279ca3cbaea46b9f83c" name="aa3b29cb26696a279ca3cbaea46b9f83c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa3b29cb26696a279ca3cbaea46b9f83c">&#9670;&#160;</a></span>AddItem</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="#aa3b29cb26696a279ca3cbaea46b9f83c">anch::json::AddItem</a> = std::function&lt;bool(<a class="el" href="classanch_1_1json_1_1_reader_context.html">anch::json::ReaderContext</a>&amp;)&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Parse and add item to array function (return <code>true</code> when ']' has been found, <code>false</code> otherwise) </p>
+
+</div>
+</div>
+<a id="a01c5143d504903660f8ad90d5a6f53fe" name="a01c5143d504903660f8ad90d5a6f53fe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a01c5143d504903660f8ad90d5a6f53fe">&#9670;&#160;</a></span>DeserializeFn</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="#a01c5143d504903660f8ad90d5a6f53fe">anch::json::DeserializeFn</a> = std::function&lt;bool(T&amp;, <a class="el" href="classanch_1_1json_1_1_reader_context.html">anch::json::ReaderContext</a>&amp;)&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Deserialization function definition </p>
+
+</div>
+</div>
+<a id="a871132154645e4f4b89c34ea060afcc7" name="a871132154645e4f4b89c34ea060afcc7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a871132154645e4f4b89c34ea060afcc7">&#9670;&#160;</a></span>jfloat</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="#a871132154645e4f4b89c34ea060afcc7">anch::json::jfloat</a> = long double</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Maximum float precision declaration </p>
+
+</div>
+</div>
+<a id="abb678d9725242b11dbcf9c9df879c613" name="abb678d9725242b11dbcf9c9df879c613"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abb678d9725242b11dbcf9c9df879c613">&#9670;&#160;</a></span>jint</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="#abb678d9725242b11dbcf9c9df879c613">anch::json::jint</a> = int64_t</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Maximum signed integer precision declaration </p>
+
+</div>
+</div>
+<a id="afc9335cba145b0db80937210418fc7e0" name="afc9335cba145b0db80937210418fc7e0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afc9335cba145b0db80937210418fc7e0">&#9670;&#160;</a></span>juint</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="#afc9335cba145b0db80937210418fc7e0">anch::json::juint</a> = uint64_t</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Maximum unsigned integer precision declaration </p>
+
+</div>
+</div>
+<a id="aef5200835f47d92a47999ca767182c77" name="aef5200835f47d92a47999ca767182c77"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aef5200835f47d92a47999ca767182c77">&#9670;&#160;</a></span>LexFunc</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="#aef5200835f47d92a47999ca767182c77">anch::json::LexFunc</a> = std::function&lt;bool(<a class="el" href="classanch_1_1json_1_1_reader_context.html">anch::json::ReaderContext</a>&amp;)&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Object lexer function </p>
+
+</div>
+</div>
+<a id="a864b8710b205d77ef15731a261ccd0f8" name="a864b8710b205d77ef15731a261ccd0f8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a864b8710b205d77ef15731a261ccd0f8">&#9670;&#160;</a></span>PushItem</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="#a864b8710b205d77ef15731a261ccd0f8">anch::json::PushItem</a> = std::function&lt;void(const std::string&amp;, <a class="el" href="classanch_1_1json_1_1_reader_context.html">anch::json::ReaderContext</a>&amp;)&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Parse and insert item to map </p>
+
+</div>
+</div>
+<a id="a9a15dc6e71c3cc7c6eed0ee21c01b8a1" name="a9a15dc6e71c3cc7c6eed0ee21c01b8a1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9a15dc6e71c3cc7c6eed0ee21c01b8a1">&#9670;&#160;</a></span>SerializeFn</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="#a9a15dc6e71c3cc7c6eed0ee21c01b8a1">anch::json::SerializeFn</a> = std::function&lt;void(const T&amp;, std::ostream&amp;, const <a class="el" href="structanch_1_1json_1_1_mapping_options.html">anch::json::MappingOptions</a>&amp;)&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Serialization function definition </p>
+
+</div>
+</div>
+<h2 class="groupheader">Enumeration Type Documentation</h2>
 <a id="a56742fecea7bc19952b3e35c013ad931" name="a56742fecea7bc19952b3e35c013ad931"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a56742fecea7bc19952b3e35c013ad931">&#9670;&#160;</a></span>ErrorCode</h2>
 
@@ -293,30 +508,159 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<h2 class="groupheader">Function Documentation</h2>
-<a id="a7e1f38d1d509739885cee52fb290660c" name="a7e1f38d1d509739885cee52fb290660c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7e1f38d1d509739885cee52fb290660c">&#9670;&#160;</a></span>consumeUnknownField()</h2>
+<a id="aa39e48b07b65032096fb6d205da99f4b" name="aa39e48b07b65032096fb6d205da99f4b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa39e48b07b65032096fb6d205da99f4b">&#9670;&#160;</a></span>EventType</h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void anch::json::consumeUnknownField </td>
+          <td class="memname">enum class <a class="el" href="#aa39e48b07b65032096fb6d205da99f4b">anch::json::EventType</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel strong">strong</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p><a class="el" href="classanch_1_1json_1_1_reader.html" title="JSON reader based on events.">Reader</a> found element type</p>
+<dl class="section author"><dt>Author</dt><dd>Vincent Lachenal</dd></dl>
+<dl class="section since"><dt>Since</dt><dd>0.1 </dd></dl>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="aa39e48b07b65032096fb6d205da99f4ba933815b48a60fd3ece2576e52727cbd9" name="aa39e48b07b65032096fb6d205da99f4ba933815b48a60fd3ece2576e52727cbd9"></a>VNULL&#160;</td><td class="fielddoc"><p>'null' value (no value) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aa39e48b07b65032096fb6d205da99f4bac0d83f0b82a6b30de8811e69e6d95c61" name="aa39e48b07b65032096fb6d205da99f4bac0d83f0b82a6b30de8811e69e6d95c61"></a>TRUE&#160;</td><td class="fielddoc"><p>Boolean 'true' value (no value) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aa39e48b07b65032096fb6d205da99f4ba946003f97ccc52d5d3b54ac0ec31bbfc" name="aa39e48b07b65032096fb6d205da99f4ba946003f97ccc52d5d3b54ac0ec31bbfc"></a>FALSE&#160;</td><td class="fielddoc"><p>Boolean 'false' value (no value) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aa39e48b07b65032096fb6d205da99f4ba552a541802e89c9f535247f725bd1c0d" name="aa39e48b07b65032096fb6d205da99f4ba552a541802e89c9f535247f725bd1c0d"></a>FIELD&#160;</td><td class="fielddoc"><p>Field value (value stored as std::string) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aa39e48b07b65032096fb6d205da99f4ba34f55eca38e0605a84f169ff61a2a396" name="aa39e48b07b65032096fb6d205da99f4ba34f55eca38e0605a84f169ff61a2a396"></a>NUMBER&#160;</td><td class="fielddoc"><p>Number value (value stored as <code>double</code>) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aa39e48b07b65032096fb6d205da99f4ba63b588d5559f64f89a416e656880b949" name="aa39e48b07b65032096fb6d205da99f4ba63b588d5559f64f89a416e656880b949"></a>STRING&#160;</td><td class="fielddoc"><p>String value (value as stored std::string) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aa39e48b07b65032096fb6d205da99f4ba3442ecc27afa18289e475facda5150ab" name="aa39e48b07b65032096fb6d205da99f4ba3442ecc27afa18289e475facda5150ab"></a>BEGIN_OBJECT&#160;</td><td class="fielddoc"><p>Begin object (no value) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aa39e48b07b65032096fb6d205da99f4babed6d3a6ae2870caee4c047c15e7cb2b" name="aa39e48b07b65032096fb6d205da99f4babed6d3a6ae2870caee4c047c15e7cb2b"></a>END_OBJECT&#160;</td><td class="fielddoc"><p>End object (no value) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aa39e48b07b65032096fb6d205da99f4ba149db99349b09ddc7523e181c78e70d0" name="aa39e48b07b65032096fb6d205da99f4ba149db99349b09ddc7523e181c78e70d0"></a>BEGIN_ARRAY&#160;</td><td class="fielddoc"><p>Begin array (no value) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aa39e48b07b65032096fb6d205da99f4ba225a0518a9013b9e99cb86ba9009a14f" name="aa39e48b07b65032096fb6d205da99f4ba225a0518a9013b9e99cb86ba9009a14f"></a>END_ARRAY&#160;</td><td class="fielddoc"><p>End array (no value) </p>
+</td></tr>
+</table>
+
+</div>
+</div>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="a0e4e3cffdf0b212af90c45bc1adf1e36" name="a0e4e3cffdf0b212af90c45bc1adf1e36"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0e4e3cffdf0b212af90c45bc1adf1e36">&#9670;&#160;</a></span>addToList()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">bool anch::json::addToList </td>
           <td>(</td>
-          <td class="paramtype">std::istream &amp;</td>          <td class="paramname"><span class="paramname"><em>input</em></span>, </td>
+          <td class="paramtype">std::list&lt; T &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>value</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="structanch_1_1json_1_1_mapping_options.html">anch::json::MappingOptions</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>options</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="#a01c5143d504903660f8ad90d5a6f53fe">anch::json::DeserializeFn</a>&lt; T &gt;</td>          <td class="paramname"><span class="paramname"><em>deser</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classanch_1_1json_1_1_reader_context.html">anch::json::ReaderContext</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>context</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Consumes unknown field until next field</p>
+<p>Deserialize item and add it to list if not <code>null</code> </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">input</td><td>the input stream to parse </td></tr>
-    <tr><td class="paramname">options</td><td>the options to use </td></tr>
+    <tr><td class="paramname">value</td><td>the list to add in </td></tr>
+    <tr><td class="paramname">deser</td><td>the deserialization function </td></tr>
+    <tr><td class="paramname">context</td><td>the reader context </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ac2054ac8f0b25d1184aa30713f4df9a9" name="ac2054ac8f0b25d1184aa30713f4df9a9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac2054ac8f0b25d1184aa30713f4df9a9">&#9670;&#160;</a></span>addToSet()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">bool anch::json::addToSet </td>
+          <td>(</td>
+          <td class="paramtype">std::set&lt; T &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>value</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="#a01c5143d504903660f8ad90d5a6f53fe">anch::json::DeserializeFn</a>&lt; T &gt;</td>          <td class="paramname"><span class="paramname"><em>deser</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classanch_1_1json_1_1_reader_context.html">anch::json::ReaderContext</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>context</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Deserialize item and add it to set if not <code>null</code> </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">value</td><td>the set to add in </td></tr>
+    <tr><td class="paramname">deser</td><td>the deserialization function </td></tr>
+    <tr><td class="paramname">context</td><td>the reader context </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a5cc03ed2658cca345c652d825becd6c2" name="a5cc03ed2658cca345c652d825becd6c2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5cc03ed2658cca345c652d825becd6c2">&#9670;&#160;</a></span>addToVector()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">bool anch::json::addToVector </td>
+          <td>(</td>
+          <td class="paramtype">std::vector&lt; T &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>value</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="#a01c5143d504903660f8ad90d5a6f53fe">anch::json::DeserializeFn</a>&lt; T &gt;</td>          <td class="paramname"><span class="paramname"><em>deser</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classanch_1_1json_1_1_reader_context.html">anch::json::ReaderContext</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>context</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Deserialize item and add it to vector if not <code>null</code> </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">value</td><td>the vector to add in </td></tr>
+    <tr><td class="paramname">deser</td><td>the deserialization function </td></tr>
+    <tr><td class="paramname">context</td><td>the reader context </td></tr>
   </table>
   </dd>
 </dl>
@@ -404,8 +748,8 @@ template&lt;typename T&gt; </div>
 
 </div>
 </div>
-<a id="a90136ad2aefd36f11a8ca55f7e95a468" name="a90136ad2aefd36f11a8ca55f7e95a468"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a90136ad2aefd36f11a8ca55f7e95a468">&#9670;&#160;</a></span>deserialize() <span class="overload">[3/8]</span></h2>
+<a id="a249d7cfaae94907ee6426e139e599c8a" name="a249d7cfaae94907ee6426e139e599c8a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a249d7cfaae94907ee6426e139e599c8a">&#9670;&#160;</a></span>deserialize() <span class="overload">[3/8]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -420,17 +764,12 @@ template&lt;typename T&gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::istream &amp;</td>          <td class="paramname"><span class="paramname"><em>input</em></span>, </td>
+          <td class="paramtype"><a class="el" href="classanch_1_1json_1_1_reader_context.html">anch::json::ReaderContext</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>context</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="structanch_1_1json_1_1_mapping_options.html">anch::json::MappingOptions</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>options</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::function&lt; void((T &amp;value, std::istream &amp;input, const <a class="el" href="structanch_1_1json_1_1_mapping_options.html">anch::json::MappingOptions</a> &amp;options))&gt;</td>          <td class="paramname"><span class="paramname"><em>deserializeFunc</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="#a01c5143d504903660f8ad90d5a6f53fe">anch::json::DeserializeFn</a>&lt; T &gt;</td>          <td class="paramname"><span class="paramname"><em>deserializeFunc</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -438,8 +777,7 @@ template&lt;typename T&gt; </div>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">value</td><td>the value to fill </td></tr>
-    <tr><td class="paramname">input</td><td>the input stream to parse </td></tr>
-    <tr><td class="paramname">options</td><td>the options to use </td></tr>
+    <tr><td class="paramname">context</td><td>the mapping context </td></tr>
     <tr><td class="paramname">deserializeFunc</td><td>the value deserialization function </td></tr>
   </table>
   </dd>
@@ -533,8 +871,8 @@ template&lt;typename T&gt; </div>
 
 </div>
 </div>
-<a id="a053492414a6a0faa21446ed8a7bd33d5" name="a053492414a6a0faa21446ed8a7bd33d5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a053492414a6a0faa21446ed8a7bd33d5">&#9670;&#160;</a></span>deserialize() <span class="overload">[6/8]</span></h2>
+<a id="af30ab5ff75ebbdd03ee983ae83e3b8df" name="af30ab5ff75ebbdd03ee983ae83e3b8df"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af30ab5ff75ebbdd03ee983ae83e3b8df">&#9670;&#160;</a></span>deserialize() <span class="overload">[6/8]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -549,17 +887,12 @@ template&lt;typename T&gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::istream &amp;</td>          <td class="paramname"><span class="paramname"><em>input</em></span>, </td>
+          <td class="paramtype"><a class="el" href="classanch_1_1json_1_1_reader_context.html">anch::json::ReaderContext</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>context</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="structanch_1_1json_1_1_mapping_options.html">anch::json::MappingOptions</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>options</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::function&lt; void((T &amp;value, std::istream &amp;input, const <a class="el" href="structanch_1_1json_1_1_mapping_options.html">anch::json::MappingOptions</a> &amp;options))&gt;</td>          <td class="paramname"><span class="paramname"><em>deserializeFunc</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="#a01c5143d504903660f8ad90d5a6f53fe">anch::json::DeserializeFn</a>&lt; T &gt;</td>          <td class="paramname"><span class="paramname"><em>deserializeFunc</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -567,8 +900,7 @@ template&lt;typename T&gt; </div>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">value</td><td>the value to fill </td></tr>
-    <tr><td class="paramname">input</td><td>the input stream to parse </td></tr>
-    <tr><td class="paramname">options</td><td>the options to use </td></tr>
+    <tr><td class="paramname">context</td><td>the mapping context </td></tr>
     <tr><td class="paramname">deserializeFunc</td><td>the value deserialization function </td></tr>
   </table>
   </dd>
@@ -619,8 +951,8 @@ template&lt;typename T&gt; </div>
 
 </div>
 </div>
-<a id="abb2f00dbc28eda4c10fd1e8fd8376fae" name="abb2f00dbc28eda4c10fd1e8fd8376fae"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abb2f00dbc28eda4c10fd1e8fd8376fae">&#9670;&#160;</a></span>deserialize() <span class="overload">[8/8]</span></h2>
+<a id="a8d1f774e8d27dcdf8f97770da88bb216" name="a8d1f774e8d27dcdf8f97770da88bb216"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8d1f774e8d27dcdf8f97770da88bb216">&#9670;&#160;</a></span>deserialize() <span class="overload">[8/8]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -635,17 +967,12 @@ template&lt;typename T&gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::istream &amp;</td>          <td class="paramname"><span class="paramname"><em>input</em></span>, </td>
+          <td class="paramtype"><a class="el" href="classanch_1_1json_1_1_reader_context.html">anch::json::ReaderContext</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>context</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="structanch_1_1json_1_1_mapping_options.html">anch::json::MappingOptions</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>options</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::function&lt; void((T &amp;value, std::istream &amp;input, const <a class="el" href="structanch_1_1json_1_1_mapping_options.html">anch::json::MappingOptions</a> &amp;options))&gt;</td>          <td class="paramname"><span class="paramname"><em>deserializeFunc</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="#a01c5143d504903660f8ad90d5a6f53fe">anch::json::DeserializeFn</a>&lt; T &gt;</td>          <td class="paramname"><span class="paramname"><em>deserializeFunc</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -653,8 +980,7 @@ template&lt;typename T&gt; </div>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">value</td><td>the value to fill </td></tr>
-    <tr><td class="paramname">input</td><td>the input stream to parse </td></tr>
-    <tr><td class="paramname">options</td><td>the options to use </td></tr>
+    <tr><td class="paramname">context</td><td>the mapping context </td></tr>
     <tr><td class="paramname">deserializeFunc</td><td>the value deserialization function </td></tr>
   </table>
   </dd>
@@ -662,8 +988,8 @@ template&lt;typename T&gt; </div>
 
 </div>
 </div>
-<a id="a8b69f7e8a7496e8912031f637e23bda9" name="a8b69f7e8a7496e8912031f637e23bda9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8b69f7e8a7496e8912031f637e23bda9">&#9670;&#160;</a></span>deserializeArray()</h2>
+<a id="a1ef290de5a755cbac6b517a13800e89e" name="a1ef290de5a755cbac6b517a13800e89e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1ef290de5a755cbac6b517a13800e89e">&#9670;&#160;</a></span>deserializeMap()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -671,24 +997,19 @@ template&lt;typename T&gt; </div>
 template&lt;typename T&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">void anch::json::deserializeArray </td>
+          <td class="memname">void anch::json::deserializeMap </td>
           <td>(</td>
-          <td class="paramtype">std::istream &amp;</td>          <td class="paramname"><span class="paramname"><em>input</em></span>, </td>
+          <td class="paramtype">std::function&lt; void(const std::pair&lt; std::string, T &gt; &amp;)&gt;</td>          <td class="paramname"><span class="paramname"><em>pushFunc</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::function&lt; void(const T &amp;)&gt;</td>          <td class="paramname"><span class="paramname"><em>pushFunc</em></span>, </td>
+          <td class="paramtype"><a class="el" href="classanch_1_1json_1_1_reader_context.html">anch::json::ReaderContext</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>context</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="structanch_1_1json_1_1_mapping_options.html">anch::json::MappingOptions</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>options</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::function&lt; void((T &amp;value, std::istream &amp;input, const <a class="el" href="structanch_1_1json_1_1_mapping_options.html">anch::json::MappingOptions</a> &amp;options))&gt;</td>          <td class="paramname"><span class="paramname"><em>deserializeFunc</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="#a01c5143d504903660f8ad90d5a6f53fe">anch::json::DeserializeFn</a>&lt; T &gt;</td>          <td class="paramname"><span class="paramname"><em>deserializeFunc</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -701,46 +1022,12 @@ template&lt;typename T&gt; </div>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">input</td><td>the input stream to deserialize </td></tr>
     <tr><td class="paramname">pushFunc</td><td>the push function according to container type </td></tr>
-    <tr><td class="paramname">options</td><td>the options to use </td></tr>
-    <tr><td class="paramname">deserializeFunc</td><td>the value deserialization function </td></tr>
+    <tr><td class="paramname">context</td><td>the mapping context </td></tr>
+    <tr><td class="paramname">deserializeFunc</td><td>the value deserialization function</td></tr>
   </table>
   </dd>
 </dl>
-
-</div>
-</div>
-<a id="a3b19d2865b53c88b65e957ec49d0359f" name="a3b19d2865b53c88b65e957ec49d0359f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3b19d2865b53c88b65e957ec49d0359f">&#9670;&#160;</a></span>deserializeMap()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">void anch::json::deserializeMap </td>
-          <td>(</td>
-          <td class="paramtype">std::istream &amp;</td>          <td class="paramname"><span class="paramname"><em>input</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::function&lt; void(const std::pair&lt; std::string, T &gt; &amp;)&gt;</td>          <td class="paramname"><span class="paramname"><em>pushFunc</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="structanch_1_1json_1_1_mapping_options.html">anch::json::MappingOptions</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>options</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::function&lt; void((T &amp;value, std::istream &amp;input, const <a class="el" href="structanch_1_1json_1_1_mapping_options.html">anch::json::MappingOptions</a> &amp;options))&gt;</td>          <td class="paramname"><span class="paramname"><em>deserializeFunc</em></span>&#160;)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
 <p>JSON map deserialization generic implementation</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
@@ -750,9 +1037,8 @@ template&lt;typename T&gt; </div>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">input</td><td>the input stream to deserialize </td></tr>
+    <tr><td class="paramname">context</td><td>the mapping context </td></tr>
     <tr><td class="paramname">pushFunc</td><td>the push function according to container type </td></tr>
-    <tr><td class="paramname">options</td><td>the options to use </td></tr>
     <tr><td class="paramname">deserializeFunc</td><td>the value deserialization function </td></tr>
   </table>
   </dd>
@@ -760,138 +1046,694 @@ template&lt;typename T&gt; </div>
 
 </div>
 </div>
-<a id="a1db238048a4a87df3380932ff10a076f" name="a1db238048a4a87df3380932ff10a076f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1db238048a4a87df3380932ff10a076f">&#9670;&#160;</a></span>discardChars()</h2>
+<a id="ac05d1e060de2a8cc00bd43b5019f0ab9" name="ac05d1e060de2a8cc00bd43b5019f0ab9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac05d1e060de2a8cc00bd43b5019f0ab9">&#9670;&#160;</a></span>discardFail()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void anch::json::discardChars </td>
+          <td class="memname">char anch::json::discardFail </td>
           <td>(</td>
-          <td class="paramtype">std::istream &amp;</td>          <td class="paramname"><span class="paramname"><em>input</em></span>, </td>
+          <td class="paramtype"><a class="el" href="classanch_1_1json_1_1_reader_context.html">anch::json::ReaderContext</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>context</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Fail on any discardable character</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">context</td><td>the parser context</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>the not discardable character</dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classanch_1_1json_1_1_mapping_error.html" title="Mapping error.">anch::json::MappingError</a></td><td>discardable charater has been found </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a0a98011ef62818836029ae7fc284f7a5" name="a0a98011ef62818836029ae7fc284f7a5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0a98011ef62818836029ae7fc284f7a5">&#9670;&#160;</a></span>isPrimitive()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool anch::json::isPrimitive </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Check if type is a primitive JSON type. </p>
+<p>When not specialzed, the function always return <code>false</code> .<br  />
+Every <code>C</code> basic types are defined as primitive. <code>std::string</code> and <code>std::string_view</code> are also defined as primitive.<br  />
+<br  />
+You can declare any type as primitive with template function specialization.</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>the type to check</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>true</code> if type is a JSON primitive type, <code>false</code> otherwise </dd></dl>
+
+</div>
+</div>
+<a id="a4f90ea8ad3c0c5de59a630fcd12b249b" name="a4f90ea8ad3c0c5de59a630fcd12b249b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4f90ea8ad3c0c5de59a630fcd12b249b">&#9670;&#160;</a></span>lexArray()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void anch::json::lexArray </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="#aa3b29cb26696a279ca3cbaea46b9f83c">anch::json::AddItem</a></td>          <td class="paramname"><span class="paramname"><em>addFunc</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="structanch_1_1json_1_1_mapping_options.html">anch::json::MappingOptions</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>options</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="classanch_1_1json_1_1_reader_context.html">anch::json::ReaderContext</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>context</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Consumes discarded characters</p>
+<p>Parse array</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">input</td><td>the input stream to consumes </td></tr>
-    <tr><td class="paramname">options</td><td>the options to use</td></tr>
+    <tr><td class="paramname">addFunc</td><td>parse and add elem to array function </td></tr>
+    <tr><td class="paramname">context</td><td>the context</td></tr>
   </table>
   </dd>
 </dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname">plop</td><td>if stream reach its end </td></tr>
+    <tr><td class="paramname"><a class="el" href="classanch_1_1json_1_1_mapping_error.html" title="Mapping error.">anch::json::MappingError</a></td><td>parsing error </td></tr>
   </table>
   </dd>
 </dl>
 
 </div>
 </div>
-<a id="add3dad4e78ae6a043b868be0594c69c0" name="add3dad4e78ae6a043b868be0594c69c0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#add3dad4e78ae6a043b868be0594c69c0">&#9670;&#160;</a></span>getFieldName()</h2>
+<a id="af4d03a7ecdab93f7b86d49cc9839941d" name="af4d03a7ecdab93f7b86d49cc9839941d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af4d03a7ecdab93f7b86d49cc9839941d">&#9670;&#160;</a></span>lexBoolean()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::optional&lt; std::string &gt; anch::json::getFieldName </td>
+          <td class="memname">bool anch::json::lexBoolean </td>
           <td>(</td>
-          <td class="paramtype">std::istream &amp;</td>          <td class="paramname"><span class="paramname"><em>input</em></span>, </td>
+          <td class="paramtype">bool &amp;</td>          <td class="paramname"><span class="paramname"><em>value</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="structanch_1_1json_1_1_mapping_options.html">anch::json::MappingOptions</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>options</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="classanch_1_1json_1_1_reader_context.html">anch::json::ReaderContext</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>context</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Parse input to get new field definition.<br  />
-This will consume '"&lt;field name&gt;":'</p>
+<p>Boolean value lexer.<br  />
+Possible values are: <code>null</code>, <code>true</code> and <code>false</code> </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">input</td><td>the input stream to parse </td></tr>
-    <tr><td class="paramname">options</td><td>the options to use</td></tr>
+    <tr><td class="paramname">value</td><td>the boolean value to store in (not set when <code>null</code> has been found) </td></tr>
+    <tr><td class="paramname">context</td><td>the parser context</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>the field's name if found, <code>empty</code> otherwise </dd></dl>
-
-</div>
-</div>
-<a id="ad43f17f4807494eca4f77b8da8e215e9" name="ad43f17f4807494eca4f77b8da8e215e9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad43f17f4807494eca4f77b8da8e215e9">&#9670;&#160;</a></span>hasMoreField()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool anch::json::hasMoreField </td>
-          <td>(</td>
-          <td class="paramtype">std::istream &amp;</td>          <td class="paramname"><span class="paramname"><em>input</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="structanch_1_1json_1_1_mapping_options.html">anch::json::MappingOptions</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>options</em></span>&#160;)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Check if stream starts with ',' and consumes these characters</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">input</td><td>the input stream to consumes </td></tr>
-    <tr><td class="paramname">options</td><td>the options to use</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd><code>true</code> if input stream starts with ',', <code>false</code> otherwise</dd></dl>
+<dl class="section return"><dt>Returns</dt><dd><code>false</code> when <code>null</code> , <code>true</code> otherwise</dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname">plop</td><td>if stream reach its end </td></tr>
+    <tr><td class="paramname"><a class="el" href="classanch_1_1json_1_1_mapping_error.html" title="Mapping error.">anch::json::MappingError</a></td><td>parsing error </td></tr>
   </table>
   </dd>
 </dl>
 
 </div>
 </div>
-<a id="afc6d63bfaa1c53167a9db1475145b0ae" name="afc6d63bfaa1c53167a9db1475145b0ae"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afc6d63bfaa1c53167a9db1475145b0ae">&#9670;&#160;</a></span>isNull()</h2>
+<a id="a39ce800f60845478d2c7530edd97b251" name="a39ce800f60845478d2c7530edd97b251"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a39ce800f60845478d2c7530edd97b251">&#9670;&#160;</a></span>lexDiscard()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool anch::json::isNull </td>
+          <td class="memname">char anch::json::lexDiscard </td>
           <td>(</td>
-          <td class="paramtype">std::istream &amp;</td>          <td class="paramname"><span class="paramname"><em>input</em></span>, </td>
+          <td class="paramtype"><a class="el" href="classanch_1_1json_1_1_reader_context.html">anch::json::ReaderContext</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>context</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Consume stream until unescapable character</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">context</td><td>the parser context</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>the not discardable character</dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classanch_1_1json_1_1_mapping_error.html" title="Mapping error.">anch::json::MappingError</a></td><td>maximum number of discardable charater has been reached </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a20f66f58dc0398558d29c7a5c861e271" name="a20f66f58dc0398558d29c7a5c861e271"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a20f66f58dc0398558d29c7a5c861e271">&#9670;&#160;</a></span>lexFalse()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void anch::json::lexFalse </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classanch_1_1json_1_1_reader_context.html">anch::json::ReaderContext</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>context</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>'false' value lexer.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">context</td><td>the parser context</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classanch_1_1json_1_1_mapping_error.html" title="Mapping error.">anch::json::MappingError</a></td><td>parsing error </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ae18820e7250822525711e46a0b92ad53" name="ae18820e7250822525711e46a0b92ad53"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae18820e7250822525711e46a0b92ad53">&#9670;&#160;</a></span>lexField()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool anch::json::lexField </td>
+          <td>(</td>
+          <td class="paramtype">std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>field</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="structanch_1_1json_1_1_mapping_options.html">anch::json::MappingOptions</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>options</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="classanch_1_1json_1_1_reader_context.html">anch::json::ReaderContext</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>context</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Check if stream starts with 'null' and consumes these characters</p>
+<p>Field lexer function.<br  />
+This lexer will look for " character to begin and end with ".<br  />
+If begin character is not found, field will be empty.<br  />
+If " end character is not found (according to options and stream), it will raised exception</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">input</td><td>the input stream to consumes </td></tr>
-    <tr><td class="paramname">options</td><td>the options to use</td></tr>
+    <tr><td class="paramname">field</td><td>the field to fill when found </td></tr>
+    <tr><td class="paramname">context</td><td>the parser context</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd><code>true</code> if input stream starts with 'null', <code>false</code> otherwise</dd></dl>
+<dl class="section return"><dt>Returns</dt><dd><code>true</code> when found, <code>false</code> otherwise</dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname">plop</td><td>if stream reach its end </td></tr>
+    <tr><td class="paramname"><a class="el" href="classanch_1_1json_1_1_mapping_error.html" title="Mapping error.">anch::json::MappingError</a></td><td>parsing error </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a29aab1ba208108aa0f3d3813e5fd700e" name="a29aab1ba208108aa0f3d3813e5fd700e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a29aab1ba208108aa0f3d3813e5fd700e">&#9670;&#160;</a></span>lexInteger()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool anch::json::lexInteger </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="#abb678d9725242b11dbcf9c9df879c613">anch::json::jint</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>value</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classanch_1_1json_1_1_reader_context.html">anch::json::ReaderContext</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>context</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Signed integer value lexer.<br  />
+Possible values are: <code>null</code> and signed integer</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">value</td><td>the signed value to store in (not set when <code>null</code> has been found) </td></tr>
+    <tr><td class="paramname">context</td><td>the parser context</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>false</code> when <code>null</code> , <code>true</code> otherwise</dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classanch_1_1json_1_1_mapping_error.html" title="Mapping error.">anch::json::MappingError</a></td><td>parsing error </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a6f769f8ae361c283d5016534bce30f4a" name="a6f769f8ae361c283d5016534bce30f4a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6f769f8ae361c283d5016534bce30f4a">&#9670;&#160;</a></span>lexMap()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void anch::json::lexMap </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="#a864b8710b205d77ef15731a261ccd0f8">anch::json::PushItem</a></td>          <td class="paramname"><span class="paramname"><em>pushFunc</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classanch_1_1json_1_1_reader_context.html">anch::json::ReaderContext</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>context</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Parse map</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">pushFunc</td><td>parse and add elem to map function </td></tr>
+    <tr><td class="paramname">context</td><td>the context</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classanch_1_1json_1_1_mapping_error.html" title="Mapping error.">anch::json::MappingError</a></td><td>parsing error </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ab634797b158c82813d54f5785584eceb" name="ab634797b158c82813d54f5785584eceb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab634797b158c82813d54f5785584eceb">&#9670;&#160;</a></span>lexNull()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void anch::json::lexNull </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classanch_1_1json_1_1_reader_context.html">anch::json::ReaderContext</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>context</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>'null' value lexer.<br  />
+ </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">context</td><td>the parser context</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classanch_1_1json_1_1_mapping_error.html" title="Mapping error.">anch::json::MappingError</a></td><td>parsing error </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a1d79047e8becf8d6a4149e251f536ee1" name="a1d79047e8becf8d6a4149e251f536ee1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1d79047e8becf8d6a4149e251f536ee1">&#9670;&#160;</a></span>lexNumber()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool anch::json::lexNumber </td>
+          <td>(</td>
+          <td class="paramtype">double &amp;</td>          <td class="paramname"><span class="paramname"><em>value</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classanch_1_1json_1_1_reader_context.html">anch::json::ReaderContext</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>context</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Floating integer (double) value lexer.<br  />
+Possible values are: <code>null</code> and floating integer value (can parse exponential representation).</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">value</td><td>the value to write in (not set when <code>null</code> has been found) </td></tr>
+    <tr><td class="paramname">context</td><td>the parser context</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>false</code> when <code>null</code> , <code>true</code> otherwise</dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classanch_1_1json_1_1_mapping_error.html" title="Mapping error.">anch::json::MappingError</a></td><td>parsing error </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="aa0a3dcae72285b35f3a5f2f752cec0f4" name="aa0a3dcae72285b35f3a5f2f752cec0f4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa0a3dcae72285b35f3a5f2f752cec0f4">&#9670;&#160;</a></span>lexObject()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void anch::json::lexObject </td>
+          <td>(</td>
+          <td class="paramtype">const std::map&lt; std::string, <a class="el" href="#aef5200835f47d92a47999ca767182c77">anch::json::LexFunc</a> &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>readers</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::set&lt; std::string &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>fields</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classanch_1_1json_1_1_reader_context.html">anch::json::ReaderContext</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>context</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Object lexer function.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">readers</td><td>the declared fields and their reader function </td></tr>
+    <tr><td class="paramname">fields</td><td>the found fields to register in </td></tr>
+    <tr><td class="paramname">context</td><td>the parser context</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classanch_1_1json_1_1_mapping_error.html" title="Mapping error.">anch::json::MappingError</a></td><td>parsing error </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ae4803c49f2b0ceee7a8f005fb275e0c8" name="ae4803c49f2b0ceee7a8f005fb275e0c8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae4803c49f2b0ceee7a8f005fb275e0c8">&#9670;&#160;</a></span>lexString()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool anch::json::lexString </td>
+          <td>(</td>
+          <td class="paramtype">std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>value</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classanch_1_1json_1_1_reader_context.html">anch::json::ReaderContext</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>context</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>String lexer function.<br  />
+This lexer will look for " character to begin and end with ".<br  />
+If begin character is not found, field will be empty.<br  />
+If " end character is not found (according to options and stream), it will raised exception</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">value</td><td>the string value to fill when found </td></tr>
+    <tr><td class="paramname">context</td><td>the parser context</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>false</code> when <code>null</code> has been found, <code>true</code> otherwise</dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classanch_1_1json_1_1_mapping_error.html" title="Mapping error.">anch::json::MappingError</a></td><td>parsing error </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ada9514b5182773c1aa708e7f8249db22" name="ada9514b5182773c1aa708e7f8249db22"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ada9514b5182773c1aa708e7f8249db22">&#9670;&#160;</a></span>lexStringContent()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void anch::json::lexStringContent </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classanch_1_1json_1_1_reader_context.html">anch::json::ReaderContext</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>context</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Lex string content (between the '"').<br  />
+The result will be stored in the context buffer.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">context</td><td>the JSON context </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a2f812b2021d81115b2f2724aa51cac46" name="a2f812b2021d81115b2f2724aa51cac46"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2f812b2021d81115b2f2724aa51cac46">&#9670;&#160;</a></span>lexTrue()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void anch::json::lexTrue </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classanch_1_1json_1_1_reader_context.html">anch::json::ReaderContext</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>context</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>'true' value lexer.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">context</td><td>the parser context</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classanch_1_1json_1_1_mapping_error.html" title="Mapping error.">anch::json::MappingError</a></td><td>parsing error </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ab8d1b9703986225449f7c2c0ea47445d" name="ab8d1b9703986225449f7c2c0ea47445d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab8d1b9703986225449f7c2c0ea47445d">&#9670;&#160;</a></span>lexUInteger()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool anch::json::lexUInteger </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="#afc9335cba145b0db80937210418fc7e0">anch::json::juint</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>value</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classanch_1_1json_1_1_reader_context.html">anch::json::ReaderContext</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>context</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Unsigned integer value lexer.<br  />
+Possible values are: <code>null</code> and unsigned integer (min value is always 0)</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">value</td><td>the unsigned value to store in (not set when <code>null</code> has been found) </td></tr>
+    <tr><td class="paramname">context</td><td>the parser context</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>false</code> when <code>null</code> , <code>true</code> otherwise</dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classanch_1_1json_1_1_mapping_error.html" title="Mapping error.">anch::json::MappingError</a></td><td>parsing error </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="aa3605b275f02faa0866a6f774481e719" name="aa3605b275f02faa0866a6f774481e719"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa3605b275f02faa0866a6f774481e719">&#9670;&#160;</a></span>lexUnknown()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void anch::json::lexUnknown </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classanch_1_1json_1_1_reader_context.html">anch::json::ReaderContext</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>context</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Parse unknown field value</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">context</td><td>the context</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classanch_1_1json_1_1_mapping_error.html" title="Mapping error.">anch::json::MappingError</a></td><td>parsing error </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a90cd440d816680996f5b17b3e8274d32" name="a90cd440d816680996f5b17b3e8274d32"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a90cd440d816680996f5b17b3e8274d32">&#9670;&#160;</a></span>lexUnknownFail()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void anch::json::lexUnknownFail </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classanch_1_1json_1_1_reader_context.html">anch::json::ReaderContext</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>context</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Raise <code><a class="el" href="classanch_1_1json_1_1_mapping_error.html" title="Mapping error.">anch::json::MappingError</a></code> </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">context</td><td>the context</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classanch_1_1json_1_1_mapping_error.html" title="Mapping error.">anch::json::MappingError</a></td><td>parsing error </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a09c93e5b43f51f0d0e72d182c8acba7c" name="a09c93e5b43f51f0d0e72d182c8acba7c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a09c93e5b43f51f0d0e72d182c8acba7c">&#9670;&#160;</a></span>objectHasValueLex()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool anch::json::objectHasValueLex </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classanch_1_1json_1_1_reader_context.html">anch::json::ReaderContext</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>context</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Check if object has value (start with '{') or is <code>null</code> </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">context</td><td>the parser context</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>object has value</dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classanch_1_1json_1_1_mapping_error.html" title="Mapping error.">anch::json::MappingError</a></td><td>parsing error </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ae31c0dd310507cbd4a1c1eda3db41cd6" name="ae31c0dd310507cbd4a1c1eda3db41cd6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae31c0dd310507cbd4a1c1eda3db41cd6">&#9670;&#160;</a></span>parseDecimal()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void anch::json::parseDecimal </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classanch_1_1json_1_1_reader_context.html">anch::json::ReaderContext</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>context</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Parse decimale digits and store them to context value's buffer</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">context</td><td>the context </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="af41663c33a6427ba46b8cdeeadb90166" name="af41663c33a6427ba46b8cdeeadb90166"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af41663c33a6427ba46b8cdeeadb90166">&#9670;&#160;</a></span>parseNumber()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void anch::json::parseNumber </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classanch_1_1json_1_1_reader_context.html">anch::json::ReaderContext</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>context</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Parse float.<br  />
+End parsing at first unrecognized character.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">context</td><td>the parser context </td></tr>
   </table>
   </dd>
 </dl>
@@ -1012,8 +1854,8 @@ template&lt;typename T&gt; </div>
 
 </div>
 </div>
-<a id="aa8153023ac9257157c9290aaa83614ac" name="aa8153023ac9257157c9290aaa83614ac"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa8153023ac9257157c9290aaa83614ac">&#9670;&#160;</a></span>serialize() <span class="overload">[3/11]</span></h2>
+<a id="ae7eb253467a5354b88bd5a72f666a8da" name="ae7eb253467a5354b88bd5a72f666a8da"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae7eb253467a5354b88bd5a72f666a8da">&#9670;&#160;</a></span>serialize() <span class="overload">[3/11]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1033,7 +1875,7 @@ template&lt;typename T&gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::function&lt; void((const T &amp;value, std::ostream &amp;out, const <a class="el" href="structanch_1_1json_1_1_mapping_options.html">anch::json::MappingOptions</a> &amp;options))&gt;</td>          <td class="paramname"><span class="paramname"><em>serializeFunc</em></span>, </td>
+          <td class="paramtype"><a class="el" href="#a9a15dc6e71c3cc7c6eed0ee21c01b8a1">anch::json::SerializeFn</a>&lt; T &gt;</td>          <td class="paramname"><span class="paramname"><em>serializeFunc</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -1267,8 +2109,63 @@ template&lt;typename T&gt; </div>
 
 </div>
 </div>
+<a id="a0af98c1dbb57f24a0a19f13174ea5af9" name="a0af98c1dbb57f24a0a19f13174ea5af9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0af98c1dbb57f24a0a19f13174ea5af9">&#9670;&#160;</a></span>serialize() <span class="overload">[9/11]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">bool anch::json::serialize </td>
+          <td>(</td>
+          <td class="paramtype">const T &amp;</td>          <td class="paramname"><span class="paramname"><em>value</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::ostream &amp;</td>          <td class="paramname"><span class="paramname"><em>out</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="#a9a15dc6e71c3cc7c6eed0ee21c01b8a1">anch::json::SerializeFn</a>&lt; T &gt;</td>          <td class="paramname"><span class="paramname"><em>serializeFunc</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structanch_1_1json_1_1_mapping_options.html">anch::json::MappingOptions</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>options</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::optional&lt; std::string &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>field</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Serialize JSON value</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">the</td><td>object type</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">value</td><td>the value to serialize </td></tr>
+    <tr><td class="paramname">out</td><td>the output stream to write in </td></tr>
+    <tr><td class="paramname">serializeFunc</td><td>the serialization function </td></tr>
+    <tr><td class="paramname">options</td><td>the options to use </td></tr>
+    <tr><td class="paramname">field</td><td>the optional field name </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="a787cc091cecc4ca05ebd5030dec3f766" name="a787cc091cecc4ca05ebd5030dec3f766"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a787cc091cecc4ca05ebd5030dec3f766">&#9670;&#160;</a></span>serialize() <span class="overload">[9/11]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a787cc091cecc4ca05ebd5030dec3f766">&#9670;&#160;</a></span>serialize() <span class="overload">[10/11]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1310,63 +2207,8 @@ template&lt;typename T&gt; </div>
 
 </div>
 </div>
-<a id="ab9456765068ac0b28517f53bd16cd9d5" name="ab9456765068ac0b28517f53bd16cd9d5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab9456765068ac0b28517f53bd16cd9d5">&#9670;&#160;</a></span>serialize() <span class="overload">[10/11]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">bool anch::json::serialize </td>
-          <td>(</td>
-          <td class="paramtype">const T &amp;</td>          <td class="paramname"><span class="paramname"><em>value</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::ostream &amp;</td>          <td class="paramname"><span class="paramname"><em>out</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::function&lt; void((const T &amp;value, std::ostream &amp;out, const <a class="el" href="structanch_1_1json_1_1_mapping_options.html">anch::json::MappingOptions</a> &amp;options))&gt;</td>          <td class="paramname"><span class="paramname"><em>serializeFunc</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="structanch_1_1json_1_1_mapping_options.html">anch::json::MappingOptions</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>options</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::optional&lt; std::string &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>field</em></span>&#160;)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Serialize JSON value</p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">the</td><td>object type</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">value</td><td>the value to serialize </td></tr>
-    <tr><td class="paramname">out</td><td>the output stream to write in </td></tr>
-    <tr><td class="paramname">serializeFunc</td><td>the serialization function </td></tr>
-    <tr><td class="paramname">options</td><td>the options to use </td></tr>
-    <tr><td class="paramname">field</td><td>the optional field name </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="ada7cbe956d0a1de3a2a9a281dd19b086" name="ada7cbe956d0a1de3a2a9a281dd19b086"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ada7cbe956d0a1de3a2a9a281dd19b086">&#9670;&#160;</a></span>serialize() <span class="overload">[11/11]</span></h2>
+<a id="a30a3bea66ae70a165c49aefb0964e956" name="a30a3bea66ae70a165c49aefb0964e956"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a30a3bea66ae70a165c49aefb0964e956">&#9670;&#160;</a></span>serialize() <span class="overload">[11/11]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1386,7 +2228,7 @@ template&lt;typename T&gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::function&lt; void((const T &amp;value, std::ostream &amp;out, const <a class="el" href="structanch_1_1json_1_1_mapping_options.html">anch::json::MappingOptions</a> &amp;options))&gt;</td>          <td class="paramname"><span class="paramname"><em>serializeFunc</em></span>, </td>
+          <td class="paramtype"><a class="el" href="#a9a15dc6e71c3cc7c6eed0ee21c01b8a1">anch::json::SerializeFn</a>&lt; T &gt;</td>          <td class="paramname"><span class="paramname"><em>serializeFunc</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -1420,8 +2262,8 @@ template&lt;typename T&gt; </div>
 
 </div>
 </div>
-<a id="aec9caeea2be8317d388745be2f3091f5" name="aec9caeea2be8317d388745be2f3091f5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aec9caeea2be8317d388745be2f3091f5">&#9670;&#160;</a></span>serializeArray()</h2>
+<a id="ac9d6a57c6761f16e3015bafbf4be695d" name="ac9d6a57c6761f16e3015bafbf4be695d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac9d6a57c6761f16e3015bafbf4be695d">&#9670;&#160;</a></span>serializeArray()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1441,7 +2283,7 @@ template&lt;typename T, typename A&gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::function&lt; void((const T &amp;value, std::ostream &amp;out, const <a class="el" href="structanch_1_1json_1_1_mapping_options.html">anch::json::MappingOptions</a> &amp;options))&gt;</td>          <td class="paramname"><span class="paramname"><em>serializeFunc</em></span>, </td>
+          <td class="paramtype"><a class="el" href="#a01c5143d504903660f8ad90d5a6f53fe">anch::json::DeserializeFn</a>&lt; T &gt;</td>          <td class="paramname"><span class="paramname"><em>serializeFunc</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -1476,8 +2318,66 @@ template&lt;typename T, typename A&gt; </div>
 
 </div>
 </div>
-<a id="a8fb10cdcb5215f6e68f6fc6e80c06ded" name="a8fb10cdcb5215f6e68f6fc6e80c06ded"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8fb10cdcb5215f6e68f6fc6e80c06ded">&#9670;&#160;</a></span>serializeMap()</h2>
+<a id="aaf17ec37314269443c74e08fd23d05ea" name="aaf17ec37314269443c74e08fd23d05ea"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaf17ec37314269443c74e08fd23d05ea">&#9670;&#160;</a></span>serializeFieldName() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void anch::json::serializeFieldName </td>
+          <td>(</td>
+          <td class="paramtype">std::ostream &amp;</td>          <td class="paramname"><span class="paramname"><em>out</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::optional&lt; std::string &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>field</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Serialize field name according to value</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">out</td><td>the ouput stream to write in </td></tr>
+    <tr><td class="paramname">field</td><td>the optional field name to serialize (or not) </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="af6718a3a34a9df46b0600d0260713b98" name="af6718a3a34a9df46b0600d0260713b98"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af6718a3a34a9df46b0600d0260713b98">&#9670;&#160;</a></span>serializeFieldName() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void anch::json::serializeFieldName </td>
+          <td>(</td>
+          <td class="paramtype">std::ostream &amp;</td>          <td class="paramname"><span class="paramname"><em>out</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>field</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Serialize field name</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">out</td><td>the ouput stream to write in </td></tr>
+    <tr><td class="paramname">field</td><td>the field name to serialize </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a04f013d99e71e91bcc9d11b4eb332302" name="a04f013d99e71e91bcc9d11b4eb332302"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a04f013d99e71e91bcc9d11b4eb332302">&#9670;&#160;</a></span>serializeMap()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1497,7 +2397,7 @@ template&lt;typename T&gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::function&lt; void((const T &amp;value, std::ostream &amp;out, const <a class="el" href="structanch_1_1json_1_1_mapping_options.html">anch::json::MappingOptions</a> &amp;options))&gt;</td>          <td class="paramname"><span class="paramname"><em>serializeFunc</em></span>, </td>
+          <td class="paramtype"><a class="el" href="#a9a15dc6e71c3cc7c6eed0ee21c01b8a1">anch::json::SerializeFn</a>&lt; T &gt;</td>          <td class="paramname"><span class="paramname"><em>serializeFunc</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -1572,19 +2472,11 @@ template&lt;typename T&gt; </div>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const char anch::json::ARRAY_BEGIN</td>
+          <td class="memname">const char anch::json::ARRAY_BEGIN = '['</td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel extern">extern</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 <p>JSON start array ('[') </p>
 
@@ -1595,19 +2487,11 @@ template&lt;typename T&gt; </div>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const char anch::json::ARRAY_END</td>
+          <td class="memname">const char anch::json::ARRAY_END =']'</td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel extern">extern</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 <p>JSON start array (']') </p>
 
@@ -1664,19 +2548,11 @@ template&lt;typename T&gt; </div>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const char anch::json::FIELD_SEPARATOR</td>
+          <td class="memname">const char anch::json::FIELD_SEPARATOR = ','</td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel extern">extern</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 <p>JSON fields delimiter (',') </p>
 
@@ -1687,19 +2563,11 @@ template&lt;typename T&gt; </div>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const char anch::json::FIELD_VALUE_SEPARATOR</td>
+          <td class="memname">const char anch::json::FIELD_VALUE_SEPARATOR = ':'</td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel extern">extern</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 <p>JSON fiel/value delimiter (':') </p>
 
@@ -1710,19 +2578,11 @@ template&lt;typename T&gt; </div>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const char anch::json::OBJECT_BEGIN</td>
+          <td class="memname">const char anch::json::OBJECT_BEGIN = '{'</td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel extern">extern</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 <p>JSON start object ('{') </p>
 
@@ -1733,19 +2593,11 @@ template&lt;typename T&gt; </div>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const char anch::json::OBJECT_END</td>
+          <td class="memname">const char anch::json::OBJECT_END = '}'</td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel extern">extern</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 <p>JSON end object ('}') </p>
 
@@ -1756,19 +2608,11 @@ template&lt;typename T&gt; </div>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const char anch::json::STRING_DELIMITER</td>
+          <td class="memname">const char anch::json::STRING_DELIMITER = '&quot;'</td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel extern">extern</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 <p>JSON caracters string delimiter ('"') </p>
 

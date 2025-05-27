@@ -137,6 +137,7 @@ var hierarchy =
       ] ]
     ] ],
     [ "anch::crypto::ISO7816_4Padding", "classanch_1_1crypto_1_1_i_s_o7816__4_padding.html", null ],
+    [ "anch::json::JSONItem", "classanch_1_1json_1_1_j_s_o_n_item.html", null ],
     [ "anch::json::JSONMapper", "classanch_1_1json_1_1_j_s_o_n_mapper.html", null ],
     [ "anch::LessPtrCompare< T >", "structanch_1_1_less_ptr_compare.html", null ],
     [ "anch::logger::Logger", "classanch_1_1logger_1_1_logger.html", null ],
@@ -156,11 +157,20 @@ var hierarchy =
     [ "ngx_anch_bootstrap_conf_t", "structngx__anch__bootstrap__conf__t.html", null ],
     [ "anch::json::ObjectMapper< T >", "classanch_1_1json_1_1_object_mapper.html", null ],
     [ "anch::events::Observable< T >", "classanch_1_1events_1_1_observable.html", null ],
+    [ "anch::events::Observable< anch::json::JSONItem >", "classanch_1_1events_1_1_observable.html", [
+      [ "anch::json::Reader", "classanch_1_1json_1_1_reader.html", null ]
+    ] ],
+    [ "anch::events::Observable< anch::json::MappingError >", "classanch_1_1events_1_1_observable.html", [
+      [ "anch::json::Reader", "classanch_1_1json_1_1_reader.html", null ]
+    ] ],
     [ "anch::events::Observable< SocketEvent >", "classanch_1_1events_1_1_observable.html", [
       [ "anch::network::Socket", "classanch_1_1network_1_1_socket.html", [
         [ "anch::network::TcpSocket", "classanch_1_1network_1_1_tcp_socket.html", null ],
         [ "anch::network::UdpSocket", "classanch_1_1network_1_1_udp_socket.html", null ]
       ] ]
+    ] ],
+    [ "anch::events::Observable< std::streamsize >", "classanch_1_1events_1_1_observable.html", [
+      [ "anch::json::Reader", "classanch_1_1json_1_1_reader.html", null ]
     ] ],
     [ "anch::events::Observer< T >", "classanch_1_1events_1_1_observer.html", [
       [ "anch::events::EventHandler< T, Derived >", "classanch_1_1events_1_1_event_handler.html", null ]
@@ -179,6 +189,9 @@ var hierarchy =
     ] ],
     [ "anch::json::PrimitiveMapper< T >", "classanch_1_1json_1_1_primitive_mapper.html", null ],
     [ "anch::rest::ProxyConfig", "structanch_1_1rest_1_1_proxy_config.html", null ],
+    [ "anch::json::ReaderContext", "classanch_1_1json_1_1_reader_context.html", [
+      [ "anch::json::Reader", "classanch_1_1json_1_1_reader.html", null ]
+    ] ],
     [ "anch::rest::Request", "classanch_1_1rest_1_1_request.html", null ],
     [ "anch::resource::Resource", "classanch_1_1resource_1_1_resource.html", null ],
     [ "anch::rest::Response", "classanch_1_1rest_1_1_response.html", null ],

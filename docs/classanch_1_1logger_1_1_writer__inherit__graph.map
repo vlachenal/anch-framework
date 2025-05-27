@@ -1,7 +1,7 @@
 <map id="anch::logger::Writer" name="anch::logger::Writer">
-<area shape="rect" id="Node000001" title=" " alt="" coords="112,5,237,203"/>
-<area shape="rect" id="Node000002" href="$classanch_1_1logger_1_1_low_priority_writer.html" title=" " alt="" coords="5,251,163,421"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="133,218,120,252,115,250,128,216"/>
-<area shape="rect" id="Node000003" href="$classanch_1_1logger_1_1_thread_safe_writer.html" title=" " alt="" coords="187,261,346,411"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="222,216,240,261,235,263,217,218"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="110,5,234,203"/>
+<area shape="rect" id="Node000002" href="$classanch_1_1logger_1_1_low_priority_writer.html" title=" " alt="" coords="5,251,160,421"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="131,218,118,252,113,250,126,216"/>
+<area shape="rect" id="Node000003" href="$classanch_1_1logger_1_1_thread_safe_writer.html" title=" " alt="" coords="184,261,341,411"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="218,216,236,261,231,263,214,218"/>
 </map>

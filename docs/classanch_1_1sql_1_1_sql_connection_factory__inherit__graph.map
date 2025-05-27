@@ -1,7 +1,7 @@
 <map id="anch::sql::SqlConnectionFactory" name="anch::sql::SqlConnectionFactory">
-<area shape="rect" id="Node000001" title="SQL connection factory." alt="" coords="26,273,185,380"/>
-<area shape="rect" id="Node000002" href="$classanch_1_1_singleton.html" title=" " alt="" coords="5,139,205,224"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="108,239,108,273,103,273,103,239"/>
-<area shape="rect" id="Node000003" href="$classanch_1_1_singleton.html" title="Meyers&#39; singleton implementation." alt="" coords="39,5,172,75"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="108,89,108,139,103,139,103,89"/>
+<area shape="rect" id="Node000001" title="SQL connection factory." alt="" coords="26,273,182,380"/>
+<area shape="rect" id="Node000002" href="$classanch_1_1_singleton.html" title=" " alt="" coords="5,139,203,224"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="107,239,107,273,102,273,102,239"/>
+<area shape="rect" id="Node000003" href="$classanch_1_1_singleton.html" title="Meyers&#39; singleton implementation." alt="" coords="38,5,170,75"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="107,89,107,139,102,139,102,89"/>
 </map>

@@ -1,5 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$classanch_1_1_singleton.html" title=" " alt="" coords="5,5,224,32"/>
-<area shape="rect" id="Node000001" href="$classanch_1_1logger_1_1_logger_factory.html" title="Logger factory." alt="" coords="272,5,455,32"/>
-<area shape="poly" id="edge54_Node000000_Node000001" title=" " alt="" coords="239,16,271,16,271,21,239,21"/>
+<area shape="rect" id="Node000000" href="$classanch_1_1_singleton.html" title=" " alt="" coords="5,5,170,32"/>
+<area shape="rect" id="Node000001" href="$classanch_1_1device_1_1_c_p_u.html" title="CPU features detection." alt="" coords="218,5,350,32"/>
+<area shape="poly" id="edge56_Node000000_Node000001" title=" " alt="" coords="185,16,217,16,217,21,185,21"/>
 </map>

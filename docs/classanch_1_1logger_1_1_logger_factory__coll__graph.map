@@ -1,11 +1,11 @@
 <map id="anch::logger::LoggerFactory" name="anch::logger::LoggerFactory">
-<area shape="rect" id="Node000001" title="Logger factory." alt="" coords="104,288,279,357"/>
-<area shape="rect" id="Node000002" href="$classanch_1_1_singleton.html" title=" " alt="" coords="5,155,215,224"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="141,236,173,287,168,289,137,238"/>
-<area shape="rect" id="Node000003" href="$classanch_1_1_singleton.html" title="Meyers&#39; singleton implementation." alt="" coords="43,13,177,83"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="113,98,113,155,107,155,107,98"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="239,155,309,224"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="255,225,224,275,219,272,251,223"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="215,5,333,91"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="277,106,277,155,271,155,271,106"/>
+<area shape="rect" id="Node000001" title="Logger factory." alt="" coords="103,288,276,357"/>
+<area shape="rect" id="Node000002" href="$classanch_1_1_singleton.html" title=" " alt="" coords="5,155,213,224"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="140,236,171,287,167,289,135,238"/>
+<area shape="rect" id="Node000003" href="$classanch_1_1_singleton.html" title="Meyers&#39; singleton implementation." alt="" coords="43,13,175,83"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="112,98,112,155,106,155,106,98"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="238,155,306,224"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="253,225,222,275,217,272,249,223"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="214,5,329,91"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="274,106,274,155,269,155,269,106"/>
 </map>

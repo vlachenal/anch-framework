@@ -1,7 +1,7 @@
 <map id="anch::crypto::ECB&lt; Cipher, Padding &gt;" name="anch::crypto::ECB&lt; Cipher, Padding &gt;">
-<area shape="rect" id="Node000001" title="Electronic codebook implementation." alt="" coords="47,636,176,807"/>
-<area shape="rect" id="Node000002" href="$classanch_1_1crypto_1_1_block_cipher_mode_of_operation.html" title=" " alt="" coords="5,336,217,587"/>
+<area shape="rect" id="Node000001" title="Electronic codebook implementation." alt="" coords="48,636,175,807"/>
+<area shape="rect" id="Node000002" href="$classanch_1_1crypto_1_1_block_cipher_mode_of_operation.html" title=" " alt="" coords="5,336,218,587"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="114,601,114,636,109,636,109,601"/>
-<area shape="rect" id="Node000003" href="$classanch_1_1crypto_1_1_block_cipher_mode_of_operation.html" title="Block cipher mode of operation interface." alt="" coords="5,5,217,256"/>
+<area shape="rect" id="Node000003" href="$classanch_1_1crypto_1_1_block_cipher_mode_of_operation.html" title="Block cipher mode of operation interface." alt="" coords="5,5,218,256"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="114,270,114,336,109,336,109,270"/>
 </map>

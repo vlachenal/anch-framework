@@ -1,11 +1,11 @@
 <map id="anch::sql::ResultSet" name="anch::sql::ResultSet">
-<area shape="rect" id="Node000001" title="SQL result representation." alt="" coords="344,5,556,373"/>
+<area shape="rect" id="Node000001" title="SQL result representation." alt="" coords="341,5,554,373"/>
 <area shape="rect" id="Node000002" href="$classanch_1_1sql_1_1_my_s_q_l_prepared_statement_result_set.html" title="MySQL result set implementation for prepared statement ... shitty API." alt="" coords="5,421,231,688"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="336,319,232,432,228,429,332,316"/>
-<area shape="rect" id="Node000003" href="$classanch_1_1sql_1_1_my_s_q_l_result_set.html" title="MySQL result set implementation." alt="" coords="255,445,431,664"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="395,388,378,446,372,445,390,387"/>
-<area shape="rect" id="Node000004" href="$classanch_1_1sql_1_1_postgre_s_q_l_result_set.html" title="PostgreSQL result set implementation." alt="" coords="455,445,658,664"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="510,387,528,445,522,446,505,388"/>
-<area shape="rect" id="Node000005" href="$classanch_1_1sql_1_1_s_q_lite3_result_set.html" title="SQLite3 result set implementation." alt="" coords="682,445,861,664"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="568,306,672,420,692,444,688,447,668,423,565,310"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="333,321,233,431,229,427,329,317"/>
+<area shape="rect" id="Node000003" href="$classanch_1_1sql_1_1_my_s_q_l_result_set.html" title="MySQL result set implementation." alt="" coords="256,445,429,664"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="393,388,376,446,371,445,388,387"/>
+<area shape="rect" id="Node000004" href="$classanch_1_1sql_1_1_postgre_s_q_l_result_set.html" title="PostgreSQL result set implementation." alt="" coords="453,445,653,664"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="507,387,524,445,519,446,502,388"/>
+<area shape="rect" id="Node000005" href="$classanch_1_1sql_1_1_s_q_lite3_result_set.html" title="SQLite3 result set implementation." alt="" coords="678,445,855,664"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="566,308,667,420,687,444,683,447,663,423,562,311"/>
 </map>

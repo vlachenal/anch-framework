@@ -1,5 +1,5 @@
 <map id="anch::sql::PostgreSQLConnection" name="anch::sql::PostgreSQLConnection">
-<area shape="rect" id="Node000001" title="PostgreSQL connection." alt="" coords="5,549,216,811"/>
-<area shape="rect" id="Node000002" href="$classanch_1_1sql_1_1_connection.html" title="SQL connection virtual class." alt="" coords="33,5,189,501"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="113,516,113,550,108,550,108,516"/>
+<area shape="rect" id="Node000001" title="PostgreSQL connection." alt="" coords="5,549,214,811"/>
+<area shape="rect" id="Node000002" href="$classanch_1_1sql_1_1_connection.html" title="SQL connection virtual class." alt="" coords="32,5,188,501"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="112,516,112,550,107,550,107,516"/>
 </map>

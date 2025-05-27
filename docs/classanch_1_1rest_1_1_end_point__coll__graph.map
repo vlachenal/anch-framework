@@ -1,7 +1,7 @@
 <map id="anch::rest::EndPoint" name="anch::rest::EndPoint">
-<area shape="rect" id="Node000001" title="Router endpoint." alt="" coords="5,321,137,561"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="36,140,107,209"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="74,209,74,305,69,305,69,209"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="13,5,130,91"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="74,106,74,140,69,140,69,106"/>
+<area shape="rect" id="Node000001" title="Router endpoint." alt="" coords="5,321,135,561"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="36,140,104,209"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="73,209,73,305,68,305,68,209"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="13,5,128,91"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="73,106,73,140,68,140,68,106"/>
 </map>

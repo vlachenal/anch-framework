@@ -1,11 +1,11 @@
 <map id="anch::network::Socket" name="anch::network::Socket">
-<area shape="rect" id="Node000001" title=" " alt="" coords="111,487,255,833"/>
-<area shape="rect" id="Node000004" href="$classanch_1_1network_1_1_tcp_socket.html" title=" " alt="" coords="5,947,171,1101"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="136,848,110,948,105,946,131,847"/>
-<area shape="rect" id="Node000005" href="$classanch_1_1network_1_1_udp_socket.html" title=" " alt="" coords="195,883,363,1165"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="235,847,244,882,239,884,230,848"/>
-<area shape="rect" id="Node000002" href="$classanch_1_1events_1_1_observable.html" title=" " alt="" coords="102,245,263,437"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="185,452,185,487,180,487,180,452"/>
-<area shape="rect" id="Node000003" href="$classanch_1_1events_1_1_observable.html" title="An observable implementation of the observers/observable design pattern." alt="" coords="86,5,279,181"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="185,196,185,246,180,246,180,196"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="109,487,251,833"/>
+<area shape="rect" id="Node000004" href="$classanch_1_1network_1_1_tcp_socket.html" title=" " alt="" coords="5,947,168,1101"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="134,848,109,948,104,946,129,847"/>
+<area shape="rect" id="Node000005" href="$classanch_1_1network_1_1_udp_socket.html" title=" " alt="" coords="192,883,358,1165"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="231,847,241,882,235,884,226,848"/>
+<area shape="rect" id="Node000002" href="$classanch_1_1events_1_1_observable.html" title=" " alt="" coords="100,245,260,437"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="183,452,183,487,177,487,177,452"/>
+<area shape="rect" id="Node000003" href="$classanch_1_1events_1_1_observable.html" title="An observable implementation of the observers/observable design pattern." alt="" coords="85,5,275,181"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="183,196,183,246,177,246,177,196"/>
 </map>

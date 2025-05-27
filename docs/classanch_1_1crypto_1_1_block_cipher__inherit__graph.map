@@ -1,16 +1,16 @@
 <map id="anch::crypto::BlockCipher&lt; B &gt;" name="anch::crypto::BlockCipher&lt; B &gt;">
-<area shape="rect" id="Node000001" title="Block cipher interface." alt="" coords="72,5,269,117"/>
-<area shape="rect" id="Node000002" href="$classanch_1_1crypto_1_1_block_cipher.html" title=" " alt="" coords="89,181,253,309"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="173,132,173,181,168,181,168,132"/>
-<area shape="rect" id="Node000003" href="$classanch_1_1crypto_1_1_a_e_s.html" title=" " alt="" coords="5,593,133,871"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="145,324,135,359,109,479,90,594,84,593,103,478,129,358,140,322"/>
-<area shape="rect" id="Node000004" href="$classanch_1_1crypto_1_1_a_e_s.html" title=" " alt="" coords="328,593,456,871"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="265,314,301,357,331,413,354,474,371,535,382,593,377,594,365,536,349,475,326,416,296,360,261,318"/>
-<area shape="rect" id="Node000005" href="$classanch_1_1crypto_1_1_a_e_s.html" title=" " alt="" coords="165,593,293,871"/>
-<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="154,324,145,379,140,441,141,506,152,569,168,614,163,616,147,570,136,506,135,441,140,378,149,324"/>
-<area shape="rect" id="Node000006" href="$classanch_1_1crypto_1_1_a_e_s.html" title="AES block cipher algorithm implementation." alt="" coords="159,359,287,529"/>
-<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="194,323,203,358,198,360,189,325"/>
-<area shape="poly" id="edge6_Node000006_Node000003" title=" " alt="" coords="171,544,165,555,136,610,131,608,161,552,167,541"/>
-<area shape="poly" id="edge7_Node000006_Node000004" title=" " alt="" coords="284,541,290,552,330,620,326,623,286,555,279,543"/>
-<area shape="poly" id="edge8_Node000006_Node000005" title=" " alt="" coords="228,544,229,593,223,593,222,544"/>
+<area shape="rect" id="Node000001" title="Block cipher interface." alt="" coords="71,5,266,117"/>
+<area shape="rect" id="Node000002" href="$classanch_1_1crypto_1_1_block_cipher.html" title=" " alt="" coords="87,181,249,309"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="171,132,171,181,166,181,166,132"/>
+<area shape="rect" id="Node000003" href="$classanch_1_1crypto_1_1_a_e_s.html" title=" " alt="" coords="5,593,131,871"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="142,324,132,359,106,479,88,594,83,593,101,478,127,358,137,322"/>
+<area shape="rect" id="Node000004" href="$classanch_1_1crypto_1_1_a_e_s.html" title=" " alt="" coords="324,593,450,871"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="261,315,296,357,326,413,349,474,365,535,377,593,371,594,360,536,344,475,321,416,291,360,257,319"/>
+<area shape="rect" id="Node000005" href="$classanch_1_1crypto_1_1_a_e_s.html" title=" " alt="" coords="163,593,288,871"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="152,324,143,379,138,441,139,506,149,569,165,615,160,616,144,570,134,506,132,441,138,378,147,324"/>
+<area shape="rect" id="Node000006" href="$classanch_1_1crypto_1_1_a_e_s.html" title="AES block cipher algorithm implementation." alt="" coords="156,359,282,529"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="191,323,200,358,195,360,186,325"/>
+<area shape="poly" id="edge6_Node000006_Node000003" title=" " alt="" coords="167,544,162,555,133,609,128,606,157,552,163,541"/>
+<area shape="poly" id="edge7_Node000006_Node000004" title=" " alt="" coords="280,541,286,552,326,620,322,623,282,555,275,543"/>
+<area shape="poly" id="edge8_Node000006_Node000005" title=" " alt="" coords="224,544,225,593,220,593,218,544"/>
 </map>

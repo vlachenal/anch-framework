@@ -1,7 +1,7 @@
 <map id="anch::rest::Verb" name="anch::rest::Verb">
-<area shape="rect" id="Node000001" title="HTTP verbs." alt="" coords="11,433,117,609"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="29,140,99,209"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="67,209,67,416,61,416,61,209"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="5,5,123,91"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="67,106,67,140,61,140,61,106"/>
+<area shape="rect" id="Node000001" title="HTTP verbs." alt="" coords="10,433,116,609"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="28,140,97,209"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="65,209,65,416,60,416,60,209"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,5,120,91"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="65,106,65,140,60,140,60,106"/>
 </map>
