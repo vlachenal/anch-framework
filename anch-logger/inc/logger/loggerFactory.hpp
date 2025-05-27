@@ -21,6 +21,7 @@
 
 #include <map>
 #include <vector>
+#include <cstdint>
 
 #include "logger/loggerConfiguration.hpp"
 #include "logger/logger.hpp"
