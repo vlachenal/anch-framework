@@ -31,6 +31,8 @@
 
 #include "json/constants.hpp"
 #include "json/mappingOptions.hpp"
+#include "json/mappingFunctions.hpp"
+#include "json/readerContext.hpp"
 
 
 namespace anch::json {
@@ -75,10 +77,10 @@ namespace anch::json {
     // Attributes +
   private:
     /*! JSON writer functions registry */
-    std::vector<std::function<bool(const T&, std::ostream&, const anch::json::MappingOptions&)>> _writers;
+    std::vector<std::function<bool((const T&, std::ostream&, const anch::json::MappingOptions&))>> _writers;
 
     /*! JSON reader functions registry */
-    std::map<std::string, std::function<void(T&, std::istream&, const anch::json::MappingOptions&)>> _readers;
+    std::map<std::string, anch::json::DeserializeFn<T>> _readers;
     // Attributes -
 
     // Constructors +
@@ -277,7 +279,7 @@ namespace anch::json {
      * \param value the array attribute to serialize
      * \param out the output stream to write the attribute
      * \param options the options to use
-     * \param field the attribute's field name
+     * \param fieldt he attribute's field name
      *
      * \return \c true
      */
@@ -290,10 +292,31 @@ namespace anch::json {
      * Deserialize JSON
      *
      * \param value the value to write in
-     * \param input the input stream to parse
-     * \param options the options to use
+     * \param context the mapper context
+     *
+     * \return \c false when \c null found, \c true otherwise
      */
-    void deserialize(T& value, std::istream& input, const anch::json::MappingOptions& options);
+    bool deserialize(T& value, anch::json::ReaderContext& context);
+
+    /*!
+     * Deserialize JSON
+     *
+     * \param value the value to write in
+     * \param context the mapper context
+     *
+     * \return \c false when \c null found, \c true otherwise
+     */
+    bool deserialize(std::optional<T>& value, anch::json::ReaderContext& context);
+
+    /*!
+     * Deserialize JSON
+     *
+     * \param value the value to write in
+     * \param context the mapper context
+     *
+     * \return \c false when \c null found, \c true otherwise
+     */
+    bool deserialize(T* value, anch::json::ReaderContext& context);
 
     /*!
      * Deserialize JSON
@@ -301,63 +324,49 @@ namespace anch::json {
      * \param value the value to write in
      * \param input the input stream to parse
      * \param options the options to use
+     *
+     * \return \c true
      */
-    void deserialize(std::optional<T>& value, std::istream& input, const anch::json::MappingOptions& options);
+    bool deserialize(std::vector<T>& value, anch::json::ReaderContext& context);
 
     /*!
      * Deserialize JSON
      *
      * \param value the value to write in
-     * \param input the input stream to parse
-     * \param options the options to use
+     * \param context the mapper context
+     *
+     * \return \c true
      */
-    void deserialize(T* value, std::istream& input, const anch::json::MappingOptions& options);
+    bool deserialize(std::list<T>& value, anch::json::ReaderContext& context);
 
     /*!
      * Deserialize JSON
      *
      * \param value the value to write in
-     * \param input the input stream to parse
-     * \param options the options to use
+     * \param context the mapper context
+     *
+     * \return \c true
      */
-    void deserialize(std::vector<T>& value, std::istream& input, const anch::json::MappingOptions& options);
+    bool deserialize(std::set<T>& value, anch::json::ReaderContext& context);
 
     /*!
      * Deserialize JSON
      *
      * \param value the value to write in
-     * \param input the input stream to parse
-     * \param options the options to use
+     * \param context the mapper context
      */
-    void deserialize(std::list<T>& value, std::istream& input, const anch::json::MappingOptions& options);
-
-    /*!
-     * Deserialize JSON
-     *
-     * \param value the value to write in
-     * \param input the input stream to parse
-     * \param options the options to use
-     */
-    void deserialize(std::set<T>& value, std::istream& input, const anch::json::MappingOptions& options);
-
-    /*!
-     * Deserialize JSON
-     *
-     * \param value the value to write in
-     * \param input the input stream to parse
-     * \param options the options to use
-     */
-    void deserialize(std::map<std::string,T>& value, std::istream& input, const anch::json::MappingOptions& options);
+    bool deserialize(std::map<std::string,T>& value, anch::json::ReaderContext& context);
 
   private:
     /*!
      * Deserialize non null JSON object (which should start with '{')
      *
      * \param value the value to write in
-     * \param input the input stream to parse
-     * \param options the options to use
+     * \param context the mapper context
+     *
+     * \return \c false when \c null found, \c true otherwise
      */
-    void deserializeValue(T& value, std::istream& input, const anch::json::MappingOptions& options);
+    bool deserializeValue(T& value, anch::json::ReaderContext& context);
 
     /*!
      * Serialize value

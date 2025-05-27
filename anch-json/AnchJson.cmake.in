@@ -11,6 +11,8 @@ set(ANCH_CLI_LIBRARY_DIR "$ENV{HOME}/projects/anch-framework/anch-cli/build/lib"
 set(ANCH_UT_INCLUDES_DIR "$ENV{HOME}/projects/anch-framework/anch-ut/inc")
 set(ANCH_UT_LIBRARY_DIR "$ENV{HOME}/projects/anch-framework/anch-ut/build/lib")
 
+set(ANCH_EVENTS_INCLUDES_DIR "$ENV{HOME}/projects/anch-framework/anch-events/inc")
+
 set(ANCH_JSON_COMPILE_FLAGS "-O2 -march=native -pipe" CACHE STRING "Additional compilation flags")
 #set(ANCH_JSON_COMPILE_FLAGS "-g" CACHE STRING "Additional compilation flags")
 

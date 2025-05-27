@@ -18,7 +18,6 @@
     },
     "plep": 2.2,
     "plyp": 3.3,
-    "lplyp": 4.4,
     "self": {
         "plop": "self",
         "plip": "self_plip",
@@ -31,7 +30,6 @@
         },
         "plep": 5.5,
         "plyp": 6.6,
-        "lplyp": 7.7,
         "ptr": "self"
     },
     "ptr": "plop"

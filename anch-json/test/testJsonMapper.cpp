@@ -15,6 +15,68 @@ using anch::json::ErrorCode;
 using anch::json::JSONMapper;
 
 
+template<typename T>
+std::ostream&
+operator<<(std::ostream& os, const std::vector<T>& array) {
+  os << '[';
+  bool first = true;
+  for(const T& item: array) {
+    if(!first) {
+      os << ", " << item;
+    } else {
+      os << item;
+      first = false;
+    }
+  }
+  os << ']';
+  return os;
+}
+
+template<typename T>
+std::ostream&
+operator<<(std::ostream& os, const std::list<T>& array) {
+  os << '[';
+  bool first = true;
+  for(const T& item: array) {
+    if(!first) {
+      os << ", " << item;
+    } else {
+      os << item;
+      first = false;
+    }
+  }
+  os << ']';
+  return os;
+}
+
+template<typename T>
+std::ostream&
+operator<<(std::ostream& os, const std::set<T>& array) {
+  os << '[';
+  bool first = true;
+  for(const T& item: array) {
+    if(!first) {
+      os << ", " << item;
+    } else {
+      os << item;
+      first = false;
+    }
+  }
+  os << ']';
+  return os;
+}
+
+template<typename T>
+std::ostream&
+operator<<(std::ostream& os, const std::optional<T>& opt) {
+  if(!opt.has_value()) {
+    os << "std::optional->empty";
+  } else {
+    os << opt.value();
+  }
+  return os;
+}
+
 struct Tata {
   std::string ploum;
   std::string_view view;
@@ -24,7 +86,25 @@ struct Tata {
   const std::string_view& getView() const {
     return view;
   }
+  bool operator==(const Tata& tata) const {
+    return  anch::ut::equals("Tata::ploum", ploum, tata.ploum)
+      && anch::ut::equals("Tata::selfList", selfList, tata.selfList)
+      && anch::ut::equals("Tata::strVect", strVect, tata.strVect)
+      && anch::ut::equals("Tata::numSet", numSet, tata.numSet)
+      ;
+  }
 };
+
+std::ostream&
+operator<<(std::ostream& os, const Tata& tata) {
+    os << "{ploum=" << tata.ploum
+       << ",view=" << tata.view
+       << ",selfList=" << tata.selfList
+       << ",strVect=" << tata.strVect
+       << ",numSet=" << tata.numSet << '}'
+      ;
+    return os;
+}
 
 const std::string PLOP_TOTO("Toto");
 
@@ -36,15 +116,54 @@ struct Toto {
   Tata tata;
   float plep;
   double plyp;
-  long double lplyp;
-  Toto* self;
+  //long double lplyp;
+  Toto* self = NULL;
   std::optional<std::string> empty;
-  std::string* ptr;
-  std::string* null;
+  std::string* ptr = NULL;
+  std::string* null = NULL;
   std::string getClass() const {
     return "Toto";
   }
+  bool operator==(const Toto& toto) const {
+    return anch::ut::equals("Toto::plop", plop, toto.plop)
+      && anch::ut::equals("Toto::plip", plip, toto.plip)
+      && anch::ut::equals("Toto::plap", plap, toto.plap)
+      && anch::ut::equals("Toto::plup", plup, toto.plup)
+      && anch::ut::equals("Toto::plep", plep, toto.plep)
+      && anch::ut::equals("Toto::plyp", plyp, toto.plyp)
+      //&& anch::ut::equals("Toto::lplyp", lplyp, toto.lplyp)
+      && anch::ut::equalsPtr("Toto::self", self, toto.self)
+      && anch::ut::equalsPtr("Toto::ptr", ptr, toto.ptr)
+      && anch::ut::equalsPtr("Toto::null", null, toto.null)
+      && anch::ut::equals("Toto::empty", empty, toto.empty)
+      && anch::ut::equals("Toto::tata", tata, toto.tata)
+      ;
+  }
 };
+
+std::ostream&
+operator<<(std::ostream& os, const Toto& toto) {
+  std::ostringstream selfOss;
+  if(toto.self == NULL) {
+    selfOss << "NULL";
+  } else {
+    selfOss << *toto.self;
+  }
+  os << "{plop=" << toto.plop
+     << ",plip=" << toto.plip
+     << ",plap=" << toto.plap
+     << ",plup=" << toto.plup
+     << ",plep=" << toto.plep
+     << ",plyp=" << toto.plyp
+    //<< ",lplyp=" << toto.lplyp
+     << ",self=" << selfOss.str()
+     << ",ptr=" << (toto.ptr != NULL ? *toto.ptr : std::string("NULL"))
+     << ",null=" << (toto.null != NULL ? *toto.null : std::string("NULL"))
+     << ",empty=" << toto.empty
+     << ",tata=" << toto.tata << '}'
+    ;
+  return os;
+}
 
 template<>
 void
@@ -58,7 +177,7 @@ anch::json::registerObject(ObjectMapper<Toto>& mapper) {
     .registerField("tata", &Toto::tata)
     .registerField("plep", &Toto::plep)
     .registerField("plyp", &Toto::plyp)
-    .registerField("lplyp", &Toto::lplyp)
+    //.registerField("lplyp", &Toto::lplyp)
     .registerField("self", &Toto::self)
     .registerField<std::string>("invisible", &Toto::empty)
     .registerField("ptr", &Toto::ptr)
@@ -90,6 +209,16 @@ struct Test {
   }
   inline void setValue(const std::string& value) {
     _value = value;
+  }
+  bool operator==(const Test& test) const {
+    return anch::ut::equals("Test::id", _id, test._id)
+      && anch::ut::equals("Test::value", _value, test._value)
+      && anch::ut::equals("Test::nums", _nums, test._nums)
+      ;
+    // return _id == test._id
+    //   && _value == test._value
+    //   && _nums == test._nums
+    //   ;
   }
 };
 
@@ -126,47 +255,76 @@ namespace plop {
   }
 }
 
+Toto toto;
+Toto* self = NULL;
+std::string VIEW = "VIEW";
+//const std::string totoRes = "{\"plop\":\"plop\",\"plip\":\"plip\",\"plap\":42,\"plup\":false,\"tata\":{\"ploum\":\"ploum\",\"view\":\"VIEW\",\"num_set\":[1,2,3],\"str_vector\":[\"4\",\"5\",\"6\"]},\"plep\":2.2,\"plyp\":3.3,\"lplyp\":4.4,\"self\":{\"plop\":\"self\",\"plip\":\"self_plip\",\"plap\":24,\"plup\":true,\"tata\":{\"ploum\":\"\",\"view\":\"\",\"num_set\":[],\"str_vector\":[]},\"plep\":5.5,\"plyp\":6.6,\"lplyp\":7.7,\"ptr\":\"self\",\"class\":\"Toto\"},\"ptr\":\"plop\",\"class\":\"Toto\"}";
+const std::string totoRes = "{\"plop\":\"plop\",\"plip\":\"plip\",\"plap\":42,\"plup\":false,\"tata\":{\"ploum\":\"ploum\",\"view\":\"VIEW\",\"num_set\":[1,2,3],\"str_vector\":[\"4\",\"5\",\"6\"]},\"plep\":2.2,\"plyp\":3.3,\"self\":{\"plop\":\"self\",\"plip\":\"self_plip\",\"plap\":24,\"plup\":true,\"tata\":{\"ploum\":\"\",\"view\":\"\",\"num_set\":[],\"str_vector\":[]},\"plep\":5.5,\"plyp\":6.6,\"ptr\":\"self\",\"class\":\"Toto\"},\"ptr\":\"plop\",\"class\":\"Toto\"}";
+
+Test res = {
+  ._id = "deb94ebc-be28-4899-981a-29199b7a487d",
+  ._value = "",
+  ._nums = {1,2,3,4}
+};
+
+void
+beforeAll() {
+  std::cout << "Enter in JSON mapper unit tests" << std::endl << std::endl;
+  {
+    Toto* self = new Toto();
+    self->plop = "self";
+    self->plip = std::optional<std::string>("self_plip");
+    self->plap = 24;
+    self->plup = true;
+    self->plep = static_cast<float>(5.5);
+    self->plyp = 6.6;
+    //self->lplyp = 7.7;
+    self->empty = std::optional<std::string>();
+    self->self = NULL;
+    self->ptr = &self->plop;
+    self->null = NULL;
+
+    toto.plop = "plop";
+    toto.plip = std::optional<std::string>("plip");
+    toto.plap = 42;
+    toto.plup = false;
+    toto.plep = 2.2f;
+    toto.plyp = 3.3;
+    //toto.lplyp = 4.4;
+    toto.empty = std::optional<std::string>();
+    toto.ptr = &toto.plop;
+    toto.null = NULL;
+    toto.self = self;
+    Tata tata;
+    tata.ploum = "ploum";
+    tata.view = std::string_view(VIEW.data());
+    tata.numSet = {1, 2, 3};
+    tata.strVect = {"4","5","6"};
+    toto.tata = tata;
+  }
+}
+
+void
+afterAll() {
+  std::cout << "Exit JSON mapper unit tests" << std::endl;
+  if(self != NULL) {
+    delete self;
+  }
+}
+
 void
 testFullSerDefaultOptions() {
   anch::json::JSONMapper mapper(anch::json::DEFAULT_MAPPING_OPTIONS);
-  std::string VIEW = "VIEW";
-  Toto self;
-  self.plop = "self";
-  self.plip = std::optional<std::string>("self_plip");
-  self.plap = 24;
-  self.plup = true;
-  self.plep = static_cast<float>(5.5);
-  self.plyp = 6.6;
-  self.lplyp = 7.7;
-  self.empty = std::optional<std::string>();
-  self.ptr = &self.plop;
-  self.null = NULL;
-  self.self = NULL;
-  Toto toto;
-  toto.plop = "plop";
-  toto.plip = std::optional<std::string>("plip");
-  toto.plap = 42;
-  toto.plup = false;
-  toto.plep = 2.2f;
-  toto.plyp = 3.3;
-  toto.lplyp = 4.4;
-  toto.empty = std::optional<std::string>();
-  toto.ptr = &toto.plop;
-  toto.null = NULL;
-  toto.self = &self;
-  Tata tata;
-  tata.ploum = "ploum";
-  tata.view = std::string_view(VIEW.data());
-  tata.numSet = {1, 2, 3};
-  tata.strVect = {"4","5","6"};
-  toto.tata = tata;
   std::ostringstream oss;
   std::cout << "Serialize Toto" << std::endl;
   mapper.serialize(toto, oss);
-  std::cout << "Serialized toto: " << oss.str() << std::endl;
+  std::string res1 = oss.str();
+  std::cout << "Serialized toto: " << res1 << std::endl;
   std::cout << "Serialize Toto as string" << std::endl;
-  std::string res = mapper.serialize(toto);
-  std::cout << "Serialized toto as string: " << res << std::endl;
+  std::string res2 = mapper.serialize(toto);
+  std::cout << "Serialized toto as string: " << res2 << std::endl;
+  anch::ut::assert(res1 == res2, "Serialization results should be equals");
+  anch::ut::assert(totoRes == res1, "Result should be equals to: {}", totoRes);
 }
 
 void
@@ -178,6 +336,13 @@ testDeserList() {
   std::istringstream iss(json);
   try {
     mapper.deserialize(test, iss);
+
+    std::ostringstream numsTestOss;
+    numsTestOss << test._nums;
+    std::ostringstream numsResOss;
+    numsResOss << res._nums;
+    anch::ut::assert(test == res, "Test has been unexpecting deserialized: id {} / {} instead of {} / {}", test._id, numsTestOss.str(), res._id, numsResOss.str());
+
   } catch(const MappingError& error) {
     std::ostringstream oss;
     oss << "Fail with " << error.what();
@@ -217,6 +382,13 @@ testDeserUnknownFieldStructOK() {
   std::istringstream iss(json);
   try {
     mapper.deserialize(test, iss);
+
+    std::ostringstream numsTestOss;
+    numsTestOss << test._nums;
+    std::ostringstream numsResOss;
+    numsResOss << res._nums;
+    anch::ut::assert(test == res, "Test has been unexpecting deserialized: id {} / {} instead of {} / {}", test._id, numsTestOss.str(), res._id, numsResOss.str());
+
   } catch(const MappingError& error) {
     std::ostringstream oss;
     oss << "Fail with " << error.what();
@@ -233,6 +405,13 @@ testDeserUnknownFieldOK() {
   std::istringstream iss(json);
   try {
     mapper.deserialize(test, iss);
+
+    std::ostringstream numsTestOss;
+    numsTestOss << test._nums;
+    std::ostringstream numsResOss;
+    numsResOss << res._nums;
+    anch::ut::assert(test == res, "Test has been unexpecting deserialized: id {} / {} instead of {} / {}", test._id, numsTestOss.str(), res._id, numsResOss.str());
+
   } catch(const MappingError& error) {
     std::ostringstream oss;
     oss << "Fail with " << error.what();
@@ -249,6 +428,13 @@ testDeserUnknownFieldIntOK() {
   std::istringstream iss(json);
   try {
     mapper.deserialize(test, iss);
+
+    std::ostringstream numsTestOss;
+    numsTestOss << test._nums;
+    std::ostringstream numsResOss;
+    numsResOss << res._nums;
+    anch::ut::assert(test == res, "Test has been unexpecting deserialized: id {} / {} instead of {} / {}", test._id, numsTestOss.str(), res._id, numsResOss.str());
+
   } catch(const MappingError& error) {
     std::ostringstream oss;
     oss << "Fail with " << error.what();
@@ -266,6 +452,13 @@ testDeserUnknownFieldEmptyColOK() {
   std::istringstream iss(json);
   try {
     mapper.deserialize(test, iss);
+
+    std::ostringstream numsTestOss;
+    numsTestOss << test._nums;
+    std::ostringstream numsResOss;
+    numsResOss << res._nums;
+    anch::ut::assert(test == res, "Test has been unexpecting deserialized: id {} / {} instead of {} / {}", test._id, numsTestOss.str(), res._id, numsResOss.str());
+
   } catch(const MappingError& error) {
     std::ostringstream oss;
     oss << "Fail with " << error.what();
@@ -283,6 +476,13 @@ testDeserUnknownFielIntColOK() {
   std::istringstream iss(json);
   try {
     mapper.deserialize(test, iss);
+
+    std::ostringstream numsTestOss;
+    numsTestOss << test._nums;
+    std::ostringstream numsResOss;
+    numsResOss << res._nums;
+    anch::ut::assert(test == res, "Test has been unexpecting deserialized: id {} / {} instead of {} / {}", test._id, numsTestOss.str(), res._id, numsResOss.str());
+
   } catch(const MappingError& error) {
     std::ostringstream oss;
     oss << "Fail with " << error.what();
@@ -300,6 +500,13 @@ testDeserUnknownFielWTFColOK() {
   std::istringstream iss(json);
   try {
     mapper.deserialize(test, iss);
+
+    std::ostringstream numsTestOss;
+    numsTestOss << test._nums;
+    std::ostringstream numsResOss;
+    numsResOss << res._nums;
+    anch::ut::assert(test == res, "Test has been unexpecting deserialized: id {} / {} instead of {} / {}", test._id, numsTestOss.str(), res._id, numsResOss.str());
+
   } catch(const MappingError& error) {
     std::ostringstream oss;
     oss << "Fail with " << error.what();
@@ -311,12 +518,26 @@ testDeserUnknownFielWTFColOK() {
 void
 testFullDeserDefaultOptions() {
   anch::json::JSONMapper mapper(anch::json::DEFAULT_MAPPING_OPTIONS);
-  std::string json = "{\"plop\":\"plop\",\"plip\":\"plip\",\"plap\":42,\"plup\":false,\"tata\":{\"ploum\":\"ploum\",\"num_set\":[1,2,3],\"str_vector\":[\"4\",\"5\",\"6\"]},\"plep\":2.2,\"plyp\":3.3,\"lplyp\":4.4,\"self\":{\"plop\":\"self\",\"plip\":\"self_plip\",\"plap\":24,\"plup\":true,\"tata\":{\"ploum\":\"\",\"num_set\":[],\"str_vector\":[]},\"plep\":5.5,\"plyp\":6.6,\"lplyp\":7.7,\"ptr\":\"self\"},\"ptr\":\"plop\"}";
+  std::string json = "{\"plop\":\"plop\",\"plip\":\"plip\",\"plap\":42,\"plup\":false,\"tata\":{\"ploum\":\"ploum\",\"num_set\":[1,2,3],\"str_vector\":[\"4\",\"5\",\"6\"]},\"plep\":2.2,\"plyp\":3.3,\"self\":{\"plop\":\"self\",\"plip\":\"self_plip\",\"plap\":24,\"plup\":true,\"tata\":{\"ploum\":\"\",\"num_set\":[],\"str_vector\":[]},\"plep\":5.5,\"plyp\":6.6,\"ptr\":\"self\"},\"ptr\":\"plop\"}";
+  //  std::string json = "{\"plop\":\"plop\",\"plip\":\"plip\",\"plap\":42,\"plup\":false,\"tata\":{\"ploum\":\"ploum\",\"num_set\":[1,2,3],\"str_vector\":[\"4\",\"5\",\"6\"]},\"plep\":2.2,\"plyp\":3.3,\"lplyp\":4.4,\"self\":{\"plop\":\"self\",\"plip\":\"self_plip\",\"plap\":24,\"plup\":true,\"tata\":{\"ploum\":\"\",\"num_set\":[],\"str_vector\":[]},\"plep\":5.5,\"plyp\":6.6,\"lplyp\":7.7,\"ptr\":\"self\"},\"ptr\":\"plop\"}";
+  // {"plop":"plop","plip":"plip","plap":42,"plup":false,"tata":{"ploum":"ploum","num_set":[1,2,3],"str_vector":["4","5","6"]},"plep":2.2,"plyp":3.3,"lplyp":4.4,"self":{"plop":"self","plip":"self_plip","plap":24,"plup":true,"tata":{"ploum":"","num_set":[],"str_vector":[]},"plep":5.5,"plyp":6.6,"lplyp":7.7,"ptr":"self"},"ptr":"plop"}
+  // {"plop":"plop","plip":"plip","plap":42,"plup":false,"tata":{"ploum":"ploum","num_set":[1,2,3],"str_vector":["4","5","6"]},"plep":2.2,"plyp":3.3,"lplyp":4.4,"self":{"plop":"self","plip":"self_plip","plap":24,"plup":true,"tata":{"ploum":"","num_set":[],"str_vector":[]},"plep":5.5,"plyp":6.6,"lplyp":7.7,"ptr":"self","class":"Toto"},"ptr":"plop","class":"Toto"}
+  Toto expected = toto;
+
+  //std::string& json = totoRes;
   std::cout << "Deserialize " << json << std::endl;
   std::istringstream iss(json);
-  Toto toto;
+  Toto totoDeser;
   try {
-    mapper.deserialize(toto, iss);
+    anch::json::Factory<Toto>::getInstance();
+    std::cout << "Instance OK" << std::endl;
+    mapper.deserialize(totoDeser, iss);
+    //std::cout << totoDeser.tata.ploum << std::endl;
+
+    std::cout << "Expected: " << expected << std::endl;
+    std::cout << "Result:   " << totoDeser << std::endl;
+    anch::ut::assert(expected == totoDeser, "NOT EQUALS");
+
   } catch(const std::bad_cast& e) {
     std::ostringstream oss;
     oss << "Bad cast " << e.what();
@@ -334,7 +555,9 @@ testFulDeserDiscard128() {
   std::ifstream iss("toto.json");
   std::cout << "Deserialize toto.json" << std::endl;
   try {
-    Toto toto = mapper.deserialize<Toto>(iss);
+    Toto deserToto = mapper.deserialize<Toto>(iss);
+    std::cout << deserToto << std::endl;
+    anch::ut::assert(toto == deserToto, "NOT EQUALS");
   } catch(const std::bad_cast& e) {
     std::ostringstream oss;
     oss << "Bad cast  " << e.what();
@@ -350,10 +573,55 @@ void
 testFulDeserDiscard128Col() {
   anch::json::JSONMapper mapper({.deserialize_max_discard_char = 128});
   std::ifstream iss("totos.json");
+  std::vector<Test> expected = {
+    {
+      ._id = "deb94ebc-be28-4899-981a-29199b7a487d",
+      ._value = "this is a value",
+      ._nums = {1,2,3,4}
+    },
+    {
+      ._id = "44666aab-0b63-47a1-80bb-ae84bc844289",
+      ._value = "this is another value",
+      ._nums = {5,6,7,8}
+    }
+  };
   std::cout << "Deserialize totos.json" << std::endl;
   try {
     std::vector<Test> tests;
     mapper.deserialize<Test>(tests, iss);
+    anch::ut::assert(expected == tests, "NOT EQUALS");
+  } catch(const std::bad_cast& e) {
+    std::ostringstream oss;
+    oss << "Bad cast " << e.what();
+    anch::ut::fail(oss.str());
+  } catch(const MappingError& error) {
+    std::ostringstream oss;
+    oss << "Fail with " << error.what();
+    anch::ut::fail(oss.str());
+  }
+}
+
+void
+testFulDeserDiscard128ColBuf2() {
+  anch::json::JSONMapper mapper({.deserialize_max_discard_char = 128, .buffer_size = 2});
+  std::ifstream iss("totos.json");
+  std::vector<Test> expected = {
+    {
+      ._id = "deb94ebc-be28-4899-981a-29199b7a487d",
+      ._value = "this is a value",
+      ._nums = {1,2,3,4}
+    },
+    {
+      ._id = "44666aab-0b63-47a1-80bb-ae84bc844289",
+      ._value = "this is another value",
+      ._nums = {5,6,7,8}
+    }
+  };
+  std::cout << "Deserialize totos.json" << std::endl;
+  try {
+    std::vector<Test> tests;
+    mapper.deserialize<Test>(tests, iss);
+    anch::ut::assert(expected == tests, "NOT EQUALS");
   } catch(const std::bad_cast& e) {
     std::ostringstream oss;
     oss << "Bad cast " << e.what();
@@ -472,8 +740,10 @@ testDeserializeMap() {
 void
 anch::ut::setup(anch::ut::UnitTests& tests) {
   tests
-    .name("AnCH JSON unit tests")
-    .description("Test AnCH JSON library")
+    .name("AnCH JSON mapper unit tests")
+    .description("Test AnCH JSON mapper library")
+    .initialize(beforeAll)
+    .uninitialize(afterAll)
     .add("json-ser-full", testFullSerDefaultOptions)
     .add("json-deser-list", testDeserList)
     .add("json-deser-unf-field", testDeserUnknownFieldStructFail)
@@ -486,8 +756,9 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("json-full-deser-default", testFullDeserDefaultOptions)
     .add("json-deser-discard128", testFulDeserDiscard128)
     .add("json-deser-discard128-col", testFulDeserDiscard128Col)
+    .add("json-deser-discard128-col-buf2", testFulDeserDiscard128ColBuf2)
     .add("json-iomanip", testIOManip)
-    .add("json-sermap", testSerializeMap)
-    .add("json-desermap", testDeserializeMap)
+    .add("json-ser-map", testSerializeMap)
+    .add("json-deser-map", testDeserializeMap)
     ;
 }

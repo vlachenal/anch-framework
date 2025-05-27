@@ -23,6 +23,21 @@
 namespace anch::json {
 
   /*!
+   * \brief Check if type is a primitive JSON type.
+   *
+   * When not specialzed, the function always return \c false .\n
+   * Every \c C basic types are defined as primitive. \c std::string and \c std::string_view are also defined as primitive.\n
+   * \n
+   * You can declare any type as primitive with template function specialization.
+   *
+   * \tparam T the type to check
+   *
+   * \return \c true if type is a JSON primitive type, \c false otherwise
+   */
+  template<typename T>
+  constexpr bool isPrimitive();
+
+  /*!
    * \brief JSON mapper factory
    *
    * Each JSON mapper will have only one instance.

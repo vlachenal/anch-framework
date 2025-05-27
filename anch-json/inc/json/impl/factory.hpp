@@ -21,6 +21,8 @@
 
 #include <type_traits>
 #include <cstdint>
+#include <string>
+#include <string_view>
 
 #include "json/mapper.hpp"
 #include "json/primitiveMapper.hpp"
@@ -39,55 +41,12 @@
 
 namespace anch::json {
 
-#ifndef ANCH_JSON_CUSTOM_PRIMITIVES
-  /*!
-   * Default custom primitive implementation.
-   *
-   * \tparam T the type to check
-   *
-   * \return \c false
-   */
-  template<typename T>
-  constexpr bool isCustomPrimitive() {
-    return false;
-  }
-#endif
-
-  /*!
-   * Check if type is a primitive JSON type
-   *
-   * \tparam T the type to check
-   *
-   * \return \c true if type is a JSON primitive type, \c false otherwise
-   */
+  // isPrimitive default implemetation (default false) +
   template<typename T>
   constexpr bool isPrimitive() {
-    return std::is_same<T, std::string>::value
-      || std::is_same<T, std::string_view>::value
-      || std::is_same<T, int64_t>::value
-      || std::is_same<T, uint64_t>::value
-      || std::is_same<T, int32_t>::value
-      || std::is_same<T, uint32_t>::value
-      || std::is_same<T, int16_t>::value
-      || std::is_same<T, uint16_t>::value
-      || std::is_same<T, int8_t>::value
-      || std::is_same<T, uint8_t>::value
-      || std::is_same<T, bool>::value
-      || std::is_same<T, float>::value
-      || std::is_same<T, double>::value
-      || std::is_same<T, long double>::value
-#ifdef ANCH_UUID // \todo UUID mapper implementation in string mapper
-      || std::is_same<T, anch::UUID>::value
-#endif
-#ifdef ANCH_DATE // \todo UUID date implementation in string mapper
-      || std::is_same<T, anch::date::Date>::value
-#endif
-#ifdef ANCH_CRYPTO // \todo base64 implementation ... which is a bad idea if my mind
-      || std::is_same<T, std::istream>::value
-#endif
-      || isCustomPrimitive<T>();
-    ;
+    return false;
   }
+  // isPrimitive default implemetation (default false) -
 
   template<typename T>
   auto& Factory<T>::getInstance() {
@@ -102,5 +61,85 @@ namespace anch::json {
       return instance;
     }
   }
+
+  // isPrimitive specialization +
+  // isPrimitive string specialization +
+  template<>
+  constexpr bool isPrimitive<std::string>() {
+    return true;
+  }
+
+  template<>
+  constexpr bool isPrimitive<std::string_view>() {
+    return true;
+  }
+  // isPrimitive string specialization -
+
+  // isPrimitive interger specialization +
+  template<>
+  constexpr bool isPrimitive<int64_t>() {
+    return true;
+  }
+
+  template<>
+  constexpr bool isPrimitive<uint64_t>() {
+    return true;
+  }
+
+  template<>
+  constexpr bool isPrimitive<int32_t>() {
+    return true;
+  }
+
+  template<>
+  constexpr bool isPrimitive<uint32_t>() {
+    return true;
+  }
+
+  template<>
+  constexpr bool isPrimitive<int16_t>() {
+    return true;
+  }
+
+  template<>
+  constexpr bool isPrimitive<uint16_t>() {
+    return true;
+  }
+
+  template<>
+  constexpr bool isPrimitive<int8_t>() {
+    return true;
+  }
+
+  template<>
+  constexpr bool isPrimitive<uint8_t>() {
+    return true;
+  }
+  // isPrimitive interger specialization -
+
+  // isPrimitive boolean specialization +
+  template<>
+  constexpr bool isPrimitive<bool>() {
+    return true;
+  }
+  // isPrimitive boolean specialization -
+
+  // isPrimitive float specialization +
+  template<>
+  constexpr bool isPrimitive<float>() {
+    return true;
+  }
+
+  template<>
+  constexpr bool isPrimitive<double>() {
+    return true;
+  }
+
+  template<>
+  constexpr bool isPrimitive<long double>() {
+    return true;
+  }
+  // isPrimitive float specialization -
+  // isPrimitive specialization -
 
 }

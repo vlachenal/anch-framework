@@ -26,47 +26,37 @@ using anch::json::ErrorCode;
 
 
 std::string
-computeErrorMessage(ErrorCode code, std::istream& input, std::optional<std::string> context) {
-  std::streamoff pos = input.tellg();
-  std::ostringstream oss;
-  switch(code) {
-  case ErrorCode::INVALID_FORMAT:
-    oss << "Unexpected character found at " << pos;
-    break;
-  case ErrorCode::UNEXPECTED_FIELD:
-    oss << "Unexpected field found at " << pos;
-    break;
-  case ErrorCode::POTENTIAL_OVERFLOW:
-    oss << "Potential overflow at " << pos;
-    break;
-  default:
-    oss << "Unexpected error found at " << pos;
-  }
-  if(context.has_value()) {
-    oss << " for '" << context.value() << '\'';
-  }
-  // Try to get 20 characters around current error +
-  oss << " near '";
-  std::streamoff begin = pos - 10;
+computeErrorMessage(ErrorCode code, const anch::json::ReaderContext& context) {
+  const int32_t offset = static_cast<int32_t>(context.offset);
+  int32_t begin = offset - 10;
   if(begin < 0) {
     begin = 0;
   }
-  for(std::streamoff i = begin ; i < pos ; ++i) {
-    try {
-      input.seekg(i);
-    } catch(...) {
-      continue;
-    }
-    oss << static_cast<char>(input.peek());
+  std::ostringstream oss;
+  switch(code) {
+  case ErrorCode::INVALID_FORMAT:
+    oss << "Unexpected character '" << context.buffer[context.offset - 1] << "' found at " << (offset - begin -1);
+    break;
+  case ErrorCode::UNEXPECTED_FIELD:
+    oss << "Unexpected field found";
+    break;
+  case ErrorCode::POTENTIAL_OVERFLOW:
+    oss << "Potential overflow";
+    break;
+  default:
+    oss << "Unexpected error found at " << context.offset;
   }
-  input.seekg(pos);
-  for(std::streamoff i = 0 ; i < 10 ; ++i) {
-    try {
-      input.seekg(pos + i);
-    } catch(...) {
+  // Try to get 20 characters around current error +
+  oss << " near '";
+  for(int32_t i = begin ; i < offset ; ++i) {
+    oss << context.buffer[i];
+  }
+  for(int32_t i = offset ; i < 11 && offset + i < static_cast<int32_t>(context.bufferSize) ; ++i) {
+    char c = context.buffer[i];
+    if(c == '\0') {
       break;
     }
-    oss << static_cast<char>(input.peek());
+    oss << c;
   }
   // Try to get 20 characters around current error -
   oss << '\'';
@@ -74,14 +64,8 @@ computeErrorMessage(ErrorCode code, std::istream& input, std::optional<std::stri
 }
 
 // Constructors +
-MappingError::MappingError(ErrorCode code, std::istream& input, std::optional<std::string> context): std::exception(), _code(code) {
-  _msg = computeErrorMessage(code, input, context);
-}
-
-MappingError::MappingError(ErrorCode code, std::istream& input, char context): std::exception(), _code(code) {
-  std::ostringstream oss;
-  oss << context;
-  _msg = computeErrorMessage(code, input, std::optional<std::string>(oss.str()));
+MappingError::MappingError(ErrorCode code, const anch::json::ReaderContext& context): std::exception(), _code(code) {
+  _msg = computeErrorMessage(code, context);
 }
 // Constructors -
 

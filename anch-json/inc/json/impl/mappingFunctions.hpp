@@ -19,20 +19,26 @@
 */
 #pragma once
 
-#include "json/mappingError.hpp"
+#include "json/lexer.hpp"
 
 namespace anch::json {
+
+  inline
+  void
+  serializeFieldName(std::ostream& out, const std::optional<std::string>& field) {
+    if(field.has_value()) {
+      anch::json::serializeFieldName(out, field.value());
+    }
+  }
 
   template<typename T>
   inline bool
   serialize(const T& value,
 	    std::ostream& out,
-	    std::function<void((const T& value, std::ostream& out, const anch::json::MappingOptions& options))> serializeFunc,
+	    anch::json::SerializeFn<T> serializeFunc,
 	    const anch::json::MappingOptions& options,
 	    const std::optional<std::string>& field) {
-    if(field.has_value()) {
-      out << anch::json::STRING_DELIMITER << field.value() << anch::json::STRING_DELIMITER << anch::json::FIELD_VALUE_SEPARATOR;
-    }
+    anch::json::serializeFieldName(out, field);
     std::invoke(serializeFunc, value, out, options);
     return true;
   }
@@ -41,7 +47,7 @@ namespace anch::json {
   inline bool
   serialize(const T* const value,
 	    std::ostream& out,
-	    std::function<void((const T& value, std::ostream& out, const anch::json::MappingOptions& options))> serializeFunc,
+	    anch::json::SerializeFn<T> serializeFunc,
 	    const anch::json::MappingOptions& options,
 	    const std::optional<std::string>& field) {
     if(value == NULL) {
@@ -54,7 +60,7 @@ namespace anch::json {
   inline bool
   serialize(const std::optional<T>& value,
 	    std::ostream& out,
-	    std::function<void((const T& value, std::ostream& out, const anch::json::MappingOptions& options))> serializeFunc,
+	    anch::json::SerializeFn<T> serializeFunc,
 	    const anch::json::MappingOptions& options,
 	    const std::optional<std::string>& field) {
     if(!value.has_value()) {
@@ -67,149 +73,191 @@ namespace anch::json {
   inline void
   serializeArray(const A& array,
 		 std::ostream& out,
-		 std::function<void((const T& value, std::ostream& out, const anch::json::MappingOptions& options))> serializeFunc,
+		 anch::json::SerializeFn<T> serializeFunc,
 		 const anch::json::MappingOptions& options,
 		 const std::optional<std::string>& field) {
-    if(field.has_value()) {
-      out << anch::json::STRING_DELIMITER << field.value() << anch::json::STRING_DELIMITER << anch::json::FIELD_VALUE_SEPARATOR;
-    }
-    out << anch::json::ARRAY_BEGIN;
-    for(auto iter = array.begin() ; iter != array.end() ; ++iter) {
-      if(iter != array.begin()) {
-	out << anch::json::FIELD_SEPARATOR;
+    anch::json::serializeFieldName(out, field);
+    out.put(anch::json::ARRAY_BEGIN);
+    for(auto iter = array.cbegin() ; iter != array.cend() ; ++iter) {
+      if(iter != array.cbegin()) {
+	out.put(anch::json::FIELD_SEPARATOR);
       }
       std::invoke(serializeFunc, *iter, out, options);
     }
-    out << anch::json::ARRAY_END;
+    out.put(anch::json::ARRAY_END);
   }
 
   template<typename T>
   inline void
   serializeMap(const std::map<std::string,T>& map,
 	       std::ostream& out,
-	       std::function<void((const T& value, std::ostream& out, const anch::json::MappingOptions& options))> serializeFunc,
+	       anch::json::SerializeFn<T> serializeFunc,
 	       const anch::json::MappingOptions& options,
 	       const std::optional<std::string>& field) {
-    if(field.has_value()) {
-      out << anch::json::STRING_DELIMITER << field.value() << anch::json::STRING_DELIMITER << anch::json::FIELD_VALUE_SEPARATOR;
-    }
-    out << anch::json::OBJECT_BEGIN;
+    anch::json::serializeFieldName(out, field);
+    out.put(anch::json::OBJECT_BEGIN);
     for(auto iter = map.cbegin() ; iter != map.cend() ; ++iter) {
       if(iter != map.cbegin()) {
-	out << anch::json::FIELD_SEPARATOR;
+	out.put(anch::json::FIELD_SEPARATOR);
       }
-      out << anch::json::STRING_DELIMITER << iter->first << anch::json::STRING_DELIMITER << anch::json::FIELD_VALUE_SEPARATOR;
+      anch::json::serializeFieldName(out, iter->first);
       std::invoke(serializeFunc, iter->second, out, options);
     }
-    out << anch::json::OBJECT_END;
+    out.put(anch::json::OBJECT_END);
   }
 
   template<typename T>
   inline void
   deserialize(T& value,
-	      std::istream& input,
-	      const anch::json::MappingOptions& options,
-	      std::function<void((T& value, std::istream& input, const anch::json::MappingOptions& options))> deserializeFunc) {
-    if(!anch::json::isNull(input, options)) { // this function discards 'spaces'
-      std::invoke(deserializeFunc, value, input, options);
+	      anch::json::ReaderContext& context,
+	      anch::json::DeserializeFn<T> deserializeFunc) {
+    if(anch::json::objectHasValueLex(context)) {
+       std::invoke(deserializeFunc, value, context);
     }
   }
 
   template<typename T>
   inline void
   deserialize(T* value,
-	      std::istream& input,
-	      const anch::json::MappingOptions& options,
-	      std::function<void((T& value, std::istream& input, const anch::json::MappingOptions& options))> deserializeFunc) {
-    if(anch::json::isNull(input, options)) { // this function discards 'spaces'
+	      anch::json::ReaderContext& context,
+	      anch::json::DeserializeFn<T> deserializeFunc) {
+    if(anch::json::objectHasValueLex(context)) {
+      value = new T();
+      std::invoke(deserializeFunc, *value, context);
+    } else {
+      value = NULL;
+    }
+    /*if(anch::json::isNull(context)) { // this function discards 'spaces'
       value = NULL;
     } else {
       value = new T();
-      std::invoke(deserializeFunc, *value, input, options);
-    }
+      std::invoke(deserializeFunc, *value, context);
+      }*/
   }
 
   template<typename T>
   inline void
   deserialize(std::optional<T>& value,
-	      std::istream& input,
-	      const anch::json::MappingOptions& options,
-	      std::function<void((T& value, std::istream& input, const anch::json::MappingOptions& options))> deserializeFunc) {
-    if(anch::json::isNull(input, options)) { // this function discards 'spaces'
+	      anch::json::ReaderContext& context,
+	      anch::json::DeserializeFn<T> deserializeFunc) {
+    if(anch::json::objectHasValueLex(context)) {
+      T instance;
+      std::invoke(deserializeFunc, *value, context);
+      value = std::move(instance);
+    } else {
+      value.reset();
+    }
+    /*if(anch::json::isNull(context)) { // this function discards 'spaces'
       value.reset();
     } else {
       T instance;
-      std::invoke(deserializeFunc, instance, input, options);
+      std::invoke(deserializeFunc, instance, context);
       value = std::move(instance);
-    }
+      }*/
   }
 
+  template<typename T>
+  bool
+  addToVector(std::vector<T>& value, anch::json::DeserializeFn<T> deser, anch::json::ReaderContext& context) {
+    T val;
+    if(deser(val, context)) {
+      value.push_back(val);
+    }
+    return false;
+  }
+
+  template<typename T>
+  bool
+  addToList(std::list<T>& value, anch::json::DeserializeFn<T> deser, anch::json::ReaderContext& context) {
+    T val;
+    if(deser(val, context)) {
+      value.push_back(val);
+    }
+    return false;
+  }
+
+  template<typename T>
+  bool
+  addToSet(std::set<T>& value, anch::json::DeserializeFn<T> deser, anch::json::ReaderContext& context) {
+    T val;
+    if(deser(val, context)) {
+      value.insert(val);
+    }
+    return false;
+  }
+
+  /*
   template<typename T>
   inline void
-  deserializeArray(std::istream& input,
-		   std::function<void(const T&)> pushFunc,
-		   const anch::json::MappingOptions& options,
-		   std::function<void((T& value, std::istream& input, const anch::json::MappingOptions& options))> deserializeFunc) {
-    if(anch::json::isNull(input, options)) {
+  deserializeArray(std::function<void(const T&)> pushFunc,
+		   anch::json::Context& context,
+		   anch::json::DeserializeFn<T> deserializeFunc) {
+    if(anch::json::isNull(context)) {
       return;
     }
-    int current = input.get();
+    int current = context.input.get();
     if(current != anch::json::ARRAY_BEGIN) {
-      throw anch::json::MappingError(anch::json::ErrorCode::INVALID_FORMAT, input, static_cast<char>(current));
+      throw anch::json::MappingError(anch::json::ErrorCode::INVALID_FORMAT, context);
     }
-    anch::json::discardChars(input, options);
-    if(input.peek() != anch::json::ARRAY_END) {
-      while(input) {
+    //anch::json::discardChars(context);
+    context.discard();
+    if(context.input.peek() != anch::json::ARRAY_END) {
+      while(context.input) {
 	T value;
-	std::invoke(deserializeFunc, value, input, options);
+	std::invoke(deserializeFunc, value, context);
 	std::invoke(pushFunc, value);
-	if(!anch::json::hasMoreField(input, options)) {
+	if(!anch::json::hasMoreField(context)) {
 	  break;
 	}
-	anch::json::discardChars(input, options);
+	context.discard();
+	//anch::json::discardChars(context);
       }
     }
-    if(!input || input.get() != anch::json::ARRAY_END) {
-      throw anch::json::MappingError(anch::json::ErrorCode::INVALID_FORMAT, input, static_cast<char>(input.peek()));
+    if(!context.input || context.input.get() != anch::json::ARRAY_END) {
+      throw anch::json::MappingError(anch::json::ErrorCode::INVALID_FORMAT, context);
     }
   }
+  */
 
   template<typename T>
-  void deserializeMap(std::istream& input,
-		      std::function<void(const std::pair<std::string,T>&)> pushFunc,
-		      const anch::json::MappingOptions& options,
-		      std::function<void((T& value, std::istream& input, const anch::json::MappingOptions& options))> deserializeFunc) {
-    if(anch::json::isNull(input, options)) {
+  void
+  deserializeMap([[ maybe_unused ]] std::function<void(const std::pair<std::string,T>&)> pushFunc,
+		 [[ maybe_unused ]] anch::json::ReaderContext& context,
+		 [[ maybe_unused ]] anch::json::DeserializeFn<T> deserializeFunc) {
+    /*if(anch::json::isNull(context)) {
       return;
     }
-    int current = input.get();
+    int current = context.input.get();
     if(current != anch::json::OBJECT_BEGIN) {
-      throw anch::json::MappingError(anch::json::ErrorCode::INVALID_FORMAT, input, static_cast<char>(current));
+      throw anch::json::MappingError(anch::json::ErrorCode::INVALID_FORMAT, context);
     }
-    anch::json::discardChars(input, options);
-    if(input.peek() == anch::json::OBJECT_END) {
-      input.get();
+    //anch::json::discardChars(context);
+    context.discard();
+    if(context.input.peek() == anch::json::OBJECT_END) {
+      context.input.get();
       return;
     }
+    std::optional<std::string> field;
     do {
-      std::optional<std::string> key = anch::json::getFieldName(input, options);
-      if(!key) {
+      anch::json::getFieldName(context, field);
+      if(!field) {
 	break;
       }
-      if(anch::json::isNull(input, options)) {
+      if(anch::json::isNull(context)) {
 	continue;
       }
       T val;
-      std::invoke(deserializeFunc, val, input, options);
-      auto value = std::make_pair(key.value(), val);
+      std::invoke(deserializeFunc, val, context);
+      auto value = std::make_pair(field.value(), val);
       std::invoke(pushFunc, value);
-      if(!anch::json::hasMoreField(input, options)) {
+      if(!anch::json::hasMoreField(context)) {
 	break;
       }
+      field.reset();
     } while(true);
-    if(!input || input.get() != anch::json::OBJECT_END) {
-      throw anch::json::MappingError(anch::json::ErrorCode::INVALID_FORMAT, input, static_cast<char>(input.peek()));
-    }
+    if(!context.input || context.input.get() != anch::json::OBJECT_END) {
+      throw anch::json::MappingError(anch::json::ErrorCode::INVALID_FORMAT, context);
+      }*/
   }
 
 }  // anch::json

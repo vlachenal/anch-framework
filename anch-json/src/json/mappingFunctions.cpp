@@ -20,7 +20,6 @@
 #include "json/mappingFunctions.hpp"
 
 #include <istream>
-#include <sstream>
 #include <optional>
 
 #include "json/constants.hpp"
@@ -28,98 +27,12 @@
 #include "json/mapper.hpp"
 
 
-inline
-bool
-isDiscardChar(int car) {
-  return car == ' ' || car == '\t' || car == '\n' || car == '\r';
-}
-
 void
-anch::json::discardChars(std::istream& input, const anch::json::MappingOptions& options) {
-  int discarded = 0;
-  while(input && isDiscardChar(input.peek())) {
-    input.get();
-    if(options.deserialize_max_discard_char != -1 && ++discarded > options.deserialize_max_discard_char) {
-      throw anch::json::MappingError(anch::json::ErrorCode::POTENTIAL_OVERFLOW, input);
-    }
-  }
-  if(!input) {
-    throw anch::json::MappingError(anch::json::ErrorCode::INVALID_FORMAT, input);
-  }
-}
-
-bool
-anch::json::isNull(std::istream& input, const anch::json::MappingOptions& options) {
-  anch::json::discardChars(input, options);
-  char nullChar = 'n';
-  uint16_t index = 0;
-  bool null = false;
-  while(input) {
-    if(input.peek() == nullChar) {
-      switch(index) {
-      case 0:
-	null = true;
-	nullChar = 'u';
-	break;
-      case 1:
-	nullChar = 'l';
-	break;
-      case 2:
-	break; // wait for 'l'
-      case 3:
-	input.get();
-	goto stopnull; // stop parsing for this object
-      }
-      input.get();
-      ++index;
-    } else if(null) {
-      throw anch::json::MappingError(anch::json::ErrorCode::INVALID_FORMAT, input, static_cast<char>(input.peek()));
-    } else {
-      break;
-    }
-  }
- stopnull:
-  return null;
-}
-
-std::optional<std::string>
-anch::json::getFieldName(std::istream& input, const anch::json::MappingOptions& options) {
-  anch::json::discardChars(input, options);
-  std::optional<std::string> name;
-  int current = input.peek();
-  if(current != anch::json::STRING_DELIMITER) {
-    return name;
-  }
-  input.get();
-  int nbChar = 0;
-  std::ostringstream buffer;
-  while(input) {
-    current = input.get();
-    if(current == anch::json::STRING_DELIMITER) {
-      break;
-    }
-    if(options.deserialize_max_field_char != -1 && ++nbChar > options.deserialize_max_field_char) {
-      throw anch::json::MappingError(anch::json::ErrorCode::POTENTIAL_OVERFLOW, input);
-    }
-    buffer << static_cast<char>(current);
-  }
-  anch::json::discardChars(input, options);
-  if(input.get() != anch::json::FIELD_VALUE_SEPARATOR) {
-    throw anch::json::MappingError(anch::json::ErrorCode::INVALID_FORMAT, input, static_cast<char>(input.peek()));
-  }
-  name = buffer.str();
-  return name;
-}
-
-bool
-anch::json::hasMoreField(std::istream& input, const anch::json::MappingOptions& options) {
-  anch::json::discardChars(input, options);
-  if(input.peek() == anch::json::FIELD_SEPARATOR) {
-    input.get();
-    return true;
-  } else {
-    return false;
-  }
+anch::json::serializeFieldName(std::ostream& out, const std::string& field) {
+  out.put(anch::json::STRING_DELIMITER)
+    .write(field.data(), static_cast<std::streamsize>(field.size()))
+    .put(anch::json::STRING_DELIMITER)
+    .put(anch::json::FIELD_VALUE_SEPARATOR);
 }
 
 struct UnknownObject {
@@ -131,100 +44,17 @@ anch::json::registerObject([[maybe_unused]] anch::json::ObjectMapper<UnknownObje
   // Nothing to do
 }
 
-void
-consumeStringValue(std::istream& input, [[maybe_unused]] const anch::json::MappingOptions& options) {
-  int current = input.get();
-  while(input) {
-    // \todo max char in value ...
-    current = input.get();
-    if(current == '\\') {
-      if(!input) {
-	throw anch::json::MappingError(anch::json::ErrorCode::INVALID_FORMAT, input);
-      }
-    } else if(current == anch::json::STRING_DELIMITER) {
-      break;
-    }
-  }
-  if(!input && current != anch::json::STRING_DELIMITER) {
-    throw anch::json::MappingError(anch::json::ErrorCode::INVALID_FORMAT, input, static_cast<char>(current));
-  }
-}
-
-void
-consumeRawValue(std::istream& input) {
-  uint8_t nbChar = 0;
-  while(input) {
-    if(++nbChar > 20) { // max uint64_t is 18446744073709551615 => 20 chars and max int64_t is -9223372036854775806 => 20 chars
-      break;
-    }
-    int current = input.peek();
-    if(current == anch::json::OBJECT_BEGIN
-       || current == anch::json::OBJECT_END
-       || current == anch::json::ARRAY_BEGIN
-       || current == anch::json::ARRAY_END
-       || current == anch::json::STRING_DELIMITER
-       || current == anch::json::FIELD_VALUE_SEPARATOR
-       || current == anch::json::FIELD_SEPARATOR) {
-      break;
-    }
-    input.get();
-  }
-}
-
-void
-consumeArrayValue(std::istream& input, const anch::json::MappingOptions& options) {
-  int current = input.peek(); // consumes '['
-  anch::json::discardChars(input, options);
-  current = input.peek();
-  if(current == anch::json::ARRAY_END) {
-    input.get();
-    return;
-  }
-  while(input) {
-    anch::json::consumeUnknownField(input, options);
-    if(!anch::json::hasMoreField(input, options)) {
-      break;
-    }
-  }
-  if(input.peek() == anch::json::ARRAY_END) {
-    current = input.get();
-  }
-  if(!input && current != anch::json::ARRAY_END) {
-    throw anch::json::MappingError(anch::json::ErrorCode::INVALID_FORMAT, input, static_cast<char>(current));
-  }
-}
-
-void
-anch::json::consumeUnknownField(std::istream& input, const anch::json::MappingOptions& options) {
-  anch::json::discardChars(input, options);
-  char start = static_cast<char>(input.peek());
-  if(start == anch::json::OBJECT_BEGIN) {
-    UnknownObject obj;
-    anch::json::deserialize(obj, input, options);
-  } else if(start == anch::json::ARRAY_BEGIN) {
-    input.get();
-    consumeArrayValue(input, options);
-  } else if(start == anch::json::STRING_DELIMITER) {
-    input.get();
-    consumeStringValue(input, options);
-  } else if(start == anch::json::OBJECT_END
-	    || start == anch::json::ARRAY_END
-	    || start == anch::json::FIELD_VALUE_SEPARATOR
-	    || start == anch::json::FIELD_SEPARATOR) {
-    throw anch::json::MappingError(anch::json::ErrorCode::INVALID_FORMAT, input, static_cast<char>(input.peek()));
-  } else {
-    consumeRawValue(input);
-  }
-}
-
 bool
 anch::json::serializeNull(std::ostream& out, const anch::json::MappingOptions& options, const std::optional<std::string>& field) {
   if(!options.serialize_null) {
     return false;
   }
   if(field.has_value()) {
-    out << anch::json::STRING_DELIMITER << field.value() << anch::json::STRING_DELIMITER << anch::json::FIELD_VALUE_SEPARATOR;
+    out.put(anch::json::STRING_DELIMITER)
+      .write(field.value().data(), static_cast<std::streamsize>(field.value().size()))
+      .put(anch::json::STRING_DELIMITER)
+      .put(anch::json::FIELD_VALUE_SEPARATOR);
   }
-  out << "null";
+  out.write("null", 4);
   return true;
 }

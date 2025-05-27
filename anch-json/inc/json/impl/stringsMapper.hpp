@@ -20,32 +20,32 @@
 #pragma once
 
 #include <string>
-#include <optional>
+#include <ostream>
+
+#include "json/constants.hpp"
+#include "json/mappingOptions.hpp"
+
 
 namespace anch::json {
 
-  /*! JSON caracters string delimiter ('"') */
-  const char STRING_DELIMITER = '"';
+  /*!
+   * Serialize string value
+   *
+   * \tparam T the type to serialize as string
+   *
+   * \param value the value to serialize
+   * \param out the output stream to write in
+   * \param options the mapping options
+   */
+  template<typename T>
+  inline
+  void
+  serializeStringValue(const T& value,
+		       std::ostream& out,
+		       [[maybe_unused]] const anch::json::MappingOptions& options) {
+    out.put(anch::json::STRING_DELIMITER)
+      .write(value.data(), static_cast<std::streamsize>(value.size()))
+      .put(anch::json::STRING_DELIMITER);
+  }
 
-  /*! JSON fields delimiter (',') */
-  const char FIELD_SEPARATOR = ',';
-
-  /*! JSON fiel/value delimiter (':') */
-  const char FIELD_VALUE_SEPARATOR = ':';
-
-  /*! JSON start object ('{') */
-  const char OBJECT_BEGIN = '{';
-
-  /*! JSON end object ('}') */
-  const char OBJECT_END = '}';
-
-  /*! JSON start array ('[') */
-   const char ARRAY_BEGIN = '[';
-
-  /*! JSON start array (']') */
-  const char ARRAY_END =']' ;
-
-  /*! No field name constant value */
-  extern const std::optional<std::string> EMPTY_FIELD;
-
-}  // json::anch
+}

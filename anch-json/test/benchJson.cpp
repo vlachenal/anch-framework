@@ -2,12 +2,13 @@
 #include <sstream>
 #include <fstream>
 #include <chrono>
+#include <random>
+#include <array>
 
 #include "json/json.hpp"
 
 #include "cli/args.hpp"
 #include "cli/utils.hpp"
-
 
 
 using anch::cli::App;
@@ -19,9 +20,37 @@ using anch::json::MappingError;
 using anch::json::ErrorCode;
 using anch::json::JSONMapper;
 
+
+const std::array<char,72> printable = {
+  'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z',
+  'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z',
+  '0','1','2','3','4','5','6','7','8','9',
+  '@','/','=','+','-','%','$','&','#',';'
+}; // 72 chars
+
+// Seed with a real random value, if available
+std::random_device RE;
+// Choose a random mean between 0 and 71
+std::uniform_int_distribution<uint64_t> RP(0, 71);
+
+std::string
+copyRandomStr(const std::string& str) {
+  std::ostringstream oss;
+  for(std::size_t i = 0 ; i < str.size() ; ++i) {
+    oss << printable[RP(RE)];
+  }
+  return oss.str();
+}
+
 struct Phone {
   std::string type; // \todo enum
   std::string number;
+  Phone(): type(), number() {}
+  Phone(const Phone& phone): type(phone.type), number(phone.number) {/*
+    type = copyRandomStr(phone.type);
+    number = copyRandomStr(phone.number);*/
+  }
+  Phone(Phone&& phone): type(std::move(phone.type)), number(std::move(phone.number)) {}
 };
 
 template<>
@@ -35,11 +64,27 @@ anch::json::registerObject(ObjectMapper<Phone>& mapper) {
   std::cout << "Phone fields registered" << std::endl;
 }
 
+std::uniform_int_distribution<uint16_t> RZ(1000, 9999);
+
 struct Address {
   std::list<std::string> lines;
   uint16_t zipCode;
   std::string city;
   std::string country;
+  Address(): lines(), zipCode(0), city(), country() {}
+  Address(const Address& address): lines(address.lines), zipCode(/*RZ(RE)*/address.zipCode), city(address.city), country(address.country) {/*
+    for(const std::string& line: lines) {
+      lines.push_back(copyRandomStr(line));
+    }
+    city = copyRandomStr(address.city);
+    country = copyRandomStr(address.country);*/
+  }
+  Address(Address&& address):
+    lines(std::move(address.lines)),
+    zipCode(address.zipCode),
+    city(std::move(address.city)),
+    country(std::move(address.country)) {
+  }
 };
 
 template<>
@@ -62,6 +107,27 @@ struct Person {
   std::string email;
   std::list<Phone> phones;
   Address address;
+  Person(): firstName(), lastName(), birthDate(), email(), phones(), address() {}
+  Person(const Person& person): firstName(person.firstName), lastName(person.lastName), birthDate(person.birthDate), email(person.email), phones(person.phones), address(person.address) {
+    /*firstName = copyRandomStr(person.firstName);
+    lastName = copyRandomStr(person.lastName);
+    birthDate = copyRandomStr(person.birthDate);
+    email = copyRandomStr(person.email);
+    for(const Phone& phone: person.phones) {
+      Phone p(phone);
+      phones.push_back(p);
+      }*/
+    //std::cout << "Copied" << std::endl;
+  }
+  Person(Person&& person):
+    firstName(std::move(person.firstName)),
+    lastName(std::move(person.lastName)),
+    birthDate(std::move(person.birthDate)),
+    email(std::move(person.email)),
+    phones(std::move(person.phones)),
+    address(std::move(person.address)) {
+    std::cout << "moved" << std::endl;
+  }
 };
 
 template<>
@@ -96,7 +162,7 @@ parseArgs(int argc, char** argv, Options& opts) {
     .bannerPath = "/etc/hostname"
   };
   std::vector<anch::cli::Arg> args = {
-    {.handler = anch::cli::bindStr(opts.input), .sopt = 'i', .lopt = "input-file", .value = true, .name = "FILE", .multi = true, .description = "JSON input file"}
+    { .handler = anch::cli::bindStr(opts.input), .sopt = 'i', .lopt = "input-file", .value = true, .name = "FILE", .mandatory = true, .description = "JSON input file" }
   };
   ArgHandler handler(application, args);
   handler.printBanner(std::cout);
@@ -113,8 +179,8 @@ main(int argc, char** argv) {
   std::chrono::time_point<std::chrono::high_resolution_clock> start, end;
   std::chrono::microseconds duration;
 
-  anch::json::JSONMapper mapper({.deserialize_max_discard_char = 128});
-  std::vector<Person> persons;
+  anch::json::JSONMapper mapper({.deserialize_max_discard_char = 128, .buffer_size = 1024});
+  std::list<Person> persons;
   // Read file +
   {
     std::cout << "Parse file " << opts.input << std::endl;
@@ -133,8 +199,8 @@ main(int argc, char** argv) {
     std::ostringstream oss;
     start = std::chrono::high_resolution_clock::now();
     mapper.serialize(persons, oss);
-    json = oss.str();
     end = std::chrono::high_resolution_clock::now();
+    json = oss.str();
     duration = std::chrono::duration_cast<std::chrono::microseconds>(end.time_since_epoch()) - std::chrono::duration_cast<std::chrono::microseconds>(start.time_since_epoch());
     std::cout << "Person list serialized ; compact size : " << json.size() << " bytes in " << duration.count() << "µs" << std::endl;
   }
@@ -142,19 +208,14 @@ main(int argc, char** argv) {
   // Bench it +
   int64_t totalDeser = 0;
   int64_t totalSer = 0;
+  //int nbRun = 10;
   int nbRun = 10000;
   for(int i = 0 ; i < nbRun ; ++i) {
-    std::cout << '.';// << std::flush;
-    // Deserialize +
-    std::istringstream iss(json);
-    std::vector<Person> tmp;
-    start = std::chrono::high_resolution_clock::now();
-    mapper.deserialize<Person>(tmp, iss);
-    end = std::chrono::high_resolution_clock::now();
-    duration = std::chrono::duration_cast<std::chrono::microseconds>(end.time_since_epoch()) - std::chrono::duration_cast<std::chrono::microseconds>(start.time_since_epoch());
-    totalDeser += duration.count();
-    // Deserialize -
-
+    std::cout << '.' << std::flush;
+    std::list<Person> tmp;
+    for(const Person& person: persons) {
+      tmp.push_back(person); // copy person
+    }
     // Serialize +
     std::ostringstream oss;
     start = std::chrono::high_resolution_clock::now();
@@ -163,6 +224,19 @@ main(int argc, char** argv) {
     duration = std::chrono::duration_cast<std::chrono::microseconds>(end.time_since_epoch()) - std::chrono::duration_cast<std::chrono::microseconds>(start.time_since_epoch());
     totalSer += duration.count();
     // Serialize -
+
+    // Deserialize +
+    std::list<Person> res;
+    std::istringstream iss(oss.str());
+    start = std::chrono::high_resolution_clock::now();
+    mapper.deserialize<Person>(res, iss);
+    end = std::chrono::high_resolution_clock::now();
+    duration = std::chrono::duration_cast<std::chrono::microseconds>(end.time_since_epoch()) - std::chrono::duration_cast<std::chrono::microseconds>(start.time_since_epoch());
+    totalDeser += duration.count();
+    if(res.size() != tmp.size()) {
+      std::cerr << "plop" << std::endl;
+    }
+    // Deserialize -
   }
   std::cout << std::endl;
   std::cout << "Average time for deserialization: " << (totalDeser / nbRun) << "µs" << std::endl;

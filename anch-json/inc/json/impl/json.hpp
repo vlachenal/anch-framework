@@ -21,7 +21,10 @@
 
 #include <sstream>
 
+#include <iostream>
+
 #include "json/factory.hpp"
+#include "json/readerContext.hpp"
 
 namespace anch::json {
 
@@ -58,7 +61,8 @@ namespace anch::json {
 
   template<typename T>
   inline
-  std::string serialize(const T& value, const anch::json::MappingOptions& options) {
+  std::string
+  serialize(const T& value, const anch::json::MappingOptions& options) {
     std::ostringstream out;
     anch::json::Factory<T>::getInstance().serialize(value, out, options);
     return out.str();
@@ -66,72 +70,88 @@ namespace anch::json {
 
   template<typename T>
   inline
-  std::string serialize(const std::vector<T>& value, const anch::json::MappingOptions& options) {
+  std::string
+  serialize(const std::vector<T>& value, const anch::json::MappingOptions& options) {
+    anch::json::ReaderContext context(options);
     std::ostringstream out;
-    anch::json::Factory<T>::getInstance().serialize(value, out, options);
+    anch::json::Factory<T>::getInstance().serialize(value, out, context);
     return out.str();
   }
 
   template<typename T>
   inline
   std::string serialize(const std::list<T>& value, const anch::json::MappingOptions& options) {
+    anch::json::ReaderContext context(options);
     std::ostringstream out;
-    anch::json::Factory<T>::getInstance().serialize(value, out, options);
+    anch::json::Factory<T>::getInstance().serialize(value, out, context);
     return out.str();
   }
 
   template<typename T>
   inline
   std::string serialize(const std::set<T>& value, const anch::json::MappingOptions& options) {
+    anch::json::ReaderContext context(options);
     std::ostringstream out;
-    anch::json::Factory<T>::getInstance().serialize(value, out, options);
+    anch::json::Factory<T>::getInstance().serialize(value, out, context);
     return out.str();
   }
 
   template<typename T>
   inline
   std::string serialize(const std::map<std::string,T>& value, const anch::json::MappingOptions& options) {
+    anch::json::ReaderContext context(options);
     std::ostringstream out;
-    anch::json::Factory<T>::getInstance().serialize(value, out, options);
+    anch::json::Factory<T>::getInstance().serialize(value, out, context);
     return out.str();
   }
 
   template<typename T>
   inline
-  void deserialize(T& value, std::istream& input, const anch::json::MappingOptions& options) {
-    anch::json::Factory<T>::getInstance().deserialize(value, input, options);
+  void
+  deserialize(T& value, std::istream& input, const anch::json::MappingOptions& options) {
+    anch::json::ReaderContext context(input, options);
+    anch::json::Factory<T>::getInstance().deserialize(value, context);
   }
 
   template<typename T>
   inline
   T deserialize(std::istream& input, const anch::json::MappingOptions& options) {
+    anch::json::ReaderContext context(input, options);
     T value;
-    anch::json::Factory<T>::getInstance().deserialize(value, input, options);
+    anch::json::Factory<T>::getInstance().deserialize(value, context);
     return value;
   }
 
   template<typename T>
   inline
-  void deserialize(std::vector<T>& values, std::istream& input, const anch::json::MappingOptions& options) {
-    anch::json::Factory<T>::getInstance().deserialize(values, input, options);
+  void
+  deserialize(std::vector<T>& values, std::istream& input, const anch::json::MappingOptions& options) {
+    anch::json::ReaderContext context(input, options);
+    anch::json::Factory<T>::getInstance().deserialize(values, context);
   }
 
   template<typename T>
   inline
-  void deserialize(std::list<T>& values, std::istream& input, const anch::json::MappingOptions& options) {
-    anch::json::Factory<T>::getInstance().deserialize(values, input, options);
+  void
+  deserialize(std::list<T>& values, std::istream& input, const anch::json::MappingOptions& options) {
+    anch::json::ReaderContext context(input, options);
+    anch::json::Factory<T>::getInstance().deserialize(values, context);
   }
 
   template<typename T>
   inline
-  void deserialize(std::set<T>& values, std::istream& input, const anch::json::MappingOptions& options) {
-    anch::json::Factory<T>::getInstance().deserialize(values, input, options);
+  void
+  deserialize(std::set<T>& values, std::istream& input, const anch::json::MappingOptions& options) {
+    anch::json::ReaderContext context(input, options);
+    anch::json::Factory<T>::getInstance().deserialize(values, context);
   }
 
   template<typename T>
   inline
-  void deserialize(std::map<std::string,T>& values, std::istream& input, const anch::json::MappingOptions& options) {
-    anch::json::Factory<T>::getInstance().deserialize(values, input, options);
+  void
+  deserialize(std::map<std::string,T>& values, std::istream& input, const anch::json::MappingOptions& options) {
+    anch::json::ReaderContext context(input, options);
+    anch::json::Factory<T>::getInstance().deserialize(values, context);
   }
   // Serialization/deserialization fonctions -
 
@@ -214,7 +234,6 @@ namespace anch::json {
   }
 
   template<typename T>
-  inline
   void
   JSONMapper::deserialize(std::list<T>& values, std::istream& input) {
     anch::json::deserialize(values, input, _options);

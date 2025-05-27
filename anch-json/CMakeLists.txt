@@ -11,11 +11,11 @@ include(AnchJson.cmake.in)
 # Check GCC version +
 execute_process(COMMAND ${CMAKE_C_COMPILER} -dumpversion
                 OUTPUT_VARIABLE GCC_VERSION)
-if (GCC_VERSION VERSION_LESS 10.0)
-  message(FATAL_ERROR "Version < 10.0. This library is based on C++20 standard. Exit.")
+if (GCC_VERSION VERSION_LESS 13.0)
+  message(FATAL_ERROR "Version < 13.0. This library is based on C++23 standard. Exit.")
 else()
-  message(STATUS "Version >= 10.0 use -std=c++20")
-  add_definitions("-std=c++20")
+  message(STATUS "Version >= 13.0 use -std=c++23")
+  add_definitions("-std=c++23")
 endif()
 # Check GCC version -
 
@@ -34,6 +34,7 @@ include_directories(
   inc
   ${ANCH_UUID_INCLUDES_DIR}
   ${ANCH_UTILS_INCLUDES_DIR}
+  ${ANCH_EVENTS_INCLUDES_DIR}
   )
 
 # Retrieve every files in project
@@ -93,6 +94,7 @@ if(ANCH_JSON_UNITARY_TEST)
 
   include_directories(
     inc
+    ${ANCH_EVENTS_INCLUDES_DIR}
     ${ANCH_UTILS_INCLUDES_DIR}
     ${ANCH_JSON_INCLUDES_DIR}
     ${ANCH_CLI_INCLUDES_DIR}
@@ -105,7 +107,28 @@ if(ANCH_JSON_UNITARY_TEST)
     ${ANCH_UT_LIBRARY_DIR}
     )
 
-  # Build JSON serialization unit tests +
+  # Build JSON lexer unit tests +
+  file(
+    GLOB_RECURSE
+    test_lexer
+    test/testLexer.cpp
+  )
+
+  add_executable(
+    anch-json-lexer-test
+    ${test_lexer}
+  )
+
+  target_link_libraries(
+    anch-json-lexer-test
+    anch-json
+    anch-cli
+    anch-unit
+    anch-uuid
+  )
+  # Build JSON lexer unit tests -
+
+  # Build JSON mapper unit tests +
   file(
     GLOB_RECURSE
     test_mapper
@@ -124,29 +147,89 @@ if(ANCH_JSON_UNITARY_TEST)
     anch-unit
     anch-uuid
   )
-  # Build JSON serialization unit tests -
+  # Build JSON mapper unit tests -
+
+  # Build JSON reader unit tests +
+  file(
+    GLOB_RECURSE
+    test_reader
+    test/testReader.cpp
+  )
+
+  add_executable(
+    anch-json-reader
+    ${test_reader}
+  )
+
+  target_link_libraries(
+    anch-json-reader
+    anch-json
+    anch-cli
+    anch-unit
+    anch-uuid
+  )
+  # Build JSON reader unit tests -
 
   # Build JSON bench unit tests +
   file(
     GLOB_RECURSE
-    test_mapper
+    test_bench
     test/benchJson.cpp
   )
 
   add_executable(
     anch-json-bench
-    ${test_mapper}
+    ${test_bench}
   )
 
   target_link_libraries(
     anch-json-bench
     anch-json
     anch-cli
+    anch-uuid
   )
   # Build JSON bench unit tests -
 
   enable_testing()
 
+  # Lexer unit tests +
+  # boolean
+  add_test(lexer-bool-false ${EXECUTABLE_OUTPUT_PATH}/anch-json-lexer-test -t lexer-bool-false)
+  add_test(lexer-bool-true ${EXECUTABLE_OUTPUT_PATH}/anch-json-lexer-test -t lexer-bool-true)
+  add_test(lexer-bool-null ${EXECUTABLE_OUTPUT_PATH}/anch-json-lexer-test -t lexer-bool-null)
+  # string
+  add_test(lexer-str ${EXECUTABLE_OUTPUT_PATH}/anch-json-lexer-test -t lexer-str)
+  add_test(lexer-str-null ${EXECUTABLE_OUTPUT_PATH}/anch-json-lexer-test -t lexer-str-null)
+  # uint
+  add_test(lexer-uint ${EXECUTABLE_OUTPUT_PATH}/anch-json-lexer-test -t lexer-uint)
+  add_test(lexer-uint-null ${EXECUTABLE_OUTPUT_PATH}/anch-json-lexer-test -t lexer-uint-null)
+  add_test(lexer-uint-0-ko ${EXECUTABLE_OUTPUT_PATH}/anch-json-lexer-test -t lexer-uint-0-ko)
+  add_test(lexer-uint-s-ko ${EXECUTABLE_OUTPUT_PATH}/anch-json-lexer-test -t lexer-uint-s-ko)
+  # int
+  add_test(lexer-int ${EXECUTABLE_OUTPUT_PATH}/anch-json-lexer-test -t lexer-int)
+  add_test(lexer-int-null ${EXECUTABLE_OUTPUT_PATH}/anch-json-lexer-test -t lexer-int-null)
+  add_test(lexer-int-0-ko ${EXECUTABLE_OUTPUT_PATH}/anch-json-lexer-test -t lexer-int-0-ko)
+  # double
+  add_test(lexer-double-u ${EXECUTABLE_OUTPUT_PATH}/anch-json-lexer-test -t lexer-double-u)
+  add_test(lexer-double-u-dot ${EXECUTABLE_OUTPUT_PATH}/anch-json-lexer-test -t lexer-double-u-dot)
+  add_test(lexer-double-u-0-dot ${EXECUTABLE_OUTPUT_PATH}/anch-json-lexer-test -t lexer-double-u-0-dot)
+  add_test(lexer-double-s ${EXECUTABLE_OUTPUT_PATH}/anch-json-lexer-test -t lexer-double-s)
+  add_test(lexer-double-s-dot ${EXECUTABLE_OUTPUT_PATH}/anch-json-lexer-test -t lexer-double-s-dot)
+  add_test(lexer-double-s-0-dot ${EXECUTABLE_OUTPUT_PATH}/anch-json-lexer-test -t lexer-double-s-0-dot)
+  add_test(lexer-double-null ${EXECUTABLE_OUTPUT_PATH}/anch-json-lexer-test -t lexer-double-null)
+  add_test(lexer-double-u-exp ${EXECUTABLE_OUTPUT_PATH}/anch-json-lexer-test -t lexer-double-u-exp)
+  add_test(lexer-double-s-exp ${EXECUTABLE_OUTPUT_PATH}/anch-json-lexer-test -t lexer-double-s-exp)
+  add_test(lexer-double-u-dot-exp ${EXECUTABLE_OUTPUT_PATH}/anch-json-lexer-test -t lexer-double-u-dot-exp)
+  add_test(lexer-double-s-dot-exp ${EXECUTABLE_OUTPUT_PATH}/anch-json-lexer-test -t lexer-double-s-dot-exp)
+  # array
+  add_test(lexer-array-null ${EXECUTABLE_OUTPUT_PATH}/anch-json-lexer-test -t lexer-array-null)
+  add_test(lexer-array-empty ${EXECUTABLE_OUTPUT_PATH}/anch-json-lexer-test -t lexer-array-empty)
+  add_test(lexer-array-list ${EXECUTABLE_OUTPUT_PATH}/anch-json-lexer-test -t lexer-array-list)
+  add_test(lexer-array-vector ${EXECUTABLE_OUTPUT_PATH}/anch-json-lexer-test -t lexer-array-vector)
+  add_test(lexer-array-set ${EXECUTABLE_OUTPUT_PATH}/anch-json-lexer-test -t lexer-array-set)
+  # Lexer unit tests -
+
+  # Mapper unit tests +
   add_test(json-ser-full ${EXECUTABLE_OUTPUT_PATH}/anch-json-mapper-test -t json-ser-full)
   add_test(json-deser-list ${EXECUTABLE_OUTPUT_PATH}/anch-json-mapper-test -t json-deser-list)
   add_test(json-deser-unf-field ${EXECUTABLE_OUTPUT_PATH}/anch-json-mapper-test -t json-deser-unf-field)
@@ -160,7 +243,8 @@ if(ANCH_JSON_UNITARY_TEST)
   add_test(json-deser-discard128 ${EXECUTABLE_OUTPUT_PATH}/anch-json-mapper-test -t json-deser-discard128)
   add_test(json-deser-discard128-col ${EXECUTABLE_OUTPUT_PATH}/anch-json-mapper-test -t json-deser-discard128-col)
   add_test(json-iomanip ${EXECUTABLE_OUTPUT_PATH}/anch-json-mapper-test -t json-iomanip)
-  add_test(json-ser-map ${EXECUTABLE_OUTPUT_PATH}/anch-json-mapper-test -t json-sermap)
-  add_test(json-deser-map ${EXECUTABLE_OUTPUT_PATH}/anch-json-mapper-test -t json-desermap)
+  add_test(json-ser-map ${EXECUTABLE_OUTPUT_PATH}/anch-json-mapper-test -t json-ser-map)
+  add_test(json-deser-map ${EXECUTABLE_OUTPUT_PATH}/anch-json-mapper-test -t json-deser-map)
+  # Mapper unit tests -
 
 endif(ANCH_JSON_UNITARY_TEST)

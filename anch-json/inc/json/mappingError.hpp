@@ -24,6 +24,8 @@
 #include <optional>
 #include <string>
 
+#include "json/readerContext.hpp"
+
 
 namespace anch::json {
 
@@ -74,19 +76,9 @@ namespace anch::json {
      * \ref MappingError constructor
      *
      * \param code the error code
-     * \param input the input stream
-     * \param context the contextualized sequence which has raised this error (default to no value)
+     * \param context the JSON context parser
      */
-    MappingError(ErrorCode code, std::istream& input, std::optional<std::string> context = std::optional<std::string>());
-
-    /*!
-     * \ref MappingError constructor
-     *
-     * \param code the error code
-     * \param input the input stream
-     * \param context the contextualized character which has raised this error
-     */
-    MappingError(ErrorCode code, std::istream& input, char context);
+    MappingError(ErrorCode code, const anch::json::ReaderContext& context);
     // Constructors -
 
     // Destructor +

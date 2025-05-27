@@ -26,52 +26,21 @@
 #include <ostream>
 #include <istream>
 #include <sstream>
+#include <functional>
 
 #include "json/mappingFunctions.hpp"
+#include "json/lexer.hpp"
 
 using anch::json::PrimitiveMapper;
+using anch::json::ErrorCode;
 
 inline
 void
 serializeValue(const bool& value, std::ostream& out, [[maybe_unused]] const anch::json::MappingOptions& options) {
-  out << (value ? "true" : "false");
-}
-
-inline
-bool
-isBoolChar(int car) {
-  return car == 't'
-    || car == 'r'
-    || car == 'u'
-    || car == 'e'
-    || car == 'f'
-    || car == 'a'
-    || car == 'l'
-    || car == 's'
-    ;
-}
-
-void
-deserializeValue(bool& value, std::istream& input, [[maybe_unused]] const anch::json::MappingOptions& options) {
-  std::ostringstream buffer;
-  int current;
-  int nbChars = 0;
-  while(input && nbChars < 5) { // maximum 5 characters for 'false'
-    current = input.peek();
-    if(!isBoolChar(current)) {
-      break;
-    }
-    input.get();
-    buffer << static_cast<char>(current);
-    ++nbChars;
-  }
-  std::string strVal = buffer.str();
-  if(strVal == "true") {
-    value = true;
-  } else if(strVal == "false") {
-    value = false;
+  if(value) {
+    out.write("true", 4);
   } else {
-    throw anch::json::MappingError(anch::json::ErrorCode::INVALID_FORMAT, input, std::optional<std::string>(strVal));
+    out.write("false", 5);
   }
 }
 
@@ -154,57 +123,9 @@ PrimitiveMapper<bool>::serialize(const std::map<std::string,bool>& value,
 }
 
 template<>
-void
-PrimitiveMapper<bool>::deserialize(bool& value, std::istream& input, const anch::json::MappingOptions& options) {
-  anch::json::deserialize<bool>(value, input, options, &deserializeValue);
-}
-
-template<>
-void
-PrimitiveMapper<bool>::deserialize(std::optional<bool>& value, std::istream& input, const anch::json::MappingOptions& options) {
-  anch::json::deserialize<bool>(value, input, options, &deserializeValue);
-}
-
-template<>
-void
-PrimitiveMapper<bool>::deserialize(bool* value, std::istream& input, const anch::json::MappingOptions& options) {
-  anch::json::deserialize<bool>(value, input, options, &deserializeValue);
-}
-
-template<>
-void
-PrimitiveMapper<bool>::deserialize(std::vector<bool>& value, std::istream& input, const anch::json::MappingOptions& options) {
-  anch::json::deserializeArray<bool>(input,
-				     [&value](const bool& str) -> void { value.push_back(str); },
-				     options,
-				     &deserializeValue);
-}
-
-template<>
-void
-PrimitiveMapper<bool>::deserialize(std::list<bool>& value, std::istream& input, const anch::json::MappingOptions& options) {
-  anch::json::deserializeArray<bool>(input,
-				     [&value](const bool& str) -> void { value.push_back(str); },
-				     options,
-				     &deserializeValue);
-}
-
-template<>
-void
-PrimitiveMapper<bool>::deserialize(std::set<bool>& value, std::istream& input, const anch::json::MappingOptions& options) {
-  anch::json::deserializeArray<bool>(input,
-				     [&value](const bool& str) -> void { value.insert(str); },
-				     options,
-				     &deserializeValue);
-}
-
-template<>
-void
-PrimitiveMapper<bool>::deserialize(std::map<std::string,bool>& value, std::istream& input, const anch::json::MappingOptions& options) {
-  anch::json::deserializeMap<bool>(input,
-				   [&value](const std::pair<std::string,bool>& str) -> void { value.insert(str); },
-				   options,
-				   &deserializeValue);
+bool
+PrimitiveMapper<bool>::deserialize(bool& value, anch::json::ReaderContext& context) {
+  return anch::json::lexBoolean(value, context);
 }
 
 template class PrimitiveMapper<bool>;

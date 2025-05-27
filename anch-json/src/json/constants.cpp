@@ -19,11 +19,4 @@
 */
 #include "json/constants.hpp"
 
-const char anch::json::STRING_DELIMITER = '"';
-const char anch::json::FIELD_SEPARATOR = ',';
-const char anch::json::FIELD_VALUE_SEPARATOR = ':';
-const char anch::json::OBJECT_BEGIN = '{';
-const char anch::json::OBJECT_END = '}';
-const char anch::json::ARRAY_BEGIN = '[';
-const char anch::json::ARRAY_END = ']';
 const std::optional<std::string> anch::json::EMPTY_FIELD = std::optional<std::string>();

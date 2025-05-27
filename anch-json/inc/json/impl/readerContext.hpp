@@ -19,33 +19,24 @@
 */
 #pragma once
 
-#include <string>
-#include <optional>
-
 namespace anch::json {
 
-  /*! JSON caracters string delimiter ('"') */
-  const char STRING_DELIMITER = '"';
+  inline
+  char
+  ReaderContext::discard() {
+    return std::invoke(_discardFunc);
+  }
 
-  /*! JSON fields delimiter (',') */
-  const char FIELD_SEPARATOR = ',';
+  inline
+  void
+  ReaderContext::parseUnknown() {
+    return std::invoke(_unknownFunc);
+  }
 
-  /*! JSON fiel/value delimiter (':') */
-  const char FIELD_VALUE_SEPARATOR = ':';
+  inline
+  void
+  ReaderContext::back() {
+    --offset;
+  }
 
-  /*! JSON start object ('{') */
-  const char OBJECT_BEGIN = '{';
-
-  /*! JSON end object ('}') */
-  const char OBJECT_END = '}';
-
-  /*! JSON start array ('[') */
-   const char ARRAY_BEGIN = '[';
-
-  /*! JSON start array (']') */
-  const char ARRAY_END =']' ;
-
-  /*! No field name constant value */
-  extern const std::optional<std::string> EMPTY_FIELD;
-
-}  // json::anch
+}

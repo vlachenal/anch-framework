@@ -18,34 +18,3 @@
   along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
 #pragma once
-
-#include <string>
-#include <optional>
-
-namespace anch::json {
-
-  /*! JSON caracters string delimiter ('"') */
-  const char STRING_DELIMITER = '"';
-
-  /*! JSON fields delimiter (',') */
-  const char FIELD_SEPARATOR = ',';
-
-  /*! JSON fiel/value delimiter (':') */
-  const char FIELD_VALUE_SEPARATOR = ':';
-
-  /*! JSON start object ('{') */
-  const char OBJECT_BEGIN = '{';
-
-  /*! JSON end object ('}') */
-  const char OBJECT_END = '}';
-
-  /*! JSON start array ('[') */
-   const char ARRAY_BEGIN = '[';
-
-  /*! JSON start array (']') */
-  const char ARRAY_END =']' ;
-
-  /*! No field name constant value */
-  extern const std::optional<std::string> EMPTY_FIELD;
-
-}  // json::anch

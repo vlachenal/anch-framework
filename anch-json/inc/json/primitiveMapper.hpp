@@ -29,6 +29,7 @@
 #include <map>
 
 #include "json/constants.hpp"
+#include "json/readerContext.hpp"
 #include "json/mappingOptions.hpp"
 
 
@@ -195,66 +196,67 @@ namespace anch::json {
      * Deserialize JSON value
      *
      * \param value the value to set
-     * \param input the input stream to parse
-     * \param options the options to use
+     * \param context the mapping context
+     *
+     * \return \false when value is \c null , \c false otherwise
      */
-    void deserialize(T& value, std::istream& input, const anch::json::MappingOptions& options);
+    bool deserialize(T& value, anch::json::ReaderContext& context);
 
     /*!
      * Deserialize JSON value
      *
      * \param value the value to set
-     * \param input the input stream to parse
-     * \param options the options to use
+     * \param context the mapping context
+     *
+     * \return \false when value is \c null , \c false otherwise
      */
-    void deserialize(std::optional<T>& value, std::istream& input, const anch::json::MappingOptions& options);
+    bool deserialize(std::optional<T>& value, anch::json::ReaderContext& context);
 
     /*!
      * Deserialize JSON value
      *
      * \param value the value to set
-     * \param input the input stream to parse
-     * \param options the options to use
+     * \param context the mapping context
+     *
+     * \return \false when value is \c null , \c false otherwise
      */
-    void deserialize(T* value, std::istream& input, const anch::json::MappingOptions& options);
+    bool deserialize(T* value, anch::json::ReaderContext& context);
 
     /*!
      * Deserialize JSON value
      *
      * \param value the value to set
-     * \param input the input stream to parse
-     * \param options the options to use
+     * \param context the mapping context
      */
-    void deserialize(std::vector<T>& value, std::istream& input, const anch::json::MappingOptions& options);
+    bool deserialize(std::vector<T>& value, anch::json::ReaderContext& context);
 
     /*!
      * Deserialize JSON value
      *
      * \param value the value to set
-     * \param input the input stream to parse
-     * \param options the options to use
+     * \param context the mapping context
      */
-    void deserialize(std::list<T>& value, std::istream& input, const anch::json::MappingOptions& options);
+    bool deserialize(std::list<T>& value, anch::json::ReaderContext& context);
 
     /*!
      * Deserialize JSON value
      *
      * \param value the value to set
-     * \param input the input stream to parse
-     * \param options the options to use
+     * \param context the mapping context
      */
-    void deserialize(std::set<T>& value, std::istream& input, const anch::json::MappingOptions& options);
+    bool deserialize(std::set<T>& value, anch::json::ReaderContext& context);
 
     /*!
      * Deserialize JSON value
      *
      * \param value the value to set
-     * \param input the input stream to parse
-     * \param options the options to use
+     * \param context the mapping context
      */
-    void deserialize(std::map<std::string,T>& value, std::istream& input, const anch::json::MappingOptions& options);
+    bool deserialize(std::map<std::string,T>& value, anch::json::ReaderContext& context);
     // Methods -
 
   };
 
 }  // anch::json
+
+#include "json/impl/primitiveMapper.hpp"

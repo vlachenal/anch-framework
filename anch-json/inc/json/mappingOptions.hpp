@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include <cstddef>
+
 namespace anch::json {
 
   /*!
@@ -47,12 +49,18 @@ namespace anch::json {
     /*! Unknown will not raise error if \c true ; it can be usefull for client side implementation */
     bool deserialize_ignore_unknown_field = false;
 
-    /*! Maximum discard characters before raising error. Use \c -1 value for unlimited discard characters. It can be usefull at development stage */
-    int deserialize_max_discard_char = 0;
+    /*! Maximum discard characters before raising error. Use \c 0 value for unlimited discard characters. It can be usefull at development stage */
+    std::size_t deserialize_max_discard_char = 0;
 
-    /*! Maximum field characters before raising error. Use \c -1 value for unlimited field's value characters */
-    int deserialize_max_field_char = 512;
+    /*! Maximum field characters before raising error. Use \c 0 value for unlimited field's value characters */
+    std::size_t deserialize_max_field_char = 512; // \todo keep it ?
+
+    /*! Maximum field characters before raising error. Use \c 0 value for unlimited field's value characters */
+    std::size_t max_payload = 0;
     // Deserialization -
+
+    /*! Buffer size (used for deserialization for now) */
+    std::size_t buffer_size = 1024;
 
   };
 
