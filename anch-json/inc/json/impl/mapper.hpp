@@ -317,12 +317,12 @@ namespace anch::json {
   bool
   ObjectMapper<T>::deserialize(std::optional<T>& value, anch::json::ReaderContext& context) {
     T val;
-    if(deserializeValue(val, context)) {
-      value = std::move(val);
-      return true;
+    if(!deserializeValue(val, context)) {
+      value.reset();
+      return false;
     }
-    value.reset();
-    return false;
+    value = std::move(val);
+    return true;
   }
 
   template<typename T>
@@ -330,12 +330,12 @@ namespace anch::json {
   ObjectMapper<T>::deserialize(T* value, anch::json::ReaderContext& context) {
     T val;
     if(deserializeValue(val, context)) {
-      value = new T();
-      *value = std::move(val);
-      return true;
+      value = NULL;
+      return false;
     }
-    value = NULL;
-    return false;
+    value = new T();
+    *value = std::move(val);
+    return true;
   }
 
   template<typename T>
@@ -343,11 +343,11 @@ namespace anch::json {
   ObjectMapper<T>::deserialize(std::vector<T>& value, anch::json::ReaderContext& context) {
     AddItem addFunc = [&](anch::json::ReaderContext& ctxt) -> bool {
       T val;
-      if(deserialize(val, ctxt)) {
-	value.push_back(val);
-	return true;
+      if(!deserialize(val, ctxt)) {
+	return false;
       }
-      return false;
+      value.push_back(std::move(val));
+      return true;
     };
     anch::json::lexArray(addFunc, context);
     return true;
@@ -358,11 +358,11 @@ namespace anch::json {
   ObjectMapper<T>::deserialize(std::list<T>& value, anch::json::ReaderContext& context) {
     AddItem addFunc = [&](anch::json::ReaderContext& ctxt) -> bool {
       T val;
-      if(deserialize(val, ctxt)) {
-	value.push_back(val);
-	return true;
+      if(!deserialize(val, ctxt)) {
+	return false;
       }
-      return false;
+      value.push_back(std::move(val));
+      return true;
     };
     anch::json::lexArray(addFunc, context);
     return true;
@@ -373,11 +373,11 @@ namespace anch::json {
   ObjectMapper<T>::deserialize(std::set<T>& value, anch::json::ReaderContext& context) {
     AddItem addFunc = [&](anch::json::ReaderContext& ctxt) -> bool {
       T val;
-      if(deserialize(val, ctxt)) {
-	value.insert(val);
-	return true;
+      if(!deserialize(val, ctxt)) {
+	return false;
       }
-      return false;
+      value.insert(std::move(val));
+      return true;
     };
     anch::json::lexArray(addFunc, context);
     return true;
@@ -389,7 +389,7 @@ namespace anch::json {
     PushItem pushFunc = [&](const std::string& key, anch::json::ReaderContext& ctxt) -> void {
       T val;
       if(deserialize(val, ctxt)) {
-	value.insert({key, val});
+	value.insert({key, std::move(val)});
       }
     };
     anch::json::lexMap(pushFunc, context);

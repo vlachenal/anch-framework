@@ -126,7 +126,7 @@ struct Person {
     email(std::move(person.email)),
     phones(std::move(person.phones)),
     address(std::move(person.address)) {
-    std::cout << "moved" << std::endl;
+    //std::cout << "moved" << std::endl;
   }
 };
 
