@@ -198,67 +198,6 @@ namespace anch::json {
 		   anch::json::ReaderContext& context,
 		   anch::json::DeserializeFn<T> deserializeFunc);
 
-  /*!
-   * Deserialize item and add it to vector if not \c null
-   *
-   * \param value the vector to add in
-   * \param deser the deserialization function
-   * \param context the reader context
-   */
-  template<typename T>
-  bool
-  addToVector(std::vector<T>& value, anch::json::DeserializeFn<T> deser, anch::json::ReaderContext& context);
-
-  /*!
-   * Deserialize item and add it to list if not \c null
-   *
-   * \param value the list to add in
-   * \param deser the deserialization function
-   * \param context the reader context
-   */
-  template<typename T>
-  bool
-  addToList(std::list<T>& value, anch::json::DeserializeFn<T> deser, anch::json::ReaderContext& context);
-
-  /*!
-   * Deserialize item and add it to set if not \c null
-   *
-   * \param value the set to add in
-   * \param deser the deserialization function
-   * \param context the reader context
-   */
-  template<typename T>
-  bool
-  addToSet(std::set<T>& value, anch::json::DeserializeFn<T> deser, anch::json::ReaderContext& context);
-
-  /*!
-   * JSON array deserialization generic implementation
-   *
-   * \tparam T the object type
-   *
-   * \param pushFunc the push function according to container type
-   * \param context the mapping context
-   * \param deserializeFunc the value deserialization function
-   */
-  // template<typename T>
-  // void deserializeArray(std::function<void(const T&)> pushFunc,
-  // 			anch::json::Context& context,
-  // 			anch::json::DeserializeFn<T> deserializeFunc);
-
-  /*!
-   * JSON map deserialization generic implementation
-   *
-   * \tparam T the object type
-   *
-   * \param context the mapping context
-   * \param pushFunc the push function according to container type
-   * \param deserializeFunc the value deserialization function
-   */
-  template<typename T>
-  void deserializeMap(std::function<void(const std::pair<std::string,T>&)> pushFunc,
-		      anch::json::ReaderContext& context,
-		      anch::json::DeserializeFn<T> deserializeFunc);
-
 }  // anch::json
 
 #include "json/impl/mappingFunctions.hpp"

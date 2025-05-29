@@ -53,49 +53,52 @@ namespace anch::json {
   template<typename T>
   bool
   PrimitiveMapper<T>::deserialize(std::vector<T>& value, anch::json::ReaderContext& context) {
-    static anch::json::DeserializeFn<T> deser = [&](T& val, anch::json::ReaderContext& ctxt) -> bool {
-      return deserialize(val, ctxt);
+    AddItem addFunc = [&](anch::json::ReaderContext& ctxt) -> bool {
+      T val;
+      if(deserialize(val, ctxt)) {
+	value.push_back(val);
+	return true;
+      }
+      return false;
     };
-    anch::json::lexArray(std::bind(&anch::json::addToVector<T>,
-				   std::ref(value),
-				   deser,
-				   std::placeholders::_1),
-			 context);
+    anch::json::lexArray(addFunc, context);
     return true;
   }
 
   template<typename T>
   bool
   PrimitiveMapper<T>::deserialize(std::list<T>& value, anch::json::ReaderContext& context) {
-    static anch::json::DeserializeFn<T> deser = [&](T& val, anch::json::ReaderContext& ctxt) -> bool {
-      return deserialize(val, ctxt);
+    AddItem addFunc = [&](anch::json::ReaderContext& ctxt) -> bool {
+      T val;
+      if(deserialize(val, ctxt)) {
+	value.push_back(val);
+	return true;
+      }
+      return false;
     };
-    anch::json::lexArray(std::bind(&anch::json::addToList<T>,
-				   std::ref(value),
-				   deser,
-				   std::placeholders::_1),
-			 context);
+    anch::json::lexArray(addFunc, context);
     return true;
   }
 
   template<typename T>
   bool
   PrimitiveMapper<T>::deserialize(std::set<T>& value, anch::json::ReaderContext& context) {
-    static anch::json::DeserializeFn<T> deser = [&](T& val, anch::json::ReaderContext& ctxt) -> bool {
-      return deserialize(val, ctxt);
+    AddItem addFunc = [&](anch::json::ReaderContext& ctxt) -> bool {
+      T val;
+      if(deserialize(val, ctxt)) {
+	value.insert(val);
+	return true;
+      }
+      return false;
     };
-    anch::json::lexArray(std::bind(&anch::json::addToSet<T>,
-				   std::ref(value),
-				   deser,
-				   std::placeholders::_1),
-			 context);
+    anch::json::lexArray(addFunc, context);
     return true;
   }
 
   template<typename T>
   bool
   PrimitiveMapper<T>::deserialize(std::map<std::string,T>& value, anch::json::ReaderContext& context) {
-    static PushItem pushFunc = [&](const std::string& key, anch::json::ReaderContext& ctxt) -> void {
+    PushItem pushFunc = [&](const std::string& key, anch::json::ReaderContext& ctxt) -> void {
       T val;
       if(deserialize(val, ctxt)) {
 	value.insert({key, val});

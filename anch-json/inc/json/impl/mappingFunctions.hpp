@@ -127,12 +127,6 @@ namespace anch::json {
     } else {
       value = NULL;
     }
-    /*if(anch::json::isNull(context)) { // this function discards 'spaces'
-      value = NULL;
-    } else {
-      value = new T();
-      std::invoke(deserializeFunc, *value, context);
-      }*/
   }
 
   template<typename T>
@@ -147,15 +141,9 @@ namespace anch::json {
     } else {
       value.reset();
     }
-    /*if(anch::json::isNull(context)) { // this function discards 'spaces'
-      value.reset();
-    } else {
-      T instance;
-      std::invoke(deserializeFunc, instance, context);
-      value = std::move(instance);
-      }*/
   }
 
+  /*
   template<typename T>
   bool
   addToVector(std::vector<T>& value, anch::json::DeserializeFn<T> deser, anch::json::ReaderContext& context) {
@@ -185,79 +173,6 @@ namespace anch::json {
     }
     return false;
   }
-
-  /*
-  template<typename T>
-  inline void
-  deserializeArray(std::function<void(const T&)> pushFunc,
-		   anch::json::Context& context,
-		   anch::json::DeserializeFn<T> deserializeFunc) {
-    if(anch::json::isNull(context)) {
-      return;
-    }
-    int current = context.input.get();
-    if(current != anch::json::ARRAY_BEGIN) {
-      throw anch::json::MappingError(anch::json::ErrorCode::INVALID_FORMAT, context);
-    }
-    //anch::json::discardChars(context);
-    context.discard();
-    if(context.input.peek() != anch::json::ARRAY_END) {
-      while(context.input) {
-	T value;
-	std::invoke(deserializeFunc, value, context);
-	std::invoke(pushFunc, value);
-	if(!anch::json::hasMoreField(context)) {
-	  break;
-	}
-	context.discard();
-	//anch::json::discardChars(context);
-      }
-    }
-    if(!context.input || context.input.get() != anch::json::ARRAY_END) {
-      throw anch::json::MappingError(anch::json::ErrorCode::INVALID_FORMAT, context);
-    }
-  }
   */
-
-  template<typename T>
-  void
-  deserializeMap([[ maybe_unused ]] std::function<void(const std::pair<std::string,T>&)> pushFunc,
-		 [[ maybe_unused ]] anch::json::ReaderContext& context,
-		 [[ maybe_unused ]] anch::json::DeserializeFn<T> deserializeFunc) {
-    /*if(anch::json::isNull(context)) {
-      return;
-    }
-    int current = context.input.get();
-    if(current != anch::json::OBJECT_BEGIN) {
-      throw anch::json::MappingError(anch::json::ErrorCode::INVALID_FORMAT, context);
-    }
-    //anch::json::discardChars(context);
-    context.discard();
-    if(context.input.peek() == anch::json::OBJECT_END) {
-      context.input.get();
-      return;
-    }
-    std::optional<std::string> field;
-    do {
-      anch::json::getFieldName(context, field);
-      if(!field) {
-	break;
-      }
-      if(anch::json::isNull(context)) {
-	continue;
-      }
-      T val;
-      std::invoke(deserializeFunc, val, context);
-      auto value = std::make_pair(field.value(), val);
-      std::invoke(pushFunc, value);
-      if(!anch::json::hasMoreField(context)) {
-	break;
-      }
-      field.reset();
-    } while(true);
-    if(!context.input || context.input.get() != anch::json::OBJECT_END) {
-      throw anch::json::MappingError(anch::json::ErrorCode::INVALID_FORMAT, context);
-      }*/
-  }
 
 }  // anch::json
