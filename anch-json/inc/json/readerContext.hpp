@@ -31,7 +31,7 @@
 namespace anch::json {
 
   /*!
-   * \brief JSON mapper context
+   * \brief JSON reader context
    *
    * Context is used to store mapping options and deserialization buffers
    *
@@ -40,6 +40,7 @@ namespace anch::json {
    * \since 0.1
    */
   class ReaderContext {
+
     // Attributes +
   public:
     /*! The input stream to parse */
