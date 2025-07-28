@@ -37,7 +37,8 @@ using anch::json::PrimitiveMapper;
 
 // PrimitiveMapper specialization for uint32_t +
 template<>
-PrimitiveMapper<uint32_t>::PrimitiveMapper() {
+PrimitiveMapper<uint32_t>::PrimitiveMapper():
+  anch::json::GenericMapper<PrimitiveMapper<uint32_t>,uint32_t>() {
   // Nothing to do
 }
 
@@ -115,7 +116,7 @@ PrimitiveMapper<uint32_t>::serialize(const std::map<std::string,uint32_t>& value
 
 template<>
 bool
-PrimitiveMapper<uint32_t>::deserialize(uint32_t& value, anch::json::ReaderContext& context) {
+PrimitiveMapper<uint32_t>::deserialize(uint32_t& value, anch::json::ReaderContext& context) const {
   anch::json::juint val;
   if(anch::json::lexUInteger(val, context)) {
     if(value > std::numeric_limits<uint32_t>::max()) {

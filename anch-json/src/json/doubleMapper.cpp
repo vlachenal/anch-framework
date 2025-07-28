@@ -37,7 +37,8 @@ using anch::json::PrimitiveMapper;
 
 // PrimitiveMapper specialization for double +
 template<>
-PrimitiveMapper<double>::PrimitiveMapper() {
+PrimitiveMapper<double>::PrimitiveMapper():
+  anch::json::GenericMapper<PrimitiveMapper<double>,double>() {
   // Nothing to do
 }
 
@@ -115,7 +116,7 @@ PrimitiveMapper<double>::serialize(const std::map<std::string,double>& value,
 
 template<>
 bool
-PrimitiveMapper<double>::deserialize(double& value, anch::json::ReaderContext& context) {
+PrimitiveMapper<double>::deserialize(double& value, anch::json::ReaderContext& context) const {
   return anch::json::lexNumber(value, context);
 }
 

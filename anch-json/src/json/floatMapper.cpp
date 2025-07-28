@@ -37,7 +37,8 @@ using anch::json::PrimitiveMapper;
 
 // PrimitiveMapper specialization for float +
 template<>
-PrimitiveMapper<float>::PrimitiveMapper() {
+PrimitiveMapper<float>::PrimitiveMapper():
+  anch::json::GenericMapper<PrimitiveMapper<float>,float>() {
   // Nothing to do
 }
 
@@ -115,7 +116,7 @@ PrimitiveMapper<float>::serialize(const std::map<std::string,float>& value,
 
 template<>
 bool
-PrimitiveMapper<float>::deserialize(float& value, anch::json::ReaderContext& context) {
+PrimitiveMapper<float>::deserialize(float& value, anch::json::ReaderContext& context) const {
   double val;
   if(anch::json::lexNumber(val, context)) {
     value = static_cast<float>(val);

@@ -28,6 +28,7 @@
 #include <set>
 #include <map>
 
+#include "json/genericMapper.hpp"
 #include "json/constants.hpp"
 #include "json/readerContext.hpp"
 #include "json/mappingOptions.hpp"
@@ -51,7 +52,7 @@ namespace anch::json {
    * \since 0.1
    */
   template<typename T>
-  class PrimitiveMapper {
+  class PrimitiveMapper: public anch::json::GenericMapper<PrimitiveMapper<T>, T> {
     friend anch::json::Factory<T>;
 
     // Constructors +
@@ -77,16 +78,23 @@ namespace anch::json {
     PrimitiveMapper(PrimitiveMapper&& other) = delete;
     // Constructors -
 
+    // Destructor +
   private:
-    // Destructors +
     /*!
      * \ref PrimitiveMapper private destructor
      */
     virtual ~PrimitiveMapper();
-    // Destructors -
+    // Destructor -
 
     // Methods +
   public:
+    /*!
+     * Get generic mapper implementation
+     *
+     * \return *this
+     */
+    const anch::json::GenericMapper<PrimitiveMapper<T>, T>& generic() const;
+
     /*!
      * Serialize reference attribute
      *
@@ -200,59 +208,7 @@ namespace anch::json {
      *
      * \return \false when value is \c null , \c false otherwise
      */
-    bool deserialize(T& value, anch::json::ReaderContext& context);
-
-    /*!
-     * Deserialize JSON value
-     *
-     * \param value the value to set
-     * \param context the mapping context
-     *
-     * \return \false when value is \c null , \c false otherwise
-     */
-    bool deserialize(std::optional<T>& value, anch::json::ReaderContext& context);
-
-    /*!
-     * Deserialize JSON value
-     *
-     * \param value the value to set
-     * \param context the mapping context
-     *
-     * \return \false when value is \c null , \c false otherwise
-     */
-    bool deserialize(T* value, anch::json::ReaderContext& context);
-
-    /*!
-     * Deserialize JSON value
-     *
-     * \param value the value to set
-     * \param context the mapping context
-     */
-    bool deserialize(std::vector<T>& value, anch::json::ReaderContext& context);
-
-    /*!
-     * Deserialize JSON value
-     *
-     * \param value the value to set
-     * \param context the mapping context
-     */
-    bool deserialize(std::list<T>& value, anch::json::ReaderContext& context);
-
-    /*!
-     * Deserialize JSON value
-     *
-     * \param value the value to set
-     * \param context the mapping context
-     */
-    bool deserialize(std::set<T>& value, anch::json::ReaderContext& context);
-
-    /*!
-     * Deserialize JSON value
-     *
-     * \param value the value to set
-     * \param context the mapping context
-     */
-    bool deserialize(std::map<std::string,T>& value, anch::json::ReaderContext& context);
+    bool deserialize(T& value, anch::json::ReaderContext& context) const;
     // Methods -
 
   };

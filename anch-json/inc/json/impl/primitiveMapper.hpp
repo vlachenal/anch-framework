@@ -26,86 +26,10 @@
 namespace anch::json {
 
   template<typename T>
-  bool
-  PrimitiveMapper<T>::deserialize(std::optional<T>& value, anch::json::ReaderContext& context) {
-    T val;
-    if(!deserialize(val, context)) {
-      value.reset();
-      return false;
-    }
-    value = std::move(val);
-    return true;
-  }
-
-  template<typename T>
-  bool
-  PrimitiveMapper<T>::deserialize(T* value, anch::json::ReaderContext& context) {
-    T val;
-    if(!deserialize(val, context)) {
-      value = NULL;
-      return false;
-    }
-    value = new T();
-    *value = std::move(val);
-    return true;
-  }
-
-  template<typename T>
-  bool
-  PrimitiveMapper<T>::deserialize(std::vector<T>& value, anch::json::ReaderContext& context) {
-    AddItem addFunc = [&](anch::json::ReaderContext& ctxt) -> bool {
-      T val;
-      if(!deserialize(val, ctxt)) {
-	return false;
-      }
-      value.push_back(std::move(val));
-      return true;
-    };
-    anch::json::lexArray(addFunc, context);
-    return true;
-  }
-
-  template<typename T>
-  bool
-  PrimitiveMapper<T>::deserialize(std::list<T>& value, anch::json::ReaderContext& context) {
-    AddItem addFunc = [&](anch::json::ReaderContext& ctxt) -> bool {
-      T val;
-      if(!deserialize(val, ctxt)) {
-	return false;
-      }
-      value.push_back(std::move(val));
-      return true;
-    };
-    anch::json::lexArray(addFunc, context);
-    return true;
-  }
-
-  template<typename T>
-  bool
-  PrimitiveMapper<T>::deserialize(std::set<T>& value, anch::json::ReaderContext& context) {
-    AddItem addFunc = [&](anch::json::ReaderContext& ctxt) -> bool {
-      T val;
-      if(!deserialize(val, ctxt)) {
-	return false;
-      }
-      value.insert(std::move(val));
-      return true;
-    };
-    anch::json::lexArray(addFunc, context);
-    return true;
-  }
-
-  template<typename T>
-  bool
-  PrimitiveMapper<T>::deserialize(std::map<std::string,T>& value, anch::json::ReaderContext& context) {
-    PushItem pushFunc = [&](const std::string& key, anch::json::ReaderContext& ctxt) -> void {
-      T val;
-      if(deserialize(val, ctxt)) {
-	value.insert({key, std::move(val)});
-      }
-    };
-    anch::json::lexMap(pushFunc, context);
-    return true;
+  inline
+  const anch::json::GenericMapper<PrimitiveMapper<T>, T>&
+  PrimitiveMapper<T>::generic() const {
+    return static_cast<const anch::json::GenericMapper<PrimitiveMapper<T>, T>&>(*this);
   }
 
 }

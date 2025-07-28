@@ -36,7 +36,8 @@ using anch::json::PrimitiveMapper;
 
 // PrimitiveMapper specialization for std::string +
 template<>
-PrimitiveMapper<std::string>::PrimitiveMapper() {
+PrimitiveMapper<std::string>::PrimitiveMapper():
+  anch::json::GenericMapper<PrimitiveMapper<std::string>,std::string>() {
   // Nothing to do
 }
 
@@ -114,7 +115,7 @@ PrimitiveMapper<std::string>::serialize(const std::map<std::string,std::string>&
 
 template<>
 bool
-PrimitiveMapper<std::string>::deserialize(std::string& value, anch::json::ReaderContext& context) {
+PrimitiveMapper<std::string>::deserialize(std::string& value, anch::json::ReaderContext& context) const {
   return anch::json::lexString(value, context);
 }
 

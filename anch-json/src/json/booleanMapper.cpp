@@ -46,7 +46,8 @@ serializeValue(const bool& value, std::ostream& out, [[maybe_unused]] const anch
 
 // PrimitiveMapper specialization for bool +
 template<>
-PrimitiveMapper<bool>::PrimitiveMapper() {
+PrimitiveMapper<bool>::PrimitiveMapper():
+  anch::json::GenericMapper<PrimitiveMapper<bool>,bool>() {
   // Nothing to do
 }
 
@@ -124,7 +125,7 @@ PrimitiveMapper<bool>::serialize(const std::map<std::string,bool>& value,
 
 template<>
 bool
-PrimitiveMapper<bool>::deserialize(bool& value, anch::json::ReaderContext& context) {
+PrimitiveMapper<bool>::deserialize(bool& value, anch::json::ReaderContext& context) const {
   return anch::json::lexBoolean(value, context);
 }
 

@@ -29,6 +29,7 @@
 #include <set>
 #include <map>
 
+#include "json/genericMapper.hpp"
 #include "json/constants.hpp"
 #include "json/mappingOptions.hpp"
 #include "json/mappingFunctions.hpp"
@@ -69,7 +70,7 @@ namespace anch::json {
    * \since 0.1
    */
   template<typename T>
-  class ObjectMapper {
+  class ObjectMapper: public anch::json::GenericMapper<ObjectMapper<T>, T> {
     friend anch::json::Factory<T>;
     template<typename U>
     friend void anch::json::registerObject(ObjectMapper<U>&);
@@ -184,6 +185,13 @@ namespace anch::json {
 
   public:
     /*!
+     * Get generic mapper implementation
+     *
+     * \return *this
+     */
+    const anch::json::GenericMapper<ObjectMapper<T>, T>& generic() const;
+
+    /*!
      * Serialize reference attribute
      *
      * \param value the reference attribute to serialize
@@ -296,78 +304,9 @@ namespace anch::json {
      *
      * \return \c false when \c null found, \c true otherwise
      */
-    bool deserialize(T& value, anch::json::ReaderContext& context);
-
-    /*!
-     * Deserialize JSON
-     *
-     * \param value the value to write in
-     * \param context the mapper context
-     *
-     * \return \c false when \c null found, \c true otherwise
-     */
-    bool deserialize(std::optional<T>& value, anch::json::ReaderContext& context);
-
-    /*!
-     * Deserialize JSON
-     *
-     * \param value the value to write in
-     * \param context the mapper context
-     *
-     * \return \c false when \c null found, \c true otherwise
-     */
-    bool deserialize(T* value, anch::json::ReaderContext& context);
-
-    /*!
-     * Deserialize JSON
-     *
-     * \param value the value to write in
-     * \param input the input stream to parse
-     * \param options the options to use
-     *
-     * \return \c true
-     */
-    bool deserialize(std::vector<T>& value, anch::json::ReaderContext& context);
-
-    /*!
-     * Deserialize JSON
-     *
-     * \param value the value to write in
-     * \param context the mapper context
-     *
-     * \return \c true
-     */
-    bool deserialize(std::list<T>& value, anch::json::ReaderContext& context);
-
-    /*!
-     * Deserialize JSON
-     *
-     * \param value the value to write in
-     * \param context the mapper context
-     *
-     * \return \c true
-     */
-    bool deserialize(std::set<T>& value, anch::json::ReaderContext& context);
-
-    /*!
-     * Deserialize JSON
-     *
-     * \param value the value to write in
-     * \param context the mapper context
-     */
-    bool deserialize(std::map<std::string,T>& value, anch::json::ReaderContext& context);
+    bool deserialize(T& value, anch::json::ReaderContext& context) const;
 
   private:
-    /*!
-     * Deserialize non null JSON object (which should start with '{')
-     *
-     * \param value the value to write in
-     * \param context the mapper context
-     *
-     * \return \c false when \c null found, \c true otherwise
-     */
-    bool deserializeValue(T& value, anch::json::ReaderContext& context);
-
     /*!
      * Serialize value
      *
