@@ -1,6 +1,7 @@
 var namespaceanch_1_1json =
 [
     [ "Factory", "classanch_1_1json_1_1_factory.html", "classanch_1_1json_1_1_factory" ],
+    [ "GenericMapper", "classanch_1_1json_1_1_generic_mapper.html", "classanch_1_1json_1_1_generic_mapper" ],
     [ "JSONItem", "classanch_1_1json_1_1_j_s_o_n_item.html", "classanch_1_1json_1_1_j_s_o_n_item" ],
     [ "JSONMapper", "classanch_1_1json_1_1_j_s_o_n_mapper.html", "classanch_1_1json_1_1_j_s_o_n_mapper" ],
     [ "MappingError", "classanch_1_1json_1_1_mapping_error.html", "classanch_1_1json_1_1_mapping_error" ],
@@ -35,9 +36,6 @@ var namespaceanch_1_1json =
       [ "BEGIN_ARRAY", "namespaceanch_1_1json.html#aa39e48b07b65032096fb6d205da99f4ba149db99349b09ddc7523e181c78e70d0", null ],
       [ "END_ARRAY", "namespaceanch_1_1json.html#aa39e48b07b65032096fb6d205da99f4ba225a0518a9013b9e99cb86ba9009a14f", null ]
     ] ],
-    [ "addToList", "namespaceanch_1_1json.html#a0e4e3cffdf0b212af90c45bc1adf1e36", null ],
-    [ "addToSet", "namespaceanch_1_1json.html#ac2054ac8f0b25d1184aa30713f4df9a9", null ],
-    [ "addToVector", "namespaceanch_1_1json.html#a5cc03ed2658cca345c652d825becd6c2", null ],
     [ "deserialize", "namespaceanch_1_1json.html#af4d47efb5e9e4ba7b5e69671327d4e0b", null ],
     [ "deserialize", "namespaceanch_1_1json.html#aa22dbb66e852ca5b1c6a8d1acb5d621d", null ],
     [ "deserialize", "namespaceanch_1_1json.html#a249d7cfaae94907ee6426e139e599c8a", null ],
@@ -46,7 +44,6 @@ var namespaceanch_1_1json =
     [ "deserialize", "namespaceanch_1_1json.html#af30ab5ff75ebbdd03ee983ae83e3b8df", null ],
     [ "deserialize", "namespaceanch_1_1json.html#a1415ec0e37fa3b446aec0387a5b1cdf4", null ],
     [ "deserialize", "namespaceanch_1_1json.html#a8d1f774e8d27dcdf8f97770da88bb216", null ],
-    [ "deserializeMap", "namespaceanch_1_1json.html#a1ef290de5a755cbac6b517a13800e89e", null ],
     [ "discardFail", "namespaceanch_1_1json.html#ac05d1e060de2a8cc00bd43b5019f0ab9", null ],
     [ "isPrimitive", "namespaceanch_1_1json.html#a0a98011ef62818836029ae7fc284f7a5", null ],
     [ "lexArray", "namespaceanch_1_1json.html#a4f90ea8ad3c0c5de59a630fcd12b249b", null ],

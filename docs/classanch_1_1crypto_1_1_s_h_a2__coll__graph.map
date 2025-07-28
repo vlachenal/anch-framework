@@ -1,21 +1,21 @@
 <map id="anch::crypto::SHA2&lt; O, B, W, R, I &gt;" name="anch::crypto::SHA2&lt; O, B, W, R, I &gt;">
-<area shape="rect" id="Node000001" title="SHA2 abstract class." alt="" coords="38,1067,164,1259"/>
-<area shape="rect" id="Node000002" href="$classanch_1_1crypto_1_1_hash.html" title="Hash algorithm abstract class." alt="" coords="5,573,127,851"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="81,865,96,1067,91,1067,75,865"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="74,272,221,341"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="96,343,78,367,61,412,50,460,46,508,46,556,41,556,41,508,45,459,56,410,74,364,92,340"/>
-<area shape="rect" id="Node000006" href="$structanch_1_1crypto_1_1_s_h_a2_1_1_context.html" title=" " alt="" coords="143,875,336,1003"/>
-<area shape="poly" id="edge8_Node000006_Node000003" title=" " alt="" coords="150,341,153,435,162,549,190,715,222,858,217,859,185,716,157,550,147,435,145,341"/>
-<area shape="rect" id="Node000008" href="$structanch_1_1crypto_1_1_s_h_a2_1_1_context.html" title=" " alt="" coords="218,405,384,549"/>
-<area shape="poly" id="edge11_Node000008_Node000003" title=" " alt="" coords="180,339,227,391,223,395,176,343"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="176,139,273,208"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="189,221,181,233,162,273,157,271,176,231,184,218"/>
-<area shape="rect" id="Node000007" title=" " alt="" coords="245,272,362,341"/>
-<area shape="poly" id="edge7_Node000007_Node000004" title=" " alt="" coords="258,219,266,231,289,271,284,273,261,233,254,222"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="216,5,234,75"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="228,75,228,122,222,122,222,75"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="203,1004,171,1054,167,1051,198,1001"/>
-<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="349,339,377,369,398,404,409,444,410,476,398,550,390,637,382,707,364,773,327,852,321,862,316,859,322,849,359,771,377,706,384,637,393,549,404,476,404,444,393,406,372,372,345,343"/>
-<area shape="poly" id="edge10_Node000008_Node000007" title=" " alt="" coords="306,341,305,388,300,388,300,341"/>
-<area shape="poly" id="edge9_Node000006_Node000008" title=" " alt="" coords="292,565,251,875,245,874,287,564"/>
+<area shape="rect" id="Node000001" title="SHA2 abstract class." alt="" coords="38,1099,164,1291"/>
+<area shape="rect" id="Node000002" href="$classanch_1_1crypto_1_1_hash.html" title="Hash algorithm abstract class." alt="" coords="5,597,127,875"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="80,889,96,1099,91,1099,75,889"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="76,288,222,357"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="93,359,74,383,56,430,45,480,41,530,42,580,37,580,36,530,40,479,51,428,70,380,89,355"/>
+<area shape="rect" id="Node000006" href="$structanch_1_1crypto_1_1_s_h_a2_1_1_context.html" title=" " alt="" coords="143,899,336,1027"/>
+<area shape="poly" id="edge8_Node000006_Node000003" title=" " alt="" coords="151,357,153,454,162,573,190,739,222,882,217,883,184,740,157,574,148,455,146,357"/>
+<area shape="rect" id="Node000008" href="$structanch_1_1crypto_1_1_s_h_a2_1_1_context.html" title=" " alt="" coords="222,429,388,573"/>
+<area shape="poly" id="edge11_Node000008_Node000003" title=" " alt="" coords="180,355,233,415,229,419,176,359"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="178,147,274,216"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="187,229,180,241,160,289,155,287,175,239,183,226"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="246,288,363,357"/>
+<area shape="poly" id="edge7_Node000007_Node000004" title=" " alt="" coords="261,227,268,239,293,287,288,289,264,241,257,229"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="217,5,236,75"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="229,75,229,130,224,130,224,75"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="204,1028,169,1086,164,1083,199,1025"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="348,355,379,388,402,428,413,468,413,500,402,574,395,661,388,731,371,797,334,876,327,887,323,884,329,873,366,796,383,730,389,661,397,573,408,500,408,468,397,430,374,391,344,359"/>
+<area shape="poly" id="edge10_Node000008_Node000007" title=" " alt="" coords="308,357,308,412,302,412,302,357"/>
+<area shape="poly" id="edge9_Node000006_Node000008" title=" " alt="" coords="295,589,251,899,246,898,290,588"/>
 </map>

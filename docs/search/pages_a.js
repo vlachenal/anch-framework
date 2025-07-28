@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['unit_20tests_20library_20documentation_0',['AnCH unit tests library documentation',['../page_ut.html',1,'']]],
-  ['uuid_20library_20documentation_1',['AnCH UUID library documentation',['../page_uuid.html',1,'']]]
+  ['observable_0',['Observable',['../page_events.html#evt_concept_observ_sec',1,'Observer/Observable'],['../page_events.html#evt_example_obs_sec',1,'Observer/Observable']]],
+  ['observer_20observable_1',['Observer Observable',['../page_events.html#evt_concept_observ_sec',1,'Observer/Observable'],['../page_events.html#evt_example_obs_sec',1,'Observer/Observable']]]
 ];

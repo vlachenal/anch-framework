@@ -1,5 +1,5 @@
 <map id="anch::sql::SelectBuilderPart" name="anch::sql::SelectBuilderPart">
-<area shape="rect" id="Node000001" title="SQL select query part builder." alt="" coords="5,395,178,741"/>
+<area shape="rect" id="Node000001" title="SQL select query part builder." alt="" coords="5,403,178,749"/>
 <area shape="rect" id="Node000002" href="$classanch_1_1sql_1_1_select_builder.html" title="Dynamic SQL select request builder." alt="" coords="9,5,174,331"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="94,330,94,378,89,378,89,330"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="94,330,94,386,89,386,89,330"/>
 </map>

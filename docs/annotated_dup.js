@@ -70,6 +70,7 @@ var annotated_dup =
       ] ],
       [ "json", "namespaceanch_1_1json.html", [
         [ "Factory", "classanch_1_1json_1_1_factory.html", "classanch_1_1json_1_1_factory" ],
+        [ "GenericMapper", "classanch_1_1json_1_1_generic_mapper.html", "classanch_1_1json_1_1_generic_mapper" ],
         [ "JSONItem", "classanch_1_1json_1_1_j_s_o_n_item.html", "classanch_1_1json_1_1_j_s_o_n_item" ],
         [ "JSONMapper", "classanch_1_1json_1_1_j_s_o_n_mapper.html", "classanch_1_1json_1_1_j_s_o_n_mapper" ],
         [ "MappingError", "classanch_1_1json_1_1_mapping_error.html", "classanch_1_1json_1_1_mapping_error" ],

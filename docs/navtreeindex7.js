@@ -1,5 +1,7 @@
 var NAVTREEINDEX7 =
 {
+"classanch_1_1sql_1_1_clauses_builder.html#acfaaed3973ba217de132a4d42cb82f09":[19,0,0,11,0,26],
+"classanch_1_1sql_1_1_clauses_builder.html#ad0c609f72e69f74b9886483e46bf61d7":[18,0,0,8,0,2],
 "classanch_1_1sql_1_1_clauses_builder.html#ad0c609f72e69f74b9886483e46bf61d7":[19,0,0,11,0,2],
 "classanch_1_1sql_1_1_clauses_builder.html#adb3ea1530d0627c62acff3085976ca17":[18,0,0,8,0,19],
 "classanch_1_1sql_1_1_clauses_builder.html#adb3ea1530d0627c62acff3085976ca17":[19,0,0,11,0,19],
@@ -247,7 +249,5 @@ var NAVTREEINDEX7 =
 "classanch_1_1sql_1_1_my_s_q_l_result_set.html#a9f6758c2ef173dda7f3cca4726e3f830":[19,0,0,11,8,2],
 "classanch_1_1sql_1_1_my_s_q_l_result_set.html#ae68c9df740ff2936edc2fd20dbc2dc38":[18,0,0,8,8,7],
 "classanch_1_1sql_1_1_my_s_q_l_result_set.html#ae68c9df740ff2936edc2fd20dbc2dc38":[19,0,0,11,8,7],
-"classanch_1_1sql_1_1_postgre_s_q_l_connection.html":[18,0,0,8,9],
-"classanch_1_1sql_1_1_postgre_s_q_l_connection.html":[19,0,0,11,9],
-"classanch_1_1sql_1_1_postgre_s_q_l_connection.html#a3116c8de1ff05e73a8eadb1ebc5930c6":[18,0,0,8,9,3]
+"classanch_1_1sql_1_1_postgre_s_q_l_connection.html":[18,0,0,8,9]
 };

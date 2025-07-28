@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['library_20documentation_0',['library documentation',['../page_cli.html',1,'AnCH CLI library documentation'],['../page_crypto.html',1,'AnCH cryptography library documentation'],['../page_events.html',1,'AnCH events library documentation'],['../page_json.html',1,'AnCH JSON library documentation'],['../page_logger.html',1,'AnCH logger library documentation'],['../page_res.html',1,'AnCH resource library documentation'],['../page_rest.html',1,'AnCH REST library documentation'],['../page_sql.html',1,'AnCH SQL library documentation'],['../page_ut.html',1,'AnCH unit tests library documentation'],['../page_uuid.html',1,'AnCH UUID library documentation']]],
-  ['list_1',['Todo List',['../todo.html',1,'']]],
-  ['logger_20library_20documentation_2',['AnCH logger library documentation',['../page_logger.html',1,'']]]
+  ['handler_0',['handler',['../page_events.html#evt_concept_handler_sec',1,'Event handler'],['../page_events.html#evt_example_handler_sec',1,'Event handler']]],
+  ['hashes_1',['Hashes',['../page_crypto.html#hash_concept_sec',1,'']]]
 ];

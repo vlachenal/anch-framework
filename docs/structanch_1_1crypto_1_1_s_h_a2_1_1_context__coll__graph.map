@@ -1,12 +1,12 @@
 <map id="anch::crypto::SHA2&lt; O, B, W, R, I &gt;::Context&lt; Init &gt;" name="anch::crypto::SHA2&lt; O, B, W, R, I &gt;::Context&lt; Init &gt;">
-<area shape="rect" id="Node000001" title=" " alt="" coords="58,405,224,549"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="5,272,122,341"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="81,340,104,388,99,391,77,342"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="93,139,189,208"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="116,222,86,273,81,271,111,220"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="146,272,293,341"/>
-<area shape="poly" id="edge5_Node000005_Node000003" title=" " alt="" coords="171,220,202,271,197,273,167,222"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="58,429,224,573"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,288,122,357"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="81,356,106,413,101,415,76,358"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="93,147,189,216"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="118,230,84,290,80,287,113,228"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="146,288,293,357"/>
+<area shape="poly" id="edge5_Node000005_Node000003" title=" " alt="" coords="170,228,203,287,199,290,165,230"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="132,5,150,75"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="144,75,144,122,138,122,138,75"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="207,342,184,391,179,389,202,340"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="144,75,144,130,138,130,138,75"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="207,358,182,415,177,413,202,356"/>
 </map>
