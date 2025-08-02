@@ -1,11 +1,11 @@
 <map id="anch::network::Socket" name="anch::network::Socket">
-<area shape="rect" id="Node000001" title=" " alt="" coords="109,487,251,833"/>
-<area shape="rect" id="Node000004" href="$classanch_1_1network_1_1_tcp_socket.html" title=" " alt="" coords="5,947,168,1101"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="134,848,109,948,104,946,129,847"/>
-<area shape="rect" id="Node000005" href="$classanch_1_1network_1_1_udp_socket.html" title=" " alt="" coords="192,883,358,1165"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="231,847,241,882,235,884,226,848"/>
-<area shape="rect" id="Node000002" href="$classanch_1_1events_1_1_observable.html" title=" " alt="" coords="100,245,260,437"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="183,452,183,487,177,487,177,452"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="109,473,251,820"/>
+<area shape="rect" id="Node000004" href="$classanch_1_1network_1_1_tcp_socket.html" title=" " alt="" coords="5,933,168,1088"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="134,835,109,934,104,933,129,834"/>
+<area shape="rect" id="Node000005" href="$classanch_1_1network_1_1_udp_socket.html" title=" " alt="" coords="192,869,358,1152"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="231,834,241,869,235,870,226,835"/>
+<area shape="rect" id="Node000002" href="$classanch_1_1events_1_1_observable.html" title=" " alt="" coords="100,253,260,424"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="183,439,183,474,177,474,177,439"/>
 <area shape="rect" id="Node000003" href="$classanch_1_1events_1_1_observable.html" title="An observable implementation of the observers/observable design pattern." alt="" coords="85,5,275,181"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="183,196,183,246,177,246,177,196"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="183,196,183,254,177,254,177,196"/>
 </map>

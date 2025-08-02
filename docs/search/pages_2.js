@@ -1,4 +1,9 @@
 var searchData=
 [
-  ['documentation_0',['documentation',['../page_cli.html',1,'AnCH CLI library documentation'],['../page_crypto.html',1,'AnCH cryptography library documentation'],['../page_events.html',1,'AnCH events library documentation'],['../page_json.html',1,'AnCH JSON library documentation'],['../page_logger.html',1,'AnCH logger library documentation'],['../page_res.html',1,'AnCH resource library documentation'],['../page_rest.html',1,'AnCH REST library documentation'],['../page_sql.html',1,'AnCH SQL library documentation'],['../page_ut.html',1,'AnCH unit tests library documentation'],['../page_uuid.html',1,'AnCH UUID library documentation']]]
+  ['categories_0',['Categories',['../page_logger.html#log_concept_conf_cat_sec',1,'']]],
+  ['cli_20library_20documentation_1',['AnCH CLI library documentation',['../page_cli.html',1,'']]],
+  ['conception_2',['Conception',['../page_cli.html#cli_concept_sec',1,'Conception'],['../page_crypto.html#crypto_concept_sec',1,'Conception'],['../page_events.html#evt_concept_sec',1,'Conception'],['../page_json.html#json_concept_sec',1,'Conception'],['../page_res.html#res_concept_sec',1,'Conception'],['../page_rest.html#rest_concept_sec',1,'Conception'],['../todo.html#_todo000001',1,'Conception'],['../page_sql.html#sql_concept_sec',1,'Conception'],['../todo.html#_todo000003',1,'Conception'],['../page_ut.html#ut_concept_sec',1,'Conception'],['../page_uuid.html#uuid_concept_sec',1,'Conception']]],
+  ['configuration_20file_3',['Configuration file',['../page_logger.html#log_concept_conf_sec',1,'']]],
+  ['connection_20pool_4',['connection pool',['../page_rest.html#rest_conception_pool_sec',1,'REST connection pool'],['../page_sql.html#sql_conception_pool_sec',1,'SQL connection pool']]],
+  ['cryptography_20library_20documentation_5',['AnCH cryptography library documentation',['../page_crypto.html',1,'']]]
 ];

@@ -1,5 +1,7 @@
 var NAVTREEINDEX8 =
 {
+"classanch_1_1sql_1_1_postgre_s_q_l_connection.html":[19,0,0,11,9],
+"classanch_1_1sql_1_1_postgre_s_q_l_connection.html#a3116c8de1ff05e73a8eadb1ebc5930c6":[18,0,0,8,9,3],
 "classanch_1_1sql_1_1_postgre_s_q_l_connection.html#a3116c8de1ff05e73a8eadb1ebc5930c6":[19,0,0,11,9,3],
 "classanch_1_1sql_1_1_postgre_s_q_l_connection.html#a379f3d2ca7424f46c2c6defa029e78f4":[18,0,0,8,9,4],
 "classanch_1_1sql_1_1_postgre_s_q_l_connection.html#a379f3d2ca7424f46c2c6defa029e78f4":[19,0,0,11,9,4],
@@ -247,7 +249,5 @@ var NAVTREEINDEX8 =
 "classanch_1_1sql_1_1_select_builder_part.html#a47e5d5eae8cf0cf6ef05e0bd02163029":[19,0,0,11,15,1],
 "classanch_1_1sql_1_1_select_builder_part.html#a69d0fda3fd9e5d5f86781fb96a576ab2":[18,0,0,8,15,10],
 "classanch_1_1sql_1_1_select_builder_part.html#a69d0fda3fd9e5d5f86781fb96a576ab2":[19,0,0,11,15,10],
-"classanch_1_1sql_1_1_select_builder_part.html#a96093df671aea41f5abeb87c6f66b15e":[18,0,0,8,15,14],
-"classanch_1_1sql_1_1_select_builder_part.html#a96093df671aea41f5abeb87c6f66b15e":[19,0,0,11,15,14],
-"classanch_1_1sql_1_1_select_builder_part.html#ab0e684ea5ddd21441fb4dde35bea6e97":[18,0,0,8,15,3]
+"classanch_1_1sql_1_1_select_builder_part.html#a96093df671aea41f5abeb87c6f66b15e":[18,0,0,8,15,14]
 };

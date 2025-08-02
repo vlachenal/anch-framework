@@ -1,9 +1,9 @@
 <map id="anch::date::formatter::MillisecondFormatter" name="anch::date::formatter::MillisecondFormatter">
-<area shape="rect" id="Node000001" title=" " alt="" coords="22,609,183,823"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="22,617,183,831"/>
 <area shape="rect" id="Node000002" href="$classanch_1_1date_1_1formatter_1_1_i_date_part_formatter.html" title=" " alt="" coords="5,140,157,545"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="96,560,99,610,94,610,91,560"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="96,560,99,618,94,618,91,560"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="182,308,250,377"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="212,378,196,455,172,546,155,594,150,593,167,545,191,454,207,377"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="212,378,196,455,172,546,153,602,148,600,167,545,191,454,207,377"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="159,5,273,91"/>
 <area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="219,106,219,308,213,308,213,106"/>
 </map>

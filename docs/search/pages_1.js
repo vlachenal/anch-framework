@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['cli_20library_20documentation_0',['AnCH CLI library documentation',['../page_cli.html',1,'']]],
-  ['cryptography_20library_20documentation_1',['AnCH cryptography library documentation',['../page_crypto.html',1,'']]]
+  ['bus_0',['bus',['../page_events.html#evt_concept_eventbus_sec',1,'Event bus'],['../page_events.html#evt_example_eventbus_sec',1,'Event bus']]]
 ];

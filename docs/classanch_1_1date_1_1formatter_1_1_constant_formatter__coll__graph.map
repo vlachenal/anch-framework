@@ -1,9 +1,9 @@
 <map id="anch::date::formatter::ConstantFormatter" name="anch::date::formatter::ConstantFormatter">
-<area shape="rect" id="Node000001" title=" " alt="" coords="28,609,177,801"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="28,617,177,809"/>
 <area shape="rect" id="Node000002" href="$classanch_1_1date_1_1formatter_1_1_i_date_part_formatter.html" title=" " alt="" coords="5,140,157,545"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="97,560,100,609,94,610,91,560"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="97,560,100,617,95,618,91,561"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="182,308,250,377"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="213,378,197,455,172,546,154,594,149,593,167,545,191,454,207,377"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="213,378,196,455,172,546,152,602,147,601,167,545,191,454,207,377"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="159,5,273,91"/>
 <area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="219,106,219,308,213,308,213,106"/>
 </map>

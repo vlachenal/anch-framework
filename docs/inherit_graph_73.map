@@ -1,5 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$classanch_1_1_singleton.html" title=" " alt="" coords="5,5,186,48"/>
-<area shape="rect" id="Node000001" href="$classanch_1_1events_1_1_event_bus.html" title="A class which manage global events firing and events QoS." alt="" coords="234,13,426,40"/>
-<area shape="poly" id="edge57_Node000000_Node000001" title=" " alt="" coords="201,24,233,24,233,29,201,29"/>
+<area shape="rect" id="Node000000" href="$classanch_1_1_singleton.html" title=" " alt="" coords="5,5,170,32"/>
+<area shape="rect" id="Node000001" href="$classanch_1_1device_1_1_c_p_u.html" title="CPU features detection." alt="" coords="218,5,350,32"/>
+<area shape="poly" id="edge58_Node000000_Node000001" title=" " alt="" coords="185,16,217,16,217,21,185,21"/>
 </map>

@@ -82,6 +82,13 @@ var hierarchy =
     [ "anch::Fluent< T, C >", "classanch_1_1_fluent.html", null ],
     [ "anch::Flux< T >", "classanch_1_1_flux.html", null ],
     [ "anch::cli::Formatter", "structanch_1_1cli_1_1_formatter.html", null ],
+    [ "anch::json::GenericMapper< M, T >", "classanch_1_1json_1_1_generic_mapper.html", null ],
+    [ "anch::json::GenericMapper< ObjectMapper< T >, T >", "classanch_1_1json_1_1_generic_mapper.html", [
+      [ "anch::json::ObjectMapper< T >", "classanch_1_1json_1_1_object_mapper.html", null ]
+    ] ],
+    [ "anch::json::GenericMapper< PrimitiveMapper< T >, T >", "classanch_1_1json_1_1_generic_mapper.html", [
+      [ "anch::json::PrimitiveMapper< T >", "classanch_1_1json_1_1_primitive_mapper.html", null ]
+    ] ],
     [ "anch::crypto::Hash< O, B >", "classanch_1_1crypto_1_1_hash.html", [
       [ "anch::crypto::SHA2< O, B, W, R, I >", "classanch_1_1crypto_1_1_s_h_a2.html", null ]
     ] ],
@@ -155,7 +162,6 @@ var hierarchy =
     [ "anch::device::Network", "classanch_1_1device_1_1_network.html", null ],
     [ "anch::device::NetworkInterface", "classanch_1_1device_1_1_network_interface.html", null ],
     [ "ngx_anch_bootstrap_conf_t", "structngx__anch__bootstrap__conf__t.html", null ],
-    [ "anch::json::ObjectMapper< T >", "classanch_1_1json_1_1_object_mapper.html", null ],
     [ "anch::events::Observable< T >", "classanch_1_1events_1_1_observable.html", null ],
     [ "anch::events::Observable< anch::json::JSONItem >", "classanch_1_1events_1_1_observable.html", [
       [ "anch::json::Reader", "classanch_1_1json_1_1_reader.html", null ]
@@ -187,7 +193,6 @@ var hierarchy =
       [ "anch::sql::PostgreSQLPreparedStatement", "classanch_1_1sql_1_1_postgre_s_q_l_prepared_statement.html", null ],
       [ "anch::sql::SQLite3PreparedStatement", "classanch_1_1sql_1_1_s_q_lite3_prepared_statement.html", null ]
     ] ],
-    [ "anch::json::PrimitiveMapper< T >", "classanch_1_1json_1_1_primitive_mapper.html", null ],
     [ "anch::rest::ProxyConfig", "structanch_1_1rest_1_1_proxy_config.html", null ],
     [ "anch::json::ReaderContext", "classanch_1_1json_1_1_reader_context.html", [
       [ "anch::json::Reader", "classanch_1_1json_1_1_reader.html", null ]

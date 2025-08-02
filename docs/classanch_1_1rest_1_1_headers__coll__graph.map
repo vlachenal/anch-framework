@@ -1,9 +1,9 @@
 <map id="anch::rest::Headers" name="anch::rest::Headers">
-<area shape="rect" id="Node000001" title="HTTP headers." alt="" coords="5,257,131,476"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="13,139,123,208"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="71,223,71,258,66,258,66,223"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="24,5,43,75"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="33,74,37,114,40,122,35,124,32,115,28,75"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="95,5,114,75"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="98,75,84,123,79,121,92,74"/>
+<area shape="rect" id="Node000001" title="HTTP headers." alt="" coords="5,265,131,484"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="13,147,123,216"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="71,231,71,266,66,266,66,231"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="21,5,41,75"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="30,74,30,98,35,122,38,131,33,133,30,123,25,99,25,74"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="96,5,115,75"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="99,75,84,131,79,130,94,74"/>
 </map>
