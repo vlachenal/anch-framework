@@ -75,7 +75,7 @@ namespace anch::json {
   }
   // isPrimitive string specialization -
 
-  // isPrimitive interger specialization +
+  // isPrimitive integer specialization +
   template<>
   constexpr bool isPrimitive<int64_t>() {
     return true;
@@ -115,7 +115,7 @@ namespace anch::json {
   constexpr bool isPrimitive<uint8_t>() {
     return true;
   }
-  // isPrimitive interger specialization -
+  // isPrimitive integer specialization -
 
   // isPrimitive boolean specialization +
   template<>

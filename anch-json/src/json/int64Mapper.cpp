@@ -116,7 +116,7 @@ PrimitiveMapper<int64_t>::serialize(const std::map<std::string,int64_t>& value,
 
 template<>
 bool
-PrimitiveMapper<int64_t>::deserialize(int64_t& value, anch::json::ReaderContext& context) const {
+PrimitiveMapper<int64_t>::deserializeValue(int64_t& value, anch::json::ReaderContext& context) const {
   return anch::json::lexInteger(value, context);
 }
 

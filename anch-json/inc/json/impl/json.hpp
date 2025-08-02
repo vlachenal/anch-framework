@@ -127,7 +127,7 @@ namespace anch::json {
   void
   deserialize(std::vector<T>& values, std::istream& input, const anch::json::MappingOptions& options) {
     anch::json::ReaderContext context(input, options);
-    anch::json::Factory<T>::getInstance().generic().deserialize(values, context);
+    anch::json::Factory<T>::getInstance().deserialize(values, context);
   }
 
   template<typename T>
@@ -135,7 +135,7 @@ namespace anch::json {
   void
   deserialize(std::list<T>& values, std::istream& input, const anch::json::MappingOptions& options) {
     anch::json::ReaderContext context(input, options);
-    anch::json::Factory<T>::getInstance().generic().deserialize(values, context);
+    anch::json::Factory<T>::getInstance().deserialize(values, context);
   }
 
   template<typename T>
@@ -143,7 +143,7 @@ namespace anch::json {
   void
   deserialize(std::set<T>& values, std::istream& input, const anch::json::MappingOptions& options) {
     anch::json::ReaderContext context(input, options);
-    anch::json::Factory<T>::getInstance().generic().deserialize(values, context);
+    anch::json::Factory<T>::getInstance().deserialize(values, context);
   }
 
   template<typename T>
@@ -151,7 +151,7 @@ namespace anch::json {
   void
   deserialize(std::map<std::string,T>& values, std::istream& input, const anch::json::MappingOptions& options) {
     anch::json::ReaderContext context(input, options);
-    anch::json::Factory<T>::getInstance().generic().deserialize(values, context);
+    anch::json::Factory<T>::getInstance().deserialize(values, context);
   }
   // Serialization/deserialization fonctions -
 

@@ -109,9 +109,9 @@ namespace anch::json {
     }));
     _readers[key] = anch::json::DeserializeFn<T>([=, this](T& obj, anch::json::ReaderContext& context) -> bool {
       if constexpr (std::is_same<MT, T>::value) { // if same, use direct call to avoid recursive instanciation
-	return this->generic().deserialize(obj.*value, context);
+	return this->deserialize(obj.*value, context);
       } else {
-	return anch::json::Factory<MT>::getInstance().generic().deserialize(obj.*value, context);
+	return anch::json::Factory<MT>::getInstance().deserialize(obj.*value, context);
       }
     });
     return *this;
@@ -230,13 +230,6 @@ namespace anch::json {
   }
 
   template<typename T>
-  inline
-  const anch::json::GenericMapper<ObjectMapper<T>, T>&
-  ObjectMapper<T>::generic() const {
-    return static_cast<const anch::json::GenericMapper<ObjectMapper<T>, T>&>(*this);
-  }
-
-  template<typename T>
   void
   ObjectMapper<T>::serializeValue(const T& value, std::ostream& out, const anch::json::MappingOptions& options) {
     out.put(anch::json::OBJECT_BEGIN);
@@ -301,7 +294,7 @@ namespace anch::json {
 
   template<typename T>
   bool
-  ObjectMapper<T>::deserialize(T& value, anch::json::ReaderContext& context) const {
+  ObjectMapper<T>::deserializeValue(T& value, anch::json::ReaderContext& context) const {
     if(!anch::json::objectHasValueLex(context)) {
       return false;
     }

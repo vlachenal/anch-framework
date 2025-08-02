@@ -125,7 +125,7 @@ PrimitiveMapper<bool>::serialize(const std::map<std::string,bool>& value,
 
 template<>
 bool
-PrimitiveMapper<bool>::deserialize(bool& value, anch::json::ReaderContext& context) const {
+PrimitiveMapper<bool>::deserializeValue(bool& value, anch::json::ReaderContext& context) const {
   return anch::json::lexBoolean(value, context);
 }
 

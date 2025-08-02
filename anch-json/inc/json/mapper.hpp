@@ -185,13 +185,6 @@ namespace anch::json {
 
   public:
     /*!
-     * Get generic mapper implementation
-     *
-     * \return *this
-     */
-    const anch::json::GenericMapper<ObjectMapper<T>, T>& generic() const;
-
-    /*!
      * Serialize reference attribute
      *
      * \param value the reference attribute to serialize
@@ -304,7 +297,7 @@ namespace anch::json {
      *
      * \return \c false when \c null found, \c true otherwise
      */
-    bool deserialize(T& value, anch::json::ReaderContext& context) const;
+    bool deserializeValue(T& value, anch::json::ReaderContext& context) const;
 
   private:
     /*!

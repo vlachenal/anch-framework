@@ -89,13 +89,6 @@ namespace anch::json {
     // Methods +
   public:
     /*!
-     * Get generic mapper implementation
-     *
-     * \return *this
-     */
-    const anch::json::GenericMapper<PrimitiveMapper<T>, T>& generic() const;
-
-    /*!
      * Serialize reference attribute
      *
      * \param value the reference attribute to serialize
@@ -208,11 +201,9 @@ namespace anch::json {
      *
      * \return \false when value is \c null , \c false otherwise
      */
-    bool deserialize(T& value, anch::json::ReaderContext& context) const;
+    bool deserializeValue(T& value, anch::json::ReaderContext& context) const;
     // Methods -
 
   };
 
 }  // anch::json
-
-#include "json/impl/primitiveMapper.hpp"

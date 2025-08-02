@@ -19,101 +19,23 @@
 */
 #pragma once
 
-#include "json/lexer.hpp"
-
 namespace anch::json {
 
+  // Constructors +
   template<typename M, typename T>
   GenericMapper<M,T>::GenericMapper() {
     // Nothing to do
   }
+  // Constructors -
 
+  // Destructor +
   template<typename M, typename T>
   GenericMapper<M,T>::~GenericMapper() {
     // Nothing to do
   }
-
-  template<typename M, typename T>
-  bool
-  GenericMapper<M,T>::deserialize(std::optional<T>& value, anch::json::ReaderContext& context) const {
-    T val;
-    if(!static_cast<const M*>(this)->deserialize(val, context)) {
-      value.reset();
-      return false;
-    }
-    value = std::move(val);
-    return true;
-  }
-
-  template<typename M, typename T>
-  bool
-  GenericMapper<M,T>::deserialize(T* value, anch::json::ReaderContext& context) const {
-    T val;
-    if(!static_cast<const M*>(this)->deserialize(val, context)) {
-      value = NULL;
-      return false;
-    }
-    value = new T();
-    *value = std::move(val);
-    return true;
-  }
-
-  template<typename M, typename T>
-  bool
-  GenericMapper<M,T>::deserialize(std::vector<T>& value, anch::json::ReaderContext& context) const {
-    AddItem addFunc = [&](anch::json::ReaderContext& ctxt) -> bool {
-      T val;
-      if(!static_cast<const M*>(this)->deserialize(val, ctxt)) {
-	return false;
-      }
-      value.push_back(std::move(val));
-      return true;
-    };
-    anch::json::lexArray(addFunc, context);
-    return true;
-  }
-
-  template<typename M, typename T>
-  bool
-  GenericMapper<M,T>::deserialize(std::list<T>& value, anch::json::ReaderContext& context) const {
-    AddItem addFunc = [&](anch::json::ReaderContext& ctxt) -> bool {
-      T val;
-      if(!static_cast<const M*>(this)->deserialize(val, ctxt)) {
-	return false;
-      }
-      value.push_back(std::move(val));
-      return true;
-    };
-    anch::json::lexArray(addFunc, context);
-    return true;
-  }
-
-  template<typename M, typename T>
-  bool
-  GenericMapper<M,T>::deserialize(std::set<T>& value, anch::json::ReaderContext& context) const {
-    AddItem addFunc = [&](anch::json::ReaderContext& ctxt) -> bool {
-      T val;
-      if(!static_cast<const M*>(this)->deserialize(val, ctxt)) {
-	return false;
-      }
-      value.insert(std::move(val));
-      return true;
-    };
-    anch::json::lexArray(addFunc, context);
-    return true;
-  }
-
-  template<typename M, typename T>
-  bool
-  GenericMapper<M,T>::deserialize(std::map<std::string,T>& value, anch::json::ReaderContext& context) const {
-    PushItem pushFunc = [&](const std::string& key, anch::json::ReaderContext& ctxt) -> void {
-      T val;
-      if(static_cast<const M*>(this)->deserialize(val, ctxt)) {
-	value.insert({key, std::move(val)});
-      }
-    };
-    anch::json::lexMap(pushFunc, context);
-    return true;
-  }
+  // Destructor -
 
 }
+
+#include "json/impl/genericMapperDeserialize.hpp"
+#include "json/impl/genericMapperSerialize.hpp"

@@ -116,7 +116,7 @@ PrimitiveMapper<float>::serialize(const std::map<std::string,float>& value,
 
 template<>
 bool
-PrimitiveMapper<float>::deserialize(float& value, anch::json::ReaderContext& context) const {
+PrimitiveMapper<float>::deserializeValue(float& value, anch::json::ReaderContext& context) const {
   double val;
   if(anch::json::lexNumber(val, context)) {
     value = static_cast<float>(val);

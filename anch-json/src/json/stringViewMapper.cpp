@@ -103,7 +103,11 @@ PrimitiveMapper<std::string_view>::serialize(const std::set<std::string_view>& v
 
 template<>
 bool
-PrimitiveMapper<std::string_view>::deserialize(std::string_view& value, anch::json::ReaderContext& context) const = delete;
+PrimitiveMapper<std::string_view>::deserializeValue(std::string_view& value, anch::json::ReaderContext& context) const = delete;
+
+template<>
+bool
+StringViewMapper::deserialize(std::string_view& value, anch::json::ReaderContext& context) const = delete;
 
 template<>
 bool

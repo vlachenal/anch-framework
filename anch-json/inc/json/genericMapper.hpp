@@ -28,6 +28,7 @@
 #include <map>
 
 #include "json/readerContext.hpp"
+#include "json/writerContext.hpp"
 
 namespace anch::json {
 
@@ -77,6 +78,170 @@ namespace anch::json {
 
     // Methods +
   public:
+    // Serialization +
+    // Raw value +
+    /*!
+     * Serialize value
+     *
+     * \param value the value
+     * \param context the context
+     */
+    void serialize(const T& value, anch::json::WriterContext& context) const;
+
+    /*!
+     * Serialize value according to optional/null option
+     *
+     * \param value the value
+     * \param context the context
+     */
+    void serialize(const std::optional<T>& value, anch::json::WriterContext& context) const;
+
+    /*!
+     * Serialize value according to optional/null option
+     *
+     * \param value the value
+     * \param context the context
+     */
+    void serialize(const T* const value, anch::json::WriterContext& context) const;
+
+    /*!
+     * Serialize array values according to empty option
+     *
+     * \param value the value
+     * \param context the context
+     */
+    void serialize(const std::vector<T>& value, anch::json::WriterContext& context) const;
+
+    /*!
+     * Serialize array values according to empty option
+     *
+     * \param value the value
+     * \param context the context
+     */
+    void serialize(const std::list<T>& value, anch::json::WriterContext& context) const;
+
+    /*!
+     * Serialize array values according to empty option
+     *
+     * \param value the value
+     * \param context the context
+     */
+    void serialize(const std::set<T>& value, anch::json::WriterContext& context) const;
+
+    /*!
+     * Serialize map values according to empty option
+     *
+     * \param value the value
+     * \param context the context
+     */
+    void serialize(const std::map<std::string,T>& value, anch::json::WriterContext& context) const;
+    // Raw value -
+
+    // With field +
+    /*!
+     * Serialize value
+     *
+     * \param field the field's name
+     * \param value the value
+     * \param context the context
+     *
+     * \return \c true when field has been write, \c false otherwise
+     */
+    bool serialize(const std::string& field,
+		   const T& value,
+		   anch::json::WriterContext& context) const;
+
+    /*!
+     * Serialize value according to optional/null option
+     *
+     * \param field the field's name
+     * \param value the value
+     * \param context the context
+     *
+     * \return \c true when field has been write, \c false otherwise
+     */
+    bool serialize(const std::string& field,
+		   const std::optional<T>& value,
+		   anch::json::WriterContext& context) const;
+
+    /*!
+     * Serialize value according to optional/null option
+     *
+     * \param field the field's name
+     * \param value the value
+     * \param context the context
+     *
+     * \return \c true when field has been write, \c false otherwise
+     */
+    bool serialize(const std::string& field,
+		   const T* const value,
+		   anch::json::WriterContext& context) const;
+
+    /*!
+     * Serialize array values according to empty option
+     *
+     * \param field the field's name
+     * \param value the value
+     * \param context the context
+     *
+     * \return \c true when field has been write, \c false otherwise
+     */
+    bool serialize(const std::string& field,
+		   const std::vector<T>& value,
+		   anch::json::WriterContext& context) const;
+
+    /*!
+     * Serialize array values according to empty option
+     *
+     * \param field the field's name
+     * \param value the value
+     * \param context the context
+     *
+     * \return \c true when field has been write, \c false otherwise
+     */
+    bool serialize(const std::string& field,
+		   const std::list<T>& value,
+		   anch::json::WriterContext& context) const;
+
+    /*!
+     * Serialize array values according to empty option
+     *
+     * \param field the field's name
+     * \param value the value
+     * \param context the context
+     *
+     * \return \c true when field has been write, \c false otherwise
+     */
+    bool serialize(const std::string& field,
+		   const std::set<T>& value,
+		   anch::json::WriterContext& context) const;
+
+    /*!
+     * Serialize map values according to empty option
+     *
+     * \param field the field's name
+     * \param value the value
+     * \param context the context
+     *
+     * \return \c true when field has been write, \c false otherwise
+     */
+    bool serialize(const std::string& field,
+		   const std::map<std::string,T>& value,
+		   anch::json::WriterContext& context) const;
+    // With field -
+    // Serialization -
+
+    // Deserialization +
+    /*!
+     * Deserialize JSON value
+     *
+     * \param value the value to set
+     * \param context the mapping context
+     *
+     * \return \false when value is \c null , \c false otherwise
+     */
+    bool deserialize(T& value, anch::json::ReaderContext& context) const;
+
     /*!
      * Deserialize JSON value
      *
@@ -128,6 +293,7 @@ namespace anch::json {
      * \param context the mapping context
      */
     bool deserialize(std::map<std::string,T>& value, anch::json::ReaderContext& context) const;
+    // Deserialization -
     // Methods -
 
   };

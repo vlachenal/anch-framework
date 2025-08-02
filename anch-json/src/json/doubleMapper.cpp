@@ -116,7 +116,7 @@ PrimitiveMapper<double>::serialize(const std::map<std::string,double>& value,
 
 template<>
 bool
-PrimitiveMapper<double>::deserialize(double& value, anch::json::ReaderContext& context) const {
+PrimitiveMapper<double>::deserializeValue(double& value, anch::json::ReaderContext& context) const {
   return anch::json::lexNumber(value, context);
 }
 
