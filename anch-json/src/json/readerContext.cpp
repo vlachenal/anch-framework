@@ -39,6 +39,7 @@ notCheckPayloadSize([[ maybe_unused ]] ReaderContext& context,
   // Nothing to do
 }
 
+// Constructors +
 ReaderContext::ReaderContext(std::istream& is, const anch::json::MappingOptions& mapOpts) noexcept:
   input(is),
   options(mapOpts),
@@ -75,13 +76,17 @@ ReaderContext::ReaderContext(std::istream& is, const anch::json::MappingOptions&
   }
   // Determine lexer functions according to mapping options -
 }
+// Constructors -
 
+// Destructor +
 ReaderContext::~ReaderContext() {
   if(buffer != NULL) {
     delete[] buffer;
   }
 }
+// Destructor -
 
+// Methods +
 bool
 ReaderContext::next(char& current) {
   // Consume input stream in buffer when buffer end has been reached and input is available +
@@ -107,3 +112,4 @@ ReaderContext::refillBuffer() {
   offset = 0; // reset offset
   return count;
 }
+// Methods -

@@ -25,9 +25,7 @@
 #include <list>
 #include <map>
 
-#include "json/mappingFunctions.hpp"
 #include "json/mappingError.hpp"
-#include "json/impl/stringsMapper.hpp"
 #include "json/lexer.hpp"
 
 
@@ -47,70 +45,11 @@ PrimitiveMapper<std::string>::~PrimitiveMapper() {
 }
 
 template<>
-bool
-PrimitiveMapper<std::string>::serialize(const std::string& value,
-					std::ostream& out,
-					const anch::json::MappingOptions& options,
-					const std::optional<std::string>& field) {
-  return anch::json::serialize(value, out, &anch::json::serializeStringValue<std::string>, options, field);
-}
-
-template<>
-bool
-PrimitiveMapper<std::string>::serialize(const std::string* const value,
-					std::ostream& out,
-					const anch::json::MappingOptions& options,
-					const std::optional<std::string>& field) {
-  return anch::json::serialize(value, out, &anch::json::serializeStringValue<std::string>, options, field);
-}
-
-template<>
-bool
-PrimitiveMapper<std::string>::serialize(const std::optional<std::string>& value,
-					std::ostream& out,
-					const anch::json::MappingOptions& options,
-					const std::optional<std::string>& field) {
-  return anch::json::serialize(value, out, &anch::json::serializeStringValue<std::string>, options, field);
-}
-
-template<>
-bool
-PrimitiveMapper<std::string>::serialize(const std::vector<std::string>& value,
-					std::ostream& out,
-					const anch::json::MappingOptions& options,
-					const std::optional<std::string>& field) {
-  anch::json::serializeArray<std::string>(value, out, &anch::json::serializeStringValue<std::string>, options, field);
-  return true;
-}
-
-template<>
-bool
-PrimitiveMapper<std::string>::serialize(const std::list<std::string>& value,
-					std::ostream& out,
-					const anch::json::MappingOptions& options,
-					const std::optional<std::string>& field) {
-  anch::json::serializeArray<std::string>(value, out, &anch::json::serializeStringValue<std::string>, options, field);
-  return true;
-}
-
-template<>
-bool
-PrimitiveMapper<std::string>::serialize(const std::set<std::string>& value,
-					std::ostream& out,
-					const anch::json::MappingOptions& options,
-					const std::optional<std::string>& field) {
-  anch::json::serializeArray<std::string>(value, out, &anch::json::serializeStringValue<std::string>, options, field);
-  return true;
-}
-
-template<>
-bool
-PrimitiveMapper<std::string>::serialize(const std::map<std::string,std::string>& value,
-					std::ostream& out,
-					const anch::json::MappingOptions& options,
-					const std::optional<std::string>& field) {
-  anch::json::serializeMap<std::string>(value, out, &anch::json::serializeStringValue<std::string>, options, field);
-  return true;
+void
+PrimitiveMapper<std::string>::serializeValue(const std::string& value, anch::json::WriterContext& context) const {
+    context.output.put(anch::json::STRING_DELIMITER)
+      .write(value.data(), static_cast<std::streamsize>(value.size()))
+      .put(anch::json::STRING_DELIMITER);
 }
 
 template<>

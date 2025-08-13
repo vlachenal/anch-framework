@@ -72,13 +72,6 @@ namespace anch::json {
     WriterContext() = delete;
 
     /*!
-     * Forbids \c WriterContext copy constructor
-     *
-     * \param context the context not to copy
-     */
-    WriterContext(const WriterContext& context) = delete;
-
-    /*!
      * Forbids \c WriterContext move constructor
      *
      * \param context the context not to move
@@ -92,6 +85,14 @@ namespace anch::json {
      * \param options the mapping options to use
      */
     WriterContext(std::ostream& os, const anch::json::MappingOptions& options) noexcept;
+
+  private:
+    /*!
+     * \c WriterContext copy constructor (private)
+     *
+     * \param context the context not to copy
+     */
+    WriterContext(const WriterContext& context);
     // Constructors -
 
     // Destructor +

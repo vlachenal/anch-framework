@@ -25,6 +25,7 @@
 
 #include "json/factory.hpp"
 #include "json/readerContext.hpp"
+#include "json/writerContext.hpp"
 
 namespace anch::json {
 
@@ -32,31 +33,36 @@ namespace anch::json {
   template<typename T>
   inline
   void serialize(const T& value, std::ostream& out, const anch::json::MappingOptions& options) {
-    anch::json::Factory<T>::getInstance().serialize(value, out, options);
+    anch::json::WriterContext context(out, options);
+    anch::json::Factory<T>::getInstance().serialize(value, context);
   }
 
   template<typename T>
   inline
   void serialize(const std::vector<T>& value, std::ostream& out, const anch::json::MappingOptions& options) {
-    anch::json::Factory<T>::getInstance().serialize(value, out, options);
+    anch::json::WriterContext context(out, options);
+    anch::json::Factory<T>::getInstance().serialize(value, context);
   }
 
   template<typename T>
   inline
   void serialize(const std::list<T>& value, std::ostream& out, const anch::json::MappingOptions& options) {
-    anch::json::Factory<T>::getInstance().serialize(value, out, options);
+    anch::json::WriterContext context(out, options);
+    anch::json::Factory<T>::getInstance().serialize(value, context);
   }
 
   template<typename T>
   inline
   void serialize(const std::set<T>& value, std::ostream& out, const anch::json::MappingOptions& options) {
-    anch::json::Factory<T>::getInstance().serialize(value, out, options);
+    anch::json::WriterContext context(out, options);
+    anch::json::Factory<T>::getInstance().serialize(value, context);
   }
 
   template<typename T>
   inline
   void serialize(const std::map<std::string,T>& value, std::ostream& out, const anch::json::MappingOptions& options) {
-    anch::json::Factory<T>::getInstance().serialize(value, out, options);
+    anch::json::WriterContext context(out, options);
+    anch::json::Factory<T>::getInstance().serialize(value, context);
   }
 
   template<typename T>
@@ -64,7 +70,8 @@ namespace anch::json {
   std::string
   serialize(const T& value, const anch::json::MappingOptions& options) {
     std::ostringstream out;
-    anch::json::Factory<T>::getInstance().serialize(value, out, options);
+    anch::json::WriterContext context(out, options);
+    anch::json::Factory<T>::getInstance().serialize(value, context);
     return out.str();
   }
 
@@ -72,36 +79,36 @@ namespace anch::json {
   inline
   std::string
   serialize(const std::vector<T>& value, const anch::json::MappingOptions& options) {
-    anch::json::ReaderContext context(options);
     std::ostringstream out;
-    anch::json::Factory<T>::getInstance().serialize(value, out, context);
+    anch::json::WriterContext context(out, options);
+    anch::json::Factory<T>::getInstance().serialize(value, context);
     return out.str();
   }
 
   template<typename T>
   inline
   std::string serialize(const std::list<T>& value, const anch::json::MappingOptions& options) {
-    anch::json::ReaderContext context(options);
     std::ostringstream out;
-    anch::json::Factory<T>::getInstance().serialize(value, out, context);
+    anch::json::WriterContext context(out, options);
+    anch::json::Factory<T>::getInstance().serialize(value, context);
     return out.str();
   }
 
   template<typename T>
   inline
   std::string serialize(const std::set<T>& value, const anch::json::MappingOptions& options) {
-    anch::json::ReaderContext context(options);
     std::ostringstream out;
-    anch::json::Factory<T>::getInstance().serialize(value, out, context);
+    anch::json::WriterContext context(out, options);
+    anch::json::Factory<T>::getInstance().serialize(value, context);
     return out.str();
   }
 
   template<typename T>
   inline
   std::string serialize(const std::map<std::string,T>& value, const anch::json::MappingOptions& options) {
-    anch::json::ReaderContext context(options);
     std::ostringstream out;
-    anch::json::Factory<T>::getInstance().serialize(value, out, context);
+    anch::json::WriterContext context(out, options);
+    anch::json::Factory<T>::getInstance().serialize(value, context);
     return out.str();
   }
 

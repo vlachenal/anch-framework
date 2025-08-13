@@ -27,7 +27,6 @@
 #include <functional>
 #include <cstdint>
 
-#include "json/mappingFunctions.hpp"
 #include "json/impl/numericsMapper.hpp"
 #include "json/lexer.hpp"
 #include "convert.hpp"
@@ -48,70 +47,9 @@ PrimitiveMapper<int16_t>::~PrimitiveMapper() {
 }
 
 template<>
-bool
-PrimitiveMapper<int16_t>::serialize(const int16_t& value,
-				    std::ostream& out,
-				    const anch::json::MappingOptions& options,
-				    const std::optional<std::string>& field) {
-  return anch::json::serialize(value, out, &anch::json::serializeNumericValue<int16_t>, options, field);
-}
-
-template<>
-bool
-PrimitiveMapper<int16_t>::serialize(const int16_t* const value,
-				    std::ostream& out,
-				    const anch::json::MappingOptions& options,
-				    const std::optional<std::string>& field) {
-  return anch::json::serialize(value, out, &anch::json::serializeNumericValue<int16_t>, options, field);
-}
-
-template<>
-bool
-PrimitiveMapper<int16_t>::serialize(const std::optional<int16_t>& value,
-				    std::ostream& out,
-				    const anch::json::MappingOptions& options,
-				    const std::optional<std::string>& field) {
-  return anch::json::serialize(value, out, &anch::json::serializeNumericValue<int16_t>, options, field);
-}
-
-template<>
-bool
-PrimitiveMapper<int16_t>::serialize(const std::vector<int16_t>& value,
-				    std::ostream& out,
-				    const anch::json::MappingOptions& options,
-				    const std::optional<std::string>& field) {
-  anch::json::serializeArray<int16_t>(value, out, &anch::json::serializeNumericValue<int16_t>, options, field);
-  return true;
-}
-
-template<>
-bool
-PrimitiveMapper<int16_t>::serialize(const std::list<int16_t>& value,
-				    std::ostream& out,
-				    const anch::json::MappingOptions& options,
-				    const std::optional<std::string>& field) {
-  anch::json::serializeArray<int16_t>(value, out, &anch::json::serializeNumericValue<int16_t>, options, field);
-  return true;
-}
-
-template<>
-bool
-PrimitiveMapper<int16_t>::serialize(const std::set<int16_t>& value,
-				    std::ostream& out,
-				    const anch::json::MappingOptions& options,
-				    const std::optional<std::string>& field) {
-  anch::json::serializeArray<int16_t>(value, out, &anch::json::serializeNumericValue<int16_t>, options, field);
-  return true;
-}
-
-template<>
-bool
-PrimitiveMapper<int16_t>::serialize(const std::map<std::string,int16_t>& value,
-				    std::ostream& out,
-				    const anch::json::MappingOptions& options,
-				    const std::optional<std::string>& field) {
-  anch::json::serializeMap<int16_t>(value, out, &anch::json::serializeNumericValue<int16_t>, options, field);
-  return true;
+void
+PrimitiveMapper<int16_t>::serializeValue(const int16_t& value, anch::json::WriterContext& context) const {
+  context.output << value; // \todo format it properly
 }
 
 template<>
