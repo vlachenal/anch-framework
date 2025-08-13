@@ -1,7 +1,7 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$classanch_1_1rest_1_1_mapper_registry.html" title=" " alt="" coords="17,5,197,32"/>
-<area shape="rect" id="Node000001" href="$classanch_1_1rest_1_1_global_mapper_registry.html" title=" " alt="" coords="257,27,424,69"/>
-<area shape="poly" id="edge56_Node000000_Node000001" title=" " alt="" coords="212,29,256,35,256,40,212,35"/>
-<area shape="rect" id="Node000002" href="$classanch_1_1_singleton.html" title=" " alt="" coords="5,56,209,99"/>
-<area shape="poly" id="edge57_Node000002_Node000001" title=" " alt="" coords="224,60,256,56,257,61,225,65"/>
+<area shape="rect" id="Node000000" href="$classanch_1_1rest_1_1_endpoint_func.html" title="Endpoint function interface." alt="" coords="5,43,173,69"/>
+<area shape="rect" id="Node000001" href="$classanch_1_1rest_1_1_endpoint_params_func.html" title=" " alt="" coords="233,5,416,48"/>
+<area shape="poly" id="edge54_Node000000_Node000001" title=" " alt="" coords="188,41,232,35,233,41,188,46"/>
+<area shape="rect" id="Node000002" href="$classanch_1_1rest_1_1_endpoint_simple_func.html" title=" " alt="" coords="221,72,428,99"/>
+<area shape="poly" id="edge55_Node000000_Node000002" title=" " alt="" coords="188,66,221,70,220,75,188,71"/>
 </map>

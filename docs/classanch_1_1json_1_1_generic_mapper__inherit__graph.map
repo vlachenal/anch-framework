@@ -1,11 +1,11 @@
 <map id="anch::json::GenericMapper&lt; M, T &gt;" name="anch::json::GenericMapper&lt; M, T &gt;">
-<area shape="rect" id="Node000001" title="Generic mapper." alt="" coords="121,5,288,283"/>
-<area shape="rect" id="Node000002" href="$classanch_1_1json_1_1_generic_mapper.html" title=" " alt="" coords="24,376,191,504"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="139,297,135,307,119,377,114,376,130,306,133,296"/>
-<area shape="rect" id="Node000004" href="$classanch_1_1json_1_1_generic_mapper.html" title=" " alt="" coords="228,376,403,504"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="264,296,294,375,289,377,259,298"/>
-<area shape="rect" id="Node000003" href="$classanch_1_1json_1_1_object_mapper.html" title="JSON complex object mapper." alt="" coords="5,553,196,836"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="108,519,107,554,102,554,103,519"/>
-<area shape="rect" id="Node000005" href="$classanch_1_1json_1_1_primitive_mapper.html" title="JSON primitive types mapper." alt="" coords="220,553,424,836"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="320,519,321,554,316,554,315,519"/>
+<area shape="rect" id="Node000001" title="Generic mapper." alt="" coords="121,5,288,347"/>
+<area shape="rect" id="Node000002" href="$classanch_1_1json_1_1_generic_mapper.html" title=" " alt="" coords="24,440,191,589"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="138,362,135,371,120,441,115,440,130,370,133,360"/>
+<area shape="rect" id="Node000004" href="$classanch_1_1json_1_1_generic_mapper.html" title=" " alt="" coords="228,440,403,589"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="268,360,294,439,289,441,262,361"/>
+<area shape="rect" id="Node000003" href="$classanch_1_1json_1_1_object_mapper.html" title="JSON complex object mapper." alt="" coords="5,639,196,772"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="107,605,106,639,100,639,102,604"/>
+<area shape="rect" id="Node000005" href="$classanch_1_1json_1_1_primitive_mapper.html" title="JSON primitive types mapper." alt="" coords="220,639,424,772"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="321,604,322,639,317,639,316,605"/>
 </map>

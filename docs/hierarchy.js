@@ -254,5 +254,6 @@ var hierarchy =
       [ "anch::logger::LowPriorityWriter", "classanch_1_1logger_1_1_low_priority_writer.html", null ],
       [ "anch::logger::ThreadSafeWriter", "classanch_1_1logger_1_1_thread_safe_writer.html", null ]
     ] ],
+    [ "anch::json::WriterContext", "classanch_1_1json_1_1_writer_context.html", null ],
     [ "anch::crypto::ZeroPadding", "classanch_1_1crypto_1_1_zero_padding.html", null ]
 ];

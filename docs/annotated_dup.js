@@ -78,7 +78,8 @@ var annotated_dup =
         [ "ObjectMapper", "classanch_1_1json_1_1_object_mapper.html", "classanch_1_1json_1_1_object_mapper" ],
         [ "PrimitiveMapper", "classanch_1_1json_1_1_primitive_mapper.html", "classanch_1_1json_1_1_primitive_mapper" ],
         [ "Reader", "classanch_1_1json_1_1_reader.html", "classanch_1_1json_1_1_reader" ],
-        [ "ReaderContext", "classanch_1_1json_1_1_reader_context.html", "classanch_1_1json_1_1_reader_context" ]
+        [ "ReaderContext", "classanch_1_1json_1_1_reader_context.html", "classanch_1_1json_1_1_reader_context" ],
+        [ "WriterContext", "classanch_1_1json_1_1_writer_context.html", "classanch_1_1json_1_1_writer_context" ]
       ] ],
       [ "logger", "namespaceanch_1_1logger.html", [
         [ "formatter", "namespaceanch_1_1logger_1_1formatter.html", [

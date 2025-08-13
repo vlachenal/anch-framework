@@ -113,6 +113,7 @@ var searchData=
   ['_7euuid_110',['~UUID',['../classanch_1_1_u_u_i_d.html#ac1a536fe3ca38f2d4ac45d218b2512c1',1,'anch::UUID']]],
   ['_7ewebclient_111',['~WebClient',['../classanch_1_1rest_1_1_web_client.html#ac42d95763ca9eb4c95dc2ef1013ef5ea',1,'anch::rest::WebClient']]],
   ['_7ewriter_112',['~Writer',['../classanch_1_1logger_1_1_writer.html#aa728821d9b405970546a04eeeb160b18',1,'anch::logger::Writer']]],
-  ['_7eyear2dformatter_113',['~Year2DFormatter',['../classanch_1_1date_1_1formatter_1_1_year2_d_formatter.html#af9f3fb5482bc404268ade8780454d05d',1,'anch::date::formatter::Year2DFormatter']]],
-  ['_7eyear4dformatter_114',['~Year4DFormatter',['../classanch_1_1date_1_1formatter_1_1_year4_d_formatter.html#ace0b1d74c2da8753fe7aa1d633af9f8c',1,'anch::date::formatter::Year4DFormatter']]]
+  ['_7ewritercontext_113',['~WriterContext',['../classanch_1_1json_1_1_writer_context.html#a32d15f52ea0f168b53af36839724845d',1,'anch::json::WriterContext']]],
+  ['_7eyear2dformatter_114',['~Year2DFormatter',['../classanch_1_1date_1_1formatter_1_1_year2_d_formatter.html#af9f3fb5482bc404268ade8780454d05d',1,'anch::date::formatter::Year2DFormatter']]],
+  ['_7eyear4dformatter_115',['~Year4DFormatter',['../classanch_1_1date_1_1formatter_1_1_year4_d_formatter.html#ace0b1d74c2da8753fe7aa1d633af9f8c',1,'anch::date::formatter::Year4DFormatter']]]
 ];
