@@ -238,18 +238,11 @@ namespace anch::json {
   template<typename T>
   void
   ObjectMapper<T>::serializeValue(const T& value, anch::json::WriterContext& context) const {
-    context.output.put(anch::json::OBJECT_BEGIN);
-    auto iter = _writers.begin();
-    while(true) {
-      bool added = std::invoke(*iter, value, context);
-      if(++iter == _writers.end()) {
-	break;
-      }
-      if(added) {
-	context.output.put(anch::json::FIELD_SEPARATOR);
-      }
+    context.beginObject();
+    for(auto iter = _writers.begin() ; iter != _writers.end() ; ++iter) {
+      std::invoke(*iter, value, context);
     }
-    context.output.put(anch::json::OBJECT_END);
+    context.endObject();
   }
 
   template<typename T>

@@ -47,13 +47,9 @@ namespace anch::json {
   void
   GenericMapper<M,T>::serialize(const std::vector<T>& value, anch::json::WriterContext& context) const {
     context.beginArray();
-    bool first = true;
     for(auto iter = value.cbegin() ; iter != value.cend() ; ++iter) {
-      if(!first) {
-	context.next();
-      }
+      context.next();
       serialize(*iter, context);
-      first = false;
     }
     context.endArray();
   }
@@ -62,13 +58,9 @@ namespace anch::json {
   void
   GenericMapper<M,T>::serialize(const std::list<T>& value, anch::json::WriterContext& context) const {
     context.beginArray();
-    bool first = true;
     for(auto iter = value.cbegin() ; iter != value.cend() ; ++iter) {
-      if(!first) {
-	context.next();
-      }
+      context.next();
       serialize(*iter, context);
-      first = false;
     }
     context.endArray();
   }
@@ -77,13 +69,9 @@ namespace anch::json {
   void
   GenericMapper<M,T>::serialize(const std::set<T>& value, anch::json::WriterContext& context) const {
     context.beginArray();
-    bool first = true;
     for(auto iter = value.cbegin() ; iter != value.cend() ; ++iter) {
-      if(!first) {
-	context.next();
-      }
+      context.next();
       serialize(*iter, context);
-      first = false;
     }
     context.endArray();
   }
@@ -92,14 +80,9 @@ namespace anch::json {
   void
   GenericMapper<M,T>::serialize(const std::map<std::string,T>& value, anch::json::WriterContext& context) const {
     context.beginObject();
-    bool first = true;
     for(auto iter = value.cbegin() ; iter != value.cend() ; ++iter) {
-      if(!first) {
-	context.next();
-      }
       context.writeField(iter->first);
       serialize(iter->second, context);
-      first = false;
     }
     context.endObject();
   }

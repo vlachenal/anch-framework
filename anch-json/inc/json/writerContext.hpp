@@ -23,6 +23,7 @@
 #include <string>
 #include <functional>
 #include <stdint.h>
+#include <deque>
 
 #include "json/mappingOptions.hpp"
 
@@ -48,8 +49,8 @@ namespace anch::json {
     anch::json::MappingOptions options;
 
   private:
-    /*! First field flag */
-    bool _firstField;
+    /*! First fields queue */
+    std::deque<bool> _firsts;
 
     /*! Current number of indentation */
     uint16_t _nbIndent;
@@ -159,6 +160,7 @@ namespace anch::json {
      */
     void endObject();
 
+    //private:
     /*!
      * Write field/value delimiter (',') according to formatter options
      */
