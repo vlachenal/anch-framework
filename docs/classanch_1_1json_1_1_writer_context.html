@@ -287,7 +287,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Write begin array ('[') according to formatter options </p>
+<p>Write begin array ('[') and push first field in context </p>
 <div id="dynsection-3" onclick="return dynsection.toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
 <div id="dynsection-3-summary" class="dynsummary" style="display:block;">
 </div>
@@ -311,7 +311,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Write begin array ('{') according to formatter options </p>
+<p>Write begin array ('{') and push first field in context </p>
 <div id="dynsection-4" onclick="return dynsection.toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
 <div id="dynsection-4-summary" class="dynsummary" style="display:block;">
 </div>
@@ -335,7 +335,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Write end array (']') according to formatter options </p>
+<p>Write end array (']') and pop first field from context </p>
 <div id="dynsection-5" onclick="return dynsection.toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
 <div id="dynsection-5-summary" class="dynsummary" style="display:block;">
 </div>
@@ -359,7 +359,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Write end array ('}') according to formatter options </p>
+<p>Write end array ('}') and pop first field from context </p>
 <div id="dynsection-6" onclick="return dynsection.toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
 <div id="dynsection-6-summary" class="dynsummary" style="display:block;">
 </div>
@@ -383,7 +383,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Write field/value delimiter (',') according to formatter options </p>
+<p>Write field/value delimiter (',') according to context (first field or not) </p>
 <div id="dynsection-7" onclick="return dynsection.toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
 <div id="dynsection-7-summary" class="dynsummary" style="display:block;">
 </div>
@@ -407,7 +407,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Wirte empty array according to options.<br  />
+<p>Write empty array according to options.<br  />
 When serialize, it will be serialized as '"&lt;field&gt;":[]'</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -438,7 +438,7 @@ When serialize, it will be serialized as '"&lt;field&gt;":[]'</p>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Wirte empty object (map) according to options.<br  />
+<p>Write empty object (map) according to options.<br  />
 When serialize, it will be serialized as '"&lt;field&gt;":{}'</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -469,7 +469,8 @@ When serialize, it will be serialized as '"&lt;field&gt;":{}'</p>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Write field and add ':' into output stream</p>
+<p>Write field and add ':' into output stream.<br  />
+Call <code><a class="el" href="#a515e174edace2e927a95d2c49218ba4b">next()</a></code> to add ',' or not before field</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">field</td><td>the field </td></tr>
@@ -502,7 +503,7 @@ When serialize, it will be serialized as '"&lt;field&gt;":{}'</p>
 <p>Write <code>null</code> value or not according to options</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">field</td><td>the field</td></tr>
+    <tr><td class="paramname">field</td><td>the field name</td></tr>
   </table>
   </dd>
 </dl>
