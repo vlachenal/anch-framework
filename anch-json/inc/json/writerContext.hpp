@@ -111,14 +111,14 @@ namespace anch::json {
     /*!
      * Write \c null value or not according to options
      *
-     * \param field the field
+     * \param field the field name
      *
      * \return \c true when \c null value has been serialize, \c false otherwise
      */
     bool writeNull(const std::string& field);
 
     /*!
-     * Wirte empty array according to options.\n
+     * Write empty array according to options.\n
      * When serialize, it will be serialized as '"<field>":[]'
      *
      * \param field the field name
@@ -126,7 +126,7 @@ namespace anch::json {
     bool writeEmptyArray(const std::string& field);
 
     /*!
-     * Wirte empty object (map) according to options.\n
+     * Write empty object (map) according to options.\n
      * When serialize, it will be serialized as '"<field>":{}'
      *
      * \param field the field name
@@ -134,35 +134,35 @@ namespace anch::json {
     bool writeEmptyObject(const std::string& field);
 
     /*!
-     * Write field and add ':' into output stream
+     * Write field and add ':' into output stream.\n
+     * Call \c next() to add ',' or not before field
      *
      * \param field the field
      */
     void writeField(const std::string& field);
 
     /*!
-     * Write begin array ('[') according to formatter options
+     * Write begin array ('[') and push first field in context
      */
     void beginArray();
 
     /*!
-     * Write end array (']') according to formatter options
+     * Write end array (']') and pop first field from context
      */
     void endArray();
 
     /*!
-     * Write begin array ('{') according to formatter options
+     * Write begin array ('{') and push first field in context
      */
     void beginObject();
 
     /*!
-     * Write end array ('}') according to formatter options
+     * Write end array ('}') and pop first field from context
      */
     void endObject();
 
-    //private:
     /*!
-     * Write field/value delimiter (',') according to formatter options
+     * Write field/value delimiter (',') according to context (first field or not)
      */
     void next();
     // Methods -
