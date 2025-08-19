@@ -39,7 +39,7 @@ PrimitiveMapper<float>::~PrimitiveMapper() {
 template<>
 void
 PrimitiveMapper<float>::serializeValue(const float& value, anch::json::WriterContext& context) const {
-  context.output << value; // \todo format it properly
+  context.output << value;
 }
 
 template<>

@@ -25,11 +25,10 @@ using anch::json::WriterContext;
 
 
 // Constructors +
-WriterContext::WriterContext(std::ostream& os, const anch::json::MappingOptions& mapOpts) noexcept:
-  output(os), options(mapOpts), _firsts() {
-}
-
-WriterContext::WriterContext(const WriterContext& context): output(context.output), options(context.options) {
+WriterContext::WriterContext(std::ostream& os, const anch::json::MappingOptions& options) noexcept:
+  output(os), _options(options), _firsts() {
+  // set output stream formatter for integer, float and boolean
+  output << std::dec << std::defaultfloat << std::boolalpha;
 }
 // Constructors -
 
@@ -42,26 +41,29 @@ WriterContext::~WriterContext() noexcept {
 // Methods +
 bool
 WriterContext::writeNull(const std::string& field) {
-  if(!options.serialize_null) {
-    return false;
+  if(_options.serialize_null) {
+    writeField(field);
+    output.write("null", 4);
   }
-  writeField(field);
-  output.write("null", 4);
-  return true;
+  return _options.serialize_null;
 }
 
 bool
 WriterContext::writeEmptyArray(const std::string& field) {
-  writeField(field);
-  output.put(anch::json::ARRAY_BEGIN).put(anch::json::ARRAY_END); // \todo check empty array options
-  return true;
+  if(_options.serialize_empty_col) {
+    writeField(field);
+    output.put(anch::json::ARRAY_BEGIN).put(anch::json::ARRAY_END);
+  }
+  return _options.serialize_empty_col;
 }
 
 bool
 WriterContext::writeEmptyObject(const std::string& field) {
-  writeField(field);
-  output.put(anch::json::OBJECT_BEGIN).put(anch::json::OBJECT_END); // \todo check empty array options
-  return true;
+  if(_options.serialize_empty_col) {
+    writeField(field);
+    output.put(anch::json::OBJECT_BEGIN).put(anch::json::OBJECT_END);
+  }
+  return _options.serialize_empty_col;
 }
 
 void
@@ -99,10 +101,16 @@ WriterContext::endObject() {
 
 void
 WriterContext::next() {
-  if(!_firsts.back()) { // \todo manage indentation when needed
+  if(!_firsts.back()) {
     output.put(anch::json::FIELD_SEPARATOR);
   } else {
     _firsts.back() = false;
+  }
+  if(_options.prettify_nbs != 0) {
+    output.put('\n');
+    for(uint32_t i = 0 ; i < _firsts.size() * _options.prettify_nbs ; ++i) {
+      output.put(' ');
+    }
   }
 }
 // Methods -

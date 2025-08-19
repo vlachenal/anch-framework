@@ -48,11 +48,7 @@ PrimitiveMapper<bool>::~PrimitiveMapper() {
 template<>
 void
 PrimitiveMapper<bool>::serializeValue(const bool& value, anch::json::WriterContext& context) const {
-  if(value) {
-    context.output.write("true", 4);
-  } else {
-    context.output.write("false", 5);
-  }
+  context.output << value;
 }
 
 template<>

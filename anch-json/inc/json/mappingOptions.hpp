@@ -20,6 +20,7 @@
 #pragma once
 
 #include <cstddef>
+#include <stdint.h>
 
 namespace anch::json {
 
@@ -35,14 +36,14 @@ namespace anch::json {
   struct MappingOptions {
 
     // Serialization +
-    /*! Serialize empty character' string as \c "" . Default to \c true ; std::optional or pointer can be used */
-    bool serialize_empty_string = true;
-
-    /*! Serialize empty collection as \c [] . Default to \c true ; std::optional or pointer can be used */
-    bool serialize_empty_array = true;
+    /*! Serialize empty collection as \c [] or \c {} for map . Default to \c true ; std::optional or pointer can be used */
+    bool serialize_empty_col = true;
 
     /*! Serialize null or empty string as \c null . Default to \c false */
     bool serialize_null = false;
+
+    /*! Serialization indentation number of spaces (\c 0 means no prettifying). Default to \c 0 */
+    uint16_t prettify_nbs = 0;
     // Serialization -
 
     // Deserialization +

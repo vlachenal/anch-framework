@@ -39,7 +39,7 @@ PrimitiveMapper<double>::~PrimitiveMapper() {
 template<>
 void
 PrimitiveMapper<double>::serializeValue(const double& value, anch::json::WriterContext& context) const {
-  context.output << value; // \todo format it properly
+  context.output << value;
 }
 
 template<>

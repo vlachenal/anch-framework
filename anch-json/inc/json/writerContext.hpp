@@ -45,24 +45,12 @@ namespace anch::json {
     /*! The input stream to parse */
     std::ostream& output;
 
-    /*! Mapping options */
-    anch::json::MappingOptions options;
-
   private:
+    /*! Mapping options */
+    anch::json::MappingOptions _options;
+
     /*! First fields queue */
     std::deque<bool> _firsts;
-
-    /*! Current number of indentation */
-    uint16_t _nbIndent;
-
-    /*! Current indentation to use */
-    std::string _indent;
-
-    /*! Write \c null value function */
-    std::function<bool(const std::string&)> _nullFunc;
-
-    /*! Next field function */
-    std::function<void()> _nextFunc;
     // Attributes -
 
     // Constructors +
@@ -71,6 +59,13 @@ namespace anch::json {
      * Forbids \c WriterContext default constructor
      */
     WriterContext() = delete;
+
+    /*!
+     * Forbids \c WriterContext copy constructor
+     *
+     * \param context the context not to copy
+     */
+    WriterContext(const WriterContext& context) = delete;
 
     /*!
      * Forbids \c WriterContext move constructor
@@ -86,14 +81,6 @@ namespace anch::json {
      * \param options the mapping options to use
      */
     WriterContext(std::ostream& os, const anch::json::MappingOptions& options) noexcept;
-
-  private:
-    /*!
-     * \c WriterContext copy constructor (private)
-     *
-     * \param context the context not to copy
-     */
-    WriterContext(const WriterContext& context);
     // Constructors -
 
     // Destructor +
@@ -118,7 +105,7 @@ namespace anch::json {
     bool writeNull(const std::string& field);
 
     /*!
-     * Write empty array according to options.\n
+     * Write empty collection according to options.\n
      * When serialize, it will be serialized as '"<field>":[]'
      *
      * \param field the field name
