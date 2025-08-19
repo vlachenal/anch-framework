@@ -114,8 +114,9 @@ $(function(){initNavTree('classanch_1_1json_1_1_writer_context.html','','classan
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a60bdd270f96e59de0a3f019e89b04d5e" id="r_a60bdd270f96e59de0a3f019e89b04d5e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a60bdd270f96e59de0a3f019e89b04d5e">WriterContext</a> ()=delete</td></tr>
+<tr class="memitem:aa4db852067763d591089887c720f238f" id="r_aa4db852067763d591089887c720f238f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa4db852067763d591089887c720f238f">WriterContext</a> (const <a class="el" href="classanch_1_1json_1_1_writer_context.html">WriterContext</a> &amp;context)=delete</td></tr>
 <tr class="memitem:aa4f3933f6f2ade30af04344467c8657a" id="r_aa4f3933f6f2ade30af04344467c8657a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa4f3933f6f2ade30af04344467c8657a">WriterContext</a> (<a class="el" href="classanch_1_1json_1_1_writer_context.html">WriterContext</a> &amp;&amp;context)=delete</td></tr>
-<tr class="memitem:a9c6c2c628c1b7aa06b146480817041be" id="r_a9c6c2c628c1b7aa06b146480817041be"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9c6c2c628c1b7aa06b146480817041be">WriterContext</a> (std::ostream &amp;os, const <a class="el" href="structanch_1_1json_1_1_mapping_options.html">anch::json::MappingOptions</a> &amp;<a class="el" href="#a0dfd9e4d1fde9f9a300154e1172986a8">options</a>) noexcept</td></tr>
+<tr class="memitem:a9c6c2c628c1b7aa06b146480817041be" id="r_a9c6c2c628c1b7aa06b146480817041be"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9c6c2c628c1b7aa06b146480817041be">WriterContext</a> (std::ostream &amp;os, const <a class="el" href="structanch_1_1json_1_1_mapping_options.html">anch::json::MappingOptions</a> &amp;options) noexcept</td></tr>
 <tr class="memitem:a32d15f52ea0f168b53af36839724845d" id="r_a32d15f52ea0f168b53af36839724845d"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a32d15f52ea0f168b53af36839724845d">~WriterContext</a> () noexcept</td></tr>
 <tr class="memitem:a6de375a25bff81b8136ebe6fdc2bf6d7" id="r_a6de375a25bff81b8136ebe6fdc2bf6d7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6de375a25bff81b8136ebe6fdc2bf6d7">writeNull</a> (const std::string &amp;field)</td></tr>
 <tr class="memitem:a5c49f813ead476e0542ab7a9e8366e23" id="r_a5c49f813ead476e0542ab7a9e8366e23"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5c49f813ead476e0542ab7a9e8366e23">writeEmptyArray</a> (const std::string &amp;field)</td></tr>
@@ -130,7 +131,6 @@ Public Member Functions</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 id="header-pub-attribs" class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:ad27ae46bc2589d9e298537b067299782" id="r_ad27ae46bc2589d9e298537b067299782"><td class="memItemLeft" align="right" valign="top">std::ostream &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad27ae46bc2589d9e298537b067299782">output</a></td></tr>
-<tr class="memitem:a0dfd9e4d1fde9f9a300154e1172986a8" id="r_a0dfd9e4d1fde9f9a300154e1172986a8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structanch_1_1json_1_1_mapping_options.html">anch::json::MappingOptions</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0dfd9e4d1fde9f9a300154e1172986a8">options</a></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>JSON writer context. </p>
@@ -139,7 +139,7 @@ Public Attributes</h2></td></tr>
 <dl class="section since"><dt>Since</dt><dd>0.1 </dd></dl>
 </div><a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a60bdd270f96e59de0a3f019e89b04d5e" name="a60bdd270f96e59de0a3f019e89b04d5e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a60bdd270f96e59de0a3f019e89b04d5e">&#9670;&#160;</a></span>WriterContext() <span class="overload">[1/3]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a60bdd270f96e59de0a3f019e89b04d5e">&#9670;&#160;</a></span>WriterContext() <span class="overload">[1/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -164,8 +164,46 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="aa4db852067763d591089887c720f238f" name="aa4db852067763d591089887c720f238f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa4db852067763d591089887c720f238f">&#9670;&#160;</a></span>WriterContext() <span class="overload">[2/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">anch::json::WriterContext::WriterContext </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classanch_1_1json_1_1_writer_context.html">WriterContext</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>context</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel delete">delete</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Forbids <code><a class="el" href="classanch_1_1json_1_1_writer_context.html" title="JSON writer context.">WriterContext</a></code> copy constructor</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">context</td><td>the context not to copy </td></tr>
+  </table>
+  </dd>
+</dl>
+<div id="dynsection-1" onclick="return dynsection.toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-1-summary" class="dynsummary" style="display:block;">
+</div>
+<div id="dynsection-1-content" class="dyncontent" style="display:none;">
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classanch_1_1json_1_1_writer_context_aa4db852067763d591089887c720f238f_cgraph.svg" width="398" height="54"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+
+</div>
+</div>
 <a id="aa4f3933f6f2ade30af04344467c8657a" name="aa4f3933f6f2ade30af04344467c8657a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa4f3933f6f2ade30af04344467c8657a">&#9670;&#160;</a></span>WriterContext() <span class="overload">[2/3]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aa4f3933f6f2ade30af04344467c8657a">&#9670;&#160;</a></span>WriterContext() <span class="overload">[3/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -193,17 +231,17 @@ Public Attributes</h2></td></tr>
   </table>
   </dd>
 </dl>
-<div id="dynsection-1" onclick="return dynsection.toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-1-summary" class="dynsummary" style="display:block;">
+<div id="dynsection-2" onclick="return dynsection.toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-2-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-1-content" class="dyncontent" style="display:none;">
+<div id="dynsection-2-content" class="dyncontent" style="display:none;">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classanch_1_1json_1_1_writer_context_aa4f3933f6f2ade30af04344467c8657a_cgraph.svg" width="398" height="54"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
 </div>
 </div>
 <a id="a9c6c2c628c1b7aa06b146480817041be" name="a9c6c2c628c1b7aa06b146480817041be"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9c6c2c628c1b7aa06b146480817041be">&#9670;&#160;</a></span>WriterContext() <span class="overload">[3/3]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a9c6c2c628c1b7aa06b146480817041be">&#9670;&#160;</a></span>WriterContext() <span class="overload">[4/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -236,12 +274,6 @@ Public Attributes</h2></td></tr>
   </table>
   </dd>
 </dl>
-<div id="dynsection-2" onclick="return dynsection.toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-2-summary" class="dynsummary" style="display:block;">
-</div>
-<div id="dynsection-2-content" class="dyncontent" style="display:none;">
-<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classanch_1_1json_1_1_writer_context_a9c6c2c628c1b7aa06b146480817041be_cgraph.svg" width="398" height="54"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
 
 </div>
 </div>
@@ -407,7 +439,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Write empty array according to options.<br  />
+<p>Write empty collection according to options.<br  />
 When serialize, it will be serialized as '"&lt;field&gt;":[]'</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -518,21 +550,6 @@ Call <code><a class="el" href="#a515e174edace2e927a95d2c49218ba4b">next()</a></c
 </div>
 </div>
 <a name="doc-variable-members" id="doc-variable-members"></a><h2 id="header-doc-variable-members" class="groupheader">Member Data Documentation</h2>
-<a id="a0dfd9e4d1fde9f9a300154e1172986a8" name="a0dfd9e4d1fde9f9a300154e1172986a8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0dfd9e4d1fde9f9a300154e1172986a8">&#9670;&#160;</a></span>options</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="structanch_1_1json_1_1_mapping_options.html">anch::json::MappingOptions</a> anch::json::WriterContext::options</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Mapping options </p>
-
-</div>
-</div>
 <a id="ad27ae46bc2589d9e298537b067299782" name="ad27ae46bc2589d9e298537b067299782"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad27ae46bc2589d9e298537b067299782">&#9670;&#160;</a></span>output</h2>
 

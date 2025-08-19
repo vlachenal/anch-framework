@@ -113,9 +113,9 @@ $(function(){initNavTree('structanch_1_1json_1_1_mapping_options.html','','struc
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-attribs" class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:ae39760f3484a88e1d3b6eccac998a7ad" id="r_ae39760f3484a88e1d3b6eccac998a7ad"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae39760f3484a88e1d3b6eccac998a7ad">serialize_empty_string</a> = true</td></tr>
-<tr class="memitem:a08fbca084890bb95e47073166dd1f172" id="r_a08fbca084890bb95e47073166dd1f172"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a08fbca084890bb95e47073166dd1f172">serialize_empty_array</a> = true</td></tr>
+<tr class="memitem:a1bae822e06ea3633055038c291997b85" id="r_a1bae822e06ea3633055038c291997b85"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1bae822e06ea3633055038c291997b85">serialize_empty_col</a> = true</td></tr>
 <tr class="memitem:adadf488f9661046c6a757088f486b3c2" id="r_adadf488f9661046c6a757088f486b3c2"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adadf488f9661046c6a757088f486b3c2">serialize_null</a> = false</td></tr>
+<tr class="memitem:a970b8a55a3abe5bbf1b230b685c9c280" id="r_a970b8a55a3abe5bbf1b230b685c9c280"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a970b8a55a3abe5bbf1b230b685c9c280">prettify_nbs</a> = 0</td></tr>
 <tr class="memitem:a9a73d4355f14264ff26f7936036f13ca" id="r_a9a73d4355f14264ff26f7936036f13ca"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9a73d4355f14264ff26f7936036f13ca">deserialize_ignore_unknown_field</a> = false</td></tr>
 <tr class="memitem:a52d4c5cf7ce9ae144d71e5bb50c1d40c" id="r_a52d4c5cf7ce9ae144d71e5bb50c1d40c"><td class="memItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a52d4c5cf7ce9ae144d71e5bb50c1d40c">deserialize_max_discard_char</a> = 0</td></tr>
 <tr class="memitem:a197bfa9b01700f0bbf714e91a6086f5a" id="r_a197bfa9b01700f0bbf714e91a6086f5a"><td class="memItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a197bfa9b01700f0bbf714e91a6086f5a">deserialize_max_field_char</a> = 512</td></tr>
@@ -203,33 +203,33 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a08fbca084890bb95e47073166dd1f172" name="a08fbca084890bb95e47073166dd1f172"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a08fbca084890bb95e47073166dd1f172">&#9670;&#160;</a></span>serialize_empty_array</h2>
+<a id="a970b8a55a3abe5bbf1b230b685c9c280" name="a970b8a55a3abe5bbf1b230b685c9c280"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a970b8a55a3abe5bbf1b230b685c9c280">&#9670;&#160;</a></span>prettify_nbs</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool anch::json::MappingOptions::serialize_empty_array = true</td>
+          <td class="memname">uint16_t anch::json::MappingOptions::prettify_nbs = 0</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Serialize empty collection as <code></code>[] . Default to <code>true</code> ; std::optional or pointer can be used </p>
+<p>Serialization indentation number of spaces (<code>0</code> means no prettifying). Default to <code>0</code> </p>
 
 </div>
 </div>
-<a id="ae39760f3484a88e1d3b6eccac998a7ad" name="ae39760f3484a88e1d3b6eccac998a7ad"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae39760f3484a88e1d3b6eccac998a7ad">&#9670;&#160;</a></span>serialize_empty_string</h2>
+<a id="a1bae822e06ea3633055038c291997b85" name="a1bae822e06ea3633055038c291997b85"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1bae822e06ea3633055038c291997b85">&#9670;&#160;</a></span>serialize_empty_col</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool anch::json::MappingOptions::serialize_empty_string = true</td>
+          <td class="memname">bool anch::json::MappingOptions::serialize_empty_col = true</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Serialize empty character' string as <code>""</code> . Default to <code>true</code> ; std::optional or pointer can be used </p>
+<p>Serialize empty collection as <code></code>[] or <code>{}</code> for map . Default to <code>true</code> ; std::optional or pointer can be used </p>
 
 </div>
 </div>

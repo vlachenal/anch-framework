@@ -340,11 +340,11 @@
 <polygon fill="white" stroke="none" points="606.38,-659 457.12,-659 457.12,-483 606.38,-483 606.38,-659"/>
 <text xml:space="preserve" text-anchor="start" x="471" y="-645.5" font-family="Helvetica,sans-Serif" font-size="10.00">anch::json::MappingOptions</text>
 <text xml:space="preserve" text-anchor="start" x="461.12" y="-629.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text xml:space="preserve" text-anchor="start" x="471.12" y="-629.5" font-family="Helvetica,sans-Serif" font-size="10.00">serialize_empty_string</text>
+<text xml:space="preserve" text-anchor="start" x="471.12" y="-629.5" font-family="Helvetica,sans-Serif" font-size="10.00">serialize_empty_col</text>
 <text xml:space="preserve" text-anchor="start" x="461.12" y="-613.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text xml:space="preserve" text-anchor="start" x="471.12" y="-613.5" font-family="Helvetica,sans-Serif" font-size="10.00">serialize_empty_array</text>
+<text xml:space="preserve" text-anchor="start" x="471.12" y="-613.5" font-family="Helvetica,sans-Serif" font-size="10.00">serialize_null</text>
 <text xml:space="preserve" text-anchor="start" x="461.12" y="-597.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text xml:space="preserve" text-anchor="start" x="471.12" y="-597.5" font-family="Helvetica,sans-Serif" font-size="10.00">serialize_null</text>
+<text xml:space="preserve" text-anchor="start" x="471.12" y="-597.5" font-family="Helvetica,sans-Serif" font-size="10.00">prettify_nbs</text>
 <text xml:space="preserve" text-anchor="start" x="461.12" y="-581.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
 <text xml:space="preserve" text-anchor="start" x="471.12" y="-581.5" font-family="Helvetica,sans-Serif" font-size="10.00">deserialize_ignore</text>
 <text xml:space="preserve" text-anchor="start" x="471.12" y="-569.5" font-family="Helvetica,sans-Serif" font-size="10.00">_unknown_field</text>

@@ -14,11 +14,12 @@ var searchData=
   ['pragma_11',['PRAGMA',['../structanch_1_1rest_1_1_common_headers.html#a6c362ec783316f18bc0b2252c7167ae0',1,'anch::rest::CommonHeaders']]],
   ['prefer_12',['PREFER',['../structanch_1_1rest_1_1_common_headers.html#ac23e10c1caed076308888a0b0d3d5900',1,'anch::rest::CommonHeaders']]],
   ['preference_5fapplied_13',['PREFERENCE_APPLIED',['../structanch_1_1rest_1_1_common_headers.html#ac126788844ee226194d6927234ad4190',1,'anch::rest::CommonHeaders']]],
-  ['propfind_14',['PROPFIND',['../structanch_1_1rest_1_1_verb.html#a0f15159a1340e68b4c56126e62d8e151',1,'anch::rest::Verb']]],
-  ['proppatch_15',['PROPPATCH',['../structanch_1_1rest_1_1_verb.html#a8e6f36821f737164a02690eb559ec495',1,'anch::rest::Verb']]],
-  ['proxy_5fauthenticate_16',['PROXY_AUTHENTICATE',['../structanch_1_1rest_1_1_common_headers.html#a9c916c0b9e276f9723063cabb47b026f',1,'anch::rest::CommonHeaders']]],
-  ['proxy_5fauthorization_17',['PROXY_AUTHORIZATION',['../structanch_1_1rest_1_1_common_headers.html#ab0e00d479833de3f884d64b415200307',1,'anch::rest::CommonHeaders']]],
-  ['proxy_5fconnection_18',['PROXY_CONNECTION',['../structanch_1_1rest_1_1_common_headers.html#a096e963e30fb7fab565c31bfd93f7e6b',1,'anch::rest::CommonHeaders']]],
-  ['public_5fkey_5fpins_19',['PUBLIC_KEY_PINS',['../structanch_1_1rest_1_1_common_headers.html#add752cf9fd36144b16e565bb1d6c494e',1,'anch::rest::CommonHeaders']]],
-  ['put_20',['PUT',['../structanch_1_1rest_1_1_verb.html#abe7a75e3f0bb634b92a934f364139819',1,'anch::rest::Verb']]]
+  ['prettify_5fnbs_14',['prettify_nbs',['../structanch_1_1json_1_1_mapping_options.html#a970b8a55a3abe5bbf1b230b685c9c280',1,'anch::json::MappingOptions']]],
+  ['propfind_15',['PROPFIND',['../structanch_1_1rest_1_1_verb.html#a0f15159a1340e68b4c56126e62d8e151',1,'anch::rest::Verb']]],
+  ['proppatch_16',['PROPPATCH',['../structanch_1_1rest_1_1_verb.html#a8e6f36821f737164a02690eb559ec495',1,'anch::rest::Verb']]],
+  ['proxy_5fauthenticate_17',['PROXY_AUTHENTICATE',['../structanch_1_1rest_1_1_common_headers.html#a9c916c0b9e276f9723063cabb47b026f',1,'anch::rest::CommonHeaders']]],
+  ['proxy_5fauthorization_18',['PROXY_AUTHORIZATION',['../structanch_1_1rest_1_1_common_headers.html#ab0e00d479833de3f884d64b415200307',1,'anch::rest::CommonHeaders']]],
+  ['proxy_5fconnection_19',['PROXY_CONNECTION',['../structanch_1_1rest_1_1_common_headers.html#a096e963e30fb7fab565c31bfd93f7e6b',1,'anch::rest::CommonHeaders']]],
+  ['public_5fkey_5fpins_20',['PUBLIC_KEY_PINS',['../structanch_1_1rest_1_1_common_headers.html#add752cf9fd36144b16e565bb1d6c494e',1,'anch::rest::CommonHeaders']]],
+  ['put_21',['PUT',['../structanch_1_1rest_1_1_verb.html#abe7a75e3f0bb634b92a934f364139819',1,'anch::rest::Verb']]]
 ];
