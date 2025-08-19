@@ -19,15 +19,6 @@
 */
 #include "json/primitiveMapper.hpp"
 
-#include <string>
-#include <set>
-#include <vector>
-#include <list>
-#include <ostream>
-#include <istream>
-#include <sstream>
-#include <functional>
-
 #include "json/lexer.hpp"
 
 using anch::json::PrimitiveMapper;
