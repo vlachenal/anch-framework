@@ -53,6 +53,78 @@ namespace anch::cli {
   BindArg bindFalse(bool& dest);
 
   /*!
+   * Bind \c uint16_t value utility function
+   *
+   * \param dest the destination
+   *
+   * \return the binding function
+   */
+  BindArg bindNum(uint16_t& dest);
+
+  /*!
+   * Bind \c uint16_t value utility function
+   *
+   * \param dest the destination
+   *
+   * \return the binding function
+   */
+  BindArg bindNum(uint32_t& dest);
+
+  /*!
+   * Bind \c uint32_t value utility function
+   *
+   * \param dest the destination
+   *
+   * \return the binding function
+   */
+  BindArg bindNum(uint64_t& dest);
+
+  /*!
+   * Bind \c int64_t value utility function
+   *
+   * \param dest the destination
+   *
+   * \return the binding function
+   */
+  BindArg bindNum(int16_t& dest);
+
+  /*!
+   * Bind \c int32_t value utility function
+   *
+   * \param dest the destination
+   *
+   * \return the binding function
+   */
+  BindArg bindNum(int32_t& dest);
+
+  /*!
+   * Bind \c int64_t value utility function
+   *
+   * \param dest the destination
+   *
+   * \return the binding function
+   */
+  BindArg bindNum(int64_t& dest);
+
+  /*!
+   * Bind \c float value utility function
+   *
+   * \param dest the destination
+   *
+   * \return the binding function
+   */
+  BindArg bindNum(float& dest);
+
+  /*!
+   * Bind \c double value utility function
+   *
+   * \param dest the destination
+   *
+   * \return the binding function
+   */
+  BindArg bindNum(double& dest);
+
+  /*!
    * Bind caracters' string value utility function
    *
    * \param dest the destination
@@ -139,6 +211,13 @@ namespace anch::cli {
    * \param dest the destination input stream
    */
   std::function<void(std::istream&)> bindPipe(std::shared_ptr<std::istream>& dest);
+
+  /*!
+   * Bind \c std::cout to output stream
+   *
+   * \param dest the destination output stream
+   */
+  std::function<void(std::ostream&)> bindCout(std::shared_ptr<std::ostream>& dest);
 
   /*!
    * Disable console formatting when environment variable \c ANCH_CLI_NO_FMT is set to \c 1

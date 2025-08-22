@@ -317,6 +317,11 @@ ArgHandler::arg(anch::cli::Arg& arg) {
     _positionals.push_back(option);
   }
   // Positional -
+  // Pipe and cout options +
+  if(option->arg->pipe || option->arg->cout) {
+    option->arg->mandatory = true;
+  }
+  // Pipe and cout options -
   return *this;
 }
 
@@ -442,6 +447,11 @@ ArgHandler::check() {
     // Check pipe option
     if(!option->state->found && option->arg->pipe) {
       std::invoke(option->arg->pipe, std::cin);
+      continue;
+    }
+    // Check cout option
+    if(!option->state->found && option->arg->cout) {
+      std::invoke(option->arg->cout, std::cout);
       continue;
     }
     // Format error +

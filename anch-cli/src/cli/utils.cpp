@@ -26,6 +26,7 @@
 #include <fstream>
 #include <cstdlib>
 #include <cstring>
+#include <charconv>
 
 
 using anch::cli::BindArg;
@@ -48,6 +49,58 @@ setFalse(bool& dest, const std::string&) {
 BindArg
 anch::cli::bindFalse(bool& dest) {
   return std::bind_front(setFalse, std::ref(dest));
+}
+
+template<typename T>
+void
+setNum(T& dest, const std::string& val) {
+  const char* last = val.data() + val.size();
+  auto res = std::from_chars(val.data(), last, dest);
+  if(res.ptr != last) {
+    std::ostringstream oss;
+    oss << "Invalid value: " << val;
+    throw std::invalid_argument(oss.str());
+  }
+}
+
+BindArg
+anch::cli::bindNum(uint16_t& dest) {
+  return std::bind_front(setNum<uint16_t>, std::ref(dest));
+}
+
+BindArg
+anch::cli::bindNum(uint32_t& dest) {
+  return std::bind_front(setNum<uint32_t>, std::ref(dest));
+}
+
+BindArg
+anch::cli::bindNum(uint64_t& dest) {
+  return std::bind_front(setNum<uint64_t>, std::ref(dest));
+}
+
+BindArg
+anch::cli::bindNum(int16_t& dest) {
+  return std::bind_front(setNum<int16_t>, std::ref(dest));
+}
+
+BindArg
+anch::cli::bindNum(int32_t& dest) {
+  return std::bind_front(setNum<int32_t>, std::ref(dest));
+}
+
+BindArg
+anch::cli::bindNum(int64_t& dest) {
+  return std::bind_front(setNum<int64_t>, std::ref(dest));
+}
+
+BindArg
+anch::cli::bindNum(float& dest) {
+  return std::bind_front(setNum<float>, std::ref(dest));
+}
+
+BindArg
+anch::cli::bindNum(double& dest) {
+  return std::bind_front(setNum<double>, std::ref(dest));
 }
 
 void
@@ -159,6 +212,16 @@ setInputStream(std::shared_ptr<std::istream>& dest, std::istream& in) {
 std::function<void(std::istream&)>
 anch::cli::bindPipe(std::shared_ptr<std::istream>& dest) {
   return std::bind_front(setInputStream, std::ref(dest));
+}
+
+void
+setOutputStream(std::shared_ptr<std::ostream>& dest, std::ostream& out) {
+  dest = std::make_shared<std::ostream>(out.rdbuf());
+}
+
+std::function<void(std::ostream&)>
+anch::cli::bindCout(std::shared_ptr<std::ostream>& dest) {
+  return std::bind_front(setOutputStream, std::ref(dest));
 }
 
 void

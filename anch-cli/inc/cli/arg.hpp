@@ -62,6 +62,9 @@ namespace anch::cli {
     /*! Input stream setter (mandatory with pipe option ; default not set) */
     std::function<void(std::istream&)> pipe = std::function<void(std::istream&)>();
 
+    /*! Output stream on stdout setter (mandatory with cout option ; default not set) */
+    std::function<void(std::ostream&)> cout = std::function<void(std::ostream&)>();
+
     /*! Description */
     std::optional<std::string> description = std::optional<std::string>();
 
