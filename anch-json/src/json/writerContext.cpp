@@ -34,7 +34,7 @@ WriterContext::WriterContext(std::ostream& os, const anch::json::MappingOptions&
 
 // Destructor +
 WriterContext::~WriterContext() noexcept {
-  // Nothing to do
+  output.flush();
 }
 // Destructor -
 

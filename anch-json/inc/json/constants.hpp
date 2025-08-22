@@ -43,7 +43,7 @@ namespace anch::json {
    const char ARRAY_BEGIN = '[';
 
   /*! JSON start array (']') */
-  const char ARRAY_END =']' ;
+  const char ARRAY_END =']';
 
   /*! No field name constant value */
   extern const std::optional<std::string> EMPTY_FIELD;

@@ -22,7 +22,7 @@
 namespace anch::json {
 
   inline
-  anch::json::EventType
+  EventType
   JSONItem::getType() const {
     return _type;
   }
@@ -31,6 +31,24 @@ namespace anch::json {
   const std::any&
   JSONItem::getValue() const {
     return _value;
+  }
+
+  inline
+  anch::events::Observable<JSONItem>&
+  Reader::itemObs() {
+    return static_cast<anch::events::Observable<JSONItem>&>(*this);
+  }
+
+  inline
+  anch::events::Observable<std::streamsize>&
+  Reader::sizeObs() {
+    return static_cast<anch::events::Observable<std::streamsize>&>(*this);
+  }
+
+  inline
+  anch::events::Observable<anch::json::MappingError>&
+  Reader::errorObs() {
+    return static_cast<anch::events::Observable<anch::json::MappingError>&>(*this);
   }
 
 }

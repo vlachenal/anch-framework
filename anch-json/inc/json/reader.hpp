@@ -198,6 +198,27 @@ namespace anch::json {
      */
     void parse() noexcept;
 
+    /*!
+     * Observalble \c JSONItem cast utility method
+     *
+     * \return this as observable \c JSONItem
+     */
+    anch::events::Observable<JSONItem>& itemObs();
+
+    /*!
+     * Observalble \c streamsize cast utility method
+     *
+     * \return this as observable \c streamsize
+     */
+    anch::events::Observable<std::streamsize>& sizeObs();
+
+    /*!
+     * Observalble \c anch::json::MappingError cast utility method
+     *
+     * \return this as observable \c anch::json::MappingError
+     */
+    anch::events::Observable<anch::json::MappingError>& errorObs();
+
   protected:
     /*!
      * Refill buffer from input stream.\n

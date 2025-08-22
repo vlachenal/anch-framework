@@ -47,7 +47,7 @@ anch::json::discardFail(anch::json::ReaderContext& context) {
 char
 anch::json::lexDiscard(anch::json::ReaderContext& context) {
   char current;
-  std::size_t nb = 0;
+  int64_t nb = 0;
   do {
     bool bufEnd = context.next(current);
     switch(current) {
@@ -60,12 +60,15 @@ anch::json::lexDiscard(anch::json::ReaderContext& context) {
     default:
       goto end;
     }
+    if(context.options.deserialize_max_discard_char < 0) {
+      continue;
+    }
     if(bufEnd && nb > context.options.deserialize_max_discard_char) {
       throw anch::json::MappingError(ErrorCode::POTENTIAL_OVERFLOW, context);
     }
   } while(true);
  end:
-  if(nb > context.options.deserialize_max_discard_char) {
+  if(context.options.deserialize_max_discard_char > 0 && nb > context.options.deserialize_max_discard_char) {
     throw anch::json::MappingError(ErrorCode::POTENTIAL_OVERFLOW, context);
   }
   return current;

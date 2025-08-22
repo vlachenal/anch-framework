@@ -86,6 +86,39 @@ endif(ANCH_JSON_STATIC_LIB)
 ## Static library -
 
 
+## Utilities +
+if(ANCH_JSON_UNITARY_UTILS)
+  include_directories(
+    inc
+    ${ANCH_EVENTS_INCLUDES_DIR}
+    ${ANCH_JSON_INCLUDES_DIR}
+    ${ANCH_CLI_INCLUDES_DIR}
+    )
+
+  link_directories(
+    ${ANCH_CLI_LIBRARY_DIR}
+  )
+
+  file(
+    GLOB_RECURSE
+    json_formatter
+    utils/jsonFormat.cpp
+  )
+
+  add_executable(
+    anch-json-formatter
+    ${json_formatter}
+  )
+
+  target_link_libraries(
+    anch-json-formatter
+    anch-json
+    anch-cli
+  )
+endif(ANCH_JSON_UNITARY_UTILS)
+## Utilities -
+
+
 # Unitary tests
 if(ANCH_JSON_UNITARY_TEST)
   configure_file(test/toto.json toto.json COPYONLY)

@@ -59,10 +59,10 @@ ReaderContext::ReaderContext(std::istream& is, const anch::json::MappingOptions&
   // Input stream initial read -
 
   // Determine lexer functions according to mapping options +
-  if(options.deserialize_max_discard_char != 0) {
-    _discardFunc = std::bind(&anch::json::lexDiscard, std::ref(*this));
-  } else {
+  if(options.deserialize_max_discard_char == 0) {
     _discardFunc = std::bind(&anch::json::discardFail, std::ref(*this));
+  } else {
+    _discardFunc = std::bind(&anch::json::lexDiscard, std::ref(*this));
   }
   if(options.deserialize_ignore_unknown_field) {
     _unknownFunc = std::bind(&anch::json::lexUnknown, std::ref(*this));
