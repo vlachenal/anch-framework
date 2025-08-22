@@ -117,7 +117,7 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:adadf488f9661046c6a757088f486b3c2" id="r_adadf488f9661046c6a757088f486b3c2"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adadf488f9661046c6a757088f486b3c2">serialize_null</a> = false</td></tr>
 <tr class="memitem:a970b8a55a3abe5bbf1b230b685c9c280" id="r_a970b8a55a3abe5bbf1b230b685c9c280"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a970b8a55a3abe5bbf1b230b685c9c280">prettify_nbs</a> = 0</td></tr>
 <tr class="memitem:a9a73d4355f14264ff26f7936036f13ca" id="r_a9a73d4355f14264ff26f7936036f13ca"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9a73d4355f14264ff26f7936036f13ca">deserialize_ignore_unknown_field</a> = false</td></tr>
-<tr class="memitem:a52d4c5cf7ce9ae144d71e5bb50c1d40c" id="r_a52d4c5cf7ce9ae144d71e5bb50c1d40c"><td class="memItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a52d4c5cf7ce9ae144d71e5bb50c1d40c">deserialize_max_discard_char</a> = 0</td></tr>
+<tr class="memitem:a471bdfa768f8e945fa0a7fd9d46ca107" id="r_a471bdfa768f8e945fa0a7fd9d46ca107"><td class="memItemLeft" align="right" valign="top">int64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a471bdfa768f8e945fa0a7fd9d46ca107">deserialize_max_discard_char</a> = 0</td></tr>
 <tr class="memitem:a197bfa9b01700f0bbf714e91a6086f5a" id="r_a197bfa9b01700f0bbf714e91a6086f5a"><td class="memItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a197bfa9b01700f0bbf714e91a6086f5a">deserialize_max_field_char</a> = 512</td></tr>
 <tr class="memitem:ab49f1978c8a9b932bceaaf8ceb528927" id="r_ab49f1978c8a9b932bceaaf8ceb528927"><td class="memItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab49f1978c8a9b932bceaaf8ceb528927">max_payload</a> = 0</td></tr>
 <tr class="memitem:a5b5dc1b630fc2e406cb066126781744f" id="r_a5b5dc1b630fc2e406cb066126781744f"><td class="memItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5b5dc1b630fc2e406cb066126781744f">buffer_size</a> = 1024</td></tr>
@@ -158,18 +158,18 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a52d4c5cf7ce9ae144d71e5bb50c1d40c" name="a52d4c5cf7ce9ae144d71e5bb50c1d40c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a52d4c5cf7ce9ae144d71e5bb50c1d40c">&#9670;&#160;</a></span>deserialize_max_discard_char</h2>
+<a id="a471bdfa768f8e945fa0a7fd9d46ca107" name="a471bdfa768f8e945fa0a7fd9d46ca107"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a471bdfa768f8e945fa0a7fd9d46ca107">&#9670;&#160;</a></span>deserialize_max_discard_char</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::size_t anch::json::MappingOptions::deserialize_max_discard_char = 0</td>
+          <td class="memname">int64_t anch::json::MappingOptions::deserialize_max_discard_char = 0</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Maximum discard characters before raising error. Use <code>0</code> value for unlimited discard characters. It can be usefull at development stage </p>
+<p>Maximum discard characters before raising error. Use <code>-1</code> value for unlimited discard characters. It can be usefull at development stage </p>
 
 </div>
 </div>

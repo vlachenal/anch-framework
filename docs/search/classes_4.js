@@ -5,7 +5,8 @@ var searchData=
   ['endpointfunc_2',['EndpointFunc',['../classanch_1_1rest_1_1_endpoint_func.html',1,'anch::rest']]],
   ['endpointparamsfunc_3',['EndpointParamsFunc',['../classanch_1_1rest_1_1_endpoint_params_func.html',1,'anch::rest']]],
   ['endpointsimplefunc_4',['EndpointSimpleFunc',['../classanch_1_1rest_1_1_endpoint_simple_func.html',1,'anch::rest']]],
-  ['event_5',['Event',['../structanch_1_1events_1_1_event.html',1,'anch::events']]],
-  ['eventbus_6',['EventBus',['../classanch_1_1events_1_1_event_bus.html',1,'anch::events']]],
-  ['eventhandler_7',['EventHandler',['../classanch_1_1events_1_1_event_handler.html',1,'anch::events']]]
+  ['errorobserver_5',['ErrorObserver',['../class_error_observer.html',1,'']]],
+  ['event_6',['Event',['../structanch_1_1events_1_1_event.html',1,'anch::events']]],
+  ['eventbus_7',['EventBus',['../classanch_1_1events_1_1_event_bus.html',1,'anch::events']]],
+  ['eventhandler_8',['EventHandler',['../classanch_1_1events_1_1_event_handler.html',1,'anch::events']]]
 ];

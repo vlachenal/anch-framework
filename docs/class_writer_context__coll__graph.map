@@ -1,0 +1,11 @@
+<map id="WriterContext" name="WriterContext">
+<area shape="rect" id="Node000001" title="JSON writer context." alt="" coords="9,519,145,865"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="35,377,119,447"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="80,446,80,502,74,502,74,446"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="16,243,138,328"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="80,343,80,377,74,377,74,343"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="5,124,149,193"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="80,208,80,243,74,243,74,208"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="33,5,122,75"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="80,89,80,124,74,124,74,89"/>
+</map>

@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['reader_0',['Reader',['../classanch_1_1json_1_1_reader.html',1,'anch::json']]],
-  ['readercontext_1',['ReaderContext',['../classanch_1_1json_1_1_reader_context.html',1,'anch::json']]],
+  ['reader_0',['Reader',['../classanch_1_1json_1_1_reader.html',1,'anch::json::Reader'],['../class_reader.html',1,'Reader']]],
+  ['readercontext_1',['ReaderContext',['../classanch_1_1json_1_1_reader_context.html',1,'anch::json::ReaderContext'],['../class_reader_context.html',1,'ReaderContext']]],
   ['request_2',['Request',['../classanch_1_1rest_1_1_request.html',1,'anch::rest']]],
   ['resource_3',['Resource',['../classanch_1_1resource_1_1_resource.html',1,'anch::resource']]],
   ['resourcefileexception_4',['ResourceFileException',['../classanch_1_1resource_1_1file_1_1_resource_file_exception.html',1,'anch::resource::file']]],

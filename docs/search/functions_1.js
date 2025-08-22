@@ -1,13 +1,13 @@
 var searchData=
 [
-  ['back_0',['back',['../classanch_1_1json_1_1_reader_context.html#a8a4b465349d4e2ecc28ddc2e6f8180a2',1,'anch::json::ReaderContext']]],
+  ['back_0',['back',['../classanch_1_1json_1_1_reader_context.html#a8a4b465349d4e2ecc28ddc2e6f8180a2',1,'anch::json::ReaderContext::back()'],['../class_reader_context.html#a8a4b465349d4e2ecc28ddc2e6f8180a2',1,'ReaderContext::back()']]],
   ['basicauthentication_1',['BasicAuthentication',['../classanch_1_1rest_1_1_basic_authentication.html#a3aca6374bac532479940c2109694e0d2',1,'anch::rest::BasicAuthentication::BasicAuthentication()=delete'],['../classanch_1_1rest_1_1_basic_authentication.html#a7950217a388b75d9cbc825fb7abf684f',1,'anch::rest::BasicAuthentication::BasicAuthentication(const std::string &amp;login, const std::string &amp;password)']]],
   ['batchupdate_2',['batchUpdate',['../classanch_1_1sql_1_1_connection.html#a16bb2c8695a30f4aa4832017662aa034',1,'anch::sql::Connection']]],
   ['before_3',['before',['../classanch_1_1date_1_1_date.html#a568608f4185ccebb97d059f0939fcc73',1,'anch::date::Date::before()'],['../classanch_1_1ut_1_1_unit_tests.html#a6f6aee77df4f14c8f8c30fd1399ddbc4',1,'anch::ut::UnitTests::before() const']]],
   ['beforetest_4',['beforeTest',['../classanch_1_1ut_1_1_unit_tests.html#aee8713e93f9a57e2b85438b43da4edea',1,'anch::ut::UnitTests']]],
   ['begin_5',['begin',['../classanch_1_1sql_1_1_connection.html#a233c24d2a0b36038021aa1a0479a9fbc',1,'anch::sql::Connection']]],
-  ['beginarray_6',['beginArray',['../classanch_1_1json_1_1_writer_context.html#a63f031c8d8a2584511d23887fccdb053',1,'anch::json::WriterContext']]],
-  ['beginobject_7',['beginObject',['../classanch_1_1json_1_1_writer_context.html#a344e43fc6865a9f8fe76b282d3241f07',1,'anch::json::WriterContext']]],
+  ['beginarray_6',['beginArray',['../classanch_1_1json_1_1_writer_context.html#a63f031c8d8a2584511d23887fccdb053',1,'anch::json::WriterContext::beginArray()'],['../class_writer_context.html#a63f031c8d8a2584511d23887fccdb053',1,'WriterContext::beginArray()']]],
+  ['beginobject_7',['beginObject',['../classanch_1_1json_1_1_writer_context.html#a344e43fc6865a9f8fe76b282d3241f07',1,'anch::json::WriterContext::beginObject()'],['../class_writer_context.html#a344e43fc6865a9f8fe76b282d3241f07',1,'WriterContext::beginObject()']]],
   ['between_8',['between',['../classanch_1_1sql_1_1_clauses_builder.html#a6a247a21320ff121144fa426fc08dcdf',1,'anch::sql::ClausesBuilder::between()'],['../namespaceanch_1_1sql.html#a7f56b8f5ba69be8f030a0c91d2f7bd5a',1,'anch::sql::between()']]],
   ['bgcolor_9',['bgColor',['../structanch_1_1cli_1_1_formatter.html#af622d5facd562baa097499a7b34f3643',1,'anch::cli::Formatter::bgColor(const Color &amp;color)'],['../structanch_1_1cli_1_1_formatter.html#a048f4968151556f9f4cb4fbab659b721',1,'anch::cli::Formatter::bgColor(const std::array&lt; uint8_t, 3 &gt; &amp;color)']]],
   ['bind_10',['bind',['../classanch_1_1network_1_1_socket.html#a300499b50515aaceef7524a3b82121a4',1,'anch::network::Socket']]],

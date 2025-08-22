@@ -1,0 +1,15 @@
+<map id="Reader" name="Reader">
+<area shape="rect" id="Node000001" title="JSON reader based on events." alt="" coords="313,692,403,953"/>
+<area shape="rect" id="Node000002" href="$classanch_1_1events_1_1_observable.html" title=" " alt="" coords="5,363,170,533"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="130,546,155,594,185,641,216,681,250,718,315,781,312,785,246,722,211,684,180,644,151,597,126,548"/>
+<area shape="rect" id="Node000003" href="$classanch_1_1events_1_1_observable.html" title="An observable implementation of the observers/observable design pattern." alt="" coords="186,5,376,181"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="175,146,140,173,113,207,96,244,86,284,82,324,81,363,76,363,76,324,81,283,91,242,109,204,137,170,171,142"/>
+<area shape="rect" id="Node000004" href="$classanch_1_1events_1_1_observable.html" title=" " alt="" coords="194,363,354,533"/>
+<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="282,197,279,363,273,363,276,196"/>
+<area shape="rect" id="Node000005" href="$classanch_1_1events_1_1_observable.html" title=" " alt="" coords="378,363,558,533"/>
+<area shape="poly" id="edge6_Node000005_Node000003" title=" " alt="" coords="388,176,409,204,428,242,443,283,462,363,456,364,438,285,423,244,404,207,384,179"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="299,547,332,691,327,693,294,549"/>
+<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="441,549,399,693,394,691,436,547"/>
+<area shape="rect" id="Node000006" href="$classanch_1_1json_1_1_reader_context.html" title="JSON reader context." alt="" coords="582,253,748,643"/>
+<area shape="poly" id="edge7_Node000001_Node000006" title=" " alt="" coords="575,639,571,644,531,689,487,730,405,794,402,789,484,726,527,685,567,641,571,636"/>
+</map>

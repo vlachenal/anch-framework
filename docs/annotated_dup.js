@@ -191,5 +191,14 @@ var annotated_dup =
       [ "ThreadPool", "classanch_1_1_thread_pool.html", "classanch_1_1_thread_pool" ],
       [ "UUID", "classanch_1_1_u_u_i_d.html", "classanch_1_1_u_u_i_d" ]
     ] ],
-    [ "ngx_anch_bootstrap_conf_t", "structngx__anch__bootstrap__conf__t.html", null ]
+    [ "ErrorObserver", "class_error_observer.html", null ],
+    [ "FormatterOptions", "struct_formatter_options.html", "struct_formatter_options" ],
+    [ "JSONFormatter", "class_j_s_o_n_formatter.html", "class_j_s_o_n_formatter" ],
+    [ "JSONItem", "class_j_s_o_n_item.html", "class_j_s_o_n_item" ],
+    [ "MappingError", "class_mapping_error.html", "class_mapping_error" ],
+    [ "MappingOptions", "struct_mapping_options.html", "struct_mapping_options" ],
+    [ "ngx_anch_bootstrap_conf_t", "structngx__anch__bootstrap__conf__t.html", null ],
+    [ "Reader", "class_reader.html", "class_reader" ],
+    [ "ReaderContext", "class_reader_context.html", "class_reader_context" ],
+    [ "WriterContext", "class_writer_context.html", "class_writer_context" ]
 ];

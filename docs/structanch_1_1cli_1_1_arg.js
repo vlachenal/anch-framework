@@ -1,5 +1,6 @@
 var structanch_1_1cli_1_1_arg =
 [
+    [ "cout", "structanch_1_1cli_1_1_arg.html#a0320f976f5882bf383208fbaa77fedb1", null ],
     [ "description", "structanch_1_1cli_1_1_arg.html#a32d13b4c77532b4c2bcbd45ea50f62ae", null ],
     [ "example", "structanch_1_1cli_1_1_arg.html#afc4130db98d38cd22deb672117da02d6", null ],
     [ "handler", "structanch_1_1cli_1_1_arg.html#a7e74af3bcee3f8c3250f0e7a5dc07bd5", null ],

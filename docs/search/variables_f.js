@@ -1,7 +1,7 @@
 var searchData=
 [
   ['range_0',['RANGE',['../structanch_1_1rest_1_1_common_headers.html#a7ee11e3cc9f096be6aaef055467c5e89',1,'anch::rest::CommonHeaders']]],
-  ['read_1',['read',['../structanch_1_1cutils_1_1cbuffer.html#a434ccac0ec63d2546bd10b374b050a6f',1,'anch::cutils::cbuffer::read'],['../classanch_1_1json_1_1_reader_context.html#a21f33046410b9eecf27c444d16f43f22',1,'anch::json::ReaderContext::read']]],
+  ['read_1',['read',['../structanch_1_1cutils_1_1cbuffer.html#a434ccac0ec63d2546bd10b374b050a6f',1,'anch::cutils::cbuffer::read'],['../classanch_1_1json_1_1_reader_context.html#a21f33046410b9eecf27c444d16f43f22',1,'anch::json::ReaderContext::read'],['../class_reader_context.html#a21f33046410b9eecf27c444d16f43f22',1,'ReaderContext::read']]],
   ['referer_2',['REFERER',['../structanch_1_1rest_1_1_common_headers.html#ac662cbefb12e361a4ad5758a9f33ab1a',1,'anch::rest::CommonHeaders']]],
   ['refresh_3',['REFRESH',['../structanch_1_1rest_1_1_common_headers.html#a17af2978c8a434e279733fac80e4ae8d',1,'anch::rest::CommonHeaders']]],
   ['report_5fto_4',['REPORT_TO',['../structanch_1_1rest_1_1_common_headers.html#a71a556df240f9bea807b78f71532ad3c',1,'anch::rest::CommonHeaders']]],

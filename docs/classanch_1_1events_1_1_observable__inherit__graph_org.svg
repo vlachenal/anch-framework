@@ -173,26 +173,32 @@
 <g id="Node000003" class="node">
 <title>Node3</title>
 <g id="a_Node000003"><a xlink:href="classanch_1_1json_1_1_reader.html" target="_top" xlink:title="JSON reader based on events.">
-<polygon fill="white" stroke="none" points="247,-453 156.5,-453 156.5,-305 247,-305 247,-453"/>
-<text xml:space="preserve" text-anchor="start" x="160.5" y="-439.5" font-family="Helvetica,sans-Serif" font-size="10.00">anch::json::Reader</text>
-<text xml:space="preserve" text-anchor="start" x="200.25" y="-423.5" font-family="Helvetica,sans-Serif" font-size="10.00"> </text>
-<text xml:space="preserve" text-anchor="start" x="166.25" y="-407.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text xml:space="preserve" text-anchor="start" x="182" y="-407.5" font-family="Helvetica,sans-Serif" font-size="10.00">Reader()</text>
-<text xml:space="preserve" text-anchor="start" x="166.25" y="-391.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text xml:space="preserve" text-anchor="start" x="182" y="-391.5" font-family="Helvetica,sans-Serif" font-size="10.00">Reader()</text>
-<text xml:space="preserve" text-anchor="start" x="166.25" y="-375.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text xml:space="preserve" text-anchor="start" x="182" y="-375.5" font-family="Helvetica,sans-Serif" font-size="10.00">Reader()</text>
-<text xml:space="preserve" text-anchor="start" x="166.25" y="-359.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text xml:space="preserve" text-anchor="start" x="182" y="-359.5" font-family="Helvetica,sans-Serif" font-size="10.00">Reader()</text>
-<text xml:space="preserve" text-anchor="start" x="166.25" y="-343.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text xml:space="preserve" text-anchor="start" x="182" y="-343.5" font-family="Helvetica,sans-Serif" font-size="10.00">~Reader()</text>
-<text xml:space="preserve" text-anchor="start" x="166.25" y="-327.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text xml:space="preserve" text-anchor="start" x="182" y="-327.5" font-family="Helvetica,sans-Serif" font-size="10.00">parse()</text>
-<text xml:space="preserve" text-anchor="start" x="166.62" y="-311.5" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
-<text xml:space="preserve" text-anchor="start" x="182" y="-311.5" font-family="Helvetica,sans-Serif" font-size="10.00">refillBuffer()</text>
-<polygon fill="#666666" stroke="#666666" points="156.5,-435 156.5,-435 247,-435 247,-435 156.5,-435"/>
-<polygon fill="#666666" stroke="#666666" points="156.5,-419 156.5,-419 247,-419 247,-419 156.5,-419"/>
-<polygon fill="none" stroke="#666666" points="156.5,-305 156.5,-453 247,-453 247,-305 156.5,-305"/>
+<polygon fill="white" stroke="none" points="247,-477 156.5,-477 156.5,-281 247,-281 247,-477"/>
+<text xml:space="preserve" text-anchor="start" x="160.5" y="-463.5" font-family="Helvetica,sans-Serif" font-size="10.00">anch::json::Reader</text>
+<text xml:space="preserve" text-anchor="start" x="200.25" y="-447.5" font-family="Helvetica,sans-Serif" font-size="10.00"> </text>
+<text xml:space="preserve" text-anchor="start" x="166.25" y="-431.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text xml:space="preserve" text-anchor="start" x="182" y="-431.5" font-family="Helvetica,sans-Serif" font-size="10.00">Reader()</text>
+<text xml:space="preserve" text-anchor="start" x="166.25" y="-415.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text xml:space="preserve" text-anchor="start" x="182" y="-415.5" font-family="Helvetica,sans-Serif" font-size="10.00">Reader()</text>
+<text xml:space="preserve" text-anchor="start" x="166.25" y="-399.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text xml:space="preserve" text-anchor="start" x="182" y="-399.5" font-family="Helvetica,sans-Serif" font-size="10.00">Reader()</text>
+<text xml:space="preserve" text-anchor="start" x="166.25" y="-383.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text xml:space="preserve" text-anchor="start" x="182" y="-383.5" font-family="Helvetica,sans-Serif" font-size="10.00">Reader()</text>
+<text xml:space="preserve" text-anchor="start" x="166.25" y="-367.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text xml:space="preserve" text-anchor="start" x="182" y="-367.5" font-family="Helvetica,sans-Serif" font-size="10.00">~Reader()</text>
+<text xml:space="preserve" text-anchor="start" x="166.25" y="-351.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text xml:space="preserve" text-anchor="start" x="182" y="-351.5" font-family="Helvetica,sans-Serif" font-size="10.00">parse()</text>
+<text xml:space="preserve" text-anchor="start" x="166.25" y="-335.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text xml:space="preserve" text-anchor="start" x="182" y="-335.5" font-family="Helvetica,sans-Serif" font-size="10.00">itemObs()</text>
+<text xml:space="preserve" text-anchor="start" x="166.25" y="-319.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text xml:space="preserve" text-anchor="start" x="182" y="-319.5" font-family="Helvetica,sans-Serif" font-size="10.00">sizeObs()</text>
+<text xml:space="preserve" text-anchor="start" x="166.25" y="-303.5" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
+<text xml:space="preserve" text-anchor="start" x="182" y="-303.5" font-family="Helvetica,sans-Serif" font-size="10.00">errorObs()</text>
+<text xml:space="preserve" text-anchor="start" x="166.62" y="-287.5" font-family="Helvetica,sans-Serif" font-size="10.00">#</text>
+<text xml:space="preserve" text-anchor="start" x="182" y="-287.5" font-family="Helvetica,sans-Serif" font-size="10.00">refillBuffer()</text>
+<polygon fill="#666666" stroke="#666666" points="156.5,-459 156.5,-459 247,-459 247,-459 156.5,-459"/>
+<polygon fill="#666666" stroke="#666666" points="156.5,-443 156.5,-443 247,-443 247,-443 156.5,-443"/>
+<polygon fill="none" stroke="#666666" points="156.5,-281 156.5,-477 247,-477 247,-281 156.5,-281"/>
 </a>
 </g>
 </g>
@@ -200,7 +206,7 @@
 <g id="edge2_Node000002_Node000003" class="edge">
 <title>Node2&#45;&gt;Node3</title>
 <g id="a_edge2_Node000002_Node000003"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M106.09,-536.46C122.41,-509.78 140.87,-479.58 157.2,-452.87"/>
+<path fill="none" stroke="#63b8ff" d="M106.04,-536.56C122.2,-510.13 140.48,-480.23 156.7,-453.69"/>
 <polygon fill="none" stroke="#63b8ff" points="103.21,-534.47 100.98,-544.83 109.18,-538.12 103.21,-534.47"/>
 </a>
 </g>
@@ -209,7 +215,7 @@
 <g id="edge4_Node000004_Node000003" class="edge">
 <title>Node4&#45;&gt;Node3</title>
 <g id="a_edge4_Node000004_Node000003"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M201.75,-534.7C201.75,-508.46 201.75,-478.99 201.75,-452.87"/>
+<path fill="none" stroke="#63b8ff" d="M201.75,-534.81C201.75,-516.28 201.75,-496.13 201.75,-476.68"/>
 <polygon fill="none" stroke="#63b8ff" points="198.25,-534.61 201.75,-544.61 205.25,-534.61 198.25,-534.61"/>
 </a>
 </g>

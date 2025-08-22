@@ -27,5 +27,6 @@ var searchData=
   ['issse4_5f2_24',['isSSE4_2',['../classanch_1_1device_1_1_c_p_u.html#a4533df5494c0de7f51fe61f39dce3aee',1,'anch::device::CPU']]],
   ['isssse3_25',['isSSSE3',['../classanch_1_1device_1_1_c_p_u.html#a8a6bb46ea5ec3a546991df68d4dfdea8',1,'anch::device::CPU']]],
   ['isvalid_26',['isValid',['../classanch_1_1sql_1_1_connection.html#ad940302808cfd3e736377e23195102d7',1,'anch::sql::Connection']]],
-  ['isvalidvalue_27',['isValidValue',['../namespaceanch_1_1sql.html#a0c852e8a39657a1fac57b31ee124108f',1,'anch::sql']]]
+  ['isvalidvalue_27',['isValidValue',['../namespaceanch_1_1sql.html#a0c852e8a39657a1fac57b31ee124108f',1,'anch::sql']]],
+  ['itemobs_28',['itemObs',['../classanch_1_1json_1_1_reader.html#a282a1da0dfe76e43c27061018c80a054',1,'anch::json::Reader::itemObs()'],['../class_reader.html#a282a1da0dfe76e43c27061018c80a054',1,'Reader::itemObs()']]]
 ];

@@ -1,0 +1,7 @@
+<map id="ErrorObserver" name="ErrorObserver">
+<area shape="rect" id="Node000001" title=" " alt="" coords="49,281,141,351"/>
+<area shape="rect" id="Node000002" href="$classanch_1_1events_1_1_observer.html" title=" " alt="" coords="5,147,185,232"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="98,247,98,281,92,281,92,247"/>
+<area shape="rect" id="Node000003" href="$classanch_1_1events_1_1_observer.html" title="An observer interface of the observers/observable design pattern." alt="" coords="6,5,184,75"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="98,90,98,147,92,147,92,90"/>
+</map>

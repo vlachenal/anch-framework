@@ -82,6 +82,7 @@ var hierarchy =
     [ "anch::Fluent< T, C >", "classanch_1_1_fluent.html", null ],
     [ "anch::Flux< T >", "classanch_1_1_flux.html", null ],
     [ "anch::cli::Formatter", "structanch_1_1cli_1_1_formatter.html", null ],
+    [ "FormatterOptions", "struct_formatter_options.html", null ],
     [ "anch::json::GenericMapper< M, T >", "classanch_1_1json_1_1_generic_mapper.html", null ],
     [ "anch::json::GenericMapper< ObjectMapper< T >, T >", "classanch_1_1json_1_1_generic_mapper.html", [
       [ "anch::json::ObjectMapper< T >", "classanch_1_1json_1_1_object_mapper.html", null ]
@@ -145,6 +146,7 @@ var hierarchy =
     ] ],
     [ "anch::crypto::ISO7816_4Padding", "classanch_1_1crypto_1_1_i_s_o7816__4_padding.html", null ],
     [ "anch::json::JSONItem", "classanch_1_1json_1_1_j_s_o_n_item.html", null ],
+    [ "JSONItem", "class_j_s_o_n_item.html", null ],
     [ "anch::json::JSONMapper", "classanch_1_1json_1_1_j_s_o_n_mapper.html", null ],
     [ "anch::LessPtrCompare< T >", "structanch_1_1_less_ptr_compare.html", null ],
     [ "anch::logger::Logger", "classanch_1_1logger_1_1_logger.html", null ],
@@ -157,6 +159,7 @@ var hierarchy =
       [ "anch::rest::GlobalMapperRegistry", "classanch_1_1rest_1_1_global_mapper_registry.html", null ]
     ] ],
     [ "anch::json::MappingOptions", "structanch_1_1json_1_1_mapping_options.html", null ],
+    [ "MappingOptions", "struct_mapping_options.html", null ],
     [ "anch::rest::MediaType", "structanch_1_1rest_1_1_media_type.html", null ],
     [ "anch::logger::formatter::MessageFormatter", "classanch_1_1logger_1_1formatter_1_1_message_formatter.html", null ],
     [ "anch::device::Network", "classanch_1_1device_1_1_network.html", null ],
@@ -181,8 +184,14 @@ var hierarchy =
     [ "anch::events::Observer< T >", "classanch_1_1events_1_1_observer.html", [
       [ "anch::events::EventHandler< T, Derived >", "classanch_1_1events_1_1_event_handler.html", null ]
     ] ],
+    [ "anch::events::Observer< anch::json::MappingError >", "classanch_1_1events_1_1_observer.html", [
+      [ "ErrorObserver", "class_error_observer.html", null ]
+    ] ],
     [ "anch::events::Observer< anch::network::SocketEvent >", "classanch_1_1events_1_1_observer.html", [
       [ "anch::ut::SocketServerRunner", "classanch_1_1ut_1_1_socket_server_runner.html", null ]
+    ] ],
+    [ "anch::events::Observer< JSONItem >", "classanch_1_1events_1_1_observer.html", [
+      [ "JSONFormatter", "class_j_s_o_n_formatter.html", null ]
     ] ],
     [ "std::optional", null, [
       [ "anch::Optional< T >", "classanch_1_1_optional.html", null ]
@@ -195,6 +204,9 @@ var hierarchy =
     ] ],
     [ "anch::rest::ProxyConfig", "structanch_1_1rest_1_1_proxy_config.html", null ],
     [ "anch::json::ReaderContext", "classanch_1_1json_1_1_reader_context.html", [
+      [ "anch::json::Reader", "classanch_1_1json_1_1_reader.html", null ]
+    ] ],
+    [ "ReaderContext", "class_reader_context.html", [
       [ "anch::json::Reader", "classanch_1_1json_1_1_reader.html", null ]
     ] ],
     [ "anch::rest::Request", "classanch_1_1rest_1_1_request.html", null ],
@@ -255,5 +267,6 @@ var hierarchy =
       [ "anch::logger::ThreadSafeWriter", "classanch_1_1logger_1_1_thread_safe_writer.html", null ]
     ] ],
     [ "anch::json::WriterContext", "classanch_1_1json_1_1_writer_context.html", null ],
+    [ "WriterContext", "class_writer_context.html", null ],
     [ "anch::crypto::ZeroPadding", "classanch_1_1crypto_1_1_zero_padding.html", null ]
 ];

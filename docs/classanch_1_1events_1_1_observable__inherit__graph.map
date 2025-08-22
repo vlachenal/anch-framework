@@ -8,9 +8,9 @@
 <area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="419,194,423,204,442,253,437,254,419,206,414,196"/>
 <area shape="rect" id="Node000006" href="$classanch_1_1events_1_1_observable.html" title=" " alt="" coords="581,253,741,424"/>
 <area shape="poly" id="edge7_Node000001_Node000006" title=" " alt="" coords="481,122,551,155,584,177,614,204,631,227,643,252,639,255,626,229,610,207,581,181,548,159,479,127"/>
-<area shape="rect" id="Node000003" href="$classanch_1_1json_1_1_reader.html" title="JSON reader based on events." alt="" coords="214,548,335,745"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="149,435,217,547,213,550,145,438"/>
-<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="277,439,277,548,272,548,272,439"/>
+<area shape="rect" id="Node000003" href="$classanch_1_1json_1_1_reader.html" title="JSON reader based on events." alt="" coords="214,516,335,777"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="149,435,217,546,212,548,144,438"/>
+<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="277,439,277,516,272,516,272,439"/>
 <area shape="poly" id="edge6_Node000005_Node000003" title=" " alt="" coords="409,438,337,552,332,549,404,435"/>
 <area shape="rect" id="Node000007" href="$classanch_1_1network_1_1_socket.html" title=" " alt="" coords="590,473,732,820"/>
 <area shape="poly" id="edge8_Node000006_Node000007" title=" " alt="" coords="664,439,664,474,658,474,658,439"/>
