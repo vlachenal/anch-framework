@@ -1,0 +1,22 @@
+/*! \page page_cutils AnCH CUtils library documentation
+*
+* \tableofcontents
+ *
+ * \section cutils_intro_seq Introduction
+ *
+ * AnCH CUtils library is a library which proveides gateway between C and C++ (char[] to iostream for now).
+ *
+ * \section cutils_prereq_sec Prerequisites
+ *
+ * AnCH CUtils is a standalone library.
+ *
+ * \section cutils_install_sec Installation
+ *
+ * make install
+ *
+ * \section cutils_concept_sec Conception
+ *
+ * This library tries to provide utility classes and functions to manage C data with C++ concepts.
+ *
+ * \section cutils_example_sec Examples
+ */

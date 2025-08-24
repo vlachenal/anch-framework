@@ -49,13 +49,14 @@ std::size_t offset = 0;
 
 std::size_t
 readBuffer(char* data, std::size_t size) {
-  if(offset > json.length()) {
+  if(offset > json.length()) { // already read data is over data length => 0
     return 0;
   }
-  if(size >= json.length()) {
+  if(size >= json.length()) { // size is superior to data length => data length
     ::strncpy(data, json.data(), json.length());
     return json.length();
   }
+  // get characters from data between offset and offset + size => size
   ::strncpy(data, json.substr(offset, offset + size).data(), size);
   offset += size;
   return size;
