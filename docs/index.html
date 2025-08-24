@@ -106,7 +106,7 @@ This framework was initially a way to test new C++ specifications and to test C+
 Only POSIX systems are supported for now. Others could be supported later.<br  />
 <br  />
 Features are splitted into small libraries. Some of them are only header files :</p><ul>
-<li><a class="el" href="page_res.html">anch-resource</a>: provides library to parse configuration files based on C++11 regular expression library (using boost for now).</li>
+<li><a class="el" href="page_res.html">anch-resource</a>: provides library to parse configuration files based on C++11 regular expression library.</li>
 <li>anch-date: provides date and time facilities based on C++11 high precision clock.</li>
 <li><a class="el" href="page_logger.html">anch-logger</a>: provides logging facilities based on C++11 thread and regular expression libraries.</li>
 <li><a class="el" href="page_events.html">anch-events</a>: provides event programming facilities based on C++11 thread library.</li>
@@ -115,6 +115,7 @@ Features are splitted into small libraries. Some of them are only header files :
 <li>anch-network: provides basic API to send and receive data on TCP or UDP sockets.</li>
 <li><a class="el" href="page_sql.html">anch-sql</a>: provides SQL client abstraction layer implementation for SQLite3, PostgreSQL and MySQL.</li>
 <li>anch-utils: provides some utility classes and functions. This 'library' contains header only implementations.</li>
+<li><a class="el" href="page_cutils.html">anch-cutils</a>: provides library which aims to provide gateway between C and C++.</li>
 <li><a class="el" href="page_uuid.html">anch-uuid</a>: provides UUID library.</li>
 <li><a class="el" href="page_json.html">anch-json</a>: provides JSON serialization/deserialization library.</li>
 <li><a class="el" href="page_cli.html">anch-cli</a>: provides command line interface utilities (parse arguments only for now).</li>
@@ -134,7 +135,6 @@ Prerequisites</h1>
 <p>AnCH libraries have various requirements.<br  />
 To use AnCH Framework in its totallity, you need:</p><ul>
 <li>recent C++ compiler (such as gcc 10.x or later)</li>
-<li>boost library (until standard C++ library implements regular expression)</li>
 <li>CMake</li>
 <li>POSIX system</li>
 </ul>

@@ -48,6 +48,13 @@ var NAVTREE =
       ] ],
       [ "Examples", "page_crypto.html#crypto_example_sec", null ]
     ] ],
+    [ "AnCH CUtils library documentation", "page_cutils.html", [
+      [ "Introduction", "page_cutils.html#cutils_intro_seq", null ],
+      [ "Prerequisites", "page_cutils.html#cutils_prereq_sec", null ],
+      [ "Installation", "page_cutils.html#cutils_install_sec", null ],
+      [ "Conception", "page_cutils.html#cutils_concept_sec", null ],
+      [ "Examples", "page_cutils.html#cutils_example_sec", null ]
+    ] ],
     [ "AnCH events library documentation", "page_events.html", [
       [ "Introduction", "page_events.html#evt_intro_seq", null ],
       [ "Prerequisites", "page_events.html#evt_req_sec", null ],
@@ -165,8 +172,8 @@ var NAVTREEINDEX =
 "classanch_1_1sql_1_1_s_q_l_shared_libraries.html#af11936a0b85c21b325a3a24a7b810a88",
 "dir_7aebef6c8987afc02b634cd677bbdbd2.html",
 "namespaceanch_1_1json.html#a787cc091cecc4ca05ebd5030dec3f766",
-"structanch_1_1_less_ptr_compare.html#a39093239df7b0afafd94e3c216defd23",
-"structanch_1_1sql_1_1_sql_connection_configuration.html#a4f574e8bb8c3287ae5a123a83532126d"
+"struct_mapping_options.html#a9a73d4355f14264ff26f7936036f13ca",
+"structanch_1_1sql_1_1_s_q_l_shared_library.html#ace13344d3a21cbd5104084f99e846892"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronization';
