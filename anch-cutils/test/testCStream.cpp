@@ -49,19 +49,16 @@ std::size_t offset = 0;
 
 std::size_t
 readBuffer(char* data, std::size_t size) {
+  if(offset > json.length()) {
+    return 0;
+  }
   if(size >= json.length()) {
     ::strncpy(data, json.data(), json.length());
     return json.length();
-  } else if(offset + size == json.length() + 1) {
-    return 0;
-  } else if(offset + size > json.length() + 1) {
-    ::strncpy(data, json.substr(offset).data(), json.length() - offset);
-    return json.length() - size - offset;
-  } else {
-    ::strncpy(data, json.substr(offset, offset + size).data(), size);
-    offset += size;
-    return size;
   }
+  ::strncpy(data, json.substr(offset, offset + size).data(), size);
+  offset += size;
+  return size;
 }
 
 void
@@ -99,15 +96,16 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
   tests
     .name("AnCH CStream unit tests")
     .description("Test AnCH CStream unit tests library")
-    .add("serialize", std::bind(&serialize, 4))
-    .add("deserialize", std::bind(&deserialize, 4))
-    .add("serialize1", std::bind(&serialize, 1))
-    .add("deserialize1", std::bind(&deserialize, 1))
-    .add("serialize1500", std::bind(&serialize, 1500))
-    .add("deserialize1500", std::bind(&deserialize, 1500))
-    .add("serialize25", std::bind(&serialize, 25))
-    .add("deserialize25", std::bind(&deserialize, 25))
-    .add("serdser1500", std::bind(&serdser, 1500))
-    .add("serdser4", std::bind(&serdser, 4))
+    .add("cstream-output-jsonser", std::bind(&serialize, 4))
+    .add("cstream-output-jsondeser", std::bind(&deserialize, 4))
+    .add("cstream-output-jsonser-1char", std::bind(&serialize, 1))
+    .add("cstream-output-jsondeser-1char", std::bind(&deserialize, 1))
+    .add("cstream-output-jsonser-1500char", std::bind(&serialize, 1500))
+    .add("cstream-output-jsondeser-1500char", std::bind(&deserialize, 1500))
+    .add("cstream-output-jsonser-25char", std::bind(&serialize, 25))
+    .add("cstream-output-jsondeser-25char", std::bind(&deserialize, 25))
+    .add("cstream-inout-json-1500char", std::bind(&serdser, 1500))
+    .add("cstream-inout-json-1char", std::bind(&serdser, 1))
+    .add("cstream-inout-json-4char", std::bind(&serdser, 4))
     ;
 }
