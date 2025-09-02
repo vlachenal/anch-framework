@@ -38,8 +38,14 @@ namespace anch {
 
     // Attributes +
   private:
-    /*! Consume object function */
-    std::function<void(const T&...)> _consume;
+    /*! Consumer object function */
+    std::function<void(const T&...)> _consumer;
+
+    /*! Finalizer object function (default to do nothing) */
+    std::function<void()> _finalizer;
+
+    /*! Error handler object function (default to rethrow) */
+    std::function<void()> _errorHandler;
     // Attributes -
 
     // Constructors +
@@ -47,14 +53,7 @@ namespace anch {
     /*!
      * Forbids \ref Flux default constructor
      */
-    Flux() = delete;
-
-    /*!
-     * \ref Flux constructor
-     *
-     * \param consume the consume object function to use
-     */
-    Flux(std::function<void(const T&...)> consume);
+    Flux();
     // Constructors -
 
     // Destructor +
@@ -75,13 +74,34 @@ namespace anch {
     void push(const T&... object);
 
     /*!
-     * \brief Handle error
-     *
-     * This method has to be implemented for each \c T implementation when \c push method can raise error.\n
-     * Default implementation will only rethrow the error.
+     * Finalize treatment
      */
-    void handleError();
+    void finalize();
     // Methods -
+
+    // Accessors +
+  public:
+    /*!
+     * Object consumer setter
+     *
+     * \param consumer the consumer to use
+     */
+    void setConsumer(std::function<void(const T&...)> consumer);
+
+    /*!
+     * Object finalizer setter
+     *
+     * \param finalizer the finalizer to use
+     */
+    void setFinalizer(std::function<void()> finalizer);
+
+    /*!
+     * Object finalizer setter
+     *
+     * \param finalizer the finalizer to use
+     */
+    void setErrorHandler(std::function<void()> errorHandler);
+    // Accessors -
 
   };
 

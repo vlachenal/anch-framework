@@ -31,9 +31,8 @@ koToto(const Toto& toto) {
   std::cout << toto;
 }
 
-template<>
 void
-anch::Flux<Toto>::handleError() {
+handleTotoError() {
   nbErr += 1;
   try {
     throw;
@@ -46,21 +45,32 @@ anch::Flux<Toto>::handleError() {
 }
 
 void
+finalize() {
+  std::cout << "Finalize flux" << std::endl;
+}
+
+void
 testPushOK() {
   std::cout << "Enter in testPushOK" << std::endl;
-  anch::Flux<Toto> flux(okToto);
+  anch::Flux<Toto> flux;
+  flux.setConsumer(okToto);
+  flux.setFinalizer(finalize);
+  flux.setErrorHandler(handleTotoError);
   Toto toto;
   toto.msg = "a";
   flux.push(toto);
   toto.msg = "b";
   flux.push(toto);
+  flux.finalize();
   std::cout << "Exit testPushOK" << std::endl;
 }
 
 void
 testPushKO() {
   std::cout << "Enter in testPushKO" << std::endl;
-  anch::Flux<Toto> flux(koToto);
+  anch::Flux<Toto> flux;
+  flux.setConsumer(koToto);
+  flux.setErrorHandler(handleTotoError);
   Toto toto;
   toto.msg = "ko";
   flux.push(toto);
@@ -68,6 +78,7 @@ testPushKO() {
   flux.push(toto);
   toto.msg = "b";
   flux.push(toto);
+  flux.finalize();
   anch::ut::assert(nbErr == 1, "Number of errors should be equals to 1");
   std::cout << "Exit testPushKO" << std::endl;
 }
@@ -85,36 +96,28 @@ koTotoMulti(int i, const Toto& toto) {
   std::cout << i << "->" << toto;
 }
 
-template<>
-void
-anch::Flux<int, Toto>::handleError() {
-  nbErr += 1;
-  try {
-    throw;
-  } catch(const std::string& err) {
-    std::cerr << "Toto error: " << err << std::endl;
-  } catch(...) {
-    std::cerr << "Unexpected error" << std::endl;
-    throw;
-  }
-}
-
 void
 testPushMultiOK() {
   std::cout << "Enter in testPushMultiOK" << std::endl;
-  anch::Flux<int,Toto> flux(okTotoMulti);
+  anch::Flux<int,Toto> flux;
+  flux.setConsumer(okTotoMulti);
+  flux.setFinalizer(finalize);
+  flux.setErrorHandler(handleTotoError);
   Toto toto;
   toto.msg = "a";
   flux.push(1, toto);
   toto.msg = "b";
   flux.push(2, toto);
+  flux.finalize();
   std::cout << "Exit testPushMultiOK" << std::endl;
 }
 
 void
 testPushMultiKO() {
   std::cout << "Enter in testPushMultiKO" << std::endl;
-  anch::Flux<int,Toto> flux(koTotoMulti);
+  anch::Flux<int,Toto> flux;
+  flux.setConsumer(koTotoMulti);
+  flux.setErrorHandler(handleTotoError);
   Toto toto;
   toto.msg = "ko";
   flux.push(1, toto);
@@ -122,6 +125,7 @@ testPushMultiKO() {
   flux.push(2, toto);
   toto.msg = "b";
   flux.push(3, toto);
+  flux.finalize();
   anch::ut::assert(nbErr == 1, "Number of errors should be equals to 1");
   std::cout << "Exit testPushMultiKO" << std::endl;
 }

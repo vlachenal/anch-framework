@@ -22,7 +22,7 @@
 namespace anch {
 
   template<typename... T>
-  Flux<T...>::Flux(std::function<void(const T&...)> consume): _consume(consume) {
+  Flux<T...>::Flux(): _consumer(), _finalizer([](){}), _errorHandler([](){throw;}) {
     // Nothing to do
   }
 
@@ -35,16 +35,37 @@ namespace anch {
   void
   Flux<T...>::push(const T&... object) {
     try {
-      std::invoke(_consume, object...);
+      std::invoke(_consumer, object...);
     } catch(...) {
-      handleError();
+      std::invoke(_errorHandler);
     }
   }
 
   template<typename... T>
   void
-  Flux<T...>::handleError() {
-    throw;
+  Flux<T...>::finalize() {
+    std::invoke(_finalizer);
+  }
+
+  template<typename... T>
+  inline
+  void
+  Flux<T...>::setConsumer(std::function<void(const T&...)> consumer) {
+    _consumer = consumer;
+  }
+
+  template<typename... T>
+  inline
+  void
+  Flux<T...>::setFinalizer(std::function<void()> finalizer) {
+    _finalizer = finalizer;
+  }
+
+  template<typename... T>
+  inline
+  void
+  Flux<T...>::setErrorHandler(std::function<void()> errorHandler) {
+    _errorHandler = errorHandler;
   }
 
 }
