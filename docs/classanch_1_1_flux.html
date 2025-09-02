@@ -108,17 +108,18 @@ $(function(){initNavTree('classanch_1_1_flux.html','','classanch_1_1_flux-member
 <div id="dynsection-0-summary" class="dynsummary" style="display:block;">
 </div>
 <div id="dynsection-0-content" class="dyncontent" style="display:none;">
-<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classanch_1_1_flux__coll__graph.svg" width="114" height="166"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classanch_1_1_flux__coll__graph.svg" width="134" height="208"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:abe14df15ee1514d9634281edfd3961ba" id="r_abe14df15ee1514d9634281edfd3961ba"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abe14df15ee1514d9634281edfd3961ba">Flux</a> ()=delete</td></tr>
-<tr class="memitem:a2084778c7d7ed4ef10075cd54c56de81" id="r_a2084778c7d7ed4ef10075cd54c56de81"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2084778c7d7ed4ef10075cd54c56de81">Flux</a> (std::function&lt; void(const T &amp;...)&gt; consume)</td></tr>
+<tr class="memitem:a16e1fc73c0e0feb8cb8b52e80de7a22c" id="r_a16e1fc73c0e0feb8cb8b52e80de7a22c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a16e1fc73c0e0feb8cb8b52e80de7a22c">Flux</a> ()</td></tr>
 <tr class="memitem:a808bed8a66faaa6a82fcfc19ca4aae9f" id="r_a808bed8a66faaa6a82fcfc19ca4aae9f"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a808bed8a66faaa6a82fcfc19ca4aae9f">~Flux</a> ()</td></tr>
 <tr class="memitem:a8e1a8f95b2713d1f60e9b5a51b1fd0f5" id="r_a8e1a8f95b2713d1f60e9b5a51b1fd0f5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8e1a8f95b2713d1f60e9b5a51b1fd0f5">push</a> (const T &amp;... object)</td></tr>
-<tr class="memitem:a72fd8e4af3809ec3df8ad22e44a4a504" id="r_a72fd8e4af3809ec3df8ad22e44a4a504"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a72fd8e4af3809ec3df8ad22e44a4a504">handleError</a> ()</td></tr>
-<tr class="memdesc:a72fd8e4af3809ec3df8ad22e44a4a504"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handle error.  <br /></td></tr>
+<tr class="memitem:ac4d5d6815a6ed2b0d3b3ba61e48da5c8" id="r_ac4d5d6815a6ed2b0d3b3ba61e48da5c8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac4d5d6815a6ed2b0d3b3ba61e48da5c8">finalize</a> ()</td></tr>
+<tr class="memitem:a1e90a13df6d72cccbd599ed405e66f17" id="r_a1e90a13df6d72cccbd599ed405e66f17"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1e90a13df6d72cccbd599ed405e66f17">setConsumer</a> (std::function&lt; void(const T &amp;...)&gt; consumer)</td></tr>
+<tr class="memitem:aa22822f35d67b67682d440ef0ed9aa0f" id="r_aa22822f35d67b67682d440ef0ed9aa0f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa22822f35d67b67682d440ef0ed9aa0f">setFinalizer</a> (std::function&lt; void()&gt; finalizer)</td></tr>
+<tr class="memitem:ac65a5f253ddedc85098493480f4c16b4" id="r_ac65a5f253ddedc85098493480f4c16b4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac65a5f253ddedc85098493480f4c16b4">setErrorHandler</a> (std::function&lt; void()&gt; errorHandler)</td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;typename... T&gt;<br />
@@ -132,16 +133,13 @@ class anch::Flux&lt; T &gt;</div><p>Manage collection as stream. </p>
 <dl class="section since"><dt>Since</dt><dd>0.1</dd></dl>
 <dl class="section author"><dt>Author</dt><dd>Vincent Lachenal </dd></dl>
 </div><a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="abe14df15ee1514d9634281edfd3961ba" name="abe14df15ee1514d9634281edfd3961ba"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abe14df15ee1514d9634281edfd3961ba">&#9670;&#160;</a></span>Flux() <span class="overload">[1/2]</span></h2>
+<a id="a16e1fc73c0e0feb8cb8b52e80de7a22c" name="a16e1fc73c0e0feb8cb8b52e80de7a22c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a16e1fc73c0e0feb8cb8b52e80de7a22c">&#9670;&#160;</a></span>Flux()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename... T&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="classanch_1_1_flux.html">anch::Flux</a>&lt; T &gt;::Flux </td>
@@ -150,39 +148,8 @@ template&lt;typename... T&gt; </div>
           <td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel delete">delete</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 <p>Forbids <a class="el" href="classanch_1_1_flux.html">Flux</a> default constructor </p>
-
-</div>
-</div>
-<a id="a2084778c7d7ed4ef10075cd54c56de81" name="a2084778c7d7ed4ef10075cd54c56de81"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2084778c7d7ed4ef10075cd54c56de81">&#9670;&#160;</a></span>Flux() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename... T&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classanch_1_1_flux.html">anch::Flux</a>&lt; T &gt;::Flux </td>
-          <td>(</td>
-          <td class="paramtype">std::function&lt; void(const T &amp;...)&gt;</td>          <td class="paramname"><span class="paramname"><em>consume</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p><a class="el" href="classanch_1_1_flux.html">Flux</a> constructor</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">consume</td><td>the consume object function to use </td></tr>
-  </table>
-  </dd>
-</dl>
 
 </div>
 </div>
@@ -215,8 +182,8 @@ template&lt;typename... T&gt; </div>
 </div>
 </div>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
-<a id="a72fd8e4af3809ec3df8ad22e44a4a504" name="a72fd8e4af3809ec3df8ad22e44a4a504"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a72fd8e4af3809ec3df8ad22e44a4a504">&#9670;&#160;</a></span>handleError()</h2>
+<a id="ac4d5d6815a6ed2b0d3b3ba61e48da5c8" name="ac4d5d6815a6ed2b0d3b3ba61e48da5c8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac4d5d6815a6ed2b0d3b3ba61e48da5c8">&#9670;&#160;</a></span>finalize()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -224,17 +191,14 @@ template&lt;typename... T&gt; </div>
 template&lt;typename... T&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="classanch_1_1_flux.html">anch::Flux</a>&lt; T &gt;::handleError </td>
+          <td class="memname">void <a class="el" href="classanch_1_1_flux.html">anch::Flux</a>&lt; T &gt;::finalize </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>Handle error. </p>
-<p>This method has to be implemented for each <code>T</code> implementation when <code>push</code> method can raise error.<br  />
-Default implementation will only rethrow the error. </p>
+<p>Finalize treatment </p>
 
 </div>
 </div>
@@ -258,6 +222,84 @@ template&lt;typename... T&gt; </div>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">object</td><td>the object to push in stream </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a1e90a13df6d72cccbd599ed405e66f17" name="a1e90a13df6d72cccbd599ed405e66f17"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1e90a13df6d72cccbd599ed405e66f17">&#9670;&#160;</a></span>setConsumer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename... T&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classanch_1_1_flux.html">anch::Flux</a>&lt; T &gt;::setConsumer </td>
+          <td>(</td>
+          <td class="paramtype">std::function&lt; void(const T &amp;...)&gt;</td>          <td class="paramname"><span class="paramname"><em>consumer</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Object consumer setter</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">consumer</td><td>the consumer to use </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ac65a5f253ddedc85098493480f4c16b4" name="ac65a5f253ddedc85098493480f4c16b4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac65a5f253ddedc85098493480f4c16b4">&#9670;&#160;</a></span>setErrorHandler()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename... T&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classanch_1_1_flux.html">anch::Flux</a>&lt; T &gt;::setErrorHandler </td>
+          <td>(</td>
+          <td class="paramtype">std::function&lt; void()&gt;</td>          <td class="paramname"><span class="paramname"><em>errorHandler</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Object finalizer setter</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">finalizer</td><td>the finalizer to use </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="aa22822f35d67b67682d440ef0ed9aa0f" name="aa22822f35d67b67682d440ef0ed9aa0f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa22822f35d67b67682d440ef0ed9aa0f">&#9670;&#160;</a></span>setFinalizer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename... T&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classanch_1_1_flux.html">anch::Flux</a>&lt; T &gt;::setFinalizer </td>
+          <td>(</td>
+          <td class="paramtype">std::function&lt; void()&gt;</td>          <td class="paramname"><span class="paramname"><em>finalizer</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Object finalizer setter</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">finalizer</td><td>the finalizer to use </td></tr>
   </table>
   </dd>
 </dl>

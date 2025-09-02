@@ -127,43 +127,56 @@ $(function(){initNavTree('flux_8hpp_source.html','',''); });
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span></div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>  <span class="keyword">template</span>&lt;<span class="keyword">typename</span>... T&gt;</div>
 <div class="foldopen" id="foldopen00037" data-start="{" data-end="};">
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno"><a class="line" href="classanch_1_1_flux.html">   37</a></span>  <span class="keyword">class </span><a class="code hl_function" href="classanch_1_1_flux.html#abe14df15ee1514d9634281edfd3961ba">Flux</a> {</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno"><a class="line" href="classanch_1_1_flux.html">   37</a></span>  <span class="keyword">class </span><a class="code hl_function" href="classanch_1_1_flux.html#a16e1fc73c0e0feb8cb8b52e80de7a22c">Flux</a> {</div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span> </div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    <span class="comment">// Attributes +</span></div>
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>  <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    std::function&lt;void(<span class="keyword">const</span> T&amp;...)&gt; _consume;</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    <span class="comment">// Attributes -</span></div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    <span class="comment">// Constructors +</span></div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>  <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno"><a class="line" href="classanch_1_1_flux.html#abe14df15ee1514d9634281edfd3961ba">   50</a></span>    <a class="code hl_function" href="classanch_1_1_flux.html#abe14df15ee1514d9634281edfd3961ba">Flux</a>() = <span class="keyword">delete</span>;</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span></div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno"><a class="line" href="classanch_1_1_flux.html#a2084778c7d7ed4ef10075cd54c56de81">   57</a></span>    <a class="code hl_function" href="classanch_1_1_flux.html#a2084778c7d7ed4ef10075cd54c56de81">Flux</a>(std::function&lt;<span class="keywordtype">void</span>(<span class="keyword">const</span> T&amp;...)&gt; consume);</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    <span class="comment">// Constructors -</span></div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span> </div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    <span class="comment">// Destructor +</span></div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>  <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno"><a class="line" href="classanch_1_1_flux.html#a808bed8a66faaa6a82fcfc19ca4aae9f">   65</a></span>    <span class="keyword">virtual</span> <a class="code hl_function" href="classanch_1_1_flux.html#a808bed8a66faaa6a82fcfc19ca4aae9f">~Flux</a>();</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    <span class="comment">// Destructor -</span></div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span> </div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    <span class="comment">// Methods +</span></div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>  <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno"><a class="line" href="classanch_1_1_flux.html#a8e1a8f95b2713d1f60e9b5a51b1fd0f5">   75</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classanch_1_1_flux.html#a8e1a8f95b2713d1f60e9b5a51b1fd0f5">push</a>(<span class="keyword">const</span> T&amp;... <span class="keywordtype">object</span>);</div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span></div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno"><a class="line" href="classanch_1_1_flux.html#a72fd8e4af3809ec3df8ad22e44a4a504">   83</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classanch_1_1_flux.html#a72fd8e4af3809ec3df8ad22e44a4a504">handleError</a>();</div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>    <span class="comment">// Methods -</span></div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span> </div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>  };</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    std::function&lt;void(<span class="keyword">const</span> T&amp;...)&gt; _consumer;</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span></div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    std::function&lt;void()&gt; _finalizer;</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span></div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    std::function&lt;void()&gt; _errorHandler;</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    <span class="comment">// Attributes -</span></div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    <span class="comment">// Constructors +</span></div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>  <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno"><a class="line" href="classanch_1_1_flux.html#a16e1fc73c0e0feb8cb8b52e80de7a22c">   56</a></span>    <a class="code hl_function" href="classanch_1_1_flux.html#a16e1fc73c0e0feb8cb8b52e80de7a22c">Flux</a>();</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    <span class="comment">// Constructors -</span></div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span> </div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    <span class="comment">// Destructor +</span></div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>  <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno"><a class="line" href="classanch_1_1_flux.html#a808bed8a66faaa6a82fcfc19ca4aae9f">   64</a></span>    <span class="keyword">virtual</span> <a class="code hl_function" href="classanch_1_1_flux.html#a808bed8a66faaa6a82fcfc19ca4aae9f">~Flux</a>();</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    <span class="comment">// Destructor -</span></div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span> </div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    <span class="comment">// Methods +</span></div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>  <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno"><a class="line" href="classanch_1_1_flux.html#a8e1a8f95b2713d1f60e9b5a51b1fd0f5">   74</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classanch_1_1_flux.html#a8e1a8f95b2713d1f60e9b5a51b1fd0f5">push</a>(<span class="keyword">const</span> T&amp;... <span class="keywordtype">object</span>);</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span></div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno"><a class="line" href="classanch_1_1_flux.html#ac4d5d6815a6ed2b0d3b3ba61e48da5c8">   79</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classanch_1_1_flux.html#ac4d5d6815a6ed2b0d3b3ba61e48da5c8">finalize</a>();</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    <span class="comment">// Methods -</span></div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span> </div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    <span class="comment">// Accessors +</span></div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>  <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno"><a class="line" href="classanch_1_1_flux.html#a1e90a13df6d72cccbd599ed405e66f17">   89</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classanch_1_1_flux.html#a1e90a13df6d72cccbd599ed405e66f17">setConsumer</a>(std::function&lt;<span class="keywordtype">void</span>(<span class="keyword">const</span> T&amp;...)&gt; consumer);</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span></div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno"><a class="line" href="classanch_1_1_flux.html#aa22822f35d67b67682d440ef0ed9aa0f">   96</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classanch_1_1_flux.html#aa22822f35d67b67682d440ef0ed9aa0f">setFinalizer</a>(std::function&lt;<span class="keywordtype">void</span>()&gt; finalizer);</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span></div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno"><a class="line" href="classanch_1_1_flux.html#ac65a5f253ddedc85098493480f4c16b4">  103</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classanch_1_1_flux.html#ac65a5f253ddedc85098493480f4c16b4">setErrorHandler</a>(std::function&lt;<span class="keywordtype">void</span>()&gt; errorHandler);</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>    <span class="comment">// Accessors -</span></div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span> </div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>  };</div>
 </div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span> </div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>}</div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span> </div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span><span class="preprocessor">#include &quot;impl/flux.hpp&quot;</span></div>
-<div class="ttc" id="aclassanch_1_1_flux_html_a2084778c7d7ed4ef10075cd54c56de81"><div class="ttname"><a href="classanch_1_1_flux.html#a2084778c7d7ed4ef10075cd54c56de81">anch::Flux::Flux</a></div><div class="ttdeci">Flux(std::function&lt; void(const T &amp;...)&gt; consume)</div></div>
-<div class="ttc" id="aclassanch_1_1_flux_html_a72fd8e4af3809ec3df8ad22e44a4a504"><div class="ttname"><a href="classanch_1_1_flux.html#a72fd8e4af3809ec3df8ad22e44a4a504">anch::Flux::handleError</a></div><div class="ttdeci">void handleError()</div><div class="ttdoc">Handle error.</div></div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span> </div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>}</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span> </div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span><span class="preprocessor">#include &quot;impl/flux.hpp&quot;</span></div>
+<div class="ttc" id="aclassanch_1_1_flux_html_a16e1fc73c0e0feb8cb8b52e80de7a22c"><div class="ttname"><a href="classanch_1_1_flux.html#a16e1fc73c0e0feb8cb8b52e80de7a22c">anch::Flux::Flux</a></div><div class="ttdeci">Flux()</div></div>
+<div class="ttc" id="aclassanch_1_1_flux_html_a1e90a13df6d72cccbd599ed405e66f17"><div class="ttname"><a href="classanch_1_1_flux.html#a1e90a13df6d72cccbd599ed405e66f17">anch::Flux::setConsumer</a></div><div class="ttdeci">void setConsumer(std::function&lt; void(const T &amp;...)&gt; consumer)</div></div>
 <div class="ttc" id="aclassanch_1_1_flux_html_a808bed8a66faaa6a82fcfc19ca4aae9f"><div class="ttname"><a href="classanch_1_1_flux.html#a808bed8a66faaa6a82fcfc19ca4aae9f">anch::Flux::~Flux</a></div><div class="ttdeci">virtual ~Flux()</div></div>
 <div class="ttc" id="aclassanch_1_1_flux_html_a8e1a8f95b2713d1f60e9b5a51b1fd0f5"><div class="ttname"><a href="classanch_1_1_flux.html#a8e1a8f95b2713d1f60e9b5a51b1fd0f5">anch::Flux::push</a></div><div class="ttdeci">void push(const T &amp;... object)</div></div>
-<div class="ttc" id="aclassanch_1_1_flux_html_abe14df15ee1514d9634281edfd3961ba"><div class="ttname"><a href="classanch_1_1_flux.html#abe14df15ee1514d9634281edfd3961ba">anch::Flux::Flux</a></div><div class="ttdeci">Flux()=delete</div></div>
+<div class="ttc" id="aclassanch_1_1_flux_html_aa22822f35d67b67682d440ef0ed9aa0f"><div class="ttname"><a href="classanch_1_1_flux.html#aa22822f35d67b67682d440ef0ed9aa0f">anch::Flux::setFinalizer</a></div><div class="ttdeci">void setFinalizer(std::function&lt; void()&gt; finalizer)</div></div>
+<div class="ttc" id="aclassanch_1_1_flux_html_ac4d5d6815a6ed2b0d3b3ba61e48da5c8"><div class="ttname"><a href="classanch_1_1_flux.html#ac4d5d6815a6ed2b0d3b3ba61e48da5c8">anch::Flux::finalize</a></div><div class="ttdeci">void finalize()</div></div>
+<div class="ttc" id="aclassanch_1_1_flux_html_ac65a5f253ddedc85098493480f4c16b4"><div class="ttname"><a href="classanch_1_1_flux.html#ac65a5f253ddedc85098493480f4c16b4">anch::Flux::setErrorHandler</a></div><div class="ttdeci">void setErrorHandler(std::function&lt; void()&gt; errorHandler)</div></div>
 <div class="ttc" id="anamespaceanch_html"><div class="ttname"><a href="namespaceanch.html">anch</a></div><div class="ttdoc">AnCH framework base namespace.</div><div class="ttdef"><b>Definition</b> app.hpp:28</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
