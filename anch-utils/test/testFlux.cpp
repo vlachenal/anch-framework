@@ -81,10 +81,10 @@ testPushAsyncOK(int nbPush) {
     std::cout << "finalize" << std::endl;
     flux.finalize();
   });
+  t.detach();
   std::mutex m;
   std::condition_variable cv;
   bool finished = false;
-  t.detach();
   // Start push early -
   flux.setConsumer(okToto);
   flux.setFinalizer([&cv, &finished]() {
