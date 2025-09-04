@@ -62,7 +62,6 @@ namespace anch {
   Flux<T...>::push(const T&... object) {
     _consumer.wait();
     _errorHandler.wait();
-    _finalizer.wait();
     try {
       std::invoke(_consumer.get(), object...);
     } catch(...) {
@@ -73,6 +72,7 @@ namespace anch {
   template<typename... T>
   void
   Flux<T...>::finalize() {
+    _finalizer.wait();
     std::invoke(_finalizer.get());
   }
 
