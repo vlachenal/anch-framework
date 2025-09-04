@@ -38,7 +38,9 @@ namespace anch {
    *   - error's handler (optional)
    *   - finalizer (optional)
    *
-   * When not set, the \c ready method will set error handler to rethrow and finalizer to do nothing.
+   * When not set, the \c ready method will set error handler to rethrow and finalizer to do nothing.\n
+   * \n
+   * When not sure, it is advise to call \c ready every time you have been to set consummer.
    *
    * \tparam T the collection's type
    *

@@ -80,6 +80,9 @@ namespace anch {
   inline
   void
   Flux<T...>::setConsumer(std::function<void(const T&...)> consumer) {
+    if(_con) {
+      throw std::runtime_error("Consumer function is already set");
+    }
     _pcon.set_value(consumer);
     _con = true;
   }
@@ -88,6 +91,9 @@ namespace anch {
   inline
   void
   Flux<T...>::setFinalizer(std::function<void()> finalizer) {
+    if(_fin) {
+      throw std::runtime_error("Finalizer function is already set");
+    }
     _pfin.set_value(finalizer);
     _fin = true;
   }
@@ -96,6 +102,9 @@ namespace anch {
   inline
   void
   Flux<T...>::setErrorHandler(std::function<void()> errorHandler) {
+    if(_err) {
+      throw std::runtime_error("Finalizer function is already set");
+    }
     _perr.set_value(errorHandler);
     _err = true;
   }
