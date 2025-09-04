@@ -1,5 +1,7 @@
 var NAVTREEINDEX11 =
 {
+"namespaceanch_1_1json.html#a56742fecea7bc19952b3e35c013ad931a252d8e34178da47f2208605a66051241":[19,0,0,4,19,0],
+"namespaceanch_1_1json.html#a56742fecea7bc19952b3e35c013ad931a696b031073e74bf2cb98e5ef201d4aa3":[19,0,0,4,19,3],
 "namespaceanch_1_1json.html#a56742fecea7bc19952b3e35c013ad931af5c210bc40c859808ff6958741df23f0":[19,0,0,4,19,1],
 "namespaceanch_1_1json.html#a6f0f7c7dce90dfd75b3d67ec70fcb693":[19,0,0,4,64],
 "namespaceanch_1_1json.html#a6f769f8ae361c283d5016534bce30f4a":[19,0,0,4,34],
@@ -247,7 +249,5 @@ var NAVTREEINDEX11 =
 "string_utils_8hpp_source.html":[21,0,13,0,10],
 "struct_formatter_options.html":[20,0,2],
 "struct_formatter_options.html#a5f3f187400c0d87ad9971fedfe522183":[20,0,2,1],
-"struct_formatter_options.html#aefb9c68cbec782d266431a2f8cf45cbb":[20,0,2,0],
-"struct_mapping_options.html":[20,0,6],
-"struct_mapping_options.html#a197bfa9b01700f0bbf714e91a6086f5a":[20,0,6,3]
+"struct_formatter_options.html#aefb9c68cbec782d266431a2f8cf45cbb":[20,0,2,0]
 };

@@ -1,5 +1,7 @@
 var NAVTREEINDEX5 =
 {
+"classanch_1_1logger_1_1_logger.html#a025e8112f470b0148dd66cf175f2bad0":[20,0,0,7,1,2],
+"classanch_1_1logger_1_1_logger.html#a767097deec69626406c053403d2a958d":[19,0,0,5,1,1],
 "classanch_1_1logger_1_1_logger.html#a767097deec69626406c053403d2a958d":[20,0,0,7,1,1],
 "classanch_1_1logger_1_1_logger.html#a7d53282e024b10b5fd5841b0b0c2db5c":[19,0,0,5,1,0],
 "classanch_1_1logger_1_1_logger.html#a7d53282e024b10b5fd5841b0b0c2db5c":[20,0,0,7,1,0],
@@ -247,7 +249,5 @@ var NAVTREEINDEX5 =
 "classanch_1_1network_1_1_socket.html#ac0a76f5f226af06f9fa3e7fb7f9b24fa":[20,0,0,8,1,5],
 "classanch_1_1network_1_1_socket.html#ad2919fb42e49758e4d66e8463110c741":[19,0,0,6,1,21],
 "classanch_1_1network_1_1_socket.html#ad2919fb42e49758e4d66e8463110c741":[20,0,0,8,1,21],
-"classanch_1_1network_1_1_socket.html#ad9a0ac294069a6d22cd104b0a09e4829":[19,0,0,6,1,10],
-"classanch_1_1network_1_1_socket.html#ad9a0ac294069a6d22cd104b0a09e4829":[20,0,0,8,1,10],
-"classanch_1_1network_1_1_socket.html#adad2dc931f953a14f55bb616e4b17168":[19,0,0,6,1,23]
+"classanch_1_1network_1_1_socket.html#ad9a0ac294069a6d22cd104b0a09e4829":[19,0,0,6,1,10]
 };

@@ -108,13 +108,14 @@ $(function(){initNavTree('classanch_1_1_flux.html','','classanch_1_1_flux-member
 <div id="dynsection-0-summary" class="dynsummary" style="display:block;">
 </div>
 <div id="dynsection-0-content" class="dyncontent" style="display:none;">
-<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classanch_1_1_flux__coll__graph.svg" width="134" height="208"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classanch_1_1_flux__coll__graph.svg" width="134" height="230"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a16e1fc73c0e0feb8cb8b52e80de7a22c" id="r_a16e1fc73c0e0feb8cb8b52e80de7a22c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a16e1fc73c0e0feb8cb8b52e80de7a22c">Flux</a> ()</td></tr>
 <tr class="memitem:a808bed8a66faaa6a82fcfc19ca4aae9f" id="r_a808bed8a66faaa6a82fcfc19ca4aae9f"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a808bed8a66faaa6a82fcfc19ca4aae9f">~Flux</a> ()</td></tr>
+<tr class="memitem:abbf02cff088a7dd6d4c14db5bd52064b" id="r_abbf02cff088a7dd6d4c14db5bd52064b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abbf02cff088a7dd6d4c14db5bd52064b">ready</a> ()</td></tr>
 <tr class="memitem:a8e1a8f95b2713d1f60e9b5a51b1fd0f5" id="r_a8e1a8f95b2713d1f60e9b5a51b1fd0f5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8e1a8f95b2713d1f60e9b5a51b1fd0f5">push</a> (const T &amp;... object)</td></tr>
 <tr class="memitem:ac4d5d6815a6ed2b0d3b3ba61e48da5c8" id="r_ac4d5d6815a6ed2b0d3b3ba61e48da5c8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac4d5d6815a6ed2b0d3b3ba61e48da5c8">finalize</a> ()</td></tr>
 <tr class="memitem:a1e90a13df6d72cccbd599ed405e66f17" id="r_a1e90a13df6d72cccbd599ed405e66f17"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1e90a13df6d72cccbd599ed405e66f17">setConsumer</a> (std::function&lt; void(const T &amp;...)&gt; consumer)</td></tr>
@@ -149,7 +150,13 @@ template&lt;typename... T&gt; </div>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Forbids <a class="el" href="classanch_1_1_flux.html">Flux</a> default constructor </p>
+<p><a class="el" href="classanch_1_1_flux.html">Flux</a> (default) constructor</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">async</td><td>asynchronous mode (default to <code>true</code> ) </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -228,6 +235,29 @@ template&lt;typename... T&gt; </div>
 
 </div>
 </div>
+<a id="abbf02cff088a7dd6d4c14db5bd52064b" name="abbf02cff088a7dd6d4c14db5bd52064b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abbf02cff088a7dd6d4c14db5bd52064b">&#9670;&#160;</a></span>ready()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename... T&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classanch_1_1_flux.html">anch::Flux</a>&lt; T &gt;::ready </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Set ready to consume<br  />
+ When consumer is not set, <code>std::runtime_error</code> will be raised.<br  />
+When finalizer is not set, <code>ready</code> set it to nothing to do.<br  />
+When error handler is not set, <code>ready</code> set it to rethrow. </p>
+
+</div>
+</div>
 <a id="a1e90a13df6d72cccbd599ed405e66f17" name="a1e90a13df6d72cccbd599ed405e66f17"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1e90a13df6d72cccbd599ed405e66f17">&#9670;&#160;</a></span>setConsumer()</h2>
 
@@ -270,10 +300,10 @@ template&lt;typename... T&gt; </div>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Object finalizer setter</p>
+<p>Object error handler setter</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">finalizer</td><td>the finalizer to use </td></tr>
+    <tr><td class="paramname">errorHandler</td><td>the error handler to use </td></tr>
   </table>
   </dd>
 </dl>

@@ -1,5 +1,7 @@
 var NAVTREEINDEX4 =
 {
+"classanch_1_1events_1_1_event_handler.html#acfdae7cc9d4049ea85c78195ab3a87ab":[20,0,0,5,2,2],
+"classanch_1_1events_1_1_observable.html":[19,0,0,3,3],
 "classanch_1_1events_1_1_observable.html":[20,0,0,5,3],
 "classanch_1_1events_1_1_observable.html#a38496a3958f7a7f062ac26b3182780d6":[19,0,0,3,3,5],
 "classanch_1_1events_1_1_observable.html#a38496a3958f7a7f062ac26b3182780d6":[20,0,0,5,3,5],
@@ -247,7 +249,5 @@ var NAVTREEINDEX4 =
 "classanch_1_1json_1_1_writer_context.html#ad8a827827795df0e2b513a4266d0ca19":[20,0,0,6,10,7],
 "classanch_1_1logger_1_1_logger.html":[19,0,0,5,1],
 "classanch_1_1logger_1_1_logger.html":[20,0,0,7,1],
-"classanch_1_1logger_1_1_logger.html#a025e8112f470b0148dd66cf175f2bad0":[19,0,0,5,1,2],
-"classanch_1_1logger_1_1_logger.html#a025e8112f470b0148dd66cf175f2bad0":[20,0,0,7,1,2],
-"classanch_1_1logger_1_1_logger.html#a767097deec69626406c053403d2a958d":[19,0,0,5,1,1]
+"classanch_1_1logger_1_1_logger.html#a025e8112f470b0148dd66cf175f2bad0":[19,0,0,5,1,2]
 };
