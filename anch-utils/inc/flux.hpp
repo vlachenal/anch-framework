@@ -30,6 +30,16 @@ namespace anch {
   /*!
    * \brief Manage collection as stream
    *
+   * Each item fomr the collection will be added with \c push method.\n
+   * The synchronization is managed with \c std::promise / \c std::future C++ features.\n
+   *
+   * \c Flux runs with:
+   *   - item's consumer (mandatory)
+   *   - error's handler (optional)
+   *   - finalizer (optional)
+   *
+   * When not set, the \c ready method will set error handler to rethrow and finalizer to do nothing.
+   *
    * \tparam T the collection's type
    *
    * \since 0.1
