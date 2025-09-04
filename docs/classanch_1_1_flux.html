@@ -125,6 +125,16 @@ Public Member Functions</h2></td></tr>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;typename... T&gt;<br />
 class anch::Flux&lt; T &gt;</div><p>Manage collection as stream. </p>
+<p>Each item fomr the collection will be added with <code>push</code> method.<br  />
+The synchronization is managed with <code>std::promise</code> / <code>std::future</code> C++ features.<br  />
+ <code><a class="el" href="classanch_1_1_flux.html" title="Manage collection as stream.">Flux</a></code> runs with:</p><ul>
+<li>item's consumer (mandatory)</li>
+<li>error's handler (optional)</li>
+<li>finalizer (optional)</li>
+</ul>
+<p>When not set, the <code>ready</code> method will set error handler to rethrow and finalizer to do nothing.<br  />
+<br  />
+When not sure, it is advise to call <code>ready</code> every time you have been to set consummer.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">T</td><td>the collection's type</td></tr>
@@ -150,13 +160,7 @@ template&lt;typename... T&gt; </div>
         </tr>
       </table>
 </div><div class="memdoc">
-<p><a class="el" href="classanch_1_1_flux.html">Flux</a> (default) constructor</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">async</td><td>asynchronous mode (default to <code>true</code> ) </td></tr>
-  </table>
-  </dd>
-</dl>
+<p><a class="el" href="classanch_1_1_flux.html">Flux</a> default constructor </p>
 
 </div>
 </div>
@@ -254,7 +258,13 @@ template&lt;typename... T&gt; </div>
 <p>Set ready to consume<br  />
  When consumer is not set, <code>std::runtime_error</code> will be raised.<br  />
 When finalizer is not set, <code>ready</code> set it to nothing to do.<br  />
-When error handler is not set, <code>ready</code> set it to rethrow. </p>
+When error handler is not set, <code>ready</code> set it to rethrow.</p>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname">std::runtime_error</td><td>when consumer function is not set </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -277,7 +287,13 @@ template&lt;typename... T&gt; </div>
 <p>Object consumer setter</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">consumer</td><td>the consumer to use </td></tr>
+    <tr><td class="paramname">consumer</td><td>the consumer to use</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname">std::runtime_error</td><td>when already set </td></tr>
   </table>
   </dd>
 </dl>
@@ -303,7 +319,13 @@ template&lt;typename... T&gt; </div>
 <p>Object error handler setter</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">errorHandler</td><td>the error handler to use </td></tr>
+    <tr><td class="paramname">errorHandler</td><td>the error handler to use</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname">std::runtime_error</td><td>when already set </td></tr>
   </table>
   </dd>
 </dl>
@@ -329,7 +351,13 @@ template&lt;typename... T&gt; </div>
 <p>Object finalizer setter</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">finalizer</td><td>the finalizer to use </td></tr>
+    <tr><td class="paramname">finalizer</td><td>the finalizer to use</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname">std::runtime_error</td><td>when already set </td></tr>
   </table>
   </dd>
 </dl>
