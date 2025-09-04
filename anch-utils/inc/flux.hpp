@@ -72,9 +72,7 @@ namespace anch {
     // Constructors +
   public:
     /*!
-     * \ref Flux (default) constructor
-     *
-     * \param async asynchronous mode (default to \c true )
+     * \ref Flux default constructor
      */
     Flux();
     // Constructors -
