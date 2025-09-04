@@ -68,13 +68,13 @@ testPushOK() {
 }
 
 void
-testPushAsyncOK() {
+testPushAsyncOK(int nbPush) {
   std::cout << "Enter in testPushAsyncOK" << std::endl;
   anch::Flux<Toto> flux;
   // Start push early +
-  std::thread t([&flux]() {
+  std::thread t([&flux, &nbPush]() {
     Toto toto;
-    for(int i = 0 ; i < 1000 ; ++i) {
+    for(int i = 0 ; i < nbPush ; ++i) {
       toto.msg = std::to_string(i);
       flux.push(toto);
     }
@@ -94,7 +94,25 @@ testPushAsyncOK() {
   flux.ready();
   m.lock();
   m.unlock();
-  std::cout << "Exit testPushAsyncOK" << std::endl;
+  std::cout << "Exit testPushAsyncOK(" << nbPush << ')' << std::endl;
+}
+
+void
+testPushSyncOK(int nbPush) {
+  std::cout << "Enter in testPushSyncOK" << std::endl;
+  anch::Flux<Toto> flux;
+  flux.setConsumer(okToto);
+  flux.setFinalizer(finalize);
+  flux.setErrorHandler(handleTotoError);
+  flux.ready();
+  Toto toto;
+  for(int i = 0 ; i < nbPush ; ++i) {
+    toto.msg = std::to_string(i);
+    flux.push(toto);
+  }
+  std::cout << "finalize" << std::endl;
+  flux.finalize();
+  std::cout << "Exit testPushSyncOK(" << nbPush << ')' << std::endl;
 }
 
 void
@@ -180,6 +198,13 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("push-ko", testPushKO)
     .add("push-ok-multi", testPushMultiOK)
     .add("push-ko-multi", testPushMultiKO)
-    .add("push-async-ok", testPushAsyncOK)
+    .add("push-async-ok", std::bind(testPushAsyncOK, 1000))
+    .add("push-async-10-ok", std::bind(testPushAsyncOK, 10))
+    .add("push-async-100-ok", std::bind(testPushAsyncOK, 100))
+    .add("push-async-10000-ok", std::bind(testPushAsyncOK, 10000))
+    .add("push-sync-10-ok", std::bind(testPushSyncOK, 10))
+    .add("push-sync-100-ok", std::bind(testPushSyncOK, 100))
+    .add("push-sync-1000-ok", std::bind(testPushSyncOK, 1000))
+    .add("push-sync-10000-ok", std::bind(testPushSyncOK, 10000))
     ;
 }

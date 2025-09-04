@@ -20,8 +20,6 @@
 #pragma once
 
 #include <functional>
-#include <thread>
-#include <condition_variable>
 #include <future>
 
 
@@ -105,6 +103,8 @@ namespace anch {
      * When consumer is not set, \c std::runtime_error will be raised.\n
      * When finalizer is not set, \c ready set it to nothing to do.\n
      * When error handler is not set, \c ready set it to rethrow.
+     *
+     * \throw std::runtime_error when consumer function is not set
      */
     void ready();
 
@@ -127,6 +127,8 @@ namespace anch {
      * Object consumer setter
      *
      * \param consumer the consumer to use
+     *
+     * \throw std::runtime_error when already set
      */
     void setConsumer(std::function<void(const T&...)> consumer);
 
@@ -134,6 +136,8 @@ namespace anch {
      * Object finalizer setter
      *
      * \param finalizer the finalizer to use
+     *
+     * \throw std::runtime_error when already set
      */
     void setFinalizer(std::function<void()> finalizer);
 
@@ -141,6 +145,8 @@ namespace anch {
      * Object error handler setter
      *
      * \param errorHandler the error handler to use
+     *
+     * \throw std::runtime_error when already set
      */
     void setErrorHandler(std::function<void()> errorHandler);
     // Accessors -
