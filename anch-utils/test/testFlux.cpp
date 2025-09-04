@@ -82,18 +82,20 @@ testPushAsyncOK(int nbPush) {
     flux.finalize();
   });
   std::mutex m;
-  m.lock();
+  std::condition_variable cv;
+  bool finished = false;
   t.detach();
   // Start push early -
   flux.setConsumer(okToto);
-  flux.setFinalizer([&m]() {
+  flux.setFinalizer([&cv, &finished]() {
     finalize();
-    m.unlock();
+    finished = true;
+    cv.notify_one();
   });
   flux.setErrorHandler(handleTotoError);
   flux.ready();
-  m.lock();
-  m.unlock();
+  std::unique_lock lk(m);
+  cv.wait(lk, [&finished]{ return finished; }); // wait for end
   std::cout << "Exit testPushAsyncOK(" << nbPush << ')' << std::endl;
 }
 
