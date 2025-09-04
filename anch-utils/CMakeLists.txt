@@ -282,6 +282,7 @@ if(ANCH_UTILS_UNIT_TEST)
   add_test(anch-flux-push-ko-test ${EXECUTABLE_OUTPUT_PATH}/anch-flux-test -t push-ko)
   add_test(anch-flux-push-multi-ok-test ${EXECUTABLE_OUTPUT_PATH}/anch-flux-test -t push-ok-multi)
   add_test(anch-flux-push-multi-ko-test ${EXECUTABLE_OUTPUT_PATH}/anch-flux-test -t push-ko-multi)
+  add_test(anch-flux-push-async-ok-test ${EXECUTABLE_OUTPUT_PATH}/anch-flux-test -t push-async-ok)
   # Flux -
 
 endif(ANCH_UTILS_UNIT_TEST)

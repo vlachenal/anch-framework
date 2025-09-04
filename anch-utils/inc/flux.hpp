@@ -20,6 +20,9 @@
 #pragma once
 
 #include <functional>
+#include <thread>
+#include <condition_variable>
+#include <future>
 
 
 namespace anch {
@@ -38,20 +41,40 @@ namespace anch {
 
     // Attributes +
   private:
+    /*! Consumer has been set flag */
+    bool _con;
+
+    /*! Promise consumer value */
+    std::promise<std::function<void(const T&...)>> _pcon;
+
     /*! Consumer object function */
-    std::function<void(const T&...)> _consumer;
+    std::shared_future<std::function<void(const T&...)>> _consumer;
 
-    /*! Finalizer object function (default to do nothing) */
-    std::function<void()> _finalizer;
+    /*! Finalizer has been set flag */
+    bool _fin;
 
-    /*! Error handler object function (default to rethrow) */
-    std::function<void()> _errorHandler;
+    /*! Finalizer consumer value */
+    std::promise<std::function<void()>> _pfin;
+
+    /*! Finalizer object function */
+    std::shared_future<std::function<void()>> _finalizer;
+
+    /*! Error handler has been set flag */
+    bool _err;
+
+    /*! Error handler consumer value */
+    std::promise<std::function<void()>> _perr;
+
+    /*! Error handler object function */
+    std::shared_future<std::function<void()>> _errorHandler;
     // Attributes -
 
     // Constructors +
   public:
     /*!
-     * Forbids \ref Flux default constructor
+     * \ref Flux (default) constructor
+     *
+     * \param async asynchronous mode (default to \c true )
      */
     Flux();
     // Constructors -
@@ -66,6 +89,15 @@ namespace anch {
 
     // Methods +
   public:
+    /*!
+     * Set ready to consume\n
+     *
+     * When consumer is not set, \c std::runtime_error will be raised.\n
+     * When finalizer is not set, \c ready set it to nothing to do.\n
+     * When error handler is not set, \c ready set it to rethrow.
+     */
+    void ready();
+
     /*!
      * Push object in stream
      *
@@ -96,9 +128,9 @@ namespace anch {
     void setFinalizer(std::function<void()> finalizer);
 
     /*!
-     * Object finalizer setter
+     * Object error handler setter
      *
-     * \param finalizer the finalizer to use
+     * \param errorHandler the error handler to use
      */
     void setErrorHandler(std::function<void()> errorHandler);
     // Accessors -

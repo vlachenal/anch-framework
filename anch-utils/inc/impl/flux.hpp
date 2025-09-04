@@ -19,10 +19,22 @@
 */
 #pragma once
 
+#include <stdexcept>
+
+
 namespace anch {
 
   template<typename... T>
-  Flux<T...>::Flux(): _consumer(), _finalizer([](){}), _errorHandler([](){throw;}) {
+  Flux<T...>::Flux():
+    _con(false),
+    _pcon(),
+    _consumer(_pcon.get_future()),
+    _fin(false),
+    _pfin(),
+    _finalizer(_pfin.get_future()),
+    _err(false),
+    _perr(),
+    _errorHandler(_perr.get_future()) {
     // Nothing to do
   }
 
@@ -33,39 +45,59 @@ namespace anch {
 
   template<typename... T>
   void
+  Flux<T...>::ready() {
+    if(!_con) {
+      throw std::runtime_error("Consumer function is not set");
+    }
+    if(!_fin) {
+      _pfin.set_value([](){});
+    }
+    if(!_err) {
+      _perr.set_value([](){throw;});
+    }
+  }
+
+  template<typename... T>
+  void
   Flux<T...>::push(const T&... object) {
+    _consumer.wait();
+    _errorHandler.wait();
+    _finalizer.wait();
     try {
-      std::invoke(_consumer, object...);
+      std::invoke(_consumer.get(), object...);
     } catch(...) {
-      std::invoke(_errorHandler);
+      std::invoke(_errorHandler.get());
     }
   }
 
   template<typename... T>
   void
   Flux<T...>::finalize() {
-    std::invoke(_finalizer);
+    std::invoke(_finalizer.get());
   }
 
   template<typename... T>
   inline
   void
   Flux<T...>::setConsumer(std::function<void(const T&...)> consumer) {
-    _consumer = consumer;
+    _pcon.set_value(consumer);
+    _con = true;
   }
 
   template<typename... T>
   inline
   void
   Flux<T...>::setFinalizer(std::function<void()> finalizer) {
-    _finalizer = finalizer;
+    _pfin.set_value(finalizer);
+    _fin = true;
   }
 
   template<typename... T>
   inline
   void
   Flux<T...>::setErrorHandler(std::function<void()> errorHandler) {
-    _errorHandler = errorHandler;
+    _perr.set_value(errorHandler);
+    _err = true;
   }
 
 }

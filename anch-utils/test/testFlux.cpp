@@ -56,13 +56,45 @@ testPushOK() {
   flux.setConsumer(okToto);
   flux.setFinalizer(finalize);
   flux.setErrorHandler(handleTotoError);
+  flux.ready();
   Toto toto;
   toto.msg = "a";
   flux.push(toto);
   toto.msg = "b";
   flux.push(toto);
+  std::cout << "finalize" << std::endl;
   flux.finalize();
   std::cout << "Exit testPushOK" << std::endl;
+}
+
+void
+testPushAsyncOK() {
+  std::cout << "Enter in testPushAsyncOK" << std::endl;
+  anch::Flux<Toto> flux;
+  // Start push early +
+  std::thread t([&flux]() {
+    Toto toto;
+    for(int i = 0 ; i < 1000 ; ++i) {
+      toto.msg = std::to_string(i);
+      flux.push(toto);
+    }
+    std::cout << "finalize" << std::endl;
+    flux.finalize();
+  });
+  std::mutex m;
+  m.lock();
+  t.detach();
+  // Start push early -
+  flux.setConsumer(okToto);
+  flux.setFinalizer([&m]() {
+    finalize();
+    m.unlock();
+  });
+  flux.setErrorHandler(handleTotoError);
+  flux.ready();
+  m.lock();
+  m.unlock();
+  std::cout << "Exit testPushAsyncOK" << std::endl;
 }
 
 void
@@ -71,6 +103,7 @@ testPushKO() {
   anch::Flux<Toto> flux;
   flux.setConsumer(koToto);
   flux.setErrorHandler(handleTotoError);
+  flux.ready();
   Toto toto;
   toto.msg = "ko";
   flux.push(toto);
@@ -103,6 +136,7 @@ testPushMultiOK() {
   flux.setConsumer(okTotoMulti);
   flux.setFinalizer(finalize);
   flux.setErrorHandler(handleTotoError);
+  flux.ready();
   Toto toto;
   toto.msg = "a";
   flux.push(1, toto);
@@ -118,6 +152,7 @@ testPushMultiKO() {
   anch::Flux<int,Toto> flux;
   flux.setConsumer(koTotoMulti);
   flux.setErrorHandler(handleTotoError);
+  flux.ready();
   Toto toto;
   toto.msg = "ko";
   flux.push(1, toto);
@@ -145,5 +180,6 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("push-ko", testPushKO)
     .add("push-ok-multi", testPushMultiOK)
     .add("push-ko-multi", testPushMultiKO)
+    .add("push-async-ok", testPushAsyncOK)
     ;
 }
