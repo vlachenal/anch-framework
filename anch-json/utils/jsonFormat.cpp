@@ -219,6 +219,7 @@ parseArgs(int argc, char** argv, FormatterOptions& opts, MappingOptions& jsonOpt
     {.handler = anch::cli::bindTrue(opts.color), .sopt = 'c', .lopt = "color", .description = "Activate console color (default to false)"},
     {.handler = anch::cli::bindTrue(jsonOpts.serialize_null), .lopt = "null", .description = "Serialize null value (default to false)"},
     {.handler = anch::cli::bindNum(jsonOpts.prettify_nbs), .sopt = 'n', .lopt = "nb-indent", .value = true, .name = "N", .description = "Number of spaces for indentation (default to 0)"},
+    {.handler = anch::cli::bindNum(jsonOpts.buffer_size), .sopt = 'b', .lopt = "buffer-size", .value = true, .name = "SIZE", .description = "Buffer size in byte (default to anch-json = 1024)"},
     {.handler = anch::cli::bindIFS(opts.input), .sopt = 'i', .lopt = "input", .value = true, .name = "IS", .pipe = anch::cli::bindPipe(opts.input), .description = "Input file (default to stdin)"},
     {.handler = anch::cli::bindOFS(opts.output), .sopt = 'o', .lopt = "output", .value = true, .name = "OS", .cout = anch::cli::bindCout(opts.output), .description = "Output file (default to stdout)"}
   };

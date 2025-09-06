@@ -115,6 +115,12 @@ if(ANCH_JSON_UNITARY_UTILS)
     anch-json
     anch-cli
   )
+
+  set_target_properties(
+    anch-json-formatter
+    PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/utils
+  )
 endif(ANCH_JSON_UNITARY_UTILS)
 ## Utilities -
 
