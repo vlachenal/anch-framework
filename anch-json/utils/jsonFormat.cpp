@@ -25,6 +25,7 @@
 
 #include "cli/args.hpp"
 #include "cli/utils.hpp"
+#include "cli/formatter.hpp"
 #include "events/observer.hpp"
 
 using anch::json::Reader;
@@ -77,10 +78,11 @@ public:
    *
    * \param output the ouput stream
    * \param options the mapping options
+   * \param color the output color options
    */
-  JSONFormatter(std::ostream& output, const MappingOptions& options):
+  JSONFormatter(std::ostream& output, const MappingOptions& options, bool color):
     _writer(output, options), _currentField(), _array(0) {
-    // Nothing to do
+    anch::cli::Formatter::DISABLED = !color;
   }
 
 public:
@@ -104,30 +106,40 @@ public:
   virtual void handle(const anch::events::Event<JSONItem>& event) noexcept {
     switch(event.body.getType()) {
     case EventType::FIELD:
-      _currentField = std::any_cast<std::string>(event.body.getValue());
+      {
+	std::ostringstream oss;
+	oss << anch::cli::Formatter::format().bold() << std::any_cast<std::string>(event.body.getValue()) << anch::cli::RESET;
+	_currentField = oss.str();
+      }
       break;
     case EventType::VNULL:
-      addField();
-      _currentField.reset();
+      if(_currentField.has_value()) {
+	_writer.writeNull(_currentField.value());
+	_currentField.reset();
+      } else {
+	_writer.next();
+      }
       break;
     case EventType::TRUE:
       addField();
-      _writer.output << "true";
+      _writer.output << anch::cli::Formatter::format().fgColor(anch::cli::Color::GREEN) << "true" << anch::cli::RESET;
       _currentField.reset();
       break;
     case EventType::FALSE:
       addField();
-      _writer.output << "false";
+      _writer.output << anch::cli::Formatter::format().fgColor(anch::cli::Color::RED) << "false" << anch::cli::RESET;
       _currentField.reset();
       break;
     case EventType::NUMBER:
       addField();
-      _writer.output << std::any_cast<double>(event.body.getValue());
+      _writer.output << anch::cli::Formatter::format().fgColor(anch::cli::Color::YELLOW) << std::any_cast<double>(event.body.getValue()) << anch::cli::RESET;
       _currentField.reset();
       break;
     case EventType::STRING:
       addField();
-      _writer.output << anch::json::STRING_DELIMITER << std::any_cast<std::string>(event.body.getValue()) << anch::json::STRING_DELIMITER;
+      _writer.output << anch::json::STRING_DELIMITER
+		     << anch::cli::Formatter::format().fgColor(anch::cli::Color::BLUE) << std::any_cast<std::string>(event.body.getValue()) << anch::cli::RESET
+		     << anch::json::STRING_DELIMITER;
       _currentField.reset();
       break;
     case EventType::BEGIN_OBJECT:
@@ -188,6 +200,9 @@ struct FormatterOptions {
   /*! The output stream to write in */
   std::shared_ptr<std::ostream> output;
 
+  /*! Color output */
+  bool color = false;
+
 };
 
 /*!
@@ -199,8 +214,10 @@ struct FormatterOptions {
  * \param jsonOpts the JSON mapper options
  */
 void
-parseArgs(int argc, char** argv, FormatterOptions& opts, MappingOptions jsonOpts) {
+parseArgs(int argc, char** argv, FormatterOptions& opts, MappingOptions& jsonOpts) {
   std::vector<anch::cli::Arg> args = {
+    {.handler = anch::cli::bindTrue(opts.color), .sopt = 'c', .lopt = "color", .description = "Activate console color (default to false)"},
+    {.handler = anch::cli::bindTrue(jsonOpts.serialize_null), .lopt = "null", .description = "Serialize null value (default to false)"},
     {.handler = anch::cli::bindNum(jsonOpts.prettify_nbs), .sopt = 'n', .lopt = "nb-indent", .value = true, .name = "N", .description = "Number of spaces for indentation (default to 0)"},
     {.handler = anch::cli::bindIFS(opts.input), .sopt = 'i', .lopt = "input", .value = true, .name = "IS", .pipe = anch::cli::bindPipe(opts.input), .description = "Input file (default to stdin)"},
     {.handler = anch::cli::bindOFS(opts.output), .sopt = 'o', .lopt = "output", .value = true, .name = "OS", .cout = anch::cli::bindCout(opts.output), .description = "Output file (default to stdout)"}
@@ -222,7 +239,7 @@ main(int argc, char** argv) {
   options.deserialize_max_discard_char = -1;
   parseArgs(argc, argv, args, options);
   Reader reader(*args.input, options);
-  JSONFormatter formatter(*args.output, options);
+  JSONFormatter formatter(*args.output, options, args.color);
   reader.itemObs().addObserver(formatter);
   ErrorObserver error;
   reader.errorObs().addObserver(error);

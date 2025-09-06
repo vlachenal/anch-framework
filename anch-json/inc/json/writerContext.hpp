@@ -51,6 +51,9 @@ namespace anch::json {
 
     /*! First fields queue */
     std::deque<bool> _firsts;
+
+    /*! Indentation function to call */
+    std::function<void()> _indent;
     // Attributes -
 
     // Constructors +
@@ -152,6 +155,12 @@ namespace anch::json {
      * Write field/value delimiter (',') according to context (first field or not)
      */
     void next();
+
+  private:
+    /*!
+     * Manage indentation according to context
+     */
+    void indent();
     // Methods -
 
   };

@@ -44,7 +44,7 @@ JSONItem::JSONItem(EventType type, anch::json::ReaderContext& context): _type(ty
   case EventType::NUMBER:
     {
       double value;
-      char* last = context.pbuf.data() + context.pbuf.size() - 1;
+      char* last = context.pbuf.data() + context.pbuf.size();
       auto res = std::from_chars(context.pbuf.data(), last, value);
       if(res.ptr != last) {
 	if(res.ec == std::errc::result_out_of_range) {

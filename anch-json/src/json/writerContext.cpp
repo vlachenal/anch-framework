@@ -26,9 +26,14 @@ using anch::json::WriterContext;
 
 // Constructors +
 WriterContext::WriterContext(std::ostream& os, const anch::json::MappingOptions& options) noexcept:
-  output(os), _options(options), _firsts() {
+  output(os), _options(options), _firsts(), _indent() {
   // set output stream formatter for integer, float and boolean
   output << std::dec << std::defaultfloat << std::boolalpha;
+  if(_options.prettify_nbs != 0) {
+    _indent = [this](){indent();};
+  } else {
+    _indent = [](){};
+  }
 }
 // Constructors -
 
@@ -73,6 +78,9 @@ WriterContext::writeField(const std::string& field) {
     .write(field.data(), static_cast<std::streamsize>(field.size()))
     .put(anch::json::STRING_DELIMITER)
     .put(anch::json::FIELD_VALUE_SEPARATOR);
+  if(_options.prettify_nbs != 0) {
+    output.put(' ');
+  }
 }
 
 void
@@ -83,8 +91,9 @@ WriterContext::beginArray() {
 
 void
 WriterContext::endArray() {
-  output.put(anch::json::ARRAY_END);
   _firsts.pop_back();
+  std::invoke(_indent);
+  output.put(anch::json::ARRAY_END);
 }
 
 void
@@ -95,8 +104,9 @@ WriterContext::beginObject() {
 
 void
 WriterContext::endObject() {
-  output.put(anch::json::OBJECT_END);
   _firsts.pop_back();
+  std::invoke(_indent);
+  output.put(anch::json::OBJECT_END);
 }
 
 void
@@ -106,11 +116,14 @@ WriterContext::next() {
   } else {
     _firsts.back() = false;
   }
-  if(_options.prettify_nbs != 0) {
-    output.put('\n');
-    for(uint32_t i = 0 ; i < _firsts.size() * _options.prettify_nbs ; ++i) {
-      output.put(' ');
-    }
+  std::invoke(_indent);
+}
+
+void
+WriterContext::indent() {
+  output.put('\n');
+  for(uint32_t i = 0 ; i < _firsts.size() * _options.prettify_nbs ; ++i) {
+    output.put(' ');
   }
 }
 // Methods -
