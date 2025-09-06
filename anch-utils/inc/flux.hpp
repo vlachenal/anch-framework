@@ -28,7 +28,7 @@ namespace anch {
   /*!
    * \brief Manage collection as stream
    *
-   * Each item fomr the collection will be added with \c push method.\n
+   * Each item from the collection will be added with \c push method.\n
    * The synchronization is managed with \c std::promise / \c std::future C++ features.\n
    *
    * \c Flux runs with:
