@@ -26,6 +26,7 @@
 #include "cli/args.hpp"
 #include "cli/utils.hpp"
 #include "cli/formatter.hpp"
+
 #include "events/observer.hpp"
 
 using anch::json::Reader;
@@ -36,13 +37,17 @@ using anch::json::MappingError;
 using anch::json::JSONItem;
 using anch::json::EventType;
 
+// JSON token event handler +
 /*!
  * JSON formatter on event
+ *
+ * \todo manage array value more precisely
  *
  * \author Vincent Lachenal
  */
 class JSONFormatter: public anch::events::Observer<JSONItem> {
 
+  // Attributes +
 private:
   /*! The context writer */
   anch::json::WriterContext _writer;
@@ -53,6 +58,11 @@ private:
   /*! In array flag */
   uint64_t _array;
 
+  /*! Write null value (use for array value) */
+  bool _null;
+  // Attributes -
+
+  // Constructors +
 public:
   /*!
    * Forbids \c JSONFormatter default constructor
@@ -80,16 +90,24 @@ public:
    * \param options the mapping options
    * \param color the output color options
    */
-  JSONFormatter(std::ostream& output, const MappingOptions& options, bool color):
-    _writer(output, options), _currentField(), _array(0) {
+  JSONFormatter(std::ostream& output, const MappingOptions& options, bool color, bool null):
+    anch::events::Observer<JSONItem>(), _writer(output, options), _currentField(), _array(0), _null(null) {
     anch::cli::Formatter::DISABLED = !color;
   }
+  // Constructors -
 
+  // Destructor +
+public:
+  virtual ~JSONFormatter() {
+    // Nothing to do
+  }
+  // Destructor -
+
+  // Methods +
 public:
   /*!
    * Serialize field when set
    */
-  inline
   void addField() {
     if(_currentField.has_value()) {
       _writer.writeField(_currentField.value());
@@ -105,68 +123,81 @@ public:
    */
   virtual void handle(const anch::events::Event<JSONItem>& event) noexcept {
     switch(event.body.getType()) {
-    case EventType::FIELD:
+    case EventType::FIELD: // Manage field
       {
 	std::ostringstream oss;
 	oss << anch::cli::Formatter::format().bold() << std::any_cast<std::string>(event.body.getValue()) << anch::cli::RESET;
 	_currentField = oss.str();
       }
       break;
-    case EventType::VNULL:
+
+    case EventType::VNULL: // Manage null value
       if(_currentField.has_value()) {
 	_writer.writeNull(_currentField.value());
 	_currentField.reset();
-      } else {
-	_writer.next();
+      } else if(_null) {
+	//_writer.next();
+	_writer.output << "null";
       }
       break;
-    case EventType::TRUE:
+
+    case EventType::TRUE: // Manage boolean true value
       addField();
       _writer.output << anch::cli::Formatter::format().fgColor(anch::cli::Color::GREEN) << "true" << anch::cli::RESET;
       _currentField.reset();
       break;
-    case EventType::FALSE:
+
+    case EventType::FALSE: // Manage boolean false value
       addField();
       _writer.output << anch::cli::Formatter::format().fgColor(anch::cli::Color::RED) << "false" << anch::cli::RESET;
       _currentField.reset();
       break;
-    case EventType::NUMBER:
+
+    case EventType::NUMBER: // Manage number value
       addField();
       _writer.output << anch::cli::Formatter::format().fgColor(anch::cli::Color::YELLOW) << std::any_cast<double>(event.body.getValue()) << anch::cli::RESET;
       _currentField.reset();
       break;
-    case EventType::STRING:
+
+    case EventType::STRING: // Manage character string value
       addField();
       _writer.output << anch::json::STRING_DELIMITER
 		     << anch::cli::Formatter::format().fgColor(anch::cli::Color::BLUE) << std::any_cast<std::string>(event.body.getValue()) << anch::cli::RESET
 		     << anch::json::STRING_DELIMITER;
       _currentField.reset();
       break;
-    case EventType::BEGIN_OBJECT:
+
+    case EventType::BEGIN_OBJECT: // Manage begin object token ({)
       addField();
       _writer.beginObject();
       _currentField.reset();
       break;
-    case EventType::END_OBJECT:
+
+    case EventType::END_OBJECT: // Manage end object token (})
       _writer.endObject();
       _currentField.reset();
       break;
-    case EventType::BEGIN_ARRAY:
+
+    case EventType::BEGIN_ARRAY: // Manage begin array token ([)
       addField();
       _writer.beginArray();
       _currentField.reset();
       ++_array;
       break;
-    case EventType::END_ARRAY:
+
+    case EventType::END_ARRAY: // Manage end array token (])
       _writer.endArray();
       --_array;
       _currentField.reset();
       break;
     }
   }
+  // Methods -
 
 };
+// JSON token event handler -
 
+// Error handling +
 /*!
  * Mapping error handler
  *
@@ -174,6 +205,42 @@ public:
  */
 class ErrorObserver: public anch::events::Observer<anch::json::MappingError> {
 
+  // Constructors +
+public:
+  /*!
+   * \ref ErrorObserver default constructor
+   */
+  ErrorObserver(): anch::events::Observer<anch::json::MappingError>() {
+    // Nothing to do
+  }
+
+  /*!
+   * Forbids \c ErrorObserver copy constructor
+   *
+   * \param handler the JSON error handler not to copy
+   */
+  ErrorObserver(const ErrorObserver& handler) = delete;
+
+  /*!
+   * Forbids \c ErrorObserver move constructor
+   *
+   * \param handler the JSON error handler not to move
+   */
+  ErrorObserver(ErrorObserver&& handler) = delete;
+  // Constructors -
+
+  // Destructor +
+public:
+  /*!
+   * \ref ErrorObserver destructor
+   */
+  virtual ~ErrorObserver() {
+    // Nothing to do
+  }
+  // Destructor -
+
+  // Methods +
+public:
   /*!
    * Handle JSON parser error\n
    * Print and exit
@@ -184,9 +251,12 @@ class ErrorObserver: public anch::events::Observer<anch::json::MappingError> {
     std::cerr << "Parsing error: " << event.body.what() << std::endl;
     std::exit(1);
   }
+  // Methods -
 
 };
+// Error handling -
 
+// Arguments parser declaration +
 /*!
  * CLI JSON formatter options
  *
@@ -226,9 +296,11 @@ parseArgs(int argc, char** argv, FormatterOptions& opts, MappingOptions& jsonOpt
   anch::cli::ArgHandler handler(args);
   handler.handle(argc, argv);
 }
+// Arguments parser declaration -
 
+// Application +
 /*!
- * Initalize parse and writer and let's go !
+ * Initalize reader and writer and let's go !
  *
  * \param argc the number of arguments
  * \param argv the arguments' value
@@ -243,14 +315,15 @@ main(int argc, char** argv) {
   // Manage options -
   // Read and format JSON +
   Reader reader(*args.input, options);
-  JSONFormatter formatter(*args.output, options, args.color);
+  JSONFormatter formatter(*args.output, options, args.color, options.serialize_null);
   reader.itemObs().addObserver(formatter);
   ErrorObserver error;
   reader.errorObs().addObserver(error);
   reader.parse();
   // Read and format JSON -
-  if(args.output->rdbuf() == std::cout.rdbuf()) {
+  if(args.output->rdbuf() == std::cout.rdbuf()) { // add new line when output is std::cout
     std::cout << std::endl;
   }
   return 0;
 }
+// Application -
