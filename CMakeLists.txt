@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 4.0)
 
 # Project anch framework
 # ANother C++ Hack
@@ -6,6 +6,10 @@ cmake_minimum_required(VERSION 3.0)
 project(anch-framework)
 set(EXECUTABLE_OUTPUT_PATH bin/${CMAKE_BUILD_TYPE})
 
+add_subdirectory(anch-utils)
+add_subdirectory(anch-cutils)
+add_subdirectory(anch-cli)
+add_subdirectory(anch-ut)
 add_subdirectory(anch-resource)
 add_subdirectory(anch-date)
 add_subdirectory(anch-logger)
@@ -16,8 +20,8 @@ add_subdirectory(anch-device)
 add_subdirectory(anch-crypto)
 add_subdirectory(anch-sql)
 add_subdirectory(anch-json)
-add_subdirectory(anch-rest)
-add_subdirectory(anch-utils)
-add_subdirectory(anch-cutils)
-add_subdirectory(anch-cli)
-add_subdirectory(anch-ut)
+#add_subdirectory(anch-rest)
+
+if(ANCH_JSON_UNITARY_TEST)
+  enable_testing()
+endif(ANCH_JSON_UNITARY_TEST)
