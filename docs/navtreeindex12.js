@@ -1,5 +1,11 @@
 var NAVTREEINDEX12 =
 {
+"string_formatter_8hpp_source.html":[21,0,7,0,0,0,8],
+"string_utils_8hpp_source.html":[21,0,13,0,10],
+"struct_formatter_options.html":[20,0,2],
+"struct_formatter_options.html#a3c6809db3df975c48bfaf8e9bb2f9bcb":[20,0,2,0],
+"struct_formatter_options.html#a5f3f187400c0d87ad9971fedfe522183":[20,0,2,2],
+"struct_formatter_options.html#aefb9c68cbec782d266431a2f8cf45cbb":[20,0,2,1],
 "struct_mapping_options.html":[20,0,6],
 "struct_mapping_options.html#a197bfa9b01700f0bbf714e91a6086f5a":[20,0,6,3],
 "struct_mapping_options.html#a1bae822e06ea3633055038c291997b85":[20,0,6,6],
@@ -243,11 +249,5 @@ var NAVTREEINDEX12 =
 "structanch_1_1rest_1_1_verb.html#a8a8c528050c1bf6872abf6298453c8b9":[20,0,0,10,20,4],
 "structanch_1_1rest_1_1_verb.html#a8e6f36821f737164a02690eb559ec495":[20,0,0,10,20,12],
 "structanch_1_1rest_1_1_verb.html#a955e53e8de9225941e9a5bc6a6877798":[20,0,0,10,20,0],
-"structanch_1_1rest_1_1_verb.html#ab74132c109ce0137475a492e04499516":[20,0,0,10,20,2],
-"structanch_1_1rest_1_1_verb.html#abe7a75e3f0bb634b92a934f364139819":[20,0,0,10,20,13],
-"structanch_1_1rest_1_1_verb.html#ae46f11f85d3e39de60af6a7a78d0f2f3":[20,0,0,10,20,15],
-"structanch_1_1rest_1_1_verb.html#af746ad633e0906f0bf5b2fb6cd3f5360":[20,0,0,10,20,5],
-"structanch_1_1sql_1_1_s_q_l_shared_library.html":[19,0,0,8,24],
-"structanch_1_1sql_1_1_s_q_l_shared_library.html":[20,0,0,11,24],
-"structanch_1_1sql_1_1_s_q_l_shared_library.html#a29a5796ba7802d99ceb52443fccde14c":[19,0,0,8,24,0]
+"structanch_1_1rest_1_1_verb.html#ab74132c109ce0137475a492e04499516":[20,0,0,10,20,2]
 };

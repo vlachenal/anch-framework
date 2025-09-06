@@ -18,7 +18,7 @@ var searchData=
   ['error_15',['error',['../classanch_1_1logger_1_1_logger.html#adaacca48afedffb895e06d1f7c6fe660',1,'anch::logger::Logger']]],
   ['errorcode_16',['ErrorCode',['../namespaceanch_1_1json.html#a56742fecea7bc19952b3e35c013ad931',1,'anch::json']]],
   ['errorobs_17',['errorObs',['../classanch_1_1json_1_1_reader.html#a2789dc487ec68ee8668272cc1cecbe95',1,'anch::json::Reader::errorObs()'],['../class_reader.html#a2789dc487ec68ee8668272cc1cecbe95',1,'Reader::errorObs()']]],
-  ['errorobserver_18',['ErrorObserver',['../class_error_observer.html',1,'']]],
+  ['errorobserver_18',['ErrorObserver',['../class_error_observer.html',1,'ErrorObserver'],['../class_error_observer.html#a0985e9476d4f3c047666998a99685888',1,'ErrorObserver::ErrorObserver()'],['../class_error_observer.html#a53618829b61a5c45ac750d455ca688c4',1,'ErrorObserver::ErrorObserver(const ErrorObserver &amp;handler)=delete'],['../class_error_observer.html#ab1d0a3395b31950933cbf82922adf78a',1,'ErrorObserver::ErrorObserver(ErrorObserver &amp;&amp;handler)=delete']]],
   ['etag_19',['ETAG',['../structanch_1_1rest_1_1_common_headers.html#aa7eb78dcdfa0f968aeb415eb36259250',1,'anch::rest::CommonHeaders']]],
   ['event_20',['Event',['../structanch_1_1events_1_1_event.html',1,'anch::events']]],
   ['event_20bus_21',['Event bus',['../page_events.html#evt_concept_eventbus_sec',1,'Event bus'],['../page_events.html#evt_example_eventbus_sec',1,'Event bus']]],

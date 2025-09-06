@@ -191,7 +191,7 @@ var annotated_dup =
       [ "ThreadPool", "classanch_1_1_thread_pool.html", "classanch_1_1_thread_pool" ],
       [ "UUID", "classanch_1_1_u_u_i_d.html", "classanch_1_1_u_u_i_d" ]
     ] ],
-    [ "ErrorObserver", "class_error_observer.html", null ],
+    [ "ErrorObserver", "class_error_observer.html", "class_error_observer" ],
     [ "FormatterOptions", "struct_formatter_options.html", "struct_formatter_options" ],
     [ "JSONFormatter", "class_j_s_o_n_formatter.html", "class_j_s_o_n_formatter" ],
     [ "JSONItem", "class_j_s_o_n_item.html", "class_j_s_o_n_item" ],
