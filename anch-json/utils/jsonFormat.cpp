@@ -235,16 +235,22 @@ parseArgs(int argc, char** argv, FormatterOptions& opts, MappingOptions& jsonOpt
  */
 int
 main(int argc, char** argv) {
+  // Manage options +
   FormatterOptions args;
   MappingOptions options;
   options.deserialize_max_discard_char = -1;
   parseArgs(argc, argv, args, options);
+  // Manage options -
+  // Read and format JSON +
   Reader reader(*args.input, options);
   JSONFormatter formatter(*args.output, options, args.color);
   reader.itemObs().addObserver(formatter);
   ErrorObserver error;
   reader.errorObs().addObserver(error);
   reader.parse();
-  std::cout << std::endl;
+  // Read and format JSON -
+  if(args.output->rdbuf() == std::cout.rdbuf()) {
+    std::cout << std::endl;
+  }
   return 0;
 }
