@@ -84,6 +84,17 @@ endif(ANCH_DATE_STATIC_LIB)
 
 # Unitary tests
 if(ANCH_DATE_UNITARY_TEST)
+  include_directories(
+    inc
+    ${ANCH_CLI_INCLUDES_DIR}
+    ${ANCH_UT_INCLUDES_DIR}
+    )
+
+  link_directories(
+    ${ANCH_CLI_LIBRARY_DIR}
+    ${ANCH_UT_LIBRARY_DIR}
+    )
+
 
   # Build date format unitary test +
   file(
@@ -100,10 +111,16 @@ if(ANCH_DATE_UNITARY_TEST)
   target_link_libraries(
     anch-date-format-test
     anch-date
+    anch-cli
+    anch-unit
     )
   # Build date format unitary test -
 
   enable_testing()
-  add_test(anch-date-format-test ${EXECUTABLE_OUTPUT_PATH}/anch-date-format-test main)
+  add_test(date-format ${EXECUTABLE_OUTPUT_PATH}/anch-date-format-test -t date-format)
+  add_test(date-format-time_t ${EXECUTABLE_OUTPUT_PATH}/anch-date-format-test -t date-format-time_t)
+  add_test(date-parse ${EXECUTABLE_OUTPUT_PATH}/anch-date-format-test -t date-parse)
+  add_test(date-comparison ${EXECUTABLE_OUTPUT_PATH}/anch-date-format-test -t date-comparison)
+  add_test(date-format-custom ${EXECUTABLE_OUTPUT_PATH}/anch-date-format-test -t date-format-custom)
 
 endif(ANCH_DATE_UNITARY_TEST)

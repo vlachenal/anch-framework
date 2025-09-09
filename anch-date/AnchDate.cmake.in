@@ -1,7 +1,14 @@
 ## Anch date configuration +
 # Anch date installation configuration
-set(ANCH_DATE_COMPILE_FLAGS "-O2")
+set(ANCH_DATE_COMPILE_FLAGS "-O2 -march=native -pipe")
 #set(ANCH_DATE_COMPILE_FLAGS "-g")
+
+set(ANCH_CLI_INCLUDES_DIR "$ENV{HOME}/projects/anch-framework/anch-cli/inc")
+set(ANCH_CLI_LIBRARY_DIR "$ENV{HOME}/projects/anch-framework/anch-cli/build/lib")
+
+set(ANCH_UT_INCLUDES_DIR "$ENV{HOME}/projects/anch-framework/anch-ut/inc")
+set(ANCH_UT_LIBRARY_DIR "$ENV{HOME}/projects/anch-framework/anch-ut/build/lib")
+
 
 # Install path
 set(ANCH_DATE_INSTALL_INC_DIR "/usr/local/include/anch" CACHE STRING "Header installation path")

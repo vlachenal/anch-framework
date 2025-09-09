@@ -5,11 +5,15 @@
 #include "date/dateFormatter.hpp"
 #include "date/fmt/iDatePartFormatter.hpp"
 
+#include "ut/assert.hpp"
+#include "ut/unit.hpp"
+
 using anch::date::Date;
 using anch::date::DateFormatter;
 using anch::date::IDatePartFormatter;
 
 
+// Custom formatter +
 class MicroFormatter : public IDatePartFormatter {
 public:
   static const std::string PATTERN;
@@ -70,61 +74,94 @@ public:
     return new NanoFormatter();
   }
 };
+// Custom formatter -
+
 const std::string NanoFormatter::PATTERN = "%N";
+DateFormatter formatter("%Y-%m-%d %H:%M:%S.%s");
 
-
-int
-main(void) {
+void
+testFormatDate() {
   std::cout << "Enter in test date format" << std::endl;
 
-  DateFormatter formatter("%Y-%m-%d %H:%M:%S.%s");
   std::string nowStr;
   Date now = Date();
   formatter.format(now, nowStr);
   std::cout << "Date from scratch: " << nowStr << std::endl;
 
+  std::cout << "Exit test date format" << std::endl;
+}
+
+void
+testFormatDateTimeT() {
+  std::cout << "Enter in test date format from std::time_t" << std::endl;
+
   std::string timetStr;
   formatter.format(Date(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now())), timetStr);
   std::cout << "Date from time_t: " << timetStr << std::endl;
 
-  std::cout << "Exit test date format" << std::endl;
+  std::cout << "Exit test date format from std::time_t" << std::endl;
+}
 
+Date
+parseDate(const std::string& strDate) {
+  Date parsedDate(false);
+  formatter.parse(strDate, parsedDate);
+  return parsedDate;
+}
 
+void
+testParseDate() {
   std::cout << "Enter in test date parse" << std::endl;
 
   std::string strDate = "2012-10-23 10:02:59.998";
-  Date parsedDate(false);
-  formatter.parse(strDate, parsedDate);
+  Date parsedDate = parseDate(strDate);
   std::string parsedDateStr;
   formatter.format(parsedDate, parsedDateStr);
-  if(strDate != parsedDateStr) {
-    std::cerr << "Retrieve " << parsedDateStr << " instead of " << strDate << std::endl;
-    return 1;
-  } else {
-    std::cout << "Parsed date: " << parsedDateStr << std::endl;
-  }
+  anch::ut::assert(strDate == parsedDateStr, "Parse {} instrad of {}", parsedDateStr, strDate);
+  std::cout << "Parsed date: " << parsedDateStr << std::endl;
 
   std::cout << "Exit test date parse" << std::endl;
+}
 
-
+void
+testComparison() {
   std::cout << "Enter in test comparison" << std::endl;
 
-  if(now <= parsedDate) {
-    std::cerr << nowStr << " should be after " << parsedDateStr << std::endl;
-    return 2;
-  } else {
-    std::cout << nowStr << " is after " << parsedDateStr << std::endl;
-  }
+  Date now = Date();
+  std::string nowStr;
+  formatter.format(now, nowStr);
+  std::string strDate = "2012-10-23 10:02:59.998";
+  Date parsedDate = parseDate(strDate);
+  anch::ut::assert(now > parsedDate, "{} should be after {}", nowStr, strDate);
+  std::cout << nowStr << " is after " << strDate << std::endl;
 
   std::cout << "Exit test comparison" << std::endl;
+}
 
-  std::cout << "Enter in new formatter test" << std::endl;
+void
+testFormatDateCustom() {
+  std::cout << "Enter in custom formatter test" << std::endl;
+
+  std::string nowStr;
+  Date now = Date();
   DateFormatter::registerFormatterPart(NanoFormatter::PATTERN, &NanoFormatter::getInstance);
   DateFormatter::registerFormatterPart(MicroFormatter::PATTERN, &MicroFormatter::getInstance);
   DateFormatter formatter2("%Y-%m-%d %H:%M:%S.%s.%v.%N");
   formatter2.format(now, nowStr);
-  std::cout << "Date from scratch: " << nowStr << std::endl;
-  std::cout << "Exit new formatter test" << std::endl;
+  std::cout << "Date from custom parser: " << nowStr << std::endl;
 
-  return 0;
+  std::cout << "Exit custom formatter test" << std::endl;
+}
+
+void
+anch::ut::setup(anch::ut::UnitTests& tests) {
+  tests
+    .name("AnCH date unit tests")
+    .description("Test AnCH date library")
+    .add("date-format", testFormatDate)
+    .add("date-format-time_t", testFormatDateTimeT)
+    .add("date-parse", testParseDate)
+    .add("date-comparison", testComparison)
+    .add("date-format-custom", testFormatDateCustom)
+    ;
 }
