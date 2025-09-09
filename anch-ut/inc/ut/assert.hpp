@@ -26,6 +26,7 @@
 #include <list>
 #include <set>
 #include <vector>
+#include <memory>
 
 namespace anch::ut {
 
@@ -123,6 +124,21 @@ namespace anch::ut {
    */
   template<typename T>
   bool equals(const char* const field, const std::optional<T>& expected, const std::optional<T>& value, std::ostream& out = std::cout);
+
+  /*!
+   * Check if shared pointer value is equals to expected shared pointer value ; print the field and expected versus current value when \c false ; return the result
+   *
+   * \tparam T the value type
+   *
+   * \param field the field name
+   * \param expected the expected value
+   * \param value the current value
+   * \param out the output stream to print in when \c false (default to \c{std::cout})
+   *
+   * \return \c true when expect equals to value, \c false otherwise
+   */
+  template<typename T>
+  bool equals(const char* const field, const std::shared_ptr<T>& expected, const std::shared_ptr<T>& value, std::ostream& out = std::cout);
 
   /*!
    * Check if pointer value is equals to expected pointer value ; print the field and expected versus current value when \c false ; return the result

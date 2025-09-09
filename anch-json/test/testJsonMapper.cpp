@@ -117,9 +117,9 @@ struct Toto {
   float plep;
   double plyp;
   //long double lplyp;
-  Toto* self = NULL;
+  std::shared_ptr<Toto> self = NULL;
   std::optional<std::string> empty;
-  std::string* ptr = NULL;
+  std::shared_ptr<std::string> ptr;
   std::string* null = NULL;
   std::string getClass() const {
     return "Toto";
@@ -132,8 +132,8 @@ struct Toto {
       && anch::ut::equals("Toto::plep", plep, toto.plep)
       && anch::ut::equals("Toto::plyp", plyp, toto.plyp)
       //&& anch::ut::equals("Toto::lplyp", lplyp, toto.lplyp)
-      && anch::ut::equalsPtr("Toto::self", self, toto.self)
-      && anch::ut::equalsPtr("Toto::ptr", ptr, toto.ptr)
+      && anch::ut::equals("Toto::self", self, toto.self)
+      && anch::ut::equals("Toto::ptr", ptr, toto.ptr)
       && anch::ut::equalsPtr("Toto::null", null, toto.null)
       && anch::ut::equals("Toto::empty", empty, toto.empty)
       && anch::ut::equals("Toto::tata", tata, toto.tata)
@@ -178,9 +178,9 @@ anch::json::registerObject(ObjectMapper<Toto>& mapper) {
     .registerField("plep", &Toto::plep)
     .registerField("plyp", &Toto::plyp)
     //.registerField("lplyp", &Toto::lplyp)
-    .registerField("self", &Toto::self)
+    .registerField<Toto>("self", &Toto::self)
     .registerField<std::string>("invisible", &Toto::empty)
-    .registerField("ptr", &Toto::ptr)
+    .registerField<std::string>("ptr", &Toto::ptr)
     .registerField("null", &Toto::null)
     .registerField("class", std::function<std::string(const Toto&)>(&Toto::getClass))
     ;
@@ -256,7 +256,7 @@ namespace plop {
 }
 
 Toto toto;
-Toto* self = NULL;
+//Toto* self = NULL;
 std::string VIEW = "VIEW";
 //const std::string totoRes = "{\"plop\":\"plop\",\"plip\":\"plip\",\"plap\":42,\"plup\":false,\"tata\":{\"ploum\":\"ploum\",\"view\":\"VIEW\",\"num_set\":[1,2,3],\"str_vector\":[\"4\",\"5\",\"6\"]},\"plep\":2.2,\"plyp\":3.3,\"lplyp\":4.4,\"self\":{\"plop\":\"self\",\"plip\":\"self_plip\",\"plap\":24,\"plup\":true,\"tata\":{\"ploum\":\"\",\"view\":\"\",\"num_set\":[],\"str_vector\":[]},\"plep\":5.5,\"plyp\":6.6,\"lplyp\":7.7,\"ptr\":\"self\",\"class\":\"Toto\"},\"ptr\":\"plop\",\"class\":\"Toto\"}";
 const std::string totoRes = "{\"plop\":\"plop\",\"plip\":\"plip\",\"plap\":42,\"plup\":false,\"tata\":{\"ploum\":\"ploum\",\"view\":\"VIEW\",\"num_set\":[1,2,3],\"str_vector\":[\"4\",\"5\",\"6\"]},\"plep\":2.2,\"plyp\":3.3,\"self\":{\"plop\":\"self\",\"plip\":\"self_plip\",\"plap\":24,\"plup\":true,\"tata\":{\"ploum\":\"\",\"view\":\"\",\"num_set\":[],\"str_vector\":[]},\"plep\":5.5,\"plyp\":6.6,\"ptr\":\"self\",\"class\":\"Toto\"},\"ptr\":\"plop\",\"class\":\"Toto\"}";
@@ -271,7 +271,7 @@ void
 beforeAll() {
   std::cout << "Enter in JSON mapper unit tests" << std::endl << std::endl;
   {
-    Toto* self = new Toto();
+    std::shared_ptr<Toto> self = std::make_shared<Toto>();
     self->plop = "self";
     self->plip = std::optional<std::string>("self_plip");
     self->plap = 24;
@@ -281,7 +281,7 @@ beforeAll() {
     //self->lplyp = 7.7;
     self->empty = std::optional<std::string>();
     self->self = NULL;
-    self->ptr = &self->plop;
+    self->ptr = std::make_shared<std::string>(self->plop);
     self->null = NULL;
 
     toto.plop = "plop";
@@ -292,7 +292,7 @@ beforeAll() {
     toto.plyp = 3.3;
     //toto.lplyp = 4.4;
     toto.empty = std::optional<std::string>();
-    toto.ptr = &toto.plop;
+    toto.ptr = std::make_shared<std::string>(toto.plop);
     toto.null = NULL;
     toto.self = self;
     Tata tata;
@@ -301,14 +301,6 @@ beforeAll() {
     tata.numSet = {1, 2, 3};
     tata.strVect = {"4","5","6"};
     toto.tata = tata;
-  }
-}
-
-void
-afterAll() {
-  std::cout << "Exit JSON mapper unit tests" << std::endl;
-  if(self != NULL) {
-    delete self;
   }
 }
 
@@ -743,7 +735,6 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .name("AnCH JSON mapper unit tests")
     .description("Test AnCH JSON mapper library")
     .initialize(beforeAll)
-    .uninitialize(afterAll)
     .add("json-ser-full", testFullSerDefaultOptions)
     .add("json-deser-list", testDeserList)
     .add("json-deser-unf-field", testDeserUnknownFieldStructFail)

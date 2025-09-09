@@ -128,6 +128,29 @@ namespace anch::ut {
   }
 
   template<typename T>
+  bool equals(const char* const field,
+	      const std::shared_ptr<T>& expected,
+	      const std::shared_ptr<T>& value,
+	      std::ostream& out) {
+    if(!expected && !value) {
+      return true;
+    }
+    if(expected && !value) {
+      out << field << " differs ; expected=" << *expected << " / current is NULL" << std::endl;
+      return false;
+    }
+    if(!expected && value) {
+      out << field << " differs ; expected should be NULL / current=" << *value << std::endl;
+      return false;
+    }
+    if(*expected != *value) {
+      out << field << " differs ; expected='" << *expected << "' / current='" << *value << '\'' << std::endl;
+      return false;
+    }
+    return true;
+  }
+
+  template<typename T>
   bool equalsPtr(const char* const field, const T* const expected, const T* const value, std::ostream& out) {
     if(expected == value) {
       return true;

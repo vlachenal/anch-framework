@@ -26,6 +26,7 @@
 #include <list>
 #include <set>
 #include <map>
+#include <memory>
 
 #include "json/readerContext.hpp"
 #include "json/writerContext.hpp"
@@ -105,6 +106,14 @@ namespace anch::json {
     void serialize(const T* const value, anch::json::WriterContext& context) const;
 
     /*!
+     * Serialize value according to optional/null option
+     *
+     * \param value the value
+     * \param context the context
+     */
+    void serialize(const std::shared_ptr<T>& value, anch::json::WriterContext& context) const;
+
+    /*!
      * Serialize array values according to empty option
      *
      * \param value the value
@@ -175,6 +184,19 @@ namespace anch::json {
      */
     bool serialize(const std::string& field,
 		   const T* const value,
+		   anch::json::WriterContext& context) const;
+
+    /*!
+     * Serialize value according to optional/null option
+     *
+     * \param field the field's name
+     * \param value the value
+     * \param context the context
+     *
+     * \return \c true when field has been write, \c false otherwise
+     */
+    bool serialize(const std::string& field,
+		   const std::shared_ptr<T>& value,
 		   anch::json::WriterContext& context) const;
 
     /*!
@@ -261,6 +283,16 @@ namespace anch::json {
      * \return \false when value is \c null , \c false otherwise
      */
     bool deserialize(T* value, anch::json::ReaderContext& context) const;
+
+    /*!
+     * Deserialize JSON value
+     *
+     * \param value the value to set
+     * \param context the mapping context
+     *
+     * \return \false when value is \c null , \c false otherwise
+     */
+    bool deserialize(std::shared_ptr<T>& value, anch::json::ReaderContext& context) const;
 
     /*!
      * Deserialize JSON value

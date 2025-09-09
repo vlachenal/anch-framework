@@ -44,6 +44,13 @@ namespace anch::json {
   }
 
   template<typename M, typename T>
+  inline
+  void
+  GenericMapper<M,T>::serialize(const std::shared_ptr<T>& value, anch::json::WriterContext& context) const {
+    serialize(*value, context);
+  }
+
+  template<typename M, typename T>
   void
   GenericMapper<M,T>::serialize(const std::vector<T>& value, anch::json::WriterContext& context) const {
     context.beginArray();
@@ -106,6 +113,19 @@ namespace anch::json {
 				const std::optional<T>& value,
 				anch::json::WriterContext& context) const {
     if(!value.has_value()) {
+      return context.writeNull(field);
+    }
+    context.writeField(field);
+    serialize(value, context);
+    return true;
+  }
+
+  template<typename M, typename T>
+  bool
+  GenericMapper<M,T>::serialize(const std::string& field,
+				const std::shared_ptr<T>& value,
+				anch::json::WriterContext& context) const {
+    if(!value) {
       return context.writeNull(field);
     }
     context.writeField(field);

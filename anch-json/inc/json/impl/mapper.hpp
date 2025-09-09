@@ -128,7 +128,6 @@ namespace anch::json {
 
 	if constexpr (std::is_pointer<P>::value) { // Remove pointer on parameter type to check the main type
 	  if constexpr (std::is_same<T, typename std::remove_pointer<P>>::value) { // if same, use direct call to avoid recursive instanciation
-	    //return this->serialize(std::invoke(getter, obj), out, options, std::optional<std::string>(key));
 	    return this->serialize(key, std::invoke(getter, obj), context);
 	  } else { // Use 'unpointered' type
 	    return anch::json::Factory<typename std::remove_pointer<P>::type>::getInstance().serialize(key, std::invoke(getter, obj), context);
@@ -136,7 +135,6 @@ namespace anch::json {
 
 	} else if constexpr (std::is_reference<P>::value) { // Remove reference on parameter type to check the main type
 	  if constexpr (std::is_same<T, typename std::remove_reference<P>>::value) { // if same, use direct call to avoid recursive instanciation
-	    //return this->serialize(std::invoke(getter, obj), out, options, std::optional<std::string>(key));
 	    return this->serialize(key, std::invoke(getter, obj), context);
 	  } else { // Use 'unreferenced' type
 	    return anch::json::Factory<typename std::decay<P>::type>::getInstance().serialize(key, std::invoke(getter, obj), context);

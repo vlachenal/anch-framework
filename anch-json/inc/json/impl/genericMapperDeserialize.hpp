@@ -51,7 +51,22 @@ namespace anch::json {
       value = NULL;
       return false;
     }
-    value = new T();
+    if(value == NULL) {
+      value = new T();
+    }
+    *value = std::move(val);
+    return true;
+  }
+
+  template<typename M, typename T>
+  bool
+  GenericMapper<M,T>::deserialize(std::shared_ptr<T>& value, anch::json::ReaderContext& context) const {
+    T val;
+    if(!deserialize(val, context)) {
+      value.reset();
+      return false;
+    }
+    value = std::make_shared<T>();
     *value = std::move(val);
     return true;
   }
