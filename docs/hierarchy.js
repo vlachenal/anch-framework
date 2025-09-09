@@ -68,7 +68,6 @@ var hierarchy =
     [ "anch::events::Event< T >", "structanch_1_1events_1_1_event.html", null ],
     [ "std::exception", null, [
       [ "anch::crypto::InvalidBlockException", "classanch_1_1crypto_1_1_invalid_block_exception.html", null ],
-      [ "anch::date::InvalidFormatException", "classanch_1_1date_1_1_invalid_format_exception.html", null ],
       [ "anch::device::DeviceException", "classanch_1_1device_1_1_device_exception.html", null ],
       [ "anch::json::MappingError", "classanch_1_1json_1_1_mapping_error.html", null ],
       [ "anch::network::IOException", "classanch_1_1network_1_1_i_o_exception.html", null ],
@@ -99,18 +98,18 @@ var hierarchy =
     [ "anch::crypto::Hash< 20, 64 >", "classanch_1_1crypto_1_1_hash.html", [
       [ "anch::crypto::SHA1", "classanch_1_1crypto_1_1_s_h_a1.html", null ]
     ] ],
-    [ "anch::date::formatter::IDatePartFormatter", "classanch_1_1date_1_1formatter_1_1_i_date_part_formatter.html", [
-      [ "anch::date::formatter::ConstantFormatter", "classanch_1_1date_1_1formatter_1_1_constant_formatter.html", null ],
-      [ "anch::date::formatter::DayFormatter", "classanch_1_1date_1_1formatter_1_1_day_formatter.html", null ],
-      [ "anch::date::formatter::Hour12Formatter", "classanch_1_1date_1_1formatter_1_1_hour12_formatter.html", null ],
-      [ "anch::date::formatter::Hour24Formatter", "classanch_1_1date_1_1formatter_1_1_hour24_formatter.html", null ],
-      [ "anch::date::formatter::MarkerFormatter", "classanch_1_1date_1_1formatter_1_1_marker_formatter.html", null ],
-      [ "anch::date::formatter::MillisecondFormatter", "classanch_1_1date_1_1formatter_1_1_millisecond_formatter.html", null ],
-      [ "anch::date::formatter::MinuteFormatter", "classanch_1_1date_1_1formatter_1_1_minute_formatter.html", null ],
-      [ "anch::date::formatter::MonthFormatter", "classanch_1_1date_1_1formatter_1_1_month_formatter.html", null ],
-      [ "anch::date::formatter::SecondFormatter", "classanch_1_1date_1_1formatter_1_1_second_formatter.html", null ],
-      [ "anch::date::formatter::Year2DFormatter", "classanch_1_1date_1_1formatter_1_1_year2_d_formatter.html", null ],
-      [ "anch::date::formatter::Year4DFormatter", "classanch_1_1date_1_1formatter_1_1_year4_d_formatter.html", null ]
+    [ "anch::date::IDatePartFormatter", "classanch_1_1date_1_1_i_date_part_formatter.html", [
+      [ "anch::date::ConstantFormatter", "classanch_1_1date_1_1_constant_formatter.html", null ],
+      [ "anch::date::DayFormatter", "classanch_1_1date_1_1_day_formatter.html", null ],
+      [ "anch::date::Hour12Formatter", "classanch_1_1date_1_1_hour12_formatter.html", null ],
+      [ "anch::date::Hour24Formatter", "classanch_1_1date_1_1_hour24_formatter.html", null ],
+      [ "anch::date::MarkerFormatter", "classanch_1_1date_1_1_marker_formatter.html", null ],
+      [ "anch::date::MillisecondFormatter", "classanch_1_1date_1_1_millisecond_formatter.html", null ],
+      [ "anch::date::MinuteFormatter", "classanch_1_1date_1_1_minute_formatter.html", null ],
+      [ "anch::date::MonthFormatter", "classanch_1_1date_1_1_month_formatter.html", null ],
+      [ "anch::date::SecondFormatter", "classanch_1_1date_1_1_second_formatter.html", null ],
+      [ "anch::date::Year2DFormatter", "classanch_1_1date_1_1_year2_d_formatter.html", null ],
+      [ "anch::date::Year4DFormatter", "classanch_1_1date_1_1_year4_d_formatter.html", null ]
     ] ],
     [ "anch::logger::formatter::IFormatter", "classanch_1_1logger_1_1formatter_1_1_i_formatter.html", [
       [ "anch::logger::formatter::AnchDateFormatter", "classanch_1_1logger_1_1formatter_1_1_anch_date_formatter.html", null ],

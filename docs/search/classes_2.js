@@ -15,7 +15,7 @@ var searchData=
   ['commonheaders_12',['CommonHeaders',['../structanch_1_1rest_1_1_common_headers.html',1,'anch::rest']]],
   ['configurationfileparser_13',['ConfigurationFileParser',['../classanch_1_1resource_1_1file_1_1_configuration_file_parser.html',1,'anch::resource::file']]],
   ['connection_14',['Connection',['../classanch_1_1sql_1_1_connection.html',1,'anch::sql']]],
-  ['constantformatter_15',['ConstantFormatter',['../classanch_1_1date_1_1formatter_1_1_constant_formatter.html',1,'anch::date::formatter']]],
+  ['constantformatter_15',['ConstantFormatter',['../classanch_1_1date_1_1_constant_formatter.html',1,'anch::date']]],
   ['constformatter_16',['ConstFormatter',['../classanch_1_1logger_1_1formatter_1_1_const_formatter.html',1,'anch::logger::formatter']]],
   ['context_17',['Context',['../structanch_1_1crypto_1_1_s_h_a2_1_1_context.html',1,'anch::crypto::SHA2']]],
   ['context_3c_20i_20_3e_18',['Context&lt; I &gt;',['../structanch_1_1crypto_1_1_s_h_a2_1_1_context.html',1,'anch::crypto::SHA2']]],

@@ -21,7 +21,7 @@ var searchData=
   ['hmac_3c_20sha512_20_3e_18',['HMAC&lt; SHA512 &gt;',['../namespaceanch_1_1crypto.html#ac81180a22f2bf62fee20d419efc50a87',1,'anch::crypto']]],
   ['host_19',['HOST',['../structanch_1_1rest_1_1_common_headers.html#a38d86f78baf3317f456f6238437919e2',1,'anch::rest::CommonHeaders']]],
   ['hostname_20',['hostname',['../structanch_1_1sql_1_1_sql_connection_configuration.html#a8541600f17f143e77dda93f05f89c9da',1,'anch::sql::SqlConnectionConfiguration']]],
-  ['hour12formatter_21',['Hour12Formatter',['../classanch_1_1date_1_1formatter_1_1_hour12_formatter.html',1,'anch::date::formatter::Hour12Formatter'],['../classanch_1_1date_1_1formatter_1_1_hour12_formatter.html#af242fc75939420ef92d2f28556829837',1,'anch::date::formatter::Hour12Formatter::Hour12Formatter()']]],
-  ['hour24formatter_22',['Hour24Formatter',['../classanch_1_1date_1_1formatter_1_1_hour24_formatter.html',1,'anch::date::formatter::Hour24Formatter'],['../classanch_1_1date_1_1formatter_1_1_hour24_formatter.html#ad9450a0713af580e46618305b17f9ff5',1,'anch::date::formatter::Hour24Formatter::Hour24Formatter()']]],
+  ['hour12formatter_21',['Hour12Formatter',['../classanch_1_1date_1_1_hour12_formatter.html',1,'anch::date::Hour12Formatter'],['../classanch_1_1date_1_1_hour12_formatter.html#a8e33117164f41b720a1ef7bec8eb2095',1,'anch::date::Hour12Formatter::Hour12Formatter()']]],
+  ['hour24formatter_22',['Hour24Formatter',['../classanch_1_1date_1_1_hour24_formatter.html',1,'anch::date::Hour24Formatter'],['../classanch_1_1date_1_1_hour24_formatter.html#a12cf9834c67e0dd7d3543b1d7f0eaef8',1,'anch::date::Hour24Formatter::Hour24Formatter()']]],
   ['http2_5fsettings_23',['HTTP2_SETTINGS',['../structanch_1_1rest_1_1_common_headers.html#aec9cc51da0fad4ef1202050f0e1216e6',1,'anch::rest::CommonHeaders']]]
 ];

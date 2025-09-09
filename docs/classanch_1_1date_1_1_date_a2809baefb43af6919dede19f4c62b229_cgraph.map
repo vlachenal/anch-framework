@@ -1,8 +1,5 @@
 <map id="anch::date::Date::operator&gt;" name="anch::date::Date::operator&gt;">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,31,187,57"/>
-<area shape="rect" id="Node000002" href="$classanch_1_1date_1_1_date.html#a991173104183a55ed5a376092569b120" title=" " alt="" coords="235,5,387,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="187,31,219,27,219,32,188,36"/>
-<area shape="rect" id="Node000003" href="$classanch_1_1date_1_1_date.html#a67ebc88fe2e013b0127fe727ccd7c656" title=" " alt="" coords="435,31,589,57"/>
-<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="187,41,419,41,419,47,187,47"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="388,26,420,30,419,35,387,31"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,187,32"/>
+<area shape="rect" id="Node000002" href="$classanch_1_1date_1_1_date.html#a67ebc88fe2e013b0127fe727ccd7c656" title=" " alt="" coords="235,5,389,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="187,16,219,16,219,21,187,21"/>
 </map>

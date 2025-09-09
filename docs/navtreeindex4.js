@@ -1,13 +1,5 @@
 var NAVTREEINDEX4 =
 {
-"classanch_1_1events_1_1_event_handler.html#a4c387a30f436efcfd28cb53696e80736":[19,0,0,3,2,1],
-"classanch_1_1events_1_1_event_handler.html#a4c387a30f436efcfd28cb53696e80736":[20,0,0,5,2,1],
-"classanch_1_1events_1_1_event_handler.html#abb6454f8574143f1426faa0daad58de0":[19,0,0,3,2,3],
-"classanch_1_1events_1_1_event_handler.html#abb6454f8574143f1426faa0daad58de0":[20,0,0,5,2,3],
-"classanch_1_1events_1_1_event_handler.html#acfdae7cc9d4049ea85c78195ab3a87ab":[19,0,0,3,2,2],
-"classanch_1_1events_1_1_event_handler.html#acfdae7cc9d4049ea85c78195ab3a87ab":[20,0,0,5,2,2],
-"classanch_1_1events_1_1_observable.html":[19,0,0,3,3],
-"classanch_1_1events_1_1_observable.html":[20,0,0,5,3],
 "classanch_1_1events_1_1_observable.html#a38496a3958f7a7f062ac26b3182780d6":[19,0,0,3,3,5],
 "classanch_1_1events_1_1_observable.html#a38496a3958f7a7f062ac26b3182780d6":[20,0,0,5,3,5],
 "classanch_1_1events_1_1_observable.html#a48dda1a1f78b09e94f8afe8a5f25454c":[19,0,0,3,3,1],
@@ -249,5 +241,13 @@ var NAVTREEINDEX4 =
 "classanch_1_1json_1_1_writer_context.html#ab9ef425557e987c82a270f2a1c941aa3":[19,0,0,4,10,11],
 "classanch_1_1json_1_1_writer_context.html#ab9ef425557e987c82a270f2a1c941aa3":[20,0,0,6,10,11],
 "classanch_1_1json_1_1_writer_context.html#ad27ae46bc2589d9e298537b067299782":[19,0,0,4,10,14],
-"classanch_1_1json_1_1_writer_context.html#ad27ae46bc2589d9e298537b067299782":[20,0,0,6,10,14]
+"classanch_1_1json_1_1_writer_context.html#ad27ae46bc2589d9e298537b067299782":[20,0,0,6,10,14],
+"classanch_1_1json_1_1_writer_context.html#ad8a827827795df0e2b513a4266d0ca19":[19,0,0,4,10,7],
+"classanch_1_1json_1_1_writer_context.html#ad8a827827795df0e2b513a4266d0ca19":[20,0,0,6,10,7],
+"classanch_1_1logger_1_1_logger.html":[19,0,0,5,1],
+"classanch_1_1logger_1_1_logger.html":[20,0,0,7,1],
+"classanch_1_1logger_1_1_logger.html#a025e8112f470b0148dd66cf175f2bad0":[19,0,0,5,1,2],
+"classanch_1_1logger_1_1_logger.html#a025e8112f470b0148dd66cf175f2bad0":[20,0,0,7,1,2],
+"classanch_1_1logger_1_1_logger.html#a767097deec69626406c053403d2a958d":[19,0,0,5,1,1],
+"classanch_1_1logger_1_1_logger.html#a767097deec69626406c053403d2a958d":[20,0,0,7,1,1]
 };

@@ -163,17 +163,17 @@ var NAVTREEINDEX =
 "_nginx_router_8hpp_source.html",
 "classanch_1_1_u_u_i_d.html#aaad2d3bada25d7ffb6bd3a2865cf7f3c",
 "classanch_1_1crypto_1_1_p_c_b_c.html#a2d095088202aa9e31a1f2b83aefe7645",
-"classanch_1_1date_1_1formatter_1_1_i_date_part_formatter.html#a5a3c64674c7b6807da083d89a56e533d",
-"classanch_1_1events_1_1_event_handler.html#a4c387a30f436efcfd28cb53696e80736",
-"classanch_1_1json_1_1_writer_context.html#ad8a827827795df0e2b513a4266d0ca19",
-"classanch_1_1network_1_1_socket.html#ac0a76f5f226af06f9fa3e7fb7f9b24fa",
-"classanch_1_1rest_1_1_response.html#a247eac85e0d8c8ff8d55c4047d181d5b",
-"classanch_1_1sql_1_1_from_builder.html#a6ff56cc253e3aadc0739fe85bf29e2c5",
-"classanch_1_1sql_1_1_s_q_l_shared_libraries.html",
-"dir_4c3603f98189869a049ffe00d2de0167.html",
-"namespaceanch_1_1json.html#a3a305bac5e5abec8d3de745d27061c15",
-"string_formatter_8hpp_source.html",
-"structanch_1_1rest_1_1_verb.html#abe7a75e3f0bb634b92a934f364139819"
+"classanch_1_1date_1_1_i_date_part_formatter.html#aba3896a1fb15a83d1ce02d204602c419",
+"classanch_1_1events_1_1_observable.html#a38496a3958f7a7f062ac26b3182780d6",
+"classanch_1_1logger_1_1_logger.html#a7d53282e024b10b5fd5841b0b0c2db5c",
+"classanch_1_1network_1_1_socket_event.html",
+"classanch_1_1rest_1_1_response.html#ac576abb4d151f122787f17525eb68c54",
+"classanch_1_1sql_1_1_from_builder.html#a946724a8ec4b3c4fa7f497bbe29f5fc1",
+"classanch_1_1sql_1_1_s_q_l_shared_libraries.html#adb065066f277b774ab895eedb129c1ab",
+"dir_66fd3e422064a3d6afe303059f58b9f2.html",
+"namespaceanch_1_1json.html#a6f769f8ae361c283d5016534bce30f4a",
+"struct_mapping_options.html#a471bdfa768f8e945fa0a7fd9d46ca107",
+"structanch_1_1sql_1_1_s_q_l_shared_library.html#aae3e0210c78aec638733c217de40c0d2"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronization';
