@@ -17,62 +17,56 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "date/formatter/millisecondFormatter.hpp"
+#include "date/fmt/year2dFormatter.hpp"
 
 #include <iomanip>
 #include <sstream>
 
-using std::string;
-using std::ostream;
-using std::setfill;
-using std::setw;
-using std::istringstream;
-
 using anch::date::Date;
-using anch::date::formatter::MillisecondFormatter;
-using anch::date::formatter::IDatePartFormatter;
+using anch::date::Year2DFormatter;
+using anch::date::IDatePartFormatter;
 
 
-const string MillisecondFormatter::PATTERN = "%s";
+const std::string Year2DFormatter::PATTERN = "%y";
 
 
-MillisecondFormatter::MillisecondFormatter() {
+Year2DFormatter::Year2DFormatter() {
   // Nothing to do
 }
 
-MillisecondFormatter::~MillisecondFormatter() {
+Year2DFormatter::~Year2DFormatter() {
   // Nothing to do
 }
 
 void
-MillisecondFormatter::format(const Date& date, ostream& output) const noexcept {
-  output << setfill('0') << setw(3) << getMillisecond(date);
+Year2DFormatter::format(const Date& date, std::ostream& output) const noexcept {
+  output << std::setfill('0') << std::setw(2) << getYear(date);
 }
 
 std::size_t
-MillisecondFormatter::getSize() const noexcept {
-  return 3;
+Year2DFormatter::getSize() const noexcept {
+  return 2;
 }
 
 bool
-MillisecondFormatter::setValue(Date& date, const string& value) const noexcept {
-  istringstream iss(value);
-  uint16_t val;
+Year2DFormatter::setValue(Date& date, const std::string& value) const noexcept {
+  std::istringstream iss(value);
+  int32_t val;
   iss >> std::dec >> val;
   if(iss.fail()) {
     return false;
   } else {
-    setMillisecond(date, val);
+    setYear(date, 1900 + val);
     return true;
   }
 }
 
-const string&
-MillisecondFormatter::getPattern() const noexcept {
-  return MillisecondFormatter::PATTERN;
+const std::string&
+Year2DFormatter::getPattern() const noexcept {
+  return Year2DFormatter::PATTERN;
 }
 
 IDatePartFormatter*
-MillisecondFormatter::getInstance() {
-  return new MillisecondFormatter();
+Year2DFormatter::getInstance() {
+  return new Year2DFormatter();
 }

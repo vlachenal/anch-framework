@@ -17,66 +17,60 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "date/formatter/minuteFormatter.hpp"
+#include "date/fmt/monthFormatter.hpp"
 
 #include <iomanip>
 #include <sstream>
 
-using std::string;
-using std::ostream;
-using std::setfill;
-using std::setw;
-using std::istringstream;
-
 using anch::date::Date;
-using anch::date::formatter::MinuteFormatter;
-using anch::date::formatter::IDatePartFormatter;
+using anch::date::MonthFormatter;
+using anch::date::IDatePartFormatter;
 
 
-const string MinuteFormatter::PATTERN = "%M";
+const std::string MonthFormatter::PATTERN = "%m";
 
 
-MinuteFormatter::MinuteFormatter() {
+MonthFormatter::MonthFormatter() {
   // Nothing to do
 }
 
-MinuteFormatter::~MinuteFormatter() {
+MonthFormatter::~MonthFormatter() {
   // Nothing to do
 }
 
 void
-MinuteFormatter::format(const Date& date, ostream& output) const noexcept {
-  output << setfill('0') << setw(2) << getMinute(date);
+MonthFormatter::format(const Date& date, std::ostream& output) const noexcept {
+  output << std::setfill('0') << std::setw(2) << getMonth(date) + 1;
 }
 
 std::size_t
-MinuteFormatter::getSize() const noexcept {
+MonthFormatter::getSize() const noexcept {
   return 2;
 }
 
 bool
-MinuteFormatter::setValue(Date& date, const string& value) const noexcept {
-  istringstream iss(value);
+MonthFormatter::setValue(Date& date, const std::string& value) const noexcept {
+  std::istringstream iss(value);
   uint16_t val;
   iss >> std::dec >> val;
   if(iss.fail()) {
     return false;
   } else {
-    if(val > 59) {
+    if(val > 12) {
       return false;
     } else {
-      setMinute(date, val);
+      setMonth(date, static_cast<uint16_t>(val - 1));
       return true;
     }
   }
 }
 
-const string&
-MinuteFormatter::getPattern() const noexcept {
-  return MinuteFormatter::PATTERN;
+const std::string&
+MonthFormatter::getPattern() const noexcept {
+  return MonthFormatter::PATTERN;
 }
 
 IDatePartFormatter*
-MinuteFormatter::getInstance() {
-  return new MinuteFormatter();
+MonthFormatter::getInstance() {
+  return new MonthFormatter();
 }

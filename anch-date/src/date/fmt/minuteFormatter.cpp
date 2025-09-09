@@ -17,7 +17,7 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "date/formatter/dayFormatter.hpp"
+#include "date/fmt/minuteFormatter.hpp"
 
 #include <iomanip>
 #include <sstream>
@@ -29,54 +29,54 @@ using std::setw;
 using std::istringstream;
 
 using anch::date::Date;
-using anch::date::formatter::DayFormatter;
-using anch::date::formatter::IDatePartFormatter;
+using anch::date::MinuteFormatter;
+using anch::date::IDatePartFormatter;
 
 
-const string DayFormatter::PATTERN = "%d";
+const string MinuteFormatter::PATTERN = "%M";
 
 
-DayFormatter::DayFormatter() {
+MinuteFormatter::MinuteFormatter() {
   // Nothing to do
 }
 
-DayFormatter::~DayFormatter() {
+MinuteFormatter::~MinuteFormatter() {
   // Nothing to do
 }
 
 void
-DayFormatter::format(const Date& date, ostream& output) const noexcept {
-  output << setfill('0') << setw(2) << getDay(date);
+MinuteFormatter::format(const Date& date, ostream& output) const noexcept {
+  output << setfill('0') << setw(2) << getMinute(date);
 }
 
 std::size_t
-DayFormatter::getSize() const noexcept {
+MinuteFormatter::getSize() const noexcept {
   return 2;
 }
 
 bool
-DayFormatter::setValue(Date& date, const string& value) const noexcept {
+MinuteFormatter::setValue(Date& date, const string& value) const noexcept {
   istringstream iss(value);
   uint16_t val;
   iss >> std::dec >> val;
   if(iss.fail()) {
     return false;
   } else {
-    if(val == 0 || val > 31) {
+    if(val > 59) {
       return false;
     } else {
-      setDay(date, val);
+      setMinute(date, val);
       return true;
     }
   }
 }
 
 const string&
-DayFormatter::getPattern() const noexcept {
-  return DayFormatter::PATTERN;
+MinuteFormatter::getPattern() const noexcept {
+  return MinuteFormatter::PATTERN;
 }
 
 IDatePartFormatter*
-DayFormatter::getInstance() {
-  return new DayFormatter();
+MinuteFormatter::getInstance() {
+  return new MinuteFormatter();
 }

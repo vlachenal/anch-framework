@@ -17,59 +17,66 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "date/formatter/markerFormatter.hpp"
+#include "date/fmt/secondFormatter.hpp"
 
 #include <iomanip>
 #include <sstream>
 
+using std::string;
+using std::ostream;
+using std::setfill;
+using std::setw;
+using std::istringstream;
+
 using anch::date::Date;
-using anch::date::formatter::MarkerFormatter;
-using anch::date::formatter::IDatePartFormatter;
+using anch::date::SecondFormatter;
+using anch::date::IDatePartFormatter;
 
 
-const std::string MarkerFormatter::PATTERN = "%p";
+const string SecondFormatter::PATTERN = "%S";
 
 
-MarkerFormatter::MarkerFormatter() {
+SecondFormatter::SecondFormatter() {
   // Nothing to do
 }
 
-MarkerFormatter::~MarkerFormatter() {
+SecondFormatter::~SecondFormatter() {
   // Nothing to do
 }
 
 void
-MarkerFormatter::format(const Date& date, std::ostream& output) const noexcept {
-  std::string marker;
-  if(getHour(date) < 12) {
-    marker = "a.m.";
-  } else {
-    marker = "p.m.";
-  }
-  output << marker;
+SecondFormatter::format(const Date& date, ostream& output) const noexcept {
+  output << setfill('0') << setw(2) << getSecond(date);
 }
 
 std::size_t
-MarkerFormatter::getSize() const noexcept {
-  return 4;
+SecondFormatter::getSize() const noexcept {
+  return 2;
 }
 
 bool
-MarkerFormatter::setValue(Date& date, const std::string& value) const noexcept {
-  if(value == "p.m.") {
-    setHour(date, static_cast<uint16_t>(getHour(date) + 12));
-  } else if(value != "a.m.") {
+SecondFormatter::setValue(Date& date, const string& value) const noexcept {
+  istringstream iss(value);
+  uint16_t val;
+  iss >> std::dec >> val;
+  if(iss.fail()) {
     return false;
+  } else {
+    if(val > 60) {
+      return false;
+    } else {
+      setSecond(date, val);
+      return true;
+    }
   }
-  return true;
 }
 
-const std::string&
-MarkerFormatter::getPattern() const noexcept {
-  return MarkerFormatter::PATTERN;
+const string&
+SecondFormatter::getPattern() const noexcept {
+  return SecondFormatter::PATTERN;
 }
 
 IDatePartFormatter*
-MarkerFormatter::getInstance() {
-  return new MarkerFormatter();
+SecondFormatter::getInstance() {
+  return new SecondFormatter();
 }

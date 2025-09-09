@@ -25,126 +25,124 @@
 #include <regex>
 
 #include "date/date.hpp"
-#include "date/invalidFormatException.hpp"
 
 
-namespace anch {
-  namespace date {
+namespace anch::date {
 
-    /*! \ref anch::date::formatter::IDatePartFormatter instance getter function/method prototype */
-    typedef anch::date::formatter::IDatePartFormatter* (*getInstance)();
+  /*! \ref anch::date::IDatePartFormatter instance getter function/method prototype */
+  typedef anch::date::IDatePartFormatter* (*getInstance)();
+
+  /*!
+   * \ref Date string formatter.
+   *
+   * Paterns are:
+   * - \%Y: 4 digits year
+   * - \%y: 2 digits year
+   * - \%m: Month (1-12)
+   * - \%d: Day in month (1-31)
+   * - \%H: 00-23 hours
+   * - \%h: 00-11 hours
+   * - \%p: AM/PM marker
+   * - \%M: minutes (00-59)
+   * - \%S: seconds (00-59)
+   * - \%s: milliseconds (000-999)
+   *
+   * Do not use characters '\%' in your string pattern.<br>
+   *
+   * Warning: This class is not thread safe.
+   *
+   * \author Vincent Lachenal
+   */
+  class DateFormatter {
+
+    // Attributes +
+  private:
+    /*! Date formatter pattern */
+    const static std::regex DATE_PATTERN;
+
+    /*! Formatter list */
+    std::vector<anch::date::IDatePartFormatter*> _formatters;
+
+    /*! String size */
+    size_t _size;
+    // Attributes -
+
+    // Constructors +
+  public:
+    /*!
+     * \ref DateFormatter constructor
+     *
+     * \param dateFormat The date format
+     */
+    DateFormatter(const std::string& dateFormat) noexcept;
+    // Constructors -
+
+    // Destructor +
+  public:
+    /*!
+     * \ref DateFormatter destructor
+     */
+    virtual ~DateFormatter() noexcept;
+    // Destructor -
+
+    // Methods +
+  public:
+    /*!
+     * Register a new formatter part
+     *
+     * \param pattern The formatter part pattern
+     * \param instGetter The formatter part new instance getter
+     */
+    static void registerFormatterPart(const std::string& pattern, getInstance instGetter) noexcept;
 
     /*!
-     * \ref Date string formatter.
+     * Format date
      *
-     * Paterns are:
-     * - \%Y: 4 digits year
-     * - \%y: 2 digits year
-     * - \%m: Month (1-12)
-     * - \%d: Day in month (1-31)
-     * - \%H: 00-23 hours
-     * - \%h: 00-11 hours
-     * - \%p: AM/PM marker
-     * - \%M: minutes (00-59)
-     * - \%S: seconds (00-59)
-     * - \%s: milliseconds (000-999)
-     *
-     * Do not use characters '\%' in your string pattern.<br>
-     *
-     * Warning: This class is not thread safe.
-     *
-     * \author Vincent Lachenal
+     * \param date The date to format
+     * \param output The output string
      */
-    class DateFormatter {
+    void format(const anch::date::Date& date, std::string& output) const noexcept;
 
-      // Attributes +
-      /*! Date formatter pattern */
-      const static std::regex DATE_PATTERN;
+    /*!
+     * Format date
+     *
+     * \param date The date to format
+     * \param output The output stream
+     */
+    void format(const anch::date::Date& date, std::ostream& output) const noexcept;
 
-      /*! Formatter list */
-      std::vector<anch::date::formatter::IDatePartFormatter*> _formatters;
+    /*!
+     * Build date from string.\n
+     * You can build the output \ref Date with Date(false) constructor.
+     *
+     * \param strDate String formatted date
+     * \param date The output date
+     *
+     * \throw std::invalid_argument invalid format
+     */
+    void parse(const std::string& strDate, anch::date::Date& date) const;
 
-      /*! String size */
-      size_t _size;
-      // Attributes -
+    /*!
+     * Build date from string.\n
+     * You had to delete \ref Date not to make memory leaks.
+     *
+     * \param strDate String formatted date
+     *
+     * \return A date
+     *
+     * \throw std::invalid_argument invalid format
+     */
+    anch::date::Date* parse(const std::string& strDate) const;
 
-      // Constructors +
-    public:
-      /*!
-       * \ref DateFormatter constructor
-       *
-       * \param dateFormat The date format
-       */
-      DateFormatter(const std::string& dateFormat) noexcept;
-      // Constructors -
+  private:
+    /*!
+     * Add formatter to formatter list
+     *
+     * \param strFormatter The formatter part to instanciate
+     */
+    void addFormatter(const std::string& strFormatter) noexcept;
+    // Methods -
 
-      // Destructor +
-    public:
-      /*!
-       * \ref DateFormatter destructor
-       */
-      virtual ~DateFormatter() noexcept;
-      // Destructor -
+  };
 
-      // Methods +
-    public:
-      /*!
-       * Register a new formatter part
-       *
-       * \param pattern The formatter part pattern
-       * \param instGetter The formatter part new instance getter
-       */
-      static void registerFormatterPart(const std::string& pattern, getInstance instGetter) noexcept;
-
-      /*!
-       * Format date
-       *
-       * \param date The date to format
-       * \param output The output string
-       */
-      void format(const anch::date::Date& date, std::string& output) const noexcept;
-
-      /*!
-       * Format date
-       *
-       * \param date The date to format
-       * \param output The output stream
-       */
-      void format(const anch::date::Date& date, std::ostream& output) const noexcept;
-
-      /*!
-       * Build date from string.\n
-       * You can build the output \ref Date with Date(false) constructor.
-       *
-       * \param strDate String formatted date
-       * \param date The output date
-       *
-       * \throw InvalidFormatException invalid format
-       */
-      void parse(const std::string& strDate, anch::date::Date& date) const;
-
-      /*!
-       * Build date from string.\n
-       * You had to delete \ref Date not to make memory leaks.
-       *
-       * \param strDate String formatted date
-       *
-       * \return A date
-       *
-       * \throw InvalidFormatException invalid format
-       */
-      anch::date::Date* parse(const std::string& strDate) const;
-
-    private:
-      /*!
-       * Add formatter to formatter list
-       *
-       * \param strFormatter The formatter part to instanciate
-       */
-      void addFormatter(const std::string& strFormatter) noexcept;
-      // Methods -
-
-    };
-
-  }
-}
+} // anch::date

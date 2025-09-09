@@ -28,9 +28,7 @@
 namespace anch::date {
 
   class DateFormatter;
-  namespace formatter {
-    class IDatePartFormatter;
-  }
+  class IDatePartFormatter;
 
   /*!
    * Date and time utility class.
@@ -44,7 +42,7 @@ namespace anch::date {
    */
   class Date {
 
-    friend class formatter::IDatePartFormatter;
+    friend class IDatePartFormatter;
     friend class DateFormatter;
 
     // Attributes +
@@ -136,11 +134,7 @@ namespace anch::date {
      * \param duration The duration
      */
     template<typename R, typename P>
-    void initialize(const std::chrono::duration<R,P>& duration) noexcept {
-      _nanoseconds = static_cast<uint16_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(duration).count() % 1000);
-      _microseconds = static_cast<uint16_t>(std::chrono::duration_cast<std::chrono::microseconds>(duration).count() % 1000);
-      _milliseconds = static_cast<uint16_t>(std::chrono::duration_cast<std::chrono::milliseconds>(duration).count() % 1000);
-    }
+    void initialize(const std::chrono::duration<R,P>& duration) noexcept;
 
     /*!
      * Initialize date fields
@@ -155,7 +149,7 @@ namespace anch::date {
     void computeTimestamp();
 
     /*!
-     * Compute std::tm from internal members
+     * Compute \c std::tm from internal members
      */
     void computeTm(std::tm& time) const;
 
@@ -187,7 +181,6 @@ namespace anch::date {
      */
     bool equals(const Date& date) const noexcept;
     // Methods -
-
 
     // Operators +
   public:
@@ -240,94 +233,29 @@ namespace anch::date {
     bool operator != (const Date& date) const noexcept;
 
     /*!
-     * Cast operator to std::time_t definition.
+     * Cast operator to \c std::time_t definition.
      *
-     * \return The converted std::time_t
+     * \return The converted \c std::time_t
      */
     operator std::time_t() const noexcept;
 
     /*!
-     * Cast operator to std::tm definition.
+     * Cast operator to \c std::tm definition.
      *
-     * \return The converted std::tm
+     * \return The converted \c std::tm
      */
     operator std::tm() const noexcept;
 
     /*!
-     * Cast operator to std::timespec definition.
+     * Cast operator to \c std::timespec definition.
      *
-     * \return The converted std::timespec
+     * \return The converted \c std::timespec
      */
     operator std::timespec() const noexcept;
     // Operators -
 
   };
 
-  inline void Date::computeTm(std::tm& time) const {
-    time.tm_sec = _seconds;
-    time.tm_min = _minutes;
-    time.tm_hour = _hours;
-    time.tm_mday = _mdays;
-    time.tm_mon = _months;
-    time.tm_year = _years - 1900;
-  }
+} // anch::date
 
-  inline bool Date::after(const Date& date) const noexcept {
-    return _timestamp > date._timestamp;
-  }
-
-  inline bool Date::before(const Date& date) const noexcept {
-    return _timestamp < date._timestamp;
-  }
-
-  inline bool Date::equals(const Date& date) const noexcept {
-    return _timestamp == date._timestamp;
-  }
-
-  inline bool Date::operator > (const Date& date) const noexcept {
-    return after(date);
-  }
-
-  inline bool Date::operator >= (const Date& date) const noexcept {
-    return (after(date) || equals(date));
-  }
-
-  inline bool Date::operator < (const Date& date) const noexcept {
-    return before(date);
-  }
-
-  inline bool Date::operator <= (const Date& date) const noexcept {
-    return (before(date) || equals(date));
-  }
-
-  inline bool Date::operator == (const Date& date) const noexcept {
-    return equals(date);
-  }
-
-  inline bool Date::operator != (const Date& date) const noexcept {
-    return !equals(date);
-  }
-
-  inline Date::operator std::time_t() const noexcept {
-    std::tm time;
-    computeTm(time);
-    return std::mktime(&time);
-  }
-
-  inline Date::operator std::tm() const noexcept {
-    std::tm time;
-    computeTm(time);
-    return time;
-  }
-
-
-  inline Date::operator std::timespec() const noexcept {
-    std::timespec time;
-    std::tm cal;
-    computeTm(cal);
-    time.tv_sec = std::mktime(&cal);
-    time.tv_nsec = _nanoseconds + 1000 * _microseconds + 1000000 * _milliseconds;
-    return time;
-  }
-
-}
+#include "date/impl/date.hpp"

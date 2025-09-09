@@ -17,60 +17,64 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "date/formatter/monthFormatter.hpp"
+#include "date/fmt/hour12Formatter.hpp"
 
 #include <iomanip>
 #include <sstream>
 
 using anch::date::Date;
-using anch::date::formatter::MonthFormatter;
-using anch::date::formatter::IDatePartFormatter;
+using anch::date::Hour12Formatter;
+using anch::date::IDatePartFormatter;
 
 
-const std::string MonthFormatter::PATTERN = "%m";
+const std::string Hour12Formatter::PATTERN = "%h";
 
 
-MonthFormatter::MonthFormatter() {
+Hour12Formatter::Hour12Formatter() {
   // Nothing to do
 }
 
-MonthFormatter::~MonthFormatter() {
+Hour12Formatter::~Hour12Formatter() {
   // Nothing to do
 }
 
 void
-MonthFormatter::format(const Date& date, std::ostream& output) const noexcept {
-  output << std::setfill('0') << std::setw(2) << getMonth(date) + 1;
+Hour12Formatter::format(const Date& date, std::ostream& output) const noexcept {
+  uint16_t hours = getHour(date);
+  if(hours >= 12) {
+    hours = static_cast<uint16_t>(hours - 12);
+  }
+  output << std::setfill('0') << std::setw(2) << hours;
 }
 
 std::size_t
-MonthFormatter::getSize() const noexcept {
+Hour12Formatter::getSize() const noexcept {
   return 2;
 }
 
 bool
-MonthFormatter::setValue(Date& date, const std::string& value) const noexcept {
+Hour12Formatter::setValue(Date& date, const std::string& value) const noexcept {
   std::istringstream iss(value);
   uint16_t val;
   iss >> std::dec >> val;
   if(iss.fail()) {
     return false;
   } else {
-    if(val > 12) {
+    if(val > 11) {
       return false;
     } else {
-      setMonth(date, static_cast<uint16_t>(val - 1));
+      setHour(date, static_cast<uint16_t>(getHour(date) + val));
       return true;
     }
   }
 }
 
 const std::string&
-MonthFormatter::getPattern() const noexcept {
-  return MonthFormatter::PATTERN;
+Hour12Formatter::getPattern() const noexcept {
+  return Hour12Formatter::PATTERN;
 }
 
 IDatePartFormatter*
-MonthFormatter::getInstance() {
-  return new MonthFormatter();
+Hour12Formatter::getInstance() {
+  return new Hour12Formatter();
 }

@@ -23,18 +23,18 @@
 #include <iomanip>
 #include <sstream>
 
-#include "date/formatter/constantFormatter.hpp"
-#include "date/formatter/dayFormatter.hpp"
-#include "date/formatter/hour12Formatter.hpp"
-#include "date/formatter/hour24Formatter.hpp"
-#include "date/formatter/iDatePartFormatter.hpp"
-#include "date/formatter/markerFormatter.hpp"
-#include "date/formatter/millisecondFormatter.hpp"
-#include "date/formatter/minuteFormatter.hpp"
-#include "date/formatter/monthFormatter.hpp"
-#include "date/formatter/secondFormatter.hpp"
-#include "date/formatter/year2dFormatter.hpp"
-#include "date/formatter/year4dFormatter.hpp"
+#include "date/fmt/constantFormatter.hpp"
+#include "date/fmt/dayFormatter.hpp"
+#include "date/fmt/hour12Formatter.hpp"
+#include "date/fmt/hour24Formatter.hpp"
+#include "date/fmt/iDatePartFormatter.hpp"
+#include "date/fmt/markerFormatter.hpp"
+#include "date/fmt/millisecondFormatter.hpp"
+#include "date/fmt/minuteFormatter.hpp"
+#include "date/fmt/monthFormatter.hpp"
+#include "date/fmt/secondFormatter.hpp"
+#include "date/fmt/year2dFormatter.hpp"
+#include "date/fmt/year4dFormatter.hpp"
 
 using anch::date::Date;
 using anch::date::DateFormatter;
@@ -48,16 +48,16 @@ const std::regex DateFormatter::DATE_PATTERN = std::regex(R"(^((%.)|([^%]+)))");
 std::map<std::string, getInstance>&
 getFormatters() {
   static std::map<std::string, getInstance> formatters = {
-    { anch::date::formatter::Year4DFormatter::PATTERN, &anch::date::formatter::Year4DFormatter::getInstance },
-    { anch::date::formatter::Year2DFormatter::PATTERN, &anch::date::formatter::Year2DFormatter::getInstance },
-    { anch::date::formatter::MonthFormatter::PATTERN, &anch::date::formatter::MonthFormatter::getInstance },
-    { anch::date::formatter::DayFormatter::PATTERN, &anch::date::formatter::DayFormatter::getInstance },
-    { anch::date::formatter::Hour24Formatter::PATTERN, &anch::date::formatter::Hour24Formatter::getInstance },
-    { anch::date::formatter::Hour12Formatter::PATTERN, &anch::date::formatter::Hour12Formatter::getInstance },
-    { anch::date::formatter::MarkerFormatter::PATTERN, &anch::date::formatter::MarkerFormatter::getInstance },
-    { anch::date::formatter::MinuteFormatter::PATTERN, &anch::date::formatter::MinuteFormatter::getInstance },
-    { anch::date::formatter::SecondFormatter::PATTERN, &anch::date::formatter::SecondFormatter::getInstance },
-    { anch::date::formatter::MillisecondFormatter::PATTERN, &anch::date::formatter::MillisecondFormatter::getInstance }
+    { anch::date::Year4DFormatter::PATTERN, &anch::date::Year4DFormatter::getInstance },
+    { anch::date::Year2DFormatter::PATTERN, &anch::date::Year2DFormatter::getInstance },
+    { anch::date::MonthFormatter::PATTERN, &anch::date::MonthFormatter::getInstance },
+    { anch::date::DayFormatter::PATTERN, &anch::date::DayFormatter::getInstance },
+    { anch::date::Hour24Formatter::PATTERN, &anch::date::Hour24Formatter::getInstance },
+    { anch::date::Hour12Formatter::PATTERN, &anch::date::Hour12Formatter::getInstance },
+    { anch::date::MarkerFormatter::PATTERN, &anch::date::MarkerFormatter::getInstance },
+    { anch::date::MinuteFormatter::PATTERN, &anch::date::MinuteFormatter::getInstance },
+    { anch::date::SecondFormatter::PATTERN, &anch::date::SecondFormatter::getInstance },
+    { anch::date::MillisecondFormatter::PATTERN, &anch::date::MillisecondFormatter::getInstance }
   };
   return formatters;
 }
@@ -84,7 +84,7 @@ DateFormatter::DateFormatter(const std::string& dateFormat) noexcept: _formatter
 
 // Destructor +
 DateFormatter::~DateFormatter() noexcept {
-  for(const anch::date::formatter::IDatePartFormatter* part : _formatters) {
+  for(const anch::date::IDatePartFormatter* part : _formatters) {
     delete part;
   }
 }
@@ -110,7 +110,7 @@ DateFormatter::format(const Date& date, std::string& output) const noexcept {
 
 void
 DateFormatter::format(const Date& date, std::ostream& output) const noexcept {
-  for(const anch::date::formatter::IDatePartFormatter* part : _formatters) {
+  for(const anch::date::IDatePartFormatter* part : _formatters) {
     part->format(date, output);
   }
   output.flush();
@@ -121,14 +121,14 @@ DateFormatter::parse(const std::string& strDate, Date& date) const {
   if(strDate.size() != _size) {
     std::stringstream oss;
     oss << "Found " << strDate.size() << " characters instead of " << _size;
-    throw InvalidFormatException(oss.str());
+    throw std::invalid_argument(oss.str());
   }
   std::size_t offset = 0;
   bool ok = false;
-  for(const anch::date::formatter::IDatePartFormatter* part : _formatters) {
+  for(const anch::date::IDatePartFormatter* part : _formatters) {
     ok = part->setValue(date, strDate.substr(offset, part->getSize()));
     if(!ok) {
-      throw InvalidFormatException("Fail to parse " + strDate);
+      throw std::invalid_argument("Fail to parse " + strDate);
     }
     offset += part->getSize();
   }
@@ -144,15 +144,15 @@ DateFormatter::parse(const std::string& strDate) const {
 
 void
 DateFormatter::addFormatter(const std::string& strFormatter) noexcept {
-  anch::date::formatter::IDatePartFormatter* form;
+  anch::date::IDatePartFormatter* form;
   if(strFormatter.length() == 1) {
-    form = new anch::date::formatter::ConstantFormatter(strFormatter);
+    form = new anch::date::ConstantFormatter(strFormatter);
 
   } else {
     const std::string pattern = strFormatter.substr(0,2);
     auto iter = getFormatters().find(pattern);
     if(iter == getFormatters().end()) {
-      form = new anch::date::formatter::ConstantFormatter(strFormatter);
+      form = new anch::date::ConstantFormatter(strFormatter);
     } else {
       form = (*(iter->second))();
     }

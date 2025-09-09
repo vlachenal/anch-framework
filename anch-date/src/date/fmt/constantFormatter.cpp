@@ -17,7 +17,7 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "date/formatter/hour24Formatter.hpp"
+#include "date/fmt/constantFormatter.hpp"
 
 #include <iomanip>
 #include <sstream>
@@ -29,54 +29,34 @@ using std::setw;
 using std::istringstream;
 
 using anch::date::Date;
-using anch::date::formatter::Hour24Formatter;
-using anch::date::formatter::IDatePartFormatter;
+using anch::date::ConstantFormatter;
 
 
-const string Hour24Formatter::PATTERN = "%H";
-
-
-Hour24Formatter::Hour24Formatter() {
-  // Nothing to do
+ConstantFormatter::ConstantFormatter(const string& message): _message(message) {
+  _message.shrink_to_fit();
 }
 
-Hour24Formatter::~Hour24Formatter() {
+ConstantFormatter::~ConstantFormatter() {
   // Nothing to do
 }
 
 void
-Hour24Formatter::format(const Date& date, ostream& output) const noexcept {
-  output << setfill('0') << setw(2) << getHour(date);
+ConstantFormatter::format(const Date&, ostream& output) const noexcept {
+  output << _message;
 }
 
 std::size_t
-Hour24Formatter::getSize() const noexcept {
-  return 2;
+ConstantFormatter::getSize() const noexcept {
+  return _message.size();
 }
 
 bool
-Hour24Formatter::setValue(Date& date, const string& value) const noexcept {
-  istringstream iss(value);
-  uint16_t val;
-  iss >> std::dec >> val;
-  if(iss.fail()) {
-    return false;
-  } else {
-    if(val > 23) {
-      return false;
-    } else {
-      setHour(date, val);
-      return true;
-    }
-  }
+ConstantFormatter::setValue(Date&, const string&) const noexcept {
+  // Nothing to do
+  return true;
 }
 
 const string&
-Hour24Formatter::getPattern() const noexcept {
-  return Hour24Formatter::PATTERN;
-}
-
-IDatePartFormatter*
-Hour24Formatter::getInstance() {
-  return new Hour24Formatter();
+ConstantFormatter::getPattern() const noexcept {
+  return _message;
 }

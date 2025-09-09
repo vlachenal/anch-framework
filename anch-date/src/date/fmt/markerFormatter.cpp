@@ -17,56 +17,59 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "date/formatter/year4dFormatter.hpp"
+#include "date/fmt/markerFormatter.hpp"
 
 #include <iomanip>
 #include <sstream>
 
 using anch::date::Date;
-using anch::date::formatter::Year4DFormatter;
-using anch::date::formatter::IDatePartFormatter;
+using anch::date::MarkerFormatter;
+using anch::date::IDatePartFormatter;
 
 
-const std::string Year4DFormatter::PATTERN = "%Y";
+const std::string MarkerFormatter::PATTERN = "%p";
 
 
-Year4DFormatter::Year4DFormatter() {
+MarkerFormatter::MarkerFormatter() {
   // Nothing to do
 }
 
-Year4DFormatter::~Year4DFormatter() {
+MarkerFormatter::~MarkerFormatter() {
   // Nothing to do
 }
 
 void
-Year4DFormatter::format(const Date& date, std::ostream& output) const noexcept {
-  output << std::setfill('0') << std::setw(4) << getYear(date);
+MarkerFormatter::format(const Date& date, std::ostream& output) const noexcept {
+  std::string marker;
+  if(getHour(date) < 12) {
+    marker = "a.m.";
+  } else {
+    marker = "p.m.";
+  }
+  output << marker;
 }
 
 std::size_t
-Year4DFormatter::getSize() const noexcept {
+MarkerFormatter::getSize() const noexcept {
   return 4;
 }
 
 bool
-Year4DFormatter::setValue(Date& date, const std::string& value) const noexcept {
-  std::istringstream iss(value);
-  int32_t val;
-  iss >> std::dec >> val;
-  if(iss.fail()) {
+MarkerFormatter::setValue(Date& date, const std::string& value) const noexcept {
+  if(value == "p.m.") {
+    setHour(date, static_cast<uint16_t>(getHour(date) + 12));
+  } else if(value != "a.m.") {
     return false;
-  } else {
-    setYear(date, val);
-    return true;
   }
+  return true;
 }
 
 const std::string&
-Year4DFormatter::getPattern() const noexcept {
-  return Year4DFormatter::PATTERN;
+MarkerFormatter::getPattern() const noexcept {
+  return MarkerFormatter::PATTERN;
 }
 
 IDatePartFormatter*
-Year4DFormatter::getInstance() {
-  return new Year4DFormatter();
+MarkerFormatter::getInstance() {
+  return new MarkerFormatter();
 }
