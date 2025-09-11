@@ -45,6 +45,7 @@ ReaderContext::ReaderContext(std::istream& is, const anch::json::MappingOptions&
   options(mapOpts),
   pbuf(),
   offset(0),
+  bufferSize(0),
   read(0) {
   // Initialize buffers +
   pbuf.reserve(options.buffer_size);

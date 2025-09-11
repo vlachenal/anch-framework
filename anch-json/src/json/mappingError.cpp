@@ -26,9 +26,9 @@ using anch::json::ErrorCode;
 
 
 std::string
-computeErrorMessage(ErrorCode code, const anch::json::ReaderContext& context) {
-  const int32_t offset = static_cast<int32_t>(context.offset);
-  int32_t begin = offset - 10;
+computeErrorMessage(const ErrorCode& code, const anch::json::ReaderContext& context) {
+  int64_t offset = static_cast<int64_t>(context.offset);
+  int64_t begin = offset - 10;
   if(begin < 0) {
     begin = 0;
   }
@@ -48,10 +48,10 @@ computeErrorMessage(ErrorCode code, const anch::json::ReaderContext& context) {
   }
   // Try to get 20 characters around current error +
   oss << " near '";
-  for(int32_t i = begin ; i < offset ; ++i) {
+  for(int64_t i = begin ; i < offset ; ++i) {
     oss << context.buffer[i];
   }
-  for(int32_t i = offset ; i < 11 && offset + i < static_cast<int32_t>(context.bufferSize) ; ++i) {
+  for(int64_t i = offset ; i < 11 && offset + i < static_cast<int64_t>(context.bufferSize) ; ++i) {
     char c = context.buffer[i];
     if(c == '\0') {
       break;
