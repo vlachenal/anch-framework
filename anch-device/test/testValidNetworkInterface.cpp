@@ -2,11 +2,6 @@
 
 #include "device/network.hpp"
 
-using std::string;
-using std::cout;
-using std::cerr;
-using std::endl;
-
 using anch::device::Network;
 using anch::device::NetworkInterface;
 using anch::device::DeviceException;
@@ -19,18 +14,29 @@ using anch::device::DeviceException;
  */
 int
 main(void) {
-  string ifName = "wlp2s0";
   try {
-    const NetworkInterface* interface = Network::getInterface(ifName);
+    auto ifaces = Network::getInterfaces();
+    NetworkInterface* interface = NULL;
+    for(auto iter = ifaces.begin() ; iter != ifaces.end() ; ++iter) {
+      if(iter->second.isLocalhost()) {
+	continue;
+      }
+      if(iter->second.getIpAddress() == "") {
+	std::cout << iter->second.getName() << " is not connected" << std::endl;
+	continue;
+      }
+      interface = &iter->second;
+      break;
+    }
     if(interface == NULL) {
-      cerr << "Interface not found" << endl;
+      std::cerr << "Interface not found" << std::endl;
       return 2;
     }
-    cout << interface->getName() << " has broadcast address "
-	 << interface->getBroadcastAddress() << endl;
+    std::cout << interface->getName() << " has broadcast address "
+	      << interface->getBroadcastAddress() << std::endl;
 
   } catch(const DeviceException& e) {
-    cerr << e.what() << endl;
+    std::cerr << e.what() << std::endl;
     return 1;
   }
   return 0;

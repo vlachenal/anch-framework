@@ -44,6 +44,8 @@
  *
  * \section anch_lib_sec Libraries dependencies
  *
+ * For AnCH unit tests integration, you will depends on \ref page_ut "anch-ut" and \ref page_cli "anch-cli" libraries.\n
+ *
  * - anch-utils: Dependends on the feature (see class and function description)
  * - anch-resource: nothing
  * - anch-date: nothing
@@ -64,7 +66,7 @@
  * - anch-uuid: nothing
  * - anch-json: nothing
  * - anch-cli: nothing
- * - anch-ut:
+ * - \ref page_ut "anch-ut":
  *   - \ref page_cli "anch-cli": parsing tests arguments
  *
  * \section install_sec Installation
