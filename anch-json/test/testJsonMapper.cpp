@@ -273,7 +273,6 @@ namespace plop {
 Toto toto;
 //Toto* self = NULL;
 std::string VIEW = "VIEW";
-//const std::string totoRes = "{\"plop\":\"plop\",\"plip\":\"plip\",\"plap\":42,\"plup\":false,\"tata\":{\"ploum\":\"ploum\",\"view\":\"VIEW\",\"num_set\":[1,2,3],\"str_vector\":[\"4\",\"5\",\"6\"]},\"plep\":2.2,\"plyp\":3.3,\"lplyp\":4.4,\"self\":{\"plop\":\"self\",\"plip\":\"self_plip\",\"plap\":24,\"plup\":true,\"tata\":{\"ploum\":\"\",\"view\":\"\",\"num_set\":[],\"str_vector\":[]},\"plep\":5.5,\"plyp\":6.6,\"lplyp\":7.7,\"ptr\":\"self\",\"class\":\"Toto\"},\"ptr\":\"plop\",\"class\":\"Toto\"}";
 const std::string totoRes = "{\"plop\":\"plop\",\"plip\":\"plip\",\"plap\":42,\"plup\":false,\"tata\":{\"ploum\":\"ploum\",\"view\":\"VIEW\",\"num_set\":[1,2,3],\"str_vector\":[\"4\",\"5\",\"6\"]},\"plep\":2.2,\"plyp\":3.3,\"self\":{\"plop\":\"self\",\"plip\":\"self_plip\",\"plap\":24,\"plup\":true,\"tata\":{\"ploum\":\"\",\"view\":\"\",\"num_set\":[],\"str_vector\":[]},\"plep\":5.5,\"plyp\":6.6,\"ptr\":\"self\",\"class\":\"Toto\",\"uuid\":\"00000000-0000-0000-0000-000000000000\"},\"ptr\":\"plop\",\"class\":\"Toto\",\"uuid\":\"b4c7f7e7-adaf-41d6-8ff9-150f6b867071\"}";
 
 Test res = {
@@ -529,7 +528,6 @@ testFullDeserDefaultOptions() {
   std::string json = "{\"plop\":\"plop\",\"plip\":\"plip\",\"plap\":42,\"plup\":false,\"tata\":{\"ploum\":\"ploum\",\"num_set\":[1,2,3],\"str_vector\":[\"4\",\"5\",\"6\"]},\"plep\":2.2,\"plyp\":3.3,\"self\":{\"plop\":\"self\",\"plip\":\"self_plip\",\"plap\":24,\"plup\":true,\"tata\":{\"ploum\":\"\",\"num_set\":[],\"str_vector\":[]},\"plep\":5.5,\"plyp\":6.6,\"ptr\":\"self\"},\"ptr\":\"plop\",\"uuid\":\"b4c7f7e7-adaf-41d6-8ff9-150f6b867071\"}";
   Toto expected = toto;
 
-  //std::string& json = totoRes;
   std::cout << "Deserialize " << json << std::endl;
   std::istringstream iss(json);
   Toto totoDeser;
@@ -537,7 +535,6 @@ testFullDeserDefaultOptions() {
     anch::json::Factory<Toto>::getInstance();
     std::cout << "Instance OK" << std::endl;
     mapper.deserialize(totoDeser, iss);
-    //std::cout << totoDeser.tata.ploum << std::endl;
 
     std::cout << "Expected: " << expected << std::endl;
     std::cout << "Result:   " << totoDeser << std::endl;
