@@ -1,6 +1,7 @@
 var classanch_1_1_u_u_i_d =
 [
     [ "Version", "classanch_1_1_u_u_i_d.html#a6ee815d96c7a3fec3e5ed88f05e600f6", [
+      [ "NOT_SET", "classanch_1_1_u_u_i_d.html#a6ee815d96c7a3fec3e5ed88f05e600f6a1c250a21210b7b88a14db9a0cbe71162", null ],
       [ "MAC_ADDRESS", "classanch_1_1_u_u_i_d.html#a6ee815d96c7a3fec3e5ed88f05e600f6a298f2346d8522b9a2c6ee1101e0f1a4d", null ],
       [ "DCE_SECURITY", "classanch_1_1_u_u_i_d.html#a6ee815d96c7a3fec3e5ed88f05e600f6affa23ee2a831cf77de87152b513c4119", null ],
       [ "MD5_HASH", "classanch_1_1_u_u_i_d.html#a6ee815d96c7a3fec3e5ed88f05e600f6a63bd233e447da01a556518b319b1abc5", null ],
@@ -9,6 +10,7 @@ var classanch_1_1_u_u_i_d =
     ] ],
     [ "UUID", "classanch_1_1_u_u_i_d.html#aaad2d3bada25d7ffb6bd3a2865cf7f3c", null ],
     [ "UUID", "classanch_1_1_u_u_i_d.html#ad6aef62706d56dbcf57400ec68de738e", null ],
+    [ "UUID", "classanch_1_1_u_u_i_d.html#a1a8215d5dc13dfbbcc8b29d0fc8a61ef", null ],
     [ "UUID", "classanch_1_1_u_u_i_d.html#a5ac699341813ed8e910983d81a05e4c6", null ],
     [ "UUID", "classanch_1_1_u_u_i_d.html#a6ef92aef2a4f2bb354019a3dd750abf5", null ],
     [ "~UUID", "classanch_1_1_u_u_i_d.html#ac1a536fe3ca38f2d4ac45d218b2512c1", null ],
@@ -24,6 +26,11 @@ var classanch_1_1_u_u_i_d =
     [ "getUtcTimestamp", "classanch_1_1_u_u_i_d.html#a64079d65e69e6e5416a4fb1f9f1e6ec6", null ],
     [ "getVersion", "classanch_1_1_u_u_i_d.html#a8d539bd756d7cb8396dfe7b6cc84cfd7", null ],
     [ "operator std::string", "classanch_1_1_u_u_i_d.html#ad47e4b3bfedd7a36a660b2ce9ba5c001", null ],
+    [ "operator!=", "classanch_1_1_u_u_i_d.html#a2cf03d7b4cd51b864c312483d03e38d4", null ],
+    [ "operator=", "classanch_1_1_u_u_i_d.html#aac2c05f387a6a1381d0d6cff89dfe67e", null ],
+    [ "operator==", "classanch_1_1_u_u_i_d.html#a16b5d65e7d6d3de208af6ba6b2cfef05", null ],
+    [ "parse", "classanch_1_1_u_u_i_d.html#ac1d5a91793a0cf78ad89ebe93053b0d3", null ],
+    [ "parseUUID", "classanch_1_1_u_u_i_d.html#aed529f2fe72cc146234b44f666df5678", null ],
     [ "random", "classanch_1_1_u_u_i_d.html#a94689a1fa6ec4b669691117a15aa4227", null ],
     [ "registerProvider", "classanch_1_1_u_u_i_d.html#ae8140e8432b12dd983afec0cf12d5eb6", null ],
     [ "toString", "classanch_1_1_u_u_i_d.html#a36736e2206df28396b345d625804368e", null ],

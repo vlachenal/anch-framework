@@ -108,18 +108,19 @@ $(function(){initNavTree('classanch_1_1_u_u_i_d.html','','classanch_1_1_u_u_i_d-
 <div id="dynsection-0-summary" class="dynsummary" style="display:block;">
 </div>
 <div id="dynsection-0-content" class="dyncontent" style="display:none;">
-<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classanch_1_1_u_u_i_d__coll__graph.svg" width="170" height="592"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classanch_1_1_u_u_i_d__coll__graph.svg" width="154" height="550"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-types" class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
 <tr class="memitem:a6ee815d96c7a3fec3e5ed88f05e600f6" id="r_a6ee815d96c7a3fec3e5ed88f05e600f6"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6ee815d96c7a3fec3e5ed88f05e600f6">Version</a> { <br />
-&#160;&#160;<a class="el" href="#a6ee815d96c7a3fec3e5ed88f05e600f6a298f2346d8522b9a2c6ee1101e0f1a4d">MAC_ADDRESS</a> = 1
+&#160;&#160;<a class="el" href="#a6ee815d96c7a3fec3e5ed88f05e600f6a1c250a21210b7b88a14db9a0cbe71162">NOT_SET</a> = 0
+, <a class="el" href="#a6ee815d96c7a3fec3e5ed88f05e600f6a298f2346d8522b9a2c6ee1101e0f1a4d">MAC_ADDRESS</a> = 1
 , <a class="el" href="#a6ee815d96c7a3fec3e5ed88f05e600f6affa23ee2a831cf77de87152b513c4119">DCE_SECURITY</a>
 , <a class="el" href="#a6ee815d96c7a3fec3e5ed88f05e600f6a63bd233e447da01a556518b319b1abc5">MD5_HASH</a>
-, <a class="el" href="#a6ee815d96c7a3fec3e5ed88f05e600f6a170e02e86972c2be8559884cc3c12254">RANDOM</a>
 , <br />
-&#160;&#160;<a class="el" href="#a6ee815d96c7a3fec3e5ed88f05e600f6a11ac5cacee1040b5b2bf75799b0a2e30">SHA1_HASH</a>
+&#160;&#160;<a class="el" href="#a6ee815d96c7a3fec3e5ed88f05e600f6a170e02e86972c2be8559884cc3c12254">RANDOM</a>
+, <a class="el" href="#a6ee815d96c7a3fec3e5ed88f05e600f6a11ac5cacee1040b5b2bf75799b0a2e30">SHA1_HASH</a>
 <br />
  }</td></tr>
 </table><table class="memberdecls">
@@ -127,11 +128,16 @@ Public Types</h2></td></tr>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:aaad2d3bada25d7ffb6bd3a2865cf7f3c" id="r_aaad2d3bada25d7ffb6bd3a2865cf7f3c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aaad2d3bada25d7ffb6bd3a2865cf7f3c">UUID</a> ()</td></tr>
 <tr class="memitem:ad6aef62706d56dbcf57400ec68de738e" id="r_ad6aef62706d56dbcf57400ec68de738e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad6aef62706d56dbcf57400ec68de738e">UUID</a> (const <a class="el" href="classanch_1_1_u_u_i_d.html">UUID</a> &amp;uuid)</td></tr>
+<tr class="memitem:a1a8215d5dc13dfbbcc8b29d0fc8a61ef" id="r_a1a8215d5dc13dfbbcc8b29d0fc8a61ef"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1a8215d5dc13dfbbcc8b29d0fc8a61ef">UUID</a> (<a class="el" href="classanch_1_1_u_u_i_d.html">UUID</a> &amp;&amp;uuid)</td></tr>
 <tr class="memitem:a5ac699341813ed8e910983d81a05e4c6" id="r_a5ac699341813ed8e910983d81a05e4c6"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5ac699341813ed8e910983d81a05e4c6">UUID</a> (const std::string &amp;uuid)</td></tr>
 <tr class="memitem:a6ef92aef2a4f2bb354019a3dd750abf5" id="r_a6ef92aef2a4f2bb354019a3dd750abf5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6ef92aef2a4f2bb354019a3dd750abf5">UUID</a> (uint32_t lowTime, uint16_t midTime, uint16_t highTime, uint16_t clockSeqLow, uint16_t clockSeqHighRes, uint64_t node, <a class="el" href="#a6ee815d96c7a3fec3e5ed88f05e600f6">UUID::Version</a> version)</td></tr>
 <tr class="memitem:ac1a536fe3ca38f2d4ac45d218b2512c1" id="r_ac1a536fe3ca38f2d4ac45d218b2512c1"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac1a536fe3ca38f2d4ac45d218b2512c1">~UUID</a> ()</td></tr>
+<tr class="memitem:ac1d5a91793a0cf78ad89ebe93053b0d3" id="r_ac1d5a91793a0cf78ad89ebe93053b0d3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac1d5a91793a0cf78ad89ebe93053b0d3">parse</a> (const std::string &amp;uuid)</td></tr>
 <tr class="memitem:a36736e2206df28396b345d625804368e" id="r_a36736e2206df28396b345d625804368e"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a36736e2206df28396b345d625804368e">toString</a> () const</td></tr>
 <tr class="memitem:ad47e4b3bfedd7a36a660b2ce9ba5c001" id="r_ad47e4b3bfedd7a36a660b2ce9ba5c001"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad47e4b3bfedd7a36a660b2ce9ba5c001">operator std::string</a> () const</td></tr>
+<tr class="memitem:a16b5d65e7d6d3de208af6ba6b2cfef05" id="r_a16b5d65e7d6d3de208af6ba6b2cfef05"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a16b5d65e7d6d3de208af6ba6b2cfef05">operator==</a> (const <a class="el" href="classanch_1_1_u_u_i_d.html">UUID</a> &amp;uuid) const</td></tr>
+<tr class="memitem:a2cf03d7b4cd51b864c312483d03e38d4" id="r_a2cf03d7b4cd51b864c312483d03e38d4"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2cf03d7b4cd51b864c312483d03e38d4">operator!=</a> (const <a class="el" href="classanch_1_1_u_u_i_d.html">UUID</a> &amp;uuid) const</td></tr>
+<tr class="memitem:aac2c05f387a6a1381d0d6cff89dfe67e" id="r_aac2c05f387a6a1381d0d6cff89dfe67e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classanch_1_1_u_u_i_d.html">UUID</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aac2c05f387a6a1381d0d6cff89dfe67e">operator=</a> (const <a class="el" href="classanch_1_1_u_u_i_d.html">UUID</a> &amp;uuid)</td></tr>
 <tr class="memitem:a03f41a7fe5031218255f99e0e31588ef" id="r_a03f41a7fe5031218255f99e0e31588ef"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a03f41a7fe5031218255f99e0e31588ef">getLowTime</a> () const</td></tr>
 <tr class="memitem:ab88f1253cf48bc4a6deaae5bc3eaf9b1" id="r_ab88f1253cf48bc4a6deaae5bc3eaf9b1"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab88f1253cf48bc4a6deaae5bc3eaf9b1">getMidTime</a> () const</td></tr>
 <tr class="memitem:a8a1d449f7d9fe524d837161c26afd550" id="r_a8a1d449f7d9fe524d837161c26afd550"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8a1d449f7d9fe524d837161c26afd550">getHighTime</a> () const</td></tr>
@@ -148,6 +154,7 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a64079d65e69e6e5416a4fb1f9f1e6ec6" id="r_a64079d65e69e6e5416a4fb1f9f1e6ec6"><td class="memItemLeft" align="right" valign="top">static uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a64079d65e69e6e5416a4fb1f9f1e6ec6">getUtcTimestamp</a> ()</td></tr>
 <tr class="memitem:a06716c6b98735c675928239e003fc72c" id="r_a06716c6b98735c675928239e003fc72c"><td class="memItemLeft" align="right" valign="top">static std::random_device &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a06716c6b98735c675928239e003fc72c">getRandomEngine</a> ()</td></tr>
 <tr class="memitem:a215ba761b88e83ed87df2aaba0f227b9" id="r_a215ba761b88e83ed87df2aaba0f227b9"><td class="memItemLeft" align="right" valign="top">static std::uniform_int_distribution&lt; uint16_t &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a215ba761b88e83ed87df2aaba0f227b9">getDistSeq</a> ()</td></tr>
+<tr class="memitem:aed529f2fe72cc146234b44f666df5678" id="r_aed529f2fe72cc146234b44f666df5678"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classanch_1_1_u_u_i_d.html">UUID</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aed529f2fe72cc146234b44f666df5678">parseUUID</a> (const std::string &amp;uuid)</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-static-attribs" class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
@@ -189,7 +196,9 @@ This class needs anch-crypto and anch-device libraries.</p>
 <dl class="section since"><dt>Since</dt><dd>0.1</dd></dl>
 <dl class="section author"><dt>Author</dt><dd>Vincent Lachenal </dd></dl>
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a6ee815d96c7a3fec3e5ed88f05e600f6a298f2346d8522b9a2c6ee1101e0f1a4d" name="a6ee815d96c7a3fec3e5ed88f05e600f6a298f2346d8522b9a2c6ee1101e0f1a4d"></a>MAC_ADDRESS&#160;</td><td class="fielddoc"><p>MAC address based algorithm </p>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a6ee815d96c7a3fec3e5ed88f05e600f6a1c250a21210b7b88a14db9a0cbe71162" name="a6ee815d96c7a3fec3e5ed88f05e600f6a1c250a21210b7b88a14db9a0cbe71162"></a>NOT_SET&#160;</td><td class="fielddoc"><p>Undefined </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a6ee815d96c7a3fec3e5ed88f05e600f6a298f2346d8522b9a2c6ee1101e0f1a4d" name="a6ee815d96c7a3fec3e5ed88f05e600f6a298f2346d8522b9a2c6ee1101e0f1a4d"></a>MAC_ADDRESS&#160;</td><td class="fielddoc"><p>MAC address based algorithm </p>
 </td></tr>
 <tr><td class="fieldname"><a id="a6ee815d96c7a3fec3e5ed88f05e600f6affa23ee2a831cf77de87152b513c4119" name="a6ee815d96c7a3fec3e5ed88f05e600f6affa23ee2a831cf77de87152b513c4119"></a>DCE_SECURITY&#160;</td><td class="fielddoc"><p>DCE security (Windows) base algorithm </p>
 </td></tr>
@@ -205,7 +214,7 @@ This class needs anch-crypto and anch-device libraries.</p>
 </div>
 <a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="aaad2d3bada25d7ffb6bd3a2865cf7f3c" name="aaad2d3bada25d7ffb6bd3a2865cf7f3c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aaad2d3bada25d7ffb6bd3a2865cf7f3c">&#9670;&#160;</a></span>UUID() <span class="overload">[1/4]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aaad2d3bada25d7ffb6bd3a2865cf7f3c">&#9670;&#160;</a></span>UUID() <span class="overload">[1/5]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -223,7 +232,7 @@ This class needs anch-crypto and anch-device libraries.</p>
 </div>
 </div>
 <a id="ad6aef62706d56dbcf57400ec68de738e" name="ad6aef62706d56dbcf57400ec68de738e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad6aef62706d56dbcf57400ec68de738e">&#9670;&#160;</a></span>UUID() <span class="overload">[2/4]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ad6aef62706d56dbcf57400ec68de738e">&#9670;&#160;</a></span>UUID() <span class="overload">[2/5]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -252,8 +261,38 @@ This class needs anch-crypto and anch-device libraries.</p>
 
 </div>
 </div>
+<a id="a1a8215d5dc13dfbbcc8b29d0fc8a61ef" name="a1a8215d5dc13dfbbcc8b29d0fc8a61ef"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1a8215d5dc13dfbbcc8b29d0fc8a61ef">&#9670;&#160;</a></span>UUID() <span class="overload">[3/5]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">anch::UUID::UUID </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classanch_1_1_u_u_i_d.html">UUID</a> &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>uuid</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p><a class="el" href="classanch_1_1_u_u_i_d.html">UUID</a> move constructor</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">uuid</td><td>The <a class="el" href="classanch_1_1_u_u_i_d.html">UUID</a> to 'move' </td></tr>
+  </table>
+  </dd>
+</dl>
+<div id="dynsection-2" onclick="return dynsection.toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-2-summary" class="dynsummary" style="display:block;">
+</div>
+<div id="dynsection-2-content" class="dyncontent" style="display:none;">
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classanch_1_1_u_u_i_d_a1a8215d5dc13dfbbcc8b29d0fc8a61ef_cgraph.svg" width="326" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+
+</div>
+</div>
 <a id="a5ac699341813ed8e910983d81a05e4c6" name="a5ac699341813ed8e910983d81a05e4c6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5ac699341813ed8e910983d81a05e4c6">&#9670;&#160;</a></span>UUID() <span class="overload">[3/4]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a5ac699341813ed8e910983d81a05e4c6">&#9670;&#160;</a></span>UUID() <span class="overload">[4/5]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -284,7 +323,7 @@ This class needs anch-crypto and anch-device libraries.</p>
 </div>
 </div>
 <a id="a6ef92aef2a4f2bb354019a3dd750abf5" name="a6ef92aef2a4f2bb354019a3dd750abf5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6ef92aef2a4f2bb354019a3dd750abf5">&#9670;&#160;</a></span>UUID() <span class="overload">[4/4]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a6ef92aef2a4f2bb354019a3dd750abf5">&#9670;&#160;</a></span>UUID() <span class="overload">[5/5]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -410,10 +449,10 @@ This class needs anch-crypto and anch-device libraries.</p>
   </table>
   </dd>
 </dl>
-<div id="dynsection-2" onclick="return dynsection.toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-2-summary" class="dynsummary" style="display:block;">
+<div id="dynsection-3" onclick="return dynsection.toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-3-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-2-content" class="dyncontent" style="display:none;">
+<div id="dynsection-3-content" class="dyncontent" style="display:none;">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classanch_1_1_u_u_i_d_a9686540ca55cca300f35618515c50b89_cgraph.svg" width="376" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -659,6 +698,162 @@ This class needs anch-crypto and anch-device libraries.</p>
 
 </div>
 </div>
+<a id="a2cf03d7b4cd51b864c312483d03e38d4" name="a2cf03d7b4cd51b864c312483d03e38d4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2cf03d7b4cd51b864c312483d03e38d4">&#9670;&#160;</a></span>operator!=()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool anch::UUID::operator!= </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classanch_1_1_u_u_i_d.html">UUID</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>uuid</em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p><code>!=</code> operator definition</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">uuid</td><td>the <a class="el" href="classanch_1_1_u_u_i_d.html">UUID</a> to compare with</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>true</code> when the two <a class="el" href="classanch_1_1_u_u_i_d.html">UUID</a> are differents, <code>false</code> otherwise </dd></dl>
+<div id="dynsection-4" onclick="return dynsection.toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-4-summary" class="dynsummary" style="display:block;">
+</div>
+<div id="dynsection-4-content" class="dyncontent" style="display:none;">
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classanch_1_1_u_u_i_d_a2cf03d7b4cd51b864c312483d03e38d4_cgraph.svg" width="351" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+
+</div>
+</div>
+<a id="aac2c05f387a6a1381d0d6cff89dfe67e" name="aac2c05f387a6a1381d0d6cff89dfe67e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aac2c05f387a6a1381d0d6cff89dfe67e">&#9670;&#160;</a></span>operator=()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classanch_1_1_u_u_i_d.html">UUID</a> &amp; anch::UUID::operator= </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classanch_1_1_u_u_i_d.html">UUID</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>uuid</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p><code>==</code> operator definition</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">uuid</td><td>the <a class="el" href="classanch_1_1_u_u_i_d.html">UUID</a> to copy</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>this</code> </dd></dl>
+<div id="dynsection-5" onclick="return dynsection.toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-5-summary" class="dynsummary" style="display:block;">
+</div>
+<div id="dynsection-5-content" class="dyncontent" style="display:none;">
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classanch_1_1_u_u_i_d_aac2c05f387a6a1381d0d6cff89dfe67e_cgraph.svg" width="347" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+
+</div>
+</div>
+<a id="a16b5d65e7d6d3de208af6ba6b2cfef05" name="a16b5d65e7d6d3de208af6ba6b2cfef05"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a16b5d65e7d6d3de208af6ba6b2cfef05">&#9670;&#160;</a></span>operator==()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool anch::UUID::operator== </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classanch_1_1_u_u_i_d.html">UUID</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>uuid</em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p><code>==</code> operator definition</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">uuid</td><td>the <a class="el" href="classanch_1_1_u_u_i_d.html">UUID</a> to compare with</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>true</code> when the two <a class="el" href="classanch_1_1_u_u_i_d.html">UUID</a> are equals, <code>false</code> otherwise </dd></dl>
+<div id="dynsection-6" onclick="return dynsection.toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-6-summary" class="dynsummary" style="display:block;">
+</div>
+<div id="dynsection-6-content" class="dyncontent" style="display:none;">
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classanch_1_1_u_u_i_d_a16b5d65e7d6d3de208af6ba6b2cfef05_cgraph.svg" width="355" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+
+</div>
+</div>
+<a id="ac1d5a91793a0cf78ad89ebe93053b0d3" name="ac1d5a91793a0cf78ad89ebe93053b0d3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac1d5a91793a0cf78ad89ebe93053b0d3">&#9670;&#160;</a></span>parse()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void anch::UUID::parse </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>uuid</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Parse <a class="el" href="classanch_1_1_u_u_i_d.html">UUID</a> for this value (usefull with default constructor)</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">uuid</td><td>the <a class="el" href="classanch_1_1_u_u_i_d.html">UUID</a> to parse </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="aed529f2fe72cc146234b44f666df5678" name="aed529f2fe72cc146234b44f666df5678"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aed529f2fe72cc146234b44f666df5678">&#9670;&#160;</a></span>parseUUID()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classanch_1_1_u_u_i_d.html">UUID</a> anch::UUID::parseUUID </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>uuid</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Parse <a class="el" href="classanch_1_1_u_u_i_d.html">UUID</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">uuid</td><td>the <a class="el" href="classanch_1_1_u_u_i_d.html">UUID</a> to parse</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>the parsed <a class="el" href="classanch_1_1_u_u_i_d.html">UUID</a> </dd></dl>
+<div id="dynsection-7" onclick="return dynsection.toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-7-summary" class="dynsummary" style="display:block;">
+</div>
+<div id="dynsection-7-content" class="dyncontent" style="display:none;">
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classanch_1_1_u_u_i_d_aed529f2fe72cc146234b44f666df5678_cgraph.svg" width="358" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+
+</div>
+</div>
 <a id="a94689a1fa6ec4b669691117a15aa4227" name="a94689a1fa6ec4b669691117a15aa4227"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a94689a1fa6ec4b669691117a15aa4227">&#9670;&#160;</a></span>random()</h2>
 
@@ -683,10 +878,10 @@ This class needs anch-crypto and anch-device libraries.</p>
 </div><div class="memdoc">
 <p>Generate a new <a class="el" href="classanch_1_1_u_u_i_d.html" title="UUID generator and parser.">UUID</a> with version 4 (random) algorithm</p>
 <dl class="section return"><dt>Returns</dt><dd>the new <a class="el" href="classanch_1_1_u_u_i_d.html" title="UUID generator and parser.">UUID</a> </dd></dl>
-<div id="dynsection-3" onclick="return dynsection.toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-3-summary" class="dynsummary" style="display:block;">
+<div id="dynsection-8" onclick="return dynsection.toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-8-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-3-content" class="dyncontent" style="display:none;">
+<div id="dynsection-8-content" class="dyncontent" style="display:none;">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classanch_1_1_u_u_i_d_a94689a1fa6ec4b669691117a15aa4227_cgraph.svg" width="335" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
