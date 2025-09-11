@@ -236,10 +236,6 @@ struct Test {
       && anch::ut::equals("Test::value", _value, test._value)
       && anch::ut::equals("Test::nums", _nums, test._nums)
       ;
-    // return _id == test._id
-    //   && _value == test._value
-    //   && _nums == test._nums
-    //   ;
   }
 };
 
@@ -248,9 +244,7 @@ void
 anch::json::registerObject(ObjectMapper<Test>& mapper) {
   mapper
     .registerField("id", &Test::_id)
-    //.registerField("value", std::function<std::string(const Test&)>(&Test::getValue))
     .registerField("value", std::function<std::string(const Test&)>(&Test::getValue), std::function<void(Test&, const std::string&)>(&Test::setValue))
-    //.registerField("value", std::function<void(Test&, const std::string&)>(&Test::setValue))
     .registerField<int32_t>("nums", &Test::_nums)
     ;
 }
@@ -533,9 +527,6 @@ void
 testFullDeserDefaultOptions() {
   anch::json::JSONMapper mapper(anch::json::DEFAULT_MAPPING_OPTIONS);
   std::string json = "{\"plop\":\"plop\",\"plip\":\"plip\",\"plap\":42,\"plup\":false,\"tata\":{\"ploum\":\"ploum\",\"num_set\":[1,2,3],\"str_vector\":[\"4\",\"5\",\"6\"]},\"plep\":2.2,\"plyp\":3.3,\"self\":{\"plop\":\"self\",\"plip\":\"self_plip\",\"plap\":24,\"plup\":true,\"tata\":{\"ploum\":\"\",\"num_set\":[],\"str_vector\":[]},\"plep\":5.5,\"plyp\":6.6,\"ptr\":\"self\"},\"ptr\":\"plop\",\"uuid\":\"b4c7f7e7-adaf-41d6-8ff9-150f6b867071\"}";
-  //  std::string json = "{\"plop\":\"plop\",\"plip\":\"plip\",\"plap\":42,\"plup\":false,\"tata\":{\"ploum\":\"ploum\",\"num_set\":[1,2,3],\"str_vector\":[\"4\",\"5\",\"6\"]},\"plep\":2.2,\"plyp\":3.3,\"lplyp\":4.4,\"self\":{\"plop\":\"self\",\"plip\":\"self_plip\",\"plap\":24,\"plup\":true,\"tata\":{\"ploum\":\"\",\"num_set\":[],\"str_vector\":[]},\"plep\":5.5,\"plyp\":6.6,\"lplyp\":7.7,\"ptr\":\"self\"},\"ptr\":\"plop\"}";
-  // {"plop":"plop","plip":"plip","plap":42,"plup":false,"tata":{"ploum":"ploum","num_set":[1,2,3],"str_vector":["4","5","6"]},"plep":2.2,"plyp":3.3,"lplyp":4.4,"self":{"plop":"self","plip":"self_plip","plap":24,"plup":true,"tata":{"ploum":"","num_set":[],"str_vector":[]},"plep":5.5,"plyp":6.6,"lplyp":7.7,"ptr":"self"},"ptr":"plop"}
-  // {"plop":"plop","plip":"plip","plap":42,"plup":false,"tata":{"ploum":"ploum","num_set":[1,2,3],"str_vector":["4","5","6"]},"plep":2.2,"plyp":3.3,"lplyp":4.4,"self":{"plop":"self","plip":"self_plip","plap":24,"plup":true,"tata":{"ploum":"","num_set":[],"str_vector":[]},"plep":5.5,"plyp":6.6,"lplyp":7.7,"ptr":"self","class":"Toto"},"ptr":"plop","class":"Toto"}
   Toto expected = toto;
 
   //std::string& json = totoRes;
