@@ -5,7 +5,9 @@
 
 #include "json/json.hpp"
 
+#ifdef ANCH_UUID
 #include "uuid.hpp"
+#endif
 
 #include "ut/assert.hpp"
 #include "ut/unit.hpp"

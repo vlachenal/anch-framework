@@ -291,7 +291,7 @@ namespace anch {
     bool operator !=(const UUID& uuid) const;
 
     /*!
-     * \c == operator definition
+     * \c = operator definition
      *
      * \param uuid the \ref UUID to copy
      *
