@@ -53,6 +53,9 @@ namespace anch {
      * \author Vincent Lachenal
      */
     enum class Version {
+      /*! Undefined */
+      NOT_SET = 0,
+
       /*! MAC address based algorithm */
       MAC_ADDRESS = 1,
 
@@ -137,6 +140,13 @@ namespace anch {
     UUID(const UUID& uuid);
 
     /*!
+     * \ref UUID move constructor
+     *
+     * \param uuid The \ref UUID to 'move'
+     */
+    UUID(UUID&& uuid);
+
+    /*!
      * \ref UUID from std::string constructor
      *
      * \param uuid the std::string to parse
@@ -157,7 +167,13 @@ namespace anch {
      * \param node the node part
      * \param version the \ref UUID version
      */
-    UUID(uint32_t lowTime, uint16_t midTime, uint16_t highTime, uint16_t clockSeqLow, uint16_t clockSeqHighRes, uint64_t node, UUID::Version version);
+    UUID(uint32_t lowTime,
+	 uint16_t midTime,
+	 uint16_t highTime,
+	 uint16_t clockSeqLow,
+	 uint16_t clockSeqHighRes,
+	 uint64_t node,
+	 UUID::Version version);
     // Constructors -
 
     // Destructor +
@@ -219,6 +235,22 @@ namespace anch {
     static std::uniform_int_distribution<uint16_t>& getDistSeq();
 
     /*!
+     * Parse \ref UUID
+     *
+     * \param uuid the \ref UUID to parse
+     *
+     * \return the parsed \ref UUID
+     */
+    static UUID parseUUID(const std::string& uuid);
+
+    /*!
+     * Parse \ref UUID for this value (usefull with default constructor)
+     *
+     * \param uuid the \ref UUID to parse
+     */
+    void parse(const std::string& uuid);
+
+    /*!
      * Convert \ref UUID to std::string
      *
      * \return The string representation of \ref UUID
@@ -239,6 +271,33 @@ namespace anch {
      * Cast \ref UUID to std::string
      */
     explicit operator std::string() const;
+
+    /*!
+     * \c == operator definition
+     *
+     * \param uuid the \ref UUID to compare with
+     *
+     * \return \c true when the two \ref UUID are equals, \c false otherwise
+     */
+    bool operator ==(const UUID& uuid) const;
+
+    /*!
+     * \c != operator definition
+     *
+     * \param uuid the \ref UUID to compare with
+     *
+     * \return \c true when the two \ref UUID are differents, \c false otherwise
+     */
+    bool operator !=(const UUID& uuid) const;
+
+    /*!
+     * \c == operator definition
+     *
+     * \param uuid the \ref UUID to copy
+     *
+     * \return \c this
+     */
+    UUID& operator =(const UUID& uuid);
     // Operators -
 
 

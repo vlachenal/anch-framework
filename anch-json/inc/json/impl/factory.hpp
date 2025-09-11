@@ -73,6 +73,20 @@ namespace anch::json {
   constexpr bool isPrimitive<std::string_view>() {
     return true;
   }
+
+#ifdef ANCH_UUID
+  template<>
+  constexpr bool isPrimitive<anch::UUID>() {
+    return true;
+  }
+#endif
+
+#ifdef ANCH_DATE
+  template<>
+  constexpr bool isPrimitive<anch::date::Date>() {
+    return true;
+  }
+#endif
   // isPrimitive string specialization -
 
   // isPrimitive integer specialization +

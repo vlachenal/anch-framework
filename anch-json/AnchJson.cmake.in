@@ -31,4 +31,7 @@ set(ANCH_JSON_UNITARY_TEST ON CACHE BOOL "Anch JSON unit tests")
 
 # Utilties
 set(ANCH_JSON_UNITARY_UTILS ON CACHE BOOL "Anch JSON utilties")
+
+# UUID
+set(ANCH_UUID ON CACHE BOOL "Anch UUID support")
 ## Anch json configuration -

@@ -29,7 +29,13 @@ std::atomic_bool UUID::_seeded(false);
 std::map<UUID::Version, std::function<UUID(const std::string&)>> UUID::_providers;
 
 // Constructors +
-UUID::UUID() {
+UUID::UUID(): _lowTime(0),
+	      _midTime(0),
+	      _highTime(0),
+	      _clockSeqLow(0),
+	      _clockSeqHighRes(0),
+	      _node(0),
+	      _version(Version::NOT_SET) {
   // Nothing to do
 }
 
@@ -43,19 +49,23 @@ UUID::UUID(const UUID& uuid): _lowTime(uuid._lowTime),
   // Nothing to do
 }
 
+UUID::UUID(UUID&& uuid): _lowTime(uuid._lowTime),
+			 _midTime(uuid._midTime),
+			 _highTime(uuid._highTime),
+			 _clockSeqLow(uuid._clockSeqLow),
+			 _clockSeqHighRes(uuid._clockSeqHighRes),
+			 _node(uuid._node),
+			 _version(uuid._version) {
+  // Nothing to do
+}
+
 UUID::UUID(const std::string& uuid): _lowTime(0),
 				     _midTime(0),
 				     _highTime(0),
 				     _clockSeqLow(0),
 				     _clockSeqHighRes(0),
 				     _node(0) {
-  _lowTime = static_cast<uint32_t>(std::stoul(uuid.substr(0, 8), 0, 16));
-  _midTime = static_cast<uint16_t>(std::stoul(uuid.substr(9, 4), 0, 16));
-  _version = static_cast<anch::UUID::Version>(std::stoi(uuid.substr(14, 1), 0, 16));
-  _highTime = static_cast<uint16_t>(std::stoul(uuid.substr(15, 3), 0, 16));
-  _clockSeqHighRes = static_cast<uint16_t>(std::stoul(uuid.substr(19, 2), 0, 16));
-  _clockSeqLow = static_cast<uint16_t>(std::stoul(uuid.substr(21, 2), 0, 16));
-  _node = std::stoull(uuid.substr(24, 12), 0, 16);
+  parse(uuid);
 }
 
 UUID::UUID(uint32_t lowTime,
@@ -83,6 +93,36 @@ UUID::~UUID() {
 // Destructor -
 
 // Methods +
+void
+UUID::parse(const std::string& uuid) {
+  _lowTime = static_cast<uint32_t>(std::stoul(uuid.substr(0, 8), 0, 16));
+  _midTime = static_cast<uint16_t>(std::stoul(uuid.substr(9, 4), 0, 16));
+  _version = static_cast<anch::UUID::Version>(std::stoi(uuid.substr(14, 1), 0, 16));
+  _highTime = static_cast<uint16_t>(std::stoul(uuid.substr(15, 3), 0, 16));
+  _clockSeqHighRes = static_cast<uint16_t>(std::stoul(uuid.substr(19, 2), 0, 16));
+  _clockSeqLow = static_cast<uint16_t>(std::stoul(uuid.substr(21, 2), 0, 16));
+  _node = std::stoull(uuid.substr(24, 12), 0, 16);
+}
+
+UUID
+UUID::parseUUID(const std::string& uuid) {
+  return UUID(uuid);
+}
+
+std::string
+UUID::toString() const {
+  std::ostringstream out;
+  out << std::hex
+      << std::setfill('0') << std::setw(8) << _lowTime << '-'
+      << std::setfill('0') << std::setw(4) << _midTime << '-'
+      << std::setfill('0') << std::setw(1) << static_cast<int>(_version)
+      << std::setfill('0') << std::setw(3) << _highTime << '-'
+      << std::setfill('0') << std::setw(2) << _clockSeqHighRes
+      << std::setfill('0') << std::setw(2) << _clockSeqLow << '-'
+      << std::setfill('0') << std::setw(12) << _node;
+  return out.str();
+}
+
 void
 UUID::registerProvider(UUID::Version version, std::function<UUID(const std::string&)> provider) {
   _providers[version] = provider;
@@ -164,3 +204,29 @@ UUID::getDistSeq() {
   return distSeq;
 }
 // Methods -
+
+// Operators +
+bool
+UUID::operator ==(const UUID& uuid) const {
+  return _lowTime == uuid._lowTime
+    && _midTime == uuid._midTime
+    && _version == uuid._version
+    && _highTime == uuid._highTime
+    && _clockSeqHighRes == uuid._clockSeqHighRes
+    && _clockSeqLow == uuid._clockSeqLow
+    && _node == uuid._node
+    ;
+}
+
+UUID&
+UUID::operator =(const UUID& uuid) {
+  _lowTime = uuid._lowTime;
+  _midTime = uuid._midTime;
+  _version = uuid._version;
+  _highTime = uuid._highTime;
+  _clockSeqHighRes = uuid._clockSeqHighRes;
+  _clockSeqLow = uuid._clockSeqLow;
+  _node = uuid._node;
+  return *this;
+}
+// Operators -

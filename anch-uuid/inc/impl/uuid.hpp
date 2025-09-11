@@ -21,55 +21,55 @@
 
 namespace anch {
 
-  inline std::string
-  UUID::toString() const {
-    std::ostringstream out;
-    out << std::hex
-    	<< std::setfill('0') << std::setw(8) << _lowTime << '-'
-    	<< std::setfill('0') << std::setw(4) << _midTime << '-'
-    	<< std::setfill('0') << std::setw(1) << static_cast<int>(_version)
-    	<< std::setfill('0') << std::setw(3) << _highTime << '-'
-    	<< std::setfill('0') << std::setw(2) << _clockSeqHighRes
-    	<< std::setfill('0') << std::setw(2) << _clockSeqLow << '-'
-    	<< std::setfill('0') << std::setw(12) << _node;
-    return out.str();
+  inline
+  bool
+  UUID::operator !=(const UUID& uuid) const {
+    return !(*this == uuid);
   }
 
-  inline UUID::operator std::string() const {
+  inline
+  UUID::operator std::string() const {
     return toString();
   }
 
-  inline uint32_t
+  inline
+  uint32_t
   UUID::getLowTime() const {
     return _lowTime;
   }
 
-  inline uint16_t
+  inline
+  uint16_t
   UUID::getMidTime() const {
     return _midTime;
   }
 
-  inline uint16_t
+  inline
+  uint16_t
   UUID::getHighTime() const {
     return _highTime;
   }
 
-  inline uint16_t
+  inline
+  uint16_t
   UUID::getClockSeqLow() const {
     return _clockSeqLow;
   }
 
-  inline uint16_t
+  inline
+  uint16_t
   UUID::getClockSeqHighRes() const {
     return _clockSeqHighRes;
   }
 
-  inline uint64_t
+  inline
+  uint64_t
   UUID::getNode() const {
     return _node;
   }
 
-  inline anch::UUID::Version
+  inline
+  anch::UUID::Version
   UUID::getVersion() const {
     return _version;
   }

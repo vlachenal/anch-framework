@@ -4,6 +4,9 @@
 #include <chrono>
 
 #include "json/json.hpp"
+
+#include "uuid.hpp"
+
 #include "ut/assert.hpp"
 #include "ut/unit.hpp"
 
@@ -13,6 +16,9 @@ using anch::json::Factory;
 using anch::json::MappingError;
 using anch::json::ErrorCode;
 using anch::json::JSONMapper;
+#ifdef ANCH_UUID
+using anch::UUID;
+#endif
 
 
 template<typename T>
@@ -121,6 +127,9 @@ struct Toto {
   std::optional<std::string> empty;
   std::shared_ptr<std::string> ptr;
   std::string* null = NULL;
+#ifdef ANCH_UUID
+  UUID uuid;
+#endif
   std::string getClass() const {
     return "Toto";
   }
@@ -137,6 +146,9 @@ struct Toto {
       && anch::ut::equalsPtr("Toto::null", null, toto.null)
       && anch::ut::equals("Toto::empty", empty, toto.empty)
       && anch::ut::equals("Toto::tata", tata, toto.tata)
+#ifdef ANCH_UUID
+      && anch::ut::equals("Toto::uuid", uuid, toto.uuid)
+#endif
       ;
   }
 };
@@ -160,7 +172,11 @@ operator<<(std::ostream& os, const Toto& toto) {
      << ",ptr=" << (toto.ptr != NULL ? *toto.ptr : std::string("NULL"))
      << ",null=" << (toto.null != NULL ? *toto.null : std::string("NULL"))
      << ",empty=" << toto.empty
-     << ",tata=" << toto.tata << '}'
+     << ",tata=" << toto.tata
+#ifdef ANCH_UUID
+     << ",uuid=" << toto.uuid
+#endif
+     << '}'
     ;
   return os;
 }
@@ -183,6 +199,9 @@ anch::json::registerObject(ObjectMapper<Toto>& mapper) {
     .registerField<std::string>("ptr", &Toto::ptr)
     .registerField("null", &Toto::null)
     .registerField("class", std::function<std::string(const Toto&)>(&Toto::getClass))
+#ifdef ANCH_UUID
+    .registerField("uuid", &Toto::uuid)
+#endif
     ;
   std::cout << "Toto fields registered" << std::endl;
 }
@@ -259,7 +278,7 @@ Toto toto;
 //Toto* self = NULL;
 std::string VIEW = "VIEW";
 //const std::string totoRes = "{\"plop\":\"plop\",\"plip\":\"plip\",\"plap\":42,\"plup\":false,\"tata\":{\"ploum\":\"ploum\",\"view\":\"VIEW\",\"num_set\":[1,2,3],\"str_vector\":[\"4\",\"5\",\"6\"]},\"plep\":2.2,\"plyp\":3.3,\"lplyp\":4.4,\"self\":{\"plop\":\"self\",\"plip\":\"self_plip\",\"plap\":24,\"plup\":true,\"tata\":{\"ploum\":\"\",\"view\":\"\",\"num_set\":[],\"str_vector\":[]},\"plep\":5.5,\"plyp\":6.6,\"lplyp\":7.7,\"ptr\":\"self\",\"class\":\"Toto\"},\"ptr\":\"plop\",\"class\":\"Toto\"}";
-const std::string totoRes = "{\"plop\":\"plop\",\"plip\":\"plip\",\"plap\":42,\"plup\":false,\"tata\":{\"ploum\":\"ploum\",\"view\":\"VIEW\",\"num_set\":[1,2,3],\"str_vector\":[\"4\",\"5\",\"6\"]},\"plep\":2.2,\"plyp\":3.3,\"self\":{\"plop\":\"self\",\"plip\":\"self_plip\",\"plap\":24,\"plup\":true,\"tata\":{\"ploum\":\"\",\"view\":\"\",\"num_set\":[],\"str_vector\":[]},\"plep\":5.5,\"plyp\":6.6,\"ptr\":\"self\",\"class\":\"Toto\"},\"ptr\":\"plop\",\"class\":\"Toto\"}";
+const std::string totoRes = "{\"plop\":\"plop\",\"plip\":\"plip\",\"plap\":42,\"plup\":false,\"tata\":{\"ploum\":\"ploum\",\"view\":\"VIEW\",\"num_set\":[1,2,3],\"str_vector\":[\"4\",\"5\",\"6\"]},\"plep\":2.2,\"plyp\":3.3,\"self\":{\"plop\":\"self\",\"plip\":\"self_plip\",\"plap\":24,\"plup\":true,\"tata\":{\"ploum\":\"\",\"view\":\"\",\"num_set\":[],\"str_vector\":[]},\"plep\":5.5,\"plyp\":6.6,\"ptr\":\"self\",\"class\":\"Toto\",\"uuid\":\"00000000-0000-0000-0000-000000000000\"},\"ptr\":\"plop\",\"class\":\"Toto\",\"uuid\":\"b4c7f7e7-adaf-41d6-8ff9-150f6b867071\"}";
 
 Test res = {
   ._id = "deb94ebc-be28-4899-981a-29199b7a487d",
@@ -301,6 +320,7 @@ beforeAll() {
     tata.numSet = {1, 2, 3};
     tata.strVect = {"4","5","6"};
     toto.tata = tata;
+    toto.uuid = anch::UUID("b4c7f7e7-adaf-41d6-8ff9-150f6b867071");
   }
 }
 
@@ -510,7 +530,7 @@ testDeserUnknownFielWTFColOK() {
 void
 testFullDeserDefaultOptions() {
   anch::json::JSONMapper mapper(anch::json::DEFAULT_MAPPING_OPTIONS);
-  std::string json = "{\"plop\":\"plop\",\"plip\":\"plip\",\"plap\":42,\"plup\":false,\"tata\":{\"ploum\":\"ploum\",\"num_set\":[1,2,3],\"str_vector\":[\"4\",\"5\",\"6\"]},\"plep\":2.2,\"plyp\":3.3,\"self\":{\"plop\":\"self\",\"plip\":\"self_plip\",\"plap\":24,\"plup\":true,\"tata\":{\"ploum\":\"\",\"num_set\":[],\"str_vector\":[]},\"plep\":5.5,\"plyp\":6.6,\"ptr\":\"self\"},\"ptr\":\"plop\"}";
+  std::string json = "{\"plop\":\"plop\",\"plip\":\"plip\",\"plap\":42,\"plup\":false,\"tata\":{\"ploum\":\"ploum\",\"num_set\":[1,2,3],\"str_vector\":[\"4\",\"5\",\"6\"]},\"plep\":2.2,\"plyp\":3.3,\"self\":{\"plop\":\"self\",\"plip\":\"self_plip\",\"plap\":24,\"plup\":true,\"tata\":{\"ploum\":\"\",\"num_set\":[],\"str_vector\":[]},\"plep\":5.5,\"plyp\":6.6,\"ptr\":\"self\"},\"ptr\":\"plop\",\"uuid\":\"b4c7f7e7-adaf-41d6-8ff9-150f6b867071\"}";
   //  std::string json = "{\"plop\":\"plop\",\"plip\":\"plip\",\"plap\":42,\"plup\":false,\"tata\":{\"ploum\":\"ploum\",\"num_set\":[1,2,3],\"str_vector\":[\"4\",\"5\",\"6\"]},\"plep\":2.2,\"plyp\":3.3,\"lplyp\":4.4,\"self\":{\"plop\":\"self\",\"plip\":\"self_plip\",\"plap\":24,\"plup\":true,\"tata\":{\"ploum\":\"\",\"num_set\":[],\"str_vector\":[]},\"plep\":5.5,\"plyp\":6.6,\"lplyp\":7.7,\"ptr\":\"self\"},\"ptr\":\"plop\"}";
   // {"plop":"plop","plip":"plip","plap":42,"plup":false,"tata":{"ploum":"ploum","num_set":[1,2,3],"str_vector":["4","5","6"]},"plep":2.2,"plyp":3.3,"lplyp":4.4,"self":{"plop":"self","plip":"self_plip","plap":24,"plup":true,"tata":{"ploum":"","num_set":[],"str_vector":[]},"plep":5.5,"plyp":6.6,"lplyp":7.7,"ptr":"self"},"ptr":"plop"}
   // {"plop":"plop","plip":"plip","plap":42,"plup":false,"tata":{"ploum":"ploum","num_set":[1,2,3],"str_vector":["4","5","6"]},"plep":2.2,"plyp":3.3,"lplyp":4.4,"self":{"plop":"self","plip":"self_plip","plap":24,"plup":true,"tata":{"ploum":"","num_set":[],"str_vector":[]},"plep":5.5,"plyp":6.6,"lplyp":7.7,"ptr":"self","class":"Toto"},"ptr":"plop","class":"Toto"}

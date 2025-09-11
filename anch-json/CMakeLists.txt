@@ -29,6 +29,10 @@ else()
 endif()
 add_definitions(${ANCH_JSON_COMPILE_FLAGS})
 
+if(${ANCH_UUID})
+  add_definitions("-D ANCH_UUID")
+endif()
+
 # Includes location
 include_directories(
   inc
@@ -97,6 +101,7 @@ if(ANCH_JSON_UNITARY_UTILS)
 
   link_directories(
     ${ANCH_CLI_LIBRARY_DIR}
+    ${ANCH_UUID_LIBRARY_DIR}
   )
 
   file(
@@ -114,6 +119,7 @@ if(ANCH_JSON_UNITARY_UTILS)
     anch-json-formatter
     anch-json
     anch-cli
+    anch-uuid
   )
 
   set_target_properties(
@@ -138,12 +144,14 @@ if(ANCH_JSON_UNITARY_TEST)
     ${ANCH_JSON_INCLUDES_DIR}
     ${ANCH_CLI_INCLUDES_DIR}
     ${ANCH_UT_INCLUDES_DIR}
+    ${ANCH_UUID_INCLUDES_DIR}
     )
 
   link_directories(
     ${ANCH_UUID_LIBRARY_DIR}
     ${ANCH_CLI_LIBRARY_DIR}
     ${ANCH_UT_LIBRARY_DIR}
+    ${ANCH_UUID_LIBRARY_DIR}
     )
 
   # Build JSON lexer unit tests +

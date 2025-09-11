@@ -17,48 +17,49 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
+#ifdef ANCH_UUID
 #include "json/primitiveMapper.hpp"
 
 #include <string>
 
-#include "json/lexer.hpp"
+#include "uuid.hpp"
 
 
 using anch::json::PrimitiveMapper;
 
 
-// PrimitiveMapper specialization for std::string +
+// PrimitiveMapper specialization for anch::UUID +
 template<>
-PrimitiveMapper<std::string>::PrimitiveMapper():
-  anch::json::GenericMapper<PrimitiveMapper<std::string>,std::string>() {
+PrimitiveMapper<anch::UUID>::PrimitiveMapper():
+  anch::json::GenericMapper<PrimitiveMapper<anch::UUID>,anch::UUID>() {
   // Nothing to do
 }
 
 template<>
-PrimitiveMapper<std::string>::~PrimitiveMapper() {
+PrimitiveMapper<anch::UUID>::~PrimitiveMapper() {
   // Nothing to do
 }
 
 template<>
 void
-PrimitiveMapper<std::string>::serializeValue(const std::string& value, anch::json::WriterContext& context) const {
+PrimitiveMapper<anch::UUID>::serializeValue(const anch::UUID& value, anch::json::WriterContext& context) const {
   context.output.put(anch::json::STRING_DELIMITER)
-    .write(value.data(), static_cast<std::streamsize>(value.size()))
+    .write(value.toString().data(), 36)
     .put(anch::json::STRING_DELIMITER);
 }
 
 template<>
 bool
-PrimitiveMapper<std::string>::deserializeValue(std::string& value, anch::json::ReaderContext& context) const {
-  return anch::json::lexString(value, context);
+PrimitiveMapper<anch::UUID>::deserializeValue(anch::UUID& value, anch::json::ReaderContext& context) const {
+  std::string uuid;
+  if(!anch::json::lexString(uuid, context)) {
+    return false;
+  }
+  value.parse(uuid);
+  return true;
 }
 
-template class PrimitiveMapper<std::string>;
-// PrimitiveMapper specialization for std::string -
+template class PrimitiveMapper<anch::UUID>;
+// PrimitiveMapper specialization for anch::UUID -
 
-// PrimitiveMapper specialization for anch::date::Date +
-#ifdef ANCH_DATE
-#include "date/date.hpp"
-using anch::date::Date;
 #endif
-// PrimitiveMapper specialization for anch::date::Date -
