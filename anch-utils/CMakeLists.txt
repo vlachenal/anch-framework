@@ -10,7 +10,7 @@ include(AnchUtils.cmake.in)
 
 # Check GCC version +
 execute_process(COMMAND ${CMAKE_C_COMPILER} -dumpversion
-                OUTPUT_VARIABLE GCC_VERSION)
+  OUTPUT_VARIABLE GCC_VERSION)
 if (GCC_VERSION VERSION_LESS 8.0)
   message(FATAL_ERROR "Version < 8.0. This library is based on C++17 standard. Exit.")
 elseif(GCC_VERSION VERSION_GREATER 10.0 OR GCC_VERSION VERSION_EQUAL 10.0)
@@ -49,21 +49,20 @@ file(
 install(
   DIRECTORY inc/ DESTINATION ${ANCH_UTILS_INSTALL_INC_DIR}
   FILES_MATCHING PATTERN "*.hpp"
-  )
+)
 
 # Unit tests
 if(ANCH_UTILS_UNIT_TEST)
 
   # Includes location
   include_directories(
-    inc
     ${ANCH_UT_INCLUDES_DIR}
-    )
+  )
 
   link_directories(
     ${ANCH_UT_LIBRARY_DIR}
     ${ANCH_CLI_LIBRARY_DIR}
-    )
+  )
 
   # Build thread pool unit test +
   file(
@@ -184,18 +183,18 @@ if(ANCH_UTILS_UNIT_TEST)
     GLOB_RECURSE
     test_optional
     test/testOptional.cpp
-    )
+  )
 
   add_executable(
     anch-optional-test
     ${test_optional}
-    )
+  )
 
   target_link_libraries(
     anch-optional-test
     anch-unit
     anch-cli
-    )
+  )
   # Build optional unit test -
 
   # Build flux unit test +
@@ -203,18 +202,18 @@ if(ANCH_UTILS_UNIT_TEST)
     GLOB_RECURSE
     test_flux
     test/testFlux.cpp
-    )
+  )
 
   add_executable(
     anch-flux-test
     ${test_flux}
-    )
+  )
 
   target_link_libraries(
     anch-flux-test
     anch-unit
     anch-cli
-    )
+  )
   # Build flux unit test -
 
   enable_testing()
