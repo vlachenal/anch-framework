@@ -32,7 +32,9 @@ endif()
 add_definitions(${ANCH_DATE_COMPILE_FLAGS})
 
 # Includes location
-include_directories(inc)
+include_directories(
+  inc
+)
 
 # Retrieve every files in project
 file(
@@ -85,7 +87,6 @@ endif(ANCH_DATE_STATIC_LIB)
 # Unitary tests
 if(ANCH_DATE_UNITARY_TEST)
   include_directories(
-    inc
     ${ANCH_CLI_INCLUDES_DIR}
     ${ANCH_UT_INCLUDES_DIR}
     )
