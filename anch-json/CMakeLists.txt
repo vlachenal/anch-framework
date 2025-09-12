@@ -10,7 +10,7 @@ include(AnchJson.cmake.in)
 
 # Check GCC version +
 execute_process(COMMAND ${CMAKE_C_COMPILER} -dumpversion
-                OUTPUT_VARIABLE GCC_VERSION)
+  OUTPUT_VARIABLE GCC_VERSION)
 if (GCC_VERSION VERSION_LESS 13.0)
   message(FATAL_ERROR "Version < 13.0. This library is based on C++23 standard. Exit.")
 else()
@@ -36,24 +36,28 @@ endif()
 # Includes location
 include_directories(
   inc
-  ${ANCH_UUID_INCLUDES_DIR}
   ${ANCH_UTILS_INCLUDES_DIR}
   ${ANCH_EVENTS_INCLUDES_DIR}
+)
+if(ANCH_UUID)
+  include_directories(
+    ${ANCH_UUID_INCLUDES_DIR}
   )
+endif(ANCH_UUID)
 
 # Retrieve every files in project
 file(
   GLOB_RECURSE
   source_files
   src/*
-  )
+)
 
 # Build objects
 add_library(
   anch-json-obj
   OBJECT
   ${source_files}
-  )
+)
 
 ## Dynamic library +
 add_library(
@@ -65,12 +69,12 @@ add_library(
 install(
   DIRECTORY inc/ DESTINATION ${ANCH_JSON_INSTALL_INC_DIR}
   FILES_MATCHING PATTERN "*.hpp"
-  )
+)
 
 install(
   TARGETS anch-json
   LIBRARY DESTINATION ${ANCH_JSON_INSTALL_LIB_DIR}
-  )
+)
 ## Dynamic library -
 
 ## Static library +
@@ -79,31 +83,31 @@ if(ANCH_JSON_STATIC_LIB)
     anch-json-static
     STATIC
     $<TARGET_OBJECTS:anch-json-obj>
-    )
+  )
   set_target_properties(anch-json-static PROPERTIES OUTPUT_NAME anch-json)
 
   install(
     TARGETS anch-json-static
     ARCHIVE DESTINATION ${ANCH_JSON_INSTALL_LIB_DIR}
-    )
+  )
 endif(ANCH_JSON_STATIC_LIB)
 ## Static library -
 
 
 ## Utilities +
-if(ANCH_JSON_UNITARY_UTILS)
-  include_directories(
-    inc
-    ${ANCH_EVENTS_INCLUDES_DIR}
-    ${ANCH_JSON_INCLUDES_DIR}
-    ${ANCH_CLI_INCLUDES_DIR}
-    )
-
+include_directories(
+  ${ANCH_CLI_INCLUDES_DIR}
+)
+link_directories( # use in utils and unit tests
+  ${ANCH_CLI_LIBRARY_DIR}
+)
+if(ANCH_UUID)
   link_directories(
-    ${ANCH_CLI_LIBRARY_DIR}
     ${ANCH_UUID_LIBRARY_DIR}
   )
+endif(ANCH_UUID)
 
+if(ANCH_JSON_UTILS)
   file(
     GLOB_RECURSE
     json_formatter
@@ -119,40 +123,36 @@ if(ANCH_JSON_UNITARY_UTILS)
     anch-json-formatter
     anch-json
     anch-cli
-    anch-uuid
   )
+  if(ANCH_UUID)
+    target_link_libraries(
+      anch-json-formatter
+      anch-uuid
+    )
+  endif(ANCH_UUID)
 
   set_target_properties(
     anch-json-formatter
     PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/utils
   )
-endif(ANCH_JSON_UNITARY_UTILS)
+endif(ANCH_JSON_UTILS)
 ## Utilities -
 
 
 # Unitary tests
 if(ANCH_JSON_UNITARY_TEST)
   configure_file(test/toto.json toto.json COPYONLY)
+  configure_file(test/toto_uuid.json toto_uuid.json COPYONLY)
   configure_file(test/totos.json totos.json COPYONLY)
   configure_file(test/data_set.json data_set.json COPYONLY)
 
   include_directories(
-    inc
-    ${ANCH_EVENTS_INCLUDES_DIR}
-    ${ANCH_UTILS_INCLUDES_DIR}
-    ${ANCH_JSON_INCLUDES_DIR}
-    ${ANCH_CLI_INCLUDES_DIR}
     ${ANCH_UT_INCLUDES_DIR}
-    ${ANCH_UUID_INCLUDES_DIR}
-    )
-
+  )
   link_directories(
-    ${ANCH_UUID_LIBRARY_DIR}
-    ${ANCH_CLI_LIBRARY_DIR}
     ${ANCH_UT_LIBRARY_DIR}
-    ${ANCH_UUID_LIBRARY_DIR}
-    )
+  )
 
   # Build JSON lexer unit tests +
   file(
@@ -171,8 +171,13 @@ if(ANCH_JSON_UNITARY_TEST)
     anch-json
     anch-cli
     anch-unit
-    anch-uuid
   )
+  if(ANCH_UUID)
+    target_link_libraries(
+      anch-json-lexer-test
+      anch-uuid
+    )
+  endif(ANCH_UUID)
   # Build JSON lexer unit tests -
 
   # Build JSON mapper unit tests +
@@ -192,8 +197,13 @@ if(ANCH_JSON_UNITARY_TEST)
     anch-json
     anch-cli
     anch-unit
-    anch-uuid
   )
+  if(ANCH_UUID)
+    target_link_libraries(
+      anch-json-mapper-test
+      anch-uuid
+    )
+  endif(ANCH_UUID)
   # Build JSON mapper unit tests -
 
   # Build JSON reader unit tests +
@@ -213,8 +223,13 @@ if(ANCH_JSON_UNITARY_TEST)
     anch-json
     anch-cli
     anch-unit
-    anch-uuid
   )
+  if(ANCH_UUID)
+    target_link_libraries(
+      anch-json-reader
+      anch-uuid
+    )
+  endif(ANCH_UUID)
   # Build JSON reader unit tests -
 
   # Build JSON bench unit tests +
@@ -233,8 +248,13 @@ if(ANCH_JSON_UNITARY_TEST)
     anch-json-bench
     anch-json
     anch-cli
-    anch-uuid
   )
+  if(ANCH_UUID)
+    target_link_libraries(
+      anch-json-bench
+      anch-uuid
+    )
+  endif(ANCH_UUID)
   # Build JSON bench unit tests -
 
   enable_testing()

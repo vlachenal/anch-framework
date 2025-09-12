@@ -273,7 +273,11 @@ namespace plop {
 Toto toto;
 //Toto* self = NULL;
 std::string VIEW = "VIEW";
+#ifdef ANCH_UUID
 const std::string totoRes = "{\"plop\":\"plop\",\"plip\":\"plip\",\"plap\":42,\"plup\":false,\"tata\":{\"ploum\":\"ploum\",\"view\":\"VIEW\",\"num_set\":[1,2,3],\"str_vector\":[\"4\",\"5\",\"6\"]},\"plep\":2.2,\"plyp\":3.3,\"self\":{\"plop\":\"self\",\"plip\":\"self_plip\",\"plap\":24,\"plup\":true,\"tata\":{\"ploum\":\"\",\"view\":\"\",\"num_set\":[],\"str_vector\":[]},\"plep\":5.5,\"plyp\":6.6,\"ptr\":\"self\",\"class\":\"Toto\",\"uuid\":\"00000000-0000-0000-0000-000000000000\"},\"ptr\":\"plop\",\"class\":\"Toto\",\"uuid\":\"b4c7f7e7-adaf-41d6-8ff9-150f6b867071\"}";
+#else
+const std::string totoRes = "{\"plop\":\"plop\",\"plip\":\"plip\",\"plap\":42,\"plup\":false,\"tata\":{\"ploum\":\"ploum\",\"view\":\"VIEW\",\"num_set\":[1,2,3],\"str_vector\":[\"4\",\"5\",\"6\"]},\"plep\":2.2,\"plyp\":3.3,\"self\":{\"plop\":\"self\",\"plip\":\"self_plip\",\"plap\":24,\"plup\":true,\"tata\":{\"ploum\":\"\",\"view\":\"\",\"num_set\":[],\"str_vector\":[]},\"plep\":5.5,\"plyp\":6.6,\"ptr\":\"self\",\"class\":\"Toto\"},\"ptr\":\"plop\",\"class\":\"Toto\"}";
+#endif
 
 Test res = {
   ._id = "deb94ebc-be28-4899-981a-29199b7a487d",
@@ -315,7 +319,9 @@ beforeAll() {
     tata.numSet = {1, 2, 3};
     tata.strVect = {"4","5","6"};
     toto.tata = tata;
+#ifdef ANCH_UUID
     toto.uuid = anch::UUID("b4c7f7e7-adaf-41d6-8ff9-150f6b867071");
+#endif
   }
 }
 
@@ -525,7 +531,11 @@ testDeserUnknownFielWTFColOK() {
 void
 testFullDeserDefaultOptions() {
   anch::json::JSONMapper mapper(anch::json::DEFAULT_MAPPING_OPTIONS);
+#ifdef ANCH_UUID
   std::string json = "{\"plop\":\"plop\",\"plip\":\"plip\",\"plap\":42,\"plup\":false,\"tata\":{\"ploum\":\"ploum\",\"num_set\":[1,2,3],\"str_vector\":[\"4\",\"5\",\"6\"]},\"plep\":2.2,\"plyp\":3.3,\"self\":{\"plop\":\"self\",\"plip\":\"self_plip\",\"plap\":24,\"plup\":true,\"tata\":{\"ploum\":\"\",\"num_set\":[],\"str_vector\":[]},\"plep\":5.5,\"plyp\":6.6,\"ptr\":\"self\"},\"ptr\":\"plop\",\"uuid\":\"b4c7f7e7-adaf-41d6-8ff9-150f6b867071\"}";
+#else
+  std::string json = "{\"plop\":\"plop\",\"plip\":\"plip\",\"plap\":42,\"plup\":false,\"tata\":{\"ploum\":\"ploum\",\"num_set\":[1,2,3],\"str_vector\":[\"4\",\"5\",\"6\"]},\"plep\":2.2,\"plyp\":3.3,\"self\":{\"plop\":\"self\",\"plip\":\"self_plip\",\"plap\":24,\"plup\":true,\"tata\":{\"ploum\":\"\",\"num_set\":[],\"str_vector\":[]},\"plep\":5.5,\"plyp\":6.6,\"ptr\":\"self\"},\"ptr\":\"plop\"}";
+#endif
   Toto expected = toto;
 
   std::cout << "Deserialize " << json << std::endl;
@@ -554,7 +564,11 @@ testFullDeserDefaultOptions() {
 void
 testFulDeserDiscard128() {
   anch::json::JSONMapper mapper({.deserialize_max_discard_char = 128});
+#ifdef ANCH_UUID
+  std::ifstream iss("toto_uuid.json");
+#else
   std::ifstream iss("toto.json");
+#endif
   std::cout << "Deserialize toto.json" << std::endl;
   try {
     Toto deserToto = mapper.deserialize<Toto>(iss);
