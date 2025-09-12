@@ -90,7 +90,6 @@ endif(ANCH_UUID_STATIC_LIB)
 if(ANCH_UUID_UNITARY_TEST)
 
   include_directories(
-    inc
     ${ANCH_UT_INCLUDES_DIR}
     )
 
