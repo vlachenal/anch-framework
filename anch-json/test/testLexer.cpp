@@ -3,11 +3,14 @@
 #include <chrono>
 
 #include "json/lexer.hpp"
+
 #include "ut/assert.hpp"
 #include "ut/unit.hpp"
 
+
 using anch::json::MappingError;
 using anch::json::ErrorCode;
+
 
 // Boolean +
 void
@@ -408,6 +411,65 @@ testArraySet() {
 // Array -
 
 // Map +
+#include <map>
+
+void
+testNullMap() {
+  std::istringstream sis("null");
+  anch::json::ReaderContext context(sis, anch::json::DEFAULT_MAPPING_OPTIONS);
+  std::map<std::string,anch::json::jint> value;
+  anch::json::PushItem push = [&](const std::string& key, anch::json::ReaderContext& ctxt) {
+    anch::json::jint val;
+    if(anch::json::lexInteger(val, ctxt)) {
+      value[key] = val;
+    }
+  };
+  anch::json::lexMap(push, context);
+  std::map<std::string,anch::json::jint> expected = {};
+  anch::ut::assert(value.empty(), "Result should not have value");
+}
+
+void
+testEmptyMap() {
+  std::istringstream sis("{}");
+  anch::json::ReaderContext context(sis, anch::json::DEFAULT_MAPPING_OPTIONS);
+  std::map<std::string,anch::json::jint> value;
+  anch::json::PushItem push = [&](const std::string& key, anch::json::ReaderContext& ctxt) {
+    anch::json::jint val;
+    if(anch::json::lexInteger(val, ctxt)) {
+      value[key] = val;
+    }
+  };
+  anch::json::lexMap(push, context);
+  std::map<std::string,anch::json::jint> expected = {};
+  anch::ut::assert(value.empty(), "Result should not have value");
+}
+
+void
+testMap() {
+  std::istringstream sis("{\"plop\":1,\"plip\":2,\"plap\":3}");
+  anch::json::ReaderContext context(sis, anch::json::DEFAULT_MAPPING_OPTIONS);
+  std::map<std::string,anch::json::jint> value;
+  anch::json::PushItem push = [&value](const std::string& key, anch::json::ReaderContext& ctxt) {
+    anch::json::jint val;
+    if(anch::json::lexInteger(val, ctxt)) {
+      value[key] = val;
+    }
+  };
+  anch::json::lexMap(push, context);
+  for(auto iter = value.cbegin() ; iter != value.cend() ; ++iter) {
+    std::cout << iter->first << '=' << iter->second << std::endl;
+  }
+  std::map<std::string,anch::json::jint> expected = {
+    {"plop", 1},
+    {"plip", 2},
+    {"plap", 3}
+  };
+  anch::ut::assert(expected.size() == value.size(), "Number of items should be {} ; found {}", expected.size(), value.size());
+  for(auto iter = expected.cbegin() ; iter != expected.cend() ; ++iter) {
+    anch::ut::assert(iter->second == value[iter->first], "{}={} differs from {}={}", iter->first, iter->second, iter->first, value[iter->first]);
+  }
+}
 // Map -
 
 // Object +
@@ -462,6 +524,9 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("lexer-array-set", testArraySet)
     // Array -
     // Map +
+    .add("lexer-map-null", testNullMap)
+    .add("lexer-map-empty", testEmptyMap)
+    .add("lexer-map", testMap)
     // Map -
     // Object +
     // Object -

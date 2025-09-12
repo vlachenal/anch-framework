@@ -99,8 +99,7 @@ anch::json::objectHasValueLex(anch::json::ReaderContext& context) {
 }
 
 void
-anch::json::lexObject(const std::map<std::string,
-		      anch::json::LexFunc>& readers,
+anch::json::lexObject(const std::map<std::string,anch::json::LexFunc>& readers,
 		      std::set<std::string>& fields,
 		      anch::json::ReaderContext& context) {
   char current = '\0';

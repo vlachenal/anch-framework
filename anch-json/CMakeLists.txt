@@ -274,6 +274,10 @@ if(ANCH_JSON_UNITARY_TEST)
   add_test(lexer-array-list ${EXECUTABLE_OUTPUT_PATH}/anch-json-lexer-test -t lexer-array-list)
   add_test(lexer-array-vector ${EXECUTABLE_OUTPUT_PATH}/anch-json-lexer-test -t lexer-array-vector)
   add_test(lexer-array-set ${EXECUTABLE_OUTPUT_PATH}/anch-json-lexer-test -t lexer-array-set)
+  # map
+  add_test(lexer-map-null ${EXECUTABLE_OUTPUT_PATH}/anch-json-lexer-test -t lexer-map-null)
+  add_test(lexer-map-empty ${EXECUTABLE_OUTPUT_PATH}/anch-json-lexer-test -t lexer-map-empty)
+  add_test(lexer-map ${EXECUTABLE_OUTPUT_PATH}/anch-json-lexer-test -t lexer-map)
   # Lexer unit tests -
 
   # Mapper unit tests +
