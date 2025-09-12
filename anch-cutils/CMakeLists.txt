@@ -10,7 +10,7 @@ include(AnchCutils.cmake.in)
 
 # Check GCC version +
 execute_process(COMMAND ${CMAKE_C_COMPILER} -dumpversion
-                OUTPUT_VARIABLE GCC_VERSION)
+  OUTPUT_VARIABLE GCC_VERSION)
 if (GCC_VERSION VERSION_LESS 10.0)
   message(FATAL_ERROR "Version < 10.0. This library is based on C++20 standard. Exit.")
 elseif(GCC_VERSION VERSION_GREATER 10.0 OR GCC_VERSION VERSION_EQUAL 10.0)
@@ -33,21 +33,21 @@ add_definitions(${ANCH_CUTILS_COMPILE_FLAGS})
 include_directories(
   inc
   ${ANCH_UTILS_INCLUDES_DIR}
-  )
+)
 
 # Retrieve every files in project
 file(
   GLOB_RECURSE
   source_files
   src/*
-  )
+)
 
 # Build objects
 add_library(
   anch-cutils-obj
   OBJECT
   ${source_files}
-  )
+)
 
 ## Dynamic library +
 add_library(
@@ -59,12 +59,12 @@ add_library(
 install(
   DIRECTORY inc/ DESTINATION ${ANCH_CUTILS_INSTALL_INC_DIR}
   FILES_MATCHING PATTERN "*.hpp"
-  )
+)
 
 install(
   TARGETS anch-cutils
   LIBRARY DESTINATION ${ANCH_CUTILS_INSTALL_LIB_DIR}
-  )
+)
 ## Dynamic library -
 
 ## Static library +
@@ -73,13 +73,13 @@ if(ANCH_CUTILS_STATIC_LIB)
     anch-cutils-static
     STATIC
     $<TARGET_OBJECTS:anch-cutils-obj>
-    )
+  )
   set_target_properties(anch-cutils-static PROPERTIES OUTPUT_NAME anch-cutils)
 
   install(
     TARGETS anch-cutils-static
     ARCHIVE DESTINATION ${ANCH_CUTILS_INSTALL_LIB_DIR}
-    )
+  )
 endif(ANCH_CUTILS_STATIC_LIB)
 ## Static library -
 
@@ -88,30 +88,38 @@ endif(ANCH_CUTILS_STATIC_LIB)
 if(ANCH_CUTILS_UNITARY_TEST)
 
   include_directories(
-    inc
-    ${ANCH_UTILS_INCLUDES_DIR}
     ${ANCH_JSON_INCLUDES_DIR}
     ${ANCH_UT_INCLUDES_DIR}
     ${ANCH_CLI_INCLUDES_DIR}
+  )
+  if(ANCH_UUID)
+    include_directories(
+      ${ANCH_UUID_INCLUDES_DIR}
     )
+  endif(ANCH_UUID)
 
   link_directories(
     ${ANCH_JSON_LIBRARY_DIR}
     ${ANCH_UT_LIBRARY_DIR}
     ${ANCH_CLI_LIBRARY_DIR}
+  )
+  if(ANCH_UUID)
+    link_directories(
+      ${ANCH_UUID_LIBRARY_DIR}
     )
+  endif(ANCH_UUID)
 
   # CStream unit tests +
   file(
     GLOB_RECURSE
     test_cstream
     test/testCStream.cpp
-    )
+  )
 
   add_executable(
     anch-cstream-test
     ${test_cstream}
-    )
+  )
 
   target_link_libraries(
     anch-cstream-test
@@ -119,7 +127,13 @@ if(ANCH_CUTILS_UNITARY_TEST)
     anch-json
     anch-unit
     anch-cli
+  )
+  if(ANCH_UUID)
+    target_link_libraries(
+      anch-cstream-test
+      anch-uuid
     )
+  endif(ANCH_UUID)
   # CStream unit tests -
 
   enable_testing()
