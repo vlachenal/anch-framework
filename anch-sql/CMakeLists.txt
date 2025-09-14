@@ -10,20 +10,18 @@ include(AnchSQL.cmake.in)
 
 # Check GCC version +
 execute_process(COMMAND ${CMAKE_C_COMPILER} -dumpversion
-                OUTPUT_VARIABLE GCC_VERSION)
-if (GCC_VERSION VERSION_LESS 8.0)
-  message(FATAL_ERROR "Version < 8.0. This library is based on C++17 standard. Exit.")
-elseif(GCC_VERSION VERSION_GREATER 10.0 OR GCC_VERSION VERSION_EQUAL 10.0)
-  message(STATUS "Version >= 10.0 use -std=c++20")
-  add_definitions("-std=c++20")
+  OUTPUT_VARIABLE GCC_VERSION)
+if (GCC_VERSION VERSION_LESS 13.0)
+  message(FATAL_ERROR "Version < 13.0. This library is based on C++23 standard. Exit.")
 else()
-  message(STATUS "Version >= 8.0 use -std=c++17")
-  add_definitions("-std=c++17")
+  message(STATUS "Version >= 13.0 use -std=c++23")
+  add_definitions("-std=c++23")
 endif()
 # Check GCC version -
 
 # Add GCC definitions
-add_definitions("-Wall -Wextra -Werror -Wuninitialized -Wconversion -Wsign-conversion -Wformat-security -fstack-protector-all -Wstack-protector --param ssp-buffer-size=4 -ftrapv  -z relro,now -fPIC")
+add_definitions("-Wall -Wextra -Werror -Wuninitialized -Wconversion -Wsign-conversion -Wformat-security -fstack-protector-all -Wstack-protector --param ssp-buffer-size=4 -ftrapv -D_FORTIFY_SOURCE=2 -z relro,now -fPIC")
+#add_definitions("-Wall -Wextra -Werror -Wuninitialized -Wconversion -Wsign-conversion -Wformat-security -fstack-protector-all -Wstack-protector --param ssp-buffer-size=4 -ftrapv -z relro,now -fPIC")
 if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
   add_definitions("-D ANCH_WINDOWS")
 else()
@@ -37,43 +35,43 @@ include_directories(
   ${ANCH_UTILS_INCLUDES_DIR}
   ${ANCH_RES_INCLUDES_DIR}
   ${ANCH_DATE_INCLUDES_DIR}
-  )
+)
 
 # Retrieve every files in project
 file(
   GLOB_RECURSE
   source_files
   src/*
-  )
+)
 
 # Build objects
 add_library(
   anch-sql-obj
   OBJECT
   ${source_files}
-  )
+)
 
 ## Dynamic library +
 add_library(
   anch-sql
   SHARED
   $<TARGET_OBJECTS:anch-sql-obj>
-  )
+)
 
 target_link_libraries(
   anch-sql
   ${CMAKE_DL_LIBS}
-  )
+)
 
 install(
   DIRECTORY inc/ DESTINATION ${ANCH_SQL_INSTALL_INC_DIR}
   FILES_MATCHING PATTERN "*.hpp"
-  )
+)
 
 install(
   TARGETS anch-sql
   LIBRARY DESTINATION ${ANCH_SQL_INSTALL_LIB_DIR}
-  )
+)
 ## Dynamic library -
 
 ## Static library +
@@ -82,13 +80,13 @@ if(ANCH_SQL_STATIC_LIB)
     anch-sql-static
     STATIC
     $<TARGET_OBJECTS:anch-sql-obj>
-    )
+  )
   set_target_properties(anch-sql-static PROPERTIES OUTPUT_NAME anch-sql)
 
   install(
     TARGETS anch-sql-static
     ARCHIVE DESTINATION ${ANCH_SQL_INSTALL_LIB_DIR}
-    )
+  )
 endif(ANCH_SQL_STATIC_LIB)
 ## Static library -
 
@@ -110,44 +108,40 @@ if(ANCH_SQL_MYSQL)
   # MySQL includes location
   include_directories(
     mysql/inc
-    inc
     ${MySQL_INCLUDE_DIRS}
-    ${ANCH_UTILS_INCLUDES_DIR}
-    ${ANCH_RES_INCLUDES_DIR}
-    ${ANCH_DATE_INCLUDES_DIR}
-    )
+  )
 
   # Retrieve every files in MySQL project
   file(
     GLOB_RECURSE
     mysql_source_files
     mysql/*
-    )
+  )
 
   # Build objects
   add_library(
     anch-mysql-obj
     OBJECT
     ${mysql_source_files}
-    )
+  )
 
   ## Dynamic library +
   add_library(
     anch-mysql
     SHARED
     $<TARGET_OBJECTS:anch-mysql-obj>
-    )
+  )
   target_link_libraries(anch-mysql ${MySQL_LIBRARIES})
 
   install(
     DIRECTORY mysql/inc/ DESTINATION ${ANCH_SQL_INSTALL_INC_DIR}
     FILES_MATCHING PATTERN "*.hpp"
-    )
+  )
 
   install(
     TARGETS anch-mysql
     LIBRARY DESTINATION ${ANCH_SQL_INSTALL_LIB_DIR}
-    )
+  )
   ## Dynamic library -
 
   ## Static library +
@@ -156,14 +150,14 @@ if(ANCH_SQL_MYSQL)
       anch-mysql-static
       STATIC
       $<TARGET_OBJECTS:anch-mysql-obj>
-      )
+    )
     set_target_properties(anch-mysql-static PROPERTIES OUTPUT_NAME anch-mysql)
     target_link_libraries(anch-mysql-static ${MySQL_LIBRARIES})
 
     install(
       TARGETS anch-mysql-static
       ARCHIVE DESTINATION ${ANCH_SQL_INSTALL_LIB_DIR}
-      )
+    )
   endif(ANCH_SQL_STATIC_LIB)
   ## Static library -
 
@@ -185,44 +179,40 @@ if(ANCH_SQL_POSTGRESQL)
   # PostgreSQL includes location
   include_directories(
     postgresql/inc
-    inc
     ${PostgreSQL_INCLUDE_DIRS}
-    ${ANCH_UTILS_INCLUDES_DIR}
-    ${ANCH_RES_INCLUDES_DIR}
-    ${ANCH_DATE_INCLUDES_DIR}
-    )
+  )
 
   # Retrieve every files in PostgreSQL project
   file(
     GLOB_RECURSE
     pg_source_files
     postgresql/*
-    )
+  )
 
   # Build objects
   add_library(
     anch-postgresql-obj
     OBJECT
     ${pg_source_files}
-    )
+  )
 
   ## Dynamic library +
   add_library(
     anch-postgresql
     SHARED
     $<TARGET_OBJECTS:anch-postgresql-obj>
-    )
+  )
   target_link_libraries(anch-postgresql ${PostgreSQL_LIBRARIES})
 
   install(
     DIRECTORY postgresql/inc/ DESTINATION ${ANCH_SQL_INSTALL_INC_DIR}
     FILES_MATCHING PATTERN "*.hpp"
-    )
+  )
 
   install(
     TARGETS anch-postgresql
     LIBRARY DESTINATION ${ANCH_SQL_INSTALL_LIB_DIR}
-    )
+  )
   ## Dynamic library -
 
   ## Static library +
@@ -231,14 +221,14 @@ if(ANCH_SQL_POSTGRESQL)
       anch-postgresql-static
       STATIC
       $<TARGET_OBJECTS:anch-postgresql-obj>
-      )
+    )
     set_target_properties(anch-postgresql-static PROPERTIES OUTPUT_NAME anch-postgresql)
     target_link_libraries(anch-postgresql-static ${PostgreSQL_LIBRARIES})
 
     install(
       TARGETS anch-postgresql-static
       ARCHIVE DESTINATION ${ANCH_SQL_INSTALL_LIB_DIR}
-      )
+    )
   endif(ANCH_SQL_STATIC_LIB)
   ## Static library -
 
@@ -262,42 +252,39 @@ if(ANCH_SQL_SQLITE3)
     sqlite/inc
     inc
     ${SQLite3_INCLUDE_DIRS}
-    ${ANCH_UTILS_INCLUDES_DIR}
-    ${ANCH_RES_INCLUDES_DIR}
-    ${ANCH_DATE_INCLUDES_DIR}
-    )
+  )
 
   # Retrieve every files in PostgreSQL project
   file(
     GLOB_RECURSE
     sqlite_source_files
     sqlite/*
-    )
+  )
 
   # Build objects
   add_library(
     anch-sqlite-obj
     OBJECT
     ${sqlite_source_files}
-    )
+  )
 
   ## Dynamic library +
   add_library(
     anch-sqlite
     SHARED
     $<TARGET_OBJECTS:anch-sqlite-obj>
-    )
+  )
   target_link_libraries(anch-sqlite ${SQLite3_LIBRARIES})
 
   install(
     DIRECTORY sqlite/inc/ DESTINATION ${ANCH_SQL_INSTALL_INC_DIR}
     FILES_MATCHING PATTERN "*.hpp"
-    )
+  )
 
   install(
     TARGETS anch-sqlite
     LIBRARY DESTINATION ${ANCH_SQL_INSTALL_LIB_DIR}
-    )
+  )
   ## Dynamic library -
 
   ## Static library +
@@ -306,14 +293,14 @@ if(ANCH_SQL_SQLITE3)
       anch-sqlite-static
       STATIC
       $<TARGET_OBJECTS:anch-sqlite-obj>
-      )
+    )
     set_target_properties(anch-sqlite-static PROPERTIES OUTPUT_NAME anch-sqlite)
     target_link_libraries(anch-sqlite-static ${SQLite3_LIBRARIES})
 
     install(
       TARGETS anch-sqlite-static
       ARCHIVE DESTINATION ${ANCH_SQL_INSTALL_LIB_DIR}
-      )
+    )
   endif(ANCH_SQL_STATIC_LIB)
   ## Static library -
 
@@ -327,14 +314,14 @@ if(ANCH_SQL_UNITARY_TEST)
   include_directories(
     ${ANCH_UT_INCLUDES_DIR}
     ${ANCH_CLI_INCLUDES_DIR}
-    )
+  )
 
   link_directories(
     ${ANCH_RES_LIBRARY_DIR}
     ${ANCH_DATE_LIBRARY_DIR}
     ${ANCH_UT_LIBRARY_DIR}
     ${ANCH_CLI_LIBRARY_DIR}
-    )
+  )
 
   # Build MySQL unitary test +
   if(ANCH_SQL_MYSQL)
@@ -343,12 +330,12 @@ if(ANCH_SQL_UNITARY_TEST)
       test_mysql
       inc/*
       test/testMySQL.cpp
-      )
+    )
 
     add_executable(
       anch-mysql-test
       ${test_mysql}
-      )
+    )
 
     target_link_libraries(
       anch-mysql-test
@@ -359,7 +346,7 @@ if(ANCH_SQL_UNITARY_TEST)
       anch-unit
       anch-cli
       ${MySQL_LIBRARIES}
-      )
+    )
   endif(ANCH_SQL_MYSQL)
   # Build MySQL unitary test -
 
@@ -370,12 +357,12 @@ if(ANCH_SQL_UNITARY_TEST)
       test_postgresql
       inc/*
       test/testPostgreSQL.cpp
-      )
+    )
 
     add_executable(
       anch-postgresql-test
       ${test_postgresql}
-      )
+    )
 
     target_link_libraries(
       anch-postgresql-test
@@ -386,7 +373,7 @@ if(ANCH_SQL_UNITARY_TEST)
       anch-unit
       anch-cli
       ${PostgreSQL_LIBRARIES}
-      )
+    )
   endif(ANCH_SQL_POSTGRESQL)
   # Build PostgreSQL unitary test -
 
@@ -397,12 +384,12 @@ if(ANCH_SQL_UNITARY_TEST)
       test_sqlite3
       inc/*
       test/testSQLite3.cpp
-      )
+    )
 
     add_executable(
       anch-sqlite3-test
       ${test_sqlite3}
-      )
+    )
 
     target_link_libraries(
       anch-sqlite3-test
@@ -413,7 +400,7 @@ if(ANCH_SQL_UNITARY_TEST)
       anch-unit
       anch-cli
       ${SQLite3_LIBRARIES}
-      )
+    )
   endif(ANCH_SQL_SQLITE3)
   # Build SQLite3 unitary test -
 
@@ -423,12 +410,12 @@ if(ANCH_SQL_UNITARY_TEST)
     test_sqlfactory
     inc/*
     test/testSQLConnectionFactory.cpp
-    )
+  )
 
   add_executable(
     anch-sql-connection-factory-test
     ${test_sqlfactory}
-    )
+  )
 
   target_link_libraries(
     anch-sql-connection-factory-test
@@ -437,7 +424,7 @@ if(ANCH_SQL_UNITARY_TEST)
     anch-date
     anch-unit
     anch-cli
-    )
+  )
   # Build SQL connection factory test -
 
   # Build SQL prepare statement placeholders +
@@ -446,12 +433,12 @@ if(ANCH_SQL_UNITARY_TEST)
     test_placeholders
     inc/*
     test/testPrepareStatementWildCards.cpp
-    )
+  )
 
   add_executable(
     anch-placeholders-test
     ${test_placeholders}
-    )
+  )
 
   target_link_libraries(
     anch-placeholders-test
@@ -460,7 +447,7 @@ if(ANCH_SQL_UNITARY_TEST)
     anch-date
     anch-unit
     anch-cli
-    )
+  )
   # Build SQL prepare statement placeholders -
 
   # Build SELECT builder unit tests +
@@ -469,12 +456,12 @@ if(ANCH_SQL_UNITARY_TEST)
     test_select_builder
     inc/*
     test/testSelectBuilder.cpp
-    )
+  )
 
   add_executable(
     anch-select-builder-test
     ${test_select_builder}
-    )
+  )
 
   target_link_libraries(
     anch-select-builder-test
@@ -483,7 +470,7 @@ if(ANCH_SQL_UNITARY_TEST)
     anch-date
     anch-unit
     anch-cli
-    )
+  )
   # Build SELECT builder unit tests -
 
   configure_file(test/anch.db anch.db COPYONLY)
