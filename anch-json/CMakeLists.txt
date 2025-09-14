@@ -29,7 +29,7 @@ else()
 endif()
 add_definitions(${ANCH_JSON_COMPILE_FLAGS})
 
-if(${ANCH_UUID})
+if(ANCH_UUID)
   add_definitions("-D ANCH_UUID")
 endif()
 
