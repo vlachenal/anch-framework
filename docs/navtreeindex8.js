@@ -1,13 +1,5 @@
 var NAVTREEINDEX8 =
 {
-"classanch_1_1sql_1_1_from_builder.html#a3f642010610f4c1cd4474942799373d6":[19,0,0,8,4,23],
-"classanch_1_1sql_1_1_from_builder.html#a3f642010610f4c1cd4474942799373d6":[20,0,0,11,4,23],
-"classanch_1_1sql_1_1_from_builder.html#a416114dc1fc959ae53541eb6f74b5242":[19,0,0,8,4,39],
-"classanch_1_1sql_1_1_from_builder.html#a416114dc1fc959ae53541eb6f74b5242":[20,0,0,11,4,39],
-"classanch_1_1sql_1_1_from_builder.html#a45d4cf0d476db21cd860ecd3de1c175d":[19,0,0,8,4,24],
-"classanch_1_1sql_1_1_from_builder.html#a45d4cf0d476db21cd860ecd3de1c175d":[20,0,0,11,4,24],
-"classanch_1_1sql_1_1_from_builder.html#a47b269f81b93afc6da39a08f5e48d93e":[19,0,0,8,4,15],
-"classanch_1_1sql_1_1_from_builder.html#a47b269f81b93afc6da39a08f5e48d93e":[20,0,0,11,4,15],
 "classanch_1_1sql_1_1_from_builder.html#a590a45623a39f48950db31ce4ba4f626":[19,0,0,8,4,30],
 "classanch_1_1sql_1_1_from_builder.html#a590a45623a39f48950db31ce4ba4f626":[20,0,0,11,4,30],
 "classanch_1_1sql_1_1_from_builder.html#a616b940a71a3d4d5d48bed910c62049d":[19,0,0,8,4,22],
@@ -249,5 +241,13 @@ var NAVTREEINDEX8 =
 "classanch_1_1sql_1_1_result_set.html#af378dd263c6a2dff0814dd299bda2e91":[19,0,0,8,13,3],
 "classanch_1_1sql_1_1_result_set.html#af378dd263c6a2dff0814dd299bda2e91":[20,0,0,11,13,3],
 "classanch_1_1sql_1_1_result_set.html#af68ff2db0d3c5f3039a7626dde2092a2":[19,0,0,8,13,4],
-"classanch_1_1sql_1_1_result_set.html#af68ff2db0d3c5f3039a7626dde2092a2":[20,0,0,11,13,4]
+"classanch_1_1sql_1_1_result_set.html#af68ff2db0d3c5f3039a7626dde2092a2":[20,0,0,11,13,4],
+"classanch_1_1sql_1_1_s_q_l_query.html":[19,0,0,8,22],
+"classanch_1_1sql_1_1_s_q_l_query.html":[20,0,0,11,22],
+"classanch_1_1sql_1_1_s_q_l_query.html#a0e6a0b50726488ea8aa1187888797616":[19,0,0,8,22,0],
+"classanch_1_1sql_1_1_s_q_l_query.html#a0e6a0b50726488ea8aa1187888797616":[20,0,0,11,22,0],
+"classanch_1_1sql_1_1_s_q_l_query.html#a1c9895d939e3bb07ab1e9f108f5fed24":[19,0,0,8,22,1],
+"classanch_1_1sql_1_1_s_q_l_query.html#a1c9895d939e3bb07ab1e9f108f5fed24":[20,0,0,11,22,1],
+"classanch_1_1sql_1_1_s_q_l_query.html#a3bf9506026e9cd6dbe95a096daa2e4c9":[19,0,0,8,22,2],
+"classanch_1_1sql_1_1_s_q_l_query.html#a3bf9506026e9cd6dbe95a096daa2e4c9":[20,0,0,11,22,2]
 };

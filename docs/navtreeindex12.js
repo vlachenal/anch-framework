@@ -1,15 +1,5 @@
 var NAVTREEINDEX12 =
 {
-"socket_client_runner_8hpp_source.html":[21,0,12,0,0,4],
-"socket_event_8hpp_source.html":[21,0,8,0,0,2],
-"socket_server_runner_8hpp_source.html":[21,0,12,0,0,5],
-"sql_connection_factory_8hpp_source.html":[21,0,11,0,0,5],
-"sql_exception_8hpp_source.html":[21,0,11,0,0,6],
-"sql_functions_8hpp_source.html":[21,0,11,0,0,0,6],
-"sql_query_8hpp_source.html":[21,0,11,0,0,0,7],
-"sql_shared_libraries_8hpp_source.html":[21,0,11,0,0,7],
-"sqlite3_connection_8hpp_source.html":[21,0,11,3,0,0,0],
-"sqlite3_prepared_statement_8hpp_source.html":[21,0,11,3,0,0,1],
 "sqlite3_result_set_8hpp_source.html":[21,0,11,3,0,0,2],
 "string_formatter_8hpp_source.html":[21,0,7,0,0,0,8],
 "string_utils_8hpp_source.html":[21,0,13,0,10],
@@ -249,5 +239,15 @@ var NAVTREEINDEX12 =
 "structanch_1_1rest_1_1_proxy_config.html":[20,0,0,10,15],
 "structanch_1_1rest_1_1_verb.html":[20,0,0,10,20],
 "structanch_1_1rest_1_1_verb.html#a0af85908bbf4727150c082d7f37abb91":[20,0,0,10,20,9],
-"structanch_1_1rest_1_1_verb.html#a0f15159a1340e68b4c56126e62d8e151":[20,0,0,10,20,11]
+"structanch_1_1rest_1_1_verb.html#a0f15159a1340e68b4c56126e62d8e151":[20,0,0,10,20,11],
+"structanch_1_1rest_1_1_verb.html#a12d42df5bfff2c5a09e7f283860b5486":[20,0,0,10,20,3],
+"structanch_1_1rest_1_1_verb.html#a19c0c6bf1f52f86323c9fb5244e4c314":[20,0,0,10,20,10],
+"structanch_1_1rest_1_1_verb.html#a4eae21fafa38ab4731fa4e1f3c6ac1a2":[20,0,0,10,20,6],
+"structanch_1_1rest_1_1_verb.html#a54df972691684be9805bd6e75ebaa868":[20,0,0,10,20,7],
+"structanch_1_1rest_1_1_verb.html#a5d1250a9a5c20e2ebf6fb2d4142c39b6":[20,0,0,10,20,14],
+"structanch_1_1rest_1_1_verb.html#a5ee8b000fc053e3496c31e1ff54eb680":[20,0,0,10,20,8],
+"structanch_1_1rest_1_1_verb.html#a62a8b3add0d9c0c05ddf5ca54c60e9fb":[20,0,0,10,20,1],
+"structanch_1_1rest_1_1_verb.html#a8a8c528050c1bf6872abf6298453c8b9":[20,0,0,10,20,4],
+"structanch_1_1rest_1_1_verb.html#a8e6f36821f737164a02690eb559ec495":[20,0,0,10,20,12],
+"structanch_1_1rest_1_1_verb.html#a955e53e8de9225941e9a5bc6a6877798":[20,0,0,10,20,0]
 };
