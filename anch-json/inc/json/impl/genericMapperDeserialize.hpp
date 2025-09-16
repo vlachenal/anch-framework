@@ -118,6 +118,21 @@ namespace anch::json {
 
   template<typename M, typename T>
   bool
+  GenericMapper<M,T>::deserialize(anch::Flux<T>& value, anch::json::ReaderContext& context) const {
+    AddItem addFunc = [&](anch::json::ReaderContext& ctxt) -> bool {
+      T val;
+      if(!deserialize(val, ctxt)) {
+	return false;
+      }
+      value.push(std::move(val));
+      return true;
+    };
+    anch::json::lexArray(addFunc, context);
+    return true;
+  }
+
+  template<typename M, typename T>
+  bool
   GenericMapper<M,T>::deserialize(std::map<std::string,T>& value, anch::json::ReaderContext& context) const {
     PushItem pushFunc = [&](const std::string& key, anch::json::ReaderContext& ctxt) -> void {
       T val;

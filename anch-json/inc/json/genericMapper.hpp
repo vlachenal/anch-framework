@@ -31,6 +31,8 @@
 #include "json/readerContext.hpp"
 #include "json/writerContext.hpp"
 
+#include "flux.hpp"
+
 namespace anch::json {
 
   /*!
@@ -317,6 +319,14 @@ namespace anch::json {
      * \param context the mapping context
      */
     bool deserialize(std::set<T>& value, anch::json::ReaderContext& context) const;
+
+    /*!
+     * Deserialize JSON value
+     *
+     * \param value the value to set
+     * \param context the mapping context
+     */
+    bool deserialize(anch::Flux<T>& value, anch::json::ReaderContext& context) const;
 
     /*!
      * Deserialize JSON value

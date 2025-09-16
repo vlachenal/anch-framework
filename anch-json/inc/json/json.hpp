@@ -20,10 +20,19 @@
 #pragma once
 
 #include <ostream>
+#include <istream>
 #include <string>
-#include <iomanip>
+#include <vector>
+#include <list>
+#include <set>
+#include <map>
 
 #include "json/mapper.hpp"
+#include "json/mappingOptions.hpp"
+#include "json/readerContext.hpp"
+#include "json/writerContext.hpp"
+
+#include "flux.hpp"
 
 
 namespace anch::json {
@@ -39,6 +48,7 @@ namespace anch::json {
   template<typename T>
   void registerObject(anch::json::ObjectMapper<T>& mapper);
 
+  // Serialization functions +
   /*!
    * Serialize object
    *
@@ -86,6 +96,18 @@ namespace anch::json {
    */
   template<typename T>
   void serialize(const std::set<T>& value, std::ostream& out, const anch::json::MappingOptions& options = anch::json::DEFAULT_MAPPING_OPTIONS);
+
+  /*!
+   * Serialize objects
+   *
+   * \tparam T the object type
+   *
+   * \param value the objects to serialize
+   * \param out the output stream to write in
+   * \param options the options to use
+   */
+  template<typename T>
+  void serialize(anch::Flux<T>& value, std::ostream& out, const anch::json::MappingOptions& options = anch::json::DEFAULT_MAPPING_OPTIONS);
 
   /*!
    * Serialize object
@@ -138,7 +160,9 @@ namespace anch::json {
    */
   template<typename T>
   std::string serialize(const std::set<T>& value, const anch::json::MappingOptions& options = anch::json::DEFAULT_MAPPING_OPTIONS);
+  // Serialization functions -
 
+  // Deserialization functions +
   /*!
    * Deserialize object
    *
@@ -201,6 +225,32 @@ namespace anch::json {
   void deserialize(std::set<T>& values, std::istream& input, const anch::json::MappingOptions& options = anch::json::DEFAULT_MAPPING_OPTIONS);
 
   /*!
+   * Deserialize objects
+   *
+   * \tparam T the object type
+   *
+   * \param values the values to fill
+   * \param input the input stream to parse
+   * \param options the options to use
+   */
+  template<typename T>
+  void deserialize(anch::Flux<T>& values, std::istream& input, const anch::json::MappingOptions& options = anch::json::DEFAULT_MAPPING_OPTIONS);
+
+  /*!
+   * Deserialize objects
+   *
+   * \tparam T the object type
+   *
+   * \param values the values to fill
+   * \param input the input stream to parse
+   * \param options the options to use
+   */
+  template<typename T>
+  void deserialize(std::map<std::string,T>& values, std::istream& input, const anch::json::MappingOptions& options = anch::json::DEFAULT_MAPPING_OPTIONS);
+  // Deserialization functions -
+
+  // JSON mapper +
+  /*!
    * \brief JSON mapper with mapping options
    *
    * JSON mapper declaration which will always use same mapping options
@@ -242,6 +292,7 @@ namespace anch::json {
 
     // Methods +
   public:
+    // Serialization methods +
     /*!
      * Serialize object
      *
@@ -285,6 +336,17 @@ namespace anch::json {
      */
     template<typename T>
     void serialize(const std::set<T>& value, std::ostream& out);
+
+    /*!
+     * Serialize objects
+     *
+     * \tparam T the object type
+     *
+     * \param value the objects to serialize
+     * \param out the output stream to write in
+     */
+    template<typename T>
+    void serialize(anch::Flux<T>& value, std::ostream& out);
 
     /*!
      * Serialize objects
@@ -356,7 +418,9 @@ namespace anch::json {
      */
     template<typename T>
     std::string serialize(const std::map<std::string,T>& value);
+    // Serialization methods -
 
+    // Deserialize methods +
     /*!
      * Deserialize object
      *
@@ -428,13 +492,30 @@ namespace anch::json {
      *
      * \param values the values to fill
      * \param input the input stream to parse
+     *
+     * \return \c true
+     */
+    template<typename T>
+    void deserialize(anch::Flux<T>& values, std::istream& input);
+
+    /*!
+     * Deserialize objects
+     *
+     * \tparam T the object type
+     *
+     * \param values the values to fill
+     * \param input the input stream to parse
      */
     template<typename T>
     void deserialize(std::map<std::string,T>& values, std::istream& input);
+    // Deserialize methods -
     // Methods -
 
   };
+  // JSON mapper -
 
 }  // anch::json
 
-#include "json/impl/json.hpp"
+#include "json/impl/jsonSerialize.hpp" // Serialization functions implementation
+#include "json/impl/jsonDeserialize.hpp" // Deserialization functions implementation
+#include "json/impl/jsonMapper.hpp" // JSONMapper methods implementation
