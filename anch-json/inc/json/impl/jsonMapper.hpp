@@ -23,7 +23,7 @@
 
 namespace anch::json {
 
-  // Serialize methods +
+  // Serialization methods +
   template<typename T>
   inline
   void
@@ -31,25 +31,11 @@ namespace anch::json {
     anch::json::serialize(value, out, _options);
   }
 
-  template<typename T>
+  template<template<typename> typename C, typename T>
   inline
   void
-  JSONMapper::serialize(const std::vector<T>& value, std::ostream& out) {
-    anch::json::serialize(value, out, _options);
-  }
-
-  template<typename T>
-  inline
-  void
-  JSONMapper::serialize(const std::list<T>& value, std::ostream& out) {
-    anch::json::serialize(value, out, _options);
-  }
-
-  template<typename T>
-  inline
-  void
-  JSONMapper::serialize(const std::set<T>& value, std::ostream& out) {
-    anch::json::serialize(value, out, _options);
+  JSONMapper::serialize(const C<T>& value, std::ostream& out) {
+    anch::json::serialize<C,T>(value, out, _options);
   }
 
   template<typename T>
@@ -73,25 +59,11 @@ namespace anch::json {
     return anch::json::serialize(value, _options);
   }
 
-  template<typename T>
+  template<template<typename> typename C, typename T>
   inline
   std::string
-  JSONMapper::serialize(const std::vector<T>& value) {
-    return anch::json::serialize(value, _options);
-  }
-
-  template<typename T>
-  inline
-  std::string
-  JSONMapper::serialize(const std::list<T>& value) {
-    return anch::json::serialize(value, _options);
-  }
-
-  template<typename T>
-  inline
-  std::string
-  JSONMapper::serialize(const std::set<T>& value) {
-    return anch::json::serialize(value, _options);
+  JSONMapper::serialize(const C<T>& value) {
+    return anch::json::serialize<C,T>(value, _options);
   }
 
   template<typename T>
@@ -100,9 +72,9 @@ namespace anch::json {
   JSONMapper::serialize(const std::map<std::string,T>& value) {
     return anch::json::serialize(value, _options);
   }
-  // Serialize methods -
+  // Serialization methods -
 
-  // Deserialize methods +
+  // Deserialization methods +
   template<typename T>
   inline
   void
@@ -117,32 +89,11 @@ namespace anch::json {
     return anch::json::deserialize<T>(input, _options);
   }
 
-  template<typename T>
+  template<template<typename> typename C, typename T>
   inline
   void
-  JSONMapper::deserialize(std::vector<T>& values, std::istream& input) {
-    anch::json::deserialize(values, input, _options);
-  }
-
-  template<typename T>
-  inline
-  void
-  JSONMapper::deserialize(std::list<T>& values, std::istream& input) {
-    anch::json::deserialize(values, input, _options);
-  }
-
-  template<typename T>
-  inline
-  void
-  JSONMapper::deserialize(std::set<T>& values, std::istream& input) {
-    anch::json::deserialize(values, input, _options);
-  }
-
-  template<typename T>
-  inline
-  void
-  JSONMapper::deserialize(anch::Flux<T>& values, std::istream& input) {
-    anch::json::deserialize(values, input, _options);
+  JSONMapper::deserialize(C<T>& values, std::istream& input) {
+    anch::json::deserialize<C,T>(values, input, _options);
   }
 
   template<typename T>
@@ -151,6 +102,6 @@ namespace anch::json {
   JSONMapper::deserialize(std::map<std::string,T>& values, std::istream& input) {
     anch::json::deserialize(values, input, _options);
   }
-  // Deserialize methods -
+  // Deserialization methods -
 
 }

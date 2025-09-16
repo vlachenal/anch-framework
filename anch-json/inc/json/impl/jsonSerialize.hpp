@@ -21,8 +21,12 @@
 
 #include <sstream>
 
+#include "json/writerContext.hpp"
+
+
 namespace anch::json {
 
+  // Functions which write result in output stream +
   template<typename T>
   inline
   void
@@ -31,26 +35,10 @@ namespace anch::json {
     anch::json::Factory<T>::getInstance().serialize(value, context);
   }
 
-  template<typename T>
+  template<template<typename> typename C, typename T>
   inline
   void
-  serialize(const std::vector<T>& value, std::ostream& out, const anch::json::MappingOptions& options) {
-    anch::json::WriterContext context(out, options);
-    anch::json::Factory<T>::getInstance().serialize(value, context);
-  }
-
-  template<typename T>
-  inline
-  void
-  serialize(const std::list<T>& value, std::ostream& out, const anch::json::MappingOptions& options) {
-    anch::json::WriterContext context(out, options);
-    anch::json::Factory<T>::getInstance().serialize(value, context);
-  }
-
-  template<typename T>
-  inline
-  void
-  serialize(const std::set<T>& value, std::ostream& out, const anch::json::MappingOptions& options) {
+  serialize(const C<T>& value, std::ostream& out, const anch::json::MappingOptions& options) {
     anch::json::WriterContext context(out, options);
     anch::json::Factory<T>::getInstance().serialize(value, context);
   }
@@ -61,11 +49,13 @@ namespace anch::json {
     anch::json::WriterContext context(out, options);
     auto& mapper = anch::json::Factory<T>::getInstance().serialize(value, context);
     context.beginArray();
-    value.setConsumer([&context, &mapper](const T& val){
+    value.setConsumer([&context, &mapper](const T& val) {
       context.next();
       mapper.serialize(val, context);
     });
-    value.setFinalizer([&context](){context.beginArray();});
+    value.setFinalizer([&context]() {
+      context.endArray();
+    });
     value.ready();
   }
 
@@ -76,7 +66,9 @@ namespace anch::json {
     anch::json::WriterContext context(out, options);
     anch::json::Factory<T>::getInstance().serialize(value, context);
   }
+  // Functions which write result in output stream -
 
+  // Functions which returns std::string +
   template<typename T>
   inline
   std::string
@@ -87,34 +79,13 @@ namespace anch::json {
     return out.str();
   }
 
-  template<typename T>
+  template<template<typename> typename C, typename T>
   inline
   std::string
-  serialize(const std::vector<T>& value, const anch::json::MappingOptions& options) {
+  serialize(const C<T>& value, const anch::json::MappingOptions& options) {
     std::ostringstream out;
     anch::json::WriterContext context(out, options);
     anch::json::Factory<T>::getInstance().serialize(value, context);
-    return out.str();
-  }
-
-  template<typename T>
-  inline
-  std::string
-  serialize(const std::list<T>& value, const anch::json::MappingOptions& options) {
-    std::ostringstream out;
-    anch::json::WriterContext context(out, options);
-    anch::json::Factory<T>::getInstance().serialize(value, context);
-    return out.str();
-  }
-
-  template<typename T>
-  inline
-  std::string
-  serialize(const std::set<T>& value, const anch::json::MappingOptions& options) {
-    std::ostringstream out;
-    anch::json::WriterContext context(out, options);
-    anch::json::Factory<T>::getInstance().serialize(value, context);
-    return out.str();
   }
 
   template<typename T>
@@ -126,5 +97,6 @@ namespace anch::json {
     anch::json::Factory<T>::getInstance().serialize(value, context);
     return out.str();
   }
+  // Functions which returns std::string -
 
 }

@@ -604,7 +604,7 @@ testFulDeserDiscard128Col() {
   std::cout << "Deserialize totos.json" << std::endl;
   try {
     std::vector<Test> tests;
-    mapper.deserialize<Test>(tests, iss);
+    mapper.deserialize(tests, iss);
     anch::ut::assert(expected == tests, "NOT EQUALS");
   } catch(const std::bad_cast& e) {
     std::ostringstream oss;
@@ -636,7 +636,7 @@ testFulDeserDiscard128ColBuf2() {
   std::cout << "Deserialize totos.json" << std::endl;
   try {
     std::vector<Test> tests;
-    mapper.deserialize<Test>(tests, iss);
+    mapper.deserialize(tests, iss);
     anch::ut::assert(expected == tests, "NOT EQUALS");
   } catch(const std::bad_cast& e) {
     std::ostringstream oss;

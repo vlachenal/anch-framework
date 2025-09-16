@@ -29,8 +29,6 @@
 
 #include "json/mapper.hpp"
 #include "json/mappingOptions.hpp"
-#include "json/readerContext.hpp"
-#include "json/writerContext.hpp"
 
 #include "flux.hpp"
 
@@ -59,7 +57,40 @@ namespace anch::json {
    * \param options the options to use
    */
   template<typename T>
-  void serialize(const T& value, std::ostream& out, const anch::json::MappingOptions& options = anch::json::DEFAULT_MAPPING_OPTIONS);
+  void serialize(const T& value,
+		 std::ostream& out,
+		 const anch::json::MappingOptions& options = anch::json::DEFAULT_MAPPING_OPTIONS);
+
+  /*!
+   * Serialize objects
+   *
+   * \tparam T the object type
+   * \tparam C the collection's type
+   *
+   * \param value the objects to serialize
+   * \param out the output stream to write in
+   * \param options the options to use
+   */
+  template<template<typename> typename C, typename T>
+  void serialize(const C<T>& value,
+		 std::ostream& out,
+		 const anch::json::MappingOptions& options = anch::json::DEFAULT_MAPPING_OPTIONS);
+
+  /*!
+   * Serialize object's flux.\n
+   * Error handler has to be set before this function call.
+   * Consumer and finalize functions are set in this function.
+   *
+   * \tparam T the object type
+   *
+   * \param value the objects to serialize
+   * \param out the output stream to write in
+   * \param options the options to use
+   */
+  template<typename T>
+  void serialize(anch::Flux<T>& value,
+		 std::ostream& out,
+		 const anch::json::MappingOptions& options = anch::json::DEFAULT_MAPPING_OPTIONS);
 
   /*!
    * Serialize objects
@@ -71,43 +102,9 @@ namespace anch::json {
    * \param options the options to use
    */
   template<typename T>
-  void serialize(const std::vector<T>& value, std::ostream& out, const anch::json::MappingOptions& options = anch::json::DEFAULT_MAPPING_OPTIONS);
-
-  /*!
-   * Serialize objects
-   *
-   * \tparam T the object type
-   *
-   * \param value the objects to serialize
-   * \param out the output stream to write in
-   * \param options the options to use
-   */
-  template<typename T>
-  void serialize(const std::list<T>& value, std::ostream& out, const anch::json::MappingOptions& options = anch::json::DEFAULT_MAPPING_OPTIONS);
-
-  /*!
-   * Serialize objects
-   *
-   * \tparam T the object type
-   *
-   * \param value the objects to serialize
-   * \param out the output stream to write in
-   * \param options the options to use
-   */
-  template<typename T>
-  void serialize(const std::set<T>& value, std::ostream& out, const anch::json::MappingOptions& options = anch::json::DEFAULT_MAPPING_OPTIONS);
-
-  /*!
-   * Serialize objects
-   *
-   * \tparam T the object type
-   *
-   * \param value the objects to serialize
-   * \param out the output stream to write in
-   * \param options the options to use
-   */
-  template<typename T>
-  void serialize(anch::Flux<T>& value, std::ostream& out, const anch::json::MappingOptions& options = anch::json::DEFAULT_MAPPING_OPTIONS);
+  void serialize(const std::map<std::string,T>& value,
+		 std::ostream& out,
+		 const anch::json::MappingOptions& options = anch::json::DEFAULT_MAPPING_OPTIONS);
 
   /*!
    * Serialize object
@@ -120,7 +117,23 @@ namespace anch::json {
    * \return the serialized object as \c std::string
    */
   template<typename T>
-  std::string serialize(const T& value, const anch::json::MappingOptions& options = anch::json::DEFAULT_MAPPING_OPTIONS);
+  std::string serialize(const T& value,
+			const anch::json::MappingOptions& options = anch::json::DEFAULT_MAPPING_OPTIONS);
+
+  /*!
+   * Serialize objects
+   *
+   * \tparam T the object type
+   * \tparam C the collection type
+   *
+   * \param value the object to serialize
+   * \param options the options to use
+   *
+   * \return the serialized objects as \c std::string
+   */
+  template<template<typename> typename C, typename T>
+  std::string serialize(const C<T>& value,
+			const anch::json::MappingOptions& options = anch::json::DEFAULT_MAPPING_OPTIONS);
 
   /*!
    * Serialize objects
@@ -133,33 +146,8 @@ namespace anch::json {
    * \return the serialized objects as \c std::string
    */
   template<typename T>
-  std::string serialize(const std::vector<T>& value, const anch::json::MappingOptions& options = anch::json::DEFAULT_MAPPING_OPTIONS);
-
-  /*!
-   * Serialize objects
-   *
-   * \tparam T the object type
-   *
-   * \param value the object to serialize
-   * \param options the options to use
-   *
-   * \return the serialized objects as \c std::string
-   */
-  template<typename T>
-  std::string serialize(const std::list<T>& value, const anch::json::MappingOptions& options = anch::json::DEFAULT_MAPPING_OPTIONS);
-
-  /*!
-   * Serialize objects
-   *
-   * \tparam T the object type
-   *
-   * \param value the object to serialize
-   * \param options the options to use
-   *
-   * \return the serialized objects as \c std::string
-   */
-  template<typename T>
-  std::string serialize(const std::set<T>& value, const anch::json::MappingOptions& options = anch::json::DEFAULT_MAPPING_OPTIONS);
+  std::string serialize(const std::map<std::string,T>& value,
+			const anch::json::MappingOptions& options = anch::json::DEFAULT_MAPPING_OPTIONS);
   // Serialization functions -
 
   // Deserialization functions +
@@ -173,7 +161,9 @@ namespace anch::json {
    * \param options the options to use
    */
   template<typename T>
-  void deserialize(T& value, std::istream& input, const anch::json::MappingOptions& options = anch::json::DEFAULT_MAPPING_OPTIONS);
+  void deserialize(T& value,
+		   std::istream& input,
+		   const anch::json::MappingOptions& options = anch::json::DEFAULT_MAPPING_OPTIONS);
 
   /*!
    * Deserialize object
@@ -186,7 +176,23 @@ namespace anch::json {
    * \return the deserialized object by copy
    */
   template<typename T>
-  T deserialize(std::istream& input, const anch::json::MappingOptions& options = anch::json::DEFAULT_MAPPING_OPTIONS);
+  T deserialize(std::istream& input,
+		const anch::json::MappingOptions& options = anch::json::DEFAULT_MAPPING_OPTIONS);
+
+  /*!
+   * Deserialize objects
+   *
+   * \tparam T the object type
+   * \tparam C the collection type
+   *
+   * \param values the values to fill
+   * \param input the input stream to parse
+   * \param options the options to use
+   */
+  template<template<typename> typename C, typename T>
+  void deserialize(C<T>& values,
+		   std::istream& input,
+		   const anch::json::MappingOptions& options = anch::json::DEFAULT_MAPPING_OPTIONS);
 
   /*!
    * Deserialize objects
@@ -198,55 +204,9 @@ namespace anch::json {
    * \param options the options to use
    */
   template<typename T>
-  void deserialize(std::vector<T>& values, std::istream& input, const anch::json::MappingOptions& options = anch::json::DEFAULT_MAPPING_OPTIONS);
-
-  /*!
-   * Deserialize objects
-   *
-   * \tparam T the object type
-   *
-   * \param values the values to fill
-   * \param input the input stream to parse
-   * \param options the options to use
-   */
-  template<typename T>
-  void deserialize(std::list<T>& values, std::istream& input, const anch::json::MappingOptions& options = anch::json::DEFAULT_MAPPING_OPTIONS);
-
-  /*!
-   * Deserialize objects
-   *
-   * \tparam T the object type
-   *
-   * \param values the values to fill
-   * \param input the input stream to parse
-   * \param options the options to use
-   */
-  template<typename T>
-  void deserialize(std::set<T>& values, std::istream& input, const anch::json::MappingOptions& options = anch::json::DEFAULT_MAPPING_OPTIONS);
-
-  /*!
-   * Deserialize objects
-   *
-   * \tparam T the object type
-   *
-   * \param values the values to fill
-   * \param input the input stream to parse
-   * \param options the options to use
-   */
-  template<typename T>
-  void deserialize(anch::Flux<T>& values, std::istream& input, const anch::json::MappingOptions& options = anch::json::DEFAULT_MAPPING_OPTIONS);
-
-  /*!
-   * Deserialize objects
-   *
-   * \tparam T the object type
-   *
-   * \param values the values to fill
-   * \param input the input stream to parse
-   * \param options the options to use
-   */
-  template<typename T>
-  void deserialize(std::map<std::string,T>& values, std::istream& input, const anch::json::MappingOptions& options = anch::json::DEFAULT_MAPPING_OPTIONS);
+  void deserialize(std::map<std::string,T>& values,
+		   std::istream& input,
+		   const anch::json::MappingOptions& options = anch::json::DEFAULT_MAPPING_OPTIONS);
   // Deserialization functions -
 
   // JSON mapper +
@@ -308,37 +268,19 @@ namespace anch::json {
      * Serialize objects
      *
      * \tparam T the object type
+     * \tparam C the collection type
      *
      * \param value the objects to serialize
      * \param out the output stream to write in
      */
-    template<typename T>
-    void serialize(const std::vector<T>& value, std::ostream& out);
+    template<template<typename> typename C, typename T>
+    void serialize(const C<T>& value, std::ostream& out);
 
     /*!
-     * Serialize objects
-     *
-     * \tparam T the object type
-     *
-     * \param value the objects to serialize
-     * \param out the output stream to write in
-     */
-    template<typename T>
-    void serialize(const std::list<T>& value, std::ostream& out);
-
-    /*!
-     * Serialize objects
-     *
-     * \tparam T the object type
-     *
-     * \param value the objects to serialize
-     * \param out the output stream to write in
-     */
-    template<typename T>
-    void serialize(const std::set<T>& value, std::ostream& out);
-
-    /*!
-     * Serialize objects
+     * Serialize object's flux.\n
+     * Error handler has to be set before this method call.
+     * Consumer and finalize functions are set in this method.
+   *
      *
      * \tparam T the object type
      *
@@ -375,37 +317,14 @@ namespace anch::json {
      * Serialize objects
      *
      * \tparam T the object type
+     * \tparam C the collection type
      *
      * \param value the object to serialize
      *
      * \return the serialized objects as \c std::string
      */
-    template<typename T>
-    std::string serialize(const std::vector<T>& value);
-
-    /*!
-     * Serialize objects
-     *
-     * \tparam T the object type
-     *
-     * \param value the object to serialize
-     *
-     * \return the serialized objects as \c std::string
-     */
-    template<typename T>
-    std::string serialize(const std::list<T>& value);
-
-    /*!
-     * Serialize objects
-     *
-     * \tparam T the object type
-     *
-     * \param value the object to serialize
-     *
-     * \return the serialized objects as \c std::string
-     */
-    template<typename T>
-    std::string serialize(const std::set<T>& value);
+    template<template<typename> typename C, typename T>
+    std::string serialize(const C<T>& value);
 
     /*!
      * Serialize objects
@@ -420,7 +339,7 @@ namespace anch::json {
     std::string serialize(const std::map<std::string,T>& value);
     // Serialization methods -
 
-    // Deserialize methods +
+    // Deserialization methods +
     /*!
      * Deserialize object
      *
@@ -450,53 +369,15 @@ namespace anch::json {
      * Deserialize objects
      *
      * \tparam T the object type
+     * \tparam C the collection type
      *
      * \param values the values to fill
      * \param input the input stream to parse
      *
      * \return \c true
      */
-    template<typename T>
-    void deserialize(std::vector<T>& values, std::istream& input);
-
-    /*!
-     * Deserialize objects
-     *
-     * \tparam T the object type
-     *
-     * \param values the values to fill
-     * \param input the input stream to parse
-     *
-     * \return \c true
-     */
-    template<typename T>
-    void deserialize(std::list<T>& values, std::istream& input);
-
-    /*!
-     * Deserialize objects
-     *
-     * \tparam T the object type
-     *
-     * \param values the values to fill
-     * \param input the input stream to parse
-     *
-     * \return \c true
-     */
-    template<typename T>
-    void deserialize(std::set<T>& values, std::istream& input);
-
-    /*!
-     * Deserialize objects
-     *
-     * \tparam T the object type
-     *
-     * \param values the values to fill
-     * \param input the input stream to parse
-     *
-     * \return \c true
-     */
-    template<typename T>
-    void deserialize(anch::Flux<T>& values, std::istream& input);
+    template<template<typename> typename C, typename T>
+    void deserialize(C<T>& values, std::istream& input);
 
     /*!
      * Deserialize objects
@@ -508,7 +389,7 @@ namespace anch::json {
      */
     template<typename T>
     void deserialize(std::map<std::string,T>& values, std::istream& input);
-    // Deserialize methods -
+    // Deserialization methods -
     // Methods -
 
   };

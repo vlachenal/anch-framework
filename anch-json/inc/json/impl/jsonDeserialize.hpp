@@ -19,6 +19,9 @@
 */
 #pragma once
 
+#include "json/readerContext.hpp"
+
+
 namespace anch::json {
 
   template<typename T>
@@ -39,37 +42,14 @@ namespace anch::json {
     return value;
   }
 
-  template<typename T>
+  template<template<typename> typename C, typename T>
   inline
   void
-  deserialize(std::vector<T>& values, std::istream& input, const anch::json::MappingOptions& options) {
+  deserialize(C<T>& values, std::istream& input, const anch::json::MappingOptions& options) {
     anch::json::ReaderContext context(input, options);
     anch::json::Factory<T>::getInstance().deserialize(values, context);
   }
 
-  template<typename T>
-  inline
-  void
-  deserialize(std::list<T>& values, std::istream& input, const anch::json::MappingOptions& options) {
-    anch::json::ReaderContext context(input, options);
-    anch::json::Factory<T>::getInstance().deserialize(values, context);
-  }
-
-  template<typename T>
-  inline
-  void
-  deserialize(std::set<T>& values, std::istream& input, const anch::json::MappingOptions& options) {
-    anch::json::ReaderContext context(input, options);
-    anch::json::Factory<T>::getInstance().deserialize(values, context);
-  }
-
-  template<typename T>
-  inline
-  void
-  deserialize(anch::Flux<T>& values, std::istream& input, const anch::json::MappingOptions& options) {
-    anch::json::ReaderContext context(input, options);
-    anch::json::Factory<T>::getInstance().deserialize(values, context);
-  }
 
   template<typename T>
   inline

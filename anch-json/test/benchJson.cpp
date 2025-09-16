@@ -186,7 +186,7 @@ main(int argc, char** argv) {
     std::cout << "Parse file " << opts.input << std::endl;
     std::ifstream file(opts.input);
     start = std::chrono::high_resolution_clock::now();
-    mapper.deserialize<Person>(persons, file);
+    mapper.deserialize(persons, file);
     end = std::chrono::high_resolution_clock::now();
     duration = std::chrono::duration_cast<std::chrono::microseconds>(end.time_since_epoch()) - std::chrono::duration_cast<std::chrono::microseconds>(start.time_since_epoch());
     std::cout << "File " << opts.input << " parsed ; nb persons = " << persons.size() << " in " << duration.count() << "µs" << std::endl;
@@ -229,7 +229,7 @@ main(int argc, char** argv) {
     std::list<Person> res;
     std::istringstream iss(oss.str());
     start = std::chrono::high_resolution_clock::now();
-    mapper.deserialize<Person>(res, iss);
+    mapper.deserialize(res, iss);
     end = std::chrono::high_resolution_clock::now();
     duration = std::chrono::duration_cast<std::chrono::microseconds>(end.time_since_epoch()) - std::chrono::duration_cast<std::chrono::microseconds>(start.time_since_epoch());
     totalDeser += duration.count();
