@@ -63,10 +63,10 @@ namespace anch::json {
 		 const anch::json::MappingOptions& options = anch::json::DEFAULT_MAPPING_OPTIONS);
 
   /*!
-   * Serialize objects
+   * Serialize objects (it can also work with \c std::optional, \c std::shared_ptr, ...)
    *
    * \tparam T the object type
-   * \tparam C the collection's type
+   * \tparam C the container's type
    *
    * \param value the objects to serialize
    * \param out the output stream to write in
@@ -79,8 +79,9 @@ namespace anch::json {
 
   /*!
    * Serialize object's flux.\n
-   * Error handler has to be set before this function call.
-   * Consumer and finalize functions are set in this function.
+   * Error handler has to be set before this method call when needed.
+   * Consumer and finalize functions are set in this method.\n
+   * This method will lock the processing until \ref anch::Flux::finalize method has not be called (or error happened and throw itself).
    *
    * \tparam T the object type
    *
@@ -124,10 +125,10 @@ namespace anch::json {
 			const anch::json::MappingOptions& options = anch::json::DEFAULT_MAPPING_OPTIONS);
 
   /*!
-   * Serialize objects
+   * Serialize objects (it can also work with \c std::optional, \c std::shared_ptr, ...)
    *
    * \tparam T the object type
-   * \tparam C the collection type
+   * \tparam C the container's type
    *
    * \param value the object to serialize
    * \param options the options to use
@@ -184,10 +185,10 @@ namespace anch::json {
 		const anch::json::MappingOptions& options = anch::json::DEFAULT_MAPPING_OPTIONS);
 
   /*!
-   * Deserialize objects
+   * Deserialize objects (it can also work with \c std::optional, \c std::shared_ptr, ...)
    *
-   * \tparam T the object type
-   * \tparam C the collection type
+   * \tparam T the object's type
+   * \tparam C the container's type
    *
    * \param values the values to fill
    * \param input the input stream to parse
@@ -269,10 +270,10 @@ namespace anch::json {
     void serialize(const T& value, std::ostream& out);
 
     /*!
-     * Serialize objects
+     * Serialize objects (it can also work with \c std::optional, \c std::shared_ptr, ...)
      *
-     * \tparam T the object type
-     * \tparam C the collection type
+     * \tparam T the object's type
+     * \tparam C the container's type
      *
      * \param value the objects to serialize
      * \param out the output stream to write in
@@ -282,9 +283,9 @@ namespace anch::json {
 
     /*!
      * Serialize object's flux.\n
-     * Error handler has to be set before this method call.
-     * Consumer and finalize functions are set in this method.
-   *
+     * Error handler has to be set before this method call when needed.
+     * Consumer and finalize functions are set in this method.\n
+     * This method will lock the processing until \ref anch::Flux::finalize method has not be called (or error happened and throw itself).
      *
      * \tparam T the object type
      *
@@ -318,10 +319,10 @@ namespace anch::json {
     std::string serialize(const T& value);
 
     /*!
-     * Serialize objects
+     * Serialize objects (it can also work with \c std::optional, \c std::shared_ptr, ...)
      *
-     * \tparam T the object type
-     * \tparam C the collection type
+     * \tparam T the object's type
+     * \tparam C the container's type
      *
      * \param value the object to serialize
      *
@@ -370,10 +371,10 @@ namespace anch::json {
     T deserialize(std::istream& input);
 
     /*!
-     * Deserialize objects
+     * Deserialize objects (it can also work with \c std::optional, \c std::shared_ptr, ...)
      *
-     * \tparam T the object type
-     * \tparam C the collection type
+     * \tparam T the object's type
+     * \tparam C the container's type
      *
      * \param values the values to fill
      * \param input the input stream to parse

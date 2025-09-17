@@ -23,7 +23,6 @@
 #include <condition_variable>
 #include <mutex>
 
-
 #include "json/writerContext.hpp"
 
 
@@ -63,14 +62,18 @@ namespace anch::json {
       context.next();
       mapper.serialize(val, context);
     });
-    value.setFinalizer([&context, &finished, &cv]() {
-      context.endArray();
+    value.setFinalizer([&context, &first, &finished, &cv]() {
+      if(!first) {
+	context.endArray();
+      }
       finished = true;
       cv.notify_one();
     });
     value.ready();
     std::unique_lock lk(m);
-    cv.wait(lk, [&finished]{ return finished; }); // wait for end
+    cv.wait(lk, [&finished]() {
+      return finished;
+    }); // wait for end
   }
 
   template<typename T>
@@ -100,6 +103,7 @@ namespace anch::json {
     std::ostringstream out;
     anch::json::WriterContext context(out, options);
     anch::json::Factory<T>::getInstance().serialize(value, context);
+    return out.str();
   }
 
   template<typename T>
