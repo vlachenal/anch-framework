@@ -316,6 +316,8 @@ if(ANCH_JSON_UNITARY_TEST)
   add_test(json-iomanip ${EXECUTABLE_OUTPUT_PATH}/anch-json-mapper-test -t json-iomanip)
   add_test(json-ser-map ${EXECUTABLE_OUTPUT_PATH}/anch-json-mapper-test -t json-ser-map)
   add_test(json-deser-map ${EXECUTABLE_OUTPUT_PATH}/anch-json-mapper-test -t json-deser-map)
+  add_test(json-ser-flux ${EXECUTABLE_OUTPUT_PATH}/anch-json-mapper-test -t json-ser-flux)
+  add_test(json-deser-flux ${EXECUTABLE_OUTPUT_PATH}/anch-json-mapper-test -t json-deser-flux)
   # Mapper unit tests -
 
 endif(ANCH_JSON_UNITARY_TEST)

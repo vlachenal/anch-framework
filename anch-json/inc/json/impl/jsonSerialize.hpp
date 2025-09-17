@@ -20,6 +20,9 @@
 #pragma once
 
 #include <sstream>
+#include <condition_variable>
+#include <mutex>
+
 
 #include "json/writerContext.hpp"
 
@@ -47,16 +50,27 @@ namespace anch::json {
   void
   serialize(anch::Flux<T>& value, std::ostream& out, const anch::json::MappingOptions& options) {
     anch::json::WriterContext context(out, options);
-    auto& mapper = anch::json::Factory<T>::getInstance().serialize(value, context);
-    context.beginArray();
-    value.setConsumer([&context, &mapper](const T& val) {
+    auto& mapper = anch::json::Factory<T>::getInstance();
+    std::mutex m;
+    std::condition_variable cv;
+    bool finished = false;
+    bool first = true;
+    value.setConsumer([&context, &mapper, &first](const T& val) {
+      if(first) {
+	context.beginArray();
+	first = false;
+      }
       context.next();
       mapper.serialize(val, context);
     });
-    value.setFinalizer([&context]() {
+    value.setFinalizer([&context, &finished, &cv]() {
       context.endArray();
+      finished = true;
+      cv.notify_one();
     });
     value.ready();
+    std::unique_lock lk(m);
+    cv.wait(lk, [&finished]{ return finished; }); // wait for end
   }
 
   template<typename T>

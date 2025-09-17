@@ -47,6 +47,7 @@ namespace anch::json {
   void registerObject(anch::json::ObjectMapper<T>& mapper);
 
   // Serialization functions +
+  // Functions which write result in output stream +
   /*!
    * Serialize object
    *
@@ -105,7 +106,9 @@ namespace anch::json {
   void serialize(const std::map<std::string,T>& value,
 		 std::ostream& out,
 		 const anch::json::MappingOptions& options = anch::json::DEFAULT_MAPPING_OPTIONS);
+  // Functions which write result in output stream -
 
+  // Functions which returns std::string +
   /*!
    * Serialize object
    *
@@ -148,6 +151,7 @@ namespace anch::json {
   template<typename T>
   std::string serialize(const std::map<std::string,T>& value,
 			const anch::json::MappingOptions& options = anch::json::DEFAULT_MAPPING_OPTIONS);
+  // Functions which returns std::string -
   // Serialization functions -
 
   // Deserialization functions +

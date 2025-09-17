@@ -2,6 +2,7 @@
 #include <sstream>
 #include <fstream>
 #include <chrono>
+#include <thread>
 
 #include "json/json.hpp"
 
@@ -650,6 +651,78 @@ testFulDeserDiscard128ColBuf2() {
 }
 
 void
+testDeserFlux() {
+  anch::json::JSONMapper mapper({.deserialize_max_discard_char = 128});
+  std::ifstream iss("totos.json");
+  std::vector<Test> expected = {
+    {
+      ._id = "deb94ebc-be28-4899-981a-29199b7a487d",
+      ._value = "this is a value",
+      ._nums = {1,2,3,4}
+    },
+    {
+      ._id = "44666aab-0b63-47a1-80bb-ae84bc844289",
+      ._value = "this is another value",
+      ._nums = {5,6,7,8}
+    }
+  };
+  std::cout << "Deserialize totos.json" << std::endl;
+  try {
+    std::vector<Test> tests;
+    anch::Flux<Test> flux;
+    flux.setConsumer([&tests](const Test& test) {
+      tests.push_back(test);
+    });
+    flux.ready();
+    mapper.deserialize(flux, iss);
+    anch::ut::assert(expected == tests, "NOT EQUALS");
+  } catch(const std::bad_cast& e) {
+    std::ostringstream oss;
+    oss << "Bad cast " << e.what();
+    anch::ut::fail(oss.str());
+  } catch(const MappingError& error) {
+    std::ostringstream oss;
+    oss << "Fail with " << error.what();
+    anch::ut::fail(oss.str());
+  }
+}
+
+void
+testSerFlux() {
+  std::vector<Test> tests = {
+    {
+      ._id = "deb94ebc-be28-4899-981a-29199b7a487d",
+      ._value = "this is a value",
+      ._nums = {1,2,3,4}
+    },
+    {
+      ._id = "44666aab-0b63-47a1-80bb-ae84bc844289",
+      ._value = "this is another value",
+      ._nums = {5,6,7,8}
+    }
+  };
+  anch::json::JSONMapper mapper(anch::json::DEFAULT_MAPPING_OPTIONS);
+  std::ostringstream out;
+  anch::Flux<Test> flux;
+  std::string expected("[{\"id\":\"deb94ebc-be28-4899-981a-29199b7a487d\",\"value\":\"this is a value\",\"nums\":[1,2,3,4]},{\"id\":\"44666aab-0b63-47a1-80bb-ae84bc844289\",\"value\":\"this is another value\",\"nums\":[5,6,7,8]}]");
+  try {
+    std::thread t([&flux, &tests]() {
+      for(auto iter = tests.cbegin() ; iter != tests.cend() ; ++iter) {
+    	flux.push(*iter);
+      }
+      flux.finalize();
+    });
+    t.detach();
+    mapper.serialize(flux, out);
+    anch::ut::assert(out.str() == expected, "\nResult is:  {}\ninstead of: {}", out.str(), expected);
+  } catch(const MappingError& error) {
+    std::ostringstream oss;
+    oss << "Fail with " << error.what();
+    anch::ut::fail(oss.str());
+  }
+}
+
+void
 testIOManip() {
   Test test = {
     ._id = "deb94ebc-be28-4899-981a-29199b7a487d",
@@ -775,5 +848,7 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("json-iomanip", testIOManip)
     .add("json-ser-map", testSerializeMap)
     .add("json-deser-map", testDeserializeMap)
+    .add("json-ser-flux", testSerFlux)
+    .add("json-deser-flux", testDeserFlux)
     ;
 }
