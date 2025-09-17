@@ -85,6 +85,7 @@ DefaultRunner::test(const std::string& test) {
 
   std::cout << anch::cli::Formatter::format().fgColor(anch::cli::Color::BLUE)
 	    << "-- " << test << " --" << anch::cli::RESET << std::endl;
+
   // Before test function +
   try {
     _tests.before();
@@ -109,8 +110,8 @@ DefaultRunner::test(const std::string& test) {
   }
   // Before test function -
 
-  bool passed = false;
   // Call test function +
+  bool passed = false;
   try {
     std::invoke(iter->second);
     passed = true;
