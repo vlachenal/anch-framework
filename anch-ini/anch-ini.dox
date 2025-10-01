@@ -24,7 +24,20 @@
  *
  * \section ini_example_sec Examples
  *
- * Serialize structure into INI format:
+ * INI file:
+ * \code{.txt}
+# Comments
+# vnjldmsv
+# cdsnjkovdfmsnjom gefdbnjmvdfbnjiom
+
+toto=tata
+tata=tutu # test with comments
+
+[TOTO]
+toto=titi
+ * \endcode
+ *
+ * Parse INI file:
  * \code{.cpp}
 void
 addIndent(uint32_t indent) {
@@ -53,6 +66,7 @@ parse() {
   section = anch::ini::parse(file);
   printSection(section);
   std::cout << "File has been parsed" << std::endl;
+  std::cout << "TOTO.toto = " << section.getValue("TOTO.toto") << std::endl;
 }
 \endcode
  */
