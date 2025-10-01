@@ -1,7 +1,7 @@
 var searchData=
 [
   ['secondformatter_0',['SecondFormatter',['../classanch_1_1date_1_1_second_formatter.html',1,'anch::date']]],
-  ['section_1',['Section',['../classanch_1_1resource_1_1_section.html',1,'anch::resource']]],
+  ['section_1',['Section',['../classanch_1_1ini_1_1_section.html',1,'anch::ini::Section'],['../classanch_1_1resource_1_1_section.html',1,'anch::resource::Section']]],
   ['selectbuilder_2',['SelectBuilder',['../classanch_1_1sql_1_1_select_builder.html',1,'anch::sql']]],
   ['selectbuilderpart_3',['SelectBuilderPart',['../classanch_1_1sql_1_1_select_builder_part.html',1,'anch::sql']]],
   ['sha1_4',['SHA1',['../classanch_1_1crypto_1_1_s_h_a1.html',1,'anch::crypto']]],

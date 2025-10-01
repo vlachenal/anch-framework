@@ -1,3 +1,19 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$classanch_1_1logger_1_1formatter_1_1_message_formatter.html" title=" " alt="" coords="5,5,158,48"/>
+<area shape="rect" id="Node000000" href="$classanch_1_1logger_1_1formatter_1_1_i_formatter.html" title=" " alt="" coords="5,239,158,281"/>
+<area shape="rect" id="Node000001" href="$classanch_1_1logger_1_1formatter_1_1_anch_date_formatter.html" title=" " alt="" coords="206,5,358,48"/>
+<area shape="poly" id="edge45_Node000000_Node000001" title=" " alt="" coords="95,223,136,142,167,97,204,58,220,46,224,51,207,62,171,101,141,144,99,225"/>
+<area shape="rect" id="Node000002" href="$classanch_1_1logger_1_1formatter_1_1_category_formatter.html" title=" " alt="" coords="206,72,358,115"/>
+<area shape="poly" id="edge46_Node000000_Node000002" title=" " alt="" coords="106,224,149,174,204,125,223,113,226,118,207,129,153,178,110,228"/>
+<area shape="rect" id="Node000003" href="$classanch_1_1logger_1_1formatter_1_1_const_formatter.html" title=" " alt="" coords="206,139,358,181"/>
+<area shape="poly" id="edge47_Node000000_Node000003" title=" " alt="" coords="133,229,204,191,229,179,231,184,207,196,135,233"/>
+<area shape="rect" id="Node000004" href="$classanch_1_1logger_1_1formatter_1_1_date_formatter.html" title=" " alt="" coords="206,205,358,248"/>
+<area shape="poly" id="edge48_Node000000_Node000004" title=" " alt="" coords="173,242,205,237,206,242,174,247"/>
+<area shape="rect" id="Node000005" href="$classanch_1_1logger_1_1formatter_1_1_level_formatter.html" title=" " alt="" coords="206,272,358,315"/>
+<area shape="poly" id="edge49_Node000000_Node000005" title=" " alt="" coords="174,273,206,278,205,283,173,278"/>
+<area shape="rect" id="Node000006" href="$classanch_1_1logger_1_1formatter_1_1_m_d_c_formatter.html" title=" " alt="" coords="206,339,358,381"/>
+<area shape="poly" id="edge50_Node000000_Node000006" title=" " alt="" coords="135,287,207,324,231,336,229,341,204,329,133,291"/>
+<area shape="rect" id="Node000007" href="$classanch_1_1logger_1_1formatter_1_1_string_formatter.html" title=" " alt="" coords="206,405,358,448"/>
+<area shape="poly" id="edge51_Node000000_Node000007" title=" " alt="" coords="110,292,153,342,207,391,226,402,223,407,204,395,149,346,106,296"/>
+<area shape="rect" id="Node000008" href="$classanch_1_1logger_1_1formatter_1_1_thread_id_formatter.html" title=" " alt="" coords="206,472,358,515"/>
+<area shape="poly" id="edge52_Node000000_Node000008" title=" " alt="" coords="99,295,141,376,171,419,207,458,224,469,220,474,204,462,167,423,136,378,95,297"/>
 </map>

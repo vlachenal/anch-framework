@@ -65,6 +65,10 @@ var annotated_dup =
         [ "Observable", "classanch_1_1events_1_1_observable.html", "classanch_1_1events_1_1_observable" ],
         [ "Observer", "classanch_1_1events_1_1_observer.html", "classanch_1_1events_1_1_observer" ]
       ] ],
+      [ "ini", null, [
+        [ "ParserError", "classanch_1_1ini_1_1_parser_error.html", "classanch_1_1ini_1_1_parser_error" ],
+        [ "Section", "classanch_1_1ini_1_1_section.html", "classanch_1_1ini_1_1_section" ]
+      ] ],
       [ "json", "namespaceanch_1_1json.html", [
         [ "Factory", "classanch_1_1json_1_1_factory.html", "classanch_1_1json_1_1_factory" ],
         [ "GenericMapper", "classanch_1_1json_1_1_generic_mapper.html", "classanch_1_1json_1_1_generic_mapper" ],

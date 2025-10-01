@@ -70,6 +70,13 @@ var NAVTREE =
         [ "Event bus", "page_events.html#evt_example_eventbus_sec", null ]
       ] ]
     ] ],
+    [ "AnCH INI library documentation", "page_ini.html", [
+      [ "Introduction", "page_ini.html#ini_intro_seq", null ],
+      [ "Prerequisites", "page_ini.html#ini_prereq_sec", null ],
+      [ "Installation", "page_ini.html#ini_install_sec", null ],
+      [ "Conception", "page_ini.html#ini_concept_sec", null ],
+      [ "Examples", "page_ini.html#ini_example_sec", null ]
+    ] ],
     [ "AnCH JSON library documentation", "page_json.html", [
       [ "Introduction", "page_json.html#json_intro_seq", null ],
       [ "Prerequisites", "page_json.html#json_prereq_sec", null ],
@@ -161,19 +168,19 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "_nginx_router_8hpp_source.html",
-"classanch_1_1_u_u_i_d.html#a8d539bd756d7cb8396dfe7b6cc84cfd7",
-"classanch_1_1crypto_1_1_o_f_b.html",
-"classanch_1_1date_1_1_i_date_part_formatter.html#a27881c83ffb093541473ab32c41b3ec6",
-"classanch_1_1events_1_1_event_bus.html#ac59ea3ce221e5ac72a764777aa3b5258",
-"classanch_1_1json_1_1_writer_context.html#ab9ef425557e987c82a270f2a1c941aa3",
-"classanch_1_1network_1_1_socket.html#ab3820404a89671c43ce7f6faeef634c5",
-"classanch_1_1rest_1_1_response.html#a066b5ab91c6ce0a1e02f1917dfd55d92",
-"classanch_1_1sql_1_1_from_builder.html#a590a45623a39f48950db31ce4ba4f626",
-"classanch_1_1sql_1_1_s_q_l_query.html#a81397ee21e5d9e6399e687b0346ee39d",
-"dir_3e2a3a3a89ad9282bfb978e7f87ffd97.html",
-"namespaceanch_1_1json.html#a2f812b2021d81115b2f2724aa51cac46",
-"sqlite3_result_set_8hpp_source.html",
-"structanch_1_1rest_1_1_verb.html#ab74132c109ce0137475a492e04499516"
+"classanch_1_1_u_u_i_d.html#a8a1d449f7d9fe524d837161c26afd550",
+"classanch_1_1crypto_1_1_m_d5.html#afb0b3ba398ae8c76e6bf5bb4d7eb0e3a",
+"classanch_1_1date_1_1_i_date_part_formatter.html#a2718e309ce6a935c0fd09033f90c6088",
+"classanch_1_1events_1_1_event_bus.html#ac2fd3d69d33f2b3a09b0948b3025b5bd",
+"classanch_1_1json_1_1_writer_context.html",
+"classanch_1_1network_1_1_socket.html#a414a66820860f113c0acee1f70b667d6",
+"classanch_1_1rest_1_1_request.html#a498aa04cdb10a28dae9f12ea514edb3c",
+"classanch_1_1sql_1_1_from_builder.html#a0ec29dde42dd560aa7b463ef71766f60",
+"classanch_1_1sql_1_1_result_set.html#a8ead5dbf35ddbcb9835bdbda22170ec3",
+"configuration_file_parser_8hpp_source.html",
+"namespaceanch_1_1crypto.html#a9b5443f947314be67113bfbe25531337",
+"postgresql_result_set_8hpp_source.html",
+"structanch_1_1rest_1_1_common_headers.html#afd6eaffa9c497a48d48afcb210510eea"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronization';

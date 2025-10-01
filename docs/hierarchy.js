@@ -69,6 +69,7 @@ var hierarchy =
     [ "std::exception", null, [
       [ "anch::crypto::InvalidBlockException", "classanch_1_1crypto_1_1_invalid_block_exception.html", null ],
       [ "anch::device::DeviceException", "classanch_1_1device_1_1_device_exception.html", null ],
+      [ "anch::ini::ParserError", "classanch_1_1ini_1_1_parser_error.html", null ],
       [ "anch::json::MappingError", "classanch_1_1json_1_1_mapping_error.html", null ],
       [ "anch::network::IOException", "classanch_1_1network_1_1_i_o_exception.html", null ],
       [ "anch::resource::file::ResourceFileException", "classanch_1_1resource_1_1file_1_1_resource_file_exception.html", null ],
@@ -224,6 +225,7 @@ var hierarchy =
       ] ],
       [ "anch::ut::SocketClientRunner", "classanch_1_1ut_1_1_socket_client_runner.html", null ]
     ] ],
+    [ "anch::ini::Section", "classanch_1_1ini_1_1_section.html", null ],
     [ "anch::resource::Section", "classanch_1_1resource_1_1_section.html", null ],
     [ "anch::sql::SelectBuilder", "classanch_1_1sql_1_1_select_builder.html", null ],
     [ "anch::sql::SelectBuilderPart", "classanch_1_1sql_1_1_select_builder_part.html", [

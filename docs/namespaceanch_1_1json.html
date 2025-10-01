@@ -462,11 +462,11 @@ template&lt;template&lt; typename &gt; typename C, typename T&gt; </div>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Deserialize objects</p>
+<p>Deserialize objects (it can also work with <code>std::optional</code>, <code>std::shared_ptr</code>, ...)</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">T</td><td>the object type </td></tr>
-    <tr><td class="paramname">C</td><td>the collection type</td></tr>
+    <tr><td class="paramname">T</td><td>the object's type </td></tr>
+    <tr><td class="paramname">C</td><td>the container's type</td></tr>
   </table>
   </dd>
 </dl>
@@ -1358,7 +1358,9 @@ template&lt;typename T&gt; </div>
       </table>
 </div><div class="memdoc">
 <p>Serialize object's flux.<br  />
-Error handler has to be set before this function call. Consumer and finalize functions are set in this function.</p>
+Error handler has to be set before this method call when needed. Consumer and finalize functions are set in this method.<br  />
+This method will lock the processing until <a class="el" href="classanch_1_1_flux.html#ac4d5d6815a6ed2b0d3b3ba61e48da5c8">anch::Flux::finalize</a> method has not be called (or error happened and throw itself).<br  />
+ This function is implemented in header imkplementation instead uses <a class="el" href="classanch_1_1json_1_1_generic_mapper.html">GenericMapper</a> implementation.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">T</td><td>the object type</td></tr>
@@ -1396,11 +1398,11 @@ template&lt;template&lt; typename &gt; typename C, typename T&gt; </div>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Serialize objects</p>
+<p>Serialize objects (it can also work with <code>std::optional</code>, <code>std::shared_ptr</code>, ...)</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">T</td><td>the object type </td></tr>
-    <tr><td class="paramname">C</td><td>the collection type</td></tr>
+    <tr><td class="paramname">C</td><td>the container's type</td></tr>
   </table>
   </dd>
 </dl>
@@ -1440,11 +1442,11 @@ template&lt;template&lt; typename &gt; typename C, typename T&gt; </div>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Serialize objects</p>
+<p>Serialize objects (it can also work with <code>std::optional</code>, <code>std::shared_ptr</code>, ...)</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">T</td><td>the object type </td></tr>
-    <tr><td class="paramname">C</td><td>the collection's type</td></tr>
+    <tr><td class="paramname">C</td><td>the container's type</td></tr>
   </table>
   </dd>
 </dl>
