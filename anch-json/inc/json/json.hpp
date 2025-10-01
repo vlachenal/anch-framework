@@ -81,7 +81,9 @@ namespace anch::json {
    * Serialize object's flux.\n
    * Error handler has to be set before this method call when needed.
    * Consumer and finalize functions are set in this method.\n
-   * This method will lock the processing until \ref anch::Flux::finalize method has not be called (or error happened and throw itself).
+   * This method will lock the processing until \ref anch::Flux::finalize method has not be called (or error happened and throw itself).\n
+   *
+   * This function is implemented in header imkplementation instead uses \ref GenericMapper implementation.
    *
    * \tparam T the object type
    *
