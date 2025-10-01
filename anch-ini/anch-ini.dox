@@ -1,0 +1,58 @@
+/*! \page page_ini AnCH INI library documentation
+ *
+ * \tableofcontents
+ *
+ * \section ini_intro_seq Introduction
+ *
+ * AnCH INI library is INI parsing library for INI format.
+ *
+ * \section ini_prereq_sec Prerequisites
+ *
+ * AnCH INI is a standalone library.
+ *
+ * \section ini_install_sec Installation
+ *
+ * make install
+ *
+ * \section ini_concept_sec Conception
+ *
+ * AnCH INI file library aims to parse <a href="https://en.wikipedia.org/wiki/INI_file">INI file according to common specifications</a>.\n
+ * Comments are managed with '#' character.\n
+ * Subsections are delimited by '.'.\n
+ * Key which contains '.' character will create as many subsections as the number of '.' in key.\n
+ * Values will be requested with their paths separated with '.'.
+ *
+ * \section ini_example_sec Examples
+ *
+ * Serialize structure into INI format:
+ * \code{.cpp}
+void
+addIndent(uint32_t indent) {
+  for(uint32_t i = 0 ; i < indent ; ++i) {
+    std::cout << ' ';
+  }
+}
+
+void
+printSection(const anch::ini::Section& section, const std::string& name = "root", uint32_t indent = 0) {
+  addIndent(indent);
+  std::cout << '[' << name << ']' << std::endl;
+  for(auto iter = section.getValues().begin() ; iter != section.getValues().end() ; ++iter) {
+    addIndent(indent + 1);
+    std::cout << iter->first << '=' << iter->second << std::endl;
+  }
+  for(auto iter = section.getSections().begin() ; iter != section.getSections().end() ; ++iter) {
+    printSection(iter->second, iter->first, indent + 2);
+  }
+}
+
+void
+parse() {
+  std::cout << "Parse file" << std::endl;
+  std::string file = "test.ini";
+  section = anch::ini::parse(file);
+  printSection(section);
+  std::cout << "File has been parsed" << std::endl;
+}
+\endcode
+ */
