@@ -10,6 +10,7 @@
  * \n
  * Features are splitted into small libraries. Some of them are only header files :
  * - \ref page_res "anch-resource": provides library to parse configuration files based on C++11 regular expression library.
+ * - \ref page_ini "anch-ini": provides library to parse INI files
  * - anch-date: provides date and time facilities based on C++11 high precision clock.
  * - \ref page_logger "anch-logger": provides logging facilities based on C++11 thread and regular expression libraries.
  * - \ref page_events "anch-events": provides event programming facilities based on C++11 thread library.
@@ -48,6 +49,7 @@
  *
  * - anch-utils: Dependends on the feature (see class and function description)
  * - anch-resource: nothing
+ * - anch-ini: nothing
  * - anch-date: nothing
  * - anch-logger:
  *   - \ref page_res "anch-resource": parse anch-logger configuration file
