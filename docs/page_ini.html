@@ -111,13 +111,22 @@ Installation</h1>
 <h1 class="doxsection"><a class="anchor" id="ini_concept_sec"></a>
 Conception</h1>
 <p>AnCH INI file library aims to parse <a href="https://en.wikipedia.org/wiki/INI_file">INI file according to common specifications</a>.<br  />
- Comments are managed with '#' character.<br  />
+ Comments are managed with '#' or ';' character.<br  />
  Subsections are delimited by '.'.<br  />
  Key which contains '.' character will create as many subsections as the number of '.' in key.<br  />
  Values will be requested with their paths separated with '.'.</p>
 <h1 class="doxsection"><a class="anchor" id="ini_example_sec"></a>
 Examples</h1>
-<p>Serialize structure into INI format: </p><div class="fragment"><div class="line"><span class="keywordtype">void</span></div>
+<p>INI file: </p><div class="fragment"><div class="line"><span class="preprocessor"># Comments</span></div>
+<div class="line"><span class="preprocessor"># vnjldmsv</span></div>
+<div class="line"><span class="preprocessor"># cdsnjkovdfmsnjom gefdbnjmvdfbnjiom</span></div>
+<div class="line"> </div>
+<div class="line">toto=tata</div>
+<div class="line">tata=tutu # test with comments</div>
+<div class="line"> </div>
+<div class="line">[TOTO]</div>
+<div class="line">toto=titi</div>
+</div><!-- fragment --><p>Parse INI file: </p><div class="fragment"><div class="line"><span class="keywordtype">void</span></div>
 <div class="line">addIndent(uint32_t indent) {</div>
 <div class="line">  <span class="keywordflow">for</span>(uint32_t i = 0 ; i &lt; indent ; ++i) {</div>
 <div class="line">    std::cout &lt;&lt; <span class="charliteral">&#39; &#39;</span>;</div>
@@ -144,8 +153,10 @@ Examples</h1>
 <div class="line">  section = anch::ini::parse(file);</div>
 <div class="line">  printSection(section);</div>
 <div class="line">  std::cout &lt;&lt; <span class="stringliteral">&quot;File has been parsed&quot;</span> &lt;&lt; std::endl;</div>
+<div class="line">  std::cout &lt;&lt; <span class="stringliteral">&quot;TOTO.toto = &quot;</span> &lt;&lt; section.<a class="code hl_function" href="classanch_1_1ini_1_1_section.html#a6c050ced3348cfb48ac3dac0dd069f6e">getValue</a>(<span class="stringliteral">&quot;TOTO.toto&quot;</span>) &lt;&lt; std::endl;</div>
 <div class="line">}</div>
 <div class="ttc" id="aclassanch_1_1ini_1_1_section_html"><div class="ttname"><a href="classanch_1_1ini_1_1_section.html">anch::ini::Section</a></div><div class="ttdoc">INI file section.</div><div class="ttdef"><b>Definition</b> section.hpp:39</div></div>
+<div class="ttc" id="aclassanch_1_1ini_1_1_section_html_a6c050ced3348cfb48ac3dac0dd069f6e"><div class="ttname"><a href="classanch_1_1ini_1_1_section.html#a6c050ced3348cfb48ac3dac0dd069f6e">anch::ini::Section::getValue</a></div><div class="ttdeci">static std::optional&lt; std::string &gt; getValue(const std::string &amp;path, const Section &amp;section)</div></div>
 <div class="ttc" id="aclassanch_1_1ini_1_1_section_html_acf1ca3dc80d59cac4a97c1d5134ec731"><div class="ttname"><a href="classanch_1_1ini_1_1_section.html#acf1ca3dc80d59cac4a97c1d5134ec731">anch::ini::Section::getValues</a></div><div class="ttdeci">const std::map&lt; std::string, std::string &gt; &amp; getValues() const</div></div>
 <div class="ttc" id="aclassanch_1_1ini_1_1_section_html_afa6a487343921f94e905e15966bc8345"><div class="ttname"><a href="classanch_1_1ini_1_1_section.html#afa6a487343921f94e905e15966bc8345">anch::ini::Section::getSections</a></div><div class="ttdeci">const std::map&lt; std::string, Section &gt; &amp; getSections() const</div></div>
 </div><!-- fragment --> </div></div><!-- contents -->
