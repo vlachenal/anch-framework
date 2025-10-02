@@ -138,9 +138,10 @@ if(ANCH_INI_UNITARY_TEST)
   enable_testing()
 
   # Parser unit tests +
-  add_test(parser-toto ${EXECUTABLE_OUTPUT_PATH}/anch-ini-parser-test -t parser-toto)
-  add_test(parser-TOTO-toto ${EXECUTABLE_OUTPUT_PATH}/anch-ini-parser-test -t parser-TOTO-toto)
-  add_test(parser-tata ${EXECUTABLE_OUTPUT_PATH}/anch-ini-parser-test -t parser-tata)
+  add_test(parser-root-val ${EXECUTABLE_OUTPUT_PATH}/anch-ini-parser-test -t parser-root-val)
+  add_test(parser-root-sub-val ${EXECUTABLE_OUTPUT_PATH}/anch-ini-parser-test -t parser-root-sub-val)
+  add_test(parser-root-sub-keysub-val ${EXECUTABLE_OUTPUT_PATH}/anch-ini-parser-test -t parser-root-sub-keysub-val)
+  add_test(parser-root-subsub-val ${EXECUTABLE_OUTPUT_PATH}/anch-ini-parser-test -t parser-root-subsub-val)
   # Parser unit tests -
 
 endif(ANCH_INI_UNITARY_TEST)

@@ -38,27 +38,42 @@ startup() {
 }
 
 void
-getToto() {
-  std::cout << "Execute getToto" << std::endl;
+getValFromRoot() {
+  std::cout << "Execute getValFromRoot" << std::endl;
   auto val = section.getValue("toto");
   anch::ut::assertTrue(val.has_value(), "toto not found");
   std::cout << "toto=" << val.value() << std::endl;
 }
 
 void
-getTOTOToto() {
-  std::cout << "Execute getTOTOToto" << std::endl;
+getValInSub() {
+  std::cout << "Execute getValInSub" << std::endl;
+  anch::ut::assertTrue(section.getSections().contains("TOTO"));
   auto val = section.getValue("TOTO.toto");
   anch::ut::assertTrue(val.has_value(), "toto not found");
   std::cout << "TOTO/toto=" << val.value() << std::endl;
 }
 
 void
-getTata() {
-  std::cout << "Execute getTata" << std::endl;
-  auto val = section.getValue("tata");
-  anch::ut::assertTrue(val.has_value(), "tata not found");
-  std::cout << "tata=" << val.value() << std::endl;
+getValSubInSub() {
+  std::cout << "Execute getValSubInSub" << std::endl;
+  anch::ut::assertTrue(section.getSections().contains("TOTO"));
+  auto sec = section.getSections().find("TOTO")->second;
+  anch::ut::assertTrue(sec.getSections().contains("tata"));
+  auto val = section.getValue("TOTO.tata.tyty");
+  anch::ut::assertTrue(val.has_value(), "tyty not found");
+  std::cout << "TOTO/tata/tyty=" << val.value() << std::endl;
+}
+
+void
+getValInSubSub() {
+  std::cout << "Execute getPlopPlipPlup" << std::endl;
+  anch::ut::assertTrue(section.getSections().contains("plop"));
+  auto sec = section.getSections().find("plop")->second;
+  anch::ut::assertTrue(sec.getSections().contains("plip"));
+  auto val = section.getValue("plop.plip.plup");
+  anch::ut::assertTrue(val.has_value(), "plup not found");
+  std::cout << "plop/plip/plup=" << val.value() << std::endl;
 }
 
 void
@@ -67,8 +82,9 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .name("AnCH INI unit tests")
     .description("Test AnCH INI library")
     .initialize(startup)
-    .add("parser-toto", getToto)
-    .add("parser-TOTO-toto", getTOTOToto)
-    .add("parser-tata", getTata)
+    .add("parser-root-val", getValFromRoot)
+    .add("parser-root-sub-val", getValInSub)
+    .add("parser-root-sub-keysub-val", getValSubInSub)
+    .add("parser-root-subsub-val", getValInSubSub)
     ;
 }

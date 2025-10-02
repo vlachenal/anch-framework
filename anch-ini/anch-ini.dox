@@ -17,7 +17,7 @@
  * \section ini_concept_sec Conception
  *
  * AnCH INI file library aims to parse <a href="https://en.wikipedia.org/wiki/INI_file">INI file according to common specifications</a>.\n
- * Comments are managed with '#' character.\n
+ * Comments are managed with '#' or ';' character.\n
  * Subsections are delimited by '.'.\n
  * Key which contains '.' character will create as many subsections as the number of '.' in key.\n
  * Values will be requested with their paths separated with '.'.

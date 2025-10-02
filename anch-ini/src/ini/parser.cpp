@@ -22,6 +22,7 @@
 #include <regex>
 #include <fstream>
 #include <string_view>
+#include <sstream>
 
 #include "ini/section.hpp"
 
@@ -30,10 +31,65 @@ using anch::ini::ParserError;
 
 
 // Static intialization +
-const std::regex SECTION_REGEX = std::regex("^\\[([^# \t]+)\\]");
-const std::regex KEYVAL_REGEX = std::regex("^([^# \t]+)( |\t)*=( |\t)*(.+)");
-const std::regex COMMENT_REGEX = std::regex("( |\t)*([^\\\\]#).*");
+const std::regex SECTION_REGEX = std::regex("^( |\t)*\\[([^#; \t]+)\\]");
+const std::regex KEYVAL_REGEX = std::regex("^[#; \t]*(.+)( |\t)*=( |\t)*(.+)");
+//const std::regex COMMENT_REGEX = std::regex("( |\t)*([^\\\\][#|;].*)$");
 // Static intialization -
+
+/*!
+ * Parse value
+ *
+ * \param value the value
+ * \param section the current section
+ */
+std::string
+parseValue(const std::string& value, std::istream& input) {
+  std::ostringstream oss;
+  std::string spaces;
+  for(auto iter = value.cbegin() ; iter != value.end() ; ++iter) {
+    switch(*iter) {
+    case ' ':
+    case '\t': // Put spaces into buffer
+      spaces += *iter;
+      break;
+    case '#':
+    case ';':
+      goto end;
+    case '\\': // Read next char
+      ++iter;
+      if(iter == value.cend()) {
+	std::ostringstream oss;
+	oss << value << " ends with \\";
+	throw ParserError(oss.str(), ParserError::ErrorCode::PARSING_ERROR);
+      }
+      if(*iter == '\\') {
+	for(; iter != value.end() ; ++iter) {
+	  if(*iter != ' ' && *iter != '\t' ) {
+	    std::ostringstream oss;
+	    oss << "Multiline should not have any character but spaces after \\\\ (" << value << ')';
+	    throw ParserError(oss.str(), ParserError::ErrorCode::PARSING_ERROR);
+	  }
+	}
+	if(input.eof()) {
+	  throw ParserError("End of file as been reached altough multiline is requested",
+			    ParserError::ErrorCode::PARSING_ERROR);
+	}
+	std::string line;
+	std::getline(input, line);
+	return oss.str() + parseValue(line, input);
+      }
+      [[ fallthrough ]];
+    default:
+      if(!spaces.empty()) {
+	oss.write(spaces.data(), static_cast<std::streamsize>(spaces.size()));
+	spaces.clear();
+      }
+      oss.put(*iter);
+    }
+  }
+ end:
+  return oss.str();
+}
 
 /*!
  * Parse key to store value.\n
@@ -42,37 +98,58 @@ const std::regex COMMENT_REGEX = std::regex("( |\t)*([^\\\\]#).*");
  * \param key the key
  * \param value the value
  * \param section the current section
+ * \param input the input stream
  */
 void
-parseValue(const std::string& key, const std::string& value, Section& section) {
+parseValue(const std::string& key, const std::string& value, Section& section, std::istream& input) {
   auto pos = key.find('.');
   if(pos != key.npos) {
-    parseValue(key.substr(pos + 1), value, section.section(key.substr(0, pos)));
+    parseValue(key.substr(pos + 1), value, section.section(key.substr(0, pos)), input);
   } else {
-    section.putValue(key, value);
+    section.putValue(key, parseValue(value, input));
   }
+}
+
+/*!
+ * Parse section
+ *
+ * \param name the section name
+ * \param section the current section
+ *
+ * \return the found section
+ */
+Section&
+parseSection(const std::string& name, Section& section) {
+  auto pos = name.find('.');
+  if(pos != name.npos) {
+    return parseSection(name.substr(pos + 1), section.section(name.substr(0, pos)));
+  }
+  return section.section(name);
 }
 
 /*!
  * Parse line
  *
  * \param line the read line as \c std::string
- * \param section the \ref Section to fill
+ * \param section the current \ref Section to fill
+ * \param section the root \ref Section
+ * \param input the input stream
  */
 Section*
-parseLine(const std::string& line, Section& section) {
+parseLine(const std::string& line, Section& section, Section& root, std::istream& input) {
   std::smatch match;
   Section* res = &section;
   if(std::regex_search(line, match, SECTION_REGEX)) {
-    res = &section.section(match[1]);
+    res = &parseSection(match[2], root);
 
   } else if(std::regex_search(line, match, KEYVAL_REGEX)) {
-    const std::string& key = match[1];
+    /*const std::string& key = match[1];
     std::string value = match[4];
     if(std::regex_search(value, match, COMMENT_REGEX)) {
       value = match.prefix();
     }
-    parseValue(key, value, section);
+    parseValue(key, value, section, input);*/
+    parseValue(match[1], match[4], section, input);
   }
   return res;
 }
@@ -100,7 +177,7 @@ anch::ini::parse(const std::filesystem::path& path) {
   std::string out;
   do {
     std::getline(file, out);
-    current = parseLine(out, *current);
+    current = parseLine(out, *current, root, file);
     out.clear();
 
   } while(!file.eof());
