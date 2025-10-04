@@ -20,6 +20,7 @@
 #include "uuid.hpp"
 
 #include <limits>
+#include <bit>
 
 using anch::UUID;
 
@@ -173,6 +174,42 @@ UUID::random() {
   // Sequence +
   uint16_t clockSeq = getDistSeq()(getRandomEngine());
   uuid._clockSeqLow = clockSeq & SEQ_LOW_MASK;
+  uuid._clockSeqHighRes = (clockSeq & SEQ_HIGH_MASK) >> 8;
+  uuid._clockSeqHighRes |= 0x80;
+  // Sequence -
+
+  // Node +
+  uuid._node = dist64(getRandomEngine());
+  // Node -
+  return uuid;
+}
+
+UUID
+UUID::randomTime() {
+  if(!_seeded) {
+    registerRandomUUID();
+  }
+
+  UUID uuid;
+  uuid._version = UUID::Version::RANDOM_TIME;
+  static std::uniform_int_distribution<uint16_t> dist16;
+  static std::uniform_int_distribution<uint64_t> dist64(0, 0xFFFFFFFFFFFF); // Max 12 hexadecimal digits
+
+  // Timestamp +
+  std::chrono::time_point<std::chrono::high_resolution_clock> now = std::chrono::high_resolution_clock::now();
+  auto epoch = now.time_since_epoch();
+  uint64_t timestamp = static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::milliseconds>(epoch).count());
+  if constexpr (std::endian::native == std::endian::big) {
+    timestamp = std::byteswap(timestamp);
+  }
+  uuid._lowTime = (timestamp >> 16) & UUID::TIME_LOW_MASK;
+  uuid._midTime = timestamp & UUID::TIME_MID_MASK;
+  uuid._highTime = dist16(getRandomEngine()) & UUID::TIME_HIGH_MASK;
+  // Timestamp -
+
+  // Sequence +
+  uint16_t clockSeq = getDistSeq()(getRandomEngine());
+  uuid._clockSeqLow = clockSeq & UUID::SEQ_LOW_MASK;
   uuid._clockSeqHighRes = (clockSeq & SEQ_HIGH_MASK) >> 8;
   uuid._clockSeqHighRes |= 0x80;
   // Sequence -

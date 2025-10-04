@@ -11,14 +11,11 @@ include(AnchUUID.cmake.in)
 # Check GCC version +
 execute_process(COMMAND ${CMAKE_C_COMPILER} -dumpversion
                 OUTPUT_VARIABLE GCC_VERSION)
-if (GCC_VERSION VERSION_LESS 8.0)
-  message(FATAL_ERROR "Version < 8.0. This library is based on C++17 standard. Exit.")
-elseif(GCC_VERSION VERSION_GREATER 10.0 OR GCC_VERSION VERSION_EQUAL 10.0)
-  message(STATUS "Version >= 10.0 use -std=c++20")
-  add_definitions("-std=c++20")
+if (GCC_VERSION VERSION_LESS 13.0)
+  message(FATAL_ERROR "Version < 13.0. This library is based on C++23 standard. Exit.")
 else()
-  message(STATUS "Version >= 8.0 use -std=c++17")
-  add_definitions("-std=c++17")
+  message(STATUS "Version >= 13.0 use -std=c++23")
+  add_definitions("-std=c++23")
 endif()
 # Check GCC version -
 
@@ -122,8 +119,9 @@ if(ANCH_UUID_UNITARY_TEST)
   # Build UUID unit test -
 
   enable_testing()
-  add_test(anch-uuid-single-test ${EXECUTABLE_OUTPUT_PATH}/anch-uuid-test -t uuid-single)
-  add_test(anch-uuid-collision-test ${EXECUTABLE_OUTPUT_PATH}/anch-uuid-test -t uuid-collision)
-  add_test(anch-uuid-perf-test ${EXECUTABLE_OUTPUT_PATH}/anch-uuid-test -t uuid-perf)
+  add_test(uuid-random ${EXECUTABLE_OUTPUT_PATH}/anch-uuid-test -t uuid-random)
+  add_test(uuid-random-time ${EXECUTABLE_OUTPUT_PATH}/anch-uuid-test -t uuid-random-time)
+  add_test(uuid-collision ${EXECUTABLE_OUTPUT_PATH}/anch-uuid-test -t uuid-collision)
+  add_test(uuid-perf ${EXECUTABLE_OUTPUT_PATH}/anch-uuid-test -t uuid-perf)
 
 endif(ANCH_UUID_UNITARY_TEST)

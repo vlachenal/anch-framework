@@ -73,12 +73,22 @@ tesUUIDSingle() {
 }
 
 void
+tesUUIDRadomTime() {
+  UUID random = UUID::randomTime();
+  std::cout << "Random time UUID:              " << random << std::endl;
+  std::string randomStr = static_cast<std::string>(random);
+  std::cout << "UUID random conversion:        " << randomStr << std::endl;
+  std::cout << "UUID random string conversion: " << UUID(randomStr) << std::endl;
+}
+
+void
 anch::ut::setup(anch::ut::UnitTests& tests) {
   tests
     .name("AnCH UUID unit tests")
     .description("Test AnCH UUID library")
     .add("uuid-perf", testUUIDPerf)
     .add("uuid-collision", testUUIDCollision)
-    .add("uuid-single", tesUUIDSingle)
+    .add("uuid-random", tesUUIDSingle)
+    .add("uuid-random-time", tesUUIDRadomTime)
     ;
 }

@@ -69,7 +69,16 @@ namespace anch {
       RANDOM,
 
       /*! SHA1 hash based algorithm */
-      SHA1_HASH
+      SHA1_HASH,
+
+      /*! MAC address based algorithm ; all time bits are in reserve order compared to MAC_ADDRESS */
+      MAC_ADDRESS_R,
+
+      /*! Random and time based algorithm */
+      RANDOM_TIME,
+
+      /*! Random and time based algorithm */
+      EXP
     };
 
     // Attributes +
@@ -212,6 +221,13 @@ namespace anch {
      * \return the new UUID
      */
     static UUID random();
+
+    /*!
+     * Generate a new UUID with version 7 (random + time) algorithm
+     *
+     * \return the new UUID
+     */
+    static UUID randomTime();
 
     /*!
      * Get UTC timestamp
