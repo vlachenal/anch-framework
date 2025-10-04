@@ -143,12 +143,6 @@ parseLine(const std::string& line, Section& section, Section& root, std::istream
     res = &parseSection(match[2], root);
 
   } else if(std::regex_search(line, match, KEYVAL_REGEX)) {
-    /*const std::string& key = match[1];
-    std::string value = match[4];
-    if(std::regex_search(value, match, COMMENT_REGEX)) {
-      value = match.prefix();
-    }
-    parseValue(key, value, section, input);*/
     parseValue(match[1], match[4], section, input);
   }
   return res;
