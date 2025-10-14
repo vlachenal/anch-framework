@@ -148,8 +148,8 @@ parseLine(const std::string& line, Section& section, Section& root, std::istream
   return res;
 }
 
-Section
-anch::ini::parse(const std::filesystem::path& path) {
+void
+anch::ini::merge(const std::filesystem::path& path, anch::ini::Section& section) {
   if(!std::filesystem::exists(path)) {
     std::ostringstream oss;
     oss << "File " << path << " does not exists";
@@ -166,18 +166,15 @@ anch::ini::parse(const std::filesystem::path& path) {
   // Open file -
 
   // Parse file +
-  Section root;
-  Section* current = &root;
+  Section* current = &section;
   std::string out;
   do {
     std::getline(file, out);
-    current = parseLine(out, *current, root, file);
+    current = parseLine(out, *current, section, file);
     out.clear();
 
   } while(!file.eof());
   // Parse file -
 
   file.close();
-
-  return root;
 }

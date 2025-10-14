@@ -17,43 +17,29 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
-#pragma once
+#include "conf/confError.hpp"
 
-namespace anch::conf {
+#include <sstream>
 
-  inline
-  Configuration&
-  Configuration::loader() noexcept {
-    static Configuration conf;
-    return conf;
+using anch::conf::ConfError;
+
+
+ConfError::ConfError(const std::string& msg, ConfError::ErrorCode code): _code(code) {
+  std::ostringstream oss;
+  switch(_code) {
+  case ConfError::ErrorCode::NOT_READABLE:
+    oss << "NOT_READABLE: ";
+    break;
+  case ConfError::ErrorCode::PARSING_ERROR:
+    oss << "PARSING_ERROR: ";
+    break;
+  default:
+    oss << "UNKNOWN: ";
   }
+  oss << msg;
+  _msg = oss.str();
+}
 
-  inline
-  Configuration&
-  Configuration::name(const std::string& name) noexcept {
-    if(!_loaded) {
-      _name = name;
-    }
-    return *this;
-  }
-
-  inline
-  Configuration&
-  Configuration::profiles(const std::vector<std::string>& profiles) noexcept {
-    if(!_loaded) {
-      _profiles = profiles;
-    }
-    return *this;
-  }
-
-  inline
-  const Configuration&
-  Configuration::inst() {
-    Configuration& conf = Configuration::loader();
-    if(!conf._loaded) {
-      // \todo raise error
-    }
-    return conf;
-  }
-
+ConfError::~ConfError() noexcept {
+  // Nothing to do
 }

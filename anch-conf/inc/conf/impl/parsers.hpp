@@ -19,18 +19,13 @@
 */
 #pragma once
 
-namespace anch::resource {
 
-  inline const std::map<std::string,std::string>& Section::getParameters() const {
-    return _parameters;
-  }
+namespace anch::conf {
 
-  inline void Section::setParameters(const std::map<std::string,std::string>& parameters) {
-    _parameters = parameters;
-  }
-
-  inline void Section::addParameter(const std::string& param, const std::string& value) {
-    _parameters[param] = value;
+  inline
+  const std::map<std::string, Parser>&
+  Parsers::getParsers() const {
+    return _registry;
   }
 
 }

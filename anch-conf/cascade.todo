@@ -1,0 +1,18 @@
+fonction register pour la lib à utiliser pour lire un fichier à partir de son extension (anch-ini => .ini, .conf, .properties ; anch-json => .json ; anch-yaml => .yaml, .yml ; anch-xml => .xml ; ...)
+
+parsing complet
+
+dans la section anch::conf
+
+[anch::conf]
+includes=file1,file2
+default-profiles=dev
+
+split des includes par ','
+si pas de profile en paramètre ni de profile dans les variables d'environnement (ANCH_PROFILES) alors la liste des profiles est default-profiles (split par ',')
+
+chargement des includes AVEC les profiles (même règle que ci-dessous)
+si un des fichiers inclus n'existe pas, plantage
+
+chargement des profiles (même nom de fichier suffixé par -<profile>)
+si le fichier suffixé n'existe pas, pas d'erreur

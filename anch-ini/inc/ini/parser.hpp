@@ -50,6 +50,16 @@ namespace anch::ini {
    */
   anch::ini::Section parse(const std::filesystem::path& path);
 
+  /*!
+   * Parse file
+   *
+   * \param path the file's path
+   * \param section the section to fill
+   *
+   * \throw \ref anch::ini::ParseError parsing exception
+   */
+  void merge(const std::filesystem::path& path, anch::ini::Section& section);
+
 }
 
 #include "ini/impl/parser.hpp"

@@ -20,97 +20,169 @@
 #pragma once
 
 #include <map>
-#include <mutex>
 #include <optional>
+#include <string>
+#include <vector>
+#include <filesystem>
 
-#include "resource/section.hpp"
+#include "conf/section.hpp"
+#include "conf/confError.hpp"
 
-namespace anch::resource {
+namespace anch::conf {
 
   /*!
-   * Resource manager
+   * \brief Application configuration
+   *
+   * Load and manage configuration for an application.\n
+   * It provides profiles inspired by Spring framework.
+   *
+   * \since 0.1
    *
    * \author Vincent Lachenal
    */
-  class Resource {
-  private:
+  class Configuration {
+
     // Attributes +
-    /*! Cached resources */
-    static std::map<std::string,Resource> RESOURCES;
+  private:
+    /*! Configuration has been loaded flag */
+    bool _loaded;
 
-    /*! Mutex */
-    static std::mutex MUTEX;
+    /*! Configuration file base name without profile suffix and without extension */
+    std::string _name;
 
-    /*! Resources */
-    std::map<std::string,anch::resource::Section> _resources;
+    /*! Profiles' list. Default: ANCH_PROFILES environment variable */
+    std::vector<std::string> _profiles;
+
+    /*! Files to include */
+    std::vector<std::string> _includes;
+
+    /*! Files to include */
+    std::vector<std::string> _folders;
+
+    /*! Root section */
+    anch::conf::Section _root;
     // Attributes -
 
-  private:
     // Constructors +
+  private:
     /*!
-     * \ref Resource private constructor
+     * \ref Configuration private constructor
      */
-    Resource();
+    Configuration();
+
+  public:
+    /*!
+     * Forbids \ref Configuration copy constructor
+     *
+     * \param conf the \ref Configuration not to copy
+     */
+    Configuration(const Configuration& conf) = delete;
+
+    /*!
+     * Forbids \ref Configuration move constructor
+     *
+     * \param conf the \ref Configuration not to move
+     */
+    Configuration(Configuration&& conf) = delete;
     // Constructors -
 
-  public:
     // Destructor +
+  private:
     /*!
-     * \ref Resource destructor
+     * \ref Configuration destructor
      */
-    virtual ~Resource();
+    virtual ~Configuration();
     // Destructor -
 
+    // Methods +
   public:
     /*!
-     * Get Resource instance from file
+     * Get \ref Configuration unique instance
+     *
+     * \return the reference of the \ref Configuration
+     */
+    static const Configuration& inst();
+
+    /*!
+     * Initialize \ref Configuration
+     *
+     * \return the reference of the new \ref Configuration
+     */
+    static Configuration& loader() noexcept;
+
+    /*!
+     * Folders' setter
+     *
+     * \param folders the folders to inspect
+     *
+     * \return \c this
+     */
+    Configuration& folders(const std::vector<std::filesystem::path>& folders) noexcept;
+
+    /*!
+     * Configuration base name setter
+     *
+     * \param name the name to set
+     *
+     * \return \c this
+     */
+    Configuration& name(const std::string& name) noexcept;
+
+    /*!
+     * Configuration profiles setter
+     *
+     * \param profiles the profiles to set
+     *
+     * \return \c this
+     */
+    Configuration& profiles(const std::vector<std::string>& profiles) noexcept;
+
+    /*!
+     * Parse \ref Configuration from base name.\n
+     * Configuration will load configuration files in this order:
+     *  - look for <name> file with registered extenions (default name to application ; ini, conf, cnf and properties extensions will always been registered) in folders
+     *  - raise error when file is not found
+     *  - load the first file found (others will be ignored)
+     *  - load includes files
+     *  - for each active profiles, repeat the previous loading with <file>-<profile>.<extension>
      *
      * \param filePath The resource file path
      *
-     * \return The \ref Resource unique instance
+     * \return the \ref Configuration
      */
-    static const Resource& getResource(const std::string& filePath);
+    Configuration& load();
 
     /*!
-     * Get parameter value from its name and section
+     * Get section
      *
-     * \param value The value to set
-     * \param param The parameter to find
-     * \param section The parameter section (optional)
+     * \param section the section's path
      *
-     * \return \c true if value has been found, \c false otherwise.
+     * \return the section when found, \c NULL otherwise.
      */
-    bool getParameter(std::string& value,
-		      const std::string& param,
-		      const std::string& section = "") const;
+    const anch::conf::Section* section(const std::string& path) const noexcept;
 
     /*!
-     * Access section
+     * Get value
      *
-     * \param section the section name
+     * \param param the value's path
      *
      * \return the optional result
      */
-    std::optional<anch::resource::Section> section(const std::string& section) const;
+    std::optional<std::string> value(const std::string& path) const noexcept;
 
+  private:
     /*!
-     * Access parameter without section
+     * Load profile's configuration files.\n
+     * Do not raise error when configuration has not been found.\n
+     * This will override any previously defined value.
      *
-     * \param param the parameter name
-     *
-     * \return the optional result
+     * \param profile the profile to load
      */
-    std::optional<std::string> parameter(const std::string& param) const;
-
-    /*!
-     * Get resource configuration
-     *
-     * \return The configuration
-     */
-    const std::map<std::string,anch::resource::Section>& getConfiguration() const;
+    void loadProfile(const std::string& profile);
+    // Methods -
 
   };
 
 }
 
-#include "resource/impl/resource.hpp"
+#include "conf/impl/configuration.hpp"

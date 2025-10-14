@@ -1,29 +1,34 @@
 cmake_minimum_required(VERSION 3.10)
 
-# Project anch resource
+# Project anch conf
 # ANother C++ Harsh/Huge/Hack
-project(anch-resource)
+project(anch-conf)
 set(EXECUTABLE_OUTPUT_PATH bin/${CMAKE_BUILD_TYPE})
 set(LIBRARY_OUTPUT_PATH lib/${CMAKE_BUILD_TYPE})
 
-include(AnchResource.cmake.in)
+include(AnchConf.cmake.in)
 
 # Check GCC version +
-execute_process(COMMAND ${CMAKE_C_COMPILER} -dumpversion OUTPUT_VARIABLE GCC_VERSION)
-if (GCC_VERSION VERSION_LESS 10.0)
-  message(FATAL_ERROR "Version < 10.0. This library is based on C++20 standard. Exit.")
+execute_process(COMMAND ${CMAKE_C_COMPILER} -dumpversion
+  OUTPUT_VARIABLE GCC_VERSION)
+if (GCC_VERSION VERSION_LESS 13.0)
+  message(FATAL_ERROR "Version < 13.0. This library is based on C++23 standard. Exit.")
 else()
-  message(STATUS "Version >= 10.0 use -std=c++20")
-  add_definitions("-std=c++20")
+  message(STATUS "Version >= 13.0 use -std=c++23")
+  add_definitions("-std=c++23")
 endif()
 # Check GCC version -
 
 # Add GCC definitions
 add_definitions("-Wall -Wextra -Werror -Wuninitialized -Wconversion -Wsign-conversion -Wformat-security -fstack-protector-all -Wstack-protector --param ssp-buffer-size=4 -ftrapv  -z relro,now -fPIC -D_FORTIFY_SOURCE=2")
-add_definitions(${ANCH_RESOURCE_COMPILE_FLAGS})
+add_definitions(${ANCH_CONF_COMPILE_FLAGS})
 
 # Includes location
-include_directories(inc)
+include_directories(
+  inc
+  ${ANCH_INI_INCLUDES_DIR}
+  ${ANCH_UTILS_INCLUDES_DIR}
+)
 
 # Retrieve every files in project
 file(
@@ -34,50 +39,51 @@ file(
 
 # Build objects
 add_library(
-  anch-resource-obj
+  anch-conf-obj
   OBJECT
   ${source_files}
   )
 
 ## Dynamic library +
 add_library(
-  anch-resource
+  anch-conf
   SHARED
-  $<TARGET_OBJECTS:anch-resource-obj>
+  $<TARGET_OBJECTS:anch-conf-obj>
   )
 
 install(
-  DIRECTORY inc/ DESTINATION ${ANCH_RESOURCE_INSTALL_INC_DIR}
+  DIRECTORY inc/ DESTINATION ${ANCH_CONF_INSTALL_INC_DIR}
   FILES_MATCHING PATTERN "*.hpp"
   )
 
 install(
-  TARGETS anch-resource
-  LIBRARY DESTINATION ${ANCH_RESOURCE_INSTALL_LIB_DIR}
+  TARGETS anch-conf
+  LIBRARY DESTINATION ${ANCH_CONF_INSTALL_LIB_DIR}
   )
 ## Dynamic library -
 
 ## Static library +
-if(ANCH_RESOURCE_STATIC_LIB)
+if(ANCH_CONF_STATIC_LIB)
   add_library(
-    anch-resource-static
+    anch-conf-static
     STATIC
-    $<TARGET_OBJECTS:anch-resource-obj>
+    $<TARGET_OBJECTS:anch-conf-obj>
     )
-  set_target_properties(anch-resource-static PROPERTIES OUTPUT_NAME anch-resource)
+  set_target_properties(anch-conf-static PROPERTIES OUTPUT_NAME anch-conf)
 
   install(
-    TARGETS anch-resource-static
-    ARCHIVE DESTINATION ${ANCH_RESOURCE_INSTALL_LIB_DIR}
+    TARGETS anch-conf-static
+    ARCHIVE DESTINATION ${ANCH_CONF_INSTALL_LIB_DIR}
     )
-endif(ANCH_RESOURCE_STATIC_LIB)
+endif(ANCH_CONF_STATIC_LIB)
 ## Static library -
 
 
-if(ANCH_RESOURCE_UNITARY_TEST)
+if(ANCH_CONF_UNITARY_TEST)
 
   include_directories(
     inc
+    ${ANCH_INI_INCLUDES_DIR}
     ${ANCH_CLI_INCLUDES_DIR}
     ${ANCH_UT_INCLUDES_DIR}
     )
@@ -85,6 +91,7 @@ if(ANCH_RESOURCE_UNITARY_TEST)
   link_directories(
     ${ANCH_CLI_LIBRARY_DIR}
     ${ANCH_UT_LIBRARY_DIR}
+    ${ANCH_INI_LIBRARY_DIR}
     )
 
   configure_file(test/test.ini test.ini COPYONLY)
@@ -92,28 +99,26 @@ if(ANCH_RESOURCE_UNITARY_TEST)
   file(
     GLOB_RECURSE
     test_files
-    test/testResource.cpp
+    test/testConf.cpp
     )
 
   add_executable(
-    anch-resource-parse
+    anch-conf-parse
     ${test_files}
     )
 
   target_link_libraries(
-    anch-resource-parse
-    anch-resource
+    anch-conf-parse
+    anch-conf
+    anch-ini
     anch-cli
     anch-unit
     )
   # Build parser unitary test -
 
   enable_testing()
-  add_test(anch-resource-get-TOTO-toto ${EXECUTABLE_OUTPUT_PATH}/anch-resource-parse -t get-TOTO-toto)
-  add_test(anch-resource-get-opt-TOTO-toto ${EXECUTABLE_OUTPUT_PATH}/anch-resource-parse -t get-opt-TOTO-toto)
-  add_test(anch-resource-get-opt-tata ${EXECUTABLE_OUTPUT_PATH}/anch-resource-parse -t get-opt-tata)
-  add_test(anch-resource-get-opt-toto ${EXECUTABLE_OUTPUT_PATH}/anch-resource-parse -t get-opt-toto)
-  add_test(anch-resource-get-tata ${EXECUTABLE_OUTPUT_PATH}/anch-resource-parse -t get-tata)
-  add_test(anch-resource-get-toto ${EXECUTABLE_OUTPUT_PATH}/anch-resource-parse -t get-toto)
+  add_test(anch-conf-get-TOTO-toto ${EXECUTABLE_OUTPUT_PATH}/anch-conf-parse -t get-TOTO-toto)
+  add_test(anch-conf-get-tata ${EXECUTABLE_OUTPUT_PATH}/anch-conf-parse -t get-tata)
+  add_test(anch-conf-get-toto ${EXECUTABLE_OUTPUT_PATH}/anch-conf-parse -t get-toto)
 
-endif(ANCH_RESOURCE_UNITARY_TEST)
+endif(ANCH_CONF_UNITARY_TEST)

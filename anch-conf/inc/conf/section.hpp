@@ -19,95 +19,11 @@
 */
 #pragma once
 
-#include <map>
-#include <string>
-#include <optional>
+#include "ini/section.hpp"
 
-namespace anch::resource {
+namespace anch::conf {
 
-  /*!
-   * Parameters defined in a section
-   *
-   * \author Vincent Lachenal
-   */
-  class Section {
-
-  public:
-    // Attributes +
-    /*! Parameter default value when not found */
-    static std::string DEFAULT_VALUE;
-
-  private:
-    /*! Parameters map */
-    std::map<std::string,std::string> _parameters;
-    // Attributes -
-
-  public:
-    // Constructors +
-    /*!
-     * \ref Section default constructor
-     */
-    Section();
-
-    /*!
-     * \ref Section copy constructor
-     */
-    Section(const Section& section);
-    // Constructors -
-
-    // Destructor +
-    /*!
-     * \ref Section destructor
-     */
-    ~Section();
-    // Destructor -
-
-  public:
-    // Accessors +
-    /*!
-     * Parameters getter
-     *
-     * \return The parameters
-     */
-    const std::map<std::string,std::string>& getParameters() const;
-
-    /*!
-     * Parameters setter
-     *
-     * \param parameters The parameters
-     */
-    void setParameters(const std::map<std::string,std::string>& parameters);
-
-    /*!
-     * Add parameter to section
-     *
-     * \param param The parameter
-     * \param value The associated value
-     */
-    void addParameter(const std::string& param, const std::string& value);
-
-    /*!
-     * Parameter getter.\n
-     * Search a parameter value by parameter name. If not found, an empty string will be returned.
-     *
-     * \param parameterName The parameter's name
-     *
-     * \return The parameter value or empty if not found
-     */
-    virtual const std::string& getParameter(const std::string& parameterName) const;
-
-    /*!
-     * Access parameter
-     *
-     * \param param the parameter name
-     *
-     * \return the optional result
-     */
-    virtual std::optional<std::string> parameter(const std::string& param) const;
-    // Accessors -
-
-  };
+  /*! Declare \c anch::conf::Section as alias of \ref anch::ini::Section  */
+  using Section = anch::ini::Section;
 
 }
-
-#include "resource/impl/section.hpp"

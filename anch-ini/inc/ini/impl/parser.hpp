@@ -23,9 +23,16 @@ namespace anch::ini {
 
   inline
   Section parse(const std::string& path) {
-    std::filesystem::path file(path);
-    Section sec = parse(file);
-    return sec;
+    Section root;
+    anch::ini::merge(std::filesystem::path(path), root);
+    return root;
+  }
+
+  inline
+  Section parse(const std::filesystem::path& path) {
+    Section root;
+    anch::ini::merge(path, root);
+    return root;
   }
 
 }

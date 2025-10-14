@@ -1,30 +1,29 @@
-/*! \page page_res AnCH resource library documentation
+/*! \page page_res AnCH configuration library documentation
  *
  * \tableofcontents
  *
  * \section res_intro_seq Introduction
  *
- * AnCh resource library aims to provide facilities to handle resource/configuration files.
+ * AnCh configuration library aims to provide facilities to handle configuration files.
  *
  * \section res_req_sec Prerequisites
  *
- * - boost library (until standard C++ library implements regular expression)
- * - pthread library
+ * - \ref anch-ini this is the default configuration file parser (it will be register with extensions \c ini , \c conf , \c cnf and \c properties files)
  *
  * \section res_install_sec Installation
  *
- * TODO fill this section
+ * make install
  *
  * \section res_concept_sec Conception
  *
- * AnCH resource library is a thread safe configuration files management library.\n
- * Every resources will be store in application cache and will be available with static methods.\n
+ * AnCH configuration library is a thread safe configuration files management library.\n
+ * Every configurations will be store in application cache and will be available with static methods.\n
  * \n
  * Configuration files has to be formatted with classic key=value syntax. It supports comments with \c # character.\n
- * Resource files can also contains categories which will be declared between brackets.\n
+ * Configuration files can also contains categories which will be declared between brackets.\n
  * \n
  * Configuration file example:\n
- * \code{.txt}
+ * \code{.ini}
 # Some comment
 key=value
 key1=value1
@@ -34,13 +33,13 @@ key=value # Other comment
 key2=value2
 \endcode
  * \n
- * Library interface is done in a single class: \ref anch::resource::Resource "anch::resource::Resource".\n
- * Resource files are retrieved through \c getResource static method which returns a \ref anch::resource::Resource "anch::resource::Resource" instance.\n
- * Resource parameters are retrieved through \c getParameter method.
+ * Library interface is done in a single class: \ref anch::conf::Configuration "anch::conf::Configuration".\n
+ * Configuration files are retrieved through \c getConfiguration static method which returns a \ref anch::conf::Configuration "anch::conf::Configuration" instance.\n
+ * Configuration parameters are retrieved through \c getParameter method.
  *
  * \section res_example_sec Example
  *
- * Resource file "test.ini":
+ * Configuration file "test.ini":
  * \code{.txt}
 # Comments
 
@@ -55,22 +54,22 @@ toto=titi
  * \code{.cpp}
 #include <iostream>
 
-#include "resource/resource.hpp"
+#include "configuration/configuration.hpp"
 
 
 using std::cout;
 using std::endl;
 using std::string;
 
-using anch::resource::Resource;
+using anch::configuration::Configuration;
 
 
 int
 main(void) {
-  cout << "Enter in test resource" << endl;
+  cout << "Enter in test configuration" << endl;
 
   cout << "Parse file" << endl;
-  const Resource& res = Resource::getResource("test.ini");
+  const Configuration& res = Configuration::getConfiguration("test.ini");
   cout << "File has been parsed" << endl;
 
   string value;
@@ -96,7 +95,7 @@ main(void) {
   }
 
 
-  cout << "Exit test resource" << endl;
+  cout << "Exit test configuration" << endl;
   return 0;
 }\endcode
  */
