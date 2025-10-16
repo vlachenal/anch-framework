@@ -69,6 +69,11 @@ SqlConnectionFactory* fact;
 void
 beforeAll() {
   std::cout << "Enter in SQL connection factory unit test" << std::endl;
+  std::cout << "To run tests outside of ctest, be sure LD_LIBRARY_PATH environment variable is set to cmake libraries folder (ex: export LD_LIBRARY_PATH=lib)" << std::endl;
+  char* dir = std::getenv("LD_LIBRARY_PATH");
+  if(dir == NULL) {
+    std::cerr << "LD_LIBRARY_PATH is not set" << std::endl;
+  }
   anch::conf::Configuration& conf = anch::conf::Configuration::loader().name("db_con").load();
   anch::ut::assertFalse(conf.section("anch::sql") == NULL);
   const anch::conf::Section* sql = conf.section("anch::sql");

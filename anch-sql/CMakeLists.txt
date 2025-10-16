@@ -410,6 +410,7 @@ if(ANCH_SQL_UNITARY_TEST)
   # Build SQLite3 unitary test -
 
   # Build SQL connection factory test +
+  set(ENV{LD_LIBRARY_PATH} ${LIBRARY_OUTPUT_DIRECTORY})
   file(
     GLOB_RECURSE
     test_sqlfactory
