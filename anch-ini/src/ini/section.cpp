@@ -95,3 +95,33 @@ Section::operator = (const Section& other) {
   return *this;
 }
 // Operators +
+
+void
+addIndent(uint32_t indent, std::ostringstream& oss) {
+  for(uint32_t i = 0 ; i < indent ; ++i) {
+    oss << ' ';
+  }
+}
+
+void
+printSection(const anch::ini::Section& section,
+	     std::ostringstream& oss,
+	     const std::string& name = "root",
+	     uint32_t indent = 0) {
+  addIndent(indent, oss);
+  oss << '[' << name << ']' << std::endl;
+  for(auto iter = section.getValues().begin() ; iter != section.getValues().end() ; ++iter) {
+    addIndent(indent + 1, oss);
+    oss << iter->first << '=' << iter->second << std::endl;
+  }
+  for(auto iter = section.getSections().begin() ; iter != section.getSections().end() ; ++iter) {
+    printSection(iter->second, oss, iter->first, indent + 2);
+  }
+}
+
+std::string
+Section::debug() const {
+  std::ostringstream oss;
+  printSection(*this, oss);
+  return oss.str();
+}

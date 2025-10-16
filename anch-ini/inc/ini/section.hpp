@@ -163,6 +163,14 @@ namespace anch::ini {
     Section& putValue(const std::string& key, const std::string& value);
     // Modifiers -
 
+  public:
+    /*!
+     * Print section for debug
+     *
+     * \return the section as string
+     */
+    std::string debug() const;
+
     // Operators +
   public:
     /*!
