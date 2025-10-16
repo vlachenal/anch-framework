@@ -123,9 +123,12 @@ main(int argc, char** argv) {
   } // \todo manage other runners (TCP, UDP, UDS)
   // Manage unit tests runner -
 
-  runner->startup();
+  bool started = runner->startup();
   uint16_t nbOK = 0;
   for(auto iter = opts.tests.cbegin() ; iter != opts.tests.cend() ; ++iter) {
+    if(!started) {
+      continue;
+    }
     uint16_t res = runner->test(*iter);
     if(res == 0) {
       ++nbOK;
