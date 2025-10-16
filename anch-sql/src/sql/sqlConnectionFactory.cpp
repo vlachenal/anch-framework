@@ -20,7 +20,7 @@
 #include "sql/sqlConnectionFactory.hpp"
 
 #include "sql/sqlSharedLibraries.hpp"
-#include "resource/resource.hpp"
+#include "conf/configuration.hpp"
 #include "convert.hpp"
 #include "singleton.hpp"
 
@@ -34,10 +34,10 @@ using anch::sql::SqlConnectionConfiguration;
 using anch::sql::SqlConnectionPool;
 using anch::sql::SQLSharedLibraries;
 
-using anch::resource::Resource;
-using anch::resource::Section;
+using anch::conf::Configuration;
+using anch::conf::Section;
 
-const std::string NAME_PREFIX("anch::sql::");
+const std::string SQL_SECTION("anch::sql");
 
 
 std::shared_ptr<Connection>
@@ -47,24 +47,16 @@ anch::sql::make_shared_connection(const SqlConnectionConfiguration& config) {
 
 // Constructors +
 SqlConnectionFactory::SqlConnectionFactory(): _configs(), _pools() {
-  auto resource = Resource::getResource("db_con.conf");
-  auto conf = resource.getConfiguration();
-  for(auto iter = conf.cbegin() ; iter != conf.cend() ; ++iter) {
-    std::string name = iter->first;
-    // Check if section is about anch::sql +
-    if(!name.starts_with(NAME_PREFIX)) {
-      continue;
-    }
-    name = name.substr(NAME_PREFIX.size());
-    // Check if section is about anch::sql -
-    const Section& conf = iter->second;
-    // Connection configuration +
-    SqlConnectionConfiguration conConf;
-    conConf.driver = conf.getParameter("driver");
-    if(conConf.driver.empty()) {
+  const Section* conf = Configuration::inst().section(SQL_SECTION);
+  for(auto iter = conf->getSections().begin() ; iter != conf->getSections().end() ; ++iter) {
+    const Section& connection = iter->second;
+    std::optional<std::string> optdriver = connection.getValue("driver");
+    if(!optdriver.has_value()) {
       continue;
     }
     // Try to register known database engine if found +
+    SqlConnectionConfiguration conConf;
+    conConf.driver = optdriver.value();
     if(conConf.driver == "PostgreSQL") {
       SQLSharedLibraries::registerPostgreSQL();
     } else if(conConf.driver == "MySQL") {
@@ -73,52 +65,72 @@ SqlConnectionFactory::SqlConnectionFactory(): _configs(), _pools() {
       SQLSharedLibraries::registerSQLite();
     }
     // Try to register known database engine if found -
-    conConf.database = conf.getParameter("database");
-    conConf.hostname = conf.getParameter("host");
-    conConf.user = conf.getParameter("user");
-    conConf.password = conf.getParameter("password");
-    conConf.application = conf.getParameter("application");
-    std::string intStr = conf.getParameter("port");
-    if(!intStr.empty()) {
+    auto db = connection.getValue("database");
+    if(db.has_value()) {
+      conConf.database = db.value();
+    }
+    auto host = connection.getValue("host");
+    if(host.has_value()) {
+      conConf.hostname = host.value();
+    }
+    auto user = connection.getValue("user");
+    if(user.has_value()) {
+      conConf.user = user.value();
+    }
+    auto password = connection.getValue("password");
+    if(password.has_value()) {
+      conConf.password = password.value();
+    }
+    auto application = connection.getValue("application");
+    if(application.has_value()) {
+      conConf.application = application.value();
+    }
+    auto port = connection.getValue("port");
+    if(port.has_value()) {
       try {
-	conConf.port = convert<int>(intStr);
+	conConf.port = convert<int>(port.value());
       } catch(const std::bad_cast& e) {
 	// continue ...
       }
     }
-    _configs[name] = conConf;
+    _configs[iter->first] = conConf;
     // Connection configuration -
 
     // Pool configuration +
-    intStr = conf.getParameter("pool_maxsize");
-    if(intStr.empty()) {
+    const anch::conf::Section* pool = NULL;
+    auto iterPool = connection.getSections().find("pool");
+    if(iterPool == connection.getSections().end()) {
       continue;
     }
+    pool = &iterPool->second;
+    std::optional<std::string> intStr = pool->getValue("max-size");
     std::size_t maxSize = 0;
-    try {
-      maxSize = convert<std::size_t>(intStr);
-    } catch(const std::bad_cast& e) {
-      continue;
+    if(intStr.has_value()) {
+      try {
+	maxSize = convert<std::size_t>(intStr.value());
+      } catch(const std::bad_cast& e) {
+	continue;
+      }
     }
     std::size_t initSize = 0;
-    intStr = conf.getParameter("pool_initsize");
-    if(!intStr.empty()) {
+    intStr = pool->getValue("init-size");
+    if(intStr.has_value()) {
       try {
-	initSize = convert<std::size_t>(intStr);
+	initSize = convert<std::size_t>(intStr.value());
       } catch(const std::bad_cast& e) {
 	initSize = 0;
       }
     }
     std::size_t timeout = 100;
-    intStr = conf.getParameter("pool_timeout");
-    if(!intStr.empty()) {
+    intStr = pool->getValue("timeout");
+    if(intStr.has_value()) {
       try {
-	timeout = convert<std::size_t>(intStr);
+	timeout = convert<std::size_t>(intStr.value());
       } catch(const std::bad_cast& e) {
 	timeout = 100;
       }
     }
-    _pools[name] = new SqlConnectionPool(conConf, maxSize, initSize, std::chrono::milliseconds(timeout));
+    _pools[iter->first] = new SqlConnectionPool(conConf, maxSize, initSize, std::chrono::milliseconds(timeout));
     // Pool configuration -
   }
 }

@@ -33,7 +33,8 @@ add_definitions(" ${ANCH_SQL_COMPILE_FLAGS}")
 include_directories(
   inc
   ${ANCH_UTILS_INCLUDES_DIR}
-  ${ANCH_RES_INCLUDES_DIR}
+  ${ANCH_CONF_INCLUDES_DIR}
+  ${ANCH_INI_INCLUDES_DIR}
   ${ANCH_DATE_INCLUDES_DIR}
 )
 
@@ -317,7 +318,8 @@ if(ANCH_SQL_UNITARY_TEST)
   )
 
   link_directories(
-    ${ANCH_RES_LIBRARY_DIR}
+    ${ANCH_CONF_LIBRARY_DIR}
+    ${ANCH_INI_LIBRARY_DIR}
     ${ANCH_DATE_LIBRARY_DIR}
     ${ANCH_UT_LIBRARY_DIR}
     ${ANCH_CLI_LIBRARY_DIR}
@@ -341,7 +343,8 @@ if(ANCH_SQL_UNITARY_TEST)
       anch-mysql-test
       anch-sql
       anch-mysql
-      anch-resource
+      anch-conf
+      anch-ini
       anch-date
       anch-unit
       anch-cli
@@ -368,7 +371,8 @@ if(ANCH_SQL_UNITARY_TEST)
       anch-postgresql-test
       anch-sql
       anch-postgresql
-      anch-resource
+      anch-conf
+      anch-ini
       anch-date
       anch-unit
       anch-cli
@@ -395,7 +399,8 @@ if(ANCH_SQL_UNITARY_TEST)
       anch-sqlite3-test
       anch-sql
       anch-sqlite
-      anch-resource
+      anch-conf
+      anch-ini
       anch-date
       anch-unit
       anch-cli
@@ -420,7 +425,8 @@ if(ANCH_SQL_UNITARY_TEST)
   target_link_libraries(
     anch-sql-connection-factory-test
     anch-sql
-    anch-resource
+    anch-conf
+    anch-ini
     anch-date
     anch-unit
     anch-cli
@@ -443,7 +449,8 @@ if(ANCH_SQL_UNITARY_TEST)
   target_link_libraries(
     anch-placeholders-test
     anch-sql
-    anch-resource
+    anch-conf
+    anch-ini
     anch-date
     anch-unit
     anch-cli
@@ -466,7 +473,8 @@ if(ANCH_SQL_UNITARY_TEST)
   target_link_libraries(
     anch-select-builder-test
     anch-sql
-    anch-resource
+    anch-conf
+    anch-ini
     anch-date
     anch-unit
     anch-cli

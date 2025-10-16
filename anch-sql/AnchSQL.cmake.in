@@ -1,8 +1,10 @@
 ## Anch SQL configuration +
 # Anch utils path
 set(ANCH_UTILS_INCLUDES_DIR "$ENV{HOME}/projects/anch-framework/anch-utils/inc")
-set(ANCH_RES_INCLUDES_DIR "$ENV{HOME}/projects/anch-framework/anch-resource/inc")
-set(ANCH_RES_LIBRARY_DIR "$ENV{HOME}/projects/anch-framework/anch-resource/build/lib")
+set(ANCH_CONF_INCLUDES_DIR "$ENV{HOME}/projects/anch-framework/anch-conf/inc")
+set(ANCH_CONF_LIBRARY_DIR "$ENV{HOME}/projects/anch-framework/anch-conf/build/lib")
+set(ANCH_INI_INCLUDES_DIR "$ENV{HOME}/projects/anch-framework/anch-ini/inc")
+set(ANCH_INI_LIBRARY_DIR "$ENV{HOME}/projects/anch-framework/anch-ini/build/lib")
 set(ANCH_DATE_INCLUDES_DIR "$ENV{HOME}/projects/anch-framework/anch-date/inc")
 set(ANCH_DATE_LIBRARY_DIR "$ENV{HOME}/projects/anch-framework/anch-date/build/lib")
 set(ANCH_UT_INCLUDES_DIR "$ENV{HOME}/projects/anch-framework/anch-ut/inc")

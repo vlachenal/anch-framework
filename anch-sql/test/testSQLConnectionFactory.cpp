@@ -6,6 +6,8 @@
 #include <functional>
 #include <string.h>
 
+#include "conf/configuration.hpp"
+
 #include "ut/assert.hpp"
 #include "ut/unit.hpp"
 
@@ -67,6 +69,10 @@ SqlConnectionFactory* fact;
 void
 beforeAll() {
   std::cout << "Enter in SQL connection factory unit test" << std::endl;
+  anch::conf::Configuration& conf = anch::conf::Configuration::loader().name("db_con").load();
+  anch::ut::assertFalse(conf.section("anch::sql") == NULL);
+  const anch::conf::Section* sql = conf.section("anch::sql");
+  std::cout << sql->debug() << std::endl;
   fact = &(SqlConnectionFactory::getInstance());
   std::cout << "Factory has been correctly initialized" << std::endl;
 }

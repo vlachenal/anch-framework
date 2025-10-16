@@ -40,7 +40,7 @@ public:
 };
 
 
-PostgreSQLConnection* dbCon;
+PostgreSQLConnection* dbCon = NULL;
 
 void
 beforeAll() {
