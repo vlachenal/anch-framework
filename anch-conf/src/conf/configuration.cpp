@@ -154,22 +154,6 @@ Configuration::load() {
   std::invoke(*conf->parser, conf->file, _root);
   // Parse file and fill section -
 
-  // Parse included files +
-  std::optional<std::string> includes = value(ANCH_CONF_INC);
-  if(includes.has_value()) {
-    split(',', includes.value(), _includes);
-    for(const std::string& inc: _includes) {
-      conf = selectConfFile(_folders, inc);
-      if(!conf.has_value()) {
-	std::ostringstream oss;
-	oss << "Included file " << _name << " has not been found with registered extensions";
-	throw ConfError(oss.str(), ConfError::ErrorCode::CONF_NOT_FOUND);
-      }
-      std::invoke(*conf->parser, conf->file, _root);
-    }
-  }
-  // Parse included files -
-
   // Add profiles with environment variable (if found) when not set +
   if(_profiles.empty()) {
     char* env = std::getenv("ANCH_PROFILES");
@@ -190,6 +174,22 @@ Configuration::load() {
     loadProfile(profile);
   }
   // Load configuration from profiles -
+
+  // Parse included files +
+  std::optional<std::string> includes = value(ANCH_CONF_INC);
+  if(includes.has_value()) {
+    split(',', includes.value(), _includes);
+    for(const std::string& inc: _includes) {
+      conf = selectConfFile(_folders, inc);
+      if(!conf.has_value()) {
+	std::ostringstream oss;
+	oss << "Included file " << _name << " has not been found with registered extensions";
+	throw ConfError(oss.str(), ConfError::ErrorCode::CONF_NOT_FOUND);
+      }
+      std::invoke(*conf->parser, conf->file, _root);
+    }
+  }
+  // Parse included files -
 
   return *this;
 }
@@ -218,6 +218,9 @@ Configuration::loadProfile(const std::string& profile) {
 const anch::conf::Section*
 Configuration::section(const std::string& path) const noexcept {
   const Section* sec = &_root;
+  if(path == ".") {
+    return sec;
+  }
   std::size_t cur = 0;
   while(std::size_t pos = path.find('.', cur) != path.npos) {
     auto iter = sec->getSections().find(path.substr(cur, pos));
@@ -227,6 +230,11 @@ Configuration::section(const std::string& path) const noexcept {
     sec = &iter->second;
     cur = pos + 1;
   }
+  auto iter = sec->getSections().find(path.substr(cur));
+  if(iter == sec->getSections().end()) {
+    return NULL;
+  }
+  sec = &iter->second;
   return sec;
 }
 
