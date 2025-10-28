@@ -50,7 +50,10 @@ namespace anch::ini {
       NOT_READABLE,
 
       /*! Parsing error */
-      PARSING_ERROR
+      PARSING_ERROR,
+
+      /*! Bad cast error */
+      BAD_CAST
 
     };
 

@@ -34,11 +34,47 @@ namespace anch::ini {
     return _values;
   }
 
-  inline
+  // Specialization +
+  template<>
   std::optional<std::string>
-  Section::getValue(const std::string& path) const {
-    return Section::getValue(path, *this);
-  }
+  Section::getValue(const std::string& path) const;
+
+  template<>
+  std::optional<int16_t>
+  Section::getValue(const std::string& path) const;
+
+  template<>
+  std::optional<int32_t>
+  Section::getValue(const std::string& path) const;
+
+  template<>
+  std::optional<int64_t>
+  Section::getValue(const std::string& path) const;
+
+  template<>
+  std::optional<uint16_t>
+  Section::getValue(const std::string& path) const;
+
+  template<>
+  std::optional<uint32_t>
+  Section::getValue(const std::string& path) const;
+
+  template<>
+  std::optional<uint64_t>
+  Section::getValue(const std::string& path) const;
+
+  template<>
+  std::optional<float>
+  Section::getValue(const std::string& path) const;
+
+  template<>
+  std::optional<double>
+  Section::getValue(const std::string& path) const;
+
+  template<>
+  std::optional<bool>
+  Section::getValue(const std::string& path) const;
+  // Specialization -
 
   template<typename T>
   inline

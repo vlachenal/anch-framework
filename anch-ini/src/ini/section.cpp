@@ -19,7 +19,12 @@
 */
 #include "ini/section.hpp"
 
+#include <charconv>
+
+#include "ini/parserError.hpp"
+
 using anch::ini::Section;
+using anch::ini::ParserError;
 
 
 // Static methods +
@@ -84,6 +89,152 @@ Section&
 Section::putValue(const std::string& key, const std::string& value) {
   _values[key] = value;
   return *this;
+}
+
+template<>
+std::optional<std::string>
+Section::getValue(const std::string& path) const {
+  return Section::getValue(path, *this);
+}
+
+template<typename T>
+void
+toNumber(const std::string val, T& num) {
+  const char* end = val.data() + val.size() - 1;
+  auto res = std::from_chars(val.data(), end, num);
+  if(res.ec == std::errc::invalid_argument) {
+    throw ParserError(val + " is invalid number", ParserError::ErrorCode::BAD_CAST);
+  }
+  if(res.ec == std::errc::result_out_of_range) {
+    throw ParserError(val + " is too big", ParserError::ErrorCode::BAD_CAST);
+  }
+  if(res.ptr != end) {
+    throw ParserError(val + " does not end with numbers", ParserError::ErrorCode::BAD_CAST);
+  }
+}
+
+template<>
+std::optional<int16_t>
+Section::getValue(const std::string& path) const {
+  auto str = Section::getValue(path, *this);
+  std::optional<int16_t> val;
+  if(!str.has_value()) {
+    return val;
+  }
+  int16_t num = 0;
+  toNumber(str.value(), num);
+  val = num;
+  return val;
+}
+
+template<>
+std::optional<int32_t>
+Section::getValue(const std::string& path) const {
+  auto str = Section::getValue(path, *this);
+  std::optional<int32_t> val;
+  if(!str.has_value()) {
+    return val;
+  }
+  int32_t num = 0;
+  toNumber(str.value(), num);
+  val = num;
+  return val;
+}
+
+template<>
+std::optional<int64_t>
+Section::getValue(const std::string& path) const {
+  auto str = Section::getValue(path, *this);
+  std::optional<int64_t> val;
+  if(!str.has_value()) {
+    return val;
+  }
+  int64_t num = 0;
+  toNumber(str.value(), num);
+  val = num;
+  return val;
+}
+
+template<>
+std::optional<uint16_t>
+Section::getValue(const std::string& path) const {
+  auto str = Section::getValue(path, *this);
+  std::optional<uint16_t> val;
+  if(!str.has_value()) {
+    return val;
+  }
+  uint16_t num = 0;
+  toNumber(str.value(), num);
+  val = num;
+  return val;
+}
+
+template<>
+std::optional<uint32_t>
+Section::getValue(const std::string& path) const {
+  auto str = Section::getValue(path, *this);
+  std::optional<uint32_t> val;
+  if(!str.has_value()) {
+    return val;
+  }
+  uint32_t num = 0;
+  toNumber(str.value(), num);
+  val = num;
+  return val;
+}
+
+template<>
+std::optional<uint64_t>
+Section::getValue(const std::string& path) const {
+  auto str = Section::getValue(path, *this);
+  std::optional<uint64_t> val;
+  if(!str.has_value()) {
+    return val;
+  }
+  uint64_t num = 0;
+  toNumber(str.value(), num);
+  val = num;
+  return val;
+}
+
+template<>
+std::optional<float>
+Section::getValue(const std::string& path) const {
+  auto str = Section::getValue(path, *this);
+  std::optional<float> val;
+  if(!str.has_value()) {
+    return val;
+  }
+  float num = 0;
+  toNumber(str.value(), num);
+  val = num;
+  return val;
+}
+
+template<>
+std::optional<double>
+Section::getValue(const std::string& path) const {
+  auto str = Section::getValue(path, *this);
+  std::optional<double> val;
+  if(!str.has_value()) {
+    return val;
+  }
+  double num = 0;
+  toNumber(str.value(), num);
+  val = num;
+  return val;
+}
+
+template<>
+std::optional<bool>
+Section::getValue(const std::string& path) const {
+  auto str = Section::getValue(path, *this);
+  std::optional<bool> val;
+  if(!str.has_value()) {
+    return val;
+  }
+  val = str.value() == "true";
+  return val;
 }
 // Methods -
 

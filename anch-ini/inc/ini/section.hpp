@@ -106,16 +106,6 @@ namespace anch::ini {
     static std::optional<std::string> getValue(const std::string& path, const Section& section);
 
     /*!
-     * Get value from path.\n
-     * Path is composed by (sub)sections delimited by '.' and key as last token.
-     *
-     * \param path the key's path to search
-     *
-     * \return the \c std::string value when found, \c empty otherwise
-     */
-    std::optional<std::string> getValue(const std::string& path) const;
-
-    /*!
      * Get value and cast it into \c T
      *
      * \param key the value's key
