@@ -4,6 +4,8 @@
 #include "ut/assert.hpp"
 #include "ut/unit.hpp"
 
+using anch::ini::ParserError;
+
 
 anch::ini::Section section;
 
@@ -127,6 +129,44 @@ getBool() {
   std::cout << "conv/bool=" << val.value() << std::endl;
 }
 
+
+void
+getNumFailRange() {
+  std::cout << "Execute getNumFailRange" << std::endl;
+  try {
+    section.getValue<int16_t>("conv.int64");
+    anch::ut::fail("This test should have failed");
+  } catch(const ParserError& e) {
+    std::cout << e.what() << std::endl;
+    anch::ut::assert(e.getErrorCode() == ParserError::ErrorCode::BAD_CAST, "Error code should be BAD_CAST");
+  }
+}
+
+void
+getNumFailInvalid() {
+  std::cout << "Execute getNumFailInvalid" << std::endl;
+  try {
+    section.getValue<uint16_t>("conv.int16");
+    anch::ut::fail("This test should have failed");
+  } catch(const ParserError& e) {
+    std::cout << e.what() << std::endl;
+    anch::ut::assert(e.getErrorCode() == ParserError::ErrorCode::BAD_CAST, "Error code should be BAD_CAST");
+  }
+}
+
+void
+getNumFailIncomplete() {
+  std::cout << "Execute getNumFailIncomplete" << std::endl;
+  try {
+    section.getValue<uint16_t>("conv.double");
+    anch::ut::fail("This test should have failed");
+  } catch(const ParserError& e) {
+    std::cout << e.what() << std::endl;
+    anch::ut::assert(e.getErrorCode() == ParserError::ErrorCode::BAD_CAST, "Error code should be BAD_CAST");
+  }
+}
+
+
 void
 anch::ut::setup(anch::ut::UnitTests& tests) {
   tests
@@ -146,5 +186,8 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("parser-float", getFloat)
     .add("parser-double", getDouble)
     .add("parser-bool", getBool)
+    .add("parser-num-range", getNumFailRange)
+    .add("parser-num-invalid", getNumFailInvalid)
+    .add("parser-num-incomplete", getNumFailIncomplete)
     ;
 }

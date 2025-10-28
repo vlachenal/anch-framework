@@ -33,6 +33,9 @@ ParserError::ParserError(const std::string& msg, ParserError::ErrorCode code): _
   case ParserError::ErrorCode::PARSING_ERROR:
     oss << "PARSING_ERROR: ";
     break;
+  case ParserError::ErrorCode::BAD_CAST:
+    oss << "BAD_CAST: ";
+    break;
   default:
     oss << "UNKNOWN: ";
   }

@@ -151,6 +151,9 @@ if(ANCH_INI_UNITARY_TEST)
   add_test(parser-float ${EXECUTABLE_OUTPUT_PATH}/anch-ini-parser-test -t parser-float)
   add_test(parser-double ${EXECUTABLE_OUTPUT_PATH}/anch-ini-parser-test -t parser-double)
   add_test(parser-bool ${EXECUTABLE_OUTPUT_PATH}/anch-ini-parser-test -t parser-bool)
+  add_test(parser-num-range ${EXECUTABLE_OUTPUT_PATH}/anch-ini-parser-test -t parser-num-range)
+  add_test(parser-num-invalid ${EXECUTABLE_OUTPUT_PATH}/anch-ini-parser-test -t parser-num-invalid)
+  add_test(parser-num-incomplete ${EXECUTABLE_OUTPUT_PATH}/anch-ini-parser-test -t parser-num-incomplete)
   # Parser unit tests -
 
 endif(ANCH_INI_UNITARY_TEST)
