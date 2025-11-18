@@ -177,7 +177,7 @@ namespace anch::json {
      *
      * \throw anch::json::MappingError fail to read input stream
      */
-    Reader(std::istream& is, const anch::json::MappingOptions& mappingOptions);
+    Reader(std::istream& is, const anch::json::MappingOptions& options);
     // Constructors -
 
     // Destructor +

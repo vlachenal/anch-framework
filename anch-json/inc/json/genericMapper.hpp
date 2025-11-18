@@ -262,7 +262,7 @@ namespace anch::json {
      * \param value the value to set
      * \param context the mapping context
      *
-     * \return \false when value is \c null , \c false otherwise
+     * \return \c false when value is \c null , \c false otherwise
      */
     bool deserialize(T& value, anch::json::ReaderContext& context) const;
 
@@ -272,7 +272,7 @@ namespace anch::json {
      * \param value the value to set
      * \param context the mapping context
      *
-     * \return \false when value is \c null , \c false otherwise
+     * \return \c false when value is \c null , \c false otherwise
      */
     bool deserialize(std::optional<T>& value, anch::json::ReaderContext& context) const;
 
@@ -282,7 +282,7 @@ namespace anch::json {
      * \param value the value to set
      * \param context the mapping context
      *
-     * \return \false when value is \c null , \c false otherwise
+     * \return \c false when value is \c null , \c false otherwise
      */
     bool deserialize(T* value, anch::json::ReaderContext& context) const;
 
@@ -292,7 +292,7 @@ namespace anch::json {
      * \param value the value to set
      * \param context the mapping context
      *
-     * \return \false when value is \c null , \c false otherwise
+     * \return \c false when value is \c null , \c false otherwise
      */
     bool deserialize(std::shared_ptr<T>& value, anch::json::ReaderContext& context) const;
 

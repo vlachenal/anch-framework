@@ -101,7 +101,7 @@ namespace anch::json {
      * \param value the value to set
      * \param context the reader context
      *
-     * \return \false when value is \c null , \c false otherwise
+     * \return \c false when value is \c null , \c false otherwise
      */
     bool deserializeValue(T& value, anch::json::ReaderContext& context) const;
     // Methods -

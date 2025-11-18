@@ -354,8 +354,6 @@ namespace anch::json {
      *
      * \param value the value to fill
      * \param input the input stream to parse
-     *
-     * \return \c true when value has been found, \c false otherwise
      */
     template<typename T>
     void deserialize(T& value, std::istream& input);
@@ -380,8 +378,6 @@ namespace anch::json {
      *
      * \param values the values to fill
      * \param input the input stream to parse
-     *
-     * \return \c true
      */
     template<template<typename> typename C, typename T>
     void deserialize(C<T>& values, std::istream& input);
