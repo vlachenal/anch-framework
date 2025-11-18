@@ -110,6 +110,7 @@ getFloat() {
   std::cout << "Execute getFloat" << std::endl;
   auto val = section.getValue<float>("conv.float");
   anch::ut::assertTrue(val.has_value(), "conv/float not found");
+  anch::ut::assert(anch::ut::equals("val", (float)123.456, val.value()), "Value {} should be equals to 123.456", val.value());
   std::cout << "conv/float=" << val.value() << std::endl;
 }
 
@@ -118,6 +119,7 @@ getDouble() {
   std::cout << "Execute getDouble" << std::endl;
   auto val = section.getValue<double>("conv.double");
   anch::ut::assertTrue(val.has_value(), "conv/double not found");
+  anch::ut::assert(anch::ut::equals("val", 123.4567890123, val.value()), "Value {} should be equals to 123.4567890123", val.value());
   std::cout << "conv/double=" << val.value() << std::endl;
 }
 

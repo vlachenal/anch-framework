@@ -11,11 +11,11 @@ include(AnchUT.cmake.in)
 # Check GCC version +
 execute_process(COMMAND ${CMAKE_C_COMPILER} -dumpversion
                 OUTPUT_VARIABLE GCC_VERSION)
-if (GCC_VERSION VERSION_LESS 10.0)
-  message(FATAL_ERROR "Version < 10.0. This library is based on C++20 standard. Exit.")
+if (GCC_VERSION VERSION_LESS 13.0)
+  message(FATAL_ERROR "Version < 13.0. This library is based on C++23 standard. Exit.")
 else()
-  message(STATUS "Version >= 10.0 use -std=c++20")
-  add_definitions("-std=c++20")
+  message(STATUS "Version >= 13.0 use -std=c++23")
+  add_definitions("-std=c++23")
 endif()
 # Check GCC version -
 
@@ -107,6 +107,7 @@ if(ANCH_UNIT_UNITARY_TEST)
     anch-unit-test
     anch-unit
     anch-cli
+    #stdc++exp
     )
   # Build unit format unitary test -
 

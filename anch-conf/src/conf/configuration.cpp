@@ -240,5 +240,5 @@ Configuration::section(const std::string& path) const noexcept {
 
 std::optional<std::string>
 Configuration::value(const std::string& path) const noexcept {
-  return _root.getValue(path);
+  return _root.getValue<std::string>(path);
 }

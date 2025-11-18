@@ -21,6 +21,7 @@
 
 #include <iostream>
 #include <chrono>
+#include <stacktrace>
 
 #include "ut/error.hpp"
 #include "cli/formatter.hpp"
@@ -123,10 +124,12 @@ DefaultRunner::test(const std::string& test) {
     std::cout << anch::cli::Formatter::format().fgColor(anch::cli::Color::RED)
 	      << "Unit test " << test << " execution failed: " << e.what()
 	      << anch::cli::RESET << std::endl;
+    //std::cout << std::stacktrace::current() << '\n';
   } catch(...) {
     std::cout << anch::cli::Formatter::format().fgColor(anch::cli::Color::RED)
 	      << "Unit test " << test << " execution failed"
 	      << anch::cli::RESET << std::endl;
+    //std::cout << std::stacktrace::current() << std::endl;
   }
   // Call test function -
 

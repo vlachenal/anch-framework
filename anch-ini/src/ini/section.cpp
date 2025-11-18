@@ -100,7 +100,7 @@ Section::getValue(const std::string& path) const {
 template<typename T>
 void
 toNumber(const std::string val, T& num) {
-  const char* end = val.data() + val.size() - 1;
+  const char* end = val.data() + val.size();
   auto res = std::from_chars(val.data(), end, num);
   if(res.ec == std::errc::invalid_argument) {
     throw ParserError(val + " is invalid number", ParserError::ErrorCode::BAD_CAST);
