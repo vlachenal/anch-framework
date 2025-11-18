@@ -17,11 +17,11 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "logger/levels.hpp"
+#include "log/levels.hpp"
 
-using anch::logger::Level;
+using anch::log::Level;
 
-const std::map<const Level, const std::string> anch::logger::LEVEL_LABEL = {
+const std::map<const Level, const std::string> anch::log::LEVEL_LABEL = {
   {Level::TRACE, "TRACE"},
   {Level::DEBUG, "DEBUG"},
   {Level::INFO, "INFO"},
@@ -30,7 +30,7 @@ const std::map<const Level, const std::string> anch::logger::LEVEL_LABEL = {
   {Level::FATAL, "FATAL"},
 };
 
-const std::map<const std::string, const anch::logger::Level> anch::logger::LABEL_LEVEL = {
+const std::map<const std::string, const anch::log::Level> anch::log::LABEL_LEVEL = {
   {"TRACE", Level::TRACE},
   {"DEBUG", Level::DEBUG},
   {"INFO", Level::INFO},

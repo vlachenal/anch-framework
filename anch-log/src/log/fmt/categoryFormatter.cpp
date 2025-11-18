@@ -17,13 +17,10 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "logger/formatter/categoryFormatter.hpp"
+#include "log/fmt/categoryFormatter.hpp"
 
-using std::string;
-using std::ostream;
-
-using anch::logger::formatter::CategoryFormatter;
-using anch::logger::formatter::FormatterType;
+using anch::log::fmt::CategoryFormatter;
+using anch::log::fmt::FormatterType;
 
 CategoryFormatter::CategoryFormatter() {
   // Nothing to do
@@ -34,8 +31,8 @@ CategoryFormatter::~CategoryFormatter() {
 }
 
 void
-CategoryFormatter::formatValue(const void* const value, ostream& out) const noexcept {
-  out << *((string*)value);
+CategoryFormatter::formatValue(const void* const value, std::ostream& out) const noexcept {
+  out << *((std::string*)value);
 }
 
 FormatterType

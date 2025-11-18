@@ -19,103 +19,35 @@
 */
 #include <fstream>
 #include <sstream>
-
 #include <filesystem>
 
-#include "logger/writer.hpp"
+#include "log/writer.hpp"
+#include "log/mdc.hpp"
+#include "log/levels.hpp"
 
 
-using anch::logger::Writer;
-using anch::logger::Level;
-using anch::logger::formatter::MessageFormatter;
+using anch::log::Writer;
+using anch::log::Level;
+using anch::log::MDC;
+using anch::log::fmt::MessageFormatter;
 
 
-Writer::Writer(const std::string& fileName,
-	       const std::string& linePattern,
-	       unsigned int maxSize,
-	       int maxIndex):  _formatter(linePattern),
-			       _fileName(fileName),
-			       _maxSize(maxSize),
-			       _maxIndex(maxIndex),
-			       _fileIndex(0) {
-  try {
-    _output = new std::ofstream(fileName, std::ios_base::app);
-    // Retrieve current file index +
-    for(int i = 1 ; i < _maxIndex ; ++i) {
-      std::ostringstream ostr;
-      ostr << fileName << '.' << i;
-      std::ifstream file(ostr.str());
-      if(file) {
-	_fileIndex = i;
-	file.close();
-      } else {
-	break;
-      }
-    }
-    // Retrieve current file index -
-
-  } catch(const std::exception& e) {
-    std::cerr << "Unable to open file. Use standard output." << std::endl;
-    _output = static_cast<std::ostream*>(&std::cout);
-    _fileName = "";
-    _maxSize = 0;
-    _maxIndex = 0;
+Writer::Writer(const anch::conf::Section& conf): _formatter() {
+  std::optional<std::string> optVal = conf.getValue<std::string>("pattern");
+  if(!optVal.has_value()) {
+    _formatter.parserPattern("%m");
+  } else {
+    _formatter.parserPattern(optVal.value());
   }
-}
-
-Writer::Writer(std::ostream* output,
-	       const std::string& linePattern): _output(output),
-						_formatter(linePattern),
-						_fileName(""),
-						_maxSize(0),
-						_maxIndex(0),
-						_fileIndex(0) {
-  // Nothing to do
 }
 
 Writer::~Writer() {
-  _output->flush();
-  if(_fileName != "") {
-    static_cast<std::ofstream*>(_output)->close();
-    delete _output;
-  } // else do not delete cout ...
+  // Nothing to do
 }
 
-void
-Writer::write(const std::string& category,
-	      const Level& level,
-	      const std::string& message) {
-  *_output << _formatter.formatMessage(category, level, message) << "\n";
-  if(rotate()) {
-    rotateFiles();
-  }
-}
-
-void
-Writer::rotateFiles() {
-  _output->flush();
-  static_cast<std::ofstream*>(_output)->close();
-  delete _output;
-  std::ostringstream ostr;
-  // Remove older file if max index file has been reached +
-  if(_fileIndex == _maxIndex) {
-    ostr << _fileName << "." << _fileIndex;
-    std::filesystem::remove(ostr.str().data());
-    --_fileIndex;
-  }
-  // Remove older file if max index file has been reached -
-  // Rename every log files +
-  for(int i = _fileIndex ; i > 0 ; --i) {
-    ostr.str("");
-    ostr << _fileName << '.' << i;
-    std::string oldName = ostr.str();
-    ostr.str("");
-    ostr << _fileName << "." << (i + 1);
-    std::string newName = ostr.str();
-    std::filesystem::rename(oldName.data(), newName.data());
-  }
-  std::filesystem::rename(_fileName.data(), std::string(_fileName + ".1").data());
-  // Rename every log files -
-  _output = new std::ofstream(_fileName);
-  _fileIndex++;
+std::string
+Writer::format(const std::string& msg) {
+  const std::string& logger = MDC.get().at("logger");
+  const std::string& level = MDC.get().at("level");
+  return _formatter.formatMessage(logger, anch::log::LABEL_LEVEL.at(level), msg);
 }

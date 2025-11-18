@@ -19,7 +19,7 @@
 */
 #pragma once
 
-namespace anch::logger {
+namespace anch::log {
 
   inline void
   MapDiagnosticContext::put(const std::string& key, const std::string& value) noexcept {

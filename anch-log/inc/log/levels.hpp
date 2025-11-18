@@ -22,7 +22,7 @@
 #include <string>
 #include <map>
 
-namespace anch::logger {
+namespace anch::log {
 
   /*!
    * Logging levels declaration

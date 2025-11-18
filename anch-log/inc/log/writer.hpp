@@ -19,100 +19,68 @@
 */
 #pragma once
 
-#include <iostream>
+#include <string>
 
-#include "logger/levels.hpp"
-#include "logger/formatter/messageFormatter.hpp"
+#include "log/fmt/messageFormatter.hpp"
+
+#include "conf/section.hpp"
 
 
-namespace anch::logger {
+namespace anch::log {
 
   /*!
-   * File writer which is not thread safe
+   * \brief Logger writter definition
+   *
+   * Provides format message function and define write function based on MDC.
    *
    * \author Vincent Lachenal
    */
   class Writer {
+
     // Attributes +
-  protected:
-    /*! Ouput file stream */
-    std::ostream* _output;
-
-    /*! Message formatter */
-    anch::logger::formatter::MessageFormatter _formatter;
-
   private:
-    /*! File name */
-    std::string _fileName;
-
-    /*! Maximum file size */
-    unsigned int _maxSize;
-
-    /*! Maximum file index */
-    int _maxIndex;
-
-    /*! Current file index */
-    int _fileIndex;
+    /*! Message formatter */
+    anch::log::fmt::MessageFormatter _formatter;
     // Attributes -
 
-  public:
     // Constructors +
+  public:
     /*!
      * \ref Writer constructor
      *
-     * \param fileName The file name
-     * \param linePattern The line pattern
-     * \param maxSize The file maximum size before file rotation
-     * \param maxIndex The maximum number of log files to keep
+     * \param conf the writer's configuration
      */
-    Writer(const std::string& fileName,
-	   const std::string& linePattern,
-	   unsigned int maxSize = 0,
-	   int maxIndex = 0);
-
-    /*!
-     * \ref Writer constructor
-     *
-     * \param output The output to use
-     * \param linePattern The line pattern
-     */
-    Writer(std::ostream* output, const std::string& linePattern);
+    Writer(const anch::conf::Section& conf);
     // Constructors -
 
     // Destructor +
+  public:
     /*!
      * \ref Writer destructor
      */
     virtual ~Writer();
     // Destructor -
 
+    // Methods +
   public:
     /*!
      * Write message in the file
      *
-     * \param category The logger category
-     * \param level The message level
      * \param message Message to write
      */
-    virtual void write(const std::string& category,
-		       const anch::logger::Level& level,
-		       const std::string& message);
+    virtual void write(const std::string& message) = 0;
 
   protected:
     /*!
-     * Check if file has to be rotate according to configuration and its size
+     * Format message according to writer message formatter
      *
-     * \return true or false
+     * \param msg the message
+     *
+     * \return the formatted log line
      */
-    bool rotate() const;
-
-    /*!
-     * Rotate files when current reachs the maximum file length.
-     */
-    void rotateFiles();
+    std::string format(const std::string& msg);
+    // Methods -
 
   };
 
 }
-
-#include "logger/impl/writter.hpp"

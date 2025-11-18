@@ -17,40 +17,51 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "logger/threadSafeWriter.hpp"
+#include "log/threadSafeWriter.hpp"
 
 
 using std::string;
 using std::ostream;
 
-using anch::logger::Writer;
-using anch::logger::ThreadSafeWriter;
-using anch::logger::Level;
+using anch::log::ThreadSafeWriter;
+using anch::log::Level;
 
 
+// Constructors +
+/*
 ThreadSafeWriter::ThreadSafeWriter(const string& fileName,
 				   const string& linePattern,
-				   unsigned int maxSize,
-				   int maxIndex):  Writer(fileName,linePattern,maxSize,maxIndex),
-						   _mutex() {
+				   uint32_t maxSize,
+				   int maxIndex):
+  Writer(fileName,linePattern,maxSize,maxIndex), _mutex() {
   // Nothing to do
 }
 
-ThreadSafeWriter::ThreadSafeWriter(ostream* output,
-				   const string& linePattern): Writer(output,linePattern),
-							       _mutex() {
+ThreadSafeWriter::ThreadSafeWriter(ostream* output, const string& linePattern):
+  Writer(output,linePattern), _mutex() {
   // Nothing to do
 }
+*/
+ThreadSafeWriter::ThreadSafeWriter(const anch::conf::Section& conf):
+  FileWriter(conf),
+  _mutex() {
+  // Nothing to do
+}
+// Constructors -
 
+
+// Destructor +
 ThreadSafeWriter::~ThreadSafeWriter() {
   // Nothing to do
 }
+// Destructor -
 
+
+// Methods +
 void
-ThreadSafeWriter::write(const string& category,
-			const Level& level,
-			const string& message) {
+ThreadSafeWriter::write(const string& message) {
   _mutex.lock();
-  Writer::write(category,level,message);
+  FileWriter::write(message);
   _mutex.unlock();
 }
+// Methods -

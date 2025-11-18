@@ -17,7 +17,7 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "logger/formatter/dateFormatter.hpp"
+#include "log/fmt/dateFormatter.hpp"
 
 #include <iomanip>
 #include <ctime>
@@ -26,8 +26,8 @@
 using std::string;
 using std::ostream;
 
-using anch::logger::formatter::DateFormatter;
-using anch::logger::formatter::FormatterType;
+using anch::log::fmt::DateFormatter;
+using anch::log::fmt::FormatterType;
 
 DateFormatter::DateFormatter(const string& dateFormat): _dateFormat(dateFormat) {
   // Nothing to do

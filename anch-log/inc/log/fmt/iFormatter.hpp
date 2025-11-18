@@ -21,7 +21,7 @@
 
 #include <iostream>
 
-namespace anch::logger::formatter {
+namespace anch::log::fmt {
 
   /*!
    * Formatter types
@@ -59,7 +59,7 @@ namespace anch::logger::formatter {
      *
      * \return The formatter type
      */
-    virtual anch::logger::formatter::FormatterType getType() const noexcept = 0;
+    virtual anch::log::fmt::FormatterType getType() const noexcept = 0;
 
     /*!
      * Format value

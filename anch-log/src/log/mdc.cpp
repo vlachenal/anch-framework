@@ -17,23 +17,23 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "logger/mdc.hpp"
+#include "log/mdc.hpp"
 
 #include <sstream>
 #include <thread>
 
-using anch::logger::MapDiagnosticContext;
+using anch::log::MapDiagnosticContext;
 
 // Constants +
-const std::string anch::logger::MDC_THREAD_ID("threadId");
-std::map<std::string,std::string> anch::logger::MDC_CONST;
-thread_local MapDiagnosticContext anch::logger::MDC;
+const std::string anch::log::MDC_THREAD_ID("threadId");
+std::map<std::string,std::string> anch::log::MDC_CONST;
+thread_local MapDiagnosticContext anch::log::MDC;
 // Constants -
 
 MapDiagnosticContext::MapDiagnosticContext(): _context(MDC_CONST) {
   std::ostringstream oss;
   oss << std::this_thread::get_id();
-  _context[anch::logger::MDC_THREAD_ID] = oss.str();
+  _context[anch::log::MDC_THREAD_ID] = oss.str();
 }
 
 MapDiagnosticContext::~MapDiagnosticContext() {
@@ -42,7 +42,7 @@ MapDiagnosticContext::~MapDiagnosticContext() {
 
 void
 MapDiagnosticContext::add(const std::string& key, const std::string& value) noexcept {
-  if(key == anch::logger::MDC_THREAD_ID || MDC_CONST.find(key) == MDC_CONST.end()) {
+  if(key == anch::log::MDC_THREAD_ID || MDC_CONST.find(key) == MDC_CONST.end()) {
     return;
   }
   put(key, value);
@@ -50,7 +50,7 @@ MapDiagnosticContext::add(const std::string& key, const std::string& value) noex
 
 void
 MapDiagnosticContext::remove(const std::string& key) noexcept {
-  if(key == anch::logger::MDC_THREAD_ID || MDC_CONST.find(key) == MDC_CONST.end()) {
+  if(key == anch::log::MDC_THREAD_ID || MDC_CONST.find(key) == MDC_CONST.end()) {
     return;
   }
   auto iter = _context.find(key);
@@ -62,7 +62,7 @@ MapDiagnosticContext::remove(const std::string& key) noexcept {
 void
 MapDiagnosticContext::reset() noexcept {
   for(auto iter = _context.begin() ; iter != _context.end() ; ++iter) {
-    if(iter->first == anch::logger::MDC_THREAD_ID
+    if(iter->first == anch::log::MDC_THREAD_ID
        || MDC_CONST.find(iter->first) == MDC_CONST.end()) {
       continue;
     }
@@ -73,7 +73,7 @@ MapDiagnosticContext::reset() noexcept {
 void
 MapDiagnosticContext::copy(const MapDiagnosticContext& other) noexcept {
   for(auto iter = other._context.cbegin() ; iter != other._context.cend() ; ++iter) {
-    if(iter->first == anch::logger::MDC_THREAD_ID
+    if(iter->first == anch::log::MDC_THREAD_ID
        || MDC_CONST.find(iter->first) == MDC_CONST.end()) {
       continue;
     }

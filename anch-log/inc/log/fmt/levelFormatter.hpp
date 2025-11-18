@@ -19,17 +19,17 @@
 */
 #pragma once
 
-#include "logger/formatter/iFormatter.hpp"
-#include "logger/levels.hpp"
+#include "log/fmt/iFormatter.hpp"
+#include "log/levels.hpp"
 
-namespace anch::logger::formatter {
+namespace anch::log::fmt {
 
   /*!
    * Logging level formatter
    *
    * \author Vincent Lachenal
    */
-  class LevelFormatter: public anch::logger::formatter::IFormatter {
+  class LevelFormatter: public anch::log::fmt::IFormatter {
   public:
     // Constructors +
     /*!
@@ -61,7 +61,7 @@ namespace anch::logger::formatter {
      *
      * \return The formatter type
      */
-    virtual anch::logger::formatter::FormatterType getType() const noexcept;
+    virtual anch::log::fmt::FormatterType getType() const noexcept;
   };
 
 }

@@ -1,4 +1,4 @@
-#include "logger/loggerFactory.hpp"
+#include "log/loggerFactory.hpp"
 
 #include <iostream>
 #include <thread>
@@ -7,8 +7,8 @@
 #include "ut/unit.hpp"
 
 
-using anch::logger::LoggerFactory;
-using anch::logger::Logger;
+using anch::log::LoggerFactory;
+using anch::log::Logger;
 
 
 void
@@ -22,9 +22,10 @@ void
 testRotate() {
   std::cout << "Enter in testRotate" << std::endl;
 
-  LoggerFactory::CONF_FILE = "anch-logger.conf";
-  auto LOG = LoggerFactory::getLogger("anch::logger::Logger");
-  LOG.info(LoggerFactory::CONF_FILE);
+  anch::conf::Configuration::loader().name("anch-logger").load();
+  static auto LOG = LoggerFactory::getLogger("anch::logger::Logger");
+  std::cout << "Logger has been retrieved" << std::endl;
+  LOG.info("anch-logger");
 
   std::thread th = std::thread(testMultiThread, LOG, 200000);
   for(int i = 0 ; i < 200000 ; ++i) {
@@ -39,10 +40,10 @@ void
 testCustomFile() {
   std::cout << "Enter in testCustomFile" << std::endl;
 
-  LoggerFactory::CONF_FILE = "customFile.ini";
-  auto LOG = LoggerFactory::getLogger("anch::logger::Logger");
+  anch::conf::Configuration::loader().name("customFile").load();
+  static auto LOG = LoggerFactory::getLogger("anch::logger::Logger");
+  LOG.info("customFile");
 
-  LOG.info(LoggerFactory::CONF_FILE);
   for(int i = 0 ; i < 200 ; ++i) {
     LOG.info("Message n° ", i, " from main thread");
   }
@@ -54,7 +55,12 @@ void
 testFallbackOnDefault() {
   std::cout << "Enter in testFallbackOnDefault" << std::endl;
 
-  LoggerFactory::CONF_FILE = "invalid.conf";
+  //LoggerFactory::CONF_FILE = "invalid.conf";
+  try {
+    anch::conf::Configuration::loader().name("invalid").load();
+  } catch(...) {
+    // OK
+  }
   auto LOG = LoggerFactory::getLogger("anch::logger::Logger");
   LOG.info("Message with default configuration");
 
@@ -63,11 +69,11 @@ testFallbackOnDefault() {
 
 void
 testLowPriority() {
-  std::cout << "Enter in testFallbackOnDefault" << std::endl;
+  std::cout << "Enter in testLowPriority" << std::endl;
 
-  LoggerFactory::CONF_FILE = "low-priority-logger.conf";
-  auto LOG = LoggerFactory::getLogger("anch::logger::Logger");
-  LOG.info(LoggerFactory::CONF_FILE);
+  anch::conf::Configuration::loader().name("low-priority-logger").load();
+  static auto LOG = LoggerFactory::getLogger("anch::logger::Logger");
+  LOG.info("low-priority-logger.conf");
 
   std::thread th = std::thread(testMultiThread, LOG, 2000);
   for(int i = 0 ; i < 2000 ; ++i) {
@@ -76,20 +82,20 @@ testLowPriority() {
 
   th.join();
 
-  std::cout << "Exit testFallbackOnDefault" << std::endl;
+  std::cout << "Exit testLowPriority" << std::endl;
 }
 
-void
+/*void
 beforeAll() {
   std::cerr << "anch-logger-test has to be launch one by one => configuration file change is not supported (and will not be supported) ; if not, segfault will occur" << std::endl;
-}
+  }*/
 
 void
 anch::ut::setup(anch::ut::UnitTests& tests) {
   tests
     .name("AnCH logger unit tests")
     .description("Test AnCH logger utiliy class")
-    .initialize(beforeAll)
+    //.initialize(beforeAll)
     .add("rotate", testRotate)
     .add("custom-file", testCustomFile)
     .add("default", testFallbackOnDefault)

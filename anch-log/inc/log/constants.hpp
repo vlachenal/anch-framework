@@ -19,12 +19,41 @@
 */
 #pragma once
 
+#include <string>
 
-namespace anch::logger {
+namespace anch::log {
 
-  inline bool
-  Writer::rotate() const {
-    return (_maxSize > 0 && _fileName != "" && _output->tellp() >= _maxSize);
-  }
+  /*! '' constant */
+  extern const std::string DEFAULT;
+
+  /*! 'module' constant */
+  extern const std::string MODULE;
+
+  /*! 'thread-safe' constant */
+  extern const std::string THREAD_SAFE;
+
+  /*! 'low-priority' constant */
+  extern const std::string LOW_PRIORITY;
+
+  /*! 'writer' constant */
+  extern const std::string WRITER;
+
+  /*! 'writers' constant */
+  extern const std::string WRITERS;
+
+  /*! 'logger' constant */
+  extern const std::string LOGGER;
+
+  /*! 'level' constant */
+  extern const std::string LEVEL;
+
+  /*! 'anch::log' constant */
+  extern const std::string NS_LOG;
+
+  /*! 'file' constant */
+  extern const std::string WRITER_FILE;
+
+  /*! 'console' constant */
+  extern const std::string WRITER_TERM;
 
 }

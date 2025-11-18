@@ -19,17 +19,17 @@
 */
 #pragma once
 
-#include "logger/formatter/iFormatter.hpp"
+#include "log/fmt/iFormatter.hpp"
 
 
-namespace anch::logger::formatter {
+namespace anch::log::fmt {
 
   /*!
    * Constant string formatter
    *
    * \author Vincent Lachenal
    */
-  class ConstFormatter: public anch::logger::formatter::IFormatter {
+  class ConstFormatter: public anch::log::fmt::IFormatter {
   private:
     // Attributes +
     /*! The string to print */
@@ -69,7 +69,7 @@ namespace anch::logger::formatter {
      *
      * \return The formatter type
      */
-    virtual anch::logger::formatter::FormatterType getType() const noexcept;
+    virtual anch::log::fmt::FormatterType getType() const noexcept;
 
   };
 

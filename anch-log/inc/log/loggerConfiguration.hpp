@@ -22,10 +22,10 @@
 #include <iostream>
 #include <vector>
 
-#include "logger/levels.hpp"
-#include "logger/writer.hpp"
+#include "log/levels.hpp"
+#include "log/writer.hpp"
 
-namespace anch::logger {
+namespace anch::log {
 
   /*!
    * Loggers configuration extract from configuration file
@@ -38,10 +38,10 @@ namespace anch::logger {
     std::string _category;
 
     /*! Logging level */
-    anch::logger::Level _level;
+    anch::log::Level _level;
 
     /*! Writers */
-    std::vector<anch::logger::Writer*> _writers;
+    std::vector<anch::log::Writer*> _writers;
 
   public:
     // Constructor +
@@ -53,8 +53,8 @@ namespace anch::logger {
      * \param writers The writers
      */
     LoggerConfiguration(const std::string& category,
-			const anch::logger::Level& level,
-			const std::vector<anch::logger::Writer*>& writers);
+			const anch::log::Level& level,
+			const std::vector<anch::log::Writer*>& writers);
     // Constructor -
 
     // Destructor +
@@ -78,18 +78,18 @@ namespace anch::logger {
      *
      * \return The logging level
      */
-    const anch::logger::Level& getLevel() const;
+    const anch::log::Level& getLevel() const;
 
     /*!
      * Writers getter
      *
      * \return The writers
      */
-    const std::vector<anch::logger::Writer*>& getWriters() const;
+    const std::vector<anch::log::Writer*>& getWriters() const;
     // Accessors -
 
   };
 
 }
 
-#include "logger/impl/loggerConfiguration.hpp"
+#include "log/impl/loggerConfiguration.hpp"

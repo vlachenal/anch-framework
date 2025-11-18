@@ -17,15 +17,15 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "logger/formatter/threadIdFormatter.hpp"
+#include "log/fmt/threadIdFormatter.hpp"
 
-#include "logger/mdc.hpp"
+#include "log/mdc.hpp"
 
 using std::string;
 using std::ostream;
 
-using anch::logger::formatter::ThreadIdFormatter;
-using anch::logger::formatter::FormatterType;
+using anch::log::fmt::ThreadIdFormatter;
+using anch::log::fmt::FormatterType;
 
 ThreadIdFormatter::ThreadIdFormatter() {
   // Nothing to do
@@ -37,7 +37,7 @@ ThreadIdFormatter::~ThreadIdFormatter() {
 
 void
 ThreadIdFormatter::formatValue(const void* const, ostream& out) const noexcept {
-  out << anch::logger::MDC.get().find(anch::logger::MDC_THREAD_ID)->second;
+  out << anch::log::MDC.get().find(anch::log::MDC_THREAD_ID)->second;
 }
 
 FormatterType

@@ -17,15 +17,15 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "logger/formatter/anchDateFormatter.hpp"
+#include "log/fmt/anchDateFormatter.hpp"
 
 #include "date/dateFormatter.hpp"
 
 using std::string;
 using std::ostream;
 
-using anch::logger::formatter::AnchDateFormatter;
-using anch::logger::formatter::FormatterType;
+using anch::log::fmt::AnchDateFormatter;
+using anch::log::fmt::FormatterType;
 
 using anch::date::Date;
 

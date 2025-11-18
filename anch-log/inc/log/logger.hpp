@@ -23,10 +23,10 @@
 #include <sstream>
 #include <vector>
 
-#include "logger/levels.hpp"
-#include "logger/writer.hpp"
+#include "log/levels.hpp"
+#include "log/writer.hpp"
 
-namespace anch::logger {
+namespace anch::log {
 
   /*!
    * Logger class.\n
@@ -49,10 +49,10 @@ namespace anch::logger {
     std::string _name;
 
     /*! The current logging level */
-    anch::logger::Level _level;
+    anch::log::Level _level;
 
     /*! Logger writers */
-    std::vector<anch::logger::Writer*> _writers;
+    std::vector<anch::log::Writer*> _writers;
     // Attributes -
 
     // Constructors +
@@ -65,8 +65,8 @@ namespace anch::logger {
      * \param writers The writers list
      */
     Logger(const std::string& name,
-	   const anch::logger::Level level,
-	   const std::vector<anch::logger::Writer*>& writers);
+	   const anch::log::Level level,
+	   const std::vector<anch::log::Writer*>& writers);
     // Constructors -
 
     // Destructor +
@@ -177,4 +177,4 @@ namespace anch::logger {
 
 }
 
-#include "logger/impl/logger.hpp"
+#include "log/impl/logger.hpp"

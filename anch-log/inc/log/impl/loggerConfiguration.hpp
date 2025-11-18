@@ -19,19 +19,19 @@
 */
 #pragma once
 
-namespace anch::logger {
+namespace anch::log {
 
   inline const std::string&
   LoggerConfiguration::getCategory() const {
     return _category;
   }
 
-  inline const anch::logger::Level&
+  inline const anch::log::Level&
   LoggerConfiguration::getLevel() const {
     return _level;
   }
 
-  inline const std::vector<anch::logger::Writer*>&
+  inline const std::vector<anch::log::Writer*>&
   LoggerConfiguration::getWriters() const {
     return _writers;
   }

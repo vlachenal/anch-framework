@@ -1,10 +1,10 @@
-/*! \page page_logger AnCH logger library documentation
+/*! \page page_logger AnCH logging library documentation
  *
  * \tableofcontents
  *
  * \section log_intro_seq Introduction
  *
- * AnCH logger library aims to provide facilities for applications logging.
+ * AnCH logigng library aims to provide facilities for applications logging.
  *
  * \section log_prereq_sec Prerequisites
  *
@@ -19,7 +19,7 @@
  *
  * \section log_concept_sec Usage
  *
- * The library is used in a similar way that log4j. So the classes which will be used are \ref anch::logger::LoggerFactory "LoggerFactory" to initialize and retrieve logger instances and \ref anch::logger::Logger "Logger" to log messages.\n
+ * The library is used in a similar way that log4j. So the classes which will be used are \ref anch::log::LoggerFactory "LoggerFactory" to initialize and retrieve logger instances and \ref anch::log::Logger "Logger" to log messages.\n
  * Messages are logged with level which can be (from the lowest to the highest):
  * - \c TRACE
  * - \c DEBUG
@@ -27,7 +27,7 @@
  * - \c WARN
  * - \c ERROR
  * - \c FATAL
- * 
+ *
  * Each level has a method in Logger class which is named like level in lower case. These methods take a variable number of arguments which have to have stream injection operator definition.\n
  * \n
  * User can define several writers to log messages in separate files and console. Three writer types are available:
@@ -114,8 +114,8 @@ logger.level=debug
 using std::cout;
 using std::endl;
 
-using anch::logger::LoggerFactory;
-using anch::logger::Logger;
+using anch::log::LoggerFactory;
+using anch::log::Logger;
 
 int
 main(void) {

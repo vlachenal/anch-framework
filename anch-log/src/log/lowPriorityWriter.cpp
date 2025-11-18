@@ -17,7 +17,7 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "logger/lowPriorityWriter.hpp"
+#include "log/lowPriorityWriter.hpp"
 
 #include <chrono>
 
@@ -27,25 +27,37 @@ using std::ostream;
 using std::mutex;
 using std::queue;
 
-using anch::logger::LowPriorityWriter;
-using anch::logger::Writer;
-using anch::logger::Level;
+using anch::log::LowPriorityWriter;
+using anch::log::FileWriter;
+using anch::log::Level;
 
 
 // Constructors +
+/*
 LowPriorityWriter::LowPriorityWriter(const string& fileName,
 				     const string& linePattern,
 				     unsigned int maxSize,
-				     int maxIndex) : Writer(fileName,linePattern,maxSize,maxIndex),
-						     _messages(),
-						     _mutex() {
+				     int maxIndex):
+  Writer(fileName,linePattern,maxSize,maxIndex),
+  _messages(),
+  _mutex() {
   // Nothing to do
 }
 
 LowPriorityWriter::LowPriorityWriter(ostream* output,
-				     const string& linePattern) : Writer(output,linePattern),
-								  _messages(),
-								  _mutex() {
+				     const string& linePattern):
+  Writer(output,linePattern),
+  _messages(),
+  _mutex() {
+  // Nothing to do
+}
+*/
+LowPriorityWriter::LowPriorityWriter(const anch::conf::Section& conf):
+  FileWriter(conf),
+  _messages(),
+  _running(false),
+  _thread(NULL),
+  _mutex() {
   // Nothing to do
 }
 // Constructors -
@@ -61,11 +73,9 @@ LowPriorityWriter::~LowPriorityWriter() {
 
 // Methods +
 void
-LowPriorityWriter::write(const string& category,
-			 const Level& level,
-			 const string& message) {
+LowPriorityWriter::write(const string& message) {
   _mutex.lock();
-  _messages.push(_formatter.formatMessage(category, level, message) + "\n");
+  _messages.push(format(message));
   _mutex.unlock();
 }
 

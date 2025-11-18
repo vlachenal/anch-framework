@@ -19,17 +19,17 @@
 */
 #pragma once
 
-#include "logger/formatter/iFormatter.hpp"
+#include "log/fmt/iFormatter.hpp"
 
 
-namespace anch::logger::formatter {
+namespace anch::log::fmt {
 
   /*!
    * Category formatter
    *
    * \author Vincent Lachenal
    */
-  class CategoryFormatter: public anch::logger::formatter::IFormatter {
+  class CategoryFormatter: public anch::log::fmt::IFormatter {
   public:
     // Constructors +
     /*!
@@ -61,7 +61,7 @@ namespace anch::logger::formatter {
      *
      * \return The formatter type
      */
-    virtual anch::logger::formatter::FormatterType getType() const noexcept;
+    virtual anch::log::fmt::FormatterType getType() const noexcept;
 
   };
 

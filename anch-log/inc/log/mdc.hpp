@@ -22,7 +22,7 @@
 #include <string>
 #include <map>
 
-namespace anch::logger {
+namespace anch::log {
 
   /*! Thread ID key in diagnostic context */
   extern const std::string MDC_THREAD_ID;
@@ -110,7 +110,6 @@ namespace anch::logger {
      */
     void reset() noexcept;
 
-
     /*!
      * Copy diagnostics context from another one but thread identifier and constants
      *
@@ -126,4 +125,4 @@ namespace anch::logger {
 
 }
 
-#include "logger/impl/mdc.hpp"
+#include "log/impl/mdc.hpp"

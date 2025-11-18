@@ -19,57 +19,61 @@
 */
 #pragma once
 
-#include "log/fmt/iFormatter.hpp"
+#include <mutex>
 
-#include <string>
+#include "log/writer.hpp"
 
-namespace anch::log::fmt {
+
+namespace anch::log {
 
   /*!
-   * MDC value formatter
+   * \brief Log file writer
+   *
+   * Manage file writer with file rotation on size, date and max rotate index
    *
    * \author Vincent Lachenal
+   *
+   * \since 0.1
    */
-  class MDCFormatter: public anch::log::fmt::IFormatter {
+  class ConsoleWriter: public Writer {
 
-  private:
     // Attributes +
-    /*! MDC key */
-    std::string _key;
+  private:
+    /*! Mutual exclusion object */
+    std::mutex _mutex;
+
+    /*! Console color flag */
+    bool _color;
     // Attributes -
 
-  public:
     // Constructors +
+  public:
     /*!
-     * \ref MDCFormatter default constructor
+     * \ref ConsoleWriter constructor
      *
-     * \param key the MDC key
+     * \param conf the writer's configuration
      */
-    MDCFormatter(const std::string& key);
+    ConsoleWriter(const anch::conf::Section& conf);
     // Constructors -
 
     // Destructor +
-    /*!
-     * \ref MDCFormatter destructor
-     */
-    virtual ~MDCFormatter();
-    // Destructor -
-
   public:
     /*!
-     * Return the input string
-     *
-     * \param value The input string
-     * \param out The output stream to write in
+     * \ref ConsoleWriter destructor
      */
-    virtual void formatValue(const void* const value, std::ostream& out) const noexcept;
+    virtual ~ConsoleWriter();
+    // Destructor -
 
+    // Methods +
+  public:
     /*!
-     * Get the formatter type
+     * Write message in the file.\n
+     * Rotate log file when needed.
      *
-     * \return The formatter type
+     * \param message Message to write
      */
-    virtual anch::log::fmt::FormatterType getType() const noexcept;
+    virtual void write(const std::string& message);
+    // Methods -
 
   };
 

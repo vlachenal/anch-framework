@@ -17,14 +17,14 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "logger/formatter/levelFormatter.hpp"
+#include "log/fmt/levelFormatter.hpp"
 
 using std::string;
 using std::ostream;
 
-using anch::logger::formatter::LevelFormatter;
-using anch::logger::formatter::FormatterType;
-using anch::logger::Level;
+using anch::log::fmt::LevelFormatter;
+using anch::log::fmt::FormatterType;
+using anch::log::Level;
 
 
 LevelFormatter::LevelFormatter() {
@@ -37,7 +37,7 @@ LevelFormatter::~LevelFormatter() {
 
 void
 LevelFormatter::formatValue(const void* const value, ostream& out) const noexcept {
-  const Level* const level = static_cast<const anch::logger::Level*>(value);
+  const Level* const level = static_cast<const anch::log::Level*>(value);
   out << LEVEL_LABEL.find(*level)->second;
 }
 

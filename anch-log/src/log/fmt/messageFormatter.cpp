@@ -17,50 +17,55 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "logger/formatter/messageFormatter.hpp"
+#include "log/fmt/messageFormatter.hpp"
 
 #include <sstream>
 
-#include "logger/formatter/levelFormatter.hpp"
-#include "logger/formatter/constFormatter.hpp"
-#include "logger/formatter/stringFormatter.hpp"
-#include "logger/formatter/categoryFormatter.hpp"
-#include "logger/formatter/threadIdFormatter.hpp"
-#include "logger/formatter/dateFormatter.hpp"
-#include "logger/formatter/anchDateFormatter.hpp"
-#include "logger/formatter/mdcFormatter.hpp"
+#include "log/fmt/levelFormatter.hpp"
+#include "log/fmt/constFormatter.hpp"
+#include "log/fmt/stringFormatter.hpp"
+#include "log/fmt/categoryFormatter.hpp"
+#include "log/fmt/threadIdFormatter.hpp"
+#include "log/fmt/dateFormatter.hpp"
+#include "log/fmt/anchDateFormatter.hpp"
+#include "log/fmt/mdcFormatter.hpp"
 
-using anch::logger::formatter::MessageFormatter;
-using anch::logger::formatter::IFormatter;
-using anch::logger::formatter::FormatterType;
-using anch::logger::formatter::LevelFormatter;
-using anch::logger::formatter::ConstFormatter;
-using anch::logger::formatter::StringFormatter;
-using anch::logger::formatter::CategoryFormatter;
-using anch::logger::formatter::ThreadIdFormatter;
-using anch::logger::formatter::DateFormatter;
-using anch::logger::formatter::AnchDateFormatter;
-using anch::logger::formatter::MDCFormatter;
+using anch::log::fmt::MessageFormatter;
+using anch::log::fmt::IFormatter;
+using anch::log::fmt::FormatterType;
+using anch::log::fmt::LevelFormatter;
+using anch::log::fmt::ConstFormatter;
+using anch::log::fmt::StringFormatter;
+using anch::log::fmt::CategoryFormatter;
+using anch::log::fmt::ThreadIdFormatter;
+using anch::log::fmt::DateFormatter;
+using anch::log::fmt::AnchDateFormatter;
+using anch::log::fmt::MDCFormatter;
 
 
 // Static initialization +
 const std::regex MessageFormatter::CONFIG_PATTERN = std::regex(R"(^((\$d\{[^\}]+\})|(\$D\{[^\}]+\})|(\$C\{[^\}]+\})|(\$m)|(\$c)|(\$p)|(\$t)|([^\$]+)))");
 // Static initialization -
 
-MessageFormatter::MessageFormatter(const std::string& linePattern): _formatters() {
-  std::smatch match;
-  std::string line = linePattern;
-  bool ok = true;
-  while(!line.empty() && ok) {
-    if(std::regex_search(line, match, CONFIG_PATTERN)) {
-      addFormatter(std::string(match[0].first, match[0].second));
-      line = std::string(match.suffix().first, match.suffix().second);
+MessageFormatter::MessageFormatter(): _formatters() {
+  // Nothing to do
+}
 
-    } else {
-      ok = false;
-    }
-  }
-  _formatters.shrink_to_fit();
+MessageFormatter::MessageFormatter(const std::string& linePattern): _formatters() {
+  parserPattern(linePattern);
+  // std::smatch match;
+  // std::string line = linePattern;
+  // bool ok = true;
+  // while(!line.empty() && ok) {
+  //   if(std::regex_search(line, match, CONFIG_PATTERN)) {
+  //     addFormatter(std::string(match[0].first, match[0].second));
+  //     line = std::string(match.suffix().first, match.suffix().second);
+
+  //   } else {
+  //     ok = false;
+  //   }
+  // }
+  // _formatters.shrink_to_fit();
 }
 
 MessageFormatter::~MessageFormatter() {
@@ -140,4 +145,21 @@ MessageFormatter::formatMessage(const std::string& category,
   }
 
   return out.str();
+}
+
+void
+MessageFormatter::parserPattern(const std::string& pattern) {
+  std::smatch match;
+  std::string line = pattern;
+  bool ok = true;
+  while(!line.empty() && ok) {
+    if(std::regex_search(line, match, CONFIG_PATTERN)) {
+      addFormatter(std::string(match[0].first, match[0].second));
+      line = std::string(match.suffix().first, match.suffix().second);
+
+    } else {
+      ok = false;
+    }
+  }
+  _formatters.shrink_to_fit();
 }

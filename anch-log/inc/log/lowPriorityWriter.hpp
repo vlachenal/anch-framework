@@ -24,93 +24,74 @@
 #include <mutex>
 #include <thread>
 
-#include "logger/writer.hpp"
+#include "log/fileWriter.hpp"
 
 
-namespace anch {
-  namespace logger {
+namespace anch::log {
+
+  /*!
+   * File writer with QoS implementation to avoid performance lose
+   * when files are written.
+   *
+   * \author Vincent Lachenal
+   */
+  class LowPriorityWriter: public anch::log::FileWriter {
+
+    // Attributes +
+  private:
+    /*! Messages queue */
+    std::queue<std::string> _messages;
+
+    /*! Running state */
+    bool _running;
+
+    /*! Treatment thread */
+    std::thread* _thread;
+
+    /*! Writer mutex */
+    std::mutex _mutex;
+    // Attributes -
+
+    // Constructors +
+  public:
+    /*!
+     * \ref LowPriorityWriter constructor
+     *
+     * \param conf the writer's configuration
+     */
+    LowPriorityWriter(const anch::conf::Section& conf);
+    // Constructors -
+
+    // Destructor +
+  public:
+    /*!
+     * \ref LowPriorityWriter destructor
+     */
+    virtual ~LowPriorityWriter();
+    // Destructor -
+
+    // Method +
+  public:
+    /*!
+     * Write message in the file.\n
+     * Rotate log file when needed.
+     *
+     * \param message Message to write
+     */
+    virtual void write(const std::string& message) override;
 
     /*!
-     * File writer with QoS implementation to avoid performance lose
-     * when files are written.
-     *
-     * \author Vincent Lachenal
+     * Start messages queue pooling
      */
-    class LowPriorityWriter: public Writer {
+    void startTreatment();
 
-      // Attributes +
-    private:
-      /*! Messages queue */
-      std::queue<std::string> _messages;
+  private:
+    /*!
+     * Process messages in queue in a separated thread
+     */
+    void process();
+    // Method -
 
-      /*! Running state */
-      bool _running;
+  };
 
-      /*! Treatment thread */
-      std::thread* _thread;
-
-      /*! Writer mutex */
-      std::mutex _mutex;
-      // Attributes -
-
-    public:
-      // Constructors +
-      /*!
-       * \ref LowPriorityWriter constructor
-       *
-       * \param fileName The file name
-       * \param linePattern The line pattern
-       * \param maxSize The file maximum size before file rotation
-       * \param maxIndex The maximum number of log files to keep
-       */
-      LowPriorityWriter(const std::string& fileName,
-			const std::string& linePattern,
-			unsigned int maxSize = 0,
-			int maxIndex = 0);
-
-      /*!
-       * \ref LowPriorityWriter constructor
-       *
-       * \param output The output to use
-       * \param linePattern The line pattern
-       */
-      LowPriorityWriter(std::ostream* output, const std::string& linePattern);
-      // Constructors -
-
-      // Destructor +
-      /*!
-       * \ref LowPriorityWriter destructor
-       */
-      virtual ~LowPriorityWriter();
-      // Destructor -
-
-
-      // Method +
-    public:
-      /*!
-       * Write message in the file
-       *
-       * \param category The logger category
-       * \param level The message level
-       * \param message Message to write
-       */
-      virtual void write(const std::string& category,
-			 const anch::logger::Level& level,
-			 const std::string& message);
-
-      /*!
-       * Start messages queue pooling
-       */
-      void startTreatment();
-
-    private:
-      /*!
-       * Process messages in queue in a separated thread
-       */
-      void process();
-      // Method -
-
-    };
-
-  }
 }

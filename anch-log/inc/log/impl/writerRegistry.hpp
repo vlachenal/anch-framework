@@ -17,28 +17,14 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "log/fmt/stringFormatter.hpp"
+#pragma once
 
-using std::string;
-using std::ostream;
+namespace anch::log {
 
-using anch::log::fmt::StringFormatter;
-using anch::log::fmt::FormatterType;
+  inline
+  bool
+  WriterRegistry::contains(const std::string& name) const {
+    return _registry.contains(name);
+  }
 
-StringFormatter::StringFormatter() {
-  // Nothing to do
-}
-
-StringFormatter::~StringFormatter() {
-  // Nothing to do
-}
-
-void
-StringFormatter::formatValue(const void* const value, ostream& out) const noexcept {
-  out << *((const string*)value);
-}
-
-FormatterType
-StringFormatter::getType() const noexcept {
-  return FormatterType::STRING;
 }

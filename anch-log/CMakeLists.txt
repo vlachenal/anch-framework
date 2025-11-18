@@ -29,9 +29,11 @@ add_definitions(${ANCH_LOGGER_COMPILE_FLAGS})
 # Includes location
 include_directories(
   inc
-  ${ANCH_RESOURCE_INCLUDES_DIR}
+  ${ANCH_CONF_INCLUDES_DIR}
+  ${ANCH_INI_INCLUDES_DIR}
   ${ANCH_DATE_INCLUDES_DIR}
   ${ANCH_UTILS_INCLUDES_DIR}
+  ${ANCH_CLI_INCLUDES_DIR}
 )
 
 # Retrieve every files in project
@@ -94,7 +96,8 @@ if(ANCH_LOGGER_UNITARY_TEST)
 
   link_directories(
     inc
-    ${ANCH_RESOURCE_LIBRARY_DIR}
+    ${ANCH_CONF_LIBRARY_DIR}
+    ${ANCH_INI_LIBRARY_DIR}
     ${ANCH_DATE_LIBRARY_DIR}
     ${ANCH_UT_LIBRARY_DIR}
     ${ANCH_CLI_LIBRARY_DIR}
@@ -115,10 +118,12 @@ if(ANCH_LOGGER_UNITARY_TEST)
   target_link_libraries(
     anch-logger-test
     anch-logger
-    anch-resource
+    anch-conf
+    anch-ini
     anch-date
     anch-unit
     anch-cli
+    #stdc++exp
     )
   configure_file(test/anch-logger.conf anch-logger.conf COPYONLY)
   configure_file(test/customFile.ini customFile.ini COPYONLY)

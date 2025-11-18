@@ -19,19 +19,19 @@
 */
 #pragma once
 
-#include "logger/formatter/iFormatter.hpp"
+#include "log/fmt/iFormatter.hpp"
 
 #include "date/dateFormatter.hpp"
 
 
-namespace anch::logger::formatter {
+namespace anch::log::fmt {
 
   /*!
    * Date formatter with high precision clock
    *
    * \author Vincent Lachenal
    */
-  class AnchDateFormatter: public anch::logger::formatter::IFormatter {
+  class AnchDateFormatter: public anch::log::fmt::IFormatter {
   private:
     // Attributes +
     /*! Date format pattern */
@@ -67,7 +67,7 @@ namespace anch::logger::formatter {
      *
      * \return The formatter type
      */
-    virtual anch::logger::formatter::FormatterType getType() const noexcept;
+    virtual anch::log::fmt::FormatterType getType() const noexcept;
 
   };
 

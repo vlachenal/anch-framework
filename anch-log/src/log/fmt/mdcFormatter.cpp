@@ -17,12 +17,12 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "logger/formatter/mdcFormatter.hpp"
+#include "log/fmt/mdcFormatter.hpp"
 
-#include "logger/mdc.hpp"
+#include "log/mdc.hpp"
 
-using anch::logger::formatter::MDCFormatter;
-using anch::logger::formatter::FormatterType;
+using anch::log::fmt::MDCFormatter;
+using anch::log::fmt::FormatterType;
 
 MDCFormatter::MDCFormatter(const std::string& key): _key(key) {
   // Nothing to do
@@ -34,7 +34,7 @@ MDCFormatter::~MDCFormatter() {
 
 void
 MDCFormatter::formatValue([[ maybe_unused ]] const void* const value, std::ostream& out) const noexcept {
-  auto mdc =  anch::logger::MDC.get();
+  auto mdc =  anch::log::MDC.get();
   auto iter = mdc.find(_key);
   if(iter ==  mdc.end()) {
     out << "undefined";

@@ -17,14 +17,14 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "logger/logger.hpp"
+#include "log/logger.hpp"
 
 using std::string;
 using std::vector;
 
-using anch::logger::Logger;
-using anch::logger::Level;
-using anch::logger::Writer;
+using anch::log::Logger;
+using anch::log::Level;
+using anch::log::Writer;
 
 
 Logger::Logger(const string& name,

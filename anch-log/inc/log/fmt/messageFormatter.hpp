@@ -23,11 +23,15 @@
 #include <vector>
 #include <regex>
 
-#include "logger/levels.hpp"
-#include "logger/formatter/iFormatter.hpp"
+#include "log/levels.hpp"
+#include "log/fmt/iFormatter.hpp"
 
 
-namespace anch::logger::formatter {
+namespace anch::log {
+  class Writer;
+}
+
+namespace anch::log::fmt {
 
   /*!
    * Format a message for logging acording writer configuration\n
@@ -44,17 +48,24 @@ namespace anch::logger::formatter {
    * \author Vincent Lachenal
    */
   class MessageFormatter {
+    friend anch::log::Writer;
+
   private:
     // Attributes +
     /*! Writter configuration pattern */
     const static std::regex CONFIG_PATTERN;
 
     /*! Formatters list */
-    std::vector<anch::logger::formatter::IFormatter*> _formatters;
+    std::vector<anch::log::fmt::IFormatter*> _formatters;
     // Attributes -
 
   public:
     // Constructors +
+    /*!
+     * \ref MessageFormatter default constructor
+     */
+    MessageFormatter();
+
     /*!
      * \ref MessageFormatter constructor
      *
@@ -82,7 +93,7 @@ namespace anch::logger::formatter {
      * \return The formatted message
      */
     const std::string formatMessage(const std::string& category,
-				    const anch::logger::Level& level,
+				    const anch::log::Level& level,
 				    const std::string& message) const;
 
   private:
@@ -92,6 +103,13 @@ namespace anch::logger::formatter {
      * \param str The formatter string
      */
     void addFormatter(const std::string& strFormatter);
+
+    /*!
+     * Parse formatters' pattern
+     *
+     * \param pattern the formatters' pattern
+     */
+    void parserPattern(const std::string& pattern);
     // Methods -
 
   };

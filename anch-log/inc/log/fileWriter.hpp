@@ -19,45 +19,62 @@
 */
 #pragma once
 
-#include <mutex>
+#include <fstream>
+#include <filesystem>
 
-#include "log/fileWriter.hpp"
+#include "log/writer.hpp"
 
 
 namespace anch::log {
 
   /*!
-   * File writer which manage conccurency access
+   * \brief Log file writer
+   *
+   * Manage file writer with file rotation on size, date and max rotate index
    *
    * \author Vincent Lachenal
    *
    * \since 0.1
    */
-  class ThreadSafeWriter: public FileWriter {
-  private:
+  class FileWriter: public Writer {
+
     // Attributes +
-    /*! Writer mutex */
-    std::mutex _mutex;
+  protected:
+    /*! Ouput file stream */
+    std::ofstream* _output;
+
+    /*! File name */
+    std::filesystem::path _path;
+
+    /*! Maximum file size */
+    uint32_t _maxSize;
+
+    /*! Maximum file index */
+    int _maxIdx;
+
+    /*! Current file index */
+    int _fileIdx;
     // Attributes -
 
-  public:
     // Constructors +
+  public:
     /*!
-     * \ref ThreadSafeWriter constructor
+     * \ref FileWriter constructor
      *
      * \param conf the writer's configuration
      */
-    ThreadSafeWriter(const anch::conf::Section& conf);
+    FileWriter(const anch::conf::Section& conf);
     // Constructors -
 
-  public:
     // Destructor +
+  public:
     /*!
-     * \ref ThreadSafeWriter destructor
+     * \ref FileWriter destructor
      */
-    virtual ~ThreadSafeWriter();
+    virtual ~FileWriter();
     // Destructor -
 
+    // Methods +
   public:
     /*!
      * Write message in the file.\n
@@ -65,7 +82,21 @@ namespace anch::log {
      *
      * \param message Message to write
      */
-    virtual void write(const std::string& message) override;
+    virtual void write(const std::string& message);
+
+  protected:
+    /*!
+     * Check if file has to be rotate according to configuration and its size
+     *
+     * \return true or false
+     */
+    bool rotate() const;
+
+    /*!
+     * Rotate files when current reachs the maximum file length.
+     */
+    void rotateFiles();
+    // Methods -
 
   };
 

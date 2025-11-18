@@ -19,7 +19,9 @@
 */
 #pragma once
 
-namespace anch::logger {
+#include "log/mdc.hpp"
+
+namespace anch::log {
 
   template<typename T, typename... Q>
   void
@@ -62,8 +64,11 @@ namespace anch::logger {
   Logger::log(const Level& level, std::ostringstream& out, const T& value) const noexcept {
     out << value;
     const std::string& message = out.str();
-    for(size_t i = 0 ; i < _writers.size() ; i++) {
-      _writers[i]->write(_name, level, message);
+    anch::log::MDC.put("level", LEVEL_LABEL.at(level));
+    anch::log::MDC.put("logger", _name);
+    for(size_t i = 0 ; i < _writers.size() ; ++i) {
+      //_writers[i]->write(_name, level, message); // \todo fix
+      _writers[i]->write(message);
     }
   }
 

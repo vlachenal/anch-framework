@@ -23,14 +23,17 @@
 #include <vector>
 #include <cstdint>
 
-#include "logger/loggerConfiguration.hpp"
-#include "logger/logger.hpp"
-#include "logger/writer.hpp"
-#include "resource/resource.hpp"
+#include "log/loggerConfiguration.hpp"
+#include "log/logger.hpp"
+#include "log/writer.hpp"
+
 #include "singleton.hpp"
 
+#include "conf/configuration.hpp"
+#include "conf/section.hpp"
 
-namespace anch::logger {
+
+namespace anch::log {
 
   /*!
    * \brief Logger factory.
@@ -44,17 +47,13 @@ namespace anch::logger {
   class LoggerFactory: public anch::Singleton<LoggerFactory> {
     friend class anch::Singleton<LoggerFactory>;
 
-  public:
-    /*! Configuration file path. Default: \c anch-logger.conf */
-    static std::string CONF_FILE;
-
   private:
     // Attributes +
     /*! Loggers configuration */
-    std::vector<anch::logger::LoggerConfiguration> _loggersConfig;
+    std::map<std::string, anch::log::LoggerConfiguration> _loggersConfig;
 
     /*! Register loggers to free them */
-    std::vector<anch::logger::Logger*> _loggers;
+    std::map<std::string, anch::log::Logger*> _loggers;
     // Attributes -
 
   private:
@@ -65,6 +64,7 @@ namespace anch::logger {
     LoggerFactory();
     // Constructor -
 
+  private:
     // Destructor +
     /*!
      * \ref LoggerFactory destructor.\n
@@ -83,46 +83,26 @@ namespace anch::logger {
      *
      * \return The loggerr instance
      */
-    static const anch::logger::Logger& getLogger(const std::string& loggerName);
+    static const anch::log::Logger& getLogger(const std::string& loggerName);
 
   private:
-    /*!
-     * Create writer instance according to writter configuration
-     *
-     * \param threadSafe Use a thread safe logger
-     * \param lowPriority Use a low priority logger
-     * \param out the output stream to use
-     * \param pattern the logger pattern configuration
-     */
-    anch::logger::Writer* createWriterInstance(bool threadSafe, bool lowPriority, std::ostream* out, const std::string& pattern);
-
-    /*!
-     * Create writer instance according to writter configuration
-     *
-     * \param threadSafe use a thread safe logger
-     * \param lowPriority use a low priority logger
-     * \param path the file path
-     * \param pattern the logger pattern configuration
-     * \param maxSize the log files maximum size
-     * \param maxIndex the maximum number of log file to keep
-     */
-    anch::logger::Writer* createWriterInstance(bool threadSafe, bool lowPriority, const std::string& path, const std::string& pattern, uint32_t maxSize, int maxIndex);
-
     /*!
      * Initialize writers
      *
      * \param writers The writers container
-     * \param resource The resource configuration file
+     * \param conf the configuration file
      */
-    void initializeWriters(std::map<std::string,anch::logger::Writer*>& writers, const anch::resource::Resource& resource);
+    void initializeWriters(std::map<std::string, anch::log::Writer*>& writers,
+			   const anch::conf::Section* conf);
 
     /*!
      * Initialize loggers configuration
      *
      * \param writers The configured writers
-     * \param resource The resource configuration file
+     * \param conf The configuration file
      */
-    void initializeLoggersConfiguration(const std::map<std::string,anch::logger::Writer*>& writers, const anch::resource::Resource& resource);
+    void initializeLoggersConfiguration(const std::map<std::string, anch::log::Writer*>& writers,
+					const anch::conf::Section* conf);
 
     /*!
      * Load default configuration

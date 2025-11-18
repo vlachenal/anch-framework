@@ -17,13 +17,13 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "logger/formatter/constFormatter.hpp"
+#include "log/fmt/constFormatter.hpp"
 
 using std::string;
 using std::ostream;
 
-using anch::logger::formatter::ConstFormatter;
-using anch::logger::formatter::FormatterType;
+using anch::log::fmt::ConstFormatter;
+using anch::log::fmt::FormatterType;
 
 
 ConstFormatter::ConstFormatter(const string strToPrint): _strToPrint(strToPrint) {
@@ -41,5 +41,5 @@ ConstFormatter::formatValue(const void* const, ostream& out) const noexcept {
 
 FormatterType
 ConstFormatter::getType() const noexcept {
-  return anch::logger::formatter::FormatterType::CONST;
+  return anch::log::fmt::FormatterType::CONST;
 }

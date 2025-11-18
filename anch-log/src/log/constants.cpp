@@ -17,28 +17,18 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "log/fmt/stringFormatter.hpp"
+#include "log/constants.hpp"
 
-using std::string;
-using std::ostream;
-
-using anch::log::fmt::StringFormatter;
-using anch::log::fmt::FormatterType;
-
-StringFormatter::StringFormatter() {
-  // Nothing to do
-}
-
-StringFormatter::~StringFormatter() {
-  // Nothing to do
-}
-
-void
-StringFormatter::formatValue(const void* const value, ostream& out) const noexcept {
-  out << *((const string*)value);
-}
-
-FormatterType
-StringFormatter::getType() const noexcept {
-  return FormatterType::STRING;
-}
+// Constants definition +
+const std::string anch::log::DEFAULT("");
+const std::string anch::log::MODULE("module");
+const std::string anch::log::THREAD_SAFE("thread-safe");
+const std::string anch::log::LOW_PRIORITY("low-priority");
+const std::string anch::log::WRITER("writer");
+const std::string anch::log::WRITERS("writers");
+const std::string anch::log::LOGGER("logger");
+const std::string anch::log::LEVEL("level");
+const std::string anch::log::NS_LOG("anch::log");
+const std::string anch::log::WRITER_FILE("file");
+const std::string anch::log::WRITER_TERM("console");
+// Constants definition -
