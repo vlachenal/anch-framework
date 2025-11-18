@@ -1,6 +1,6 @@
 <map id="anch::network::UdpSocket::accept" name="anch::network::UdpSocket::accept">
 <area shape="rect" id="Node000001" title=" " alt="" coords="5,29,182,72"/>
-<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="53,29,51,19,58,10,72,5,94,3,116,5,130,11,128,16,115,10,93,8,74,10,61,15,57,21,58,28"/>
+<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="53,28,51,19,58,10,72,5,94,3,116,5,132,13,126,14,115,10,93,8,74,10,61,15,57,21,58,29"/>
 <area shape="rect" id="Node000002" href="$classanch_1_1network_1_1_socket.html#a3d3b64a3a5d9bb1f4093942a4d7bb611" title=" " alt="" coords="230,29,382,72"/>
-<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="182,48,214,48,214,53,182,53"/>
+<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="182,48,217,50,212,51,182,53"/>
 </map>

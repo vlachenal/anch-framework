@@ -1,25 +1,3 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$classanch_1_1date_1_1_i_date_part_formatter.html" title=" " alt="" coords="5,259,208,285"/>
-<area shape="rect" id="Node000001" href="$classanch_1_1date_1_1_constant_formatter.html" title=" " alt="" coords="262,5,461,32"/>
-<area shape="poly" id="edge17_Node000000_Node000001" title=" " alt="" coords="115,243,135,199,164,144,204,89,228,64,254,42,276,30,278,35,257,46,231,67,208,92,169,147,140,201,120,245"/>
-<area shape="rect" id="Node000002" href="$classanch_1_1date_1_1_day_formatter.html" title=" " alt="" coords="276,56,446,83"/>
-<area shape="poly" id="edge18_Node000000_Node000002" title=" " alt="" coords="120,244,142,209,173,168,210,127,254,92,279,81,281,86,257,97,214,131,177,171,147,212,125,246"/>
-<area shape="rect" id="Node000003" href="$classanch_1_1date_1_1_hour12_formatter.html" title=" " alt="" coords="267,107,456,133"/>
-<area shape="poly" id="edge19_Node000000_Node000003" title=" " alt="" coords="128,245,182,193,217,166,254,143,283,131,285,136,257,148,220,170,186,197,132,249"/>
-<area shape="rect" id="Node000004" href="$classanch_1_1date_1_1_hour24_formatter.html" title=" " alt="" coords="267,157,456,184"/>
-<area shape="poly" id="edge20_Node000000_Node000004" title=" " alt="" coords="143,248,195,220,255,194,292,182,293,187,257,198,197,225,145,253"/>
-<area shape="rect" id="Node000005" href="$classanch_1_1date_1_1_marker_formatter.html" title=" " alt="" coords="268,208,454,235"/>
-<area shape="poly" id="edge21_Node000000_Node000005" title=" " alt="" coords="192,252,290,233,291,238,193,258"/>
-<area shape="rect" id="Node000006" href="$classanch_1_1date_1_1_millisecond_formatter.html" title=" " alt="" coords="256,259,467,285"/>
-<area shape="poly" id="edge22_Node000000_Node000006" title=" " alt="" coords="223,269,255,269,255,275,223,275"/>
-<area shape="rect" id="Node000007" href="$classanch_1_1date_1_1_minute_formatter.html" title=" " alt="" coords="269,309,454,336"/>
-<area shape="poly" id="edge23_Node000000_Node000007" title=" " alt="" coords="193,286,291,306,290,311,192,292"/>
-<area shape="rect" id="Node000008" href="$classanch_1_1date_1_1_month_formatter.html" title=" " alt="" coords="270,360,452,387"/>
-<area shape="poly" id="edge24_Node000000_Node000008" title=" " alt="" coords="145,291,197,319,257,346,293,357,292,362,255,350,195,324,143,296"/>
-<area shape="rect" id="Node000009" href="$classanch_1_1date_1_1_second_formatter.html" title=" " alt="" coords="266,411,456,437"/>
-<area shape="poly" id="edge25_Node000000_Node000009" title=" " alt="" coords="132,295,186,347,220,374,257,396,285,408,283,413,254,401,217,378,182,351,128,299"/>
-<area shape="rect" id="Node000010" href="$classanch_1_1date_1_1_year2_d_formatter.html" title=" " alt="" coords="267,461,456,488"/>
-<area shape="poly" id="edge26_Node000000_Node000010" title=" " alt="" coords="125,298,147,332,177,373,214,413,257,447,281,458,279,463,254,452,210,417,173,376,142,335,120,300"/>
-<area shape="rect" id="Node000011" href="$classanch_1_1date_1_1_year4_d_formatter.html" title=" " alt="" coords="267,512,456,539"/>
-<area shape="poly" id="edge27_Node000000_Node000011" title=" " alt="" coords="120,299,140,343,169,397,208,452,231,477,257,498,278,509,276,514,254,502,228,480,204,455,164,400,135,345,115,301"/>
+<area shape="rect" id="Node000000" href="$classanch_1_1date_1_1_date_formatter.html" title=" " alt="" coords="5,5,180,32"/>
 </map>

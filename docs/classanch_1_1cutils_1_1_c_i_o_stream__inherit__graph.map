@@ -1,11 +1,11 @@
 <map id="anch::cutils::CIOStream" name="anch::cutils::CIOStream">
 <area shape="rect" id="Node000001" title=" " alt="" coords="105,123,256,256"/>
 <area shape="rect" id="Node000003" href="$classanch_1_1network_1_1_tcp_stream.html" title=" " alt="" coords="99,304,262,437"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="183,271,183,304,178,304,178,271"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="181,268,183,305,178,303,180,273"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="137,5,224,75"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="183,90,183,123,178,123,178,90"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="181,87,183,123,178,123,180,93"/>
 <area shape="rect" id="Node000004" href="$classanch_1_1network_1_1_tcp_stream_client.html" title="TCP stream client." alt="" coords="5,485,169,592"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="139,451,119,487,114,484,134,449"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="138,448,119,487,114,484,135,452"/>
 <area shape="rect" id="Node000005" href="$classanch_1_1network_1_1_tcp_stream_server.html" title="TCP stream server." alt="" coords="193,485,357,592"/>
-<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="227,449,248,484,243,487,223,451"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="226,447,248,486,243,485,224,452"/>
 </map>

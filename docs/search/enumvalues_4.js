@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['info_0',['INFO',['../namespaceanch_1_1logger.html#a973cdff92f296b5fba7f68660d4ee41fa551b723eafd6a31d444fcb2f5920fbd3',1,'anch::logger']]],
-  ['invalid_5fformat_1',['INVALID_FORMAT',['../namespaceanch_1_1json.html#a56742fecea7bc19952b3e35c013ad931a252d8e34178da47f2208605a66051241',1,'anch::json']]]
+  ['false_0',['FALSE',['../namespaceanch_1_1json.html#aa39e48b07b65032096fb6d205da99f4ba946003f97ccc52d5d3b54ac0ec31bbfc',1,'anch::json']]],
+  ['field_1',['FIELD',['../namespaceanch_1_1json.html#aa39e48b07b65032096fb6d205da99f4ba552a541802e89c9f535247f725bd1c0d',1,'anch::json']]]
 ];

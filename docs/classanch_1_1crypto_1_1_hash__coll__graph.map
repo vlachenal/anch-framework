@@ -1,9 +1,9 @@
 <map id="anch::crypto::Hash&lt; O, B &gt;" name="anch::crypto::Hash&lt; O, B &gt;">
 <area shape="rect" id="Node000001" title="Hash algorithm abstract class." alt="" coords="18,429,140,707"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="5,288,152,357"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="81,357,81,413,76,413,76,357"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="79,355,81,413,76,413,78,360"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="30,147,127,216"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="81,231,81,288,76,288,76,231"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="79,228,81,289,76,288,78,234"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="69,5,88,75"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="81,75,81,130,76,130,76,75"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="79,72,81,130,76,130,78,77"/>
 </map>

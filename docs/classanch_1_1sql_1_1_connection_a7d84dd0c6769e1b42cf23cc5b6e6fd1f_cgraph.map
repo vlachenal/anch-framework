@@ -1,6 +1,6 @@
 <map id="anch::sql::Connection::query" name="anch::sql::Connection::query">
 <area shape="rect" id="Node000001" title=" " alt="" coords="5,29,154,72"/>
 <area shape="rect" id="Node000002" href="$classanch_1_1sql_1_1_connection.html#a81b8bf61bf16b985e11e15dc0e556443" title=" " alt="" coords="202,29,350,72"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="154,48,186,48,186,53,154,53"/>
-<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="238,29,237,19,243,10,256,5,276,3,297,5,310,11,307,16,296,10,276,8,257,10,246,15,242,21,243,28"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="154,48,189,50,183,51,154,53"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="239,27,237,19,243,10,256,5,276,3,297,5,311,14,306,13,296,10,276,8,257,10,246,15,242,21,243,30"/>
 </map>

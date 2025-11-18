@@ -1,0 +1,19 @@
+<map id="anch::log::fmt::IFormatter" name="anch::log::fmt::IFormatter">
+<area shape="rect" id="Node000001" title=" " alt="" coords="692,5,851,117"/>
+<area shape="rect" id="Node000002" href="$classanch_1_1log_1_1fmt_1_1_anch_date_formatter.html" title=" " alt="" coords="5,165,162,315"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="675,65,571,74,443,91,307,121,240,142,175,168,163,174,160,170,173,163,238,137,305,116,442,86,571,69,680,64"/>
+<area shape="rect" id="Node000003" href="$classanch_1_1log_1_1fmt_1_1_category_formatter.html" title=" " alt="" coords="186,165,338,315"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="675,74,605,88,521,107,434,133,352,168,339,175,336,170,349,163,433,128,520,102,604,83,680,72"/>
+<area shape="rect" id="Node000004" href="$classanch_1_1log_1_1fmt_1_1_const_formatter.html" title=" " alt="" coords="362,173,552,307"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="682,104,565,168,551,176,549,171,562,163,676,106"/>
+<area shape="rect" id="Node000005" href="$classanch_1_1log_1_1fmt_1_1_date_formatter.html" title=" " alt="" coords="576,173,759,307"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="734,128,708,176,704,172,730,131"/>
+<area shape="rect" id="Node000006" href="$classanch_1_1log_1_1fmt_1_1_level_formatter.html" title=" " alt="" coords="783,173,968,307"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="813,127,840,175,835,173,810,132"/>
+<area shape="rect" id="Node000007" href="$classanch_1_1log_1_1fmt_1_1_m_d_c_formatter.html" title=" " alt="" coords="992,173,1178,307"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="865,102,982,163,997,174,992,173,980,168,864,107"/>
+<area shape="rect" id="Node000008" href="$classanch_1_1log_1_1fmt_1_1_string_formatter.html" title=" " alt="" coords="1201,173,1390,307"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="866,73,939,86,1021,105,1108,131,1191,163,1209,174,1204,173,1189,168,1106,136,1020,110,938,91,866,78"/>
+<area shape="rect" id="Node000009" href="$classanch_1_1log_1_1fmt_1_1_thread_id_formatter.html" title=" " alt="" coords="1414,165,1564,315"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="866,60,979,66,1116,82,1189,95,1262,113,1334,135,1403,163,1417,172,1412,171,1401,168,1333,140,1261,118,1188,100,1115,87,978,71,866,65"/>
+</map>

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['level_0',['Level',['../namespaceanch_1_1logger.html#a973cdff92f296b5fba7f68660d4ee41f',1,'anch::logger']]]
+  ['version_0',['Version',['../classanch_1_1_u_u_i_d.html#a6ee815d96c7a3fec3e5ed88f05e600f6',1,'anch::UUID']]]
 ];

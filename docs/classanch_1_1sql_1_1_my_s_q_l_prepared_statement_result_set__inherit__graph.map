@@ -1,5 +1,5 @@
 <map id="anch::sql::MySQLPreparedStatementResultSet" name="anch::sql::MySQLPreparedStatementResultSet">
 <area shape="rect" id="Node000001" title="MySQL result set implementation for prepared statement ... shitty API." alt="" coords="5,421,231,688"/>
 <area shape="rect" id="Node000002" href="$classanch_1_1sql_1_1_result_set.html" title="SQL result representation." alt="" coords="12,5,225,373"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="121,388,121,422,116,422,116,388"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="119,385,121,422,116,421,118,391"/>
 </map>

@@ -1,11 +1,11 @@
 <map id="anch::json::GenericMapper&lt; M, T &gt;" name="anch::json::GenericMapper&lt; M, T &gt;">
 <area shape="rect" id="Node000001" title="Generic mapper." alt="" coords="121,5,288,347"/>
 <area shape="rect" id="Node000002" href="$classanch_1_1json_1_1_generic_mapper.html" title=" " alt="" coords="24,440,191,589"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="138,362,135,371,120,441,115,440,130,370,133,360"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="136,358,135,371,120,441,115,440,130,370,135,363"/>
 <area shape="rect" id="Node000004" href="$classanch_1_1json_1_1_generic_mapper.html" title=" " alt="" coords="228,440,403,589"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="268,360,294,439,289,441,262,361"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="266,358,294,440,289,440,264,363"/>
 <area shape="rect" id="Node000003" href="$classanch_1_1json_1_1_object_mapper.html" title="JSON complex object mapper." alt="" coords="5,639,196,772"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="107,605,106,639,100,639,102,604"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="105,602,106,640,100,639,103,607"/>
 <area shape="rect" id="Node000005" href="$classanch_1_1json_1_1_primitive_mapper.html" title="JSON primitive types mapper." alt="" coords="220,639,424,772"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="321,604,322,639,317,639,316,605"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="320,602,322,640,317,638,317,607"/>
 </map>

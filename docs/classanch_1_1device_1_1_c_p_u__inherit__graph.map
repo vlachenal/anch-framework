@@ -1,7 +1,7 @@
 <map id="anch::device::CPU" name="anch::device::CPU">
 <area shape="rect" id="Node000001" title="CPU features detection." alt="" coords="21,265,143,505"/>
 <area shape="rect" id="Node000002" href="$classanch_1_1_singleton.html" title=" " alt="" coords="5,147,159,216"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="85,231,85,265,80,265,80,231"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="83,228,85,266,80,265,82,234"/>
 <area shape="rect" id="Node000003" href="$classanch_1_1_singleton.html" title="Meyers&#39; singleton implementation." alt="" coords="16,5,148,75"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="85,90,85,147,80,147,80,90"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="82,87,85,147,80,147,82,92"/>
 </map>

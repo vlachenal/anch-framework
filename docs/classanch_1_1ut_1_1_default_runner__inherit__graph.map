@@ -1,7 +1,7 @@
 <map id="anch::ut::DefaultRunner" name="anch::ut::DefaultRunner">
 <area shape="rect" id="Node000001" title="Default unit tests runner." alt="" coords="24,165,174,341"/>
 <area shape="rect" id="Node000003" href="$classanch_1_1ut_1_1_socket_server_runner.html" title="Socket server unit tests runner." alt="" coords="5,389,192,544"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="101,356,101,390,96,390,96,356"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="100,354,101,390,96,389,98,359"/>
 <area shape="rect" id="Node000002" href="$classanch_1_1ut_1_1_runner.html" title="Unit tests runner." alt="" coords="45,5,152,117"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="101,132,101,166,96,166,96,132"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="99,129,101,166,96,165,98,135"/>
 </map>

@@ -10,7 +10,5 @@ var searchData=
   ['anch_3a_3alogger_7',['logger',['../namespaceanch_1_1logger.html',1,'anch']]],
   ['anch_3a_3alogger_3a_3aformatter_8',['formatter',['../namespaceanch_1_1logger_1_1formatter.html',1,'anch::logger']]],
   ['anch_3a_3anetwork_9',['network',['../namespaceanch_1_1network.html',1,'anch']]],
-  ['anch_3a_3aresource_10',['resource',['../namespaceanch_1_1resource.html',1,'anch']]],
-  ['anch_3a_3aresource_3a_3afile_11',['file',['../namespaceanch_1_1resource_1_1file.html',1,'anch::resource']]],
-  ['anch_3a_3asql_12',['sql',['../namespaceanch_1_1sql.html',1,'anch']]]
+  ['anch_3a_3asql_10',['sql',['../namespaceanch_1_1sql.html',1,'anch']]]
 ];

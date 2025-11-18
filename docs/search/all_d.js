@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['name_0',['name',['../structanch_1_1cli_1_1_app.html#a15a529d59a7a743c882bf90037dbfa67',1,'anch::cli::App::name'],['../structanch_1_1cli_1_1_arg.html#a650e54cbeeb627f2fbb1d87096e0770e',1,'anch::cli::Arg::name'],['../classanch_1_1ut_1_1_unit_tests.html#a986b64600aae2fefa47cc3b2fb97623d',1,'anch::ut::UnitTests::name()']]],
+  ['name_0',['name',['../structanch_1_1cli_1_1_app.html#a15a529d59a7a743c882bf90037dbfa67',1,'anch::cli::App::name'],['../structanch_1_1cli_1_1_arg.html#a650e54cbeeb627f2fbb1d87096e0770e',1,'anch::cli::Arg::name'],['../classanch_1_1conf_1_1_configuration.html#aa4b297d0b196ff1465a0d3a12c67b857',1,'anch::conf::Configuration::name()'],['../classanch_1_1ut_1_1_unit_tests.html#a986b64600aae2fefa47cc3b2fb97623d',1,'anch::ut::UnitTests::name()']]],
   ['naturaljoin_1',['naturalJoin',['../classanch_1_1sql_1_1_from_builder.html#a590a45623a39f48950db31ce4ba4f626',1,'anch::sql::FromBuilder::naturalJoin(const std::string &amp;table)'],['../classanch_1_1sql_1_1_from_builder.html#ae138d95283842666137f1181717d4b9a',1,'anch::sql::FromBuilder::naturalJoin(const anch::sql::SQLQuery &amp;subquery, const std::string &amp;alias)'],['../classanch_1_1sql_1_1_from_builder.html#a3712d57aed2a09ee9f4a902fa7cf418a',1,'anch::sql::FromBuilder::naturalJoin(const anch::sql::SelectBuilder &amp;subquery, const std::string &amp;alias)']]],
   ['nel_2',['NEL',['../structanch_1_1rest_1_1_common_headers.html#a72266028946cbbb42c9bde446e773fae',1,'anch::rest::CommonHeaders']]],
   ['network_3',['Network',['../classanch_1_1device_1_1_network.html',1,'anch::device']]],
@@ -11,7 +11,7 @@ var searchData=
   ['nonematch_8',['noneMatch',['../classanch_1_1_fluent.html#abc69b8466a06817c01b1b99b77d25c30',1,'anch::Fluent']]],
   ['nopadding_9',['NOPADDING',['../classanch_1_1crypto_1_1_base64.html#aa8d3d99bcb486e4434d1cc81a4f4ee91',1,'anch::crypto::Base64']]],
   ['not_10',['NOT',['../classanch_1_1sql_1_1_clauses_builder.html#a8f3107a894ae66579f31f4a584799aa1',1,'anch::sql::ClausesBuilder']]],
-  ['not_5freadable_11',['NOT_READABLE',['../classanch_1_1ini_1_1_parser_error.html#a2d5d885e252170535f9ddabf23c236b4a9547794ad47ead502399954092c567ba',1,'anch::ini::ParserError']]],
+  ['not_5freadable_11',['NOT_READABLE',['../classanch_1_1conf_1_1_conf_error.html#abab53c9d1f2453e51ae897e44e05b7a7a9547794ad47ead502399954092c567ba',1,'anch::conf::ConfError::NOT_READABLE'],['../classanch_1_1ini_1_1_parser_error.html#a2d5d885e252170535f9ddabf23c236b4a9547794ad47ead502399954092c567ba',1,'anch::ini::ParserError::NOT_READABLE']]],
   ['not_5fset_12',['NOT_SET',['../classanch_1_1_u_u_i_d.html#a6ee815d96c7a3fec3e5ed88f05e600f6a1c250a21210b7b88a14db9a0cbe71162',1,'anch::UUID']]],
   ['notbetween_13',['notBetween',['../classanch_1_1sql_1_1_clauses_builder.html#ab3aabb22ecc604b21c44cc61db480584',1,'anch::sql::ClausesBuilder::notBetween()'],['../namespaceanch_1_1sql.html#af6749b09fcc7a3d5bfeaf81a3dfea56b',1,'anch::sql::notBetween()']]],
   ['notequals_14',['notEquals',['../classanch_1_1sql_1_1_clauses_builder.html#a912be9dd35de1ca317882d3a3c6c3c93',1,'anch::sql::ClausesBuilder::notEquals()'],['../namespaceanch_1_1sql.html#ad28e2832c1b7e078cfbbea441ceb36d5',1,'anch::sql::notEquals()']]],

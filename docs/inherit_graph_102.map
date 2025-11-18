@@ -1,11 +1,17 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" title=" " alt="" coords="5,47,103,73"/>
-<area shape="rect" id="Node000001" href="$classanch_1_1cutils_1_1_c_i_o_stream.html" title=" " alt="" coords="151,47,313,73"/>
-<area shape="poly" id="edge95_Node000000_Node000001" title=" " alt="" coords="118,57,150,57,150,63,118,63"/>
-<area shape="rect" id="Node000002" href="$classanch_1_1network_1_1_tcp_stream.html" title=" " alt="" coords="361,47,535,73"/>
-<area shape="poly" id="edge96_Node000001_Node000002" title=" " alt="" coords="328,57,360,57,360,63,328,63"/>
-<area shape="rect" id="Node000003" href="$classanch_1_1network_1_1_tcp_stream_client.html" title="TCP stream client." alt="" coords="583,5,758,48"/>
-<area shape="poly" id="edge97_Node000002_Node000003" title=" " alt="" coords="550,42,582,37,583,42,551,47"/>
-<area shape="rect" id="Node000004" href="$classanch_1_1network_1_1_tcp_stream_server.html" title="TCP stream server." alt="" coords="583,72,758,115"/>
-<area shape="poly" id="edge98_Node000002_Node000004" title=" " alt="" coords="551,73,583,78,582,83,550,78"/>
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,47,105,73"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="153,47,307,73"/>
+<area shape="poly" id="edge93_Node000000_Node000001" title=" " alt="" coords="120,57,155,59,150,61,121,63"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="357,5,485,48"/>
+<area shape="poly" id="edge94_Node000001_Node000002" title=" " alt="" coords="322,41,359,37,354,38,323,46"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="355,72,487,115"/>
+<area shape="poly" id="edge97_Node000001_Node000005" title=" " alt="" coords="322,73,358,82,352,82,322,79"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="537,13,628,40"/>
+<area shape="poly" id="edge95_Node000002_Node000003" title=" " alt="" coords="500,24,539,26,534,27,501,29"/>
+<area shape="rect" id="Node000004" href="$classanch_1_1cutils_1_1_c_i_stream.html" title=" " alt="" coords="681,13,833,40"/>
+<area shape="poly" id="edge96_Node000003_Node000004" title=" " alt="" coords="643,24,683,26,677,27,643,29"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="535,80,630,107"/>
+<area shape="poly" id="edge98_Node000005_Node000006" title=" " alt="" coords="503,91,537,93,532,93,503,96"/>
+<area shape="rect" id="Node000007" href="$classanch_1_1cutils_1_1_c_o_stream.html" title=" " alt="" coords="678,80,836,107"/>
+<area shape="poly" id="edge99_Node000006_Node000007" title=" " alt="" coords="645,91,680,93,675,93,646,96"/>
 </map>

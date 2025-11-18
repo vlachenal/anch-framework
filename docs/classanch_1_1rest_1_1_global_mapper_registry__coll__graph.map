@@ -1,9 +1,9 @@
 <map id="anch::rest::GlobalMapperRegistry" name="anch::rest::GlobalMapperRegistry">
 <area shape="rect" id="Node000001" title=" " alt="" coords="27,351,184,436"/>
 <area shape="rect" id="Node000002" href="$classanch_1_1rest_1_1_mapper_registry.html" title=" " alt="" coords="5,147,174,301"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="101,316,104,351,99,351,96,316"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="100,314,104,351,99,350,97,318"/>
 <area shape="rect" id="Node000003" href="$classanch_1_1_singleton.html" title=" " alt="" coords="199,181,391,267"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="239,278,154,353,151,349,235,274"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="239,275,154,353,151,349,235,278"/>
 <area shape="rect" id="Node000004" href="$classanch_1_1_singleton.html" title="Meyers&#39; singleton implementation." alt="" coords="229,5,361,75"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="298,90,298,181,292,181,292,90"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="296,87,298,182,292,181,294,92"/>
 </map>

@@ -7,7 +7,6 @@ var namespaceanch =
     [ "json", "namespaceanch_1_1json.html", "namespaceanch_1_1json" ],
     [ "logger", "namespaceanch_1_1logger.html", "namespaceanch_1_1logger" ],
     [ "network", "namespaceanch_1_1network.html", "namespaceanch_1_1network" ],
-    [ "resource", "namespaceanch_1_1resource.html", "namespaceanch_1_1resource" ],
     [ "sql", "namespaceanch_1_1sql.html", "namespaceanch_1_1sql" ],
     [ "Collectors", "classanch_1_1_collectors.html", "classanch_1_1_collectors" ],
     [ "Fluent", "classanch_1_1_fluent.html", "classanch_1_1_fluent" ],

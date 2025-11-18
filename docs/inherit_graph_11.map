@@ -1,5 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$classanch_1_1crypto_1_1_block_cipher_mode_of_operation.html" title=" " alt="" coords="5,5,218,64"/>
-<area shape="rect" id="Node000001" href="$classanch_1_1crypto_1_1_c_f_b.html" title="Cipher feedback implementation." alt="" coords="266,13,402,56"/>
-<area shape="poly" id="edge6_Node000000_Node000001" title=" " alt="" coords="233,32,265,32,265,37,233,37"/>
+<area shape="rect" id="Node000000" href="$classanch_1_1crypto_1_1_block_cipher_mode_of_operation.html" title=" " alt="" coords="5,5,224,64"/>
+<area shape="rect" id="Node000001" href="$classanch_1_1crypto_1_1_c_b_c.html" title="Cipher&#45;block chaining implementation." alt="" coords="272,13,410,56"/>
+<area shape="poly" id="edge5_Node000000_Node000001" title=" " alt="" coords="239,32,274,34,269,35,239,37"/>
 </map>

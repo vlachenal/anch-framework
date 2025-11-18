@@ -1,6 +1,6 @@
 <map id="anch::sql::PostgreSQLResultSet::getValue" name="anch::sql::PostgreSQLResultSet::getValue">
 <area shape="rect" id="Node000001" title=" " alt="" coords="5,29,197,72"/>
 <area shape="rect" id="Node000002" href="$classanch_1_1sql_1_1_postgre_s_q_l_result_set.html#a6457d95f0afb51112b3dcff7d74b887b" title=" " alt="" coords="245,29,436,72"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="197,48,229,48,229,53,197,53"/>
-<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="295,29,293,19,301,10,317,5,340,3,366,5,381,11,379,16,365,10,340,8,318,10,304,15,298,21,300,28"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="197,48,231,50,226,51,197,53"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="295,27,293,19,301,10,317,5,340,3,366,5,383,14,378,13,365,10,340,8,318,10,304,15,298,21,300,30"/>
 </map>

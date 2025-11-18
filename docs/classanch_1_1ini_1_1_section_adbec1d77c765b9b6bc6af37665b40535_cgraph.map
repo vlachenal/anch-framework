@@ -1,8 +1,8 @@
 <map id="anch::ini::Section::Section" name="anch::ini::Section::Section">
 <area shape="rect" id="Node000001" title=" " alt="" coords="5,5,128,48"/>
 <area shape="rect" id="Node000002" href="$classanch_1_1ini_1_1_section.html#a8edc203dec8533b1ad6088c1bb5a0fbc" title=" " alt="" coords="346,5,468,48"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="128,21,176,20,298,20,330,21,330,26,298,25,176,25,128,27"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="128,21,176,20,298,20,333,23,328,24,298,25,176,25,129,27"/>
 <area shape="rect" id="Node000003" href="$classanch_1_1ini_1_1_section.html#a41a99b5cc49f37599baaba6afd4f9b40" title=" " alt="" coords="176,35,298,77"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="128,35,161,40,160,45,127,40"/>
-<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="298,43,330,37,331,42,299,48"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="128,35,163,42,158,43,128,40"/>
+<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="298,43,328,40,333,39,299,48"/>
 </map>

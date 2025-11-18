@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['warn_0',['WARN',['../namespaceanch_1_1logger.html#a973cdff92f296b5fba7f68660d4ee41fa32bd8a1db2275458673903bdb84cb277',1,'anch::logger']]]
+  ['vnull_0',['VNULL',['../namespaceanch_1_1json.html#aa39e48b07b65032096fb6d205da99f4ba933815b48a60fd3ece2576e52727cbd9',1,'anch::json']]]
 ];

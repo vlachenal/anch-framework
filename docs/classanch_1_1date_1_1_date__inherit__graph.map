@@ -1,9 +1,9 @@
 <map id="anch::date::Date" name="anch::date::Date">
 <area shape="rect" id="Node000001" title=" " alt="" coords="123,5,235,544"/>
 <area shape="rect" id="Node000002" href="$classanch_1_1sql_1_1_date.html" title="SQL date type." alt="" coords="5,592,105,747"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="121,468,82,593,77,592,116,466"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="120,465,82,593,77,592,117,469"/>
 <area shape="rect" id="Node000003" href="$classanch_1_1sql_1_1_time.html" title="SQL time type." alt="" coords="129,592,230,747"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="182,559,182,592,176,592,176,559"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="180,557,182,593,177,591,178,561"/>
 <area shape="rect" id="Node000004" href="$classanch_1_1sql_1_1_timestamp.html" title="SQL timestamp type." alt="" coords="254,592,390,747"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="243,443,297,591,292,593,238,445"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="242,441,297,592,292,592,239,446"/>
 </map>

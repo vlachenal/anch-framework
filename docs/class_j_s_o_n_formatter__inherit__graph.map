@@ -1,7 +1,7 @@
 <map id="JSONFormatter" name="JSONFormatter">
 <area shape="rect" id="Node000001" title=" " alt="" coords="28,281,160,479"/>
 <area shape="rect" id="Node000002" href="$classanch_1_1events_1_1_observer.html" title=" " alt="" coords="21,147,168,232"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="97,247,97,282,92,282,92,247"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="95,245,97,282,92,281,94,250"/>
 <area shape="rect" id="Node000003" href="$classanch_1_1events_1_1_observer.html" title="An observer interface of the observers/observable design pattern." alt="" coords="5,5,183,75"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="97,90,97,147,92,147,92,90"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="95,87,97,147,92,147,94,92"/>
 </map>

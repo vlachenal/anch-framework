@@ -1,0 +1,15 @@
+<map id="anch::log::FileWriter" name="anch::log::FileWriter">
+<area shape="rect" id="Node000001" title="Log file writer." alt="" coords="16,717,143,936"/>
+<area shape="rect" id="Node000002" href="$classanch_1_1log_1_1_writer.html" title="Logger writter definition." alt="" coords="5,512,111,645"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="66,658,73,718,67,718,65,663"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="136,544,223,613"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="167,611,132,702,128,700,165,615"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="117,377,242,463"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="180,475,182,545,177,544,179,480"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="119,243,240,328"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="180,340,182,378,177,377,179,345"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="108,124,251,193"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="180,206,182,243,177,242,179,211"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="135,5,224,75"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="180,87,182,125,177,124,179,92"/>
+</map>

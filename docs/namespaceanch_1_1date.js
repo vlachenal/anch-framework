@@ -1,9 +1,9 @@
 var namespaceanch_1_1date =
 [
     [ "formatter", "namespaceanch_1_1date_1_1formatter.html", null ],
-    [ "ConstantFormatter", "classanch_1_1date_1_1_constant_formatter.html", "classanch_1_1date_1_1_constant_formatter" ],
     [ "Date", "classanch_1_1date_1_1_date.html", "classanch_1_1date_1_1_date" ],
     [ "DateFormatter", "classanch_1_1date_1_1_date_formatter.html", "classanch_1_1date_1_1_date_formatter" ],
+    [ "ConstantFormatter", "classanch_1_1date_1_1_constant_formatter.html", "classanch_1_1date_1_1_constant_formatter" ],
     [ "DayFormatter", "classanch_1_1date_1_1_day_formatter.html", "classanch_1_1date_1_1_day_formatter" ],
     [ "Hour12Formatter", "classanch_1_1date_1_1_hour12_formatter.html", "classanch_1_1date_1_1_hour12_formatter" ],
     [ "Hour24Formatter", "classanch_1_1date_1_1_hour24_formatter.html", "classanch_1_1date_1_1_hour24_formatter" ],

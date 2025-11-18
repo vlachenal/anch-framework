@@ -1,16 +1,16 @@
 <map id="anch::events::Event&lt; T &gt;" name="anch::events::Event&lt; T &gt;">
 <area shape="rect" id="Node000001" title="Event representation." alt="" coords="170,483,329,552"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="114,325,249,411"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="203,409,229,466,224,469,198,412"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="202,408,229,468,224,467,199,413"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="31,163,100,232"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="77,231,90,265,109,300,118,311,114,315,105,303,85,268,72,233"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="74,229,90,265,109,300,119,313,114,314,105,303,85,268,74,234"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="5,5,120,91"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="66,106,67,163,62,163,61,106"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="64,103,67,163,62,163,63,108"/>
 <area shape="rect" id="Node000005" title=" " alt="" coords="126,163,236,232"/>
-<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="184,247,184,326,179,326,179,247"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="182,245,184,326,179,325,180,249"/>
 <area shape="rect" id="Node000006" title=" " alt="" coords="144,13,163,83"/>
-<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="153,82,153,110,157,138,159,146,154,147,152,139,148,110,148,82"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="151,80,153,110,157,138,160,147,154,147,152,139,148,110,150,85"/>
 <area shape="rect" id="Node000007" title=" " alt="" coords="263,13,281,83"/>
-<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="284,65,294,88,301,114,301,139,305,229,313,301,312,372,305,413,292,460,288,469,283,467,287,458,300,411,307,371,307,301,300,230,296,139,296,115,289,90,279,68"/>
-<area shape="poly" id="edge6_Node000005_Node000007" title=" " alt="" coords="265,65,232,116,211,150,207,147,227,113,261,62"/>
+<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="281,64,294,88,301,114,301,139,305,229,313,301,312,372,305,413,292,460,287,470,284,466,287,458,300,411,307,371,307,301,300,230,296,139,296,115,289,90,281,69"/>
+<area shape="poly" id="edge6_Node000005_Node000007" title=" " alt="" coords="261,66,232,116,212,150,207,147,227,113,264,61"/>
 </map>

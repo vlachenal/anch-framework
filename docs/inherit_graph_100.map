@@ -1,23 +1,3 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" title=" " alt="" coords="5,253,109,280"/>
-<area shape="rect" id="Node000001" href="$classanch_1_1crypto_1_1_invalid_block_exception.html" title="Exception on receiving an invalid block." alt="" coords="172,5,344,48"/>
-<area shape="poly" id="edge78_Node000000_Node000001" title=" " alt="" coords="62,237,73,197,92,149,119,100,155,58,171,46,174,51,158,62,123,103,97,152,78,199,67,239"/>
-<area shape="rect" id="Node000002" href="$classanch_1_1device_1_1_device_exception.html" title=" " alt="" coords="157,72,359,99"/>
-<area shape="poly" id="edge79_Node000000_Node000002" title=" " alt="" coords="66,237,99,172,124,138,155,109,176,97,179,101,158,113,128,141,103,175,71,240"/>
-<area shape="rect" id="Node000003" href="$classanch_1_1ini_1_1_parser_error.html" title=" " alt="" coords="186,123,330,149"/>
-<area shape="poly" id="edge80_Node000000_Node000003" title=" " alt="" coords="74,239,108,198,131,177,155,159,184,146,186,151,158,164,134,181,112,201,78,242"/>
-<area shape="rect" id="Node000004" href="$classanch_1_1json_1_1_mapping_error.html" title="Mapping error." alt="" coords="175,173,341,200"/>
-<area shape="poly" id="edge81_Node000000_Node000004" title=" " alt="" coords="91,242,156,210,190,198,192,203,158,214,94,247"/>
-<area shape="rect" id="Node000005" href="$classanch_1_1network_1_1_i_o_exception.html" title=" " alt="" coords="166,224,350,251"/>
-<area shape="poly" id="edge82_Node000000_Node000005" title=" " alt="" coords="124,254,165,248,166,253,124,260"/>
-<area shape="rect" id="Node000006" href="$classanch_1_1resource_1_1file_1_1_resource_file_exception.html" title=" " alt="" coords="176,275,340,317"/>
-<area shape="poly" id="edge83_Node000000_Node000006" title=" " alt="" coords="124,274,176,281,175,287,123,279"/>
-<area shape="rect" id="Node000007" href="$classanch_1_1rest_1_1_mapper_exception.html" title=" " alt="" coords="164,341,352,368"/>
-<area shape="poly" id="edge84_Node000000_Node000007" title=" " alt="" coords="90,287,122,308,158,327,190,338,189,343,156,332,119,313,87,291"/>
-<area shape="rect" id="Node000008" href="$classanch_1_1rest_1_1_router_exception.html" title="REST router exception class." alt="" coords="166,392,350,419"/>
-<area shape="poly" id="edge85_Node000000_Node000008" title=" " alt="" coords="77,292,111,336,133,359,158,378,182,389,180,394,155,382,129,363,107,340,72,295"/>
-<area shape="rect" id="Node000009" href="$classanch_1_1sql_1_1_sql_exception.html" title="SQL exception." alt="" coords="178,443,338,469"/>
-<area shape="poly" id="edge86_Node000000_Node000009" title=" " alt="" coords="70,294,83,326,102,362,127,398,158,429,179,440,177,445,155,433,123,402,97,365,78,328,65,296"/>
-<area shape="rect" id="Node000010" href="$classanch_1_1ut_1_1_assert_exception.html" title="Unit test assertion error." alt="" coords="172,493,344,520"/>
-<area shape="poly" id="edge87_Node000000_Node000010" title=" " alt="" coords="66,294,76,336,94,386,121,437,138,459,158,479,176,491,174,495,155,483,134,463,116,440,89,388,71,337,61,296"/>
+<area shape="rect" id="Node000000" href="$structngx__anch__bootstrap__conf__t.html" title=" " alt="" coords="5,5,144,48"/>
 </map>

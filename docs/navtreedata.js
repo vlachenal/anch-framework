@@ -38,6 +38,13 @@ var NAVTREE =
       [ "Conception", "page_cli.html#cli_concept_sec", null ],
       [ "Examples", "page_cli.html#cli_example_sec", null ]
     ] ],
+    [ "AnCH configuration library documentation", "page_res.html", [
+      [ "Introduction", "page_res.html#res_intro_seq", null ],
+      [ "Prerequisites", "page_res.html#res_req_sec", null ],
+      [ "Installation", "page_res.html#res_install_sec", null ],
+      [ "Conception", "page_res.html#res_concept_sec", null ],
+      [ "Example", "page_res.html#res_example_sec", null ]
+    ] ],
     [ "AnCH cryptography library documentation", "page_crypto.html", [
       [ "Introduction", "page_crypto.html#crypto_intro_seq", null ],
       [ "Prerequisites", "page_crypto.html#crypto_prereq_sec", null ],
@@ -84,7 +91,7 @@ var NAVTREE =
       [ "Conception", "page_json.html#json_concept_sec", null ],
       [ "Examples", "page_json.html#json_example_sec", null ]
     ] ],
-    [ "AnCH logger library documentation", "page_logger.html", [
+    [ "AnCH logging library documentation", "page_logger.html", [
       [ "Introduction", "page_logger.html#log_intro_seq", null ],
       [ "Prerequisites", "page_logger.html#log_prereq_sec", null ],
       [ "Installation", "page_logger.html#log_install_sec", null ],
@@ -95,13 +102,6 @@ var NAVTREE =
         ] ]
       ] ],
       [ "Example", "page_logger.html#log_example_sec", null ]
-    ] ],
-    [ "AnCH resource library documentation", "page_res.html", [
-      [ "Introduction", "page_res.html#res_intro_seq", null ],
-      [ "Prerequisites", "page_res.html#res_req_sec", null ],
-      [ "Installation", "page_res.html#res_install_sec", null ],
-      [ "Conception", "page_res.html#res_concept_sec", null ],
-      [ "Example", "page_res.html#res_example_sec", null ]
     ] ],
     [ "AnCH REST library documentation", "page_rest.html", [
       [ "Introduction", "page_rest.html#rest_intro_seq", null ],
@@ -168,19 +168,18 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "_nginx_router_8hpp_source.html",
-"classanch_1_1_u_u_i_d.html#a8a1d449f7d9fe524d837161c26afd550",
-"classanch_1_1crypto_1_1_m_d5.html#afb0b3ba398ae8c76e6bf5bb4d7eb0e3a",
-"classanch_1_1date_1_1_i_date_part_formatter.html#a2718e309ce6a935c0fd09033f90c6088",
-"classanch_1_1events_1_1_event_bus.html#ac2fd3d69d33f2b3a09b0948b3025b5bd",
-"classanch_1_1json_1_1_writer_context.html",
-"classanch_1_1network_1_1_socket.html#a414a66820860f113c0acee1f70b667d6",
-"classanch_1_1rest_1_1_request.html#a498aa04cdb10a28dae9f12ea514edb3c",
-"classanch_1_1sql_1_1_from_builder.html#a0ec29dde42dd560aa7b463ef71766f60",
-"classanch_1_1sql_1_1_result_set.html#a8ead5dbf35ddbcb9835bdbda22170ec3",
-"configuration_file_parser_8hpp_source.html",
-"namespaceanch_1_1crypto.html#a9b5443f947314be67113bfbe25531337",
-"postgresql_result_set_8hpp_source.html",
-"structanch_1_1rest_1_1_common_headers.html#afd6eaffa9c497a48d48afcb210510eea"
+"classanch_1_1_u_u_i_d.html#a6ee815d96c7a3fec3e5ed88f05e600f6affa23ee2a831cf77de87152b513c4119",
+"classanch_1_1crypto_1_1_hash.html#a65617f9780c87614a9cf5c6269653417",
+"classanch_1_1date_1_1_day_formatter.html#af2f0f6adddb65ec18479a7521d601f58",
+"classanch_1_1device_1_1_network.html#a5648208a40dbaa592e93c4b0ce35a744",
+"classanch_1_1json_1_1_reader.html#a409f5eb9bc7b52e2e1df0e28547a81f3",
+"classanch_1_1network_1_1_socket.html#ad9a0ac294069a6d22cd104b0a09e4829",
+"classanch_1_1sql_1_1_clauses_builder.html#a0f6b42f590cff116115f792ffc01e76b",
+"classanch_1_1sql_1_1_my_s_q_l_connection.html#a46bc2190ab9b13b89b21a51aeb1ebe9a",
+"classanch_1_1sql_1_1_s_q_lite3_result_set.html#a48f3bf039d86e2a1f7cb898e52a4f230",
+"dir_fe5553ee4b4b1c8670091b99a1c9862b.html",
+"namespaceanch_1_1json.html#af4d03a7ecdab93f7b86d49cc9839941d",
+"structanch_1_1crypto_1_1_s_h_a2_1_1_context.html#a7715aa4cccbe8ea9fac6b70eb3567369"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronization';

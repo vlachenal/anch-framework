@@ -1,15 +1,15 @@
 var searchData=
 [
-  ['mapdiagnosticcontext_0',['MapDiagnosticContext',['../classanch_1_1logger_1_1_map_diagnostic_context.html',1,'anch::logger']]],
+  ['mapdiagnosticcontext_0',['MapDiagnosticContext',['../classanch_1_1log_1_1_map_diagnostic_context.html',1,'anch::log']]],
   ['mapperexception_1',['MapperException',['../classanch_1_1rest_1_1_mapper_exception.html',1,'anch::rest']]],
   ['mapperregistry_2',['MapperRegistry',['../classanch_1_1rest_1_1_mapper_registry.html',1,'anch::rest']]],
   ['mappingerror_3',['MappingError',['../classanch_1_1json_1_1_mapping_error.html',1,'anch::json::MappingError'],['../class_mapping_error.html',1,'MappingError']]],
   ['mappingoptions_4',['MappingOptions',['../structanch_1_1json_1_1_mapping_options.html',1,'anch::json::MappingOptions'],['../struct_mapping_options.html',1,'MappingOptions']]],
   ['markerformatter_5',['MarkerFormatter',['../classanch_1_1date_1_1_marker_formatter.html',1,'anch::date']]],
   ['md5_6',['MD5',['../classanch_1_1crypto_1_1_m_d5.html',1,'anch::crypto']]],
-  ['mdcformatter_7',['MDCFormatter',['../classanch_1_1logger_1_1formatter_1_1_m_d_c_formatter.html',1,'anch::logger::formatter']]],
+  ['mdcformatter_7',['MDCFormatter',['../classanch_1_1log_1_1fmt_1_1_m_d_c_formatter.html',1,'anch::log::fmt']]],
   ['mediatype_8',['MediaType',['../structanch_1_1rest_1_1_media_type.html',1,'anch::rest']]],
-  ['messageformatter_9',['MessageFormatter',['../classanch_1_1logger_1_1formatter_1_1_message_formatter.html',1,'anch::logger::formatter']]],
+  ['messageformatter_9',['MessageFormatter',['../classanch_1_1log_1_1fmt_1_1_message_formatter.html',1,'anch::log::fmt']]],
   ['millisecondformatter_10',['MillisecondFormatter',['../classanch_1_1date_1_1_millisecond_formatter.html',1,'anch::date']]],
   ['minuteformatter_11',['MinuteFormatter',['../classanch_1_1date_1_1_minute_formatter.html',1,'anch::date']]],
   ['monthformatter_12',['MonthFormatter',['../classanch_1_1date_1_1_month_formatter.html',1,'anch::date']]],

@@ -1,9 +1,9 @@
 <map id="anch::sql::Connection::queryExtract" name="anch::sql::Connection::queryExtract">
 <area shape="rect" id="Node000001" title=" " alt="" coords="5,75,154,117"/>
 <area shape="rect" id="Node000002" href="$classanch_1_1sql_1_1_connection.html#a81b8bf61bf16b985e11e15dc0e556443" title=" " alt="" coords="202,29,350,72"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="153,76,186,69,187,74,155,81"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="153,76,189,70,184,72,155,81"/>
 <area shape="rect" id="Node000003" href="$classanch_1_1sql_1_1_connection.html#a7d80a549d5f15247a258719086c27e02" title=" " alt="" coords="202,120,350,163"/>
-<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="155,111,187,118,186,123,153,116"/>
-<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="238,29,237,19,243,10,256,5,276,3,297,5,310,11,307,16,296,10,276,8,257,10,246,15,242,21,243,28"/>
-<area shape="poly" id="edge4_Node000003_Node000003" title=" " alt="" coords="238,120,237,110,243,101,256,95,276,93,297,96,310,102,307,107,296,101,276,99,257,101,246,105,242,111,243,119"/>
+<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="154,110,189,120,184,121,154,116"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="238,28,237,19,243,10,256,5,276,3,297,5,311,14,306,14,296,10,276,8,257,10,246,15,242,21,243,30"/>
+<area shape="poly" id="edge4_Node000003_Node000003" title=" " alt="" coords="239,118,237,110,243,101,256,95,276,93,297,96,311,105,306,104,296,101,276,99,257,101,246,105,242,111,243,121"/>
 </map>

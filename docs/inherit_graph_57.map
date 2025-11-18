@@ -1,3 +1,11 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$classanch_1_1network_1_1_socket_event.html" title=" " alt="" coords="5,5,192,32"/>
+<area shape="rect" id="Node000000" href="$classanch_1_1log_1_1_writer.html" title="Logger writter definition." alt="" coords="5,31,122,57"/>
+<area shape="rect" id="Node000001" href="$classanch_1_1log_1_1_console_writer.html" title="Log file writer." alt="" coords="170,5,334,32"/>
+<area shape="poly" id="edge53_Node000000_Node000001" title=" " alt="" coords="136,32,172,29,167,31,138,37"/>
+<area shape="rect" id="Node000002" href="$classanch_1_1log_1_1_file_writer.html" title="Log file writer." alt="" coords="183,56,320,83"/>
+<area shape="poly" id="edge54_Node000000_Node000002" title=" " alt="" coords="137,51,185,59,180,61,137,56"/>
+<area shape="rect" id="Node000003" href="$classanch_1_1log_1_1_low_priority_writer.html" title=" " alt="" coords="383,31,564,57"/>
+<area shape="poly" id="edge55_Node000002_Node000003" title=" " alt="" coords="335,57,385,54,380,55,336,62"/>
+<area shape="rect" id="Node000004" href="$classanch_1_1log_1_1_thread_safe_writer.html" title=" " alt="" coords="382,81,565,108"/>
+<area shape="poly" id="edge56_Node000002_Node000004" title=" " alt="" coords="336,76,384,84,379,84,336,82"/>
 </map>

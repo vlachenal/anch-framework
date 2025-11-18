@@ -6,7 +6,10 @@ var classanch_1_1_u_u_i_d =
       [ "DCE_SECURITY", "classanch_1_1_u_u_i_d.html#a6ee815d96c7a3fec3e5ed88f05e600f6affa23ee2a831cf77de87152b513c4119", null ],
       [ "MD5_HASH", "classanch_1_1_u_u_i_d.html#a6ee815d96c7a3fec3e5ed88f05e600f6a63bd233e447da01a556518b319b1abc5", null ],
       [ "RANDOM", "classanch_1_1_u_u_i_d.html#a6ee815d96c7a3fec3e5ed88f05e600f6a170e02e86972c2be8559884cc3c12254", null ],
-      [ "SHA1_HASH", "classanch_1_1_u_u_i_d.html#a6ee815d96c7a3fec3e5ed88f05e600f6a11ac5cacee1040b5b2bf75799b0a2e30", null ]
+      [ "SHA1_HASH", "classanch_1_1_u_u_i_d.html#a6ee815d96c7a3fec3e5ed88f05e600f6a11ac5cacee1040b5b2bf75799b0a2e30", null ],
+      [ "MAC_ADDRESS_R", "classanch_1_1_u_u_i_d.html#a6ee815d96c7a3fec3e5ed88f05e600f6aed3e00b8754be0bcd23549296f2e0b87", null ],
+      [ "RANDOM_TIME", "classanch_1_1_u_u_i_d.html#a6ee815d96c7a3fec3e5ed88f05e600f6a9714d02578c6cfe6f241b055a38cb329", null ],
+      [ "EXP", "classanch_1_1_u_u_i_d.html#a6ee815d96c7a3fec3e5ed88f05e600f6a8c670f8c37b95e1ed14a0ce414b049c7", null ]
     ] ],
     [ "UUID", "classanch_1_1_u_u_i_d.html#aaad2d3bada25d7ffb6bd3a2865cf7f3c", null ],
     [ "UUID", "classanch_1_1_u_u_i_d.html#ad6aef62706d56dbcf57400ec68de738e", null ],
@@ -32,6 +35,7 @@ var classanch_1_1_u_u_i_d =
     [ "parse", "classanch_1_1_u_u_i_d.html#ac1d5a91793a0cf78ad89ebe93053b0d3", null ],
     [ "parseUUID", "classanch_1_1_u_u_i_d.html#aed529f2fe72cc146234b44f666df5678", null ],
     [ "random", "classanch_1_1_u_u_i_d.html#a94689a1fa6ec4b669691117a15aa4227", null ],
+    [ "randomTime", "classanch_1_1_u_u_i_d.html#a93dbae8d2df07016ee184075e2e21ca4", null ],
     [ "registerProvider", "classanch_1_1_u_u_i_d.html#ae8140e8432b12dd983afec0cf12d5eb6", null ],
     [ "toString", "classanch_1_1_u_u_i_d.html#a36736e2206df28396b345d625804368e", null ],
     [ "SEQ_HIGH_MASK", "classanch_1_1_u_u_i_d.html#a2b9d719b6e21e18f6ff9744f195afa3a", null ],

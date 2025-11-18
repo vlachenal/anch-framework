@@ -1,0 +1,7 @@
+<map id="anch::conf::Parsers" name="anch::conf::Parsers">
+<area shape="rect" id="Node000001" title="Parsers registry." alt="" coords="28,265,152,420"/>
+<area shape="rect" id="Node000002" href="$classanch_1_1_singleton.html" title=" " alt="" coords="5,147,175,216"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="91,229,93,266,88,265,89,234"/>
+<area shape="rect" id="Node000003" href="$classanch_1_1_singleton.html" title="Meyers&#39; singleton implementation." alt="" coords="24,5,156,75"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="91,87,93,147,88,147,90,92"/>
+</map>

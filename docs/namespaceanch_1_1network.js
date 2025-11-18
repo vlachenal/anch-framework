@@ -5,8 +5,8 @@ var namespaceanch_1_1network =
     [ "SocketEvent", "classanch_1_1network_1_1_socket_event.html", "classanch_1_1network_1_1_socket_event" ],
     [ "TcpSocket", "classanch_1_1network_1_1_tcp_socket.html", "classanch_1_1network_1_1_tcp_socket" ],
     [ "TcpStream", "classanch_1_1network_1_1_tcp_stream.html", "classanch_1_1network_1_1_tcp_stream" ],
-    [ "TcpStreamClient", "classanch_1_1network_1_1_tcp_stream_client.html", "classanch_1_1network_1_1_tcp_stream_client" ],
     [ "TcpStreamServer", "classanch_1_1network_1_1_tcp_stream_server.html", "classanch_1_1network_1_1_tcp_stream_server" ],
+    [ "TcpStreamClient", "classanch_1_1network_1_1_tcp_stream_client.html", "classanch_1_1network_1_1_tcp_stream_client" ],
     [ "UdpSocket", "classanch_1_1network_1_1_udp_socket.html", "classanch_1_1network_1_1_udp_socket" ],
     [ "Direction", "namespaceanch_1_1network.html#a9f8e25f60fe02869e8ee22c02024854d", [
       [ "RECEPTION", "namespaceanch_1_1network.html#a9f8e25f60fe02869e8ee22c02024854da090237bb91fd0d8cde45ec58edb67b57", null ],

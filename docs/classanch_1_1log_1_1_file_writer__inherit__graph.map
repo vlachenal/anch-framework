@@ -1,0 +1,9 @@
+<map id="anch::log::FileWriter" name="anch::log::FileWriter">
+<area shape="rect" id="Node000001" title="Log file writer." alt="" coords="125,187,251,427"/>
+<area shape="rect" id="Node000003" href="$classanch_1_1log_1_1_low_priority_writer.html" title=" " alt="" coords="5,475,176,608"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="134,438,120,476,116,474,131,443"/>
+<area shape="rect" id="Node000004" href="$classanch_1_1log_1_1_thread_safe_writer.html" title=" " alt="" coords="200,485,373,597"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="245,438,266,486,261,485,243,443"/>
+<area shape="rect" id="Node000002" href="$classanch_1_1log_1_1_writer.html" title="Logger writter definition." alt="" coords="135,5,241,139"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="189,151,191,187,185,186,187,157"/>
+</map>

@@ -1,7 +1,7 @@
 <map id="anch::sql::Date" name="anch::sql::Date">
 <area shape="rect" id="Node000001" title="SQL date type." alt="" coords="12,713,111,868"/>
 <area shape="rect" id="Node000002" href="$classanch_1_1date_1_1_date.html" title=" " alt="" coords="5,147,117,664"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="64,679,64,714,59,714,59,679"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="62,676,64,714,59,713,61,681"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="25,5,98,75"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="64,74,64,130,59,130,59,74"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="61,71,64,130,59,130,61,77"/>
 </map>

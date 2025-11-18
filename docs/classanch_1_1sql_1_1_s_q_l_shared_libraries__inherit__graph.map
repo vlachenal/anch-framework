@@ -1,7 +1,7 @@
 <map id="anch::sql::SQLSharedLibraries" name="anch::sql::SQLSharedLibraries">
 <area shape="rect" id="Node000001" title="SQL shared libraries manager." alt="" coords="5,281,193,457"/>
 <area shape="rect" id="Node000002" href="$classanch_1_1_singleton.html" title=" " alt="" coords="9,147,189,232"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="102,247,102,282,96,282,96,247"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="100,244,102,282,97,281,98,249"/>
 <area shape="rect" id="Node000003" href="$classanch_1_1_singleton.html" title="Meyers&#39; singleton implementation." alt="" coords="33,5,165,75"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="102,90,102,147,96,147,96,90"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="100,87,102,147,97,147,99,92"/>
 </map>
