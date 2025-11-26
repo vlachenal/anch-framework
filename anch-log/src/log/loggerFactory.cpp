@@ -41,6 +41,7 @@ LoggerFactory::LoggerFactory(): _loggersConfig() {
   try {
     const anch::conf::Section* conf = anch::conf::Configuration::inst().section(anch::log::NS_LOG);
     if(conf == NULL) {
+      std::cout << "Section " << anch::log::NS_LOG << " has not been found. Load default configuration." << std::endl;
       loadDefaultConfiguration();
     } else {
       std::map<std::string,anch::log::Writer*> writers;
@@ -49,6 +50,7 @@ LoggerFactory::LoggerFactory(): _loggersConfig() {
     }
 
   } catch(...) {
+    std::cerr << "Error while loading logger configuration. Load default configuration." << std::endl;
     loadDefaultConfiguration();
   }
 }
@@ -101,9 +103,6 @@ LoggerFactory::getLogger(const std::string& loggerName) {
     self._loggers.insert({loggerName, new anch::log::Logger(loggerName,
 							    iter->second.getLevel(),
 							    iter->second.getWriters())});
-    /*self._loggers[loggerName] = new anch::log::Logger(loggerName,
-      iter->second.getLevel(),
-      iter->second.getWriters());*/
     break;
   }
   // Create logger according loggers configuration -
@@ -119,6 +118,20 @@ LoggerFactory::getLogger(const std::string& loggerName) {
   return *self._loggers.at(loggerName);
 }
 
+anch::log::Writer*
+createDefaultWriter(const std::string& name) {
+  // Create writer +
+  // Create writer section +
+  anch::conf::Section defSec;
+  anch::conf::Section& writerSec = defSec.section(anch::log::LOGGER).section(name);
+  writerSec.putValue(anch::log::MODULE, anch::log::WRITER_TERM)
+    .putValue("pattern", "$d{%Y-%m-%d %H:%M:%S} - $m");
+  // Create writer section -
+  return WriterRegistry::getInstance().create(name, true, false, writerSec);
+  // Create writer -
+}
+
+
 void
 LoggerFactory::initializeWriters(std::map<std::string, anch::log::Writer*>& writers,
 				 const anch::conf::Section* resource) {
@@ -130,6 +143,8 @@ LoggerFactory::initializeWriters(std::map<std::string, anch::log::Writer*>& writ
   // Register writers +
   auto wIter = resource->getSections().find(anch::log::WRITER);
   if(wIter == resource->getSections().end()) {
+    std::cout << "Section " << anch::log::WRITER << " has not been found. Load default writer." << std::endl;
+    writers[anch::log::WRITER_TERM] = createDefaultWriter(anch::log::WRITER_TERM);
     return;
   }
   const anch::conf::Section& wSec = wIter->second;
@@ -138,24 +153,34 @@ LoggerFactory::initializeWriters(std::map<std::string, anch::log::Writer*>& writ
     const anch::conf::Section& writer = iter->second;
     std::optional<std::string> type = writer.getValue<std::string>(anch::log::MODULE);
     if(!type.has_value()) {
+      std::cerr << "Writer " << name << " type has not been found" << std::endl;
       continue;
     }
     if(!WriterRegistry::getInstance().contains(type.value())) {
+      std::cerr << "Unkown writer type (" << type.value() << " has been found for writer " << name << std::endl;
       continue;
     }
     writers[name] = WriterRegistry::getInstance().create(name, threadSafe, lowPriority, writer);
   }
   // Register writers -
+
+  // Register default writer when empty +
+  if(writers.empty()) {
+    std::cout << "No writer has not been registered. Load default writer." << std::endl;
+    writers[anch::log::WRITER_TERM] = createDefaultWriter(anch::log::WRITER_TERM);
+  }
+  // Register default writer when empty -
 }
 
 anch::log::Level
-toLevel(std::string& levelLbl) {
-  std::transform(levelLbl.begin(),
-		 levelLbl.end(),
-		 levelLbl.begin(),
+toLevel(const std::string& levelLbl) {
+  std::string tmp(levelLbl);
+  std::transform(tmp.begin(),
+		 tmp.end(),
+		 tmp.begin(),
 		 ::toupper);
-  anch::log::Level level = anch::log::Level::FATAL;
-  auto iterLvl = anch::log::LABEL_LEVEL.find(levelLbl);
+  anch::log::Level level = anch::log::Level::WARN;
+  auto iterLvl = anch::log::LABEL_LEVEL.find(tmp);
   if(iterLvl == anch::log::LABEL_LEVEL.cend()) {
     std::cerr << "Invalid level: " << levelLbl << std::endl;
   } else {
@@ -174,6 +199,8 @@ parseWriters(const std::string& logWriters, const std::map<std::string, anch::lo
     auto iter = writers.find(writerName);
     if(iter != writers.cend()) {
       loggerWriters.push_back(iter->second);
+    } else {
+      std::cout << "Writer " << writerName << " has not been registered" << std::endl;
     }
     pos = nextPos + 1;
     nextPos = logWriters.find(',', pos);
@@ -186,68 +213,84 @@ parseWriters(const std::string& logWriters, const std::map<std::string, anch::lo
   return loggerWriters;
 }
 
+std::vector<anch::log::Writer*>
+getAllWriters(const std::map<std::string, anch::log::Writer*>& writers) {
+  std::vector<anch::log::Writer*> loggerWriters;
+  for(auto iter = writers.begin() ; iter != writers.end() ; ++iter) {
+    loggerWriters.push_back(iter->second);
+  }
+  return loggerWriters;
+}
+
+void
+LoggerFactory::createDefaultLogger(const std::map<std::string, anch::log::Writer*>& writers) {
+  _loggersConfig.insert({
+      anch::log::DEFAULT,
+      anch::log::LoggerConfiguration(anch::log::DEFAULT, anch::log::Level::TRACE, getAllWriters(writers))
+    });
+}
+
 void
 LoggerFactory::initializeLoggersConfiguration(const std::map<std::string, anch::log::Writer*>& writers,
 					      const anch::conf::Section* conf) {
+  // Check anch::log section existence +
   if(!conf->getSections().contains(anch::log::LOGGER)) {
-    loadDefaultConfiguration(); // \todo ???
+    createDefaultLogger(writers);
     return;
   }
+  // Check anch::log section existence -
 
   auto loggers = conf->getSections().at(anch::log::LOGGER);
-  std::optional<std::string> defaultWriters = loggers.getValue<std::string>(anch::log::WRITERS);
-  if(defaultWriters.has_value()) {
-    std::vector<anch::log::Writer*> loggerWriters = parseWriters(defaultWriters.value(), writers);
-    if(loggerWriters.empty()) {
-      std::string level = loggers.getValue<std::string>(anch::log::LEVEL, "WARN");
-      _loggersConfig.insert({anch::log::DEFAULT, anch::log::LoggerConfiguration(anch::log::DEFAULT, toLevel(level), loggerWriters)});
+  // Retrieve default writer +
+  std::optional<std::string> optDefaultWriters = loggers.getValue<std::string>(anch::log::WRITERS);
+  anch::log::Level defaultLevel = toLevel(loggers.getValue<std::string>(anch::log::LEVEL, "WARN"));
+  if(optDefaultWriters.has_value()) {
+    std::vector<anch::log::Writer*> loggerWriters = parseWriters(optDefaultWriters.value(), writers);
+    // Add default writer when not found +
+    if(!loggerWriters.empty()) {
+      _loggersConfig.insert({anch::log::DEFAULT, anch::log::LoggerConfiguration(anch::log::DEFAULT, defaultLevel, loggerWriters)});
+    } else {
+      _loggersConfig.insert({anch::log::DEFAULT, anch::log::LoggerConfiguration(anch::log::DEFAULT, defaultLevel, std::move(getAllWriters(writers)))});
     }
+    // Add default writer when not found -
+  } else {
+    std::cerr << "No writers has been found for default logger. Add all writers by default." << std::endl;
+    _loggersConfig.insert({anch::log::DEFAULT, anch::log::LoggerConfiguration(anch::log::DEFAULT, defaultLevel, std::move(getAllWriters(writers)))});
   }
+  // Retrieve default writer -
 
+  // Parser writers +
   for(auto iter = loggers.getSections().begin() ; iter != loggers.getSections().end() ; ++iter) {
+    // Retrieve writer +
     std::string name = iter->first;
     const anch::conf::Section& logger = iter->second;
     std::optional<std::string> opWriters = logger.getValue<std::string>(anch::log::WRITERS);
-    if(!opWriters.has_value()) {
-      continue;
+    std::vector<anch::log::Writer*> loggerWriters;
+    if(opWriters.has_value()) {
+      loggerWriters = parseWriters(opWriters.value(), writers);
     }
+    // Retrieve writer -
 
-    std::vector<anch::log::Writer*> loggerWriters = parseWriters(opWriters.value(), writers);
-    // Retrieve writers -
-
-    // Retrieve level +
+    anch::log::Level level = toLevel(logger.getValue<std::string>(anch::log::LEVEL, "WARN"));
     if(loggerWriters.empty()) {
-      std::cerr << "No writers has been found for " << name << ": "
-		<< opWriters.value() << std::endl; // \todo remove
-      continue;
+      _loggersConfig.insert({name, anch::log::LoggerConfiguration(name, level, loggerWriters)});
+    } else {
+      _loggersConfig.insert({name, anch::log::LoggerConfiguration(name, level, std::move(getAllWriters(writers)))});
     }
-
-    std::string levelLbl = logger.getValue<std::string>(anch::log::LEVEL, "FATAL");
-    // Retrieve level -
-    _loggersConfig.insert({name, anch::log::LoggerConfiguration(name, toLevel(levelLbl), loggerWriters)});
   }
+  // Parser writers -
 }
 
 void
 LoggerFactory::loadDefaultConfiguration() {
   _loggersConfig.clear();
   std::cout << "No configuration has been found. Everything will be logged in console." << std::endl;
-  // Create writer +
-  // Create writer section +
-  anch::conf::Section defSec;
-  anch::conf::Section& writerSec = defSec.section(anch::log::LOGGER).section(anch::log::WRITER_TERM);
-  writerSec.putValue(anch::log::MODULE, anch::log::WRITER_TERM)
-    .putValue("pattern", "$d{%Y-%m-%d %H:%M:%S} - $m");
-  // Create writer section -
-  auto console = WriterRegistry::getInstance().create(anch::log::WRITER_TERM, true, false, writerSec);
-  // Create writer -
+  // Create default writer +
+  anch::log::Writer* console = createDefaultWriter(anch::log::WRITER_TERM);
+  // Create default writer -
   // Register default logger on default writer +
-  std::vector<anch::log::Writer*> loggerWriters;
-  loggerWriters.push_back(console);
-  loggerWriters.shrink_to_fit();
-  _loggersConfig.insert({
-      anch::log::DEFAULT,
-      anch::log::LoggerConfiguration(anch::log::DEFAULT, anch::log::Level::TRACE, loggerWriters)
+  createDefaultLogger({
+      {anch::log::DEFAULT, console}
     });
   // Register default logger on default writer -
 }

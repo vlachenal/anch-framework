@@ -85,20 +85,26 @@ testLowPriority() {
   std::cout << "Exit testLowPriority" << std::endl;
 }
 
-/*void
-beforeAll() {
-  std::cerr << "anch-logger-test has to be launch one by one => configuration file change is not supported (and will not be supported) ; if not, segfault will occur" << std::endl;
-  }*/
+void
+testBadWriters() {
+  std::cout << "Enter in testBadWriters" << std::endl;
+
+  anch::conf::Configuration::loader().name("anch-logger-bad-writer").load();
+  static auto LOG = LoggerFactory::getLogger("anch::logger::Logger");
+  LOG.info("anch-logger-bad-writer.conf");
+
+  std::cout << "Exit testBadWriters" << std::endl;
+}
 
 void
 anch::ut::setup(anch::ut::UnitTests& tests) {
   tests
     .name("AnCH logger unit tests")
     .description("Test AnCH logger utiliy class")
-    //.initialize(beforeAll)
     .add("rotate", testRotate)
     .add("custom-file", testCustomFile)
     .add("default", testFallbackOnDefault)
     .add("low-priority", testLowPriority)
+    .add("bad-writers", testBadWriters)
     ;
 }

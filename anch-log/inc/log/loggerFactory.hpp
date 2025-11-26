@@ -96,6 +96,13 @@ namespace anch::log {
 			   const anch::conf::Section* conf);
 
     /*!
+     * Create default logger
+     *
+     * \param writers the writers to use
+     */
+    void createDefaultLogger(const std::map<std::string, anch::log::Writer*>& writers);
+
+    /*!
      * Initialize loggers configuration
      *
      * \param writers The configured writers

@@ -128,6 +128,7 @@ if(ANCH_LOGGER_UNITARY_TEST)
   configure_file(test/anch-logger.conf anch-logger.conf COPYONLY)
   configure_file(test/customFile.ini customFile.ini COPYONLY)
   configure_file(test/low-priority-logger.conf low-priority-logger.conf COPYONLY)
+  configure_file(test/anch-logger-bad-writer.conf anch-logger-bad-writer.conf COPYONLY)
   # build logger test -
 
   enable_testing()
@@ -135,6 +136,7 @@ if(ANCH_LOGGER_UNITARY_TEST)
   add_test(anch-logger-custom-file ${EXECUTABLE_OUTPUT_PATH}/anch-logger-test -t custom-file)
   add_test(anch-logger-low-priority ${EXECUTABLE_OUTPUT_PATH}/anch-logger-test -t low-priority)
   add_test(anch-logger-default-config ${EXECUTABLE_OUTPUT_PATH}/anch-logger-test -t default)
+  add_test(anch-logger-bad-writers ${EXECUTABLE_OUTPUT_PATH}/anch-logger-test -t bad-writers)
 
   message(WARNING "anch-logger-test has to be launch one by one")
 
