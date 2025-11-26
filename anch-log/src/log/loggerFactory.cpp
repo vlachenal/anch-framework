@@ -245,6 +245,8 @@ parseWriters(const std::string& logWriters, const std::map<std::string, anch::lo
   auto iterStr = writers.find(writerName);
   if(iterStr != writers.cend()) {
     loggerWriters.push_back(iterStr->second);
+  } else {
+    std::cout << "Writer " << writerName << " has not been registered" << std::endl;
   }
   // Add last or unique writer -
   return loggerWriters;

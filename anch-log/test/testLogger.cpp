@@ -97,6 +97,17 @@ testBadWriters() {
 }
 
 void
+testBadLoggers() {
+  std::cout << "Enter in testBadLoggers" << std::endl;
+
+  anch::conf::Configuration::loader().name("anch-logger-bad-logger").load();
+  static auto LOG = LoggerFactory::getLogger("anch::logger::Logger");
+  LOG.info("anch-logger-bad-logger.conf");
+
+  std::cout << "Exit testBadLoggers" << std::endl;
+}
+
+void
 anch::ut::setup(anch::ut::UnitTests& tests) {
   tests
     .name("AnCH logger unit tests")
@@ -106,5 +117,6 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("default", testFallbackOnDefault)
     .add("low-priority", testLowPriority)
     .add("bad-writers", testBadWriters)
+    .add("bad-loggers", testBadLoggers)
     ;
 }
