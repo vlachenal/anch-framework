@@ -66,6 +66,13 @@ LoggerFactory::~LoggerFactory() {
 // Destructor -
 
 // Methods +
+/*!
+ * Tokenize logger name with '::' separator
+ *
+ * \param loggerName the logger name
+ *
+ * \return the logger name tokens
+ */
 std::vector<std::string>
 tokenizeLoggerName(const std::string& loggerName) {
   std::vector<std::string> tokens;
@@ -118,6 +125,13 @@ LoggerFactory::getLogger(const std::string& loggerName) {
   return *self._loggers.at(loggerName);
 }
 
+/*!
+ * Create default writer. The default writer will be named 'console' and will have 'console' type
+ *
+ * \param name the default writer's name
+ *
+ * \return the default writer
+ */
 anch::log::Writer*
 createDefaultWriter(const std::string& name) {
   // Create writer +
@@ -172,13 +186,23 @@ LoggerFactory::initializeWriters(std::map<std::string, anch::log::Writer*>& writ
   // Register default writer when empty -
 }
 
+/*!
+ * Convert level label to enum value
+ *
+ * \param levelLbl the level label to parse
+ *
+ * \return the level (default to WARN)
+ */
 anch::log::Level
 toLevel(const std::string& levelLbl) {
+  // Convert value to upper case +
   std::string tmp(levelLbl);
   std::transform(tmp.begin(),
 		 tmp.end(),
 		 tmp.begin(),
 		 ::toupper);
+  // Convert value to upper case -
+  // Convert to enum valie => default to WARN +
   anch::log::Level level = anch::log::Level::WARN;
   auto iterLvl = anch::log::LABEL_LEVEL.find(tmp);
   if(iterLvl == anch::log::LABEL_LEVEL.cend()) {
@@ -186,13 +210,23 @@ toLevel(const std::string& levelLbl) {
   } else {
     level = iterLvl->second;
   }
+  // Convert to enum valie => default to WARN -
   return level;
 }
 
+/*!
+ * Parse writers
+ *
+ * \param logWriters the wanted wrtiers
+ * \param writers the registered writers
+ *
+ * \return the found writers
+ */
 std::vector<anch::log::Writer*>
 parseWriters(const std::string& logWriters, const std::map<std::string, anch::log::Writer*>& writers) {
   size_t pos = 0;
   std::vector<anch::log::Writer*> loggerWriters;
+  // Split writers by ',' +
   size_t nextPos = logWriters.find(',',pos);
   while(nextPos != std::string::npos && nextPos != pos) {
     const std::string writerName = logWriters.substr(pos, nextPos - pos);
@@ -205,14 +239,24 @@ parseWriters(const std::string& logWriters, const std::map<std::string, anch::lo
     pos = nextPos + 1;
     nextPos = logWriters.find(',', pos);
   }
+  // Split writers by ',' -
+  // Add last or unique writer +
   const std::string writerName = logWriters.substr(pos);
   auto iterStr = writers.find(writerName);
   if(iterStr != writers.cend()) {
     loggerWriters.push_back(iterStr->second);
   }
+  // Add last or unique writer -
   return loggerWriters;
 }
 
+/*!
+ * Get all writers from registered writers
+ *
+ * \param writers the registered writers
+ *
+ * \return the writers
+ */
 std::vector<anch::log::Writer*>
 getAllWriters(const std::map<std::string, anch::log::Writer*>& writers) {
   std::vector<anch::log::Writer*> loggerWriters;
@@ -254,7 +298,7 @@ LoggerFactory::initializeLoggers(const std::map<std::string, anch::log::Writer*>
     }
     // Add default writer when not found -
   } else {
-    std::cerr << "No writers has been found for default logger. Add all writers by default." << std::endl;
+    std::cout << "No writers has been found for default logger. Add all writers by default." << std::endl;
     _loggersConfig.insert({anch::log::DEFAULT, anch::log::LoggerConfiguration(anch::log::DEFAULT, defaultLevel, std::move(getAllWriters(writers)))});
   }
   // Retrieve default writer -
