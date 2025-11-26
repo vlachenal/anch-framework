@@ -50,7 +50,7 @@ SqlConnectionFactory::SqlConnectionFactory(): _configs(), _pools() {
   const Section* conf = Configuration::inst().section(SQL_SECTION);
   for(auto iter = conf->getSections().begin() ; iter != conf->getSections().end() ; ++iter) {
     const Section& connection = iter->second;
-    std::optional<std::string> optdriver = connection.getValue("driver");
+    std::optional<std::string> optdriver = connection.getValue<std::string>("driver");
     if(!optdriver.has_value()) {
       continue;
     }
@@ -65,33 +65,29 @@ SqlConnectionFactory::SqlConnectionFactory(): _configs(), _pools() {
       SQLSharedLibraries::registerSQLite();
     }
     // Try to register known database engine if found -
-    auto db = connection.getValue("database");
+    auto db = connection.getValue<std::string>("database");
     if(db.has_value()) {
       conConf.database = db.value();
     }
-    auto host = connection.getValue("host");
+    auto host = connection.getValue<std::string>("host");
     if(host.has_value()) {
       conConf.hostname = host.value();
     }
-    auto user = connection.getValue("user");
+    auto user = connection.getValue<std::string>("user");
     if(user.has_value()) {
       conConf.user = user.value();
     }
-    auto password = connection.getValue("password");
+    auto password = connection.getValue<std::string>("password");
     if(password.has_value()) {
       conConf.password = password.value();
     }
-    auto application = connection.getValue("application");
+    auto application = connection.getValue<std::string>("application");
     if(application.has_value()) {
       conConf.application = application.value();
     }
-    auto port = connection.getValue("port");
+    auto port = connection.getValue<int>("port");
     if(port.has_value()) {
-      try {
-	conConf.port = convert<int>(port.value());
-      } catch(const std::bad_cast& e) {
-	// continue ...
-      }
+      conConf.port = port.value();
     }
     _configs[iter->first] = conConf;
     // Connection configuration -
@@ -103,33 +99,9 @@ SqlConnectionFactory::SqlConnectionFactory(): _configs(), _pools() {
       continue;
     }
     pool = &iterPool->second;
-    std::optional<std::string> intStr = pool->getValue("max-size");
-    std::size_t maxSize = 0;
-    if(intStr.has_value()) {
-      try {
-	maxSize = convert<std::size_t>(intStr.value());
-      } catch(const std::bad_cast& e) {
-	continue;
-      }
-    }
-    std::size_t initSize = 0;
-    intStr = pool->getValue("init-size");
-    if(intStr.has_value()) {
-      try {
-	initSize = convert<std::size_t>(intStr.value());
-      } catch(const std::bad_cast& e) {
-	initSize = 0;
-      }
-    }
-    std::size_t timeout = 100;
-    intStr = pool->getValue("timeout");
-    if(intStr.has_value()) {
-      try {
-	timeout = convert<std::size_t>(intStr.value());
-      } catch(const std::bad_cast& e) {
-	timeout = 100;
-      }
-    }
+    std::size_t maxSize = pool->getValue<std::size_t>("max-size", 0);
+    std::size_t initSize = pool->getValue<std::size_t>("init-size", 0);
+    std::size_t timeout = pool->getValue<std::size_t>("timeout", 100);
     _pools[iter->first] = new SqlConnectionPool(conConf, maxSize, initSize, std::chrono::milliseconds(timeout));
     // Pool configuration -
   }
