@@ -92,8 +92,7 @@ namespace anch::log {
      * \param writers The writers container
      * \param conf the configuration file
      */
-    void initializeWriters(std::map<std::string, anch::log::Writer*>& writers,
-			   const anch::conf::Section* conf);
+    void initializeWriters(std::map<std::string, anch::log::Writer*>& writers, const anch::conf::Section* conf);
 
     /*!
      * Create default logger
@@ -108,8 +107,7 @@ namespace anch::log {
      * \param writers The configured writers
      * \param conf The configuration file
      */
-    void initializeLoggersConfiguration(const std::map<std::string, anch::log::Writer*>& writers,
-					const anch::conf::Section* conf);
+    void initializeLoggers(const std::map<std::string, anch::log::Writer*>& writers, const anch::conf::Section* conf);
 
     /*!
      * Load default configuration

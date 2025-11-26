@@ -46,7 +46,7 @@ LoggerFactory::LoggerFactory(): _loggersConfig() {
     } else {
       std::map<std::string,anch::log::Writer*> writers;
       initializeWriters(writers, conf);
-      initializeLoggersConfiguration(writers, conf);
+      initializeLoggers(writers, conf);
     }
 
   } catch(...) {
@@ -231,8 +231,8 @@ LoggerFactory::createDefaultLogger(const std::map<std::string, anch::log::Writer
 }
 
 void
-LoggerFactory::initializeLoggersConfiguration(const std::map<std::string, anch::log::Writer*>& writers,
-					      const anch::conf::Section* conf) {
+LoggerFactory::initializeLoggers(const std::map<std::string, anch::log::Writer*>& writers,
+				 const anch::conf::Section* conf) {
   // Check anch::log section existence +
   if(!conf->getSections().contains(anch::log::LOGGER)) {
     createDefaultLogger(writers);
