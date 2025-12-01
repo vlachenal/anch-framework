@@ -32,6 +32,22 @@ std::map<std::string, uint32_t> SIZES = std::map<std::string, uint32_t>({
   });
 const std::regex UNITS_REGEX = std::regex("^([0-9]+)(K|M|G|T)?$");
 
+int
+getFileIndex(const std::filesystem::path& file) {
+  int idx = -1;
+  int i = 0;
+  while(true) {
+    std::filesystem::path path(file);
+    std::ostringstream ostr;
+    ostr <<  '.' << i;
+    path += ostr.str();
+    if(!std::filesystem::exists(path)) {
+      break;
+    }
+    idx = i++;
+  }
+  return idx;
+}
 
 FileWriter::FileWriter(const anch::conf::Section& conf):
   anch::log::Writer(conf),
@@ -56,8 +72,7 @@ FileWriter::FileWriter(const anch::conf::Section& conf):
   _output = new std::ofstream(_path, std::ios_base::app);
   // Check file path -
 
-  _fileIdx = 0;
-  // \todo retrieve current file index
+  _fileIdx = getFileIndex(_path);
 
   // Parse maximum file size +
   std::optional<std::string> maxSize = conf.getValue<std::string>("max-size");
@@ -76,10 +91,7 @@ FileWriter::FileWriter(const anch::conf::Section& conf):
   // Parse maximum file size -
 
   // Parse maximum file index +
-  std::optional<int> maxIdx = conf.getValue<int>("max-idx");
-  if(maxIdx.has_value()) {
-    _maxIdx = maxIdx.value();
-  }
+  _maxIdx = conf.getValue<int>("max-rotate-files", -1);
   // Parse maximum file index -
 }
 
@@ -114,12 +126,12 @@ FileWriter::rotateFiles() {
     delete _output; // It will close output
     _output = NULL;
   }
-  std::ostringstream ostr;
   bool maxReached = false;
+  std::ostringstream ostr;
   // Rename already rotated files +
-  for(int i = _fileIdx ; i > 0 ; --i) {
+  for(int i = _fileIdx ; i >= 0 ; --i) {
     std::filesystem::path curPath = _path;
-    ostr << "." << i;
+    ostr << '.' << i;
     curPath += ostr.str();
     if(!std::filesystem::exists(curPath)) { // when current path does not exist, decrement file index
       --_fileIdx;
@@ -131,18 +143,21 @@ FileWriter::rotateFiles() {
       continue;
     }
     ostr.str("");
+    ostr.clear();
     std::filesystem::path newPath = _path;
-    ostr << "." << (i + 1);
+    ostr << '.' << (i + 1);
     newPath += ostr.str();
     std::filesystem::rename(curPath, newPath);
+    ostr.str("");
+    ostr.clear();
   }
   if(maxReached) {
-    _fileIdx = _maxIdx - 1;
+    _fileIdx = _maxIdx;
   }
   // Rename already rotated files -
   // Rename current file +
   std::filesystem::path newPath = _path;
-  newPath += ".1";
+  newPath += ".0";
   std::filesystem::rename(_path, newPath);
   _output = new std::ofstream(_path);
   ++_fileIdx;
