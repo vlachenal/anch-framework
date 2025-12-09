@@ -1,0 +1,21 @@
+/*! \page page_date AnCH logging library documentation
+ *
+ * \tableofcontents
+ *
+ * \section date_intro_seq Introduction
+ *
+ * AnCH date library aims to provide facilities for applications manipulate date/time.
+ *
+ * \section date_prereq_sec Prerequisites
+ *
+ * None
+ *
+ * \section date_install_sec Installation
+ *
+ * TODO fill this section
+ *
+ * \section date_concept_sec Usage
+ *
+ * \section date_example_sec Example
+ *
+ */
