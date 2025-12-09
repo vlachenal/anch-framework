@@ -50,7 +50,7 @@ var searchData=
   ['anch_20framework_47',['anch-framework',['../md__r_e_a_d_m_e.html',1,'']]],
   ['anch_20ini_20library_20documentation_48',['AnCH INI library documentation',['../page_ini.html',1,'']]],
   ['anch_20json_20library_20documentation_49',['AnCH JSON library documentation',['../page_json.html',1,'']]],
-  ['anch_20logging_20library_20documentation_50',['AnCH logging library documentation',['../page_logger.html',1,'']]],
+  ['anch_20logging_20library_20documentation_50',['AnCH logging library documentation',['../page_date.html',1,'AnCH logging library documentation'],['../page_logger.html',1,'AnCH logging library documentation']]],
   ['anch_20rest_20library_20documentation_51',['AnCH REST library documentation',['../page_rest.html',1,'']]],
   ['anch_20sql_20library_20documentation_52',['AnCH SQL library documentation',['../page_sql.html',1,'']]],
   ['anch_20unit_20tests_20library_20documentation_53',['AnCH unit tests library documentation',['../page_ut.html',1,'']]],

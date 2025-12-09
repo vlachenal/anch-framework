@@ -62,6 +62,13 @@ var NAVTREE =
       [ "Conception", "page_cutils.html#cutils_concept_sec", null ],
       [ "Examples", "page_cutils.html#cutils_example_sec", null ]
     ] ],
+    [ "AnCH logging library documentation", "page_date.html", [
+      [ "Introduction", "page_date.html#date_intro_seq", null ],
+      [ "Prerequisites", "page_date.html#date_prereq_sec", null ],
+      [ "Installation", "page_date.html#date_install_sec", null ],
+      [ "Usage", "page_date.html#date_concept_sec", null ],
+      [ "Example", "page_date.html#date_example_sec", null ]
+    ] ],
     [ "AnCH events library documentation", "page_events.html", [
       [ "Introduction", "page_events.html#evt_intro_seq", null ],
       [ "Prerequisites", "page_events.html#evt_req_sec", null ],
@@ -179,7 +186,7 @@ var NAVTREEINDEX =
 "classanch_1_1sql_1_1_s_q_lite3_result_set.html#a48f3bf039d86e2a1f7cb898e52a4f230",
 "dir_fe5553ee4b4b1c8670091b99a1c9862b.html",
 "namespaceanch_1_1json.html#af4d03a7ecdab93f7b86d49cc9839941d",
-"structanch_1_1crypto_1_1_s_h_a2_1_1_context.html#a7715aa4cccbe8ea9fac6b70eb3567369"
+"structanch_1_1crypto_1_1_s_h_a2_1_1_context.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronization';
