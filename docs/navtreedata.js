@@ -62,7 +62,7 @@ var NAVTREE =
       [ "Conception", "page_cutils.html#cutils_concept_sec", null ],
       [ "Examples", "page_cutils.html#cutils_example_sec", null ]
     ] ],
-    [ "AnCH logging library documentation", "page_date.html", [
+    [ "AnCH date library documentation", "page_date.html", [
       [ "Introduction", "page_date.html#date_intro_seq", null ],
       [ "Prerequisites", "page_date.html#date_prereq_sec", null ],
       [ "Installation", "page_date.html#date_install_sec", null ],
