@@ -21,8 +21,10 @@
 
 #include <filesystem>
 #include <string_view>
+#include <regex>
 
 #include "conf/parsers.hpp"
+#include "conf/resolvers.hpp"
 
 using anch::conf::Configuration;
 using anch::conf::Section;
@@ -32,6 +34,8 @@ const std::string ANCH_CONF("anch::conf");
 const std::string ANCH_DEFAULT_PROFILE("anch::conf.default-profile");
 const std::string ANCH_CONF_INC("anch::conf.includes");
 
+//const std::regex PH_PATTERN("${([^}]+)}");
+//const std::regex RSV_PATTERN("^([^:]+:)(.+)$");
 
 /*!
  * Split \c std::string using delimiter, trim left and right and add items in \c std::vector when not empty
@@ -55,7 +59,6 @@ split(char delim, const std::string& str, std::vector<std::string>& res) {
     }
     // trim right -
     res.push_back(val.data());
-    //res.push_back(str.substr(cur, pos));
     cur = pos + 1;
   }
   res.push_back(str.substr(cur));
@@ -191,6 +194,10 @@ Configuration::load() {
   }
   // Parse included files -
 
+  // Resolve value with place holders +
+  // \todo resolve placeholders
+  // Resolve value with place holders -
+
   return *this;
 }
 
@@ -218,9 +225,12 @@ Configuration::loadProfile(const std::string& profile) {
 const anch::conf::Section*
 Configuration::section(const std::string& path) const noexcept {
   const Section* sec = &_root;
+  // if path == '.' return root section +
   if(path == ".") {
     return sec;
   }
+  // if path == '.' return root section -
+  // Split path on '.' +
   std::size_t cur = 0;
   while(std::size_t pos = path.find('.', cur) != path.npos) {
     auto iter = sec->getSections().find(path.substr(cur, pos));
@@ -230,10 +240,13 @@ Configuration::section(const std::string& path) const noexcept {
     sec = &iter->second;
     cur = pos + 1;
   }
+  // Split path on '.' -
+  // Get last split characters string +
   auto iter = sec->getSections().find(path.substr(cur));
   if(iter == sec->getSections().end()) {
     return NULL;
   }
+  // Get last split characters string -
   sec = &iter->second;
   return sec;
 }

@@ -1,0 +1,221 @@
+Start testing: Dec 13 13:48 CET
+----------------------------------------------------------
+1/9 Testing: anch-conf-get-TOTO-toto
+1/9 Test: anch-conf-get-TOTO-toto
+Command: "/home/winz/projects/anch-framework/anch-conf/test/bin/anch-conf-parse" "-t" "get-TOTO-toto"
+Directory: /home/winz/projects/anch-framework/anch-conf/test
+"anch-conf-get-TOTO-toto" start time: Dec 13 13:48 CET
+Output:
+----------------------------------------------------------
+Parse file
+File has been parsed
+[34m-- get-TOTO-toto --[0m[K
+Execute getTOTOToto
+TOTO.toto=titi
+
+Time: 14 µs
+[34m-- get-TOTO-toto --[0m[K
+
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"anch-conf-get-TOTO-toto" end time: Dec 13 13:48 CET
+"anch-conf-get-TOTO-toto" time elapsed: 00:00:00
+----------------------------------------------------------
+
+2/9 Testing: anch-conf-get-tata
+2/9 Test: anch-conf-get-tata
+Command: "/home/winz/projects/anch-framework/anch-conf/test/bin/anch-conf-parse" "-t" "get-tata"
+Directory: /home/winz/projects/anch-framework/anch-conf/test
+"anch-conf-get-tata" start time: Dec 13 13:48 CET
+Output:
+----------------------------------------------------------
+Parse file
+File has been parsed
+[34m-- get-tata --[0m[K
+Execute getTata
+tata=tutu
+
+Time: 10 µs
+[34m-- get-tata --[0m[K
+
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"anch-conf-get-tata" end time: Dec 13 13:48 CET
+"anch-conf-get-tata" time elapsed: 00:00:00
+----------------------------------------------------------
+
+3/9 Testing: anch-conf-get-toto
+3/9 Test: anch-conf-get-toto
+Command: "/home/winz/projects/anch-framework/anch-conf/test/bin/anch-conf-parse" "-t" "get-toto"
+Directory: /home/winz/projects/anch-framework/anch-conf/test
+"anch-conf-get-toto" start time: Dec 13 13:48 CET
+Output:
+----------------------------------------------------------
+Parse file
+File has been parsed
+[34m-- get-toto --[0m[K
+Execute getToto
+toto=tata
+
+Time: 11 µs
+[34m-- get-toto --[0m[K
+
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"anch-conf-get-toto" end time: Dec 13 13:48 CET
+"anch-conf-get-toto" time elapsed: 00:00:00
+----------------------------------------------------------
+
+4/9 Testing: anch-conf-prof-get-TOTO-toto
+4/9 Test: anch-conf-prof-get-TOTO-toto
+Command: "/home/winz/projects/anch-framework/anch-conf/test/bin/anch-conf-profile-parse" "-t" "get-TOTO-toto"
+Directory: /home/winz/projects/anch-framework/anch-conf/test
+"anch-conf-prof-get-TOTO-toto" start time: Dec 13 13:48 CET
+Output:
+----------------------------------------------------------
+Parse file
+File has been parsed
+[34m-- get-TOTO-toto --[0m[K
+Execute getTOTOToto
+TOTO.toto=tata
+
+Time: 12 µs
+[34m-- get-TOTO-toto --[0m[K
+
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"anch-conf-prof-get-TOTO-toto" end time: Dec 13 13:48 CET
+"anch-conf-prof-get-TOTO-toto" time elapsed: 00:00:00
+----------------------------------------------------------
+
+5/9 Testing: anch-conf-prof-get-tata
+5/9 Test: anch-conf-prof-get-tata
+Command: "/home/winz/projects/anch-framework/anch-conf/test/bin/anch-conf-profile-parse" "-t" "get-tata"
+Directory: /home/winz/projects/anch-framework/anch-conf/test
+"anch-conf-prof-get-tata" start time: Dec 13 13:48 CET
+Output:
+----------------------------------------------------------
+Parse file
+File has been parsed
+[34m-- get-tata --[0m[K
+Execute getTata
+tata=tutu
+
+Time: 11 µs
+[34m-- get-tata --[0m[K
+
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"anch-conf-prof-get-tata" end time: Dec 13 13:48 CET
+"anch-conf-prof-get-tata" time elapsed: 00:00:00
+----------------------------------------------------------
+
+6/9 Testing: anch-conf-prof-get-toto
+6/9 Test: anch-conf-prof-get-toto
+Command: "/home/winz/projects/anch-framework/anch-conf/test/bin/anch-conf-profile-parse" "-t" "get-toto"
+Directory: /home/winz/projects/anch-framework/anch-conf/test
+"anch-conf-prof-get-toto" start time: Dec 13 13:48 CET
+Output:
+----------------------------------------------------------
+Parse file
+File has been parsed
+[34m-- get-toto --[0m[K
+Execute getToto
+toto=toto
+
+Time: 11 µs
+[34m-- get-toto --[0m[K
+
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"anch-conf-prof-get-toto" end time: Dec 13 13:48 CET
+"anch-conf-prof-get-toto" time elapsed: 00:00:00
+----------------------------------------------------------
+
+7/9 Testing: anch-conf-defprof-get-TOTO-toto
+7/9 Test: anch-conf-defprof-get-TOTO-toto
+Command: "/home/winz/projects/anch-framework/anch-conf/test/bin/anch-conf-default-profile-parse" "-t" "get-TOTO-toto"
+Directory: /home/winz/projects/anch-framework/anch-conf/test
+"anch-conf-defprof-get-TOTO-toto" start time: Dec 13 13:48 CET
+Output:
+----------------------------------------------------------
+Parse file
+File has been parsed
+[34m-- get-TOTO-toto --[0m[K
+Execute getTOTOToto
+TOTO.toto=titi
+[31mUnit test get-TOTO-toto execution failed on assertion: Found titi instead of tata[0m[K
+
+Time: 43 µs
+[34m-- get-TOTO-toto --[0m[K
+
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Failed.
+"anch-conf-defprof-get-TOTO-toto" end time: Dec 13 13:48 CET
+"anch-conf-defprof-get-TOTO-toto" time elapsed: 00:00:00
+----------------------------------------------------------
+
+8/9 Testing: anch-conf-defprof-get-tata
+8/9 Test: anch-conf-defprof-get-tata
+Command: "/home/winz/projects/anch-framework/anch-conf/test/bin/anch-conf-default-profile-parse" "-t" "get-tata"
+Directory: /home/winz/projects/anch-framework/anch-conf/test
+"anch-conf-defprof-get-tata" start time: Dec 13 13:48 CET
+Output:
+----------------------------------------------------------
+Parse file
+File has been parsed
+[34m-- get-tata --[0m[K
+Execute getTata
+tata=tutu
+
+Time: 10 µs
+[34m-- get-tata --[0m[K
+
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"anch-conf-defprof-get-tata" end time: Dec 13 13:48 CET
+"anch-conf-defprof-get-tata" time elapsed: 00:00:00
+----------------------------------------------------------
+
+9/9 Testing: anch-conf-defprof-get-toto
+9/9 Test: anch-conf-defprof-get-toto
+Command: "/home/winz/projects/anch-framework/anch-conf/test/bin/anch-conf-default-profile-parse" "-t" "get-toto"
+Directory: /home/winz/projects/anch-framework/anch-conf/test
+"anch-conf-defprof-get-toto" start time: Dec 13 13:48 CET
+Output:
+----------------------------------------------------------
+Parse file
+File has been parsed
+[34m-- get-toto --[0m[K
+Execute getToto
+toto=tata
+[31mUnit test get-toto execution failed on assertion: Found tata instead of toto[0m[K
+
+Time: 32 µs
+[34m-- get-toto --[0m[K
+
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Failed.
+"anch-conf-defprof-get-toto" end time: Dec 13 13:48 CET
+"anch-conf-defprof-get-toto" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Dec 13 13:48 CET

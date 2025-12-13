@@ -37,15 +37,13 @@ namespace anch::conf {
    *
    * \param name the resolver's name
    * \param args the resolver's arguments
-   * \param defaultVal the default vaule when not found
    *
-   * \return the value
+   * \return the value is found, \c empty when not found
    *
    * \throw ... any error
    */
-  using Resolver = std::function<std::string(const std::string& /*name*/,
-					     const std::optional<std::string>& /*args*/,
-					     const std::optional<std::string>& /*defaultVal*/)>;
+  using Resolver = std::function<std::optional<std::string>(const std::string& /*name*/,
+							    const std::optional<std::string>& /*args*/)>;
 
   /*!
    * \brief Value resolvers' registry

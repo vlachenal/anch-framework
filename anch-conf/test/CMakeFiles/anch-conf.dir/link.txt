@@ -1,0 +1,1 @@
+/usr/bin/c++ -fPIC -shared -Wl,--dependency-file=CMakeFiles/anch-conf.dir/link.d -Wl,-soname,libanch-conf.so -o lib/libanch-conf.so "CMakeFiles/anch-conf-obj.dir/src/conf/confError.cpp.o" "CMakeFiles/anch-conf-obj.dir/src/conf/configuration.cpp.o" "CMakeFiles/anch-conf-obj.dir/src/conf/parsers.cpp.o" "CMakeFiles/anch-conf-obj.dir/src/conf/resolvers.cpp.o"

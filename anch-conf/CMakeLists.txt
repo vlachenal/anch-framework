@@ -95,6 +95,9 @@ if(ANCH_CONF_UNITARY_TEST)
     )
 
   configure_file(test/test.ini test.ini COPYONLY)
+  configure_file(test/test-UT.conf test-UT.conf COPYONLY)
+  configure_file(test/test-defprof.ini test-defprof.ini COPYONLY)
+  configure_file(test/test-defprof-UT.conf test-defprof-UT.conf COPYONLY)
   # Build parser unitary test +
   file(
     GLOB_RECURSE
@@ -116,9 +119,59 @@ if(ANCH_CONF_UNITARY_TEST)
     )
   # Build parser unitary test -
 
+  # Build parser unitary test +
+  file(
+    GLOB_RECURSE
+    test_profile_files
+    test/testConfProfile.cpp
+    )
+
+  add_executable(
+    anch-conf-profile-parse
+    ${test_profile_files}
+    )
+
+  target_link_libraries(
+    anch-conf-profile-parse
+    anch-conf
+    anch-ini
+    anch-cli
+    anch-unit
+    )
+  # Build parser unitary test -
+
+  # Build parser unitary test +
+  file(
+    GLOB_RECURSE
+    test_default_profile_files
+    test/testDefaultProfiles.cpp
+    )
+
+  add_executable(
+    anch-conf-default-profile-parse
+    ${test_default_profile_files}
+    )
+
+  target_link_libraries(
+    anch-conf-default-profile-parse
+    anch-conf
+    anch-ini
+    anch-cli
+    anch-unit
+    )
+  # Build parser unitary test -
+
   enable_testing()
   add_test(anch-conf-get-TOTO-toto ${EXECUTABLE_OUTPUT_PATH}/anch-conf-parse -t get-TOTO-toto)
   add_test(anch-conf-get-tata ${EXECUTABLE_OUTPUT_PATH}/anch-conf-parse -t get-tata)
   add_test(anch-conf-get-toto ${EXECUTABLE_OUTPUT_PATH}/anch-conf-parse -t get-toto)
+
+  add_test(anch-conf-prof-get-TOTO-toto ${EXECUTABLE_OUTPUT_PATH}/anch-conf-profile-parse -t get-TOTO-toto)
+  add_test(anch-conf-prof-get-tata ${EXECUTABLE_OUTPUT_PATH}/anch-conf-profile-parse -t get-tata)
+  add_test(anch-conf-prof-get-toto ${EXECUTABLE_OUTPUT_PATH}/anch-conf-profile-parse -t get-toto)
+
+  add_test(anch-conf-defprof-get-TOTO-toto ${EXECUTABLE_OUTPUT_PATH}/anch-conf-default-profile-parse -t get-TOTO-toto)
+  add_test(anch-conf-defprof-get-tata ${EXECUTABLE_OUTPUT_PATH}/anch-conf-default-profile-parse -t get-tata)
+  add_test(anch-conf-defprof-get-toto ${EXECUTABLE_OUTPUT_PATH}/anch-conf-default-profile-parse -t get-toto)
 
 endif(ANCH_CONF_UNITARY_TEST)

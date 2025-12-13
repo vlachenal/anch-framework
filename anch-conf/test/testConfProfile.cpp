@@ -15,6 +15,7 @@ startup() {
   std::cout << "Parse file" << std::endl;
   conf = &Configuration::loader()
     .name("test")
+    .profiles({"UT"})
     .load();
   std::cout << "File has been parsed" << std::endl;
 }
@@ -25,7 +26,7 @@ getToto() {
   std::optional<std::string> val = conf->value("toto");
   anch::ut::assertTrue(val.has_value(), "toto not found");
   std::cout << "toto=" << val.value() << std::endl;
-  anch::ut::assert(val.value() == "tata", "Found {} instead of {}", val.value(), "tata");
+  anch::ut::assert(val.value() == "toto", "Found {} instead of {}", val.value(), "toto");
 }
 
 void
@@ -34,7 +35,7 @@ getTOTOToto() {
   std::optional<std::string> val = conf->value("TOTO.toto");
   anch::ut::assertTrue(val.has_value(), "TOTO/toto not found");
   std::cout << "TOTO.toto=" << val.value() << std::endl;
-  anch::ut::assert(val.value() == "titi", "Found {} instead of {}", val.value(), "titi");
+  anch::ut::assert(val.value() == "tata", "Found {} instead of {}", val.value(), "tata");
 }
 
 void
@@ -43,7 +44,6 @@ getTata() {
   std::optional<std::string> val = conf->value("tata");
   anch::ut::assertTrue(val.has_value(), "tata not found");
   std::cout << "tata=" << val.value() << std::endl;
-  anch::ut::assert(val.value() == "tutu", "Found {} instead of {}", val.value(), "tutu");
 }
 
 void

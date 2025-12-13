@@ -1,0 +1,7 @@
+{
+	"InstallScripts" : 
+	[
+		"/home/winz/projects/anch-framework/anch-conf/test/cmake_install.cmake"
+	],
+	"Parallel" : false
+}

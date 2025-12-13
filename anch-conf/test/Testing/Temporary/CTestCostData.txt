@@ -1,0 +1,12 @@
+anch-conf-get-TOTO-toto 1 0.00218795
+anch-conf-get-tata 1 0.00220332
+anch-conf-get-toto 1 0.00207125
+anch-conf-prof-get-TOTO-toto 1 0.00195381
+anch-conf-prof-get-tata 1 0.00205013
+anch-conf-prof-get-toto 1 0.0021276
+anch-conf-defprof-get-TOTO-toto 0 0
+anch-conf-defprof-get-tata 1 0.00198313
+anch-conf-defprof-get-toto 0 0
+---
+anch-conf-defprof-get-TOTO-toto
+anch-conf-defprof-get-toto

@@ -31,36 +31,27 @@ using anch::conf::Configuration;
 
 namespace anch::conf {
 
-  std::string
+  std::optional<std::string>
   resolvEnv(const std::string& name,
-	    [[maybe_unused]] const std::optional<std::string>& args,
-	    const std::optional<std::string>& defaultVal) {
+	    [[maybe_unused]] const std::optional<std::string>& args) {
+    std::optional<std::string> value;
     char* env = std::getenv(name.data());
     if(env != NULL) {
-      return std::string(env);
+      value = env;
     }
-    if(!defaultVal.has_value()) {
-      std::ostringstream oss;
-      oss << "Environment variable " << name << " has not been found and has no default value";
-      throw ConfError(oss.str(), ConfError::ErrorCode::CONF_NOT_FOUND);
-    }
-    return defaultVal.value();
+    //if(!value.has_value() && defaultVal.has_value()) {
+      //value = defaultVal.value();
+      //std::ostringstream oss;
+      //oss << "Environment variable " << name << " has not been found and has no default value";
+      //throw ConfError(oss.str(), ConfError::ErrorCode::CONF_NOT_FOUND);
+    //}
+    return value;
   }
 
-  std::string
+  std::optional<std::string>
   resolvConf(const std::string& name,
-	     [[maybe_unused]] const std::optional<std::string>& args,
-	     const std::optional<std::string>& defaultVal) {
-    auto val = Configuration::inst().value(name);
-    if(val.has_value()) {
-      return val.value();
-    }
-    if(!defaultVal.has_value()) {
-      std::ostringstream oss;
-      oss << "Environment variable " << name << " has not been found and has no default value";
-      throw ConfError(oss.str(), ConfError::ErrorCode::CONF_NOT_FOUND);
-    }
-    return defaultVal.value();
+	     [[maybe_unused]] const std::optional<std::string>& args) {
+    return Configuration::inst().value(name);
   }
 
 }
