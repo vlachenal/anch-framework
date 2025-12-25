@@ -23,7 +23,7 @@
  * Configuration files can also contains categories which will be declared between brackets.\n
  * \n
  * Configuration file example:\n
- * \code{.ini}
+ * \code{.txt}
 # Some comment
 key=value
 key1=value1

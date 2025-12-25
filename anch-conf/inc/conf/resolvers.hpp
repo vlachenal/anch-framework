@@ -107,6 +107,8 @@ namespace anch::conf {
      * \param resolver the resolver to register
      * \param key the key to associate to the resolver
      *
+     * \return \c this
+     *
      * \throw \c anch::conf::ConfError when extension as already been registered
      */
     Resolvers& registerResolver(Resolver resolver, const std::string& key);

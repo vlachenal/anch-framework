@@ -34,8 +34,8 @@ const std::string ANCH_CONF("anch::conf");
 const std::string ANCH_DEFAULT_PROFILE("anch::conf.default-profile");
 const std::string ANCH_CONF_INC("anch::conf.includes");
 
-//const std::regex PH_PATTERN("${([^}]+)}");
-//const std::regex RSV_PATTERN("^([^:]+:)(.+)$");
+const std::regex PH_PATTERN("\\$\\{([^}]+)\\}");
+const std::regex RSV_PATTERN("([^=|]+)=([^|]+)");
 
 /*!
  * Split \c std::string using delimiter, trim left and right and add items in \c std::vector when not empty
@@ -45,7 +45,7 @@ const std::string ANCH_CONF_INC("anch::conf.includes");
  * \param res the \c std::vector to fill
  */
 void
-split(char delim, const std::string& str, std::vector<std::string>& res) {
+splitTrim(char delim, const std::string& str, std::vector<std::string>& res) {
   std::size_t cur = 0;
   while(std::size_t pos = str.find(delim, cur) != str.npos) {
     // trim left +
@@ -64,6 +64,7 @@ split(char delim, const std::string& str, std::vector<std::string>& res) {
   res.push_back(str.substr(cur));
 }
 
+
 /*!
  * Configuration file and parser to use
  */
@@ -71,6 +72,7 @@ struct ConfFile {
   std::filesystem::path file;
   const anch::conf::Parser* parser = NULL;
 };
+
 
 /*!
  * Select the configuration file and the parser to use
@@ -83,11 +85,11 @@ struct ConfFile {
 std::optional<ConfFile>
 selectConfFile(const std::vector<std::string>& folders, const std::string& name) {
   Parsers& parsers = Parsers::getInstance();
-  for(auto fiter = folders.begin() ; fiter != folders.end() ; ++fiter) {
-    for(auto riter = parsers.getParsers().begin() ; riter != parsers.getParsers().end() ; ++riter) {
+  for(auto fiter = folders.begin() ; fiter != folders.end() ; ++fiter) { // for each folder
+    for(auto riter = parsers.getParsers().begin() ; riter != parsers.getParsers().end() ; ++riter) { // look for extension
       std::filesystem::path check(*fiter);
       check /= std::filesystem::path(name + "." + riter->first);
-      if(std::filesystem::exists(check)) {
+      if(std::filesystem::exists(check)) { // when found return file
 	ConfFile conf;
 	conf.file = check;
 	conf.parser = &riter->second;
@@ -161,13 +163,13 @@ Configuration::load() {
   if(_profiles.empty()) {
     char* env = std::getenv("ANCH_PROFILES");
     if(env != NULL) {
-      split(',', std::getenv("ANCH_PROFILES"), _profiles);
+      splitTrim(',', std::getenv("ANCH_PROFILES"), _profiles);
     }
   }
   if(_profiles.empty()) {
     std::optional<std::string> defProf = value(ANCH_DEFAULT_PROFILE);
     if(defProf.has_value()) {
-      split(',', defProf.value(), _profiles);
+      splitTrim(',', defProf.value(), _profiles);
     }
   }
   // Add profiles with environment variable (if found) when not set -
@@ -181,7 +183,7 @@ Configuration::load() {
   // Parse included files +
   std::optional<std::string> includes = value(ANCH_CONF_INC);
   if(includes.has_value()) {
-    split(',', includes.value(), _includes);
+    splitTrim(',', includes.value(), _includes);
     for(const std::string& inc: _includes) {
       conf = selectConfFile(_folders, inc);
       if(!conf.has_value()) {
@@ -195,10 +197,29 @@ Configuration::load() {
   // Parse included files -
 
   // Resolve value with place holders +
-  // \todo resolve placeholders
+  resolvePlaceholders();
   // Resolve value with place holders -
 
   return *this;
+}
+
+void
+collectPlaceholders(const anch::conf::Section& section,
+		    std::map<std::string, std::optional<std::string>>& placeholders) {
+  for(auto iter = section.getValues().begin() ; iter != section.getValues().end() ; ++iter) {
+    // \todo parse values
+    std::smatch ph;
+    std::regex_search(iter->second, ph, PH_PATTERN);
+  }
+  for(auto iter = section.getSections().begin() ; iter != section.getSections().end() ; ++iter) {
+    collectPlaceholders(iter->second, placeholders);
+  }
+}
+
+void
+Configuration::resolvePlaceholders() {
+  std::map<std::string, std::optional<std::string>> placeholders;
+  collectPlaceholders(_root, placeholders);
 }
 
 void

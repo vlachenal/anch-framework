@@ -146,8 +146,6 @@ namespace anch::conf {
      *  - load includes files
      *  - for each active profiles, repeat the previous loading with <file>-<profile>.<extension>
      *
-     * \param filePath The resource file path
-     *
      * \return the \ref Configuration
      */
     Configuration& load();
@@ -179,6 +177,11 @@ namespace anch::conf {
      * \param profile the profile to load
      */
     void loadProfile(const std::string& profile);
+
+    /*!
+     * Collect and resolve placeholders
+     */
+    void resolvePlaceholders();
     // Methods -
 
   };
