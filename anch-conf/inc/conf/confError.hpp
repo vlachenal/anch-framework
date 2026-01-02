@@ -65,7 +65,10 @@ namespace anch::conf {
       PARSER_NOT_FOUND,
 
       /*! Parser is a protected resolver */
-      PARSER_PROTECTED
+      PARSER_PROTECTED,
+
+      /*! Parser is not initialized */
+      NOT_LOADED
 
     };
 

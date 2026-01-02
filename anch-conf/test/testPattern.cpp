@@ -9,16 +9,19 @@ const std::regex RSV_PATTERN("([^=|]+)=([^|]+)");
 
 void
 check(const std::string& url, const std::vector<std::string>& placeholders) {
+  std::cout << std::endl << "Parse " << url << std::endl;
   auto iter = std::sregex_iterator(url.begin(), url.end(), PH_PATTERN);
   auto end = std::sregex_iterator();
   anch::ut::assert(static_cast<std::size_t>(std::distance(iter, end)) == placeholders.size(), "Found {} tokens instead of {}", std::distance(iter, end), placeholders.size());
   for(std::size_t i = 0 ; iter != end ; ++iter, ++i) {
     std::smatch sub = *iter;
     anch::ut::assert(sub.size() == 2, "Found {} placeholders instead of {}", sub.size(), 2);
-    std::string ph = sub.str(1);
+    std::string ph = sub.str(1); // sub.str(0) matches the complete PH_PATTERN with ${}
+    std::cout << "Found placeholders: " << ph << std::endl;
     anch::ut::assert(ph == placeholders[i], "Found placeholder {} instead of {}", ph, placeholders[i]);
     // \todo parse resolvers
   }
+  std::cout << std::endl;
 }
 
 void
@@ -40,9 +43,9 @@ checkConfDefault() {
 void
 checkEnvConfDefault() {
   std::cout << "Enter in checkEnvConfDefault" << std::endl;
-  std::string url = "https://${conf=host|env=TOTO_ACCOUNT|toto.titi.org}/accounts/${env=TOTO_ACCOUNT|conf=toto.account-id}";
+  std::string url = "https://${conf=toto.host|env=TOTO_HOST|toto.titi.org}/accounts/${env=TOTO_ACCOUNT|conf=toto.account-id}";
   check(url, {
-      "conf=host|env=TOTO_ACCOUNT|toto.titi.org",
+      "conf=toto.host|env=TOTO_HOST|toto.titi.org",
       "env=TOTO_ACCOUNT|conf=toto.account-id"
     });
   std::cout << "Exit checkEnvConfDefault" << std::endl;

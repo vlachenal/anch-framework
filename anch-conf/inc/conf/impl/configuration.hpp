@@ -19,6 +19,9 @@
 */
 #pragma once
 
+#include "conf/confError.hpp"
+
+
 namespace anch::conf {
 
   inline
@@ -51,7 +54,7 @@ namespace anch::conf {
   Configuration::inst() {
     Configuration& conf = Configuration::loader();
     if(!conf._loaded) {
-      // \todo raise error
+      throw anch::conf::ConfError("Configuration has not been loaded yet", ConfError::ErrorCode::NOT_LOADED);
     }
     return conf;
   }

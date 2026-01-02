@@ -100,6 +100,8 @@ namespace anch::conf {
      * Get \ref Configuration unique instance
      *
      * \return the reference of the \ref Configuration
+     *
+     * \throw anch::conf::ConfError when configuration has not been loaded (code: NOT_LOADED)
      */
     static const Configuration& inst();
 
@@ -147,6 +149,9 @@ namespace anch::conf {
      *  - for each active profiles, repeat the previous loading with <file>-<profile>.<extension>
      *
      * \return the \ref Configuration
+     *
+     * \throw anch::conf::ConfError on file open or resolution error (codes: CONF_NOT_FOUND)
+     * \throw anch::ini::ParserError INI file parser error
      */
     Configuration& load();
 
