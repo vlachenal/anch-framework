@@ -261,7 +261,13 @@ It provides profiles inspired by Spring framework.</p>
 </table>
 </div><div class="memdoc">
 <p>Get <a class="el" href="classanch_1_1conf_1_1_configuration.html">Configuration</a> unique instance</p>
-<dl class="section return"><dt>Returns</dt><dd>the reference of the <a class="el" href="classanch_1_1conf_1_1_configuration.html">Configuration</a> </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>the reference of the <a class="el" href="classanch_1_1conf_1_1_configuration.html">Configuration</a></dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classanch_1_1conf_1_1_conf_error.html">anch::conf::ConfError</a></td><td>when configuration has not been loaded (code: NOT_LOADED) </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -287,13 +293,14 @@ It provides profiles inspired by Spring framework.</p>
 <li>load includes files</li>
 <li>for each active profiles, repeat the previous loading with &lt;file&gt;-&lt;profile&gt;.&lt;extension&gt;</li>
 </ul>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">filePath</td><td>The resource file path</td></tr>
+<dl class="section return"><dt>Returns</dt><dd>the <a class="el" href="classanch_1_1conf_1_1_configuration.html">Configuration</a></dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classanch_1_1conf_1_1_conf_error.html">anch::conf::ConfError</a></td><td>on file open or resolution error (codes: CONF_NOT_FOUND) </td></tr>
+    <tr><td class="paramname"><a class="el" href="classanch_1_1ini_1_1_parser_error.html">anch::ini::ParserError</a></td><td>INI file parser error </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>the <a class="el" href="classanch_1_1conf_1_1_configuration.html">Configuration</a> </dd></dl>
 <div id="dynsection-2" onclick="return dynsection.toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
 <div id="dynsection-2-summary" class="dynsummary" style="display:block;">
 </div>

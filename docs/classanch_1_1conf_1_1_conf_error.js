@@ -8,7 +8,8 @@ var classanch_1_1conf_1_1_conf_error =
       [ "RES_NOT_FOUND", "classanch_1_1conf_1_1_conf_error.html#abab53c9d1f2453e51ae897e44e05b7a7a2672a2321bcacdd6742ce1b848badc89", null ],
       [ "RES_PROTECTED", "classanch_1_1conf_1_1_conf_error.html#abab53c9d1f2453e51ae897e44e05b7a7a16836c780932a497810a8ece651df1e4", null ],
       [ "PARSER_NOT_FOUND", "classanch_1_1conf_1_1_conf_error.html#abab53c9d1f2453e51ae897e44e05b7a7a1ac0cc9046dc2cb773d65a05b7df6b07", null ],
-      [ "PARSER_PROTECTED", "classanch_1_1conf_1_1_conf_error.html#abab53c9d1f2453e51ae897e44e05b7a7a2bb3a71b90df3e6e268362deb5bf09dd", null ]
+      [ "PARSER_PROTECTED", "classanch_1_1conf_1_1_conf_error.html#abab53c9d1f2453e51ae897e44e05b7a7a2bb3a71b90df3e6e268362deb5bf09dd", null ],
+      [ "NOT_LOADED", "classanch_1_1conf_1_1_conf_error.html#abab53c9d1f2453e51ae897e44e05b7a7a64d839b006f22e6c066be3e30d3a6d49", null ]
     ] ],
     [ "ConfError", "classanch_1_1conf_1_1_conf_error.html#af171574fb05243cc8f55360a859863b7", null ],
     [ "ConfError", "classanch_1_1conf_1_1_conf_error.html#a08d3679140234d261b9dabbae92d8a40", null ],
