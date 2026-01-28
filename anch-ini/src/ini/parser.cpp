@@ -32,7 +32,7 @@ using anch::ini::ParserError;
 
 // Static intialization +
 const std::regex SECTION_REGEX = std::regex("^( |\t)*\\[([^#; \t]+)\\]");
-const std::regex KEYVAL_REGEX = std::regex("^[#; \t]*(.+)( |\t)*=( |\t)*(.+)");
+const std::regex KEYVAL_REGEX = std::regex("^[#; \t]*([^=]+)( |\t)*=( |\t)*(.+)");
 //const std::regex COMMENT_REGEX = std::regex("( |\t)*([^\\\\][#|;].*)$");
 // Static intialization -
 
