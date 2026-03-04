@@ -182,11 +182,6 @@ namespace anch::conf {
      * \param profile the profile to load
      */
     void loadProfile(const std::string& profile);
-
-    /*!
-     * Collect and resolve placeholders
-     */
-    void resolvePlaceholders();
     // Methods -
 
   };

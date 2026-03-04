@@ -28,6 +28,9 @@ using anch::conf::Resolvers;
 using anch::conf::ConfError;
 using anch::conf::Configuration;
 
+const std::string Resolvers::ENV("env");
+const std::string Resolvers::CONF("conf");
+const std::string Resolvers::ARG("arg");
 
 namespace anch::conf {
 
@@ -39,12 +42,6 @@ namespace anch::conf {
     if(env != NULL) {
       value = env;
     }
-    //if(!value.has_value() && defaultVal.has_value()) {
-      //value = defaultVal.value();
-      //std::ostringstream oss;
-      //oss << "Environment variable " << name << " has not been found and has no default value";
-      //throw ConfError(oss.str(), ConfError::ErrorCode::CONF_NOT_FOUND);
-    //}
     return value;
   }
 
@@ -59,14 +56,18 @@ namespace anch::conf {
 Resolvers::Resolvers(): _registry(), _protected() {
   // Resolvers registration +
   // Environment variables resolver +
-  _registry["env"] = anch::conf::resolvEnv;
-  _protected.insert("env");
+  _registry[ENV] = anch::conf::resolvEnv;
+  _protected.insert(ENV);
   // Environment variables resolver -
 
   // Configuration variables resolver +
-  _registry["cnf"] = anch::conf::resolvConf;
-  _protected.insert("cnf");
+  _registry[CONF] = anch::conf::resolvConf;
+  _protected.insert(CONF);
   // Configuration variables resolver -
+
+  // Configuration CLI argument resolver +
+  _protected.insert(ARG);
+  // Configuration CLI argument resolver -
 
   // \todo check libs, load them and protect them
   // Resolvers registration -

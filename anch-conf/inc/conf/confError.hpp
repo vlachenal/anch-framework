@@ -61,6 +61,9 @@ namespace anch::conf {
       /*! Resolver is a protected resolver */
       RES_PROTECTED,
 
+      /*! Unresolved configuration value(s) */
+      NOT_RES,
+
       /*! Parser not found */
       PARSER_NOT_FOUND,
 

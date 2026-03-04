@@ -28,6 +28,7 @@ include_directories(
   inc
   ${ANCH_INI_INCLUDES_DIR}
   ${ANCH_UTILS_INCLUDES_DIR}
+  ${ANCH_EVT_INCLUDES_DIR}
 )
 
 # Retrieve every files in project
@@ -86,18 +87,21 @@ if(ANCH_CONF_UNITARY_TEST)
     ${ANCH_INI_INCLUDES_DIR}
     ${ANCH_CLI_INCLUDES_DIR}
     ${ANCH_UT_INCLUDES_DIR}
+    ${ANCH_EVT_INCLUDES_DIR}
     )
 
   link_directories(
     ${ANCH_CLI_LIBRARY_DIR}
     ${ANCH_UT_LIBRARY_DIR}
     ${ANCH_INI_LIBRARY_DIR}
+    ${ANCH_EVT_LIBRARY_DIR}
     )
 
   configure_file(test/test.ini test.ini COPYONLY)
   configure_file(test/test-UT.conf test-UT.conf COPYONLY)
   configure_file(test/test-defprof.ini test-defprof.ini COPYONLY)
   configure_file(test/test-defprof-UT.conf test-defprof-UT.conf COPYONLY)
+  configure_file(test/test-placeholders.ini test-placeholders.ini COPYONLY)
   # Build parser unit tests +
   file(
     GLOB_RECURSE
@@ -182,6 +186,27 @@ if(ANCH_CONF_UNITARY_TEST)
     )
   # Build RE unit tests -
 
+  # Build placeholders unit tests +
+  file(
+    GLOB_RECURSE
+    test_placeholders_files
+    test/testPlaceHolders.cpp
+    )
+
+  add_executable(
+    anch-conf-placeholders-test
+    ${test_placeholders_files}
+    )
+
+  target_link_libraries(
+    anch-conf-placeholders-test
+    anch-conf
+    anch-ini
+    anch-cli
+    anch-unit
+    )
+  # Build placeholders unit tests -
+
   enable_testing()
   # Build parser unit tests +
   add_test(anch-conf-get-TOTO-toto ${EXECUTABLE_OUTPUT_PATH}/anch-conf-parse -t get-TOTO-toto)
@@ -206,5 +231,9 @@ if(ANCH_CONF_UNITARY_TEST)
   add_test(anch-conf-pattern-check-conf-default ${EXECUTABLE_OUTPUT_PATH}/anch-conf-pattern-test -t check-conf-default)
   add_test(anch-conf-pattern-check-env-conf-default ${EXECUTABLE_OUTPUT_PATH}/anch-conf-pattern-test -t check-env-conf-default)
   # Build RE unit tests -
+
+  # Build parse placeholders unit tests +
+  add_test(anch-conf-placeholders-check-conf ${EXECUTABLE_OUTPUT_PATH}/anch-conf-placeholders-test -t single)
+  # Build parse placeholders unit tests -
 
 endif(ANCH_CONF_UNITARY_TEST)

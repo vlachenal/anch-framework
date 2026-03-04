@@ -23,5 +23,8 @@ set(ANCH_CLI_LIBRARY_DIR "$ENV{HOME}/projects/anch-framework/anch-cli/build/lib"
 set(ANCH_INI_INCLUDES_DIR "$ENV{HOME}/projects/anch-framework/anch-ini/inc")
 set(ANCH_INI_LIBRARY_DIR "$ENV{HOME}/projects/anch-framework/anch-ini/build/lib")
 
+set(ANCH_EVT_INCLUDES_DIR "$ENV{HOME}/projects/anch-framework/anch-events/inc")
+set(ANCH_EVT_LIBRARY_DIR "$ENV{HOME}/projects/anch-framework/anch-events/build/lib")
+
 set(ANCH_CONF_UNITARY_TEST ON CACHE BOOL "Anch conf unitary tests")
 ## Anch conf configuration -

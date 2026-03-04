@@ -24,18 +24,19 @@
 #include <regex>
 
 #include "conf/parsers.hpp"
-#include "conf/resolvers.hpp"
+#include "conf/placeholders.hpp"
 
 using anch::conf::Configuration;
 using anch::conf::Section;
 using anch::conf::Parsers;
+using anch::conf::Placeholders;
 
 const std::string ANCH_CONF("anch::conf");
 const std::string ANCH_DEFAULT_PROFILE("anch::conf.default-profile");
 const std::string ANCH_CONF_INC("anch::conf.includes");
 
 const std::regex PH_PATTERN("\\$\\{([^}]+)\\}");
-const std::regex RSV_PATTERN("([^=|]+)=([^|]+)");
+const std::regex RSV_PATTERN("(([^=|]+)=)?([^|]+)");
 
 /*!
  * Split \c std::string using delimiter, trim left and right and add items in \c std::vector when not empty
@@ -197,29 +198,13 @@ Configuration::load() {
   // Parse included files -
 
   // Resolve value with place holders +
-  resolvePlaceholders();
+  Placeholders placeholders(_root);
+  if(placeholders.collect()) {
+    placeholders.resolve();
+  }
   // Resolve value with place holders -
 
   return *this;
-}
-
-void
-collectPlaceholders(const anch::conf::Section& section,
-		    std::map<std::string, std::optional<std::string>>& placeholders) {
-  for(auto iter = section.getValues().begin() ; iter != section.getValues().end() ; ++iter) {
-    // \todo parse values
-    std::smatch ph;
-    std::regex_search(iter->second, ph, PH_PATTERN);
-  }
-  for(auto iter = section.getSections().begin() ; iter != section.getSections().end() ; ++iter) {
-    collectPlaceholders(iter->second, placeholders);
-  }
-}
-
-void
-Configuration::resolvePlaceholders() {
-  std::map<std::string, std::optional<std::string>> placeholders;
-  collectPlaceholders(_root, placeholders);
 }
 
 void

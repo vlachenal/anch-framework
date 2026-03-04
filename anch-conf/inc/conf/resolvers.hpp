@@ -60,6 +60,16 @@ namespace anch::conf {
     friend anch::Singleton<Resolvers>;
 
     // Attributes +
+  public:
+    /*! Environment resovler key: 'env' */
+    static const std::string ENV;
+
+    /*! Configuration key: 'conf' */
+    static const std::string CONF;
+
+    /*! CLI argument key: 'arg' */
+    static const std::string ARG;
+
   private:
     /*! Resolvers' registry */
     std::map<std::string, Resolver> _registry;
@@ -123,8 +133,19 @@ namespace anch::conf {
      * \throw anch::conf::ConfError when extension is not registered
      */
     Resolver getResolver(const std::string& key) const;
+
+    /*!
+     * Resolver getter
+     *
+     * \param key the resolver's key
+     *
+     * \return \c true when resolver has been registered, \c false otherwise
+     */
+    bool hasResolver(const std::string& key) const;
     // Methods -
 
   };
 
 }
+
+#include "conf/impl/resolvers.hpp"
