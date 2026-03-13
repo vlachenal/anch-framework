@@ -1,0 +1,7 @@
+<map id="anch::conf::Placeholders" name="anch::conf::Placeholders">
+<area shape="rect" id="Node000001" title="Register placeholders." alt="" coords="23,473,178,671"/>
+<area shape="rect" id="Node000002" href="$classanch_1_1events_1_1_observable.html" title=" " alt="" coords="13,253,188,424"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="101,437,103,474,98,473,100,442"/>
+<area shape="rect" id="Node000003" href="$classanch_1_1events_1_1_observable.html" title="An observable implementation of the observers/observable design pattern." alt="" coords="5,5,196,181"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="101,194,103,254,98,253,100,199"/>
+</map>

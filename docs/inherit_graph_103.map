@@ -1,11 +1,23 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" title=" " alt="" coords="5,47,103,73"/>
-<area shape="rect" id="Node000001" href="$classanch_1_1cutils_1_1_c_i_o_stream.html" title=" " alt="" coords="151,47,313,73"/>
-<area shape="poly" id="edge100_Node000000_Node000001" title=" " alt="" coords="118,57,153,59,147,61,119,63"/>
-<area shape="rect" id="Node000002" href="$classanch_1_1network_1_1_tcp_stream.html" title=" " alt="" coords="361,47,535,73"/>
-<area shape="poly" id="edge101_Node000001_Node000002" title=" " alt="" coords="328,57,363,60,358,60,329,63"/>
-<area shape="rect" id="Node000003" href="$classanch_1_1network_1_1_tcp_stream_client.html" title="TCP stream client." alt="" coords="583,5,758,48"/>
-<area shape="poly" id="edge102_Node000002_Node000003" title=" " alt="" coords="550,42,580,40,586,39,551,47"/>
-<area shape="rect" id="Node000004" href="$classanch_1_1network_1_1_tcp_stream_server.html" title="TCP stream server." alt="" coords="583,72,758,115"/>
-<area shape="poly" id="edge103_Node000002_Node000004" title=" " alt="" coords="551,73,586,80,580,80,551,78"/>
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,249,109,276"/>
+<area shape="rect" id="Node000001" href="$classanch_1_1conf_1_1_conf_error.html" title=" " alt="" coords="185,5,331,32"/>
+<area shape="poly" id="edge85_Node000000_Node000001" title=" " alt="" coords="60,233,71,191,89,139,116,87,134,63,155,42,186,26,183,31,158,46,138,66,121,89,94,141,76,192,66,234"/>
+<area shape="rect" id="Node000002" href="$classanch_1_1crypto_1_1_invalid_block_exception.html" title="Exception on receiving an invalid block." alt="" coords="172,56,344,99"/>
+<area shape="poly" id="edge86_Node000000_Node000002" title=" " alt="" coords="67,234,100,171,125,138,155,109,177,97,173,101,158,113,129,141,105,174,72,236"/>
+<area shape="rect" id="Node000003" href="$classanch_1_1device_1_1_device_exception.html" title=" " alt="" coords="157,123,359,149"/>
+<area shape="poly" id="edge87_Node000000_Node000003" title=" " alt="" coords="74,236,109,196,131,176,155,159,184,148,180,152,158,164,134,180,113,200,79,239"/>
+<area shape="rect" id="Node000004" href="$classanch_1_1ini_1_1_parser_error.html" title=" " alt="" coords="186,173,330,200"/>
+<area shape="poly" id="edge88_Node000000_Node000004" title=" " alt="" coords="93,240,156,210,194,199,190,202,158,214,96,244"/>
+<area shape="rect" id="Node000005" href="$classanch_1_1json_1_1_mapping_error.html" title="Mapping error." alt="" coords="175,224,341,251"/>
+<area shape="poly" id="edge89_Node000000_Node000005" title=" " alt="" coords="123,252,176,246,172,250,125,257"/>
+<area shape="rect" id="Node000006" href="$classanch_1_1network_1_1_i_o_exception.html" title=" " alt="" coords="166,275,350,301"/>
+<area shape="poly" id="edge90_Node000000_Node000006" title=" " alt="" coords="123,269,168,275,163,278,125,274"/>
+<area shape="rect" id="Node000007" href="$classanch_1_1rest_1_1_mapper_exception.html" title=" " alt="" coords="164,325,352,352"/>
+<area shape="poly" id="edge91_Node000000_Node000007" title=" " alt="" coords="94,281,158,311,195,324,190,326,156,316,95,286"/>
+<area shape="rect" id="Node000008" href="$classanch_1_1rest_1_1_router_exception.html" title="REST router exception class." alt="" coords="166,376,350,403"/>
+<area shape="poly" id="edge92_Node000000_Node000008" title=" " alt="" coords="77,286,113,326,134,345,158,362,185,375,180,376,155,366,131,349,109,329,76,291"/>
+<area shape="rect" id="Node000009" href="$classanch_1_1sql_1_1_sql_exception.html" title="SQL exception." alt="" coords="178,427,338,453"/>
+<area shape="poly" id="edge93_Node000000_Node000009" title=" " alt="" coords="69,288,104,352,128,385,158,412,180,426,175,426,155,417,124,389,99,355,68,293"/>
+<area shape="rect" id="Node000010" href="$classanch_1_1ut_1_1_assert_exception.html" title="Unit test assertion error." alt="" coords="172,477,344,504"/>
+<area shape="poly" id="edge94_Node000000_Node000010" title=" " alt="" coords="64,289,78,330,96,377,122,424,139,445,158,463,178,477,173,477,155,467,135,448,118,427,91,379,73,332,64,294"/>
 </map>

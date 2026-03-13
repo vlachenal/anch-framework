@@ -1,23 +1,27 @@
 <map id="anch::events::Observer&lt; T &gt;" name="anch::events::Observer&lt; T &gt;">
-<area shape="rect" id="Node000001" title="An observer interface of the observers/observable design pattern." alt="" coords="556,5,734,75"/>
+<area shape="rect" id="Node000001" title="An observer interface of the observers/observable design pattern." alt="" coords="663,5,840,75"/>
 <area shape="rect" id="Node000002" href="$classanch_1_1events_1_1_event_handler.html" title="An event handler." alt="" coords="5,147,178,296"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="539,51,462,63,372,82,279,110,192,149,180,156,176,152,189,144,277,105,371,77,461,58,544,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="646,43,548,52,430,69,369,82,307,100,248,122,192,149,180,156,176,152,189,144,246,117,306,95,367,77,429,63,547,46,651,41"/>
 <area shape="rect" id="Node000003" href="$classanch_1_1events_1_1_observer.html" title=" " alt="" coords="202,179,382,264"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="539,52,427,72,379,85,347,101,331,117,318,137,302,180,297,178,313,135,327,114,344,97,377,80,426,66,544,49"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="645,45,562,52,473,62,395,78,365,89,343,101,327,117,315,137,300,180,295,177,310,135,323,114,340,97,362,84,393,73,472,57,562,47,650,43"/>
 <area shape="rect" id="Node000005" href="$classanch_1_1events_1_1_observer.html" title=" " alt="" coords="405,179,552,264"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="567,82,549,100,519,139,497,180,493,177,515,136,545,97,563,85"/>
-<area shape="rect" id="Node000007" href="$classanch_1_1events_1_1_observer.html" title=" " alt="" coords="576,179,741,264"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="647,88,650,122,655,180,650,178,644,123,644,92"/>
-<area shape="rect" id="Node000008" href="$classanch_1_1events_1_1_observer.html" title=" " alt="" coords="765,179,912,264"/>
-<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="748,57,782,73,811,97,824,115,833,136,840,180,836,178,827,138,819,118,807,100,779,78,748,63"/>
-<area shape="rect" id="Node000009" href="$classanch_1_1events_1_1_observer.html" title=" " alt="" coords="936,179,1082,264"/>
-<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="748,48,867,66,917,80,952,96,970,114,984,135,1002,180,997,178,979,137,966,117,949,101,915,85,866,72,749,53"/>
-<area shape="rect" id="Node000010" href="$classanch_1_1events_1_1_observer.html" title=" " alt="" coords="1106,179,1306,264"/>
-<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="748,45,937,63,1024,77,1086,96,1114,113,1139,134,1180,180,1175,179,1135,137,1111,117,1084,101,1023,82,937,68,749,50"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="646,54,595,73,569,85,546,101,529,118,514,138,493,181,489,177,510,135,525,114,543,97,567,80,593,68,651,52"/>
+<area shape="rect" id="Node000007" href="$classanch_1_1events_1_1_observer.html" title=" " alt="" coords="576,179,752,264"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="664,83,654,100,647,119,645,139,651,180,646,178,640,139,642,117,650,97,660,87"/>
+<area shape="rect" id="Node000009" href="$classanch_1_1events_1_1_observer.html" title=" " alt="" coords="776,179,941,264"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="814,82,827,97,846,138,856,180,851,178,841,139,823,100,813,87"/>
+<area shape="rect" id="Node000010" href="$classanch_1_1events_1_1_observer.html" title=" " alt="" coords="972,179,1118,264"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="855,52,944,70,981,82,1005,97,1021,115,1032,136,1044,180,1039,178,1027,137,1016,118,1002,101,978,87,943,75,856,57"/>
+<area shape="rect" id="Node000011" href="$classanch_1_1events_1_1_observer.html" title=" " alt="" coords="1142,179,1289,264"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="855,43,937,50,1023,60,1097,75,1127,85,1149,96,1169,114,1184,134,1206,180,1201,178,1180,137,1165,117,1146,101,1125,90,1096,81,1022,66,937,55,856,49"/>
+<area shape="rect" id="Node000012" href="$classanch_1_1events_1_1_observer.html" title=" " alt="" coords="1313,179,1513,264"/>
+<area shape="poly" id="edge11_Node000001_Node000012" title=" " alt="" coords="855,42,968,48,1092,58,1205,74,1250,84,1285,96,1314,113,1340,133,1384,180,1379,178,1337,137,1311,117,1283,101,1249,89,1204,79,1091,64,968,53,856,47"/>
 <area shape="rect" id="Node000004" href="$class_error_observer.html" title=" " alt="" coords="231,367,352,521"/>
 <area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="293,276,294,368,289,366,290,281"/>
 <area shape="rect" id="Node000006" href="$class_j_s_o_n_formatter.html" title=" " alt="" coords="412,345,544,543"/>
 <area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="480,276,481,347,476,344,477,281"/>
-<area shape="rect" id="Node000011" href="$classanch_1_1ut_1_1_socket_server_runner.html" title="Socket server unit tests runner." alt="" coords="1113,367,1300,521"/>
-<area shape="poly" id="edge10_Node000010_Node000011" title=" " alt="" coords="1208,277,1208,368,1204,365,1205,281"/>
+<area shape="rect" id="Node000008" href="$structanch_1_1conf_1_1_sub_placeholder.html" title="Placeholder items." alt="" coords="578,356,749,532"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="665,277,666,358,661,355,662,281"/>
+<area shape="rect" id="Node000013" href="$classanch_1_1ut_1_1_socket_server_runner.html" title="Socket server unit tests runner." alt="" coords="1320,367,1506,521"/>
+<area shape="poly" id="edge12_Node000012_Node000013" title=" " alt="" coords="1415,277,1415,368,1411,365,1411,281"/>
 </map>

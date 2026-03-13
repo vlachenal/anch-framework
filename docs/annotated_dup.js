@@ -11,7 +11,9 @@ var annotated_dup =
         [ "ConfError", "classanch_1_1conf_1_1_conf_error.html", "classanch_1_1conf_1_1_conf_error" ],
         [ "Configuration", "classanch_1_1conf_1_1_configuration.html", "classanch_1_1conf_1_1_configuration" ],
         [ "Parsers", "classanch_1_1conf_1_1_parsers.html", "classanch_1_1conf_1_1_parsers" ],
-        [ "Resolvers", "classanch_1_1conf_1_1_resolvers.html", "classanch_1_1conf_1_1_resolvers" ]
+        [ "Placeholders", "classanch_1_1conf_1_1_placeholders.html", "classanch_1_1conf_1_1_placeholders" ],
+        [ "Resolvers", "classanch_1_1conf_1_1_resolvers.html", "classanch_1_1conf_1_1_resolvers" ],
+        [ "SubPlaceholder", "structanch_1_1conf_1_1_sub_placeholder.html", "structanch_1_1conf_1_1_sub_placeholder" ]
       ] ],
       [ "crypto", "namespaceanch_1_1crypto.html", [
         [ "Base64", "classanch_1_1crypto_1_1_base64.html", "classanch_1_1crypto_1_1_base64" ],

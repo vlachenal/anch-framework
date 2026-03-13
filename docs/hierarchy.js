@@ -166,6 +166,9 @@ var hierarchy =
     [ "anch::device::NetworkInterface", "classanch_1_1device_1_1_network_interface.html", null ],
     [ "ngx_anch_bootstrap_conf_t", "structngx__anch__bootstrap__conf__t.html", null ],
     [ "anch::events::Observable&lt; T &gt;", "classanch_1_1events_1_1_observable.html", null ],
+    [ "anch::events::Observable&lt; anch::conf::ResConfEvt &gt;", "classanch_1_1events_1_1_observable.html", [
+      [ "anch::conf::Placeholders", "classanch_1_1conf_1_1_placeholders.html", null ]
+    ] ],
     [ "anch::events::Observable&lt; anch::json::JSONItem &gt;", "classanch_1_1events_1_1_observable.html", [
       [ "anch::json::Reader", "classanch_1_1json_1_1_reader.html", null ]
     ] ],
@@ -183,6 +186,9 @@ var hierarchy =
     ] ],
     [ "anch::events::Observer&lt; T &gt;", "classanch_1_1events_1_1_observer.html", [
       [ "anch::events::EventHandler< T, Derived >", "classanch_1_1events_1_1_event_handler.html", null ]
+    ] ],
+    [ "anch::events::Observer&lt; anch::conf::ResConfEvt &gt;", "classanch_1_1events_1_1_observer.html", [
+      [ "anch::conf::SubPlaceholder", "structanch_1_1conf_1_1_sub_placeholder.html", null ]
     ] ],
     [ "anch::events::Observer&lt; anch::json::MappingError &gt;", "classanch_1_1events_1_1_observer.html", [
       [ "ErrorObserver", "class_error_observer.html", null ]

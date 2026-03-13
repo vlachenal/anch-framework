@@ -7,6 +7,7 @@ var classanch_1_1conf_1_1_conf_error =
       [ "CONF_NOT_FOUND", "classanch_1_1conf_1_1_conf_error.html#abab53c9d1f2453e51ae897e44e05b7a7a4b1cffc4195363e33214718ffe677b33", null ],
       [ "RES_NOT_FOUND", "classanch_1_1conf_1_1_conf_error.html#abab53c9d1f2453e51ae897e44e05b7a7a2672a2321bcacdd6742ce1b848badc89", null ],
       [ "RES_PROTECTED", "classanch_1_1conf_1_1_conf_error.html#abab53c9d1f2453e51ae897e44e05b7a7a16836c780932a497810a8ece651df1e4", null ],
+      [ "NOT_RES", "classanch_1_1conf_1_1_conf_error.html#abab53c9d1f2453e51ae897e44e05b7a7aa1b015ca2d040b286c23e8e0053b4286", null ],
       [ "PARSER_NOT_FOUND", "classanch_1_1conf_1_1_conf_error.html#abab53c9d1f2453e51ae897e44e05b7a7a1ac0cc9046dc2cb773d65a05b7df6b07", null ],
       [ "PARSER_PROTECTED", "classanch_1_1conf_1_1_conf_error.html#abab53c9d1f2453e51ae897e44e05b7a7a2bb3a71b90df3e6e268362deb5bf09dd", null ],
       [ "NOT_LOADED", "classanch_1_1conf_1_1_conf_error.html#abab53c9d1f2453e51ae897e44e05b7a7a64d839b006f22e6c066be3e30d3a6d49", null ]

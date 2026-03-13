@@ -1,0 +1,7 @@
+<map id="anch::conf::SubPlaceholder" name="anch::conf::SubPlaceholder">
+<area shape="rect" id="Node000001" title="Placeholder items." alt="" coords="9,281,180,457"/>
+<area shape="rect" id="Node000002" href="$classanch_1_1events_1_1_observer.html" title=" " alt="" coords="6,147,182,232"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="95,244,97,282,92,281,93,249"/>
+<area shape="rect" id="Node000003" href="$classanch_1_1events_1_1_observer.html" title="An observer interface of the observers/observable design pattern." alt="" coords="5,5,183,75"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="95,87,97,147,92,147,94,92"/>
+</map>
