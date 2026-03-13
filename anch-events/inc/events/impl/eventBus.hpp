@@ -43,6 +43,7 @@ namespace anch::events {
   }
 
   template<typename T>
+  inline
   bool
   EventBus<T>::AddObserver(anch::events::Observer<T>& observer) noexcept {
     return EventBus<T>::getInstance().addObserver(observer);
@@ -56,13 +57,15 @@ namespace anch::events {
   }
 
   template<typename T>
+  inline
   void
   EventBus<T>::RemoveObserver(anch::events::Observer<T>& observer) noexcept {
     EventBus<T>::getInstance().removeObserver(observer);
   }
 
   template<typename T>
-  inline void
+  inline
+  void
   EventBus<T>::fireEvent(const T& event, const std::map<std::string,std::string>& headers) noexcept {
     fireEvent({.headers = headers, .body = event});
   }
@@ -70,33 +73,6 @@ namespace anch::events {
   template<typename T>
   void
   EventBus<T>::fireEvent(const anch::events::Event<T>& event) noexcept {
-    std::lock_guard<std::mutex> lock(_eventMutex);
-    for(anch::events::Observer<T>* observer : _observers) {
-      observer->handle(event);
-    }
-  }
-
-  template<typename T>
-  inline void
-  EventBus<T>::FireEvent(const T& event, const std::map<std::string,std::string>& headers) noexcept {
-    EventBus<T>::getInstance().fireEvent(event, headers);
-  }
-
-  template<typename T>
-  inline void
-  EventBus<T>::FireEvent(const anch::events::Event<T>& event) noexcept {
-    EventBus<T>::getInstance().fireEvent(event);
-  }
-
-  template<typename T>
-  inline void
-  EventBus<T>::scheduleDeferred(const T& event, const std::map<std::string,std::string>& headers) noexcept {
-    scheduleDeferred({.headers = headers, .body = event});
-  }
-
-  template<typename T>
-  void
-  EventBus<T>::scheduleDeferred(const anch::events::Event<T>& event) noexcept {
     std::lock_guard<std::mutex> lock(_queueMutex);
     bool empty = _events.empty();
     _events.push(event);
@@ -110,15 +86,24 @@ namespace anch::events {
   }
 
   template<typename T>
-  inline void
-  EventBus<T>::ScheduleDeferred(const T& event, const std::map<std::string,std::string>& headers) noexcept {
-    EventBus<T>::getInstance().scheduleDeferred(event, headers);
+  inline
+  void
+  EventBus<T>::FireEvent(const T& event, const std::map<std::string,std::string>& headers) noexcept {
+    EventBus<T>::getInstance().fireEvent(event, headers);
   }
 
   template<typename T>
-  inline void
-  EventBus<T>::ScheduleDeferred(const anch::events::Event<T>& event) noexcept {
-    EventBus<T>::getInstance().scheduleDeferred(event);
+  inline
+  void
+  EventBus<T>::FireEvent(const anch::events::Event<T>& event) noexcept {
+    EventBus<T>::getInstance().fireEvent(event);
+  }
+
+  template<typename T>
+  inline
+  void
+  EventBus<T>::release() {
+    delete this;
   }
 
   template<typename T>
@@ -132,7 +117,9 @@ namespace anch::events {
       empty = _events.empty();
       _queueMutex.unlock();
 
-      fireEvent(event);
+      for(anch::events::Observer<T>* observer : _observers) {
+	observer->handle(event);
+      }
 
     } while(!empty);
   }

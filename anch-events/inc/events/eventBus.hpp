@@ -65,16 +65,19 @@ namespace anch::events {
 
 
     // Constructors +
-  private:
+  public:
     /*!
-     * \ref EventBus default constructor
+     * \ref EventBus default constructor.\n
+     * This constructor is public to allow to declare temporary \c EventBus.
+     * The \c EventBus destructor is private. To delete temporary \c EventBus, \c free method has to be call.
      */
     EventBus();
     // Constructors -
 
+  private:
     // Destructor +
     /*!
-     * \ref EventBus destructor
+     * \ref EventBus private destructor
      */
     virtual ~EventBus();
     // Destructor -
@@ -86,6 +89,8 @@ namespace anch::events {
      * Register \ref Observer to \ref EventBus
      *
      * \param observer the \ref Observer to register
+     *
+     * \return \c true when observer has been added, \c false otherwise (when observer has already been registered)
      */
     bool addObserver(anch::events::Observer<T>& observer) noexcept;
 
@@ -93,6 +98,8 @@ namespace anch::events {
      * Retrieve \ref EventBus instance and register \ref Observer to \ref EventBus
      *
      * \param observer the \ref Observer to register
+     *
+     * \return \c true when observer has been added, \c false otherwise (when observer has already been registered)
      */
     static bool AddObserver(anch::events::Observer<T>& observer) noexcept;
 
@@ -141,34 +148,9 @@ namespace anch::events {
     static void FireEvent(const anch::events::Event<T>& event) noexcept;
 
     /*!
-     * Put event in sheduler.
-     *
-     * \param event the event to process
-     * \param headers the event's context
+     * Delete \c this
      */
-    void scheduleDeferred(const T& event, const std::map<std::string,std::string>& headers = {}) noexcept;
-
-    /*!
-     * Put event in sheduler.
-     *
-     * \param event the event to process
-     */
-    void scheduleDeferred(const anch::events::Event<T>& event) noexcept;
-
-    /*!
-     * Retrieve \ref EventBus instance and put event in sheduler.
-     *
-     * \param event the event to process
-     * \param headers the event's context
-     */
-    static void ScheduleDeferred(const T& event, const std::map<std::string,std::string>& headers = {}) noexcept;
-
-    /*!
-     * Retrieve \ref EventBus instance and put event in sheduler.
-     *
-     * \param event the event to process
-     */
-    static void ScheduleDeferred(const anch::events::Event<T>& event) noexcept;
+    void release();
 
   private:
     /*!

@@ -57,8 +57,8 @@ main(void) {
   eventBus.addObserver(handler);
 
   eventBus.fireEvent(Evt("titi"));
-  for(int i  = 0 ; i < 10 ; i++) {
-    eventBus.scheduleDeferred(Evt("toto"));
+  for(int i  = 0 ; i < 10 ; ++i) {
+    eventBus.fireEvent(Evt("toto"));
   }
 
   std::this_thread::sleep_for(std::chrono::milliseconds(200)); // to receive deferred messages
