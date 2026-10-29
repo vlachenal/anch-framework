@@ -22,6 +22,7 @@
 namespace anch {
 
   // Constructors +
+  inline
   ThreadPool::ThreadPool(uint32_t maxThreads):
     _threads(),
     _mutex(),
@@ -40,6 +41,7 @@ namespace anch {
   // Constructors -
 
   // Destructor +
+  inline
   ThreadPool::~ThreadPool() {
     _mutex.lock();
     _running = false;
@@ -51,6 +53,7 @@ namespace anch {
   // Destructor -
 
   // Methods +
+  inline
   void
   ThreadPool::start() {
     std::lock_guard<std::mutex> lock(_mutex);
@@ -66,6 +69,7 @@ namespace anch {
     }
   }
 
+  inline
   void
   ThreadPool::stop() {
     std::lock_guard<std::mutex> lock(_mutex);
@@ -136,6 +140,7 @@ namespace anch {
     }
   }
 
+  inline
   void
   ThreadPool::execute(std::function<void()> func) {
     try {

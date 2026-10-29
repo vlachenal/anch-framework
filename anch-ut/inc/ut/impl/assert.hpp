@@ -166,6 +166,7 @@ namespace anch::ut {
   }
 
   template<>
+  inline
   bool equals(const char* const field, const long double& expected, const long double& value, std::ostream& out) {
     if(expected != value) {
       out << field << " differs ; expected=" << expected << " / current=" << value << std::endl;

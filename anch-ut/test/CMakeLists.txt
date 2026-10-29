@@ -1,0 +1,15 @@
+set_property(DIRECTORY PROPERTY LABELS ut)
+
+anch_add_executable(anch-unit-test SOURCES testUnit.cpp LIBS anch::ut)
+
+add_test(NAME anch-unit-test COMMAND anch-unit-test)
+add_test(NAME anch-unit-test-all COMMAND anch-unit-test -t all)
+add_test(NAME anch-unit-test-nothing COMMAND anch-unit-test -t nothing)
+add_test(NAME anch-unit-test-exception COMMAND anch-unit-test -t exception)
+add_test(NAME anch-unit-test-assert COMMAND anch-unit-test -t assert)
+add_test(NAME anch-unit-test-assert-format COMMAND anch-unit-test -t assert-format)
+set_tests_properties(anch-unit-test PROPERTIES WILL_FAIL TRUE)
+set_tests_properties(anch-unit-test-all PROPERTIES WILL_FAIL TRUE)
+set_tests_properties(anch-unit-test-exception PROPERTIES WILL_FAIL TRUE)
+set_tests_properties(anch-unit-test-assert PROPERTIES WILL_FAIL TRUE)
+set_tests_properties(anch-unit-test-assert-format PROPERTIES WILL_FAIL TRUE)

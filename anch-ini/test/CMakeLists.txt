@@ -1,0 +1,22 @@
+set_property(DIRECTORY PROPERTY LABELS ini)
+
+anch_copy_test_files(test.ini)
+
+anch_add_executable(anch-ini-parser-test SOURCES testParser.cpp LIBS anch::ini anch::ut)
+
+add_test(NAME parser-root-val COMMAND anch-ini-parser-test -t parser-root-val)
+add_test(NAME parser-root-sub-val COMMAND anch-ini-parser-test -t parser-root-sub-val)
+add_test(NAME parser-root-sub-keysub-val COMMAND anch-ini-parser-test -t parser-root-sub-keysub-val)
+add_test(NAME parser-root-subsub-val COMMAND anch-ini-parser-test -t parser-root-subsub-val)
+add_test(NAME parser-int16 COMMAND anch-ini-parser-test -t parser-int16)
+add_test(NAME parser-int32 COMMAND anch-ini-parser-test -t parser-int32)
+add_test(NAME parser-int64 COMMAND anch-ini-parser-test -t parser-int64)
+add_test(NAME parser-uint16 COMMAND anch-ini-parser-test -t parser-uint16)
+add_test(NAME parser-uint32 COMMAND anch-ini-parser-test -t parser-uint32)
+add_test(NAME parser-uint64 COMMAND anch-ini-parser-test -t parser-uint64)
+add_test(NAME parser-float COMMAND anch-ini-parser-test -t parser-float)
+add_test(NAME parser-double COMMAND anch-ini-parser-test -t parser-double)
+add_test(NAME parser-bool COMMAND anch-ini-parser-test -t parser-bool)
+add_test(NAME parser-num-range COMMAND anch-ini-parser-test -t parser-num-range)
+add_test(NAME parser-num-invalid COMMAND anch-ini-parser-test -t parser-num-invalid)
+add_test(NAME parser-num-incomplete COMMAND anch-ini-parser-test -t parser-num-incomplete)

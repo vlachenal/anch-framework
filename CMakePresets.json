@@ -1,0 +1,53 @@
+{
+  "version": 6,
+  "cmakeMinimumRequired": { "major": 3, "minor": 25, "patch": 0 },
+  "configurePresets": [
+    {
+      "name": "release",
+      "displayName": "Release",
+      "binaryDir": "${sourceDir}/build/release",
+      "cacheVariables": { "CMAKE_BUILD_TYPE": "Release" }
+    },
+    {
+      "name": "debug",
+      "displayName": "Debug",
+      "binaryDir": "${sourceDir}/build/debug",
+      "cacheVariables": { "CMAKE_BUILD_TYPE": "Debug" }
+    },
+    {
+      "name": "no-db",
+      "displayName": "Release without database drivers",
+      "inherits": "release",
+      "binaryDir": "${sourceDir}/build/no-db",
+      "cacheVariables": {
+        "ANCH_SQL_MYSQL": "OFF",
+        "ANCH_SQL_POSTGRESQL": "OFF"
+      }
+    }
+  ],
+  "buildPresets": [
+    { "name": "release", "configurePreset": "release" },
+    { "name": "debug", "configurePreset": "debug" },
+    { "name": "no-db", "configurePreset": "no-db" }
+  ],
+  "testPresets": [
+    {
+      "name": "release",
+      "configurePreset": "release",
+      "output": { "outputOnFailure": true },
+      "execution": { "jobs": 0, "timeout": 120 }
+    },
+    {
+      "name": "debug",
+      "configurePreset": "debug",
+      "output": { "outputOnFailure": true },
+      "execution": { "jobs": 0, "timeout": 120 }
+    },
+    {
+      "name": "no-db",
+      "configurePreset": "no-db",
+      "output": { "outputOnFailure": true },
+      "execution": { "jobs": 0, "timeout": 120 }
+    }
+  ]
+}

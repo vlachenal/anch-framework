@@ -305,14 +305,15 @@ namespace anch {
     AES<K,R>::AES(const uint8_t key[4*K]): _state(), _expKey() {
 #ifdef ANCH_CPU_DETECTION
       if(anch::device::CPU::getInstance().isAES()) {
-	uint8_t aesKey[4*K];
+	// AES-NI key expansion loads 16 bytes blocks: round buffer size up to avoid out of bounds read for AES-192 (24 bytes key)
+	uint8_t aesKey[(4*K + 15) / 16 * 16] = {};
 	std::memcpy(aesKey, key, 4*K);
 	aesniExpandKey(aesKey);
       } else {
 	expandKey(key);
       }
 #elif ANCH_CPU_AES
-      uint8_t aesKey[4*K];
+      uint8_t aesKey[(4*K + 15) / 16 * 16] = {};
       std::memcpy(aesKey, key, 4*K);
       aesniExpandKey(aesKey);
 #else

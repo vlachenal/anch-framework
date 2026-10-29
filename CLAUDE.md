@@ -8,25 +8,26 @@ AnCH Framework ("Another C++ Hack") is a set of small, independent C++ utility l
 
 ## Build
 
-Each `anch-<module>/` directory is a standalone CMake project with its own `build/` directory (git-ignored). The usual workflow is per-module, out-of-source inside `build/`:
+The framework is a single CMake project (CMake >= 3.25): the root `CMakeLists.txt` adds every module with `add_subdirectory()` in dependency order, and modules depend on each other through targets (`anch::utils`, `anch::conf`, `anch::log`, ...). Presets are defined in `CMakePresets.json` (`release`, `debug`, `no-db`; build dirs in `build/<preset>`):
 
 ```sh
-cd anch-conf/build
-cmake ..
-make
-ctest                        # run all of the module's tests
-ctest -R anch-conf-pattern   # run a subset by CTest name
+cmake --preset debug                        # configure
+cmake --build --preset debug                # build everything
+cmake --build --preset debug --target anch-conf-parse   # build one target
+ctest --preset debug                        # run all tests
+ctest --preset debug -L conf                # run one module's tests (label = module name without 'anch-')
+ctest --preset debug -R anch-conf-pattern   # run tests by name
 ```
-
-There is also a root `CMakeLists.txt` that does `add_subdirectory()` on most modules (build in `./build`), but some modules are not listed there (e.g. `anch-ini`, `anch-app`, `anch-csv`), and `anch-rest` is commented out.
 
 Things to know about the build:
 
-- **Module settings live in `<Module>.cmake.in`** (e.g. `anch-conf/AnchConf.cmake.in`), `include()`d by the module's `CMakeLists.txt`. They define optimization flags, install dirs, static-lib switch (`ANCH_<MOD>_STATIC_LIB`), unit-test switch (`ANCH_<MOD>_UNITARY_TEST`, ON by default) and dependency paths.
-- **Inter-module dependencies are resolved by hard-coded paths**: `$ENV{HOME}/projects/anch-framework/<dep>/inc` and `<dep>/build/lib`. A module therefore links against the dependency's already-built `build/lib/*.so`, so dependencies must be built first (e.g. `anch-conf` needs `anch-utils`, `anch-ini`, `anch-events`, and for tests `anch-cli` + `anch-ut`). `Anch.cmake.in` at the root is a newer, centralized version of these settings using `${PROJECT_SOURCE_DIR}`.
-- Warnings are errors: `-Wall -Wextra -Werror -Wconversion -Wsign-conversion ...` plus hardening flags (`-fstack-protector-all`, `-D_FORTIFY_SOURCE=2`, `-ftrapv`). Implicit narrowing/sign conversions will break the build.
-- Sources are picked up with `GLOB_RECURSE src/*`; re-run `cmake` after adding a file. Each library is built as an OBJECT library, then a shared lib (and optionally a static one).
-- `anch-sql` has optional backends toggled by `ANCH_SQL_MYSQL`, `ANCH_SQL_POSTGRESQL`, `ANCH_SQL_SQLITE3`.
+- **Helpers are in `cmake/AnchHelpers.cmake`**: `anch_add_library()` declares a module library (target `anch-<name>`, alias `anch::<name>`, include dir `inc/`, sources `src/*.cpp`, install rules), `anch_add_executable()` declares test/utility executables, `anch_copy_test_files()` copies fixtures. Each module's `CMakeLists.txt` only lists its public/private dependencies and definitions; tests live in `<module>/test/CMakeLists.txt`.
+- **Options** are declared once in the root `CMakeLists.txt`: `ANCH_BUILD_TESTS`, `BUILD_SHARED_LIBS`, `ANCH_WARNINGS_AS_ERRORS`, `ANCH_HARDENING`, `ANCH_NATIVE_ARCH`, optional modules (`ANCH_BUILD_CRYPTO` and `ANCH_BUILD_SQL` ON; `ANCH_BUILD_REST` and `ANCH_BUILD_APP` OFF: anch-rest does not compile currently), features (`ANCH_UUID`, `ANCH_CPU_AES`, `ANCH_CPU_DETECTION`, `ANCH_SQL_MYSQL`, `ANCH_SQL_POSTGRESQL`, `ANCH_SQL_SQLITE3`, ...).
+- Warnings are errors: `-Wall -Wextra -Werror -Wconversion -Wsign-conversion ...` plus hardening (`-fstack-protector-all`, `-ftrapv`, `_FORTIFY_SOURCE=2` in optimized builds only, `-z relro -z now` at link time). Implicit narrowing/sign conversions will break the build.
+- Definitions used by public headers (`ANCH_POSIX`, `ANCH_UUID` for anch-json, `ANCH_CPU_*` for anch-crypto, `ANCH_SQL_*` for drivers) are PUBLIC target definitions: never add them with `add_definitions()`.
+- Non-template functions defined in headers (`impl/` files) must be `inline`, otherwise linking two translation units that include them fails.
+- `anch-sql` drivers (`anch-mysql`, `anch-postgresql`, `anch-sqlite`) are loaded with `dlopen("libanch-<driver>.so")` by the connection factory; tests set `LD_LIBRARY_PATH` to the build `lib/` directory. MySQL and PostgreSQL tests need running servers.
+- `cmake --install` installs headers in `include/anch` and a CMake package: consumers use `find_package(Anch)` and `target_link_libraries(... anch::conf)`.
 
 ## Tests (anch-ut)
 
@@ -47,14 +48,15 @@ void anch::ut::setup(anch::ut::UnitTests& tests) {
 
 Assertions: `anch::ut::assertTrue(cond, msg)` and `anch::ut::assert(cond, "fmt {} {}", args...)` (std::format-style).
 
-Each test executable is registered in the module `CMakeLists.txt` once per test case with `add_test(<ctest-name> ${EXECUTABLE_OUTPUT_PATH}/<exe> -t <test-name>)`. When adding a test case, add both the `.add(...)` registration and a matching `add_test` line. Executables can be run directly from `build/bin/`:
+Each test executable is declared in `<module>/test/CMakeLists.txt` with `anch_add_executable()`, and registered once per test case with `add_test(NAME <ctest-name> COMMAND <exe> -t <test-name>)`. When adding a test case, add both the `.add(...)` registration and a matching `add_test` line. Executables are in `build/<preset>/bin/` and can be run directly from the test binary directory:
 
 ```sh
-./bin/anch-conf-placeholders-test -l          # list tests
-./bin/anch-conf-placeholders-test -t single   # run one test (repeatable; default 'all')
+cd build/debug/anch-conf/test
+../../bin/anch-conf-placeholders-test -l          # list tests
+../../bin/anch-conf-placeholders-test -t single   # run one test (repeatable; default 'all')
 ```
 
-Test fixture files (`.ini`, `.conf`, ...) in `test/` are copied into the build dir with `configure_file(... COPYONLY)`, so tests must run from `build/`.
+Test fixture files (`.ini`, `.conf`, ...) are copied with `anch_copy_test_files()` into the test binary directory (`build/<preset>/anch-<module>/test`), which is the tests working directory.
 
 ## Code layout and conventions
 
