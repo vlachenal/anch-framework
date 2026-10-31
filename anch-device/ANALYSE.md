@@ -79,7 +79,7 @@ Correction : `randomClockSequence` prend ses 14 bits dans les octets 8 et 9 de `
 - Vérifié : variant toujours correct ; les 16 384 valeurs de séquence apparaissent sur 640 000 UUID (entre 17 et 68 fois, ~39 attendues : dispersion d'un tirage uniforme).
 - Test `uuid-clock-sequence` : variant et répartition uniforme des 6 bits de poids fort de la séquence sur 64 000 UUID v1 / v6.
 - La séquence reste tirée à chaque UUID (DV11) : une séquence stable par processus serait conforme à la recommandation de la RFC, mais après `fork` le parent et le fils auraient le même nœud, la même séquence et le même dernier timestamp (doublons possibles dans un même intervalle de 100 ns) sans régénération dans le fils (`pthread_atfork`).
-- `UUID::getRandomEngine()` et `UUID::getDistSeq()` (publiques, `anch-uuid`) ne sont plus utilisées dans le dépôt ; marquées obsolètes (`[[deprecated]]`).
+- `UUID::getRandomEngine()` et `UUID::getDistSeq()` (publiques, `anch-uuid`) ne sont plus utilisées dans le dépôt : supprimées.
 
 ### DV11. Séquence d'horloge v1 tirée à chaque appel, pas de garde sur un même intervalle — lecture — **garde corrigée le 2026-10-31 (avec DV7)**
 La séquence d'horloge est aléatoire à chaque UUID (`getDistSeq`). La RFC 9562 (§ 6.3) la veut stable et incrémentée quand l'horloge recule, et demande de garantir l'unicité de deux UUID générés dans le même intervalle de 100 ns (compteur ou attente). Ici, l'unicité dans un même intervalle repose sur les 14 bits aléatoires.

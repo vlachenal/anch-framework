@@ -44,7 +44,7 @@ Correction :
 - Source : `arc4random_buf` (aléa cryptographique, sûr entre threads et après `fork`) quand CMake la trouve (`check_cxx_symbol_exists`, définition privée `ANCH_UUID_ARC4RANDOM` d'`anch-uuid` : glibc ≥ 2.36, BSD, macOS), sinon `getentropy` (POSIX ; `std::system_error` en cas d'échec).
 - Résultat : 100 000 `random()` de ~261 ms à ~4,7 ms (**56 fois plus rapide**, ~47 ns par UUID) ; ~49 ms avec `getentropy` (5 fois plus rapide).
 - Vérifié : 200 000 UUID v4 distincts, version `4`, variants `8` à `b` uniformes (avec les deux sources) ; octet de séquence uniforme (UU6) ; v7 : version `7`, horodatage exact ; ThreadSanitizer sans alerte sur 4 threads appelant `random()`. Test ajouté : `uuid-random-format` (bits de version et de variant pour v4 et v7, horodatage v7 encadré par l'heure système).
-- `getRandomEngine()` et `getDistSeq()` (publiques) ne sont plus utilisées dans le dépôt depuis DV10 (`anch-device`) : marquées `[[deprecated]]` le 2026-10-31 (avec `\deprecated` Doxygen, qui renvoie vers `random()` / `toBytes()`). Un appel produit un avertissement `-Wdeprecated-declarations` (donc une erreur avec `-Werror`) ; à supprimer dans une version ultérieure.
+- `getRandomEngine()` et `getDistSeq()` (publiques) ne sont plus utilisées dans le dépôt depuis DV10 (`anch-device`) : supprimées le 2026-10-31 (ainsi que l'inclusion de `<random>` dans `uuid.hpp`, qui ne servait qu'à elles). Pour obtenir des bits aléatoires : `UUID::random().toBytes()`.
 
 ### UU4. `toString` passe par un `std::ostringstream` — **corrigé le 2026-10-31**
 `toString` formatait chaque partie avec `std::setw` / `std::setfill` dans un `std::ostringstream` : création d'un flux (locale) et allocations à chaque appel. `anch-json` l'appelait pour chaque UUID écrit.

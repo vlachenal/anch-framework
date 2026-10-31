@@ -300,16 +300,4 @@ UUID::getUtcTimestamp() {
   int64_t timestamp = (std::chrono::duration_cast<std::chrono::nanoseconds>(epoch).count()) / 100;
   return UTC_OFFSET + (uint64_t)timestamp;
 }
-
-std::random_device&
-UUID::getRandomEngine() {
-  static std::random_device engine;
-  return engine;
-}
-
-std::uniform_int_distribution<uint16_t>&
-UUID::getDistSeq() {
-  static std::uniform_int_distribution<uint16_t> distSeq(0, SEQ_HIGH_MASK | SEQ_LOW_MASK); // 14 bits clock sequence
-  return distSeq;
-}
 // Methods -

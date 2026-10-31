@@ -22,7 +22,6 @@
 #include <iostream>
 #include <iomanip>
 #include <sstream>
-#include <random>
 #include <functional>
 #include <atomic>
 #include <mutex>
@@ -291,29 +290,6 @@ namespace anch {
      * \return The timestamp
      */
     static uint64_t getUtcTimestamp();
-
-    /*!
-     * Random engine getter
-     *
-     * \deprecated No longer used by AnCH: \c std::random_device is slow (~435 ns per call) and is shared between
-     * threads. Use \ref random (16 cryptographically secure random bytes in one call, see \ref toBytes ) to get
-     * random bits.
-     *
-     * \return the random engine
-     */
-    [[deprecated("Use anch::UUID::random().toBytes() to get random bits")]]
-    static std::random_device& getRandomEngine();
-
-    /*!
-     * Clock sequence distribution getter (uniform 14 bits values: \c 0 to \c 0x3FFF )
-     *
-     * \deprecated No longer used by AnCH: the distribution is shared between threads and is used with
-     * \ref getRandomEngine . Use \ref random (14 random bits in bytes 8 and 9, after variant, see \ref toBytes ).
-     *
-     * \return the clock sequence distribution
-     */
-    [[deprecated("Use anch::UUID::random().toBytes() bytes 8 and 9 to get a random clock sequence")]]
-    static std::uniform_int_distribution<uint16_t>& getDistSeq();
 
     /*!
      * Parse \ref UUID
