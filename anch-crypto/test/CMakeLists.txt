@@ -132,6 +132,8 @@ add_test(NAME Aes256Cfb-seq COMMAND anch-aes-cfb-test -t 256-sequential)
 add_test(NAME Aes256Cfb-para COMMAND anch-aes-cfb-test -t 256-parallel)
 add_test(NAME UUID-MD5 COMMAND anch-crypto-uuid-test -t MD5)
 add_test(NAME UUID-SHA1 COMMAND anch-crypto-uuid-test -t SHA1)
+add_test(NAME UUID-MD5-RFC COMMAND anch-crypto-uuid-test -t MD5-RFC)
+add_test(NAME UUID-SHA1-RFC COMMAND anch-crypto-uuid-test -t SHA1-RFC)
 
 # Comparison with OpenSSL +
 find_package(OpenSSL COMPONENTS Crypto)

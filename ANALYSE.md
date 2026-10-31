@@ -20,11 +20,11 @@ Statut des constats :
 | anch-events | [anch-events/ANALYSE.md](anch-events/ANALYSE.md) | `EventBus` : `std::terminate` si un handler émet un événement ; `Observable` : interblocage si un observateur se désabonne |
 | anch-log | [anch-log/ANALYSE.md](anch-log/ANALYSE.md) | motif par défaut qui n'écrit pas le message, `MDC` aux conditions inversées, `LowPriorityWriter` qui plante, `max-size` mal lu, `getLogger` non protégé |
 | anch-network | [anch-network/ANALYSE.md](anch-network/ANALYSE.md) | use-after-free après `freeaddrinfo`, débordements en réception (confirmés sous ASan), UDP IPv4 uniquement, `TcpStreamServer` sans `accept` |
-| anch-json | [anch-json/ANALYSE.md](anch-json/ANALYSE.md) | `0` refusé, dépassements et troncatures numériques (corrigés), chaînes non échappées / non décodées, récursion non bornée |
+| anch-json | [anch-json/ANALYSE.md](anch-json/ANALYSE.md) | corrigés : `0` refusé, dépassements numériques, chaînes non échappées / non décodées, récursion non bornée, `max_payload` ignoré ; lecture 3,7× et écriture 2× plus rapides (2026-10-31) ; reste `'\0'` comme fin de données (J4) |
 | anch-date | [anch-date/ANALYSE.md](anch-date/ANALYSE.md) | heure d'été ajoutée deux fois (+1 h en été), millisecondes fausses depuis un `timespec`, `%y` sur 4 chiffres, `tm_isdst` non initialisé |
-| anch-device | [anch-device/ANALYSE.md](anch-device/ANALYSE.md) | une interface atypique bloque tout l'inventaire réseau, `_metric` invalide, IPv4 uniquement |
+| anch-device | [anch-device/ANALYSE.md](anch-device/ANALYSE.md) | une interface atypique bloque tout l'inventaire réseau, `_metric` invalide, IPv4 uniquement ; fournisseurs UUID v1 / v6 corrigés (DV7 à DV10, DV12 ; v1 19× plus rapide) |
 | anch-ut | [anch-ut/ANALYSE.md](anch-ut/ANALYSE.md) | `-r` provoque une erreur de segmentation, `--start` / `--stop` / `--gen-ctest` sans effet |
-| anch-uuid | [anch-uuid/ANALYSE.md](anch-uuid/ANALYSE.md) | parsing non validé (`1234zzzz-...` accepté) ; UUID aléatoires conformes |
+| anch-uuid | [anch-uuid/ANALYSE.md](anch-uuid/ANALYSE.md) | tous les constats corrigés le 2026-10-31 (UU1 à UU9) : parsing validé et 8× plus rapide, `toString` 14×, `random()` 56×, v3 / v5 conformes à la RFC 9562, v7 monotone, registre protégé, type valeur de 16 octets ordonnable et hachable ; fournisseurs v1 / v6 : voir `anch-device` |
 | anch-sql | [anch-sql/ANALYSE.md](anch-sql/ANALYSE.md) | hors gestion d'erreurs : builder sain, pilote introuvable = appel d'adresse indéterminée, tests non isolés |
 | anch-crypto | [anch-crypto/ANALYSE.md](anch-crypto/ANALYSE.md) | non analysé (hors périmètre) ; lecture hors limites AES-192 corrigée |
 | anch-conf | [anch-conf/ANALYSE.md](anch-conf/ANALYSE.md) | en construction ; correctif `_loaded` provisoire (pas encore avec placeholders) |

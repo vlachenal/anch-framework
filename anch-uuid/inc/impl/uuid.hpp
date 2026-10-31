@@ -22,12 +22,6 @@
 namespace anch {
 
   inline
-  bool
-  UUID::operator !=(const UUID& uuid) const {
-    return !(*this == uuid);
-  }
-
-  inline
   UUID::operator std::string() const {
     return toString();
   }
@@ -35,45 +29,80 @@ namespace anch {
   inline
   uint32_t
   UUID::getLowTime() const {
-    return _lowTime;
+    return (static_cast<uint32_t>(_bytes[0]) << 24)
+      | (static_cast<uint32_t>(_bytes[1]) << 16)
+      | (static_cast<uint32_t>(_bytes[2]) << 8)
+      | static_cast<uint32_t>(_bytes[3]);
   }
 
   inline
   uint16_t
   UUID::getMidTime() const {
-    return _midTime;
+    return static_cast<uint16_t>((_bytes[4] << 8) | _bytes[5]);
   }
 
   inline
   uint16_t
   UUID::getHighTime() const {
-    return _highTime;
+    return static_cast<uint16_t>(((_bytes[6] & 0x0F) << 8) | _bytes[7]);
   }
 
   inline
   uint16_t
   UUID::getClockSeqLow() const {
-    return _clockSeqLow;
+    return _bytes[9];
   }
 
   inline
   uint16_t
   UUID::getClockSeqHighRes() const {
-    return _clockSeqHighRes;
+    return _bytes[8];
   }
 
   inline
   uint64_t
   UUID::getNode() const {
-    return _node;
+    uint64_t node = 0;
+    for(std::size_t i = 10 ; i < 16 ; ++i) {
+      node = (node << 8) | _bytes[i];
+    }
+    return node;
   }
 
   inline
   anch::UUID::Version
   UUID::getVersion() const {
-    return _version;
+    return static_cast<anch::UUID::Version>(_bytes[6] >> 4);
   }
 
+  inline
+  UUID
+  UUID::fromBytes(const std::array<uint8_t,16>& bytes) {
+    UUID uuid;
+    uuid._bytes = bytes;
+    return uuid;
+  }
+
+  inline
+  std::array<uint8_t,16>
+  UUID::toBytes() const {
+    return _bytes;
+  }
+
+}
+
+inline
+std::size_t
+std::hash<anch::UUID>::operator()(const anch::UUID& uuid) const noexcept {
+  // Bytes are random for most versions: combine the two halves
+  std::array<uint8_t,16> bytes = uuid.toBytes();
+  uint64_t high = 0;
+  uint64_t low = 0;
+  for(std::size_t i = 0 ; i < 8 ; ++i) {
+    high = (high << 8) | bytes[i];
+    low = (low << 8) | bytes[i + 8];
+  }
+  return static_cast<std::size_t>(high ^ (low * 0x9E3779B97F4A7C15ULL));
 }
 
 template<class CharT, class Traits>

@@ -26,8 +26,12 @@
 #include <functional>
 #include <atomic>
 #include <mutex>
+#include <shared_mutex>
 #include <map>
 #include <cinttypes>
+#include <array>
+#include <compare>
+#include <cstddef>
 
 
 namespace anch {
@@ -101,9 +105,12 @@ namespace anch {
     /*! Sequence high part time mask */
     static const uint32_t SEQ_HIGH_MASK = 0x3F00;
 
+    /*! UUID string representation size (without \c '\\0' ) */
+    static constexpr std::size_t STRING_SIZE = 36;
+
   private:
-    /*! Mutex used for static members' initialization */
-    static std::mutex _mutex;
+    /*! Providers registry mutex (exclusive to register providers, shared to generate UUID) */
+    static std::shared_mutex _mutex;
 
     /*! Random engine initialization state */
     static std::atomic_bool _seeded;
@@ -111,62 +118,46 @@ namespace anch {
     /*! UUID providers */
     static std::map<UUID::Version, std::function<UUID(const std::string&)>> _providers;
 
-    /*! The timestamp low value */
-    uint32_t _lowTime;
-
-    /*! The timestamp mid value */
-    uint16_t _midTime;
-
-    /*! The timestamp high value */
-    uint16_t _highTime;
-
-    /*! The clock sequence low value */
-    uint16_t _clockSeqLow;
-
-    /*! The clock sequence high value and reserved value */
-    uint16_t _clockSeqHighRes;
-
-    /*! The node */
-    uint64_t _node;
-
-    /*! Version */
-    anch::UUID::Version _version;
+    /*! UUID 16 bytes binary representation (RFC 9562, big-endian): parts are computed by accessors */
+    std::array<uint8_t,16> _bytes{};
     // Attributes -
 
 
     // Constructors +
   public:
     /*!
-     * \ref UUID default constructor
+     * \ref UUID default constructor: nil UUID ( \c 00000000-0000-0000-0000-000000000000 )
      */
-    UUID();
+    UUID() = default;
 
     /*!
      * \ref UUID copy constructor
      *
      * \param uuid The \ref UUID to copy
      */
-    UUID(const UUID& uuid);
+    UUID(const UUID& uuid) = default;
 
     /*!
      * \ref UUID move constructor
      *
      * \param uuid The \ref UUID to 'move'
      */
-    UUID(UUID&& uuid);
+    UUID(UUID&& uuid) = default;
 
     /*!
      * \ref UUID from std::string constructor
      *
      * \param uuid the std::string to parse
      *
-     * \throw std::out_of_range invalid UUID length
-     * \throw std::invalid_argument invalid UUID subpart
+     * \throw std::invalid_argument invalid UUID: length is not 36, \c '-' is not at positions 8, 13, 18 and 23,
+     * or other characters are not hexadecimal digits
      */
     UUID(const std::string& uuid);
 
     /*!
-     * \ref UUID constructor
+     * \ref UUID constructor.\n
+     * Each part is truncated to its width (32 bits for \c lowTime , 16 for \c midTime , 12 for \c highTime ,
+     * 8 for \c clockSeqLow and \c clockSeqHighRes , 48 for \c node and 4 for \c version ).
      *
      * \param lowTime the low time part
      * \param midTime the mid time part
@@ -188,9 +179,9 @@ namespace anch {
     // Destructor +
   public:
     /*!
-     * \ref UUID destructor
+     * \ref UUID destructor (not virtual: \ref UUID is a value type)
      */
-    virtual ~UUID();
+    ~UUID() = default;
     // Destructor -
 
     // Methods +
@@ -216,6 +207,66 @@ namespace anch {
     static UUID generateUUID(anch::UUID::Version version, const std::string& data = "");
 
     /*!
+     * Generate a new name based UUID (version 3 or 5) according to RFC 9562: the provider hashes the namespace
+     * \ref UUID (16 bytes, see \ref toBytes) followed by the name.\n
+     * For other versions, namespace and name are given to the provider in the same way (random providers ignore them).
+     *
+     * \param version The UUID algorithm version to use (\c MD5_HASH or \c SHA1_HASH)
+     * \param nameSpace the namespace (for example \ref namespaceDNS )
+     * \param name the name in the namespace
+     *
+     * \return the new \ref UUID
+     *
+     * \throw std::runtime_error no provider for specified UUID version
+     */
+    static UUID generateUUID(anch::UUID::Version version, const UUID& nameSpace, const std::string& name);
+
+    /*!
+     * Build \ref UUID from its 16 bytes binary representation (RFC 9562, big-endian).\n
+     * Version is read from the 4 high bits of byte 6 ; bytes are not checked (variant is not forced).
+     *
+     * \param bytes the 16 bytes
+     *
+     * \return the \ref UUID
+     */
+    static UUID fromBytes(const std::array<uint8_t,16>& bytes);
+
+    /*!
+     * Get \ref UUID 16 bytes binary representation (RFC 9562, big-endian)
+     *
+     * \return the 16 bytes
+     */
+    std::array<uint8_t,16> toBytes() const;
+
+    /*!
+     * DNS namespace (\c 6ba7b810-9dad-11d1-80b4-00c04fd430c8 ) for name based UUID (RFC 9562)
+     *
+     * \return the namespace
+     */
+    static const UUID& namespaceDNS();
+
+    /*!
+     * URL namespace (\c 6ba7b811-9dad-11d1-80b4-00c04fd430c8 ) for name based UUID (RFC 9562)
+     *
+     * \return the namespace
+     */
+    static const UUID& namespaceURL();
+
+    /*!
+     * ISO OID namespace (\c 6ba7b812-9dad-11d1-80b4-00c04fd430c8 ) for name based UUID (RFC 9562)
+     *
+     * \return the namespace
+     */
+    static const UUID& namespaceOID();
+
+    /*!
+     * X.500 DN namespace (\c 6ba7b814-9dad-11d1-80b4-00c04fd430c8 ) for name based UUID (RFC 9562)
+     *
+     * \return the namespace
+     */
+    static const UUID& namespaceX500();
+
+    /*!
      * Generate a new UUID with version 4 (random) algorithm
      *
      * \return the new UUID
@@ -223,31 +274,45 @@ namespace anch {
     static UUID random();
 
     /*!
-     * Generate a new UUID with version 7 (random + time) algorithm
+     * Generate a new UUID with version 7 (random + time) algorithm.\n
+     * A 16 bits counter (RFC 9562 section 6.2, method 1) is written in the 12 \c rand_a bits and in the 4 first
+     * \c rand_b bits: UUID generated by this process are strictly increasing (string and binary order), including
+     * between threads. It is initialized randomly on each new millisecond (at least 32768 UUID per millisecond before
+     * timestamp is incremented). The 58 last bits are random.
      *
      * \return the new UUID
      */
     static UUID randomTime();
 
     /*!
-     * Get UTC timestamp
+     * Get UUID version 1 / 6 timestamp: number of 100 ns intervals since 1582-10-15 00:00:00 UTC (Gregorian calendar
+     * reform, RFC 9562), from system clock
      *
-     * \return The UTC timestamp
+     * \return The timestamp
      */
     static uint64_t getUtcTimestamp();
 
     /*!
      * Random engine getter
      *
+     * \deprecated No longer used by AnCH: \c std::random_device is slow (~435 ns per call) and is shared between
+     * threads. Use \ref random (16 cryptographically secure random bytes in one call, see \ref toBytes ) to get
+     * random bits.
+     *
      * \return the random engine
      */
+    [[deprecated("Use anch::UUID::random().toBytes() to get random bits")]]
     static std::random_device& getRandomEngine();
 
     /*!
-     * Distribution sequence getter
+     * Clock sequence distribution getter (uniform 14 bits values: \c 0 to \c 0x3FFF )
      *
-     * \return the distribution sequence
+     * \deprecated No longer used by AnCH: the distribution is shared between threads and is used with
+     * \ref getRandomEngine . Use \ref random (14 random bits in bytes 8 and 9, after variant, see \ref toBytes ).
+     *
+     * \return the clock sequence distribution
      */
+    [[deprecated("Use anch::UUID::random().toBytes() bytes 8 and 9 to get a random clock sequence")]]
     static std::uniform_int_distribution<uint16_t>& getDistSeq();
 
     /*!
@@ -256,13 +321,20 @@ namespace anch {
      * \param uuid the \ref UUID to parse
      *
      * \return the parsed \ref UUID
+     *
+     * \throw std::invalid_argument invalid UUID: length is not 36, \c '-' is not at positions 8, 13, 18 and 23,
+     * or other characters are not hexadecimal digits
      */
     static UUID parseUUID(const std::string& uuid);
 
     /*!
-     * Parse \ref UUID for this value (usefull with default constructor)
+     * Parse \ref UUID for this value (usefull with default constructor).\n
+     * Uppercase and lowercase hexadecimal digits are accepted. The value is not modified when \c uuid is invalid.
      *
      * \param uuid the \ref UUID to parse
+     *
+     * \throw std::invalid_argument invalid UUID: length is not 36, \c '-' is not at positions 8, 13, 18 and 23,
+     * or other characters are not hexadecimal digits
      */
     void parse(const std::string& uuid);
 
@@ -272,6 +344,18 @@ namespace anch {
      * \return The string representation of \ref UUID
      */
     std::string toString() const;
+
+    /*!
+     * Write \ref UUID string representation without allocation.\n
+     * Exactly \ref STRING_SIZE lowercase hexadecimal characters and \c '-' are written (no \c '\\0' ).
+     * Each part is written with its fixed width: higher bits of a part which does not fit (which can only be set
+     * with the parts constructor) are ignored.
+     *
+     * \param first the first character to write (at least \ref STRING_SIZE characters available)
+     *
+     * \return the pointer after the last written character
+     */
+    char* toChars(char* first) const;
 
   private:
     /*!
@@ -289,22 +373,23 @@ namespace anch {
     explicit operator std::string() const;
 
     /*!
+     * Three-way comparison: binary order (RFC 9562), which is also string representation order.\n
+     * \c == , \c != , \c < , \c <= , \c > and \c >= are generated from it.
+     *
+     * \param uuid the \ref UUID to compare with
+     *
+     * \return the comparison result
+     */
+    std::strong_ordering operator <=>(const UUID& uuid) const = default;
+
+    /*!
      * \c == operator definition
      *
      * \param uuid the \ref UUID to compare with
      *
      * \return \c true when the two \ref UUID are equals, \c false otherwise
      */
-    bool operator ==(const UUID& uuid) const;
-
-    /*!
-     * \c != operator definition
-     *
-     * \param uuid the \ref UUID to compare with
-     *
-     * \return \c true when the two \ref UUID are differents, \c false otherwise
-     */
-    bool operator !=(const UUID& uuid) const;
+    bool operator ==(const UUID& uuid) const = default;
 
     /*!
      * \c = operator definition
@@ -313,7 +398,16 @@ namespace anch {
      *
      * \return \c this
      */
-    UUID& operator =(const UUID& uuid);
+    UUID& operator =(const UUID& uuid) = default;
+
+    /*!
+     * Move \c = operator definition
+     *
+     * \param uuid the \ref UUID to move
+     *
+     * \return \c this
+     */
+    UUID& operator =(UUID&& uuid) = default;
     // Operators -
 
 
@@ -372,6 +466,25 @@ namespace anch {
   };
 
 }
+
+/*!
+ * \c std::hash specialization for \ref anch::UUID (usable as \c std::unordered_map key)
+ *
+ * \author Vincent Lachenal
+ *
+ * \since 0.1
+ */
+template<>
+struct std::hash<anch::UUID> {
+  /*!
+   * Compute \ref anch::UUID hash
+   *
+   * \param uuid the \ref anch::UUID
+   *
+   * \return the hash
+   */
+  std::size_t operator()(const anch::UUID& uuid) const noexcept;
+};
 
 /*!
  * Ouput stream operator definition for UUID.\n
