@@ -18,6 +18,7 @@
   along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include <cstdlib>
+#include <bitset>
 
 #include "device/uuidProvider.hpp"
 #include "device/network.hpp"
@@ -28,9 +29,8 @@ using anch::device::Network;
 using anch::device::NetworkInterface;
 
 UUID
-generateUUID(const std::string& macAddress = "") {
+generateUUID(uint64_t timestamp, const std::string& macAddress = "") {
   // Timestamp +
-  uint64_t timestamp = UUID::getUtcTimestamp();
   uint32_t lowTime = timestamp & UUID::TIME_LOW_MASK;
   uint16_t midTime = (timestamp >> 32) & UUID::TIME_MID_MASK;
   uint16_t highTime = (timestamp >> 48) & UUID::TIME_HIGH_MASK;
@@ -69,7 +69,24 @@ generateUUID(const std::string& macAddress = "") {
   return UUID(lowTime, midTime, highTime, clockSeqLow, clockSeqHighRes, node, UUID::Version::MAC_ADDRESS);
 }
 
+UUID
+generateUUIDv1(const std::string& macAddress = "") {
+  return generateUUID(UUID::getUtcTimestamp(), macAddress);
+}
+
+UUID
+generateUUIDv6(const std::string& macAddress = "") {
+  uint64_t timestamp = UUID::getUtcTimestamp();
+  std::bitset<64> bits(timestamp);
+  std::bitset<64> res;
+  for(std::size_t i = 0 ; i < 64 ; ++i) {
+    res.set(63 - i, bits[i]);
+  }
+  return generateUUID(res.to_ullong(), macAddress);
+}
+
 void
 anch::device::registerMACAddressUUIDProvider() {
-  UUID::registerProvider(UUID::Version::MAC_ADDRESS, &generateUUID);
+  UUID::registerProvider(UUID::Version::MAC_ADDRESS, &generateUUIDv1);
+  UUID::registerProvider(UUID::Version::MAC_ADDRESS_R, &generateUUIDv6);
 }

@@ -3,6 +3,7 @@
 #include <fstream>
 #include <chrono>
 #include <thread>
+#include <limits>
 
 #include "json/json.hpp"
 
@@ -826,6 +827,136 @@ testDeserializeMap() {
   }
 }
 
+// Integer range +
+struct TestRange {
+  int16_t _i16 = 0;
+  int32_t _i32 = 0;
+  uint16_t _u16 = 0;
+  uint32_t _u32 = 0;
+};
+
+template<>
+void
+anch::json::registerObject(ObjectMapper<TestRange>& mapper) {
+  mapper
+    .registerField("i16", &TestRange::_i16)
+    .registerField("i32", &TestRange::_i32)
+    .registerField("u16", &TestRange::_u16)
+    .registerField("u32", &TestRange::_u32)
+    ;
+}
+
+void
+checkRangeOverflow(const std::string& json) {
+  anch::json::JSONMapper mapper(anch::json::DEFAULT_MAPPING_OPTIONS);
+  std::cout << "Deserialize TestRange: " << json << std::endl;
+  try {
+    auto iss = std::istringstream(json);
+    [[maybe_unused]] TestRange res = mapper.deserialize<TestRange>(iss);
+    anch::ut::fail("This test should have failed");
+  } catch(const MappingError& e) {
+    if(e.getErrorCode() != ErrorCode::POTENTIAL_OVERFLOW) {
+      throw;
+    }
+    std::cout << e.what() << std::endl;
+  }
+}
+
+void
+testDeserInt16Overflow() {
+  checkRangeOverflow("{\"i16\":32768}");
+}
+
+void
+testDeserInt16Underflow() {
+  checkRangeOverflow("{\"i16\":-32769}");
+}
+
+void
+testDeserInt32Overflow() {
+  checkRangeOverflow("{\"i32\":2147483648}");
+}
+
+void
+testDeserInt32Underflow() {
+  checkRangeOverflow("{\"i32\":-2147483649}");
+}
+
+void
+testDeserUint16Overflow() {
+  checkRangeOverflow("{\"u16\":65536}");
+}
+
+void
+testDeserUint32Overflow() {
+  checkRangeOverflow("{\"u32\":4294967296}");
+}
+
+void
+testDeserRangeLimits() {
+  std::string json("{\"i16\":-32768,\"i32\":2147483647,\"u16\":65535,\"u32\":4294967295}");
+  anch::json::JSONMapper mapper(anch::json::DEFAULT_MAPPING_OPTIONS);
+  std::cout << "Deserialize TestRange: " << json << std::endl;
+  auto iss = std::istringstream(json);
+  TestRange res = mapper.deserialize<TestRange>(iss);
+  anch::ut::assert(res._i16 == std::numeric_limits<int16_t>::min(), "i16 should be {} ; found {}", std::numeric_limits<int16_t>::min(), res._i16);
+  anch::ut::assert(res._i32 == std::numeric_limits<int32_t>::max(), "i32 should be {} ; found {}", std::numeric_limits<int32_t>::max(), res._i32);
+  anch::ut::assert(res._u16 == std::numeric_limits<uint16_t>::max(), "u16 should be {} ; found {}", std::numeric_limits<uint16_t>::max(), res._u16);
+  anch::ut::assert(res._u32 == std::numeric_limits<uint32_t>::max(), "u32 should be {} ; found {}", std::numeric_limits<uint32_t>::max(), res._u32);
+}
+// Integer range -
+
+// Float range +
+struct TestFloat {
+  float _f = 0;
+};
+
+template<>
+void
+anch::json::registerObject(ObjectMapper<TestFloat>& mapper) {
+  mapper
+    .registerField("f", &TestFloat::_f)
+    ;
+}
+
+void
+checkFloatOverflow(const std::string& json) {
+  anch::json::JSONMapper mapper(anch::json::DEFAULT_MAPPING_OPTIONS);
+  std::cout << "Deserialize TestFloat: " << json << std::endl;
+  try {
+    auto iss = std::istringstream(json);
+    [[maybe_unused]] TestFloat res = mapper.deserialize<TestFloat>(iss);
+    anch::ut::fail("This test should have failed");
+  } catch(const MappingError& e) {
+    if(e.getErrorCode() != ErrorCode::POTENTIAL_OVERFLOW) {
+      throw;
+    }
+    std::cout << e.what() << std::endl;
+  }
+}
+
+void
+testDeserFloatOverflow() {
+  checkFloatOverflow("{\"f\":1e300}");
+}
+
+void
+testDeserFloatNegativeOverflow() {
+  checkFloatOverflow("{\"f\":-1e300}");
+}
+
+void
+testDeserFloatLimits() {
+  anch::json::JSONMapper mapper(anch::json::DEFAULT_MAPPING_OPTIONS);
+  for(std::string json : {"{\"f\":3.4028234e38}", "{\"f\":-3.4028234e38}", "{\"f\":1e-50}"}) {
+    std::cout << "Deserialize TestFloat: " << json << std::endl;
+    auto iss = std::istringstream(json);
+    TestFloat res = mapper.deserialize<TestFloat>(iss);
+    std::cout << "Found " << res._f << std::endl;
+  }
+}
+// Float range -
+
 void
 anch::ut::setup(anch::ut::UnitTests& tests) {
   tests
@@ -850,5 +981,15 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("json-deser-map", testDeserializeMap)
     .add("json-ser-flux", testSerFlux)
     .add("json-deser-flux", testDeserFlux)
+    .add("json-deser-int16-overflow", testDeserInt16Overflow)
+    .add("json-deser-int16-underflow", testDeserInt16Underflow)
+    .add("json-deser-int32-overflow", testDeserInt32Overflow)
+    .add("json-deser-int32-underflow", testDeserInt32Underflow)
+    .add("json-deser-uint16-overflow", testDeserUint16Overflow)
+    .add("json-deser-uint32-overflow", testDeserUint32Overflow)
+    .add("json-deser-range-limits", testDeserRangeLimits)
+    .add("json-deser-float-overflow", testDeserFloatOverflow)
+    .add("json-deser-float-negative-overflow", testDeserFloatNegativeOverflow)
+    .add("json-deser-float-limits", testDeserFloatLimits)
     ;
 }

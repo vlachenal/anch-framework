@@ -19,49 +19,7 @@
 */
 #pragma once
 
-#include <vector>
-#include <optional>
-
 namespace anch::conf {
-
-  /*!
-   * \brief Event when configuration's value has been resolved
-   *
-   * Declare anch::conf::ConfEvt which is the event that will be send when configuration has been resolved.
-   *
-   * \since 0.1
-   *
-   * \author Vincent Lachenal
-   */
-  struct ResConfEvt {
-
-    /*! Configuration path */
-    std::string conf;
-
-    /*! Value */
-    std::string val;
-
-  };
-
-  /*!
-   * Configuration value placeholders
-   *
-   * \since 0.1
-   *
-   * \author Vincent Lachenal
-   */
-  struct ConfPlaceholders {
-
-    /*! Configuration path */
-    std::string path;
-
-    /*! Placeholders for this configuration */
-    std::map<std::string, std::vector<anch::conf::SubPlaceholder>> placeholders;
-
-    /*! Placeholders has been resolved flag */
-    bool resolved = false;
-
-  };
 
   inline
   bool

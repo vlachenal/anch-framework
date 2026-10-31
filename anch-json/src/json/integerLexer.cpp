@@ -50,6 +50,21 @@ anch::json::parseDecimal(anch::json::ReaderContext& context) {
   } while(true);
 }
 
+/*!
+ * Check that parsed integer has no leading zero (only \c 0 and \c -0 can start with \c 0 according to RFC 8259)
+ *
+ * \param context the reader context which contains the parsed integer
+ *
+ * \throw anch::json::MappingError when integer has leading zero
+ */
+static void
+checkLeadingZero(anch::json::ReaderContext& context) {
+  std::size_t first = (context.pbuf.starts_with('-')) ? 1 : 0;
+  if(context.pbuf.size() > first + 1 && context.pbuf[first] == '0') {
+    throw anch::json::MappingError(ErrorCode::INVALID_FORMAT, context);
+  }
+}
+
 bool
 anch::json::lexInteger(anch::json::jint& value, anch::json::ReaderContext& context) {
   char current = context.discard();
@@ -57,9 +72,8 @@ anch::json::lexInteger(anch::json::jint& value, anch::json::ReaderContext& conte
   case 'n':
     anch::json::lexNull(context);
     return false;
-  case '0': // case 0 as octal or hexa will be implemented if needed .. forbidden according to RFC4627 (last update 2021)
-    throw anch::json::MappingError(ErrorCode::INVALID_FORMAT, context);
   case '-':
+  case '0':
   case '1':
   case '2':
   case '3':
@@ -76,14 +90,15 @@ anch::json::lexInteger(anch::json::jint& value, anch::json::ReaderContext& conte
   default:
     throw anch::json::MappingError(ErrorCode::INVALID_FORMAT, context);
   }
+  checkLeadingZero(context);
   char* last = context.pbuf.data() + context.pbuf.size();
   auto res = std::from_chars(context.pbuf.data(), last, value);
-  if(res.ptr != last) {
-    if(res.ec == std::errc::result_out_of_range) {
-      throw anch::json::MappingError(ErrorCode::POTENTIAL_OVERFLOW, context);
-    } else {
-      throw anch::json::MappingError(ErrorCode::INVALID_FORMAT, context);
-    }
+  // On overflow, std::from_chars consumes every digit (ptr == last): error code has to be checked first
+  if(res.ec == std::errc::result_out_of_range) {
+    throw anch::json::MappingError(ErrorCode::POTENTIAL_OVERFLOW, context);
+  }
+  if(res.ec != std::errc() || res.ptr != last) {
+    throw anch::json::MappingError(ErrorCode::INVALID_FORMAT, context);
   }
   return true;
 }
@@ -95,8 +110,7 @@ anch::json::lexUInteger(anch::json::juint& value, anch::json::ReaderContext& con
   case 'n':
     anch::json::lexNull(context);
     return false;
-  case '0': // case 0 as octal or hexa will be implemented if needed .. forbidden according to RFC4627 (last update 2021)
-    throw anch::json::MappingError(ErrorCode::INVALID_FORMAT, context);
+  case '0':
   case '1':
   case '2':
   case '3':
@@ -113,14 +127,15 @@ anch::json::lexUInteger(anch::json::juint& value, anch::json::ReaderContext& con
   default:
     throw anch::json::MappingError(ErrorCode::INVALID_FORMAT, context);
   }
+  checkLeadingZero(context);
   char* last = context.pbuf.data() + context.pbuf.size();
   auto res = std::from_chars(context.pbuf.data(), last, value);
-  if(res.ptr != last) {
-    if(res.ec == std::errc::result_out_of_range) {
-      throw anch::json::MappingError(ErrorCode::POTENTIAL_OVERFLOW, context);
-    } else {
-      throw anch::json::MappingError(ErrorCode::INVALID_FORMAT, context);
-    }
+  // On overflow, std::from_chars consumes every digit (ptr == last): error code has to be checked first
+  if(res.ec == std::errc::result_out_of_range) {
+    throw anch::json::MappingError(ErrorCode::POTENTIAL_OVERFLOW, context);
+  }
+  if(res.ec != std::errc() || res.ptr != last) {
+    throw anch::json::MappingError(ErrorCode::INVALID_FORMAT, context);
   }
   return true;
 }

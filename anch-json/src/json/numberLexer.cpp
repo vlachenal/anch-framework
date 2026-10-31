@@ -34,12 +34,14 @@ anch::json::parseNumber(anch::json::ReaderContext& context) {
   if(current == '0') {
     context.pbuf += current;
     context.next(current);
-    if(current != '.') {
+    if(current >= '0' && current <= '9') { // leading zero is forbidden according to RFC 8259
       throw anch::json::MappingError(ErrorCode::INVALID_FORMAT, context);
     }
-    context.pbuf += current;
-    context.next(current);
-    dot = true;
+    if(current == '.') {
+      context.pbuf += current;
+      context.next(current);
+      dot = true;
+    }
   }
   context.back();
   // Check first characters -
@@ -83,12 +85,12 @@ anch::json::lexNumber(double& value, anch::json::ReaderContext& context) {
   anch::json::parseNumber(context);
   char* last = context.pbuf.data() + context.pbuf.size();
   auto res = std::from_chars(context.pbuf.data(), last, value);
-  if(res.ptr != last) {
-    if(res.ec == std::errc::result_out_of_range) {
-      throw anch::json::MappingError(ErrorCode::POTENTIAL_OVERFLOW, context);
-    } else {
-      throw anch::json::MappingError(ErrorCode::INVALID_FORMAT, context);
-    }
+  // On overflow, std::from_chars consumes every digit (ptr == last): error code has to be checked first
+  if(res.ec == std::errc::result_out_of_range) {
+    throw anch::json::MappingError(ErrorCode::POTENTIAL_OVERFLOW, context);
+  }
+  if(res.ec != std::errc() || res.ptr != last) {
+    throw anch::json::MappingError(ErrorCode::INVALID_FORMAT, context);
   }
   return true;
 }

@@ -1,0 +1,5 @@
+anch-conf: add anch-batch arguments and environment variables management
+anch-sql: add bacth default schema
+manage steps
+manage errors
+mange continue on error

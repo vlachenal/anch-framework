@@ -19,6 +19,8 @@
 */
 #include "json/primitiveMapper.hpp"
 
+#include <limits>
+
 #include "json/lexer.hpp"
 
 
@@ -47,6 +49,9 @@ bool
 PrimitiveMapper<float>::deserializeValue(float& value, anch::json::ReaderContext& context) const {
   double val;
   if(anch::json::lexNumber(val, context)) {
+    if(val < -std::numeric_limits<float>::max() || val > std::numeric_limits<float>::max()) {
+      throw anch::json::MappingError(ErrorCode::POTENTIAL_OVERFLOW, context);
+    }
     value = static_cast<float>(val);
     return true;
   }

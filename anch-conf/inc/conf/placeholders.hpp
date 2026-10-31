@@ -24,12 +24,12 @@
 
 #include "conf/section.hpp"
 #include "conf/confError.hpp"
-#include "conf/subplaceholder.hpp"
 
-#include "events/observable.hpp"
+#include "events/eventBus.hpp"
 
 namespace anch::conf {
 
+  struct ResConfEvt;
   struct ConfPlaceholders;
 
   /*!
@@ -41,7 +41,7 @@ namespace anch::conf {
    *
    * \author Vincent Lachenal
    */
-  class Placeholders: anch::events::Observable<anch::conf::ResConfEvt> {
+  class Placeholders {
 
     // Attributes +
   private:
@@ -50,6 +50,9 @@ namespace anch::conf {
 
     /*! The collected placeholders to replace */
     std::map<std::string, anch::conf::ConfPlaceholders> _values;
+
+    /*! The event bus to use if needed */
+    anch::events::EventBus<anch::conf::ResConfEvt>* _evtBus;
     // Attributes -
 
     // Constructors +

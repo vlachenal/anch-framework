@@ -1,6 +1,7 @@
 #include <iostream>
 #include <sstream>
 #include <chrono>
+#include <limits>
 
 #include "json/lexer.hpp"
 
@@ -472,6 +473,154 @@ testMap() {
 }
 // Map -
 
+// Zero +
+void
+testParseUint0() {
+  std::istringstream sis("0,");
+  anch::json::ReaderContext context(sis, anch::json::DEFAULT_MAPPING_OPTIONS);
+  anch::json::juint value = 42;
+  bool found = anch::json::lexUInteger(value, context);
+  anch::ut::assert(found, "Result should have value");
+  anch::ut::assert(anch::ut::equals("lex", static_cast<anch::json::juint>(0), value),
+		   "Result should parse '0'");
+}
+
+void
+testParseInt0() {
+  std::istringstream sis("0}");
+  anch::json::ReaderContext context(sis, anch::json::DEFAULT_MAPPING_OPTIONS);
+  anch::json::jint value = 42;
+  bool found = anch::json::lexInteger(value, context);
+  anch::ut::assert(found, "Result should have value");
+  anch::ut::assert(anch::ut::equals("lex", static_cast<anch::json::jint>(0), value),
+		   "Result should parse '0'");
+}
+
+void
+testParseIntMinus0() {
+  std::istringstream sis("-0");
+  anch::json::ReaderContext context(sis, anch::json::DEFAULT_MAPPING_OPTIONS);
+  anch::json::jint value = 42;
+  bool found = anch::json::lexInteger(value, context);
+  anch::ut::assert(found, "Result should have value");
+  anch::ut::assert(anch::ut::equals("lex", static_cast<anch::json::jint>(0), value),
+		   "Result should parse '-0'");
+}
+
+void
+testParseIntMinus0KO() {
+  std::istringstream sis("-0123");
+  anch::json::ReaderContext context(sis, anch::json::DEFAULT_MAPPING_OPTIONS);
+  anch::json::jint value;
+  try {
+    anch::json::lexInteger(value, context);
+    anch::ut::fail("This test should have failed");
+  } catch(const MappingError& e) {
+    if(e.getErrorCode() != ErrorCode::INVALID_FORMAT) {
+      throw;
+    }
+    std::cout << e.what() << std::endl;
+  }
+}
+
+void
+testParseDouble0() {
+  std::istringstream sis("0,");
+  anch::json::ReaderContext context(sis, anch::json::DEFAULT_MAPPING_OPTIONS);
+  double value = 42.0;
+  bool found = anch::json::lexNumber(value, context);
+  anch::ut::assert(found, "Result should have value");
+  anch::ut::assert(anch::ut::equals("lex", 0.0, value), "Result should parse '0'");
+}
+
+void
+testParseDouble0Exp() {
+  std::istringstream sis("0e2");
+  anch::json::ReaderContext context(sis, anch::json::DEFAULT_MAPPING_OPTIONS);
+  double value = 42.0;
+  bool found = anch::json::lexNumber(value, context);
+  anch::ut::assert(found, "Result should have value");
+  anch::ut::assert(anch::ut::equals("lex", 0.0, value), "Result should parse '0e2'");
+}
+
+void
+testParseDouble0KO() {
+  std::istringstream sis("0123.4");
+  anch::json::ReaderContext context(sis, anch::json::DEFAULT_MAPPING_OPTIONS);
+  double value;
+  try {
+    anch::json::lexNumber(value, context);
+    anch::ut::fail("This test should have failed");
+  } catch(const MappingError& e) {
+    if(e.getErrorCode() != ErrorCode::INVALID_FORMAT) {
+      throw;
+    }
+    std::cout << e.what() << std::endl;
+  }
+}
+// Zero -
+
+// Overflow +
+template<typename T>
+void
+checkOverflow(const std::string& input, bool (*lex)(T&, anch::json::ReaderContext&)) {
+  std::istringstream sis(input);
+  anch::json::ReaderContext context(sis, anch::json::DEFAULT_MAPPING_OPTIONS);
+  T value;
+  try {
+    lex(value, context);
+    anch::ut::fail("This test should have failed");
+  } catch(const MappingError& e) {
+    if(e.getErrorCode() != ErrorCode::POTENTIAL_OVERFLOW) {
+      throw;
+    }
+    std::cout << e.what() << std::endl;
+  }
+}
+
+void
+testParseUintOverflow() {
+  checkOverflow<anch::json::juint>("18446744073709551616", anch::json::lexUInteger);
+}
+
+void
+testParseIntOverflow() {
+  checkOverflow<anch::json::jint>("9223372036854775808", anch::json::lexInteger);
+}
+
+void
+testParseIntUnderflow() {
+  checkOverflow<anch::json::jint>("-9223372036854775809", anch::json::lexInteger);
+}
+
+void
+testParseDoubleOverflow() {
+  checkOverflow<double>("1e999", anch::json::lexNumber);
+}
+
+void
+testParseUintMax() {
+  std::istringstream sis("18446744073709551615");
+  anch::json::ReaderContext context(sis, anch::json::DEFAULT_MAPPING_OPTIONS);
+  anch::json::juint value = 0;
+  bool found = anch::json::lexUInteger(value, context);
+  anch::ut::assert(found, "Result should have value");
+  anch::ut::assert(anch::ut::equals("lex", std::numeric_limits<anch::json::juint>::max(), value),
+		   "Result should parse '18446744073709551615'");
+}
+
+void
+testParseIntMin() {
+  std::istringstream sis("-9223372036854775808");
+  anch::json::ReaderContext context(sis, anch::json::DEFAULT_MAPPING_OPTIONS);
+  anch::json::jint value = 0;
+  bool found = anch::json::lexInteger(value, context);
+  anch::ut::assert(found, "Result should have value");
+  anch::ut::assert(anch::ut::equals("lex", std::numeric_limits<anch::json::jint>::min(), value),
+		   "Result should parse '-9223372036854775808'");
+}
+// Overflow -
+
 // Object +
 // Object -
 
@@ -528,6 +677,23 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("lexer-map-empty", testEmptyMap)
     .add("lexer-map", testMap)
     // Map -
+    // Zero +
+    .add("lexer-uint-0", testParseUint0)
+    .add("lexer-int-0", testParseInt0)
+    .add("lexer-int-minus-0", testParseIntMinus0)
+    .add("lexer-int-minus-0-ko", testParseIntMinus0KO)
+    .add("lexer-double-0", testParseDouble0)
+    .add("lexer-double-0-exp", testParseDouble0Exp)
+    .add("lexer-double-0-ko", testParseDouble0KO)
+    // Zero -
+    // Overflow +
+    .add("lexer-uint-overflow", testParseUintOverflow)
+    .add("lexer-int-overflow", testParseIntOverflow)
+    .add("lexer-int-underflow", testParseIntUnderflow)
+    .add("lexer-double-overflow", testParseDoubleOverflow)
+    .add("lexer-uint-max", testParseUintMax)
+    .add("lexer-int-min", testParseIntMin)
+    // Overflow -
     // Object +
     // Object -
     ;

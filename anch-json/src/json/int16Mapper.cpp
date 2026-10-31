@@ -47,7 +47,7 @@ bool
 PrimitiveMapper<int16_t>::deserializeValue(int16_t& value, anch::json::ReaderContext& context) const {
   anch::json::jint val;
   if(anch::json::lexInteger(val, context)) {
-    if(value < std::numeric_limits<int16_t>::min() || value > std::numeric_limits<int16_t>::max()) {
+    if(val < std::numeric_limits<int16_t>::min() || val > std::numeric_limits<int16_t>::max()) {
       throw anch::json::MappingError(ErrorCode::POTENTIAL_OVERFLOW, context);
     }
     value = static_cast<int16_t>(val);

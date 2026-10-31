@@ -1,0 +1,4 @@
+Add default options to anch-cli (-v|--versbose ; -c|--config ; -d|--dir-conf)
+anch-conf: default base name to application name -> application -> -c|--config
+anch-conf: default config files' folder to . -> -d|--dir-conf
+anch-logger: multi -v|--versbose to switch to minimum level to INFO, DEBUG and TRACE

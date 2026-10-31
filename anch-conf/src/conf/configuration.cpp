@@ -201,6 +201,8 @@ Configuration::load() {
   Placeholders placeholders(_root);
   if(placeholders.collect()) {
     placeholders.resolve();
+  } else {
+    _loaded = true;
   }
   // Resolve value with place holders -
 
