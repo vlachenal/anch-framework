@@ -88,6 +88,68 @@ testParseStrNull() {
   std::cout << "Result has value ? " << std::boolalpha << found << std::endl;
   anch::ut::assert(!found, "Result should not have value");
 }
+
+void
+checkParseStr(const std::string& json, const std::string& expected, std::size_t bufferSize) {
+  std::istringstream sis(json);
+  anch::json::ReaderContext context(sis, {.buffer_size = bufferSize});
+  std::string value;
+  bool found = anch::json::lexString(value, context);
+  anch::ut::assert(found, "Result should have value");
+  anch::ut::assert(value == expected, "Parsing {} with buffer_size={}: expected '{}' ; found '{}'", json, bufferSize, expected, value);
+}
+
+void
+checkParseStrKO(const std::string& json) {
+  std::cout << "Parse " << json << std::endl;
+  std::istringstream sis(json);
+  anch::json::ReaderContext context(sis, anch::json::DEFAULT_MAPPING_OPTIONS);
+  std::string value;
+  try {
+    anch::json::lexString(value, context);
+    anch::ut::fail("This test should have failed");
+  } catch(const MappingError& e) {
+    if(e.getErrorCode() != ErrorCode::INVALID_FORMAT) {
+      throw;
+    }
+    std::cout << e.what() << std::endl;
+  }
+}
+
+void
+testParseStrEscapes() {
+  checkParseStr("\"a\\\"b\\\\c\\/d\\b\\f\\n\\r\\t\"", "a\"b\\c/d\b\f\n\r\t", 1024);
+}
+
+void
+testParseStrUnicode() {
+  checkParseStr("\"caf\\u00e9 \\u20AC \\u0041\"", "caf\xC3\xA9 \xE2\x82\xAC A", 1024);
+}
+
+void
+testParseStrSurrogate() {
+  checkParseStr("\"\\uD83D\\uDE00\"", "\xF0\x9F\x98\x80", 1024);
+}
+
+void
+testParseStrEscapeKO() {
+  for(const char* json : {"\"\\x\"", "\"\\u12G4\"", "\"\\uD83D\"", "\"\\uD83Dx\"", "\"\\uD83D\\u0041\"", "\"\\uDE00\"", "\"abc\\"}) {
+    checkParseStrKO(json);
+  }
+}
+
+void
+testParseStrUnterminatedKO() {
+  checkParseStrKO("\"abc");
+}
+
+void
+testParseStrBuffer() {
+  // Strings, escape and unicode sequences across buffer boundaries
+  for(std::size_t bufferSize = 1 ; bufferSize <= 12 ; ++bufferSize) {
+    checkParseStr("\"0123456789\\n\\u00e9abc\\uD83D\\uDE00defgh\"", "0123456789\n\xC3\xA9" "abc\xF0\x9F\x98\x80" "defgh", bufferSize);
+  }
+}
 // String -
 
 // Unsigned integer +
@@ -621,6 +683,69 @@ testParseIntMin() {
 }
 // Overflow -
 
+// Number scanning +
+template<typename T, typename F>
+void
+checkParseNumberBuffer(const std::string& number, T expected, F lex) {
+  for(std::size_t bufferSize = 1 ; bufferSize <= 12 ; ++bufferSize) {
+    for(std::size_t pad = 0 ; pad < 4 ; ++pad) {
+      std::string json = std::string(pad, ' ') + number + ",";
+      std::istringstream sis(json);
+      anch::json::ReaderContext context(sis, {.deserialize_max_discard_char = -1, .buffer_size = bufferSize});
+      T value{};
+      bool found = lex(value, context);
+      anch::ut::assert(found, "'{}' should have value", json);
+      anch::ut::assert(value == expected, "Parsing '{}' with buffer_size={}: expected {} ; found {}", json, bufferSize, expected, value);
+      char next = context.discard();
+      anch::ut::assert(next == ',', "Parsing '{}' with buffer_size={}: next character should be ',' ; found '{}'", json, bufferSize, next);
+    }
+  }
+}
+
+void
+testParseNumberBuffer() {
+  checkParseNumberBuffer<anch::json::jint>("-1234567890123", -1234567890123, [](anch::json::jint& v, anch::json::ReaderContext& c) { return anch::json::lexInteger(v, c); });
+  checkParseNumberBuffer<anch::json::juint>("18446744073709551615", std::numeric_limits<uint64_t>::max(), [](anch::json::juint& v, anch::json::ReaderContext& c) { return anch::json::lexUInteger(v, c); });
+  checkParseNumberBuffer<double>("-12.5e-3", -12.5e-3, [](double& v, anch::json::ReaderContext& c) { return anch::json::lexNumber(v, c); });
+  checkParseNumberBuffer<double>("0.5E+2", 0.5E+2, [](double& v, anch::json::ReaderContext& c) { return anch::json::lexNumber(v, c); });
+}
+
+template<typename T, typename F>
+void
+checkParseNumberKO(const char* json, F lex) {
+  std::cout << "Parse " << json << std::endl;
+  std::istringstream sis(json);
+  anch::json::ReaderContext context(sis, anch::json::DEFAULT_MAPPING_OPTIONS);
+  T value{};
+  try {
+    lex(value, context);
+    anch::ut::fail("This test should have failed");
+  } catch(const MappingError& e) {
+    if(e.getErrorCode() != ErrorCode::INVALID_FORMAT) {
+      throw;
+    }
+    std::cout << e.what() << std::endl;
+  }
+}
+
+void
+testParseDoubleFormatKO() {
+  for(const char* json : {".5", "-.5", "1.", "1.e2", "1e", "1e+", "-", "1.5.3", "+1", "1-2", "01.5", "1e2.5"}) {
+    checkParseNumberKO<double>(json, [](double& v, anch::json::ReaderContext& c) { return anch::json::lexNumber(v, c); });
+  }
+}
+
+void
+testParseIntFormatKO() {
+  for(const char* json : {"-", "--1", "1-2", "-01"}) {
+    checkParseNumberKO<anch::json::jint>(json, [](anch::json::jint& v, anch::json::ReaderContext& c) { return anch::json::lexInteger(v, c); });
+  }
+  for(const char* json : {"-1", "01"}) {
+    checkParseNumberKO<anch::json::juint>(json, [](anch::json::juint& v, anch::json::ReaderContext& c) { return anch::json::lexUInteger(v, c); });
+  }
+}
+// Number scanning -
+
 // Object +
 // Object -
 
@@ -640,6 +765,12 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     // String +
     .add("lexer-str", testParseStr)
     .add("lexer-str-null", testParseStrNull)
+    .add("lexer-str-escapes", testParseStrEscapes)
+    .add("lexer-str-unicode", testParseStrUnicode)
+    .add("lexer-str-surrogate", testParseStrSurrogate)
+    .add("lexer-str-escape-ko", testParseStrEscapeKO)
+    .add("lexer-str-unterminated-ko", testParseStrUnterminatedKO)
+    .add("lexer-str-buffer", testParseStrBuffer)
     // String -
     // Unsigned integer +
     .add("lexer-uint", testParseUint)
@@ -694,6 +825,11 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("lexer-uint-max", testParseUintMax)
     .add("lexer-int-min", testParseIntMin)
     // Overflow -
+    // Number scanning +
+    .add("lexer-number-buffer", testParseNumberBuffer)
+    .add("lexer-double-format-ko", testParseDoubleFormatKO)
+    .add("lexer-int-format-ko", testParseIntFormatKO)
+    // Number scanning -
     // Object +
     // Object -
     ;

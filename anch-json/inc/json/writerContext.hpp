@@ -20,6 +20,8 @@
 #pragma once
 
 #include <ostream>
+#include <streambuf>
+#include <string_view>
 #include <string>
 #include <functional>
 #include <stdint.h>
@@ -52,8 +54,8 @@ namespace anch::json {
     /*! First fields queue */
     std::deque<bool> _firsts;
 
-    /*! Indentation function to call */
-    std::function<void()> _indent;
+    /*! Output stream buffer (written directly to avoid \c std::ostream sentry on each write) */
+    std::streambuf* _sbuf;
     // Attributes -
 
     // Constructors +
@@ -132,6 +134,15 @@ namespace anch::json {
     void writeField(const std::string& field);
 
     /*!
+     * Write field without escaping it and add ':' into output stream.\n
+     * Field has to be already escaped (it can contain formatting such as console colors).\n
+     * Call \c next() to add ',' or not before field
+     *
+     * \param field the field
+     */
+    void writeRawField(std::string_view field);
+
+    /*!
      * Write begin array ('[') and push first field in context
      */
     void beginArray();
@@ -156,13 +167,67 @@ namespace anch::json {
      */
     void next();
 
+    /*!
+     * Write a character in output stream buffer.\n
+     * Output stream \c badbit is set when character can not be written.
+     *
+     * \param c the character to write
+     */
+    void write(char c);
+
+    /*!
+     * Write characters in output stream buffer.\n
+     * Output stream \c badbit is set when characters can not be written.
+     *
+     * \param str the characters to write
+     */
+    void write(std::string_view str);
+
+    /*!
+     * Write number in output stream buffer with \c std::to_chars .\n
+     * Floating point numbers are written with the shortest representation which can be read back
+     * without precision loss.
+     *
+     * \tparam T the number type
+     *
+     * \param value the number to write
+     */
+    template<typename T>
+    void writeNumber(T value);
+
+    /*!
+     * Write JSON string: '"', escaped characters, '"'.\n
+     * See \ref writeEscaped for escaped characters.
+     *
+     * \param str the characters to write
+     */
+    void writeString(std::string_view str);
+
+    /*!
+     * Write characters escaped according to RFC 8259 (without '"' around): '"', '\\' and control characters
+     * (\c \\b, \c \\f, \c \\n, \c \\r, \c \\t, \c \\u00XX for the others). Other characters (UTF-8 included)
+     * are written as is.
+     *
+     * \param str the characters to write
+     */
+    void writeEscaped(std::string_view str);
+
   private:
     /*!
      * Manage indentation according to context
      */
     void indent();
+
+    /*!
+     * Write escape sequence of character
+     *
+     * \param c the character to escape
+     */
+    void writeEscapeSequence(char c);
     // Methods -
 
   };
 
 }
+
+#include "json/impl/writerContext.hpp"

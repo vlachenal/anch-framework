@@ -110,7 +110,7 @@ public:
    */
   void addField() {
     if(_currentField.has_value()) {
-      _writer.writeField(_currentField.value());
+      _writer.writeRawField(_currentField.value());
     } else if(_array > 0) {
       _writer.next();
     }
@@ -126,14 +126,22 @@ public:
     case EventType::FIELD: // Manage field
       {
 	std::ostringstream oss;
-	oss << anch::cli::Formatter::format().bold() << std::any_cast<std::string>(event.body.getValue()) << anch::cli::RESET;
+	oss << anch::cli::Formatter::format().bold();
+	{
+	  anch::json::WriterContext escaper(oss, anch::json::DEFAULT_MAPPING_OPTIONS); // escape field name before adding colors
+	  escaper.writeEscaped(std::any_cast<std::string>(event.body.getValue()));
+	}
+	oss << anch::cli::RESET;
 	_currentField = oss.str();
       }
       break;
 
     case EventType::VNULL: // Manage null value
       if(_currentField.has_value()) {
-	_writer.writeNull(_currentField.value());
+	if(_null) {
+	  _writer.writeRawField(_currentField.value());
+	  _writer.output << "null";
+	}
 	_currentField.reset();
       } else if(_null) {
 	//_writer.next();
@@ -161,9 +169,9 @@ public:
 
     case EventType::STRING: // Manage character string value
       addField();
-      _writer.output << anch::json::STRING_DELIMITER
-		     << anch::cli::Formatter::format().fgColor(anch::cli::Color::BLUE) << std::any_cast<std::string>(event.body.getValue()) << anch::cli::RESET
-		     << anch::json::STRING_DELIMITER;
+      _writer.output << anch::json::STRING_DELIMITER << anch::cli::Formatter::format().fgColor(anch::cli::Color::BLUE);
+      _writer.writeEscaped(std::any_cast<std::string>(event.body.getValue()));
+      _writer.output << anch::cli::RESET << anch::json::STRING_DELIMITER;
       _currentField.reset();
       break;
 

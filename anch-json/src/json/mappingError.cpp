@@ -20,40 +20,56 @@
 #include "json/mappingError.hpp"
 
 #include <sstream>
+#include <algorithm>
 
 using anch::json::MappingError;
 using anch::json::ErrorCode;
 
 
 std::string
-computeErrorMessage(const ErrorCode& code, const anch::json::ReaderContext& context) {
+computeErrorMessage(const ErrorCode& code, const anch::json::ReaderContext& context, std::string_view message) {
   int64_t offset = static_cast<int64_t>(context.offset);
   int64_t begin = offset - 10;
   if(begin < 0) {
     begin = 0;
   }
   std::ostringstream oss;
-  switch(code) {
-  case ErrorCode::INVALID_FORMAT:
-    oss << "Unexpected character '" << context.buffer[context.offset - 1] << "' found at " << (offset - begin -1);
-    break;
-  case ErrorCode::UNEXPECTED_FIELD:
-    oss << "Unexpected field found";
-    break;
-  case ErrorCode::POTENTIAL_OVERFLOW:
-    oss << "Potential overflow";
-    break;
-  default:
-    oss << "Unexpected error found at " << context.offset;
+  if(!message.empty()) {
+    oss << message;
+  } else {
+    switch(code) {
+    case ErrorCode::INVALID_FORMAT:
+      {
+	char current = (offset > 0) ? context.buffer[offset - 1] : '\0';
+	if(current == '\0') {
+	  oss << "Unexpected end of data";
+	} else {
+	  oss << "Unexpected character '" << current << "' found at " << (offset - begin - 1);
+	}
+      }
+      break;
+    case ErrorCode::UNEXPECTED_FIELD:
+      oss << "Unexpected field found";
+      break;
+    case ErrorCode::POTENTIAL_OVERFLOW:
+      oss << "Potential overflow";
+      break;
+    default:
+      oss << "Unexpected error found at " << context.offset;
+    }
   }
-  // Try to get 20 characters around current error +
+  // Try to get 20 characters around current error (10 before, 10 after) +
   oss << " near '";
   for(int64_t i = begin ; i < offset ; ++i) {
-    oss << context.buffer[i];
-  }
-  for(int64_t i = offset ; i < 11 && offset + i < static_cast<int64_t>(context.bufferSize) ; ++i) {
     char c = context.buffer[i];
-    if(c == '\0') {
+    if(c != '\0') { // ignore end of data marker
+      oss << c;
+    }
+  }
+  int64_t end = std::min(offset + 10, static_cast<int64_t>(context.bufferSize));
+  for(int64_t i = offset ; i < end ; ++i) {
+    char c = context.buffer[i];
+    if(c == '\0') { // end of data
       break;
     }
     oss << c;
@@ -65,7 +81,12 @@ computeErrorMessage(const ErrorCode& code, const anch::json::ReaderContext& cont
 
 // Constructors +
 MappingError::MappingError(ErrorCode code, const anch::json::ReaderContext& context): std::exception(), _code(code) {
-  _msg = computeErrorMessage(code, context);
+  _msg = computeErrorMessage(code, context, std::string_view());
+}
+
+MappingError::MappingError(ErrorCode code, const anch::json::ReaderContext& context, std::string_view message):
+  std::exception(), _code(code) {
+  _msg = computeErrorMessage(code, context, message);
 }
 // Constructors -
 

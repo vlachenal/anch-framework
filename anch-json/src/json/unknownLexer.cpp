@@ -22,54 +22,17 @@
 #include "json/mappingError.hpp"
 #include "json/constants.hpp"
 
+#include "json/numberScanner.hpp"
+
 using anch::json::ErrorCode;
 
 void
 parseUnknownNumber(anch::json::ReaderContext& context) {
-  char current = context.discard();
-  // Check first characters +
-  if(current == '-') {
-    context.next(current);
-  }
-  if(current == '0') {
-    context.next(current);
-    if(current == '0') {
-      throw anch::json::MappingError(ErrorCode::INVALID_FORMAT, context);
-    }
-  }
-  // Check first characters -
-  bool dot = false;
-  do {
-    switch(current) {
-    case '.':
-      if(dot) {
-	throw anch::json::MappingError(ErrorCode::INVALID_FORMAT, context);
-      }
-      dot = true;
-      [[fallthrough]]; // no break
-    case '0':
-    case '1':
-    case '2':
-    case '3':
-    case '4':
-    case '5':
-    case '6':
-    case '7':
-    case '8':
-    case '9':
-      break;
-    default:
-      goto end_float;
-    }
-    context.next(current);
-  } while(true);
- end_float:
-  // Check that last OK character is not '.' or '-' +
-  if(current == '.' || current == '-') {
+  context.discard(); // first number character (checked by caller)
+  std::string_view chars = anch::json::scanNumber(context, anch::json::isNumberChar);
+  if(!anch::json::isJsonNumber(chars)) {
     throw anch::json::MappingError(ErrorCode::INVALID_FORMAT, context);
   }
-  // Check that last OK character is not '.' or '-' -
-  context.back();
 }
 
 void
@@ -97,6 +60,7 @@ lexUnknownStr(anch::json::ReaderContext& context) {
 
 void
 lexUnknownArray(anch::json::ReaderContext& context) {
+  anch::json::DepthGuard guard(context);
   char current = context.discard();
   if(current == anch::json::ARRAY_END) {
     return;
@@ -116,6 +80,7 @@ lexUnknownArray(anch::json::ReaderContext& context) {
 
 void
 lexUnknownObject(anch::json::ReaderContext& context) {
+  anch::json::DepthGuard guard(context);
   char current = context.discard();
   if(current == anch::json::OBJECT_END) {
     return;

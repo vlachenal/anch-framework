@@ -45,9 +45,7 @@ PrimitiveMapper<std::string_view>::~PrimitiveMapper() {
 template<>
 void
 PrimitiveMapper<std::string_view>::serializeValue(const std::string_view& value, anch::json::WriterContext& context) const {
-  context.output.put(anch::json::STRING_DELIMITER)
-    .write(value.data(), static_cast<std::streamsize>(value.size()))
-    .put(anch::json::STRING_DELIMITER);
+  context.writeString(value);
 }
 
 template<>

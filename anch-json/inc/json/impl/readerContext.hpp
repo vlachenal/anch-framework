@@ -21,16 +21,56 @@
 
 namespace anch::json {
 
+  // Lexer functions used by context (declared in json/lexer.hpp) +
+  char discardFail(anch::json::ReaderContext& context);
+  char lexDiscard(anch::json::ReaderContext& context);
+  void lexUnknown(anch::json::ReaderContext& context);
+  void lexUnknownFail(anch::json::ReaderContext& context);
+  // Lexer functions used by context (declared in json/lexer.hpp) -
+
   inline
   char
   ReaderContext::discard() {
-    return std::invoke(_discardFunc);
+    // Fast path: next character is not discardable +
+    char current;
+    next(current);
+    switch(current) {
+    case ' ':
+    case '\t':
+    case '\n':
+    case '\r':
+      break;
+    default:
+      return current;
+    }
+    // Fast path: next character is not discardable -
+    back();
+    if(options.deserialize_max_discard_char == 0) {
+      return anch::json::discardFail(*this);
+    }
+    return anch::json::lexDiscard(*this);
   }
 
   inline
   void
   ReaderContext::parseUnknown() {
-    return std::invoke(_unknownFunc);
+    if(options.deserialize_ignore_unknown_field) {
+      anch::json::lexUnknown(*this);
+    } else {
+      anch::json::lexUnknownFail(*this);
+    }
+  }
+
+  inline
+  bool
+  ReaderContext::next(char& current) {
+    // Consume input stream in buffer when buffer end has been reached and input is available +
+    if(offset == options.buffer_size) [[unlikely]] {
+      refillBuffer();
+    }
+    // Consume input stream in buffer when buffer end has been reached and input is available -
+    current = buffer[offset++];
+    return (offset == options.buffer_size);
   }
 
   inline
@@ -38,5 +78,32 @@ namespace anch::json {
   ReaderContext::back() {
     --offset;
   }
+
+  inline
+  void
+  ReaderContext::enterLevel() {
+    ++depth;
+    if(options.max_depth != 0 && depth > options.max_depth) [[unlikely]] {
+      throwDepthError();
+    }
+  }
+
+  inline
+  void
+  ReaderContext::leaveLevel() noexcept {
+    --depth;
+  }
+
+  // DepthGuard +
+  inline
+  DepthGuard::DepthGuard(anch::json::ReaderContext& context): _context(context) {
+    _context.enterLevel();
+  }
+
+  inline
+  DepthGuard::~DepthGuard() noexcept {
+    _context.leaveLevel();
+  }
+  // DepthGuard -
 
 }

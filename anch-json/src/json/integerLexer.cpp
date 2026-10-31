@@ -21,6 +21,9 @@
 #include "json/lexer.hpp"
 
 #include <charconv>
+#include <string_view>
+
+#include "json/numberScanner.hpp"
 
 using anch::json::ErrorCode;
 
@@ -51,16 +54,53 @@ anch::json::parseDecimal(anch::json::ReaderContext& context) {
 }
 
 /*!
- * Check that parsed integer has no leading zero (only \c 0 and \c -0 can start with \c 0 according to RFC 8259)
+ * Check that number characters are a valid JSON integer: optional '-' (when signed), then \c 0 or digits
+ * without leading zero (RFC 8259)
  *
- * \param context the reader context which contains the parsed integer
+ * \param chars the number characters
+ * \param allowMinus allow '-' as first character
  *
- * \throw anch::json::MappingError when integer has leading zero
+ * \return \c true when valid
  */
+static bool
+isJsonInteger(std::string_view chars, bool allowMinus) {
+  std::size_t i = 0;
+  if(allowMinus && !chars.empty() && chars[0] == '-') {
+    ++i;
+  }
+  if(i == chars.size()) { // no digit
+    return false;
+  }
+  if(chars[i] == '0' && chars.size() - i > 1) { // leading zero
+    return false;
+  }
+  for( ; i < chars.size() ; ++i) {
+    if(chars[i] < '0' || chars[i] > '9') {
+      return false;
+    }
+  }
+  return true;
+}
+
+/*!
+ * Convert integer characters
+ *
+ * \param chars the number characters
+ * \param value the value to write in
+ * \param context the reader context (for errors)
+ *
+ * \throw anch::json::MappingError invalid integer or overflow
+ */
+template<typename T>
 static void
-checkLeadingZero(anch::json::ReaderContext& context) {
-  std::size_t first = (context.pbuf.starts_with('-')) ? 1 : 0;
-  if(context.pbuf.size() > first + 1 && context.pbuf[first] == '0') {
+toInteger(std::string_view chars, T& value, anch::json::ReaderContext& context) {
+  const char* last = chars.data() + chars.size();
+  auto res = std::from_chars(chars.data(), last, value);
+  // On overflow, std::from_chars consumes every digit (ptr == last): error code has to be checked first
+  if(res.ec == std::errc::result_out_of_range) {
+    throw anch::json::MappingError(ErrorCode::POTENTIAL_OVERFLOW, context);
+  }
+  if(res.ec != std::errc() || res.ptr != last) {
     throw anch::json::MappingError(ErrorCode::INVALID_FORMAT, context);
   }
 }
@@ -83,23 +123,17 @@ anch::json::lexInteger(anch::json::jint& value, anch::json::ReaderContext& conte
   case '7':
   case '8':
   case '9':
-    context.pbuf.clear();
-    context.pbuf += current;
-    anch::json::parseDecimal(context);
     break;
   default:
     throw anch::json::MappingError(ErrorCode::INVALID_FORMAT, context);
   }
-  checkLeadingZero(context);
-  char* last = context.pbuf.data() + context.pbuf.size();
-  auto res = std::from_chars(context.pbuf.data(), last, value);
-  // On overflow, std::from_chars consumes every digit (ptr == last): error code has to be checked first
-  if(res.ec == std::errc::result_out_of_range) {
-    throw anch::json::MappingError(ErrorCode::POTENTIAL_OVERFLOW, context);
-  }
-  if(res.ec != std::errc() || res.ptr != last) {
+  std::string_view chars = anch::json::scanNumber(context, [](char c) {
+    return (c >= '0' && c <= '9') || c == '-';
+  });
+  if(!isJsonInteger(chars, true)) {
     throw anch::json::MappingError(ErrorCode::INVALID_FORMAT, context);
   }
+  toInteger(chars, value, context);
   return true;
 }
 
@@ -120,23 +154,17 @@ anch::json::lexUInteger(anch::json::juint& value, anch::json::ReaderContext& con
   case '7':
   case '8':
   case '9':
-    context.pbuf.clear();
-    context.pbuf += current;
-    anch::json::parseDecimal(context);
     break;
   default:
     throw anch::json::MappingError(ErrorCode::INVALID_FORMAT, context);
   }
-  checkLeadingZero(context);
-  char* last = context.pbuf.data() + context.pbuf.size();
-  auto res = std::from_chars(context.pbuf.data(), last, value);
-  // On overflow, std::from_chars consumes every digit (ptr == last): error code has to be checked first
-  if(res.ec == std::errc::result_out_of_range) {
-    throw anch::json::MappingError(ErrorCode::POTENTIAL_OVERFLOW, context);
-  }
-  if(res.ec != std::errc() || res.ptr != last) {
+  std::string_view chars = anch::json::scanNumber(context, [](char c) {
+    return c >= '0' && c <= '9';
+  });
+  if(!isJsonInteger(chars, false)) {
     throw anch::json::MappingError(ErrorCode::INVALID_FORMAT, context);
   }
+  toInteger(chars, value, context);
   return true;
 }
 

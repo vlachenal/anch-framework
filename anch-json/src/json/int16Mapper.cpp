@@ -39,7 +39,7 @@ PrimitiveMapper<int16_t>::~PrimitiveMapper() {
 template<>
 void
 PrimitiveMapper<int16_t>::serializeValue(const int16_t& value, anch::json::WriterContext& context) const {
-  context.output << value;
+  context.writeNumber(value);
 }
 
 template<>

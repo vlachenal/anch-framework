@@ -56,8 +56,11 @@ namespace anch::json {
     /*! Maximum field characters before raising error. Use \c 0 value for unlimited field's value characters */
     std::size_t deserialize_max_field_char = 512; // \todo keep it ?
 
-    /*! Maximum field characters before raising error. Use \c 0 value for unlimited field's value characters */
+    /*! Maximum number of characters read from input stream before raising error. Use \c 0 value for unlimited payload */
     std::size_t max_payload = 0;
+
+    /*! Maximum nesting depth of objects and arrays (root object or array is level \c 1 ) before raising error. It protects parser against stack overflow. Use \c 0 value for unlimited depth. Default to \c 512 */
+    std::size_t max_depth = 512;
     // Deserialization -
 
     /*! Buffer size (used for deserialization for now) */

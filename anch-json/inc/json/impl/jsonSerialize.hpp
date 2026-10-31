@@ -22,6 +22,7 @@
 #include <sstream>
 #include <condition_variable>
 #include <mutex>
+#include <utility>
 
 #include "json/writerContext.hpp"
 
@@ -91,9 +92,11 @@ namespace anch::json {
   std::string
   serialize(const T& value, const anch::json::MappingOptions& options) {
     std::ostringstream out;
-    anch::json::WriterContext context(out, options);
-    anch::json::Factory<T>::getInstance().serialize(value, context);
-    return out.str();
+    {
+      anch::json::WriterContext context(out, options);
+      anch::json::Factory<T>::getInstance().serialize(value, context);
+    } // context is destroyed (and output flushed) before moving result
+    return std::move(out).str(); // move internal string instead of copying it
   }
 
   template<template<typename> typename C, typename T>
@@ -101,9 +104,11 @@ namespace anch::json {
   std::string
   serialize(const C<T>& value, const anch::json::MappingOptions& options) {
     std::ostringstream out;
-    anch::json::WriterContext context(out, options);
-    anch::json::Factory<T>::getInstance().serialize(value, context);
-    return out.str();
+    {
+      anch::json::WriterContext context(out, options);
+      anch::json::Factory<T>::getInstance().serialize(value, context);
+    } // context is destroyed (and output flushed) before moving result
+    return std::move(out).str(); // move internal string instead of copying it
   }
 
   template<typename T>
@@ -111,9 +116,11 @@ namespace anch::json {
   std::string
   serialize(const std::map<std::string,T>& value, const anch::json::MappingOptions& options) {
     std::ostringstream out;
-    anch::json::WriterContext context(out, options);
-    anch::json::Factory<T>::getInstance().serialize(value, context);
-    return out.str();
+    {
+      anch::json::WriterContext context(out, options);
+      anch::json::Factory<T>::getInstance().serialize(value, context);
+    } // context is destroyed (and output flushed) before moving result
+    return std::move(out).str(); // move internal string instead of copying it
   }
   // Functions which returns std::string -
 

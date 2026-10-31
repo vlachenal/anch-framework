@@ -957,6 +957,272 @@ testDeserFloatLimits() {
 }
 // Float range -
 
+// Payload size +
+void
+checkMaxPayloadKo(const std::string& json, std::size_t maxPayload, std::size_t bufferSize) {
+  anch::json::JSONMapper mapper({.max_payload = maxPayload, .buffer_size = bufferSize});
+  std::cout << "Deserialize TestFloat: " << json << " with max_payload=" << maxPayload << " and buffer_size=" << bufferSize << std::endl;
+  try {
+    auto iss = std::istringstream(json);
+    [[maybe_unused]] TestFloat res = mapper.deserialize<TestFloat>(iss);
+    anch::ut::fail("This test should have failed");
+  } catch(const MappingError& e) {
+    if(e.getErrorCode() != ErrorCode::POTENTIAL_OVERFLOW) {
+      throw;
+    }
+    std::cout << e.what() << std::endl;
+  }
+}
+
+void
+testDeserMaxPayloadKo() {
+  checkMaxPayloadKo("{\"f\":1.5}", 8, 1024); // payload is bigger than max_payload in initial read
+}
+
+void
+testDeserMaxPayloadRefillKo() {
+  checkMaxPayloadKo("{\"f\":1.5}", 8, 4); // payload is bigger than max_payload while refilling buffer
+}
+
+void
+testDeserMaxPayloadLimit() {
+  std::string json("{\"f\":1.5}");
+  for(std::size_t bufferSize : {std::size_t(3), std::size_t(1024)}) {
+    anch::json::JSONMapper mapper({.max_payload = json.size(), .buffer_size = bufferSize});
+    std::cout << "Deserialize TestFloat: " << json << " with max_payload=" << json.size() << " and buffer_size=" << bufferSize << std::endl;
+    auto iss = std::istringstream(json);
+    TestFloat res = mapper.deserialize<TestFloat>(iss);
+    anch::ut::assert(res._f == 1.5f, "f should be 1.5 ; found {}", res._f);
+  }
+}
+// Payload size -
+
+// String escaping +
+struct TestStr {
+  std::string _s;
+};
+
+template<>
+void
+anch::json::registerObject(ObjectMapper<TestStr>& mapper) {
+  mapper
+    .registerField("s", &TestStr::_s)
+    ;
+}
+
+void
+testSerEscape() {
+  TestStr value = {._s = "a\"b\\c/\b\f\n\r\t\x01\x1f caf\xC3\xA9"};
+  std::string expected = "{\"s\":\"a\\\"b\\\\c/\\b\\f\\n\\r\\t\\u0001\\u001f caf\xC3\xA9\"}";
+  std::string json = anch::json::serialize(value, anch::json::DEFAULT_MAPPING_OPTIONS);
+  std::cout << "Serialized: " << json << std::endl;
+  anch::ut::assert(json == expected, "Expected {} ; found {}", expected, json);
+  // Round trip +
+  anch::json::JSONMapper mapper(anch::json::DEFAULT_MAPPING_OPTIONS);
+  auto iss = std::istringstream(json);
+  TestStr res = mapper.deserialize<TestStr>(iss);
+  anch::ut::assert(res._s == value._s, "Round trip failed: found '{}'", res._s);
+  // Round trip -
+}
+
+void
+testSerEscapeMapKey() {
+  std::map<std::string,std::string> value = {{"k\"1", "v\n"}};
+  std::string expected = "{\"k\\\"1\":\"v\\n\"}";
+  std::string json = anch::json::serialize(value, anch::json::DEFAULT_MAPPING_OPTIONS);
+  std::cout << "Serialized: " << json << std::endl;
+  anch::ut::assert(json == expected, "Expected {} ; found {}", expected, json);
+  // Round trip +
+  anch::json::JSONMapper mapper(anch::json::DEFAULT_MAPPING_OPTIONS);
+  auto iss = std::istringstream(json);
+  std::map<std::string,std::string> res;
+  mapper.deserialize(res, iss);
+  anch::ut::assert(res == value, "Round trip failed");
+  // Round trip -
+}
+// String escaping -
+
+// Nesting depth +
+struct TestNode {
+  std::vector<TestNode> _children;
+};
+
+template<>
+void
+anch::json::registerObject(ObjectMapper<TestNode>& mapper) {
+  mapper
+    .registerField<TestNode>("c", &TestNode::_children)
+    ;
+}
+
+void
+checkDepthError(const std::function<void()>& deser) {
+  try {
+    deser();
+    anch::ut::fail("This test should have failed");
+  } catch(const MappingError& e) {
+    if(e.getErrorCode() != ErrorCode::POTENTIAL_OVERFLOW) {
+      throw;
+    }
+    std::cout << e.what() << std::endl;
+  }
+}
+
+void
+testDeserMaxDepthUnknown() {
+  // 200000 nested arrays in ignored field: stack overflow before max_depth option
+  std::string json = "{\"s\":\"a\",\"u\":" + std::string(200000, '[') + std::string(200000, ']') + "}";
+  anch::json::JSONMapper mapper({.deserialize_ignore_unknown_field = true});
+  checkDepthError([&]() {
+    auto iss = std::istringstream(json);
+    [[maybe_unused]] TestStr res = mapper.deserialize<TestStr>(iss);
+  });
+}
+
+void
+testDeserMaxDepthUnknownLimit() {
+  // root object is level 1 ; arrays are levels 2 to 4
+  anch::json::JSONMapper mapper({.deserialize_ignore_unknown_field = true, .max_depth = 4});
+  auto iss = std::istringstream("{\"s\":\"a\",\"u\":[[{}]]}");
+  TestStr res = mapper.deserialize<TestStr>(iss);
+  anch::ut::assert(res._s == "a", "s should be 'a' ; found '{}'", res._s);
+  checkDepthError([&]() {
+    auto iss = std::istringstream("{\"s\":\"a\",\"u\":[[[{}]]]}");
+    [[maybe_unused]] TestStr res = mapper.deserialize<TestStr>(iss);
+  });
+}
+
+void
+testDeserMaxDepthMapped() {
+  // object (1) > array (2) > object (3) > array (4)
+  std::string json = "{\"c\":[{\"c\":[]}]}";
+  {
+    anch::json::JSONMapper mapper({.max_depth = 4});
+    auto iss = std::istringstream(json);
+    TestNode res = mapper.deserialize<TestNode>(iss);
+    anch::ut::assert(res._children.size() == 1, "1 child expected ; found {}", res._children.size());
+  }
+  {
+    anch::json::JSONMapper mapper({.max_depth = 3});
+    checkDepthError([&]() {
+      auto iss = std::istringstream(json);
+      [[maybe_unused]] TestNode res = mapper.deserialize<TestNode>(iss);
+    });
+  }
+  {
+    anch::json::JSONMapper mapper({.max_depth = 0}); // unlimited
+    auto iss = std::istringstream(json);
+    TestNode res = mapper.deserialize<TestNode>(iss);
+    anch::ut::assert(res._children.size() == 1, "1 child expected ; found {}", res._children.size());
+  }
+}
+// Nesting depth -
+
+// Numbers in ignored fields +
+void
+testDeserUnknownNumber() {
+  anch::json::JSONMapper mapper({.deserialize_ignore_unknown_field = true});
+  for(const char* number : {"0", "-0", "12", "-1.5", "1e5", "1E5", "-1.5E-3", "2.5e+10", "0e0", "[1e2,-3.5e-1,0]"}) {
+    std::string json = std::string("{\"u\":") + number + ",\"s\":\"a\"}";
+    std::cout << "Deserialize " << json << std::endl;
+    auto iss = std::istringstream(json);
+    TestStr res = mapper.deserialize<TestStr>(iss);
+    anch::ut::assert(res._s == "a", "{}: s should be 'a' ; found '{}'", json, res._s);
+  }
+}
+
+void
+testDeserUnknownNumberKO() {
+  anch::json::JSONMapper mapper({.deserialize_ignore_unknown_field = true});
+  for(const char* number : {"-", "01", "1.", "1e", "1e+", "1.2.3", "1-2", "1.e2", "-01"}) {
+    std::string json = std::string("{\"u\":") + number + ",\"s\":\"a\"}";
+    std::cout << "Deserialize " << json << std::endl;
+    try {
+      auto iss = std::istringstream(json);
+      [[maybe_unused]] TestStr res = mapper.deserialize<TestStr>(iss);
+      anch::ut::fail("This test should have failed");
+    } catch(const MappingError& e) {
+      if(e.getErrorCode() != ErrorCode::INVALID_FORMAT) {
+        throw;
+      }
+      std::cout << e.what() << std::endl;
+    }
+  }
+}
+// Numbers in ignored fields -
+
+// Error message +
+void
+checkErrorMessage(const std::string& json, const std::string& expected) {
+  anch::json::JSONMapper mapper(anch::json::DEFAULT_MAPPING_OPTIONS);
+  try {
+    auto iss = std::istringstream(json);
+    [[maybe_unused]] TestStr res = mapper.deserialize<TestStr>(iss);
+    anch::ut::fail("This test should have failed");
+  } catch(const MappingError& e) {
+    std::cout << e.what() << std::endl;
+    anch::ut::assert(expected == e.what(), "Expected message '{}' ; found '{}'", expected, e.what());
+  }
+}
+
+void
+testErrorMessage() {
+  // 10 characters before error (error character included) and 10 after
+  checkErrorMessage("{\"s\":\"abc\"x\"0123456789ABCDEF\"}", "Unexpected character 'x' found at 9 near '\"s\":\"abc\"x\"012345678'");
+  // Less than 10 characters after error
+  checkErrorMessage("{\"s\":\"abc\"x}", "Unexpected character 'x' found at 9 near '\"s\":\"abc\"x}'");
+}
+
+void
+testErrorMessageEnd() {
+  checkErrorMessage("{\"s\":\"abc\"", "Unexpected end of data near '\"s\":\"abc\"'");
+}
+// Error message -
+
+// UUID +
+#ifdef ANCH_UUID
+struct TestUuid {
+  anch::UUID _id;
+};
+
+template<>
+void
+anch::json::registerObject(ObjectMapper<TestUuid>& mapper) {
+  mapper
+    .registerField("id", &TestUuid::_id)
+    ;
+}
+
+void
+testDeserUuid() {
+  anch::json::JSONMapper mapper(anch::json::DEFAULT_MAPPING_OPTIONS);
+  auto iss = std::istringstream("{\"id\":\"DEB94EBC-be28-4899-981a-29199b7a487d\"}");
+  TestUuid res = mapper.deserialize<TestUuid>(iss);
+  anch::ut::assert(res._id.toString() == "deb94ebc-be28-4899-981a-29199b7a487d", "Found {}", res._id.toString());
+}
+
+void
+testDeserUuidKO() {
+  anch::json::JSONMapper mapper(anch::json::DEFAULT_MAPPING_OPTIONS);
+  for(const char* id : {"1234zzzz-e89b-42d3-a456-426614174000", "deb94ebc-be28-4899-981a-29199b7a487", "", "not an UUID"}) {
+    std::string json = std::string("{\"id\":\"") + id + "\"}";
+    std::cout << "Deserialize " << json << std::endl;
+    try {
+      auto iss = std::istringstream(json);
+      [[maybe_unused]] TestUuid res = mapper.deserialize<TestUuid>(iss);
+      anch::ut::fail("This test should have failed");
+    } catch(const MappingError& e) {
+      if(e.getErrorCode() != ErrorCode::INVALID_FORMAT) {
+        throw;
+      }
+      std::cout << e.what() << std::endl;
+      anch::ut::assert(std::string(e.what()).starts_with("Invalid UUID '"), "Message should come from UUID parser ; found '{}'", e.what());
+    }
+  }
+}
+#endif // ANCH_UUID
+// UUID -
+
 void
 anch::ut::setup(anch::ut::UnitTests& tests) {
   tests
@@ -991,5 +1257,21 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("json-deser-float-overflow", testDeserFloatOverflow)
     .add("json-deser-float-negative-overflow", testDeserFloatNegativeOverflow)
     .add("json-deser-float-limits", testDeserFloatLimits)
+    .add("json-deser-max-payload-ko", testDeserMaxPayloadKo)
+    .add("json-deser-max-payload-refill-ko", testDeserMaxPayloadRefillKo)
+    .add("json-deser-max-payload-limit", testDeserMaxPayloadLimit)
+    .add("json-ser-escape", testSerEscape)
+    .add("json-ser-escape-map-key", testSerEscapeMapKey)
+    .add("json-deser-max-depth-unknown", testDeserMaxDepthUnknown)
+    .add("json-deser-max-depth-unknown-limit", testDeserMaxDepthUnknownLimit)
+    .add("json-deser-max-depth-mapped", testDeserMaxDepthMapped)
+    .add("json-deser-unknown-number", testDeserUnknownNumber)
+    .add("json-deser-unknown-number-ko", testDeserUnknownNumberKO)
+    .add("json-error-message", testErrorMessage)
+    .add("json-error-message-end", testErrorMessageEnd)
+#ifdef ANCH_UUID
+    .add("json-deser-uuid", testDeserUuid)
+    .add("json-deser-uuid-ko", testDeserUuidKO)
+#endif
     ;
 }

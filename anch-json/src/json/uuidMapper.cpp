@@ -21,8 +21,11 @@
 #include "json/primitiveMapper.hpp"
 
 #include <string>
+#include <stdexcept>
 
 #include "uuid.hpp"
+
+#include "json/mappingError.hpp"
 
 
 using anch::json::PrimitiveMapper;
@@ -43,9 +46,11 @@ PrimitiveMapper<anch::UUID>::~PrimitiveMapper() {
 template<>
 void
 PrimitiveMapper<anch::UUID>::serializeValue(const anch::UUID& value, anch::json::WriterContext& context) const {
-  context.output.put(anch::json::STRING_DELIMITER)
-    .write(value.toString().data(), 36)
-    .put(anch::json::STRING_DELIMITER);
+  char uuid[anch::UUID::STRING_SIZE + 2]; // '"' + UUID + '"' (no allocation)
+  uuid[0] = anch::json::STRING_DELIMITER;
+  value.toChars(uuid + 1);
+  uuid[anch::UUID::STRING_SIZE + 1] = anch::json::STRING_DELIMITER;
+  context.write(std::string_view(uuid, sizeof(uuid)));
 }
 
 template<>
@@ -55,7 +60,11 @@ PrimitiveMapper<anch::UUID>::deserializeValue(anch::UUID& value, anch::json::Rea
   if(!anch::json::lexString(uuid, context)) {
     return false;
   }
-  value.parse(uuid);
+  try {
+    value.parse(uuid);
+  } catch(const std::invalid_argument& e) { // invalid UUID format
+    throw anch::json::MappingError(anch::json::ErrorCode::INVALID_FORMAT, context, e.what());
+  }
   return true;
 }
 

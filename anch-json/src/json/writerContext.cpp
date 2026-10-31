@@ -26,14 +26,9 @@ using anch::json::WriterContext;
 
 // Constructors +
 WriterContext::WriterContext(std::ostream& os, const anch::json::MappingOptions& options) noexcept:
-  output(os), _options(options), _firsts(), _indent() {
+  output(os), _options(options), _firsts(), _sbuf(os.rdbuf()) {
   // set output stream formatter for integer, float and boolean
   output << std::dec << std::defaultfloat << std::boolalpha;
-  if(_options.prettify_nbs != 0) {
-    _indent = [this](){indent();};
-  } else {
-    _indent = [](){};
-  }
 }
 // Constructors -
 
@@ -48,7 +43,7 @@ bool
 WriterContext::writeNull(const std::string& field) {
   if(_options.serialize_null) {
     writeField(field);
-    output.write("null", 4);
+    write("null");
   }
   return _options.serialize_null;
 }
@@ -57,7 +52,8 @@ bool
 WriterContext::writeEmptyArray(const std::string& field) {
   if(_options.serialize_empty_col) {
     writeField(field);
-    output.put(anch::json::ARRAY_BEGIN).put(anch::json::ARRAY_END);
+    write(anch::json::ARRAY_BEGIN);
+    write(anch::json::ARRAY_END);
   }
   return _options.serialize_empty_col;
 }
@@ -66,64 +62,51 @@ bool
 WriterContext::writeEmptyObject(const std::string& field) {
   if(_options.serialize_empty_col) {
     writeField(field);
-    output.put(anch::json::OBJECT_BEGIN).put(anch::json::OBJECT_END);
+    write(anch::json::OBJECT_BEGIN);
+    write(anch::json::OBJECT_END);
   }
   return _options.serialize_empty_col;
 }
 
 void
-WriterContext::writeField(const std::string& field) {
-  next();
-  output.put(anch::json::STRING_DELIMITER)
-    .write(field.data(), static_cast<std::streamsize>(field.size()))
-    .put(anch::json::STRING_DELIMITER)
-    .put(anch::json::FIELD_VALUE_SEPARATOR);
-  if(_options.prettify_nbs != 0) {
-    output.put(' ');
-  }
-}
-
-void
-WriterContext::beginArray() {
-  output.put(anch::json::ARRAY_BEGIN);
-  _firsts.push_back(true);
-}
-
-void
-WriterContext::endArray() {
-  _firsts.pop_back();
-  std::invoke(_indent);
-  output.put(anch::json::ARRAY_END);
-}
-
-void
-WriterContext::beginObject() {
-  output.put(anch::json::OBJECT_BEGIN);
-  _firsts.push_back(true);
-}
-
-void
-WriterContext::endObject() {
-  _firsts.pop_back();
-  std::invoke(_indent);
-  output.put(anch::json::OBJECT_END);
-}
-
-void
-WriterContext::next() {
-  if(!_firsts.back()) {
-    output.put(anch::json::FIELD_SEPARATOR);
-  } else {
-    _firsts.back() = false;
-  }
-  std::invoke(_indent);
-}
-
-void
 WriterContext::indent() {
-  output.put('\n');
+  write('\n');
   for(uint32_t i = 0 ; i < _firsts.size() * _options.prettify_nbs ; ++i) {
-    output.put(' ');
+    write(' ');
+  }
+}
+
+void
+WriterContext::writeEscapeSequence(char c) {
+  switch(c) {
+  case '"':
+    write("\\\"");
+    break;
+  case '\\':
+    write("\\\\");
+    break;
+  case '\b':
+    write("\\b");
+    break;
+  case '\f':
+    write("\\f");
+    break;
+  case '\n':
+    write("\\n");
+    break;
+  case '\r':
+    write("\\r");
+    break;
+  case '\t':
+    write("\\t");
+    break;
+  default: // other control characters
+    {
+      static constexpr char HEX[] = "0123456789abcdef";
+      unsigned char uc = static_cast<unsigned char>(c);
+      char seq[6] = {'\\', 'u', '0', '0', HEX[uc >> 4], HEX[uc & 0x0F]};
+      write(std::string_view(seq, sizeof(seq)));
+    }
   }
 }
 // Methods -

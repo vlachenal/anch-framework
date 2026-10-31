@@ -25,28 +25,15 @@
 
 using anch::json::ReaderContext;
 
-void
-checkPayloadSize(ReaderContext& context, std::streamsize read) {
-  context.read += static_cast<std::size_t>(read);
-  if(context.read > context.options.max_payload) {
-    throw anch::json::MappingError(anch::json::ErrorCode::POTENTIAL_OVERFLOW, context);
-  }
-}
-
-void
-notCheckPayloadSize([[ maybe_unused ]] ReaderContext& context,
-		    [[ maybe_unused ]] std::streamsize read) {
-  // Nothing to do
-}
-
 // Constructors +
-ReaderContext::ReaderContext(std::istream& is, const anch::json::MappingOptions& mapOpts) noexcept:
+ReaderContext::ReaderContext(std::istream& is, const anch::json::MappingOptions& mapOpts):
   input(is),
   options(mapOpts),
   pbuf(),
   offset(0),
-  bufferSize(0),
-  read(0) {
+  bufferSize(mapOpts.buffer_size),
+  read(0),
+  depth(0) {
   // Initialize buffers +
   pbuf.reserve(options.buffer_size);
   buffer = new char[options.buffer_size + 1];
@@ -59,23 +46,16 @@ ReaderContext::ReaderContext(std::istream& is, const anch::json::MappingOptions&
   read += static_cast<std::size_t>(count);
   // Input stream initial read -
 
-  // Determine lexer functions according to mapping options +
-  if(options.deserialize_max_discard_char == 0) {
-    _discardFunc = std::bind(&anch::json::discardFail, std::ref(*this));
-  } else {
-    _discardFunc = std::bind(&anch::json::lexDiscard, std::ref(*this));
+  // Check payload size +
+  // Destructor is not called when constructor fails: release buffer before raising error
+  try {
+    checkPayloadSize();
+  } catch(...) {
+    delete[] buffer;
+    buffer = NULL;
+    throw;
   }
-  if(options.deserialize_ignore_unknown_field) {
-    _unknownFunc = std::bind(&anch::json::lexUnknown, std::ref(*this));
-  } else {
-    _unknownFunc = std::bind(&anch::json::lexUnknownFail, std::ref(*this));
-  }
-  if(options.max_payload != 0) {
-    _checkSize = std::bind_front(&checkPayloadSize, std::ref(*this));
-  } else {
-    _checkSize = std::bind_front(&notCheckPayloadSize, std::ref(*this));
-  }
-  // Determine lexer functions according to mapping options -
+  // Check payload size -
 }
 // Constructors -
 
@@ -88,17 +68,6 @@ ReaderContext::~ReaderContext() {
 // Destructor -
 
 // Methods +
-bool
-ReaderContext::next(char& current) {
-  // Consume input stream in buffer when buffer end has been reached and input is available +
-  if(offset == options.buffer_size) {
-    refillBuffer();
-  }
-  // Consume input stream in buffer when buffer end has been reached and input is available -
-  current = buffer[offset++];
-  return (offset == options.buffer_size);
-}
-
 std::streamsize
 ReaderContext::refillBuffer() {
   std::streamsize count = 0;
@@ -107,10 +76,24 @@ ReaderContext::refillBuffer() {
     count = input.gcount();
     read += static_cast<std::size_t>(count);
     std::memset(buffer + static_cast<int>(count), '\0', options.buffer_size - static_cast<std::size_t>(count));
+    checkPayloadSize();
   } else {
     std::memset(buffer, '\0', options.buffer_size);
   }
   offset = 0; // reset offset
   return count;
+}
+
+void
+ReaderContext::checkPayloadSize() const {
+  if(options.max_payload != 0 && read > options.max_payload) {
+    throw anch::json::MappingError(anch::json::ErrorCode::POTENTIAL_OVERFLOW, *this);
+  }
+}
+
+void
+ReaderContext::throwDepthError() {
+  --depth; // level has not been entered
+  throw anch::json::MappingError(anch::json::ErrorCode::POTENTIAL_OVERFLOW, *this);
 }
 // Methods -

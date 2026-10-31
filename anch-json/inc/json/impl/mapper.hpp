@@ -249,12 +249,14 @@ namespace anch::json {
     if(!anch::json::objectHasValueLex(context)) {
       return false;
     }
-    std::map<std::string, anch::json::LexFunc> lexers;
-    for(auto iter = _readers.cbegin() ; iter != _readers.cend() ; ++iter) {
-      lexers[iter->first] = std::move(std::bind_front(iter->second, std::ref(value)));
-    }
-    std::set<std::string> fields; // found fields for validation
-    anch::json::lexObject(lexers, fields, context);
+    anch::json::lexObject([this, &value](const std::string& field, anch::json::ReaderContext& ctxt) -> void {
+      auto iter = _readers.find(field);
+      if(iter == _readers.cend()) {
+	ctxt.parseUnknown();
+      } else {
+	std::invoke(iter->second, value, ctxt);
+      }
+    }, context);
     return true;
   }
   // Methods -

@@ -23,6 +23,7 @@
 #include <exception>
 #include <optional>
 #include <string>
+#include <string_view>
 
 #include "json/readerContext.hpp"
 
@@ -79,6 +80,16 @@ namespace anch::json {
      * \param context the JSON context parser
      */
     MappingError(ErrorCode code, const anch::json::ReaderContext& context);
+
+    /*!
+     * \ref MappingError constructor with detailed message.\n
+     * The message replaces the generic message of the error code ; the input around the error is still added.
+     *
+     * \param code the error code
+     * \param context the JSON context parser
+     * \param message the detailed error message
+     */
+    MappingError(ErrorCode code, const anch::json::ReaderContext& context, std::string_view message);
     // Constructors -
 
     // Destructor +

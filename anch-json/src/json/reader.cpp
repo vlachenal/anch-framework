@@ -136,6 +136,7 @@ Reader::parseField() {
 
 void
 Reader::parseObject() {
+  anch::json::DepthGuard guard(*this);
   char current = discard();
   if(current == anch::json::OBJECT_END) {
     anch::events::Observable<JSONItem>::notifyObservers(JSONItem(EventType::END_OBJECT, *this));
@@ -211,6 +212,7 @@ Reader::parseValue() {
 
 void
 Reader::parseArray() {
+  anch::json::DepthGuard guard(*this);
   char current = discard();
   if(current == anch::json::ARRAY_END) {
     anch::events::Observable<JSONItem>::notifyObservers(JSONItem(EventType::END_ARRAY, *this));

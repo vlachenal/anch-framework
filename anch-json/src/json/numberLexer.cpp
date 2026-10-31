@@ -20,6 +20,9 @@
 #include "json/lexer.hpp"
 
 #include <charconv>
+#include <string_view>
+
+#include "json/numberScanner.hpp"
 
 void
 anch::json::parseNumber(anch::json::ReaderContext& context) {
@@ -81,10 +84,12 @@ anch::json::lexNumber(double& value, anch::json::ReaderContext& context) {
     anch::json::lexNull(context);
     return false;
   }
-  context.back();
-  anch::json::parseNumber(context);
-  char* last = context.pbuf.data() + context.pbuf.size();
-  auto res = std::from_chars(context.pbuf.data(), last, value);
+  std::string_view chars = anch::json::scanNumber(context, anch::json::isNumberChar);
+  if(!anch::json::isJsonNumber(chars)) {
+    throw anch::json::MappingError(ErrorCode::INVALID_FORMAT, context);
+  }
+  const char* last = chars.data() + chars.size();
+  auto res = std::from_chars(chars.data(), last, value);
   // On overflow, std::from_chars consumes every digit (ptr == last): error code has to be checked first
   if(res.ec == std::errc::result_out_of_range) {
     throw anch::json::MappingError(ErrorCode::POTENTIAL_OVERFLOW, context);

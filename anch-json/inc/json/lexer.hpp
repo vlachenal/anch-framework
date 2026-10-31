@@ -31,9 +31,6 @@
 namespace anch::json {
 
   // Types' definitions +
-  /*! Object lexer function */
-  using LexFunc = std::function<bool(anch::json::ReaderContext&)>;
-
   /*! Parse and add item to array function (return \c true when ']' has been found, \c false otherwise) */
   using AddItem = std::function<bool(anch::json::ReaderContext&)>;
 
@@ -144,9 +141,23 @@ namespace anch::json {
   // String lexer functions +
   /*!
    * Lex string content (between the '"').\n
-   * The result will be stored in the context buffer.
+   * Escape sequences are decoded (\c \\uXXXX sequences, including UTF-16 surrogate pairs, are converted to UTF-8).\n
+   * The opening '"' has to be already consumed.
+   *
+   * \param value the string to write in (cleared before)
+   * \param context the JSON context
+   *
+   * \throw anch::json::MappingError invalid escape sequence or end of data before end of string
+   */
+  void lexStringContent(std::string& value, anch::json::ReaderContext& context);
+
+  /*!
+   * Lex string content (between the '"').\n
+   * The result will be stored in the context buffer (see \ref lexStringContent(std::string&, anch::json::ReaderContext&) ).
    *
    * \param context the JSON context
+   *
+   * \throw anch::json::MappingError invalid escape sequence or end of data before end of string
    */
   void lexStringContent(anch::json::ReaderContext& context);
 
@@ -225,39 +236,48 @@ namespace anch::json {
   bool objectHasValueLex(anch::json::ReaderContext& context);
 
   /*!
-   * Object lexer function.
+   * Object lexer function.\n
+   * The opening \c '{' has to be already consumed (see \ref objectHasValueLex).\n
+   * \c onField is called for each found field with the field name and the context positioned
+   * just after \c ':'. It has to consume the field value.
    *
-   * \param readers the declared fields and their reader function
-   * \param fields the found fields to register in
+   * \tparam F the field handler type (callable as \c void(const std::string&, anch::json::ReaderContext&))
+   *
+   * \param onField the field handler
    * \param context the parser context
    *
    * \throw anch::json::MappingError parsing error
    */
-  void lexObject(const std::map<std::string, anch::json::LexFunc>& readers,
-		 std::set<std::string>& fields,
-		 anch::json::ReaderContext& context);
+  template<typename F>
+  void lexObject(F&& onField, anch::json::ReaderContext& context);
   // Generic lexer functions -
 
   // Container lexer functions +
   /*!
    * Parse array
    *
-   * \param addFunc parse and add elem to array function
+   * \tparam F the item parser type
+   *
+   * \param addFunc parse and add elem to array function (callable as \c bool(anch::json::ReaderContext&))
    * \param context the context
    *
    * \throw anch::json::MappingError parsing error
    */
-  void lexArray(anch::json::AddItem addFunc, anch::json::ReaderContext& context);
+  template<typename F>
+  void lexArray(F&& addFunc, anch::json::ReaderContext& context);
 
   /*!
    * Parse map
    *
-   * \param pushFunc parse and add elem to map function
+   * \tparam F the item parser type
+   *
+   * \param pushFunc parse and add elem to map function (callable as \c void(const std::string&, anch::json::ReaderContext&))
    * \param context the context
    *
    * \throw anch::json::MappingError parsing error
    */
-  void lexMap(anch::json::PushItem pushFunc, anch::json::ReaderContext& context);
+  template<typename F>
+  void lexMap(F&& pushFunc, anch::json::ReaderContext& context);
   // Container lexer functions -
 
   // Unknown lexer functions +
@@ -281,3 +301,5 @@ namespace anch::json {
   // Unknown lexer functions +
 
 }
+
+#include "json/impl/lexer.hpp"
