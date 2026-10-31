@@ -35,10 +35,15 @@ namespace anch::ut {
   }
 
   template<typename... T>
-  void assert(bool check, std::string_view message, const T&... args) {
+  void assertThat(bool check, std::string_view message, const T&... args) {
     if(!check) {
       anch::ut::fail(std::vformat(message, std::make_format_args(args...)));
     }
+  }
+
+  template<typename... T>
+  void (assert)(bool check, std::string_view message, const T&... args) {
+    anch::ut::assertThat(check, message, args...);
   }
 
   template<typename T>

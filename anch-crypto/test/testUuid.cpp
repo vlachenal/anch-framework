@@ -35,8 +35,8 @@ void
 checkNameUUID(anch::UUID::Version version, const anch::UUID& ns, const std::string& name, const std::string& expected) {
   anch::UUID uuid = anch::UUID::generateUUID(version, ns, name);
   std::cout << name << " -> " << uuid << std::endl;
-  anch::ut::assert(uuid.toString() == expected, "UUID for '{}': expected {} ; found {}", name, expected, uuid.toString());
-  anch::ut::assert(uuid.getVersion() == version, "Bad version for '{}'", name);
+  anch::ut::assertThat(uuid.toString() == expected, "UUID for '{}': expected {} ; found {}", name, expected, uuid.toString());
+  anch::ut::assertThat(uuid.getVersion() == version, "Bad version for '{}'", name);
 }
 
 /*!
@@ -46,8 +46,8 @@ void
 checkVersionVariant(anch::UUID::Version version, char versionChar) {
   for(int i = 0 ; i < 10000 ; ++i) {
     std::string str = anch::UUID::generateUUID(version, anch::UUID::namespaceDNS(), "name" + std::to_string(i)).toString();
-    anch::ut::assert(str[14] == versionChar, "Bad version in {}", str);
-    anch::ut::assert(str[19] == '8' || str[19] == '9' || str[19] == 'a' || str[19] == 'b', "Bad variant in {}", str);
+    anch::ut::assertThat(str[14] == versionChar, "Bad version in {}", str);
+    anch::ut::assertThat(str[19] == '8' || str[19] == '9' || str[19] == 'a' || str[19] == 'b', "Bad variant in {}", str);
   }
 }
 

@@ -338,8 +338,8 @@ testFullSerDefaultOptions() {
   std::cout << "Serialize Toto as string" << std::endl;
   std::string res2 = mapper.serialize(toto);
   std::cout << "Serialized toto as string: " << res2 << std::endl;
-  anch::ut::assert(res1 == res2, "Serialization results should be equals");
-  anch::ut::assert(totoRes == res1, "Result should be equals to: {}", totoRes);
+  anch::ut::assertThat(res1 == res2, "Serialization results should be equals");
+  anch::ut::assertThat(totoRes == res1, "Result should be equals to: {}", totoRes);
 }
 
 void
@@ -356,7 +356,7 @@ testDeserList() {
     numsTestOss << test._nums;
     std::ostringstream numsResOss;
     numsResOss << res._nums;
-    anch::ut::assert(test == res, "Test has been unexpecting deserialized: id {} / {} instead of {} / {}", test._id, numsTestOss.str(), res._id, numsResOss.str());
+    anch::ut::assertThat(test == res, "Test has been unexpecting deserialized: id {} / {} instead of {} / {}", test._id, numsTestOss.str(), res._id, numsResOss.str());
 
   } catch(const MappingError& error) {
     std::ostringstream oss;
@@ -402,7 +402,7 @@ testDeserUnknownFieldStructOK() {
     numsTestOss << test._nums;
     std::ostringstream numsResOss;
     numsResOss << res._nums;
-    anch::ut::assert(test == res, "Test has been unexpecting deserialized: id {} / {} instead of {} / {}", test._id, numsTestOss.str(), res._id, numsResOss.str());
+    anch::ut::assertThat(test == res, "Test has been unexpecting deserialized: id {} / {} instead of {} / {}", test._id, numsTestOss.str(), res._id, numsResOss.str());
 
   } catch(const MappingError& error) {
     std::ostringstream oss;
@@ -425,7 +425,7 @@ testDeserUnknownFieldOK() {
     numsTestOss << test._nums;
     std::ostringstream numsResOss;
     numsResOss << res._nums;
-    anch::ut::assert(test == res, "Test has been unexpecting deserialized: id {} / {} instead of {} / {}", test._id, numsTestOss.str(), res._id, numsResOss.str());
+    anch::ut::assertThat(test == res, "Test has been unexpecting deserialized: id {} / {} instead of {} / {}", test._id, numsTestOss.str(), res._id, numsResOss.str());
 
   } catch(const MappingError& error) {
     std::ostringstream oss;
@@ -448,7 +448,7 @@ testDeserUnknownFieldIntOK() {
     numsTestOss << test._nums;
     std::ostringstream numsResOss;
     numsResOss << res._nums;
-    anch::ut::assert(test == res, "Test has been unexpecting deserialized: id {} / {} instead of {} / {}", test._id, numsTestOss.str(), res._id, numsResOss.str());
+    anch::ut::assertThat(test == res, "Test has been unexpecting deserialized: id {} / {} instead of {} / {}", test._id, numsTestOss.str(), res._id, numsResOss.str());
 
   } catch(const MappingError& error) {
     std::ostringstream oss;
@@ -472,7 +472,7 @@ testDeserUnknownFieldEmptyColOK() {
     numsTestOss << test._nums;
     std::ostringstream numsResOss;
     numsResOss << res._nums;
-    anch::ut::assert(test == res, "Test has been unexpecting deserialized: id {} / {} instead of {} / {}", test._id, numsTestOss.str(), res._id, numsResOss.str());
+    anch::ut::assertThat(test == res, "Test has been unexpecting deserialized: id {} / {} instead of {} / {}", test._id, numsTestOss.str(), res._id, numsResOss.str());
 
   } catch(const MappingError& error) {
     std::ostringstream oss;
@@ -496,7 +496,7 @@ testDeserUnknownFielIntColOK() {
     numsTestOss << test._nums;
     std::ostringstream numsResOss;
     numsResOss << res._nums;
-    anch::ut::assert(test == res, "Test has been unexpecting deserialized: id {} / {} instead of {} / {}", test._id, numsTestOss.str(), res._id, numsResOss.str());
+    anch::ut::assertThat(test == res, "Test has been unexpecting deserialized: id {} / {} instead of {} / {}", test._id, numsTestOss.str(), res._id, numsResOss.str());
 
   } catch(const MappingError& error) {
     std::ostringstream oss;
@@ -520,7 +520,7 @@ testDeserUnknownFielWTFColOK() {
     numsTestOss << test._nums;
     std::ostringstream numsResOss;
     numsResOss << res._nums;
-    anch::ut::assert(test == res, "Test has been unexpecting deserialized: id {} / {} instead of {} / {}", test._id, numsTestOss.str(), res._id, numsResOss.str());
+    anch::ut::assertThat(test == res, "Test has been unexpecting deserialized: id {} / {} instead of {} / {}", test._id, numsTestOss.str(), res._id, numsResOss.str());
 
   } catch(const MappingError& error) {
     std::ostringstream oss;
@@ -550,7 +550,7 @@ testFullDeserDefaultOptions() {
 
     std::cout << "Expected: " << expected << std::endl;
     std::cout << "Result:   " << totoDeser << std::endl;
-    anch::ut::assert(expected == totoDeser, "NOT EQUALS");
+    anch::ut::assertThat(expected == totoDeser, "NOT EQUALS");
 
   } catch(const std::bad_cast& e) {
     std::ostringstream oss;
@@ -575,7 +575,7 @@ testFulDeserDiscard128() {
   try {
     Toto deserToto = mapper.deserialize<Toto>(iss);
     std::cout << deserToto << std::endl;
-    anch::ut::assert(toto == deserToto, "NOT EQUALS");
+    anch::ut::assertThat(toto == deserToto, "NOT EQUALS");
   } catch(const std::bad_cast& e) {
     std::ostringstream oss;
     oss << "Bad cast  " << e.what();
@@ -607,7 +607,7 @@ testFulDeserDiscard128Col() {
   try {
     std::vector<Test> tests;
     mapper.deserialize(tests, iss);
-    anch::ut::assert(expected == tests, "NOT EQUALS");
+    anch::ut::assertThat(expected == tests, "NOT EQUALS");
   } catch(const std::bad_cast& e) {
     std::ostringstream oss;
     oss << "Bad cast " << e.what();
@@ -639,7 +639,7 @@ testFulDeserDiscard128ColBuf2() {
   try {
     std::vector<Test> tests;
     mapper.deserialize(tests, iss);
-    anch::ut::assert(expected == tests, "NOT EQUALS");
+    anch::ut::assertThat(expected == tests, "NOT EQUALS");
   } catch(const std::bad_cast& e) {
     std::ostringstream oss;
     oss << "Bad cast " << e.what();
@@ -676,7 +676,7 @@ testDeserFlux() {
     });
     flux.ready();
     mapper.deserialize(flux, iss);
-    anch::ut::assert(expected == tests, "NOT EQUALS");
+    anch::ut::assertThat(expected == tests, "NOT EQUALS");
   } catch(const std::bad_cast& e) {
     std::ostringstream oss;
     oss << "Bad cast " << e.what();
@@ -715,7 +715,7 @@ testSerFlux() {
     });
     t.detach();
     mapper.serialize(flux, out);
-    anch::ut::assert(out.str() == expected, "\nResult is:  {}\ninstead of: {}", out.str(), expected);
+    anch::ut::assertThat(out.str() == expected, "\nResult is:  {}\ninstead of: {}", out.str(), expected);
   } catch(const MappingError& error) {
     std::ostringstream oss;
     oss << "Fail with " << error.what();
@@ -899,10 +899,10 @@ testDeserRangeLimits() {
   std::cout << "Deserialize TestRange: " << json << std::endl;
   auto iss = std::istringstream(json);
   TestRange res = mapper.deserialize<TestRange>(iss);
-  anch::ut::assert(res._i16 == std::numeric_limits<int16_t>::min(), "i16 should be {} ; found {}", std::numeric_limits<int16_t>::min(), res._i16);
-  anch::ut::assert(res._i32 == std::numeric_limits<int32_t>::max(), "i32 should be {} ; found {}", std::numeric_limits<int32_t>::max(), res._i32);
-  anch::ut::assert(res._u16 == std::numeric_limits<uint16_t>::max(), "u16 should be {} ; found {}", std::numeric_limits<uint16_t>::max(), res._u16);
-  anch::ut::assert(res._u32 == std::numeric_limits<uint32_t>::max(), "u32 should be {} ; found {}", std::numeric_limits<uint32_t>::max(), res._u32);
+  anch::ut::assertThat(res._i16 == std::numeric_limits<int16_t>::min(), "i16 should be {} ; found {}", std::numeric_limits<int16_t>::min(), res._i16);
+  anch::ut::assertThat(res._i32 == std::numeric_limits<int32_t>::max(), "i32 should be {} ; found {}", std::numeric_limits<int32_t>::max(), res._i32);
+  anch::ut::assertThat(res._u16 == std::numeric_limits<uint16_t>::max(), "u16 should be {} ; found {}", std::numeric_limits<uint16_t>::max(), res._u16);
+  anch::ut::assertThat(res._u32 == std::numeric_limits<uint32_t>::max(), "u32 should be {} ; found {}", std::numeric_limits<uint32_t>::max(), res._u32);
 }
 // Integer range -
 
@@ -992,7 +992,7 @@ testDeserMaxPayloadLimit() {
     std::cout << "Deserialize TestFloat: " << json << " with max_payload=" << json.size() << " and buffer_size=" << bufferSize << std::endl;
     auto iss = std::istringstream(json);
     TestFloat res = mapper.deserialize<TestFloat>(iss);
-    anch::ut::assert(res._f == 1.5f, "f should be 1.5 ; found {}", res._f);
+    anch::ut::assertThat(res._f == 1.5f, "f should be 1.5 ; found {}", res._f);
   }
 }
 // Payload size -
@@ -1016,12 +1016,12 @@ testSerEscape() {
   std::string expected = "{\"s\":\"a\\\"b\\\\c/\\b\\f\\n\\r\\t\\u0001\\u001f caf\xC3\xA9\"}";
   std::string json = anch::json::serialize(value, anch::json::DEFAULT_MAPPING_OPTIONS);
   std::cout << "Serialized: " << json << std::endl;
-  anch::ut::assert(json == expected, "Expected {} ; found {}", expected, json);
+  anch::ut::assertThat(json == expected, "Expected {} ; found {}", expected, json);
   // Round trip +
   anch::json::JSONMapper mapper(anch::json::DEFAULT_MAPPING_OPTIONS);
   auto iss = std::istringstream(json);
   TestStr res = mapper.deserialize<TestStr>(iss);
-  anch::ut::assert(res._s == value._s, "Round trip failed: found '{}'", res._s);
+  anch::ut::assertThat(res._s == value._s, "Round trip failed: found '{}'", res._s);
   // Round trip -
 }
 
@@ -1031,13 +1031,13 @@ testSerEscapeMapKey() {
   std::string expected = "{\"k\\\"1\":\"v\\n\"}";
   std::string json = anch::json::serialize(value, anch::json::DEFAULT_MAPPING_OPTIONS);
   std::cout << "Serialized: " << json << std::endl;
-  anch::ut::assert(json == expected, "Expected {} ; found {}", expected, json);
+  anch::ut::assertThat(json == expected, "Expected {} ; found {}", expected, json);
   // Round trip +
   anch::json::JSONMapper mapper(anch::json::DEFAULT_MAPPING_OPTIONS);
   auto iss = std::istringstream(json);
   std::map<std::string,std::string> res;
   mapper.deserialize(res, iss);
-  anch::ut::assert(res == value, "Round trip failed");
+  anch::ut::assertThat(res == value, "Round trip failed");
   // Round trip -
 }
 // String escaping -
@@ -1085,7 +1085,7 @@ testDeserMaxDepthUnknownLimit() {
   anch::json::JSONMapper mapper({.deserialize_ignore_unknown_field = true, .max_depth = 4});
   auto iss = std::istringstream("{\"s\":\"a\",\"u\":[[{}]]}");
   TestStr res = mapper.deserialize<TestStr>(iss);
-  anch::ut::assert(res._s == "a", "s should be 'a' ; found '{}'", res._s);
+  anch::ut::assertThat(res._s == "a", "s should be 'a' ; found '{}'", res._s);
   checkDepthError([&]() {
     auto iss = std::istringstream("{\"s\":\"a\",\"u\":[[[{}]]]}");
     [[maybe_unused]] TestStr res = mapper.deserialize<TestStr>(iss);
@@ -1100,7 +1100,7 @@ testDeserMaxDepthMapped() {
     anch::json::JSONMapper mapper({.max_depth = 4});
     auto iss = std::istringstream(json);
     TestNode res = mapper.deserialize<TestNode>(iss);
-    anch::ut::assert(res._children.size() == 1, "1 child expected ; found {}", res._children.size());
+    anch::ut::assertThat(res._children.size() == 1, "1 child expected ; found {}", res._children.size());
   }
   {
     anch::json::JSONMapper mapper({.max_depth = 3});
@@ -1113,7 +1113,7 @@ testDeserMaxDepthMapped() {
     anch::json::JSONMapper mapper({.max_depth = 0}); // unlimited
     auto iss = std::istringstream(json);
     TestNode res = mapper.deserialize<TestNode>(iss);
-    anch::ut::assert(res._children.size() == 1, "1 child expected ; found {}", res._children.size());
+    anch::ut::assertThat(res._children.size() == 1, "1 child expected ; found {}", res._children.size());
   }
 }
 // Nesting depth -
@@ -1127,7 +1127,7 @@ testDeserUnknownNumber() {
     std::cout << "Deserialize " << json << std::endl;
     auto iss = std::istringstream(json);
     TestStr res = mapper.deserialize<TestStr>(iss);
-    anch::ut::assert(res._s == "a", "{}: s should be 'a' ; found '{}'", json, res._s);
+    anch::ut::assertThat(res._s == "a", "{}: s should be 'a' ; found '{}'", json, res._s);
   }
 }
 
@@ -1161,7 +1161,7 @@ checkErrorMessage(const std::string& json, const std::string& expected) {
     anch::ut::fail("This test should have failed");
   } catch(const MappingError& e) {
     std::cout << e.what() << std::endl;
-    anch::ut::assert(expected == e.what(), "Expected message '{}' ; found '{}'", expected, e.what());
+    anch::ut::assertThat(expected == e.what(), "Expected message '{}' ; found '{}'", expected, e.what());
   }
 }
 
@@ -1198,7 +1198,7 @@ testDeserUuid() {
   anch::json::JSONMapper mapper(anch::json::DEFAULT_MAPPING_OPTIONS);
   auto iss = std::istringstream("{\"id\":\"DEB94EBC-be28-4899-981a-29199b7a487d\"}");
   TestUuid res = mapper.deserialize<TestUuid>(iss);
-  anch::ut::assert(res._id.toString() == "deb94ebc-be28-4899-981a-29199b7a487d", "Found {}", res._id.toString());
+  anch::ut::assertThat(res._id.toString() == "deb94ebc-be28-4899-981a-29199b7a487d", "Found {}", res._id.toString());
 }
 
 void
@@ -1216,7 +1216,7 @@ testDeserUuidKO() {
         throw;
       }
       std::cout << e.what() << std::endl;
-      anch::ut::assert(std::string(e.what()).starts_with("Invalid UUID '"), "Message should come from UUID parser ; found '{}'", e.what());
+      anch::ut::assertThat(std::string(e.what()).starts_with("Invalid UUID '"), "Message should come from UUID parser ; found '{}'", e.what());
     }
   }
 }

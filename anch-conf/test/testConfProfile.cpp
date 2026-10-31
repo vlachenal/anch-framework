@@ -26,7 +26,7 @@ getToto() {
   std::optional<std::string> val = conf->value("toto");
   anch::ut::assertTrue(val.has_value(), "toto not found");
   std::cout << "toto=" << val.value() << std::endl;
-  anch::ut::assert(val.value() == "toto", "Found {} instead of {}", val.value(), "toto");
+  anch::ut::assertThat(val.value() == "toto", "Found {} instead of {}", val.value(), "toto");
 }
 
 void
@@ -35,7 +35,7 @@ getTOTOToto() {
   std::optional<std::string> val = conf->value("TOTO.toto");
   anch::ut::assertTrue(val.has_value(), "TOTO/toto not found");
   std::cout << "TOTO.toto=" << val.value() << std::endl;
-  anch::ut::assert(val.value() == "tata", "Found {} instead of {}", val.value(), "tata");
+  anch::ut::assertThat(val.value() == "tata", "Found {} instead of {}", val.value(), "tata");
 }
 
 void

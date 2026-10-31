@@ -77,7 +77,7 @@ testForeach() {
   anch::Fluent(ints)
     .forEach([&res](int& i) { std::cout << " " << i; res.push_back(i); });
   std::cout << std::endl;
-  anch::ut::assert(res == ints, "Unexpected result");
+  anch::ut::assertThat(res == ints, "Unexpected result");
   std::cout << "Exit testForeach" << std::endl;
 }
 
@@ -90,7 +90,7 @@ testFilter() {
     .filter([](const int& i) -> bool { return (i % 2) == 0; })
     .forEach([&res](int& i) { std::cout << " " << i; res.push_back(i); });
   std::cout << std::endl;
-  anch::ut::assert(res == std::list<int>{0,2,4,6,8,10,12,14,16,18}, "Unexpected result");
+  anch::ut::assertThat(res == std::list<int>{0,2,4,6,8,10,12,14,16,18}, "Unexpected result");
   std::cout << "Exit testFilter" << std::endl;
 }
 
@@ -104,7 +104,7 @@ testSkip() {
     .filter([](const int& i) -> bool { return (i % 2) == 0; })
     .forEach([&res](int& i) { std::cout << " " << i; res.push_back(i); });
   std::cout << std::endl;
-  anch::ut::assert(res == std::list<int>{4,6,8,10,12,14,16,18}, "Unexpected result");
+  anch::ut::assertThat(res == std::list<int>{4,6,8,10,12,14,16,18}, "Unexpected result");
   std::cout << "Exit testSkip" << std::endl;
 }
 
@@ -119,7 +119,7 @@ testLimit() {
     .filter([](const int& i) -> bool { return (i % 2) == 0; })
     .forEach([&res](int& i) { std::cout << " " << i; res.push_back(i); });
   std::cout << std::endl;
-  anch::ut::assert(res == std::list<int>{4,6}, "Unexpected result");
+  anch::ut::assertThat(res == std::list<int>{4,6}, "Unexpected result");
   std::cout << "Exit testLimit" << std::endl;
 }
 
@@ -136,7 +136,7 @@ testConcat() {
     .limit(5)
     .forEach([&res](int& i) { std::cout << " " << i; res.push_back(i); });
   std::cout << std::endl;
-  anch::ut::assert(res == std::list<int>{4,6,8,10,12}, "Unexpected result");
+  anch::ut::assertThat(res == std::list<int>{4,6,8,10,12}, "Unexpected result");
   std::cout << "Exit testConcat" << std::endl;
 }
 
@@ -203,7 +203,7 @@ testMap() {
       std::cout << "B " << b.b << std::endl;
       res.push_back(b);
     });
-  anch::ut::assert(res == expected, "Unexpected result");
+  anch::ut::assertThat(res == expected, "Unexpected result");
   std::cout << "Exit testMap" << std::endl;
 }
 
@@ -220,7 +220,7 @@ testCollectList() {
   for(auto b : resL) {
     std::cout << "ListB " << b.b << std::endl;
   }
-  anch::ut::assert(resL == expected, "Unexpected result");
+  anch::ut::assertThat(resL == expected, "Unexpected result");
   std::cout << "Exit testCollectList" << std::endl;
 }
 
@@ -238,7 +238,7 @@ testCollectForwardList() {
   for(auto b : resFL) {
     std::cout << "ForwardListB " << b.b << std::endl;
   }
-  anch::ut::assert(resFL == exp, "Unexpected result");
+  anch::ut::assertThat(resFL == exp, "Unexpected result");
   std::cout << "Exit testCollectForwardList" << std::endl;
 }
 
@@ -256,7 +256,7 @@ testCollectVector() {
   for(auto b : resV) {
     std::cout << "VectorB " << b.b << std::endl;
   }
-  anch::ut::assert(resV == exp, "Unexpected result");
+  anch::ut::assertThat(resV == exp, "Unexpected result");
   std::cout << "Exit testCollectVector" << std::endl;
 }
 
@@ -275,7 +275,7 @@ testCollectSet() {
   for(auto b : resS) {
     std::cout << "SetB " << b.b << std::endl;
   }
-  anch::ut::assert(resS == exp, "Unexpected result");
+  anch::ut::assertThat(resS == exp, "Unexpected result");
   std::cout << "Exit testCollectSet" << std::endl;
 }
 
@@ -294,7 +294,7 @@ testCollectMultiSet() {
   for(auto b : resMS) {
     std::cout << "MSetB " << b.b << std::endl;
   }
-  anch::ut::assert(resMS == exp, "Unexpected result");
+  anch::ut::assertThat(resMS == exp, "Unexpected result");
   std::cout << "Exit testCollectMultiSet" << std::endl;
 }
 
@@ -315,7 +315,7 @@ testCollectUnorderedSet() {
   for(auto b : resUS) {
     std::cout << "USetB " << b.b << std::endl;
   }
-  anch::ut::assert(resUS == exp, "Unexpected result");
+  anch::ut::assertThat(resUS == exp, "Unexpected result");
   std::cout << "Exit testCollectUnorderedSet" << std::endl;
 }
 
@@ -336,7 +336,7 @@ testCollectUnorderedMultiset() {
   for(auto b : resUS) {
     std::cout << "USetB " << b.b << std::endl;
   }
-  anch::ut::assert(resUS == exp, "Unexpected result");
+  anch::ut::assertThat(resUS == exp, "Unexpected result");
   std::cout << "Exit testCollectUnorderedMultiset" << std::endl;
 }
 
@@ -354,7 +354,7 @@ testCollectDeque() {
   for(auto b : resDQ) {
     std::cout << "DequeB " << b.b << std::endl;
   }
-  anch::ut::assert(resDQ == exp, "Unexpected result");
+  anch::ut::assertThat(resDQ == exp, "Unexpected result");
   std::cout << "Exit testCollectDeque" << std::endl;
 }
 
@@ -372,7 +372,7 @@ testCollectStack() {
       return b;
     })
     .collect(&std::stack<B>::push);
-  anch::ut::assert(resSt == exp, "Unexpected result");
+  anch::ut::assertThat(resSt == exp, "Unexpected result");
   while(!resSt.empty()) {
     std::cout << "StackB " << resSt.top().b << std::endl;
     resSt.pop();
@@ -394,7 +394,7 @@ testCollectQueue() {
       return b;
     })
     .collect(&std::queue<B>::push);
-  anch::ut::assert(resQ == exp, "Unexpected result");
+  anch::ut::assertThat(resQ == exp, "Unexpected result");
   while(!resQ.empty()) {
     std::cout << "QueueB " << resQ.front().b << std::endl;
     resQ.pop();
@@ -446,7 +446,7 @@ testCollectMap() {
   for(auto item : resM) {
     std::cout << "Map: " << item.first << '=' << item.second.b << std::endl;
   }
-  anch::ut::assert(resM == exp, "Unexpected result");
+  anch::ut::assertThat(resM == exp, "Unexpected result");
   std::cout << "Exit testCollectMap" << std::endl;
 }
 

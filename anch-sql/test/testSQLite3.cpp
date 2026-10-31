@@ -56,6 +56,26 @@ afterAll() {
   }
 }
 
+/*!
+ * Reset test data before each test: only the 4 rows created by the database initialization script (ids 1 to 4) are
+ * kept, so that tests depend neither on each other nor on previous executions
+ */
+void
+resetData() {
+  dbCon->update("DELETE FROM T_Test WHERE id > 4");
+}
+
+/*!
+ * Insert the 'Test' person used as precondition by update and delete tests
+ *
+ * \param firstName the person first name
+ */
+void
+insertTestPerson(const std::string& firstName) {
+  uint64_t nbRow = dbCon->update("INSERT INTO T_Test (first_name,last_name,birth_date,email) VALUES('" + firstName + "','Test','2016-03-22','precondition.test@yopmail.com')");
+  anch::ut::assertThat(nbRow == 1, "Precondition: number of inserted rows should be 1 instead of {}", nbRow);
+}
+
 void
 testQueryManualHandling() {
   std::cout << "Execute 'SELECT id,first_name,last_name,birth_date,email FROM T_Test' with manual result handling" << std::endl;
@@ -172,6 +192,7 @@ testInsert() {
 
 void
 testUpdate() {
+  insertTestPerson("Insert");
   std::cout << "Execute 'UPDATE T_Test SET first_name = 'Update', email = 'update.test@yopmail.com' WHERE first_name = 'Insert' AND last_name = 'Test''" << std::endl;
   try {
     uint64_t nbRow = dbCon->update("UPDATE T_Test SET first_name = 'Update', email = 'update.test@yopmail.com' WHERE first_name = 'Insert' AND last_name = 'Test'");
@@ -190,6 +211,7 @@ testUpdate() {
 
 void
 testDelete() {
+  insertTestPerson("Update");
   std::cout << "Execute 'DELETE FROM T_Test WHERE first_name = 'Update' AND last_name = 'Test''" << std::endl;
   try {
     uint64_t nbRow = dbCon->update("DELETE FROM T_Test WHERE first_name = 'Update' AND last_name = 'Test'");
@@ -272,6 +294,7 @@ testStmtInsert() {
 
 void
 testStmtUpdate() {
+  insertTestPerson("Insert");
   std::cout << "Execute 'UPDATE T_Test SET first_name = ?, email = ? WHERE first_name = ? AND last_name = ?'" << std::endl;
   try {
     PreparedStatement& stmtU = dbCon->prepareStatement("UPDATE T_Test SET first_name = ?, email = ? WHERE first_name = ? AND last_name = ?");
@@ -406,6 +429,7 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .description("Test AnCH SQLite3 library")
     .initialize(beforeAll)
     .uninitialize(afterAll)
+    .beforeTest(resetData)
     .add("query-manual-handling", testQueryManualHandling)
     .add("query-row-result-handling", testQueryRowResultHandling)
     .add("query-result-set-handling", testQueryResultSetHandling)

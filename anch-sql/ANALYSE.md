@@ -31,10 +31,18 @@ De même, le résultat de `dlsym` (ligne 63-64) n'est pas vérifié : un pilote 
 Ce point relève en partie de la gestion d'erreurs, mais il transforme une erreur de configuration (pilote absent) en plantage.
 Piste : n'enregistrer l'entrée qu'après un `dlopen` et des `dlsym` réussis ; initialiser les pointeurs à `nullptr`.
 
-### S6. Tests non isolés : résultats dépendants de l'ordre et des exécutions précédentes — vérifié
+### S6. Tests non isolés : résultats dépendants de l'ordre et des exécutions précédentes — vérifié — **corrigé le 2026-10-31**
 Les tests MySQL, PostgreSQL et SQLite partagent l'état de la base : `*-update` suppose que `*-insert` a été exécuté avant, et `*-transactions` compte des lignes laissées par les exécutions précédentes. `anch.db` n'est copié qu'à la configuration CMake : son contenu s'accumule d'une exécution de `ctest` à l'autre.
 Reproduction (2026-10-30) : avec `ctest -j`, `SQLite3-insert`, `SQLite3-update`, `SQLite3-update-stmt` et `SQLite3-transactions` échouent ; en séquentiel, il reste `PostgreSQL-update` (« Number of affected rows should be 1 instead of 0 ») et `SQLite3-transactions` (« Found 3 persons instead of 1 »), qui échouent aussi lancés seuls car ils dépendent des lignes laissées par les exécutions précédentes. `SQLite3-update` passe quand il est lancé seul.
 Piste : fixtures CTest (`FIXTURES_SETUP` / `FIXTURES_REQUIRED`) qui recréent la base avant chaque série (`mysql_init.sql`, `postgresql_init.sql`, copie de `anch.db`), et `RESOURCE_LOCK` par base pour empêcher l'exécution parallèle.
+État avant correction (2026-10-31) : 55 lignes dans `T_Test` sous MySQL (dont 51 « Update ») et 51 sous PostgreSQL, accumulées par les exécutions précédentes.
+Correction (chaque cas indépendant, plutôt qu'une série ordonnée) :
+- `testSQLite3.cpp`, `testMySQL.cpp`, `testPostgreSQL.cpp` : fonction `resetData`, enregistrée avec `beforeTest`, qui ne garde que les 4 lignes du script d'initialisation (`DELETE FROM T_Test WHERE id > 4`) ; les tests ne modifient jamais ces lignes (ils ciblent « Insert », « Update », « Roll », « Com », « Batch … »).
+- Préconditions locales : `update`, `update-stmt` et `delete` insèrent eux-mêmes la ligne qu'ils modifient ou suppriment (`insertTestPerson`), au lieu de dépendre du test précédent.
+- `06-delete` réactivé pour MySQL et PostgreSQL (il était en commentaire) ; `SQLite3-delete`, `MySQL-delete` et `PostgreSQL-delete` enregistrés dans CMake (le cas SQLite était l'oubli restant de T6 dans `anch-ut/ANALYSE.md`).
+- `RESOURCE_LOCK` par base (`anch_mysql`, `anch_pgsql`, `anch_sqlite`) sur tous les tests d'une base, y compris `SQLConnectionFactory*` qui y écrit aussi : jamais deux tests de la même base en parallèle ; les bases différentes et les autres tests restent parallèles.
+- Vérifié : 64 tests `sql` passent avec `ctest -j12` (3 exécutions de suite) et en séquentiel ; les 12 tests d'écriture (`update`, `delete`, `update-stmt`, `transactions` des trois bases) passent lancés seuls ; les trois exécutables passent avec tous leurs cas dans un seul processus ; après les tests, chaque base contient de nouveau ses 4 lignes initiales.
+- Limite : la remise à zéro suppose que les lignes 1 à 4 du script d'initialisation sont intactes (elles le sont : aucun test ne les modifie).
 
 ### S7. Conversion des colonnes : valeurs négatives et `uint8_t` — renvoi
 `src/sql/resultSet.cpp:99-186` et `postgresql/src/sql/postgresqlConnection.cpp:202` utilisent `anch::convert` : une colonne négative lue dans un type non signé est acceptée modulo 2^n, sans erreur (constat U9 de [../anch-utils/ANALYSE.md](../anch-utils/ANALYSE.md)).

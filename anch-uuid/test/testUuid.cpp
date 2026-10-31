@@ -112,14 +112,14 @@ void
 checkToString(const UUID& uuid) {
   std::string expected = referenceToString(uuid);
   std::string str = uuid.toString();
-  anch::ut::assert(str == expected, "toString: expected {} ; found {}", expected, str);
+  anch::ut::assertThat(str == expected, "toString: expected {} ; found {}", expected, str);
   char chars[UUID::STRING_SIZE + 1];
   chars[UUID::STRING_SIZE] = 'X'; // check that nothing is written after UUID
   char* end = uuid.toChars(chars);
-  anch::ut::assert(end == chars + UUID::STRING_SIZE, "toChars should write {} characters ; found {}", UUID::STRING_SIZE, end - chars);
-  anch::ut::assert(std::string(chars, UUID::STRING_SIZE) == expected, "toChars: expected {} ; found {}", expected, std::string(chars, UUID::STRING_SIZE));
-  anch::ut::assert(chars[UUID::STRING_SIZE] == 'X', "toChars has written after UUID");
-  anch::ut::assert(UUID(str).toString() == str, "Round trip failed for {}", str);
+  anch::ut::assertThat(end == chars + UUID::STRING_SIZE, "toChars should write {} characters ; found {}", UUID::STRING_SIZE, end - chars);
+  anch::ut::assertThat(std::string(chars, UUID::STRING_SIZE) == expected, "toChars: expected {} ; found {}", expected, std::string(chars, UUID::STRING_SIZE));
+  anch::ut::assertThat(chars[UUID::STRING_SIZE] == 'X', "toChars has written after UUID");
+  anch::ut::assertThat(UUID(str).toString() == str, "Round trip failed for {}", str);
 }
 
 void
@@ -138,9 +138,9 @@ testUUIDToString() {
 void
 testUUIDParse() {
   UUID uuid("DEB94EBC-BE28-4899-981A-29199B7A487D"); // uppercase is accepted
-  anch::ut::assert(uuid.toString() == "deb94ebc-be28-4899-981a-29199b7a487d", "Uppercase parsing: found {}", uuid.toString());
-  anch::ut::assert(uuid.getVersion() == UUID::Version::RANDOM, "Version should be 4");
-  anch::ut::assert(uuid.getNode() == 0x29199b7a487dULL, "Node should be 29199b7a487d ; found {:x}", uuid.getNode());
+  anch::ut::assertThat(uuid.toString() == "deb94ebc-be28-4899-981a-29199b7a487d", "Uppercase parsing: found {}", uuid.toString());
+  anch::ut::assertThat(uuid.getVersion() == UUID::Version::RANDOM, "Version should be 4");
+  anch::ut::assertThat(uuid.getNode() == 0x29199b7a487dULL, "Node should be 29199b7a487d ; found {:x}", uuid.getNode());
 }
 
 void
@@ -162,7 +162,7 @@ testUUIDParseKO() {
     } catch(const std::invalid_argument& e) {
       std::cout << e.what() << std::endl;
     }
-    anch::ut::assert(uuid.toString() == valid, "UUID should not be modified by failed parsing ; found {}", uuid.toString());
+    anch::ut::assertThat(uuid.toString() == valid, "UUID should not be modified by failed parsing ; found {}", uuid.toString());
   }
 }
 
@@ -170,19 +170,19 @@ void
 testUUIDBytes() {
   UUID uuid("01234567-89ab-4def-9123-456789abcdef");
   std::array<uint8_t,16> expected = {0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0x4d, 0xef, 0x91, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef};
-  anch::ut::assert(uuid.toBytes() == expected, "toBytes does not match RFC 9562 big-endian layout");
+  anch::ut::assertThat(uuid.toBytes() == expected, "toBytes does not match RFC 9562 big-endian layout");
   UUID res = UUID::fromBytes(expected);
-  anch::ut::assert(res == uuid, "fromBytes: expected {} ; found {}", uuid.toString(), res.toString());
-  anch::ut::assert(res.getVersion() == UUID::Version::RANDOM, "fromBytes: version should be 4");
+  anch::ut::assertThat(res == uuid, "fromBytes: expected {} ; found {}", uuid.toString(), res.toString());
+  anch::ut::assertThat(res.getVersion() == UUID::Version::RANDOM, "fromBytes: version should be 4");
   for(int i = 0 ; i < 10000 ; ++i) { // round trip
     UUID random = UUID::random();
-    anch::ut::assert(UUID::fromBytes(random.toBytes()) == random, "Round trip failed for {}", random.toString());
+    anch::ut::assertThat(UUID::fromBytes(random.toBytes()) == random, "Round trip failed for {}", random.toString());
   }
   // Namespaces +
-  anch::ut::assert(UUID::namespaceDNS().toString() == "6ba7b810-9dad-11d1-80b4-00c04fd430c8", "Bad DNS namespace");
-  anch::ut::assert(UUID::namespaceURL().toString() == "6ba7b811-9dad-11d1-80b4-00c04fd430c8", "Bad URL namespace");
-  anch::ut::assert(UUID::namespaceOID().toString() == "6ba7b812-9dad-11d1-80b4-00c04fd430c8", "Bad OID namespace");
-  anch::ut::assert(UUID::namespaceX500().toString() == "6ba7b814-9dad-11d1-80b4-00c04fd430c8", "Bad X500 namespace");
+  anch::ut::assertThat(UUID::namespaceDNS().toString() == "6ba7b810-9dad-11d1-80b4-00c04fd430c8", "Bad DNS namespace");
+  anch::ut::assertThat(UUID::namespaceURL().toString() == "6ba7b811-9dad-11d1-80b4-00c04fd430c8", "Bad URL namespace");
+  anch::ut::assertThat(UUID::namespaceOID().toString() == "6ba7b812-9dad-11d1-80b4-00c04fd430c8", "Bad OID namespace");
+  anch::ut::assertThat(UUID::namespaceX500().toString() == "6ba7b814-9dad-11d1-80b4-00c04fd430c8", "Bad X500 namespace");
   // Namespaces -
 }
 
@@ -197,10 +197,10 @@ testUUIDClockSeq() {
   }
   for(int b = 0 ; b < 256 ; ++b) {
     if(b < 0x80 || b > 0xbf) {
-      anch::ut::assert(counts[static_cast<std::size_t>(b)] == 0, "Byte {:x} should never be generated (variant)", b);
+      anch::ut::assertThat(counts[static_cast<std::size_t>(b)] == 0, "Byte {:x} should never be generated (variant)", b);
     } else {
       int count = counts[static_cast<std::size_t>(b)];
-      anch::ut::assert(count > nb / 64 / 2 && count < nb / 64 * 3 / 2, "Byte {:x} generated {} times ; expected ~{}", b, count, nb / 64);
+      anch::ut::assertThat(count > nb / 64 / 2 && count < nb / 64 * 3 / 2, "Byte {:x} generated {} times ; expected ~{}", b, count, nb / 64);
     }
   }
 }
@@ -220,14 +220,14 @@ testUUIDProviderConcurrency() {
     threads.emplace_back([&stop]() {
       while(!stop) {
 	UUID uuid = UUID::generateUUID(UUID::Version::RANDOM, "");
-	anch::ut::assert(uuid.getVersion() == UUID::Version::RANDOM, "Version should be 4");
+	anch::ut::assertThat(uuid.getVersion() == UUID::Version::RANDOM, "Version should be 4");
       }
     });
   }
   for(std::thread& thread : threads) {
     thread.join();
   }
-  anch::ut::assert(UUID::generateUUID(UUID::Version::EXP, "").getVersion() == UUID::Version::RANDOM, "Registered provider should be used");
+  anch::ut::assertThat(UUID::generateUUID(UUID::Version::EXP, "").getVersion() == UUID::Version::RANDOM, "Registered provider should be used");
 }
 
 void
@@ -235,8 +235,8 @@ testUUIDRandomFormat() {
   for(int i = 0 ; i < 10000 ; ++i) {
     // Version 4: version and variant bits, other bits random
     std::array<uint8_t,16> bytes = UUID::random().toBytes();
-    anch::ut::assert((bytes[6] >> 4) == 4, "Version 4 expected");
-    anch::ut::assert((bytes[8] & 0xC0) == 0x80, "RFC 9562 variant expected");
+    anch::ut::assertThat((bytes[6] >> 4) == 4, "Version 4 expected");
+    anch::ut::assertThat((bytes[8] & 0xC0) == 0x80, "RFC 9562 variant expected");
     // Version 7: Unix timestamp in milliseconds on 48 first bits
     auto before = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
     bytes = UUID::randomTime().toBytes();
@@ -245,9 +245,9 @@ testUUIDRandomFormat() {
     for(std::size_t b = 0 ; b < 6 ; ++b) {
       timestamp = (timestamp << 8) | bytes[b];
     }
-    anch::ut::assert((bytes[6] >> 4) == 7, "Version 7 expected");
-    anch::ut::assert((bytes[8] & 0xC0) == 0x80, "RFC 9562 variant expected");
-    anch::ut::assert(timestamp >= before && timestamp <= after, "Timestamp {} should be between {} and {}", timestamp, before, after);
+    anch::ut::assertThat((bytes[6] >> 4) == 7, "Version 7 expected");
+    anch::ut::assertThat((bytes[8] & 0xC0) == 0x80, "RFC 9562 variant expected");
+    anch::ut::assertThat(timestamp >= before && timestamp <= after, "Timestamp {} should be between {} and {}", timestamp, before, after);
   }
 }
 
@@ -258,7 +258,7 @@ testUUIDUtcTimestamp() {
   uint64_t timestamp = UUID::getUtcTimestamp();
   auto after = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
   int64_t unixMs = static_cast<int64_t>((timestamp - 0x01B21DD213814000ULL) / 10000);
-  anch::ut::assert(unixMs >= before && unixMs <= after, "Timestamp {} (Unix ms {}) should be between {} and {}", timestamp, unixMs, before, after);
+  anch::ut::assertThat(unixMs >= before && unixMs <= after, "Timestamp {} (Unix ms {}) should be between {} and {}", timestamp, unixMs, before, after);
 }
 
 void
@@ -267,8 +267,8 @@ testUUIDV7Monotonic() {
   UUID previous = UUID::randomTime();
   for(int i = 0 ; i < 200000 ; ++i) {
     UUID current = UUID::randomTime();
-    anch::ut::assert(previous.toBytes() < current.toBytes(), "{} should be lower than {}", previous.toString(), current.toString());
-    anch::ut::assert(previous.toString() < current.toString(), "{} should be lower than {} (string)", previous.toString(), current.toString());
+    anch::ut::assertThat(previous.toBytes() < current.toBytes(), "{} should be lower than {}", previous.toString(), current.toString());
+    anch::ut::assertThat(previous.toString() < current.toString(), "{} should be lower than {} (string)", previous.toString(), current.toString());
     previous = current;
   }
   // 4 threads: strictly increasing in each thread, timestamp and counter unique between threads
@@ -297,11 +297,11 @@ testUUIDV7Monotonic() {
   std::set<uint64_t> all;
   for(const std::vector<uint64_t>& threadKeys : keys) {
     for(std::size_t i = 1 ; i < threadKeys.size() ; ++i) {
-      anch::ut::assert(threadKeys[i - 1] < threadKeys[i], "UUID v7 should be strictly increasing in thread");
+      anch::ut::assertThat(threadKeys[i - 1] < threadKeys[i], "UUID v7 should be strictly increasing in thread");
     }
     all.insert(threadKeys.begin(), threadKeys.end());
   }
-  anch::ut::assert(all.size() == static_cast<std::size_t>(nbThreads * nb), "Timestamp and counter should be unique ; found {} / {}", all.size(), nbThreads * nb);
+  anch::ut::assertThat(all.size() == static_cast<std::size_t>(nbThreads * nb), "Timestamp and counter should be unique ; found {} / {}", all.size(), nbThreads * nb);
 }
 
 void
@@ -309,7 +309,7 @@ testUUIDValueType() {
   static_assert(sizeof(UUID) == 16, "UUID should be 16 bytes");
   static_assert(std::is_trivially_copyable_v<UUID>, "UUID should be trivially copyable");
   static_assert(!std::has_virtual_destructor_v<UUID>, "UUID destructor should not be virtual");
-  anch::ut::assert(UUID().toString() == "00000000-0000-0000-0000-000000000000", "Default UUID should be nil");
+  anch::ut::assertThat(UUID().toString() == "00000000-0000-0000-0000-000000000000", "Default UUID should be nil");
   // Order is binary order and string order +
   std::vector<UUID> uuids;
   for(int i = 0 ; i < 10000 ; ++i) {
@@ -318,23 +318,23 @@ testUUIDValueType() {
   for(std::size_t i = 1 ; i < uuids.size() ; ++i) {
     const UUID& a = uuids[i - 1];
     const UUID& b = uuids[i];
-    anch::ut::assert((a < b) == (a.toString() < b.toString()), "Order of {} and {} should be string order", a.toString(), b.toString());
-    anch::ut::assert((a < b) == (a.toBytes() < b.toBytes()), "Order of {} and {} should be binary order", a.toString(), b.toString());
-    anch::ut::assert((a == b) == (a.toString() == b.toString()), "Equality of {} and {}", a.toString(), b.toString());
+    anch::ut::assertThat((a < b) == (a.toString() < b.toString()), "Order of {} and {} should be string order", a.toString(), b.toString());
+    anch::ut::assertThat((a < b) == (a.toBytes() < b.toBytes()), "Order of {} and {} should be binary order", a.toString(), b.toString());
+    anch::ut::assertThat((a == b) == (a.toString() == b.toString()), "Equality of {} and {}", a.toString(), b.toString());
   }
   // Order is binary order and string order -
   // Containers +
   std::set<UUID> set(uuids.begin(), uuids.end());
   std::unordered_set<UUID> hashSet(uuids.begin(), uuids.end());
-  anch::ut::assert(set.size() == uuids.size() && hashSet.size() == uuids.size(), "All UUID should be in containers");
-  anch::ut::assert(hashSet.contains(UUID(uuids[42].toString())), "Parsed UUID should be found in unordered_set");
+  anch::ut::assertThat(set.size() == uuids.size() && hashSet.size() == uuids.size(), "All UUID should be in containers");
+  anch::ut::assertThat(hashSet.contains(UUID(uuids[42].toString())), "Parsed UUID should be found in unordered_set");
   // Containers -
   // Parts constructor +
   UUID parts(0x01234567, 0x89ab, 0x0def, 0x23, 0x91, 0x456789abcdefULL, UUID::Version::RANDOM);
-  anch::ut::assert(parts.toString() == "01234567-89ab-4def-9123-456789abcdef", "Parts constructor: found {}", parts.toString());
-  anch::ut::assert(parts.getLowTime() == 0x01234567 && parts.getMidTime() == 0x89ab && parts.getHighTime() == 0x0def
-		   && parts.getClockSeqLow() == 0x23 && parts.getClockSeqHighRes() == 0x91 && parts.getNode() == 0x456789abcdefULL
-		   && parts.getVersion() == UUID::Version::RANDOM, "Parts getters");
+  anch::ut::assertThat(parts.toString() == "01234567-89ab-4def-9123-456789abcdef", "Parts constructor: found {}", parts.toString());
+  anch::ut::assertThat(parts.getLowTime() == 0x01234567 && parts.getMidTime() == 0x89ab && parts.getHighTime() == 0x0def
+		       && parts.getClockSeqLow() == 0x23 && parts.getClockSeqHighRes() == 0x91 && parts.getNode() == 0x456789abcdefULL
+		       && parts.getVersion() == UUID::Version::RANDOM, "Parts getters");
   // Parts constructor -
 }
 

@@ -21,8 +21,8 @@ testParseBooleanFalse() {
   bool value = true;
   anch::json::lexBoolean(value, context);
   std::cout << "Result: " << std::boolalpha << value << std::endl;
-  anch::ut::assert(anch::ut::equals("lex: ", false, value),
-		   "Result should be false");
+  anch::ut::assertThat(anch::ut::equals("lex: ", false, value),
+		       "Result should be false");
 }
 
 void
@@ -32,8 +32,8 @@ testParseBooleanTrue() {
   bool value = false;
   anch::json::lexBoolean(value, context);
   std::cout << "Result: " << std::boolalpha << value << std::endl;
-  anch::ut::assert(anch::ut::equals("lex: ", true, value),
-		   "Result should be true");
+  anch::ut::assertThat(anch::ut::equals("lex: ", true, value),
+		       "Result should be true");
 }
 
 void
@@ -43,8 +43,8 @@ testParseBooleanNull() {
   bool value = true;
   anch::json::lexBoolean(value, context);
   std::cout << "Result: " << std::boolalpha << value << std::endl;
-  anch::ut::assert(anch::ut::equals("lex: ", true, value),
-		   "Result should remain true");
+  anch::ut::assertThat(anch::ut::equals("lex: ", true, value),
+		       "Result should remain true");
 }
 
 void
@@ -73,9 +73,9 @@ testParseStr() {
   std::string value;
   bool found = anch::json::lexString(value, context);
   std::cout << "Result has value ? " << std::boolalpha << found << std::endl;
-  anch::ut::assert(found, "Result should have value");
-  anch::ut::assert(anch::ut::equals("lex", std::string("test string"), value),
-		   "Result should parse 'test string'");
+  anch::ut::assertThat(found, "Result should have value");
+  anch::ut::assertThat(anch::ut::equals("lex", std::string("test string"), value),
+		       "Result should parse 'test string'");
   std::cout << "Result: " << value << std::endl;
 }
 
@@ -86,7 +86,7 @@ testParseStrNull() {
   std::string value;
   bool found = anch::json::lexString(value, context);
   std::cout << "Result has value ? " << std::boolalpha << found << std::endl;
-  anch::ut::assert(!found, "Result should not have value");
+  anch::ut::assertThat(!found, "Result should not have value");
 }
 
 void
@@ -95,8 +95,8 @@ checkParseStr(const std::string& json, const std::string& expected, std::size_t 
   anch::json::ReaderContext context(sis, {.buffer_size = bufferSize});
   std::string value;
   bool found = anch::json::lexString(value, context);
-  anch::ut::assert(found, "Result should have value");
-  anch::ut::assert(value == expected, "Parsing {} with buffer_size={}: expected '{}' ; found '{}'", json, bufferSize, expected, value);
+  anch::ut::assertThat(found, "Result should have value");
+  anch::ut::assertThat(value == expected, "Parsing {} with buffer_size={}: expected '{}' ; found '{}'", json, bufferSize, expected, value);
 }
 
 void
@@ -160,9 +160,9 @@ testParseUint() {
   anch::json::juint value;
   bool found = anch::json::lexUInteger(value, context);
   std::cout << "Result has value ? " << std::boolalpha << found << std::endl;
-  anch::ut::assert(found, "Result should have value");
-  anch::ut::assert(anch::ut::equals("lex", static_cast<anch::json::juint>(123456789), value),
-		   "Result should parse '123456789'");
+  anch::ut::assertThat(found, "Result should have value");
+  anch::ut::assertThat(anch::ut::equals("lex", static_cast<anch::json::juint>(123456789), value),
+		       "Result should parse '123456789'");
 }
 
 void
@@ -172,7 +172,7 @@ testParseUintNull() {
   anch::json::juint value;
   bool found = anch::json::lexUInteger(value, context);
   std::cout << "Result has value ? " << std::boolalpha << found << std::endl;
-  anch::ut::assert(!found, "Result should not have value");
+  anch::ut::assertThat(!found, "Result should not have value");
 }
 
 void
@@ -218,9 +218,9 @@ testParseInt() {
   anch::json::jint value;
   bool found = anch::json::lexInteger(value, context);
   std::cout << "Result has value ? " << std::boolalpha << found << std::endl;
-  anch::ut::assert(found, "Result should have value");
-  anch::ut::assert(anch::ut::equals("lex", static_cast<anch::json::jint>(-123456789), value),
-		   "Result should parse '-123456789'");
+  anch::ut::assertThat(found, "Result should have value");
+  anch::ut::assertThat(anch::ut::equals("lex", static_cast<anch::json::jint>(-123456789), value),
+		       "Result should parse '-123456789'");
 }
 
 void
@@ -230,7 +230,7 @@ testParseIntNull() {
   anch::json::jint value;
   bool found = anch::json::lexInteger(value, context);
   std::cout << "Result has value ? " << std::boolalpha << found << std::endl;
-  anch::ut::assert(!found, "Result should not have value");
+  anch::ut::assertThat(!found, "Result should not have value");
 }
 
 void
@@ -259,9 +259,9 @@ testParseUDouble() {
   double value;
   bool found = anch::json::lexNumber(value, context);
   std::cout << "Result has value ? " << std::boolalpha << found << std::endl;
-  anch::ut::assert(found, "Result should have value");
-  anch::ut::assert(anch::ut::equals("lex", static_cast<double>(123456789), value),
-		   "Result should parse '123456789'");
+  anch::ut::assertThat(found, "Result should have value");
+  anch::ut::assertThat(anch::ut::equals("lex", static_cast<double>(123456789), value),
+		       "Result should parse '123456789'");
 }
 
 void
@@ -271,9 +271,9 @@ testParseUDoubleDot() {
   double value;
   bool found = anch::json::lexNumber(value, context);
   std::cout << "Result has value ? " << std::boolalpha << found << std::endl;
-  anch::ut::assert(found, "Result should have value");
-  anch::ut::assert(anch::ut::equals("lex", static_cast<double>(123456789.123456), value),
-		   "Result should parse '123456789.123456'");
+  anch::ut::assertThat(found, "Result should have value");
+  anch::ut::assertThat(anch::ut::equals("lex", static_cast<double>(123456789.123456), value),
+		       "Result should parse '123456789.123456'");
 }
 
 void
@@ -283,9 +283,9 @@ testParseUDoubleZeroDot() {
   double value;
   bool found = anch::json::lexNumber(value, context);
   std::cout << "Result has value ? " << std::boolalpha << found << std::endl;
-  anch::ut::assert(found, "Result should have value");
-  anch::ut::assert(anch::ut::equals("lex", static_cast<double>(0.123456), value),
-		   "Result should parse '0.123456'");
+  anch::ut::assertThat(found, "Result should have value");
+  anch::ut::assertThat(anch::ut::equals("lex", static_cast<double>(0.123456), value),
+		       "Result should parse '0.123456'");
 }
 
 void
@@ -295,9 +295,9 @@ testParseSDouble() {
   double value;
   bool found = anch::json::lexNumber(value, context);
   std::cout << "Result has value ? " << std::boolalpha << found << std::endl;
-  anch::ut::assert(found, "Result should have value");
-  anch::ut::assert(anch::ut::equals("lex", static_cast<double>(-123456789), value),
-		   "Result should parse '-123456789'");
+  anch::ut::assertThat(found, "Result should have value");
+  anch::ut::assertThat(anch::ut::equals("lex", static_cast<double>(-123456789), value),
+		       "Result should parse '-123456789'");
 }
 
 void
@@ -307,9 +307,9 @@ testParseSDoubleDot() {
   double value;
   bool found = anch::json::lexNumber(value, context);
   std::cout << "Result has value ? " << std::boolalpha << found << std::endl;
-  anch::ut::assert(found, "Result should have value");
-  anch::ut::assert(anch::ut::equals("lex", static_cast<double>(-123456789.123456), value),
-		   "Result should parse '-123456789.123456'");
+  anch::ut::assertThat(found, "Result should have value");
+  anch::ut::assertThat(anch::ut::equals("lex", static_cast<double>(-123456789.123456), value),
+		       "Result should parse '-123456789.123456'");
 }
 
 void
@@ -319,9 +319,9 @@ testParseSDoubleZeroDot() {
   double value;
   bool found = anch::json::lexNumber(value, context);
   std::cout << "Result has value ? " << std::boolalpha << found << std::endl;
-  anch::ut::assert(found, "Result should have value");
-  anch::ut::assert(anch::ut::equals("lex", static_cast<double>(-0.123456), value),
-		   "Result should parse '-0.123456'");
+  anch::ut::assertThat(found, "Result should have value");
+  anch::ut::assertThat(anch::ut::equals("lex", static_cast<double>(-0.123456), value),
+		       "Result should parse '-0.123456'");
 }
 
 void
@@ -331,7 +331,7 @@ testParseDoubleNull() {
   double value;
   bool found = anch::json::lexNumber(value, context);
   std::cout << "Result has value ? " << std::boolalpha << found << std::endl;
-  anch::ut::assert(!found, "Result should not have value");
+  anch::ut::assertThat(!found, "Result should not have value");
 }
 
 void
@@ -341,8 +341,8 @@ testParseUDoubleDotExp() {
   double value;
   bool found = anch::json::lexNumber(value, context);
   std::cout << "Result has value ? " << std::boolalpha << found << std::endl;
-  anch::ut::assert(anch::ut::equals("lex", static_cast<double>(1.2e+123), value),
-		   "Result should parse '1.2e+123'");
+  anch::ut::assertThat(anch::ut::equals("lex", static_cast<double>(1.2e+123), value),
+		       "Result should parse '1.2e+123'");
 }
 
 void
@@ -352,8 +352,8 @@ testParseSDoubleDotExp() {
   double value;
   bool found = anch::json::lexNumber(value, context);
   std::cout << "Result has value ? " << std::boolalpha << found << std::endl;
-  anch::ut::assert(anch::ut::equals("lex", static_cast<double>(-1.2e+123), value),
-		   "Result should parse '-1.2e+123'");
+  anch::ut::assertThat(anch::ut::equals("lex", static_cast<double>(-1.2e+123), value),
+		       "Result should parse '-1.2e+123'");
 }
 
 void
@@ -363,8 +363,8 @@ testParseUDoubleExp() {
   double value;
   bool found = anch::json::lexNumber(value, context);
   std::cout << "Result has value ? " << std::boolalpha << found << std::endl;
-  anch::ut::assert(anch::ut::equals("lex", static_cast<double>(5e+123), value),
-		   "Result should parse '5e+123'");
+  anch::ut::assertThat(anch::ut::equals("lex", static_cast<double>(5e+123), value),
+		       "Result should parse '5e+123'");
 }
 
 void
@@ -374,8 +374,8 @@ testParseSDoubleExp() {
   double value;
   bool found = anch::json::lexNumber(value, context);
   std::cout << "Result has value ? " << std::boolalpha << found << std::endl;
-  anch::ut::assert(anch::ut::equals("lex", static_cast<double>(-5e+123), value),
-		   "Result should parse '-5e+123'");
+  anch::ut::assertThat(anch::ut::equals("lex", static_cast<double>(-5e+123), value),
+		       "Result should parse '-5e+123'");
 }
 // Double -
 
@@ -398,7 +398,7 @@ testArrayNull() {
     return false;
   };
   anch::json::lexArray(add, context);
-  anch::ut::assert(value.empty(), "Result should not have value");
+  anch::ut::assertThat(value.empty(), "Result should not have value");
 }
 
 void
@@ -415,7 +415,7 @@ testArrayEmpty() {
     return false;
   };
   anch::json::lexArray(add, context);
-  anch::ut::assert(value.empty(), "Result should not have value");
+  anch::ut::assertThat(value.empty(), "Result should not have value");
 }
 
 void
@@ -433,7 +433,7 @@ testArrayList() {
   };
   anch::json::lexArray(add, context);
   std::list<anch::json::jint> expected = {1,2,3,4};
-  anch::ut::assert(anch::ut::equals("lex", expected, value), "Result should parse '{1,2,3,4}'");
+  anch::ut::assertThat(anch::ut::equals("lex", expected, value), "Result should parse '{1,2,3,4}'");
 }
 
 void
@@ -451,7 +451,7 @@ testArrayVector() {
   };
   anch::json::lexArray(add, context);
   std::vector<anch::json::jint> expected = {1,2,3,4};
-  anch::ut::assert(anch::ut::equals("lex", expected, value), "Result should parse '{1,2,3,4}'");
+  anch::ut::assertThat(anch::ut::equals("lex", expected, value), "Result should parse '{1,2,3,4}'");
 }
 
 void
@@ -469,7 +469,7 @@ testArraySet() {
   };
   anch::json::lexArray(add, context);
   std::set<anch::json::jint> expected = {1,2,3,4};
-  anch::ut::assert(anch::ut::equals("lex", expected, value), "Result should parse '{1,2,3,4}'");
+  anch::ut::assertThat(anch::ut::equals("lex", expected, value), "Result should parse '{1,2,3,4}'");
 }
 // Array -
 
@@ -489,7 +489,7 @@ testNullMap() {
   };
   anch::json::lexMap(push, context);
   std::map<std::string,anch::json::jint> expected = {};
-  anch::ut::assert(value.empty(), "Result should not have value");
+  anch::ut::assertThat(value.empty(), "Result should not have value");
 }
 
 void
@@ -505,7 +505,7 @@ testEmptyMap() {
   };
   anch::json::lexMap(push, context);
   std::map<std::string,anch::json::jint> expected = {};
-  anch::ut::assert(value.empty(), "Result should not have value");
+  anch::ut::assertThat(value.empty(), "Result should not have value");
 }
 
 void
@@ -528,9 +528,9 @@ testMap() {
     {"plip", 2},
     {"plap", 3}
   };
-  anch::ut::assert(expected.size() == value.size(), "Number of items should be {} ; found {}", expected.size(), value.size());
+  anch::ut::assertThat(expected.size() == value.size(), "Number of items should be {} ; found {}", expected.size(), value.size());
   for(auto iter = expected.cbegin() ; iter != expected.cend() ; ++iter) {
-    anch::ut::assert(iter->second == value[iter->first], "{}={} differs from {}={}", iter->first, iter->second, iter->first, value[iter->first]);
+    anch::ut::assertThat(iter->second == value[iter->first], "{}={} differs from {}={}", iter->first, iter->second, iter->first, value[iter->first]);
   }
 }
 // Map -
@@ -542,9 +542,9 @@ testParseUint0() {
   anch::json::ReaderContext context(sis, anch::json::DEFAULT_MAPPING_OPTIONS);
   anch::json::juint value = 42;
   bool found = anch::json::lexUInteger(value, context);
-  anch::ut::assert(found, "Result should have value");
-  anch::ut::assert(anch::ut::equals("lex", static_cast<anch::json::juint>(0), value),
-		   "Result should parse '0'");
+  anch::ut::assertThat(found, "Result should have value");
+  anch::ut::assertThat(anch::ut::equals("lex", static_cast<anch::json::juint>(0), value),
+		       "Result should parse '0'");
 }
 
 void
@@ -553,9 +553,9 @@ testParseInt0() {
   anch::json::ReaderContext context(sis, anch::json::DEFAULT_MAPPING_OPTIONS);
   anch::json::jint value = 42;
   bool found = anch::json::lexInteger(value, context);
-  anch::ut::assert(found, "Result should have value");
-  anch::ut::assert(anch::ut::equals("lex", static_cast<anch::json::jint>(0), value),
-		   "Result should parse '0'");
+  anch::ut::assertThat(found, "Result should have value");
+  anch::ut::assertThat(anch::ut::equals("lex", static_cast<anch::json::jint>(0), value),
+		       "Result should parse '0'");
 }
 
 void
@@ -564,9 +564,9 @@ testParseIntMinus0() {
   anch::json::ReaderContext context(sis, anch::json::DEFAULT_MAPPING_OPTIONS);
   anch::json::jint value = 42;
   bool found = anch::json::lexInteger(value, context);
-  anch::ut::assert(found, "Result should have value");
-  anch::ut::assert(anch::ut::equals("lex", static_cast<anch::json::jint>(0), value),
-		   "Result should parse '-0'");
+  anch::ut::assertThat(found, "Result should have value");
+  anch::ut::assertThat(anch::ut::equals("lex", static_cast<anch::json::jint>(0), value),
+		       "Result should parse '-0'");
 }
 
 void
@@ -591,8 +591,8 @@ testParseDouble0() {
   anch::json::ReaderContext context(sis, anch::json::DEFAULT_MAPPING_OPTIONS);
   double value = 42.0;
   bool found = anch::json::lexNumber(value, context);
-  anch::ut::assert(found, "Result should have value");
-  anch::ut::assert(anch::ut::equals("lex", 0.0, value), "Result should parse '0'");
+  anch::ut::assertThat(found, "Result should have value");
+  anch::ut::assertThat(anch::ut::equals("lex", 0.0, value), "Result should parse '0'");
 }
 
 void
@@ -601,8 +601,8 @@ testParseDouble0Exp() {
   anch::json::ReaderContext context(sis, anch::json::DEFAULT_MAPPING_OPTIONS);
   double value = 42.0;
   bool found = anch::json::lexNumber(value, context);
-  anch::ut::assert(found, "Result should have value");
-  anch::ut::assert(anch::ut::equals("lex", 0.0, value), "Result should parse '0e2'");
+  anch::ut::assertThat(found, "Result should have value");
+  anch::ut::assertThat(anch::ut::equals("lex", 0.0, value), "Result should parse '0e2'");
 }
 
 void
@@ -666,9 +666,9 @@ testParseUintMax() {
   anch::json::ReaderContext context(sis, anch::json::DEFAULT_MAPPING_OPTIONS);
   anch::json::juint value = 0;
   bool found = anch::json::lexUInteger(value, context);
-  anch::ut::assert(found, "Result should have value");
-  anch::ut::assert(anch::ut::equals("lex", std::numeric_limits<anch::json::juint>::max(), value),
-		   "Result should parse '18446744073709551615'");
+  anch::ut::assertThat(found, "Result should have value");
+  anch::ut::assertThat(anch::ut::equals("lex", std::numeric_limits<anch::json::juint>::max(), value),
+		       "Result should parse '18446744073709551615'");
 }
 
 void
@@ -677,9 +677,9 @@ testParseIntMin() {
   anch::json::ReaderContext context(sis, anch::json::DEFAULT_MAPPING_OPTIONS);
   anch::json::jint value = 0;
   bool found = anch::json::lexInteger(value, context);
-  anch::ut::assert(found, "Result should have value");
-  anch::ut::assert(anch::ut::equals("lex", std::numeric_limits<anch::json::jint>::min(), value),
-		   "Result should parse '-9223372036854775808'");
+  anch::ut::assertThat(found, "Result should have value");
+  anch::ut::assertThat(anch::ut::equals("lex", std::numeric_limits<anch::json::jint>::min(), value),
+		       "Result should parse '-9223372036854775808'");
 }
 // Overflow -
 
@@ -694,10 +694,10 @@ checkParseNumberBuffer(const std::string& number, T expected, F lex) {
       anch::json::ReaderContext context(sis, {.deserialize_max_discard_char = -1, .buffer_size = bufferSize});
       T value{};
       bool found = lex(value, context);
-      anch::ut::assert(found, "'{}' should have value", json);
-      anch::ut::assert(value == expected, "Parsing '{}' with buffer_size={}: expected {} ; found {}", json, bufferSize, expected, value);
+      anch::ut::assertThat(found, "'{}' should have value", json);
+      anch::ut::assertThat(value == expected, "Parsing '{}' with buffer_size={}: expected {} ; found {}", json, bufferSize, expected, value);
       char next = context.discard();
-      anch::ut::assert(next == ',', "Parsing '{}' with buffer_size={}: next character should be ',' ; found '{}'", json, bufferSize, next);
+      anch::ut::assertThat(next == ',', "Parsing '{}' with buffer_size={}: next character should be ',' ; found '{}'", json, bufferSize, next);
     }
   }
 }

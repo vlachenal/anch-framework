@@ -32,14 +32,14 @@ resolv(const std::string& phs, const std::vector<Resolver>& resolvers) {
   }
   auto iter = std::sregex_iterator(phs.begin(), phs.end(), RSV_PATTERN);
   std::size_t nbRes = static_cast<std::size_t>(std::distance(iter, std::sregex_iterator()));
-  anch::ut::assert(nbRes == resolvers.size(), "Found {} tokens instead of {}", nbRes, resolvers.size());
+  anch::ut::assertThat(nbRes == resolvers.size(), "Found {} tokens instead of {}", nbRes, resolvers.size());
   for(std::size_t i = 0 ; iter != std::sregex_iterator() ; ++iter, ++i) {
     std::smatch sub = *iter;
-    anch::ut::assert(sub.size() == 4, "Found {} placeholders instead of {}", sub.size(), 4);
+    anch::ut::assertThat(sub.size() == 4, "Found {} placeholders instead of {}", sub.size(), 4);
     std::cout << std::endl << "Found:    resolver = '" << sub.str(2) << "' : value = '" << sub.str(3) << '\'' << std::endl;
     std::cout << "Expected: resolver = '" << resolvers[i].res << "' ; value = '" << resolvers[i].val << '\'' << std::endl;
-    anch::ut::assert(sub.str(2) == resolvers[i].res, "Resolver '{}' should be '{}'", sub.str(2), resolvers[i].res);
-    anch::ut::assert(sub.str(3) == resolvers[i].val, "Resolver '{}' should be '{}'", sub.str(3), resolvers[i].val);
+    anch::ut::assertThat(sub.str(2) == resolvers[i].res, "Resolver '{}' should be '{}'", sub.str(2), resolvers[i].res);
+    anch::ut::assertThat(sub.str(3) == resolvers[i].val, "Resolver '{}' should be '{}'", sub.str(3), resolvers[i].val);
   }
 }
 
@@ -56,14 +56,14 @@ check(const std::string& url, const Placeholders& placeholders) {
     std::cout << " - " << iter->first << std::endl;
   }
   auto iter = std::sregex_iterator(url.begin(), url.end(), PH_PATTERN);
-  anch::ut::assert(static_cast<std::size_t>(std::distance(iter, end)) == placeholders.size(), "Found {} tokens instead of {}", std::distance(iter, end), placeholders.size());
+  anch::ut::assertThat(static_cast<std::size_t>(std::distance(iter, end)) == placeholders.size(), "Found {} tokens instead of {}", std::distance(iter, end), placeholders.size());
   for(auto iter = std::sregex_iterator(url.begin(), url.end(), PH_PATTERN) ; iter != end ; ++iter) {
     std::smatch sub = *iter;
-    anch::ut::assert(sub.size() == 2, "Found {} placeholders instead of {}", sub.size(), 2);
+    anch::ut::assertThat(sub.size() == 2, "Found {} placeholders instead of {}", sub.size(), 2);
     std::string ph = sub.str(1); // sub.str(0) matches the complete PH_PATTERN with ${}
     std::cout << std::endl << "Found placeholders: " << ph << std::endl;
     auto it = placeholders.find(ph);
-    anch::ut::assert(it != placeholders.end(), "Placeholder '{}' has not been found", ph);
+    anch::ut::assertThat(it != placeholders.end(), "Placeholder '{}' has not been found", ph);
     resolv(ph, it->second);
   }
   std::cout << std::endl;

@@ -46,7 +46,7 @@ void anch::ut::setup(anch::ut::UnitTests& tests) {
 }
 ```
 
-Assertions: `anch::ut::assertTrue(cond, msg)` and `anch::ut::assert(cond, "fmt {} {}", args...)` (std::format-style).
+Assertions: `anch::ut::assertTrue(cond, msg)` and `anch::ut::assertThat(cond, "fmt {} {}", args...)` (std::format-style). `anch::ut::assert` is a deprecated alias (it conflicts with the `<cassert>` macro): use `assertThat`.
 
 Each test executable is declared in `<module>/test/CMakeLists.txt` with `anch_add_executable()`, and registered once per test case with `add_test(NAME <ctest-name> COMMAND <exe> -t <test-name>)`. When adding a test case, add both the `.add(...)` registration and a matching `add_test` line. Executables are in `build/<preset>/bin/` and can be run directly from the test binary directory:
 

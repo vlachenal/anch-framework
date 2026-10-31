@@ -117,7 +117,7 @@ testParseDate() {
   Date parsedDate = parseDate(strDate);
   std::string parsedDateStr;
   formatter.format(parsedDate, parsedDateStr);
-  anch::ut::assert(strDate == parsedDateStr, "Parse {} instrad of {}", parsedDateStr, strDate);
+  anch::ut::assertThat(strDate == parsedDateStr, "Parse {} instrad of {}", parsedDateStr, strDate);
   std::cout << "Parsed date: " << parsedDateStr << std::endl;
 
   std::cout << "Exit test date parse" << std::endl;
@@ -132,7 +132,7 @@ testComparison() {
   formatter.format(now, nowStr);
   std::string strDate = "2012-10-23 10:02:59.998";
   Date parsedDate = parseDate(strDate);
-  anch::ut::assert(now > parsedDate, "{} should be after {}", nowStr, strDate);
+  anch::ut::assertThat(now > parsedDate, "{} should be after {}", nowStr, strDate);
   std::cout << nowStr << " is after " << strDate << std::endl;
 
   std::cout << "Exit test comparison" << std::endl;

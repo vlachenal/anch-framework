@@ -15,12 +15,18 @@ if(ANCH_SQL_MYSQL)
   add_test(NAME MySQL-query-result-set-handling COMMAND anch-mysql-test -t 03-query-result-set-handling)
   add_test(NAME MySQL-insert COMMAND anch-mysql-test -t 04-insert)
   add_test(NAME MySQL-update COMMAND anch-mysql-test -t 05-update)
+  add_test(NAME MySQL-delete COMMAND anch-mysql-test -t 06-delete)
   add_test(NAME MySQL-query-stmt-row-result-handling COMMAND anch-mysql-test -t 07-query-stmt-row-result-handling)
   add_test(NAME MySQL-insert-stmt COMMAND anch-mysql-test -t 08-insert-stmt)
   add_test(NAME MySQL-update-stmt COMMAND anch-mysql-test -t 09-update-stmt)
   add_test(NAME MySQL-transactions COMMAND anch-mysql-test -t 10-transactions)
   add_test(NAME SQLConnectionFactoryMySQL COMMAND anch-sql-connection-factory-test -t sql-factory-mysql)
   set_tests_properties(SQLConnectionFactoryMySQL PROPERTIES ENVIRONMENT "${driver_env}")
+  # Tests share the database: they are not run in parallel (each test resets data before running)
+  set_tests_properties(MySQL-query-manual-handling MySQL-query-row-result-handling MySQL-query-result-set-handling
+    MySQL-insert MySQL-update MySQL-delete MySQL-query-stmt-row-result-handling MySQL-insert-stmt MySQL-update-stmt
+    MySQL-transactions SQLConnectionFactoryMySQL
+    PROPERTIES RESOURCE_LOCK anch_mysql)
 endif()
 
 if(ANCH_SQL_POSTGRESQL)
@@ -32,12 +38,18 @@ if(ANCH_SQL_POSTGRESQL)
   add_test(NAME PostgreSQL-query-result-set-handling COMMAND anch-postgresql-test -t 03-query-result-set-handling)
   add_test(NAME PostgreSQL-insert COMMAND anch-postgresql-test -t 04-insert)
   add_test(NAME PostgreSQL-update COMMAND anch-postgresql-test -t 05-update)
+  add_test(NAME PostgreSQL-delete COMMAND anch-postgresql-test -t 06-delete)
   add_test(NAME PostgreSQL-query-stmt-row-result-handling COMMAND anch-postgresql-test -t 07-query-stmt-row-result-handling)
   add_test(NAME PostgreSQL-insert-stmt COMMAND anch-postgresql-test -t 08-insert-stmt)
   add_test(NAME PostgreSQL-update-stmt COMMAND anch-postgresql-test -t 09-update-stmt)
   add_test(NAME PostgreSQL-transactions COMMAND anch-postgresql-test -t 10-transactions)
   add_test(NAME SQLConnectionFactoryPostgreSQL COMMAND anch-sql-connection-factory-test -t sql-factory-postgresql)
   set_tests_properties(SQLConnectionFactoryPostgreSQL PROPERTIES ENVIRONMENT "${driver_env}")
+  # Tests share the database: they are not run in parallel (each test resets data before running)
+  set_tests_properties(PostgreSQL-query-manual-handling PostgreSQL-query-row-result-handling PostgreSQL-query-result-set-handling
+    PostgreSQL-insert PostgreSQL-update PostgreSQL-delete PostgreSQL-query-stmt-row-result-handling PostgreSQL-insert-stmt
+    PostgreSQL-update-stmt PostgreSQL-transactions SQLConnectionFactoryPostgreSQL
+    PROPERTIES RESOURCE_LOCK anch_pgsql)
 endif()
 
 if(ANCH_SQL_SQLITE3)
@@ -49,12 +61,18 @@ if(ANCH_SQL_SQLITE3)
   add_test(NAME SQLite3-query-result-set-handling COMMAND anch-sqlite3-test -t query-result-set-handling)
   add_test(NAME SQLite3-insert COMMAND anch-sqlite3-test -t insert)
   add_test(NAME SQLite3-update COMMAND anch-sqlite3-test -t update)
+  add_test(NAME SQLite3-delete COMMAND anch-sqlite3-test -t delete)
   add_test(NAME SQLite3-query-stmt-row-result-handling COMMAND anch-sqlite3-test -t query-stmt-row-result-handling)
   add_test(NAME SQLite3-insert-stmt COMMAND anch-sqlite3-test -t insert-stmt)
   add_test(NAME SQLite3-update-stmt COMMAND anch-sqlite3-test -t update-stmt)
   add_test(NAME SQLite3-transactions COMMAND anch-sqlite3-test -t transactions)
   add_test(NAME SQLConnectionFactorySQLite COMMAND anch-sql-connection-factory-test -t sql-factory-sqlite3)
   set_tests_properties(SQLConnectionFactorySQLite PROPERTIES ENVIRONMENT "${driver_env}")
+  # Tests share anch.db: they are not run in parallel (each test resets data before running)
+  set_tests_properties(SQLite3-query-manual-handling SQLite3-query-row-result-handling SQLite3-query-result-set-handling
+    SQLite3-insert SQLite3-update SQLite3-delete SQLite3-query-stmt-row-result-handling SQLite3-insert-stmt
+    SQLite3-update-stmt SQLite3-transactions SQLConnectionFactorySQLite
+    PROPERTIES RESOURCE_LOCK anch_sqlite)
 endif()
 
 # Prepared statement placeholders +
@@ -92,4 +110,6 @@ add_test(NAME NaturalJoin COMMAND anch-select-builder-test -t natural_join_no_wh
 add_test(NAME NaturalJoinSubquery COMMAND anch-select-builder-test -t natural_join_subquery_no_where)
 add_test(NAME CrossJoin COMMAND anch-select-builder-test -t cross_join_no_where)
 add_test(NAME CrossJoinSubquery COMMAND anch-select-builder-test -t cross_join_subquery_no_where)
+add_test(NAME InnerJoin COMMAND anch-select-builder-test -t inner_join_no_where)
+add_test(NAME InnerJoinWithoutValidClause COMMAND anch-select-builder-test -t inner_join_without_valid_clause)
 # SELECT builder -

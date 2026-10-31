@@ -132,7 +132,7 @@ testPushKO() {
   toto.msg = "b";
   flux.push(toto);
   flux.finalize();
-  anch::ut::assert(nbErr == 1, "Number of errors should be equals to 1");
+  anch::ut::assertThat(nbErr == 1, "Number of errors should be equals to 1");
   std::cout << "Exit testPushKO" << std::endl;
 }
 
@@ -181,7 +181,7 @@ testPushMultiKO() {
   toto.msg = "b";
   flux.push(3, toto);
   flux.finalize();
-  anch::ut::assert(nbErr == 1, "Number of errors should be equals to 1");
+  anch::ut::assertThat(nbErr == 1, "Number of errors should be equals to 1");
   std::cout << "Exit testPushMultiKO" << std::endl;
 }
 

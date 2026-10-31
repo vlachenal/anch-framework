@@ -30,7 +30,8 @@
  *\n
  * It will make executable with \c help argument (\c -h or \c --help for help): \c -l or \c --list-tests to list registered unit test, \c -t or \c --test <the test to run> to run a specific test and nothing to run all tests.\n
  *\n
- * \c anch::ut::assert function is based on \c std::format function with \c {} paceholders.
+ * \c anch::ut::assertThat function is based on \c std::format function with \c {} paceholders.
+ * \c anch::ut::assert is a deprecated alias: it conflicts with the \c <cassert> macro.
  *
  * \section ut_example_sec Examples
  *
@@ -81,7 +82,7 @@ testAssert() {
 void
 testAssertFormat() {
   std::cout << "Assert" << std::endl;
-  anch::ut::assert(false, "format message: int={}, float={}, str={}", 2, 3.14, "toto");
+  anch::ut::assertThat(false, "format message: int={}, float={}, str={}", 2, 3.14, "toto");
 }
 
 void

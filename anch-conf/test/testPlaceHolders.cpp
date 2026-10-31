@@ -26,8 +26,8 @@ parseSingle() {
   anch::ut::assertTrue(val.has_value(), "TOTO/toto not found");
   std::cout << "TOTO.toto=" << val.value() << std::endl;
   // std::string user = std::getenv("USER");
-  // anch::ut::assert(val.value() == user", "Found {} instead of {}", val.value(), user);
-  anch::ut::assert(val.value() == "${env=USER}", "Found {} instead of {}", val.value(), "${env=USER}");
+  // anch::ut::assertThat(val.value() == user", "Found {} instead of {}", val.value(), user);
+  anch::ut::assertThat(val.value() == "${env=USER}", "Found {} instead of {}", val.value(), "${env=USER}");
   std::cout << "Exit parseSingle" << std::endl;
 }
 

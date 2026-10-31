@@ -22,20 +22,91 @@
 #include <iostream>
 #include <chrono>
 #include <stacktrace>
+#include <atomic>
+#include <cstdio>
+#include <cstdlib>
+#include <mutex>
+#include <string>
 
 #include "ut/error.hpp"
 #include "cli/formatter.hpp"
 
 using anch::ut::DefaultRunner;
 
+namespace {
+
+  /*! Description of the running step (initialization, test, uninitialization) */
+  std::string currentStep;
+
+  /*! Running step (\c NULL when no step is running): read by exit handler */
+  std::atomic<const char*> runningStep(NULL);
+
+  /*!
+   * Exit handler: when \c exit() (or \c quick_exit() ) is called while a step is running (by a test or by the tested
+   * code), the remaining tests would not be run and the exit code given to \c exit() (often \c 0 ) would be the result
+   * of the unit tests. Report the step and exit with failure.
+   */
+  void
+  onExit() {
+    const char* step = runningStep.load();
+    if(step == NULL) {
+      return;
+    }
+    std::cout << std::endl << anch::cli::Formatter::format().fgColor(anch::cli::Color::RED)
+	      << "exit() has been called during " << step << ": unit tests are failed"
+	      << anch::cli::RESET << std::endl;
+    std::fflush(NULL);
+    std::_Exit(EXIT_FAILURE);
+  }
+
+  /*!
+   * Register exit handler once
+   */
+  void
+  registerExitHandler() {
+    static std::once_flag once;
+    std::call_once(once, []() {
+      std::atexit(onExit);
+      std::at_quick_exit(onExit);
+    });
+  }
+
+  /*!
+   * \brief Running step guard
+   *
+   * Set running step on construction and reset it on destruction.
+   */
+  class StepGuard {
+  public:
+    /*!
+     * \c StepGuard constructor
+     *
+     * \param step the step description
+     */
+    explicit StepGuard(const std::string& step) {
+      currentStep = step;
+      runningStep = currentStep.c_str();
+    }
+
+    /*!
+     * \c StepGuard destructor
+     */
+    ~StepGuard() {
+      runningStep = NULL;
+    }
+  };
+
+}
+
 
 DefaultRunner::DefaultRunner(const UnitTests& tests): _tests(tests) {
-  // Nothing to do
+  registerExitHandler();
 }
 
 bool
 DefaultRunner::startup() {
   bool ok = false;
+  StepGuard guard("unit tests initialization");
   try {
     _tests.initialize();
     ok = true;
@@ -52,6 +123,7 @@ DefaultRunner::startup() {
 bool
 DefaultRunner::shutdown() {
   bool ok = false;
+  StepGuard guard("unit tests uninitialization");
   try {
     _tests.uninitialize();
     ok = true;
@@ -86,6 +158,7 @@ DefaultRunner::test(const std::string& test) {
 
   std::cout << anch::cli::Formatter::format().fgColor(anch::cli::Color::BLUE)
 	    << "-- " << test << " --" << anch::cli::RESET << std::endl;
+  StepGuard guard("unit test " + test);
 
   // Before test function +
   try {

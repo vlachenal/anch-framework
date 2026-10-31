@@ -54,16 +54,37 @@ namespace anch::ut {
   void fail(const std::string& message = "");
 
   /*!
-   * Assert clause with error message formatting
+   * Assert clause with error message formatting (\c std::format syntax with \c {} placeholders).\n
+   * The message is formatted only when the assertion fails.
    *
    * \tparam T the arguments
    *
    * \param check \c true if test is OK, \c false otherwise
    * \param message the message which have to be formatted
    * \param args the message's arguments
+   *
+   * \throw anch::ut::AssertException \c check is \c false
    */
   template<typename... T>
-  void assert(bool check, std::string_view message, const T&... args);
+  void assertThat(bool check, std::string_view message, const T&... args);
+
+  /*!
+   * Assert clause with error message formatting
+   *
+   * \deprecated Use \ref assertThat : \c assert is also the \c <cassert> macro, so calls are expanded by the macro when
+   * \c <cassert> is included (the name is written between parentheses here so that this header always compiles).
+   *
+   * \tparam T the arguments
+   *
+   * \param check \c true if test is OK, \c false otherwise
+   * \param message the message which have to be formatted
+   * \param args the message's arguments
+   *
+   * \throw anch::ut::AssertException \c check is \c false
+   */
+  template<typename... T>
+  [[deprecated("Use anch::ut::assertThat: assert conflicts with <cassert> macro")]]
+  void (assert)(bool check, std::string_view message, const T&... args);
 
   /*!
    * Check if optional value is equals to expected pointer value ; print the field and expected versus current value when \c false ; return the result

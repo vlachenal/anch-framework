@@ -87,11 +87,11 @@ testV6Format() {
     UUID uuid = UUID::generateUUID(UUID::Version::MAC_ADDRESS_R, MAC);
     int64_t after = nowMs();
     std::string str = uuid.toString();
-    anch::ut::assert(str[14] == '6', "Version 6 expected: {}", str);
-    anch::ut::assert(str[19] == '8' || str[19] == '9' || str[19] == 'a' || str[19] == 'b', "RFC 9562 variant expected: {}", str);
-    anch::ut::assert(uuid.getNode() == 0x0123456789abULL, "Node should be MAC address: {}", str);
+    anch::ut::assertThat(str[14] == '6', "Version 6 expected: {}", str);
+    anch::ut::assertThat(str[19] == '8' || str[19] == '9' || str[19] == 'a' || str[19] == 'b', "RFC 9562 variant expected: {}", str);
+    anch::ut::assertThat(uuid.getNode() == 0x0123456789abULL, "Node should be MAC address: {}", str);
     int64_t ms = v6UnixMs(uuid);
-    anch::ut::assert(ms >= before && ms <= after, "Timestamp {} should be between {} and {}: {}", ms, before, after, str);
+    anch::ut::assertThat(ms >= before && ms <= after, "Timestamp {} should be between {} and {}: {}", ms, before, after, str);
   }
 }
 
@@ -102,11 +102,11 @@ testV1Format() {
     UUID uuid = UUID::generateUUID(UUID::Version::MAC_ADDRESS, MAC);
     int64_t after = nowMs();
     std::string str = uuid.toString();
-    anch::ut::assert(str[14] == '1', "Version 1 expected: {}", str);
-    anch::ut::assert(str[19] == '8' || str[19] == '9' || str[19] == 'a' || str[19] == 'b', "RFC 9562 variant expected: {}", str);
-    anch::ut::assert(uuid.getNode() == 0x0123456789abULL, "Node should be MAC address: {}", str);
+    anch::ut::assertThat(str[14] == '1', "Version 1 expected: {}", str);
+    anch::ut::assertThat(str[19] == '8' || str[19] == '9' || str[19] == 'a' || str[19] == 'b', "RFC 9562 variant expected: {}", str);
+    anch::ut::assertThat(uuid.getNode() == 0x0123456789abULL, "Node should be MAC address: {}", str);
     int64_t ms = v1UnixMs(uuid);
-    anch::ut::assert(ms >= before && ms <= after, "Timestamp {} should be between {} and {}: {}", ms, before, after, str);
+    anch::ut::assertThat(ms >= before && ms <= after, "Timestamp {} should be between {} and {}: {}", ms, before, after, str);
   }
 }
 
@@ -117,12 +117,12 @@ testV6Order() {
   std::set<UUID> all;
   for(int i = 0 ; i < 200000 ; ++i) {
     UUID current = UUID::generateUUID(UUID::Version::MAC_ADDRESS_R, MAC);
-    anch::ut::assert(previous < current, "{} should be lower than {}", previous.toString(), current.toString());
-    anch::ut::assert(previous.toString() < current.toString(), "{} should be lower than {} (string)", previous.toString(), current.toString());
+    anch::ut::assertThat(previous < current, "{} should be lower than {}", previous.toString(), current.toString());
+    anch::ut::assertThat(previous.toString() < current.toString(), "{} should be lower than {} (string)", previous.toString(), current.toString());
     all.insert(current);
     previous = current;
   }
-  anch::ut::assert(all.size() == 200000, "UUID should be unique ; found {} / 200000", all.size());
+  anch::ut::assertThat(all.size() == 200000, "UUID should be unique ; found {} / 200000", all.size());
 }
 
 void
@@ -147,7 +147,7 @@ testUniqueThreads() {
   for(const std::vector<UUID>& uuids : results) {
     all.insert(uuids.begin(), uuids.end());
   }
-  anch::ut::assert(all.size() == static_cast<std::size_t>(nbThreads * nb), "UUID should be unique ; found {} / {}", all.size(), nbThreads * nb);
+  anch::ut::assertThat(all.size() == static_cast<std::size_t>(nbThreads * nb), "UUID should be unique ; found {} / {}", all.size(), nbThreads * nb);
 }
 
 void
@@ -156,7 +156,7 @@ testDefaultNode() {
   std::map<std::string, uint64_t> universal;
   std::map<std::string, uint64_t> local;
   struct ifaddrs* addresses = NULL;
-  anch::ut::assert(::getifaddrs(&addresses) == 0, "getifaddrs failed");
+  anch::ut::assertThat(::getifaddrs(&addresses) == 0, "getifaddrs failed");
   for(struct ifaddrs* iter = addresses ; iter != NULL ; iter = iter->ifa_next) {
     if(iter->ifa_addr == NULL || iter->ifa_addr->sa_family != AF_PACKET || (iter->ifa_flags & IFF_LOOPBACK) != 0) {
       continue;
@@ -176,16 +176,16 @@ testDefaultNode() {
   UUID v1 = UUID::generateUUID(UUID::Version::MAC_ADDRESS);
   std::cout << "Default node: " << std::hex << v1.getNode() << std::dec << std::endl;
   if(!universal.empty()) {
-    anch::ut::assert(v1.getNode() == universal.begin()->second, "Node should be {} address", universal.begin()->first);
+    anch::ut::assertThat(v1.getNode() == universal.begin()->second, "Node should be {} address", universal.begin()->first);
   } else if(!local.empty()) {
-    anch::ut::assert(v1.getNode() == local.begin()->second, "Node should be {} address", local.begin()->first);
+    anch::ut::assertThat(v1.getNode() == local.begin()->second, "Node should be {} address", local.begin()->first);
   } else {
-    anch::ut::assert((v1.getNode() & 0x010000000000ULL) != 0, "Random node should have multicast bit set");
+    anch::ut::assertThat((v1.getNode() & 0x010000000000ULL) != 0, "Random node should have multicast bit set");
   }
   // Stable node for v1 and v6
   for(int i = 0 ; i < 100 ; ++i) {
-    anch::ut::assert(UUID::generateUUID(UUID::Version::MAC_ADDRESS).getNode() == v1.getNode(), "v1 node should be stable");
-    anch::ut::assert(UUID::generateUUID(UUID::Version::MAC_ADDRESS_R).getNode() == v1.getNode(), "v6 node should be stable");
+    anch::ut::assertThat(UUID::generateUUID(UUID::Version::MAC_ADDRESS).getNode() == v1.getNode(), "v1 node should be stable");
+    anch::ut::assertThat(UUID::generateUUID(UUID::Version::MAC_ADDRESS_R).getNode() == v1.getNode(), "v6 node should be stable");
   }
 }
 
@@ -194,7 +194,7 @@ testMacAddress() {
   // Valid MAC addresses +
   for(const char* mac : {"01:23:45:67:89:ab", "01-23-45-67-89-ab", "01:23:45:67:89:AB", "01-23-45-67-89-Ab"}) {
     UUID uuid = UUID::generateUUID(UUID::Version::MAC_ADDRESS, mac);
-    anch::ut::assert(uuid.getNode() == 0x0123456789abULL, "Node for '{}' should be 0123456789ab ; found {:x}", mac, uuid.getNode());
+    anch::ut::assertThat(uuid.getNode() == 0x0123456789abULL, "Node for '{}' should be 0123456789ab ; found {:x}", mac, uuid.getNode());
   }
   // Valid MAC addresses -
   // Invalid MAC addresses +
@@ -221,11 +221,11 @@ testClockSequence() {
   std::array<int,64> counts{};
   for(int i = 0 ; i < nb ; ++i) {
     UUID uuid = UUID::generateUUID((i % 2 == 0) ? UUID::Version::MAC_ADDRESS : UUID::Version::MAC_ADDRESS_R, MAC);
-    anch::ut::assert((uuid.getClockSeqHighRes() & 0xC0) == 0x80, "RFC 9562 variant expected: {}", uuid.toString());
+    anch::ut::assertThat((uuid.getClockSeqHighRes() & 0xC0) == 0x80, "RFC 9562 variant expected: {}", uuid.toString());
     counts[static_cast<std::size_t>(uuid.getClockSeqHighRes() & 0x3F)]++;
   }
   for(std::size_t i = 0 ; i < counts.size() ; ++i) {
-    anch::ut::assert(counts[i] > nb / 64 / 2 && counts[i] < nb / 64 * 3 / 2, "Clock sequence high value {:x} generated {} times ; expected ~{}", i, counts[i], nb / 64);
+    anch::ut::assertThat(counts[i] > nb / 64 / 2 && counts[i] < nb / 64 * 3 / 2, "Clock sequence high value {:x} generated {} times ; expected ~{}", i, counts[i], nb / 64);
   }
 }
 
