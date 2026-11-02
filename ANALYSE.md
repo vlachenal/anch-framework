@@ -17,7 +17,7 @@ Statut des constats :
 | Librairie | Fichier | Constats principaux |
 |---|---|---|
 | anch-utils | [anch-utils/ANALYSE.md](anch-utils/ANALYSE.md) | tous les constats corrigés le 2026-11-02 (`ThreadPool` réécrit, `ResourcePool`, `convert`, `Singleton`, `Optional`, `Fluent`, `Flux`, `endianness`)  |
-| anch-events | [anch-events/ANALYSE.md](anch-events/ANALYSE.md) | `EventBus` : `std::terminate` si un handler émet un événement ; `Observable` : interblocage si un observateur se désabonne |
+| anch-events | [anch-events/ANALYSE.md](anch-events/ANALYSE.md) | corrigé le 2026-11-02 : `EventBus` (thread permanent, `fireEvent` non bloquant et appelable depuis un handler), `Observable` (plus d'interblocage, `removeObserver` attend les diffusions en cours) |
 | anch-log | [anch-log/ANALYSE.md](anch-log/ANALYSE.md) | motif par défaut qui n'écrit pas le message, `MDC` aux conditions inversées, `LowPriorityWriter` qui plante, `max-size` mal lu, `getLogger` non protégé |
 | anch-network | [anch-network/ANALYSE.md](anch-network/ANALYSE.md) | use-after-free après `freeaddrinfo`, débordements en réception (confirmés sous ASan), UDP IPv4 uniquement, `TcpStreamServer` sans `accept` |
 | anch-json | [anch-json/ANALYSE.md](anch-json/ANALYSE.md) | corrigés : `0` refusé, dépassements numériques, chaînes non échappées / non décodées, récursion non bornée, `max_payload` ignoré ; lecture 3,7× et écriture 2× plus rapides (2026-10-31) ; reste `'\0'` comme fin de données (J4) |
@@ -102,6 +102,6 @@ Mise à jour le 2026-10-30, par impact sur l'usage courant :
 4. `anch-date` D3 : une heure d'avance en été (impacte aussi les horodatages des logs).
 5. `anch-network` N1 / N3 : use-after-free et débordement de tampon.
 6. `anch-json` J1 / J2 : échappement des chaînes.
-7. `anch-events` E2 / E7 : arrêt ou interblocage dès qu'un handler interagit avec le bus ou l'observable.
+7. ~~`anch-events` E2 / E7 : arrêt ou interblocage dès qu'un handler interagit avec le bus ou l'observable.~~ Corrigé le 2026-11-02.
 
 Déjà corrigés : U1 (`ThreadPool`), B1 à B5 (build), C2 (AES-192), J6, J7 et J9 en JSON, `_loaded` (provisoire).

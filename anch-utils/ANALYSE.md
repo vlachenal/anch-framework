@@ -118,7 +118,7 @@ Correction : `Singleton` supprime la copie et le déplacement (hérité par tout
 Tests : instance unique sous concurrence (20 threads synchronisés par `std::latch`, joints), nouvel essai après une exception du constructeur, ordre de destruction (le test échoue si la dépendance est inversée).
 À corriger dans les librairies concernées :
 - `anch-sql` : `SqlConnectionFactory` dépend de `SQLSharedLibraries` (les connexions des pools viennent des pilotes fermés par `dlclose`) ; l'ordre est correct seulement parce que le constructeur appelle `registerMySQL()` & co. À rendre explicite ;
-- `anch-events` / `anch-conf` : le constructeur d'`EventBus` est public (voulu : `anch-conf` crée son propre bus) mais son destructeur est privé, donc le bus créé par `Placeholders` ne peut pas être détruit (fuite) ;
+- `anch-events` : le constructeur d'`EventBus` est public (voulu : `anch-conf` crée son propre bus, libéré par `release()`) mais son destructeur était privé (corrigé le 2026-11-02 : public) ;
 - `anch-device` : `CPU` laisse ses drapeaux non initialisés si la feuille 1 de `cpuid` n'existe pas ;
 - toutes : `virtual` sur les destructeurs et suppressions de copie devenus inutiles.
 
