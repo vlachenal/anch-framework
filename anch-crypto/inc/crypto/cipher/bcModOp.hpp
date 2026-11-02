@@ -26,10 +26,15 @@
 #include <array>
 #include <thread>
 #include <condition_variable>
+#include <atomic>
+#include <cstddef>
 #include <cstring>
+#include <deque>
+#include <functional>
 #include <map>
-
-#include "threadPool.hpp"
+#include <mutex>
+#include <string>
+#include <vector>
 
 
 namespace anch {
@@ -46,8 +51,6 @@ namespace anch {
      */
     template<typename Derived, typename Cipher>
     class BlockCipherModeOfOperation {
-
-      friend class anch::ThreadPool;
 
       // Attributes +
     private:

@@ -33,6 +33,7 @@ Un thread système est créé par tâche. Le nombre de threads simultanés est b
 `stop()` tient `_mutex` et dort par tranches de 50 ms jusqu'au retour de toutes les tâches. Pas d'interblocage, car `_available` est incrémenté avant la prise du mutex dans `execute`, mais c'est fragile.
 
 Correction de U2 à U5 (2026-11-02) : `ThreadPool` réécrit avec un nombre fixe de threads permanents (`std::jthread`) qui prennent les tâches dans la file ; un seul mutex et deux variables de condition (tâches, fin des tâches), plus d'attente active. Le destructeur abandonne les tâches en file et joint les threads (les tâches en cours sont attendues). `awaitTermination` : le délai borne l'attente des tâches en file ; les tâches en cours, non interruptibles, sont toujours attendues. `add` renvoie `false` si la tâche est refusée (fin en cours) et accepte des fonctions et arguments non copiables. Tests réécrits avec assertions (9 cas), sans signalement sous TSan / ASan.
+`anch-crypto` n'inclut plus `threadPool.hpp` (il ne s'en servait pas) : `ThreadPool` n'est plus utilisé hors de ses tests.
 
 ### U6. `ResourcePool::borrowResource` : course sur `_availables` — vérifié (TSan, erreur de segmentation) — **corrigé le 2026-11-02**
 `inc/impl/resourcePool.hpp:133` : l'attente se fait avec `_waitex`, mais la condition lit `_availables`, protégé par `_mutex`.
