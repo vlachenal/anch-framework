@@ -19,14 +19,12 @@
 */
 #pragma once
 
-#include <mutex>
-#include <set>
 #include <map>
 #include <string>
 
 #include "events/observer.hpp"
 #include "events/event.hpp"
-#include "lessPtrCompare.hpp"
+#include "events/observerList.hpp"
 
 
 namespace anch::events {
@@ -34,7 +32,10 @@ namespace anch::events {
   /*!
    * \brief An observable implementation of the observers/observable design pattern.
    *
-   * This class maintains an observer list which have to be notified on event.
+   * This class maintains an observer list which have to be notified on event.\n
+   * Notifications are synchronous (observers are called in the notifying thread, in their registration order).
+   * Observers can add or remove observers, or notify again, from their \c handle method.
+   * When \ref removeObserver returns, the observer will not be notified anymore and can be destroyed.
    *
    * \since 0.1
    *
@@ -46,10 +47,7 @@ namespace anch::events {
   private:
     // Attributes +
     /*! Observers list */
-    std::set<anch::events::Observer<T>*, anch::LessPtrCompare<anch::events::Observer<T> > > _observers;
-
-    /*! Mutex */
-    std::mutex _mutex;
+    anch::events::ObserverList<T> _observers;
     // Attributes -
 
   public:
@@ -79,7 +77,8 @@ namespace anch::events {
     bool addObserver(anch::events::Observer<T>& observer);
 
     /*!
-     * Remove observer for notifications
+     * Remove observer for notifications.\n
+     * Wait for notifications running in other threads.
      *
      * \param observer The observer to remove
      */

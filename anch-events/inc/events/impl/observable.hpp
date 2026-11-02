@@ -22,7 +22,7 @@
 namespace anch::events {
 
   template<typename T>
-  Observable<T>::Observable(): _observers(), _mutex() {
+  Observable<T>::Observable(): _observers() {
     // Nothing to do
   }
 
@@ -32,36 +32,27 @@ namespace anch::events {
   }
 
   template<typename T>
-  bool
+  inline bool
   Observable<T>::addObserver(anch::events::Observer<T>& observer) {
-    _mutex.lock();
-    bool added = _observers.insert(&observer).second;
-    _mutex.unlock();
-    return added;
+    return _observers.add(observer);
   }
 
   template<typename T>
-  void
+  inline void
   Observable<T>::removeObserver(anch::events::Observer<T>& observer) {
-    _mutex.lock();
-    _observers.erase(&observer);
-    _mutex.unlock();
+    _observers.remove(observer);
   }
 
   template<typename T>
-  void
+  inline void
   Observable<T>::notifyObservers(const T& event, const std::map<std::string,std::string>& headers) {
     notifyObservers({.headers = headers, .body = event});
   }
 
   template<typename T>
-  void
+  inline void
   Observable<T>::notifyObservers(const anch::events::Event<T>& event) {
-    _mutex.lock();
-    for(anch::events::Observer<T>* observer : _observers) {
-      observer->handle(event);
-    }
-    _mutex.unlock();
+    _observers.notify(event);
   }
 
 }
