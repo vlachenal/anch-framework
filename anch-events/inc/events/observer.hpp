@@ -29,7 +29,10 @@ namespace anch::events {
   /*!
    * \brief An observer interface of the observers/observable design pattern.
    *
-   * It has to be implemented to handle events correctly.
+   * It has to be implemented to handle events correctly.\n
+   * An observer has to be removed from its \ref Observable or \ref EventBus before its destruction.
+   * When it can be notified from another thread, it has to be removed in the destructor of the most derived class
+   * (base class destructors run after the derived class has been destroyed).
    *
    * \since 0.1
    *
@@ -38,10 +41,19 @@ namespace anch::events {
   template<typename T>
   class Observer {
 
+    // Destructor +
   public:
-    // Methods +
     /*!
-     * Receive event notification
+     * \ref Observer destructor
+     */
+    virtual ~Observer() = default;
+    // Destructor -
+
+    // Methods +
+  public:
+    /*!
+     * Receive event notification.\n
+     * It must not throw (an exception calls \c std::terminate).
      *
      * \param event The event to receive
      */
