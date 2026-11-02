@@ -91,10 +91,12 @@ Piste : ne pas stocker `skip` / `limit` comme filtres, mais les appliquer dans l
 - `push()` (lignes 63-64) attend indéfiniment tant que `ready()` n'a pas été appelé ou que le gestionnaire d'erreur n'est pas défini : à documenter.
 - `_con`, `_fin` et `_err` sont des `bool` lus et écrits par des threads différents (les futures synchronisent les fonctions, pas ces drapeaux).
 
-### U15. `endianness` et `processor` : remplaçables par le standard — lecture (conception)
+### U15. `endianness` et `processor` : remplaçables par le standard — lecture (conception) — **corrigé le 2026-11-02** pour `endianness`
 - `isBigEndian()` / `isLittleEndian()` : `std::endian::native` (C++20) donne la même information à la compilation.
 - `byteSwap()` : `std::byteswap` (C++23).
 - `processor.hpp` (définition de `ANCH64` / `ANCH32` selon `ULONG_MAX`) n'est utilisé nulle part dans le framework.
+
+Correction de `endianness` : `std::byteswap` et `std::endian` ; `isBigEndian` / `isLittleEndian` sont `constexpr`, `byteSwap` est limité aux entiers ; ajout de `<cstdint>` et des premiers tests. Ce changement a révélé un bug dans `anch-crypto` (voir C3). `processor.hpp` est conservé (usage prévu).
 
 ### U16. `stringUtils`, `collectors` — lecture
 `LessPtrCompare` (2026-11-02) : comparaison faite avec `std::less<const T*>` (le `<` entre pointeurs d'objets différents n'est pas spécifié) ; il équivaut au comparateur par défaut de `std::set<T*>`, à préférer dans `anch-events`.

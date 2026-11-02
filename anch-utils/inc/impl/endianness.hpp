@@ -19,25 +19,25 @@
 */
 #pragma once
 
+#include <cstring>
 
 namespace anch {
 
-  template<typename T>
-  inline void byteSwap(T src, uint8_t* dest) {
-    const uint8_t* words = reinterpret_cast<const uint8_t*>(&src);
-    std::size_t size = sizeof(T);
-    for(std::size_t i = 0 ; i < size ; ++i) {
-      dest[i] = words[size - 1 - i];
-    }
+  template<std::integral T>
+  inline void
+  byteSwap(T src, uint8_t* dest) noexcept {
+    const T swapped = std::byteswap(src);
+    std::memcpy(dest, &swapped, sizeof(T));
   }
 
-  inline bool isBigEndian() {
-    const uint32_t byteOrderTest = 0x01;
-    return (reinterpret_cast<const uint8_t*>(&byteOrderTest)[0] == 0);
+  constexpr bool
+  isBigEndian() noexcept {
+    return std::endian::native == std::endian::big;
   }
 
-  inline bool isLittleEndian() {
-    return !isBigEndian();
+  constexpr bool
+  isLittleEndian() noexcept {
+    return std::endian::native == std::endian::little;
   }
 
 }

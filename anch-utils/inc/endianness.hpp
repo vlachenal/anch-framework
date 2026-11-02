@@ -19,29 +19,26 @@
 */
 #pragma once
 
-#include <cstddef>
+#include <bit>
+#include <concepts>
+#include <cstdint>
 
 
 namespace anch {
 
   /*!
-   * Switch data endianness.
+   * Switch data endianness.\n
+   * Write the \c sizeof(T) bytes of \c src in reverse order into \c dest (\c dest can overlap \c src storage).
    *
-   * \param src the object to convert
-   * \param dest the converted bytes
+   * \param src the integer to convert
+   * \param dest the converted bytes (at least \c sizeof(T) bytes)
    *
    * \since 0.1
    *
    * \author Vincent Lachenal
    */
-  template<typename T>
-  void byteSwap(T src, uint8_t* dest);/* {
-    const uint8_t* words = reinterpret_cast<const uint8_t*>(&src);
-    std::size_t size = sizeof(T);
-    for(std::size_t i = 0 ; i < size ; i++) {
-      dest[i] = words[size - 1 - i];
-    }
-    }*/
+  template<std::integral T>
+  void byteSwap(T src, uint8_t* dest) noexcept;
 
   /*!
    * Check if system is in big endian bytes order.
@@ -52,10 +49,7 @@ namespace anch {
    *
    * \author Vincent Lachenal
    */
-  bool isBigEndian();/* {
-    const uint32_t byteOrderTest = 0x01;
-    return (reinterpret_cast<const uint8_t*>(&byteOrderTest)[0] == 0);
-    }*/
+  constexpr bool isBigEndian() noexcept;
 
   /*!
    * Check if system is in little endian bytes order.
@@ -66,9 +60,7 @@ namespace anch {
    *
    * \author Vincent Lachenal
    */
-  bool isLittleEndian();/* {
-    return !isBigEndian();
-    }*/
+  constexpr bool isLittleEndian() noexcept;
 
 }
 
