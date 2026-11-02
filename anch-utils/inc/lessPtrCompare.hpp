@@ -19,12 +19,15 @@
 */
 #pragma once
 
+#include <functional>
+
 namespace anch {
 
   /*!
    * \brief Less comparator based on object address.
    *
-   * This class can be used to register objects in std::set or std::map.
+   * This class can be used to register objects in std::set or std::map.\n
+   * It is equivalent to the default comparator of \c std::set<T*> (\c std::less<T*>), which should be preferred.
    *
    * \since 0.1
    *
@@ -42,7 +45,8 @@ namespace anch {
      */
     bool operator() (const T* const first,
 		     const T* const second) const {
-      return first < second;
+      // Built-in '<' between pointers to unrelated objects is unspecified ; std::less guarantees a strict total order
+      return std::less<const T*>()(first, second);
     }
   };
 

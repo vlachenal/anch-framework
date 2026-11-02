@@ -97,6 +97,7 @@ Piste : ne pas stocker `skip` / `limit` comme filtres, mais les appliquer dans l
 - `processor.hpp` (définition de `ANCH64` / `ANCH32` selon `ULONG_MAX`) n'est utilisé nulle part dans le framework.
 
 ### U16. `stringUtils`, `collectors` — lecture
+`LessPtrCompare` (2026-11-02) : comparaison faite avec `std::less<const T*>` (le `<` entre pointeurs d'objets différents n'est pas spécifié) ; il équivaut au comparateur par défaut de `std::set<T*>`, à préférer dans `anch-events`.
 Pas de défaut relevé. `toLower` / `toUpper` convertissent correctement en `unsigned char` avant `std::tolower` / `std::toupper`, mais ne gèrent que l'ASCII (pas d'UTF-8) : à documenter.
 
 ### U17. `Singleton` : schéma recopié à la main dans chaque classe, ordre de destruction non documenté — lecture — **corrigé le 2026-11-02**
