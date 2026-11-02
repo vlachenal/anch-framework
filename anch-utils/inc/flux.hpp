@@ -21,6 +21,7 @@
 
 #include <functional>
 #include <future>
+#include <mutex>
 
 
 namespace anch {
@@ -77,6 +78,9 @@ namespace anch {
 
     /*! Error handler object function */
     std::shared_future<std::function<void()>> _errorHandler;
+
+    /*! Protects flags and promises (functions can be set from another thread than \c push one) */
+    std::mutex _mutex;
     // Attributes -
 
     // Constructors +
@@ -92,7 +96,7 @@ namespace anch {
     /*!
      * \ref Flux destructor
      */
-    virtual ~Flux();
+    ~Flux();
     // Destructor -
 
     // Methods +
@@ -102,21 +106,24 @@ namespace anch {
      *
      * When consumer is not set, \c std::runtime_error will be raised.\n
      * When finalizer is not set, \c ready set it to nothing to do.\n
-     * When error handler is not set, \c ready set it to rethrow.
+     * When error handler is not set, \c ready set it to rethrow.\n
+     * It can be called several times. Once called, finalizer and error handler can not be set anymore.
      *
      * \throw std::runtime_error when consumer function is not set
      */
     void ready();
 
     /*!
-     * Push object in stream
+     * Push object in stream.\n
+     * Block until consumer and error handler are set (\ref ready sets the default error handler).
      *
      * \param object the object to push in stream
      */
     void push(const T&... object);
 
     /*!
-     * Finalize treatment
+     * Finalize treatment.\n
+     * Block until finalizer is set (\ref ready sets the default finalizer).
      */
     void finalize();
     // Methods -

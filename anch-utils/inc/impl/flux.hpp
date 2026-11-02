@@ -34,7 +34,8 @@ namespace anch {
     _finalizer(_pfin.get_future()),
     _err(false),
     _perr(),
-    _errorHandler(_perr.get_future()) {
+    _errorHandler(_perr.get_future()),
+    _mutex() {
     // Nothing to do
   }
 
@@ -46,14 +47,17 @@ namespace anch {
   template<typename... T>
   void
   Flux<T...>::ready() {
+    std::lock_guard<std::mutex> lock(_mutex);
     if(!_con) {
       throw std::runtime_error("Consumer function is not set");
     }
     if(!_fin) {
       _pfin.set_value([](){});
+      _fin = true;
     }
     if(!_err) {
       _perr.set_value([](){throw;});
+      _err = true;
     }
   }
 
@@ -80,6 +84,7 @@ namespace anch {
   inline
   void
   Flux<T...>::setConsumer(std::function<void(const T&...)> consumer) {
+    std::lock_guard<std::mutex> lock(_mutex);
     if(_con) {
       throw std::runtime_error("Consumer function is already set");
     }
@@ -91,6 +96,7 @@ namespace anch {
   inline
   void
   Flux<T...>::setFinalizer(std::function<void()> finalizer) {
+    std::lock_guard<std::mutex> lock(_mutex);
     if(_fin) {
       throw std::runtime_error("Finalizer function is already set");
     }
@@ -102,8 +108,9 @@ namespace anch {
   inline
   void
   Flux<T...>::setErrorHandler(std::function<void()> errorHandler) {
+    std::lock_guard<std::mutex> lock(_mutex);
     if(_err) {
-      throw std::runtime_error("Finalizer function is already set");
+      throw std::runtime_error("Error handler function is already set");
     }
     _perr.set_value(errorHandler);
     _err = true;

@@ -1,5 +1,8 @@
 #include "flux.hpp"
 
+#include <stdexcept>
+#include <string>
+
 #include <iostream>
 
 #include "ut/unit.hpp"
@@ -185,6 +188,46 @@ testPushMultiKO() {
   std::cout << "Exit testPushMultiKO" << std::endl;
 }
 
+// Check that function raises std::runtime_error with message
+template<typename F>
+void
+checkRuntimeError(F function, const std::string& message) {
+  try {
+    function();
+    anch::ut::fail("No error has been raised (expected '" + message + "')");
+  } catch(const std::runtime_error& e) {
+    anch::ut::assertThat(message == e.what(), "Error message is '{}' instead of '{}'", e.what(), message);
+  }
+}
+
+void
+testReadyTwice() {
+  anch::Flux<Toto> flux;
+  flux.setConsumer(okToto);
+  flux.ready();
+  flux.ready(); // has to be a no-op
+  Toto toto;
+  toto.msg = "a";
+  flux.push(toto);
+  flux.finalize();
+}
+
+void
+testReadyWithoutConsumer() {
+  anch::Flux<Toto> flux;
+  checkRuntimeError([&flux]() { flux.ready(); }, "Consumer function is not set");
+}
+
+void
+testSetAfterReady() {
+  anch::Flux<Toto> flux;
+  flux.setConsumer(okToto);
+  flux.ready();
+  checkRuntimeError([&flux]() { flux.setFinalizer(finalize); }, "Finalizer function is already set");
+  checkRuntimeError([&flux]() { flux.setErrorHandler(handleTotoError); }, "Error handler function is already set");
+  checkRuntimeError([&flux]() { flux.setConsumer(okToto); }, "Consumer function is already set");
+}
+
 void
 beforeEach() {
   nbErr = 0;
@@ -200,6 +243,9 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("push-ko", testPushKO)
     .add("push-ok-multi", testPushMultiOK)
     .add("push-ko-multi", testPushMultiKO)
+    .add("ready-twice", testReadyTwice)
+    .add("ready-without-consumer", testReadyWithoutConsumer)
+    .add("set-after-ready", testSetAfterReady)
     .add("push-async-ok", std::bind(testPushAsyncOK, 1000))
     .add("push-async-10-ok", std::bind(testPushAsyncOK, 10))
     .add("push-async-100-ok", std::bind(testPushAsyncOK, 100))

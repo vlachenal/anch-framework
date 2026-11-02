@@ -88,11 +88,13 @@ Piste : `for(auto& val : _values)` et `for(const auto& filter : filters)`.
 `skip()` (ligne 81) et `limit()` (ligne 93) ajoutent des lambdas qui capturent `this`. Le constructeur de copie et celui de déplacement copient `_filters` : les lambdas de la copie lisent et modifient les compteurs de l'objet d'origine. Si l'original est détruit, c'est un accès à de la mémoire libérée (ASan : `heap-use-after-free` dans la lambda de `skip`).
 Piste : ne pas stocker `skip` / `limit` comme filtres, mais les appliquer dans les boucles à partir des compteurs de l'instance courante.
 
-### U14. `Flux` : appels répétés et messages d'erreur — lecture
+### U14. `Flux` : appels répétés et messages d'erreur — lecture — **corrigé le 2026-11-02**
 - `ready()` (lignes 53, 56) appelle `set_value` sur les promesses du finaliseur et du gestionnaire d'erreur sans mettre `_fin` / `_err` à `true` : un second appel à `ready()`, ou `setFinalizer()` après `ready()`, lève `std::future_error` (« promise already satisfied ») au lieu du message prévu.
 - `setErrorHandler` (ligne 106) lève « Finalizer function is already set » (copier-coller du message de `setFinalizer`).
 - `push()` (lignes 63-64) attend indéfiniment tant que `ready()` n'a pas été appelé ou que le gestionnaire d'erreur n'est pas défini : à documenter.
 - `_con`, `_fin` et `_err` sont des `bool` lus et écrits par des threads différents (les futures synchronisent les fonctions, pas ces drapeaux).
+
+Correction : `ready()` positionne les drapeaux (appel multiple sans effet, `setFinalizer` / `setErrorHandler` après `ready()` lèvent « already set »), message de `setErrorHandler` corrigé, drapeaux et promesses protégés par un mutex. Nouveaux tests.
 
 ### U15. `endianness` et `processor` : remplaçables par le standard — lecture (conception) — **corrigé le 2026-11-02** pour `endianness`
 - `isBigEndian()` / `isLittleEndian()` : `std::endian::native` (C++20) donne la même information à la compilation.
