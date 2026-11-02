@@ -28,7 +28,7 @@ namespace anch::events {
       eventBus.addObserver(*this);
       _eventBus = &eventBus;
     } else {
-      _eventBus = NULL;
+      _eventBus = nullptr;
     }
   }
 
@@ -41,8 +41,15 @@ namespace anch::events {
 
   template<typename T, typename D>
   EventHandler<T,D>::~EventHandler() {
-    if(_eventBus != NULL) {
+    unsubscribe();
+  }
+
+  template<typename T, typename D>
+  void
+  EventHandler<T,D>::unsubscribe() noexcept {
+    if(_eventBus != nullptr) {
       _eventBus->removeObserver(*this);
+      _eventBus = nullptr;
     }
   }
 

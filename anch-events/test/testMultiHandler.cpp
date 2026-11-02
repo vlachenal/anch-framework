@@ -1,7 +1,11 @@
 #include "events/observable.hpp"
 #include "events/eventHandler.hpp"
 
-#include <iostream>
+#include <string>
+#include <vector>
+
+#include "ut/unit.hpp"
+#include "ut/assert.hpp"
 
 using anch::events::Observable;
 using anch::events::EventHandler;
@@ -36,8 +40,9 @@ public:
 class SingleMsgHandler: public MessageEventHandler<SingleMsgHandler> {
 public:
   SingleMsgHandler(): MessageEventHandler<SingleMsgHandler>() {}
+  std::vector<std::string> received;
   virtual void onMessage(const anch::events::Event<Message>& event) noexcept {
-    std::cout << event.body.getMessage() << std::endl;
+    received.push_back(event.body.getMessage());
   }
 };
 
@@ -57,32 +62,41 @@ public:
  */
 class MultiEventHandler: public MessageEventHandler<MultiEventHandler>, public StringEventHandler<MultiEventHandler> {
 public:
+  std::vector<std::string> messages;
+  std::vector<std::string> strings;
   MultiEventHandler(): MessageEventHandler<MultiEventHandler>(), StringEventHandler<MultiEventHandler>() {}
   virtual void onMessage(const anch::events::Event<Message>& event) noexcept {
-    std::cout << "MULTI : " << event.body.getMessage() << std::endl;
+    messages.push_back(event.body.getMessage());
   }
   virtual void onString(const anch::events::Event<std::string>& event) noexcept {
-    std::cout << "MULTI : " << event.body << std::endl;
+    strings.push_back(event.body);
   }
 };
 
-
-int
-main(void) {
-  std::cout << "Enter in test" << std::endl;
-
+void
+testMultiHandler() {
   SingleMsgHandler handler;
   MultiEventHandler multi;
-
   Observable<Message> observable;
   observable.addObserver(handler);
   observable.addObserver(multi);
   Observable<std::string> strObs;
   strObs.addObserver(multi);
-
   strObs.notifyObservers("tata");
   observable.notifyObservers(Message("toto"));
+  anch::ut::assertTrue(handler.received == std::vector<std::string>{"toto"}, "Single handler has not received message");
+  anch::ut::assertTrue(multi.messages == std::vector<std::string>{"toto"}, "Multi handler has not received message");
+  anch::ut::assertTrue(multi.strings == std::vector<std::string>{"tata"}, "Multi handler has not received string");
+  observable.removeObserver(handler);
+  observable.removeObserver(multi);
+  strObs.removeObserver(multi);
+}
 
-  std::cout << "Exit test" << std::endl;
-  return 0;
+void
+anch::ut::setup(anch::ut::UnitTests& tests) {
+  tests
+    .name("AnCH event handlers unit tests")
+    .description("Test AnCH event handler with several event types")
+    .add("multi-handler", testMultiHandler)
+    ;
 }

@@ -31,7 +31,12 @@ namespace anch::events {
   /*!
    * \brief An event handler.
    *
-   * It provides a simple way to inherits several times from Observer and cutomize event receiving method name.
+   * It provides a simple way to inherits several times from Observer and cutomize event receiving method name.\n
+   * \n
+   * The handler is registered in the \ref EventBus by its constructor and unregistered by its destructor. These
+   * constructor and destructor run while \c Derived is not built (or already destroyed): when events can be fired
+   * from another thread, \c Derived destructor has to call \ref unsubscribe (and events must not be fired before
+   * \c Derived construction ends).
    *
    * \since 0.1
    *
@@ -74,6 +79,12 @@ namespace anch::events {
     virtual ~EventHandler();
 
   public:
+    /*!
+     * Unregister \ref EventHandler from \ref EventBus if needed.\n
+     * When it returns, the handler will not be notified anymore by the \ref EventBus.
+     */
+    void unsubscribe() noexcept;
+
     /*!
      * Invokes callback method on receiving event.
      *
