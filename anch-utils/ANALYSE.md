@@ -51,14 +51,22 @@ Piste : `= delete` sur la copie, constructeur de déplacement qui vide la source
 ### U8. `PoolableResource` peut survivre au pool — lecture — **corrigé le 2026-11-02** (état partagé `ResourcePoolState`, la ressource est détruite à sa libération si le pool n'existe plus)
 Il garde une référence `_pool`. Si le pool est détruit avant, le destructeur de la ressource utilise une référence invalide.
 
-### U9. `convert` accepte les nombres négatifs pour les types non signés — vérifié
+### U9. `convert` accepte les nombres négatifs pour les types non signés — vérifié — **corrigé le 2026-11-02**
 `inc/convert.hpp:44` : `conv >> num` sur un type non signé accepte le signe `-` et renvoie la valeur modulo 2^n, sans erreur.
 Exemple : `anch::convert<uint32_t>("-1")` renvoie `4294967295`. `convert` est utilisé par `anch-sql` (`resultSet.cpp`, conversion des colonnes ; `postgresqlConnection.cpp`) et `anch-rest` (`endpointFunction.cpp`, paramètres de route) : une valeur négative lue dans une colonne ou une URL passe donc silencieusement. `anch-ini` utilise déjà `std::from_chars` (`src/ini/section.cpp:104`).
 Piste : `std::from_chars` (C++17), qui refuse le signe pour les non signés et signale les dépassements (`std::errc::result_out_of_range`).
 
-### U10. `convert<uint8_t>` / `convert<int8_t>` lèvent toujours une exception — vérifié
+### U10. `convert<uint8_t>` / `convert<int8_t>` lèvent toujours une exception — vérifié — **corrigé le 2026-11-02**
 `uint8_t` est un `unsigned char` : le flux lit un caractère et non un nombre. Pour `"7"`, il lit `'7'` (55) puis, la fin du flux n'étant pas encore atteinte (`eof()` faux), `std::bad_cast` est levée. Aucune conversion vers ces types ne peut réussir.
 Piste : même solution que U9 (`std::from_chars` traite `uint8_t` comme un entier).
+
+Correction de U9 et U10 : `convert` utilise `std::from_chars` et prend un `std::string_view`. Elle continue de lever `std::bad_cast` (les appelants de `anch-sql` et `anch-rest` l'attrapent).
+Autres effets :
+- la conversion ne dépend plus de la locale globale (le `stringstream` l'utilisait) ;
+- environ 23× plus rapide (5 ns au lieu de 120 ns par `int64_t`, sans construction de `stringstream`), ce qui compte pour la lecture des colonnes de `anch-sql` ;
+- `inf`, `nan`, `Infinity` et `NaN` (sans tenir compte de la casse) sont acceptés pour les flottants ;
+- le signe `+` est maintenant refusé ;
+- le type est contraint (`anch::Convertible` : entiers sauf `bool`, flottants).
 
 ### U11. `Optional` hérite de `std::optional` en privé — vérifié
 `inc/optional.hpp:56` : `class Optional: std::optional<T>` (héritage privé par défaut pour `class`). `has_value()`, `value()`, `operator*`, `operator bool` sont inaccessibles depuis l'extérieur : `anch::Optional<int> o(3); o.has_value();` ne compile pas. Seuls `ifValue`, `ifValueOrElse` et `map` sont utilisables.
@@ -98,5 +106,5 @@ Pas de défaut relevé. `toLower` / `toUpper` convertissent correctement en `uns
 ## À approfondir
 - [ ] Ajouter un test liant deux TU qui incluent `threadPool.hpp`.
 - [x] Tests de charge multi-thread sur `ResourcePool` (sous TSan) : `res-pool-concurrent` (2026-11-02).
-- [ ] Tests de `convert` sur les bornes (`"-1"` en non signé, dépassements, `uint8_t`).
+- [x] Tests de `convert` sur les bornes (`"-1"` en non signé, dépassements, `uint8_t`) (2026-11-02).
 - [ ] Test de `Fluent::forEach` modifiant les éléments, et de la copie d'un `Fluent` avec `skip` / `limit`.

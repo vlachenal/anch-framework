@@ -19,16 +19,30 @@
 */
 #pragma once
 
-#include <sstream>
-#include <iomanip>
-#include <string>
+#include <concepts>
+#include <string_view>
 #include <typeinfo>
 
 
 namespace anch {
 
   /*!
-   * Performs strict conversion from \c std::string to number
+   * Number type which can be converted by \ref convert (any integer or floating point type except \c bool).
+   *
+   * \author Vincent Lachenal
+   *
+   * \since 0.1
+   */
+  template<typename N>
+  concept Convertible = (std::integral<N> && !std::same_as<N, bool>) || std::floating_point<N>;
+
+  /*!
+   * Performs strict conversion from string to number.\n
+   * \n
+   * The whole string has to be a number: leading or trailing characters (including spaces and \c '+' sign) are rejected.\n
+   * The conversion does not depend on locale. Negative values are rejected for unsigned types and out of range
+   * values are rejected. \c int8_t and \c uint8_t are converted as numbers (not as characters).\n
+   * Floating point values can be written in fixed or scientific notation, and can be \c inf or \c nan.
    *
    * \param str the string to convert
    *
@@ -36,16 +50,9 @@ namespace anch {
    *
    * \throw std::bad_cast conversion error
    */
-  template <typename N>
-  N convert(const std::string& str) {
-    N num;
-    std::stringstream conv;
-    conv << std::noskipws << str;
-    conv >> num;
-    if(conv.fail() || !conv.eof()) {
-      throw std::bad_cast();
-    }
-    return num;
-  }
+  template<anch::Convertible N>
+  N convert(std::string_view str);
 
 }
+
+#include "impl/convert.hpp"
