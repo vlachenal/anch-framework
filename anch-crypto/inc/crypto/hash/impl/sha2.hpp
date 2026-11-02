@@ -131,7 +131,7 @@ namespace anch::crypto {
     std::memcpy(chunkBuffer, buffer, B);
 
     Chunk* chunk = reinterpret_cast<Chunk*>(&chunkBuffer);
-    bytesSwap(chunk->words, B);
+    bytesSwap(chunk->words, static_cast<uint8_t>(B / sizeof(W))); // swap the 16 words of the block only
     for(std::size_t i = 16 ; i < B ; i++) {
       chunk->words[i] = sigma1(chunk->words[i-2]) + chunk->words[i-7]
 	+ sigma0(chunk->words[i-15]) + chunk->words[i-16];

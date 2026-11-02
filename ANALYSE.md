@@ -26,7 +26,7 @@ Statut des constats :
 | anch-ut | [anch-ut/ANALYSE.md](anch-ut/ANALYSE.md) | cas déclarés deux fois (code et CMake) : 13 oubliés, rattrapés (T6) ; `exit()` dans un test signalé en échec (T5) ; `assert` renommé `assertThat` (conflit avec `<cassert>`, T7) ; erreurs de format et assertions dans un thread mal signalées ; pas d'emplacement dans les échecs ; `-r` provoque une erreur de segmentation, `--start` / `--stop` / `--gen-ctest` sans effet |
 | anch-uuid | [anch-uuid/ANALYSE.md](anch-uuid/ANALYSE.md) | tous les constats corrigés le 2026-10-31 (UU1 à UU9) : parsing validé et 8× plus rapide, `toString` 14×, `random()` 56×, v3 / v5 conformes à la RFC 9562, v7 monotone, registre protégé, type valeur de 16 octets ordonnable et hachable ; fournisseurs v1 / v6 : voir `anch-device` |
 | anch-sql | [anch-sql/ANALYSE.md](anch-sql/ANALYSE.md) | hors gestion d'erreurs : builder sain, pilote introuvable = appel d'adresse indéterminée ; tests isolés depuis le 2026-10-31 (S6) |
-| anch-crypto | [anch-crypto/ANALYSE.md](anch-crypto/ANALYSE.md) | non analysé (hors périmètre) ; lecture hors limites AES-192 corrigée |
+| anch-crypto | [anch-crypto/ANALYSE.md](anch-crypto/ANALYSE.md) | non analysé (hors périmètre) ; lecture hors limites AES-192 et lecture non initialisée SHA-2 corrigées |
 | anch-conf | [anch-conf/ANALYSE.md](anch-conf/ANALYSE.md) | en construction ; correctif `_loaded` provisoire (pas encore avec placeholders) |
 | anch-ini | [anch-ini/ANALYSE.md](anch-ini/ANALYSE.md) | en construction ; conversion numérique correcte (modèle pour les autres modules) |
 | anch-cli | [anch-cli/ANALYSE.md](anch-cli/ANALYSE.md) | valeurs numériques hors limites ou vides ignorées, fichiers de sortie non vérifiés, ANSI hors terminal |
