@@ -32,16 +32,23 @@ Un thread système est créé par tâche. Le nombre de threads simultanés est b
 ### U5. `ThreadPool::stop` attend en boucle active — lecture
 `stop()` tient `_mutex` et dort par tranches de 50 ms jusqu'au retour de toutes les tâches. Pas d'interblocage, car `_available` est incrémenté avant la prise du mutex dans `execute`, mais c'est fragile.
 
-### U6. `ResourcePool::borrowResource` : course sur `_availables` — lecture
+### U6. `ResourcePool::borrowResource` : course sur `_availables` — vérifié (TSan, erreur de segmentation) — **corrigé le 2026-11-02**
 `inc/impl/resourcePool.hpp:133` : l'attente se fait avec `_waitex`, mais la condition lit `_availables`, protégé par `_mutex`.
 Après le réveil, `_mutex` est repris puis `_availables.front()` est appelé sans revérifier : un autre thread a pu prendre la ressource entre-temps, d'où un `front()` sur liste vide (comportement indéfini).
 Piste : un seul mutex pour l'état et la variable de condition.
+Correction : un seul mutex ; la condition d'attente (« ressource disponible ou place libre ») est revérifiée sous ce mutex.
+Autres défauts corrigés en même temps :
+- **réveil perdu** : `returnResource` notifiait sans tenir le mutex de l'attente, d'où des `TimeoutException` alors qu'une ressource était libre ;
+- **création sous verrou** : `make_ptr` (ouverture d'une connexion SQL) était appelé en tenant `_mutex`, y compris depuis `invalidateResource` (donc depuis un destructeur). La création se fait maintenant hors verrou, après réservation d'une place ; une ressource invalide n'est plus recréée immédiatement mais à la demande ;
+- **`TimeoutException` héritait de `std::exception` en privé** : `catch(const std::exception&)` ne l'attrapait pas ;
+- `setTimeout` écrivait `_timeout` sans verrou pendant que `borrowResource` le lisait ;
+- `maxSize == 0` donnait un pool inutilisable (toujours en délai dépassé) : lève maintenant `std::invalid_argument`.
 
-### U7. `PoolableResource` est copiable — lecture
+### U7. `PoolableResource` est copiable — lecture — **corrigé le 2026-11-02** (déplaçable, non copiable)
 `inc/resourcePool.hpp` : la copie implicite est disponible et le destructeur rend la ressource au pool. Une copie entraîne une double restitution.
 Piste : `= delete` sur la copie, constructeur de déplacement qui vide la source.
 
-### U8. `PoolableResource` peut survivre au pool — lecture
+### U8. `PoolableResource` peut survivre au pool — lecture — **corrigé le 2026-11-02** (état partagé `ResourcePoolState`, la ressource est détruite à sa libération si le pool n'existe plus)
 Il garde une référence `_pool`. Si le pool est détruit avant, le destructeur de la ressource utilise une référence invalide.
 
 ### U9. `convert` accepte les nombres négatifs pour les types non signés — vérifié
@@ -90,6 +97,6 @@ Pas de défaut relevé. `toLower` / `toUpper` convertissent correctement en `uns
 
 ## À approfondir
 - [ ] Ajouter un test liant deux TU qui incluent `threadPool.hpp`.
-- [ ] Tests de charge multi-thread sur `ResourcePool` (sous TSan).
+- [x] Tests de charge multi-thread sur `ResourcePool` (sous TSan) : `res-pool-concurrent` (2026-11-02).
 - [ ] Tests de `convert` sur les bornes (`"-1"` en non signé, dépassements, `uint8_t`).
 - [ ] Test de `Fluent::forEach` modifiant les éléments, et de la copie d'un `Fluent` avec `skip` / `limit`.

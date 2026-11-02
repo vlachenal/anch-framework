@@ -21,163 +21,124 @@
 
 namespace anch {
 
-  /*!
-   * \brief Generic poolable resource
-   *
-   * Poolable resource which ensure return and invalidate to pool
-   *
-   * \author Vincen Lachenal
-   *
-   * \since 0.1
-   */
-  template<anch::Validable T, typename C, std::shared_ptr<T>(*make_ptr)(const C&)>
-  class PoolableResource {
-
-    // Attributes +
-  private:
-    /*! Current resource pool */
-    ResourcePool<T, C, make_ptr>& _pool;
-
-    /*! Resource */
-    std::shared_ptr<T> _ptr;
-    // Attributes -
-
-    // Constructors +
-  public:
-    /*!
-     * \ref PoolableResource constructor
-     */
-    PoolableResource(ResourcePool<T, C, make_ptr>& pool, std::shared_ptr<T> ptr): _pool(pool), _ptr(ptr) {
-      // Nothing to do
+  // ResourcePoolState +
+  template<anch::Validable T>
+  void
+  ResourcePoolState<T>::release(std::shared_ptr<T> res, bool valid) noexcept {
+    if(!valid) {
+      res.reset();
     }
-    // Constructors -
-
-    // Destructor +
-  public:
-    /*!
-     * \ref PoolableResource destructor
-     */
-    virtual ~PoolableResource() {
-      if(_ptr.get()->isValid()) {
-	_pool.returnResource(_ptr);
-      } else {
-	_pool.invalidateResource(_ptr);
+    {
+      std::lock_guard<std::mutex> lock(_mutex);
+      --_used;
+      if(res && !_closed) {
+	try {
+	  _availables.push_back(std::move(res));
+	} catch(...) {
+	  // Resource will be destroyed outside the lock and created again on demand
+	}
       }
     }
-    // Destructor -
+    _wait.notify_one();
+  }
+  // ResourcePoolState -
 
-    // Accessors +
-  public:
-    /*!
-     * Smart pointer inner resource reference getter
-     *
-     * \return the resource
-     */
-    inline T& get() {
-      return *(_ptr.get());
+  // PoolableResource +
+  template<anch::Validable T>
+  PoolableResource<T>::PoolableResource(std::shared_ptr<anch::ResourcePoolState<T>> state, std::shared_ptr<T> ptr) noexcept:
+    _state(std::move(state)),
+    _ptr(std::move(ptr)) {
+  }
+
+  template<anch::Validable T>
+  PoolableResource<T>::~PoolableResource() noexcept {
+    if(!_state) { // moved resource
+      return;
     }
-    // Accessors -
-  };
+    bool valid = false;
+    try {
+      valid = _ptr && static_cast<bool>(_ptr->isValid());
+    } catch(...) {
+      // Resource which can not be validated is considered as invalid
+    }
+    _state->release(std::move(_ptr), valid);
+  }
 
+  template<anch::Validable T>
+  inline T&
+  PoolableResource<T>::get() noexcept {
+    return *_ptr;
+  }
+  // PoolableResource -
 
+  // ResourcePool +
   template<anch::Validable T, typename C, std::shared_ptr<T>(*make_ptr)(const C&)>
   ResourcePool<T,C,make_ptr>::ResourcePool(const C& config,
 					   std::size_t maxSize,
-					   std::size_t initialiSize,
+					   std::size_t initialSize,
 					   std::chrono::milliseconds timeout):
-    _mutex(),
-    _wait(),
-    _waitex(),
-    _availables(),
+    _state(std::make_shared<anch::ResourcePoolState<T>>()),
     _maxSize(maxSize),
-    _used(0),
     _config(config),
     _timeout(timeout) {
-    for(std::size_t i = 0 ; i < initialiSize && i < maxSize ; ++i) {
+    if(_maxSize == 0) {
+      throw std::invalid_argument("Resource pool maximum size must be greater than 0");
+    }
+    for(std::size_t i = 0 ; i < initialSize && i < _maxSize ; ++i) {
       try {
-	std::shared_ptr<T> ptr = make_ptr(_config);
-	_availables.push_back(ptr);
+	_state->_availables.push_back(make_ptr(_config));
       } catch(...) {
-	// Nothing to do => resources will be instanciated later ... or not
+	// Resource will be created on demand
       }
     }
   }
 
   template<anch::Validable T, typename C, std::shared_ptr<T>(*make_ptr)(const C&)>
   ResourcePool<T,C,make_ptr>::~ResourcePool() {
-    while(!_availables.empty()) {
-      _availables.front().reset();
-      _availables.pop_front();
+    std::deque<std::shared_ptr<T>> availables;
+    {
+      std::lock_guard<std::mutex> lock(_state->_mutex);
+      _state->_closed = true;
+      availables.swap(_state->_availables);
     }
+    // Available resources are destroyed here, outside the lock
   }
 
   template<anch::Validable T, typename C, std::shared_ptr<T>(*make_ptr)(const C&)>
-  anch::PoolableResource<T,C,make_ptr>
+  anch::PoolableResource<T>
   ResourcePool<T,C,make_ptr>::borrowResource() {
-    _mutex.lock();
+    anch::ResourcePoolState<T>& state = *_state;
+    std::unique_lock<std::mutex> lock(state._mutex);
+    // Available resource or free slot (when there is no available resource, _used is the number of created resources)
+    if(!state._wait.wait_for(lock, _timeout, [this, &state]() {
+      return !state._availables.empty() || state._used < _maxSize;
+    })) {
+      throw anch::TimeoutException(_timeout, "Resource could not be retrieved.");
+    }
+    ++state._used;
+    if(!state._availables.empty()) {
+      std::shared_ptr<T> ptr = std::move(state._availables.front());
+      state._availables.pop_front();
+      return anch::PoolableResource<T>(_state, std::move(ptr));
+    }
+    // Slot is reserved: create resource outside the lock
+    lock.unlock();
     std::shared_ptr<T> ptr;
-    if(_availables.empty()) {
-      if(_used < _maxSize) {
-	try {
-	  ptr = make_ptr(_config);
-	} catch(...) {
-	  _mutex.unlock();
-	  throw;
-	}
-	++_used;
-	_mutex.unlock();
-
-      } else {
-	_mutex.unlock();
-	std::unique_lock<std::mutex> lock(_waitex);
-	if(_wait.wait_for(lock, _timeout, [this](){return !this->_availables.empty();})) {
-	  _mutex.lock();
-	  ptr = _availables.front();
-	  _availables.pop_front();
-	  ++_used;
-	  _mutex.unlock();
-	} else {
-	  throw TimeoutException(_timeout, "Resource could not be retrieved.");
-	}
-      }
-
-    } else {
-      ptr = _availables.front();
-      _availables.pop_front();
-      ++_used;
-      _mutex.unlock();
-    }
-    return anch::PoolableResource<T,C,make_ptr>(*this, ptr);
-  }
-
-  template<anch::Validable T, typename C, std::shared_ptr<T>(*make_ptr)(const C&)>
-  void
-  ResourcePool<T,C,make_ptr>::returnResource(std::shared_ptr<T> res) {
-    std::lock_guard<std::mutex> lock(_mutex);
-    _availables.push_back(res);
-    --_used;
-    _wait.notify_one();
-  }
-
-  template<anch::Validable T, typename C, std::shared_ptr<T>(*make_ptr)(const C&)>
-  void
-  ResourcePool<T,C,make_ptr>::invalidateResource(std::shared_ptr<T> res) {
-    std::lock_guard<std::mutex> lock(_mutex);
-    res.reset();
-    --_used;
     try {
-      _availables.push_back(make_ptr(_config));
-      _wait.notify_one();
+      ptr = make_ptr(_config);
     } catch(...) {
-      // Nothing to do => until resource will be instanciate other waiters will fail on timeout
+      state.release(nullptr, false); // free the reserved slot and wake up a waiting thread
+      throw;
     }
+    return anch::PoolableResource<T>(_state, std::move(ptr));
   }
 
   template<anch::Validable T, typename C, std::shared_ptr<T>(*make_ptr)(const C&)>
-  inline
   void
-  ResourcePool<T,C,make_ptr>::setTimeout(const std::chrono::milliseconds timeout) {
+  ResourcePool<T,C,make_ptr>::setTimeout(std::chrono::milliseconds timeout) {
+    std::lock_guard<std::mutex> lock(_state->_mutex);
     _timeout = timeout;
   }
+  // ResourcePool -
 
 }

@@ -1,172 +1,269 @@
 #include "resourcePool.hpp"
 
-#include <iostream>
-#include <random>
+#include <atomic>
+#include <chrono>
+#include <memory>
+#include <stdexcept>
 #include <thread>
+#include <type_traits>
+#include <vector>
 
+#include "ut/assert.hpp"
 #include "ut/unit.hpp"
 
-class TestConfig {
+using namespace std::chrono_literals;
+
+struct Config {
+};
+
+// Resource with creation/destruction counters
+class Res {
 public:
-  virtual ~TestConfig() {
+  static std::atomic<int> created;
+  static std::atomic<int> destroyed;
+  int id;
+  bool valid = true;
+  std::atomic<bool> inUse = false;
+
+  Res(const Config&): id(created.fetch_add(1)) {
+  }
+
+  ~Res() {
+    destroyed.fetch_add(1);
+  }
+
+  bool isValid() const {
+    return valid;
   }
 };
 
-class Test {
-private:
-  static std::default_random_engine randNgin;
-  static std::uniform_int_distribution<int> rand;
-  static std::atomic<int> globalIdx;
-  int _idx;
-  const TestConfig& _config;
-  bool _valid;
-public:
-  Test(const TestConfig& config): _idx(globalIdx.fetch_add(1)), _config(config), _valid(true) {
-    std::cout << "Build Test " << _idx << std::endl;
-  }
+std::atomic<int> Res::created;
+std::atomic<int> Res::destroyed;
 
-  virtual ~Test() {
-    std::cout << "Destroy Test " << _idx << std::endl;
-  }
-
-  void doStuff() {
-    std::cout << "Stuff " << _idx << std::endl;
-    int nb = Test::rand(Test::randNgin);
-    if(nb == 4) {
-      _valid = false;
-    }
-  }
-
-  inline int getIdx() const {
-    return _idx;
-  }
-
-  inline bool isValid() const {
-    return _valid;
-  }
-};
-
-std::random_device rDev;
-std::default_random_engine Test::randNgin(rDev());
-std::uniform_int_distribution<int> Test::rand(1,4);
-std::atomic<int> Test::globalIdx;
-
-using TestPool = anch::ResourcePool<Test, TestConfig>;
-
-void
-doStuff(TestPool* const pool) {
-  try {
-    auto res = pool->borrowResource();
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
-    res.get().doStuff();
-  } catch(const anch::TimeoutException& e) {
-    std::cerr << "Timeout error: " << e.what() << " ; timeout=" << e.getTimeout().count() << "ms" << std::endl;
-  }
+static void
+resetCounters() {
+  Res::created = 0;
+  Res::destroyed = 0;
 }
 
-class Test2 {
-private:
-  static std::default_random_engine randNgin;
-  static std::uniform_int_distribution<int> rand;
-  static std::atomic<int> globalIdx;
-  int _idx;
-  const TestConfig& _config;
-  bool _valid;
-  std::mutex _mutex;
-public:
-  Test2(const TestConfig& config): _idx(globalIdx.fetch_add(1)), _config(config), _valid(true), _mutex() {
-    std::cout << "Build Test2 " << _idx << std::endl;
+using Pool = anch::ResourcePool<Res, Config>;
+
+static_assert(!std::is_copy_constructible_v<anch::PoolableResource<Res>>, "PoolableResource must not be copyable");
+static_assert(std::is_nothrow_move_constructible_v<anch::PoolableResource<Res>>, "PoolableResource must be movable");
+
+// Resource factory which can fail
+static std::atomic<bool> failCreation = false;
+
+std::shared_ptr<Res>
+makeRes(const Config& config) {
+  if(failCreation) {
+    throw std::runtime_error("creation failure");
   }
-
-  virtual ~Test2() {
-    std::cout << "Destroy Test2 " << _idx << std::endl;
-  }
-
-  void doStuff() {
-    if(_mutex.try_lock()) {
-      std::cout << "Stuff2 " << _idx << std::endl;
-      int nb = Test2::rand(Test2::randNgin);
-      if(nb == 4) {
-	_valid = false;
-      }
-      std::this_thread::sleep_for(std::chrono::milliseconds(100));
-      _mutex.unlock();
-    } else {
-      std::cerr << "Test2 " << _idx << " is already in use ..." << std::endl;
-    }
-  }
-
-  inline int getIdx() const {
-    return _idx;
-  }
-
-  inline bool isValid() const {
-    return _valid;
-  }
-};
-
-std::default_random_engine Test2::randNgin(rDev());
-std::uniform_int_distribution<int> Test2::rand(1,4);
-std::atomic<int> Test2::globalIdx;
-
-using Test2Pool = anch::ResourcePool<Test2, TestConfig>;
-
-void
-doStuff2(Test2Pool* const pool) {
-  try {
-    pool->borrowResource().get().doStuff();
-  } catch(const anch::TimeoutException& e) {
-    std::cerr << "Timeout error: " << e.what() << " ; timeout=" << e.getTimeout().count() << "ms" << std::endl;
-  }
+  return std::make_shared<Res>(config);
 }
+
+using FailPool = anch::ResourcePool<Res, Config, makeRes>;
 
 // Anch unit tests +
 void
-testPool1() {
-  std::cout << "Enter in testPool1 test" << std::endl;
-  TestConfig config;
-  TestPool pool(config, 10, 5);
-  for(int i = 0 ; i < 15 ; ++i) {
-    std::thread t(doStuff, &pool);
-    t.detach();
+testReuse() {
+  resetCounters();
+  Config config;
+  Pool pool(config, 2);
+  int id;
+  {
+    auto res = pool.borrowResource();
+    id = res.get().id;
   }
-  std::this_thread::sleep_for(std::chrono::seconds(2));
-  std::cout << "Exit testPool1 test" << std::endl;
+  {
+    auto res = pool.borrowResource();
+    anch::ut::assertThat(res.get().id == id, "Resource {} has not been reused (got {})", id, res.get().id);
+  }
+  anch::ut::assertThat(Res::created == 1, "{} resources have been created instead of 1", Res::created.load());
 }
 
 void
-testPool2() {
-  std::cout << "Enter in testPool2 test" << std::endl;
-  TestConfig config;
-  Test2Pool pool2(config, 10, 5);
-  for(int i = 0 ; i < 15 ; ++i) {
-    std::thread t(doStuff2, &pool2);
-    t.detach();
-  }
-  std::this_thread::sleep_for(std::chrono::seconds(2));
-  std::cout << "Exit testPool2 test" << std::endl;
+testInitSize() {
+  resetCounters();
+  Config config;
+  Pool pool(config, 3, 5);
+  anch::ut::assertThat(Res::created == 3, "{} resources have been created instead of 3 (max size)", Res::created.load());
+  auto r1 = pool.borrowResource();
+  auto r2 = pool.borrowResource();
+  auto r3 = pool.borrowResource();
+  anch::ut::assertThat(Res::created == 3, "{} resources have been created instead of 3", Res::created.load());
 }
-
-/*
-class Notvalid {
-};
 
 void
-testPoolNotValid() {
-  std::cout << "Enter in testPoolNotValid test" << std::endl;
-  anch::ResourcePool<Notvalid, TestConfig> pool;
-  std::cout << pool << std::endl;
-  std::cout << "Exit testPoolNotValid test" << std::endl;
+testMaxSizeZero() {
+  Config config;
+  try {
+    Pool pool(config, 0);
+    anch::ut::fail("Pool with maximum size 0 has been created");
+  } catch(const std::invalid_argument&) {
+    // expected
+  }
 }
-*/
+
+void
+testTimeout() {
+  resetCounters();
+  Config config;
+  Pool pool(config, 1, 0, 50ms);
+  auto res = pool.borrowResource();
+  auto start = std::chrono::steady_clock::now();
+  try {
+    auto other = pool.borrowResource();
+    anch::ut::fail("Second resource has been borrowed from a pool of 1");
+  } catch(const std::exception& e) { // TimeoutException must be catchable as std::exception
+    auto elapsed = std::chrono::steady_clock::now() - start;
+    anch::ut::assertTrue(dynamic_cast<const anch::TimeoutException*>(&e) != nullptr, "Exception is not a TimeoutException");
+    anch::ut::assertThat(elapsed >= 50ms, "Timeout raised after {} instead of 50ms",
+			 std::chrono::duration_cast<std::chrono::milliseconds>(elapsed));
+  }
+}
+
+void
+testWakeUp() {
+  resetCounters();
+  Config config;
+  Pool pool(config, 1, 0, 2s);
+  auto start = std::chrono::steady_clock::now();
+  std::thread holder([res = pool.borrowResource()]() mutable {
+    std::this_thread::sleep_for(100ms);
+  });
+  auto res = pool.borrowResource(); // has to wait for holder release
+  auto elapsed = std::chrono::steady_clock::now() - start;
+  holder.join();
+  anch::ut::assertThat(elapsed >= 100ms && elapsed < 1s, "Resource borrowed after {} (expected about 100ms)",
+		       std::chrono::duration_cast<std::chrono::milliseconds>(elapsed));
+}
+
+void
+testInvalid() {
+  resetCounters();
+  Config config;
+  Pool pool(config, 1);
+  int id;
+  {
+    auto res = pool.borrowResource();
+    id = res.get().id;
+    res.get().valid = false;
+  }
+  anch::ut::assertThat(Res::destroyed == 1, "Invalid resource has not been destroyed ({} destroyed)", Res::destroyed.load());
+  auto res = pool.borrowResource();
+  anch::ut::assertThat(res.get().id != id, "Invalid resource {} has been reused", id);
+  anch::ut::assertThat(Res::created == 2, "{} resources have been created instead of 2", Res::created.load());
+}
+
+void
+testMove() {
+  resetCounters();
+  Config config;
+  Pool pool(config, 1, 0, 10ms);
+  {
+    auto res = pool.borrowResource();
+    auto moved = std::move(res);
+  }
+  // Resource has to be returned only once: the second borrow has to fail
+  auto res = pool.borrowResource();
+  try {
+    auto other = pool.borrowResource();
+    anch::ut::fail("Moved resource has been returned twice");
+  } catch(const anch::TimeoutException&) {
+    // expected
+  }
+}
+
+void
+testCreationFailure() {
+  resetCounters();
+  Config config;
+  FailPool pool(config, 1, 0, 50ms);
+  failCreation = true;
+  try {
+    auto res = pool.borrowResource();
+    anch::ut::fail("Resource creation failure has not been raised");
+  } catch(const std::runtime_error&) {
+    // expected
+  }
+  failCreation = false;
+  // Slot reserved by the failed creation has to be released
+  auto res = pool.borrowResource();
+  anch::ut::assertThat(Res::created == 1, "{} resources have been created instead of 1", Res::created.load());
+}
+
+void
+testOutlivePool() {
+  resetCounters();
+  Config config;
+  auto pool = std::make_unique<Pool>(config, 2, 2);
+  {
+    auto res = pool->borrowResource();
+    pool.reset();
+    anch::ut::assertThat(Res::destroyed == 1, "Available resource has not been destroyed with pool ({} destroyed)", Res::destroyed.load());
+  }
+  anch::ut::assertThat(Res::destroyed == 2, "Borrowed resource has not been destroyed on release ({} destroyed)", Res::destroyed.load());
+}
+
+void
+testConcurrent() {
+  resetCounters();
+  Config config;
+  constexpr std::size_t MAX_SIZE = 4;
+  constexpr int NB_THREADS = 16;
+  constexpr int NB_BORROWS = 500;
+  Pool pool(config, MAX_SIZE, 0, 10s);
+  std::atomic<int> sharedUse = 0;
+  std::atomic<int> errors = 0;
+  std::atomic<std::size_t> concurrent = 0;
+  std::atomic<std::size_t> maxConcurrent = 0;
+  std::vector<std::thread> threads;
+  for(int i = 0 ; i < NB_THREADS ; ++i) {
+    threads.emplace_back([&]() {
+      for(int j = 0 ; j < NB_BORROWS ; ++j) {
+	try {
+	  auto res = pool.borrowResource();
+	  if(res.get().inUse.exchange(true)) {
+	    ++sharedUse;
+	  }
+	  std::size_t current = ++concurrent;
+	  std::size_t max = maxConcurrent;
+	  while(current > max && !maxConcurrent.compare_exchange_weak(max, current)) {
+	  }
+	  std::this_thread::yield();
+	  --concurrent;
+	  res.get().inUse = false;
+	} catch(...) {
+	  ++errors;
+	}
+      }
+    });
+  }
+  for(std::thread& thread : threads) {
+    thread.join();
+  }
+  anch::ut::assertThat(errors == 0, "{} borrow errors", errors.load());
+  anch::ut::assertThat(sharedUse == 0, "Resources have been used by several threads at the same time {} times", sharedUse.load());
+  anch::ut::assertThat(maxConcurrent <= MAX_SIZE, "{} resources have been used at the same time (max {})", maxConcurrent.load(), MAX_SIZE);
+  anch::ut::assertThat(Res::created <= static_cast<int>(MAX_SIZE), "{} resources have been created (max {})", Res::created.load(), MAX_SIZE);
+}
 
 void
 anch::ut::setup(anch::ut::UnitTests& tests) {
   tests
     .name("AnCH resource pool unit tests")
     .description("Test AnCH resource pool utiliy class")
-    .add("res-pool1", testPool1)
-    .add("res-pool2", testPool2)
+    .add("res-pool-reuse", testReuse)
+    .add("res-pool-init-size", testInitSize)
+    .add("res-pool-max-size-zero", testMaxSizeZero)
+    .add("res-pool-timeout", testTimeout)
+    .add("res-pool-wake-up", testWakeUp)
+    .add("res-pool-invalid", testInvalid)
+    .add("res-pool-move", testMove)
+    .add("res-pool-creation-failure", testCreationFailure)
+    .add("res-pool-outlive", testOutlivePool)
+    .add("res-pool-concurrent", testConcurrent)
     ;
 }
 // Anch unit tests -
