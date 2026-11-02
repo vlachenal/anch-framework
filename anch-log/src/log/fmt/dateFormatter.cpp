@@ -41,8 +41,14 @@ void
 DateFormatter::formatValue(const void* const, ostream& out) const noexcept {
   std::chrono::time_point<std::chrono::system_clock> now = std::chrono::system_clock::now();
   std::time_t now_c = std::chrono::system_clock::to_time_t(now);
+  std::tm local;
+  if(localtime_r(&now_c, &local) == nullptr) { // std::localtime uses a static buffer shared between threads
+    return;
+  }
   char buf[200];
-  std::strftime(buf,200,_dateFormat.data(),std::localtime(&now_c));
+  if(std::strftime(buf, sizeof(buf), _dateFormat.data(), &local) == 0) { // too long or empty: buf is indeterminate
+    return;
+  }
   out << buf;
 }
 

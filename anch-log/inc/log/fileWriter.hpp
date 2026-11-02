@@ -19,6 +19,7 @@
 */
 #pragma once
 
+#include <cstdint>
 #include <fstream>
 #include <filesystem>
 
@@ -30,7 +31,16 @@ namespace anch::log {
   /*!
    * \brief Log file writer
    *
-   * Manage file writer with file rotation on size, date and max rotate index
+   * Manage file writer with file rotation on size.\n
+   * \n
+   * Configuration:
+   * - \c path: the log file path (mandatory ; its directory has to exist) ;
+   * - \c max-size: maximum file size before rotation, in bytes, with optional unit \c K, \c M, \c G or \c T
+   *   (powers of 1024). No rotation when not set ;
+   * - \c max-rotate-files: number of archives to keep (\c <path>.0 is the most recent). Default to 1.
+   *   With 0, the file is truncated on rotation.
+   *
+   * File system errors during rotation are ignored: the current file is kept and rotation is tried again later.
    *
    * \author Vincent Lachenal
    *
@@ -41,19 +51,16 @@ namespace anch::log {
     // Attributes +
   protected:
     /*! Ouput file stream */
-    std::ofstream* _output;
+    std::ofstream _output;
 
     /*! File name */
     std::filesystem::path _path;
 
-    /*! Maximum file size */
-    uint32_t _maxSize;
+    /*! Maximum file size (0 for no rotation) */
+    std::uint64_t _maxSize;
 
-    /*! Maximum file index */
-    int _maxIdx;
-
-    /*! Current file index */
-    int _fileIdx;
+    /*! Number of archives to keep */
+    std::uint32_t _maxFiles;
     // Attributes -
 
     // Constructors +
@@ -62,6 +69,8 @@ namespace anch::log {
      * \ref FileWriter constructor
      *
      * \param conf the writer's configuration
+     *
+     * \throw std::invalid_argument invalid configuration or file which can not be opened
      */
     FileWriter(const anch::conf::Section& conf);
     // Constructors -
@@ -77,7 +86,7 @@ namespace anch::log {
     // Methods +
   public:
     /*!
-     * Write message in the file.\n
+     * Write message in the file and flush it.\n
      * Rotate log file when needed.
      *
      * \param message Message to write
@@ -86,16 +95,32 @@ namespace anch::log {
 
   protected:
     /*!
+     * Write an already formatted line in the file (without flush) and rotate log file when needed.
+     *
+     * \param line the formatted line (without end of line)
+     */
+    void writeLine(const std::string& line);
+
+    /*!
      * Check if file has to be rotate according to configuration and its size
      *
      * \return true or false
      */
-    bool rotate() const;
+    bool rotate();
 
     /*!
      * Rotate files when current reachs the maximum file length.
      */
     void rotateFiles();
+
+    /*!
+     * Archive path
+     *
+     * \param index the archive index
+     *
+     * \return \c <path>.<index>
+     */
+    std::filesystem::path archive(std::uint32_t index) const;
     // Methods -
 
   };

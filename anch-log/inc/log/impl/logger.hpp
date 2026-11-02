@@ -62,13 +62,20 @@ namespace anch::log {
   template<typename T>
   void
   Logger::log(const Level& level, std::ostringstream& out, const T& value) const noexcept {
-    out << value;
-    const std::string& message = out.str();
-    anch::log::MDC.put("level", LEVEL_LABEL.at(level));
-    anch::log::MDC.put("logger", _name);
-    for(size_t i = 0 ; i < _writers.size() ; ++i) {
-      //_writers[i]->write(_name, level, message); // \todo fix
-      _writers[i]->write(message);
+    try {
+      out << value;
+      const std::string message = out.str();
+      anch::log::MDC.put("level", LEVEL_LABEL.at(level));
+      anch::log::MDC.put("logger", _name);
+      for(anch::log::Writer* writer : _writers) {
+	try {
+	  writer->write(message);
+	} catch(...) {
+	  // A writer error must not prevent other writers to log, nor stop the application
+	}
+      }
+    } catch(...) {
+      // Logging must never stop the application (this method is noexcept)
     }
   }
 

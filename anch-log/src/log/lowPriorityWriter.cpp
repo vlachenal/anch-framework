@@ -19,93 +19,69 @@
 */
 #include "log/lowPriorityWriter.hpp"
 
-#include <chrono>
-
-
-using std::string;
-using std::ostream;
-using std::mutex;
-using std::queue;
-
 using anch::log::LowPriorityWriter;
-using anch::log::FileWriter;
-using anch::log::Level;
-
 
 // Constructors +
-/*
-LowPriorityWriter::LowPriorityWriter(const string& fileName,
-				     const string& linePattern,
-				     unsigned int maxSize,
-				     int maxIndex):
-  Writer(fileName,linePattern,maxSize,maxIndex),
-  _messages(),
-  _mutex() {
-  // Nothing to do
-}
-
-LowPriorityWriter::LowPriorityWriter(ostream* output,
-				     const string& linePattern):
-  Writer(output,linePattern),
-  _messages(),
-  _mutex() {
-  // Nothing to do
-}
-*/
 LowPriorityWriter::LowPriorityWriter(const anch::conf::Section& conf):
   FileWriter(conf),
   _messages(),
-  _running(false),
-  _thread(NULL),
-  _mutex() {
-  // Nothing to do
+  _mutex(),
+  _wait(),
+  _stop(false),
+  _thread() {
+  startTreatment();
 }
 // Constructors -
 
-
 // Destructor +
 LowPriorityWriter::~LowPriorityWriter() {
-  _running = false;
-  _thread->join();
+  {
+    std::lock_guard<std::mutex> lock(_mutex);
+    _stop = true;
+  }
+  _wait.notify_all();
+  if(_thread.joinable()) {
+    _thread.join(); // queued messages are written before the thread stops
+  }
 }
 // Destructor -
 
-
 // Methods +
 void
-LowPriorityWriter::write(const string& message) {
-  _mutex.lock();
-  _messages.push(format(message));
-  _mutex.unlock();
+LowPriorityWriter::write(const std::string& message) {
+  std::string line = format(message); // MDC is thread local: format in the logging thread
+  {
+    std::lock_guard<std::mutex> lock(_mutex);
+    _messages.push(std::move(line));
+  }
+  _wait.notify_one();
 }
 
 void
 LowPriorityWriter::process() {
-  while(_running) {
-    std::this_thread::sleep_for(std::chrono::milliseconds(50));
-
-    _mutex.lock();
-    bool empty = _messages.empty();
-    _mutex.unlock();
-    while(!empty) {
-      _mutex.lock();
-      const string& msg = _messages.front();
-      _mutex.unlock();
-      *_output << msg;
-      if(rotate()) {
-	rotateFiles();
-      }
-      _mutex.lock();
-      _messages.pop();
-      empty = _messages.empty();
-      _mutex.unlock();
+  std::unique_lock<std::mutex> lock(_mutex);
+  while(true) {
+    _wait.wait(lock, [this]() { return _stop || !_messages.empty(); });
+    if(_messages.empty()) { // stopped and every message has been written
+      return;
     }
+    std::queue<std::string> messages;
+    messages.swap(_messages); // write without lock
+    lock.unlock();
+    while(!messages.empty()) {
+      writeLine(messages.front());
+      messages.pop();
+    }
+    _output.flush(); // once per batch
+    lock.lock();
   }
 }
 
 void
 LowPriorityWriter::startTreatment() {
-  _running = true;
-  _thread = new std::thread(&LowPriorityWriter::process, this);
+  std::lock_guard<std::mutex> lock(_mutex);
+  if(!_thread.joinable()) {
+    _thread = std::jthread(&LowPriorityWriter::process, this);
+  }
 }
 // Methods -

@@ -40,43 +40,54 @@ MapDiagnosticContext::~MapDiagnosticContext() {
   // Nothing to do
 }
 
+namespace {
+
+  /*!
+   * Check if key can not be modified by \c add, \c remove, \c reset and \c copy
+   *
+   * \param key the key
+   *
+   * \return \c true for thread identifier and constants, \c false otherwise
+   */
+  bool
+  isProtected(const std::string& key) {
+    return key == anch::log::MDC_THREAD_ID || anch::log::MDC_CONST.contains(key);
+  }
+
+}
+
 void
 MapDiagnosticContext::add(const std::string& key, const std::string& value) noexcept {
-  if(key == anch::log::MDC_THREAD_ID || MDC_CONST.find(key) == MDC_CONST.end()) {
+  if(isProtected(key)) {
     return;
   }
-  put(key, value);
+  _context.try_emplace(key, value); // only if not exists
 }
 
 void
 MapDiagnosticContext::remove(const std::string& key) noexcept {
-  if(key == anch::log::MDC_THREAD_ID || MDC_CONST.find(key) == MDC_CONST.end()) {
+  if(isProtected(key)) {
     return;
   }
-  auto iter = _context.find(key);
-  if(iter != _context.end()) {
-    _context.erase(iter);
-  }
+  _context.erase(key);
 }
 
 void
 MapDiagnosticContext::reset() noexcept {
-  for(auto iter = _context.begin() ; iter != _context.end() ; ++iter) {
-    if(iter->first == anch::log::MDC_THREAD_ID
-       || MDC_CONST.find(iter->first) == MDC_CONST.end()) {
-      continue;
+  for(auto iter = _context.begin() ; iter != _context.end() ; ) {
+    if(isProtected(iter->first)) {
+      ++iter;
+    } else {
+      iter = _context.erase(iter);
     }
-    _context.erase(iter);
   }
 }
 
 void
 MapDiagnosticContext::copy(const MapDiagnosticContext& other) noexcept {
-  for(auto iter = other._context.cbegin() ; iter != other._context.cend() ; ++iter) {
-    if(iter->first == anch::log::MDC_THREAD_ID
-       || MDC_CONST.find(iter->first) == MDC_CONST.end()) {
-      continue;
+  for(const auto& [key, value] : other._context) {
+    if(!isProtected(key)) {
+      _context[key] = value;
     }
-    _context[iter->first] = iter->second;
   }
 }

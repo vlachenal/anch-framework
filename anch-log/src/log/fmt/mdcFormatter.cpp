@@ -34,7 +34,7 @@ MDCFormatter::~MDCFormatter() {
 
 void
 MDCFormatter::formatValue([[ maybe_unused ]] const void* const value, std::ostream& out) const noexcept {
-  auto mdc =  anch::log::MDC.get();
+  const auto& mdc = anch::log::MDC.get(); // no copy of the whole context
   auto iter = mdc.find(_key);
   if(iter ==  mdc.end()) {
     out << "undefined";

@@ -44,7 +44,7 @@ using anch::log::fmt::MDCFormatter;
 
 
 // Static initialization +
-const std::regex MessageFormatter::CONFIG_PATTERN = std::regex(R"(^((\$d\{[^\}]+\})|(\$D\{[^\}]+\})|(\$C\{[^\}]+\})|(\$m)|(\$c)|(\$p)|(\$t)|([^\$]+)))");
+const std::regex MessageFormatter::CONFIG_PATTERN = std::regex(R"(^((\$d\{[^\}]+\})|(\$D\{[^\}]+\})|(\$C\{[^\}]+\})|(\$m)|(\$c)|(\$p)|(\$t)|([^\$]+)|(\$)))");
 // Static initialization -
 
 MessageFormatter::MessageFormatter(): _formatters() {

@@ -94,6 +94,7 @@ tokenizeLoggerName(const std::string& loggerName) {
 const anch::log::Logger&
 LoggerFactory::getLogger(const std::string& loggerName) {
   LoggerFactory& self = LoggerFactory::getInstance();
+  std::lock_guard<std::mutex> lock(self._mutex);
 
   // Return already registered logger instance +
   if(self._loggers.contains(loggerName)) {
@@ -224,31 +225,28 @@ toLevel(const std::string& levelLbl) {
  */
 std::vector<anch::log::Writer*>
 parseWriters(const std::string& logWriters, const std::map<std::string, anch::log::Writer*>& writers) {
-  size_t pos = 0;
   std::vector<anch::log::Writer*> loggerWriters;
-  // Split writers by ',' +
-  size_t nextPos = logWriters.find(',',pos);
-  while(nextPos != std::string::npos && nextPos != pos) {
-    const std::string writerName = logWriters.substr(pos, nextPos - pos);
-    auto iter = writers.find(writerName);
-    if(iter != writers.cend()) {
-      loggerWriters.push_back(iter->second);
-    } else {
-      std::cout << "Writer " << writerName << " has not been registered" << std::endl;
+  // Split writers by ',' (spaces around names are ignored, as empty names) +
+  std::size_t pos = 0;
+  while(pos <= logWriters.size()) {
+    std::size_t nextPos = logWriters.find(',', pos);
+    if(nextPos == std::string::npos) {
+      nextPos = logWriters.size();
+    }
+    std::size_t begin = logWriters.find_first_not_of(" \t", pos);
+    std::size_t end = logWriters.find_last_not_of(" \t", nextPos == 0 ? 0 : nextPos - 1);
+    if(begin != std::string::npos && begin < nextPos && end != std::string::npos && end >= begin) {
+      const std::string writerName = logWriters.substr(begin, end - begin + 1);
+      auto iter = writers.find(writerName);
+      if(iter != writers.cend()) {
+	loggerWriters.push_back(iter->second);
+      } else {
+	std::cout << "Writer " << writerName << " has not been registered" << std::endl;
+      }
     }
     pos = nextPos + 1;
-    nextPos = logWriters.find(',', pos);
   }
   // Split writers by ',' -
-  // Add last or unique writer +
-  const std::string writerName = logWriters.substr(pos);
-  auto iterStr = writers.find(writerName);
-  if(iterStr != writers.cend()) {
-    loggerWriters.push_back(iterStr->second);
-  } else {
-    std::cout << "Writer " << writerName << " has not been registered" << std::endl;
-  }
-  // Add last or unique writer -
   return loggerWriters;
 }
 
@@ -286,7 +284,7 @@ LoggerFactory::initializeLoggers(const std::map<std::string, anch::log::Writer*>
   }
   // Check anch::log section existence -
 
-  auto loggers = conf->getSections().at(anch::log::LOGGER);
+  const auto& loggers = conf->getSections().at(anch::log::LOGGER);
   // Retrieve default writer +
   std::optional<std::string> optDefaultWriters = loggers.getValue<std::string>(anch::log::WRITERS);
   anch::log::Level defaultLevel = toLevel(loggers.getValue<std::string>(anch::log::LEVEL, "WARN"));
@@ -318,10 +316,10 @@ LoggerFactory::initializeLoggers(const std::map<std::string, anch::log::Writer*>
     // Retrieve writer -
 
     anch::log::Level level = toLevel(logger.getValue<std::string>(anch::log::LEVEL, "WARN"));
-    if(loggerWriters.empty()) {
-      _loggersConfig.insert({name, anch::log::LoggerConfiguration(name, level, loggerWriters)});
+    if(loggerWriters.empty()) { // no (valid) writer: use every writer
+      _loggersConfig.insert({name, anch::log::LoggerConfiguration(name, level, getAllWriters(writers))});
     } else {
-      _loggersConfig.insert({name, anch::log::LoggerConfiguration(name, level, std::move(getAllWriters(writers)))});
+      _loggersConfig.insert({name, anch::log::LoggerConfiguration(name, level, loggerWriters)});
     }
   }
   // Parser writers -

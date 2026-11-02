@@ -35,7 +35,7 @@ using anch::log::fmt::MessageFormatter;
 Writer::Writer(const anch::conf::Section& conf): _formatter() {
   std::optional<std::string> optVal = conf.getValue<std::string>("pattern");
   if(!optVal.has_value()) {
-    _formatter.parserPattern("%m");
+    _formatter.parserPattern("$m");
   } else {
     _formatter.parserPattern(optVal.value());
   }

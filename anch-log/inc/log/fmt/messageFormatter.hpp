@@ -37,13 +37,15 @@ namespace anch::log::fmt {
    * Format a message for logging acording writer configuration\n
    * \n
    * Paterns are:
-   * - %c: The category (logger name)
-   * - %p: The logging level
-   * - %m: The message
-   * - %d{C++ time standard}: The date
-   * - %D{C++ time standard}: The high precision date
-   * - %t: The current thread ID
-   * - %f: The function name (not imlpemented)
+   * - $c: The category (logger name)
+   * - $p: The logging level
+   * - $m: The message
+   * - $d{strftime format}: The date
+   * - $D{anch::date format}: The high precision date
+   * - $C{key}: The value of \c key in the map diagnostic context
+   * - $t: The current thread ID
+   *
+   * Other characters (including a \c $ which does not start a pattern) are written as is.
    *
    * \author Vincent Lachenal
    */
@@ -72,6 +74,11 @@ namespace anch::log::fmt {
      * \param linePattern The message line pattern
      */
     MessageFormatter(const std::string& linePattern);
+
+    /*!
+     * Prohibits \ref MessageFormatter copy constructor (it owns its formatters)
+     */
+    MessageFormatter(const MessageFormatter&) = delete;
     // Constructors -
 
     // Destructor +
@@ -80,6 +87,14 @@ namespace anch::log::fmt {
      */
     virtual ~MessageFormatter();
     // Destructor -
+
+    // Operators +
+  public:
+    /*!
+     * Prohibits \ref MessageFormatter copy assignment (it owns its formatters)
+     */
+    MessageFormatter& operator=(const MessageFormatter&) = delete;
+    // Operators -
 
     // Methods +
   public:

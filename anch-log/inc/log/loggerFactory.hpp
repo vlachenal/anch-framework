@@ -20,6 +20,7 @@
 #pragma once
 
 #include <map>
+#include <mutex>
 #include <vector>
 #include <cstdint>
 
@@ -54,6 +55,9 @@ namespace anch::log {
 
     /*! Register loggers to free them */
     std::map<std::string, anch::log::Logger*> _loggers;
+
+    /*! Protects loggers creation (getLogger can be called from several threads) */
+    std::mutex _mutex;
     // Attributes -
 
   private:
@@ -77,7 +81,8 @@ namespace anch::log {
     // Methods +
     /*!
      * Retrieve a registered logger from a logger name or create a new one
-     * and register it.
+     * and register it.\n
+     * Thread safe. The returned reference is valid until program exit.
      *
      * \param loggerName The logger name to retrieve
      *

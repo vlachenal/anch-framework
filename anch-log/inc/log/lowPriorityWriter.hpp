@@ -19,9 +19,10 @@
 */
 #pragma once
 
-#include <iostream>
-#include <queue>
+#include <condition_variable>
 #include <mutex>
+#include <queue>
+#include <string>
 #include <thread>
 
 #include "log/fileWriter.hpp"
@@ -31,7 +32,9 @@ namespace anch::log {
 
   /*!
    * File writer with QoS implementation to avoid performance lose
-   * when files are written.
+   * when files are written.\n
+   * Messages are formatted in the logging thread and written by a dedicated thread.
+   * The queued messages are written before destruction.
    *
    * \author Vincent Lachenal
    */
@@ -42,20 +45,24 @@ namespace anch::log {
     /*! Messages queue */
     std::queue<std::string> _messages;
 
-    /*! Running state */
-    bool _running;
-
-    /*! Treatment thread */
-    std::thread* _thread;
-
-    /*! Writer mutex */
+    /*! Writer mutex (protects messages queue and stop flag) */
     std::mutex _mutex;
+
+    /*! The writing thread waits for messages on this condition */
+    std::condition_variable _wait;
+
+    /*! The writing thread stops when \c true and the queue is empty */
+    bool _stop;
+
+    /*! Writing thread (declared last: joined first on destruction) */
+    std::jthread _thread;
     // Attributes -
 
     // Constructors +
   public:
     /*!
-     * \ref LowPriorityWriter constructor
+     * \ref LowPriorityWriter constructor.\n
+     * Start the writing thread.
      *
      * \param conf the writer's configuration
      */
@@ -65,7 +72,8 @@ namespace anch::log {
     // Destructor +
   public:
     /*!
-     * \ref LowPriorityWriter destructor
+     * \ref LowPriorityWriter destructor.\n
+     * Write the queued messages and stop the writing thread.
      */
     virtual ~LowPriorityWriter();
     // Destructor -
@@ -73,15 +81,15 @@ namespace anch::log {
     // Method +
   public:
     /*!
-     * Write message in the file.\n
-     * Rotate log file when needed.
+     * Queue message to write in the file.
      *
      * \param message Message to write
      */
     virtual void write(const std::string& message) override;
 
     /*!
-     * Start messages queue pooling
+     * Start messages queue pooling.\n
+     * The writing thread is started by the constructor: this method does nothing when it is running.
      */
     void startTreatment();
 

@@ -19,43 +19,64 @@
 */
 #include "log/fileWriter.hpp"
 
+#include <charconv>
+#include <limits>
+#include <map>
 #include <stdexcept>
-#include <regex>
+#include <string>
+#include <system_error>
 
 using anch::log::FileWriter;
 
+namespace {
 
-std::map<std::string, uint32_t> SIZES = std::map<std::string, uint32_t>({
-    {"K", 1024},
-    {"M", 1024*1024},
-    {"G", 1024*1024*1024}
-  });
-const std::regex UNITS_REGEX = std::regex("^([0-9]+)(K|M|G|T)?$");
+  /*! Size units (powers of 1024) */
+  const std::map<char, std::uint64_t> SIZE_UNITS = {
+    {'K', 1024ull},
+    {'M', 1024ull * 1024},
+    {'G', 1024ull * 1024 * 1024},
+    {'T', 1024ull * 1024 * 1024 * 1024}
+  };
 
-int
-getFileIndex(const std::filesystem::path& file) {
-  int idx = -1;
-  int i = 0;
-  while(true) {
-    std::filesystem::path path(file);
-    std::ostringstream ostr;
-    ostr <<  '.' << i;
-    path += ostr.str();
-    if(!std::filesystem::exists(path)) {
-      break;
+  /*!
+   * Parse file size: number with optional unit (K, M, G or T)
+   *
+   * \param value the value to parse
+   *
+   * \return the size in bytes
+   *
+   * \throw std::invalid_argument invalid size
+   */
+  std::uint64_t
+  parseSize(const std::string& value) {
+    std::uint64_t num = 0;
+    const char* end = value.data() + value.size();
+    auto [ptr, ec] = std::from_chars(value.data(), end, num);
+    if(ec != std::errc() || (end - ptr) > 1) {
+      throw std::invalid_argument("Invalid max size: " + value);
     }
-    idx = i++;
+    std::uint64_t factor = 1;
+    if(ptr != end) {
+      auto unit = SIZE_UNITS.find(*ptr);
+      if(unit == SIZE_UNITS.end()) {
+	throw std::invalid_argument("Invalid max size unit: " + value);
+      }
+      factor = unit->second;
+    }
+    if(num > std::numeric_limits<std::uint64_t>::max() / factor) {
+      throw std::invalid_argument("Max size is too big: " + value);
+    }
+    return num * factor;
   }
-  return idx;
+
 }
 
 FileWriter::FileWriter(const anch::conf::Section& conf):
   anch::log::Writer(conf),
-  _output(NULL),
+  _output(),
   _path(),
   _maxSize(0),
-  _maxIdx(-1),
-  _fileIdx(-1) {
+  _maxFiles(1) {
   // Check file path +
   std::optional<std::string> strPath = conf.getValue<std::string>("path");
   if(!strPath.has_value()) {
@@ -66,100 +87,84 @@ FileWriter::FileWriter(const anch::conf::Section& conf):
     throw std::invalid_argument("Path is not a file");
   }
   auto folder = _path.parent_path();
-  if(!std::filesystem::exists(folder)) {
+  if(!folder.empty() && !std::filesystem::exists(folder)) {
     throw std::invalid_argument("Directory does not exist");
   }
-  _output = new std::ofstream(_path, std::ios_base::app);
   // Check file path -
 
-  _fileIdx = getFileIndex(_path);
-
-  // Parse maximum file size +
+  // Parse rotation configuration +
   std::optional<std::string> maxSize = conf.getValue<std::string>("max-size");
   if(maxSize.has_value()) {
-    std::smatch items;
-    if(!std::regex_match(maxSize.value(), items, UNITS_REGEX)) {
-      throw std::invalid_argument("Invalid max size");
-    }
-    uint32_t num = static_cast<uint32_t>(std::atoi(items[1].str().data()));
-    uint32_t factor = 1;
-    if(items.length() > 2) {
-      factor = SIZES[items[2].str()];
-    }
-    _maxSize = num * factor;
+    _maxSize = parseSize(maxSize.value());
   }
-  // Parse maximum file size -
+  int maxFiles = conf.getValue<int>("max-rotate-files", 1);
+  if(maxFiles < 0) {
+    throw std::invalid_argument("Invalid max rotate files: " + std::to_string(maxFiles));
+  }
+  _maxFiles = static_cast<std::uint32_t>(maxFiles);
+  // Parse rotation configuration -
 
-  // Parse maximum file index +
-  _maxIdx = conf.getValue<int>("max-rotate-files", -1);
-  // Parse maximum file index -
+  _output.open(_path, std::ios_base::app);
+  if(!_output.is_open()) {
+    throw std::invalid_argument("Unable to open log file " + _path.string());
+  }
 }
 
 FileWriter::~FileWriter() {
-  if(_output != NULL) { // release file when open
-    _output->flush();
-    delete _output; // it will close the file
-    _output = NULL;
-  }
+  // Nothing to do: the file is flushed and closed by the stream destructor
 }
 
 void
 FileWriter::write(const std::string& message) {
-  if(_output == NULL) {
+  writeLine(format(message));
+  _output.flush(); // do not lose messages on crash
+}
+
+void
+FileWriter::writeLine(const std::string& line) {
+  if(!_output.is_open()) {
     return;
   }
-  *_output << format(message) << '\n';
+  _output << line << '\n';
   if(rotate()) {
     rotateFiles();
   }
 }
 
 bool
-FileWriter::rotate() const {
-  return (_maxSize > 0 && _output->tellp() >= _maxSize);
+FileWriter::rotate() {
+  if(_maxSize == 0) {
+    return false;
+  }
+  std::streamoff size = _output.tellp();
+  return size >= 0 && static_cast<std::uint64_t>(size) >= _maxSize;
+}
+
+std::filesystem::path
+FileWriter::archive(std::uint32_t index) const {
+  std::filesystem::path path = _path;
+  path += "." + std::to_string(index);
+  return path;
 }
 
 void
 FileWriter::rotateFiles() {
-  if(_output != NULL) {
-    _output->flush();
-    delete _output; // It will close output
-    _output = NULL;
-  }
-  bool maxReached = false;
-  std::ostringstream ostr;
-  // Rename already rotated files +
-  for(int i = _fileIdx ; i >= 0 ; --i) {
-    std::filesystem::path curPath = _path;
-    ostr << '.' << i;
-    curPath += ostr.str();
-    if(!std::filesystem::exists(curPath)) { // when current path does not exist, decrement file index
-      --_fileIdx;
-      continue;
+  _output.close();
+  bool archived = false;
+  if(_maxFiles > 0) {
+    std::error_code error;
+    // Shift archives: <path>.<max-1> is removed, <path>.<i> becomes <path>.<i+1>
+    std::filesystem::remove(archive(_maxFiles - 1), error);
+    for(std::uint32_t i = _maxFiles - 1 ; i > 0 ; --i) {
+      std::filesystem::path previous = archive(i - 1);
+      if(std::filesystem::exists(previous, error)) {
+	std::filesystem::rename(previous, archive(i), error);
+      }
     }
-    if(i >= _maxIdx) { // when max index has been reached, remove file
-      std::filesystem::remove(curPath);
-      maxReached = true;
-      continue;
-    }
-    ostr.str("");
-    ostr.clear();
-    std::filesystem::path newPath = _path;
-    ostr << '.' << (i + 1);
-    newPath += ostr.str();
-    std::filesystem::rename(curPath, newPath);
-    ostr.str("");
-    ostr.clear();
+    error.clear();
+    std::filesystem::rename(_path, archive(0), error);
+    archived = !error;
   }
-  if(maxReached) {
-    _fileIdx = _maxIdx;
-  }
-  // Rename already rotated files -
-  // Rename current file +
-  std::filesystem::path newPath = _path;
-  newPath += ".0";
-  std::filesystem::rename(_path, newPath);
-  _output = new std::ofstream(_path);
-  ++_fileIdx;
-  // Rename current file -
+  // Truncate when the file has been archived or when there is no archive ; otherwise keep appending
+  _output.open(_path, (archived || _maxFiles == 0) ? std::ios_base::trunc : std::ios_base::app);
 }

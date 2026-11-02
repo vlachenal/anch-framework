@@ -18,7 +18,7 @@ Statut des constats :
 |---|---|---|
 | anch-utils | [anch-utils/ANALYSE.md](anch-utils/ANALYSE.md) | tous les constats corrigés le 2026-11-02 (`ThreadPool` réécrit, `ResourcePool`, `convert`, `Singleton`, `Optional`, `Fluent`, `Flux`, `endianness`)  |
 | anch-events | [anch-events/ANALYSE.md](anch-events/ANALYSE.md) | corrigé le 2026-11-02 : `EventBus` (thread permanent, `fireEvent` non bloquant et appelable depuis un handler), `Observable` (plus d'interblocage, `removeObserver` attend les diffusions en cours) |
-| anch-log | [anch-log/ANALYSE.md](anch-log/ANALYSE.md) | motif par défaut qui n'écrit pas le message, `MDC` aux conditions inversées, `LowPriorityWriter` qui plante, `max-size` mal lu, `getLogger` non protégé |
+| anch-log | [anch-log/ANALYSE.md](anch-log/ANALYSE.md) | corrigé le 2026-11-02 : motif par défaut, `MDC`, `LowPriorityWriter`, `max-size` et rotation, `getLogger` concurrent, writers par logger inversés, erreurs d'écriture fatales, fichiers non vidés |
 | anch-network | [anch-network/ANALYSE.md](anch-network/ANALYSE.md) | use-after-free après `freeaddrinfo`, débordements en réception (confirmés sous ASan), UDP IPv4 uniquement, `TcpStreamServer` sans `accept` |
 | anch-json | [anch-json/ANALYSE.md](anch-json/ANALYSE.md) | corrigés : `0` refusé, dépassements numériques, chaînes non échappées / non décodées, récursion non bornée, `max_payload` ignoré ; lecture 3,7× et écriture 2× plus rapides (2026-10-31) ; reste `'\0'` comme fin de données (J4) |
 | anch-date | [anch-date/ANALYSE.md](anch-date/ANALYSE.md) | heure d'été ajoutée deux fois (+1 h en été), millisecondes fausses depuis un `timespec`, `%y` sur 4 chiffres, `tm_isdst` non initialisé |
@@ -98,7 +98,7 @@ Mise à jour le 2026-10-30, par impact sur l'usage courant :
 
 1. ~~`anch-json` J6 : la valeur `0` est refusée.~~ Corrigé le 2026-10-30.
 2. `anch-cutils` CU1 : en lecture / écriture, les données envoyées sont corrompues (impacte `TcpStream`).
-3. `anch-log` L8 et L9 : le motif par défaut n'écrit pas le message, et `MDC.add` / `reset` ne fonctionnent pas.
+3. ~~`anch-log` L8 et L9 : le motif par défaut n'écrit pas le message, et `MDC.add` / `reset` ne fonctionnent pas.~~ Corrigé le 2026-11-02.
 4. `anch-date` D3 : une heure d'avance en été (impacte aussi les horodatages des logs).
 5. `anch-network` N1 / N3 : use-after-free et débordement de tampon.
 6. `anch-json` J1 / J2 : échappement des chaînes.

@@ -3,8 +3,13 @@
 #include <iostream>
 #include <thread>
 #include <chrono>
+#include <filesystem>
+#include <fstream>
+#include <string>
+#include <vector>
 
 #include "ut/unit.hpp"
+#include "ut/assert.hpp"
 
 
 using anch::log::LoggerFactory;
@@ -107,6 +112,55 @@ testBadLoggers() {
   std::cout << "Exit testBadLoggers" << std::endl;
 }
 
+std::vector<std::string>
+readLines(const std::string& path) {
+  std::vector<std::string> lines;
+  std::ifstream input(path);
+  std::string line;
+  while(std::getline(input, line)) {
+    lines.push_back(line);
+  }
+  return lines;
+}
+
+// L11: spaces in writers list ; L12: loggers with writers used every writer, loggers without writers none
+void
+testWritersPerLogger() {
+  std::filesystem::remove("writers-a.log");
+  std::filesystem::remove("writers-b.log");
+  anch::conf::Configuration::loader().name("anch-logger-writers").load();
+  LoggerFactory::getLogger("only::a").info("1");
+  LoggerFactory::getLogger("no::writers").info("2");
+  LoggerFactory::getLogger("other").info("3");
+  std::vector<std::string> a = readLines("writers-a.log");
+  std::vector<std::string> b = readLines("writers-b.log");
+  anch::ut::assertTrue(a == std::vector<std::string>{"only::a 1", "no::writers 2", "other 3"}, "Unexpected messages in writer a");
+  anch::ut::assertTrue(b == std::vector<std::string>{"no::writers 2", "other 3"}, "Unexpected messages in writer b");
+}
+
+// L10: getLogger was not thread safe
+void
+testConcurrentGetLogger() {
+  anch::conf::Configuration::loader().name("anch-logger-writers").load();
+  std::vector<std::thread> threads;
+  std::vector<const Logger*> loggers(8 * 50, nullptr);
+  for(std::size_t t = 0 ; t < 8 ; ++t) {
+    threads.emplace_back([&loggers, t]() {
+      for(std::size_t i = 0 ; i < 50 ; ++i) {
+	loggers[t * 50 + i] = &LoggerFactory::getLogger("concurrent::logger" + std::to_string(i));
+      }
+    });
+  }
+  for(std::thread& thread : threads) {
+    thread.join();
+  }
+  for(std::size_t t = 1 ; t < 8 ; ++t) {
+    for(std::size_t i = 0 ; i < 50 ; ++i) {
+      anch::ut::assertTrue(loggers[t * 50 + i] == loggers[i], "Different instances for the same logger");
+    }
+  }
+}
+
 void
 anch::ut::setup(anch::ut::UnitTests& tests) {
   tests
@@ -118,5 +172,7 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("low-priority", testLowPriority)
     .add("bad-writers", testBadWriters)
     .add("bad-loggers", testBadLoggers)
+    .add("writers-per-logger", testWritersPerLogger)
+    .add("concurrent-get-logger", testConcurrentGetLogger)
     ;
 }

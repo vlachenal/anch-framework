@@ -60,8 +60,7 @@ ThreadSafeWriter::~ThreadSafeWriter() {
 // Methods +
 void
 ThreadSafeWriter::write(const string& message) {
-  _mutex.lock();
+  std::lock_guard<std::mutex> lock(_mutex);
   FileWriter::write(message);
-  _mutex.unlock();
 }
 // Methods -
