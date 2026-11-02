@@ -19,11 +19,10 @@
 */
 #pragma once
 
-#include <vector>
-#include <functional>
-#include <limits>
 #include <cstdint>
-
+#include <functional>
+#include <memory>
+#include <vector>
 
 namespace anch {
 
@@ -31,34 +30,61 @@ namespace anch {
    * \brief Java style fuent class
    *
    * \ref Fluent aims to lazily apply treatment on container.\n
-   * Every operation is stored until final operation is call. They are applied in their insertion order.
+   * Every operation is stored until final operation is call. They are applied in their insertion order.\n
+   * \ref skip and \ref limit count elements across concatenated fluents (\ref concat) ; only the operations
+   * of the first fluent are applied.\n
+   * Final operations can be called several times: skip and limit counters are reset on each call.\n
+   * A fluent built on a container reference does not own it: the container has to outlive the fluent.
+   * A fluent built on a temporary container (or returned by \ref map) owns its values.
    *
    * \author Vincent Lachenal
    */
   template<typename T, template<typename> typename C>
   class Fluent {
+
+    // Inner types +
+  private:
+    /*!
+     * Lazy operation applied on each element
+     */
+    struct Step {
+      /*! Operation kind */
+      enum class Kind {
+	FILTER,
+	SKIP,
+	LIMIT
+      };
+
+      /*! Operation kind */
+      Kind kind;
+
+      /*! Filter predicate (\c FILTER only) */
+      std::function<bool(const T&)> predicate;
+
+      /*! Number of elements to skip or to treat (\c SKIP and \c LIMIT only) */
+      uint64_t count;
+    };
+
+    /*!
+     * Step result for an element
+     */
+    enum class Verdict {
+      ACCEPT,
+      REJECT,
+      STOP
+    };
+    // Inner types -
+
     // Attributes +
   private:
-    /*! Values */
-    C<T>* _internalValues;
+    /*! Owned values (\c nullptr when the fluent does not own its values) */
+    std::shared_ptr<C<T>> _owned;
 
     /*! Values */
-    C<T>& _values;
+    C<T>* _values;
 
-    /*! Filters to apply on each entry */
-    std::vector<std::function<bool(const T&)>> _filters;
-
-    /*! Skip the <skip> first elements */
-    uint64_t _skip;
-
-    /*! Stop treatment after <limit> elements */
-    uint64_t _limit;
-
-    /*! Current index (for skip feature) */
-    uint64_t _index;
-
-    /*! Number of treated items (for limit feature) */
-    uint64_t _treated;
+    /*! Operations to apply on each entry */
+    std::vector<Step> _steps;
 
     /*! Next fluent (use to concatenate fluent) */
     Fluent<T,C>* _next;
@@ -72,21 +98,28 @@ namespace anch {
     Fluent() = delete;
 
     /*!
-     * Build fluent from container
+     * Build fluent from container. The container has to outlive the fluent.
      *
      * \param container the container
      */
     Fluent(C<T>& container);
 
     /*!
-     * \ref Fluent copy constructor
+     * Build fluent from temporary container. The fluent owns the values.
+     *
+     * \param container the container
      */
-    Fluent(const Fluent& other);
+    Fluent(C<T>&& container);
+
+    /*!
+     * \ref Fluent copy constructor (values are shared)
+     */
+    Fluent(const Fluent& other) = default;
 
     /*!
      * \ref Fluent move constructor
      */
-    Fluent(Fluent&& other);
+    Fluent(Fluent&& other) noexcept = default;
     // Constructors -
 
     // Destructor +
@@ -94,7 +127,7 @@ namespace anch {
     /*!
      * \ref Fluent destructor
      */
-    virtual ~Fluent();
+    ~Fluent() = default;
     // Destructor -
 
     // Methods +
@@ -109,7 +142,7 @@ namespace anch {
     Fluent& filter(std::function<bool(const T&)> predicate);
 
     /*!
-     * Set skip
+     * Skip elements
      *
      * \param skip the elements to skip
      *
@@ -118,7 +151,7 @@ namespace anch {
     Fluent& skip(uint64_t skip);
 
     /*!
-     * Set limit
+     * Limit the number of elements
      *
      * \param limit the number maximum of elements to treat
      *
@@ -127,7 +160,8 @@ namespace anch {
     Fluent& limit(uint64_t limit);
 
     /*!
-     * Fluent lazy 'concatenation'
+     * Fluent lazy 'concatenation'.\n
+     * The concatenated fluent has to outlive this one.
      *
      * \param other the fluent to concatenate
      */
@@ -155,7 +189,8 @@ namespace anch {
     bool noneMatch(std::function<bool(const T&)> predicate);
 
     /*!
-     * Apply treatment for each item in fluent
+     * Apply treatment for each item in fluent.\n
+     * Items are passed by reference: the action can modify them.
      *
      * \param action the function to execute on each item
      */
@@ -209,43 +244,23 @@ namespace anch {
 
   private:
     /*!
-     * Apply treatment for each item in fluent
+     * Apply operations on each element of this fluent and the concatenated ones.\n
+     * Skip and limit counters are local to the traversal.
      *
-     * \param action the function to execute on each item
-     * \param filters the filters to apply
+     * \param consumer the function called on accepted elements ; it returns \c false to stop the traversal
      */
-    void forEach(std::function<void(T&)> action, const std::vector<std::function<bool(const T&)>>& filters);
+    template<typename F>
+    void traverse(F&& consumer);
 
     /*!
-     * Check if every items in fluent match a predicate
+     * Apply operations on an element
      *
-     * \param predicate the function to use to check items
-     * \param filters the filters to apply
-     */
-    bool allMatch(std::function<bool(const T&)> predicate, const std::vector<std::function<bool(const T&)>>& filters);
-
-    /*!
-     * Check if there is at least one item in fluent that matches a predicate
+     * \param value the element
+     * \param counters the skip and limit counters (one per operation)
      *
-     * \param predicate the function to use to check items
-     * \param filters the filters to apply
+     * \return the element verdict
      */
-    bool anyMatch(std::function<bool(const T&)> predicate, const std::vector<std::function<bool(const T&)>>& filters);
-
-    /*!
-     * Check if there is no item in fluent that matches a predicate
-     *
-     * \param predicate the function to use to check items
-     * \param filters the filters to apply
-     */
-    bool noneMatch(std::function<bool(const T&)> predicate, const std::vector<std::function<bool(const T&)>>& filters);
-
-    /*!
-     * Check if limit has been reached
-     *
-     * \return \c true if limit has been reached, \c false otherwise
-     */
-    bool limitReached() const;
+    Verdict apply(const T& value, std::vector<uint64_t>& counters) const;
     // Methods -
 
   };

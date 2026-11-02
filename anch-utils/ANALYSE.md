@@ -79,14 +79,16 @@ Autres points :
 - C++23 fournit `std::optional::transform`, `and_then` et `or_else`, qui couvrent `map` et `ifValueOrElse`.
 Piste : `class Optional: public std::optional<T>`, ou remplacer la classe par les fonctions libres `applyIfValue` / `applyIfValueOrElse` + les méthodes C++23.
 
-### U12. `Fluent::forEach` modifie des copies — vérifié
+### U12. `Fluent::forEach` modifie des copies — vérifié — **corrigé le 2026-11-02**
 `inc/impl/fluent.hpp:230` : `for(auto val : _values)` copie chaque élément ; l'action `std::function<void(T&)>` reçoit la copie. Exemple : `forEach([](int& i){ i *= 10; })` sur `{1,2,3}` laisse le conteneur à `{1,2,3}`.
 Même boucle par copie dans `allMatch`, `anyMatch` et `noneMatch` (lignes 126, 161, 196) : coût de copie pour les types lourds. Les filtres sont aussi copiés à chaque élément (`for(auto filter : filters)`).
 Piste : `for(auto& val : _values)` et `for(const auto& filter : filters)`.
 
-### U13. `Fluent` copié : les filtres `skip` / `limit` pointent vers l'original — vérifié (ASan)
+### U13. `Fluent` copié : les filtres `skip` / `limit` pointent vers l'original — vérifié (ASan) — **corrigé le 2026-11-02**
 `skip()` (ligne 81) et `limit()` (ligne 93) ajoutent des lambdas qui capturent `this`. Le constructeur de copie et celui de déplacement copient `_filters` : les lambdas de la copie lisent et modifient les compteurs de l'objet d'origine. Si l'original est détruit, c'est un accès à de la mémoire libérée (ASan : `heap-use-after-free` dans la lambda de `skip`).
 Piste : ne pas stocker `skip` / `limit` comme filtres, mais les appliquer dans les boucles à partir des compteurs de l'instance courante.
+
+Correction de U12 et U13 : les opérations (`filter`, `skip`, `limit`) sont stockées comme des étapes sans référence à l'objet ; les compteurs de `skip` / `limit` sont locaux à chaque parcours (une opération finale peut être appelée plusieurs fois, plusieurs `skip` / `limit` sont possibles). Un seul parcours (`traverse`) remplace les quatre boucles dupliquées (`goto` supprimés) ; les éléments sont parcourus par référence. Un `Fluent` construit sur un conteneur temporaire (ou renvoyé par `map`) possède ses valeurs (`std::shared_ptr`) : le constructeur de déplacement ne copie plus le conteneur. Nouveaux tests, sans signalement sous ASan.
 
 ### U14. `Flux` : appels répétés et messages d'erreur — lecture — **corrigé le 2026-11-02**
 - `ready()` (lignes 53, 56) appelle `set_value` sur les promesses du finaliseur et du gestionnaire d'erreur sans mettre `_fin` / `_err` à `true` : un second appel à `ready()`, ou `setFinalizer()` après `ready()`, lève `std::future_error` (« promise already satisfied ») au lieu du message prévu.
@@ -126,4 +128,4 @@ Tests : instance unique sous concurrence (20 threads synchronisés par `std::lat
 - [ ] Ajouter un test liant deux TU qui incluent `threadPool.hpp`.
 - [x] Tests de charge multi-thread sur `ResourcePool` (sous TSan) : `res-pool-concurrent` (2026-11-02).
 - [x] Tests de `convert` sur les bornes (`"-1"` en non signé, dépassements, `uint8_t`) (2026-11-02).
-- [ ] Test de `Fluent::forEach` modifiant les éléments, et de la copie d'un `Fluent` avec `skip` / `limit`.
+- [x] Test de `Fluent::forEach` modifiant les éléments, et de la copie d'un `Fluent` avec `skip` / `limit` (2026-11-02).

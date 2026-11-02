@@ -21,273 +21,186 @@
 
 namespace anch {
 
+  // Constructors +
   template<typename T, template<typename> typename C>
-  Fluent<T,C>::Fluent(C<T>& values): _internalValues(NULL),
-				     _values(values),
-				     _filters(),
-				     _skip(0),
-				     _limit(std::numeric_limits<uint64_t>::max()),
-				     _index(0),
-				     _treated(0),
-				     _next(NULL) {
+  Fluent<T,C>::Fluent(C<T>& values): _owned(),
+				     _values(&values),
+				     _steps(),
+				     _next(nullptr) {
     // Nothing to do
   }
 
   template<typename T, template<typename> typename C>
-  Fluent<T,C>::Fluent(const Fluent& other): _internalValues(NULL),
-					    _values(other._values),
-					    _filters(other._filters),
-					    _skip(other._skip),
-					    _limit(other._limit),
-					    _index(0),
-					    _treated(0),
-					    _next(other._next) {
+  Fluent<T,C>::Fluent(C<T>&& values): _owned(std::make_shared<C<T>>(std::move(values))),
+				      _values(_owned.get()),
+				      _steps(),
+				      _next(nullptr) {
     // Nothing to do
   }
+  // Constructors -
 
-  template<typename T, template<typename> typename C>
-  Fluent<T,C>::Fluent(Fluent&& other): _internalValues(new C<T>(other._values)),
-				       _values(*_internalValues),
-				       _filters(other._filters),
-				       _skip(other._skip),
-				       _limit(other._limit),
-				       _index(0),
-				       _treated(0),
-				       _next(other._next) {
-    // Nothing to do
-  }
-
-  template<typename T, template<typename> typename C>
-  Fluent<T,C>::~Fluent() {
-    if(_internalValues != NULL) {
-      delete _internalValues;
-    }
-  }
-
-  // Filters +
+  // Operations +
   template<typename T, template<typename> typename C>
   inline Fluent<T,C>&
   Fluent<T,C>::filter(std::function<bool(const T&)> predicate) {
-    _filters.push_back(predicate);
+    _steps.push_back(Step{Step::Kind::FILTER, std::move(predicate), 0});
     return *this;
   }
 
   template<typename T, template<typename> typename C>
   inline Fluent<T,C>&
   Fluent<T,C>::skip(uint64_t skip) {
-    if(_skip == 0) {
-      _skip = skip;
-      _filters.push_back([this](const T&) -> bool {
-	return ++this->_index > this->_skip;
-      });
-    }
+    _steps.push_back(Step{Step::Kind::SKIP, nullptr, skip});
     return *this;
   }
 
   template<typename T, template<typename> typename C>
   inline Fluent<T,C>&
   Fluent<T,C>::limit(uint64_t limit) {
-    if(_limit == std::numeric_limits<uint64_t>::max()) {
-      _limit = limit;
-      _filters.push_back([this](const T&) -> bool {
-	bool ok = !this->limitReached();
-	++this->_treated;
-	return ok;
-      });
-    }
+    _steps.push_back(Step{Step::Kind::LIMIT, nullptr, limit});
     return *this;
   }
-  // Filters -
 
-    template<typename T, template<typename> typename C>
-    inline Fluent<T,C>&
-    Fluent<T,C>::concat(Fluent<T,C>& other) noexcept {
-      if(_next == NULL) {
-	_next = &other;
-      } else {
-	_next->concat(other);
-      }
-      return *this;
+  template<typename T, template<typename> typename C>
+  inline Fluent<T,C>&
+  Fluent<T,C>::concat(Fluent<T,C>& other) noexcept {
+    Fluent<T,C>* last = this;
+    while(last->_next != nullptr) {
+      last = last->_next;
     }
+    last->_next = &other;
+    return *this;
+  }
+  // Operations -
 
-  // All match +
+  // Traversal +
+  template<typename T, template<typename> typename C>
+  typename Fluent<T,C>::Verdict
+  Fluent<T,C>::apply(const T& value, std::vector<uint64_t>& counters) const {
+    for(std::size_t i = 0 ; i < _steps.size() ; ++i) {
+      const Step& step = _steps[i];
+      switch(step.kind) {
+      case Step::Kind::FILTER:
+	if(!step.predicate(value)) {
+	  return Verdict::REJECT;
+	}
+	break;
+      case Step::Kind::SKIP:
+	if(counters[i] < step.count) {
+	  ++counters[i];
+	  return Verdict::REJECT;
+	}
+	break;
+      case Step::Kind::LIMIT:
+	if(counters[i] >= step.count) {
+	  return Verdict::STOP; // no other element can pass this step
+	}
+	++counters[i];
+	break;
+      }
+    }
+    return Verdict::ACCEPT;
+  }
+
+  template<typename T, template<typename> typename C>
+  template<typename F>
+  void
+  Fluent<T,C>::traverse(F&& consumer) {
+    std::vector<uint64_t> counters(_steps.size(), 0);
+    for(Fluent<T,C>* current = this ; current != nullptr ; current = current->_next) {
+      for(auto& value : *current->_values) {
+	switch(apply(value, counters)) {
+	case Verdict::REJECT:
+	  break;
+	case Verdict::STOP:
+	  return;
+	case Verdict::ACCEPT:
+	  if(!consumer(value)) {
+	    return;
+	  }
+	  break;
+	}
+      }
+    }
+  }
+  // Traversal -
+
+  // Final operations +
   template<typename T, template<typename> typename C>
   bool
   Fluent<T,C>::allMatch(std::function<bool(const T&)> predicate) {
-    _index = 0;
-    _treated = 0;
-    return allMatch(predicate, _filters);
+    bool match = true;
+    traverse([&match, &predicate](const T& value) {
+      match = predicate(value);
+      return match;
+    });
+    return match;
   }
 
-    template<typename T, template<typename> typename C>
-    bool
-    Fluent<T,C>::allMatch(std::function<bool(const T&)> predicate, const std::vector<std::function<bool(const T&)>>& filters) {
-      bool match = true;
-      for(auto val : _values) {
-	for(auto filter : filters) {
-	  if(!filter(val)) {
-	    goto next;
-	  }
-	}
-	if(!predicate(val)) {
-	  match = false;
-	  break;
-	}
-      next:
-	if(limitReached()) {
-	  break;
-	}
-      }
-      if(_next != NULL && match && !limitReached()) {
-	match = _next->allMatch(predicate, filters);
-      }
-      return match;
-    }
-  // All match -
-
-  // Any match +
   template<typename T, template<typename> typename C>
   bool
   Fluent<T,C>::anyMatch(std::function<bool(const T&)> predicate) {
-    _index = 0;
-    _treated = 0;
-    return anyMatch(predicate, _filters);
-  }
-
-    template<typename T, template<typename> typename C>
-    bool
-    Fluent<T,C>::anyMatch(std::function<bool(const T&)> predicate, const std::vector<std::function<bool(const T&)>>& filters) {
-      bool match = false;
-      for(auto val : _values) {
-	for(auto filter : filters) {
-	  if(!filter(val)) {
-	    goto next;
-	  }
-	}
-	if(predicate(val)) {
-	  match = true;
-	  break;
-	}
-      next:
-	if(limitReached()) {
-	  break;
-	}
-      }
-      if(_next != NULL && !match && !limitReached()) {
-	match = _next->anyMatch(predicate, filters);
-      }
-      return match;
-    }
-  // Any match -
-
-  // None match +
-  template<typename T, template<typename> typename C>
-  bool
-  Fluent<T,C>::noneMatch(std::function<bool(const T&)> predicate) {
-    _index = 0;
-    _treated = 0;
-    return noneMatch(predicate, _filters);
-  }
-
-    template<typename T, template<typename> typename C>
-    bool
-    Fluent<T,C>::noneMatch(std::function<bool(const T&)> predicate, const std::vector<std::function<bool(const T&)>>& filters) {
-      bool match = false;
-      for(auto val : _values) {
-	for(auto filter : filters) {
-	  if(!filter(val)) {
-	    goto next;
-	  }
-	}
-	if(predicate(val)) {
-	  match = true;
-	  break;
-	}
-      next:
-	if(limitReached()) {
-	  break;
-	}
-      }
-      if(_next != NULL && !match && !limitReached()) {
-	match = _next->noneMatch(predicate, filters);
-      }
+    bool match = false;
+    traverse([&match, &predicate](const T& value) {
+      match = predicate(value);
       return !match;
-    }
-  // None match -
+    });
+    return match;
+  }
 
-  // Foreach +
+  template<typename T, template<typename> typename C>
+  inline bool
+  Fluent<T,C>::noneMatch(std::function<bool(const T&)> predicate) {
+    return !anyMatch(std::move(predicate));
+  }
+
   template<typename T, template<typename> typename C>
   void
   Fluent<T,C>::forEach(std::function<void(T&)> action) {
-    _index = 0;
-    _treated = 0;
-    forEach(action, _filters);
+    traverse([&action](T& value) {
+      action(value);
+      return true;
+    });
   }
-
-    template<typename T, template<typename> typename C>
-    void
-    Fluent<T,C>::forEach(std::function<void(T&)> action, const std::vector<std::function<bool(const T&)>>& filters) {
-      for(auto val : _values) {
-	for(auto filter : filters) {
-	  if(!filter(val)) {
-	    goto next;
-	  }
-	}
-	action(val);
-      next:
-	if(limitReached()) {
-	  break;
-	}
-      }
-      if(_next != NULL && !limitReached()) {
-	_next->forEach(action, filters);
-      }
-    }
-  // Foreach -
 
   template<typename T, template<typename> typename C>
   template<typename U>
   Fluent<U,std::vector>
   Fluent<T,C>::map(std::function<U(const T&)> mapper) {
     std::vector<U> values;
-    forEach([&values, mapper](const T& val) {
-      values.push_back(mapper(val));
+    traverse([&values, &mapper](const T& value) {
+      values.push_back(mapper(value));
+      return true;
     });
-    anch::Fluent fluent(values);
-    return std::move(fluent);
+    return Fluent<U,std::vector>(std::move(values));
   }
 
-    template<typename T, template<typename> typename C>
-    inline bool
-    Fluent<T,C>::limitReached() const {
-      return _treated >= _limit;
-    }
-
-  // Collect +
   template<typename T, template<typename> typename C>
   template<typename D>
   void
   Fluent<T,C>::collect(D& result, std::function<void(D&,const T&)> collector) {
-    forEach([&result, &collector](const T& val) {
-      std::invoke(collector, result, val);
+    traverse([&result, &collector](const T& value) {
+      std::invoke(collector, result, value);
+      return true;
     });
   }
 
-    template<typename T, template<typename> typename C>
-    template<typename D>
-    inline D
-    Fluent<T,C>::collect(std::function<void(D&,const T&)> collector) {
-      D result;
-      collect(result, collector);
-      return result;
-    }
+  template<typename T, template<typename> typename C>
+  template<typename D>
+  inline D
+  Fluent<T,C>::collect(std::function<void(D&,const T&)> collector) {
+    D result;
+    collect(result, collector);
+    return result;
+  }
 
   template<typename T, template<typename> typename C>
   template<typename D, typename R>
   void
   Fluent<T,C>::collect(D& result, R(D::*collector)(const T&)) {
-    forEach([&result, &collector](const T& val) {
-      std::invoke(collector, result, val);
+    traverse([&result, collector](const T& value) {
+      std::invoke(collector, result, value);
+      return true;
     });
   }
 
@@ -299,6 +212,6 @@ namespace anch {
     collect(result, collector);
     return result;
   }
-  // Collect -
+  // Final operations -
 
 }

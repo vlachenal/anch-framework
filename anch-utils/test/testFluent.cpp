@@ -10,6 +10,7 @@
 #include <queue>
 #include <set>
 #include <unordered_set>
+#include <optional>
 
 #include "fluent.hpp"
 #include "collectors.hpp"
@@ -451,12 +452,84 @@ testCollectMap() {
 }
 
 void
+testForeachModify() {
+  std::list<int> values = {1,2,3};
+  anch::Fluent(values).forEach([](int& i) { i *= 10; });
+  anch::ut::assertThat(values == std::list<int>{10,20,30}, "forEach has not modified values");
+}
+
+void
+testCopyWithSkipLimit() {
+  std::list<int> res;
+  std::optional<anch::Fluent<int,std::list>> copy;
+  {
+    anch::Fluent<int,std::list> original(ints);
+    original.skip(3).limit(2);
+    copy.emplace(original);
+  } // original is destroyed: the copy must not use it
+  copy->forEach([&res](int& i) { res.push_back(i); });
+  anch::ut::assertThat(res == std::list<int>{3,4}, "Copy with skip/limit gives unexpected result");
+}
+
+void
+testReuse() {
+  anch::Fluent<int,std::list> fluent(ints);
+  fluent.skip(3).limit(2);
+  std::list<int> res1;
+  fluent.forEach([&res1](int& i) { res1.push_back(i); });
+  std::list<int> res2;
+  fluent.forEach([&res2](int& i) { res2.push_back(i); });
+  anch::ut::assertThat(res1 == std::list<int>{3,4} && res2 == res1, "Second traversal gives a different result");
+  anch::ut::assertTrue(fluent.allMatch([](const int& i) { return i == 3 || i == 4; }), "allMatch does not apply skip/limit");
+}
+
+void
+testOwnedValues() {
+  // Temporary container is owned by the fluent
+  auto fluent = anch::Fluent(std::list<int>{1,2,3});
+  int sum = 0;
+  fluent.forEach([&sum](int& i) { sum += i; });
+  anch::ut::assertThat(sum == 6, "Sum is {} instead of 6", sum);
+  // Mapped fluent owns its values even after move
+  auto mapped = anch::Fluent(ints).limit(3).map<int>([](const int& i) { return i * 2; });
+  auto moved = std::move(mapped);
+  std::list<int> res;
+  moved.forEach([&res](int& i) { res.push_back(i); });
+  anch::ut::assertThat(res == std::list<int>{0,2,4}, "Mapped values are unexpected");
+}
+
+void
+testSeveralLimits() {
+  std::list<int> res;
+  anch::Fluent(ints)
+    .limit(10)
+    .filter([](const int& i) { return (i % 2) == 0; })
+    .limit(3)
+    .forEach([&res](int& i) { res.push_back(i); });
+  anch::ut::assertThat(res == std::list<int>{0,2,4}, "Several limits give unexpected result");
+}
+
+void
+testNoneMatchEmpty() {
+  std::list<int> empty;
+  anch::ut::assertTrue(anch::Fluent(empty).noneMatch([](const int&) { return true; }), "noneMatch on empty fluent is false");
+  anch::ut::assertTrue(anch::Fluent(empty).allMatch([](const int&) { return false; }), "allMatch on empty fluent is false");
+  anch::ut::assertFalse(anch::Fluent(empty).anyMatch([](const int&) { return true; }), "anyMatch on empty fluent is true");
+}
+
+void
 anch::ut::setup(anch::ut::UnitTests& tests) {
   tests
     .name("AnCH fluent API unit tests")
     .description("Test AnCH fluent API utiliy class")
     .initialize(beforeAll)
     .add("foreach", testForeach)
+    .add("foreach-modify", testForeachModify)
+    .add("copy-skip-limit", testCopyWithSkipLimit)
+    .add("reuse", testReuse)
+    .add("owned-values", testOwnedValues)
+    .add("several-limits", testSeveralLimits)
+    .add("empty", testNoneMatchEmpty)
     .add("filter", testFilter)
     .add("skip", testSkip)
     .add("limit", testLimit)
