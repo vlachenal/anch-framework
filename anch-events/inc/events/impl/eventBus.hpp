@@ -22,50 +22,48 @@
 namespace anch::events {
 
   template<typename T>
-  EventBus<T>::EventBus():  _eventMutex(), _queueMutex(), _thread(NULL), _events(), _observers() {
-    // Nothing to do
+  EventBus<T>::EventBus(): _observers(), _mutex(), _eventCV(), _events(), _stop(false), _worker() {
+    // Nothing to do: the bus thread is started on first event
   }
 
   template<typename T>
   EventBus<T>::~EventBus() {
-    if(_thread != NULL) {
-      _thread->join();
-      delete _thread;
+    {
+      std::lock_guard<std::mutex> lock(_mutex);
+      _stop = true;
+    }
+    _eventCV.notify_all();
+    if(_worker.joinable()) {
+      _worker.join(); // queued events are notified before the thread stops
     }
   }
 
   template<typename T>
-  bool
+  inline bool
   EventBus<T>::addObserver(anch::events::Observer<T>& observer) noexcept {
-    std::lock_guard<std::mutex> lock(_eventMutex);
-    bool added = _observers.insert(&observer).second;
-    return added;
+    return _observers.add(observer);
   }
 
   template<typename T>
-  inline
-  bool
+  inline bool
   EventBus<T>::AddObserver(anch::events::Observer<T>& observer) noexcept {
     return EventBus<T>::getInstance().addObserver(observer);
   }
 
   template<typename T>
-  void
+  inline void
   EventBus<T>::removeObserver(anch::events::Observer<T>& observer) noexcept {
-    std::lock_guard<std::mutex> lock(_eventMutex);
-    _observers.erase(&observer);
+    _observers.remove(observer);
   }
 
   template<typename T>
-  inline
-  void
+  inline void
   EventBus<T>::RemoveObserver(anch::events::Observer<T>& observer) noexcept {
     EventBus<T>::getInstance().removeObserver(observer);
   }
 
   template<typename T>
-  inline
-  void
+  inline void
   EventBus<T>::fireEvent(const T& event, const std::map<std::string,std::string>& headers) noexcept {
     fireEvent({.headers = headers, .body = event});
   }
@@ -73,35 +71,30 @@ namespace anch::events {
   template<typename T>
   void
   EventBus<T>::fireEvent(const anch::events::Event<T>& event) noexcept {
-    std::lock_guard<std::mutex> lock(_queueMutex);
-    bool empty = _events.empty();
-    _events.push(event);
-    if(empty) {
-      if(_thread != NULL) {
-	_thread->join();
-	delete _thread;
+    {
+      std::lock_guard<std::mutex> lock(_mutex);
+      _events.push(event);
+      if(!_worker.joinable()) {
+	_worker = std::jthread(&EventBus<T>::processEvents, this);
       }
-      _thread = new std::thread(&EventBus<T>::processEvents,this);
     }
+    _eventCV.notify_one();
   }
 
   template<typename T>
-  inline
-  void
+  inline void
   EventBus<T>::FireEvent(const T& event, const std::map<std::string,std::string>& headers) noexcept {
     EventBus<T>::getInstance().fireEvent(event, headers);
   }
 
   template<typename T>
-  inline
-  void
+  inline void
   EventBus<T>::FireEvent(const anch::events::Event<T>& event) noexcept {
     EventBus<T>::getInstance().fireEvent(event);
   }
 
   template<typename T>
-  inline
-  void
+  inline void
   EventBus<T>::release() {
     delete this;
   }
@@ -109,19 +102,18 @@ namespace anch::events {
   template<typename T>
   void
   EventBus<T>::processEvents() noexcept {
-    bool empty = false;
-    do {
-      _queueMutex.lock();
-      anch::events::Event<T> event = _events.front();
-      _events.pop();
-      empty = _events.empty();
-      _queueMutex.unlock();
-
-      for(anch::events::Observer<T>* observer : _observers) {
-	observer->handle(event);
+    std::unique_lock<std::mutex> lock(_mutex);
+    while(true) {
+      _eventCV.wait(lock, [this]() { return _stop || !_events.empty(); });
+      if(_events.empty()) { // stopped and every event has been notified
+	return;
       }
-
-    } while(!empty);
+      anch::events::Event<T> event = std::move(_events.front());
+      _events.pop();
+      lock.unlock();
+      _observers.notify(event);
+      lock.lock();
+    }
   }
 
 }

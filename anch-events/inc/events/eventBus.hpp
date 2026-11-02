@@ -19,23 +19,31 @@
 */
 #pragma once
 
-#include <thread>
+#include <condition_variable>
+#include <map>
 #include <mutex>
 #include <queue>
-#include <set>
+#include <string>
+#include <thread>
 
 #include "events/observer.hpp"
 #include "events/event.hpp"
-#include "lessPtrCompare.hpp"
+#include "events/observerList.hpp"
 #include "singleton.hpp"
-
 
 namespace anch::events {
 
   /*!
    * \brief A class which manage global events firing and events QoS.
    *
-   * EventBus is a singleton.
+   * Events are queued and notified asynchronously, in their firing order, by a dedicated thread (started on first
+   * event). \ref fireEvent does not wait for observers: observers can fire events from their \c handle method.\n
+   * Observers can add or remove observers from their \c handle method. When \ref removeObserver returns, the
+   * observer will not be notified anymore and can be destroyed.\n
+   * \n
+   * \ref getInstance returns the global \ref EventBus. Other buses can be created as plain objects.\n
+   * The destructor notifies the queued events and stops the thread: it must not be called from an observer.
+   * The global bus is destroyed at program exit: its observers must not use already destroyed static objects.
    *
    * \since 0.1
    *
@@ -47,41 +55,55 @@ namespace anch::events {
 
     // Attributes +
   private:
-    /*! Mutex for firing event*/
-    std::mutex _eventMutex;
+    /*! Observers list */
+    anch::events::ObserverList<T> _observers;
 
-    /*! Mutex dequeue events */
-    std::mutex _queueMutex;
+    /*! Protects events queue and stop flag */
+    std::mutex _mutex;
 
-    /*! Thread instance */
-    std::thread* _thread;
+    /*! The bus thread waits for events on this condition */
+    std::condition_variable _eventCV;
 
     /*! Waiting event queue */
     std::queue<anch::events::Event<T>> _events;
 
-    /*! Observers list */
-    std::set<anch::events::Observer<T>*, anch::LessPtrCompare<anch::events::Observer<T>>> _observers;
-    // Attributes -
+    /*! The bus thread stops when \c true and the queue is empty */
+    bool _stop;
 
+    /*! Bus thread (declared last: joined first on destruction) */
+    std::jthread _worker;
+    // Attributes -
 
     // Constructors +
   public:
     /*!
      * \ref EventBus default constructor.\n
-     * This constructor is public to allow to declare temporary \c EventBus.
-     * The \c EventBus destructor is private. To delete temporary \c EventBus, \c free method has to be call.
+     * This constructor is public to allow to declare other buses than the global one.
      */
     EventBus();
+
+    /*!
+     * Prohibits \ref EventBus copy constructor
+     */
+    EventBus(const EventBus&) = delete;
     // Constructors -
 
-  private:
     // Destructor +
+  public:
     /*!
-     * \ref EventBus private destructor
+     * \ref EventBus destructor.\n
+     * Notify the queued events and stop the bus thread.
      */
-    virtual ~EventBus();
+    ~EventBus();
     // Destructor -
 
+    // Operators +
+  public:
+    /*!
+     * Prohibits \ref EventBus copy assignment
+     */
+    EventBus& operator=(const EventBus&) = delete;
+    // Operators -
 
     // Methods +
   public:
@@ -104,21 +126,23 @@ namespace anch::events {
     static bool AddObserver(anch::events::Observer<T>& observer) noexcept;
 
     /*!
-     * Remove observer for notifications
+     * Remove observer for notifications.\n
+     * Wait for the running notification (when not called from an observer of this bus).
      *
-     * \param observer The observer to remove
+     * \param observer the \ref Observer to remove
      */
     void removeObserver(anch::events::Observer<T>& observer) noexcept;
 
     /*!
      * Retrieve \ref EventBus instance and remove observer for notifications
      *
-     * \param observer The observer to remove
+     * \param observer the \ref Observer to remove
      */
     static void RemoveObserver(anch::events::Observer<T>& observer) noexcept;
 
     /*!
-     * Notify all observer that an event has been fired
+     * Notify all observer that an event has been fired.\n
+     * The event is queued: this method does not wait for observers.
      *
      * \param event the event which has been fired
      * \param headers the event's context
@@ -126,7 +150,8 @@ namespace anch::events {
     void fireEvent(const T& event, const std::map<std::string,std::string>& headers = {}) noexcept;
 
     /*!
-     * Notify all observer that an event has been fired
+     * Notify all observer that an event has been fired.\n
+     * The event is queued: this method does not wait for observers.
      *
      * \param event the event which has been fired
      */
@@ -148,13 +173,14 @@ namespace anch::events {
     static void FireEvent(const anch::events::Event<T>& event) noexcept;
 
     /*!
-     * Delete \c this
+     * Delete \c this .\n
+     * Only for buses allocated with \c new (never for the global bus returned by \ref getInstance).
      */
     void release();
 
   private:
     /*!
-     * Process events in queue
+     * Process events in queue (bus thread)
      */
     void processEvents() noexcept;
     // Methods -
