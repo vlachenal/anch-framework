@@ -16,7 +16,7 @@ Statut des constats :
 
 | Librairie | Fichier | Constats principaux |
 |---|---|---|
-| anch-utils | [anch-utils/ANALYSE.md](anch-utils/ANALYSE.md) | `ThreadPool` (threads détachés, attente bloquante), `ResourcePool` (course, corrigé le 2026-11-02), `convert` (négatifs acceptés, `uint8_t` impossible, corrigés le 2026-11-02), `Optional` inutilisable, `Fluent` (`forEach` sur copies, use-after-free) |
+| anch-utils | [anch-utils/ANALYSE.md](anch-utils/ANALYSE.md) | tous les constats corrigés le 2026-11-02 (`ThreadPool` réécrit, `ResourcePool`, `convert`, `Singleton`, `Optional`, `Fluent`, `Flux`, `endianness`)  |
 | anch-events | [anch-events/ANALYSE.md](anch-events/ANALYSE.md) | `EventBus` : `std::terminate` si un handler émet un événement ; `Observable` : interblocage si un observateur se désabonne |
 | anch-log | [anch-log/ANALYSE.md](anch-log/ANALYSE.md) | motif par défaut qui n'écrit pas le message, `MDC` aux conditions inversées, `LowPriorityWriter` qui plante, `max-size` mal lu, `getLogger` non protégé |
 | anch-network | [anch-network/ANALYSE.md](anch-network/ANALYSE.md) | use-after-free après `freeaddrinfo`, débordements en réception (confirmés sous ASan), UDP IPv4 uniquement, `TcpStreamServer` sans `accept` |

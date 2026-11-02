@@ -71,13 +71,15 @@ Autres effets :
 - le signe `+` est maintenant refusé ;
 - le type est contraint (`anch::Convertible` : entiers sauf `bool`, flottants).
 
-### U11. `Optional` hérite de `std::optional` en privé — vérifié
+### U11. `Optional` hérite de `std::optional` en privé — vérifié — **corrigé le 2026-11-02**
 `inc/optional.hpp:56` : `class Optional: std::optional<T>` (héritage privé par défaut pour `class`). `has_value()`, `value()`, `operator*`, `operator bool` sont inaccessibles depuis l'extérieur : `anch::Optional<int> o(3); o.has_value();` ne compile pas. Seuls `ifValue`, `ifValueOrElse` et `map` sont utilisables.
 Autres points :
 - les constructeurs « par déplacement » (lignes 206, 218) et le constructeur générique (ligne 237) copient au lieu de déplacer (`std::optional<T>(other)` sans `std::move` / `std::forward`), y compris celui marqué `noexcept` : si la copie de `T` lève, `std::terminate` ;
 - les arguments `in_place` (lignes 224, 231) ne sont pas transmis avec `std::forward` ;
 - C++23 fournit `std::optional::transform`, `and_then` et `or_else`, qui couvrent `map` et `ifValueOrElse`.
 Piste : `class Optional: public std::optional<T>`, ou remplacer la classe par les fonctions libres `applyIfValue` / `applyIfValueOrElse` + les méthodes C++23.
+
+Correction : héritage public, constructeurs hérités de `std::optional` (`using`), constructeurs depuis `std::optional` par copie et par déplacement ; `ifValue` / `ifValueOrElse` / `map` sont `const`, `applyIfValue*` prennent un `const std::optional<T>&`. L'`operator=` de `std::optional` n'est pas hérité (ambigu avec l'affectation implicite) : les affectations passent par les constructeurs. La classe n'est utilisée nulle part dans le framework.
 
 ### U12. `Fluent::forEach` modifie des copies — vérifié — **corrigé le 2026-11-02**
 `inc/impl/fluent.hpp:230` : `for(auto val : _values)` copie chaque élément ; l'action `std::function<void(T&)>` reçoit la copie. Exemple : `forEach([](int& i){ i *= 10; })` sur `{1,2,3}` laisse le conteneur à `{1,2,3}`.

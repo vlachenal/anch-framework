@@ -74,6 +74,8 @@ add_test(NAME anch-singleton-retry-on-error COMMAND anch-singleton-test -t retry
 add_test(NAME anch-singleton-destruction-order COMMAND anch-singleton-test -t destruction-order)
 add_test(NAME anch-optional-functions-test COMMAND anch-optional-test -t opt-func)
 add_test(NAME anch-optional-class-test COMMAND anch-optional-test -t opt-class)
+add_test(NAME anch-optional-std-interface-test COMMAND anch-optional-test -t opt-std-interface)
+add_test(NAME anch-optional-move-test COMMAND anch-optional-test -t opt-move)
 add_test(NAME anch-flux-push-ok-test COMMAND anch-flux-test -t push-ok)
 add_test(NAME anch-flux-push-ko-test COMMAND anch-flux-test -t push-ko)
 add_test(NAME anch-flux-push-multi-ok-test COMMAND anch-flux-test -t push-ok-multi)
