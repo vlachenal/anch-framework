@@ -25,154 +25,208 @@ using anch::cutils::CStreambuf;
 using anch::cutils::CIStream;
 using anch::cutils::COStream;
 using anch::cutils::CIOStream;
+using anch::cutils::Direction;
 
-// CStreambuf +
-CStreambuf::CStreambuf(anch::cutils::cbuffer cbuffer, anch::cutils::Direction dir):
-  _buffer(cbuffer), _deleteBuffer(false) {
-  // Check buffer options according to direction +
-  if((static_cast<short>(dir) ^ static_cast<short>(anch::cutils::Direction::IN)) == 0) {
-    _buffer.write = nullptr;
-  }
-  if((static_cast<short>(dir) ^ static_cast<short>(anch::cutils::Direction::OUT)) == 0) {
-    _buffer.read = nullptr;
-  }
-  if(static_cast<short>(dir) & static_cast<short>(anch::cutils::Direction::IN) && _buffer.read == nullptr) {
-    throw std::invalid_argument("input stream and null read function");
-  }
-  if(static_cast<short>(dir) & static_cast<short>(anch::cutils::Direction::OUT) && _buffer.write == nullptr) {
-    throw std::invalid_argument("output stream and null write function");
-  }
-  // Check buffer options according to direction -
+namespace {
 
-  initBuffer();
+  bool
+  hasDirection(Direction dir, Direction flag) {
+    return (static_cast<int>(dir) & static_cast<int>(flag)) != 0;
+  }
+
 }
 
-CStreambuf::CStreambuf() noexcept: _deleteBuffer(false) {
-  // Nothing to do
+// CStreambuf +
+CStreambuf::CStreambuf(const anch::cutils::cbuffer& cbuffer, Direction dir): CStreambuf() {
+  setBuffer(cbuffer, dir);
+}
+
+CStreambuf::CStreambuf() noexcept:
+  std::streambuf(),
+  _read(nullptr),
+  _write(nullptr),
+  _size(0),
+  _owned(),
+  _in(nullptr),
+  _out(nullptr) {
+  setg(nullptr, nullptr, nullptr);
+  setp(nullptr, nullptr);
 }
 
 CStreambuf::~CStreambuf() {
-  sync();
-  if(_deleteBuffer) {
-    delete[] _buffer.data;
+  try {
+    flushOutput();
+  } catch(...) {
+    // Destructor must not throw
+  }
+}
+
+void
+CStreambuf::setBuffer(const anch::cutils::cbuffer& cbuffer, Direction dir) {
+  // Check buffer options according to direction +
+  const bool in = hasDirection(dir, Direction::IN);
+  const bool out = hasDirection(dir, Direction::OUT);
+  if(in && cbuffer.read == nullptr) {
+    throw std::invalid_argument("input stream and null read function");
+  }
+  if(out && cbuffer.write == nullptr) {
+    throw std::invalid_argument("output stream and null write function");
+  }
+  if(cbuffer.size == 0) {
+    throw std::invalid_argument("buffer size has to be greater than 0");
+  }
+  // Check buffer options according to direction -
+
+  flushOutput(); // pending data have to be sent with the previous write function
+
+  // Allocate areas which have not been provided +
+  std::size_t ownedSize = 0;
+  if(cbuffer.data == nullptr) {
+    ownedSize = (in ? cbuffer.size : 0) + (out ? cbuffer.size : 0);
+  } else if(in && out) {
+    ownedSize = cbuffer.size; // provided data is used for reading
+  }
+  std::unique_ptr<char[]> owned = ownedSize > 0 ? std::make_unique_for_overwrite<char[]>(ownedSize) : nullptr;
+  char* in_ = nullptr;
+  char* out_ = nullptr;
+  if(cbuffer.data == nullptr) {
+    in_ = in ? owned.get() : nullptr;
+    out_ = out ? owned.get() + (in ? cbuffer.size : 0) : nullptr;
+  } else {
+    in_ = in ? cbuffer.data : nullptr;
+    out_ = out ? (in ? owned.get() : cbuffer.data) : nullptr;
+  }
+  // Allocate areas which have not been provided -
+
+  _read = in ? cbuffer.read : nullptr;
+  _write = out ? cbuffer.write : nullptr;
+  _size = cbuffer.size;
+  _owned = std::move(owned);
+  _in = in_;
+  _out = out_;
+  setg(_in, _in, _in); // empty: first read calls underflow
+  if(_out != nullptr) {
+    setp(_out, _out + _size);
+  } else {
+    setp(nullptr, nullptr);
   }
 }
 
 std::streambuf::int_type
 CStreambuf::underflow() {
-  std::size_t read = _buffer.read(_buffer.data, _buffer.size);
+  if(gptr() < egptr()) {
+    return traits_type::to_int_type(*gptr());
+  }
+  if(_read == nullptr) {
+    return traits_type::eof();
+  }
+  if(!flushOutput()) { // send request before waiting for response
+    return traits_type::eof();
+  }
+  std::size_t read = _read(_in, _size);
   if(read == 0) {
     return traits_type::eof();
   }
-  setg(_buffer.data, _buffer.data, _buffer.data + read);
+  if(read > _size) { // invalid read function result
+    read = _size;
+  }
+  setg(_in, _in, _in + read);
   return traits_type::to_int_type(*gptr());
 }
 
 std::streambuf::int_type
 CStreambuf::overflow(std::streambuf::int_type value) {
-  long write = pptr() - pbase();
-  if(write) {
-    _buffer.write(_buffer.data, static_cast<std::size_t>(write));
+  if(_write == nullptr || !flushOutput()) {
+    return traits_type::eof();
   }
-  setp(_buffer.data, _buffer.data + _buffer.size);
   if(!traits_type::eq_int_type(value, traits_type::eof())) {
-    sputc(static_cast<char>(value));
+    *pptr() = traits_type::to_char_type(value); // writing area is empty after flush (and its size is not 0)
+    pbump(1);
   }
   return traits_type::not_eof(value);
 }
 
 int
 CStreambuf::sync() {
-  std::streambuf::int_type result = this->overflow(traits_type::eof());
-  return traits_type::eq_int_type(result, traits_type::eof()) ? -1 : 0;
+  return flushOutput() ? 0 : -1;
 }
 
-void
-CStreambuf::initBuffer() {
-  // Intialize buffer if needed +
-  if(_buffer.data == NULL) {
-    _buffer.data = new char[_buffer.size];
-    std::memset(_buffer.data, 0, _buffer.size);
-    _deleteBuffer = true;
+bool
+CStreambuf::flushOutput() {
+  if(_write == nullptr || pbase() == pptr()) {
+    return true;
   }
-  // Intialize buffer if needed -
-  // Set ready +
-  setg(0, 0, 0);
-  setp(_buffer.data, _buffer.data + _buffer.size);
-  // Set ready -
+  const char* data = pbase();
+  std::size_t remaining = static_cast<std::size_t>(pptr() - pbase());
+  setp(_out, _out + _size); // reset writing area: unsent data are dropped on error
+  while(remaining > 0) {
+    std::size_t written = _write(data, remaining);
+    if(written == 0 || written > remaining) {
+      return false;
+    }
+    data += written;
+    remaining -= written;
+  }
+  return true;
 }
 // CStreambuf -
 
 // CIStream +
-CIStream::CIStream(anch::cutils::cbuffer cbuffer):
-  std::istream(new CStreambuf(cbuffer, anch::cutils::Direction::IN)) {
-  // Nothing to do
+CIStream::CIStream(const anch::cutils::cbuffer& cbuffer): std::istream(nullptr), _streambuf(cbuffer, Direction::IN) {
+  rdbuf(&_streambuf);
 }
 
-CIStream::CIStream(): std::istream(new CStreambuf()) {
-  // Nothing to do
+CIStream::CIStream(): std::istream(nullptr), _streambuf() {
+  rdbuf(&_streambuf);
 }
 
 CIStream::~CIStream() {
-  delete rdbuf();
+  // Nothing to do
 }
 
 void
-CIStream::setBuffer(anch::cutils::cbuffer cbuffer) {
-  cbuffer.write = nullptr;
-  if(cbuffer.read == nullptr) {
-    throw std::invalid_argument("output stream and null write function");
-  }
-  static_cast<CStreambuf*>(rdbuf())->_buffer = cbuffer;
-  static_cast<CStreambuf*>(rdbuf())->initBuffer();
+CIStream::setBuffer(const anch::cutils::cbuffer& cbuffer) {
+  _streambuf.setBuffer(cbuffer, Direction::IN);
+  clear();
 }
 // CIStream -
 
 // COStream +
-COStream::COStream(anch::cutils::cbuffer cbuffer):
-  std::ostream(new CStreambuf(cbuffer, anch::cutils::Direction::OUT)) {
-  // Nothing to do
+COStream::COStream(const anch::cutils::cbuffer& cbuffer): std::ostream(nullptr), _streambuf(cbuffer, Direction::OUT) {
+  rdbuf(&_streambuf);
 }
 
-COStream::COStream(): std::ostream(new CStreambuf()) {
-  // Nothing to do
+COStream::COStream(): std::ostream(nullptr), _streambuf() {
+  rdbuf(&_streambuf);
 }
 
 COStream::~COStream() {
-  delete rdbuf();
+  // Nothing to do: pending data are sent by the stream buffer destructor
 }
 
 void
-COStream::setBuffer(anch::cutils::cbuffer cbuffer) {
-  cbuffer.read = nullptr;
-  if(cbuffer.write == nullptr) {
-    throw std::invalid_argument("input stream and null read function");
-  }
-  static_cast<CStreambuf*>(rdbuf())->_buffer = cbuffer;
-  static_cast<CStreambuf*>(rdbuf())->initBuffer();
+COStream::setBuffer(const anch::cutils::cbuffer& cbuffer) {
+  _streambuf.setBuffer(cbuffer, Direction::OUT);
+  clear();
 }
 // COStream -
 
 // CIOStream +
-CIOStream::CIOStream(anch::cutils::cbuffer cbuffer):
-  std::iostream(new CStreambuf(cbuffer, anch::cutils::Direction::INOUT)) {
-  // Nothing to do
+CIOStream::CIOStream(const anch::cutils::cbuffer& cbuffer): std::iostream(nullptr), _streambuf(cbuffer, Direction::INOUT) {
+  rdbuf(&_streambuf);
 }
 
-CIOStream::CIOStream(): std::iostream(new CStreambuf()) {
-  // Nothing to do
+CIOStream::CIOStream(): std::iostream(nullptr), _streambuf() {
+  rdbuf(&_streambuf);
 }
 
 CIOStream::~CIOStream() {
-  delete rdbuf();
+  // Nothing to do: pending data are sent by the stream buffer destructor
 }
 
 void
-CIOStream::setBuffer(anch::cutils::cbuffer cbuffer) {
-  if(cbuffer.read == nullptr || cbuffer.write == nullptr) {
-    throw std::invalid_argument("read and write function has to be defined");
-  }
-  static_cast<CStreambuf*>(rdbuf())->_buffer = cbuffer;
-  static_cast<CStreambuf*>(rdbuf())->initBuffer();
+CIOStream::setBuffer(const anch::cutils::cbuffer& cbuffer) {
+  _streambuf.setBuffer(cbuffer, Direction::INOUT);
+  clear();
 }
 // CIOStream -

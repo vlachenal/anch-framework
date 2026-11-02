@@ -30,7 +30,7 @@ Statut des constats :
 | anch-conf | [anch-conf/ANALYSE.md](anch-conf/ANALYSE.md) | en construction ; correctif `_loaded` provisoire (pas encore avec placeholders) |
 | anch-ini | [anch-ini/ANALYSE.md](anch-ini/ANALYSE.md) | en construction ; conversion numérique correcte (modèle pour les autres modules) |
 | anch-cli | [anch-cli/ANALYSE.md](anch-cli/ANALYSE.md) | valeurs numériques hors limites ou vides ignorées, fichiers de sortie non vérifiés, ANSI hors terminal |
-| anch-cutils | [anch-cutils/ANALYSE.md](anch-cutils/ANALYSE.md) | **lecture et écriture partagent le même tampon** (données envoyées corrompues), écritures partielles ignorées |
+| anch-cutils | [anch-cutils/ANALYSE.md](anch-cutils/ANALYSE.md) | corrigé le 2026-11-02 : tampons de lecture et d'écriture séparés, écritures partielles et erreurs gérées, vidage de `TcpStream` avant fermeture |
 | anch-rest | [anch-rest/ANALYSE.md](anch-rest/ANALYSE.md) | ne compile plus, désactivé par défaut |
 | anch-app | [anch-app/ANALYSE.md](anch-app/ANALYSE.md) | débuté ; `after()` virtuel appelé depuis le destructeur, premier `-v` = `DEBUG` |
 
@@ -97,7 +97,7 @@ Problèmes révélés par la migration :
 Mise à jour le 2026-10-30, par impact sur l'usage courant :
 
 1. ~~`anch-json` J6 : la valeur `0` est refusée.~~ Corrigé le 2026-10-30.
-2. `anch-cutils` CU1 : en lecture / écriture, les données envoyées sont corrompues (impacte `TcpStream`).
+2. ~~`anch-cutils` CU1 : en lecture / écriture, les données envoyées sont corrompues (impacte `TcpStream`).~~ Corrigé le 2026-11-02.
 3. ~~`anch-log` L8 et L9 : le motif par défaut n'écrit pas le message, et `MDC.add` / `reset` ne fonctionnent pas.~~ Corrigé le 2026-11-02.
 4. `anch-date` D3 : une heure d'avance en été (impacte aussi les horodatages des logs).
 5. `anch-network` N1 / N3 : use-after-free et débordement de tampon.

@@ -40,6 +40,14 @@ TcpStream::TcpStream(const std::string& ipAddress, uint16_t port, std::size_t bu
 }
 
 TcpStream::~TcpStream() noexcept {
+  try {
+    flush(); // send pending data while the socket is still open (CIOStream is destroyed after _socket)
+  } catch(...) {
+    // Destructor must not throw
+  }
+  // Drop data which could not be sent: the stream buffer destructor must not use the destroyed socket
+  setBuffer({.data = nullptr, .size = 1, .read = [](char*, std::size_t) -> std::size_t { return 0; },
+	     .write = [](const char*, std::size_t size) -> std::size_t { return size; }});
   _socket.close();
 }
 // TcpStream -
