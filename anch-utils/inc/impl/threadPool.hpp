@@ -24,18 +24,36 @@ namespace anch {
   // Constructors +
   inline
   ThreadPool::ThreadPool(uint32_t maxThreads):
-    _threads(),
     _mutex(),
+    _taskCV(),
+    _idleCV(),
+    _tasks(),
     _maxThreads(maxThreads),
-    _available(0),
+    _active(0),
     _running(false),
     _terminating(false),
-    _termCV() {
+    _shutdown(false),
+    _workers() {
     if(_maxThreads == 0) {
       _maxThreads = std::thread::hardware_concurrency();
       if(_maxThreads == 0) { // Check if maximum number of thread is at least 1 to execute at least one thread
 	_maxThreads = 1;
       }
+    }
+    _workers.reserve(_maxThreads);
+    try {
+      for(uint32_t i = 0 ; i < _maxThreads ; ++i) {
+	_workers.emplace_back(&ThreadPool::worker, this);
+      }
+    } catch(...) {
+      // Stop already created workers before propagating error (they would wait forever otherwise)
+      {
+	std::lock_guard<std::mutex> lock(_mutex);
+	_shutdown = true;
+      }
+      _taskCV.notify_all();
+      _workers.clear();
+      throw;
     }
   }
   // Constructors -
@@ -43,12 +61,15 @@ namespace anch {
   // Destructor +
   inline
   ThreadPool::~ThreadPool() {
-    _mutex.lock();
-    _running = false;
-    while(!_threads.empty()) {
-      _threads.pop();
+    std::queue<std::move_only_function<void()>> dropped;
+    {
+      std::lock_guard<std::mutex> lock(_mutex);
+      _shutdown = true;
+      _running = false;
+      dropped.swap(_tasks);
     }
-    _mutex.unlock();
+    _taskCV.notify_all();
+    _workers.clear(); // join workers: wait for running tasks
   }
   // Destructor -
 
@@ -56,103 +77,79 @@ namespace anch {
   inline
   void
   ThreadPool::start() {
-    std::lock_guard<std::mutex> lock(_mutex);
-    if(!_running) {
-      _available = _maxThreads;
+    {
+      std::lock_guard<std::mutex> lock(_mutex);
       _running = true;
-      // Check if there is some threads to proceed +
-      while(_available > 0 && !_threads.empty()) {
-	launchTreatment(_threads.front());
-	_threads.pop();
-      }
-      // Check if there is some threads to proceed -
     }
+    _taskCV.notify_all();
   }
 
   inline
   void
   ThreadPool::stop() {
-    std::lock_guard<std::mutex> lock(_mutex);
-    if(_running) {
-      _running = false;
-      // Wait for alive threads
-      while(_available != _maxThreads) {
-	std::this_thread::sleep_for(std::chrono::milliseconds(50));
-      }
-    }
+    std::unique_lock<std::mutex> lock(_mutex);
+    _running = false;
+    _idleCV.wait(lock, [this] { return _active == 0; });
   }
 
   template<typename R, typename P>
   void
   ThreadPool::awaitTermination(std::chrono::duration<R,P> duration) {
+    std::queue<std::move_only_function<void()>> dropped;
+    std::unique_lock<std::mutex> lock(_mutex);
     _terminating = true;
-    {
-      std::unique_lock<std::mutex> lock(_mutex);
-      if(duration.count() > 0) {
-	if(!_termCV.wait_for(lock, duration, [this] { return _threads.empty() && _available == _maxThreads; })) {
-	  _running = false;
-	  while(!_threads.empty()) {
-	    _threads.pop();
-	  }
-	  _termCV.wait(lock, [this] { return _threads.empty() && _available == _maxThreads; });
-	}
-      } else {
-	_termCV.wait(lock, [this] { return _threads.empty() && _available == _maxThreads; });
-      }
+    auto done = [this] { return _active == 0 && (_tasks.empty() || !_running); };
+    if(duration.count() > 0) {
+      _idleCV.wait_for(lock, duration, done);
+    } else {
+      _idleCV.wait(lock, done);
     }
-    std::lock_guard<std::mutex> lockG(_mutex);
+    // Drop tasks which have not been started and wait for running ones
+    dropped.swap(_tasks);
+    _idleCV.wait(lock, [this] { return _active == 0; });
     _running = false;
-    _available = _maxThreads;
     _terminating = false;
+    lock.unlock(); // dropped tasks are destroyed outside the lock
   }
 
   template<typename Func, typename... Args>
-  void
+  bool
   ThreadPool::add(Func function, Args... args) {
-    if(_terminating) { // Thread pool awaits for its termination
-      return;
-    }
-    std::lock_guard<std::mutex> lock(_mutex);
-    if(_running) {
-      if(_available > 0 && _threads.size() < _maxThreads) {
-	launchTreatment(static_cast<std::function<void()>>(std::bind(function, args...)));
-      } else {
-	_threads.push(std::bind(function, args...));
+    {
+      std::lock_guard<std::mutex> lock(_mutex);
+      if(_terminating || _shutdown) {
+	return false;
       }
-
-    } else {
-      _threads.push(std::bind(function, args...));
+      _tasks.emplace([function = std::move(function), ...args = std::move(args)]() mutable {
+	std::invoke(std::move(function), std::move(args)...);
+      });
     }
-  }
-
-  inline void
-  ThreadPool::launchTreatment(std::function<void()> func) {
-    --_available;
-    std::thread exec(&ThreadPool::execute, this, func);
-    exec.detach();
-  }
-
-  inline void
-  ThreadPool::afterExecute() {
-    ++_available;
-    if(_terminating) {
-      _termCV.notify_all();
-    }
+    _taskCV.notify_one();
+    return true;
   }
 
   inline
   void
-  ThreadPool::execute(std::function<void()> func) {
-    try {
-      func();
-    } catch(...) {
-      // Nothing to do => we don't want this pool to crash applications
-    }
-    afterExecute();
-    std::lock_guard<std::mutex> lockG(_mutex);
-    if(_running && _available > 0 && !_threads.empty()) {
-      launchTreatment(_threads.front());
-      _threads.pop();
+  ThreadPool::worker() {
+    std::unique_lock<std::mutex> lock(_mutex);
+    while(true) {
+      _taskCV.wait(lock, [this] { return _shutdown || (_running && !_tasks.empty()); });
+      if(_shutdown) {
+	return;
+      }
+      std::move_only_function<void()> task = std::move(_tasks.front());
+      _tasks.pop();
+      ++_active;
+      lock.unlock();
+      try {
+	task();
+      } catch(...) {
+	// Nothing to do => we don't want this pool to crash applications
+      }
+      task = nullptr; // destroy task (and its arguments) outside the lock
+      lock.lock();
+      --_active;
+      _idleCV.notify_all();
     }
   }
   // Methods -

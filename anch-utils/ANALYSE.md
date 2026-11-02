@@ -15,22 +15,24 @@ Impact : tous les headers de modes de chiffrement de `anch-crypto` (`cbc`, `ctr`
 Reproduction : deux fichiers `a.cpp` / `b.cpp` qui incluent `threadPool.hpp` et instancient `anch::ThreadPool`, liés ensemble.
 Piste : ajouter `inline` à ces définitions.
 
-### U2. `ThreadPool` : threads détachés qui survivent au pool — lecture
+### U2. `ThreadPool` : threads détachés qui survivent au pool — lecture — **corrigé le 2026-11-02**
 `inc/impl/threadPool.hpp:128` : `launchTreatment` crée un `std::thread` puis le détache. Ce thread garde `this`.
 Le destructeur vide la file mais n'attend pas les tâches en cours. Si le pool est détruit pendant une tâche, `execute` accède à un objet détruit : `afterExecute()`, puis `std::lock_guard` sur `_mutex`.
 Même après `awaitTermination`, `execute` reprend `_mutex` après la notification : le pool peut déjà être détruit à ce moment-là.
 Piste : garder les `std::thread` (ou `std::jthread`) et les joindre dans le destructeur, ou utiliser de vrais workers permanents.
 
-### U3. `ThreadPool::awaitTermination` peut rester bloqué — lecture
+### U3. `ThreadPool::awaitTermination` peut rester bloqué — lecture — **corrigé le 2026-11-02**
 - `afterExecute` (ligne 133) modifie `_available` et appelle `notify_all` sans tenir `_mutex`, alors que l'attente (lignes 88, 93, 96) vérifie sa condition sous `_mutex`. Une notification peut se perdre entre la vérification et la mise en sommeil.
 - Après expiration du délai (ligne 88), la file est vidée puis la fonction attend à nouveau sans limite (ligne 93) : le délai ne borne donc pas l'attente.
 Piste : modifier `_available` et notifier sous `_mutex` ; décider de la sémantique voulue après expiration du délai.
 
-### U4. `ThreadPool` : pas un vrai pool — lecture (conception)
+### U4. `ThreadPool` : pas un vrai pool — lecture (conception) — **corrigé le 2026-11-02**
 Un thread système est créé par tâche. Le nombre de threads simultanés est borné, mais ils ne sont pas réutilisés.
 
-### U5. `ThreadPool::stop` attend en boucle active — lecture
+### U5. `ThreadPool::stop` attend en boucle active — lecture — **corrigé le 2026-11-02**
 `stop()` tient `_mutex` et dort par tranches de 50 ms jusqu'au retour de toutes les tâches. Pas d'interblocage, car `_available` est incrémenté avant la prise du mutex dans `execute`, mais c'est fragile.
+
+Correction de U2 à U5 (2026-11-02) : `ThreadPool` réécrit avec un nombre fixe de threads permanents (`std::jthread`) qui prennent les tâches dans la file ; un seul mutex et deux variables de condition (tâches, fin des tâches), plus d'attente active. Le destructeur abandonne les tâches en file et joint les threads (les tâches en cours sont attendues). `awaitTermination` : le délai borne l'attente des tâches en file ; les tâches en cours, non interruptibles, sont toujours attendues. `add` renvoie `false` si la tâche est refusée (fin en cours) et accepte des fonctions et arguments non copiables. Tests réécrits avec assertions (9 cas), sans signalement sous TSan / ASan.
 
 ### U6. `ResourcePool::borrowResource` : course sur `_availables` — vérifié (TSan, erreur de segmentation) — **corrigé le 2026-11-02**
 `inc/impl/resourcePool.hpp:133` : l'attente se fait avec `_waitex`, mais la condition lit `_availables`, protégé par `_mutex`.
