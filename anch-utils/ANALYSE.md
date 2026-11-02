@@ -99,6 +99,17 @@ Piste : ne pas stocker `skip` / `limit` comme filtres, mais les appliquer dans l
 ### U16. `stringUtils`, `collectors` — lecture
 Pas de défaut relevé. `toLower` / `toUpper` convertissent correctement en `unsigned char` avant `std::tolower` / `std::toupper`, mais ne gèrent que l'ASCII (pas d'UTF-8) : à documenter.
 
+### U17. `Singleton` : schéma recopié à la main dans chaque classe, ordre de destruction non documenté — lecture — **corrigé le 2026-11-02**
+Chaque classe dérivée devait déclarer `friend`, un constructeur et un destructeur privés, et supprimer la copie. Résultat incohérent : `LoggerFactory`, `CPU` et `EventBus` restaient copiables (copie bloquée seulement par le destructeur privé), tous les destructeurs étaient `virtual` sans raison.
+L'ordre de destruction (inverse de la *fin* des constructions) n'était pas documenté : les dépendances entre singletons sont implicites.
+Correction : `Singleton` supprime la copie et le déplacement (hérité par toutes les classes dérivées), a un constructeur et un destructeur `protected` non virtuels, vérifie que `T` hérite de `Singleton<T>`, et documente le schéma et la règle de dépendance (appeler `getInstance` du singleton dont on dépend dans le constructeur).
+Tests : instance unique sous concurrence (20 threads synchronisés par `std::latch`, joints), nouvel essai après une exception du constructeur, ordre de destruction (le test échoue si la dépendance est inversée).
+À corriger dans les librairies concernées :
+- `anch-sql` : `SqlConnectionFactory` dépend de `SQLSharedLibraries` (les connexions des pools viennent des pilotes fermés par `dlclose`) ; l'ordre est correct seulement parce que le constructeur appelle `registerMySQL()` & co. À rendre explicite ;
+- `anch-events` / `anch-conf` : le constructeur d'`EventBus` est public (voulu : `anch-conf` crée son propre bus) mais son destructeur est privé, donc le bus créé par `Placeholders` ne peut pas être détruit (fuite) ;
+- `anch-device` : `CPU` laisse ses drapeaux non initialisés si la feuille 1 de `cpuid` n'existe pas ;
+- toutes : `virtual` sur les destructeurs et suppressions de copie devenus inutiles.
+
 ## Points positifs
 - `Singleton` repose sur une variable `static` locale : initialisation sûre entre threads.
 - 43 tests passent.

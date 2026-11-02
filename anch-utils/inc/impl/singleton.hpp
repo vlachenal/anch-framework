@@ -19,11 +19,14 @@
 */
 #pragma once
 
+#include <type_traits>
+
 namespace anch {
 
   template<typename T>
   T&
   Singleton<T>::getInstance() {
+    static_assert(std::is_base_of_v<anch::Singleton<T>, T>, "T has to inherit from anch::Singleton<T>");
     static T instance;
     return instance;
   }

@@ -1,9 +1,14 @@
 #include "singleton.hpp"
 
-#include <iostream>
-#include <chrono>
-#include <thread>
 #include <atomic>
+#include <chrono>
+#include <cstdlib>
+#include <iostream>
+#include <latch>
+#include <stdexcept>
+#include <thread>
+#include <type_traits>
+#include <vector>
 
 #include "ut/unit.hpp"
 #include "ut/assert.hpp"
@@ -11,62 +16,135 @@
 
 class Test: public anch::Singleton<Test> {
   friend anch::Singleton<Test>;
-private:
-  int nb;
-private:
-  Test(): nb(0) {++nb;}
-  virtual ~Test() {}
 public:
-  int getNb() const {return nb;}
+  static std::atomic<int> nbBuilt;
+private:
+  Test() {
+    ++nbBuilt;
+  }
+  ~Test() = default;
 };
+
+std::atomic<int> Test::nbBuilt = 0;
 
 class SlowTest: public anch::Singleton<SlowTest> {
   friend anch::Singleton<SlowTest>;
+public:
+  static std::atomic<int> nbBuilt;
 private:
-  int nb;
-private:
-  SlowTest(): nb(0) {
-    ++nb;
+  SlowTest() {
+    ++nbBuilt;
     std::this_thread::sleep_for(std::chrono::milliseconds(10));
   }
-  virtual ~SlowTest() {}
+  ~SlowTest() = default;
+};
+
+std::atomic<int> SlowTest::nbBuilt = 0;
+
+// Constructor fails on first call
+class FlakyTest: public anch::Singleton<FlakyTest> {
+  friend anch::Singleton<FlakyTest>;
 public:
-  int getNb() const {return nb;}
+  static int nbAttempts;
+private:
+  FlakyTest() {
+    if(++nbAttempts == 1) {
+      throw std::runtime_error("first attempt fails");
+    }
+  }
+  ~FlakyTest() = default;
+};
+
+int FlakyTest::nbAttempts = 0;
+
+// Copy and move have to be prohibited by anch::Singleton, even with public constructor and destructor
+class PublicTest: public anch::Singleton<PublicTest> {
+public:
+  PublicTest() = default;
+  ~PublicTest() = default;
+};
+
+static_assert(!std::is_copy_constructible_v<PublicTest>, "Singleton must not be copyable");
+static_assert(!std::is_move_constructible_v<PublicTest>, "Singleton must not be movable");
+static_assert(!std::is_copy_assignable_v<PublicTest>, "Singleton must not be copy assignable");
+static_assert(!std::is_move_assignable_v<PublicTest>, "Singleton must not be move assignable");
+
+// Destruction order: Dependent uses Dependency in its destructor
+class Dependency: public anch::Singleton<Dependency> {
+  friend anch::Singleton<Dependency>;
+public:
+  static bool alive;
+private:
+  Dependency() {
+    alive = true;
+  }
+  ~Dependency() {
+    alive = false;
+  }
+};
+
+bool Dependency::alive = false;
+
+class Dependent: public anch::Singleton<Dependent> {
+  friend anch::Singleton<Dependent>;
+private:
+  Dependent() {
+    Dependency::getInstance(); // Dependency is built first, so it will be destroyed after
+  }
+  ~Dependent() {
+    if(!Dependency::alive) {
+      std::cerr << "Dependency has been destroyed before Dependent" << std::endl;
+      std::_Exit(EXIT_FAILURE); // test result is the process exit code
+    }
+  }
 };
 
 void
 testSeqNoWait() {
-  std::cout << "Enter in testSeqNoWait" << std::endl;
   Test& test1 = Test::getInstance();
   Test& test2 = Test::getInstance();
-  std::cout << "test1: " << test1.getNb() << std::endl;
-  std::cout << "test2: " << test2.getNb() << std::endl;
-  anch::ut::assertTrue(test1.getNb() == 1);
-  anch::ut::assertTrue(test2.getNb() == 1);
-  std::cout << "Exit testSeqNoWait" << std::endl;
+  anch::ut::assertTrue(&test1 == &test2, "getInstance returns different instances");
+  anch::ut::assertThat(Test::nbBuilt == 1, "Instance has been built {} times", Test::nbBuilt.load());
 }
 
 void
 testParallelWait() {
-  std::cout << "Enter in testParallelWait" << std::endl;
-  std::atomic<int32_t> nb = 0;
-  std::atomic<int64_t> time = 0;
-  int16_t nbThread = 20;
-  for(int16_t i = 0 ; i < nbThread ; ++i) {
-    const auto start = std::chrono::high_resolution_clock::now();
-    std::thread thread([&]() {
-      const auto end = std::chrono::high_resolution_clock::now();
-      time += std::chrono::duration_cast<std::chrono::microseconds>(end.time_since_epoch()).count()
-	- std::chrono::duration_cast<std::chrono::microseconds>(start.time_since_epoch()).count();
-      nb += SlowTest::getInstance().getNb();
+  constexpr std::ptrdiff_t NB_THREADS = 20;
+  std::latch start(NB_THREADS);
+  std::vector<SlowTest*> instances(NB_THREADS, nullptr);
+  std::vector<std::thread> threads;
+  for(std::ptrdiff_t i = 0 ; i < NB_THREADS ; ++i) {
+    threads.emplace_back([&start, &instances, i]() {
+      start.arrive_and_wait(); // every thread calls getInstance at the same time
+      instances[static_cast<std::size_t>(i)] = &SlowTest::getInstance();
     });
-    thread.detach();
   }
-  std::this_thread::sleep_for(std::chrono::milliseconds(50));
-  std::cout << "Add instances nb: " << nb << std::endl;
-  anch::ut::assertTrue(nb == nbThread);
-  std::cout << "Average thread spawn time: " << (time / nbThread) << "µs" << std::endl;
-  std::cout << "Exit testParallelWait" << std::endl;
+  for(std::thread& thread : threads) {
+    thread.join();
+  }
+  for(SlowTest* instance : instances) {
+    anch::ut::assertTrue(instance == instances[0], "getInstance returns different instances");
+  }
+  anch::ut::assertThat(SlowTest::nbBuilt == 1, "Instance has been built {} times", SlowTest::nbBuilt.load());
+}
+
+void
+testRetryOnError() {
+  try {
+    FlakyTest::getInstance();
+    anch::ut::fail("Constructor exception has not been raised");
+  } catch(const std::runtime_error&) {
+    // expected
+  }
+  FlakyTest& test = FlakyTest::getInstance();
+  anch::ut::assertTrue(&test == &FlakyTest::getInstance(), "getInstance returns different instances");
+  anch::ut::assertThat(FlakyTest::nbAttempts == 2, "{} construction attempts instead of 2", FlakyTest::nbAttempts);
+}
+
+void
+testDestructionOrder() {
+  Dependent::getInstance();
+  // Checked by Dependent destructor at program exit
 }
 
 void
@@ -76,5 +154,7 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .description("Test AnCH singleton utiliy class")
     .add("seq-no-wait", testSeqNoWait)
     .add("parallel-wait", testParallelWait)
+    .add("retry-on-error", testRetryOnError)
+    .add("destruction-order", testDestructionOrder)
     ;
 }

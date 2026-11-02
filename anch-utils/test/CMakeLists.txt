@@ -56,6 +56,8 @@ add_test(NAME anch-string-utils-upper COMMAND anch-string-utils-test -t to-upper
 add_test(NAME anch-string-utils-lower COMMAND anch-string-utils-test -t to-lower)
 add_test(NAME anch-singleton-seq-no-wait COMMAND anch-singleton-test -t seq-no-wait)
 add_test(NAME anch-singleton-parallel-wait COMMAND anch-singleton-test -t parallel-wait)
+add_test(NAME anch-singleton-retry-on-error COMMAND anch-singleton-test -t retry-on-error)
+add_test(NAME anch-singleton-destruction-order COMMAND anch-singleton-test -t destruction-order)
 add_test(NAME anch-optional-functions-test COMMAND anch-optional-test -t opt-func)
 add_test(NAME anch-optional-class-test COMMAND anch-optional-test -t opt-class)
 add_test(NAME anch-flux-push-ok-test COMMAND anch-flux-test -t push-ok)
