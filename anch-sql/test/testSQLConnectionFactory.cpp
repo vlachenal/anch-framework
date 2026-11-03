@@ -9,6 +9,7 @@
 #include "conf/configuration.hpp"
 
 #include "ut/assert.hpp"
+#include "commonTests.hpp"
 #include "ut/unit.hpp"
 
 using anch::sql::Connection;
@@ -197,6 +198,109 @@ testSQLFactory(const std::string& db) {
   }
 }
 
+/*!
+ * Read connection configuration
+ *
+ * \param db the configuration name
+ *
+ * \return the configuration
+ */
+anch::sql::SqlConnectionConfiguration
+configOf(const std::string& db) {
+  const anch::conf::Section& section = anch::conf::Configuration::inst().section("anch::sql")->getSections().at(db);
+  anch::sql::SqlConnectionConfiguration config;
+  config.driver = section.getValue<std::string>("driver").value_or("");
+  config.database = section.getValue<std::string>("database").value_or("");
+  config.hostname = section.getValue<std::string>("host").value_or("");
+  config.user = section.getValue<std::string>("user").value_or("");
+  config.password = section.getValue<std::string>("password").value_or("");
+  config.port = section.getValue<int>("port").value_or(0);
+  return config;
+}
+
+/*!
+ * Pool of one connection: transactions are ended on return, and a killed connection is replaced
+ *
+ * \param db the configuration name
+ * \param sessionId the function which returns the server session identifier (empty function when connection can not be killed)
+ * \param kill the function which kills the connection
+ */
+void
+testPool(const std::string& db,
+	 std::function<std::string(Connection&)> sessionId,
+	 std::function<void(Connection&, const std::string&)> kill) {
+  SqlConnectionPool pool(configOf(db), 1, 0, std::chrono::milliseconds(1000));
+  // Error in transaction: rolled back when connection is returned +
+  {
+    auto res = pool.borrowResource();
+    res.get().update("DELETE FROM T_Test WHERE first_name IN ('PoolRollback','PoolCommit')");
+    res.get().begin();
+    res.get().update("INSERT INTO T_Test (first_name,last_name,birth_date) VALUES ('PoolRollback','Test','2016-03-22')");
+    try {
+      res.get().update("INSERT INTO T_Unknown (a) VALUES (1)");
+    } catch(const SqlException& e) {
+      std::cout << "Expected error: " << e.what() << std::endl;
+    }
+  }
+  {
+    auto res = pool.borrowResource();
+    int64_t count = countRows(res.get(), "SELECT COUNT(*) FROM T_Test WHERE first_name = ?", "PoolRollback");
+    anch::ut::assertThat(count == 0, "Transaction with error should be rolled back on return: {} rows", count);
+  }
+  // Error in transaction: rolled back when connection is returned -
+  // Transaction without error: committed when connection is returned +
+  {
+    auto res = pool.borrowResource();
+    res.get().begin();
+    res.get().update("INSERT INTO T_Test (first_name,last_name,birth_date) VALUES ('PoolCommit','Test','2016-03-22')");
+  }
+  {
+    auto res = pool.borrowResource();
+    int64_t count = countRows(res.get(), "SELECT COUNT(*) FROM T_Test WHERE first_name = ?", "PoolCommit");
+    anch::ut::assertThat(count == 1, "Transaction without error should be committed on return: {} rows", count);
+    res.get().update("DELETE FROM T_Test WHERE first_name = 'PoolCommit'");
+  }
+  // Transaction without error: committed when connection is returned -
+  if(!sessionId) {
+    return;
+  }
+  // Killed connection: replaced by a new one +
+  std::string killed;
+  {
+    auto res = pool.borrowResource();
+    killed = sessionId(res.get());
+    try {
+      kill(res.get(), killed);
+    } catch(const SqlException& e) {
+      std::cout << "Kill: " << e.what() << std::endl;
+    }
+    try {
+      countRows(res.get(), "SELECT COUNT(*) FROM T_Test WHERE id = ?", 1);
+    } catch(const SqlException& e) {
+      std::cout << "Query after kill: " << e.what() << std::endl;
+    }
+    anch::ut::assertFalse(res.get().isValid(), "Killed connection should be invalid");
+  }
+  {
+    auto res = pool.borrowResource();
+    anch::ut::assertTrue(res.get().isValid(), "Pool should provide a valid connection");
+    std::string current = sessionId(res.get());
+    anch::ut::assertThat(current != killed, "Killed connection {} should have been replaced", killed);
+    anch::ut::assertThat(countRows(res.get(), "SELECT COUNT(*) FROM T_Test WHERE id = ?", 1) == 1, "New connection should work");
+  }
+  // Killed connection: replaced by a new one -
+}
+
+/*!
+ * Get first column of first row as string
+ */
+std::string
+firstValue(Connection& conn, const std::string& query) {
+  std::string value;
+  conn.queryMapRow(query, [&value](ResultSet& res) { value = res.get<std::string>(0).value_or(""); });
+  return value;
+}
+
 void
 anch::ut::setup(anch::ut::UnitTests& tests) {
   tests
@@ -206,12 +310,23 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .uninitialize(afterAll)
 #ifdef ANCH_SQL_MYSQL
     .add("sql-factory-mysql", std::bind(testSQLFactory, "anch_mysql"))
+    .add("sql-pool-mysql", []() {
+      testPool("anch_mysql",
+	       [](Connection& conn) { return firstValue(conn, "SELECT CONNECTION_ID()"); },
+	       [](Connection& conn, const std::string& id) { conn.update("KILL " + id); });
+    })
 #endif
 #ifdef ANCH_SQL_POSTGRESQL
     .add("sql-factory-postgresql", std::bind(testSQLFactory, "anch_pgsql"))
+    .add("sql-pool-postgresql", []() {
+      testPool("anch_pgsql",
+	       [](Connection& conn) { return firstValue(conn, "SELECT pg_backend_pid()"); },
+	       [](Connection& conn, const std::string&) { firstValue(conn, "SELECT pg_terminate_backend(pg_backend_pid())"); });
+    })
 #endif
 #ifdef ANCH_SQL_SQLITE3
     .add("sql-factory-sqlite3", std::bind(testSQLFactory, "anch_sqlite"))
+    .add("sql-pool-sqlite3", []() { testPool("anch_sqlite", nullptr, nullptr); })
 #endif
     ;
 }

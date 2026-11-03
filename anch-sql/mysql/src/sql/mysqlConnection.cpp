@@ -106,81 +106,88 @@ MySQLConnection::~MySQLConnection() noexcept {
 // Destructor -
 
 // Methods +
+bool
+anch::sql::mysql::isFatal(unsigned int code) noexcept {
+  switch(code) {
+  case CR_CONNECTION_ERROR:
+  case CR_CONN_HOST_ERROR:
+  case CR_SERVER_GONE_ERROR:
+  case CR_OUT_OF_MEMORY:
+  case CR_SERVER_LOST:
+  case CR_COMMANDS_OUT_OF_SYNC:
+#ifdef CR_SERVER_LOST_EXTENDED
+  case CR_SERVER_LOST_EXTENDED:
+#endif
+  case 1053: // ER_SERVER_SHUTDOWN
+  case 1927: // ER_CONNECTION_KILLED (MariaDB)
+  case 4031: // ER_CLIENT_INTERACTION_TIMEOUT (MySQL 8)
+    return true;
+  default:
+    return false;
+  }
+}
+
+SqlException
+anch::sql::mysql::error(const std::string& message, unsigned int code, const char* text) {
+  std::ostringstream msg;
+  msg << message << ": " << text << " (" << code << ')';
+  return SqlException(msg.str(), !isFatal(code));
+}
+
+/*!
+ * Execute command which does not return rows
+ *
+ * \param conn the MySQL connection
+ * \param command the command
+ * \param context the error context
+ *
+ * \throw SqlException any error
+ */
+static void
+execCommand(MYSQL* conn, const std::string& command, const std::string& context) {
+  if(mysql_real_query(conn, command.data(), command.size()) != 0) {
+    throw anch::sql::mysql::error(context, mysql_errno(conn), mysql_error(conn));
+  }
+}
+
 void
 MySQLConnection::sendCommit() {
-  int res = mysql_query(_mysql, "COMMIT");
-  if(res != 0) {
-    _valid = res != CR_SERVER_GONE_ERROR && res != CR_SERVER_LOST;
-    std::ostringstream out;
-    out << "Unable to commit transaction ; message=" << mysql_error(_mysql);
-    throw SqlException(out.str(), _valid);
-  }
+  execCommand(_mysql, "COMMIT", "Unable to commit transaction");
 }
 
 void
 MySQLConnection::sendRollback() {
-  int res = mysql_query(_mysql, "ROLLBACK");
-  if(res != 0) {
-    _valid = res != CR_SERVER_GONE_ERROR && res != CR_SERVER_LOST;
-    std::ostringstream out;
-    out << "Unable to rollback transaction ; message=" << mysql_error(_mysql);
-    throw SqlException(out.str(), _valid);
-  }
+  execCommand(_mysql, "ROLLBACK", "Unable to rollback transaction");
 }
 
 void
 MySQLConnection::sendStartTransaction() {
-  int res = mysql_query(_mysql, "START TRANSACTION");
-  if(res != 0) {
-    _valid = res != CR_SERVER_GONE_ERROR && res != CR_SERVER_LOST;
-    std::ostringstream out;
-    out << "Unable to start transaction ; message=" << mysql_error(_mysql);
-    throw SqlException(out.str(), _valid);
-  }
+  execCommand(_mysql, "START TRANSACTION", "Unable to start transaction");
 }
 
 ResultSet*
 MySQLConnection::executeQuery(const std::string& query) {
-  ResultSet* resSet = NULL;
-  int res = mysql_query(_mysql, query.data());
-  if(res != 0) {
-    _valid = res != CR_SERVER_GONE_ERROR && res != CR_SERVER_LOST;
-    std::ostringstream out;
-    out << "Error while executing query " << query << " ; message="
-	<< mysql_error(_mysql);
-    throw SqlException(out.str(), _valid);
-  }
+  execCommand(_mysql, query, "Error while executing query " + query);
   MYSQL_RES* result = mysql_use_result(_mysql);
   if(result == NULL) {
-    std::ostringstream out;
-    out << "Error while retrieving result " << query << " ; message="
-	<< mysql_error(_mysql);
-    throw SqlException(out.str(), true);
-
-  } else {
-    resSet = new MySQLResultSet(result);
+    if(mysql_errno(_mysql) != 0) {
+      throw anch::sql::mysql::error("Error while retrieving result of " + query, mysql_errno(_mysql), mysql_error(_mysql));
+    }
+    throw SqlException("Query " + query + " does not return a result set", true);
   }
-  return resSet;
+  return new MySQLResultSet(_mysql, result);
 }
 
 uint64_t
 MySQLConnection::executeUpdate(const std::string& query) {
-  int res = mysql_query(_mysql, query.data());
-  if(res != 0) {
-    _valid = res != CR_SERVER_GONE_ERROR && res != CR_SERVER_LOST;
-    _errors = true;
-    std::ostringstream out;
-    out << "Error while executing query " << query << " ; message="
-	<< mysql_error(_mysql);
-    throw SqlException(out.str(), _valid);
-  }
+  execCommand(_mysql, query, "Error while executing query " + query);
   my_ulonglong nbRow = mysql_affected_rows(_mysql);
   if(nbRow == static_cast<my_ulonglong>(-1)) {
-    _errors = true;
-    std::ostringstream out;
-    out << "Query " << query << " is not an update query " << query
-	<< " ; message=" << mysql_error(_mysql);
-    throw SqlException(out.str(), true);
+    MYSQL_RES* result = mysql_store_result(_mysql); // pending rows have to be read before next command
+    if(result != NULL) {
+      mysql_free_result(result);
+    }
+    throw SqlException("Query " + query + " is not an update query", true);
   }
   return static_cast<uint64_t>(nbRow);
 }

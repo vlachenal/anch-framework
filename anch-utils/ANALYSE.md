@@ -47,6 +47,8 @@ Autres défauts corrigés en même temps :
 - `setTimeout` écrivait `_timeout` sans verrou pendant que `borrowResource` le lisait ;
 - `maxSize == 0` donnait un pool inutilisable (toujours en délai dépassé) : lève maintenant `std::invalid_argument`.
 
+Ajout du 2026-11-03 (pour `anch-sql`, S11) : concept `Releasable` ; `release()` est appelée sur la ressource à son retour dans le pool, avant sa validation (une exception l'invalide).
+
 ### U7. `PoolableResource` est copiable — lecture — **corrigé le 2026-11-02** (déplaçable, non copiable)
 `inc/resourcePool.hpp` : la copie implicite est disponible et le destructeur rend la ressource au pool. Une copie entraîne une double restitution.
 Piste : `= delete` sur la copie, constructeur de déplacement qui vide la source.

@@ -25,9 +25,27 @@
  * \n
  * AnCH SQL provides connection factory.
  *
+ * \subsection sql_conception_stmt_sec Prepared statements
+ *
+ * Prepared statements use \c '?' placeholders, numbered from \c 1 . Their number is given by the database (MySQL and
+ * SQLite count them on the server side) ; for PostgreSQL, \c '?' outside string literals, quoted identifiers and
+ * comments are replaced by \c $n (see \ref anch::sql::findPlaceholders ). PostgreSQL \c '?' operators (\c jsonb )
+ * can not be used in prepared statements: use their functions (\c jsonb_exists , ...) instead.\n
+ * Every parameter has to be bound before execution ; \c NULL is bound with \c setNull , a \c NULL pointer or an empty
+ * \c std::optional .
+ *
+ * \subsection sql_conception_errors_sec Errors
+ *
+ * Errors raise \ref anch::sql::SqlException "SqlException" and are reported to the connection, from its prepared
+ * statements and result sets too. A fatal error (\c SqlException::isOK is \c false : connection lost or killed,
+ * server shutdown, out of memory, protocol error) invalidates the connection. Other errors keep it valid, and its
+ * current transaction is rolled back when it is released.
+ *
  * \subsection sql_conception_pool_sec SQL connection pool
  *
- * SQL connection pools are configured in configuration file dbCon.conf
+ * SQL connection pools are configured in configuration file dbCon.conf\n
+ * When a connection is returned to its pool, \c Connection::release ends its transaction (rollback after an error,
+ * commit otherwise), then invalid connections are destroyed instead of being reused.
  *
  * \section sql_example_sec Example
  *

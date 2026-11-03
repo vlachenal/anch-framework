@@ -19,8 +19,10 @@
 */
 #pragma once
 
-#include <set>
+#include <cstdint>
+#include <optional>
 #include <string>
+#include <vector>
 
 #include "sql/sqlException.hpp"
 #include "sql/resultSet.hpp"
@@ -31,10 +33,16 @@
 
 namespace anch::sql {
 
+  class Connection;
+
   /*!
    * \brief SQL prepared statement
    *
-   * Virtual class for SQL prepared statement management.
+   * Prepared statements are created and cached by \ref Connection::prepareStatement . Parameters are numbered from
+   * \c 1 ; every parameter has to be bound before execution (values are kept between executions).\n
+   * The number of parameters is given by the database driver (MySQL and SQLite count them on the server side,
+   * PostgreSQL \c '?' placeholders are found with \ref findPlaceholders and replaced by \c $n ).\n
+   * Errors are reported to the connection: a fatal error invalidates it (see \ref Connection::isValid ).
    *
    * \author Vincent Lachenal
    *
@@ -42,13 +50,22 @@ namespace anch::sql {
    */
   class PreparedStatement {
 
+    friend class Connection;
+
     // Attributes +
   protected:
-    /*! Statement values */
-    std::map<std::size_t,std::string> _values;
+    /*! Statement values (index \c 0 is parameter \c 1 ; \c std::nullopt for \c NULL ) */
+    std::vector<std::optional<std::string>> _values;
+
+    /*! Bound parameters */
+    std::vector<bool> _bound;
 
     /*! Number of placeholders in SQL query */
     std::size_t _nbPlaceholders;
+
+  private:
+    /*! Connection which has prepared this statement (errors are reported to it) */
+    anch::sql::Connection* _connection;
     // Attributes -
 
     // Constructors +
@@ -57,6 +74,11 @@ namespace anch::sql {
      * \ref PreparedStatement constructor
      */
     PreparedStatement() noexcept;
+
+    /*!
+     * Prohibits \ref PreparedStatement copy constructor
+     */
+    PreparedStatement(const PreparedStatement&) = delete;
     // Constructors -
 
     // Destructor +
@@ -72,157 +94,228 @@ namespace anch::sql {
     /*!
      * Execute prepared statement for SELECT statement
      *
-     * \return the result set
+     * \return the result set (to delete)
      *
-     * \throw SqlException any error
+     * \throw SqlException unbound parameter or any database error
      */
-    virtual ResultSet* executeQuery() = 0;
+    ResultSet* executeQuery();
 
     /*!
      * Execute prepared statement for update database (INSERT, UPDATE, DELETE)
      *
      * \return the number of affected rows
      *
-     * \throw SqlException any error
+     * \throw SqlException unbound parameter or any database error
      */
-    virtual uint64_t executeUpdate() = 0;
+    uint64_t executeUpdate();
 
     /*!
      * Bind 16 bits signed integer value to prepared statement
      *
-     * \param idx the prepared statement index parameter
+     * \param idx the prepared statement index parameter (from \c 1 )
      * \param value the value to bind
      *
-     * \throw SqlException any error
+     * \throw SqlException invalid index
      */
     void set(std::size_t idx, int16_t value);
 
     /*!
      * Bind 16 bits unsigned integer value to prepared statement
      *
-     * \param idx the prepared statement index parameter
+     * \param idx the prepared statement index parameter (from \c 1 )
      * \param value the value to bind
      *
-     * \throw SqlException any error
+     * \throw SqlException invalid index
      */
     void set(std::size_t idx, uint16_t value);
 
     /*!
      * Bind 32 bits signed integer value to prepared statement
      *
-     * \param idx the prepared statement index parameter
+     * \param idx the prepared statement index parameter (from \c 1 )
      * \param value the value to bind
      *
-     * \throw SqlException any error
+     * \throw SqlException invalid index
      */
     void set(std::size_t idx, int32_t value);
 
     /*!
      * Bind 32 bits unsigned integer value to prepared statement
      *
-     * \param idx the prepared statement index parameter
+     * \param idx the prepared statement index parameter (from \c 1 )
      * \param value the value to bind
      *
-     * \throw SqlException any error
+     * \throw SqlException invalid index
      */
     void set(std::size_t idx, uint32_t value);
 
     /*!
      * Bind 64 bits signed integer value to prepared statement
      *
-     * \param idx the prepared statement index parameter
+     * \param idx the prepared statement index parameter (from \c 1 )
      * \param value the value to bind
      *
-     * \throw SqlException any error
+     * \throw SqlException invalid index
      */
     void set(std::size_t idx, int64_t value);
 
     /*!
      * Bind 64 bits unsigned integer value to prepared statement
      *
-     * \param idx the prepared statement index parameter
+     * \param idx the prepared statement index parameter (from \c 1 )
      * \param value the value to bind
      *
-     * \throw SqlException any error
+     * \throw SqlException invalid index
      */
     void set(std::size_t idx, uint64_t value);
 
     /*!
      * Bind string value to prepared statement
      *
-     * \param idx the prepared statement index parameter
+     * \param idx the prepared statement index parameter (from \c 1 )
      * \param value the value to bind
      *
-     * \throw SqlException any error
+     * \throw SqlException invalid index
      */
     void set(std::size_t idx, const std::string& value);
 
     /*!
-     * Bind character array value to prepared statement
+     * Bind character array value to prepared statement (\c NULL pointer binds SQL \c NULL )
      *
-     * \param idx the prepared statement index parameter
+     * \param idx the prepared statement index parameter (from \c 1 )
      * \param value the value to bind
      *
-     * \throw SqlException any error
+     * \throw SqlException invalid index
      */
     void set(std::size_t idx, const char* const value);
 
     /*!
-     * Bind SQL date value to prepared statement
+     * Bind optional value to prepared statement (\c std::nullopt binds SQL \c NULL )
      *
-     * \param idx the prepared statement index parameter
+     * \tparam T the value type
+     *
+     * \param idx the prepared statement index parameter (from \c 1 )
      * \param value the value to bind
      *
-     * \throw SqlException any error
+     * \throw SqlException invalid index
+     *
+     * \since 0.2
+     */
+    template<typename T>
+    void set(std::size_t idx, const std::optional<T>& value);
+
+    /*!
+     * Bind SQL \c NULL to prepared statement
+     *
+     * \param idx the prepared statement index parameter (from \c 1 )
+     *
+     * \throw SqlException invalid index
+     *
+     * \since 0.2
+     */
+    void setNull(std::size_t idx);
+
+    /*!
+     * Bind SQL date value to prepared statement
+     *
+     * \param idx the prepared statement index parameter (from \c 1 )
+     * \param value the value to bind
+     *
+     * \throw SqlException invalid index
      */
     virtual void set(std::size_t idx, const anch::sql::Date& value);
 
     /*!
      * Bind SQL time value to prepared statement
      *
-     * \param idx the prepared statement index parameter
+     * \param idx the prepared statement index parameter (from \c 1 )
      * \param value the value to bind
      *
-     * \throw SqlException any error
+     * \throw SqlException invalid index
      */
     virtual void set(std::size_t idx, const anch::sql::Time& value);
 
     /*!
      * Bind SQL timestamp value to prepared statement
      *
-     * \param idx the prepared statement index parameter
+     * \param idx the prepared statement index parameter (from \c 1 )
      * \param value the value to bind
      *
-     * \throw SqlException any error
+     * \throw SqlException invalid index
      */
     virtual void set(std::size_t idx, const anch::sql::Timestamp& value);
 
-  protected:
     /*!
-     * Retrieve placeholders positions ('?') in SQL query
+     * Unbind every parameter
      *
-     * \param query the SQL query
-     *
-     * \return the placeholders' position
+     * \since 0.2
      */
-    std::set<std::size_t> getPlaceholders(const std::string& query) const;
+    void clearParameters() noexcept;
 
     /*!
-     * Check index value
+     * Number of parameters getter
      *
-     * \param index the index to check
+     * \return the number of parameters
      *
-     * \throw SqlException the index is upper than number of wildcards
+     * \since 0.2
      */
-    inline void checkIndex(std::size_t index) const {
-      if(index > _nbPlaceholders) {
-	std::ostringstream oss;
-	oss << "Index " << index << " is upper than number of wildcards " << _nbPlaceholders;
-	throw SqlException(oss.str(), true);
-      }
-    }
+    std::size_t getParameterCount() const noexcept;
+
+  protected:
+    /*!
+     * Set number of parameters (called by drivers once statement has been prepared)
+     *
+     * \param count the number of parameters
+     */
+    void setParameterCount(std::size_t count);
+
+    /*!
+     * Execute prepared statement for SELECT statement (driver implementation: parameters are bound)
+     *
+     * \return the result set
+     *
+     * \throw SqlException any error (with connection status)
+     */
+    virtual ResultSet* doExecuteQuery() = 0;
+
+    /*!
+     * Execute prepared statement for update (driver implementation: parameters are bound)
+     *
+     * \return the number of affected rows
+     *
+     * \throw SqlException any error (with connection status)
+     */
+    virtual uint64_t doExecuteUpdate() = 0;
+
+  private:
+    /*!
+     * Bind value
+     *
+     * \param idx the parameter index (from \c 1 )
+     * \param value the value (\c std::nullopt for \c NULL )
+     *
+     * \throw SqlException invalid index
+     */
+    void bind(std::size_t idx, std::optional<std::string> value);
+
+    /*!
+     * Check that every parameter has been bound
+     *
+     * \throw SqlException unbound parameter
+     */
+    void checkBindings() const;
     // Methods -
 
   };
+
+  template<typename T>
+  void
+  PreparedStatement::set(std::size_t idx, const std::optional<T>& value) {
+    if(value.has_value()) {
+      set(idx, value.value());
+    } else {
+      setNull(idx);
+    }
+  }
 
 }

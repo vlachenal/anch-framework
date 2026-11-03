@@ -42,7 +42,7 @@ namespace anch {
       /*! Error message */
       std::string _msg;
 
-      /*! Connection status */
+      /*! Connection status: \c false for a fatal error which invalidates the connection */
       bool _ok;
       // Attributes -
 
@@ -52,7 +52,8 @@ namespace anch {
        * \ref SqlException constructor
        *
        * \param msg the error message
-       * \param ok connection status
+       * \param ok connection status: \c false for a fatal error (connection lost, out of memory, protocol error,
+       *        ...) which invalidates the connection
        */
       SqlException(std::string msg, bool ok = true) noexcept;
       // Constructors -

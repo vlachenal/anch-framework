@@ -78,7 +78,7 @@ namespace anch {
       // Destructor -
 
       // Methods +
-    public:
+    protected:
       /*!
        * Execute prepared statement for SELECT statement
        *
@@ -86,7 +86,7 @@ namespace anch {
        *
        * \throw SqlException any error
        */
-      virtual ResultSet* executeQuery() override;
+      virtual ResultSet* doExecuteQuery() override;
 
       /*!
        * Execute prepared statement for update database (INSERT, UPDATE, DELETE)
@@ -95,7 +95,7 @@ namespace anch {
        *
        * \throw SqlException any error
        */
-      virtual uint64_t executeUpdate() override;
+      virtual uint64_t doExecuteUpdate() override;
       // Methods -
 
     };

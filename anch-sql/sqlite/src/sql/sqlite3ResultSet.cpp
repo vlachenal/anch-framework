@@ -20,6 +20,7 @@
 #ifdef ANCH_SQL_SQLITE3
 
 #include "sql/sqlite3ResultSet.hpp"
+#include "sql/sqlite3Connection.hpp"
 
 #include "sqlite3.h"
 
@@ -56,7 +57,7 @@ SQLite3ResultSet::getValue(std::size_t idx, std::string& out) {
   bool null = true;
   const unsigned char* data = sqlite3_column_text(_stmt, static_cast<int>(idx));
   if(data != NULL) {
-    out = std::string(reinterpret_cast<const char*>(data));
+    out.assign(reinterpret_cast<const char*>(data), static_cast<std::size_t>(sqlite3_column_bytes(_stmt, static_cast<int>(idx))));
     null = false;
   }
   return null;
@@ -72,14 +73,17 @@ SQLite3ResultSet::getValue(std::size_t idx) {
   std::optional<std::string> res;
   const unsigned char* data = sqlite3_column_text(_stmt, static_cast<int>(idx));
   if(data != NULL) {
-    res = std::string(reinterpret_cast<const char*>(data));
+    res = std::string(reinterpret_cast<const char*>(data), static_cast<std::size_t>(sqlite3_column_bytes(_stmt, static_cast<int>(idx))));
   }
   return res;
 }
 
 bool
-SQLite3ResultSet::next() {
+SQLite3ResultSet::fetchNext() {
   int res = sqlite3_step(_stmt);
+  if(res != SQLITE_ROW && res != SQLITE_DONE) {
+    throw anch::sql::sqlite::error("Error while fetching row", sqlite3_db_handle(_stmt), res);
+  }
   bool hasMore = (res == SQLITE_ROW);
   if(hasMore && _fields.empty()) {
     _nbFields = sqlite3_column_count(_stmt);

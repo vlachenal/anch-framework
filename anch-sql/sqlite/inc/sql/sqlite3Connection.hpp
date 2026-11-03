@@ -28,6 +28,34 @@
 namespace anch {
   namespace sql {
 
+    namespace sqlite {
+
+      /*!
+       * Check if SQLite error invalidates the connection (I/O error, corrupted database, out of memory, ...)
+       *
+       * \param code the SQLite result code
+       *
+       * \return \c true for a fatal error, \c false otherwise
+       *
+       * \since 0.2
+       */
+      bool isFatal(int code) noexcept;
+
+      /*!
+       * Build SQL exception from SQLite error
+       *
+       * \param message the error context
+       * \param conn the SQLite connection
+       * \param code the SQLite result code
+       *
+       * \return the exception (not OK when error is fatal)
+       *
+       * \since 0.2
+       */
+      SqlException error(const std::string& message, sqlite3* conn, int code);
+
+    }
+
     /*!
      * \brief SQLite3 connection
      *

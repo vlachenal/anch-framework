@@ -20,13 +20,15 @@
 #ifdef ANCH_SQL_MYSQL
 
 #include "sql/mysqlResultSet.hpp"
+#include "sql/mysqlConnection.hpp"
 
 using anch::sql::MySQLResultSet;
 using anch::sql::ResultSet;
 
 
-MySQLResultSet::MySQLResultSet(MYSQL_RES* result) noexcept:
+MySQLResultSet::MySQLResultSet(MYSQL* conn, MYSQL_RES* result) noexcept:
   ResultSet(),
+  _conn(conn),
   _result(result),
   _row() {
   MYSQL_FIELD* field;
@@ -54,7 +56,7 @@ MySQLResultSet::getValue(std::size_t idx, std::string& out) {
   bool null = true;
   if(_row[idx] != NULL) {
     null = false;
-    out = _row[idx];
+    out.assign(_row[idx], mysql_fetch_lengths(_result)[idx]); // binary values can contain '\0'
   }
   return null;
 }
@@ -68,14 +70,17 @@ MySQLResultSet::getValue(std::size_t idx) {
   }
   std::optional<std::string> res;
   if(_row[idx] != NULL) {
-    res = _row[idx];
+    res = std::string(_row[idx], mysql_fetch_lengths(_result)[idx]);
   }
   return res;
 }
 
 bool
-MySQLResultSet::next() {
+MySQLResultSet::fetchNext() {
   _row = mysql_fetch_row(_result);
+  if(_row == NULL && mysql_errno(_conn) != 0) { // end of rows or error
+    throw anch::sql::mysql::error("Error while fetching MySQL row", mysql_errno(_conn), mysql_error(_conn));
+  }
   return (_row != NULL);
 }
 

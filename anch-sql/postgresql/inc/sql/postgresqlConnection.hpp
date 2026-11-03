@@ -24,10 +24,39 @@
 
 
 typedef struct pg_conn PGconn;
+typedef struct pg_result PGresult;
 
 
 namespace anch {
   namespace sql {
+
+    namespace postgresql {
+
+      /*!
+       * Number of rows affected by a command
+       *
+       * \param res the command result
+       *
+       * \return the number of rows (\c 0 when command has no row count)
+       *
+       * \since 0.2
+       */
+      uint64_t affectedRows(PGresult* res) noexcept;
+
+      /*!
+       * Build SQL exception from PostgreSQL error: it is fatal when the connection is broken (\c PQstatus )
+       *
+       * \param message the error context
+       * \param conn the PostgreSQL connection
+       * \param res the PostgreSQL result (its error message is used when not \c NULL ; it is cleared)
+       *
+       * \return the exception
+       *
+       * \since 0.2
+       */
+      SqlException error(const std::string& message, PGconn* conn, PGresult* res = NULL);
+
+    }
 
     /*!
      * \brief PostgreSQL connection
@@ -102,6 +131,13 @@ namespace anch {
        * \throw SqlException any error
        */
       virtual uint64_t executeUpdate(const std::string& query) override;
+
+      /*!
+       * Check PostgreSQL connection status (\c PQstatus )
+       *
+       * \return \c true when connection is \c CONNECTION_OK , \c false otherwise
+       */
+      virtual bool checkConnection() const noexcept override;
 
       /*!
        * Send commit to database server

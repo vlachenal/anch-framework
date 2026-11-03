@@ -49,20 +49,30 @@ SQLSharedLibraries::~SQLSharedLibraries() {
 // Methods +
 void
 SQLSharedLibraries::registerSQLLibrary(const std::string& db, const std::string& library) {
-  if(_libraries.find(db) == _libraries.end()) {
-    SQLSharedLibrary lib;
-    lib.layer = library;
-    void* layerLib = dlopen(library.data(), RTLD_NOW);
-    lib._layer = layerLib;
-    if(layerLib == NULL) {
-      _libraries[db] = lib;
-      std::ostringstream oss;
-      oss << "Can not open " << lib.layer << ": " << dlerror();
-      throw SqlException(oss.str());
-    }
-    lib.make_shared_connection = (std::shared_ptr<Connection> (*)(const SqlConnectionConfiguration&))dlsym(layerLib, "create_shared_connection");
-    lib.create = (Connection* (*)(const SqlConnectionConfiguration&))dlsym(layerLib, "create_connection");
+  if(_libraries.find(db) != _libraries.end()) {
+    return;
+  }
+  // The library is registered only once it has been loaded with its functions: a failed registration can be retried
+  void* layerLib = dlopen(library.data(), RTLD_NOW);
+  if(layerLib == NULL) {
+    std::ostringstream oss;
+    oss << "Can not open " << library << ": " << dlerror();
+    throw SqlException(oss.str());
+  }
+  SQLSharedLibrary lib;
+  lib.layer = library;
+  lib._layer = layerLib;
+  lib.make_shared_connection = reinterpret_cast<std::shared_ptr<Connection> (*)(const SqlConnectionConfiguration&)>(dlsym(layerLib, "create_shared_connection"));
+  lib.create = reinterpret_cast<Connection* (*)(const SqlConnectionConfiguration&)>(dlsym(layerLib, "create_connection"));
+  if(lib.make_shared_connection == NULL || lib.create == NULL) {
+    dlclose(layerLib);
+    throw SqlException(library + " is not an AnCH SQL driver (create_shared_connection or create_connection not found)");
+  }
+  try {
     _libraries[db] = lib;
+  } catch(...) {
+    dlclose(layerLib);
+    throw;
   }
 }
 

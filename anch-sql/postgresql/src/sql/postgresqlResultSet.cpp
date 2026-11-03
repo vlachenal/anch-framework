@@ -20,6 +20,7 @@
 #ifdef ANCH_SQL_POSTGRESQL
 
 #include "sql/postgresqlResultSet.hpp"
+#include "sql/postgresqlConnection.hpp"
 
 #include "libpq-fe.h"
 
@@ -81,7 +82,7 @@ PostgreSQLResultSet::getValue(std::size_t idx) {
 }
 
 bool
-PostgreSQLResultSet::next() {
+PostgreSQLResultSet::fetchNext() {
   bool hasMore = false;
   if(_currentRow + 1 < _nbRows) {
     ++_currentRow;
@@ -94,6 +95,16 @@ PostgreSQLResultSet::next() {
     _result = PQgetResult(_conn);
     hasMore = (_result != NULL);
     if(hasMore) {
+      ExecStatusType status = PQresultStatus(_result);
+      if(status != PGRES_TUPLES_OK && status != PGRES_SINGLE_TUPLE && status != PGRES_COMMAND_OK) {
+	PGresult* error = _result;
+	_result = NULL;
+	PGresult* next = NULL;
+	while((next = PQgetResult(_conn)) != NULL) { // connection can not be used until the last result has been read
+	  PQclear(next);
+	}
+	throw anch::sql::postgresql::error("Error while fetching PostgreSQL result", _conn, error);
+      }
       _currentRow = 0;
       _nbRows = PQntuples(_result);
       hasMore = (_nbRows > 0);

@@ -18,6 +18,7 @@
   along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "sql/resultSet.hpp"
+#include "sql/connection.hpp"
 
 #include "convert.hpp"
 
@@ -25,8 +26,16 @@
 using anch::sql::ResultSet;
 
 
-ResultSet::ResultSet() noexcept: _fields() {
+ResultSet::ResultSet() noexcept: _fields(), _connection(NULL) {
   // Nothing to do
+}
+
+bool
+ResultSet::next() {
+  if(_connection == NULL) {
+    return fetchNext();
+  }
+  return _connection->guard([this]() { return fetchNext(); });
 }
 
 ResultSet::~ResultSet() noexcept {

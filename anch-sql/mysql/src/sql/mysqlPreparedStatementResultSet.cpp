@@ -22,6 +22,10 @@
 #include "errmsg.h"
 
 #include "sql/mysqlPreparedStatementResultSet.hpp"
+#include "sql/mysqlConnection.hpp"
+
+#include <algorithm>
+#include <cstring>
 
 #include <string>
 #include <cstring>
@@ -32,89 +36,114 @@ using anch::sql::MySQLPreparedStatementResultSet;
 using anch::sql::ResultSet;
 
 
+namespace {
+
+  /*! Maximum size of a column buffer (longer values are read again with their real size) */
+  constexpr unsigned long MAX_BUFFER_SIZE = 4096;
+
+}
+
 MySQLPreparedStatementResultSet::MySQLPreparedStatementResultSet(MYSQL_STMT* stmt):
   ResultSet(),
-  _stmt(stmt) {
+  _stmt(stmt),
+  _buffers(),
+  _values(),
+  _lengths(),
+  _nulls(),
+  _errors(),
+  _binds() {
   MYSQL_RES* result = mysql_stmt_result_metadata(_stmt);
   if(result == NULL) {
-    unsigned int res = mysql_stmt_errno(_stmt);
-    bool ok = res != CR_OUT_OF_MEMORY;
-    std::ostringstream msg;
-    msg << "Fail to get MySQL statement result metadata " << res << ": " << mysql_stmt_error(_stmt);
-    throw SqlException(msg.str(), ok);
+    if(mysql_stmt_errno(_stmt) != 0) {
+      throw anch::sql::mysql::error("Fail to get MySQL statement result metadata", mysql_stmt_errno(_stmt), mysql_stmt_error(_stmt));
+    }
+    throw SqlException("MySQL statement does not return a result set", true);
   }
   unsigned int nbFields = mysql_num_fields(result);
-  _binds = new MYSQL_BIND[nbFields];
-  std::memset(_binds, 0, sizeof(*_binds) * nbFields);
-  _lengths = new long unsigned int[nbFields];
-  //_nulls = new char[nbFields];
-  _nulls = new my_bool[nbFields];
+  _buffers.resize(nbFields);
+  _values.resize(nbFields);
+  _lengths.assign(nbFields, 0);
+  _nulls.assign(nbFields, 0);
+  _errors.assign(nbFields, 0);
+  _binds.resize(nbFields);
+  std::memset(_binds.data(), 0, _binds.size() * sizeof(MYSQL_BIND));
   for(unsigned int i = 0 ; i < nbFields ; ++i) {
-    MYSQL_BIND* bind = &_binds[i];
     MYSQL_FIELD* field = mysql_fetch_field(result);
     _fields[field->name] = i;
-    bind->buffer_type = MYSQL_TYPE_STRING;
-    long unsigned int bufferSize = field->length + 1;
-    char* value = new char[bufferSize];
-    std::memset(value, 0, bufferSize);
-    bind->buffer = value;
-    bind->buffer_length = bufferSize;
-    bind->is_null = &_nulls[i];
-    bind->length = &_lengths[i];
-    bind->is_unsigned = field->flags & UNSIGNED_FLAG ? 1 : 0;
-  }
-  int res = mysql_stmt_bind_result(_stmt, _binds);
-  if(res != 0) {
-    bool ok = res != CR_OUT_OF_MEMORY;
-    std::ostringstream msg;
-    msg << "Fail to bind MySQL statement result " << mysql_stmt_errno(_stmt) << ": " << mysql_stmt_error(_stmt);
-    throw SqlException(msg.str(), ok);
+    _buffers[i].resize(std::min(static_cast<unsigned long>(field->length) + 1, MAX_BUFFER_SIZE));
+    MYSQL_BIND& bind = _binds[i];
+    bind.buffer_type = MYSQL_TYPE_STRING;
+    bind.buffer = _buffers[i].data();
+    bind.buffer_length = _buffers[i].size();
+    bind.is_null = &_nulls[i];
+    bind.length = &_lengths[i];
+    bind.error = &_errors[i];
+    bind.is_unsigned = field->flags & UNSIGNED_FLAG ? 1 : 0;
   }
   mysql_free_result(result);
+  if(mysql_stmt_bind_result(_stmt, _binds.data()) != 0) {
+    throw anch::sql::mysql::error("Fail to bind MySQL statement result", mysql_stmt_errno(_stmt), mysql_stmt_error(_stmt));
+  }
 }
 
 MySQLPreparedStatementResultSet::~MySQLPreparedStatementResultSet() noexcept {
-  delete[] _lengths;
-  delete[] _nulls;
-  for(std::size_t i = 0 ; i < _fields.size() ; ++i) {
-    MYSQL_BIND* bind = &_binds[i];
-    delete[] reinterpret_cast<char*>(bind->buffer);
-    bind->buffer = NULL;
-  }
-  delete[] _binds;
+  mysql_stmt_free_result(_stmt);
 }
 
 bool
 MySQLPreparedStatementResultSet::getValue(std::size_t idx, std::string& out) {
-  if(idx >= _fields.size()) {
+  if(idx >= _values.size()) {
     std::ostringstream msg;
-    msg << "Index out of range (0.." << (_fields.size() - 1) << "): " << idx;
+    msg << "Index out of range (0.." << (_values.size() - 1) << "): " << idx;
     throw SqlException(msg.str(), true);
   }
-  bool null = (_nulls[idx] != 0);
-  if(!null) {
-    out = std::string(static_cast<char*>(_binds[idx].buffer), _lengths[idx]);
+  if(!_values[idx].has_value()) {
+    return true;
   }
-  return null;
+  out = _values[idx].value();
+  return false;
 }
 
 std::optional<std::string>
 MySQLPreparedStatementResultSet::getValue(std::size_t idx) {
-  if(idx >= _fields.size()) {
+  if(idx >= _values.size()) {
     std::ostringstream msg;
-    msg << "Index out of range (0.." << (_fields.size() - 1) << "): " << idx;
+    msg << "Index out of range (0.." << (_values.size() - 1) << "): " << idx;
     throw SqlException(msg.str(), true);
   }
-  std::optional<std::string> res;
-  if(_nulls[idx] != 0) {
-    res = std::string(static_cast<char*>(_binds[idx].buffer), _lengths[idx]);
-  }
-  return res;
+  return _values[idx];
 }
 
 bool
-MySQLPreparedStatementResultSet::next() {
-  return (mysql_stmt_fetch(_stmt) == 0);
+MySQLPreparedStatementResultSet::fetchNext() {
+  int res = mysql_stmt_fetch(_stmt);
+  if(res == MYSQL_NO_DATA) {
+    return false;
+  }
+  if(res != 0 && res != MYSQL_DATA_TRUNCATED) {
+    throw anch::sql::mysql::error("Error while fetching MySQL statement row", mysql_stmt_errno(_stmt), mysql_stmt_error(_stmt));
+  }
+  for(std::size_t i = 0 ; i < _binds.size() ; ++i) {
+    if(_nulls[i] != 0) {
+      _values[i].reset();
+    } else if(_lengths[i] <= _buffers[i].size()) {
+      _values[i] = std::string(_buffers[i].data(), _lengths[i]);
+    } else { // truncated value: read it again with its real size
+      std::string value(_lengths[i], '\0');
+      unsigned long length = 0;
+      MYSQL_BIND bind;
+      std::memset(&bind, 0, sizeof(bind));
+      bind.buffer_type = MYSQL_TYPE_STRING;
+      bind.buffer = value.data();
+      bind.buffer_length = value.size();
+      bind.length = &length;
+      if(mysql_stmt_fetch_column(_stmt, &bind, static_cast<unsigned int>(i), 0) != 0) {
+	throw anch::sql::mysql::error("Error while fetching MySQL statement column", mysql_stmt_errno(_stmt), mysql_stmt_error(_stmt));
+      }
+      _values[i] = std::move(value);
+    }
+  }
+  return true;
 }
 
 const anch::date::DateFormatter&

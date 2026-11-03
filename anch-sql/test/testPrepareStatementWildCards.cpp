@@ -1,274 +1,129 @@
-#include "sql/preparedStatement.hpp"
+#include "sql/placeholders.hpp"
 
 #include <iostream>
-#include <sstream>
+#include <string>
+#include <vector>
 
 #include "ut/assert.hpp"
 #include "ut/unit.hpp"
 
-using anch::sql::SqlException;
-using anch::sql::ResultSet;
+using anch::sql::SqlSyntax;
+using anch::sql::findPlaceholders;
+using anch::sql::numberPlaceholders;
 
-class PrepareStatementMock: public anch::sql::PreparedStatement {
-
-public:
-  PrepareStatementMock(): anch::sql::PreparedStatement() {}
-  ~PrepareStatementMock() {}
-  virtual ResultSet* executeQuery() override {return NULL;}
-  virtual std::size_t executeUpdate() override {return 0;}
-  std::set<std::size_t> getPositions(const std::string& query) const {
-    return getPlaceholders(query);
+/*!
+ * Check placeholders positions
+ */
+void
+checkPositions(const std::string& query, const SqlSyntax& syntax, const std::vector<std::size_t>& expected) {
+  std::vector<std::size_t> pos = findPlaceholders(query, syntax);
+  std::string found;
+  for(std::size_t p : pos) {
+    found += std::to_string(p) + ' ';
   }
+  anch::ut::assertThat(pos == expected, "Query {} : found positions {}", query, found);
+}
 
-};
-
-
+/*!
+ * Check placeholders count and PostgreSQL numbering
+ */
 void
-beforeAll() {
-  std::cout << "Enter in prepared statement placeholders unit tests" << std::endl;
+checkNumbered(const std::string& query, const SqlSyntax& syntax, const std::string& expected) {
+  std::string numbered = numberPlaceholders(query, findPlaceholders(query, syntax));
+  anch::ut::assertThat(numbered == expected, "Query {} : numbered as {} instead of {}", query, numbered, expected);
 }
 
 void
-afterAll() {
-  std::cout << "Exit prepared statement placeholders unit tests" << std::endl;
+testLegacy() {
+  // Cases of the previous implementation (backslash escapes: MySQL syntax)
+  checkPositions("SELECT * FROM toto WHERE a = ? AND b = ?", SqlSyntax::STANDARD, {29, 39});
+  checkPositions("SELECT * FROM toto WHERE a = ? AND b = ? AND c = 'tata'", SqlSyntax::STANDARD, {29, 39});
+  checkPositions("SELECT * FROM toto WHERE a = ? AND c = 'tata' AND b = ?", SqlSyntax::STANDARD, {29, 54});
+  checkPositions("SELECT * FROM toto WHERE a = ? AND c = 'ta''ta' AND b = ?", SqlSyntax::STANDARD, {29, 56});
+  checkPositions("SELECT * FROM toto WHERE a = ? AND c = 'ta\\'ta' AND b = ?", SqlSyntax::MYSQL, {29, 56});
+  checkPositions("SELECT * FROM toto WHERE a = ? AND c = 'tata''' AND b = ?", SqlSyntax::STANDARD, {29, 56});
+  checkPositions("SELECT * FROM toto WHERE a = ? AND c = '''tata' AND b = ?", SqlSyntax::STANDARD, {29, 56});
+  checkPositions("INSERT INTO toto (a,b) VALUES (?,?)", SqlSyntax::STANDARD, {31, 33});
+  checkPositions("INSERT INTO toto (a,b,c) VALUES (?,'tata',?)", SqlSyntax::STANDARD, {33, 42});
+  checkPositions("INSERT INTO toto (a,b,c) VALUES (?,'ta''ta',?)", SqlSyntax::STANDARD, {33, 44});
+  checkPositions("INSERT INTO toto (a,b,c) VALUES (?,'ta\\'ta',?)", SqlSyntax::MYSQL, {33, 44});
+  checkPositions("INSERT INTO toto (a,b,c) VALUES (?,'tata''',?)", SqlSyntax::STANDARD, {33, 44});
+  checkPositions("INSERT INTO toto (a,b,c) VALUES (?,'''tata',?)", SqlSyntax::STANDARD, {33, 44});
+  checkPositions("INSERT INTO toto (a,b,c) VALUES (?,'ta(ta',?)", SqlSyntax::STANDARD, {33, 43});
+  checkPositions("INSERT INTO toto (a,b,c) VALUES (?,'ta)ta',?)", SqlSyntax::STANDARD, {33, 43});
+  checkPositions("SELECT * FROM toto WHERE a IN (?, ?, ?) AND c = '''tata' AND b = ?", SqlSyntax::STANDARD, {31, 34, 37, 65});
+  checkPositions("SELECT * FROM toto WHERE a IN (?, ''''tata'', ?) AND c = '''tata' AND b = ?", SqlSyntax::STANDARD, {31, 46, 74});
 }
 
 void
-test2WC() {
-  std::cout << "Check query: SELECT * FROM toto WHERE a = ? AND b = ?" << std::endl;
-  PrepareStatementMock stmt;
-  std::set<std::size_t> expPos = {29,39};
-  std::set<std::size_t> pos = stmt.getPositions("SELECT * FROM toto WHERE a = ? AND b = ?");
-  anch::ut::assertTrue(pos.size() == 2, "Should found 2 placehodlers");
-  anch::ut::assertTrue(expPos == pos, "Bad positions");
-  std::cout << "Query: SELECT * FROM toto WHERE a = ? AND b = ? has been correctly parsed" << std::endl;
+testOperators() {
+  // Placeholders were only found after '=' or in parentheses: builder clauses were not parsed
+  checkNumbered("SELECT * FROM t WHERE a <> ? AND b > ? AND c < ? AND d >= ? AND e <= ? AND f LIKE ? AND g NOT LIKE ? AND h BETWEEN ? AND ? LIMIT ? OFFSET ?",
+		SqlSyntax::POSTGRESQL,
+		"SELECT * FROM t WHERE a <> $1 AND b > $2 AND c < $3 AND d >= $4 AND e <= $5 AND f LIKE $6 AND g NOT LIKE $7 AND h BETWEEN $8 AND $9 LIMIT $10 OFFSET $11");
+  checkNumbered("UPDATE t SET a = ?, b = COALESCE(?, b) + ? WHERE c IN (SELECT d FROM u WHERE e = ?)", SqlSyntax::POSTGRESQL,
+		"UPDATE t SET a = $1, b = COALESCE($2, b) + $3 WHERE c IN (SELECT d FROM u WHERE e = $4)");
+  checkNumbered("SELECT CASE WHEN ? THEN 1 END, ?::int", SqlSyntax::POSTGRESQL, "SELECT CASE WHEN $1 THEN 1 END, $2::int");
 }
 
 void
-test2WC1F() {
-  std::cout << "Check query: SELECT * FROM toto WHERE a = ? AND b = ? AND c = 'tata'" << std::endl;
-  PrepareStatementMock stmt;
-  std::set<std::size_t> expPos = {29,39};
-  std::set<std::size_t> pos = stmt.getPositions("SELECT * FROM toto WHERE a = ? AND b = ? AND c = 'tata'");
-  anch::ut::assertTrue(pos.size() == 2, "Should found 2 placehodlers");
-  anch::ut::assertTrue(expPos == pos, "Bad positions");
-  std::cout << "Query: SELECT * FROM toto WHERE a = ? AND b = ? AND c = 'tata' has been correctly parsed" << std::endl;
+testComments() {
+  checkNumbered("SELECT a -- b = ?\nFROM t WHERE c = ? /* d = ? */", SqlSyntax::POSTGRESQL, "SELECT a -- b = ?\nFROM t WHERE c = $1 /* d = ? */");
+  // PostgreSQL block comments are nested
+  checkNumbered("SELECT /* a /* ? */ ? */ ?", SqlSyntax::POSTGRESQL, "SELECT /* a /* ? */ ? */ $1");
+  checkPositions("SELECT /* a /* ? */ ? */ ?", SqlSyntax::STANDARD, {20, 25});
+  // MySQL: '#' comment, '--' only followed by a space
+  checkPositions("SELECT a--1, ? # ?\n, ? -- ?", SqlSyntax::MYSQL, {13, 21});
+  checkPositions("SELECT a -- ?", SqlSyntax::POSTGRESQL, {});
 }
 
 void
-test1WC1F1WC() {
-  std::cout << "Check query: SELECT * FROM toto WHERE a = ? AND c = 'tata' AND b = ?" << std::endl;
-  PrepareStatementMock stmt;
-  std::set<std::size_t> expPos = {29,54};
-  std::set<std::size_t> pos = stmt.getPositions("SELECT * FROM toto WHERE a = ? AND c = 'tata' AND b = ?");
-  anch::ut::assertTrue(pos.size() == 2, "Should found 2 placehodlers");
-  anch::ut::assertTrue(expPos == pos, "Bad positions");
-  std::cout << "Query: SELECT * FROM toto WHERE a = ? AND c = 'tata' AND b = ? has been correctly parsed" << std::endl;
+testQuotedIdentifiers() {
+  checkPositions("SELECT \"a?\", \"b\"\"?\" FROM t WHERE c = ?", SqlSyntax::POSTGRESQL, {37});
+  checkPositions("SELECT `a?`, [b?] FROM t WHERE c = ?", SqlSyntax::SQLITE, {35});
+  // MySQL: double quotes delimit strings with backslash escapes
+  checkPositions("SELECT * FROM t WHERE a = \"x\\\"?\" AND b = ?", SqlSyntax::MYSQL, {41});
 }
 
 void
-test1WC1Fquote1WC() {
-  std::cout << "Check query: SELECT * FROM toto WHERE a = ? AND c = 'ta''ta' AND b = ?" << std::endl;
-  PrepareStatementMock stmt;
-  std::set<std::size_t> expPos = {29,56};
-  std::set<std::size_t> pos = stmt.getPositions("SELECT * FROM toto WHERE a = ? AND c = 'ta''ta' AND b = ?");
-  anch::ut::assertTrue(pos.size() == 2, "Should found 2 placehodlers");
-  anch::ut::assertTrue(expPos == pos, "Bad positions");
-  std::cout << "Query: SELECT * FROM toto WHERE a = ? AND c = 'ta''ta' AND b = ? has been correctly parsed" << std::endl;
+testBackslash() {
+  // Backslash is not an escape character in standard strings (PostgreSQL, SQLite): 'x\' is a complete literal
+  checkPositions("SELECT * FROM t WHERE a = 'x\\' AND b = ?", SqlSyntax::POSTGRESQL, {39});
+  checkPositions("SELECT * FROM t WHERE a = 'x\\' AND b = ?", SqlSyntax::SQLITE, {39});
+  // MySQL: the literal is not terminated, the rest of the query is hidden
+  checkPositions("SELECT * FROM t WHERE a = 'x\\' AND b = ?", SqlSyntax::MYSQL, {});
+  // PostgreSQL escape strings
+  checkPositions("SELECT * FROM t WHERE a = E'x\\' ?' AND b = ?", SqlSyntax::POSTGRESQL, {43});
+  checkPositions("SELECT * FROM t WHERE a = e'x\\\\' AND b = ?", SqlSyntax::POSTGRESQL, {41});
 }
 
 void
-test1WC1Fbslash1WC() {
-  std::cout << "Check query: SELECT * FROM toto WHERE a = ? AND c = 'ta\\'ta' AND b = ?" << std::endl;
-  PrepareStatementMock stmt;
-  std::set<std::size_t> expPos = {29,56};
-  std::set<std::size_t> pos = stmt.getPositions("SELECT * FROM toto WHERE a = ? AND c = 'ta\\'ta' AND b = ?");
-  anch::ut::assertTrue(pos.size() == 2, "Should found 2 placehodlers");
-  anch::ut::assertTrue(expPos == pos, "Bad positions");
-  std::cout << "Query: SELECT * FROM toto WHERE a = ? AND c = 'ta\\'ta' AND b = ? has been correctly parsed" << std::endl;
+testDollarQuotes() {
+  checkNumbered("SELECT $$ ? $$, $tag$ it's ? $tag$, $1, a$b, ? FROM t WHERE c = ?", SqlSyntax::POSTGRESQL,
+		"SELECT $$ ? $$, $tag$ it's ? $tag$, $1, a$b, $1 FROM t WHERE c = $2");
+  // Dollar quotes are not delimiters for other dialects
+  checkPositions("SELECT $$ ? $$", SqlSyntax::STANDARD, {10});
 }
 
 void
-test1WC1Fquoteafter1WC() {
-  std::cout << "Check query: SELECT * FROM toto WHERE a = ? AND c = 'tata''' AND b = ?" << std::endl;
-  PrepareStatementMock stmt;
-  std::set<std::size_t> expPos = {29,56};
-  std::set<std::size_t> pos = stmt.getPositions("SELECT * FROM toto WHERE a = ? AND c = 'tata''' AND b = ?");
-  anch::ut::assertTrue(pos.size() == 2, "Should found 2 placehodlers");
-  anch::ut::assertTrue(expPos == pos, "Bad positions");
-  std::cout << "Query: SELECT * FROM toto WHERE a = ? AND c = 'tata''' AND b = ? has been correctly parsed" << std::endl;
-}
-
-void
-test1WC1Fquotebefore1WC() {
-  std::cout << "Check query: SELECT * FROM toto WHERE a = ? AND c = '''tata' AND b = ?" << std::endl;
-  PrepareStatementMock stmt;
-  std::set<std::size_t> expPos = {29,56};
-  std::set<std::size_t> pos = stmt.getPositions("SELECT * FROM toto WHERE a = ? AND c = '''tata' AND b = ?");
-  anch::ut::assertTrue(pos.size() == 2, "Should found 2 placehodlers");
-  anch::ut::assertTrue(expPos == pos, "Bad positions");
-  std::cout << "Query: SELECT * FROM toto WHERE a = ? AND c = '''tata' AND b = ? has been correctly parsed" << std::endl;
-}
-
-void
-testIns2WC() {
-  std::cout << "Check query: INSERT INTO toto (a,b) VALUES (?,?)" << std::endl;
-  PrepareStatementMock stmt;
-  std::set<std::size_t> expPos = {31,33};
-  std::set<std::size_t> pos = stmt.getPositions("INSERT INTO toto (a,b) VALUES (?,?)");
-  anch::ut::assertTrue(pos.size() == 2, "Should found 2 placehodlers");
-  anch::ut::assertTrue(expPos == pos, "Bad positions");
-  std::cout << "Query: INSERT INTO toto (a,b) VALUES (?,?) has been correctly parsed" << std::endl;
-}
-
-void
-testIns1WC1F1WC() {
-  std::cout << "Check query: INSERT INTO toto (a,b,c) VALUES (?,'tata',?)" << std::endl;
-  PrepareStatementMock stmt;
-  std::set<std::size_t> expPos = {33,42};
-  std::set<std::size_t> pos = stmt.getPositions("INSERT INTO toto (a,b,c) VALUES (?,'tata',?)");
-  anch::ut::assertTrue(pos.size() == 2, "Should found 2 placehodlers");
-  anch::ut::assertTrue(expPos == pos, "Bad positions");
-  std::cout << "Query: INSERT INTO toto (a,b,c) VALUES (?,'tata',?) has been correctly parsed" << std::endl;
-}
-
-void
-testIns1WC1Fquote1WC() {
-  std::cout << "Check query: INSERT INTO toto (a,b,c) VALUES (?,'ta''ta',?)" << std::endl;
-  PrepareStatementMock stmt;
-  std::set<std::size_t> expPos = {33,44};
-  std::set<std::size_t> pos = stmt.getPositions("INSERT INTO toto (a,b,c) VALUES (?,'ta''ta',?)");
-  anch::ut::assertTrue(pos.size() == 2, "Should found 2 placehodlers");
-  anch::ut::assertTrue(expPos == pos, "Bad positions");
-  std::cout << "Query: INSERT INTO toto (a,b,c) VALUES (?,'ta''ta',?) has been correctly parsed" << std::endl;
-}
-
-void
-testIns1WC1Fbslash1WC() {
-  std::cout << "Check query: INSERT INTO toto (a,b,c) VALUES (?,'ta\\'ta',?)" << std::endl;
-  PrepareStatementMock stmt;
-  std::set<std::size_t> expPos = {33,44};
-  std::set<std::size_t> pos = stmt.getPositions("INSERT INTO toto (a,b,c) VALUES (?,'ta\\'ta',?)");
-  anch::ut::assertTrue(pos.size() == 2, "Should found 2 placehodlers");
-  anch::ut::assertTrue(expPos == pos, "Bad positions");
-  std::cout << "Query: INSERT INTO toto (a,b,c) VALUES (?,'ta\\'ta',?) has been correctly parsed" << std::endl;
-}
-
-void
-testIns1WC1Fquoteafter1WC() {
-  std::cout << "Check query: INSERT INTO toto (a,b,c) VALUES (?,'tata''',?)" << std::endl;
-  PrepareStatementMock stmt;
-  std::set<std::size_t> expPos = {33,44};
-  std::set<std::size_t> pos = stmt.getPositions("INSERT INTO toto (a,b,c) VALUES (?,'tata''',?)");
-  anch::ut::assertTrue(pos.size() == 2, "Should found 2 placehodlers");
-  anch::ut::assertTrue(expPos == pos, "Bad positions");
-  std::cout << "Query: INSERT INTO toto (a,b,c) VALUES (?,'tata''',?) has been correctly parsed" << std::endl;
-}
-
-void
-testIns1WC1Fquotebefore1WC() {
-  std::cout << "Check query: INSERT INTO toto (a,b,c) VALUES (?,'''tata',?)" << std::endl;
-  PrepareStatementMock stmt;
-  std::set<std::size_t> expPos = {33,44};
-  std::set<std::size_t> pos = stmt.getPositions("INSERT INTO toto (a,b,c) VALUES (?,'''tata',?)");
-  anch::ut::assertTrue(pos.size() == 2, "Should found 2 placehodlers");
-  anch::ut::assertTrue(expPos == pos, "Bad positions");
-  std::cout << "Query: INSERT INTO toto (a,b,c) VALUES (?,'''tata',?) has been correctly parsed" << std::endl;
-}
-
-void
-testIns1WC1Frobracket1WC() {
-  std::cout << "Check query: INSERT INTO toto (a,b,c) VALUES (?,'ta(ta',?)" << std::endl;
-  PrepareStatementMock stmt;
-  std::set<std::size_t> expPos = {33,43};
-  std::set<std::size_t> pos = stmt.getPositions("INSERT INTO toto (a,b,c) VALUES (?,'ta(ta',?)");
-  anch::ut::assertTrue(pos.size() == 2, "Should found 2 placehodlers");
-  anch::ut::assertTrue(expPos == pos, "Bad positions");
-  std::cout << "Query: INSERT INTO toto (a,b,c) VALUES (?,'ta(ta',?) has been correctly parsed" << std::endl;
-}
-
-void
-testIns1WC1Frcbracket1WC() {
-  std::cout << "Check query: INSERT INTO toto (a,b,c) VALUES (?,'ta)ta',?)" << std::endl;
-  PrepareStatementMock stmt;
-  std::set<std::size_t> expPos = {33,43};
-  std::set<std::size_t> pos = stmt.getPositions("INSERT INTO toto (a,b,c) VALUES (?,'ta)ta',?)");
-  anch::ut::assertTrue(pos.size() == 2, "Should found 2 placehodlers");
-  anch::ut::assertTrue(expPos == pos, "Bad positions");
-  std::cout << "Query: INSERT INTO toto (a,b,c) VALUES (?,'ta)ta',?) has been correctly parsed" << std::endl;
-}
-
-void
-testIn() {
-  std::cout << "Check query: SELECT * FROM toto WHERE a IN (?, ?, ?) AND c = '''tata' AND b = ?" << std::endl;
-  PrepareStatementMock stmt;
-  std::set<std::size_t> expPos = {31,34,37,65};
-  std::set<std::size_t> pos = stmt.getPositions("SELECT * FROM toto WHERE a IN (?, ?, ?) AND c = '''tata' AND b = ?");
-  anch::ut::assertTrue(pos.size() == 4, "Should found 4 placehodlers");
-  anch::ut::assertTrue(expPos == pos, "Bad positions");
-  std::cout << "Query: SELECT * FROM toto WHERE a IN (?, ?, ?) AND c = '''tata' AND b = ? has been correctly parsed" << std::endl;
-}
-
-void
-testIn1F() {
-  std::cout << "Check query: SELECT * FROM toto WHERE a IN (?, ''''tata'', ?) AND c = '''tata' AND b = ?" << std::endl;
-  PrepareStatementMock stmt;
-  std::set<std::size_t> expPos = {31,46,74};
-  std::set<std::size_t> pos = stmt.getPositions("SELECT * FROM toto WHERE a IN (?, ''''tata'', ?) AND c = '''tata' AND b = ?");
-  anch::ut::assertTrue(pos.size() == 3, "Should found 3 placehodlers");
-  anch::ut::assertTrue(expPos == pos, "Bad positions");
-  std::cout << "Query: SELECT * FROM toto WHERE a IN (?, ''''tata'', ?) AND c = '''tata' AND b = ? has been correctly parsed" << std::endl;
-}
-
-void
-testPostgres() {
-  std::cout << "Check PostgreSQL placeholders replacement" << std::endl;
-  std::string query = "SELECT * FROM toto WHERE a IN (?, ''''tata'', ?) AND c = '''tata' AND b = ? AND d = 'titi'";
-  PrepareStatementMock stmt;
-  std::set<std::size_t> pos = stmt.getPositions(query);
-  std::size_t offset = 0;
-  std::ostringstream oss;
-  std::size_t idx = 0;
-  for(auto iter = pos.cbegin() ; iter != pos.cend() ; ++iter) {
-    oss << query.substr(offset, *iter - offset) << '$' << ++idx;
-    offset = *iter + 1;
-  }
-  if(offset < query.length()) {
-    oss << query.substr(offset);
-  }
-  std::string pgQuery = oss.str();
-  if(pgQuery != "SELECT * FROM toto WHERE a IN ($1, ''''tata'', $2) AND c = '''tata' AND b = $3 AND d = 'titi'") {
-    std::ostringstream oss;
-    oss << "Invalid PostgreSQL replacement. Found " << pgQuery << " instead of SELECT * FROM toto WHERE a IN ($1, ''''tata'', $2) AND c = '''tata' AND b = $3 AND d = 'titi'";
-    anch::ut::fail(oss.str());
-  }
-  std::cout << "PostgreSQL prepared statement query will be: " << pgQuery << std::endl;
+testUnterminated() {
+  checkPositions("SELECT ? FROM t WHERE a = 'unterminated ?", SqlSyntax::STANDARD, {7});
+  checkPositions("SELECT ? /* unterminated ?", SqlSyntax::POSTGRESQL, {7});
+  checkPositions("", SqlSyntax::POSTGRESQL, {});
+  checkNumbered("?", SqlSyntax::POSTGRESQL, "$1");
 }
 
 void
 anch::ut::setup(anch::ut::UnitTests& tests) {
   tests
-    .name("AnCH prepared statement wildcards unit tests")
-    .description("Test AnCH prepared statement wildcards library")
-    .initialize(beforeAll)
-    .uninitialize(afterAll)
-    .add("select-2-wildcards", test2WC)
-    .add("select-2-wildcards-1-fixed", test2WC1F)
-    .add("select-1-wildcard-1-fixed-1-wildcard", test1WC1F1WC)
-    .add("select-1-wildcard-1-fixed-quote-1-wildcard", test1WC1Fquote1WC)
-    .add("select-1-wildcard-1-fixed-backslash-1-wildcard", test1WC1Fbslash1WC)
-    .add("select-1-wildcard-1-fixed-quoteafter-1-wildcard", test1WC1Fquoteafter1WC)
-    .add("select-1-wildcard-1-fixed-quotebefore-1-wildcard", test1WC1Fquotebefore1WC)
-    .add("insert-2-wildcards", testIns2WC)
-    .add("insert-1-wildcard-1fixed-1-wildcard", testIns1WC1F1WC)
-    .add("insert-1-wildcard-1fixed-quote-1-wildcard", testIns1WC1Fquote1WC)
-    .add("insert-1-wildcard-1fixed-backslash-1-wildcard", testIns1WC1Fbslash1WC)
-    .add("insert-1-wildcard-1fixed-quoteafter-1-wildcard", testIns1WC1Fquoteafter1WC)
-    .add("insert-1-wildcard-1fixed-quotebefore-1-wildcard", testIns1WC1Fquotebefore1WC)
-    .add("insert-1-wildcard-1fixed-robracket-1-wildcard", testIns1WC1Frobracket1WC)
-    .add("insert-1-wildcard-1fixed-rcbracket-1-wildcard", testIns1WC1Frcbracket1WC)
-    .add("select-in", testIn)
-    .add("select-in-1F", testIn1F)
-    .add("select-postgres", testPostgres)
+    .name("AnCH SQL placeholders unit tests")
+    .description("Test '?' placeholders scanner of prepared statements")
+    .add("legacy", testLegacy)
+    .add("operators", testOperators)
+    .add("comments", testComments)
+    .add("quoted-identifiers", testQuotedIdentifiers)
+    .add("backslash", testBackslash)
+    .add("dollar-quotes", testDollarQuotes)
+    .add("unterminated", testUnterminated)
     ;
 }

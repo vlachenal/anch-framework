@@ -5,6 +5,7 @@
 #include <list>
 
 #include "ut/assert.hpp"
+#include "commonTests.hpp"
 #include "ut/unit.hpp"
 
 using anch::sql::Connection;
@@ -431,6 +432,39 @@ testTransaction() {
 }
 
 void
+testOperators() {
+  testStmtOperators(*dbCon);
+}
+
+void
+testNull() {
+  testStmtNull(*dbCon);
+}
+
+void
+testSqlError() {
+  testSqlErrorKeepsConnection(*dbCon);
+}
+
+void
+testFatal() {
+  MySQLConnection conn({
+      .driver = "",
+      .database = "anch_test",
+      .hostname = "localhost",
+      .port = 3306,
+      .user = "anch",
+      .password = "anch",
+      .application = "mysql"
+    });
+  testFatalError(conn, [](Connection& c) {
+    std::string id;
+    c.queryMapRow("SELECT CONNECTION_ID()", [&id](ResultSet& res) { id = res.get<std::string>(0).value_or(""); });
+    c.update("KILL " + id);
+  });
+}
+
+void
 anch::ut::setup(anch::ut::UnitTests& tests) {
   tests
     .name("AnCH MySQL unit tests")
@@ -448,5 +482,9 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("08-insert-stmt", testStmtInsert)
     .add("09-update-stmt", testStmtUpdate)
     .add("10-transactions", testTransaction)
+    .add("11-stmt-operators", testOperators)
+    .add("12-stmt-null", testNull)
+    .add("13-sql-error", testSqlError)
+    .add("14-fatal-error", testFatal)
     ;
 }

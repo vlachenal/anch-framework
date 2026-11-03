@@ -21,6 +21,8 @@
 
 #include "sql/postgresqlPreparedStatement.hpp"
 #include "sql/postgresqlResultSet.hpp"
+#include "sql/postgresqlConnection.hpp"
+#include "sql/placeholders.hpp"
 
 #include <sstream>
 
@@ -37,39 +39,28 @@ std::atomic<std::uint64_t> PostgreSQLPreparedStatement::_counter(0);
 
 // Constructors +
 PostgreSQLPreparedStatement::PostgreSQLPreparedStatement(PGconn* dbCon, const std::string& query): PreparedStatement(), _conn(dbCon) {
-  std::set<std::size_t> pos = getPlaceholders(query);
-  _nbPlaceholders = pos.size();
-  std::size_t offset = 0;
-  std::ostringstream oss;
-  std::size_t idx = 0;
-  for(auto iter = pos.cbegin() ; iter != pos.cend() ; ++iter) {
-    oss << query.substr(offset, *iter - offset) << '$' << ++idx;
-    offset = *iter + 1;
-  }
-  if(offset < query.length()) {
-    oss << query.substr(offset);
-  }
-  std::string pgQuery = oss.str();
-  std::ostringstream ids;
-  ids << std::addressof(dbCon) << '_' << _counter.fetch_add(1);
-  _stmtId = ids.str();
-  PGresult* res = PQprepare(dbCon, _stmtId.data(), pgQuery.data(), static_cast<int>(_nbPlaceholders), NULL);
-  int retCode = PQresultStatus(res);
-  if(res == NULL || retCode != PGRES_COMMAND_OK) {
-    std::ostringstream msg;
-    msg << "Fail to prepare PostgreSQL statement: " << PQerrorMessage(dbCon);
-    if(res != NULL) {
-      PQclear(res);
-    }
-    throw SqlException(msg.str(), retCode != PGRES_FATAL_ERROR);
+  // PostgreSQL uses numbered placeholders: '?' (outside literals, quoted identifiers and comments) are replaced by $n
+  std::string pgQuery = anch::sql::numberPlaceholders(query, anch::sql::findPlaceholders(query, anch::sql::SqlSyntax::POSTGRESQL));
+  _stmtId = "anch_stmt_" + std::to_string(_counter.fetch_add(1));
+  PGresult* res = PQprepare(dbCon, _stmtId.data(), pgQuery.data(), 0, NULL); // parameter types are inferred
+  if(PQresultStatus(res) != PGRES_COMMAND_OK) {
+    throw anch::sql::postgresql::error("Fail to prepare PostgreSQL statement " + pgQuery, _conn, res);
   }
   PQclear(res);
+  // Number of parameters is given by the server +
+  res = PQdescribePrepared(dbCon, _stmtId.data());
+  if(PQresultStatus(res) != PGRES_COMMAND_OK) {
+    throw anch::sql::postgresql::error("Fail to describe PostgreSQL statement " + pgQuery, _conn, res);
+  }
+  setParameterCount(static_cast<std::size_t>(PQnparams(res)));
+  PQclear(res);
+  // Number of parameters is given by the server -
 }
 // Constructors -
 
 // Destructor +
 PostgreSQLPreparedStatement::~PostgreSQLPreparedStatement() noexcept {
-  // Nothing to do
+  // Server side statement is deallocated with the session (connection may already be closed here)
 }
 // Destructor -
 
@@ -79,71 +70,49 @@ PostgreSQLPreparedStatement::~PostgreSQLPreparedStatement() noexcept {
  *
  * \param conn the PostgreSQL connection
  * \param stmtId the prepared statement identifier
- * \param nbPlaceholders the number of placeholders in query
- * \param paramValues the values to bind
+ * \param paramValues the values to bind (\c std::nullopt for \c NULL )
  *
  * \throw SqlException any error
  */
-void
-bindParamsAndSend(PGconn* conn,
-		  const std::string& stmtId,
-		  std::size_t nbPlaceholders,
-		  const std::map<std::size_t,std::string>& paramValues) {
-  // Bind parameters +
-  const char** values = new const char*[nbPlaceholders];
-  int* lengths = new int[nbPlaceholders];
-  std::size_t idx = 0;
-  for(auto iter = paramValues.cbegin() ; iter != paramValues.cend() ; ++iter) {
-    lengths[idx] = static_cast<int>(iter->second.length());
-    values[idx] = iter->second.data();
-    ++idx;
+static void
+bindParamsAndSend(PGconn* conn, const std::string& stmtId, const std::vector<std::optional<std::string>>& paramValues) {
+  std::vector<const char*> values(paramValues.size(), NULL);
+  std::vector<int> lengths(paramValues.size(), 0);
+  for(std::size_t i = 0 ; i < paramValues.size() ; ++i) {
+    if(paramValues[i].has_value()) {
+      values[i] = paramValues[i]->data();
+      lengths[i] = static_cast<int>(paramValues[i]->size());
+    }
   }
-  // Bind parameters -
-  // Execute statement +
-  int res = PQsendQueryPrepared(conn, stmtId.data(), static_cast<int>(nbPlaceholders), values, lengths, NULL, 0);
-  if(res == 0) {
-    bool valid = (PQstatus(conn) == CONNECTION_OK);
-    delete[] values;
-    delete[] lengths;
-    std::ostringstream msg;
-    msg << "Fail to execute PostgreSQL statement: " << PQerrorMessage(conn);
-    throw SqlException(msg.str(), valid);
+  if(PQsendQueryPrepared(conn, stmtId.data(), static_cast<int>(values.size()), values.data(), lengths.data(), NULL, 0) == 0) {
+    throw anch::sql::postgresql::error("Fail to execute PostgreSQL statement", conn);
   }
-  delete[] values;
-  delete[] lengths;
-  // Execute statement -
 }
 // Functions -
 
 // Methods +
 ResultSet*
-PostgreSQLPreparedStatement::executeQuery() {
-  bindParamsAndSend(_conn, _stmtId, _nbPlaceholders, _values);
+PostgreSQLPreparedStatement::doExecuteQuery() {
+  bindParamsAndSend(_conn, _stmtId, _values);
   return new PostgreSQLResultSet(_conn);
 }
 
 uint64_t
-PostgreSQLPreparedStatement::executeUpdate() {
-  bindParamsAndSend(_conn, _stmtId, _nbPlaceholders, _values);
-  PGresult* pgRes = PQgetResult(_conn);
-  int retCode = PQresultStatus(pgRes);
-  if(pgRes == NULL || retCode != PGRES_COMMAND_OK) {
-    std::ostringstream msg;
-    msg << "Error while executing PostgreSQL command: " << PQerrorMessage(_conn);
-    PQclear(pgRes);
-    throw SqlException(msg.str(), retCode != PGRES_FATAL_ERROR);
+PostgreSQLPreparedStatement::doExecuteUpdate() {
+  bindParamsAndSend(_conn, _stmtId, _values);
+  // Read every result (the connection can not be used until the last one has been read) +
+  PGresult* res = PQgetResult(_conn);
+  PGresult* next = NULL;
+  while((next = PQgetResult(_conn)) != NULL) { // should not happen for a single command
+    PQclear(next);
   }
-  uint64_t nbRows = static_cast<uint64_t>(std::atoll(PQcmdTuples(pgRes)));
-  PQclear(pgRes);
-  // Consume next result to avoid error ... +
-  if((pgRes = PQgetResult(_conn)) != NULL) { // Should not happen
-    PQclear(pgRes);
-    while((pgRes = PQgetResult(_conn)) != NULL) {
-      PQclear(pgRes); // free PostgreSQL result
-    }
-    throw SqlException("Error: next result should be NULL ...", true);
+  // Read every result (the connection can not be used until the last one has been read) -
+  ExecStatusType status = PQresultStatus(res);
+  if(status != PGRES_COMMAND_OK && status != PGRES_TUPLES_OK) {
+    throw anch::sql::postgresql::error("Error while executing PostgreSQL command", _conn, res);
   }
-  // Consume next result to avoid error ... -
+  uint64_t nbRows = anch::sql::postgresql::affectedRows(res);
+  PQclear(res);
   return nbRows;
 }
 // Methods -

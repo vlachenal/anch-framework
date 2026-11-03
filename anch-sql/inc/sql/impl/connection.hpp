@@ -26,6 +26,17 @@ namespace anch::sql {
     startTransaction();
   }
 
+  template<typename F>
+  auto
+  Connection::guard(F&& func) -> decltype(func()) {
+    try {
+      return func();
+    } catch(const SqlException& e) {
+      onError(e);
+      throw;
+    }
+  }
+
   template<typename T, typename... Q>
   ResultSet*
   Connection::query(const std::string& query, const T& value, const Q&... values) {
@@ -92,7 +103,7 @@ namespace anch::sql {
   inline
   bool
   Connection::isValid() const noexcept {
-    return _valid;
+    return _valid && checkConnection();
   }
 
   inline

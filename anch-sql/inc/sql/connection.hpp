@@ -62,13 +62,22 @@ namespace anch::sql {
   /*!
    * \brief SQL connection virtual class
    *
-   * Abstract layer for SQL connections management.
+   * Abstract layer for SQL connections management.\n
+   * \n
+   * Errors: every \ref SqlException raised by the connection, its prepared statements and its result sets is
+   * reported to the connection. A fatal error (\ref SqlException::isOK is \c false : connection lost, out of memory,
+   * protocol error, ...) invalidates the connection: \ref isValid returns \c false and connection pools destroy it
+   * instead of reusing it. Other errors (syntax, constraint, ...) keep the connection valid, but the current
+   * transaction will be rolled back by \ref release .
    *
    * \author Vincent Lachenal
    *
    * \since 0.1
    */
   class Connection {
+
+    friend class PreparedStatement;
+    friend class ResultSet;
 
     // Attributes +
   protected:
@@ -142,7 +151,10 @@ namespace anch::sql {
     void rollback();
 
     /*!
-     * Release connection (used for connections' pool)
+     * Release connection: end the current transaction (rollback when an error has been reported since the last
+     * release, commit otherwise).\n
+     * It is called when the connection is returned to its pool and when it is destroyed. If the transaction can be
+     * neither committed nor rolled back, the connection is invalidated (its transaction state is unknown).
      */
     void release() noexcept;
 
@@ -367,12 +379,48 @@ namespace anch::sql {
      */
     template<typename T>
     static void bindParameters(PreparedStatement& stmt, std::size_t& idx, const T& value);
+
+  protected:
+    /*!
+     * Call function and report its \ref SqlException to the connection (see \ref onError )
+     *
+     * \tparam F the function type
+     *
+     * \param func the function to call
+     *
+     * \return the function result
+     *
+     * \throw SqlException the function error (rethrown)
+     *
+     * \since 0.2
+     */
+    template<typename F>
+    auto guard(F&& func) -> decltype(func());
+
+    /*!
+     * Report error: the current transaction has to be rolled back ; a fatal error invalidates the connection
+     *
+     * \param error the error
+     *
+     * \since 0.2
+     */
+    void onError(const SqlException& error) noexcept;
+
+    /*!
+     * Check driver connection status (called by \ref isValid ; default to \c true )
+     *
+     * \return \c true when the driver connection is usable, \c false otherwise
+     *
+     * \since 0.2
+     */
+    virtual bool checkConnection() const noexcept;
     // Methods -
 
     // Accessors +
   public:
     /*!
-     * Valid status getter
+     * Valid status getter: \c false once a fatal error has occurred, or when the driver reports a broken
+     * connection. Connection pools destroy invalid connections instead of reusing them.
      *
      * \return the status
      */

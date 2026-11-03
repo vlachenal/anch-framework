@@ -21,6 +21,7 @@
 
 #include "sql/sqlite3PreparedStatement.hpp"
 #include "sql/sqlite3ResultSet.hpp"
+#include "sql/sqlite3Connection.hpp"
 
 #include <sstream>
 
@@ -36,22 +37,17 @@ std::atomic<std::uint64_t> SQLite3PreparedStatement::_counter(0);
 
 // Constructors +
 SQLite3PreparedStatement::SQLite3PreparedStatement(sqlite3* dbCon, const std::string& query): PreparedStatement(), _conn(dbCon), _stmt() {
-  int res = sqlite3_prepare_v2(_conn, query.data(), -1, &_stmt, NULL);
+  int res = sqlite3_prepare_v2(_conn, query.data(), static_cast<int>(query.size()), &_stmt, NULL);
   if(res != SQLITE_OK) {
-    std::ostringstream msg;
-    msg << "Error while preparing statement " << query << ": " << sqlite3_errmsg(_conn);
-    throw SqlException(msg.str());
+    throw anch::sql::sqlite::error("Error while preparing statement " + query, _conn, res);
   }
-  std::set<std::size_t> pos = getPlaceholders(query);
-  _nbPlaceholders = pos.size();
+  setParameterCount(static_cast<std::size_t>(sqlite3_bind_parameter_count(_stmt))); // counted by SQLite parser
 }
 // Constructors -
 
 // Destructor +
 SQLite3PreparedStatement::~SQLite3PreparedStatement() noexcept {
   if(_stmt != NULL) {
-    sqlite3_reset(_stmt);
-    sqlite3_clear_bindings(_stmt);
     sqlite3_finalize(_stmt);
   }
 }
@@ -59,52 +55,54 @@ SQLite3PreparedStatement::~SQLite3PreparedStatement() noexcept {
 
 // Functions +
 /*!
- * Bind prepared statement parameters and send query to server
+ * Bind prepared statement parameters
  *
  * \param conn the SQLite3 connection
  * \param stmt the prepared statement
- * \param paramValues the values to bind
+ * \param paramValues the values to bind (\c std::nullopt for \c NULL )
  *
  * \throw SqlException any error
  */
-void
-bindParamsAndSend(sqlite3* conn,
-		  sqlite3_stmt* stmt,
-		  const std::map<std::size_t,std::string>& paramValues) {
-  sqlite3_clear_bindings(stmt);
+static void
+bindParams(sqlite3* conn, sqlite3_stmt* stmt, const std::vector<std::optional<std::string>>& paramValues) {
   sqlite3_reset(stmt);
-  // Bind parameters +
-  int res = SQLITE_OK;
-  for(auto iter = paramValues.cbegin() ; iter != paramValues.cend() ; ++iter) {
-    sqlite3_bind_text(stmt,
-		      static_cast<int>(iter->first),
-		      iter->second.data(),
-		      static_cast<int>(iter->second.length()),
-		      SQLITE_STATIC);
+  sqlite3_clear_bindings(stmt);
+  for(std::size_t i = 0 ; i < paramValues.size() ; ++i) {
+    int idx = static_cast<int>(i + 1);
+    int res = SQLITE_OK;
+    if(paramValues[i].has_value()) {
+      res = sqlite3_bind_text64(stmt, idx, paramValues[i]->data(), paramValues[i]->size(), SQLITE_TRANSIENT, SQLITE_UTF8);
+    } else {
+      res = sqlite3_bind_null(stmt, idx);
+    }
     if(res != SQLITE_OK) {
-      std::ostringstream msg;
-      msg << "Error while binding parameter [" << iter->first << "] = " << iter->second << ": " << sqlite3_errmsg(conn);
-      throw SqlException(msg.str());
+      throw anch::sql::sqlite::error("Error while binding parameter " + std::to_string(idx), conn, res);
     }
   }
-  // Bind parameters -
 }
 // Functions -
 
 // Methods +
 ResultSet*
-SQLite3PreparedStatement::executeQuery() {
-  bindParamsAndSend(_conn, _stmt, _values);
+SQLite3PreparedStatement::doExecuteQuery() {
+  bindParams(_conn, _stmt, _values);
   return new SQLite3ResultSet(_stmt, true);
 }
 
 uint64_t
-SQLite3PreparedStatement::executeUpdate() {
-  bindParamsAndSend(_conn, _stmt, _values);
-  while(sqlite3_step(_stmt) == SQLITE_ROW) {
-    // Nothing to do
+SQLite3PreparedStatement::doExecuteUpdate() {
+  bindParams(_conn, _stmt, _values);
+  int res = SQLITE_ROW;
+  while((res = sqlite3_step(_stmt)) == SQLITE_ROW) {
+    // Ignore rows
   }
-  return static_cast<uint64_t>(sqlite3_changes(_conn));
+  if(res != SQLITE_DONE) { // constraint violation, busy database, ...
+    SqlException error = anch::sql::sqlite::error("Error while executing prepared statement", _conn, res);
+    sqlite3_reset(_stmt);
+    throw error;
+  }
+  sqlite3_reset(_stmt);
+  return static_cast<uint64_t>(sqlite3_changes64(_conn));
 }
 // Methods -
 

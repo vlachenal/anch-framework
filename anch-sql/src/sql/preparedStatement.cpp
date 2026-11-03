@@ -19,12 +19,17 @@
 */
 #include "sql/preparedStatement.hpp"
 
+#include <string>
+
 #include "date/dateFormatter.hpp"
+#include "sql/connection.hpp"
 
 using anch::sql::PreparedStatement;
+using anch::sql::ResultSet;
+using anch::sql::SqlException;
 
 
-PreparedStatement::PreparedStatement() noexcept: _values(), _nbPlaceholders(0) {
+PreparedStatement::PreparedStatement() noexcept: _values(), _bound(), _nbPlaceholders(0), _connection(NULL) {
   // Nothing to do
 }
 
@@ -32,140 +37,133 @@ PreparedStatement::~PreparedStatement() noexcept {
   // Nothing to do
 }
 
-std::set<std::size_t>
-PreparedStatement::getPlaceholders(const std::string& query) const {
-  std::set<std::size_t> pos;
-  bool singleVal = false;
-  bool listVal = false;
-  bool literral = false;
-  for(std::size_t i = 0 ; i < query.length() ; ++i) {
-    switch(query.at(i)) {
-    case '?':
-      if(singleVal || listVal) {
-	pos.insert(i);
-	singleVal = false;
-      }
-      break;
-    case '=':
-      if(!literral) {
-	singleVal = true;
-	listVal = false;
-      }
-      break;
-    case '(':
-      if(!literral) {
-	listVal = true;
-	singleVal = false;
-      }
-      break;
-    case ')': // End of list
-      if(!literral) {
-	listVal = false;
-	singleVal = false;
-      }
-      break;
-    case '\'':
-      if(literral && i < query.length() - 1 && query.at(i + 1) == '\'') { // Escape character in string
-	++i; // Discard next "'"
-      } else {
-	literral = !literral;
-      }
-      break;
-    case '\\': // Escape character in string
-      if(literral) {
-	++i;
-      }
-      break;
-    case ' ':
-    case '\n':
-    case '\t':
-    case '\r':
-      // Not a revelant character
-      break;
-    default:
-      singleVal = false;
+ResultSet*
+PreparedStatement::executeQuery() {
+  checkBindings();
+  if(_connection == NULL) {
+    return doExecuteQuery();
+  }
+  return _connection->guard([this]() {
+    ResultSet* res = doExecuteQuery();
+    res->_connection = _connection;
+    return res;
+  });
+}
+
+uint64_t
+PreparedStatement::executeUpdate() {
+  checkBindings();
+  if(_connection == NULL) {
+    return doExecuteUpdate();
+  }
+  return _connection->guard([this]() { return doExecuteUpdate(); });
+}
+
+void
+PreparedStatement::setParameterCount(std::size_t count) {
+  _nbPlaceholders = count;
+  _values.assign(count, std::nullopt);
+  _bound.assign(count, false);
+}
+
+std::size_t
+PreparedStatement::getParameterCount() const noexcept {
+  return _nbPlaceholders;
+}
+
+void
+PreparedStatement::clearParameters() noexcept {
+  _values.assign(_nbPlaceholders, std::nullopt);
+  _bound.assign(_nbPlaceholders, false);
+}
+
+void
+PreparedStatement::bind(std::size_t idx, std::optional<std::string> value) {
+  if(idx == 0 || idx > _nbPlaceholders) {
+    throw SqlException("Parameter index " + std::to_string(idx) + " is out of range [1.." + std::to_string(_nbPlaceholders) + "]", true);
+  }
+  _values[idx - 1] = std::move(value);
+  _bound[idx - 1] = true;
+}
+
+void
+PreparedStatement::checkBindings() const {
+  for(std::size_t i = 0 ; i < _nbPlaceholders ; ++i) {
+    if(!_bound[i]) {
+      throw SqlException("Parameter " + std::to_string(i + 1) + " has not been bound", true);
     }
   }
-  return pos;
 }
 
 void
 PreparedStatement::set(std::size_t idx, int16_t value) {
-  checkIndex(idx);
-  std::ostringstream oss;
-  oss << value;
-  _values[idx] = oss.str();
+  bind(idx, std::to_string(value));
 }
 
 void
 PreparedStatement::set(std::size_t idx, uint16_t value) {
-  checkIndex(idx);
-  std::ostringstream oss;
-  oss << value;
-  _values[idx] = oss.str();
+  bind(idx, std::to_string(value));
 }
 
 void
 PreparedStatement::set(std::size_t idx, int32_t value) {
-  checkIndex(idx);
-  std::ostringstream oss;
-  oss << value;
-  _values[idx] = oss.str();
+  bind(idx, std::to_string(value));
 }
 
 void
 PreparedStatement::set(std::size_t idx, uint32_t value) {
-  checkIndex(idx);
-  std::ostringstream oss;
-  oss << value;
-  _values[idx] = oss.str();
+  bind(idx, std::to_string(value));
 }
 
 void
 PreparedStatement::set(std::size_t idx, int64_t value) {
-  checkIndex(idx);
-  std::ostringstream oss;
-  oss << value;
-  _values[idx] = oss.str();
+  bind(idx, std::to_string(value));
 }
 
 void
 PreparedStatement::set(std::size_t idx, uint64_t value) {
-  checkIndex(idx);
-  std::ostringstream oss;
-  oss << value;
-  _values[idx] = oss.str();
+  bind(idx, std::to_string(value));
 }
 
 void
 PreparedStatement::set(std::size_t idx, const std::string& value) {
-  checkIndex(idx);
-  _values[idx] = value;
+  bind(idx, value);
 }
 
 void
 PreparedStatement::set(std::size_t idx, const char* const value) {
-  checkIndex(idx);
-  _values[idx] = std::string(value);
+  if(value == NULL) {
+    bind(idx, std::nullopt);
+  } else {
+    bind(idx, std::string(value));
+  }
+}
+
+void
+PreparedStatement::setNull(std::size_t idx) {
+  bind(idx, std::nullopt);
 }
 
 void
 PreparedStatement::set(std::size_t idx, const anch::sql::Date& value) {
-  static anch::date::DateFormatter formatter("%Y-%m-%d");
-  checkIndex(idx);
-  formatter.format(value, _values[idx]);
+  static const anch::date::DateFormatter formatter("%Y-%m-%d");
+  std::string str;
+  formatter.format(value, str);
+  bind(idx, std::move(str));
 }
 
 void
 PreparedStatement::set(std::size_t idx, const anch::sql::Time& value) {
-  static anch::date::DateFormatter formatter("%H:%M:%S.%s");
-  checkIndex(idx);
-  formatter.format(value, _values[idx]);
+  static const anch::date::DateFormatter formatter("%H:%M:%S.%s");
+  std::string str;
+  formatter.format(value, str);
+  bind(idx, std::move(str));
 }
 
 void
 PreparedStatement::set(std::size_t idx, const anch::sql::Timestamp& value) {
-  static anch::date::DateFormatter formatter("%Y-%m-%d %H:%M:%S.%s");
-  checkIndex(idx);
-  formatter.format(value, _values[idx]);
+  static const anch::date::DateFormatter formatter("%Y-%m-%d %H:%M:%S.%s");
+  std::string str;
+  formatter.format(value, str);
+  bind(idx, std::move(str));
 }

@@ -5,6 +5,7 @@
 #include <list>
 
 #include "ut/assert.hpp"
+#include "commonTests.hpp"
 #include "ut/unit.hpp"
 
 using anch::sql::Connection;
@@ -423,6 +424,21 @@ testTransaction() {
 }
 
 void
+testOperators() {
+  testStmtOperators(*dbCon);
+}
+
+void
+testNull() {
+  testStmtNull(*dbCon);
+}
+
+void
+testSqlError() {
+  testSqlErrorKeepsConnection(*dbCon);
+}
+
+void
 anch::ut::setup(anch::ut::UnitTests& tests) {
   tests
     .name("AnCH SQLite3 unit tests")
@@ -440,5 +456,8 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("insert-stmt", testStmtInsert)
     .add("update-stmt", testStmtUpdate)
     .add("transactions", testTransaction)
+    .add("stmt-operators", testOperators)
+    .add("stmt-null", testNull)
+    .add("sql-error", testSqlError)
     ;
 }

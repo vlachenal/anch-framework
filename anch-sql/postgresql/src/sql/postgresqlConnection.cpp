@@ -22,8 +22,9 @@
 #include "sql/postgresqlConnection.hpp"
 #include "sql/postgresqlResultSet.hpp"
 #include "sql/postgresqlPreparedStatement.hpp"
-#include "convert.hpp"
 
+#include <charconv>
+#include <cstring>
 #include <sstream>
 
 #include "libpq-fe.h"
@@ -102,55 +103,67 @@ PostgreSQLConnection::~PostgreSQLConnection() noexcept {
 // Destructor -
 
 // Methods +
-void
-PostgreSQLConnection::sendCommit() {
-  PGresult* res = PQexec(_conn, "COMMIT");
-  ExecStatusType status = PQresultStatus(res);
-  if(status == PGRES_FATAL_ERROR) {
-    _valid = false;
-    std::ostringstream msg;
-    msg << "Unable to commit transaction: " << PQresultErrorMessage(res);
+/*!
+ * Build SQL exception from PostgreSQL error: it is fatal when connection is broken
+ *
+ * \param message the error context
+ * \param conn the PostgreSQL connection
+ * \param res the PostgreSQL result (its error message is used when not \c NULL ; it is cleared)
+ *
+ * \return the exception
+ */
+static SqlException
+pgError(const std::string& message, PGconn* conn, PGresult* res = NULL) {
+  std::ostringstream msg;
+  msg << message << ": " << (res != NULL ? PQresultErrorMessage(res) : PQerrorMessage(conn));
+  if(res != NULL) {
     PQclear(res);
-    throw SqlException(msg.str(), _valid);
+  }
+  return SqlException(msg.str(), PQstatus(conn) == CONNECTION_OK);
+}
+
+/*!
+ * Execute command which does not return rows
+ *
+ * \param conn the PostgreSQL connection
+ * \param command the command
+ * \param context the error context
+ *
+ * \throw SqlException any error
+ */
+static void
+execCommand(PGconn* conn, const char* command, const std::string& context) {
+  PGresult* res = PQexec(conn, command);
+  if(PQresultStatus(res) != PGRES_COMMAND_OK) { // PQresultStatus(NULL) is PGRES_FATAL_ERROR
+    throw pgError(context, conn, res);
   }
   PQclear(res);
+}
+
+bool
+PostgreSQLConnection::checkConnection() const noexcept {
+  return _conn != NULL && PQstatus(_conn) == CONNECTION_OK;
+}
+
+void
+PostgreSQLConnection::sendCommit() {
+  execCommand(_conn, "COMMIT", "Unable to commit transaction");
 }
 
 void
 PostgreSQLConnection::sendRollback() {
-  PGresult* res = PQexec(_conn, "ROLLBACK");
-  ExecStatusType status = PQresultStatus(res);
-  if(status == PGRES_FATAL_ERROR) {
-    std::ostringstream msg;
-    msg << "Unable to rollback transaction: " << PQresultErrorMessage(res);
-    PQclear(res);
-    throw SqlException(msg.str(), false);
-  }
-  PQclear(res);
+  execCommand(_conn, "ROLLBACK", "Unable to rollback transaction");
 }
 
 void
 PostgreSQLConnection::sendStartTransaction() {
-  PGresult* res = PQexec(_conn, "START TRANSACTION");
-  ExecStatusType status = PQresultStatus(res);
-  if(status == PGRES_FATAL_ERROR) {
-    _valid = false;
-    std::ostringstream msg;
-    msg << "Unable to start transaction: " << PQresultErrorMessage(res);
-    PQclear(res);
-    throw SqlException(msg.str(), false);
-  }
-  PQclear(res);
+  execCommand(_conn, "START TRANSACTION", "Unable to start transaction");
 }
 
 ResultSet*
 PostgreSQLConnection::executeQuery(const std::string& query) {
-  int res = PQsendQuery(_conn, query.data());
-  if(res != 1) {
-    _valid = (PQstatus(_conn) == CONNECTION_OK);
-    std::ostringstream msg;
-    msg << "Unable to execute query " << query << ": " << PQerrorMessage(_conn);
-    throw SqlException(msg.str(), _valid);
+  if(PQsendQuery(_conn, query.data()) != 1) {
+    throw pgError("Unable to execute query " + query, _conn);
   }
   return new PostgreSQLResultSet(_conn);
 }
@@ -158,57 +171,40 @@ PostgreSQLConnection::executeQuery(const std::string& query) {
 uint64_t
 PostgreSQLConnection::executeUpdate(const std::string& query) {
   PGresult* res = PQexec(_conn, query.data());
-  if(res == NULL) {
-    _errors = true;
-    _valid = (PQstatus(_conn) == CONNECTION_OK);
-    std::ostringstream msg;
-    msg << "Unable to execute query " << query << ": " << PQerrorMessage(_conn);
-    throw SqlException(msg.str(), _valid);
-  }
-  ExecStatusType status = PQresultStatus(res);
-  switch(status) {
+  switch(PQresultStatus(res)) {
   case PGRES_COMMAND_OK:
-    // OK => continue
+  case PGRES_TUPLES_OK: // UPDATE ... RETURNING
     break;
   case PGRES_EMPTY_QUERY:
-  case PGRES_TUPLES_OK:
   case PGRES_COPY_OUT:
   case PGRES_COPY_IN:
   case PGRES_COPY_BOTH:
-    {
-      _errors = true;
-      std::ostringstream msg;
-      msg << "Unexpected update query: " << query;
-      PQclear(res);
-      throw SqlException(msg.str(), true);
-    }
-    break;
-  case PGRES_FATAL_ERROR:
-    _valid = false; // Do not break => go to default and throw execption
-    [[fallthrough]];
+    PQclear(res);
+    throw SqlException("Unexpected update query: " + query, PQstatus(_conn) == CONNECTION_OK);
   default:
-    {
-      _errors = true;
-      std::ostringstream msg;
-      msg << "Unable to execute query " << query << ": " << PQerrorMessage(_conn);
-      PQclear(res);
-      throw SqlException(msg.str(), _valid);
-    }
+    throw pgError("Unable to execute query " + query, _conn, res);
   }
-  std::string strRes = PQcmdTuples(res);
+  uint64_t nbRows = anch::sql::postgresql::affectedRows(res);
   PQclear(res);
-  uint64_t nbRows = 0;
-  try {
-    nbRows = convert<uint64_t>(strRes);
-  } catch(std::bad_cast&) {
-    // Nothing to do
-  }
   return nbRows;
 }
 
 PreparedStatement*
 PostgreSQLConnection::makePrepared(const std::string& query) {
   return new PostgreSQLPreparedStatement(_conn, query);
+}
+
+uint64_t
+anch::sql::postgresql::affectedRows(PGresult* res) noexcept {
+  const char* tuples = PQcmdTuples(res); // empty for commands without row count
+  uint64_t nbRows = 0;
+  std::from_chars(tuples, tuples + std::strlen(tuples), nbRows);
+  return nbRows;
+}
+
+SqlException
+anch::sql::postgresql::error(const std::string& message, PGconn* conn, PGresult* res) {
+  return pgError(message, conn, res);
 }
 // Methods -
 

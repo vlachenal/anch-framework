@@ -25,7 +25,7 @@ Statut des constats :
 | anch-device | [anch-device/ANALYSE.md](anch-device/ANALYSE.md) | une interface atypique bloque tout l'inventaire réseau, `_metric` invalide, IPv4 uniquement ; fournisseurs UUID v1 / v6 corrigés (DV7 à DV10, DV12 ; v1 19× plus rapide) |
 | anch-ut | [anch-ut/ANALYSE.md](anch-ut/ANALYSE.md) | corrigé le 2026-11-03 (T3 à T20) : format des assertions vérifié à la compilation (3 messages faux trouvés dans `anch-json`), emplacement des échecs, `ThreadErrors` pour les assertions dans les threads, ordre d'enregistrement, erreurs de `setup` / d'initialisation / de désinitialisation, couleurs hors terminal ; options de runner refusées (pas implémentées) ; reste T2 (`--gen-ctest`) |
 | anch-uuid | [anch-uuid/ANALYSE.md](anch-uuid/ANALYSE.md) | tous les constats corrigés le 2026-10-31 (UU1 à UU9) : parsing validé et 8× plus rapide, `toString` 14×, `random()` 56×, v3 / v5 conformes à la RFC 9562, v7 monotone, registre protégé, type valeur de 16 octets ordonnable et hachable ; fournisseurs v1 / v6 : voir `anch-device` |
-| anch-sql | [anch-sql/ANALYSE.md](anch-sql/ANALYSE.md) | hors gestion d'erreurs : builder sain, pilote introuvable = appel d'adresse indéterminée ; tests isolés depuis le 2026-10-31 (S6) ; S8 corrigé le 2026-11-03 : les colonnes date / heure étaient lues comme la date courante |
+| anch-sql | [anch-sql/ANALYSE.md](anch-sql/ANALYSE.md) | corrigé le 2026-11-03 (S5, S9 à S15) : requêtes préparées (nombre de paramètres donné par la base, analyseur lexical pour les `?` PostgreSQL, `NULL`, paramètres non liés refusés), erreurs fatales qui invalident la connexion (MySQL ne les détectait jamais), transaction terminée au retour dans le pool, erreurs de lecture des résultats ; à décider : validation implicite à la libération (S16) |
 | anch-crypto | [anch-crypto/ANALYSE.md](anch-crypto/ANALYSE.md) | non analysé (hors périmètre) ; lecture hors limites AES-192 et lecture non initialisée SHA-2 corrigées |
 | anch-conf | [anch-conf/ANALYSE.md](anch-conf/ANALYSE.md) | en construction ; correctif `_loaded` provisoire (pas encore avec placeholders) |
 | anch-ini | [anch-ini/ANALYSE.md](anch-ini/ANALYSE.md) | en construction ; conversion numérique correcte (modèle pour les autres modules) |
@@ -43,7 +43,7 @@ Le 2026-10-30, build Debug complet depuis la racine (sources actuelles, avec le 
 | Module | Résultat |
 |---|---|
 | tous sauf anch-sql | 100 % |
-| anch-sql | 56/59 en séquentiel : échecs dus à des tests non isolés (S6) ; davantage d'échecs avec `ctest -j` |
+| anch-sql | 75/75 avec serveurs MySQL et PostgreSQL, en séquentiel et avec `ctest -j` (2026-11-03) ; avant : 56/59 (S6) |
 | anch-rest, anch-app | non compilés par défaut |
 
 Le 2026-10-27, avec les anciens `build/` : anch-sql 39/59 (pas de serveur local), anch-rest 0/19.

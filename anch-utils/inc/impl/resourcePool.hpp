@@ -57,9 +57,14 @@ namespace anch {
     }
     bool valid = false;
     try {
+      if constexpr(anch::Releasable<T>) {
+	if(_ptr) {
+	  _ptr->release(); // reset resource state (end SQL transaction for example) before validation
+	}
+      }
       valid = _ptr && static_cast<bool>(_ptr->isValid());
     } catch(...) {
-      // Resource which can not be validated is considered as invalid
+      // Resource which can not be released or validated is considered as invalid
     }
     _state->release(std::move(_ptr), valid);
   }

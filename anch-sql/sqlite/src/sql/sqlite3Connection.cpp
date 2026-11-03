@@ -73,71 +73,76 @@ SQLite3Connection::~SQLite3Connection() {
 // Destructor -
 
 // Methods +
+bool
+anch::sql::sqlite::isFatal(int code) noexcept {
+  switch(code & 0xff) { // primary result code
+  case SQLITE_IOERR:
+  case SQLITE_CORRUPT:
+  case SQLITE_NOTADB:
+  case SQLITE_CANTOPEN:
+  case SQLITE_NOMEM:
+    return true;
+  default:
+    return false;
+  }
+}
+
+SqlException
+anch::sql::sqlite::error(const std::string& message, sqlite3* conn, int code) {
+  std::ostringstream msg;
+  msg << message << ": " << (conn != NULL ? sqlite3_errmsg(conn) : sqlite3_errstr(code)) << " (" << code << ')';
+  return SqlException(msg.str(), !isFatal(code));
+}
+
 ResultSet*
 SQLite3Connection::executeQuery(const std::string& query) {
   sqlite3_stmt* stmt = NULL;
-  int res = sqlite3_prepare_v2(_conn, query.data(), -1, &stmt, NULL);
+  int res = sqlite3_prepare_v2(_conn, query.data(), static_cast<int>(query.size()), &stmt, NULL);
   if(res != SQLITE_OK) {
-    std::ostringstream msg;
-    msg << "Error while preparing statement " << query << ": " << sqlite3_errmsg(_conn);
-    throw SqlException(msg.str());
+    throw sqlite::error("Error while preparing statement " + query, _conn, res);
   }
   return new SQLite3ResultSet(stmt);
 }
 
-static int emptyCB(void*, int, char**, char**) noexcept {
-  // Nothing to do
-  return 0;
+/*!
+ * Execute SQL instruction
+ *
+ * \param conn the SQLite connection
+ * \param sql the SQL instruction
+ * \param context the error context
+ *
+ * \throw SqlException any error
+ */
+static void
+exec(sqlite3* conn, const std::string& sql, const std::string& context) {
+  char* errMsg = NULL;
+  int res = sqlite3_exec(conn, sql.data(), NULL, NULL, &errMsg);
+  if(res != SQLITE_OK) {
+    std::string msg = context + ": " + (errMsg != NULL ? errMsg : sqlite3_errstr(res)) + " (" + std::to_string(res) + ')';
+    sqlite3_free(errMsg);
+    throw SqlException(msg, !anch::sql::sqlite::isFatal(res));
+  }
 }
 
 uint64_t
 SQLite3Connection::executeUpdate(const std::string& query) {
-  char* errMsg = NULL;
-  int res = sqlite3_exec(_conn, query.data(), emptyCB, 0, &errMsg);
-  if(res != SQLITE_OK) {
-    _errors = true;
-    std::ostringstream msg;
-    msg << "Error while executing update: " << errMsg;
-    sqlite3_free(errMsg);
-    throw SqlException(msg.str());
-  }
-  return static_cast<uint64_t>(sqlite3_changes(_conn));
+  exec(_conn, query, "Error while executing update " + query);
+  return static_cast<uint64_t>(sqlite3_changes64(_conn));
 }
 
 void
 SQLite3Connection::sendCommit() {
-  char* errMsg = 0;
-  int res = sqlite3_exec(_conn, "COMMIT", emptyCB, 0, &errMsg);
-  if(res != SQLITE_OK) {
-    std::ostringstream msg;
-    msg << "Error while commiting transaction: " << errMsg;
-    sqlite3_free(errMsg);
-    throw SqlException(msg.str());
-  }
+  exec(_conn, "COMMIT", "Error while commiting transaction");
 }
 
 void
 SQLite3Connection::sendRollback() {
-  char* errMsg = 0;
-  int res = sqlite3_exec(_conn, "ROLLBACK", emptyCB, 0, &errMsg);
-  if(res != SQLITE_OK) {
-    std::ostringstream msg;
-    msg << "Error while rolling back transaction: " << errMsg;
-    sqlite3_free(errMsg);
-    throw SqlException(msg.str());
-  }
+  exec(_conn, "ROLLBACK", "Error while rolling back transaction");
 }
 
 void
 SQLite3Connection::sendStartTransaction() {
-  char* errMsg = 0;
-  int res = sqlite3_exec(_conn, "BEGIN", emptyCB, 0, &errMsg);
-  if(res != SQLITE_OK) {
-    std::ostringstream msg;
-    msg << "Error while starting transaction: " << errMsg;
-    sqlite3_free(errMsg);
-    throw SqlException(msg.str());
-  }
+  exec(_conn, "BEGIN", "Error while starting transaction");
 }
 
 PreparedStatement*

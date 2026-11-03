@@ -28,6 +28,7 @@
 #include <cstring>
 
 #include "sql/mysqlPreparedStatementResultSet.hpp"
+#include "sql/mysqlConnection.hpp"
 
 using anch::sql::PreparedStatement;
 using anch::sql::MySQLPreparedStatement;
@@ -43,16 +44,12 @@ MySQLPreparedStatement::MySQLPreparedStatement(MYSQL* dbCon, const std::string& 
   if(_stmt == NULL) {
     throw SqlException("MySQL out of memory", false);
   }
-  int res = mysql_stmt_prepare(_stmt, query.data(), query.length());
-  if(res != 0) {
-    bool ok = res != CR_SERVER_GONE_ERROR && res != CR_SERVER_LOST && res != CR_OUT_OF_MEMORY;
-    std::ostringstream msg;
-    msg << "Fail to prepare MySQL statement " << mysql_stmt_errno(_stmt) << ": " << mysql_stmt_error(_stmt);
+  if(mysql_stmt_prepare(_stmt, query.data(), query.length()) != 0) {
+    SqlException error = anch::sql::mysql::error("Fail to prepare MySQL statement " + query, mysql_stmt_errno(_stmt), mysql_stmt_error(_stmt));
     mysql_stmt_close(_stmt);
-    throw SqlException(msg.str(), ok);
+    throw error;
   }
-  std::set<std::size_t> pos = getPlaceholders(query);
-  _nbPlaceholders = pos.size();
+  setParameterCount(mysql_stmt_param_count(_stmt)); // counted by MySQL server
 }
 // Constructors -
 
@@ -67,60 +64,42 @@ MySQLPreparedStatement::~MySQLPreparedStatement() noexcept {
  * Bind prepared statement parameters and send query to server
  *
  * \param stmt the MySQL prepared statement
- * \param nbPlaceholders the number of placeholders in query
- * \param paramValues the values to bind
+ * \param paramValues the values to bind (\c std::nullopt for \c NULL )
  *
  * \throw SqlException any error
  */
-void
-bindParamsAndSend(MYSQL_STMT* stmt,
-		  std::size_t nbPlaceholders,
-		  const std::map<std::size_t,std::string>& paramValues) {
-  // Bind parameters +
-  MYSQL_BIND* bind = new MYSQL_BIND[nbPlaceholders];
-  std::memset(bind, 0, nbPlaceholders * sizeof(MYSQL_BIND));
-  std::size_t idx = 0;
-  for(auto iter = paramValues.cbegin() ; iter != paramValues.cend() ; ++iter) {
-    bind[idx].buffer_type = MYSQL_TYPE_STRING;
-    bind[idx].buffer = (void*)iter->second.data();
-    bind[idx].buffer_length = iter->second.length();
-    bind[idx].length = 0;
-    bind[idx].is_null = 0;
-    ++idx;
+static void
+bindParamsAndSend(MYSQL_STMT* stmt, const std::vector<std::optional<std::string>>& paramValues) {
+  std::vector<MYSQL_BIND> binds(paramValues.size());
+  std::memset(binds.data(), 0, binds.size() * sizeof(MYSQL_BIND));
+  for(std::size_t i = 0 ; i < paramValues.size() ; ++i) {
+    if(paramValues[i].has_value()) {
+      binds[i].buffer_type = MYSQL_TYPE_STRING;
+      binds[i].buffer = const_cast<char*>(paramValues[i]->data());
+      binds[i].buffer_length = paramValues[i]->length();
+    } else {
+      binds[i].buffer_type = MYSQL_TYPE_NULL;
+    }
   }
-  int res = mysql_stmt_bind_param(stmt, bind);
-  if(res != 0) {
-    delete[] bind;
-    bool ok = res != CR_OUT_OF_MEMORY;
-    std::ostringstream msg;
-    msg << "Fail to bind MySQL statement parameters " << mysql_stmt_errno(stmt) << ": " << mysql_stmt_error(stmt);
-    throw SqlException(msg.str(), ok);
+  if(!binds.empty() && mysql_stmt_bind_param(stmt, binds.data()) != 0) {
+    throw anch::sql::mysql::error("Fail to bind MySQL statement parameters", mysql_stmt_errno(stmt), mysql_stmt_error(stmt));
   }
-  // Bind parameters -
-  // Execute statement +
-  res = mysql_stmt_execute(stmt);
-  if(res != 0) {
-    bool ok = res != CR_SERVER_GONE_ERROR && res != CR_SERVER_LOST && res != CR_OUT_OF_MEMORY;
-    delete[] bind;
-    std::ostringstream msg;
-    msg << "Fail to execute MySQL statement " << mysql_stmt_errno(stmt) << ": " << mysql_stmt_error(stmt);
-    throw SqlException(msg.str(), ok);
+  if(mysql_stmt_execute(stmt) != 0) {
+    throw anch::sql::mysql::error("Fail to execute MySQL statement", mysql_stmt_errno(stmt), mysql_stmt_error(stmt));
   }
-  delete[] bind;
-  // Execute statement -
 }
 // Functions -
 
 // Methods +
 ResultSet*
-MySQLPreparedStatement::executeQuery() {
-  bindParamsAndSend(_stmt, _nbPlaceholders, _values);
+MySQLPreparedStatement::doExecuteQuery() {
+  bindParamsAndSend(_stmt, _values);
   return new MySQLPreparedStatementResultSet(_stmt);
 }
 
 uint64_t
-MySQLPreparedStatement::executeUpdate() {
-  bindParamsAndSend(_stmt, _nbPlaceholders, _values);
+MySQLPreparedStatement::doExecuteUpdate() {
+  bindParamsAndSend(_stmt, _values);
   return static_cast<uint64_t>(mysql_stmt_affected_rows(_stmt));
 }
 // Methods -

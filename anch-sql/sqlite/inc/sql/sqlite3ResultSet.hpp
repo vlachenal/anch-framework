@@ -71,7 +71,7 @@ namespace anch {
       // Destructor -
 
       // Methods +
-    public:
+    protected:
       /*!
        * Fetch next row in SQL result set.
        *
@@ -79,7 +79,7 @@ namespace anch {
        *
        * \throw SqlException any error
        */
-      virtual bool next();
+      virtual bool fetchNext() override;
 
     protected:
       /*!

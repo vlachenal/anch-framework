@@ -24,6 +24,9 @@
 #include "sql/resultSet.hpp"
 
 #include <list>
+#include <optional>
+#include <string>
+#include <vector>
 
 #ifndef LIBMARIADB
 typedef bool my_bool;
@@ -48,15 +51,23 @@ namespace anch {
       /*! MySQL statement */
       MYSQL_STMT* _stmt;
 
-      /*! Columns length */
-      long unsigned int* _lengths;
+      /*! Columns buffers (bound with a bounded size: truncated values are read again with their real size) */
+      std::vector<std::vector<char>> _buffers;
 
-      /*! Columns null */
-      //char* _nulls;
-      my_bool* _nulls;
+      /*! Columns values of current row (\c std::nullopt for \c NULL ) */
+      std::vector<std::optional<std::string>> _values;
+
+      /*! Columns length */
+      std::vector<unsigned long> _lengths;
+
+      /*! Columns null flags */
+      std::vector<my_bool> _nulls;
+
+      /*! Columns truncation flags */
+      std::vector<my_bool> _errors;
 
       /*! MySQL result binding */
-      MYSQL_BIND* _binds;
+      std::vector<MYSQL_BIND> _binds;
       // Attributes -
 
       // Constructors +
@@ -79,7 +90,7 @@ namespace anch {
       // Destructor -
 
       // Methods +
-    public:
+    protected:
       /*!
        * Fetch next row in SQL result set.
        *
@@ -87,7 +98,7 @@ namespace anch {
        *
        * \throw SqlException any error
        */
-      virtual bool next();
+      virtual bool fetchNext() override;
 
     protected:
       /*!

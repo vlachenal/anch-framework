@@ -5,6 +5,7 @@
 #include <list>
 
 #include "ut/assert.hpp"
+#include "commonTests.hpp"
 #include "ut/unit.hpp"
 
 using anch::sql::Connection;
@@ -432,6 +433,37 @@ testTransaction() {
 }
 
 void
+testOperators() {
+  testStmtOperators(*dbCon);
+}
+
+void
+testNull() {
+  testStmtNull(*dbCon);
+}
+
+void
+testSqlError() {
+  testSqlErrorKeepsConnection(*dbCon);
+}
+
+void
+testFatal() {
+  PostgreSQLConnection conn({
+      .driver = "",
+      .database = "anch_test",
+      .hostname = "localhost",
+      .port = 5432,
+      .user = "anch",
+      .password = "anch",
+      .application = "postgresql-fatal"
+    });
+  testFatalError(conn, [](Connection& c) {
+    c.queryMapRow("SELECT pg_terminate_backend(pg_backend_pid())", [](ResultSet&) {});
+  });
+}
+
+void
 anch::ut::setup(anch::ut::UnitTests& tests) {
   tests
     .name("AnCH PostgreSQL unit tests")
@@ -449,5 +481,9 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("08-insert-stmt", testStmtInsert)
     .add("09-update-stmt", testStmtUpdate)
     .add("10-transactions", testTransaction)
+    .add("11-stmt-operators", testOperators)
+    .add("12-stmt-null", testNull)
+    .add("13-sql-error", testSqlError)
+    .add("14-fatal-error", testFatal)
     ;
 }

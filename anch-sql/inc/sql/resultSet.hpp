@@ -36,10 +36,15 @@
 namespace anch {
   namespace sql {
 
+    class Connection;
+    class PreparedStatement;
+
     /*!
      * \brief SQL result representation
      *
-     * The \ref ResultSet has to be used with while(res.hasNext()) {res.next(); [...]}.\n
+     * The \ref ResultSet has to be used with <tt>while(res.next()) { [...] }</tt>.\n
+     * Errors raised by \ref next are reported to the connection which has executed the query (a fatal error
+     * invalidates it).\n
      * Field getter is templated. Specializations are included in library. If you need other conversions,
      * you can implement them in your own program.
      *
@@ -49,10 +54,17 @@ namespace anch {
      */
     class ResultSet {
 
+      friend class Connection;
+      friend class PreparedStatement;
+
       // Attributes +
     protected:
       /*! Result set fields */
       std::map<std::string, std::size_t> _fields;
+
+    private:
+      /*! Connection which has executed the query (errors are reported to it ; \c NULL when unknown) */
+      Connection* _connection;
       // Attributes -
 
       // Constructors +
@@ -169,9 +181,18 @@ namespace anch {
        *
        * \throw SqlException any error
        */
-      virtual bool next() = 0;
+      bool next();
 
     protected:
+      /*!
+       * Retrieve next row (driver implementation)
+       *
+       * \return \c true if next row exists, \c false otherwise
+       *
+       * \throw SqlException any error (with connection status)
+       */
+      virtual bool fetchNext() = 0;
+
       /*!
        * Retrieve string value from result set according to SQL database engine.
        *

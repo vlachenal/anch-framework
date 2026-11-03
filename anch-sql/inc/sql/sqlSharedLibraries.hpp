@@ -41,13 +41,13 @@ namespace anch::sql {
     std::string layer;
 
     /*! Layer shared library object */
-    void* _layer;
+    void* _layer = NULL;
 
     /*! Make shared pointer SQL connection */
-    std::shared_ptr<Connection> (*make_shared_connection)(const SqlConnectionConfiguration&);
+    std::shared_ptr<Connection> (*make_shared_connection)(const SqlConnectionConfiguration&) = NULL;
 
     /*! Make SQL connection */
-    Connection* (*create)(const SqlConnectionConfiguration&);
+    Connection* (*create)(const SqlConnectionConfiguration&) = NULL;
   };
 
   /*!

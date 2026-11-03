@@ -32,6 +32,35 @@
 namespace anch {
   namespace sql {
 
+    namespace mysql {
+
+      /*!
+       * Check if MySQL error invalidates the connection (server gone or connection lost, out of memory, commands out
+       * of sync, connection killed, server shutdown, ...)
+       *
+       * \param code the MySQL error code (\c mysql_errno or \c mysql_stmt_errno )
+       *
+       * \return \c true for a fatal error, \c false otherwise
+       *
+       * \since 0.2
+       */
+      bool isFatal(unsigned int code) noexcept;
+
+      /*!
+       * Build SQL exception from MySQL error
+       *
+       * \param message the error context
+       * \param code the MySQL error code
+       * \param text the MySQL error message
+       *
+       * \return the exception (not OK when error is fatal)
+       *
+       * \since 0.2
+       */
+      SqlException error(const std::string& message, unsigned int code, const char* text);
+
+    }
+
     /*!
      * \brief MySQL connection
      *

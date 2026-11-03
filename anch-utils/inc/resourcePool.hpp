@@ -48,6 +48,18 @@ namespace anch {
   };
 
   /*!
+   * Concept of resources which have to be released when they are returned to their pool.\n
+   * When a pooled resource implements \code{void release()}, it is called before validation each time the resource is
+   * returned to the pool (an exception invalidates the resource).
+   * \author Vincent Lachenal
+   * \since 0.2
+   */
+  template<typename T>
+  concept Releasable = requires(T& object) {
+    object.release();
+  };
+
+  /*!
    * \brief Timeout exception
    *
    * Timeout error
@@ -235,8 +247,8 @@ namespace anch {
    * Intialize pool size will instanciate resources for imediate use.\n
    * Resources will be instanciated with their configuration, outside the pool lock.\n
    * If no resource is available, pool will wait until timeout (default to 100ms) is reached.\n
-   * Resources are automatically released through their destructor ; invalid resources are destroyed
-   * and will be replaced on demand.\n
+   * Resources are automatically released through their destructor: \c release() is called on resources which
+   * implement it (\ref Releasable), then invalid resources are destroyed and will be replaced on demand.\n
    * If you have only one action to do, you can use \code{pool.borrowResource().get().doAction()} ;
    * otherwise you should to keep \c anch::PoolableResource until all actions have been done (with \code{auto res = pool.borrowResource()}).\n
    * Borrowed resources can outlive their pool: they will be destroyed when released.\n

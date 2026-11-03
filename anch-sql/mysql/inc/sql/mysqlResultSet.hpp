@@ -40,6 +40,9 @@ namespace anch::sql {
 
     // Attributes +
   private:
+    /*! MySQL connection */
+    MYSQL* _conn;
+
     /*! MySQL result */
     MYSQL_RES* _result;
 
@@ -52,9 +55,10 @@ namespace anch::sql {
     /*!
      * \ref MySQLResultSet constructor
      *
+     * \param conn the MySQL connection (to check fetch errors)
      * \param result the MySQL result
      */
-    MySQLResultSet(MYSQL_RES* result) noexcept;
+    MySQLResultSet(MYSQL* conn, MYSQL_RES* result) noexcept;
     // Constructors -
 
     // Destructor +
@@ -65,7 +69,7 @@ namespace anch::sql {
     // Destructor -
 
     // Methods +
-  public:
+  protected:
     /*!
      * Fetch next row in SQL result set.
      *
@@ -73,7 +77,7 @@ namespace anch::sql {
      *
      * \throw SqlException any error
      */
-    virtual bool next();
+    virtual bool fetchNext() override;
 
   protected:
     /*!
