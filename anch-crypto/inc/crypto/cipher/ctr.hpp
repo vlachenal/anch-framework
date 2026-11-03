@@ -21,162 +21,160 @@
 
 #include "crypto/cipher/bcModOp.hpp"
 
-namespace anch {
-  namespace crypto {
+namespace anch::crypto {
 
-    /*!
-     * \brief Counter implementation.
-     *
-     * CTR mode is also known as ICM (integer counter mode) and SIC (segmented integer counter).
-     *
-     * \since 0.1
-     *
-     * \author Vincent Lachenal
-     */
-    template<typename Cipher>
-    class CTR: public BlockCipherModeOfOperation<CTR<Cipher>,Cipher> {
+  /*!
+   * \brief Counter implementation.
+   *
+   * CTR mode is also known as ICM (integer counter mode) and SIC (segmented integer counter).
+   *
+   * \since 0.1
+   *
+   * \author Vincent Lachenal
+   */
+  template<typename Cipher>
+  class CTR: public BlockCipherModeOfOperation<CTR<Cipher>,Cipher> {
 
-      // Attributes +
-    private:
-      /*! Initialization vector */
-      std::array<uint8_t,Cipher::getBlockSize()> _nonce;
-      // Attributes -
+    // Attributes +
+  private:
+    /*! Initialization vector */
+    std::array<uint8_t,Cipher::getBlockSize()> _nonce;
+    // Attributes -
 
-
-      // Constructors +
-    public:
-      /*!
-       * \ref CTR constructor
-       *
-       * \param nonce the nonce
-       * \param nbThread the maximum number of thread to run in parallel (default to 1).
-       *                 If is set to 0, it will be set to the number of CPU if found (1 otherwise).
-       */
-      CTR(const std::array<uint8_t,Cipher::getBlockSize()>& nonce, unsigned int nbThread = 1);
-      // Constructors -
-
-
-      // Destructor +
-      /*!
-       * \ref CTR destructor
-       */
-      virtual ~CTR();
-      // Destructor -
-
-
-      // Methods +
-    protected:
-      /*!
-       * Cipher a block.\n
-       * This method will handle initialization vector management.
-       *
-       * \param input the input block to cipher
-       * \param nbRead the size of block which has been read
-       * \param output the output block
-       * \param index the block index
-       * \param cipher the cipher instance
-       *
-       * \return the number of bytes to write
-       */
-      virtual std::size_t cipherBlock(std::array<uint8_t,Cipher::getBlockSize()>& input,
-				      std::streamsize nbRead,
-				      std::array<uint8_t,Cipher::getBlockSize()>& output,
-				      uint32_t index,
-				      Cipher& cipher) override;
-
-      /*!
-       * Decipher a block.\n
-       * This method will handle initialization vector management.
-       *
-       * \param input the input block to decipher
-       * \param nbRead the size of block which has been read
-       * \param output the output block
-       * \param index the block index
-       * \param cipher the cipher instance
-       *
-       * \return the number of bytes to write
-       */
-      virtual std::size_t decipherBlock(std::array<uint8_t,Cipher::getBlockSize()>& input,
-					std::array<uint8_t,Cipher::getBlockSize()>&,
-					std::streamsize nbRead,
-					bool,
-					std::array<uint8_t,Cipher::getBlockSize()>& output,
-					uint32_t index,
-					Cipher& cipher) override;
-
-      /*!
-       * Reset block cipher mode of operation context
-       *
-       * \return the initial context
-       */
-      virtual const std::array<uint8_t,Cipher::getBlockSize()>& reset();
-      // Methods -
-
-    };
 
     // Constructors +
-    template<typename Cipher>
-    CTR<Cipher>::CTR(const std::array<uint8_t,Cipher::getBlockSize()>& nonce, unsigned int nbThread):
-      BlockCipherModeOfOperation<CTR<Cipher>,Cipher>(true, true, nbThread),
-      _nonce(nonce) {
-      // Nothing to do
-    }
+  public:
+    /*!
+     * \ref CTR constructor
+     *
+     * \param nonce the nonce
+     * \param nbThread the maximum number of thread to run in parallel (default to 1).
+     *                 If is set to 0, it will be set to the number of CPU if found (1 otherwise).
+     */
+    CTR(const std::array<uint8_t,Cipher::getBlockSize()>& nonce, unsigned int nbThread = 1);
     // Constructors -
 
 
     // Destructor +
-    template<typename Cipher>
-    CTR<Cipher>::~CTR() {
-      // Nothing to do
-    }
+    /*!
+     * \ref CTR destructor
+     */
+    virtual ~CTR();
     // Destructor -
 
 
     // Methods +
-    template<typename Cipher>
-    std::size_t
-    CTR<Cipher>::cipherBlock(std::array<uint8_t,Cipher::getBlockSize()>& input,
+  protected:
+    /*!
+     * Cipher a block.\n
+     * This method will handle initialization vector management.
+     *
+     * \param input the input block to cipher
+     * \param nbRead the size of block which has been read
+     * \param output the output block
+     * \param index the block index
+     * \param cipher the cipher instance
+     *
+     * \return the number of bytes to write
+     */
+    virtual std::size_t cipherBlock(std::array<uint8_t,Cipher::getBlockSize()>& input,
+				    std::streamsize nbRead,
+				    std::array<uint8_t,Cipher::getBlockSize()>& output,
+				    uint32_t index,
+				    Cipher& cipher) override;
+
+    /*!
+     * Decipher a block.\n
+     * This method will handle initialization vector management.
+     *
+     * \param input the input block to decipher
+     * \param nbRead the size of block which has been read
+     * \param output the output block
+     * \param index the block index
+     * \param cipher the cipher instance
+     *
+     * \return the number of bytes to write
+     */
+    virtual std::size_t decipherBlock(std::array<uint8_t,Cipher::getBlockSize()>& input,
+				      std::array<uint8_t,Cipher::getBlockSize()>&,
+				      std::streamsize nbRead,
+				      bool,
+				      std::array<uint8_t,Cipher::getBlockSize()>& output,
+				      uint32_t index,
+				      Cipher& cipher) override;
+
+    /*!
+     * Reset block cipher mode of operation context
+     *
+     * \return the initial context
+     */
+    virtual const std::array<uint8_t,Cipher::getBlockSize()>& reset();
+    // Methods -
+
+  };
+
+  // Constructors +
+  template<typename Cipher>
+  CTR<Cipher>::CTR(const std::array<uint8_t,Cipher::getBlockSize()>& nonce, unsigned int nbThread):
+    BlockCipherModeOfOperation<CTR<Cipher>,Cipher>(true, true, nbThread),
+    _nonce(nonce) {
+    // Nothing to do
+  }
+  // Constructors -
+
+
+  // Destructor +
+  template<typename Cipher>
+  CTR<Cipher>::~CTR() {
+    // Nothing to do
+  }
+  // Destructor -
+
+
+  // Methods +
+  template<typename Cipher>
+  std::size_t
+  CTR<Cipher>::cipherBlock(std::array<uint8_t,Cipher::getBlockSize()>& input,
+			   std::streamsize nbRead,
+			   std::array<uint8_t,Cipher::getBlockSize()>& output,
+			   uint32_t index,
+			   Cipher& cipher) {
+    std::array<uint8_t,Cipher::getBlockSize()> ctxtVect(_nonce);
+    uint16_t* counter = reinterpret_cast<uint16_t*>(&ctxtVect.data()[Cipher::getBlockSize() - 2]);
+    *counter = static_cast<uint16_t>(index);
+    std::array<uint8_t,Cipher::getBlockSize()> data;
+    cipher.cipher(ctxtVect, data);
+    for(std::size_t i = 0 ; i < static_cast<std::size_t>(nbRead) ; ++i) {
+      output[i] = input[i] ^ data[i];
+    }
+    return static_cast<std::size_t>(nbRead);
+  }
+
+  template<typename Cipher>
+  std::size_t
+  CTR<Cipher>::decipherBlock(std::array<uint8_t,Cipher::getBlockSize()>& input,
+			     std::array<uint8_t,Cipher::getBlockSize()>&,
 			     std::streamsize nbRead,
+			     bool,
 			     std::array<uint8_t,Cipher::getBlockSize()>& output,
 			     uint32_t index,
 			     Cipher& cipher) {
-      std::array<uint8_t,Cipher::getBlockSize()> ctxtVect(_nonce);
-      uint16_t* counter = reinterpret_cast<uint16_t*>(&ctxtVect.data()[Cipher::getBlockSize() - 2]);
-      *counter = static_cast<uint16_t>(index);
-      std::array<uint8_t,Cipher::getBlockSize()> data;
-      cipher.cipher(ctxtVect, data);
-      for(std::size_t i = 0 ; i < static_cast<std::size_t>(nbRead) ; ++i) {
-	output[i] = input[i] ^ data[i];
-      }
-      return static_cast<std::size_t>(nbRead);
+    std::array<uint8_t,Cipher::getBlockSize()> ctxtVect(_nonce);
+    uint16_t* counter = reinterpret_cast<uint16_t*>(&ctxtVect.data()[Cipher::getBlockSize() - 2]);
+    *counter = static_cast<uint16_t>(index);
+    std::array<uint8_t,Cipher::getBlockSize()> data;
+    cipher.cipher(ctxtVect, data);
+    for(std::size_t i = 0 ; i < static_cast<std::size_t>(nbRead) ; ++i) {
+      output[i] = input[i] ^ data[i];
     }
-
-    template<typename Cipher>
-    std::size_t
-    CTR<Cipher>::decipherBlock(std::array<uint8_t,Cipher::getBlockSize()>& input,
-			       std::array<uint8_t,Cipher::getBlockSize()>&,
-			       std::streamsize nbRead,
-			       bool,
-			       std::array<uint8_t,Cipher::getBlockSize()>& output,
-			       uint32_t index,
-			       Cipher& cipher) {
-      std::array<uint8_t,Cipher::getBlockSize()> ctxtVect(_nonce);
-      uint16_t* counter = reinterpret_cast<uint16_t*>(&ctxtVect.data()[Cipher::getBlockSize() - 2]);
-      *counter = static_cast<uint16_t>(index);
-      std::array<uint8_t,Cipher::getBlockSize()> data;
-      cipher.cipher(ctxtVect, data);
-      for(std::size_t i = 0 ; i < static_cast<std::size_t>(nbRead) ; ++i) {
-	output[i] = input[i] ^ data[i];
-      }
-      return static_cast<std::size_t>(nbRead);
-    }
-
-    template<typename Cipher>
-    const std::array<uint8_t,Cipher::getBlockSize()>&
-    CTR<Cipher>::reset() {
-      return _nonce;
-    }
-    // Methods -
-
+    return static_cast<std::size_t>(nbRead);
   }
-}
+
+  template<typename Cipher>
+  const std::array<uint8_t,Cipher::getBlockSize()>&
+  CTR<Cipher>::reset() {
+    return _nonce;
+  }
+  // Methods -
+
+}  // anch::crypto

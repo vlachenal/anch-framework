@@ -22,151 +22,149 @@
 #include "crypto/cipher/bcModOp.hpp"
 
 
-namespace anch {
-  namespace crypto {
+namespace anch::crypto {
 
-    /*!
-     * \brief Electronic codebook implementation.
-     *
-     * Block cipher mode of operation simpliest (and weakest) algorithm.
-     *
-     * \since 0.1
-     *
-     * \author Vincent Lachenal
-     */
-    template<typename Cipher, typename Padding>
-    class ECB: public BlockCipherModeOfOperation<ECB<Cipher,Padding>,Cipher> {
+  /*!
+   * \brief Electronic codebook implementation.
+   *
+   * Block cipher mode of operation simpliest (and weakest) algorithm.
+   *
+   * \since 0.1
+   *
+   * \author Vincent Lachenal
+   */
+  template<typename Cipher, typename Padding>
+  class ECB: public BlockCipherModeOfOperation<ECB<Cipher,Padding>,Cipher> {
 
-      // Attributes +
-    private:
-      /*! Initialization vector */
-      std::array<uint8_t,Cipher::getBlockSize()> _initVect;
-      // Attributes -
+    // Attributes +
+  private:
+    /*! Initialization vector */
+    std::array<uint8_t,Cipher::getBlockSize()> _initVect;
+    // Attributes -
 
-
-      // Constructors +
-    public:
-      /*!
-       * \ref ECB constructor
-       *
-       * \param nbThread the maximum number of thread to run in parallel (default to 1).
-       *                 If is set to 0, it will be set to the number of CPU if found (1 otherwise).
-       */
-      ECB(unsigned int nbThread = 1);
-      // Constructors -
-
-
-      // Destructor +
-      /*!
-       * \ref ECB destructor
-       */
-      virtual ~ECB();
-      // Destructor -
-
-
-      // Methods +
-    protected:
-      /*!
-       * Cipher a block.\n
-       * This method will handle initialization vector management.
-       *
-       * \param input the input block to cipher
-       * \param nbRead the size of block which has been read
-       * \param output the output block
-       * \param cipher the cipher instance
-       *
-       * \return the number of bytes to write
-       */
-      virtual std::size_t cipherBlock(std::array<uint8_t,Cipher::getBlockSize()>& input,
-				      std::streamsize nbRead,
-				      std::array<uint8_t,Cipher::getBlockSize()>& output,
-				      uint32_t, Cipher& cipher) override;
-
-      /*!
-       * Decipher a block.\n
-       * This method will handle initialization vector management.
-       *
-       * \param input the input block to decipher
-       * \param nbRead the size of block which has been read
-       * \param lastBlock is last block to decipher
-       * \param output the output block
-       * \param cipher the cipher instance
-       *
-       * \return the number of bytes to write
-       */
-      virtual std::size_t decipherBlock(std::array<uint8_t,Cipher::getBlockSize()>& input,
-					std::array<uint8_t,Cipher::getBlockSize()>&,
-					std::streamsize nbRead,
-					bool lastBlock,
-					std::array<uint8_t,Cipher::getBlockSize()>& output,
-					uint32_t, Cipher& cipher) override;
-
-      /*!
-       * Reset block cipher mode of operation context
-       *
-       * \return the initial context
-       */
-      virtual const std::array<uint8_t,Cipher::getBlockSize()>& reset();
-      // Methods -
-
-    };
 
     // Constructors +
-    template<typename Cipher, typename Padding>
-    ECB<Cipher,Padding>::ECB(unsigned int nbThread):
-      BlockCipherModeOfOperation<ECB<Cipher,Padding>,Cipher>(true, true, nbThread), _initVect() {
-      // Nothing to do
-    }
+  public:
+    /*!
+     * \ref ECB constructor
+     *
+     * \param nbThread the maximum number of thread to run in parallel (default to 1).
+     *                 If is set to 0, it will be set to the number of CPU if found (1 otherwise).
+     */
+    ECB(unsigned int nbThread = 1);
     // Constructors -
 
 
     // Destructor +
-    template<typename Cipher, typename Padding>
-    ECB<Cipher,Padding>::~ECB() {
-      // Nothing to do
-    }
+    /*!
+     * \ref ECB destructor
+     */
+    virtual ~ECB();
     // Destructor -
 
 
     // Methods +
-    template<typename Cipher, typename Padding>
-    std::size_t
-    ECB<Cipher,Padding>::cipherBlock(std::array<uint8_t,Cipher::getBlockSize()>& input,
-				     std::streamsize nbRead,
-				     std::array<uint8_t,Cipher::getBlockSize()>& output,
-				     uint32_t, Cipher& cipher) {
-      if(static_cast<std::size_t>(nbRead) != Cipher::getBlockSize()) {
-	Padding::pad(input.data(), static_cast<std::size_t>(nbRead), Cipher::getBlockSize());
-      }
-      cipher.cipher(input, output);
-      return Cipher::getBlockSize(); // This mode pad data => the number of bytes to write will always be a complete block
-    }
+  protected:
+    /*!
+     * Cipher a block.\n
+     * This method will handle initialization vector management.
+     *
+     * \param input the input block to cipher
+     * \param nbRead the size of block which has been read
+     * \param output the output block
+     * \param cipher the cipher instance
+     *
+     * \return the number of bytes to write
+     */
+    virtual std::size_t cipherBlock(std::array<uint8_t,Cipher::getBlockSize()>& input,
+				    std::streamsize nbRead,
+				    std::array<uint8_t,Cipher::getBlockSize()>& output,
+				    uint32_t, Cipher& cipher) override;
 
-    template<typename Cipher, typename Padding>
-    std::size_t
-    ECB<Cipher,Padding>::decipherBlock(std::array<uint8_t,Cipher::getBlockSize()>& input,
-				       std::array<uint8_t,Cipher::getBlockSize()>&,
-				       std::streamsize nbRead,
-				       bool lastBlock,
-				       std::array<uint8_t,Cipher::getBlockSize()>& output,
-				       uint32_t, Cipher& cipher) {
-      if(lastBlock && static_cast<std::size_t>(nbRead) != Cipher::getBlockSize()) {
-	throw InvalidBlockException("Invalid block size");
-      }
-      cipher.decipher(input, output);
-      if(lastBlock) {
-	return Padding::length(output.data(), Cipher::getBlockSize());
-      } else {
-	return Cipher::getBlockSize();
-      }
-    }
+    /*!
+     * Decipher a block.\n
+     * This method will handle initialization vector management.
+     *
+     * \param input the input block to decipher
+     * \param nbRead the size of block which has been read
+     * \param lastBlock is last block to decipher
+     * \param output the output block
+     * \param cipher the cipher instance
+     *
+     * \return the number of bytes to write
+     */
+    virtual std::size_t decipherBlock(std::array<uint8_t,Cipher::getBlockSize()>& input,
+				      std::array<uint8_t,Cipher::getBlockSize()>&,
+				      std::streamsize nbRead,
+				      bool lastBlock,
+				      std::array<uint8_t,Cipher::getBlockSize()>& output,
+				      uint32_t, Cipher& cipher) override;
 
-    template<typename Cipher, typename Padding>
-    const std::array<uint8_t,Cipher::getBlockSize()>&
-    ECB<Cipher,Padding>::reset() {
-      return _initVect;
-    }
+    /*!
+     * Reset block cipher mode of operation context
+     *
+     * \return the initial context
+     */
+    virtual const std::array<uint8_t,Cipher::getBlockSize()>& reset();
     // Methods -
 
+  };
+
+  // Constructors +
+  template<typename Cipher, typename Padding>
+  ECB<Cipher,Padding>::ECB(unsigned int nbThread):
+    BlockCipherModeOfOperation<ECB<Cipher,Padding>,Cipher>(true, true, nbThread), _initVect() {
+    // Nothing to do
   }
-}
+  // Constructors -
+
+
+  // Destructor +
+  template<typename Cipher, typename Padding>
+  ECB<Cipher,Padding>::~ECB() {
+    // Nothing to do
+  }
+  // Destructor -
+
+
+  // Methods +
+  template<typename Cipher, typename Padding>
+  std::size_t
+  ECB<Cipher,Padding>::cipherBlock(std::array<uint8_t,Cipher::getBlockSize()>& input,
+				   std::streamsize nbRead,
+				   std::array<uint8_t,Cipher::getBlockSize()>& output,
+				   uint32_t, Cipher& cipher) {
+    if(static_cast<std::size_t>(nbRead) != Cipher::getBlockSize()) {
+      Padding::pad(input.data(), static_cast<std::size_t>(nbRead), Cipher::getBlockSize());
+    }
+    cipher.cipher(input, output);
+    return Cipher::getBlockSize(); // This mode pad data => the number of bytes to write will always be a complete block
+  }
+
+  template<typename Cipher, typename Padding>
+  std::size_t
+  ECB<Cipher,Padding>::decipherBlock(std::array<uint8_t,Cipher::getBlockSize()>& input,
+				     std::array<uint8_t,Cipher::getBlockSize()>&,
+				     std::streamsize nbRead,
+				     bool lastBlock,
+				     std::array<uint8_t,Cipher::getBlockSize()>& output,
+				     uint32_t, Cipher& cipher) {
+    if(lastBlock && static_cast<std::size_t>(nbRead) != Cipher::getBlockSize()) {
+      throw InvalidBlockException("Invalid block size");
+    }
+    cipher.decipher(input, output);
+    if(lastBlock) {
+      return Padding::length(output.data(), Cipher::getBlockSize());
+    } else {
+      return Cipher::getBlockSize();
+    }
+  }
+
+  template<typename Cipher, typename Padding>
+  const std::array<uint8_t,Cipher::getBlockSize()>&
+  ECB<Cipher,Padding>::reset() {
+    return _initVect;
+  }
+  // Methods -
+
+}  // anch::crypto

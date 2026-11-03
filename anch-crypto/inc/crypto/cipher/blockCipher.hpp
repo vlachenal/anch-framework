@@ -24,68 +24,66 @@
 #include <array>
 
 
-namespace anch {
-  namespace crypto {
+namespace anch::crypto {
 
-    /*! Galois multiply by 2 lookup table */
-    extern const uint8_t ANCH_GALOIS_MULT2[256];
+  /*! Galois multiply by 2 lookup table */
+  extern const uint8_t ANCH_GALOIS_MULT2[256];
 
-    /*! Galois multiply by 3 lookup table */
-    extern const uint8_t ANCH_GALOIS_MULT3[256];
+  /*! Galois multiply by 3 lookup table */
+  extern const uint8_t ANCH_GALOIS_MULT3[256];
 
-    /*! Galois multiply by 9 lookup table */
-    extern const uint8_t ANCH_GALOIS_MULT9[256];
+  /*! Galois multiply by 9 lookup table */
+  extern const uint8_t ANCH_GALOIS_MULT9[256];
 
-    /*! Galois multiply by 11 lookup table */
-    extern const uint8_t ANCH_GALOIS_MULT11[256];
+  /*! Galois multiply by 11 lookup table */
+  extern const uint8_t ANCH_GALOIS_MULT11[256];
 
-    /*! Galois multiply by 13 lookup table */
-    extern const uint8_t ANCH_GALOIS_MULT13[256];
+  /*! Galois multiply by 13 lookup table */
+  extern const uint8_t ANCH_GALOIS_MULT13[256];
 
-    /*! Galois multiply by 14 lookup table */
-    extern const uint8_t ANCH_GALOIS_MULT14[256];
+  /*! Galois multiply by 14 lookup table */
+  extern const uint8_t ANCH_GALOIS_MULT14[256];
+
+  /*!
+   * \brief Block cipher interface
+   *
+   * Interface for all block cipher implementations.
+   *
+   * \since 0.1
+   *
+   * \author Vincent Lachenal
+   */
+  template<std::size_t B>
+  class BlockCipher {
+
+    // Methods +
+  public:
+    /*!
+     * Cipher a block
+     *
+     * \param input the block to cipher
+     * \param output the ciphered block
+     */
+    virtual void cipher(const std::array<uint8_t,B>& input, std::array<uint8_t,B>& output) = 0;
 
     /*!
-     * \brief Block cipher interface
+     * Decipher a block
      *
-     * Interface for all block cipher implementations.
-     *
-     * \since 0.1
-     *
-     * \author Vincent Lachenal
+     * \param input the block to decipher
+     * \param output the deciphered block
      */
-    template<std::size_t B>
-    class BlockCipher {
+    virtual void decipher(const std::array<uint8_t,B>& input, std::array<uint8_t,B>& output) = 0;
 
-      // Methods +
-    public:
-      /*!
-       * Cipher a block
-       *
-       * \param input the block to cipher
-       * \param output the ciphered block
-       */
-      virtual void cipher(const std::array<uint8_t,B>& input, std::array<uint8_t,B>& output) = 0;
+    /*!
+     * Block size getter.
+     *
+     * \return the block size
+     */
+    constexpr inline static std::size_t getBlockSize() {
+      return B;
+    }
+    // Methods -
 
-      /*!
-       * Decipher a block
-       *
-       * \param input the block to decipher
-       * \param output the deciphered block
-       */
-      virtual void decipher(const std::array<uint8_t,B>& input, std::array<uint8_t,B>& output) = 0;
+  };
 
-      /*!
-       * Block size getter.
-       *
-       * \return the block size
-       */
-      constexpr inline static std::size_t getBlockSize() {
-	return B;
-      }
-      // Methods -
-
-    };
-
-  }
-}
+}  // anch::crypto

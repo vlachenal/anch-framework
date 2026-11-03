@@ -22,56 +22,54 @@
 #include <exception>
 #include <iostream>
 
-namespace anch {
-  namespace crypto {
+namespace anch::crypto {
 
+  /*!
+   * \brief Exception on receiving an invalid block.
+   *
+   * \ref InvalidBlockException can be thrown on decipher a block or a stream.\n
+   * Blocks have fixed size. The cipher result will always have complete number of block.
+   *
+   * \since 0.1
+   *
+   * \author Vincent Lachenal
+   */
+  class InvalidBlockException: public std::exception {
+
+    // Attributes +
+  private:
+    /*! Error message */
+    std::string _message;
+    // Attributes -
+
+    // Constructors +
+  public:
     /*!
-     * \brief Exception on receiving an invalid block.
+     * \ref InvalidBlockException constructor
      *
-     * \ref InvalidBlockException can be thrown on decipher a block or a stream.\n
-     * Blocks have fixed size. The cipher result will always have complete number of block.
-     *
-     * \since 0.1
-     *
-     * \author Vincent Lachenal
+     * \param message the error message
      */
-    class InvalidBlockException: public std::exception {
+    InvalidBlockException(const std::string& message);
+    // Constructors -
 
-      // Attributes +
-    private:
-      /*! Error message */
-      std::string _message;
-      // Attributes -
+    // Destructor +
+  public:
+    /*!
+     * \ref InvalidBlockException destructor
+     */
+    virtual ~InvalidBlockException() noexcept;
+    // Destructor -
 
-      // Constructors +
-    public:
-      /*!
-       * \ref InvalidBlockException constructor
-       *
-       * \param message the error message
-       */
-      InvalidBlockException(const std::string& message);
-      // Constructors -
+    // Methods +
+  public:
+    /*!
+     * Returns error cause (message).
+     *
+     * \return the error cause
+     */
+    virtual const char* what() const noexcept override;
+    // Methods -
 
-      // Destructor +
-    public:
-      /*!
-       * \ref InvalidBlockException destructor
-       */
-      virtual ~InvalidBlockException() noexcept;
-      // Destructor -
+  };
 
-      // Methods +
-    public:
-      /*!
-       * Returns error cause (message).
-       *
-       * \return the error cause
-       */
-      virtual const char* what() const noexcept override;
-      // Methods -
-
-    };
-
-  }
-}
+}  // anch::crypto

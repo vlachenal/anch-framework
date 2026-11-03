@@ -19,29 +19,29 @@
 */
 #pragma once
 
+namespace anch::events::detail {
+
+  /*! Observer lists which are notifying in the current thread (one entry per running notification) */
+  inline thread_local std::vector<const void*> notifyingLists;
+
+  /*!
+   * Register a running notification in the current thread for its lifetime
+   */
+  class NotificationFrame {
+  public:
+    explicit NotificationFrame(const void* list) {
+      notifyingLists.push_back(list);
+    }
+    ~NotificationFrame() {
+      notifyingLists.pop_back();
+    }
+    NotificationFrame(const NotificationFrame&) = delete;
+    NotificationFrame& operator=(const NotificationFrame&) = delete;
+  };
+
+}  // anch::events::detail
+
 namespace anch::events {
-
-  namespace detail {
-
-    /*! Observer lists which are notifying in the current thread (one entry per running notification) */
-    inline thread_local std::vector<const void*> notifyingLists;
-
-    /*!
-     * Register a running notification in the current thread for its lifetime
-     */
-    class NotificationFrame {
-    public:
-      explicit NotificationFrame(const void* list) {
-	notifyingLists.push_back(list);
-      }
-      ~NotificationFrame() {
-	notifyingLists.pop_back();
-      }
-      NotificationFrame(const NotificationFrame&) = delete;
-      NotificationFrame& operator=(const NotificationFrame&) = delete;
-    };
-
-  }
 
   template<typename T>
   ObserverList<T>::ObserverList():

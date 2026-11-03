@@ -37,507 +37,505 @@
 #include <vector>
 
 
-namespace anch {
-  namespace crypto {
+namespace anch::crypto {
 
-    /*!
-     * \brief Block cipher mode of operation interface
-     *
-     * Interface for all block cipher mode of operation implementations.
-     *
-     * \since 0.1
-     *
-     * \author Vincent Lachenal
-     */
-    template<typename Derived, typename Cipher>
-    class BlockCipherModeOfOperation {
+  /*!
+   * \brief Block cipher mode of operation interface
+   *
+   * Interface for all block cipher mode of operation implementations.
+   *
+   * \since 0.1
+   *
+   * \author Vincent Lachenal
+   */
+  template<typename Derived, typename Cipher>
+  class BlockCipherModeOfOperation {
 
-      // Attributes +
-    private:
-      /*! Cipher parallelization flag */
-      bool _cipherParallelizable;
+    // Attributes +
+  private:
+    /*! Cipher parallelization flag */
+    bool _cipherParallelizable;
 
-      /*! Decipher parallelization flag */
-      bool _decipherParallelizable;
+    /*! Decipher parallelization flag */
+    bool _decipherParallelizable;
 
-      /*! Maximum number of thread to run in parallel */
-      unsigned int _nbThread;
+    /*! Maximum number of thread to run in parallel */
+    unsigned int _nbThread;
 
-      /*! Output stream mutex */
-      std::mutex _streamMutex;
+    /*! Output stream mutex */
+    std::mutex _streamMutex;
 
-      /*! Write block condition variable */
-      std::condition_variable _writeBlock;
+    /*! Write block condition variable */
+    std::condition_variable _writeBlock;
 
-      /*! End index */
-      std::atomic<uint32_t> _endIdx;
+    /*! End index */
+    std::atomic<uint32_t> _endIdx;
 
-      /*! Write index */
-      std::atomic<uint32_t> _writeIdx;
+    /*! Write index */
+    std::atomic<uint32_t> _writeIdx;
 
-      /*! Error flag */
-      std::atomic<bool> _error;
+    /*! Error flag */
+    std::atomic<bool> _error;
 
-      /*! Output stream */
-      std::ostream* _stream;
-      // Attributes -
+    /*! Output stream */
+    std::ostream* _stream;
+    // Attributes -
 
-
-      // Constructors +
-    protected:
-      /*!
-       * \ref BlockCipherModeOfOperation constructor
-       *
-       * \param cipherParallelizable Is cipher parallelizable
-       * \param decipherParallelizable Is decipher parallelizable
-       * \param nbThread the maximum number of thread to run in parallel (default to 1).
-       *                 If is set to 0, it will be set to the number of CPU if found (1 otherwise).
-       */
-      BlockCipherModeOfOperation(bool cipherParallelizable,
-				 bool decipherParallelizable,
-				 unsigned int nbThread = 1);
-      // Constructors -
-
-
-      // Destructor +
-      /*!
-       * \ref BlockCipherModeOfOperation destructor
-       */
-      virtual ~BlockCipherModeOfOperation();
-      // Destructor -
-
-
-      // Methods +
-    public:
-      /*!
-       * Cipher input stream
-       *
-       * \param input the input stream to cipher
-       * \param output the ouput stream to write in
-       * \param key the cipher key
-       */
-      void cipher(std::istream& input, std::ostream& output, const std::string& key);
-
-      /*!
-       * Decipher input stream
-       *
-       * \param input the input stream to decipher
-       * \param output the ouput stream to write in
-       * \param key the decipher key
-       */
-      void decipher(std::istream& input, std::ostream& output, const std::string& key);
-
-    protected:
-      /*!
-       * Cipher a block.\n
-       * This method will handle initialization vector management.
-       *
-       * \param input the input block to cipher
-       * \param nbRead the size of block which has been read
-       * \param output the output block
-       * \param index the block index
-       * \param cipher the cipher instance
-       *
-       * \return the number of bytes to write
-       */
-      virtual std::size_t cipherBlock(std::array<uint8_t,Cipher::getBlockSize()>& input,
-				      std::streamsize nbRead,
-				      std::array<uint8_t,Cipher::getBlockSize()>& output,
-				      uint32_t index,
-				      Cipher& cipher) = 0;
-
-      /*!
-       * Decipher a block.\n
-       * This method will handle initialization vector management.
-       *
-       * \param input the input block to decipher
-       * \param prevInput the previous input block to decipher
-       * \param nbRead the size of block which has been read
-       * \param lastBlock is last block to decipher
-       * \param output the output block
-       * \param index the block index
-       * \param cipher the cipher instance
-       *
-       * \return the number of bytes to write
-       */
-      virtual std::size_t decipherBlock(std::array<uint8_t,Cipher::getBlockSize()>& input,
-					std::array<uint8_t,Cipher::getBlockSize()>& prevInput,
-					std::streamsize nbRead,
-					bool lastBlock,
-					std::array<uint8_t,Cipher::getBlockSize()>& output,
-					uint32_t index,
-					Cipher& cipher) = 0;
-
-      /*!
-       * Reset block cipher mode of operation context
-       *
-       * \return the initial context
-       */
-      virtual const std::array<uint8_t,Cipher::getBlockSize()>& reset() = 0;
-
-    private:
-      /*!
-       * Cipher input stream into output stream sequentially
-       *
-       * \param input the input stream
-       * \param output the output stream
-       * \param key the cipher key
-       */
-      void cipherSequentially(std::istream& input, std::ostream& output, const std::string& key);
-
-      /*!
-       * Cipher input stream into output stream in parallel according to configuration put in constructor.
-       *
-       * \param input the input stream
-       * \param output the output stream
-       * \param key the cipher key
-       */
-      void cipherInParallel(std::istream& input, std::ostream& output, const std::string& key);
-
-      /*!
-       * Decipher input stream into output stream sequentially
-       *
-       * \param input the input stream
-       * \param output the output stream
-       * \param key the cipher key
-       * \param prevData the previous data
-       */
-      void decipherSequentially(std::istream& input,
-				std::ostream& output,
-				const std::string& key,
-				std::array<uint8_t,Cipher::getBlockSize()>& prevData);
-
-      /*!
-       * Decipher input stream into output stream in parallel according to configuration put in constructor.
-       *
-       * \param input the input stream
-       * \param output the output stream
-       * \param key the cipher key
-       * \param prevData the previous data
-       */
-      void decipherInParallel(std::istream& input,
-			      std::ostream& output,
-			      const std::string& key,
-			      std::array<uint8_t,Cipher::getBlockSize()>& prevData);
-
-      /*!
-       * Cipher a block
-       *
-       * \param index the block index
-       * \param input the input block to cipher
-       * \param nbRead the number of bytes which have been read
-       * \param cipher the cipher instance to use
-       */
-      void deferredCipherBlock(uint32_t index,
-			       std::array<uint8_t,Cipher::getBlockSize()>& input,
-			       std::streamsize nbRead,
-			       std::array<uint8_t,Cipher::getBlockSize()>& output,
-			       Cipher& cipher,
-			       std::size_t& nbWrite);
-
-      /*!
-       * Decipher a block
-       *
-       * \param index the block index
-       * \param input the input block to cipher
-       * \param prevInput the previous input
-       * \param nbRead the number of bytes which have been read
-       * \param cipher the cipher instance to use
-       */
-      virtual void deferredDecipherBlock(uint32_t index,
-					 std::array<uint8_t, Cipher::getBlockSize()>& input,
-					 std::array<uint8_t, Cipher::getBlockSize()> prevInput,
-					 std::streamsize nbRead,
-					 bool lastBlock,
-					 std::array<uint8_t, Cipher::getBlockSize()>& output,
-					 Cipher& cipher,
-					 std::size_t& nbWrite);
-      // Methods -
-
-
-      // Accessors +
-    public:
-      /*!
-       * Maximum number of parallel thread setter
-       *
-       * \param nbThread the maximum number of parallel thread to set
-       */
-      void setNbThread(unsigned int nbThread);
-      // Accessors -
-
-    };
 
     // Constructors +
-    template<typename Derived, typename Cipher>
-    BlockCipherModeOfOperation<Derived,Cipher>::BlockCipherModeOfOperation(bool cipherParallelizable,
-									   bool decipherParallelizable,
-									   unsigned int nbThread):
-      _cipherParallelizable(cipherParallelizable),
-      _decipherParallelizable(decipherParallelizable),
-      _nbThread(nbThread),
-      _writeBlock(),
-      _endIdx(UINT32_MAX),
-      _writeIdx(0),
-      _error(false) {
-      if(nbThread == 0 && (cipherParallelizable || decipherParallelizable)) {
-	_nbThread = std::thread::hardware_concurrency();
-	if(_nbThread == 0) { // Keep at least 1 thread running
-	  _nbThread = 1;
-	}
-      }
-    }
+  protected:
+    /*!
+     * \ref BlockCipherModeOfOperation constructor
+     *
+     * \param cipherParallelizable Is cipher parallelizable
+     * \param decipherParallelizable Is decipher parallelizable
+     * \param nbThread the maximum number of thread to run in parallel (default to 1).
+     *                 If is set to 0, it will be set to the number of CPU if found (1 otherwise).
+     */
+    BlockCipherModeOfOperation(bool cipherParallelizable,
+			       bool decipherParallelizable,
+			       unsigned int nbThread = 1);
     // Constructors -
 
 
     // Destructor +
-    template<typename Derived, typename Cipher>
-    BlockCipherModeOfOperation<Derived,Cipher>::~BlockCipherModeOfOperation() {
-      // Nothing to do
-    }
+    /*!
+     * \ref BlockCipherModeOfOperation destructor
+     */
+    virtual ~BlockCipherModeOfOperation();
     // Destructor -
 
 
     // Methods +
-    template<typename Derived, typename Cipher>
-    void
-    BlockCipherModeOfOperation<Derived,Cipher>::cipher(std::istream& input,
-						       std::ostream& output,
-						       const std::string& key) {
-      if(input && output) {
-	reset();
-	if(!_cipherParallelizable || _nbThread == 1) {
-	  cipherSequentially(input, output, key);
+  public:
+    /*!
+     * Cipher input stream
+     *
+     * \param input the input stream to cipher
+     * \param output the ouput stream to write in
+     * \param key the cipher key
+     */
+    void cipher(std::istream& input, std::ostream& output, const std::string& key);
 
-	} else {
-	  cipherInParallel(input, output, key);
-	}
-      } else {
-	throw std::ios_base::failure("Input and/or output streams are closed");
-      }
-    }
+    /*!
+     * Decipher input stream
+     *
+     * \param input the input stream to decipher
+     * \param output the ouput stream to write in
+     * \param key the decipher key
+     */
+    void decipher(std::istream& input, std::ostream& output, const std::string& key);
 
-    template<typename Derived, typename Cipher>
-    void
-    BlockCipherModeOfOperation<Derived,Cipher>::decipher(std::istream& input,
-							 std::ostream& output,
-							 const std::string& key) {
-      if(input && output) {
-	std::array<uint8_t,Cipher::getBlockSize()> prevData = reset();
-	if(!_decipherParallelizable || _nbThread == 1) {
-	  decipherSequentially(input, output, key, prevData);
+  protected:
+    /*!
+     * Cipher a block.\n
+     * This method will handle initialization vector management.
+     *
+     * \param input the input block to cipher
+     * \param nbRead the size of block which has been read
+     * \param output the output block
+     * \param index the block index
+     * \param cipher the cipher instance
+     *
+     * \return the number of bytes to write
+     */
+    virtual std::size_t cipherBlock(std::array<uint8_t,Cipher::getBlockSize()>& input,
+				    std::streamsize nbRead,
+				    std::array<uint8_t,Cipher::getBlockSize()>& output,
+				    uint32_t index,
+				    Cipher& cipher) = 0;
 
-	} else {
-	  decipherInParallel(input, output, key, prevData);
-	}
-      } else {
-	throw std::ios_base::failure("Input and/or output streams are closed");
-      }
-    }
+    /*!
+     * Decipher a block.\n
+     * This method will handle initialization vector management.
+     *
+     * \param input the input block to decipher
+     * \param prevInput the previous input block to decipher
+     * \param nbRead the size of block which has been read
+     * \param lastBlock is last block to decipher
+     * \param output the output block
+     * \param index the block index
+     * \param cipher the cipher instance
+     *
+     * \return the number of bytes to write
+     */
+    virtual std::size_t decipherBlock(std::array<uint8_t,Cipher::getBlockSize()>& input,
+				      std::array<uint8_t,Cipher::getBlockSize()>& prevInput,
+				      std::streamsize nbRead,
+				      bool lastBlock,
+				      std::array<uint8_t,Cipher::getBlockSize()>& output,
+				      uint32_t index,
+				      Cipher& cipher) = 0;
 
-    template<typename Derived, typename Cipher>
-    inline void
-    BlockCipherModeOfOperation<Derived,Cipher>::cipherSequentially(std::istream& input,
-								   std::ostream& output,
-								   const std::string& key) {
-      Cipher cipher(reinterpret_cast<const uint8_t*>(key.data()));
-      std::array<uint8_t, Cipher::getBlockSize()> data;
-      std::array<uint8_t, Cipher::getBlockSize()> out;
-      uint32_t index = 0;
-      while(!input.eof()) {
-	input.read(reinterpret_cast<char*>(data.data()), static_cast<std::streamsize>(Cipher::getBlockSize()));
-	std::streamsize nbRead = input.gcount();
-	if(nbRead == 0) {
-	  break;
-	}
-	std::size_t nbBlocks = cipherBlock(data, nbRead, out, index, cipher);
-	for(std::size_t i = 0 ; i < nbBlocks ; ++i) {
-	  output << out[i];
-	}
-	index++;
-      }
-      output.flush();
-    }
+    /*!
+     * Reset block cipher mode of operation context
+     *
+     * \return the initial context
+     */
+    virtual const std::array<uint8_t,Cipher::getBlockSize()>& reset() = 0;
 
-    template<typename Derived, typename Cipher>
-    inline void
-    BlockCipherModeOfOperation<Derived,Cipher>::cipherInParallel(std::istream& input,
-								 std::ostream& output,
-								 const std::string& key) {
-      std::array<uint8_t,Cipher::getBlockSize()>* data = new std::array<uint8_t,Cipher::getBlockSize()>[_nbThread];
-      std::array<uint8_t,Cipher::getBlockSize()>* result = new std::array<uint8_t,Cipher::getBlockSize()>[_nbThread];
-      std::size_t* nbWrite = new std::size_t[_nbThread];
-      uint32_t index = 0;
-      std::deque<std::thread> threads;
-      std::vector<Cipher> ciph;
-      ciph.push_back(Cipher(reinterpret_cast<const uint8_t*>(key.data())));
-      for(std::size_t i = 1 ; i < _nbThread ; ++i) {
-	ciph.push_back(Cipher(ciph[0]));
-      }
-      while(!input.eof()) {
-	for(std::size_t i = 0 ; i < _nbThread ; ++i) {
-	  input.read(reinterpret_cast<char*>(data[i].data()), static_cast<std::streamsize>(Cipher::getBlockSize()));
-	  std::streamsize nbRead = input.gcount();
-	  if(nbRead == 0) {
-	    break;
-	  }
-	  threads.push_back(std::thread(&Derived::deferredCipherBlock,
-					this,
-					index++,
-					std::ref(data[i]),
-					nbRead,
-					std::ref(result[i]),
-					std::ref(ciph[i]),
-					std::ref(nbWrite[i])));
-	  if(static_cast<std::size_t>(nbRead) != Cipher::getBlockSize()) {
-	    break;
-	  }
-	}
-	for(uint32_t i = 0 ; !threads.empty() ; ++i) {
-	  std::thread& th = threads.front();
-	  th.join();
-	  for(uint32_t j = 0 ; j < nbWrite[i] ; ++j) {
-	    output << result[i][j];
-	  }
-	  threads.pop_front();
-	}
-      }
+  private:
+    /*!
+     * Cipher input stream into output stream sequentially
+     *
+     * \param input the input stream
+     * \param output the output stream
+     * \param key the cipher key
+     */
+    void cipherSequentially(std::istream& input, std::ostream& output, const std::string& key);
 
-      output.flush();
-      delete[] data;
-      delete[] result;
-      delete[] nbWrite;
-    }
+    /*!
+     * Cipher input stream into output stream in parallel according to configuration put in constructor.
+     *
+     * \param input the input stream
+     * \param output the output stream
+     * \param key the cipher key
+     */
+    void cipherInParallel(std::istream& input, std::ostream& output, const std::string& key);
 
-    template<typename Derived, typename Cipher>
-    void
-    BlockCipherModeOfOperation<Derived,Cipher>::decipherSequentially(std::istream& input,
-								     std::ostream& output,
-								     const std::string& key,
-								     std::array<uint8_t,Cipher::getBlockSize()>& prevData) {
-      Cipher cipher(reinterpret_cast<const uint8_t*>(key.data()));
-      std::array<uint8_t,Cipher::getBlockSize()> out;
-      std::array<uint8_t,Cipher::getBlockSize()> data;
-      std::array<uint8_t,Cipher::getBlockSize()> cipherData;
-      input.read(reinterpret_cast<char*>(data.data()), static_cast<std::streamsize>(Cipher::getBlockSize()));
-      std::streamsize nbRead = input.gcount();
-      uint32_t index = 0;
-      do {
-	cipherData = data;
-	std::streamsize read = nbRead;
-	input.read(reinterpret_cast<char*>(data.data()), static_cast<std::streamsize>(Cipher::getBlockSize()));
+    /*!
+     * Decipher input stream into output stream sequentially
+     *
+     * \param input the input stream
+     * \param output the output stream
+     * \param key the cipher key
+     * \param prevData the previous data
+     */
+    void decipherSequentially(std::istream& input,
+			      std::ostream& output,
+			      const std::string& key,
+			      std::array<uint8_t,Cipher::getBlockSize()>& prevData);
 
-	std::size_t end = decipherBlock(cipherData, prevData, read, input.eof(), out, index, cipher);
-	for(std::size_t i = 0 ; i < end ; ++i) {
-	  output << out[i];
-	}
+    /*!
+     * Decipher input stream into output stream in parallel according to configuration put in constructor.
+     *
+     * \param input the input stream
+     * \param output the output stream
+     * \param key the cipher key
+     * \param prevData the previous data
+     */
+    void decipherInParallel(std::istream& input,
+			    std::ostream& output,
+			    const std::string& key,
+			    std::array<uint8_t,Cipher::getBlockSize()>& prevData);
 
-	prevData = cipherData;
-	nbRead = input.gcount();
-	index++;
+    /*!
+     * Cipher a block
+     *
+     * \param index the block index
+     * \param input the input block to cipher
+     * \param nbRead the number of bytes which have been read
+     * \param cipher the cipher instance to use
+     */
+    void deferredCipherBlock(uint32_t index,
+			     std::array<uint8_t,Cipher::getBlockSize()>& input,
+			     std::streamsize nbRead,
+			     std::array<uint8_t,Cipher::getBlockSize()>& output,
+			     Cipher& cipher,
+			     std::size_t& nbWrite);
 
-      } while(nbRead != 0);
-      output.flush();
-    }
-
-    template<typename Derived, typename Cipher>
-    inline void
-    BlockCipherModeOfOperation<Derived,Cipher>::decipherInParallel(std::istream& input,
-								   std::ostream& output,
-								   const std::string& key,
-								   std::array<uint8_t,Cipher::getBlockSize()>& prevData) {
-      std::array<uint8_t,Cipher::getBlockSize()>* data = new std::array<uint8_t,Cipher::getBlockSize()>[_nbThread + 1];
-      std::array<uint8_t,Cipher::getBlockSize()>* result = new std::array<uint8_t,Cipher::getBlockSize()>[_nbThread];
-      std::size_t* nbWrite = new std::size_t[_nbThread];
-      uint32_t index = 0;
-      std::deque<std::thread> threads;
-      std::vector<Cipher> ciph;
-      ciph.push_back(Cipher(reinterpret_cast<const uint8_t*>(key.data())));
-      for(std::size_t i = 1 ; i < _nbThread ; ++i) {
-	ciph.push_back(Cipher(ciph[0]));
-      }
-      bool lastBlock = false;
-      input.read(reinterpret_cast<char*>(data[0].data()), static_cast<std::streamsize>(Cipher::getBlockSize()));
-      std::size_t nbRead = static_cast<std::size_t>(input.gcount());
-      do {
-	for(std::size_t i = 0, idx = 1 ; i < _nbThread ; ++i, ++idx) {
-	  input.read(reinterpret_cast<char*>(data[idx].data()), static_cast<std::streamsize>(Cipher::getBlockSize()));
-	  std::streamsize nextCount = input.gcount();
-	  if(nextCount == 0) {
-	    lastBlock = true;
-	  }
-	  threads.push_back(std::thread(&Derived::deferredDecipherBlock,
-					this,
-					index++,
-					std::ref(data[i]),
-					prevData,
-					nbRead,
-					lastBlock,
-					std::ref(result[i]),
-					std::ref(ciph[i]),
-					std::ref(nbWrite[i])));
-	  if(lastBlock) {
-	    break;
-	  }
-	  nbRead = static_cast<std::size_t>(nextCount);
-	  prevData = data[i];
-	}
-	for(uint32_t i = 0 ; !threads.empty() ; ++i) {
-	  std::thread& th = threads.front();
-	  th.join();
-	  for(uint32_t j = 0 ; j < nbWrite[i] ; ++j) {
-	    output << result[i][j];
-	  }
-	  threads.pop_front();
-	}
-	if(_error) {
-	  throw InvalidBlockException("Error while decipher stream");
-	}
-	data[0] = data[_nbThread];
-      } while(!lastBlock);
-
-      output.flush();
-      delete[] data;
-      delete[] result;
-      delete[] nbWrite;
-    }
-
-    template<typename Derived, typename Cipher>
-    void
-    BlockCipherModeOfOperation<Derived,Cipher>::deferredCipherBlock(uint32_t index,
-								    std::array<uint8_t,Cipher::getBlockSize()>& input,
-								    std::streamsize nbRead,
-								    std::array<uint8_t,Cipher::getBlockSize()>& output,
-								    Cipher& cipher,
-								    std::size_t& nbWrite) {
-      nbWrite = cipherBlock(input, nbRead, output, index, cipher);
-    }
-
-    template<typename Derived, typename Cipher>
-    void
-    BlockCipherModeOfOperation<Derived,Cipher>::deferredDecipherBlock(uint32_t index,
-								      std::array<uint8_t, Cipher::getBlockSize()>& input,
-								      std::array<uint8_t, Cipher::getBlockSize()> prevInput,
-								      std::streamsize nbRead,
-								      bool lastBlock,
-								      std::array<uint8_t, Cipher::getBlockSize()>& output,
-								      Cipher& cipher,
-								      std::size_t& nbWrite) {
-      try {
-	nbWrite = decipherBlock(input, prevInput, nbRead, lastBlock, output, index, cipher);
-      } catch(const InvalidBlockException& e) {
-	_error = true;
-      }
-    }
+    /*!
+     * Decipher a block
+     *
+     * \param index the block index
+     * \param input the input block to cipher
+     * \param prevInput the previous input
+     * \param nbRead the number of bytes which have been read
+     * \param cipher the cipher instance to use
+     */
+    virtual void deferredDecipherBlock(uint32_t index,
+				       std::array<uint8_t, Cipher::getBlockSize()>& input,
+				       std::array<uint8_t, Cipher::getBlockSize()> prevInput,
+				       std::streamsize nbRead,
+				       bool lastBlock,
+				       std::array<uint8_t, Cipher::getBlockSize()>& output,
+				       Cipher& cipher,
+				       std::size_t& nbWrite);
     // Methods -
 
 
     // Accessors +
-    template<typename Derived, typename Cipher>
-    inline void
-    BlockCipherModeOfOperation<Derived,Cipher>::setNbThread(unsigned int nbThread) {
-      _nbThread = nbThread;
-    }
+  public:
+    /*!
+     * Maximum number of parallel thread setter
+     *
+     * \param nbThread the maximum number of parallel thread to set
+     */
+    void setNbThread(unsigned int nbThread);
     // Accessors -
 
+  };
+
+  // Constructors +
+  template<typename Derived, typename Cipher>
+  BlockCipherModeOfOperation<Derived,Cipher>::BlockCipherModeOfOperation(bool cipherParallelizable,
+									 bool decipherParallelizable,
+									 unsigned int nbThread):
+    _cipherParallelizable(cipherParallelizable),
+    _decipherParallelizable(decipherParallelizable),
+    _nbThread(nbThread),
+    _writeBlock(),
+    _endIdx(UINT32_MAX),
+    _writeIdx(0),
+    _error(false) {
+    if(nbThread == 0 && (cipherParallelizable || decipherParallelizable)) {
+      _nbThread = std::thread::hardware_concurrency();
+      if(_nbThread == 0) { // Keep at least 1 thread running
+	_nbThread = 1;
+      }
+    }
   }
-}
+  // Constructors -
+
+
+  // Destructor +
+  template<typename Derived, typename Cipher>
+  BlockCipherModeOfOperation<Derived,Cipher>::~BlockCipherModeOfOperation() {
+    // Nothing to do
+  }
+  // Destructor -
+
+
+  // Methods +
+  template<typename Derived, typename Cipher>
+  void
+  BlockCipherModeOfOperation<Derived,Cipher>::cipher(std::istream& input,
+						     std::ostream& output,
+						     const std::string& key) {
+    if(input && output) {
+      reset();
+      if(!_cipherParallelizable || _nbThread == 1) {
+	cipherSequentially(input, output, key);
+
+      } else {
+	cipherInParallel(input, output, key);
+      }
+    } else {
+      throw std::ios_base::failure("Input and/or output streams are closed");
+    }
+  }
+
+  template<typename Derived, typename Cipher>
+  void
+  BlockCipherModeOfOperation<Derived,Cipher>::decipher(std::istream& input,
+						       std::ostream& output,
+						       const std::string& key) {
+    if(input && output) {
+      std::array<uint8_t,Cipher::getBlockSize()> prevData = reset();
+      if(!_decipherParallelizable || _nbThread == 1) {
+	decipherSequentially(input, output, key, prevData);
+
+      } else {
+	decipherInParallel(input, output, key, prevData);
+      }
+    } else {
+      throw std::ios_base::failure("Input and/or output streams are closed");
+    }
+  }
+
+  template<typename Derived, typename Cipher>
+  inline void
+  BlockCipherModeOfOperation<Derived,Cipher>::cipherSequentially(std::istream& input,
+								 std::ostream& output,
+								 const std::string& key) {
+    Cipher cipher(reinterpret_cast<const uint8_t*>(key.data()));
+    std::array<uint8_t, Cipher::getBlockSize()> data;
+    std::array<uint8_t, Cipher::getBlockSize()> out;
+    uint32_t index = 0;
+    while(!input.eof()) {
+      input.read(reinterpret_cast<char*>(data.data()), static_cast<std::streamsize>(Cipher::getBlockSize()));
+      std::streamsize nbRead = input.gcount();
+      if(nbRead == 0) {
+	break;
+      }
+      std::size_t nbBlocks = cipherBlock(data, nbRead, out, index, cipher);
+      for(std::size_t i = 0 ; i < nbBlocks ; ++i) {
+	output << out[i];
+      }
+      index++;
+    }
+    output.flush();
+  }
+
+  template<typename Derived, typename Cipher>
+  inline void
+  BlockCipherModeOfOperation<Derived,Cipher>::cipherInParallel(std::istream& input,
+							       std::ostream& output,
+							       const std::string& key) {
+    std::array<uint8_t,Cipher::getBlockSize()>* data = new std::array<uint8_t,Cipher::getBlockSize()>[_nbThread];
+    std::array<uint8_t,Cipher::getBlockSize()>* result = new std::array<uint8_t,Cipher::getBlockSize()>[_nbThread];
+    std::size_t* nbWrite = new std::size_t[_nbThread];
+    uint32_t index = 0;
+    std::deque<std::thread> threads;
+    std::vector<Cipher> ciph;
+    ciph.push_back(Cipher(reinterpret_cast<const uint8_t*>(key.data())));
+    for(std::size_t i = 1 ; i < _nbThread ; ++i) {
+      ciph.push_back(Cipher(ciph[0]));
+    }
+    while(!input.eof()) {
+      for(std::size_t i = 0 ; i < _nbThread ; ++i) {
+	input.read(reinterpret_cast<char*>(data[i].data()), static_cast<std::streamsize>(Cipher::getBlockSize()));
+	std::streamsize nbRead = input.gcount();
+	if(nbRead == 0) {
+	  break;
+	}
+	threads.push_back(std::thread(&Derived::deferredCipherBlock,
+				      this,
+				      index++,
+				      std::ref(data[i]),
+				      nbRead,
+				      std::ref(result[i]),
+				      std::ref(ciph[i]),
+				      std::ref(nbWrite[i])));
+	if(static_cast<std::size_t>(nbRead) != Cipher::getBlockSize()) {
+	  break;
+	}
+      }
+      for(uint32_t i = 0 ; !threads.empty() ; ++i) {
+	std::thread& th = threads.front();
+	th.join();
+	for(uint32_t j = 0 ; j < nbWrite[i] ; ++j) {
+	  output << result[i][j];
+	}
+	threads.pop_front();
+      }
+    }
+
+    output.flush();
+    delete[] data;
+    delete[] result;
+    delete[] nbWrite;
+  }
+
+  template<typename Derived, typename Cipher>
+  void
+  BlockCipherModeOfOperation<Derived,Cipher>::decipherSequentially(std::istream& input,
+								   std::ostream& output,
+								   const std::string& key,
+								   std::array<uint8_t,Cipher::getBlockSize()>& prevData) {
+    Cipher cipher(reinterpret_cast<const uint8_t*>(key.data()));
+    std::array<uint8_t,Cipher::getBlockSize()> out;
+    std::array<uint8_t,Cipher::getBlockSize()> data;
+    std::array<uint8_t,Cipher::getBlockSize()> cipherData;
+    input.read(reinterpret_cast<char*>(data.data()), static_cast<std::streamsize>(Cipher::getBlockSize()));
+    std::streamsize nbRead = input.gcount();
+    uint32_t index = 0;
+    do {
+      cipherData = data;
+      std::streamsize read = nbRead;
+      input.read(reinterpret_cast<char*>(data.data()), static_cast<std::streamsize>(Cipher::getBlockSize()));
+
+      std::size_t end = decipherBlock(cipherData, prevData, read, input.eof(), out, index, cipher);
+      for(std::size_t i = 0 ; i < end ; ++i) {
+	output << out[i];
+      }
+
+      prevData = cipherData;
+      nbRead = input.gcount();
+      index++;
+
+    } while(nbRead != 0);
+    output.flush();
+  }
+
+  template<typename Derived, typename Cipher>
+  inline void
+  BlockCipherModeOfOperation<Derived,Cipher>::decipherInParallel(std::istream& input,
+								 std::ostream& output,
+								 const std::string& key,
+								 std::array<uint8_t,Cipher::getBlockSize()>& prevData) {
+    std::array<uint8_t,Cipher::getBlockSize()>* data = new std::array<uint8_t,Cipher::getBlockSize()>[_nbThread + 1];
+    std::array<uint8_t,Cipher::getBlockSize()>* result = new std::array<uint8_t,Cipher::getBlockSize()>[_nbThread];
+    std::size_t* nbWrite = new std::size_t[_nbThread];
+    uint32_t index = 0;
+    std::deque<std::thread> threads;
+    std::vector<Cipher> ciph;
+    ciph.push_back(Cipher(reinterpret_cast<const uint8_t*>(key.data())));
+    for(std::size_t i = 1 ; i < _nbThread ; ++i) {
+      ciph.push_back(Cipher(ciph[0]));
+    }
+    bool lastBlock = false;
+    input.read(reinterpret_cast<char*>(data[0].data()), static_cast<std::streamsize>(Cipher::getBlockSize()));
+    std::size_t nbRead = static_cast<std::size_t>(input.gcount());
+    do {
+      for(std::size_t i = 0, idx = 1 ; i < _nbThread ; ++i, ++idx) {
+	input.read(reinterpret_cast<char*>(data[idx].data()), static_cast<std::streamsize>(Cipher::getBlockSize()));
+	std::streamsize nextCount = input.gcount();
+	if(nextCount == 0) {
+	  lastBlock = true;
+	}
+	threads.push_back(std::thread(&Derived::deferredDecipherBlock,
+				      this,
+				      index++,
+				      std::ref(data[i]),
+				      prevData,
+				      nbRead,
+				      lastBlock,
+				      std::ref(result[i]),
+				      std::ref(ciph[i]),
+				      std::ref(nbWrite[i])));
+	if(lastBlock) {
+	  break;
+	}
+	nbRead = static_cast<std::size_t>(nextCount);
+	prevData = data[i];
+      }
+      for(uint32_t i = 0 ; !threads.empty() ; ++i) {
+	std::thread& th = threads.front();
+	th.join();
+	for(uint32_t j = 0 ; j < nbWrite[i] ; ++j) {
+	  output << result[i][j];
+	}
+	threads.pop_front();
+      }
+      if(_error) {
+	throw InvalidBlockException("Error while decipher stream");
+      }
+      data[0] = data[_nbThread];
+    } while(!lastBlock);
+
+    output.flush();
+    delete[] data;
+    delete[] result;
+    delete[] nbWrite;
+  }
+
+  template<typename Derived, typename Cipher>
+  void
+  BlockCipherModeOfOperation<Derived,Cipher>::deferredCipherBlock(uint32_t index,
+								  std::array<uint8_t,Cipher::getBlockSize()>& input,
+								  std::streamsize nbRead,
+								  std::array<uint8_t,Cipher::getBlockSize()>& output,
+								  Cipher& cipher,
+								  std::size_t& nbWrite) {
+    nbWrite = cipherBlock(input, nbRead, output, index, cipher);
+  }
+
+  template<typename Derived, typename Cipher>
+  void
+  BlockCipherModeOfOperation<Derived,Cipher>::deferredDecipherBlock(uint32_t index,
+								    std::array<uint8_t, Cipher::getBlockSize()>& input,
+								    std::array<uint8_t, Cipher::getBlockSize()> prevInput,
+								    std::streamsize nbRead,
+								    bool lastBlock,
+								    std::array<uint8_t, Cipher::getBlockSize()>& output,
+								    Cipher& cipher,
+								    std::size_t& nbWrite) {
+    try {
+      nbWrite = decipherBlock(input, prevInput, nbRead, lastBlock, output, index, cipher);
+    } catch(const InvalidBlockException& e) {
+      _error = true;
+    }
+  }
+  // Methods -
+
+
+  // Accessors +
+  template<typename Derived, typename Cipher>
+  inline void
+  BlockCipherModeOfOperation<Derived,Cipher>::setNbThread(unsigned int nbThread) {
+    _nbThread = nbThread;
+  }
+  // Accessors -
+
+}  // anch::crypto

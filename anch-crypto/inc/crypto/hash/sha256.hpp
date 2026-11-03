@@ -24,32 +24,30 @@
 #include <sstream>
 #include <fstream>
 
-namespace anch {
-  namespace crypto {
+namespace anch::crypto {
 
-    /*! SHA256 initial values */
-    extern std::array<uint32_t,8> SHA256_VALUES;
-    /*
-     * SHA256 defintion
-     */
-    extern template class Hash<32,64>;
-    extern template const std::array<uint8_t,32>& Hash<32,64>::digest(const std::string&);
-    //extern template const std::array<uint8_t,32>& Hash<32,64>::digest(const std::wstring&);
-    extern template const std::array<uint8_t,32>& Hash<32,64>::digest(std::istream&);
-    //extern template const std::array<uint8_t,32>& Hash<32,64>::digest(std::wistream& data);
-    extern template class SHA2<32,64,uint32_t,64,SHA256_VALUES>;
-    extern template class SHA224_256<32,SHA256_VALUES>;
-    extern template SHA224_256<32,SHA256_VALUES>::SHA224_256(const std::string& data);
-    //extern template SHA224_256<32,SHA256_VALUES>::SHA224_256(const std::wstring& data);
-    extern template SHA224_256<32,SHA256_VALUES>::SHA224_256(std::istream& stream);
-    //extern template SHA224_256<32,SHA256_VALUES>::SHA224_256(std::wistream& stream);
-    /*!
-     * SHA256 defintion
-     */
-    using SHA256 = SHA224_256<32,SHA256_VALUES>;
+  /*! SHA256 initial values */
+  extern std::array<uint32_t,8> SHA256_VALUES;
+  /*
+   * SHA256 defintion
+   */
+  extern template class Hash<32,64>;
+  extern template const std::array<uint8_t,32>& Hash<32,64>::digest(const std::string&);
+  //extern template const std::array<uint8_t,32>& Hash<32,64>::digest(const std::wstring&);
+  extern template const std::array<uint8_t,32>& Hash<32,64>::digest(std::istream&);
+  //extern template const std::array<uint8_t,32>& Hash<32,64>::digest(std::wistream& data);
+  extern template class SHA2<32,64,uint32_t,64,SHA256_VALUES>;
+  extern template class SHA224_256<32,SHA256_VALUES>;
+  extern template SHA224_256<32,SHA256_VALUES>::SHA224_256(const std::string& data);
+  //extern template SHA224_256<32,SHA256_VALUES>::SHA224_256(const std::wstring& data);
+  extern template SHA224_256<32,SHA256_VALUES>::SHA224_256(std::istream& stream);
+  //extern template SHA224_256<32,SHA256_VALUES>::SHA224_256(std::wistream& stream);
+  /*!
+   * SHA256 defintion
+   */
+  using SHA256 = SHA224_256<32,SHA256_VALUES>;
 
-    /*! HMAC SHA256 definition */
-    extern template SHA256 HMAC<SHA256>(const std::string&, const std::string&);
+  /*! HMAC SHA256 definition */
+  extern template SHA256 HMAC<SHA256>(const std::string&, const std::string&);
 
-  }
-}
+}  // anch::crypto

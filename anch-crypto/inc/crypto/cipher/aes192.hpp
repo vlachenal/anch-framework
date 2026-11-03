@@ -33,54 +33,52 @@
 #include "crypto/padding/pkcs5Padding.hpp"
 #include "crypto/padding/zeroPadding.hpp"
 
-namespace anch {
-  namespace crypto {
+namespace anch::crypto {
 
-    extern template class BlockCipher<16>;
-    extern template class AES<6,12>;
-    /*!
-     * AES-192 defintion
-     */
-    using AES192 = AES<6,12>;
+  extern template class BlockCipher<16>;
+  extern template class AES<6,12>;
+  /*!
+   * AES-192 defintion
+   */
+  using AES192 = AES<6,12>;
 
-    /*!
-     * Cipher block mode of operation definitions
-     */
-    extern template class BlockCipherModeOfOperation<ECB<AES192,ZeroPadding>,AES192>;
-    extern template class ECB<AES192,ZeroPadding>;
-    extern template class BlockCipherModeOfOperation<ECB<AES192,ANSIX923>,AES192>;
-    extern template class ECB<AES192,ANSIX923>;
-    extern template class BlockCipherModeOfOperation<ECB<AES192,ISO7816_4Padding>,AES192>;
-    extern template class ECB<AES192,ISO7816_4Padding>;
-    extern template class BlockCipherModeOfOperation<ECB<AES192,PKCS5Padding>,AES192>;
-    extern template class ECB<AES192,PKCS5Padding>;
+  /*!
+   * Cipher block mode of operation definitions
+   */
+  extern template class BlockCipherModeOfOperation<ECB<AES192,ZeroPadding>,AES192>;
+  extern template class ECB<AES192,ZeroPadding>;
+  extern template class BlockCipherModeOfOperation<ECB<AES192,ANSIX923>,AES192>;
+  extern template class ECB<AES192,ANSIX923>;
+  extern template class BlockCipherModeOfOperation<ECB<AES192,ISO7816_4Padding>,AES192>;
+  extern template class ECB<AES192,ISO7816_4Padding>;
+  extern template class BlockCipherModeOfOperation<ECB<AES192,PKCS5Padding>,AES192>;
+  extern template class ECB<AES192,PKCS5Padding>;
 
-    extern template class BlockCipherModeOfOperation<CBC<AES192,ZeroPadding>,AES192>;
-    extern template class CBC<AES192,ZeroPadding>;
-    extern template class BlockCipherModeOfOperation<CBC<AES192,ANSIX923>,AES192>;
-    extern template class CBC<AES192,ANSIX923>;
-    extern template class BlockCipherModeOfOperation<CBC<AES192,ISO7816_4Padding>,AES192>;
-    extern template class CBC<AES192,ISO7816_4Padding>;
-    extern template class BlockCipherModeOfOperation<CBC<AES192,PKCS5Padding>,AES192>;
-    extern template class CBC<AES192,PKCS5Padding>;
+  extern template class BlockCipherModeOfOperation<CBC<AES192,ZeroPadding>,AES192>;
+  extern template class CBC<AES192,ZeroPadding>;
+  extern template class BlockCipherModeOfOperation<CBC<AES192,ANSIX923>,AES192>;
+  extern template class CBC<AES192,ANSIX923>;
+  extern template class BlockCipherModeOfOperation<CBC<AES192,ISO7816_4Padding>,AES192>;
+  extern template class CBC<AES192,ISO7816_4Padding>;
+  extern template class BlockCipherModeOfOperation<CBC<AES192,PKCS5Padding>,AES192>;
+  extern template class CBC<AES192,PKCS5Padding>;
 
-    extern template class BlockCipherModeOfOperation<PCBC<AES192,ZeroPadding>,AES192>;
-    extern template class PCBC<AES192,ZeroPadding>;
-    extern template class BlockCipherModeOfOperation<PCBC<AES192,ANSIX923>,AES192>;
-    extern template class PCBC<AES192,ANSIX923>;
-    extern template class BlockCipherModeOfOperation<PCBC<AES192,ISO7816_4Padding>,AES192>;
-    extern template class PCBC<AES192,ISO7816_4Padding>;
-    extern template class BlockCipherModeOfOperation<PCBC<AES192,PKCS5Padding>,AES192>;
-    extern template class PCBC<AES192,PKCS5Padding>;
+  extern template class BlockCipherModeOfOperation<PCBC<AES192,ZeroPadding>,AES192>;
+  extern template class PCBC<AES192,ZeroPadding>;
+  extern template class BlockCipherModeOfOperation<PCBC<AES192,ANSIX923>,AES192>;
+  extern template class PCBC<AES192,ANSIX923>;
+  extern template class BlockCipherModeOfOperation<PCBC<AES192,ISO7816_4Padding>,AES192>;
+  extern template class PCBC<AES192,ISO7816_4Padding>;
+  extern template class BlockCipherModeOfOperation<PCBC<AES192,PKCS5Padding>,AES192>;
+  extern template class PCBC<AES192,PKCS5Padding>;
 
-    extern template class BlockCipherModeOfOperation<CFB<AES192>,AES192>;
-    extern template class CFB<AES192>;
+  extern template class BlockCipherModeOfOperation<CFB<AES192>,AES192>;
+  extern template class CFB<AES192>;
 
-    extern template class BlockCipherModeOfOperation<OFB<AES192>,AES192>;
-    extern template class OFB<AES192>;
+  extern template class BlockCipherModeOfOperation<OFB<AES192>,AES192>;
+  extern template class OFB<AES192>;
 
-    extern template class BlockCipherModeOfOperation<CTR<AES192>,AES192>;
-    extern template class CTR<AES192>;
+  extern template class BlockCipherModeOfOperation<CTR<AES192>,AES192>;
+  extern template class CTR<AES192>;
 
-  }
-}
+}  // anch::crypto
