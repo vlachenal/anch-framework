@@ -32,121 +32,119 @@
 typedef bool my_bool;
 #endif
 
-namespace anch {
-  namespace sql {
+namespace anch::sql {
+
+  /*!
+   * \brief MySQL result set implementation for prepared statement ... shitty API
+   *
+   * Implements \ref ResultSet for MySQL for prepared statement
+   *
+   * \author Vincent Lachenal
+   *
+   * \since 0.1
+   */
+  class MySQLPreparedStatementResultSet: public ResultSet {
+
+    // Attributes +
+  private:
+    /*! MySQL statement */
+    MYSQL_STMT* _stmt;
+
+    /*! Columns buffers (bound with a bounded size: truncated values are read again with their real size) */
+    std::vector<std::vector<char>> _buffers;
+
+    /*! Columns values of current row (\c std::nullopt for \c NULL ) */
+    std::vector<std::optional<std::string>> _values;
+
+    /*! Columns length */
+    std::vector<unsigned long> _lengths;
+
+    /*! Columns null flags */
+    std::vector<my_bool> _nulls;
+
+    /*! Columns truncation flags */
+    std::vector<my_bool> _errors;
+
+    /*! MySQL result binding */
+    std::vector<MYSQL_BIND> _binds;
+    // Attributes -
+
+    // Constructors +
+  public:
+    /*!
+     * \ref MySQLPreparedStatementResultSet constructor
+     *
+     * \param stmt the MySQL statement
+     *
+     * \throw SqlException any error
+     */
+    MySQLPreparedStatementResultSet(MYSQL_STMT* stmt);
+    // Constructors -
+
+    // Destructor +
+    /*!
+     * \ref MySQLPreparedStatementResultSet destructor
+     */
+    virtual ~MySQLPreparedStatementResultSet() noexcept;
+    // Destructor -
+
+    // Methods +
+  protected:
+    /*!
+     * Fetch next row in SQL result set.
+     *
+     * \return \c true if next row exists, \c false otherwise
+     *
+     * \throw SqlException any error
+     */
+    virtual bool fetchNext() override;
+
+  protected:
+    /*!
+     * Retrieve string value from result set according to SQL database engine.
+     *
+     * \param idx the field index
+     * \param out the result
+     *
+     * \throw SqlException any error
+     */
+    virtual bool getValue(std::size_t idx, std::string& out) override;
 
     /*!
-     * \brief MySQL result set implementation for prepared statement ... shitty API
+     * Retrieve string value from result set according to SQL database engine.
      *
-     * Implements \ref ResultSet for MySQL for prepared statement
+     * \param idx the index
      *
-     * \author Vincent Lachenal
+     * \return the result
      *
-     * \since 0.1
+     * \throw SqlException any error
      */
-    class MySQLPreparedStatementResultSet: public ResultSet {
+    virtual std::optional<std::string> getValue(std::size_t idx) override;
 
-      // Attributes +
-    private:
-      /*! MySQL statement */
-      MYSQL_STMT* _stmt;
+    /*!
+     * Retrieve SQL date formatter
+     *
+     * \return the SQL date formatter
+     */
+    virtual const anch::date::DateFormatter& getDateFormatter() override;
 
-      /*! Columns buffers (bound with a bounded size: truncated values are read again with their real size) */
-      std::vector<std::vector<char>> _buffers;
+    /*!
+     * Retrieve SQL time formatter
+     *
+     * \return the SQL time formatter
+     */
+    virtual const anch::date::DateFormatter& getTimeFormatter() override;
 
-      /*! Columns values of current row (\c std::nullopt for \c NULL ) */
-      std::vector<std::optional<std::string>> _values;
+    /*!
+     * Retrieve SQL timestamp formatter
+     *
+     * \return the SQL timestamp formatter
+     */
+    virtual const anch::date::DateFormatter& getTimestampFormatter() override;
+    // Methods -
 
-      /*! Columns length */
-      std::vector<unsigned long> _lengths;
+  };
 
-      /*! Columns null flags */
-      std::vector<my_bool> _nulls;
-
-      /*! Columns truncation flags */
-      std::vector<my_bool> _errors;
-
-      /*! MySQL result binding */
-      std::vector<MYSQL_BIND> _binds;
-      // Attributes -
-
-      // Constructors +
-    public:
-      /*!
-       * \ref MySQLPreparedStatementResultSet constructor
-       *
-       * \param stmt the MySQL statement
-       *
-       * \throw SqlException any error
-       */
-      MySQLPreparedStatementResultSet(MYSQL_STMT* stmt);
-      // Constructors -
-
-      // Destructor +
-      /*!
-       * \ref MySQLPreparedStatementResultSet destructor
-       */
-      virtual ~MySQLPreparedStatementResultSet() noexcept;
-      // Destructor -
-
-      // Methods +
-    protected:
-      /*!
-       * Fetch next row in SQL result set.
-       *
-       * \return \c true if next row exists, \c false otherwise
-       *
-       * \throw SqlException any error
-       */
-      virtual bool fetchNext() override;
-
-    protected:
-      /*!
-       * Retrieve string value from result set according to SQL database engine.
-       *
-       * \param idx the field index
-       * \param out the result
-       *
-       * \throw SqlException any error
-       */
-      virtual bool getValue(std::size_t idx, std::string& out) override;
-
-      /*!
-       * Retrieve string value from result set according to SQL database engine.
-       *
-       * \param idx the index
-       *
-       * \return the result
-       *
-       * \throw SqlException any error
-       */
-      virtual std::optional<std::string> getValue(std::size_t idx) override;
-
-      /*!
-       * Retrieve SQL date formatter
-       *
-       * \return the SQL date formatter
-       */
-      virtual const anch::date::DateFormatter& getDateFormatter() override;
-
-      /*!
-       * Retrieve SQL time formatter
-       *
-       * \return the SQL time formatter
-       */
-      virtual const anch::date::DateFormatter& getTimeFormatter() override;
-
-      /*!
-       * Retrieve SQL timestamp formatter
-       *
-       * \return the SQL timestamp formatter
-       */
-      virtual const anch::date::DateFormatter& getTimestampFormatter() override;
-      // Methods -
-
-    };
-
-  }
-}
+}  // anch::sql
 
 #endif // ANCH_SQL_MYSQL

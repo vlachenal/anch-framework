@@ -29,82 +29,80 @@
 //typedef struct st_mysql_stmt MYSQL_STMT;
 //struct MYSQL_STMT;
 
-namespace anch {
-  namespace sql {
+namespace anch::sql {
 
-    class MySQLConnection;
+  class MySQLConnection;
+
+  /*!
+   * \brief MySQL prepared statement implementation
+   *
+   * Compile prepared statement in constructor, manage bind and statement execution.
+   *
+   * \author Vincent Lachenal
+   *
+   * \since 0.1
+   */
+  class MySQLPreparedStatement: public PreparedStatement {
+
+    // Attributes +
+  private:
+    /*! Statement counter */
+    static std::atomic<std::uint64_t> _counter;
+
+    /*! MySQL connection */
+    MYSQL* _conn;
+
+    /*! MySQL statement */
+    MYSQL_STMT* _stmt;
+
+    /*! MySQL statement identifier */
+    std::string _stmtId;
+    // Attributes -
+
+    // Constructors +
+  public:
+    /*!
+     * \ref MySQLPreparedStatement constructor
+     *
+     * \param dbCon the database connection
+     * \param query the SQL query
+     *
+     * \throw SqlException any error
+     */
+    MySQLPreparedStatement(MYSQL* dbCon, const std::string& query);
+    // Constructors -
+
+    // Destructor +
+  public:
+    /*!
+     * \ref MySQLPreparedStatement destructor
+     */
+    virtual ~MySQLPreparedStatement() noexcept;
+    // Destructor -
+
+    // Methods +
+  protected:
+    /*!
+     * Execute prepared statement for SELECT statement
+     *
+     * \return the result set
+     *
+     * \throw SqlException any error
+     */
+    virtual ResultSet* doExecuteQuery() override;
 
     /*!
-     * \brief MySQL prepared statement implementation
+     * Execute prepared statement for update database (INSERT, UPDATE, DELETE)
      *
-     * Compile prepared statement in constructor, manage bind and statement execution.
+     * \return the number of affected rows
      *
-     * \author Vincent Lachenal
-     *
-     * \since 0.1
+     * \throw SqlException any error
      */
-    class MySQLPreparedStatement: public PreparedStatement {
+    virtual uint64_t doExecuteUpdate() override;
+    // Methods -
 
-      // Attributes +
-    private:
-      /*! Statement counter */
-      static std::atomic<std::uint64_t> _counter;
+  };
 
-      /*! MySQL connection */
-      MYSQL* _conn;
-
-      /*! MySQL statement */
-      MYSQL_STMT* _stmt;
-
-      /*! MySQL statement identifier */
-      std::string _stmtId;
-      // Attributes -
-
-      // Constructors +
-    public:
-      /*!
-       * \ref MySQLPreparedStatement constructor
-       *
-       * \param dbCon the database connection
-       * \param query the SQL query
-       *
-       * \throw SqlException any error
-       */
-      MySQLPreparedStatement(MYSQL* dbCon, const std::string& query);
-      // Constructors -
-
-      // Destructor +
-    public:
-      /*!
-       * \ref MySQLPreparedStatement destructor
-       */
-      virtual ~MySQLPreparedStatement() noexcept;
-      // Destructor -
-
-      // Methods +
-    protected:
-      /*!
-       * Execute prepared statement for SELECT statement
-       *
-       * \return the result set
-       *
-       * \throw SqlException any error
-       */
-      virtual ResultSet* doExecuteQuery() override;
-
-      /*!
-       * Execute prepared statement for update database (INSERT, UPDATE, DELETE)
-       *
-       * \return the number of affected rows
-       *
-       * \throw SqlException any error
-       */
-      virtual uint64_t doExecuteUpdate() override;
-      // Methods -
-
-    };
-
-  }
-}
+}  // anch::sql
 
 #endif // ANCH_SQL_MYSQL

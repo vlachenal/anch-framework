@@ -25,109 +25,107 @@
 struct sqlite3_stmt;
 
 
-namespace anch {
-  namespace sql {
+namespace anch::sql {
+
+  /*!
+   * \brief SQLite3 result set implementation
+   *
+   * Implements \ref ResultSet for SQLite3
+   *
+   * \author Vincent Lachenal
+   *
+   * \since 0.1
+   */
+  class SQLite3ResultSet: public ResultSet {
+
+    // Attributes +
+  private:
+    /*! PostgreSQL result */
+    sqlite3_stmt* _stmt;
+
+    /*! Prepared statement flag */
+    bool _prepared;
+
+    /*! Number of columns */
+    int _nbFields;
+    // Attributes -
+
+    // Constructors +
+  public:
+    /*!
+     * \ref SQLite3ResultSet constructor
+     *
+     * \param stmt the SQLite3 statement
+     * \param prepared prepared statement or not (default to not)
+     */
+    SQLite3ResultSet(sqlite3_stmt* stmt, bool prepared = false) noexcept;
+    // Constructors -
+
+    // Destructor +
+  public:
+    /*!
+     * \ref SQLite3ResultSet destructor
+     */
+    virtual ~SQLite3ResultSet();
+    // Destructor -
+
+    // Methods +
+  protected:
+    /*!
+     * Fetch next row in SQL result set.
+     *
+     * \return \c true if next row exists, \c false otherwise
+     *
+     * \throw SqlException any error
+     */
+    virtual bool fetchNext() override;
+
+  protected:
+    /*!
+     * Retrieve string value from result set according to SQL database engine.
+     *
+     * \param idx the field index
+     * \param out the result
+     *
+     * \throw SqlException any error
+     */
+    virtual bool getValue(std::size_t idx, std::string& out) override;
 
     /*!
-     * \brief SQLite3 result set implementation
+     * Retrieve string value from result set according to SQL database engine.
      *
-     * Implements \ref ResultSet for SQLite3
+     * \param idx the index
      *
-     * \author Vincent Lachenal
+     * \return the result
      *
-     * \since 0.1
+     * \throw SqlException any error
      */
-    class SQLite3ResultSet: public ResultSet {
+    virtual std::optional<std::string> getValue(std::size_t idx) override;
 
-      // Attributes +
-    private:
-      /*! PostgreSQL result */
-      sqlite3_stmt* _stmt;
+    /*!
+     * Retrieve SQL date formatter
+     *
+     * \return the SQL date formatter
+     */
+    virtual const anch::date::DateFormatter& getDateFormatter() override;
 
-      /*! Prepared statement flag */
-      bool _prepared;
+    /*!
+     * Retrieve SQL time formatter
+     *
+     * \return the SQL time formatter
+     */
+    virtual const anch::date::DateFormatter& getTimeFormatter() override;
 
-      /*! Number of columns */
-      int _nbFields;
-      // Attributes -
+    /*!
+     * Retrieve SQL timestamp formatter
+     *
+     * \return the SQL timestamp formatter
+     */
+    virtual const anch::date::DateFormatter& getTimestampFormatter() override;
+    // Methods -
 
-      // Constructors +
-    public:
-      /*!
-       * \ref SQLite3ResultSet constructor
-       *
-       * \param stmt the SQLite3 statement
-       * \param prepared prepared statement or not (default to not)
-       */
-      SQLite3ResultSet(sqlite3_stmt* stmt, bool prepared = false) noexcept;
-      // Constructors -
+  };
 
-      // Destructor +
-    public:
-      /*!
-       * \ref SQLite3ResultSet destructor
-       */
-      virtual ~SQLite3ResultSet();
-      // Destructor -
-
-      // Methods +
-    protected:
-      /*!
-       * Fetch next row in SQL result set.
-       *
-       * \return \c true if next row exists, \c false otherwise
-       *
-       * \throw SqlException any error
-       */
-      virtual bool fetchNext() override;
-
-    protected:
-      /*!
-       * Retrieve string value from result set according to SQL database engine.
-       *
-       * \param idx the field index
-       * \param out the result
-       *
-       * \throw SqlException any error
-       */
-      virtual bool getValue(std::size_t idx, std::string& out) override;
-
-      /*!
-       * Retrieve string value from result set according to SQL database engine.
-       *
-       * \param idx the index
-       *
-       * \return the result
-       *
-       * \throw SqlException any error
-       */
-      virtual std::optional<std::string> getValue(std::size_t idx) override;
-
-      /*!
-       * Retrieve SQL date formatter
-       *
-       * \return the SQL date formatter
-       */
-      virtual const anch::date::DateFormatter& getDateFormatter() override;
-
-      /*!
-       * Retrieve SQL time formatter
-       *
-       * \return the SQL time formatter
-       */
-      virtual const anch::date::DateFormatter& getTimeFormatter() override;
-
-      /*!
-       * Retrieve SQL timestamp formatter
-       *
-       * \return the SQL timestamp formatter
-       */
-      virtual const anch::date::DateFormatter& getTimestampFormatter() override;
-      // Methods -
-
-    };
-
-  }
-}
+}  // anch::sql
 
 #endif // ANCH_SQL_SQLITE3

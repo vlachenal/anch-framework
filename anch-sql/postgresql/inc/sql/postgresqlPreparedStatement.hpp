@@ -28,79 +28,77 @@
 typedef struct pg_conn PGconn;
 
 
-namespace anch {
-  namespace sql {
+namespace anch::sql {
 
-    class PostgreSQLConnection;
+  class PostgreSQLConnection;
+
+  /*!
+   * \brief PostgreSQL prepared statement implementation
+   *
+   * Compile prepared statement in constructor, manage bind and statement execution.
+   *
+   * \author Vincent Lachenal
+   *
+   * \since 0.1
+   */
+  class PostgreSQLPreparedStatement: public PreparedStatement {
+
+    // Attributes +
+  private:
+    /*! Statement counter */
+    static std::atomic<std::uint64_t> _counter;
+
+    /*! PostgreSQL database connection */
+    PGconn* _conn;
+
+    /** PostgreSQL statement identifier */
+    std::string _stmtId;
+    // Attributes -
+
+    // Constructors +
+  public:
+    /*!
+     * \ref PostgreSQLPreparedStatement constructor
+     *
+     * \param dbCon the database connection
+     * \param query the SQL query
+     *
+     * \throw SqlException any error
+     */
+    PostgreSQLPreparedStatement(PGconn* dbCon, const std::string& query);
+    // Constructors -
+
+    // Destructor +
+  public:
+    /*!
+     * \ref PostgreSQLPreparedStatement destructor
+     */
+    virtual ~PostgreSQLPreparedStatement() noexcept;
+    // Destructor -
+
+    // Methods +
+  protected:
+    /*!
+     * Execute prepared statement for SELECT statement
+     *
+     * \return the result set
+     *
+     * \throw SqlException any error
+     */
+    virtual ResultSet* doExecuteQuery() override;
 
     /*!
-     * \brief PostgreSQL prepared statement implementation
+     * Execute prepared statement for update database (INSERT, UPDATE, DELETE)
      *
-     * Compile prepared statement in constructor, manage bind and statement execution.
+     * \return the number of affected rows
      *
-     * \author Vincent Lachenal
-     *
-     * \since 0.1
+     * \throw SqlException any error
      */
-    class PostgreSQLPreparedStatement: public PreparedStatement {
+    virtual uint64_t doExecuteUpdate() override;
+    // Methods -
 
-      // Attributes +
-    private:
-      /*! Statement counter */
-      static std::atomic<std::uint64_t> _counter;
+  };
 
-      /*! PostgreSQL database connection */
-      PGconn* _conn;
-
-      /** PostgreSQL statement identifier */
-      std::string _stmtId;
-      // Attributes -
-
-      // Constructors +
-    public:
-      /*!
-       * \ref PostgreSQLPreparedStatement constructor
-       *
-       * \param dbCon the database connection
-       * \param query the SQL query
-       *
-       * \throw SqlException any error
-       */
-      PostgreSQLPreparedStatement(PGconn* dbCon, const std::string& query);
-      // Constructors -
-
-      // Destructor +
-    public:
-      /*!
-       * \ref PostgreSQLPreparedStatement destructor
-       */
-      virtual ~PostgreSQLPreparedStatement() noexcept;
-      // Destructor -
-
-      // Methods +
-    protected:
-      /*!
-       * Execute prepared statement for SELECT statement
-       *
-       * \return the result set
-       *
-       * \throw SqlException any error
-       */
-      virtual ResultSet* doExecuteQuery() override;
-
-      /*!
-       * Execute prepared statement for update database (INSERT, UPDATE, DELETE)
-       *
-       * \return the number of affected rows
-       *
-       * \throw SqlException any error
-       */
-      virtual uint64_t doExecuteUpdate() override;
-      // Methods -
-
-    };
-
-  }
-}
+}  // anch::sql
 
 #endif // ANCH_SQL_POSTGRESQL

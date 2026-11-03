@@ -155,14 +155,12 @@ SelectBuilder::window(const std::string& function,
 // Methods -
 
 
-namespace anch {
-  namespace sql {
+namespace anch::sql {
 
-    std::ostream&
-    operator<<(std::ostream& stream, const SelectBuilder& builder) {
-      stream << builder._buffer.str();
-      return stream;
-    }
+  std::ostream&
+  operator<<(std::ostream& stream, const SelectBuilder& builder) {
+    stream << builder._buffer.str();
+    return stream;
+  }
 
-  }  // sql
-}  // anch
+}  // anch::sql

@@ -23,84 +23,82 @@
 #include <list>
 
 
-namespace anch {
-  namespace sql {
+namespace anch::sql {
 
-    /**
-     * \brief SQL query
-     *
-     * This is the result of the builders. It provides:
-     * <ul>
-     * <li>query to send to database</li>
-     * <li>values to add to prepared statement</li>
-     * </ul>
-     *
-     * \since 0.1
-     *
-     * \author Vincent Lachenal
+  /**
+   * \brief SQL query
+   *
+   * This is the result of the builders. It provides:
+   * <ul>
+   * <li>query to send to database</li>
+   * <li>values to add to prepared statement</li>
+   * </ul>
+   *
+   * \since 0.1
+   *
+   * \author Vincent Lachenal
+   */
+  class SQLQuery {
+
+    // Attributes +
+  private:
+    /*! SQL query */
+    std::string _query;
+
+    /*! Prepared statement values */
+    std::list<std::string> _values;
+    // Attributes -
+
+
+    // Constructors +
+  public:
+    /*!
+     * Prohibits \ref SQLQuery default constructor
      */
-    class SQLQuery {
+    SQLQuery() = delete;
 
-      // Attributes +
-    private:
-      /*! SQL query */
-      std::string _query;
+    /*!
+     * \ref SQLQuery copy constructor
+     */
+    SQLQuery(const SQLQuery& other);
 
-      /*! Prepared statement values */
-      std::list<std::string> _values;
-      // Attributes -
-
-
-      // Constructors +
-    public:
-      /*!
-       * Prohibits \ref SQLQuery default constructor
-       */
-      SQLQuery() = delete;
-
-      /*!
-       * \ref SQLQuery copy constructor
-       */
-      SQLQuery(const SQLQuery& other);
-
-      /*!
-       * \ref SQLQuery constructor
-       *
-       * \param query the SQL query
-       * \param values the prepared statement values
-       */
-      SQLQuery(const std::string& query, const std::list<std::string>& values);
-      // Constructors -
+    /*!
+     * \ref SQLQuery constructor
+     *
+     * \param query the SQL query
+     * \param values the prepared statement values
+     */
+    SQLQuery(const std::string& query, const std::list<std::string>& values);
+    // Constructors -
 
 
-      // Accessors +
-    public:
-      /*!
-       * SQL query getter
-       *
-       * \return the SQL query
-       */
-      inline const std::string& getQuery() const;
+    // Accessors +
+  public:
+    /*!
+     * SQL query getter
+     *
+     * \return the SQL query
+     */
+    inline const std::string& getQuery() const;
 
-      /*!
-       * Prepared statement values getter
-       *
-       * \return the values
-       */
-      inline const std::list<std::string>& getValues() const;
-      // Accessors -
+    /*!
+     * Prepared statement values getter
+     *
+     * \return the values
+     */
+    inline const std::list<std::string>& getValues() const;
+    // Accessors -
 
-    };
+  };
 
-    const std::string&
-    SQLQuery::getQuery() const {
-      return _query;
-    }
+  const std::string&
+  SQLQuery::getQuery() const {
+    return _query;
+  }
 
-    const std::list<std::string>&
-    SQLQuery::getValues() const {
-      return _values;
-    }
+  const std::list<std::string>&
+  SQLQuery::getValues() const {
+    return _values;
+  }
 
-  }  // sql
-}  // anch
+}  // anch::sql

@@ -22,61 +22,59 @@
 #include "date/date.hpp"
 
 
-namespace anch {
-  namespace sql {
+namespace anch::sql {
+
+  /*!
+   * \brief SQL time type
+   *
+   * SQL time type.\n
+   * It will only take into from hours to microseconds
+   *
+   * \since 0.1
+   *
+   * \author Vincent Lachenal
+   */
+  class Time: public anch::date::Date {
+
+    // Constructors +
+  public:
+    /*!
+     * \ref Time default constructor.
+     *
+     * \param init Initialize the \ref Time to now (default true)
+     */
+    explicit Time(bool init = true);
 
     /*!
-     * \brief SQL time type
+     * \ref Time private copy constructor
      *
-     * SQL time type.\n
-     * It will only take into from hours to microseconds
-     *
-     * \since 0.1
-     *
-     * \author Vincent Lachenal
+     * \param date The \ref Date to copy
      */
-    class Time: public anch::date::Date {
+    Time(const anch::date::Date& date);
 
-      // Constructors +
-    public:
-      /*!
-       * \ref Time default constructor.
-       *
-       * \param init Initialize the \ref Time to now (default true)
-       */
-      explicit Time(bool init = true);
+    /*!
+     * \ref Time constructor.
+     *
+     * \param time The time to set
+     */
+    Time(const std::time_t& time);
 
-      /*!
-       * \ref Time private copy constructor
-       *
-       * \param date The \ref Date to copy
-       */
-      Time(const anch::date::Date& date);
+    /*!
+     * \ref Time constructor.
+     *
+     * \param time The time to set
+     */
+    Time(const std::tm* const time);
+    // Constructors -
 
-      /*!
-       * \ref Time constructor.
-       *
-       * \param time The time to set
-       */
-      Time(const std::time_t& time);
+    // Destructor +
+  public:
+    /*!
+     * \ref Time destructor
+     */
+    virtual ~Time();
+    // Destructor -
 
-      /*!
-       * \ref Time constructor.
-       *
-       * \param time The time to set
-       */
-      Time(const std::tm* const time);
-      // Constructors -
+  };
 
-      // Destructor +
-    public:
-      /*!
-       * \ref Time destructor
-       */
-      virtual ~Time();
-      // Destructor -
-
-    };
-
-  }
-}
+}  // anch::sql

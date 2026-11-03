@@ -29,139 +29,137 @@
 //typedef struct st_mysql MYSQL;
 //struct MYSQL;
 
-namespace anch {
-  namespace sql {
+namespace anch::sql::mysql {
 
-    namespace mysql {
+  /*!
+   * Check if MySQL error invalidates the connection (server gone or connection lost, out of memory, commands out
+   * of sync, connection killed, server shutdown, ...)
+   *
+   * \param code the MySQL error code (\c mysql_errno or \c mysql_stmt_errno )
+   *
+   * \return \c true for a fatal error, \c false otherwise
+   *
+   * \since 0.2
+   */
+  bool isFatal(unsigned int code) noexcept;
 
-      /*!
-       * Check if MySQL error invalidates the connection (server gone or connection lost, out of memory, commands out
-       * of sync, connection killed, server shutdown, ...)
-       *
-       * \param code the MySQL error code (\c mysql_errno or \c mysql_stmt_errno )
-       *
-       * \return \c true for a fatal error, \c false otherwise
-       *
-       * \since 0.2
-       */
-      bool isFatal(unsigned int code) noexcept;
+  /*!
+   * Build SQL exception from MySQL error
+   *
+   * \param message the error context
+   * \param code the MySQL error code
+   * \param text the MySQL error message
+   *
+   * \return the exception (not OK when error is fatal)
+   *
+   * \since 0.2
+   */
+  SqlException error(const std::string& message, unsigned int code, const char* text);
 
-      /*!
-       * Build SQL exception from MySQL error
-       *
-       * \param message the error context
-       * \param code the MySQL error code
-       * \param text the MySQL error message
-       *
-       * \return the exception (not OK when error is fatal)
-       *
-       * \since 0.2
-       */
-      SqlException error(const std::string& message, unsigned int code, const char* text);
+}  // anch::sql::mysql
 
-    }
+namespace anch::sql {
+
+  /*!
+   * \brief MySQL connection
+   *
+   * SQL connection implementation through MySQL native library
+   *
+   * \author Vincent Lachenal
+   *
+   * \since 0.1
+   */
+  class MySQLConnection: public Connection {
+
+    // Attributes +
+  private:
+    /*! MySQL connection */
+    MYSQL* _mysql;
+    // Attributes -
+
+    // Constructors +
+  public:
+    /*!
+     * \ref MySQLConnection constructor
+     *
+     * \param config the MySQL database configuration
+     *
+     * \throw SqlException any error
+     */
+    MySQLConnection(const SqlConnectionConfiguration& config);
 
     /*!
-     * \brief MySQL connection
-     *
-     * SQL connection implementation through MySQL native library
-     *
-     * \author Vincent Lachenal
-     *
-     * \since 0.1
+     * Prohibits \ref MySQLConnection copy constructor
      */
-    class MySQLConnection: public Connection {
+    MySQLConnection(const MySQLConnection&);
+    // Constructors -
 
-      // Attributes +
-    private:
-      /*! MySQL connection */
-      MYSQL* _mysql;
-      // Attributes -
+    // Destructor +
+    /*!
+     * \ref MySQLConnection destructor
+     */
+    virtual ~MySQLConnection() noexcept;
+    // Destructor -
 
-      // Constructors +
-    public:
-      /*!
-       * \ref MySQLConnection constructor
-       *
-       * \param config the MySQL database configuration
-       *
-       * \throw SqlException any error
-       */
-      MySQLConnection(const SqlConnectionConfiguration& config);
+    // Methods +
+  protected:
+    /*!
+     * Execute SQL select query
+     *
+     * \param query the SQL query to execute
+     *
+     * \return the result set
+     *
+     * \throw SqlException any error
+     */
+    virtual ResultSet* executeQuery(const std::string& query) override;
 
-      /*!
-       * Prohibits \ref MySQLConnection copy constructor
-       */
-      MySQLConnection(const MySQLConnection&);
-      // Constructors -
+    /*!
+     * Execute SQL update query
+     *
+     * \param query the SQL query to execute
+     *
+     * \return the number of updated rows
+     *
+     * \throw SqlException any error
+     */
+    virtual uint64_t executeUpdate(const std::string& query) override;
 
-      // Destructor +
-      /*!
-       * \ref MySQLConnection destructor
-       */
-      virtual ~MySQLConnection() noexcept;
-      // Destructor -
+    /*!
+     * Send commit to database server
+     *
+     * \throw SqlException fail to commit transaction
+     */
+    virtual void sendCommit() override;
 
-      // Methods +
-    protected:
-      /*!
-       * Execute SQL select query
-       *
-       * \param query the SQL query to execute
-       *
-       * \return the result set
-       *
-       * \throw SqlException any error
-       */
-      virtual ResultSet* executeQuery(const std::string& query) override;
+    /*!
+     * Send rollback to database server
+     *
+     * \throw SqlException fail to rollback transaction
+     */
+    virtual void sendRollback() override;
 
-      /*!
-       * Execute SQL update query
-       *
-       * \param query the SQL query to execute
-       *
-       * \return the number of updated rows
-       *
-       * \throw SqlException any error
-       */
-      virtual uint64_t executeUpdate(const std::string& query) override;
+    /*!
+     * Send start transaction to database server
+     *
+     * \throw SqlException any error
+     */
+    virtual void sendStartTransaction() override;
 
-      /*!
-       * Send commit to database server
-       *
-       * \throw SqlException fail to commit transaction
-       */
-      virtual void sendCommit() override;
+    /*!
+     * Send SQL query to prepare SQL statement
+     *
+     * \param query the SQL query
+     *
+     * \return the prepared statement
+     *
+     * \throw SqlException any error
+     */
+    virtual PreparedStatement* makePrepared(const std::string& query) override;
+    // Methods -
 
-      /*!
-       * Send rollback to database server
-       *
-       * \throw SqlException fail to rollback transaction
-       */
-      virtual void sendRollback() override;
+  };
 
-      /*!
-       * Send start transaction to database server
-       *
-       * \throw SqlException any error
-       */
-      virtual void sendStartTransaction() override;
-
-      /*!
-       * Send SQL query to prepare SQL statement
-       *
-       * \param query the SQL query
-       *
-       * \return the prepared statement
-       *
-       * \throw SqlException any error
-       */
-      virtual PreparedStatement* makePrepared(const std::string& query) override;
-      // Methods -
-
-    };
-
-  }
-}
+}  // anch::sql
 
 #endif // ANCH_SQL_MYSQL

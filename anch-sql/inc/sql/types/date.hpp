@@ -22,61 +22,59 @@
 #include "date/date.hpp"
 
 
-namespace anch {
-  namespace sql {
+namespace anch::sql {
+
+  /*!
+   * \brief SQL date type
+   *
+   * SQL date type.\n
+   * It will only take into account from years to days.
+   *
+   * \since 0.1
+   *
+   * \author Vincent Lachenal
+   */
+  class Date: public anch::date::Date {
+
+    // Constructors +
+  public:
+    /*!
+     * \ref Date default constructor.
+     *
+     * \param init Initialize the \ref Date to now (default true)
+     */
+    explicit Date(bool init = true);
 
     /*!
-     * \brief SQL date type
+     * \ref Date private copy constructor
      *
-     * SQL date type.\n
-     * It will only take into account from years to days.
-     *
-     * \since 0.1
-     *
-     * \author Vincent Lachenal
+     * \param date The \ref Date to copy
      */
-    class Date: public anch::date::Date {
+    Date(const anch::date::Date& date);
 
-      // Constructors +
-    public:
-      /*!
-       * \ref Date default constructor.
-       *
-       * \param init Initialize the \ref Date to now (default true)
-       */
-      explicit Date(bool init = true);
+    /*!
+     * \ref Date constructor.
+     *
+     * \param time The time to set
+     */
+    Date(const std::time_t& time);
 
-      /*!
-       * \ref Date private copy constructor
-       *
-       * \param date The \ref Date to copy
-       */
-      Date(const anch::date::Date& date);
+    /*!
+     * \ref Date constructor.
+     *
+     * \param time The time to set
+     */
+    Date(const std::tm* const time);
+    // Constructors -
 
-      /*!
-       * \ref Date constructor.
-       *
-       * \param time The time to set
-       */
-      Date(const std::time_t& time);
+    // Destructor +
+  public:
+    /*!
+     * \ref Date destructor
+     */
+    virtual ~Date();
+    // Destructor -
 
-      /*!
-       * \ref Date constructor.
-       *
-       * \param time The time to set
-       */
-      Date(const std::tm* const time);
-      // Constructors -
+  };
 
-      // Destructor +
-    public:
-      /*!
-       * \ref Date destructor
-       */
-      virtual ~Date();
-      // Destructor -
-
-    };
-
-  }
-}
+}  // anch::sql

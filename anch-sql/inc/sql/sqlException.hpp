@@ -22,70 +22,68 @@
 #include <exception>
 #include <string>
 
-namespace anch {
-  namespace sql {
+namespace anch::sql {
+
+  /*!
+   * \brief SQL exception
+   *
+   * Manage every SQL error
+   * \todo put implementation in cpp file
+   *
+   * \author Vincent Lachenal
+   *
+   * \since 0.1
+   */
+  class SqlException: public std::exception {
+
+    // Attributes +
+  private:
+    /*! Error message */
+    std::string _msg;
+
+    /*! Connection status: \c false for a fatal error which invalidates the connection */
+    bool _ok;
+    // Attributes -
+
+    // Constructors +
+  public:
+    /*!
+     * \ref SqlException constructor
+     *
+     * \param msg the error message
+     * \param ok connection status: \c false for a fatal error (connection lost, out of memory, protocol error,
+     *        ...) which invalidates the connection
+     */
+    SqlException(std::string msg, bool ok = true) noexcept;
+    // Constructors -
+
+    // Destructor +
+  public:
+    /**!
+     * \ref SqlException destructor
+     */
+    virtual ~SqlException() noexcept;
+    // Destructor -
+
+    // Methods +
+  public:
+    /*!
+     * Error message getter
+     *
+     * \return the error message
+     */
+    virtual const char* what() const noexcept;
 
     /*!
-     * \brief SQL exception
+     * Connection status getter
      *
-     * Manage every SQL error
-     * \todo put implementation in cpp file
-     *
-     * \author Vincent Lachenal
-     *
-     * \since 0.1
+     * \return \c true if connection  can be reused, \c false otherwise
      */
-    class SqlException: public std::exception {
+    inline bool isOK() const noexcept {
+      return _ok;
+    }
+    // Methods -
 
-      // Attributes +
-    private:
-      /*! Error message */
-      std::string _msg;
+  };
 
-      /*! Connection status: \c false for a fatal error which invalidates the connection */
-      bool _ok;
-      // Attributes -
-
-      // Constructors +
-    public:
-      /*!
-       * \ref SqlException constructor
-       *
-       * \param msg the error message
-       * \param ok connection status: \c false for a fatal error (connection lost, out of memory, protocol error,
-       *        ...) which invalidates the connection
-       */
-      SqlException(std::string msg, bool ok = true) noexcept;
-      // Constructors -
-
-      // Destructor +
-    public:
-      /**!
-       * \ref SqlException destructor
-       */
-      virtual ~SqlException() noexcept;
-      // Destructor -
-
-      // Methods +
-    public:
-      /*!
-       * Error message getter
-       *
-       * \return the error message
-       */
-      virtual const char* what() const noexcept;
-
-      /*!
-       * Connection status getter
-       *
-       * \return \c true if connection  can be reused, \c false otherwise
-       */
-      inline bool isOK() const noexcept {
-	return _ok;
-      }
-      // Methods -
-
-    };
-
-  }
-}
+}  // anch::sql

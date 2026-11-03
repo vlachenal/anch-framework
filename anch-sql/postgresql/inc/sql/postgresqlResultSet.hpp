@@ -27,114 +27,112 @@ typedef struct pg_conn PGconn;
 typedef struct pg_result PGresult;
 
 
-namespace anch {
-  namespace sql {
+namespace anch::sql {
+
+  /*!
+   * \brief PostgreSQL result set implementation
+   *
+   * Implements \ref ResultSet for PostgreSQL
+   *
+   * \author Vincent Lachenal
+   *
+   * \since 0.1
+   */
+  class PostgreSQLResultSet: public ResultSet {
+
+    // Attributes +
+  private:
+    /*! PostgreSQL database connection */
+    PGconn* _conn;
+
+    /*! PostgreSQL result */
+    PGresult* _result;
+
+    /*! Current row in current result */
+    int _currentRow;
+
+    /*! Number of rows in current result */
+    int _nbRows;
+
+    /*! Number of fields in result */
+    int _nbFields;
+    // Attributes -
+
+    // Constructors +
+  public:
+    /*!
+     * \ref PostgreSQLResultSet constructor
+     *
+     * \param conn the PostgreSQL database connection
+     */
+    PostgreSQLResultSet(PGconn* conn) noexcept;
+    // Constructors -
+
+    // Destructor +
+  public:
+    /*!
+     * \ref PostgreSQLResultSet destructor
+     */
+    virtual ~PostgreSQLResultSet() noexcept;
+    // Destructor -
+
+    // Methods +
+  protected:
+    /*!
+     * Fetch next row in SQL result set.
+     *
+     * \return \c true if next row exists, \c false otherwise
+     *
+     * \throw SqlException any error
+     */
+    virtual bool fetchNext() override;
+
+  protected:
+    /*!
+     * Retrieve string value from result set according to SQL database engine.
+     *
+     * \param idx the field index
+     * \param out the result
+     *
+     * \throw SqlException any error
+     */
+    virtual bool getValue(std::size_t idx, std::string& out) override;
 
     /*!
-     * \brief PostgreSQL result set implementation
+     * Retrieve string value from result set according to SQL database engine.
      *
-     * Implements \ref ResultSet for PostgreSQL
+     * \param idx the index
      *
-     * \author Vincent Lachenal
+     * \return the result
      *
-     * \since 0.1
+     * \throw SqlException any error
      */
-    class PostgreSQLResultSet: public ResultSet {
+    virtual std::optional<std::string> getValue(std::size_t idx) override;
 
-      // Attributes +
-    private:
-      /*! PostgreSQL database connection */
-      PGconn* _conn;
+    /*!
+     * Retrieve SQL date formatter
+     *
+     * \return the SQL date formatter
+     */
+    virtual const anch::date::DateFormatter& getDateFormatter() override;
 
-      /*! PostgreSQL result */
-      PGresult* _result;
+    /*!
+     * Retrieve SQL time formatter
+     *
+     * \return the SQL time formatter
+     */
+    virtual const anch::date::DateFormatter& getTimeFormatter() override;
 
-      /*! Current row in current result */
-      int _currentRow;
+    /*!
+     * Retrieve SQL timestamp formatter
+     *
+     * \return the SQL timestamp formatter
+     */
+    virtual const anch::date::DateFormatter& getTimestampFormatter() override;
+    // Methods -
 
-      /*! Number of rows in current result */
-      int _nbRows;
+  };
 
-      /*! Number of fields in result */
-      int _nbFields;
-      // Attributes -
-
-      // Constructors +
-    public:
-      /*!
-       * \ref PostgreSQLResultSet constructor
-       *
-       * \param conn the PostgreSQL database connection
-       */
-      PostgreSQLResultSet(PGconn* conn) noexcept;
-      // Constructors -
-
-      // Destructor +
-    public:
-      /*!
-       * \ref PostgreSQLResultSet destructor
-       */
-      virtual ~PostgreSQLResultSet() noexcept;
-      // Destructor -
-
-      // Methods +
-    protected:
-      /*!
-       * Fetch next row in SQL result set.
-       *
-       * \return \c true if next row exists, \c false otherwise
-       *
-       * \throw SqlException any error
-       */
-      virtual bool fetchNext() override;
-
-    protected:
-      /*!
-       * Retrieve string value from result set according to SQL database engine.
-       *
-       * \param idx the field index
-       * \param out the result
-       *
-       * \throw SqlException any error
-       */
-      virtual bool getValue(std::size_t idx, std::string& out) override;
-
-      /*!
-       * Retrieve string value from result set according to SQL database engine.
-       *
-       * \param idx the index
-       *
-       * \return the result
-       *
-       * \throw SqlException any error
-       */
-      virtual std::optional<std::string> getValue(std::size_t idx) override;
-
-      /*!
-       * Retrieve SQL date formatter
-       *
-       * \return the SQL date formatter
-       */
-      virtual const anch::date::DateFormatter& getDateFormatter() override;
-
-      /*!
-       * Retrieve SQL time formatter
-       *
-       * \return the SQL time formatter
-       */
-      virtual const anch::date::DateFormatter& getTimeFormatter() override;
-
-      /*!
-       * Retrieve SQL timestamp formatter
-       *
-       * \return the SQL timestamp formatter
-       */
-      virtual const anch::date::DateFormatter& getTimestampFormatter() override;
-      // Methods -
-
-    };
-
-  }
-}
+}  // anch::sql
 
 #endif // ANCH_SQL_POSTGRESQL

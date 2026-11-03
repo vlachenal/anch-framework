@@ -23,53 +23,51 @@
 #include "sql/builder/clausesBuilder.hpp"
 
 
-namespace anch {
-  namespace sql {
+namespace anch::sql {
 
-    // Functions +
-    /*!
-     * Initialize a new \ref SelectBuilder
-     *
-     * \return the new \ref SelectBuilder
-     */
-    anch::sql::SelectBuilder select();
+  // Functions +
+  /*!
+   * Initialize a new \ref SelectBuilder
+   *
+   * \return the new \ref SelectBuilder
+   */
+  anch::sql::SelectBuilder select();
 
-    /*!
-     * Initialize a new \ref ClausesBuilder
-     *
-     * \return the new \ref ClausesBuilder
-     */
-    anch::sql::ClausesBuilder clauses();
+  /*!
+   * Initialize a new \ref ClausesBuilder
+   *
+   * \return the new \ref ClausesBuilder
+   */
+  anch::sql::ClausesBuilder clauses();
 
-    /*!
-     * Initialize a new \ref ClausesBuilder
-     *
-     * \return the new \ref ClausesBuilder
-     */
-    template<typename T>
-    anch::sql::ClausesBuilder clauses(anch::sql::ClauseMaker clause, T& value, anch::sql::ValueChecker<T> checker = anch::sql::isValidValue<T>);
+  /*!
+   * Initialize a new \ref ClausesBuilder
+   *
+   * \return the new \ref ClausesBuilder
+   */
+  template<typename T>
+  anch::sql::ClausesBuilder clauses(anch::sql::ClauseMaker clause, T& value, anch::sql::ValueChecker<T> checker = anch::sql::isValidValue<T>);
 
-    /*!
-     * Initialize a new \ref ClausesBuilder
-     *
-     * \return the new \ref ClausesBuilder
-     */
-    template<typename T>
-    anch::sql::ClausesBuilder clauses(const std::string& column, anch::sql::ClauseMaker clause, T& value, anch::sql::ValueChecker<T> checker = anch::sql::isValidValue<T>);
-    // Functions -
+  /*!
+   * Initialize a new \ref ClausesBuilder
+   *
+   * \return the new \ref ClausesBuilder
+   */
+  template<typename T>
+  anch::sql::ClausesBuilder clauses(const std::string& column, anch::sql::ClauseMaker clause, T& value, anch::sql::ValueChecker<T> checker = anch::sql::isValidValue<T>);
+  // Functions -
 
-    // Implementations +
-    template<typename T>
-    anch::sql::ClausesBuilder clauses(anch::sql::ClauseMaker clause, T& value, anch::sql::ValueChecker<T> checker) {
-      return std::move(clauses().AND(clause, value, checker));
-    }
+  // Implementations +
+  template<typename T>
+  anch::sql::ClausesBuilder clauses(anch::sql::ClauseMaker clause, T& value, anch::sql::ValueChecker<T> checker) {
+    return std::move(clauses().AND(clause, value, checker));
+  }
 
-    template<typename T>
-    anch::sql::ClausesBuilder
-    clauses(const std::string& column, anch::sql::ClauseMaker clause, T& value, anch::sql::ValueChecker<T> checker) {
-      return std::move(clauses().AND(column, clause, value, checker));
-    }
-    // Implementations -
+  template<typename T>
+  anch::sql::ClausesBuilder
+  clauses(const std::string& column, anch::sql::ClauseMaker clause, T& value, anch::sql::ValueChecker<T> checker) {
+    return std::move(clauses().AND(column, clause, value, checker));
+  }
+  // Implementations -
 
-  } // sql
-} // anch
+}  // anch::sql

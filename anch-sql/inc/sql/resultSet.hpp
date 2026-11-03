@@ -33,231 +33,229 @@
 #include "sql/types/timestamp.hpp"
 
 
-namespace anch {
-  namespace sql {
+namespace anch::sql {
 
-    class Connection;
-    class PreparedStatement;
+  class Connection;
+  class PreparedStatement;
+
+  /*!
+   * \brief SQL result representation
+   *
+   * The \ref ResultSet has to be used with <tt>while(res.next()) { [...] }</tt>.\n
+   * Errors raised by \ref next are reported to the connection which has executed the query (a fatal error
+   * invalidates it).\n
+   * Field getter is templated. Specializations are included in library. If you need other conversions,
+   * you can implement them in your own program.
+   *
+   * \author Vincent Lachenal
+   *
+   * \since 0.1
+   */
+  class ResultSet {
+
+    friend class Connection;
+    friend class PreparedStatement;
+
+    // Attributes +
+  protected:
+    /*! Result set fields */
+    std::map<std::string, std::size_t> _fields;
+
+  private:
+    /*! Connection which has executed the query (errors are reported to it ; \c NULL when unknown) */
+    Connection* _connection;
+    // Attributes -
+
+    // Constructors +
+  public:
+    /*!
+     * \ref ResultSet default constructor
+     */
+    ResultSet() noexcept;
+    // Constructors -
+
+    // Destructor +
+  public:
+    /*!
+     * \ref ResultSet destrcutor
+     */
+    virtual ~ResultSet() noexcept;
+    // Destructor -
+
+    // Methods +
+    /*!
+     * Get field value by index.\n
+     * The output parameter will be set only if SQL result is not \c NULL.
+     *
+     * \tparam T expected type
+     *
+     * \param idx the index
+     * \param out the result
+     *
+     * \return \c true if result is NULL, \c false otherwise
+     *
+     * \throw SqlException any error
+     */
+    template<typename T>
+    bool get(std::size_t idx, T& out);
 
     /*!
-     * \brief SQL result representation
+     * Get field value by field name.\n
+     * The output parameter will be set only if SQL result is not \c NULL.
      *
-     * The \ref ResultSet has to be used with <tt>while(res.next()) { [...] }</tt>.\n
-     * Errors raised by \ref next are reported to the connection which has executed the query (a fatal error
-     * invalidates it).\n
-     * Field getter is templated. Specializations are included in library. If you need other conversions,
-     * you can implement them in your own program.
+     * \tparam T expected type
      *
-     * \author Vincent Lachenal
+     * \param field the field name
+     * \param out the result
      *
-     * \since 0.1
+     * \return \c true if result is NULL, \c false otherwise
      */
-    class ResultSet {
-
-      friend class Connection;
-      friend class PreparedStatement;
-
-      // Attributes +
-    protected:
-      /*! Result set fields */
-      std::map<std::string, std::size_t> _fields;
-
-    private:
-      /*! Connection which has executed the query (errors are reported to it ; \c NULL when unknown) */
-      Connection* _connection;
-      // Attributes -
-
-      // Constructors +
-    public:
-      /*!
-       * \ref ResultSet default constructor
-       */
-      ResultSet() noexcept;
-      // Constructors -
-
-      // Destructor +
-    public:
-      /*!
-       * \ref ResultSet destrcutor
-       */
-      virtual ~ResultSet() noexcept;
-      // Destructor -
-
-      // Methods +
-      /*!
-       * Get field value by index.\n
-       * The output parameter will be set only if SQL result is not \c NULL.
-       *
-       * \tparam T expected type
-       *
-       * \param idx the index
-       * \param out the result
-       *
-       * \return \c true if result is NULL, \c false otherwise
-       *
-       * \throw SqlException any error
-       */
-      template<typename T>
-      bool get(std::size_t idx, T& out);
-
-      /*!
-       * Get field value by field name.\n
-       * The output parameter will be set only if SQL result is not \c NULL.
-       *
-       * \tparam T expected type
-       *
-       * \param field the field name
-       * \param out the result
-       *
-       * \return \c true if result is NULL, \c false otherwise
-       */
-      template<typename T>
-      bool get(const std::string field, T& out) {
-	auto search = _fields.find(field);
-	if(search == _fields.end()) {
-	  std::ostringstream msg;
-	  msg << "Field " << field << " does not exist in result set. "
-	    "Available fields are [";
-	  for(auto iter = _fields.cbegin() ; iter != _fields.cend() ; ++iter) {
-	    if(iter != _fields.cbegin()) {
-	      msg << ',';
-	    }
-	    msg << iter->first;
+    template<typename T>
+    bool get(const std::string field, T& out) {
+      auto search = _fields.find(field);
+      if(search == _fields.end()) {
+	std::ostringstream msg;
+	msg << "Field " << field << " does not exist in result set. "
+	  "Available fields are [";
+	for(auto iter = _fields.cbegin() ; iter != _fields.cend() ; ++iter) {
+	  if(iter != _fields.cbegin()) {
+	    msg << ',';
 	  }
-	  msg << ']';
-	  throw SqlException(msg.str());
+	  msg << iter->first;
 	}
-	return get<T>(search->second, out);
+	msg << ']';
+	throw SqlException(msg.str());
       }
+      return get<T>(search->second, out);
+    }
 
-      /*!
-       * Get field value by index.
-       *
-       * \tparam T expected type
-       *
-       * \param idx the index
-       *
-       * \return the result
-       *
-       * \throw SqlException any error
-       */
-      template<typename T>
-      std::optional<T> get(std::size_t idx);
+    /*!
+     * Get field value by index.
+     *
+     * \tparam T expected type
+     *
+     * \param idx the index
+     *
+     * \return the result
+     *
+     * \throw SqlException any error
+     */
+    template<typename T>
+    std::optional<T> get(std::size_t idx);
 
-      /*!
-       * Get field value by field name.
-       *
-       * \tparam T expected type
-       *
-       * \param field the field name
-       *
-       * \return the result
-       *
-       * \throw SqlException any error
-       */
-      template<typename T>
-      const std::optional<T> get(const std::string field) {
-	auto search = _fields.find(field);
-	if(search == _fields.end()) {
-	  std::ostringstream msg;
-	  msg << "Field " << field << " does not exist in result set. "
-	    "Available fields are [";
-	  for(auto iter = _fields.cbegin() ; iter != _fields.cend() ; ++iter) {
-	    if(iter != _fields.cbegin()) {
-	      msg << ',';
-	    }
-	    msg << iter->first;
+    /*!
+     * Get field value by field name.
+     *
+     * \tparam T expected type
+     *
+     * \param field the field name
+     *
+     * \return the result
+     *
+     * \throw SqlException any error
+     */
+    template<typename T>
+    const std::optional<T> get(const std::string field) {
+      auto search = _fields.find(field);
+      if(search == _fields.end()) {
+	std::ostringstream msg;
+	msg << "Field " << field << " does not exist in result set. "
+	  "Available fields are [";
+	for(auto iter = _fields.cbegin() ; iter != _fields.cend() ; ++iter) {
+	  if(iter != _fields.cbegin()) {
+	    msg << ',';
 	  }
-	  msg << ']';
-	  throw SqlException(msg.str());
+	  msg << iter->first;
 	}
-	return get<T>(search->second);
+	msg << ']';
+	throw SqlException(msg.str());
       }
+      return get<T>(search->second);
+    }
 
-      /*!
-       * Retrieve next row
-       *
-       * \return \c true if next row exists, \c false otherwise
-       *
-       * \throw SqlException any error
-       */
-      bool next();
+    /*!
+     * Retrieve next row
+     *
+     * \return \c true if next row exists, \c false otherwise
+     *
+     * \throw SqlException any error
+     */
+    bool next();
 
-    protected:
-      /*!
-       * Retrieve next row (driver implementation)
-       *
-       * \return \c true if next row exists, \c false otherwise
-       *
-       * \throw SqlException any error (with connection status)
-       */
-      virtual bool fetchNext() = 0;
+  protected:
+    /*!
+     * Retrieve next row (driver implementation)
+     *
+     * \return \c true if next row exists, \c false otherwise
+     *
+     * \throw SqlException any error (with connection status)
+     */
+    virtual bool fetchNext() = 0;
 
-      /*!
-       * Retrieve string value from result set according to SQL database engine.
-       *
-       * \param idx the field index
-       * \param out the result
-       *
-       * \throw SqlException any error
-       */
-      virtual bool getValue(std::size_t idx, std::string& out) = 0;
+    /*!
+     * Retrieve string value from result set according to SQL database engine.
+     *
+     * \param idx the field index
+     * \param out the result
+     *
+     * \throw SqlException any error
+     */
+    virtual bool getValue(std::size_t idx, std::string& out) = 0;
 
-      /*!
-       * Retrieve string value from result set according to SQL database engine.
-       *
-       * \param idx the field index
-       *
-       * \return the result as optional character string
-       *
-       * \throw SqlException any error
-       */
-      virtual std::optional<std::string> getValue(std::size_t idx) = 0;
+    /*!
+     * Retrieve string value from result set according to SQL database engine.
+     *
+     * \param idx the field index
+     *
+     * \return the result as optional character string
+     *
+     * \throw SqlException any error
+     */
+    virtual std::optional<std::string> getValue(std::size_t idx) = 0;
 
-      /*!
-       * Retrieve SQL date formatter
-       *
-       * \return the SQL date formatter
-       */
-      virtual const anch::date::DateFormatter& getDateFormatter() = 0;
+    /*!
+     * Retrieve SQL date formatter
+     *
+     * \return the SQL date formatter
+     */
+    virtual const anch::date::DateFormatter& getDateFormatter() = 0;
 
-      /*!
-       * Retrieve SQL time formatter
-       *
-       * \return the SQL time formatter
-       */
-      virtual const anch::date::DateFormatter& getTimeFormatter() = 0;
+    /*!
+     * Retrieve SQL time formatter
+     *
+     * \return the SQL time formatter
+     */
+    virtual const anch::date::DateFormatter& getTimeFormatter() = 0;
 
-      /*!
-       * Retrieve SQL timestamp formatter
-       *
-       * \return the SQL timestamp formatter
-       */
-      virtual const anch::date::DateFormatter& getTimestampFormatter() = 0;
+    /*!
+     * Retrieve SQL timestamp formatter
+     *
+     * \return the SQL timestamp formatter
+     */
+    virtual const anch::date::DateFormatter& getTimestampFormatter() = 0;
 
-      /*!
-       * Retrieve SQL date formatter
-       *
-       * \return the SQL date formatter
-       */
-      const anch::date::DateFormatter& getDefaultDateFormatter();
+    /*!
+     * Retrieve SQL date formatter
+     *
+     * \return the SQL date formatter
+     */
+    const anch::date::DateFormatter& getDefaultDateFormatter();
 
-      /*!
-       * Retrieve SQL time formatter
-       *
-       * \return the SQL time formatter
-       */
-      const anch::date::DateFormatter& getDefaultTimeFormatter();
+    /*!
+     * Retrieve SQL time formatter
+     *
+     * \return the SQL time formatter
+     */
+    const anch::date::DateFormatter& getDefaultTimeFormatter();
 
-      /*!
-       * Retrieve SQL timestamp formatter
-       *
-       * \return the SQL timestamp formatter
-       */
-      const anch::date::DateFormatter& getDefaultTimestampFormatter();
-      // Methods -
+    /*!
+     * Retrieve SQL timestamp formatter
+     *
+     * \return the SQL timestamp formatter
+     */
+    const anch::date::DateFormatter& getDefaultTimestampFormatter();
+    // Methods -
 
-    };
+  };
 
-  }
-}
+}  // anch::sql

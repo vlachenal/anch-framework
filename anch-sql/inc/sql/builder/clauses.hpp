@@ -22,134 +22,132 @@
 #include <string>
 
 
-namespace anch {
-  namespace sql {
+namespace anch::sql {
 
-    /*!
-     * Provides 'not equals' clause with \c <> operator
-     *
-     * \param column the column
-     *
-     * \return clause request part
-     */
-    std::string notEquals(const std::string& column);
+  /*!
+   * Provides 'not equals' clause with \c <> operator
+   *
+   * \param column the column
+   *
+   * \return clause request part
+   */
+  std::string notEquals(const std::string& column);
 
-    /*!
-     * Provides 'equals' clause with \c = operator
-     *
-     * \param column the column
-     *
-     * \return clause request part
-     */
-    std::string equals(const std::string& column);
+  /*!
+   * Provides 'equals' clause with \c = operator
+   *
+   * \param column the column
+   *
+   * \return clause request part
+   */
+  std::string equals(const std::string& column);
 
-    /*!
-     * Provides 'greater' clause with \c > operator
-     *
-     * \param column the column
-     *
-     * \return clause request part
-     */
-    std::string greater(const std::string& column);
+  /*!
+   * Provides 'greater' clause with \c > operator
+   *
+   * \param column the column
+   *
+   * \return clause request part
+   */
+  std::string greater(const std::string& column);
 
-    /*!
-     * Provides 'greater or equals' clause with \c >= operator
-     *
-     * \param column the column
-     *
-     * \return clause request part
-     */
-    std::string greaterEquals(const std::string& column);
+  /*!
+   * Provides 'greater or equals' clause with \c >= operator
+   *
+   * \param column the column
+   *
+   * \return clause request part
+   */
+  std::string greaterEquals(const std::string& column);
 
-    /*!
-     * Provides 'lesser' clause with \c < operator
-     *
-     * \param column the column
-     *
-     * \return clause request part
-     */
-    std::string lesser(const std::string& column);
+  /*!
+   * Provides 'lesser' clause with \c < operator
+   *
+   * \param column the column
+   *
+   * \return clause request part
+   */
+  std::string lesser(const std::string& column);
 
-    /*!
-     * Provides 'lesser or equals' clause with \c <= operator
-     *
-     * \param column the column
-     *
-     * \return clause request part
-     */
-    std::string lesserEquals(const std::string& column);
+  /*!
+   * Provides 'lesser or equals' clause with \c <= operator
+   *
+   * \param column the column
+   *
+   * \return clause request part
+   */
+  std::string lesserEquals(const std::string& column);
 
-    /*!
-     * Provides 'like' clause with \c LIKE operator
-     *
-     * \param column the column
-     *
-     * \return clause request part
-     */
-    std::string like(const std::string& column);
+  /*!
+   * Provides 'like' clause with \c LIKE operator
+   *
+   * \param column the column
+   *
+   * \return clause request part
+   */
+  std::string like(const std::string& column);
 
-    /*!
-     * Provides 'not like' clause with <tt>NOT LIKE</tt> operator
-     *
-     * \param column the column
-     *
-     * \return clause request part
-     */
-    std::string notLike(const std::string& column);
+  /*!
+   * Provides 'not like' clause with <tt>NOT LIKE</tt> operator
+   *
+   * \param column the column
+   *
+   * \return clause request part
+   */
+  std::string notLike(const std::string& column);
 
-    /*!
-     * Provides 'between' clause with \c BETWEEN operator
-     *
-     * \param column the column
-     *
-     * \return clause request part
-     */
-    std::string between(const std::string& column);
+  /*!
+   * Provides 'between' clause with \c BETWEEN operator
+   *
+   * \param column the column
+   *
+   * \return clause request part
+   */
+  std::string between(const std::string& column);
 
-    /*!
-     * Provides 'not between' clause with <tt>NOT BETWEEN</tt> operator
-     *
-     * \param column the column
-     *
-     * \return clause request part
-     */
-    std::string notBetween(const std::string& column);
+  /*!
+   * Provides 'not between' clause with <tt>NOT BETWEEN</tt> operator
+   *
+   * \param column the column
+   *
+   * \return clause request part
+   */
+  std::string notBetween(const std::string& column);
 
-    /*!
-     * Provides 'in' clause with \c IN operator.
-     *
-     * \param column the column
-     *
-     * \return clause request part
-     */
-    std::string in(const std::string& column);
+  /*!
+   * Provides 'in' clause with \c IN operator.
+   *
+   * \param column the column
+   *
+   * \return clause request part
+   */
+  std::string in(const std::string& column);
 
-    /*!
-     * Provides 'not in' clause with <tt>NOT IN</tt> operator.
-     *
-     * \param column the column
-     *
-     * \return clause request part
-     */
-    std::string notIn(const std::string& column);
+  /*!
+   * Provides 'not in' clause with <tt>NOT IN</tt> operator.
+   *
+   * \param column the column
+   *
+   * \return clause request part
+   */
+  std::string notIn(const std::string& column);
 
-    /*!
-     * Provides 'exists' clause with \c EXISTS operator.
-     *
-     * \param column the column
-     *
-     * \return clause request part
-     */
-    std::string exists(const std::string& column);
+  /*!
+   * Provides 'exists' clause with \c EXISTS operator.
+   *
+   * \param column the column
+   *
+   * \return clause request part
+   */
+  std::string exists(const std::string& column);
 
-    /*!
-     * Provides 'not exists' clause with <tt>NOT EXISTS</tt> operator.
-     *
-     * \param column the column
-     *
-     * \return clause request part
-     */
-    std::string notExists(const std::string& column);
+  /*!
+   * Provides 'not exists' clause with <tt>NOT EXISTS</tt> operator.
+   *
+   * \param column the column
+   *
+   * \return clause request part
+   */
+  std::string notExists(const std::string& column);
 
-  }  // sql
-}  // anch
+}  // anch::sql

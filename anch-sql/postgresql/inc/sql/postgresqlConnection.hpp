@@ -27,154 +27,152 @@ typedef struct pg_conn PGconn;
 typedef struct pg_result PGresult;
 
 
-namespace anch {
-  namespace sql {
+namespace anch::sql::postgresql {
 
-    namespace postgresql {
+  /*!
+   * Number of rows affected by a command
+   *
+   * \param res the command result
+   *
+   * \return the number of rows (\c 0 when command has no row count)
+   *
+   * \since 0.2
+   */
+  uint64_t affectedRows(PGresult* res) noexcept;
 
-      /*!
-       * Number of rows affected by a command
-       *
-       * \param res the command result
-       *
-       * \return the number of rows (\c 0 when command has no row count)
-       *
-       * \since 0.2
-       */
-      uint64_t affectedRows(PGresult* res) noexcept;
+  /*!
+   * Build SQL exception from PostgreSQL error: it is fatal when the connection is broken (\c PQstatus )
+   *
+   * \param message the error context
+   * \param conn the PostgreSQL connection
+   * \param res the PostgreSQL result (its error message is used when not \c NULL ; it is cleared)
+   *
+   * \return the exception
+   *
+   * \since 0.2
+   */
+  SqlException error(const std::string& message, PGconn* conn, PGresult* res = NULL);
 
-      /*!
-       * Build SQL exception from PostgreSQL error: it is fatal when the connection is broken (\c PQstatus )
-       *
-       * \param message the error context
-       * \param conn the PostgreSQL connection
-       * \param res the PostgreSQL result (its error message is used when not \c NULL ; it is cleared)
-       *
-       * \return the exception
-       *
-       * \since 0.2
-       */
-      SqlException error(const std::string& message, PGconn* conn, PGresult* res = NULL);
+}  // anch::sql::postgresql
 
-    }
+namespace anch::sql {
+
+  /*!
+   * \brief PostgreSQL connection
+   *
+   * SQL connection implementation through PostgreSQL native library
+   *
+   * \author Vincent Lachenal
+   *
+   * \since 0.1
+   */
+  class PostgreSQLConnection: public Connection {
+
+    // Attributes +
+  private:
+    /*! PostgreSQL database connection */
+    PGconn* _conn;
+    // Attributes -
+
+    // Constructors +
+  public:
+    /*!
+     * \ref PostgreSQLConnection constructor
+     *
+     * \param connStr the PostgreSQL connection string
+     *
+     * \throw SqlException fail to create connection
+     */
+    PostgreSQLConnection(const std::string& connStr);
 
     /*!
-     * \brief PostgreSQL connection
+     * \ref PostgreSQLConnection constructor
      *
-     * SQL connection implementation through PostgreSQL native library
+     * \param config the PostgreSQL database configuration
      *
-     * \author Vincent Lachenal
-     *
-     * \since 0.1
+     * \throw SqlException fail to create connection
      */
-    class PostgreSQLConnection: public Connection {
+    PostgreSQLConnection(const SqlConnectionConfiguration& config);
 
-      // Attributes +
-    private:
-      /*! PostgreSQL database connection */
-      PGconn* _conn;
-      // Attributes -
+    /*!
+     * Prohibit \ref PostgreSQLConnection copy constructor
+     */
+    PostgreSQLConnection(const PostgreSQLConnection&) = delete;
+    // Constructors -
 
-      // Constructors +
-    public:
-      /*!
-       * \ref PostgreSQLConnection constructor
-       *
-       * \param connStr the PostgreSQL connection string
-       *
-       * \throw SqlException fail to create connection
-       */
-      PostgreSQLConnection(const std::string& connStr);
+    // Destructor +
+    /*!
+     * \ref PostgreSQLConnection destructor
+     */
+    virtual ~PostgreSQLConnection() noexcept;
+    // Destructor -
 
-      /*!
-       * \ref PostgreSQLConnection constructor
-       *
-       * \param config the PostgreSQL database configuration
-       *
-       * \throw SqlException fail to create connection
-       */
-      PostgreSQLConnection(const SqlConnectionConfiguration& config);
+    // Methods +
+  protected:
+    /*!
+     * Execute SQL select query
+     *
+     * \param query the SQL query to execute
+     *
+     * \return the result set
+     *
+     * \throw SqlException any error
+     */
+    virtual ResultSet* executeQuery(const std::string& query) override;
 
-      /*!
-       * Prohibit \ref PostgreSQLConnection copy constructor
-       */
-      PostgreSQLConnection(const PostgreSQLConnection&) = delete;
-      // Constructors -
+    /*!
+     * Execute SQL update query
+     *
+     * \param query the SQL query to execute
+     *
+     * \return the number of updated rows
+     *
+     * \throw SqlException any error
+     */
+    virtual uint64_t executeUpdate(const std::string& query) override;
 
-      // Destructor +
-      /*!
-       * \ref PostgreSQLConnection destructor
-       */
-      virtual ~PostgreSQLConnection() noexcept;
-      // Destructor -
+    /*!
+     * Check PostgreSQL connection status (\c PQstatus )
+     *
+     * \return \c true when connection is \c CONNECTION_OK , \c false otherwise
+     */
+    virtual bool checkConnection() const noexcept override;
 
-      // Methods +
-    protected:
-      /*!
-       * Execute SQL select query
-       *
-       * \param query the SQL query to execute
-       *
-       * \return the result set
-       *
-       * \throw SqlException any error
-       */
-      virtual ResultSet* executeQuery(const std::string& query) override;
+    /*!
+     * Send commit to database server
+     *
+     * \throw SqlException fail to commit transaction
+     */
+    virtual void sendCommit() override;
 
-      /*!
-       * Execute SQL update query
-       *
-       * \param query the SQL query to execute
-       *
-       * \return the number of updated rows
-       *
-       * \throw SqlException any error
-       */
-      virtual uint64_t executeUpdate(const std::string& query) override;
+    /*!
+     * Send rollback to database server
+     *
+     * \throw SqlException fail to rollback transaction
+     */
+    virtual void sendRollback() override;
 
-      /*!
-       * Check PostgreSQL connection status (\c PQstatus )
-       *
-       * \return \c true when connection is \c CONNECTION_OK , \c false otherwise
-       */
-      virtual bool checkConnection() const noexcept override;
+    /*!
+     * Send start transaction to database server
+     *
+     * \throw SqlException any error
+     */
+    virtual void sendStartTransaction() override;
 
-      /*!
-       * Send commit to database server
-       *
-       * \throw SqlException fail to commit transaction
-       */
-      virtual void sendCommit() override;
+    /*!
+     * Send SQL query to prepare SQL statement
+     *
+     * \param query the SQL query
+     *
+     * \return the prepared statement
+     *
+     * \throw SqlException any error
+     */
+    virtual PreparedStatement* makePrepared(const std::string& query) override;
+    // Methods -
 
-      /*!
-       * Send rollback to database server
-       *
-       * \throw SqlException fail to rollback transaction
-       */
-      virtual void sendRollback() override;
+  };
 
-      /*!
-       * Send start transaction to database server
-       *
-       * \throw SqlException any error
-       */
-      virtual void sendStartTransaction() override;
-
-      /*!
-       * Send SQL query to prepare SQL statement
-       *
-       * \param query the SQL query
-       *
-       * \return the prepared statement
-       *
-       * \throw SqlException any error
-       */
-      virtual PreparedStatement* makePrepared(const std::string& query) override;
-      // Methods -
-
-    };
-
-  }
-}
+}  // anch::sql
 
 #endif // ANCH_SQL_POSTGRESQL

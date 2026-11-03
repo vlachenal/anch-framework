@@ -25,147 +25,145 @@
 #include "sqlite3.h"
 
 
-namespace anch {
-  namespace sql {
+namespace anch::sql::sqlite {
 
-    namespace sqlite {
+  /*!
+   * Check if SQLite error invalidates the connection (I/O error, corrupted database, out of memory, ...)
+   *
+   * \param code the SQLite result code
+   *
+   * \return \c true for a fatal error, \c false otherwise
+   *
+   * \since 0.2
+   */
+  bool isFatal(int code) noexcept;
 
-      /*!
-       * Check if SQLite error invalidates the connection (I/O error, corrupted database, out of memory, ...)
-       *
-       * \param code the SQLite result code
-       *
-       * \return \c true for a fatal error, \c false otherwise
-       *
-       * \since 0.2
-       */
-      bool isFatal(int code) noexcept;
+  /*!
+   * Build SQL exception from SQLite error
+   *
+   * \param message the error context
+   * \param conn the SQLite connection
+   * \param code the SQLite result code
+   *
+   * \return the exception (not OK when error is fatal)
+   *
+   * \since 0.2
+   */
+  SqlException error(const std::string& message, sqlite3* conn, int code);
 
-      /*!
-       * Build SQL exception from SQLite error
-       *
-       * \param message the error context
-       * \param conn the SQLite connection
-       * \param code the SQLite result code
-       *
-       * \return the exception (not OK when error is fatal)
-       *
-       * \since 0.2
-       */
-      SqlException error(const std::string& message, sqlite3* conn, int code);
+}  // anch::sql::sqlite
 
-    }
+namespace anch::sql {
+
+  /*!
+   * \brief SQLite3 connection
+   *
+   * SQL connection implementation through SQLite3 native library
+   *
+   * \author Vincent Lachenal
+   *
+   * \since 0.1
+   */
+  class SQLite3Connection: public Connection {
+
+    // Attributes +
+  private:
+    /*! SQLite3 database connection */
+    sqlite3* _conn;
+    // Attributes -
+
+    // Constructors +
+  public:
+    /*!
+     * \ref SQLite3Connection constructor
+     *
+     * \param database the database path
+     *
+     * \throw SqlException fail to create connection
+     */
+    SQLite3Connection(const std::string& database);
 
     /*!
-     * \brief SQLite3 connection
+     * \ref SQLite3Connection constructor
      *
-     * SQL connection implementation through SQLite3 native library
+     * \param config the SQLite3 configuration
      *
-     * \author Vincent Lachenal
-     *
-     * \since 0.1
+     * \throw SqlException fail to create connection
      */
-    class SQLite3Connection: public Connection {
+    SQLite3Connection(const SqlConnectionConfiguration& config);
 
-      // Attributes +
-    private:
-      /*! SQLite3 database connection */
-      sqlite3* _conn;
-      // Attributes -
+    /*!
+     * Prohibit \ref SQLite3Connection copy constructor
+     */
+    SQLite3Connection(const SQLite3Connection&) = delete;
+    // Constructors -
 
-      // Constructors +
-    public:
-      /*!
-       * \ref SQLite3Connection constructor
-       *
-       * \param database the database path
-       *
-       * \throw SqlException fail to create connection
-       */
-      SQLite3Connection(const std::string& database);
+    // Destructor +
+    /*!
+     * \ref SQLite3Connection destructor
+     */
+    virtual ~SQLite3Connection() noexcept;
+    // Destructor -
 
-      /*!
-       * \ref SQLite3Connection constructor
-       *
-       * \param config the SQLite3 configuration
-       *
-       * \throw SqlException fail to create connection
-       */
-      SQLite3Connection(const SqlConnectionConfiguration& config);
+    // Methods +
+  protected:
+    /*!
+     * Execute SQL select query
+     *
+     * \param query the SQL query to execute
+     *
+     * \return the result set
+     *
+     * \throw SqlException any error
+     */
+    virtual ResultSet* executeQuery(const std::string& query) override;
 
-      /*!
-       * Prohibit \ref SQLite3Connection copy constructor
-       */
-      SQLite3Connection(const SQLite3Connection&) = delete;
-      // Constructors -
+    /*!
+     * Execute SQL update query
+     *
+     * \param query the SQL query to execute
+     *
+     * \return the number of updated rows
+     *
+     * \throw SqlException any error
+     */
+    virtual uint64_t executeUpdate(const std::string& query) override;
 
-      // Destructor +
-      /*!
-       * \ref SQLite3Connection destructor
-       */
-      virtual ~SQLite3Connection() noexcept;
-      // Destructor -
+    /*!
+     * Send commit to database server
+     *
+     * \throw SqlException fail to commit transaction
+     */
+    virtual void sendCommit() override;
 
-      // Methods +
-    protected:
-      /*!
-       * Execute SQL select query
-       *
-       * \param query the SQL query to execute
-       *
-       * \return the result set
-       *
-       * \throw SqlException any error
-       */
-      virtual ResultSet* executeQuery(const std::string& query) override;
+    /*!
+     * Send rollback to database server
+     *
+     * \throw SqlException fail to rollback transaction
+     */
+    virtual void sendRollback() override;
 
-      /*!
-       * Execute SQL update query
-       *
-       * \param query the SQL query to execute
-       *
-       * \return the number of updated rows
-       *
-       * \throw SqlException any error
-       */
-      virtual uint64_t executeUpdate(const std::string& query) override;
+    /*!
+     * Send start transaction to database server
+     *
+     * \throw SqlException any error
+     */
+    virtual void sendStartTransaction() override;
 
-      /*!
-       * Send commit to database server
-       *
-       * \throw SqlException fail to commit transaction
-       */
-      virtual void sendCommit() override;
+    /*!
+     * Send SQL query to prepare SQL statement
+     *
+     * \param query the SQL query
+     *
+     * \return the prepared statement
+     *
+     * \throw SqlException any error
+     */
+    virtual PreparedStatement* makePrepared(const std::string& query) override;
+    // Methods -
 
-      /*!
-       * Send rollback to database server
-       *
-       * \throw SqlException fail to rollback transaction
-       */
-      virtual void sendRollback() override;
+  };
 
-      /*!
-       * Send start transaction to database server
-       *
-       * \throw SqlException any error
-       */
-      virtual void sendStartTransaction() override;
-
-      /*!
-       * Send SQL query to prepare SQL statement
-       *
-       * \param query the SQL query
-       *
-       * \return the prepared statement
-       *
-       * \throw SqlException any error
-       */
-      virtual PreparedStatement* makePrepared(const std::string& query) override;
-      // Methods -
-
-    };
-
-  }
-}
+}  // anch::sql
 
 #endif // ANCH_SQL_SQLITE3

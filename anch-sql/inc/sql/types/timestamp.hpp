@@ -22,61 +22,59 @@
 #include "date/date.hpp"
 
 
-namespace anch {
-  namespace sql {
+namespace anch::sql {
+
+  /*!
+   * \brief SQL timestamp type
+   *
+   * SQL timestamp type.\n
+   * It will take into account from year to microseconds.
+   *
+   * \since 0.1
+   *
+   * \author Vincent Lachenal
+   */
+  class Timestamp: public anch::date::Date {
+
+    // Constructors +
+  public:
+    /*!
+     * \ref Timestamp default constructor.
+     *
+     * \param init Initialize the \ref Timestamp to now (default true)
+     */
+    explicit Timestamp(bool init = true);
 
     /*!
-     * \brief SQL timestamp type
+     * \ref Timestamp private copy constructor
      *
-     * SQL timestamp type.\n
-     * It will take into account from year to microseconds.
-     *
-     * \since 0.1
-     *
-     * \author Vincent Lachenal
+     * \param date The \ref Date to copy
      */
-    class Timestamp: public anch::date::Date {
+    Timestamp(const anch::date::Date& date);
 
-      // Constructors +
-    public:
-      /*!
-       * \ref Timestamp default constructor.
-       *
-       * \param init Initialize the \ref Timestamp to now (default true)
-       */
-      explicit Timestamp(bool init = true);
+    /*!
+     * \ref Timestamp constructor.
+     *
+     * \param time The time to set
+     */
+    Timestamp(const std::time_t& time);
 
-      /*!
-       * \ref Timestamp private copy constructor
-       *
-       * \param date The \ref Date to copy
-       */
-      Timestamp(const anch::date::Date& date);
+    /*!
+     * \ref Timestamp constructor.
+     *
+     * \param time The time to set
+     */
+    Timestamp(const std::tm* const time);
+    // Constructors -
 
-      /*!
-       * \ref Timestamp constructor.
-       *
-       * \param time The time to set
-       */
-      Timestamp(const std::time_t& time);
+    // Destructor +
+  public:
+    /*!
+     * \ref Timestamp destructor
+     */
+    virtual ~Timestamp();
+    // Destructor -
 
-      /*!
-       * \ref Timestamp constructor.
-       *
-       * \param time The time to set
-       */
-      Timestamp(const std::tm* const time);
-      // Constructors -
+  };
 
-      // Destructor +
-    public:
-      /*!
-       * \ref Timestamp destructor
-       */
-      virtual ~Timestamp();
-      // Destructor -
-
-    };
-
-  }
-}
+}  // anch::sql

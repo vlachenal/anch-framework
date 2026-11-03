@@ -25,95 +25,93 @@
 #include "sql/builder/fromBuilder.hpp"
 
 
-namespace anch {
-  namespace sql {
+namespace anch::sql {
 
-    class SelectBuilder;
+  class SelectBuilder;
 
-    /**
-     * \brief Field builder
-     *
-     * This class will be used to append selected 'columns' in \c SELECT queries
-     * and in <tt>ORDER BY</tt> and <tt>GROUP BY</tt> command.
-     *
-     * @since 0.1
-     *
-     * @author Vincent Lachenal
+  /**
+   * \brief Field builder
+   *
+   * This class will be used to append selected 'columns' in \c SELECT queries
+   * and in <tt>ORDER BY</tt> and <tt>GROUP BY</tt> command.
+   *
+   * @since 0.1
+   *
+   * @author Vincent Lachenal
+   */
+  class FieldsBuilder: public SelectBuilderPart {
+    friend anch::sql::SelectBuilder;
+
+    // Constructors +
+  private:
+    /*!
+     * Prohibits \ref FieldsBuilder default constructor
      */
-    class FieldsBuilder: public SelectBuilderPart {
-      friend anch::sql::SelectBuilder;
+    FieldsBuilder() = delete;
 
-      // Constructors +
-    private:
-      /*!
-       * Prohibits \ref FieldsBuilder default constructor
-       */
-      FieldsBuilder() = delete;
+    /*!
+     * \ref FieldsBuilder constructor
+     *
+     * \param select the \ref SelectBuilder
+     * \param column the column
+     */
+    FieldsBuilder(anch::sql::SelectBuilder& select, const std::string& column);
+    // Constructors -
 
-      /*!
-       * \ref FieldsBuilder constructor
-       *
-       * \param select the \ref SelectBuilder
-       * \param column the column
-       */
-      FieldsBuilder(anch::sql::SelectBuilder& select, const std::string& column);
-      // Constructors -
+    // Destructor +
+  public:
+    /*!
+     * \ref FieldsBuilder destructor
+     */
+    virtual ~FieldsBuilder();
+    // Destructor -
 
-      // Destructor +
-    public:
-      /*!
-       * \ref FieldsBuilder destructor
-       */
-      virtual ~FieldsBuilder();
-      // Destructor -
+    // SQL commands +
+  public:
+    /*!
+     * Add new field
+     *
+     * \param column the column
+     *
+     * \return \c this
+     */
+    FieldsBuilder& field(const std::string& column);
 
-      // SQL commands +
-    public:
-      /*!
-       * Add new field
-       *
-       * \param column the column
-       *
-       * \return \c this
-       */
-      FieldsBuilder& field(const std::string& column);
+    /*!
+     * Add \c AS alias on field
+     *
+     * \param alias the alias
+     *
+     * \return \c this
+     */
+    FieldsBuilder& as(const std::string& alias);
 
-      /*!
-       * Add \c AS alias on field
-       *
-       * \param alias the alias
-       *
-       * \return \c this
-       */
-      FieldsBuilder& as(const std::string& alias);
+    /*!
+     * Add \c ASC order by direction.
+     *
+     * @return \c this
+     */
+    FieldsBuilder& asc();
 
-      /*!
-       * Add \c ASC order by direction.
-       *
-       * @return \c this
-       */
-      FieldsBuilder& asc();
+    /*!
+     * Add \c DESC order by direction.
+     *
+     * \return \c this
+     */
+    FieldsBuilder& desc();
 
-      /*!
-       * Add \c DESC order by direction.
-       *
-       * \return \c this
-       */
-      FieldsBuilder& desc();
+    /*!
+     * Switch to 'from' builder
+     *
+     * \param table the table where columns are selected from
+     *
+     * \return the new \ref FromBuilder
+     */
+    FromBuilder from(const std::string& table);
 
-      /*!
-       * Switch to 'from' builder
-       *
-       * \param table the table where columns are selected from
-       *
-       * \return the new \ref FromBuilder
-       */
-      FromBuilder from(const std::string& table);
+    // \todo from
+    // SQL commands -
 
-      // \todo from
-      // SQL commands -
+  };
 
-    };
-
-  }  // sql
-}  // anch
+}  // anch::sql
