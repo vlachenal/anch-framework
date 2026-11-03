@@ -19,183 +19,320 @@
 */
 #include "network/socket.hpp"
 
-// Microsoft Windows operating systems defintions +
-#ifdef ANCH_WINDOWS
-#include <winsock32.h>
-// Microsoft Windows operating systems defintions -
+#include <cerrno>
+#include <utility>
 
-// POSIX operating systems definitions +
-#elif defined ANCH_POSIX
-#include <sys/types.h>
-#include <sys/socket.h>
+#include <fcntl.h>
 #include <netinet/in.h>
-#include <arpa/inet.h>
+#include <poll.h>
+#include <sys/time.h>
 #include <unistd.h>
-#include <string.h>
-#define closesocket(s) ::close(s)
-#ifndef SO_REUSEPORT
-#define SO_REUSEPORT SO_REUSEADDR
-#endif
-#endif
-// POSIX operating systems definitions -
 
-#include <sstream>
-
-
-using anch::events::Observable;
-using anch::network::Socket;
+using anch::network::Address;
 using anch::network::Direction;
-using anch::network::SocketEvent;
-using anch::network::SocketType;
 using anch::network::IOException;
+using anch::network::Socket;
+using anch::network::SocketType;
 
+namespace {
 
-// Constructors +
-Socket::Socket(anch::network::SocketType type):
-  Observable<SocketEvent>(),
-  _ipAddress(""),
-  _port(0),
-  _type(type),
-  _sock(INVALID_SOCKET),
-  _backlog(5) {
-  // Nothing to do
-}
-
-Socket::Socket(const std::string& ipAddress, uint16_t port, SocketType type):
-  Observable<SocketEvent>(),
-  _ipAddress(ipAddress),
-  _port(port),
-  _type(type),
-  _backlog(5) {
-  // Open the socket according to socket type +
-  _sock = INVALID_SOCKET;
-  int sockType = -1;
-  switch(type) {
-  case SocketType::TCP:
-    sockType = SOCK_STREAM;
-    break;
-  case SocketType::UDP:
-    sockType = SOCK_DGRAM;
-    break;
-#ifdef ANCH_POSIX
-  case SocketType::POSIX:
-    sockType = SOCK_STREAM;
-    break;
+#ifdef MSG_NOSIGNAL
+  /*! Send flags: do not raise SIGPIPE */
+  constexpr int SEND_FLAGS = MSG_NOSIGNAL;
+#else
+  /*! Send flags (SIGPIPE is disabled with SO_NOSIGPIPE) */
+  constexpr int SEND_FLAGS = 0;
 #endif
-  default:
-    // Nothing to do
-    break;
-  }
-  // Open the socket according to socket type -
 
-  // Retrieve address informations +
-  addrinfo hints;
-  addrinfo* result;
-  memset(&hints, 0, sizeof(addrinfo));
-  hints.ai_family = AF_UNSPEC;
-  hints.ai_socktype = sockType;
-  hints.ai_flags = AI_PASSIVE;
-  hints.ai_protocol = 0;
-  hints.ai_canonname = NULL;
-  hints.ai_addr = NULL;
-  hints.ai_next = NULL;
-  std::ostringstream strPortOss;
-  strPortOss << _port;
-  int res = ::getaddrinfo(_ipAddress.empty() ? NULL : _ipAddress.data(),
-			  strPortOss.str().data(), &hints, &result);
-  if(res != 0) {
-    throw IOException("Error on getaddrinfo()", res);
+  /*!
+   * Set close-on-exec flag and disable SIGPIPE when \c MSG_NOSIGNAL is not available
+   *
+   * \param fd the file descriptor
+   */
+  void
+  initDescriptor(int fd) {
+    ::fcntl(fd, F_SETFD, FD_CLOEXEC);
+#if !defined(MSG_NOSIGNAL) && defined(SO_NOSIGPIPE)
+    int on = 1;
+    ::setsockopt(fd, SOL_SOCKET, SO_NOSIGPIPE, &on, sizeof(on));
+#endif
   }
 
-  // Check addresses by opening socket and bind
-  for(_address = result ; _address != NULL ; _address = _address->ai_next) {
-    _sock = ::socket(_address->ai_family,
-		     _address->ai_socktype,
-		     _address->ai_protocol);
-    if(_sock != INVALID_SOCKET) {
-      break;
+  /*!
+   * Connect socket (wait for connection when \c connect is interrupted)
+   *
+   * \param fd the file descriptor
+   * \param address the address to connect to
+   *
+   * \return \c 0 on success, the \c errno value otherwise
+   */
+  int
+  connectTo(int fd, const Address& address) {
+    if(::connect(fd, address.data(), address.size()) == 0) {
+      return 0;
+    }
+    if(errno != EINTR) {
+      return errno;
+    }
+    // Connection goes on asynchronously: wait for it +
+    pollfd pfd{fd, POLLOUT, 0};
+    int res = 0;
+    do {
+      res = ::poll(&pfd, 1, -1);
+    } while(res < 0 && errno == EINTR);
+    if(res < 0) {
+      return errno;
+    }
+    int error = 0;
+    socklen_t length = sizeof(error);
+    if(::getsockopt(fd, SOL_SOCKET, SO_ERROR, &error, &length) != 0) {
+      return errno;
+    }
+    return error;
+    // Connection goes on asynchronously: wait for it -
+  }
+
+  /*!
+   * Set timeout socket option
+   *
+   * \param fd the file descriptor
+   * \param option \c SO_RCVTIMEO or \c SO_SNDTIMEO
+   * \param timeout the timeout
+   */
+  void
+  setTimeout(int fd, int option, std::chrono::milliseconds timeout) {
+    timeval value{};
+    value.tv_sec = static_cast<time_t>(timeout.count() / 1000);
+    value.tv_usec = static_cast<suseconds_t>((timeout.count() % 1000) * 1000);
+    if(::setsockopt(fd, SOL_SOCKET, option, &value, sizeof(value)) != 0) {
+      throw IOException("Error on setsockopt()");
     }
   }
 
-  ::freeaddrinfo(result);
-  if(_address == NULL) {
-    throw IOException("No working address");
+}
+
+// Constructors +
+Socket::Socket() noexcept: _fd(-1) {
+  // Nothing to do
+}
+
+Socket::Socket(int fd) noexcept: _fd(fd) {
+  // Nothing to do
+}
+
+Socket::Socket(int family, SocketType type): _fd(::socket(family, static_cast<int>(type), 0)) {
+  if(_fd < 0) {
+    throw IOException("Error on socket()");
   }
-  // Retrieve address informations -
+  initDescriptor(_fd);
+}
+
+Socket::Socket(Socket&& other) noexcept: _fd(std::exchange(other._fd, -1)) {
+  // Nothing to do
 }
 // Constructors -
 
 // Destructor +
 Socket::~Socket() noexcept {
-  // Nothing to do
+  close();
 }
 // Destructor -
 
+// Operators +
+Socket&
+Socket::operator=(Socket&& other) noexcept {
+  if(this != &other) {
+    close();
+    _fd = std::exchange(other._fd, -1);
+  }
+  return *this;
+}
+// Operators -
 
 // Methods +
-void
-Socket::bind() {
-  int reusePort = true;
-  int res = ::setsockopt(_sock, SOL_SOCKET, SO_REUSEPORT, &reusePort, sizeof(reusePort));
-  if(res == SOCKET_ERROR) {
-    throw IOException("Error on setsockopt()");
+Socket
+Socket::connect(const std::string& host, uint16_t port, SocketType type) {
+  int error = 0;
+  for(const Address& address : Address::resolve(host, port, type)) {
+    Socket sock(address.getFamily(), type);
+    error = connectTo(sock._fd, address);
+    if(error == 0) {
+      return sock;
+    }
   }
-  res = ::bind(_sock, _address->ai_addr, _address->ai_addrlen);
-  if(res == SOCKET_ERROR) {
-    throw IOException("Error on bind()");
+  throw IOException("Error on connect() to " + host + ':' + std::to_string(port), error);
+}
+
+Socket
+Socket::bind(const std::string& host, uint16_t port, SocketType type) {
+  int error = 0;
+  for(const Address& address : Address::resolve(host, port, type, true)) {
+    Socket sock(address.getFamily(), type);
+    int on = 1;
+    if(::setsockopt(sock._fd, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on)) != 0) {
+      throw IOException("Error on setsockopt()");
+    }
+    if(address.getFamily() == AF_INET6 && host.empty()) { // any address: accept IPv4 too
+      int off = 0;
+      ::setsockopt(sock._fd, IPPROTO_IPV6, IPV6_V6ONLY, &off, sizeof(off));
+    }
+    if(::bind(sock._fd, address.data(), address.size()) == 0) {
+      return sock;
+    }
+    error = errno;
   }
+  throw IOException("Error on bind() to " + host + ':' + std::to_string(port), error);
 }
 
 void
-Socket::connect() {
-  int res = ::connect(_sock, _address->ai_addr, _address->ai_addrlen);
-  if(res != 0) {
-    throw IOException("Error on connect()");
-  }
-}
-
-void
-Socket::listen() {
-  int res = ::listen(_sock, _backlog);
-  if(res == SOCKET_ERROR) {
+Socket::listen(int backlog) {
+  if(::listen(_fd, backlog) != 0) {
     throw IOException("Error on listen()");
   }
 }
 
-void
-Socket::accept(Socket& socket) {
-  SOCKADDR_IN csin;
-  socklen_t length = sizeof(csin);
-  SOCKET sock = ::accept(_sock, (SOCKADDR*)&csin, &length);
-  if(sock == INVALID_SOCKET) {
+Socket
+Socket::accept(Address* peer) {
+  Address address;
+  socklen_t length = sizeof(address._storage);
+  int fd = -1;
+  do {
+    fd = ::accept(_fd, reinterpret_cast<sockaddr*>(&address._storage), &length);
+  } while(fd < 0 && errno == EINTR);
+  if(fd < 0) {
     throw IOException("Error on accept()");
   }
-  socket._sock = sock;
+  initDescriptor(fd);
+  if(peer != NULL) {
+    address._length = length;
+    *peer = address;
+  }
+  return Socket(fd);
+}
+
+std::size_t
+Socket::send(const char* data, std::size_t size) {
+  ssize_t res = -1;
+  do {
+    res = ::send(_fd, data, size, SEND_FLAGS);
+  } while(res < 0 && errno == EINTR);
+  if(res < 0) {
+    throw IOException("Error on send()");
+  }
+  return static_cast<std::size_t>(res);
 }
 
 void
-Socket::receive() {
-  std::string message;
-  receive(message);
+Socket::sendAll(const char* data, std::size_t size) {
+  while(size > 0) {
+    std::size_t sent = send(data, size);
+    data += sent;
+    size -= sent;
+  }
+}
+
+std::size_t
+Socket::receive(char* data, std::size_t size) {
+  ssize_t res = -1;
+  do {
+    res = ::recv(_fd, data, size, 0);
+  } while(res < 0 && errno == EINTR);
+  if(res < 0) {
+    throw IOException("Error on recv()");
+  }
+  return static_cast<std::size_t>(res);
+}
+
+std::size_t
+Socket::sendTo(const char* data, std::size_t size, const Address& to) {
+  ssize_t res = -1;
+  do {
+    res = ::sendto(_fd, data, size, SEND_FLAGS, to.data(), to.size());
+  } while(res < 0 && errno == EINTR);
+  if(res < 0) {
+    throw IOException("Error on sendto() to " + to.toString());
+  }
+  return static_cast<std::size_t>(res);
+}
+
+std::size_t
+Socket::receiveFrom(char* data, std::size_t size, Address& from) {
+  iovec iov{data, size};
+  msghdr msg{};
+  msg.msg_name = &from._storage;
+  msg.msg_namelen = sizeof(from._storage);
+  msg.msg_iov = &iov;
+  msg.msg_iovlen = 1;
+  ssize_t res = -1;
+  do {
+    res = ::recvmsg(_fd, &msg, 0);
+  } while(res < 0 && errno == EINTR);
+  if(res < 0) {
+    throw IOException("Error on recvmsg()");
+  }
+  from._length = msg.msg_namelen;
+  if((msg.msg_flags & MSG_TRUNC) != 0) {
+    throw IOException("Datagram is larger than " + std::to_string(size) + " bytes", EMSGSIZE);
+  }
+  return static_cast<std::size_t>(res);
 }
 
 void
 Socket::shutdown(Direction how) {
-  int res = ::shutdown(_sock, static_cast<int>(how));
-  if(res != 0) {
+  if(::shutdown(_fd, static_cast<int>(how)) != 0) {
     throw IOException("Error on shutdown()");
   }
 }
 
 void
 Socket::close() noexcept {
-  // Shutdown the socket to release every data on the socket +
-  try {
-    shutdown(Direction::BOTH);
-  } catch(...) {
-    // Nothing to do
+  if(_fd >= 0) {
+    ::close(_fd);
+    _fd = -1;
   }
-  // Shutdown the socket to release every data on the socket -
-  closesocket(_sock);
+}
+
+void
+Socket::setReceiveTimeout(std::chrono::milliseconds timeout) {
+  setTimeout(_fd, SO_RCVTIMEO, timeout);
+}
+
+void
+Socket::setSendTimeout(std::chrono::milliseconds timeout) {
+  setTimeout(_fd, SO_SNDTIMEO, timeout);
 }
 // Methods -
+
+// Accessors +
+Address
+Socket::getLocalAddress() const {
+  Address address;
+  socklen_t length = sizeof(address._storage);
+  if(::getsockname(_fd, reinterpret_cast<sockaddr*>(&address._storage), &length) != 0) {
+    throw IOException("Error on getsockname()");
+  }
+  address._length = length;
+  return address;
+}
+
+Address
+Socket::getPeerAddress() const {
+  Address address;
+  socklen_t length = sizeof(address._storage);
+  if(::getpeername(_fd, reinterpret_cast<sockaddr*>(&address._storage), &length) != 0) {
+    throw IOException("Error on getpeername()");
+  }
+  address._length = length;
+  return address;
+}
+
+int
+Socket::getDescriptor() const noexcept {
+  return _fd;
+}
+
+bool
+Socket::isOpen() const noexcept {
+  return _fd >= 0;
+}
+// Accessors -

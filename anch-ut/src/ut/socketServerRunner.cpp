@@ -29,8 +29,3 @@ SocketServerRunner::SocketServerRunner([[maybe_unused]] const std::string& uri, 
 SocketServerRunner::~SocketServerRunner() {
   // \todo plop
 }
-
-void
-SocketServerRunner::handle([[maybe_unused]] const anch::events::Event<anch::network::SocketEvent>& evt) noexcept {
-  // \todo handle message
-}

@@ -23,9 +23,6 @@
 #include <vector>
 #include <string>
 
-#include "events/observer.hpp"
-#include "network/socketEvent.hpp"
-
 #include "ut/defaultRunner.hpp"
 #include "ut/unit.hpp"
 
@@ -66,7 +63,7 @@ namespace anch::ut {
    *
    * \author Vincent Lachenal
    */
-  class SocketServerRunner: public anch::ut::DefaultRunner, private anch::events::Observer<anch::network::SocketEvent> {
+  class SocketServerRunner: public anch::ut::DefaultRunner {
 
   private:
     /*! Unit tests */
@@ -97,14 +94,6 @@ namespace anch::ut {
      * \ref SocketServerRunner destructor
      */
     virtual ~SocketServerRunner();
-
-  public:
-    /*!
-     * Handle message
-     *
-     * \param evt the network message
-     */
-    virtual void handle(const anch::events::Event<anch::network::SocketEvent>& evt) noexcept override;
 
   };
 

@@ -19,121 +19,123 @@
 */
 #pragma once
 
-#include "network/tcpSocket.hpp"
+#include <cstddef>
+#include <string>
+
 #include "cutils/iostream.hpp"
+#include "network/socket.hpp"
 
 namespace anch::network {
 
   /*!
-   * TCP stream
+   * \brief Socket owner base class of \ref TcpStream
+   *
+   * It is declared as the first base class of \ref TcpStream so that the socket is still opened when the stream
+   * buffer sends pending data on destruction (base classes are destroyed in reverse order).
+   *
+   * \since 0.2
+   */
+  struct SocketHolder {
+    /*! The socket */
+    anch::network::Socket _socket;
+  };
+
+  /*!
+   * \brief TCP connection as a \c std::iostream
+   *
+   * Written data are buffered: they are sent when the buffer is full, on \c flush (or \c std::endl ), before reading
+   * (request / response protocols do not need an explicit flush) and on destruction.\n
+   * End of stream (\c eof ) is reached when the peer has closed the connection (or shut down its transmission).
+   * Network errors set \c badbit ; with \c exceptions(std::ios::badbit) , the \ref IOException is raised.\n
+   * \ref TcpStream can not be copied nor moved: it is built from a host and a port (client) or from a connected
+   * \ref Socket (\ref TcpServer::accept ).
+   *
+   * \code{.cpp}
+   * anch::network::TcpServer server("", 40099);
+   * anch::network::TcpStream client("localhost", 40099);
+   * anch::network::TcpStream peer = server.accept();
+   * client << "hello" << std::endl;
+   * std::string line;
+   * std::getline(peer, line);
+   * \endcode
    *
    * \author Vincent Lachenal
-   *
-   * \since 0.1
    */
-  class TcpStream: public anch::cutils::CIOStream {
+  class TcpStream: private anch::network::SocketHolder, public anch::cutils::CIOStream {
 
     // Attributes +
-  protected:
-    /*! The TCP socket */
-    anch::network::TcpSocket _socket;
-
-    /*! I/O buffer */
-    anch::cutils::cbuffer _buffer;
+  public:
+    /*! Default buffer size (for reading and for writing) */
+    static constexpr std::size_t DEFAULT_BUFFER_SIZE = 8192;
     // Attributes -
 
     // Constructors +
   public:
     /*!
-     * \ref TcpStream constructor
+     * \ref TcpStream constructor: connect to remote host
      *
-     * \param ipAddress the IP address
-     * \param port the port number
-     * \param bufSize the buffer size in byte (default = 1500)
+     * \param host the remote host name or numeric address (empty for loopback)
+     * \param port the remote port
+     * \param bufSize the buffer size
      *
-     * \throw anch::network::IOException Error while creating the socket
+     * \throw anch::network::IOException connection error
      */
-    TcpStream(const std::string& ipAddress, uint16_t port, std::size_t bufSize = 1500);
+    TcpStream(const std::string& host, uint16_t port, std::size_t bufSize = DEFAULT_BUFFER_SIZE);
+
+    /*!
+     * \ref TcpStream constructor: use a connected socket
+     *
+     * \param socket the connected socket
+     * \param bufSize the buffer size
+     */
+    explicit TcpStream(anch::network::Socket&& socket, std::size_t bufSize = DEFAULT_BUFFER_SIZE);
+
+    /*!
+     * Forbids \ref TcpStream copy constructor
+     */
+    TcpStream(const TcpStream&) = delete;
+
+    /*!
+     * Forbids \ref TcpStream move constructor (the stream buffer refers to the socket)
+     */
+    TcpStream(TcpStream&&) = delete;
     // Constructors -
 
     // Destructor +
   public:
     /*!
-     * \ref TcpStream destructor
+     * \ref TcpStream destructor: send pending data and close the connection
      */
     virtual ~TcpStream() noexcept;
     // Destructor -
 
-  public:
-    inline bool addObserver(anch::events::Observer<anch::network::SocketEvent>& observer) {
-      return _socket.addObserver(observer);
-    }
-
-  };
-
-  /*!
-   * \brief TCP stream server
-   *
-   * \author Vincent Lachenal
-   *
-   * \since 0.1
-   */
-  class TcpStreamServer: public TcpStream {
-
-    // Constructors +
+    // Methods +
   public:
     /*!
-     * \ref TcpStreamServer constructor
+     * Shut down part of the connection. Pending data are sent before shutting down transmission: the peer reaches
+     * the end of stream once it has read them, and this stream can still read the response.
      *
-     * \param ipAddress the IP address
-     * \param port the port number
-     * \param bufSize the buffer size in byte (default = 1500)
+     * \param how the direction to shut down
      *
-     * \throw anch::network::IOException Error while creating the socket
+     * \throw anch::network::IOException error on \c shutdown
      */
-    TcpStreamServer(const std::string& ipAddress, uint16_t port, std::size_t bufSize = 1500);
-    // Constructors -
+    void shutdown(anch::network::Direction how = anch::network::Direction::TRANSMISSION);
 
-    // Destructor +
-  public:
     /*!
-     * \ref TcpStreamServer destructor
-     */
-    virtual ~TcpStreamServer() noexcept;
-    // Destructor -
-
-  };
-
-  /*!
-   * \brief TCP stream client
-   *
-   * \author Vincent Lachenal
-   *
-   * \since 0.1
-   */
-  class TcpStreamClient: public TcpStream {
-
-    // Constructors +
-  public:
-    /*!
-     * \ref TcpStreamClient constructor
+     * Socket getter (for options, addresses, ...)
      *
-     * \param ipAddress the IP address
-     * \param port the port number
-     * \param bufSize the buffer size in byte (default = 1500)
-     *
-     * \throw anch::network::IOException Error while creating the socket
+     * \return the socket
      */
-    TcpStreamClient(const std::string& ipAddress, uint16_t port, std::size_t bufSize = 1500);
-    // Constructors -
+    anch::network::Socket& getSocket() noexcept;
+    // Methods -
 
-    // Destructor +
-  public:
+  private:
     /*!
-     * \ref TcpStreamClient destructor
+     * Initialize stream buffer
+     *
+     * \param bufSize the buffer size
      */
-    virtual ~TcpStreamClient() noexcept;
-    // Destructor -
+    void init(std::size_t bufSize);
 
   };
 

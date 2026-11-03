@@ -3,6 +3,12 @@
  *
  * \brief Network namespace.
  *
- * It contains classes to manage network data management.\n
- * For now only TCP and UDP are implemented and needed some work to be use easier. Transport layers (such as HTTP) should be implemented soon.
+ * Network sockets as C++ streams (POSIX only, IPv4 and IPv6):
+ * - \ref anch::network::TcpStream : a TCP connection as a \c std::iostream ;
+ * - \ref anch::network::TcpServer : accept connections as \ref anch::network::TcpStream ;
+ * - \ref anch::network::UdpSocket : UDP datagrams ;
+ * - \ref anch::network::Socket and \ref anch::network::Address : RAII socket and resolved address used by the
+ *   classes above.
+ *
+ * Errors are reported with \ref anch::network::IOException (a \c std::system_error with the \c errno value).
  */

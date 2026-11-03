@@ -19,7 +19,7 @@ Statut des constats :
 | anch-utils | [anch-utils/ANALYSE.md](anch-utils/ANALYSE.md) | tous les constats corrigés le 2026-11-02 (`ThreadPool` réécrit, `ResourcePool`, `convert`, `Singleton`, `Optional`, `Fluent`, `Flux`, `endianness`)  |
 | anch-events | [anch-events/ANALYSE.md](anch-events/ANALYSE.md) | corrigé le 2026-11-02 : `EventBus` (thread permanent, `fireEvent` non bloquant et appelable depuis un handler), `Observable` (plus d'interblocage, `removeObserver` attend les diffusions en cours) |
 | anch-log | [anch-log/ANALYSE.md](anch-log/ANALYSE.md) | corrigé le 2026-11-02 : motif par défaut, `MDC`, `LowPriorityWriter`, `max-size` et rotation, `getLogger` concurrent, writers par logger inversés, erreurs d'écriture fatales, fichiers non vidés |
-| anch-network | [anch-network/ANALYSE.md](anch-network/ANALYSE.md) | use-after-free après `freeaddrinfo`, débordements en réception (confirmés sous ASan), UDP IPv4 uniquement, `TcpStreamServer` sans `accept` |
+| anch-network | [anch-network/ANALYSE.md](anch-network/ANALYSE.md) | refondu le 2026-11-03 (N1 à N10) : sockets en flux C++ (`TcpStream` = `std::iostream`, `TcpServer::accept`, `UdpSocket` par datagrammes), `Socket` RAII, IPv4 / IPv6, `errno` dans `IOException` (`std::system_error`), plus d'événements ; 9 tests, propres sous ASan / UBSan |
 | anch-json | [anch-json/ANALYSE.md](anch-json/ANALYSE.md) | corrigés : `0` refusé, dépassements numériques, chaînes non échappées / non décodées, récursion non bornée, `max_payload` ignoré ; lecture 3,7× et écriture 2× plus rapides (2026-10-31) ; reste `'\0'` comme fin de données (J4) |
 | anch-date | [anch-date/ANALYSE.md](anch-date/ANALYSE.md) | révisé et corrigé le 2026-11-03 (D1 à D15) : réécrit sur `std::chrono` + `localtime_r` (sans mutex ni `std::regex`, 11 classes de formateurs remplacées par 3 internes) ; heure d'été, `timespec`, `%y`, `%h`, analyse partielle / invalide / sans millisecondes, copie de `DateFormatter`, constructeurs implicites (à l'origine de S8 dans `anch-sql`) |
 | anch-device | [anch-device/ANALYSE.md](anch-device/ANALYSE.md) | une interface atypique bloque tout l'inventaire réseau, `_metric` invalide, IPv4 uniquement ; fournisseurs UUID v1 / v6 corrigés (DV7 à DV10, DV12 ; v1 19× plus rapide) |
@@ -53,7 +53,7 @@ Les tests passent alors que de nombreux constats sont confirmés : ils ne couvre
 ## Points transverses
 
 - **Conversions numériques** : trois implémentations différentes. `anch-ini` (`toNumber`) contrôle correctement `std::from_chars` ; `anch-cli` (CL1) oubliait `res.ec` (corrigé le 2026-11-03) ; `anch-utils` (`convert`, U9 / U10) passe par un flux ; `anch-json` (J7, J9) est corrigé. Une fonction commune dans `anch-utils`, sur le modèle de `toNumber`, réglerait les quatre.
-- **Observateurs et threads** : `Observable` (E7), `EventBus` (E1, E2) et `EventHandler` (E8) appellent les handlers en tenant des verrous ou sans protéger la liste. `anch-network` et `anch-ut` reposent dessus.
+- **Observateurs et threads** : `Observable` (E7), `EventBus` (E1, E2) et `EventHandler` (E8) appellent les handlers en tenant des verrous ou sans protéger la liste. `anch-network` et `anch-ut` n'en dépendent plus depuis le 2026-11-03.
 - **Sanitizers** : N1, N3, U13 n'apparaissent qu'avec ASan. Un preset `asan` (`-fsanitize=address,undefined`) dans `CMakePresets.json` permettrait de les détecter avec la suite de tests actuelle.
 
 ## Système de build (transverse)
@@ -100,7 +100,7 @@ Mise à jour le 2026-10-30, par impact sur l'usage courant :
 2. ~~`anch-cutils` CU1 : en lecture / écriture, les données envoyées sont corrompues (impacte `TcpStream`).~~ Corrigé le 2026-11-02.
 3. ~~`anch-log` L8 et L9 : le motif par défaut n'écrit pas le message, et `MDC.add` / `reset` ne fonctionnent pas.~~ Corrigé le 2026-11-02.
 4. ~~`anch-date` D3 : une heure d'avance en été (impacte aussi les horodatages des logs).~~ Corrigé le 2026-11-03.
-5. `anch-network` N1 / N3 : use-after-free et débordement de tampon.
+5. ~~`anch-network` N1 / N3 : use-after-free et débordement de tampon.~~ Corrigé (refonte) le 2026-11-03.
 6. ~~`anch-json` J1 / J2 : échappement des chaînes.~~ Corrigé.
 7. ~~`anch-events` E2 / E7 : arrêt ou interblocage dès qu'un handler interagit avec le bus ou l'observable.~~ Corrigé le 2026-11-02.
 

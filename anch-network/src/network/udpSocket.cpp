@@ -19,108 +19,53 @@
 */
 #include "network/udpSocket.hpp"
 
-#include <sys/socket.h>
-#include <netinet/in.h>
+#include <cerrno>
 
-
+using anch::network::Address;
+using anch::network::IOException;
 using anch::network::Socket;
 using anch::network::SocketType;
 using anch::network::UdpSocket;
-using anch::network::IOException;
-
 
 // Constructors +
-UdpSocket::UdpSocket():
-  Socket(SocketType::UDP) {
-  // Nothing to do
-}
-
-UdpSocket::UdpSocket(const std::string& ipAddress, uint16_t port):
-  Socket(ipAddress, port, SocketType::UDP) {
+UdpSocket::UdpSocket(const std::string& host, uint16_t port): _socket(Socket::bind(host, port, SocketType::UDP)) {
   // Nothing to do
 }
 // Constructors -
 
-// Destructors +
-UdpSocket::~UdpSocket() noexcept {
-  // Nothing to do
-}
-// Destructors -
-
-
 // Methods +
 void
-UdpSocket::listen() {
-  // Nothing to do
-}
-
-void
-UdpSocket::accept(Socket&) {
-  // Nothing to do
-}
-
-void
-UdpSocket::connect() {
-  // Nothing to do
-}
-
-void
-UdpSocket::send(const std::string& message) {
-  ssize_t res = ::sendto(_sock,
-			 message.data(),
-			 message.size() + 1,
-			 0,
-			 _address->ai_addr,
-			 sizeof(*(_address->ai_addr)));
-  if(res == SOCKET_ERROR) {
-    throw IOException("Error on sendto()");
+UdpSocket::sendTo(std::string_view data, const Address& to) {
+  if(_socket.sendTo(data.data(), data.size(), to) != data.size()) {
+    throw IOException("Datagram has not been entirely sent to " + to.toString(), EMSGSIZE);
   }
 }
 
 void
-UdpSocket::send(const std::string& message, const sockaddr_storage& peerAddr) {
-  ssize_t res = ::sendto(_sock,
-			 message.data(),
-			 message.size() + 1,
-			 0,
-			 (SOCKADDR*)&peerAddr,
-			 sizeof(sockaddr_storage));
-  if(res == SOCKET_ERROR) {
-    throw IOException("Error on sendto()");
-  }
+UdpSocket::sendTo(std::string_view data, const std::string& host, uint16_t port) {
+  sendTo(data, Address::resolve(host, port, SocketType::UDP, false, getAddress().getFamily()).front());
 }
 
-void
-UdpSocket::receive(std::string& message) {
-  // Receive message +
-  char buffer[1024];
-  ssize_t res = 0;
-  sockaddr_storage peerAddr;
-  socklen_t peerAddrLen = sizeof(sockaddr_storage);
-  if((res = ::recvfrom(_sock, buffer, sizeof(buffer) - 1, 0, (sockaddr*)&peerAddr, &peerAddrLen)) > 0) {
-    message += buffer;
+Address
+UdpSocket::receiveFrom(std::string& data, std::size_t maxSize) {
+  Address from;
+  data.resize(maxSize);
+  try {
+    data.resize(_socket.receiveFrom(data.data(), maxSize, from));
+  } catch(...) {
+    data.clear();
+    throw;
   }
-  if(res < 0) {
-    throw IOException("Error on recvfrom()");
-  }
-  // '\0' character is automatically append by std::string
-  // Receive message -
+  return from;
+}
 
-  // Notify everybody that a message has been received +
-  notifyObservers(SocketEvent(message, peerAddr));
-  // Notify everybody that a message has been received -
+Address
+UdpSocket::getAddress() const {
+  return _socket.getLocalAddress();
+}
+
+Socket&
+UdpSocket::getSocket() noexcept {
+  return _socket;
 }
 // Methods -
-
-
-// Accessors +
-int
-UdpSocket::getDomain() const {
-  return AF_INET;
-}
-
-int
-UdpSocket::getType() const {
-  return SOCK_DGRAM;
-}
-// Accessors -

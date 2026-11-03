@@ -18,59 +18,81 @@
   along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "network/tcpStream.hpp"
+#include "network/tcpServer.hpp"
 
-#include <functional>
+#include <utility>
 
+using anch::network::Address;
+using anch::network::Direction;
+using anch::network::Socket;
+using anch::network::SocketType;
+using anch::network::TcpServer;
 using anch::network::TcpStream;
-using anch::network::TcpStreamServer;
-using anch::network::TcpStreamClient;
-using anch::network::TcpSocket;
 
 // TcpStream +
-TcpStream::TcpStream(const std::string& ipAddress, uint16_t port, std::size_t bufSize):
-  anch::cutils::CIOStream(),
-  _socket(ipAddress, port),
-  _buffer({
-	    .data = NULL,
-	    .size = bufSize,
-	    .read = std::bind_front(&TcpSocket::read, &_socket),
-	    .write = std::bind_front(&TcpSocket::write, &_socket)
-	  }) {
-  setBuffer(_buffer);
+TcpStream::TcpStream(const std::string& host, uint16_t port, std::size_t bufSize):
+  anch::network::SocketHolder{Socket::connect(host, port, SocketType::TCP)},
+  anch::cutils::CIOStream() {
+  init(bufSize);
+}
+
+TcpStream::TcpStream(Socket&& socket, std::size_t bufSize):
+  anch::network::SocketHolder{std::move(socket)},
+  anch::cutils::CIOStream() {
+  init(bufSize);
 }
 
 TcpStream::~TcpStream() noexcept {
-  try {
-    flush(); // send pending data while the socket is still open (CIOStream is destroyed after _socket)
-  } catch(...) {
-    // Destructor must not throw
+  // Pending data are sent by CIOStream destructor, before SocketHolder destructor closes the socket
+}
+
+void
+TcpStream::init(std::size_t bufSize) {
+  setBuffer({
+      .data = nullptr,
+      .size = bufSize,
+      .read = [this](char* data, std::size_t size) -> std::size_t { return _socket.receive(data, size); },
+      .write = [this](const char* data, std::size_t size) -> std::size_t { return _socket.send(data, size); }
+    });
+}
+
+void
+TcpStream::shutdown(Direction how) {
+  if(how != Direction::RECEPTION) {
+    flush();
   }
-  // Drop data which could not be sent: the stream buffer destructor must not use the destroyed socket
-  setBuffer({.data = nullptr, .size = 1, .read = [](char*, std::size_t) -> std::size_t { return 0; },
-	     .write = [](const char*, std::size_t size) -> std::size_t { return size; }});
-  _socket.close();
+  _socket.shutdown(how);
+}
+
+Socket&
+TcpStream::getSocket() noexcept {
+  return _socket;
 }
 // TcpStream -
 
-// TcpStreamServer +
-TcpStreamServer::TcpStreamServer(const std::string& ipAddress, uint16_t port, std::size_t bufSize):
-  TcpStream(ipAddress, port, bufSize) {
-  _socket.bind();
-  _socket.listen();
+// TcpServer +
+TcpServer::TcpServer(const std::string& host, uint16_t port, int backlog):
+  _socket(Socket::bind(host, port, SocketType::TCP)) {
+  _socket.listen(backlog);
 }
 
-TcpStreamServer::~TcpStreamServer() noexcept {
-  // Nothing to do ?
-}
-// TcpStreamServer -
-
-// TcpStreamClient +
-TcpStreamClient::TcpStreamClient(const std::string& ipAddress, uint16_t port, std::size_t bufSize):
-  TcpStream(ipAddress, port, bufSize) {
-  _socket.connect();
+TcpStream
+TcpServer::accept(std::size_t bufSize) {
+  return TcpStream(_socket.accept(), bufSize); // guaranteed copy elision: TcpStream is not movable
 }
 
-TcpStreamClient::~TcpStreamClient() noexcept {
-  // Nothing to do
+Socket
+TcpServer::acceptSocket(Address* peer) {
+  return _socket.accept(peer);
 }
-// TcpStreamClient -
+
+Address
+TcpServer::getAddress() const {
+  return _socket.getLocalAddress();
+}
+
+Socket&
+TcpServer::getSocket() noexcept {
+  return _socket;
+}
+// TcpServer -

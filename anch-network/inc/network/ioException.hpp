@@ -19,37 +19,50 @@
 */
 #pragma once
 
-#include <iostream>
-#include <exception>
+#include <cerrno>
+#include <string>
+#include <system_error>
 
 namespace anch::network {
 
   /*!
-   * Network input/output error management by exception
+   * \c getaddrinfo error category (messages from \c gai_strerror )
+   *
+   * \return the category
+   *
+   * \since 0.2
+   */
+  const std::error_category& addrinfoCategory() noexcept;
+
+  /*!
+   * \brief Network input/output error
+   *
+   * The error code is available with \c code() : \c std::generic_category for system errors (\c errno values),
+   * \ref addrinfoCategory for address resolution errors.
    *
    * \author Vincent Lachenal
    */
-  class IOException : public std::exception {
-  private:
-    /*! Error message */
-    std::string _message;
+  class IOException: public std::system_error {
 
   public:
     // Constructors +
     /*!
      * \ref IOException constructor
      *
-     * \param message The error message
+     * \param message the error message
+     * \param errnum the \c errno value (default to current \c errno )
      */
-    IOException(const std::string& message);
+    explicit IOException(const std::string& message, int errnum = errno);
 
     /*!
      * \ref IOException constructor
      *
-     * \param message The error message
-     * \param errorCode The error code (from \c getinfoaddr)
+     * \param message the error message
+     * \param code the error code
+     *
+     * \since 0.2
      */
-    IOException(const std::string& message, int errorCode);
+    IOException(const std::string& message, const std::error_code& code);
     // Constructors -
 
     // Destructor +
@@ -59,14 +72,6 @@ namespace anch::network {
     virtual ~IOException() noexcept;
     // Destructor -
 
-  public:
-    /*!
-     * Return the error message
-     *
-     * \return The error message
-     */
-    virtual const char* what() const noexcept;
-
   };
 
-}
+}  // anch::network

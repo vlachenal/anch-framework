@@ -19,115 +19,99 @@
 */
 #pragma once
 
-#include "network/socket.hpp"
+#include <cstddef>
+#include <string>
+#include <string_view>
 
+#include "network/socket.hpp"
 
 namespace anch::network {
 
   /*!
-   * UDP socket implementation
+   * \brief UDP socket
+   *
+   * Datagrams keep their boundaries and can contain any byte (\c '\\0' included). A datagram which does not fit in
+   * the reception buffer raises \ref IOException (\c EMSGSIZE ) instead of being silently truncated.
    *
    * \author Vincent Lachenal
    */
-  class UdpSocket: public Socket {
+  class UdpSocket {
 
+    // Attributes +
   public:
-    // Constructors +
-    /*!
-     * \ref UdpSocket default constructor
-     */
-    UdpSocket();
+    /*! Maximum UDP payload (IPv4) */
+    static constexpr std::size_t MAX_DATAGRAM_SIZE = 65507;
 
+  private:
+    /*! The socket */
+    anch::network::Socket _socket;
+    // Attributes -
+
+    // Constructors +
+  public:
     /*!
-     * \ref UdpSocket constructor
+     * \ref UdpSocket constructor: bind to local address
      *
-     * \param ipAddress The IP address
-     * \param port The port number
+     * \param host the local host name or numeric address (empty for any address)
+     * \param port the local port (\c 0 for an ephemeral port: see \ref getAddress )
      *
-     * \throw anch::network::IOException Error while creating the socket
+     * \throw anch::network::IOException bind error
      */
-    UdpSocket(const std::string& ipAddress, uint16_t port);
+    explicit UdpSocket(const std::string& host = "", uint16_t port = 0);
     // Constructors -
 
-    // Destructors +
-    /*!
-     * \ref UdpSocket destructor
-     */
-    virtual ~UdpSocket() noexcept;
-    // Destructors -
-
-  public:
     // Methods +
+  public:
     /*!
-     * Listen on socket
+     * Send a datagram
      *
-     * \throw anch::network::IOException Error while listening on the socket
+     * \param data the datagram
+     * \param to the destination
+     *
+     * \throw anch::network::IOException send error (or datagram not entirely sent)
      */
-    virtual void listen();
+    void sendTo(std::string_view data, const anch::network::Address& to);
 
     /*!
-     * Connect to remote socket.\n
-     * This method do nothing since UDP is not connected.
+     * Send a datagram (the destination is resolved for the socket address family)
      *
-     * \throw anch::network::IOException Never on UDP socket
+     * \param data the datagram
+     * \param host the destination host name or numeric address
+     * \param port the destination port
+     *
+     * \throw anch::network::IOException resolution or send error
      */
-    virtual void connect();
+    void sendTo(std::string_view data, const std::string& host, uint16_t port);
 
     /*!
-     * Accept client connection.\n
-     * This method do nothing since UDP is not connected
+     * Receive a datagram
      *
-     * \param socket The socket which describes client connection
+     * \param data receives the datagram
+     * \param maxSize the maximum datagram size
      *
-     * \throw anch::network::IOException Never on UDP socket
+     * \return the sender address
+     *
+     * \throw anch::network::IOException reception error, or datagram larger than \c maxSize (\c EMSGSIZE )
      */
-    virtual void accept(Socket& socket);
+    anch::network::Address receiveFrom(std::string& data, std::size_t maxSize = MAX_DATAGRAM_SIZE);
 
     /*!
-     * Send a message on socket
+     * Local address getter (useful for ephemeral port)
      *
-     * \param message The message to send
+     * \return the address
      *
-     * \throw anch::network::IOException Network error while sending message
+     * \throw anch::network::IOException error on \c getsockname
      */
-    virtual void send(const std::string& message);
+    anch::network::Address getAddress() const;
 
     /*!
-     * Send a message on socket
+     * Socket getter (for options, timeouts, ...)
      *
-     * \param message The message to send
-     * \param peerAddr The address where the message has to be sent
-     *
-     * \throw anch::network::IOException Network error while sending message
+     * \return the socket
      */
-    virtual void send(const std::string& message, const sockaddr_storage& peerAddr);
-
-    /*!
-     * Receive a message on socket
-     *
-     * \param message The string where to write the message
-     *
-     * \throw anch::network::IOException Network error while receiving message
-     */
-    virtual void receive(std::string& message);
+    anch::network::Socket& getSocket() noexcept;
     // Methods -
-
-    // Accessors +
-    /*!
-     * Get the socket domain
-     *
-     * \return The POSIX socket domain
-     */
-    virtual int getDomain() const;
-
-    /*!
-     * Get the socket service type
-     *
-     * \return The POSIX socket service type
-     */
-    virtual int getType() const;
-    // Accessors -
 
   };
 
-}
+}  // anch::network

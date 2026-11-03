@@ -25,6 +25,7 @@ Correction (`src/ut/main.cpp`) : `--runner` est refusé (« Options --runner, --
 ### T4. Options `--start`, `--stop` et `--gen-ctest` sans effet — vérifié — **corrigé le 2026-11-03** (refusées, pas implémentées)
 Ces options sont analysées (`opts.start`, `opts.shutdown`, `opts.genCTEST`) mais jamais utilisées. `--gen-ctest` lance simplement tous les tests.
 Les runners socket sont des squelettes : `SocketServerRunner` (constructeur et `handle()` vides, `src/ut/socketServerRunner.cpp`) ; `SocketClientRunner` n'a qu'un header, sans implémentation.
+Depuis le 2026-11-03 (refonte d'`anch-network`, sans événements) : `SocketServerRunner` n'hérite plus de `Observer<SocketEvent>` et `handle()` est supprimée ; `anch-ut` ne dépend plus d'`anch-network` ni d'`anch-events`. Les runners pourront utiliser `TcpServer` / `TcpStream`.
 Correction : ces options sont refusées comme `--runner` (T3) au lieu d'être ignorées ; elles restent dans l'aide, marquées « not implemented yet ». Les runners socket et `--gen-ctest` restent à implémenter (voir T2 et « À approfondir »). Test : `anch-unit-test-gen-ctest` (`WILL_FAIL`).
 
 ### T5. Un test qui appelle `exit()` termine la suite avec succès — vérifié — **corrigé le 2026-10-31**

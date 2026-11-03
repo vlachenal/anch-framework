@@ -19,291 +19,292 @@
 */
 #pragma once
 
-#include <cstring>
+#include <chrono>
+#include <cstddef>
+#include <string>
 
-#include "events/observable.hpp"
-#include "network/socketEvent.hpp"
+#include <sys/socket.h>
+
+#include "network/address.hpp"
 #include "network/ioException.hpp"
-
-
-// Microsoft Windows operating systems defintions +
-#ifdef ANCH_WINDOWS
-typedef int socklen_t;
-// Microsoft Windows operating systems defintions -
-
-// POSIX operating systems definitions +
-#elif defined ANCH_POSIX
-#include <netdb.h>
-#define INVALID_SOCKET -1
-#define SOCKET_ERROR -1
-typedef int SOCKET;
-typedef struct sockaddr_in SOCKADDR_IN;
-typedef struct sockaddr SOCKADDR;
-#endif
-// POSIX operating systems definitions -
 
 
 namespace anch::network {
 
   /*!
-   * Socket type enumerations
-   *
-   * \author Vincent Lachenal
-   */
-  enum class SocketType {
-    /*! Unknown socket */
-    UNKNOWN = 0,
-
-    /*! TCP socket */
-    TCP,
-
-    /*! UDP socket */
-    UDP,
-
-#ifdef ANCH_POSIX
-    /*! POSIX socket (not available for Microsoft Windows TM operating system) */
-    POSIX,
-#endif
-  };
-
-  /*!
-   * Socket direction.\n
-   * Usefull for shutdown method.
-   *
-   * \author Vincent Lachenal
+   * Socket direction (for \ref Socket::shutdown )
    */
   enum class Direction {
+
     /*! Reception */
-    RECEPTION = 0,
+    RECEPTION = SHUT_RD,
 
     /*! Transmission */
-    TRANSMISSION = 1,
+    TRANSMISSION = SHUT_WR,
 
     /*! Reception and transmission */
-    BOTH = 2,
+    BOTH = SHUT_RDWR,
+
   };
 
   /*!
-   * Network socket management class
+   * \brief Network socket (POSIX)
+   *
+   * A \ref Socket owns its file descriptor: it is closed by the destructor. Sockets can be moved, not copied.\n
+   * Every method raises \ref IOException with the \c errno value on error. Interrupted system calls (\c EINTR ) are
+   * restarted. \c SIGPIPE is not raised when peer has closed the connection: \ref send raises \ref IOException
+   * (\c EPIPE ) instead.\n
+   * For TCP connections, \ref TcpStream and \ref TcpServer provide a stream interface ; for UDP, \ref UdpSocket .
    *
    * \author Vincent Lachenal
    */
-  class Socket : public anch::events::Observable<SocketEvent> {
+  class Socket {
 
-  private:
     // Attributes +
-    /*! IP address */
-    std::string _ipAddress;
-
-    /*! Destination port */
-    uint16_t _port;
-
-    /*! The socket type */
-    SocketType _type;
-
-  protected:
-    /*! The socket */
-    SOCKET _sock;
-
-    /*! The number of connection in waiting state */
-    int _backlog;
-
-    /*! The address informations */
-    addrinfo* _address;
+  private:
+    /*! File descriptor (\c -1 when closed) */
+    int _fd;
     // Attributes -
 
     // Constructors +
-  protected:
-    /*!
-     * \ref Socket constructor.
-     *
-     * \param type The socket type
-     */
-    Socket(SocketType type);
-
   public:
     /*!
-     * \ref Socket constructor.\n
-     * Backlog is set to 5 by default. You can change it using the setter before call listen method.
-     *
-     * \param ipAddress IP address
-     * \param port Destination port
-     * \param type The socket type
-     *
-     * \throw anch::network::IOException Error while creating the socket
+     * \ref Socket default constructor (closed socket)
      */
-    Socket(const std::string& ipAddress, uint16_t port, SocketType type = SocketType::UNKNOWN);
+    Socket() noexcept;
+
+    /*!
+     * \ref Socket constructor: take ownership of an opened file descriptor
+     *
+     * \param fd the file descriptor
+     */
+    explicit Socket(int fd) noexcept;
+
+    /*!
+     * \ref Socket constructor: open a new socket
+     *
+     * \param family the address family (\c AF_INET or \c AF_INET6 )
+     * \param type the socket type
+     *
+     * \throw anch::network::IOException socket can not be opened
+     */
+    Socket(int family, anch::network::SocketType type);
+
+    /*!
+     * Forbids \ref Socket copy constructor
+     */
+    Socket(const Socket&) = delete;
+
+    /*!
+     * \ref Socket move constructor
+     *
+     * \param other the socket to move (it is closed afterwards)
+     */
+    Socket(Socket&& other) noexcept;
     // Constructors -
 
     // Destructor +
+  public:
     /*!
-     * \ref Socket destructor
+     * \ref Socket destructor: close the socket
      */
     virtual ~Socket() noexcept;
     // Destructor -
 
+    // Operators +
   public:
+    /*!
+     * Forbids \ref Socket copy assignment
+     */
+    Socket& operator=(const Socket&) = delete;
+
+    /*!
+     * \ref Socket move assignment (the current socket is closed)
+     *
+     * \param other the socket to move (it is closed afterwards)
+     *
+     * \return \c this
+     */
+    Socket& operator=(Socket&& other) noexcept;
+    // Operators -
+
     // Methods +
+  public:
     /*!
-     * Bind socket
+     * Open a socket connected to remote host. Every resolved address is tried (IPv4 and IPv6).
      *
-     * \throw anch::network::IOException Error while binding the socket
+     * \param host the remote host name or numeric address (empty for loopback)
+     * \param port the remote port
+     * \param type the socket type
+     *
+     * \return the connected socket
+     *
+     * \throw anch::network::IOException resolution or connection error (error of the last address)
      */
-    virtual void bind();
+    static Socket connect(const std::string& host, uint16_t port, anch::network::SocketType type);
 
     /*!
-     * Connect to remote socket
+     * Open a socket bound to a local address, with \c SO_REUSEADDR . Every resolved address is tried. An IPv6 socket
+     * bound to any address also accepts IPv4 connections.
      *
-     * \throw anch::network::IOException Error while connectin the client socket to the server socket
+     * \param host the local host name or numeric address (empty for any address)
+     * \param port the local port (\c 0 for an ephemeral port: see \ref getLocalAddress )
+     * \param type the socket type
+     *
+     * \return the bound socket
+     *
+     * \throw anch::network::IOException resolution or bind error (error of the last address)
      */
-    virtual void connect();
+    static Socket bind(const std::string& host, uint16_t port, anch::network::SocketType type);
 
     /*!
-     * Listen on socket
+     * Listen for connections on a bound socket
      *
-     * \throw anch::network::IOException Error while listening on the socket
+     * \param backlog the maximum number of pending connections
+     *
+     * \throw anch::network::IOException error on \c listen
      */
-    virtual void listen();
+    void listen(int backlog = SOMAXCONN);
 
     /*!
-     * Accept client connection
+     * Wait for a connection on a listening socket
      *
-     * \param socket The socket which describes client connection
+     * \param peer if not \c NULL , receives the peer address
      *
-     * \throw anch::network::IOException Error while accepting client connection
+     * \return the connected socket
+     *
+     * \throw anch::network::IOException error on \c accept
      */
-    virtual void accept(Socket& socket);
+    Socket accept(anch::network::Address* peer = NULL);
 
     /*!
-     * Send a message on socket
+     * Send data (one system call: less bytes than \c size can be sent)
      *
-     * \param message The message to send
+     * \param data the data
+     * \param size the data size
      *
-     * \throw anch::network::IOException Network error while sending message
+     * \return the number of bytes sent
+     *
+     * \throw anch::network::IOException error on \c send
      */
-    virtual void send(const std::string& message) = 0;
+    std::size_t send(const char* data, std::size_t size);
 
     /*!
-     * Receive a message on socket
+     * Send every data (loop on partial sends)
      *
-     * \param message The messages which has been received
+     * \param data the data
+     * \param size the data size
      *
-     * \throw anch::network::IOException Network error while receiving message
+     * \throw anch::network::IOException error on \c send
      */
-    virtual void receive(std::string& message) = 0;
+    void sendAll(const char* data, std::size_t size);
 
     /*!
-     * Receive a message on socket
+     * Receive data
      *
-     * \throw anch::network::IOException Network error while receiving message
+     * \param data the buffer
+     * \param size the buffer size
+     *
+     * \return the number of bytes received, \c 0 when peer has closed the connection
+     *
+     * \throw anch::network::IOException error on \c recv (\c EAGAIN on timeout)
      */
-    virtual void receive();
+    std::size_t receive(char* data, std::size_t size);
 
     /*!
-     * Shutdown data flow between client and server.\n
-     * This method has to be called by server.
+     * Send a datagram
      *
-     * \param how Direction of the data flow which has to be closed
+     * \param data the data
+     * \param size the data size
+     * \param to the destination address
      *
-     * \throw anch::network::IOException Network error while shutting down data transfer
+     * \return the number of bytes sent
+     *
+     * \throw anch::network::IOException error on \c sendto
      */
-    virtual void shutdown(Direction how = Direction::BOTH);
+    std::size_t sendTo(const char* data, std::size_t size, const anch::network::Address& to);
 
     /*!
-     * Close the socket
+     * Receive a datagram
+     *
+     * \param data the buffer
+     * \param size the buffer size
+     * \param from receives the sender address
+     *
+     * \return the datagram size
+     *
+     * \throw anch::network::IOException error on \c recvmsg , or datagram larger than buffer (\c EMSGSIZE )
      */
-    virtual void close() noexcept;
+    std::size_t receiveFrom(char* data, std::size_t size, anch::network::Address& from);
+
+    /*!
+     * Shut down part of a full-duplex connection
+     *
+     * \param how the direction to shut down
+     *
+     * \throw anch::network::IOException error on \c shutdown
+     */
+    void shutdown(anch::network::Direction how = anch::network::Direction::BOTH);
+
+    /*!
+     * Close the socket (do nothing when already closed)
+     */
+    void close() noexcept;
+
+    /*!
+     * Set receive timeout (\ref receive and \ref receiveFrom raise \ref IOException with \c EAGAIN )
+     *
+     * \param timeout the timeout (\c 0 for no timeout)
+     *
+     * \throw anch::network::IOException error on \c setsockopt
+     */
+    void setReceiveTimeout(std::chrono::milliseconds timeout);
+
+    /*!
+     * Set send timeout
+     *
+     * \param timeout the timeout (\c 0 for no timeout)
+     *
+     * \throw anch::network::IOException error on \c setsockopt
+     */
+    void setSendTimeout(std::chrono::milliseconds timeout);
     // Methods -
 
-  public:
     // Accessors +
+  public:
     /*!
-     * Get the socket domain
+     * Local address getter
      *
-     * \return The POSIX socket domain
+     * \return the address the socket is bound to
+     *
+     * \throw anch::network::IOException error on \c getsockname
      */
-    virtual int getDomain() const = 0;
+    anch::network::Address getLocalAddress() const;
 
     /*!
-     * Get the socket service type
+     * Peer address getter
      *
-     * \return The POSIX socket service type
+     * \return the address of the connected peer
+     *
+     * \throw anch::network::IOException error on \c getpeername
      */
-    virtual int getType() const = 0;
+    anch::network::Address getPeerAddress() const;
 
     /*!
-     * IP address getter
+     * File descriptor getter
      *
-     * \return The IP address
+     * \return the file descriptor (\c -1 when closed)
      */
-    inline const std::string& getIpAddress() const {
-      return _ipAddress;
-    }
+    int getDescriptor() const noexcept;
 
     /*!
-     * IP address setter
+     * Check if socket is opened
      *
-     * \param ipAddress The IP address to set
+     * \return \c true when socket is opened, \c false otherwise
      */
-    inline void setIpAddress(const std::string& ipAddress) {
-      _ipAddress = ipAddress;
-    }
-
-    /*!
-     * Destination port getter
-     *
-     * \return The destination port
-     */
-    inline uint16_t getPort() const {
-      return _port;
-    }
-
-    /*!
-     * Destination port setter
-     *
-     * \param port The destination port to set
-     */
-    inline void setIpAddress(uint16_t port) {
-      _port = port;
-    }
-
-    /*!
-     * Socket type getter
-     *
-     * \return The socket type
-     */
-    inline anch::network::SocketType getSocketType() const {
-      return _type;
-    }
-
-    /*!
-     * Socket type setter
-     *
-     * \param type The socket type to set
-     */
-    inline void setSocketType(SocketType type) {
-      _type = type;
-    }
-
-    /*!
-     * Backlog getter
-     *
-     * \return The backlog
-     */
-    inline int getBacklog() const {
-      return _backlog;
-    }
-
-    /*!
-     * Backlog setter
-     *
-     * \param backlog The backlog to set
-     */
-    inline void setBacklog(int backlog) {
-      _backlog = backlog;
-    }
+    bool isOpen() const noexcept;
     // Accessors -
 
   };
 
-}
+}  // anch::network

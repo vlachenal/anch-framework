@@ -19,23 +19,43 @@
 */
 #include "network/ioException.hpp"
 
-#include <errno.h>
-#include <string.h>
 #include <netdb.h>
-
-
-using std::exception;
 
 using anch::network::IOException;
 
+namespace {
 
-// Constructors +
-IOException::IOException(const std::string& message): _message(message) {
-  _message = message + ": " + strerror(errno);
+  /*!
+   * \brief \c getaddrinfo error category
+   */
+  class AddrinfoCategory: public std::error_category {
+  public:
+    virtual const char* name() const noexcept override {
+      return "getaddrinfo";
+    }
+
+    virtual std::string message(int code) const override {
+      return ::gai_strerror(code);
+    }
+  };
+
 }
 
-IOException::IOException(const std::string& message, int errorCode) {
-  _message = message + ": " + gai_strerror(errorCode);
+const std::error_category&
+anch::network::addrinfoCategory() noexcept {
+  static const AddrinfoCategory category;
+  return category;
+}
+
+// Constructors +
+IOException::IOException(const std::string& message, int errnum):
+  std::system_error(errnum, std::generic_category(), message) {
+  // Nothing to do
+}
+
+IOException::IOException(const std::string& message, const std::error_code& code):
+  std::system_error(code, message) {
+  // Nothing to do
 }
 // Constructors -
 
@@ -44,9 +64,3 @@ IOException::~IOException() noexcept {
   // Nothing to do
 }
 // Destructor -
-
-
-const char*
-IOException::what() const noexcept {
-  return _message.data();
-}
