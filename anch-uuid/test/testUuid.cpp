@@ -17,6 +17,7 @@
 
 #include "ut/assert.hpp"
 #include "ut/unit.hpp"
+#include "ut/threadErrors.hpp"
 
 using anch::UUID;
 
@@ -209,6 +210,7 @@ void
 testUUIDProviderConcurrency() {
   // Register providers while generating UUID from other threads (data race checked with ThreadSanitizer)
   std::atomic_bool stop(false);
+  anch::ut::ThreadErrors errors; // failed assertions are raised again in test thread
   std::vector<std::thread> threads;
   threads.emplace_back([&stop]() {
     for(int i = 0 ; i < 2000 ; ++i) {
@@ -217,16 +219,17 @@ testUUIDProviderConcurrency() {
     stop = true;
   });
   for(int t = 0 ; t < 3 ; ++t) {
-    threads.emplace_back([&stop]() {
+    threads.emplace_back(errors.wrap([&stop]() {
       while(!stop) {
 	UUID uuid = UUID::generateUUID(UUID::Version::RANDOM, "");
 	anch::ut::assertThat(uuid.getVersion() == UUID::Version::RANDOM, "Version should be 4");
       }
-    });
+    }));
   }
   for(std::thread& thread : threads) {
     thread.join();
   }
+  errors.rethrow();
   anch::ut::assertThat(UUID::generateUUID(UUID::Version::EXP, "").getVersion() == UUID::Version::RANDOM, "Registered provider should be used");
 }
 

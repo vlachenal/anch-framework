@@ -34,9 +34,20 @@ namespace anch::ut {
   }
 
   inline
-  const std::map<std::string, std::function<void(void)>>&
+  const std::vector<std::pair<std::string, std::function<void(void)>>>&
   UnitTests::getTests() const {
     return _tests;
+  }
+
+  inline
+  const std::function<void(void)>*
+  UnitTests::find(const std::string& name) const {
+    for(const auto& [testName, func] : _tests) {
+      if(testName == name) {
+	return &func;
+      }
+    }
+    return NULL;
   }
 
 }  // anch::ut

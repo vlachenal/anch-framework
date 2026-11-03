@@ -24,14 +24,24 @@
  * - a function after all tests: \c anch::ut::UnitTests::uninitialize
  *
  * These functions can be registered with the following signature \c std::function<void()> and can throw exceptions which will be caught by the library.\n
+ * When initialization fails, tests and uninitialization are not run. A failed uninitialization fails the unit tests.\n
+ * Tests are run in registration order (or in command line order with \c -t ).\n
  * To register tests, function \c anch::ut::setup(anch::ut::UnitTests&) has to be declared.\n
  *\n
  * Unit tests name and description can be registered in this function with \c name and \c description \c anch::ut::UnitTests methods.\n
  *\n
  * It will make executable with \c help argument (\c -h or \c --help for help): \c -l or \c --list-tests to list registered unit test, \c -t or \c --test <the test to run> to run a specific test and nothing to run all tests.\n
  *\n
- * \c anch::ut::assertThat function is based on \c std::format function with \c {} paceholders.
- * \c anch::ut::assert is a deprecated alias: it conflicts with the \c <cassert> macro.
+ * \c anch::ut::assertThat function is based on \c std::format function with \c {} paceholders: the message has to be
+ * a string literal, and it is checked at compile time against the arguments (literal braces are written \c {{ and \c }} ).
+ * \c anch::ut::assert is a deprecated alias: it conflicts with the \c <cassert> macro.\n
+ * Failed assertions (\c assertThat , \c assertTrue , \c assertFalse and \c fail ) report their file and line.\n
+ *\n
+ * A failed assertion in a thread other than the test one terminates the process: wrap thread functions with
+ * \c anch::ut::ThreadErrors::wrap (\c ut/threadErrors.hpp ) and call \c anch::ut::ThreadErrors::rethrow once threads
+ * have been joined.\n
+ *\n
+ * Colors are disabled when output is not a terminal or when \c NO_COLOR environment variable is set.
  *
  * \section ut_example_sec Examples
  *

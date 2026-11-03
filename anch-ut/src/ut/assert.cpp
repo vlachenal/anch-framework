@@ -22,8 +22,6 @@
 #include "ut/error.hpp"
 
 void
-anch::ut::assertTrue(bool check, const std::string& message) {
-  if(!check) {
-    throw anch::ut::AssertException(message);
-  }
+anch::ut::fail(std::string_view message, const std::source_location& location) {
+  throw anch::ut::AssertException(std::string(message), location);
 }

@@ -1,6 +1,6 @@
 # Analyse — anch-ut
 
-Analyse du 2026-10-27. Vue d'ensemble : [../ANALYSE.md](../ANALYSE.md).
+Analyse du 2026-10-27, corrections du 2026-11-03. Vue d'ensemble : [../ANALYSE.md](../ANALYSE.md).
 Statut : **vérifié** = reproduit ; **lecture** = déduit du code.
 
 Périmètre : `main.cpp` (options de ligne de commande), `unit.hpp`, runners (`defaultRunner`, `socketServerRunner`, `socketClientRunner`), vérification des symboles définis dans les headers publics (complété le 2026-10-30) ; le 2026-10-31 : `assert.hpp`, `impl/assert.hpp`, `unit.cpp`, `defaultRunner.cpp`, tests propres, intégration CTest de tout le dépôt et performances.
@@ -16,14 +16,16 @@ Piste : `template<> inline bool equals(...)`.
 ### T2. Une seule suite par exécutable — lecture (conception)
 `anch-ut` fournit `main()`, et chaque exécutable définit un seul `anch::ut::setup`. Il faut donc un exécutable par fichier de test, et une ligne `add_test` par cas dans CMake. `--gen-ctest` existe dans les options : il pourrait générer ces lignes automatiquement, mais il n'est pas implémenté (voir T4) (`AnchTest.cmake` / `anch_add_tests` est encore vide ; les tests sont désormais déclarés dans `<module>/test/CMakeLists.txt`).
 
-### T3. `-r` / `--runner` provoque une erreur de segmentation — vérifié
+### T3. `-r` / `--runner` provoque une erreur de segmentation — vérifié — **corrigé le 2026-11-03**
 `src/ut/main.cpp:126` : un runner n'est créé que si `--runner` est **absent** (`DefaultRunner`) ; les autres runners sont un `\todo`. Avec `--runner`, `runner` reste un `std::shared_ptr` nul et `runner->startup()` le déréférence.
 Reproduction (2026-10-30) : `anch-uuid-test -r tcp://localhost:54321` : erreur de segmentation (code 139).
 Piste : tant que les runners socket ne sont pas implémentés, refuser l'option avec un message d'erreur.
+Correction (`src/ut/main.cpp`) : `--runner` est refusé (« Options --runner, --start, --stop and --gen-ctest are not implemented yet », code `1`) ; l'aide l'indique (« not implemented yet »). Tests : `anch-unit-test-runner` (`WILL_FAIL`) et `anch-unit-test-runner-message`.
 
-### T4. Options `--start`, `--stop` et `--gen-ctest` sans effet — vérifié
+### T4. Options `--start`, `--stop` et `--gen-ctest` sans effet — vérifié — **corrigé le 2026-11-03** (refusées, pas implémentées)
 Ces options sont analysées (`opts.start`, `opts.shutdown`, `opts.genCTEST`) mais jamais utilisées. `--gen-ctest` lance simplement tous les tests.
 Les runners socket sont des squelettes : `SocketServerRunner` (constructeur et `handle()` vides, `src/ut/socketServerRunner.cpp`) ; `SocketClientRunner` n'a qu'un header, sans implémentation.
+Correction : ces options sont refusées comme `--runner` (T3) au lieu d'être ignorées ; elles restent dans l'aide, marquées « not implemented yet ». Les runners socket et `--gen-ctest` restent à implémenter (voir T2 et « À approfondir »). Test : `anch-unit-test-gen-ctest` (`WILL_FAIL`).
 
 ### T5. Un test qui appelle `exit()` termine la suite avec succès — vérifié — **corrigé le 2026-10-31**
 `DefaultRunner::test` n'intercepte que les exceptions. Si un test (ou le code testé) appelle `std::exit(0)` (ou `exit` avec n'importe quel code nul), le processus s'arrête aussitôt : les tests suivants ne sont pas exécutés et le code de sortie est `0`.
@@ -63,58 +65,95 @@ Correction (nom choisi : `assertThat`) :
 - Test : `anch-ut/test/testUnit.cpp` inclut `<cassert>` avant et après les headers `ut/`, et utilise la macro `assert` et `assertThat` dans le même test.
 - Vérifié : `assertThat` compile avec `<cassert>` inclus avant ou après `ut/assert.hpp` ; l'ancien `assert` produit l'avertissement d'obsolescence (une erreur avec `-Werror`) ; build complet sans avertissement et 450 tests passent.
 
-### T8. Message d'assertion vérifié seulement à l'échec, et masqué par l'erreur de format — vérifié
+### T8. Message d'assertion vérifié seulement à l'échec, et masqué par l'erreur de format — vérifié — **corrigé le 2026-11-03**
 `assert(bool, std::string_view, const T&...)` passe par `std::vformat` : une erreur dans le message (accolades et arguments qui ne correspondent pas) n'est détectée qu'au moment où l'assertion échoue, et l'exception `std::format_error` remplace alors l'échec.
 Reproduction (2026-10-31) : `assert(false, "value {} and {}", 1)` affiche « execution failed: format error: invalid arg-id in format string » ; le message et la nature de l'échec (assertion) sont perdus.
 Piste : `std::format_string<const T&...>` comme type du message : contrôle à la compilation, et `std::format` à l'échec.
+Correction (`inc/ut/assert.hpp`, `inc/ut/impl/assert.hpp`) :
+- `assertThat(bool, std::type_identity_t<AssertMessage<T...>>, const T&...)` : `AssertMessage` est construit implicitement depuis le littéral par un constructeur `consteval` qui contient un `std::format_string<const T&...>` : le format est vérifié à la compilation, comme pour `std::format`, et formaté par `std::format` à l'échec.
+- Le message doit être un littéral (ou une constante) ; les accolades littérales s'écrivent `{{` / `}}`.
+- `assert` (obsolète) garde l'ancien comportement (`std::vformat` à l'échec, sans emplacement).
+- Le contrôle a trouvé 3 messages erronés dans le dépôt : `anch-json/test/testLexer.cpp` (« Result should parse '{1,2,3,4}' », 3 fois) : en cas d'échec, l'assertion aurait été remplacée par « format error ». Corrigés en `'{{1,2,3,4}}'`.
+- Non testé par CTest (un test qui ne compile pas demanderait `try_compile`) ; vérifié à la main : `assertThat(false, "value {} and {}", 1)` ne compile plus.
 
-### T9. Pas d'emplacement dans les échecs — vérifié
+### T9. Pas d'emplacement dans les échecs — vérifié — **corrigé le 2026-11-03**
 Les échecs affichent « Unit test X execution failed on assertion: <message> », sans fichier ni ligne : avec plusieurs assertions de même message (boucles, fonctions d'aide), il faut deviner laquelle a échoué.
 Piste : `std::source_location` (C++20) capturé par défaut ; pour la version variadique, le passer dans une petite structure construite à partir du message (`struct Message { std::format_string<...> fmt; std::source_location loc = std::source_location::current(); }`).
+Correction :
+- `AssertException` porte un `std::source_location` (`location()`, ligne `0` quand il est inconnu).
+- `assertThat` le capture via `AssertMessage` ; `assertTrue`, `assertFalse` et `fail` prennent un `const std::source_location& = std::source_location::current()` en dernier paramètre.
+- `DefaultRunner` affiche `  at <fichier>:<ligne> in <fonction>` sous le message d'échec (tests, initialisation, `beforeTest` / `afterTest`, désinitialisation).
+- Tests : `anch-unit-test-assert-location(-message)` et `anch-unit-test-assert-true-location(-message)` vérifient fichier, ligne et fonction.
 
-### T10. Une assertion qui échoue dans un autre thread arrête le processus — vérifié
+### T10. Une assertion qui échoue dans un autre thread arrête le processus — vérifié — **corrigé le 2026-11-03**
 `AssertException` est levée dans le thread qui appelle `assert` ; hors du thread principal, rien ne l'intercepte : `std::terminate`.
 Reproduction (2026-10-31) : un test qui appelle `assert(false, …)` dans un `std::thread` : « Abandon (core dumped) », code 134, sans message d'échec.
 Exemple dans le dépôt : `uuid-provider-concurrency` (`anch-uuid/test/testUuid.cpp`) vérifie la version dans des threads : un échec ferait planter l'exécutable au lieu d'être signalé.
 Piste : documenter (vérifier après `join`, comme `uuid-v1-v6-unique-threads`) ; fournir une aide qui capture l'exception (`std::exception_ptr`) et la relève dans le thread du test.
+Correction : `anch::ut::ThreadErrors` (`inc/ut/threadErrors.hpp`, header-only) : `wrap(f)` renvoie une fonction qui garde la première exception levée (`std::exception_ptr`, protégé par un mutex) ; `rethrow()` la relève dans le thread du test après `join()` ; `failed()` indique si une exception a été gardée.
+- Utilisé dans `uuid-provider-concurrency` (`anch-uuid/test/testUuid.cpp`) et `testMDC` (`anch-log/test/testWriters.cpp`), les deux tests du dépôt qui font des assertions dans un thread.
+- Tests : `anch-unit-test-thread-assert(-message)` (assertion dans le 3e de 4 threads : échec signalé avec son message et son emplacement), `anch-unit-test-thread-ok` (arguments transmis, pas d'erreur).
+- Sans `wrap`, le comportement est inchangé (`std::terminate`) : documenté dans `anch-ut.dox` et `CLAUDE.md`.
 
-### T11. Exception pendant `setup` : arrêt brutal — vérifié
+### T11. Exception pendant `setup` : arrêt brutal — vérifié — **corrigé le 2026-11-03**
 `main` appelle `anch::ut::setup(tests)` hors de tout `try` : un nom de test enregistré deux fois, ou `all`, lève `std::invalid_argument` non interceptée.
 Reproduction (2026-10-31) : nom en double : « Abandon (core dumped) », code 134, sans message.
 Piste : intercepter dans `main`, afficher le message, sortir avec `EXIT_FAILURE`.
+Correction : `main` intercepte les exceptions de `setup` : « Unit tests setup failed: <message> » sur la sortie d'erreur, code `1`. Tests : `anch-unit-test-setup-error(-message)` (nom en double via `ANCH_UT_DUPLICATE`).
 
-### T12. `uninitialize` appelé même quand `initialize` a échoué — vérifié
+### T12. `uninitialize` appelé même quand `initialize` a échoué — vérifié — **corrigé le 2026-11-03**
 `main` appelle toujours `runner->shutdown()`. Si l'initialisation a levé une exception, la fonction de désinitialisation s'exécute sur un état partiellement initialisé (connexion jamais ouverte, fichier absent…).
 Reproduction (2026-10-31) : `initialize` qui lève une exception : « Unit tests initialization failed », puis la fonction `uninitialize` est appelée (code de sortie `1`, correct).
 Piste : n'appeler `shutdown` que si `startup` a réussi, ou le documenter.
+Correction (choix : comme un constructeur C++ qui lève une exception, pas de destruction) : si l'initialisation échoue, ni les tests ni la désinitialisation ne sont exécutés, code `1`. Avant, une suite sans test (ou avec `-t all` sur une suite vide) dont l'initialisation échouait sortait avec `0`.
+Corrigé en même temps : un échec de la désinitialisation fait désormais échouer la suite (il était affiché mais ignoré, voir T20).
+Tests : `anch-unit-test-init-error(-message)` (le message de désinitialisation et le test ne doivent pas apparaître), `anch-unit-test-uninit-error`.
 
-### T13. Tests exécutés dans l'ordre alphabétique, pas dans l'ordre d'enregistrement — vérifié
+### T13. Tests exécutés dans l'ordre alphabétique, pas dans l'ordre d'enregistrement — vérifié — **corrigé le 2026-11-03**
 Les cas sont stockés dans une `std::map` et les noms demandés dans un `std::set` : `-t all` (ou sans `-t`) les exécute par ordre alphabétique. Reproduction : `a-registered-second` passe avant `z-registered-first`.
 C'est peu visible avec CTest (un processus par cas) mais trompeur pour les suites dont les cas dépendent les uns des autres (S6 d'`anch-sql`) ou pour lire une sortie `-t all`.
 Piste : conserver l'ordre d'enregistrement (`std::vector` + index), et exécuter les `-t` dans l'ordre de la ligne de commande.
+Correction : `UnitTests` stocke les cas dans un `std::vector<std::pair<std::string, std::function<void()>>>` (`getTests()` change de type) et fournit `find(name)` (recherche linéaire, quelques dizaines de cas au plus). `-l` et `-t all` suivent l'ordre d'enregistrement ; les `-t` sont exécutés dans l'ordre de la ligne de commande, les doublons ignorés.
+Tests : `anch-unit-test-list-order`, `anch-unit-test-cli-order`.
 
-### T14. `equalsPtr` écrit sur `std::cout` au lieu du flux demandé — vérifié
+### T14. `equalsPtr` écrit sur `std::cout` au lieu du flux demandé — vérifié — **corrigé le 2026-11-03**
 `equalsPtr(field, expected, value, out)` écrit le cas « l'un des deux est nul » sur `std::cout` (le paramètre `out` est ignoré), avec un double espace (« p is not null and  is null »). Vérifié : flux passé en paramètre vide, message sur la sortie standard.
 Piste : écrire sur `out`.
+Correction : écrit sur `out`, avec le format des autres `equals` (« p differs ; expected is not null / current is null »). Test : `anch-unit-test-equals-ptr`.
 
-### T15. `UnitTests::setTests` déclarée mais jamais définie — vérifié
+### T15. `UnitTests::setTests` déclarée mais jamais définie — vérifié — **corrigé le 2026-11-03**
 `setTests` est déclarée dans `ut/unit.hpp`, sans définition (`nm -D libanch-unit.so` : aucun symbole) : un appel compile mais ne se lie pas.
 Piste : la supprimer ou la définir.
+Correction : supprimée (aucun appel dans le dépôt).
 
-### T16. Codes couleur ANSI hors terminal — vérifié
+### T16. Codes couleur ANSI hors terminal — vérifié — **corrigé le 2026-11-03**
 Les noms de tests et les échecs sont colorés même quand la sortie n'est pas un terminal (CTest, redirection) : les journaux contiennent `^[[34m … ^[[0m^[[K`. Voir aussi `anch-cli` (`Formatter`).
 Piste : désactiver les couleurs si `!isatty(STDOUT_FILENO)` ou si `NO_COLOR` est défini.
+Correction (`src/ut/main.cpp`) : `anch::cli::Formatter::DISABLED` est activé si la sortie standard n'est pas un terminal (`isatty`) ou si `NO_COLOR` est défini et non vide. Le problème reste entier dans `anch-cli` pour les autres programmes. Test : `anch-unit-test-no-color` (aucun caractère `ESC` dans la sortie sous CTest).
 
-### T17. Performances — vérifié
+### T17. Performances — vérifié — **corrigé le 2026-11-03** (conteneurs, messages)
 - Coût fixe d'un exécutable de test : ~1,6 ms par processus (`-l`), ~2,2 ms pour un cas simple. Avec les 449 `add_test` du dépôt, moins d'une seconde au total : la conception « un processus par cas » coûte peu, sauf si l'initialisation de la suite (`initialize`) est lourde, puisqu'elle est refaite pour chaque cas.
 - `equals` sur les conteneurs (`std::vector`, `std::list`, `std::set`) construit un `std::ostringstream` et une chaîne par élément, même quand tout est égal : 94 ms pour comparer deux vecteurs égaux de 1 000 000 d'entiers, alors que `operator==` est quasi instantané.
   Piste : comparer d'abord avec `operator==` (si disponible) et ne construire le nom de l'élément qu'en cas de différence.
 - `assertTrue` / `assertFalse` / `fail` prennent le message en `const std::string&` : un message de plus de 15 caractères est alloué à chaque appel, même réussi (~9 ns au lieu de ~2 ns). Négligeable sauf dans des boucles serrées ; `assert` (`std::string_view`) n'a pas ce coût.
 - Les arguments de `assert` sont évalués à chaque appel, même quand l'assertion réussit (par exemple `uuid.toString()` dans les boucles des tests `anch-uuid`) : c'est inhérent à une fonction (pas de macro), mais à savoir pour les tests en boucle.
+Correction :
+- `equals` sur `std::vector`, `std::list` et `std::set` passe par `equalsCollection` : comparaison globale par `operator==` quand le type des éléments est comparable, puis élément par élément ; le nom `field[i]` (`std::format`) n'est construit que pour un élément différent. Les messages sont inchangés, de même que la tolérance `double` des `long double`. Test : `anch-unit-test-equals-collections`.
+- `assertTrue` / `assertFalse` / `fail` prennent un `std::string_view` (plus d'allocation quand l'assertion réussit) ; `assertTrue` / `assertFalse` sont `inline`, seul `fail` (`[[noreturn]]`) reste dans la bibliothèque.
+- L'évaluation des arguments de `assertThat` reste inhérente à une fonction.
 
-### T18. Les tests d'`anch-ut` ne vérifient que le code de sortie — lecture
+### T18. Les tests d'`anch-ut` ne vérifient que le code de sortie — lecture — **corrigé le 2026-11-03**
 `test/testUnit.cpp` exécute un test vide, une exception, un `assertFalse` et un `assert` formaté ; les tests CTest ne vérifient que le code de sortie (`WILL_FAIL`). Aucun ne vérifie les messages, l'ordre d'exécution, les codes de retour ni les comportements de T5 à T14.
 Piste : tests de bout en bout qui lancent un exécutable de test et vérifient sa sortie (`PASS_REGULAR_EXPRESSION` / `FAIL_REGULAR_EXPRESSION` de CTest).
+Correction : 22 tests CTest ajoutés (voir T3 à T17), dont la plupart vérifient la sortie (`PASS_REGULAR_EXPRESSION` / `FAIL_REGULAR_EXPRESSION`) ; les variantes de suite passent par des variables d'environnement lues dans `startup`, `shutdown` et `setup` (`ANCH_UT_FAIL_IN_INIT`, `ANCH_UT_FAIL_IN_UNINIT`, `ANCH_UT_DUPLICATE`). 32 tests `anch-unit-test` passent.
+
+### T19. `Runner` sans destructeur virtuel — lecture — **corrigé le 2026-11-03**
+`anch::ut::Runner` est une classe abstraite sans destructeur virtuel : détruire un runner par un pointeur `Runner*` est un comportement indéfini (sans effet avec le `std::make_shared` de `main`, qui garde le bon destructeur).
+Correction : `virtual ~Runner() = default;`.
+
+### T20. Échec de la désinitialisation ignoré — vérifié — **corrigé le 2026-11-03**
+`main` ignorait le résultat de `runner->shutdown()` : une exception ou une assertion dans `uninitialize` était affichée mais la suite sortait avec `0`.
+Correction : la suite échoue (voir T12).
 
 ## Points positifs
 - API fluide (`name`, `description`, `initialize`, `beforeTest`, `afterTest`, `add`), options `-l` et `-t`.
@@ -123,6 +162,6 @@ Piste : tests de bout en bout qui lancent un exécutable de test et vérifient s
 - `assert` ne formate le message qu'en cas d'échec.
 
 ## À approfondir
-- [ ] Terminer `anch_add_tests` dans `AnchTest.cmake` en s'appuyant sur `--gen-ctest`.
-- [ ] Implémenter `--gen-ctest`, ou retirer les options non implémentées de l'aide.
+- [ ] Terminer `anch_add_tests` dans `AnchTest.cmake` en s'appuyant sur `--gen-ctest` (T2).
+- [ ] Implémenter `--gen-ctest` et les runners socket (`--runner`, `--start`, `--stop`) : refusés pour l'instant (T3, T4).
 - [ ] Plugin GCC (`anch-ut-gcc-attr-plugin`) : toujours non analysé.

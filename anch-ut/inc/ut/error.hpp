@@ -21,6 +21,7 @@
 
 #include <exception>
 #include <string>
+#include <source_location>
 
 namespace anch::ut {
 
@@ -37,7 +38,11 @@ namespace anch::ut {
 
     // Attributes +
   private:
+    /*! Error message */
     std::string _msg;
+
+    /*! Location of the failed assertion (line \c 0 when unknown) */
+    std::source_location _location;
     // Attributes -
 
     // Constructors +
@@ -48,6 +53,16 @@ namespace anch::ut {
      * \param msg error message
      */
     AssertException(const std::string& msg);
+
+    /*!
+     * \ref AssertException constructor
+     *
+     * \param msg error message
+     * \param location the failed assertion location
+     *
+     * \since 0.2
+     */
+    AssertException(const std::string& msg, const std::source_location& location);
     // Constructors -
 
     // Destructor +
@@ -66,6 +81,15 @@ namespace anch::ut {
      * \return the message
      */
     virtual const char* what() const noexcept override;
+
+    /*!
+     * Failed assertion location getter
+     *
+     * \return the location (its line is \c 0 when location is unknown)
+     *
+     * \since 0.2
+     */
+    const std::source_location& location() const noexcept;
     // Methods -
 
   };

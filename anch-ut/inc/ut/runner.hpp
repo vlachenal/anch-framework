@@ -37,6 +37,11 @@ namespace anch::ut {
 
   public:
     /*!
+     * \ref Runner destructor
+     */
+    virtual ~Runner() = default;
+
+    /*!
      * Startup test runner
      *
      * \return \c true when startup is OK, \c false otherwise

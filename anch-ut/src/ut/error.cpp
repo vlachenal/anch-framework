@@ -21,7 +21,12 @@
 
 using anch::ut::AssertException;
 
-AssertException::AssertException(const std::string& msg): _msg(msg) {
+AssertException::AssertException(const std::string& msg): _msg(msg), _location() {
+  // Nothing to do
+}
+
+AssertException::AssertException(const std::string& msg, const std::source_location& location): _msg(msg),
+												  _location(location) {
   // Nothing to do
 }
 
@@ -32,4 +37,9 @@ AssertException::~AssertException() {
 const char*
 AssertException::what() const noexcept {
   return _msg.data();
+}
+
+const std::source_location&
+AssertException::location() const noexcept {
+  return _location;
 }

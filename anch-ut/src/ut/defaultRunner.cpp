@@ -21,7 +21,8 @@
 
 #include <iostream>
 #include <chrono>
-#include <stacktrace>
+#include <functional>
+#include <source_location>
 #include <atomic>
 #include <cstdio>
 #include <cstdlib>
@@ -96,6 +97,62 @@ namespace {
     }
   };
 
+  /*!
+   * Print error message
+   *
+   * \param what the step which has failed (\c "Unit test xxx execution" for example)
+   * \param reason the failure reason
+   * \param location the failed assertion location
+   */
+  void
+  printFailure(const std::string& what,
+	       const std::string& reason,
+	       const std::source_location& location = std::source_location()) {
+    std::cout << anch::cli::Formatter::format().fgColor(anch::cli::Color::RED) << what << " failed" << reason;
+    if(location.line() != 0) {
+      std::cout << std::endl << "  at " << location.file_name() << ':' << location.line()
+		<< " in " << location.function_name();
+    }
+    std::cout << anch::cli::RESET << std::endl;
+  }
+
+  /*!
+   * Run step function and report its failure
+   *
+   * \param what the step description (\c "Unit test xxx execution" for example)
+   * \param func the function to run
+   *
+   * \return \c true when function has succeeded, \c false otherwise
+   */
+  bool
+  runStep(const std::string& what, const std::function<void(void)>& func) {
+    try {
+      std::invoke(func);
+      return true;
+    } catch(const anch::ut::AssertException& e) {
+      printFailure(what, std::string(" on assertion: ") + e.what(), e.location());
+    } catch(const std::exception& e) {
+      printFailure(what, std::string(": ") + e.what());
+    } catch(...) {
+      printFailure(what, "");
+    }
+    return false;
+  }
+
+  /*!
+   * Print test end
+   *
+   * \param name the test name
+   * \param start the test start time
+   */
+  void
+  printEnd(const std::string& name, std::chrono::steady_clock::time_point start) {
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - start);
+    std::cout << std::endl << "Time: " << duration.count() << " µs" << std::endl;
+    std::cout << anch::cli::Formatter::format().fgColor(anch::cli::Color::BLUE)
+	      << "-- " << name << " --" << anch::cli::RESET << std::endl << std::endl;
+  }
+
 }
 
 
@@ -105,52 +162,21 @@ DefaultRunner::DefaultRunner(const UnitTests& tests): _tests(tests) {
 
 bool
 DefaultRunner::startup() {
-  bool ok = false;
   StepGuard guard("unit tests initialization");
-  try {
-    _tests.initialize();
-    ok = true;
-  } catch(const anch::ut::AssertException& e) {
-    std::cout << "Unit tests initialization failed on assertion: " << e.what() << std::endl;
-  } catch(const std::exception& e) {
-    std::cout << "Unit tests initialization failed: " << e.what() << std::endl;
-  } catch(...) {
-    std::cout << "Unit tests initialization failed" << std::endl;
-  }
-  return ok;
+  return runStep("Unit tests initialization", [this]() { _tests.initialize(); });
 }
 
 bool
 DefaultRunner::shutdown() {
-  bool ok = false;
   StepGuard guard("unit tests uninitialization");
-  try {
-    _tests.uninitialize();
-    ok = true;
-  } catch(const anch::ut::AssertException& e) {
-    std::cout << "Unit tests uninitialization failed on assertion: " << e.what() << std::endl;
-  } catch(const std::exception& e) {
-    std::cout << "Unit tests uninitialization failed: " << e.what() << std::endl;
-  } catch(...) {
-    std::cout << "Unit tests uninitialization failed" << std::endl;
-  }
-  return ok;
-}
-
-void
-printEnd(const std::string& name, std::chrono::time_point<std::chrono::high_resolution_clock> start) {
-  std::chrono::time_point<std::chrono::high_resolution_clock> end = std::chrono::high_resolution_clock::now();
-  std::chrono::microseconds duration = std::chrono::duration_cast<std::chrono::microseconds>(end.time_since_epoch()) - std::chrono::duration_cast<std::chrono::microseconds>(start.time_since_epoch());
-  std::cout << std::endl << "Time: " << duration.count() << " µs" << std::endl;
-  std::cout << anch::cli::Formatter::format().fgColor(anch::cli::Color::BLUE)
-	    << "-- " << name << " --" << anch::cli::RESET << std::endl << std::endl;
+  return runStep("Unit tests uninitialization", [this]() { _tests.uninitialize(); });
 }
 
 uint16_t
 DefaultRunner::test(const std::string& test) {
-  std::chrono::time_point<std::chrono::high_resolution_clock> start = std::chrono::high_resolution_clock::now();
-  auto iter = _tests.getTests().find(test);
-  if(iter == _tests.getTests().end()) {
+  auto start = std::chrono::steady_clock::now();
+  const std::function<void(void)>* func = _tests.find(test);
+  if(func == NULL) {
     std::cout << test << " has not been registered" << std::endl;
     printEnd(test, start);
     return 1;
@@ -160,72 +186,12 @@ DefaultRunner::test(const std::string& test) {
 	    << "-- " << test << " --" << anch::cli::RESET << std::endl;
   StepGuard guard("unit test " + test);
 
-  // Before test function +
-  try {
-    _tests.before();
-  } catch(const anch::ut::AssertException& e) {
-    std::cout << anch::cli::Formatter::format().fgColor(anch::cli::Color::RED)
-	      << "Unit test " << test << " initialization failed on assertion: " << e.what()
-	      << anch::cli::RESET << std::endl;
-    printEnd(test, start);
-    return 2;
-  } catch(const std::exception& e) {
-    std::cout << anch::cli::Formatter::format().fgColor(anch::cli::Color::RED)
-	      << "Unit test " << test << " initialization failed: " << e.what()
-	      << anch::cli::RESET << std::endl;
-    printEnd(test, start);
-    return 2;
-  } catch(...) {
-    std::cout << anch::cli::Formatter::format().fgColor(anch::cli::Color::RED)
-	      << "Unit test " << test << " initialization failed"
-	      << anch::cli::RESET << std::endl;
+  if(!runStep("Unit test " + test + " initialization", [this]() { _tests.before(); })) {
     printEnd(test, start);
     return 2;
   }
-  // Before test function -
-
-  // Call test function +
-  bool passed = false;
-  try {
-    std::invoke(iter->second);
-    passed = true;
-  } catch(const anch::ut::AssertException& e) {
-    std::cout << anch::cli::Formatter::format().fgColor(anch::cli::Color::RED)
-	      << "Unit test " << test << " execution failed on assertion: " << e.what()
-	      << anch::cli::RESET << std::endl;
-  } catch(const std::exception& e) {
-    std::cout << anch::cli::Formatter::format().fgColor(anch::cli::Color::RED)
-	      << "Unit test " << test << " execution failed: " << e.what()
-	      << anch::cli::RESET << std::endl;
-    //std::cout << std::stacktrace::current() << '\n';
-  } catch(...) {
-    std::cout << anch::cli::Formatter::format().fgColor(anch::cli::Color::RED)
-	      << "Unit test " << test << " execution failed"
-	      << anch::cli::RESET << std::endl;
-    //std::cout << std::stacktrace::current() << std::endl;
-  }
-  // Call test function -
-
-  // After test function +
-  bool after = false;
-  try {
-    _tests.after();
-    after = true;
-  } catch(const anch::ut::AssertException& e) {
-    std::cout << anch::cli::Formatter::format().fgColor(anch::cli::Color::RED)
-	      << "Unit test " << test << " uninitialization failed on assertion: " << e.what()
-	      << anch::cli::RESET << std::endl;
-  } catch(const std::exception& e) {
-    std::cout << anch::cli::Formatter::format().fgColor(anch::cli::Color::RED)
-	      << "Unit test " << test << " uninitialization failed: " << e.what()
-	      << anch::cli::RESET << std::endl;
-  } catch(...) {
-    std::cout << anch::cli::Formatter::format().fgColor(anch::cli::Color::RED)
-	      << "Unit test " << test << " uninitialization failed"
-	      << anch::cli::RESET << std::endl;
-  }
-  // After test function -
-
+  bool passed = runStep("Unit test " + test + " execution", *func);
+  bool after = runStep("Unit test " + test + " uninitialization", [this]() { _tests.after(); });
   printEnd(test, start);
 
   if(!passed) {

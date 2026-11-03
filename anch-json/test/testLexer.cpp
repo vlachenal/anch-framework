@@ -433,7 +433,7 @@ testArrayList() {
   };
   anch::json::lexArray(add, context);
   std::list<anch::json::jint> expected = {1,2,3,4};
-  anch::ut::assertThat(anch::ut::equals("lex", expected, value), "Result should parse '{1,2,3,4}'");
+  anch::ut::assertThat(anch::ut::equals("lex", expected, value), "Result should parse '{{1,2,3,4}}'");
 }
 
 void
@@ -451,7 +451,7 @@ testArrayVector() {
   };
   anch::json::lexArray(add, context);
   std::vector<anch::json::jint> expected = {1,2,3,4};
-  anch::ut::assertThat(anch::ut::equals("lex", expected, value), "Result should parse '{1,2,3,4}'");
+  anch::ut::assertThat(anch::ut::equals("lex", expected, value), "Result should parse '{{1,2,3,4}}'");
 }
 
 void
@@ -469,7 +469,7 @@ testArraySet() {
   };
   anch::json::lexArray(add, context);
   std::set<anch::json::jint> expected = {1,2,3,4};
-  anch::ut::assertThat(anch::ut::equals("lex", expected, value), "Result should parse '{1,2,3,4}'");
+  anch::ut::assertThat(anch::ut::equals("lex", expected, value), "Result should parse '{{1,2,3,4}}'");
 }
 // Array -
 

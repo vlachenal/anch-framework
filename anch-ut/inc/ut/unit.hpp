@@ -21,7 +21,8 @@
 
 #include <string>
 #include <functional>
-#include <map>
+#include <vector>
+#include <utility>
 
 namespace anch::ut {
 
@@ -56,8 +57,8 @@ namespace anch::ut {
     /*! Unit test uninitialization function (default to nothing) */
     std::function<void(void)> _afterFunc;
 
-    /*! Unit tests collection */
-    std::map<std::string, std::function<void(void)>> _tests;
+    /*! Unit tests collection (in registration order) */
+    std::vector<std::pair<std::string, std::function<void(void)>>> _tests;
     // Attrbutes -
 
     // Constructors +
@@ -135,12 +136,14 @@ namespace anch::ut {
     UnitTests& afterTest(std::function<void(void)> afterFunc);
 
     /*!
-     * Unit test function setter
+     * Unit test function setter. Tests are run in registration order.
      *
      * \param name the unit test's name
      * \param testFunc the function to add
      *
      * \return \c this
+     *
+     * \throw std::invalid_argument \c name is \c all or has already been registered
      */
     UnitTests& add(const std::string& name, std::function<void(void)> testFunc);
 
@@ -183,16 +186,20 @@ namespace anch::ut {
     /*!
      * Unit tests gettter
      *
-     * \return the tests
+     * \return the tests (name and function) in registration order
      */
-    const std::map<std::string, std::function<void(void)>>& getTests() const;
+    const std::vector<std::pair<std::string, std::function<void(void)>>>& getTests() const;
 
     /*!
-     * Unit tests setters
+     * Find unit test
      *
-     * \param tests the tests to set
+     * \param name the unit test's name
+     *
+     * \return the unit test function, \c NULL when it has not been registered
+     *
+     * \since 0.2
      */
-    void setTests(const std::map<std::string, std::function<void(void)>>& tests);
+    const std::function<void(void)>* find(const std::string& name) const;
     // Accessors -
 
   };

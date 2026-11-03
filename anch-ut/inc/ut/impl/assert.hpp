@@ -21,48 +21,87 @@
 
 #include <format>
 #include <sstream>
+#include <iterator>
+#include <concepts>
 
 #include "ut/error.hpp"
 
 namespace anch::ut {
 
-  inline void assertFalse(bool check, const std::string& message) {
-    assertTrue(!check, message);
-  }
-
-  inline void fail(const std::string& message) {
-    assertTrue(false, message);
-  }
-
   template<typename... T>
-  void assertThat(bool check, std::string_view message, const T&... args) {
+  template<typename S>
+  requires std::convertible_to<const S&, std::string_view>
+  consteval AssertMessage<T...>::AssertMessage(const S& fmt, std::source_location loc): format(fmt), location(loc) {
+    // Nothing to do
+  }
+
+  inline void
+  assertTrue(bool check, std::string_view message, const std::source_location& location) {
     if(!check) {
-      anch::ut::fail(std::vformat(message, std::make_format_args(args...)));
+      anch::ut::fail(message, location);
+    }
+  }
+
+  inline void
+  assertFalse(bool check, std::string_view message, const std::source_location& location) {
+    if(check) {
+      anch::ut::fail(message, location);
     }
   }
 
   template<typename... T>
-  void (assert)(bool check, std::string_view message, const T&... args) {
-    anch::ut::assertThat(check, message, args...);
+  void
+  assertThat(bool check, std::type_identity_t<anch::ut::AssertMessage<T...>> message, const T&... args) {
+    if(!check) {
+      anch::ut::fail(std::format(message.format, args...), message.location);
+    }
   }
 
-  template<typename T>
-  bool equals(const char* const field,
-	      const std::set<T>& expected,
-	      const std::set<T>& value,
-	      std::ostream& out) {
+  template<typename... T>
+  void
+  (assert)(bool check, std::string_view message, const T&... args) {
+    if(!check) {
+      throw anch::ut::AssertException(std::vformat(message, std::make_format_args(args...)));
+    }
+  }
+
+  /*!
+   * Compare collections' elements one by one. The name of an element is built only when it differs.
+   *
+   * \tparam C the collection type
+   *
+   * \param field the field name
+   * \param expected the expected value
+   * \param value the current value
+   * \param out the output stream to print in when \c false
+   *
+   * \return \c true when collections are equals, \c false otherwise
+   */
+  template<typename C>
+  bool
+  equalsCollection(const char* const field, const C& expected, const C& value, std::ostream& out) {
     if(expected.size() != value.size()) {
       out << field << "'s size differs ; expected=" << expected.size()
 	  << " / current=" <<  value.size() << std::endl;
       return false;
     }
-    int idx = 0;
+    using T = typename C::value_type;
+    if constexpr(std::equality_comparable<T>) { // collections' operator== is not constrained on element type
+      if(expected == value) {
+	return true;
+      }
+    }
+    std::size_t idx = 0;
     auto itE = expected.begin();
     auto itV = value.begin();
     for(; itE != expected.end() ; ++itE, ++itV, ++idx) {
-      std::ostringstream oss;
-      oss << field << '[' << idx << ']';
-      if(!anch::ut::equals(oss.str().data(), *itE, *itV, out)) {
+      if constexpr(std::equality_comparable<T>) {
+	if(*itE == *itV) {
+	  continue;
+	}
+      }
+      std::string name = std::format("{}[{}]", field, idx);
+      if(!anch::ut::equals(name.data(), *itE, *itV, out)) {
 	return false;
       }
     }
@@ -70,46 +109,21 @@ namespace anch::ut {
   }
 
   template<typename T>
-  bool equals(const char* const field,
-	      const std::list<T>& expected,
-	      const std::list<T>& value,
-	      std::ostream& out) {
-    if(expected.size() != value.size()) {
-      out << field << "'s size differs ; expected=" << expected.size()
-	  << " / current=" <<  value.size() << std::endl;
-      return false;
-    }
-    int idx = 0;
-    auto itE = expected.begin();
-    auto itV = value.begin();
-    for(; itE != expected.end() ; ++itE, ++itV, ++idx) {
-      std::ostringstream oss;
-      oss << field << '[' << idx << ']';
-      if(!anch::ut::equals(oss.str().data(), *itE, *itV, out)) {
-	return false;
-      }
-    }
-    return true;
+  bool
+  equals(const char* const field, const std::set<T>& expected, const std::set<T>& value, std::ostream& out) {
+    return anch::ut::equalsCollection(field, expected, value, out);
   }
 
   template<typename T>
-  bool equals(const char* const field,
-	      const std::vector<T>& expected,
-	      const std::vector<T>& value,
-	      std::ostream& out) {
-    if(expected.size() != value.size()) {
-      out << field << "'s size differs ; expected=" << expected.size()
-	  << " / current=" <<  value.size() << std::endl;
-      return false;
-    }
-    for(std::size_t i = 0 ; i < expected.size() ; ++i) {
-      std::ostringstream oss;
-      oss << field << '[' << i << ']';
-      if(!anch::ut::equals(oss.str().data(), expected[i], value[i], out)) {
-	return false;
-      }
-    }
-    return true;
+  bool
+  equals(const char* const field, const std::list<T>& expected, const std::list<T>& value, std::ostream& out) {
+    return anch::ut::equalsCollection(field, expected, value, out);
+  }
+
+  template<typename T>
+  bool
+  equals(const char* const field, const std::vector<T>& expected, const std::vector<T>& value, std::ostream& out) {
+    return anch::ut::equalsCollection(field, expected, value, out);
   }
 
   template<typename T>
@@ -160,11 +174,8 @@ namespace anch::ut {
     if(expected == value) {
       return true;
     } else if(expected == NULL || value == NULL) {
-      std::cout << field
-		<< (expected  == NULL ? " is null" : " is not null")
-		<< " and "
-		<< (value  == NULL ? " is null" : " is not null")
-		<< std::endl;
+      out << field << " differs ; expected" << (expected == NULL ? " is null" : " is not null")
+	  << " / current" << (value == NULL ? " is null" : " is not null") << std::endl;
       return false;
     }
     return anch::ut::equals(field, *expected, *value, out);

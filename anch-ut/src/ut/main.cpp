@@ -23,6 +23,11 @@
 #include <map>
 #include <string>
 #include <optional>
+#include <memory>
+#include <cstdlib>
+#include <exception>
+
+#include <unistd.h>
 
 #include "ut/unit.hpp"
 #include "ut/runner.hpp"
@@ -30,6 +35,7 @@
 
 #include "cli/args.hpp"
 #include "cli/utils.hpp"
+#include "cli/formatter.hpp"
 
 using anch::ut::UnitTests;
 using anch::ut::Runner;
@@ -52,93 +58,135 @@ namespace anch::ut {
 
 }  // anch::ut
 
-struct UnitOptions {
-  bool list = false;
-  bool start = false;
-  bool shutdown = false;
-  bool genCTEST = false;
-  std::optional<std::string> runner;
-  std::set<std::string> tests;
-  std::map<std::string,std::string> env;
-};
+namespace {
 
-void
-parseArgs(int argc, char** argv, UnitOptions& opts) {
-  std::vector<anch::cli::Arg> args = {
-    {.handler = anch::cli::bindTrue(opts.list), .sopt = 'l', .lopt = "list-tests", .description = "List tests"},
-    {.handler = anch::cli::bindTrue(opts.start), .lopt = "start", .description = "Start runner (error if runner is not defined)"},
-    {.handler = anch::cli::bindTrue(opts.shutdown), .lopt = "stop", .description = "Stop runner (error if runner is not defined)"},
-    {.handler = anch::cli::bindTrue(opts.genCTEST), .lopt = "gen-ctest", .description = "Generate CTest file"},
-    {.handler = anch::cli::bindStr(opts.runner), .sopt = 'r', .lopt = "runner", .value = true, .name = "RUNNER", .description = "Use specific runner with URI specific (udp, tcp and file supported for now)", .example = "file://./test.sock or tcp://localhost:54321 or udp://mydomain.com:54321"},
-    {.handler = anch::cli::bindCol(opts.tests), .sopt = 't', .lopt = "test", .value = true, .name = "TEST", .multi = true, .description = "Test to run (can be defined several time) ; 'all' will run all tests ; default to 'all'"}
+  /*! Unit tests options */
+  struct UnitOptions {
+    bool list = false;
+    bool start = false;
+    bool shutdown = false;
+    bool genCTEST = false;
+    std::optional<std::string> runner;
+    std::vector<std::string> tests;
+    std::map<std::string,std::string> env;
   };
-  anch::cli::ArgHandler handler(args);
-  handler.printBanner(std::cout);
-  handler.handle(argc, argv);
-  if(opts.tests.size() > 1 && opts.tests.contains("all")) {
-    std::cerr << "Test 'all' found with other tests ..." << std::endl;
-    handler.printHelp(std::cerr);
-    std::exit(1);
+
+  /*!
+   * Disable console colors when standard output is not a terminal (CTest, redirection) or when \c NO_COLOR
+   * environment variable is set (https://no-color.org)
+   */
+  void
+  initColors() {
+    const char* noColor = std::getenv("NO_COLOR");
+    if(::isatty(STDOUT_FILENO) == 0 || (noColor != NULL && noColor[0] != '\0')) {
+      anch::cli::Formatter::DISABLED = true;
+    }
   }
-  if(opts.tests.empty()) {
-    opts.tests.insert("all");
+
+  /*!
+   * Parse command line arguments
+   *
+   * \param argc the number of arguments
+   * \param argv the arguments
+   * \param opts the options to fill
+   */
+  void
+  parseArgs(int argc, char** argv, UnitOptions& opts) {
+    std::vector<anch::cli::Arg> args = {
+      {.handler = anch::cli::bindTrue(opts.list), .sopt = 'l', .lopt = "list-tests", .description = "List tests"},
+      {.handler = anch::cli::bindTrue(opts.start), .lopt = "start", .description = "Start runner (not implemented yet)"},
+      {.handler = anch::cli::bindTrue(opts.shutdown), .lopt = "stop", .description = "Stop runner (not implemented yet)"},
+      {.handler = anch::cli::bindTrue(opts.genCTEST), .lopt = "gen-ctest", .description = "Generate CTest file (not implemented yet)"},
+      {.handler = anch::cli::bindStr(opts.runner), .sopt = 'r', .lopt = "runner", .value = true, .name = "RUNNER", .description = "Use specific runner with URI specific (not implemented yet)", .example = "file://./test.sock or tcp://localhost:54321 or udp://mydomain.com:54321"},
+      {.handler = anch::cli::bindCol(opts.tests), .sopt = 't', .lopt = "test", .value = true, .name = "TEST", .multi = true, .description = "Test to run (can be defined several time, tests are run in command line order) ; 'all' will run all tests in registration order ; default to 'all'"}
+    };
+    anch::cli::ArgHandler handler(args);
+    handler.printBanner(std::cout);
+    handler.handle(argc, argv);
+    // Runners and their options are not implemented: fail instead of ignoring them +
+    if(opts.runner.has_value() || opts.start || opts.shutdown || opts.genCTEST) {
+      std::cerr << "Options --runner, --start, --stop and --gen-ctest are not implemented yet" << std::endl;
+      std::exit(EXIT_FAILURE);
+    }
+    // Runners and their options are not implemented: fail instead of ignoring them -
+    // Remove duplicates and keep command line order +
+    std::vector<std::string> tests;
+    std::set<std::string> found;
+    for(const std::string& test : opts.tests) {
+      if(found.insert(test).second) {
+	tests.push_back(test);
+      }
+    }
+    opts.tests = std::move(tests);
+    // Remove duplicates and keep command line order -
+    if(opts.tests.size() > 1 && found.contains("all")) {
+      std::cerr << "Test 'all' found with other tests ..." << std::endl;
+      handler.printHelp(std::cerr);
+      std::exit(EXIT_FAILURE);
+    }
+    if(opts.tests.empty()) {
+      opts.tests.push_back("all");
+    }
   }
+
 }
 
 int
 main(int argc, char** argv) {
+  initColors();
+
   UnitTests tests;
-  anch::ut::setup(tests);
+  try {
+    anch::ut::setup(tests);
+  } catch(const std::exception& e) {
+    std::cerr << "Unit tests setup failed: " << e.what() << std::endl;
+    return EXIT_FAILURE;
+  } catch(...) {
+    std::cerr << "Unit tests setup failed" << std::endl;
+    return EXIT_FAILURE;
+  }
 
   // Parse options from command line arguments +
   UnitOptions opts;
   parseArgs(argc, argv, opts);
   if(opts.list) {
     std::cout << "Unit tests:" << std::endl;
-    for(auto iter = tests.getTests().cbegin() ; iter != tests.getTests().cend() ; ++iter) {
-      std::cout << " - " << iter->first << std::endl;
+    for(const auto& test : tests.getTests()) {
+      std::cout << " - " << test.first << std::endl;
     }
-    std::exit(EXIT_SUCCESS);
+    return EXIT_SUCCESS;
   }
-  if(opts.tests.contains("all")) {
-    std::set<std::string> ts;
-    for(auto iter = tests.getTests().cbegin() ; iter != tests.getTests().cend() ; ++iter) {
-      ts.insert(iter->first);
+  if(opts.tests.front() == "all") {
+    opts.tests.clear();
+    for(const auto& test : tests.getTests()) {
+      opts.tests.push_back(test.first);
     }
-    opts.tests = ts;
   } else {
-    for(auto test : opts.tests) {
-      if(!tests.getTests().contains(test)) {
+    for(const std::string& test : opts.tests) {
+      if(tests.find(test) == NULL) {
 	std::cout << "Unit test " << test << " has not been registered." << std::endl;
-	std::exit(EXIT_FAILURE);
+	return EXIT_FAILURE;
       }
     }
   }
   // Parse options from command line arguments -
 
-  // Manage unit tests runner +
-  std::shared_ptr<Runner> runner;
-  if(!opts.runner.has_value()) {
-    runner = std::make_shared<DefaultRunner>(tests);
-  } // \todo manage other runners (TCP, UDP, UDS)
-  // Manage unit tests runner -
+  std::unique_ptr<Runner> runner = std::make_unique<DefaultRunner>(tests);
 
-  bool started = runner->startup();
-  uint16_t nbOK = 0;
-  for(auto iter = opts.tests.cbegin() ; iter != opts.tests.cend() ; ++iter) {
-    if(!started) {
-      continue;
-    }
-    uint16_t res = runner->test(*iter);
-    if(res == 0) {
+  // Tests are not run, and uninitialization is not called, when initialization has failed
+  if(!runner->startup()) {
+    return EXIT_FAILURE;
+  }
+  std::size_t nbOK = 0;
+  for(const std::string& test : opts.tests) {
+    if(runner->test(test) == 0) {
       ++nbOK;
     }
   }
-  runner->shutdown();
+  bool stopped = runner->shutdown();
 
-  if(nbOK != opts.tests.size()) {
-    std::exit(EXIT_FAILURE);
+  if(nbOK != opts.tests.size() || !stopped) {
+    return EXIT_FAILURE;
   }
-
-  return 0;
+  return EXIT_SUCCESS;
 }

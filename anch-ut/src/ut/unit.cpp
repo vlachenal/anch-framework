@@ -86,12 +86,12 @@ UnitTests::add(const std::string& name, std::function<void(void)> testFunc) {
   if(name == "all") {
     throw std::invalid_argument("'all' is a reserved keyword to run all tests");
   }
-  if(_tests.contains(name)) {
+  if(find(name) != NULL) {
     std::ostringstream oss;
     oss << "Test " << name << " has already been registered";
     throw std::invalid_argument(oss.str());
   }
-  _tests[name] = testFunc;
+  _tests.emplace_back(name, testFunc);
   return *this;
 }
 

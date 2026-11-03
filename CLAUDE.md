@@ -46,7 +46,7 @@ void anch::ut::setup(anch::ut::UnitTests& tests) {
 }
 ```
 
-Assertions: `anch::ut::assertTrue(cond, msg)` and `anch::ut::assertThat(cond, "fmt {} {}", args...)` (std::format-style). `anch::ut::assert` is a deprecated alias (it conflicts with the `<cassert>` macro): use `assertThat`.
+Assertions: `anch::ut::assertTrue(cond, msg)` and `anch::ut::assertThat(cond, "fmt {} {}", args...)` (std::format-style: the format string must be a literal and is checked at compile time, so literal braces are written `{{` / `}}`). Failures report file and line. `anch::ut::assert` is a deprecated alias (it conflicts with the `<cassert>` macro): use `assertThat`. Assertions made in threads must go through `anch::ut::ThreadErrors` (`ut/threadErrors.hpp`: `wrap()` the thread function, `rethrow()` after `join()`), otherwise a failure terminates the process. Tests run in registration order.
 
 Each test executable is declared in `<module>/test/CMakeLists.txt` with `anch_add_executable()`, and registered once per test case with `add_test(NAME <ctest-name> COMMAND <exe> -t <test-name>)`. When adding a test case, add both the `.add(...)` registration and a matching `add_test` line. Executables are in `build/<preset>/bin/` and can be run directly from the test binary directory:
 

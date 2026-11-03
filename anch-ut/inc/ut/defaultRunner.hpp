@@ -79,7 +79,7 @@ namespace anch::ut {
      *
      * \param test the test to run
      *
-     * \return \c 0 when OK, \c 1 when before test processing failed, \c 2 when test failed and \c 3 when after test processing failed
+     * \return \c 0 when OK, \c 1 when test has not ben registered, \c 2 when before test processing failed, \c 3 when test failed and \c 4 when after test processing failed
      */
     virtual uint16_t test(const std::string& test) override;
 

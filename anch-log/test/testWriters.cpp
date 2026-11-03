@@ -15,6 +15,7 @@
 
 #include "ut/unit.hpp"
 #include "ut/assert.hpp"
+#include "ut/threadErrors.hpp"
 
 using anch::conf::Section;
 using anch::log::FileWriter;
@@ -209,7 +210,8 @@ testLowPriority() {
 void
 testMDC() {
   anch::log::MDC_CONST["app"] = "anch";
-  std::thread thread([]() { // MDC is thread local: new context with constants
+  anch::ut::ThreadErrors errors; // failed assertions are raised again in test thread
+  std::thread thread(errors.wrap([]() { // MDC is thread local: new context with constants
     MDC.add("user", "alice");
     MDC.add("user", "bob"); // add does not overwrite
     MDC.add("app", "other"); // constants can not be added
@@ -231,9 +233,10 @@ testMDC() {
     MDC.copy(other);
     anch::ut::assertTrue(MDC.get().at("x") == "1", "x has not been copied");
     anch::ut::assertTrue(MDC.get().at(anch::log::MDC_THREAD_ID) != "other thread", "thread id has been copied");
-  });
+  }));
   thread.join();
   anch::log::MDC_CONST.erase("app");
+  errors.rethrow();
 }
 
 void
