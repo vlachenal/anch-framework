@@ -214,19 +214,19 @@ main(int argc, char** argv) {
     std::cerr << "missing arg ..." << std::endl;
     return 1;
   }
-  char** args = new char*[static_cast<std::size_t>(argc - 1)];
-  int tidx = 0;
+  // Remove test name from arguments (pointers on argv strings are kept) +
+  std::vector<char*> argsv;
   std::string test;
   for(int i = 0 ; i < argc ; ++i) {
     if(i == 1) {
       test = argv[i];
       continue;
     }
-    char* arg = new char[strlen(argv[i])];
-    strcpy(arg, argv[i]);
-    args[tidx] = arg;
-    ++tidx;
+    argsv.push_back(argv[i]);
   }
+  argsv.push_back(NULL);
+  char** args = argsv.data();
+  // Remove test name from arguments (pointers on argv strings are kept) -
   std::cout << "Unit test: " << test << std::endl;
   int argcc = argc - 1;
   std::map<std::string, std::function<void(void)>> tests = {

@@ -19,10 +19,38 @@
 */
 #include "cli/formatter.hpp"
 
+#include <cstdlib>
+#include <cstring>
+
+#include <unistd.h>
+
 using anch::cli::Formatter;
 using anch::cli::Color;
 
-bool Formatter::DISABLED(false);
+namespace {
+
+  /*!
+   * Default formatting state: disabled when standard output is not a terminal, or when \c NO_COLOR is set and not
+   * empty, or when \c ANCH_CLI_NO_FMT is \c 1
+   *
+   * \return \c true when formatting has to be disabled, \c false otherwise
+   */
+  bool
+  defaultDisabled() {
+    if(::isatty(STDOUT_FILENO) == 0) {
+      return true;
+    }
+    const char* noColor = std::getenv("NO_COLOR");
+    if(noColor != NULL && noColor[0] != '\0') {
+      return true;
+    }
+    const char* noFmt = std::getenv("ANCH_CLI_NO_FMT");
+    return noFmt != NULL && std::strcmp(noFmt, "1") == 0;
+  }
+
+}
+
+bool Formatter::DISABLED(defaultDisabled());
 
 Formatter anch::cli::BOLD = Formatter::format().bold();
 Formatter anch::cli::UNBOLD = Formatter::format().bold(false);
@@ -155,7 +183,7 @@ addEffects(std::ostream& stream, const Formatter& fmt, bool& first) {
 }
 
 std::ostream&
-operator<<(std::ostream& stream, const Formatter& fmt) {
+anch::cli::operator<<(std::ostream& stream, const Formatter& fmt) {
   if(Formatter::DISABLED) {
     return stream;
   }

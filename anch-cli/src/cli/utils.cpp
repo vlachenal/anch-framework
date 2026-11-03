@@ -55,12 +55,19 @@ template<typename T>
 void
 setNum(T& dest, const std::string& val) {
   const char* last = val.data() + val.size();
-  auto res = std::from_chars(val.data(), last, dest);
-  if(res.ptr != last) {
+  T value{};
+  auto res = std::from_chars(val.data(), last, value);
+  if(res.ec == std::errc::result_out_of_range) {
     std::ostringstream oss;
-    oss << "Invalid value: " << val;
+    oss << "Value out of range: '" << val << '\'';
     throw std::invalid_argument(oss.str());
   }
+  if(res.ec != std::errc() || res.ptr != last) { // empty value is an invalid argument
+    std::ostringstream oss;
+    oss << "Invalid value: '" << val << '\'';
+    throw std::invalid_argument(oss.str());
+  }
+  dest = value;
 }
 
 BindArg
@@ -176,7 +183,34 @@ setIFS(std::shared_ptr<std::istream>& dest, const std::string& val) {
     oss <<  "File path " << val << " is not a regular file";
     throw std::invalid_argument(oss.str());
   }
-  dest = std::make_shared<std::ifstream>(path);
+  auto file = std::make_shared<std::ifstream>(path);
+  if(!file->is_open()) {
+    std::ostringstream oss;
+    oss <<  "File " << val << " can not be read";
+    throw std::invalid_argument(oss.str());
+  }
+  dest = file;
+}
+
+/*!
+ * Open output file stream and check it has been opened
+ *
+ * \param val the file path
+ * \param mode the open mode
+ *
+ * \return the output file stream
+ *
+ * \throw std::invalid_argument file can not be opened
+ */
+std::shared_ptr<std::ofstream>
+openOFS(const std::string& val, std::ios_base::openmode mode) {
+  auto file = std::make_shared<std::ofstream>(std::filesystem::path(val), mode);
+  if(!file->is_open()) {
+    std::ostringstream oss;
+    oss <<  "File " << val << " can not be opened for writing";
+    throw std::invalid_argument(oss.str());
+  }
+  return file;
 }
 
 BindArg
@@ -186,7 +220,7 @@ anch::cli::bindIFS(std::shared_ptr<std::istream>& dest) {
 
 void
 setOS(std::shared_ptr<std::ostream>& dest, const std::string& val) {
-  dest = std::make_shared<std::ofstream>(std::filesystem::path(val));
+  dest = openOFS(val, std::ios_base::out);
 }
 
 BindArg
@@ -196,7 +230,7 @@ anch::cli::bindOFS(std::shared_ptr<std::ostream>& dest) {
 
 void
 setOFS(std::shared_ptr<std::ofstream>& dest, std::ios_base::openmode mode, const std::string& val) {
-  dest = std::make_shared<std::ofstream>(std::filesystem::path(val), mode);
+  dest = openOFS(val, mode);
 }
 
 BindArg

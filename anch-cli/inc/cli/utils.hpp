@@ -57,7 +57,8 @@ namespace anch::cli {
    *
    * \param dest the destination
    *
-   * \return the binding function
+   * \return the binding function (which raises \c std::invalid_argument when value is empty, is not a number or is
+   * out of range ; \c dest is not modified in this case)
    */
   BindArg bindNum(uint16_t& dest);
 
@@ -66,7 +67,8 @@ namespace anch::cli {
    *
    * \param dest the destination
    *
-   * \return the binding function
+   * \return the binding function (which raises \c std::invalid_argument when value is empty, is not a number or is
+   * out of range ; \c dest is not modified in this case)
    */
   BindArg bindNum(uint32_t& dest);
 
@@ -75,7 +77,8 @@ namespace anch::cli {
    *
    * \param dest the destination
    *
-   * \return the binding function
+   * \return the binding function (which raises \c std::invalid_argument when value is empty, is not a number or is
+   * out of range ; \c dest is not modified in this case)
    */
   BindArg bindNum(uint64_t& dest);
 
@@ -84,7 +87,8 @@ namespace anch::cli {
    *
    * \param dest the destination
    *
-   * \return the binding function
+   * \return the binding function (which raises \c std::invalid_argument when value is empty, is not a number or is
+   * out of range ; \c dest is not modified in this case)
    */
   BindArg bindNum(int16_t& dest);
 
@@ -93,7 +97,8 @@ namespace anch::cli {
    *
    * \param dest the destination
    *
-   * \return the binding function
+   * \return the binding function (which raises \c std::invalid_argument when value is empty, is not a number or is
+   * out of range ; \c dest is not modified in this case)
    */
   BindArg bindNum(int32_t& dest);
 
@@ -102,7 +107,8 @@ namespace anch::cli {
    *
    * \param dest the destination
    *
-   * \return the binding function
+   * \return the binding function (which raises \c std::invalid_argument when value is empty, is not a number or is
+   * out of range ; \c dest is not modified in this case)
    */
   BindArg bindNum(int64_t& dest);
 
@@ -111,7 +117,8 @@ namespace anch::cli {
    *
    * \param dest the destination
    *
-   * \return the binding function
+   * \return the binding function (which raises \c std::invalid_argument when value is empty, is not a number or is
+   * out of range ; \c dest is not modified in this case)
    */
   BindArg bindNum(float& dest);
 
@@ -120,7 +127,8 @@ namespace anch::cli {
    *
    * \param dest the destination
    *
-   * \return the binding function
+   * \return the binding function (which raises \c std::invalid_argument when value is empty, is not a number or is
+   * out of range ; \c dest is not modified in this case)
    */
   BindArg bindNum(double& dest);
 
@@ -183,7 +191,8 @@ namespace anch::cli {
    *
    * \param dest the \c std::istream to fill
    *
-   * \return the binding function
+   * \return the binding function (which raises \c std::invalid_argument when file does not exist, is not a regular file
+   * or can not be read)
    */
   BindArg bindIFS(std::shared_ptr<std::istream>& dest);
 
@@ -192,7 +201,7 @@ namespace anch::cli {
    *
    * \param dest the \c std::ostream to fill
    *
-   * \return the binding function
+   * \return the binding function (which raises \c std::invalid_argument when file can not be opened for writing)
    */
   BindArg bindOFS(std::shared_ptr<std::ostream>& dest);
 
@@ -200,8 +209,9 @@ namespace anch::cli {
    * Bind output file stream
    *
    * \param dest the \c std::ofstream to fill
+   * \param mode the file open mode (default to \c std::ios_base::out )
    *
-   * \return the binding function
+   * \return the binding function (which raises \c std::invalid_argument when file can not be opened for writing)
    */
   BindArg bindOFS(std::shared_ptr<std::ofstream>& dest, std::ios_base::openmode mode = std::ios_base::out);
 

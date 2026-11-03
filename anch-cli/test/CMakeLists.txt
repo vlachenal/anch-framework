@@ -2,6 +2,7 @@ set_property(DIRECTORY PROPERTY LABELS cli)
 
 anch_add_executable(anch-cli-test SOURCES testCli.cpp LIBS anch::cli)
 anch_add_executable(anch-format-test SOURCES testFormatter.cpp LIBS anch::cli)
+anch_add_executable(anch-cli-utils-test SOURCES testUtils.cpp LIBS anch::cli anch::ut)
 
 # Input stream tests read an existing file: use this file instead of a generator-specific one (Makefile)
 set(input_file ${CMAKE_CURRENT_SOURCE_DIR}/CMakeLists.txt)
@@ -40,3 +41,13 @@ add_test(NAME anch-format-fg-blue-test COMMAND anch-format-test fg_blue)
 add_test(NAME anch-format-bg-blue-test COMMAND anch-format-test bg_blue)
 add_test(NAME anch-format-underline-test COMMAND anch-format-test underline)
 add_test(NAME anch-format-mix1-test COMMAND anch-format-test mix1)
+
+# Binding functions and argument handler +
+add_test(NAME anch-cli-utils-numbers COMMAND anch-cli-utils-test -t numbers)
+add_test(NAME anch-cli-utils-output-file COMMAND anch-cli-utils-test -t output-file)
+add_test(NAME anch-cli-utils-repeated-flag COMMAND anch-cli-utils-test -t repeated-flag)
+add_test(NAME anch-cli-utils-repeated-value COMMAND anch-cli-utils-test -t repeated-value)
+add_test(NAME anch-cli-utils-multi-positional-last COMMAND anch-cli-utils-test -t multi-positional-last)
+add_test(NAME anch-cli-utils-user-no-term-fmt COMMAND anch-cli-utils-test -t user-no-term-fmt)
+add_test(NAME anch-cli-utils-formatter-no-terminal COMMAND anch-cli-utils-test -t formatter-no-terminal)
+# Binding functions and argument handler -

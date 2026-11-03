@@ -129,7 +129,7 @@ Correction : supprimée (aucun appel dans le dépôt).
 ### T16. Codes couleur ANSI hors terminal — vérifié — **corrigé le 2026-11-03**
 Les noms de tests et les échecs sont colorés même quand la sortie n'est pas un terminal (CTest, redirection) : les journaux contiennent `^[[34m … ^[[0m^[[K`. Voir aussi `anch-cli` (`Formatter`).
 Piste : désactiver les couleurs si `!isatty(STDOUT_FILENO)` ou si `NO_COLOR` est défini.
-Correction (`src/ut/main.cpp`) : `anch::cli::Formatter::DISABLED` est activé si la sortie standard n'est pas un terminal (`isatty`) ou si `NO_COLOR` est défini et non vide. Le problème reste entier dans `anch-cli` pour les autres programmes. Test : `anch-unit-test-no-color` (aucun caractère `ESC` dans la sortie sous CTest).
+Correction (`src/ut/main.cpp`) : `anch::cli::Formatter::DISABLED` est activé si la sortie standard n'est pas un terminal (`isatty`) ou si `NO_COLOR` est défini et non vide. Depuis le 2026-11-03, c'est `anch-cli` qui le fait pour tous les programmes (CL3) ; le code d'`anch-ut` est retiré. Test : `anch-unit-test-no-color` (aucun caractère `ESC` dans la sortie sous CTest).
 
 ### T17. Performances — vérifié — **corrigé le 2026-11-03** (conteneurs, messages)
 - Coût fixe d'un exécutable de test : ~1,6 ms par processus (`-l`), ~2,2 ms pour un cas simple. Avec les 449 `add_test` du dépôt, moins d'une seconde au total : la conception « un processus par cas » coûte peu, sauf si l'initialisation de la suite (`initialize`) est lourde, puisqu'elle est refaite pour chaque cas.

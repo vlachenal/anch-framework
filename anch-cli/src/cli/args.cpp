@@ -82,6 +82,28 @@ namespace anch::cli {
 
   };
 
+  /*!
+   * Argument name without formatting (for error messages)
+   *
+   * \param arg the argument
+   *
+   * \return the argument name (\c -s|--long )
+   */
+  std::string
+  plainArg(const anch::cli::Arg& arg) {
+    std::ostringstream oss;
+    if(arg.sopt != '\0') {
+      oss << '-' << arg.sopt;
+      if(arg.lopt.has_value()) {
+	oss << '|';
+      }
+    }
+    if(arg.lopt.has_value()) {
+      oss << "--" << arg.lopt.value();
+    }
+    return oss.str();
+  }
+
   std::string
   formatArg(const anch::cli::Arg& arg) {
     std::ostringstream oss;
@@ -290,6 +312,11 @@ ArgHandler::arg(anch::cli::Arg& arg) {
     throw std::invalid_argument(oss.str());
   }
   // Check already exist -
+  // Check multiple positional is the last one +
+  if(arg.lopt == std::nullopt && arg.sopt == '\0' && !_positionals.empty() && _positionals.back()->arg->multi) {
+    throw std::invalid_argument("Multiple positional argument must be defined at last position");
+  }
+  // Check multiple positional is the last one -
   std::size_t idx = _options.size();
   _options.push_back(std::make_shared<anch::cli::RegisteredArg>(arg));
   std::shared_ptr<anch::cli::RegisteredArg> option = _options.at(idx);
@@ -371,7 +398,7 @@ ArgHandler::parse(int argc, char** argv) {
 	  }
 	  if(option->state->found && !option->arg->multi) {
 	    std::ostringstream oss;
-	    oss << "Argument " << formatArg(*(option->arg)) << " has already been found";
+	    oss << "Argument " << plainArg(*(option->arg)) << " has already been found";
 	    throw std::invalid_argument(oss.str());
 	  }
 	  hasMoreArg(argc, i, o);
@@ -394,12 +421,12 @@ ArgHandler::parse(int argc, char** argv) {
 	throw std::invalid_argument(oss.str());
       }
       auto option = iter->second;
-      if(option->state->found && !option->arg->multi) {
-	std::ostringstream oss;
-	oss << "Argument " << formatArg(*(option->arg)) << " has already been found";
-	throw std::invalid_argument(oss.str());
-      }
       if(option->arg->value) {
+	if(option->state->found && !option->arg->multi) { // flags can be repeated as short options (-v -v)
+	  std::ostringstream oss;
+	  oss << "Argument " << plainArg(*(option->arg)) << " has already been found";
+	  throw std::invalid_argument(oss.str());
+	}
 	hasMoreArg(argc, i, opt);
 	std::invoke(option->arg->handler, std::string(argv[++i]));
 	option->state->found = true;
@@ -506,10 +533,10 @@ ArgHandler::handle(int argc, char** argv) {
 void
 ArgHandler::printBanner(std::ostream& out) {
   if(_app.bannerPath.has_value()) {
-    try {
-      std::ifstream fis(_app.bannerPath.value());
-      fis >> out.rdbuf();
-    } catch(...) {
+    std::ifstream fis(_app.bannerPath.value());
+    if(fis.is_open()) {
+      fis >> out.rdbuf(); // an empty file only sets failbit on input stream
+    } else {
       out << "Can not read " << _app.bannerPath.value();
     }
     out << '\n';
@@ -529,20 +556,9 @@ ArgHandler::build(const std::string& arg0) {
     _app.name = _exeName;
   }
   // Set default application name to first argument when not set -
-  // Check multiple positinal options and piped options +
-  bool multipos = false;
+  // Check piped options (multiple positional is checked on registration) +
   bool piped = false;
   for(auto iter = _options.cbegin() ; iter != _options.cend() ; ++iter) {
-    if((*iter)->state->positional && (*iter)->arg->multi) {
-      if(!multipos) {
-	multipos = true;
-      } else {
-	std::ostringstream oss;
-	oss << "Multiple positional argument has already been defined.\n"
-	    << "Multiple positional must be defined at last position";
-	throw std::invalid_argument(oss.str());
-      }
-    }
     if((*iter)->arg->pipe) {
       if(!piped) {
 	piped = true;
@@ -551,7 +567,7 @@ ArgHandler::build(const std::string& arg0) {
       }
     }
   }
-  // Check multiple positinal options and piped options -
+  // Check piped options (multiple positional is checked on registration) -
   // Register help argument +
   if(!_sopts.contains('h') || !_lopts.contains("help")) {
     anch::cli::Arg help;
@@ -570,13 +586,11 @@ ArgHandler::build(const std::string& arg0) {
   }
   // Register help argument -
   // Register no color argument +
-  if(!_lopts.contains("no-term-format")) {
+  if(!_lopts.contains("no-term-fmt")) {
     anch::cli::Arg nc;
     nc.description = "Disable AnCH CLI formatting";
-    if(!_lopts.contains("no-term-fmt")) {
-      nc.lopt = "no-term-fmt";
-    }
-    nc.handler = [this](const std::string&) {
+    nc.lopt = "no-term-fmt";
+    nc.handler = [](const std::string&) {
       anch::cli::Formatter::DISABLED = true;
     };
     arg(nc);

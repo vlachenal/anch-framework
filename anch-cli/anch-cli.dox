@@ -17,7 +17,13 @@
  * \section cli_concept_sec Conception
  *
  * AnCH CLI library main class is: \ref anch::cli::ArgHandler "ArgHandler".\n
- * AnCH CLI library contains common bindings in \c cli/utils.hpp .
+ * AnCH CLI library contains common bindings in \c cli/utils.hpp : invalid values (numbers which are empty, malformed or
+ * out of range, files which can not be opened) raise \c std::invalid_argument , reported by \c ArgHandler::handle .\n
+ * Multiple positional argument has to be the last positional argument. Options without value can be repeated ; options
+ * with value can be repeated only when they are declared as \c multi .\n
+ *\n
+ * Console formatting (\ref anch::cli::Formatter "Formatter") is disabled when standard output is not a terminal, when
+ * \c NO_COLOR environment variable is set and not empty, when \c ANCH_CLI_NO_FMT is \c 1 or with \c --no-term-fmt option.
  *
  * \section cli_example_sec Examples
  *

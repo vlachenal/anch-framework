@@ -27,15 +27,12 @@
 #include <cstdlib>
 #include <exception>
 
-#include <unistd.h>
-
 #include "ut/unit.hpp"
 #include "ut/runner.hpp"
 #include "ut/defaultRunner.hpp"
 
 #include "cli/args.hpp"
 #include "cli/utils.hpp"
-#include "cli/formatter.hpp"
 
 using anch::ut::UnitTests;
 using anch::ut::Runner;
@@ -70,18 +67,6 @@ namespace {
     std::vector<std::string> tests;
     std::map<std::string,std::string> env;
   };
-
-  /*!
-   * Disable console colors when standard output is not a terminal (CTest, redirection) or when \c NO_COLOR
-   * environment variable is set (https://no-color.org)
-   */
-  void
-  initColors() {
-    const char* noColor = std::getenv("NO_COLOR");
-    if(::isatty(STDOUT_FILENO) == 0 || (noColor != NULL && noColor[0] != '\0')) {
-      anch::cli::Formatter::DISABLED = true;
-    }
-  }
 
   /*!
    * Parse command line arguments
@@ -133,8 +118,6 @@ namespace {
 
 int
 main(int argc, char** argv) {
-  initColors();
-
   UnitTests tests;
   try {
     anch::ut::setup(tests);

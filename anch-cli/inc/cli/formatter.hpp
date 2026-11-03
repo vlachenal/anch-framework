@@ -71,7 +71,11 @@ namespace anch::cli {
    */
   struct Formatter {
 
-    /*! Disable console formatter globally */
+    /*!
+     * Disable console formatter globally.\n
+     * Default to \c true when standard output is not a terminal (redirection, pipe), when \c NO_COLOR environment
+     * variable is set and not empty (https://no-color.org) or when \c ANCH_CLI_NO_FMT is \c 1 ; \c false otherwise.
+     */
     static bool DISABLED;
 
     /*! Text color (with predefined colors) */
@@ -208,15 +212,15 @@ namespace anch::cli {
   /*! Predefined reset formatter */
   extern anch::cli::Formatter RESET;
 
-}  // anch::cli
+  /*!
+   * \c Formatter output stream operator.\n
+   * It is declared in \c anch::cli namespace so that it is found by argument-dependent lookup from any namespace.
+   *
+   * \param stream the output stream to use
+   * \param fmt the formatter to use
+   *
+   * \return the output stream
+   */
+  std::ostream& operator<<(std::ostream& stream, const anch::cli::Formatter& fmt);
 
-/*!
- * \c Formatter output stream operator
- *
- * \param stream the output stream to use
- * \param fmt the formatter to use
- *
- * \return the output stream
- */
-std::ostream&
-operator<<(std::ostream& stream, const anch::cli::Formatter& fmt);
+}  // anch::cli

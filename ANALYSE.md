@@ -29,7 +29,7 @@ Statut des constats :
 | anch-crypto | [anch-crypto/ANALYSE.md](anch-crypto/ANALYSE.md) | non analysé (hors périmètre) ; lecture hors limites AES-192 et lecture non initialisée SHA-2 corrigées |
 | anch-conf | [anch-conf/ANALYSE.md](anch-conf/ANALYSE.md) | en construction ; correctif `_loaded` provisoire (pas encore avec placeholders) |
 | anch-ini | [anch-ini/ANALYSE.md](anch-ini/ANALYSE.md) | en construction ; conversion numérique correcte (modèle pour les autres modules) |
-| anch-cli | [anch-cli/ANALYSE.md](anch-cli/ANALYSE.md) | valeurs numériques hors limites ou vides ignorées, fichiers de sortie non vérifiés, ANSI hors terminal |
+| anch-cli | [anch-cli/ANALYSE.md](anch-cli/ANALYSE.md) | corrigé le 2026-11-03 (CL1 à CL10) : valeurs numériques hors limites ou vides, fichiers non ouverts, couleurs désactivées hors terminal / `NO_COLOR`, `operator<<` du `Formatter` hors namespace, `--no-term-fmt` déclaré par l'application, positionnel multiple non final, options répétées, codes ANSI dans les exceptions ; restent CL11 à CL13 (`--`, `--opt=val`, `pipe` sur un terminal) |
 | anch-cutils | [anch-cutils/ANALYSE.md](anch-cutils/ANALYSE.md) | corrigé le 2026-11-02 : tampons de lecture et d'écriture séparés, écritures partielles et erreurs gérées, vidage de `TcpStream` avant fermeture |
 | anch-rest | [anch-rest/ANALYSE.md](anch-rest/ANALYSE.md) | ne compile plus, désactivé par défaut |
 | anch-app | [anch-app/ANALYSE.md](anch-app/ANALYSE.md) | débuté ; `after()` virtuel appelé depuis le destructeur, premier `-v` = `DEBUG` |
@@ -52,7 +52,7 @@ Les tests passent alors que de nombreux constats sont confirmés : ils ne couvre
 
 ## Points transverses
 
-- **Conversions numériques** : trois implémentations différentes. `anch-ini` (`toNumber`) contrôle correctement `std::from_chars` ; `anch-cli` (CL1) oublie `res.ec` ; `anch-utils` (`convert`, U9 / U10) passe par un flux ; `anch-json` (J7, J9) est corrigé. Une fonction commune dans `anch-utils`, sur le modèle de `toNumber`, réglerait les quatre.
+- **Conversions numériques** : trois implémentations différentes. `anch-ini` (`toNumber`) contrôle correctement `std::from_chars` ; `anch-cli` (CL1) oubliait `res.ec` (corrigé le 2026-11-03) ; `anch-utils` (`convert`, U9 / U10) passe par un flux ; `anch-json` (J7, J9) est corrigé. Une fonction commune dans `anch-utils`, sur le modèle de `toNumber`, réglerait les quatre.
 - **Observateurs et threads** : `Observable` (E7), `EventBus` (E1, E2) et `EventHandler` (E8) appellent les handlers en tenant des verrous ou sans protéger la liste. `anch-network` et `anch-ut` reposent dessus.
 - **Sanitizers** : N1, N3, U13 n'apparaissent qu'avec ASan. Un preset `asan` (`-fsanitize=address,undefined`) dans `CMakePresets.json` permettrait de les détecter avec la suite de tests actuelle.
 
