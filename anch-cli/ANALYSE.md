@@ -59,16 +59,18 @@ Correction : `plainArg` (`-p|--plop`) pour les messages. Test : `anch-cli-utils-
 `parse` inverse `ignoreOpt` à chaque `--` (« trigger ignore option status ») : un second `--` réactive les options et n'est jamais transmis. La convention POSIX (`getopt`) termine l'analyse des options au premier `--` ; les `--` suivants sont des arguments positionnels. Impossible donc de passer `--` comme valeur positionnelle.
 Piste : terminer l'analyse au premier `--`, si la bascule n'est pas voulue.
 
-### CL12. Formes `--option=valeur` et `-pvaleur` non prises en charge — lecture — non corrigé
+### CL12. Formes `--option=valeur` et `-pvaleur` non prises en charge — lecture — conforme (choix)
 `--plop=x` donne « Unknown argument --plop=x » ; `-px` est lu comme les options `-p` et `-x`. Les deux formes sont courantes (`getopt_long`).
+Confirmé le 2026-11-03 : non prises en charge par choix ; à réexaminer éventuellement plus tard.
 
-### CL13. Option `pipe` absente : lecture de `std::cin` même sur un terminal — lecture — non corrigé
-`check()` appelle le gestionnaire `pipe` avec `std::cin` dès que l'option n'est pas fournie ; si l'entrée standard est un terminal, le programme attend une saisie au lieu de signaler l'argument manquant. Peut être voulu (comme `cat`) ; à décider (`isatty(STDIN_FILENO)`).
+### CL13. Option `pipe` absente : lecture de `std::cin` même sur un terminal — lecture — conforme (voulu)
+`check()` appelle le gestionnaire `pipe` avec `std::cin` dès que l'option n'est pas fournie ; si l'entrée standard est un terminal, le programme attend une saisie.
+Confirmé le 2026-11-03 : comportement voulu, comme `cat` (lecture de l'entrée standard quand aucun fichier n'est donné). Documenté dans `Arg::pipe` (`inc/cli/arg.hpp`).
 Remarque liée : les arguments positionnels sont toujours rendus obligatoires (`arg()` force `mandatory`) : pas de positionnel optionnel.
 
 ## À approfondir
 - [x] Test de non-régression pour CL1 (valeur hors limites, valeur vide) : `anch-cli-utils-numbers`.
 - [x] Analyser `app.hpp` et l'affichage de l'aide (2026-11-03 : `app.hpp` est une simple structure ; voir CL5, CL8, CL9).
 - [ ] Options par défaut prévues dans `anch-app/anch-app.todo` (`-v`, `-c`, `-d`).
-- [ ] Décider CL11 (`--`), CL12 (`--opt=val`) et CL13 (`pipe` sur un terminal).
+- [ ] Décider CL11 (`--`) ; CL12 (`--opt=val`, choix pouvant être réexaminé) et CL13 (`pipe` sur un terminal) sont voulus.
 - [ ] `testCli.cpp` ne vérifie que des codes de sortie (avec son propre `main`) : à migrer vers anch-ut.

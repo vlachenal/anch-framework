@@ -19,6 +19,8 @@
  * AnCH CLI library main class is: \ref anch::cli::ArgHandler "ArgHandler".\n
  * AnCH CLI library contains common bindings in \c cli/utils.hpp : invalid values (numbers which are empty, malformed or
  * out of range, files which can not be opened) raise \c std::invalid_argument , reported by \c ArgHandler::handle .\n
+ * An option value is always the next argument (\c -p \c value or \c --plop \c value ): \c --plop=value and \c -pvalue
+ * forms are not supported.\n
  * Multiple positional argument has to be the last positional argument. Options without value can be repeated ; options
  * with value can be repeated only when they are declared as \c multi .\n
  *\n

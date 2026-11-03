@@ -59,7 +59,11 @@ namespace anch::cli {
     /*! Multiple occurence argument flag (default to \c false ) */
     bool multi = false;
 
-    /*! Input stream setter (mandatory with pipe option ; default not set) */
+    /*!
+     * Input stream setter (mandatory with pipe option ; default not set).\n
+     * When the option is not found, it is called with \c std::cin : as \c cat , the program reads its standard input,
+     * and waits for a keyboard input when standard input is a terminal.
+     */
     std::function<void(std::istream&)> pipe = std::function<void(std::istream&)>();
 
     /*! Output stream on stdout setter (mandatory with cout option ; default not set) */
