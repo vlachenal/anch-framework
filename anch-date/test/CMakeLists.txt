@@ -7,3 +7,20 @@ add_test(NAME date-format-time_t COMMAND anch-date-format-test -t date-format-ti
 add_test(NAME date-parse COMMAND anch-date-format-test -t date-parse)
 add_test(NAME date-comparison COMMAND anch-date-format-test -t date-comparison)
 add_test(NAME date-format-custom COMMAND anch-date-format-test -t date-format-custom)
+
+# Date computations and parsing (TZ is set to check daylight saving time) +
+add_test(NAME date-dst COMMAND anch-date-format-test -t date-dst)
+add_test(NAME date-timespec COMMAND anch-date-format-test -t date-timespec)
+add_test(NAME date-conversions COMMAND anch-date-format-test -t date-conversions)
+add_test(NAME date-year-2-digits COMMAND anch-date-format-test -t date-year-2-digits)
+add_test(NAME date-hour-12 COMMAND anch-date-format-test -t date-hour-12)
+add_test(NAME date-parse-reset COMMAND anch-date-format-test -t date-parse-reset)
+add_test(NAME date-parse-milliseconds COMMAND anch-date-format-test -t date-parse-milliseconds)
+add_test(NAME date-parse-invalid COMMAND anch-date-format-test -t date-parse-invalid)
+add_test(NAME date-formatter-ownership COMMAND anch-date-format-test -t date-formatter-ownership)
+add_test(NAME date-unknown-pattern COMMAND anch-date-format-test -t date-unknown-pattern)
+set_tests_properties(
+  date-dst date-timespec date-conversions date-year-2-digits date-hour-12
+  date-parse-reset date-parse-milliseconds date-parse-invalid date-formatter-ownership date-unknown-pattern
+  PROPERTIES ENVIRONMENT "TZ=Europe/Paris")
+# Date computations and parsing (TZ is set to check daylight saving time) -

@@ -21,11 +21,11 @@ Statut des constats :
 | anch-log | [anch-log/ANALYSE.md](anch-log/ANALYSE.md) | corrigé le 2026-11-02 : motif par défaut, `MDC`, `LowPriorityWriter`, `max-size` et rotation, `getLogger` concurrent, writers par logger inversés, erreurs d'écriture fatales, fichiers non vidés |
 | anch-network | [anch-network/ANALYSE.md](anch-network/ANALYSE.md) | use-after-free après `freeaddrinfo`, débordements en réception (confirmés sous ASan), UDP IPv4 uniquement, `TcpStreamServer` sans `accept` |
 | anch-json | [anch-json/ANALYSE.md](anch-json/ANALYSE.md) | corrigés : `0` refusé, dépassements numériques, chaînes non échappées / non décodées, récursion non bornée, `max_payload` ignoré ; lecture 3,7× et écriture 2× plus rapides (2026-10-31) ; reste `'\0'` comme fin de données (J4) |
-| anch-date | [anch-date/ANALYSE.md](anch-date/ANALYSE.md) | heure d'été ajoutée deux fois (+1 h en été), millisecondes fausses depuis un `timespec`, `%y` sur 4 chiffres, `tm_isdst` non initialisé |
+| anch-date | [anch-date/ANALYSE.md](anch-date/ANALYSE.md) | révisé et corrigé le 2026-11-03 (D1 à D15) : réécrit sur `std::chrono` + `localtime_r` (sans mutex ni `std::regex`, 11 classes de formateurs remplacées par 3 internes) ; heure d'été, `timespec`, `%y`, `%h`, analyse partielle / invalide / sans millisecondes, copie de `DateFormatter`, constructeurs implicites (à l'origine de S8 dans `anch-sql`) |
 | anch-device | [anch-device/ANALYSE.md](anch-device/ANALYSE.md) | une interface atypique bloque tout l'inventaire réseau, `_metric` invalide, IPv4 uniquement ; fournisseurs UUID v1 / v6 corrigés (DV7 à DV10, DV12 ; v1 19× plus rapide) |
 | anch-ut | [anch-ut/ANALYSE.md](anch-ut/ANALYSE.md) | corrigé le 2026-11-03 (T3 à T20) : format des assertions vérifié à la compilation (3 messages faux trouvés dans `anch-json`), emplacement des échecs, `ThreadErrors` pour les assertions dans les threads, ordre d'enregistrement, erreurs de `setup` / d'initialisation / de désinitialisation, couleurs hors terminal ; options de runner refusées (pas implémentées) ; reste T2 (`--gen-ctest`) |
 | anch-uuid | [anch-uuid/ANALYSE.md](anch-uuid/ANALYSE.md) | tous les constats corrigés le 2026-10-31 (UU1 à UU9) : parsing validé et 8× plus rapide, `toString` 14×, `random()` 56×, v3 / v5 conformes à la RFC 9562, v7 monotone, registre protégé, type valeur de 16 octets ordonnable et hachable ; fournisseurs v1 / v6 : voir `anch-device` |
-| anch-sql | [anch-sql/ANALYSE.md](anch-sql/ANALYSE.md) | hors gestion d'erreurs : builder sain, pilote introuvable = appel d'adresse indéterminée ; tests isolés depuis le 2026-10-31 (S6) |
+| anch-sql | [anch-sql/ANALYSE.md](anch-sql/ANALYSE.md) | hors gestion d'erreurs : builder sain, pilote introuvable = appel d'adresse indéterminée ; tests isolés depuis le 2026-10-31 (S6) ; S8 corrigé le 2026-11-03 : les colonnes date / heure étaient lues comme la date courante |
 | anch-crypto | [anch-crypto/ANALYSE.md](anch-crypto/ANALYSE.md) | non analysé (hors périmètre) ; lecture hors limites AES-192 et lecture non initialisée SHA-2 corrigées |
 | anch-conf | [anch-conf/ANALYSE.md](anch-conf/ANALYSE.md) | en construction ; correctif `_loaded` provisoire (pas encore avec placeholders) |
 | anch-ini | [anch-ini/ANALYSE.md](anch-ini/ANALYSE.md) | en construction ; conversion numérique correcte (modèle pour les autres modules) |
@@ -99,7 +99,7 @@ Mise à jour le 2026-10-30, par impact sur l'usage courant :
 1. ~~`anch-json` J6 : la valeur `0` est refusée.~~ Corrigé le 2026-10-30.
 2. ~~`anch-cutils` CU1 : en lecture / écriture, les données envoyées sont corrompues (impacte `TcpStream`).~~ Corrigé le 2026-11-02.
 3. ~~`anch-log` L8 et L9 : le motif par défaut n'écrit pas le message, et `MDC.add` / `reset` ne fonctionnent pas.~~ Corrigé le 2026-11-02.
-4. `anch-date` D3 : une heure d'avance en été (impacte aussi les horodatages des logs).
+4. ~~`anch-date` D3 : une heure d'avance en été (impacte aussi les horodatages des logs).~~ Corrigé le 2026-11-03.
 5. `anch-network` N1 / N3 : use-after-free et débordement de tampon.
 6. ~~`anch-json` J1 / J2 : échappement des chaînes.~~ Corrigé.
 7. ~~`anch-events` E2 / E7 : arrêt ou interblocage dès qu'un handler interagit avec le bus ou l'observable.~~ Corrigé le 2026-11-02.

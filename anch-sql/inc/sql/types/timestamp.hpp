@@ -44,7 +44,7 @@ namespace anch {
        *
        * \param init Initialize the \ref Timestamp to now (default true)
        */
-      Timestamp(bool init = true);
+      explicit Timestamp(bool init = true);
 
       /*!
        * \ref Timestamp private copy constructor

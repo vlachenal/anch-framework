@@ -4,5 +4,6 @@
  * \brief Date namespace.
  *
  * It contains utilities for date and time management.\n
- * These classes are based on C++11 std::chrono. It provides date parser and formatter like in Java. The syntax of date formatting is nearly the same as std::strtime.
+ * \ref anch::date::Date is based on \c std::chrono (nanosecond precision) and on \c localtime_r for local time. \ref anch::date::DateFormatter
+ * provides a date parser and formatter with a syntax close to \c strftime .
  */

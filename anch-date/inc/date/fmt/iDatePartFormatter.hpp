@@ -19,8 +19,9 @@
 */
 #pragma once
 
-#include <iostream>
+#include <cstdint>
 #include <ostream>
+#include <string>
 
 #include "date/date.hpp"
 
@@ -28,7 +29,12 @@
 namespace anch::date {
 
   /*!
-   * Date part formatter interface
+   * \brief Date part formatter interface
+   *
+   * Implement this interface to add a pattern to \ref DateFormatter (\ref DateFormatter::registerFormatterPart ).
+   * Protected accessors give access to \ref Date fields.\n
+   * A part has a fixed size: \ref setValue receives exactly \ref getSize characters. When a \ref Date is parsed, its
+   * fields are set to 1970-01-01 00:00:00.000 before parts are called, and the timestamp is computed afterwards.
    *
    * \author Vincent Lachenal
    */
@@ -61,6 +67,8 @@ namespace anch::date {
      *
      * \param date The \ref Date to modify
      * \param value The value to set
+     *
+     * \return \c true when value is valid, \c false otherwise
      */
     virtual bool setValue(anch::date::Date& date, const std::string& value) const noexcept = 0;
 

@@ -44,7 +44,7 @@ namespace anch {
        *
        * \param init Initialize the \ref Date to now (default true)
        */
-      Date(bool init = true);
+      explicit Date(bool init = true);
 
       /*!
        * \ref Date private copy constructor

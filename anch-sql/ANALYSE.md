@@ -47,6 +47,13 @@ Correction (chaque cas indépendant, plutôt qu'une série ordonnée) :
 ### S7. Conversion des colonnes : valeurs négatives et `uint8_t` — renvoi
 `src/sql/resultSet.cpp:99-186` et `postgresql/src/sql/postgresqlConnection.cpp:202` utilisent `anch::convert` : une colonne négative lue dans un type non signé est acceptée modulo 2^n, sans erreur (constat U9 de [../anch-utils/ANALYSE.md](../anch-utils/ANALYSE.md)).
 
+### S8. Lecture des colonnes `DATE`, `TIME` et `TIMESTAMP` : date courante au lieu de la valeur — vérifié — **corrigé le 2026-11-03**
+`ResultSet::get<anch::sql::Date>` (et `Time`, `Timestamp`, `src/sql/resultSet.cpp`) faisait `out = new anch::sql::Date(date);` : `out` est une référence, pas un pointeur. Le pointeur était converti en `bool` et passé au constructeur implicite `Date(bool init = true)` : la valeur lue était remplacée par la date courante, et l'objet alloué n'était jamais libéré. De plus, l'analyse partait d'une `Date()` (maintenant) et gardait l'heure courante pour une colonne `DATE` (D8 d'`anch-date`).
+Reproduction (2026-11-03, même construction sur une classe dérivée de `Date`) : `2001-01-01` lu comme `2026-11-03`.
+Correction : `out = anch::sql::Date(date);` (idem `Time`, `Timestamp`) ; constructeurs `bool` de `Date`, `Time` et `Timestamp` rendus `explicit` ; documentation « You have to delete result » retirée.
+Non couvert par un test : les bases de test n'ont pas de colonne date.
+Remarque : les constructeurs de `anch::sql::Date` et `anch::sql::Time` remettent à zéro des champs (heure, ou date) sans recalculer le timestamp : deux `anch::sql::Date` du même jour à des heures différentes ne sont pas égales. À revoir avec ce module.
+
 ## À approfondir
 - [ ] Gestion des erreurs (connu).
 - [ ] Fermeture des pilotes (`dlclose` dans le destructeur du singleton) alors que des connexions issues de ces pilotes peuvent encore exister dans les pools.

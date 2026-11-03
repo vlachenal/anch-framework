@@ -19,9 +19,9 @@
 */
 #pragma once
 
-#include <memory>
-#include <mutex>
 #include <chrono>
+#include <compare>
+#include <cstdint>
 #include <ctime>
 
 
@@ -31,12 +31,15 @@ namespace anch::date {
   class IDatePartFormatter;
 
   /*!
-   * Date and time utility class.
+   * \brief Date and time utility class
    *
-   * The class implementation is thread safe (when using this class).\n
-   * POSIX time management is not thread safe. This class uses POSIX implementation.\n
-   * Be aware that if you use the POSIX API, you will loose the thread safe support
-   * provided in this implementation.
+   * A \ref Date is a point in time with a nanosecond precision (stored as a number of nanoseconds since epoch, which
+   * covers years 1678 to 2261), and its broken down representation in local time (year, month, day, hour, minute,
+   * second, millisecond, microsecond and nanosecond).\n
+   * Local time is computed with \c localtime_r (\c std::chrono time zones are not available with GCC 13): it is thread
+   * safe and follows the \c TZ environment variable.\n
+   * \ref Date can be converted from and to \c std::chrono::system_clock::time_point , \c std::time_t , \c std::tm and
+   * \c std::timespec .
    *
    * \author Vincent Lachenal
    */
@@ -47,75 +50,82 @@ namespace anch::date {
 
     // Attributes +
   protected:
-    /*! Mutex for thread-safe implementation */
-    static std::mutex _mutex;
-
-    /*! The timestamp */
-    std::int64_t _timestamp;
+    /*! The timestamp (nanoseconds since epoch) */
+    std::int64_t _timestamp = 0;
 
     /*! The years */
     int32_t _years = 0;
 
-    /*! The months (0-11 => 4 bits) */
+    /*! The months (0-11) */
     uint16_t _months = 0;
 
-    /*! The days of the year (0-365 => 9 bits) */
+    /*! The days of the year (0-365) */
     uint16_t _ydays = 0;
 
-    /*! The days of the year (1-31 => 5 bits) */
+    /*! The days of the month (1-31) */
     uint16_t _mdays = 0;
 
-    /*! The days of the week (0-6 => 3 bits) */
+    /*! The days of the week (0-6, 0 is sunday) */
     uint16_t _wdays = 0;
 
-    /*! The minutes (0-23 => 5 bits) */
+    /*! The hours (0-23) */
     uint16_t _hours = 0;
 
-    /*! The minutes (0-59 => 6 bits) */
+    /*! The minutes (0-59) */
     uint16_t _minutes = 0;
 
-    /*! The seconds (0-60 => 6 bits) */
+    /*! The seconds (0-60) */
     uint16_t _seconds = 0;
 
-    /*! The milliseconds (0-999 => 10 bits) */
+    /*! The milliseconds (0-999) */
     uint16_t _milliseconds = 0;
 
-    /*! The microseconds (0-999 => 10 bits) */
+    /*! The microseconds (0-999) */
     uint16_t _microseconds = 0;
 
-    /*! The nanoseconds (0-999 => 10 bits) */
+    /*! The nanoseconds (0-999) */
     uint16_t _nanoseconds = 0;
     // Attributes -
 
     // Constructors +
   public:
     /*!
-     * \ref Date default constructor.
+     * \ref Date default constructor
      *
-     * \param init Initialize the \ref Date to now (default true)
+     * \param init initialize the \ref Date to now (default \c true ) ; epoch otherwise
      */
-    Date(bool init = true);
+    explicit Date(bool init = true);
 
     /*!
-     * \ref Date constructor.
+     * \ref Date constructor
      *
-     * \param time The time to set
+     * \param time the time point to set
+     *
+     * \since 0.2
      */
-    Date(const std::time_t& time);
+    explicit Date(const std::chrono::system_clock::time_point& time);
 
     /*!
-     * \ref Date constructor.
+     * \ref Date constructor
      *
-     * \param time The time to set
+     * \param time the time to set
      */
-    Date(const std::tm* const time);
+    explicit Date(const std::time_t& time);
 
     /*!
-     * \ref Date constructor.
+     * \ref Date constructor
      *
-     * \param time The time to set
+     * \param time the local time to set (\c tm_isdst has to be \c -1 when daylight saving time is unknown ; \c tm_wday
+     *        and \c tm_yday are ignored ; out of range fields are normalized as \c std::mktime does)
      */
-    Date(const std::timespec& time);
+    explicit Date(const std::tm* const time);
+
+    /*!
+     * \ref Date constructor
+     *
+     * \param time the time to set
+     */
+    explicit Date(const std::timespec& time);
     // Constructors -
 
     // Destructor +
@@ -129,35 +139,22 @@ namespace anch::date {
     // Methods +
   private:
     /*!
-     * Intialize ms, µs and ns date fields
+     * Initialize timestamp and local time fields
      *
-     * \param duration The duration
+     * \param time the time point
      */
-    template<typename R, typename P>
-    void initialize(const std::chrono::duration<R,P>& duration) noexcept;
+    void initialize(const std::chrono::sys_time<std::chrono::nanoseconds>& time);
 
     /*!
-     * Initialize date fields
-     *
-     * \param time The current time
-     */
-    void initialize(const std::tm* const time);
-
-    /*!
-     * Compute timestamp from internal members
+     * Compute timestamp from local time fields (and normalize fields)
      */
     void computeTimestamp();
-
-    /*!
-     * Compute \c std::tm from internal members
-     */
-    void computeTm(std::tm& time) const;
 
   public:
     /*!
      * Check if current \ref Date is after another one.
      *
-     * \param date The other \ref Date
+     * \param date the other \ref Date
      *
      * \return \c true if current \ref Date is after the other one, \c false otherwise.
      */
@@ -166,7 +163,7 @@ namespace anch::date {
     /*!
      * Check if current \ref Date is before another one.
      *
-     * \param date The other \ref Date
+     * \param date the other \ref Date
      *
      * \return \c true if current \ref Date is before the other one, \c false otherwise.
      */
@@ -175,7 +172,7 @@ namespace anch::date {
     /*!
      * Check if current \ref Date is equals to another one.
      *
-     * \param date The other \ref Date
+     * \param date the other \ref Date
      *
      * \return \c true if current \ref Date is equals to the other one, \c false otherwise.
      */
@@ -185,73 +182,52 @@ namespace anch::date {
     // Operators +
   public:
     /*!
-     * '>' operator definition.
-     * Calls after method
+     * Compare dates (with nanosecond precision)
      *
-     * \param date The date to compare to
+     * \param date the date to compare to
+     *
+     * \return the comparison result
      */
-    bool operator > (const Date& date) const noexcept;
+    std::strong_ordering operator<=>(const Date& date) const noexcept;
 
     /*!
-     * '>=' operator definition.
-     * Calls after and equals methods
+     * Check if dates are equals (with nanosecond precision)
      *
-     * \param date The date to compare to
+     * \param date the date to compare to
+     *
+     * \return \c true when dates are equals, \c false otherwise
      */
-    bool operator >= (const Date& date) const noexcept;
+    bool operator==(const Date& date) const noexcept;
 
     /*!
-     * '<' operator definition.
-     * Calls before method
+     * Cast operator to \c std::chrono::system_clock::time_point
      *
-     * \param date The date to compare to
+     * \return the time point
+     *
+     * \since 0.2
      */
-    bool operator < (const Date& date) const noexcept;
+    explicit operator std::chrono::system_clock::time_point() const noexcept;
 
     /*!
-     * '<=' operator definition.
-     * Calls before and equals methods
+     * Cast operator to \c std::time_t (sub-second part is truncated toward the past)
      *
-     * \param date The date to compare to
+     * \return the converted \c std::time_t
      */
-    bool operator <= (const Date& date) const noexcept;
+    explicit operator std::time_t() const noexcept;
 
     /*!
-     * '==' operator definition.
-     * Calls equals method
+     * Cast operator to \c std::tm (local time, with \c tm_wday , \c tm_yday and \c tm_isdst )
      *
-     * \param date The date to compare to
+     * \return the converted \c std::tm
      */
-    bool operator == (const Date& date) const noexcept;
+    explicit operator std::tm() const noexcept;
 
     /*!
-     * '!=' operator definition.
-     * Calls equals method
+     * Cast operator to \c std::timespec
      *
-     * \param date The date to compare to
+     * \return the converted \c std::timespec
      */
-    bool operator != (const Date& date) const noexcept;
-
-    /*!
-     * Cast operator to \c std::time_t definition.
-     *
-     * \return The converted \c std::time_t
-     */
-    operator std::time_t() const noexcept;
-
-    /*!
-     * Cast operator to \c std::tm definition.
-     *
-     * \return The converted \c std::tm
-     */
-    operator std::tm() const noexcept;
-
-    /*!
-     * Cast operator to \c std::timespec definition.
-     *
-     * \return The converted \c std::timespec
-     */
-    operator std::timespec() const noexcept;
+    explicit operator std::timespec() const noexcept;
     // Operators -
 
   };

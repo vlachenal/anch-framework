@@ -252,8 +252,7 @@ namespace anch::sql {
   }
 
   /*!
-   * Get field \ref Date value by index.\n
-   * You have to delete result once treated.
+   * Get field \ref Date value by index.
    *
    * \param idx the index
    * \param out the result
@@ -270,14 +269,13 @@ namespace anch::sql {
       const anch::date::DateFormatter& formatter = getDateFormatter();
       anch::date::Date date;
       formatter.parse(strVal, date);
-      out = new anch::sql::Date(date);
+      out = anch::sql::Date(date);
     }
     return null;
   }
 
   /*!
-   * Get field \ref Time value by index.\n
-   * You have to delete result once treated.
+   * Get field \ref Time value by index.
    *
    * \param idx the index
    * \param out the result
@@ -294,14 +292,13 @@ namespace anch::sql {
       const anch::date::DateFormatter& formatter = getTimeFormatter();
       anch::date::Date date;
       formatter.parse(strVal, date);
-      out = new anch::sql::Time(date);
+      out = anch::sql::Time(date);
     }
     return null;
   }
 
   /*!
-   * Get field \ref Timestamp value by index.\n
-   * You have to delete result once treated.
+   * Get field \ref Timestamp value by index.
    *
    * \param idx the index
    * \param out the result
@@ -318,7 +315,7 @@ namespace anch::sql {
       const anch::date::DateFormatter& formatter = getTimestampFormatter();
       anch::date::Date date;
       formatter.parse(strVal, date);
-      out = new anch::sql::Timestamp(date);
+      out = anch::sql::Timestamp(date);
     }
     return null;
   }

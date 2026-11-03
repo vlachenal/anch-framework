@@ -44,7 +44,7 @@ namespace anch {
        *
        * \param init Initialize the \ref Time to now (default true)
        */
-      Time(bool init = true);
+      explicit Time(bool init = true);
 
       /*!
        * \ref Time private copy constructor
