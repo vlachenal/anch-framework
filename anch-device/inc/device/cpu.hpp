@@ -21,19 +21,8 @@
 
 #include "singleton.hpp"
 
-#ifdef ANCH_WINDOWS
-
-//  Windows
-#define anch_cpuid(info, x)    __cpuidex(info, x, 0)
-
-#elif defined ANCH_POSIX
-
-//  GCC Intrinsics
+#if defined(__x86_64__) || defined(__i386__)
 #include <cpuid.h>
-inline void anch_cpuid(int info[4], int InfoType){
-  __cpuid_count(InfoType, 0, info[0], info[1], info[2], info[3]);
-}
-
 #endif
 
 
@@ -42,7 +31,8 @@ namespace anch::device {
   /*!
    * \brief CPU features detection
    *
-   * Utility class which provides runtime CPU detection.
+   * Utility class which provides runtime CPU detection (\c CPUID instruction).\n
+   * On other architectures than x86 / x86-64, every feature is reported as not supported.
    *
    * \since 0.1
    *
@@ -88,22 +78,31 @@ namespace anch::device {
     /*!
      * \ref CPU private constructor
      */
-    CPU() {
-      int info[4];
-      anch_cpuid(info, 0);
-      int nIds = info[0];
-      if(nIds >= 0x00000001) {
-	anch_cpuid(info,0x00000001);
-	_aes = (info[2] & ((int)1 << 25)) != 0;
-	_mmx = (info[3] & ((int)1 << 23)) != 0;
-	_sse = (info[3] & ((int)1 << 25)) != 0;
-	_sse2 = (info[3] & ((int)1 << 26)) != 0;
-	_sse3 = (info[2] & ((int)1 << 0)) != 0;
-	_ssse3 = (info[2] & ((int)1 << 9)) != 0;
-	_sse4_1 = (info[2] & ((int)1 << 19)) != 0;
-	_sse4_2 = (info[2] & ((int)1 << 20)) != 0;
+    CPU():
+      _aes(false),
+      _mmx(false),
+      _sse(false),
+      _sse2(false),
+      _sse3(false),
+      _ssse3(false),
+      _sse4(false),
+      _sse4_1(false),
+      _sse4_2(false) {
+#if defined(__x86_64__) || defined(__i386__)
+      unsigned int eax, ebx, ecx, edx;
+      // __get_cpuid returns 0 when leaf 1 is not available
+      if(__get_cpuid(1, &eax, &ebx, &ecx, &edx) != 0) {
+	_aes = (ecx & bit_AES) != 0;
+	_mmx = (edx & bit_MMX) != 0;
+	_sse = (edx & bit_SSE) != 0;
+	_sse2 = (edx & bit_SSE2) != 0;
+	_sse3 = (ecx & bit_SSE3) != 0;
+	_ssse3 = (ecx & bit_SSSE3) != 0;
+	_sse4_1 = (ecx & bit_SSE4_1) != 0;
+	_sse4_2 = (ecx & bit_SSE4_2) != 0;
 	_sse4 = _sse4_1 || _sse4_2;
       }
+#endif
     }
     // Constructors -
 

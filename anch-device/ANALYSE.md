@@ -11,23 +11,36 @@ Périmètre : symboles définis dans les headers publics, `network.cpp`, `networ
 `inc/device/cpu.hpp:33` : `void anch_cpuid(int info[4], int InfoType){...}` est une fonction libre définie dans le header. `nm` montre un symbole fort (`T`) dans tout fichier qui inclut `cpu.hpp` : inclure ce header dans deux `.cpp` fait échouer l'édition de liens.
 Piste : `inline` (ou `static inline`), ou déplacer la définition dans un `.cpp`.
 
-### DV2. Une seule interface atypique empêche de lister toutes les interfaces — lecture
+### DV2. Une seule interface atypique empêche de lister toutes les interfaces — vérifié — **corrigé le 2026-11-10**
 `src/device/networkInterface.cpp` : le constructeur de `NetworkInterface` enchaîne six `ioctl` (drapeaux, adresse, MTU, adresse matérielle, broadcast, masque) et lève `DeviceException` au premier échec. `Network::load()` ne rattrape pas l'exception : une seule interface qui ne supporte pas l'un de ces appels (par exemple `SIOCGIFBRDADDR`, ligne 84, sur une interface point à point comme un tunnel VPN `tun0` / `wg0`) fait échouer `getInterface()` et `getInterfaces()` pour **toutes** les interfaces. Non reproduit ici (interfaces `lo`, `eno1`, `wlo1` uniquement).
 Piste : rendre les informations facultatives (adresse de broadcast absente) ou ignorer l'interface fautive.
+Vérification (2026-11-10, espace de noms réseau non privilégié `unshare -rn`) : l'hypothèse du tunnel est **fausse**, Linux ne contrôle pas `IFF_BROADCAST` pour `SIOCGIFBRDADDR` et un `tun0` point à point ne fait échouer aucun `ioctl`. La vraie cause est une interface supprimée entre `SIOCGIFCONF` et les `ioctl` suivants : **7 échecs sur 20 000** `reload()` pendant qu'une boucle crée et supprime une interface dummy (« Error while retrieving IP address for interface dumx », DV6 pour le reste du message).
+Correction : `Network::load()` repose sur un seul appel à `getifaddrs` (instantané cohérent, DV4). Le MTU, la métrique et le broadcast restent lus par `ioctl`, mais sont facultatifs : une interface supprimée entre-temps garde ses adresses avec un MTU à `0`. Aucun échec sur 20 000 `reload()` dans les mêmes conditions. `NetworkInterface` devient un type valeur rempli par `Network` (constructeur depuis `ifreq` supprimé, `networkInterface.cpp` supprimé).
 
-### DV3. `_metric` lu sans appel système — lecture
+### DV3. `_metric` lu sans appel système — lecture — **corrigé le 2026-11-10**
 `src/device/networkInterface.cpp:99` : `ifr_metric` fait partie de l'union de `struct ifreq`, qui contient à ce moment le résultat de `SIOCGIFNETMASK`. Sans `ioctl(SIOCGIFMETRIC)`, la valeur lue est un morceau du masque réseau.
+Correction : `ioctl(SIOCGIFMETRIC)`. Linux renvoie toujours `0` (documenté, vérifié par le test `network-sys-information`).
 
-### DV4. Énumération limitée et IPv4 uniquement — lecture
+### DV4. Énumération limitée et IPv4 uniquement — vérifié — **corrigé le 2026-11-10**
 `src/device/network.cpp:110` : `SIOCGIFCONF` avec un tampon de 1024 octets (environ 25 interfaces au maximum, troncature silencieuse). `SIOCGIFCONF` ne renvoie que les interfaces ayant une adresse IPv4 ; les adresses sont décodées en `sockaddr_in`.
 Piste : `getifaddrs()`, qui couvre IPv4, IPv6 et les interfaces sans adresse, sans limite de taille.
+Vérifié : une interface dummy sans adresse IPv4 n'était pas listée.
+Correction (`getifaddrs`) :
+- toutes les interfaces sont listées, avec ou sans adresse ; les étiquettes d'adresse IPv4 (`eth0:1`) restent des entrées à part, comme avec `SIOCGIFCONF` ;
+- nouvelles informations : `getIpv6Addresses()`, avec la portée pour les adresses de lien local (`fe80::…%eth0`), et `isUp()` ;
+- adresse matérielle depuis `AF_PACKET`, vide quand l'interface n'en a pas (tunnel), au lieu de `00:00:00:00:00:00` ;
+- `isLocalhost()` vient du drapeau `IFF_LOOPBACK` et non plus du nom `lo` ;
+- `inet_ntoa` (non réentrant) est remplacé par `getnameinfo(NI_NUMERICHOST)` ;
+- broadcast lu par `SIOCGIFBRDADDR` quand l'interface a `IFF_BROADCAST` : la glibc place l'adresse elle-même dans `ifa_broadaddr` quand aucun broadcast n'est configuré (vérifié sur une adresse sans `brd`). Vide si `0.0.0.0` ou sur une interface point à point.
 
-### DV5. `reload()` invalide les références déjà distribuées — lecture
+### DV5. `reload()` invalide les références déjà distribuées — lecture — **corrigé le 2026-11-10**
 `getInterface()` renvoie un pointeur et `getInterfaces()` une référence (ligne 82) vers la map statique, après avoir relâché `MUTEX`. `reload()` vide cette map (ligne 89) : les pointeurs et références obtenus auparavant deviennent invalides, et un parcours de `getInterfaces()` concurrent d'un `reload()` est une course.
 Piste : renvoyer des copies, ou un `std::shared_ptr` vers une map immuable remplacée à chaque `reload()`.
+Correction : instantané immuable (`std::shared_ptr<const map>`) remplacé à chaque `reload()`, chargé hors verrou. **API modifiée** : `getInterfaces()` renvoie une copie de la map et `getInterface()` un `std::optional<NetworkInterface>` (au lieu d'un pointeur `NULL`). En cas d'erreur, `reload()` garde l'instantané précédent. Plus de membres statiques dans le header, et `Network()` est supprimé (`= delete`). Test `network-concurrent-reload` (4 lecteurs, 500 `reload()`), propre sous TSan.
 
-### DV6. Codes d'erreur sans `errno` — lecture
-`DeviceException(..., ret)` reçoit la valeur de retour (`-1`) au lieu d'`errno` : le message ne permet pas de connaître la cause.
+### DV6. Codes d'erreur sans `errno` — vérifié — **corrigé le 2026-11-10**
+`DeviceException(..., ret)` reçoit la valeur de retour (`-1`) au lieu d'`errno`, et le constructeur la passe à `gai_strerror` : le message est toujours « Bad value for ai_flags » (vérifié).
+Correction : `DeviceException` dérive de `std::system_error` (`errno`, `std::generic_category`), comme `IOException` dans `anch-network`. L'errno courant est utilisé par défaut. Le constructeur sans code est remplacé par ce paramètre par défaut. Test `device-exception`.
 
 ### DV7. UUID v6 faux : bits inversés, version 1, doublons — vérifié — **corrigé le 2026-10-31**
 `generateUUIDv6` (`src/device/uuidProvider.cpp`) inverse les 64 bits du timestamp un par un (`std::bitset`, bit `i` vers bit `63 - i`), puis appelle la même fonction que la v1.
@@ -90,6 +103,20 @@ Depuis DV7 : timestamps strictement croissants dans le processus (`nextTimestamp
 `test/testUuid.cpp` (test `anch-device-uuid`) affiche un UUID v1 et un UUID « v6 » sans rien vérifier : DV7 passe inaperçu.
 Piste : vérifier version, variant, horodatage décodé (proche de l'heure système), ordre croissant (v6), unicité sur un grand nombre d'UUID, nœud égal à l'adresse MAC passée en paramètre.
 Depuis DV7 : `anch-device-uuid-provider-test` vérifie tout cela avec une adresse MAC fixe, et le choix du nœud par défaut depuis DV8 (`uuid-default-node`). Depuis DV9 : la validation de l'adresse passée en paramètre est testée (`uuid-mac-address`). `anch-device-uuid` (affichage seul) est conservé.
+
+### DV13. `CPU` : membres non initialisés et compilation limitée à x86 — lecture — **corrigé le 2026-11-10**
+- Si la feuille CPUID 1 n'est pas disponible, les 9 booléens ne sont pas initialisés.
+- `<cpuid.h>` est inclus sans condition alors que `ANCH_CPU_DETECTION` est `ON` par défaut : sur une autre architecture, tout module qui inclut `cpu.hpp` (dont `anch-crypto`) ne compile pas.
+- `anch_cpuid`, une fonction libre publique hors namespace, n'est utilisée que par le constructeur.
+Correction : membres initialisés à `false`, `__get_cpuid` (qui contrôle la feuille maximale) avec les constantes `bit_*` de `<cpuid.h>`, protégé par `__x86_64__` / `__i386__` : toutes les fonctionnalités sont à `false` sur les autres architectures. `anch_cpuid` et sa variante Windows sont supprimées. Test `cpu-features` : chaque fonctionnalité est comparée à `__builtin_cpu_supports` de GCC.
+
+### Tests réseau — **2026-11-10**
+`anch-device-valid-network-interface` et `anch-device-invalid-network-interface` (affichage et code de retour, incompatibles avec la nouvelle API) sont remplacés par `anch-device-network-test` (anch-ut). Chaque information est comparée à une source indépendante :
+- noms : `if_nameindex` ;
+- IPv4, masque et broadcast : `ioctl` ;
+- IPv6 : `/proc/net/if_inet6` ;
+- adresse matérielle, MTU, drapeaux et métrique : `/sys/class/net`.
+Les tests passent sur l'hôte, et dans un espace de noms réseau avec un tun point à point, une dummy sans IPv4, une étiquette `dum0:1`, plusieurs IPv4 sur une interface, un `/32 brd +` et de l'IPv6. Ils sont propres sous ASan / UBSan.
 
 Remarque : la RFC 9562 recommande la v7 plutôt que la v1 / v6 pour les nouveaux usages (pas d'exposition de l'adresse MAC, tri chronologique) ; `anch-uuid` la fournit (`UUID::randomTime`).
 

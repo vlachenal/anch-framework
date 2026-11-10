@@ -19,37 +19,31 @@
 */
 #pragma once
 
-#include <iostream>
-#include <exception>
+#include <cerrno>
+#include <string>
+#include <system_error>
 
 namespace anch::device {
 
   /*!
-   * Device exception class.
+   * \brief Device error
+   *
+   * The \c errno value of the failed system call is available with \c code() ( \c std::generic_category ) and its
+   * description is appended to the message returned by \c what() .
    *
    * \author Vincent Lachenal
    */
-  class DeviceException : public std::exception {
-  private:
-    /*! Exception message */
-    std::string _message;
+  class DeviceException: public std::system_error {
 
   public:
     // Constructors +
     /*!
      * \ref DeviceException constructor
      *
-     * \param message The error message
+     * \param message the error message
+     * \param errnum the \c errno value (default to current \c errno )
      */
-    DeviceException(const std::string& message) noexcept;
-
-    /*!
-     * \ref DeviceException constructor
-     *
-     * \param message The error message
-     * \param errorCode The error code
-     */
-    DeviceException(const std::string& message, int errorCode) noexcept;
+    explicit DeviceException(const std::string& message, int errnum = errno);
     // Constructors -
 
     // Destructor +
@@ -59,16 +53,6 @@ namespace anch::device {
     virtual ~DeviceException() noexcept;
     // Destructor -
 
-  public:
-    // Methods +
-    /*!
-     * Return the error message
-     *
-     * \return The error message
-     */
-    virtual const char* what() const noexcept;
-    // Methods -
-
   };
 
-}
+}  // anch::device

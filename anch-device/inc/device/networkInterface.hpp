@@ -19,28 +19,36 @@
 */
 #pragma once
 
-#include <iostream>
-
-#include <net/if.h>
-
-#include "device/deviceException.hpp"
+#include <string>
+#include <vector>
 
 
 namespace anch::device {
 
+  class Network;
+
   /*!
-   * Network interface
+   * \brief Network interface
+   *
+   * Snapshot of a network interface configuration built by \ref Network . Every information is optional: an empty
+   * string (or \c 0 ) means that the interface does not have it (no IPv4 address, no broadcast address on a
+   * point-to-point interface, no hardware address on a tunnel, ...).
    *
    * \author Vincent Lachenal
    */
   class NetworkInterface {
+    friend class anch::device::Network;
+
   private:
     // Attributes +
     /*! Interface name */
     std::string _name;
 
-    /*! Interface IPV4 address */
+    /*! Interface (first) IPv4 address */
     std::string _ipAddress;
+
+    /*! Interface IPv6 addresses */
+    std::vector<std::string> _ipv6Addresses;
 
     /*! Hardware address */
     std::string _macAddress;
@@ -48,7 +56,7 @@ namespace anch::device {
     /*! Interface broadcast address */
     std::string _broadcastAddress;
 
-    /*! Interface netmask */
+    /*! Interface IPv4 netmask */
     std::string _netmask;
 
     /*! Interface MTU */
@@ -57,29 +65,22 @@ namespace anch::device {
     /*! Interface metric */
     int _metric;
 
+    /*! Interface is up */
+    bool _up;
+
     /*! Interface is local loopback */
     bool _localhost;
     // Attributes -
 
-  public:
-    // Constructor +
+  private:
+    // Constructors +
     /*!
-     * \ref NetworkInterface constructor.
+     * \ref NetworkInterface constructor: interface without any information.
      *
-     * \param interface data retrieved through \c ioctl POSIX call
-     * \param isLocalhost interface is local loopback
-     *
-     * \throw anch::device::DeviceException Device error
+     * \param name the interface name
      */
-    NetworkInterface(const struct ifreq& interface, bool isLocalhost);
-    // Constructor -
-
-    // Destructor +
-    /*!
-     * \ref NetworkInterface destructor
-     */
-    virtual ~NetworkInterface();
-    // Destructor -
+    explicit NetworkInterface(const std::string& name);
+    // Constructors -
 
   public:
     // Accessors +
@@ -91,57 +92,75 @@ namespace anch::device {
     inline const std::string& getName() const;
 
     /*!
-     * Interface IP address getter
+     * Interface IPv4 address getter. When the interface has several IPv4 addresses, the first one is returned.
      *
-     * \return The interface IP address
+     * \return The interface IPv4 address, empty if none
      */
     inline const std::string& getIpAddress() const;
 
     /*!
+     * Interface IPv6 addresses getter. Link-local addresses have their scope ( \c %<interface> ).
+     *
+     * \return The interface IPv6 addresses
+     *
+     * \since 0.2
+     */
+    inline const std::vector<std::string>& getIpv6Addresses() const;
+
+    /*!
      * MAC address getter
      *
-     * \return The MAC address
+     * \return The hardware address (hexadecimal bytes separated by \c : ), empty if none
      */
     inline const std::string& getMacAddress() const;
 
     /*!
      * Interface broadcast address getter
      *
-     * \return The interface broadcast address
+     * \return The interface IPv4 broadcast address, empty if none
      */
     inline const std::string& getBroadcastAddress() const;
 
     /*!
      * Interface netmask getter
      *
-     * \return The interface netmask
+     * \return The interface IPv4 netmask, empty if none
      */
     inline const std::string& getNetmask() const;
 
     /*!
      * Interface MTU getter
      *
-     * \return The interface MTU
+     * \return The interface MTU, \c 0 if unknown
      */
     inline int getMtu() const;
 
     /*!
-     * Interface metric getter
+     * Interface metric getter (Linux always reports \c 0 )
      *
      * \return The interface metric
      */
     inline int getMetric() const;
 
     /*!
+     * Is interface up getter
+     *
+     * \return \c true if interface is up, \c false otherwise
+     *
+     * \since 0.2
+     */
+    inline bool isUp() const;
+
+    /*!
      * Is interface localhost getter
      *
-     * \return \c true if interface is localhost, \c false otherwise
+     * \return \c true if interface is local loopback, \c false otherwise
      */
     inline bool isLocalhost() const;
     // Accessors -
 
   };
 
-}
+}  // anch::device
 
 #include "device/impl/networkInterface.hpp"

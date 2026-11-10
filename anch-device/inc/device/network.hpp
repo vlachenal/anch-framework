@@ -19,9 +19,10 @@
 */
 #pragma once
 
-#include <iostream>
 #include <map>
-#include <mutex>
+#include <memory>
+#include <optional>
+#include <string>
 
 #include "device/networkInterface.hpp"
 #include "device/deviceException.hpp"
@@ -30,36 +31,24 @@
 namespace anch::device {
 
   /*!
-   * Network device utilities class
+   * \brief Network interfaces
+   *
+   * Network interfaces are listed with \c getifaddrs : every interface is listed, with or without IP address, with its
+   * IPv4 and IPv6 addresses. They are loaded on first access and kept until \ref reload .\n
+   * Interfaces are returned by copy: a \ref reload does not invalidate what has been retrieved before, and every method
+   * can be called concurrently.
    *
    * \author Vincent Lachenal
    */
   class Network {
 
-  private:
-    // Attributes +
-    /*! Network interfaces indexed by their names */
-    static std::map<std::string,anch::device::NetworkInterface>* _interfaces;
-
-    /*! Mutex */
-    static std::mutex MUTEX;
-    // Attributes -
-
-  private:
+  public:
     // Constructors +
     /*!
-     * Network configuration private constructor
+     * Utility class: no instance
      */
-    Network();
+    Network() = delete;
     // Constructors -
-
-  public:
-    // Destructors +
-    /*!
-     * Network configuration destructor
-     */
-    virtual ~Network();
-    // Destructors -
 
   public:
     // Methods +
@@ -68,23 +57,23 @@ namespace anch::device {
      *
      * \param ifName the interface name
      *
-     * \return the interface if found, \c NULL otherwise
+     * \return the interface if found, \c std::nullopt otherwise
      *
      * \throw anch::device::DeviceException Network interfaces error
      */
-    static const anch::device::NetworkInterface* getInterface(const std::string& ifName);
+    static std::optional<anch::device::NetworkInterface> getInterface(const std::string& ifName);
 
     /*!
      * Retrieve all network interfaces.
      *
-     * \return the network interfaces
+     * \return the network interfaces indexed by their names
      *
      * \throw anch::device::DeviceException Network interfaces error
      */
-    static const std::map<std::string,anch::device::NetworkInterface>& getInterfaces();
+    static std::map<std::string,anch::device::NetworkInterface> getInterfaces();
 
     /*!
-     * Reload network interfaces
+     * Reload network interfaces. On error, the previously loaded interfaces are kept.
      *
      * \throw anch::device::DeviceException Network interfaces error
      */
@@ -92,13 +81,24 @@ namespace anch::device {
 
   private:
     /*!
-     * Load network interfaces
+     * Get current network interfaces snapshot (loaded on first call)
+     *
+     * \return the network interfaces
      *
      * \throw anch::device::DeviceException Network interfaces error
      */
-    static void load();
+    static std::shared_ptr<const std::map<std::string,anch::device::NetworkInterface>> snapshot();
+
+    /*!
+     * Load network interfaces
+     *
+     * \return the network interfaces
+     *
+     * \throw anch::device::DeviceException Network interfaces error
+     */
+    static std::map<std::string,anch::device::NetworkInterface> load();
     // Methods -
 
   };
 
-}
+}  // anch::device

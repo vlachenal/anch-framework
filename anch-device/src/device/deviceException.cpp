@@ -19,35 +19,18 @@
 */
 #include "device/deviceException.hpp"
 
-#include <errno.h>
-#include <netdb.h>
-
-
-using std::string;
-
 using anch::device::DeviceException;
 
 
 // Constructors +
-DeviceException::DeviceException(const string& message) noexcept :
-  _message(message) {
-  // Do nothing
-}
-
-DeviceException::DeviceException(const string& message, int errorCode) noexcept {
-  _message = message + ": " + ::gai_strerror(errorCode);
+DeviceException::DeviceException(const std::string& message, int errnum):
+  std::system_error(errnum, std::generic_category(), message) {
+  // Nothing to do
 }
 // Constructors -
 
 // Destructor +
 DeviceException::~DeviceException() noexcept {
-  // Do nothing
+  // Nothing to do
 }
 // Destructor -
-
-// Methods +
-const char*
-DeviceException::what() const noexcept {
-  return _message.data();
-}
-// Methods -
