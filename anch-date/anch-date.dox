@@ -27,7 +27,11 @@
  * \ref anch::date::DateFormatter::registerFormatterPart .\n
  * Parsing is strict: every field has a fixed size, constant parts have to match and impossible dates are refused.\n
  *\n
- * For simple formatting, \c std::format with \c std::chrono specifiers can also be used on the converted time point.
+ * For simple formatting, \c std::format with \c std::chrono specifiers can also be used on the converted time point.\n
+ *\n
+ * \ref anch::date::rfc3339 formats and parses RFC 3339 dates (JSON schema and OpenAPI \c date-time and \c date
+ * formats): \c date-time is a \ref anch::date::Date (written in UTC or with the local offset), \c full-date is a
+ * \c std::chrono::year_month_day . anch-json uses them for these types when \c ANCH_DATE is \c ON .
  *
  * \section date_example_sec Example
  *
@@ -39,5 +43,14 @@
  formatter.format(anch::date::Date(), str);                     // now
  anch::date::Date date = formatter.parse("2012-10-23 10:02:59.998");
  std::time_t time = static_cast<std::time_t>(date);
+ \endcode
+ *
+ * \code{.cpp}
+ #include "date/rfc3339.hpp"
+
+ anch::date::Date date = anch::date::rfc3339::parseDateTime("2025-07-01T12:00:00.5+02:00");
+ std::string utc = anch::date::rfc3339::formatDateTime(date);                                  // 2025-07-01T10:00:00.500Z
+ std::string local = anch::date::rfc3339::formatDateTime(date, anch::date::rfc3339::Offset::LOCAL);
+ std::chrono::year_month_day day = anch::date::rfc3339::parseDate("2024-02-29");
  \endcode
  */

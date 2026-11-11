@@ -24,3 +24,15 @@ set_tests_properties(
   date-parse-reset date-parse-milliseconds date-parse-invalid date-formatter-ownership date-unknown-pattern
   PROPERTIES ENVIRONMENT "TZ=Europe/Paris")
 # Date computations and parsing (TZ is set to check daylight saving time) -
+
+# RFC 3339 +
+anch_add_executable(anch-date-rfc3339-test SOURCES testRfc3339.cpp LIBS anch::date anch::ut)
+
+add_test(NAME rfc3339-format-utc COMMAND anch-date-rfc3339-test -t rfc3339-format-utc)
+add_test(NAME rfc3339-format-local COMMAND anch-date-rfc3339-test -t rfc3339-format-local)
+add_test(NAME rfc3339-parse COMMAND anch-date-rfc3339-test -t rfc3339-parse)
+add_test(NAME rfc3339-leap-second COMMAND anch-date-rfc3339-test -t rfc3339-leap-second)
+add_test(NAME rfc3339-parse-invalid COMMAND anch-date-rfc3339-test -t rfc3339-parse-invalid)
+add_test(NAME rfc3339-date COMMAND anch-date-rfc3339-test -t rfc3339-date)
+set_tests_properties(rfc3339-format-local PROPERTIES ENVIRONMENT "TZ=Europe/Paris")
+# RFC 3339 -
