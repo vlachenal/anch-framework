@@ -185,3 +185,9 @@ Correction :
 - [x] Tests aller-retour avec `"`, `\`, `\n` et caractères de contrôle (`json-ser-escape`) ; lecture de `\u00e9`, `\uD83D\uDE00` (J2).
 - [x] Test de non-régression pour la profondeur (J8).
 - [ ] Analyser les exposants et `-0` dans le lexer des flottants.
+
+### J14. Objets ignorés de plus d'un champ refusés — vérifié — **corrigé le 2026-11-10**
+`lexUnknownObject` (`unknownLexer.cpp`) consommait un caractère de trop après chaque `,` : le `discard()` de fin de boucle avalait le `"` du champ suivant, que le `discard()` du début de boucle attendait. Avec `deserialize_ignore_unknown_field`, tout objet ignoré d'au moins deux champs faisait échouer la lecture (« Unexpected character 'b' found … »), y compris dans un tableau ignoré. Les tests existants n'ignoraient que des objets vides ou d'un seul champ.
+Trouvé en lisant des documents OpenAPI avec `anch-oas` (champs `paths`, `example`, … ignorés).
+Correction : suppression du `discard()` en trop. Test `json-deser-unknown-object` (objet vide, un champ, deux champs, objets imbriqués avec espaces, tableau d'objets), qui échoue avant correction.
+

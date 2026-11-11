@@ -107,7 +107,6 @@ lexUnknownObject(anch::json::ReaderContext& context) {
     if(current != anch::json::FIELD_SEPARATOR) {
       throw anch::json::MappingError(ErrorCode::INVALID_FORMAT, context);
     }
-    current = context.discard();
   } while(true);
 }
 

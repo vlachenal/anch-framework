@@ -53,10 +53,3 @@ PrimitiveMapper<std::string>::deserializeValue(std::string& value, anch::json::R
 
 template class PrimitiveMapper<std::string>;
 // PrimitiveMapper specialization for std::string -
-
-// PrimitiveMapper specialization for anch::date::Date +
-#ifdef ANCH_DATE
-#include "date/date.hpp"
-using anch::date::Date;
-#endif
-// PrimitiveMapper specialization for anch::date::Date -

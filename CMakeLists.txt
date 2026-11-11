@@ -34,6 +34,7 @@ option(ANCH_BUILD_APP "Build anch-app" OFF)
 
 # Features
 option(ANCH_UUID "AnCH UUID support in anch-json" ON)
+option(ANCH_DATE "AnCH date support in anch-json (RFC 3339 date-time and full-date)" ON)
 option(ANCH_JSON_UTILS "Build anch-json utilities (JSON formatter)" ON)
 option(ANCH_CPU_AES "Activate native AES support" OFF)
 option(ANCH_CPU_DETECTION "Activate CPU features detection" ON)

@@ -32,6 +32,8 @@
 #endif
 
 #ifdef ANCH_DATE
+#include <chrono>
+
 #include "date/date.hpp"
 #endif
 
@@ -84,6 +86,11 @@ namespace anch::json {
 #ifdef ANCH_DATE
   template<>
   constexpr bool isPrimitive<anch::date::Date>() {
+    return true;
+  }
+
+  template<>
+  constexpr bool isPrimitive<std::chrono::year_month_day>() {
     return true;
   }
 #endif

@@ -5,6 +5,10 @@ if(ANCH_UUID)
   list(APPEND json_public_deps anch::uuid)
   list(APPEND json_public_definitions ANCH_UUID)
 endif()
+if(ANCH_DATE)
+  list(APPEND json_public_deps anch::date)
+  list(APPEND json_public_definitions ANCH_DATE)
+endif()
 
 anch_add_library(anch-json
   PUBLIC_DEPS ${json_public_deps}

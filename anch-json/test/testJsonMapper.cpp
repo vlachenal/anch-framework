@@ -11,6 +11,10 @@
 #include "uuid.hpp"
 #endif
 
+#ifdef ANCH_DATE
+#include "date/date.hpp"
+#endif
+
 #include "ut/assert.hpp"
 #include "ut/unit.hpp"
 
@@ -1118,6 +1122,21 @@ testDeserMaxDepthMapped() {
 }
 // Nesting depth -
 
+// Objects in ignored fields +
+void
+testDeserUnknownObject() {
+  anch::json::JSONMapper mapper({.deserialize_ignore_unknown_field = true, .deserialize_max_discard_char = -1});
+  for(const char* value : {"{}", "{\"a\":1}", "{\"a\":1,\"b\":2}", "{ \"a\" : 1 , \"b\" : { \"c\" : [ 1 , { \"d\" : 2 , \"e\" : 3 } ] } , \"f\" : \"g\" }",
+			   "[{\"a\":1,\"b\":2},{\"c\":3,\"d\":{}}]"}) {
+    std::string json = std::string("{\"u\":") + value + ",\"s\":\"a\"}";
+    std::cout << "Deserialize " << json << std::endl;
+    auto iss = std::istringstream(json);
+    TestStr res = mapper.deserialize<TestStr>(iss);
+    anch::ut::assertThat(res._s == "a", "{}: s should be 'a' ; found '{}'", json, res._s);
+  }
+}
+// Objects in ignored fields -
+
 // Numbers in ignored fields +
 void
 testDeserUnknownNumber() {
@@ -1223,6 +1242,89 @@ testDeserUuidKO() {
 #endif // ANCH_UUID
 // UUID -
 
+// Dates +
+#ifdef ANCH_DATE
+struct TestDate {
+  anch::date::Date _timestamp{false};
+  std::optional<anch::date::Date> _updated;
+  std::chrono::year_month_day _birth{};
+  std::vector<std::chrono::year_month_day> _days;
+};
+
+template<>
+void
+anch::json::registerObject(ObjectMapper<TestDate>& mapper) {
+  mapper
+    .registerField("timestamp", &TestDate::_timestamp)
+    .registerField<anch::date::Date>("updated", &TestDate::_updated)
+    .registerField("birth", &TestDate::_birth)
+    .registerField<std::chrono::year_month_day>("days", &TestDate::_days)
+    ;
+}
+
+void
+testDeserDate() {
+  using namespace std::chrono;
+  anch::json::JSONMapper mapper(anch::json::DEFAULT_MAPPING_OPTIONS);
+  auto iss = std::istringstream(R"({"timestamp":"2025-07-01T12:00:00.5+02:00","updated":null,"birth":"2024-02-29","days":["2025-01-01","2025-12-31"]})");
+  TestDate res = mapper.deserialize<TestDate>(iss);
+  auto nanos = duration_cast<nanoseconds>(static_cast<system_clock::time_point>(res._timestamp).time_since_epoch()).count();
+  anch::ut::assertThat(nanos == 1751364000500000000, "Invalid timestamp: {}", nanos);
+  anch::ut::assertThat(!res._updated.has_value(), "updated should be empty");
+  anch::ut::assertThat(res._birth == 2024y/February/29d, "Invalid birth");
+  anch::ut::assertThat((res._days == std::vector<year_month_day>{2025y/January/1d, 2025y/December/31d}), "Invalid days");
+}
+
+void
+testSerDate() {
+  using namespace std::chrono;
+  TestDate value;
+  value._timestamp = anch::date::Date(system_clock::time_point(nanoseconds(1751364000123000000)));
+  value._updated = anch::date::Date(static_cast<std::time_t>(0));
+  value._birth = 2024y/February/29d;
+  value._days = {2025y/January/1d};
+  anch::json::JSONMapper mapper(anch::json::DEFAULT_MAPPING_OPTIONS);
+  std::string json = mapper.serialize(value);
+  std::string expected = R"({"timestamp":"2025-07-01T10:00:00.123Z","updated":"1970-01-01T00:00:00Z","birth":"2024-02-29","days":["2025-01-01"]})";
+  anch::ut::assertThat(json == expected, "Expected {} ; found {}", expected, json);
+  auto iss = std::istringstream(json);
+  TestDate copy = mapper.deserialize<TestDate>(iss);
+  anch::ut::assertThat(copy._timestamp == value._timestamp && copy._updated == value._updated
+                       && copy._birth == value._birth && copy._days == value._days, "Round trip failed");
+  // Invalid full-date is not serialized +
+  value._birth = year_month_day{};
+  try {
+    json = mapper.serialize(value);
+    anch::ut::fail("Invalid date should not be serialized");
+  } catch(const std::invalid_argument& e) {
+    std::cout << e.what() << std::endl;
+  }
+  // Invalid full-date is not serialized -
+}
+
+void
+testDeserDateKO() {
+  anch::json::JSONMapper mapper(anch::json::DEFAULT_MAPPING_OPTIONS);
+  for(const char* json : {R"({"timestamp":"2025-07-01 10:00:00Z"})", R"({"timestamp":"2025-07-01"})",
+                          R"({"timestamp":"3000-01-01T00:00:00Z"})", R"({"birth":"2025-02-29"})",
+                          R"({"days":["2025-01-01T00:00:00Z"]})"}) {
+    std::cout << "Deserialize " << json << std::endl;
+    try {
+      auto iss = std::istringstream(json);
+      [[maybe_unused]] TestDate res = mapper.deserialize<TestDate>(iss);
+      anch::ut::fail("This test should have failed");
+    } catch(const MappingError& e) {
+      if(e.getErrorCode() != ErrorCode::INVALID_FORMAT) {
+        throw;
+      }
+      std::cout << e.what() << std::endl;
+      anch::ut::assertThat(std::string(e.what()).starts_with("Invalid RFC 3339 "), "Message should come from RFC 3339 parser ; found '{}'", e.what());
+    }
+  }
+}
+#endif // ANCH_DATE
+// Dates -
+
 void
 anch::ut::setup(anch::ut::UnitTests& tests) {
   tests
@@ -1265,6 +1367,7 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("json-deser-max-depth-unknown", testDeserMaxDepthUnknown)
     .add("json-deser-max-depth-unknown-limit", testDeserMaxDepthUnknownLimit)
     .add("json-deser-max-depth-mapped", testDeserMaxDepthMapped)
+    .add("json-deser-unknown-object", testDeserUnknownObject)
     .add("json-deser-unknown-number", testDeserUnknownNumber)
     .add("json-deser-unknown-number-ko", testDeserUnknownNumberKO)
     .add("json-error-message", testErrorMessage)
@@ -1272,6 +1375,11 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
 #ifdef ANCH_UUID
     .add("json-deser-uuid", testDeserUuid)
     .add("json-deser-uuid-ko", testDeserUuidKO)
+#endif
+#ifdef ANCH_DATE
+    .add("json-deser-date", testDeserDate)
+    .add("json-ser-date", testSerDate)
+    .add("json-deser-date-ko", testDeserDateKO)
 #endif
     ;
 }
