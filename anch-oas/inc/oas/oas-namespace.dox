@@ -1,0 +1,7 @@
+/*!
+ * \namespace anch::oas
+ *
+ * \brief OpenAPI namespace.
+ *
+ * It contains OpenAPI 3.0 document parsing and code generation (models).
+ */

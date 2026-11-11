@@ -1,0 +1,105 @@
+/*! \page page_oas AnCH OAS library documentation
+ *
+ * \tableofcontents
+ *
+ * \section oas_intro_seq Introduction
+ *
+ * AnCH OAS library parses OpenAPI 3.0 documents and generates C++ code from them. Only models are generated for now:
+ * \c anch-oas-gen generates C++ structures and enumerations from the document schemas ( \c components.schemas ) with
+ * their \ref page_json "anch-json" mappers, so that API payloads can be deserialized (and serialized) with
+ * \c anch::json::deserialize and \c anch::json::serialize .
+ *
+ * \section oas_prereq_sec Prerequisites
+ *
+ * AnCH OAS depends on \ref page_json "anch-json" (document parsing) and \ref page_cli "anch-cli" ( \c anch-oas-gen
+ * arguments). Generated code depends on anch-json, on anch-uuid when \c uuid format is used, and on
+ * \ref page_date "anch-date" when \c date-time or \c date formats are used (linked by anch-json when \c ANCH_DATE is
+ * \c ON ).\n
+ * Documents have to be in JSON format (YAML is not supported). Swagger 2.0 and OpenAPI 3.1 documents are refused.
+ *
+ * \section oas_install_sec Installation
+ *
+ * \c anch-oas is built with \c ANCH_BUILD_OAS option (\c ON by default) ; \c cmake \c --install installs
+ * \c anch-oas-gen with the libraries.
+ *
+ * \section oas_usage_sec Usage
+ *
+ * \code{.sh}
+anch-oas-gen -i petstore.json -o gen -n petstore::model -f petstore   # generates gen/petstore.hpp and gen/petstore.cpp
+cat petstore.json | anch-oas-gen -o gen                              # document on standard input: gen/models.hpp and gen/models.cpp
+ * \endcode
+ *
+ * Options:
+ * - \c -i / \c --input : OpenAPI document (default to standard input) ;
+ * - \c -o / \c --output : output directory, created when needed (default to current directory) ;
+ * - \c -n / \c --namespace : models namespace (default to \c model ) ;
+ * - \c -f / \c --file : generated files base name (default to \c models ) ;
+ * - \c --no-uuid : \c uuid format is mapped to \c std::string instead of \c anch::UUID ;
+ * - \c --no-date : \c date-time and \c date formats are mapped to \c std::string instead of \c anch::date::Date and
+ *   \c std::chrono::year_month_day ;
+ * - \c --strict : unsupported schemas raise an error instead of a warning.
+ *
+ * Unchanged files are not rewritten. With CMake, a stamp file tracks the generation:
+ * \code{.cmake}
+set(models_dir ${CMAKE_CURRENT_BINARY_DIR}/gen)
+add_custom_command(
+  OUTPUT ${models_dir}/petstore.stamp
+  BYPRODUCTS ${models_dir}/petstore.hpp ${models_dir}/petstore.cpp
+  COMMAND anch-oas-gen -i ${CMAKE_CURRENT_SOURCE_DIR}/petstore.json -o ${models_dir} -n petstore::model -f petstore
+  COMMAND ${CMAKE_COMMAND} -E touch ${models_dir}/petstore.stamp
+  DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/petstore.json)
+add_custom_target(petstore-models DEPENDS ${models_dir}/petstore.stamp)
+add_executable(petstore main.cpp ${models_dir}/petstore.cpp)
+add_dependencies(petstore petstore-models)
+target_include_directories(petstore PRIVATE ${models_dir})
+target_link_libraries(petstore PRIVATE anch::json anch::uuid)
+ * \endcode
+ *
+ * Generated models are used with anch-json:
+ * \code{.cpp}
+#include "petstore.hpp"
+#include "json/json.hpp"
+
+petstore::model::Pet pet = anch::json::deserialize<petstore::model::Pet>(input);
+ * \endcode
+ *
+ * \section oas_mapping_sec Mapping
+ *
+ * | OpenAPI schema | C++ type |
+ * |----------------|----------|
+ * | \c string ( \c uuid format) | \c std::string ( \c anch::UUID ) |
+ * | \c string ( \c date-time format) | \c anch::date::Date (RFC 3339, written in UTC) |
+ * | \c string ( \c date format) | \c std::chrono::year_month_day (RFC 3339 \c full-date ) |
+ * | \c integer ( \c int32 format) | \c int64_t ( \c int32_t ) |
+ * | \c number ( \c float format) | \c double ( \c float ) |
+ * | \c boolean | \c bool |
+ * | string \c enum | <tt>enum class</tt> (unknown values are refused) |
+ * | object with \c properties , \c allOf | \c struct |
+ * | \c array | \c std::vector |
+ * | object with \c additionalProperties schema only | <tt>std::map<std::string,T></tt> |
+ * | other component schema | alias ( \c using ) |
+ *
+ * - Optional and \c nullable properties are \c std::optional ; arrays and maps are empty when absent.
+ * - Inline objects and enumerations are named after their path: \c <Model><Property> , \c <Model><Property>Item for
+ *   array items and \c <Model><Property>Value for map values.
+ * - \c allOf merges the properties of every schema: inherited properties keep the types of the model which declares
+ *   them.
+ * - Recursive references (a model which contains itself directly or through other models) are \c std::shared_ptr ;
+ *   recursion through arrays and maps does not need pointers.
+ * - Member names are property names where invalid characters are replaced by \c _ ; C++ keywords and macros get a
+ *   \c _ suffix ( \c class → \c class_ ). Enumeration values are upper case words ( \c in-stock and \c inStock →
+ *   \c IN_STOCK ).
+ * - Properties are declared in alphabetical order (anch-json maps are ordered).
+ *
+ * \section oas_limits_sec Limitations
+ *
+ * The following schemas are not generated (warning, or error with \c --strict ):
+ * - \c oneOf / \c anyOf compositions (anch-json does not support polymorphism) ;
+ * - free-form objects and schemas without type (anch-json has no generic JSON value type) ;
+ * - nested containers: array of arrays, map of arrays, ... ;
+ * - references outside \c #/components/schemas/ .
+ *
+ * Required properties are not checked on deserialization (anch-json does not check missing fields), and properties
+ * which have not been generated are unknown fields for anch-json: use \c deserialize_ignore_unknown_field to accept
+ * them.
+ */

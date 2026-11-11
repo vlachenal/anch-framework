@@ -31,6 +31,7 @@ option(ANCH_BUILD_CRYPTO "Build anch-crypto" ON)
 option(ANCH_BUILD_SQL "Build anch-sql" ON)
 option(ANCH_BUILD_REST "Build anch-rest" OFF)
 option(ANCH_BUILD_APP "Build anch-app" OFF)
+option(ANCH_BUILD_OAS "Build anch-oas (OpenAPI models generator)" ON)
 
 # Features
 option(ANCH_UUID "AnCH UUID support in anch-json" ON)
@@ -99,6 +100,9 @@ if(ANCH_BUILD_REST)
 endif()
 if(ANCH_BUILD_APP)
   add_subdirectory(anch-app)
+endif()
+if(ANCH_BUILD_OAS)
+  add_subdirectory(anch-oas)
 endif()
 # Modules -
 
