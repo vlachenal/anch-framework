@@ -1,0 +1,53 @@
+# Build and test with AddressSanitizer and UndefinedBehaviorSanitizer (asan preset)
+name: asan
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  asan:
+    name: ASan / UBSan
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    # Arch Linux: recent GCC (>= 13 required), same toolchain as development environment
+    container:
+      image: archlinux:base-devel
+      # LeakSanitizer needs ptrace
+      options: --cap-add SYS_PTRACE
+    steps:
+      - name: Install dependencies
+        run: pacman -Syu --noconfirm --needed git cmake pkgconf openssl sqlite mariadb postgresql
+
+      - uses: actions/checkout@v4
+
+      - name: Start MariaDB and PostgreSQL
+        run: sh .github/scripts/start-databases.sh .
+
+      - name: Configure
+        run: |
+          gcc --version | head -1
+          cmake --preset asan
+
+      - name: Build
+        run: cmake --build --preset asan --parallel "$(nproc)"
+
+      - name: Test
+        run: ctest --preset asan
+
+      - name: Upload test logs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: asan-test-logs
+          path: |
+            build/asan/Testing/Temporary/LastTest*.log
+            /tmp/mariadb.log
+            /tmp/postgresql.log
+          if-no-files-found: ignore
