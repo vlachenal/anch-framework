@@ -23,7 +23,7 @@ jobs:
       options: --cap-add SYS_PTRACE
     steps:
       - name: Install dependencies
-        run: pacman -Syu --noconfirm --needed git cmake pkgconf openssl sqlite mariadb postgresql
+        run: pacman -Syu --noconfirm --needed git cmake pkgconf openssl sqlite mariadb postgresql curl
 
       - uses: actions/checkout@v4
 
@@ -33,7 +33,7 @@ jobs:
       - name: Configure
         run: |
           gcc --version | head -1
-          cmake --preset asan
+          cmake --preset asan -DANCH_BUILD_REST=ON
 
       - name: Build
         run: cmake --build --preset asan --parallel "$(nproc)"

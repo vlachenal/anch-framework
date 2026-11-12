@@ -8,8 +8,8 @@ Réécriture décidée et terminée le 2026-11-12 : conception et étapes dans [
 
 - **Étape 1 terminée le 2026-11-12** : `anch-rest-common` (modèle HTTP, codecs `Json` / `Text`) et `anch-rest-server` (`Api` : déclaration des endpoints, routage, négociation, filtres) ; 17 tests, propres sous ASan / UBSan.
 - **Étape 2 terminée le 2026-11-12** : `anch-rest-client` (`Client`, `Call`, `Transport`, filtres d'authentification) et `anch-rest-curl` (`CurlTransport`, option `ANCH_REST_CURL`) ; 16 tests de plus (33 au total), dont 8 de bout en bout contre un serveur HTTP de test (anch-network), propres sous ASan / UBSan.
-- **Étape 3 terminée le 2026-11-12** : module nginx en C (`ngx_http_anch_rest_module`, directives `anch_rest_app` et `anch_rest_thread_pool`), ABI C et pont C++ `anch-rest-nginx` (`ANCH_REST_APPLICATION`, option `ANCH_REST_NGINX`) ; 5 tests du pont par `dlopen` (38 au total), et test d'intégration `nginx/test/run-nginx-test.sh` validé avec nginx 1.30.6 (18 vérifications, pool de threads non bloquant) ; il ne tourne pas en CI.
-- Toujours désactivé par défaut (`ANCH_BUILD_REST=OFF`).
+- **Étape 3 terminée le 2026-11-12** : module nginx en C (`ngx_http_anch_rest_module`, directives `anch_rest_app` et `anch_rest_thread_pool`), ABI C et pont C++ `anch-rest-nginx` (`ANCH_REST_APPLICATION`, option `ANCH_REST_NGINX`) ; 5 tests du pont par `dlopen` (38 au total), et test d'intégration `nginx/test/run-nginx-test.sh` validé avec nginx 1.30.6 (18 vérifications, pool de threads non bloquant).
+- Toujours désactivé par défaut (`ANCH_BUILD_REST=OFF`), mais activé en CI : tests sous ASan / UBSan dans le job `asan`, module testé avec nginx 1.30.6 par le workflow `nginx` (version et SHA-256 de l'archive dans `.github/workflows/nginx.yml`).
 
 ## Ancien code (avant réécriture)
 
