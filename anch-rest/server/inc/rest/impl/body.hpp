@@ -1,6 +1,6 @@
 /*
   ANCH Framework: ANother C++ Hack is a C++ framework based on C++11 standard
-  Copyright (C) 2020 Vincent Lachenal
+  Copyright (C) 2012 Vincent Lachenal
 
   This file is part of ANCH Framework.
 
@@ -19,46 +19,41 @@
 */
 #pragma once
 
-#include <exception>
-#include <string>
-
 namespace anch::rest {
 
-  class MapperException: public std::exception {
-    // Attributes +
-  private:
-    /*! The error message */
-    std::string _msg;
-    // Attributes -
+  template<typename T>
+  Body<T>::Body(T value): _value(std::move(value)) {
+    // Nothing to do
+  }
 
-    // Constructors +
-  public:
-    /*!
-     * \ref MapperException constructor
-     *
-     * \param msg the error message
-     */
-    MapperException(const std::string& msg);
-    // Constructors -
+  template<typename T>
+  T&
+  Body<T>::operator*() noexcept {
+    return _value;
+  }
 
-    // Destructor +
-  public:
-    /*!
-     * \ref MapperException destructor
-     */
-    virtual ~MapperException();
-    // Destructor -
+  template<typename T>
+  const T&
+  Body<T>::operator*() const noexcept {
+    return _value;
+  }
 
-    // Methods +
-  public:
-    /*!
-     * Returns error message
-     *
-     * \return the error message
-     */
-    virtual const char* what() const noexcept override;
-    // Methods -
+  template<typename T>
+  T*
+  Body<T>::operator->() noexcept {
+    return &_value;
+  }
 
-  };
+  template<typename T>
+  const T*
+  Body<T>::operator->() const noexcept {
+    return &_value;
+  }
 
-}  // anch::rest
+  template<typename T>
+  T&
+  Body<T>::get() noexcept {
+    return _value;
+  }
+
+}

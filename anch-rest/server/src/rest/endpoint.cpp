@@ -1,6 +1,6 @@
 /*
   ANCH Framework: ANother C++ Hack is a C++ framework based on C++11 standard
-  Copyright (C) 2020 Vincent Lachenal
+  Copyright (C) 2012 Vincent Lachenal
 
   This file is part of ANCH Framework.
 
@@ -17,20 +17,33 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "rest/routerException.hpp"
+#include "rest/endpoint.hpp"
 
-using anch::rest::RouterException;
+using anch::rest::Method;
+using anch::rest::Route;
 
-
-RouterException::RouterException(const std::string& msg): _msg(msg) {
+Route::Route(Method method, std::string pattern, std::vector<std::string> parameterNames):
+  _method(method),
+  _pattern(std::move(pattern)),
+  _parameterNames(std::move(parameterNames)) {
   // Nothing to do
 }
 
-RouterException::~RouterException() {
+Route::~Route() {
   // Nothing to do
 }
 
-const char*
-RouterException::what() const noexcept {
-  return _msg.data();
+Method
+Route::getMethod() const noexcept {
+  return _method;
+}
+
+const std::string&
+Route::getPattern() const noexcept {
+  return _pattern;
+}
+
+const std::vector<std::string>&
+Route::getParameterNames() const noexcept {
+  return _parameterNames;
 }

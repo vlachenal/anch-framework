@@ -1,6 +1,6 @@
 /*
   ANCH Framework: ANother C++ Hack is a C++ framework based on C++11 standard
-  Copyright (C) 2020 Vincent Lachenal
+  Copyright (C) 2012 Vincent Lachenal
 
   This file is part of ANCH Framework.
 
@@ -19,31 +19,35 @@
 */
 #pragma once
 
+#include <string>
+#include <type_traits>
+
 namespace anch::rest {
 
-  inline const std::regex&
-  anch::rest::EndPoint::getPathRegex() const {
-    return _pathRegex;
+  inline std::string_view
+  Json::mediaType() noexcept {
+    return "application/json";
   }
 
-  inline bool operator==(const anch::rest::EndPoint& lhs, const anch::rest::EndPoint& rhs) {
-    if(lhs.verb != rhs.verb || lhs.contentType != rhs.contentType || lhs.accept != rhs.accept) {
-      return false;
-    }
-    return lhs.pathPattern == rhs.pathPattern;
-  }
-
-  inline bool operator<(const anch::rest::EndPoint& lhs, const anch::rest::EndPoint& rhs) {
-    if(lhs.pathPattern == rhs.pathPattern) {
-      if(rhs.accept == MediaType::ALL) {
-	return false;
-      }
-      if(rhs.contentType == MediaType::ALL) {
-	return false;
-      }
-      return lhs.verb < rhs.verb || lhs.contentType < rhs.contentType || lhs.accept < rhs.accept;
+  template<typename T>
+  void
+  Json::serialize(const T& value, std::ostream& out) {
+    if constexpr (std::is_same_v<T, std::string>) {
+      // std::string would match anch-json container overload (C<T> with T = char)
+      anch::json::serialize<std::string>(value, out);
     } else {
-      return lhs.pathPattern < rhs.pathPattern;
+      anch::json::serialize(value, out);
+    }
+  }
+
+  template<typename T>
+  void
+  Json::deserialize(T& value, std::istream& input) {
+    if constexpr (std::is_same_v<T, std::string>) {
+      // std::string would match anch-json container overload (C<T> with T = char)
+      anch::json::deserialize<std::string>(value, input);
+    } else {
+      anch::json::deserialize(value, input);
     }
   }
 

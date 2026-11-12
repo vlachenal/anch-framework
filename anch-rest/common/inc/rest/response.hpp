@@ -1,6 +1,6 @@
 /*
   ANCH Framework: ANother C++ Hack is a C++ framework based on C++11 standard
-  Copyright (C) 2020 Vincent Lachenal
+  Copyright (C) 2012 Vincent Lachenal
 
   This file is part of ANCH Framework.
 
@@ -19,291 +19,182 @@
 */
 #pragma once
 
-#include <string>
-#include <sstream>
 #include <functional>
 #include <ostream>
-#include <istream>
-#include <memory>
-#include <map>
+#include <string>
+#include <string_view>
 
 #include "rest/headers.hpp"
-#include "rest/mapperRegistry.hpp"
-
+#include "rest/status.hpp"
 
 namespace anch::rest {
 
+  /*! Response body writer: it is called by the server adapter to write the body */
+  using BodyWriter = std::function<void(std::ostream&)>;
+
   /*!
-   * \brief HTTP response
-   *
-   * HTTP response representation
+   * HTTP response.\n
+   * The body is written by a function when the response is sent, which allows streaming.\n
+   * Setters return the response to chain them, on lvalues and on temporaries:
+   * \code{.cpp}
+return anch::rest::Response(anch::rest::Status::CREATED).header(anch::rest::header::LOCATION, "/pets/1");
+   * \endcode
    *
    * \author Vincent Lachenal
    *
    * \since 0.1
    */
   class Response {
-    class Builder;
 
     // Attributes +
   private:
-    /*! HTTP return code */
-    uint16_t _code;
+    /*! Status */
+    anch::rest::Status _status;
 
-    /*! HTTP headers */
+    /*! Headers */
     anch::rest::Headers _headers;
 
-    /*! Mapper registry */
-    anch::rest::MapperRegistry* _registry;
-
-    /*! Response body */
-    std::function<void(std::ostream&)> _bodyWriter;
-
-    /*! Body input stream */
-    std::shared_ptr<std::istream> _input;
+    /*! Body writer */
+    anch::rest::BodyWriter _body;
     // Attributes -
 
-  public:
     // Constructors +
-    /*!
-     * \ref Response default constructor
-     */
-    Response();
-
+  public:
     /*!
      * \ref Response constructor
      *
-     * \param code the HTTP return code
+     * \param status the status
      */
-    Response(uint16_t code);
-
-    /*!
-     * \ref Response copy constructor
-     *
-     * \param res the \ref Response to move
-     */
-    Response(const Response& res) = delete;
-
-    /*!
-     * \ref Response move constructor
-     *
-     * \param res the \ref Response to move
-     */
-    Response(Response&& res);
+    Response(anch::rest::Status status = anch::rest::Status::OK);
     // Constructors -
 
-  public:
-    // Destructor +
-    /*!
-     * \ref Response destructor
-     */
-    virtual ~Response();
-    // Destructor -
-
     // Methods +
-    /*!
-     * Instanciate a new response builder for fluent API usage
-     *
-     * \return the new builder
-     */
-    static Builder builder();
-    // Methods -
-
-    // Operators +
   public:
     /*!
-     * Move assignement
+     * Set header value
      *
-     * \param other the \ref Response to move
+     * \param name the header name
+     * \param value the header value
      *
-     * \return the new response
+     * \return \c this
      */
-    Response& operator=(Response&& other);
-    // Operators -
-
-    // Accessors +
-    /*!
-     * HTTP status code getter
-     *
-     * \return the code
-     */
-    uint16_t getStatus() const;
+    Response& header(std::string_view name, std::string_view value) &;
 
     /*!
-     * HTTP status code setter
+     * Set header value
      *
-     * \param code the status code to set
+     * \param name the header name
+     * \param value the header value
+     *
+     * \return \c this
      */
-    void setStatus(uint16_t code);
+    Response&& header(std::string_view name, std::string_view value) &&;
 
     /*!
-     * HTTP headers getter
+     * Set \c Content-Type header
      *
-     * \return the headers
+     * \param mediaType the media type
+     *
+     * \return \c this
      */
-    const anch::rest::Headers& getHeaders() const;
+    Response& contentType(std::string_view mediaType) &;
 
     /*!
-     * HTTP headers setter.\n
-     * This method will override every headers previously set.
+     * Set \c Content-Type header
      *
-     * \return the headers
+     * \param mediaType the media type
+     *
+     * \return \c this
      */
-    void setHeaders(const anch::rest::Headers& headers);
+    Response&& contentType(std::string_view mediaType) &&;
 
     /*!
-     * Media type getter
+     * Set body content
      *
-     * \return the media type
+     * \param content the body content
+     *
+     * \return \c this
      */
-    std::string getContentType() const;
+    Response& body(std::string content) &;
 
     /*!
-     * Media type getter
+     * Set body content
      *
-     * \param contentType the media type to set
+     * \param content the body content
+     *
+     * \return \c this
      */
-    void setContentType(const std::string& contentType);
+    Response&& body(std::string content) &&;
 
     /*!
-     * Response body setter
+     * Set body writer
      *
-     * \tparam T the object type
+     * \param writer the function which writes the body
      *
-     * \param body the body to set
+     * \return \c this
      */
-    template<typename T>
-    void setBody(T body);
+    Response& stream(anch::rest::BodyWriter writer) &;
 
     /*!
-     * Write body on output stream
+     * Set body writer
      *
-     * \param out the output stream to write in
+     * \param writer the function which writes the body
+     *
+     * \return \c this
+     */
+    Response&& stream(anch::rest::BodyWriter writer) &&;
+
+    /*!
+     * Check if response has a body
+     *
+     * \return \c true when response has a body
+     */
+    bool hasBody() const noexcept;
+
+    /*!
+     * Write body. Nothing is written when there is no body.
+     *
+     * \param out the output stream
      */
     void writeBody(std::ostream& out) const;
+
+    /*!
+     * Remove body (headers are kept)
+     */
+    void clearBody() noexcept;
+    // Methods -
+
+    // Accessors +
+  public:
+    /*!
+     * Status getter
+     *
+     * \return the status
+     */
+    anch::rest::Status getStatus() const noexcept;
+
+    /*!
+     * Status setter
+     *
+     * \param status the status
+     */
+    void setStatus(anch::rest::Status status) noexcept;
+
+    /*!
+     * Headers getter
+     *
+     * \return the headers
+     */
+    anch::rest::Headers& getHeaders() noexcept;
+
+    /*!
+     * Headers getter
+     *
+     * \return the headers
+     */
+    const anch::rest::Headers& getHeaders() const noexcept;
     // Accessors -
 
   };
 
-  /*!
-   * \brief HTTP response builder
-   *
-   * HTTP \ref Response builder
-   *
-   * \author Vincent Lachenal
-   *
-   * \since 0.1
-   */
-  class Response::Builder {
-  private:
-    /*! HTTP response */
-    Response _response;
-
-  public:
-    // Constructors +
-    /*!
-     * \ref Builder default constructor
-     */
-    Builder();
-
-    /*!
-     * \ref Builder move constructor
-     *
-     * \param builder the builder to move
-     */
-    Builder(Builder&& builder);
-    // Constructors -
-
-  public:
-    // Destructor +
-    /*!
-     * \ref Builder destructor
-     */
-    virtual ~Builder();
-    // Destructor -
-
-    // Methods +
-    /*!
-     * Status setter
-     *
-     * \param code the status code to set
-     *
-     * \return \c this
-     */
-    Builder status(uint16_t code);
-
-    /*!
-     * Add header when it does not exist
-     *
-     * \param name the header's name
-     * \param value the header's value
-     *
-     * \return \c this
-     */
-    Builder header(const std::string& name, const std::string& value);
-
-    /*!
-     * Add header when it does not exist
-     *
-     * \param name the header's name
-     * \param values the header's values
-     *
-     * \return \c this
-     */
-    Builder header(const std::string& name, const std::vector<std::string>& values);
-
-    /*!
-     * Set headers.\n
-     * This method overrides all headers previsouly defined
-     *
-     * \param headers the headers to set
-     *
-     * \return \c this
-     */
-    Builder headers(const anch::rest::Headers& headers);
-
-    /*!
-     * Media type setter
-     *
-     * \param contentType the media type to set
-     *
-     * \return \c this
-     */
-    Builder contentType(const std::string& contentType);
-
-    /*!
-     * Body setter
-     *
-     * \param body the body to set
-     */
-    Builder body(const std::string& body);
-
-    /*!
-     * Body setter
-     *
-     * \param body the body to set
-     */
-    Builder body(const char* const body);
-
-    /*!
-     * Body setter
-     *
-     * \param body the body to set
-     *
-     * \return \c this
-     */
-    template<typename T>
-    Builder body(T body);
-
-    /*!
-     * Finalize builder and return the HTTP \ref Response
-     *
-     * \return the HTTP response
-     */
-    Response build();
-    // Methods -
-  };
-
 }
-
-#include "rest/impl/response.hpp"

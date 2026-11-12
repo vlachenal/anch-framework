@@ -1,6 +1,6 @@
 /*
   ANCH Framework: ANother C++ Hack is a C++ framework based on C++11 standard
-  Copyright (C) 2020 Vincent Lachenal
+  Copyright (C) 2012 Vincent Lachenal
 
   This file is part of ANCH Framework.
 
@@ -19,57 +19,55 @@
 */
 #pragma once
 
-#include <exception>
-#include <string>
-
+#include <optional>
+#include <string_view>
 
 namespace anch::rest {
 
   /*!
-   * \brief REST router exception class
-   *
-   * Errors on AnCH REST router runtime initialization
+   * HTTP request methods
    *
    * \author Vincent Lachenal
    *
    * \since 0.1
    */
-  class RouterException: public std::exception {
-
-    // Attributes +
-  private:
-    /*! Error message */
-    std::string _msg;
-    // Attributes -
-
-    // Constructors +
-  public:
-    /*!
-     * \ref RouterException constuctor
-     *
-     * \param msg the error message
-     */
-    explicit RouterException(const std::string& msg);
-    // Constructors -
-
-    // Destructor +
-  public:
-    /*!
-     * \ref RouterException destructor
-     */
-    virtual ~RouterException();
-    // Destructor -
-
-    // Methods +
-  public:
-    /*!
-     * Error message
-     *
-     * \return error message
-     */
-    virtual const char* what() const noexcept override;
-    // Methods -
-
+  enum class Method {
+    /*! GET method */
+    GET,
+    /*! HEAD method */
+    HEAD,
+    /*! POST method */
+    POST,
+    /*! PUT method */
+    PUT,
+    /*! DELETE method */
+    DELETE,
+    /*! CONNECT method */
+    CONNECT,
+    /*! OPTIONS method */
+    OPTIONS,
+    /*! TRACE method */
+    TRACE,
+    /*! PATCH method */
+    PATCH
   };
 
-}  // anch::rest
+  /*!
+   * Get HTTP method name
+   *
+   * \param method the method
+   *
+   * \return the method name (\c "GET" , ...)
+   */
+  std::string_view toString(anch::rest::Method method) noexcept;
+
+  /*!
+   * Parse HTTP method name (case sensitive)
+   *
+   * \param name the method name
+   *
+   * \return the method, empty when the method is unknown
+   */
+  std::optional<anch::rest::Method> parseMethod(std::string_view name) noexcept;
+
+}

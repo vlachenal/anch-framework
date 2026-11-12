@@ -1,0 +1,138 @@
+/*
+  ANCH Framework: ANother C++ Hack is a C++ framework based on C++11 standard
+  Copyright (C) 2012 Vincent Lachenal
+
+  This file is part of ANCH Framework.
+
+  ANCH Framework is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Lesser General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  ANCH Framework is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU Lesser General Public License for more details.
+
+  You should have received a copy of the GNU Lesser General Public License
+  along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
+*/
+#pragma once
+
+#include <concepts>
+#include <optional>
+#include <string>
+#include <string_view>
+
+#include "uuid.hpp"
+
+namespace anch::rest {
+
+  /*!
+   * Path parameter converter: customization point to bind path parameters to endpoint arguments.\n
+   * A specialization provides <tt>static std::optional<T> convert(std::string_view value)</tt> ,
+   * which returns an empty value when the parameter is invalid (the response is \c 400 ).\n
+   * Integral and floating point types, \c bool , \c std::string and \c anch::UUID are supported.
+   *
+   * \tparam T the parameter type
+   *
+   * \author Vincent Lachenal
+   *
+   * \since 0.1
+   */
+  template<typename T>
+  struct ParamConverter;
+
+  /*!
+   * Integral path parameter (\c std::from_chars , the whole value has to be a number)
+   *
+   * \tparam T the integral type
+   */
+  template<typename T>
+  requires (std::integral<T> && !std::same_as<T, bool>)
+  struct ParamConverter<T> {
+    /*!
+     * Convert parameter
+     *
+     * \param value the parameter value
+     *
+     * \return the number, empty when invalid or out of range
+     */
+    static std::optional<T> convert(std::string_view value) noexcept;
+  };
+
+  /*!
+   * Floating point path parameter (\c std::from_chars )
+   *
+   * \tparam T the floating point type
+   */
+  template<std::floating_point T>
+  struct ParamConverter<T> {
+    /*!
+     * Convert parameter
+     *
+     * \param value the parameter value
+     *
+     * \return the number, empty when invalid or out of range
+     */
+    static std::optional<T> convert(std::string_view value) noexcept;
+  };
+
+  /*!
+   * Boolean path parameter: \c true or \c false
+   */
+  template<>
+  struct ParamConverter<bool> {
+    /*!
+     * Convert parameter
+     *
+     * \param value the parameter value
+     *
+     * \return the boolean, empty when invalid
+     */
+    static std::optional<bool> convert(std::string_view value) noexcept;
+  };
+
+  /*!
+   * String path parameter
+   */
+  template<>
+  struct ParamConverter<std::string> {
+    /*!
+     * Convert parameter
+     *
+     * \param value the parameter value
+     *
+     * \return the string
+     */
+    static std::optional<std::string> convert(std::string_view value);
+  };
+
+  /*!
+   * UUID path parameter
+   */
+  template<>
+  struct ParamConverter<anch::UUID> {
+    /*!
+     * Convert parameter
+     *
+     * \param value the parameter value
+     *
+     * \return the UUID, empty when invalid
+     */
+    static std::optional<anch::UUID> convert(std::string_view value);
+  };
+
+  /*!
+   * Type which can be bound to a path parameter (see \ref ParamConverter )
+   *
+   * \tparam T the type
+   */
+  template<typename T>
+  concept PathParameter = requires(std::string_view value) {
+    { anch::rest::ParamConverter<T>::convert(value) } -> std::same_as<std::optional<T>>;
+  };
+
+}
+
+#include "rest/impl/paramConverter.hpp"

@@ -1,6 +1,6 @@
 /*
   ANCH Framework: ANother C++ Hack is a C++ framework based on C++11 standard
-  Copyright (C) 2020 Vincent Lachenal
+  Copyright (C) 2012 Vincent Lachenal
 
   This file is part of ANCH Framework.
 
@@ -19,134 +19,97 @@
 */
 #include "rest/response.hpp"
 
+#include <memory>
+
+using anch::rest::BodyWriter;
+using anch::rest::Headers;
 using anch::rest::Response;
+using anch::rest::Status;
 
-
-// HTTP Response +
-// Constructors +
-Response::Response():
-  _code(500),
-  _headers(),
-  _registry(NULL),
-  _bodyWriter(),
-  _input() {
+Response::Response(Status status): _status(status), _headers(), _body() {
   // Nothing to do
 }
 
-Response::Response(uint16_t code):
-  _code(code),
-  _headers(),
-  _registry(NULL),
-  _bodyWriter(),
-  _input() {
-  // Nothing to do
-}
-
-Response::Response(Response&& res):
-  _code(res._code),
-  _headers(std::move(res._headers)),
-  _registry(res._registry),
-  _bodyWriter(res._bodyWriter),
-  _input(res._input)  {
-  // Nothing to do
-}
-// Constructors -
-
-// Destructor +
-Response::~Response() {
-  // Nothing to do
-}
-// Destructor -
-
-// Operators +
 Response&
-Response::operator=(Response&& other) {
-  _code = other._code;
-  _headers = std::move(other._headers);
-  _registry = other._registry;
-  _bodyWriter = other._bodyWriter;
-  _input = other._input;
+Response::header(std::string_view name, std::string_view value) & {
+  _headers.set(name, value);
   return *this;
 }
-// Operators -
 
-// Methods +
-Response::Builder
-Response::builder() {
-  return Response::Builder();
+Response&&
+Response::header(std::string_view name, std::string_view value) && {
+  return std::move(header(name, value));
+}
+
+Response&
+Response::contentType(std::string_view mediaType) & {
+  return header(anch::rest::header::CONTENT_TYPE, mediaType);
+}
+
+Response&&
+Response::contentType(std::string_view mediaType) && {
+  return std::move(contentType(mediaType));
+}
+
+Response&
+Response::body(std::string content) & {
+  // std::function has to be copyable: content is shared between copies
+  auto shared = std::make_shared<const std::string>(std::move(content));
+  _body = [shared](std::ostream& out) {
+    out.write(shared->data(), static_cast<std::streamsize>(shared->size()));
+  };
+  return *this;
+}
+
+Response&&
+Response::body(std::string content) && {
+  return std::move(body(std::move(content)));
+}
+
+Response&
+Response::stream(BodyWriter writer) & {
+  _body = std::move(writer);
+  return *this;
+}
+
+Response&&
+Response::stream(BodyWriter writer) && {
+  return std::move(stream(std::move(writer)));
+}
+
+bool
+Response::hasBody() const noexcept {
+  return static_cast<bool>(_body);
 }
 
 void
 Response::writeBody(std::ostream& out) const {
-  _bodyWriter(out);
-}
-// Methods -
-// HTTP Response -
-
-
-// HTTP reponse builder +
-// Constructors +
-Response::Builder::Builder(): _response() {
-  // Nothing to do
+  if(_body) {
+    _body(out);
+  }
 }
 
-Response::Builder::Builder(Builder&& builder): _response(std::move(builder._response)) {
-  // Nothing to do
-}
-// Constructors -
-
-// Destructor +
-Response::Builder::~Builder() {
-  // Nothing to do
-}
-// Destructor -
-
-// Methods +
-Response::Builder
-Response::Builder::status(uint16_t code) {
-  _response._code = code;
-  return std::move(*this);
+void
+Response::clearBody() noexcept {
+  _body = nullptr;
 }
 
-Response::Builder
-Response::Builder::header(const std::string& name, const std::string& value) {
-  _response._headers.add(name, value);
-  return std::move(*this);
+Status
+Response::getStatus() const noexcept {
+  return _status;
 }
 
-Response::Builder
-Response::Builder::header(const std::string& name, const std::vector<std::string>& values) {
-  _response._headers.add(name, values);
-  return std::move(*this);
+void
+Response::setStatus(Status status) noexcept {
+  _status = status;
 }
 
-Response::Builder
-Response::Builder::headers(const anch::rest::Headers& headers) {
-  _response._headers = headers;
-  return std::move(*this);
+Headers&
+Response::getHeaders() noexcept {
+  return _headers;
 }
 
-Response::Builder
-Response::Builder::body(const std::string& body) {
-  _response.setBody(body);
-  return std::move(*this);
+const Headers&
+Response::getHeaders() const noexcept {
+  return _headers;
 }
-
-Response::Builder
-Response::Builder::body(const char* const body) {
-  _response.setBody(std::string(body));
-  return std::move(*this);
-}
-
-Response::Builder
-Response::Builder::contentType(const std::string& contentType) {
-  _response.setContentType(contentType);
-  return std::move(*this);
-}
-
-Response
-Response::Builder::build() {
-  return std::move(_response);
-}
-// Methods -
-// HTTP reponse builder -

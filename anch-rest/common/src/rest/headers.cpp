@@ -1,6 +1,6 @@
 /*
   ANCH Framework: ANother C++ Hack is a C++ framework based on C++11 standard
-  Copyright (C) 2020 Vincent Lachenal
+  Copyright (C) 2012 Vincent Lachenal
 
   This file is part of ANCH Framework.
 
@@ -19,94 +19,109 @@
 */
 #include "rest/headers.hpp"
 
-#include <sstream>
+#include <algorithm>
 
-#include "stringUtils.hpp"
-
+using anch::rest::CaseInsensitiveLess;
 using anch::rest::Headers;
 
+namespace {
 
-std::optional<std::vector<std::string>>
-Headers::get(const std::string& key) {
-  std::string header(key);
-  anch::toLower(header);
-  auto iter = find(header);
-  if(iter == end()) {
-    return std::optional<std::vector<std::string>>();
-  } else {
-    return std::optional<std::vector<std::string>>(iter->second);
+  constexpr char
+  lower(char c) noexcept {
+    return (c >= 'A' && c <= 'Z') ? static_cast<char>(c - 'A' + 'a') : c;
   }
-}
 
-const std::optional<const std::vector<std::string>>
-Headers::get(const std::string& key) const {
-  std::string header(key);
-  anch::toLower(header);
-  auto iter = const_cast<Headers*>(this)->find(header);
-  if(iter == cend()) {
-    return std::optional<const std::vector<std::string>>();
-  } else {
-    return std::optional<const std::vector<std::string>>(iter->second);
-  }
+  const std::vector<std::string> NO_VALUE;
+
 }
 
 bool
-Headers::has(const std::string& key) const {
-  std::string header(key);
-  anch::toLower(header);
-  return contains(header);
-}
-
-bool
-Headers::add(const std::string& name, const std::vector<std::string>& values) {
-  std::string header(name);
-  anch::toLower(header);
-  return insert({header, values}).second;
-}
-
-bool
-Headers::add(const std::string& name, const std::string& value) {
-  std::string header(name);
-  anch::toLower(header);
-  return insert({header, { value } }).second;
+CaseInsensitiveLess::operator()(std::string_view left, std::string_view right) const noexcept {
+  return std::lexicographical_compare(left.begin(), left.end(), right.begin(), right.end(),
+				      [](char l, char r) { return lower(l) < lower(r); });
 }
 
 void
-Headers::put(const std::string& name, const std::vector<std::string>& values) {
-  std::string header(name);
-  anch::toLower(header);
-  auto iter = find(header);
-  if(iter != end()) {
-    iter->second = values;
-  } else {
-    insert({header, values}).first;
+Headers::add(std::string_view name, std::string_view value) {
+  auto iter = _values.find(name);
+  if(iter == _values.end()) {
+    iter = _values.emplace(std::string(name), std::vector<std::string>()).first;
   }
+  iter->second.emplace_back(value);
 }
 
 void
-Headers::put(const std::string& name, const std::string& value) {
-  std::string header(name);
-  anch::toLower(header);
-  auto iter = find(header);
-  if(iter != end()) {
-    iter->second = { value };
+Headers::set(std::string_view name, std::string_view value) {
+  auto iter = _values.find(name);
+  if(iter == _values.end()) {
+    _values.emplace(std::string(name), std::vector<std::string>{std::string(value)});
   } else {
-    insert({header, { value } }).first;
+    iter->second.assign(1, std::string(value));
   }
+}
+
+bool
+Headers::remove(std::string_view name) {
+  auto iter = _values.find(name);
+  if(iter == _values.end()) {
+    return false;
+  }
+  _values.erase(iter);
+  return true;
+}
+
+bool
+Headers::has(std::string_view name) const {
+  return _values.find(name) != _values.end();
+}
+
+std::optional<std::string_view>
+Headers::get(std::string_view name) const {
+  auto iter = _values.find(name);
+  if(iter == _values.end() || iter->second.empty()) {
+    return std::nullopt;
+  }
+  return std::string_view(iter->second.front());
+}
+
+const std::vector<std::string>&
+Headers::getAll(std::string_view name) const {
+  auto iter = _values.find(name);
+  return iter == _values.end() ? NO_VALUE : iter->second;
 }
 
 std::optional<std::string>
-Headers::format(const std::string& name) const {
-  std::string lname(name);
-  anch::toLower(lname);
-  auto header = find(lname);
-  if(header == end() || header->second.empty()) {
-    return std::optional<std::string>();
-  } else {
-    std::ostringstream oss;
-    for(auto iter = header->second.begin() ; iter != header->second.end() ; ++ iter) {
-      oss << ',' << *iter;
-    }
-    return std::optional<std::string>(oss.str().substr(1));
+Headers::format(std::string_view name) const {
+  auto iter = _values.find(name);
+  if(iter == _values.end()) {
+    return std::nullopt;
   }
+  std::string res;
+  for(const std::string& value : iter->second) {
+    if(!res.empty()) {
+      res += ", ";
+    }
+    res += value;
+  }
+  return res;
+}
+
+std::size_t
+Headers::size() const noexcept {
+  return _values.size();
+}
+
+bool
+Headers::empty() const noexcept {
+  return _values.empty();
+}
+
+Headers::Map::const_iterator
+Headers::begin() const noexcept {
+  return _values.begin();
+}
+
+Headers::Map::const_iterator
+Headers::end() const noexcept {
+  return _values.end();
 }

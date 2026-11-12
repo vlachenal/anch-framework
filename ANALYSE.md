@@ -31,7 +31,7 @@ Statut des constats :
 | anch-ini | [anch-ini/ANALYSE.md](anch-ini/ANALYSE.md) | en construction ; conversion numérique correcte (modèle pour les autres modules) |
 | anch-cli | [anch-cli/ANALYSE.md](anch-cli/ANALYSE.md) | corrigé le 2026-11-03 (CL1 à CL10) : valeurs numériques hors limites ou vides, fichiers non ouverts, couleurs désactivées hors terminal / `NO_COLOR`, `operator<<` du `Formatter` hors namespace, `--no-term-fmt` déclaré par l'application, positionnel multiple non final, options répétées, codes ANSI dans les exceptions ; reste CL11 (`--`) ; CL12 (`--opt=val` / `-pval` non gérés) et CL13 (`pipe` sur un terminal) sont des choix |
 | anch-cutils | [anch-cutils/ANALYSE.md](anch-cutils/ANALYSE.md) | corrigé le 2026-11-02 : tampons de lecture et d'écriture séparés, écritures partielles et erreurs gérées, vidage de `TcpStream` avant fermeture |
-| anch-rest | [anch-rest/ANALYSE.md](anch-rest/ANALYSE.md) | ne compile plus, désactivé par défaut |
+| anch-rest | [anch-rest/ANALYSE.md](anch-rest/ANALYSE.md) | réécriture en cours (2026-11-12) : modèle HTTP et serveur (`Api`) faits et testés ; client, curl et nginx à réécrire ; désactivé par défaut |
 | anch-app | [anch-app/ANALYSE.md](anch-app/ANALYSE.md) | débuté ; `after()` virtuel appelé depuis le destructeur, premier `-v` = `DEBUG` |
 
 `anch-csv` (CMake seulement) et `anch-batch` (fichier `.todo` seulement) sont vides.

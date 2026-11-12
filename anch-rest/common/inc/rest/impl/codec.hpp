@@ -1,6 +1,6 @@
 /*
   ANCH Framework: ANother C++ Hack is a C++ framework based on C++11 standard
-  Copyright (C) 2020 Vincent Lachenal
+  Copyright (C) 2012 Vincent Lachenal
 
   This file is part of ANCH Framework.
 
@@ -17,24 +17,27 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "rest/mapperRegistry.hpp"
+#pragma once
 
-using anch::rest::MapperRegistry;
-using anch::rest::GlobalMapperRegistry;
+#include <iterator>
 
+namespace anch::rest {
 
-MapperRegistry::MapperRegistry(): _mappers() {
-  // Nothing to do
-}
+  inline std::string_view
+  Text::mediaType() noexcept {
+    return "text/plain";
+  }
 
-MapperRegistry::~MapperRegistry() {
-  // Nothing to do
-}
+  template<typename T>
+  requires requires(std::ostream& out, const T& value) { out << value; }
+  void
+  Text::serialize(const T& value, std::ostream& out) {
+    out << value;
+  }
 
-GlobalMapperRegistry::GlobalMapperRegistry(): MapperRegistry() {
-  // Nothing to do
-}
+  inline void
+  Text::deserialize(std::string& value, std::istream& input) {
+    value.assign(std::istreambuf_iterator<char>(input), std::istreambuf_iterator<char>());
+  }
 
-GlobalMapperRegistry::~GlobalMapperRegistry() {
-  // Nothing to do
 }

@@ -1,6 +1,6 @@
 /*
   ANCH Framework: ANother C++ Hack is a C++ framework based on C++11 standard
-  Copyright (C) 2020 Vincent Lachenal
+  Copyright (C) 2012 Vincent Lachenal
 
   This file is part of ANCH Framework.
 
@@ -17,19 +17,18 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "rest/mapperException.hpp"
+#include "rest/httpException.hpp"
 
-using anch::rest::MapperException;
+using anch::rest::HttpException;
+using anch::rest::Status;
 
-MapperException::MapperException(const std::string& msg): _msg(msg) {
+HttpException::HttpException(Status status, const std::string& message):
+  std::runtime_error(message),
+  _status(status) {
   // Nothing to do
 }
 
-MapperException::~MapperException() {
-  // Nothing to do
-}
-
-const char*
-MapperException::what() const noexcept {
-  return _msg.data();
+Status
+HttpException::getStatus() const noexcept {
+  return _status;
 }

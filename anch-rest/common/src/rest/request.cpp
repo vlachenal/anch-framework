@@ -1,6 +1,6 @@
 /*
   ANCH Framework: ANother C++ Hack is a C++ framework based on C++11 standard
-  Copyright (C) 2020 Vincent Lachenal
+  Copyright (C) 2012 Vincent Lachenal
 
   This file is part of ANCH Framework.
 
@@ -19,127 +19,229 @@
 */
 #include "rest/request.hpp"
 
+#include <sstream>
+#include <stdexcept>
+
+using anch::rest::Headers;
+using anch::rest::MediaType;
+using anch::rest::Method;
 using anch::rest::Request;
 
-// HTTP request +
-// Constructors +
-Request::Request():
-  _verb(),
-  _headers(),
+namespace {
+
+  int
+  hexValue(char c) noexcept {
+    if(c >= '0' && c <= '9') {
+      return c - '0';
+    }
+    if(c >= 'a' && c <= 'f') {
+      return c - 'a' + 10;
+    }
+    if(c >= 'A' && c <= 'F') {
+      return c - 'A' + 10;
+    }
+    return -1;
+  }
+
+}
+
+// Request +
+Request::Request(): Request(Method::GET, "/") {
+  // Nothing to do
+}
+
+Request::Request(Method method, std::string_view target):
+  _method(method),
   _path(),
-  _parameters(),
-  _input(),
-  _registry(NULL) {
-  // nothing to do
+  _query(),
+  _headers(),
+  _body(),
+  _pathParameters() {
+  setTarget(target);
 }
 
-Request::Request(Request&& other):
-  _verb(std::move(other._verb)),
-  _headers(std::move(other._headers)),
-  _path(std::move(other._path)),
-  _parameters(std::move(other._parameters)),
-  _input(other._input),
-  _registry(other._registry) {
-  // Nothing to do
-}
-// Constructors -
-
-// Destructor +
-Request::~Request() {
-  // nothing to do
-}
-// Destructor -
-
-// Methods +
-Request::Builder
-Request::builder() {
-  return Request::Builder();
-}
-// Methods -
-
-// Operators +
-Request&
-Request::operator=(Request&& other) {
-  _verb = std::move(other._verb);
-  _headers = std::move(other._headers);
-  _path = std::move(other._path);
-  _input = other._input;
-  _registry = other._registry;
-  return *this;
-}
-// Operators -
-// HTTP request -
-
-
-// HTTP request builder +
-// Constructors +
-Request::Builder::Builder(): _request() {
-  // Nothing to do
+void
+Request::setTarget(std::string_view target) {
+  const std::size_t fragment = target.find('#');
+  if(fragment != std::string_view::npos) {
+    target = target.substr(0, fragment);
+  }
+  _query.clear();
+  const std::size_t question = target.find('?');
+  _path = target.substr(0, question);
+  if(question == std::string_view::npos) {
+    return;
+  }
+  std::string_view query = target.substr(question + 1);
+  while(!query.empty()) {
+    const std::size_t amp = query.find('&');
+    std::string_view param = query.substr(0, amp);
+    query = (amp == std::string_view::npos) ? std::string_view() : query.substr(amp + 1);
+    if(param.empty()) {
+      continue;
+    }
+    const std::size_t equal = param.find('=');
+    std::string_view name = param.substr(0, equal);
+    std::string_view value = (equal == std::string_view::npos) ? std::string_view() : param.substr(equal + 1);
+    // Invalid encoding is kept as is
+    _query.emplace_back(anch::rest::percentDecode(name, true).value_or(std::string(name)),
+			anch::rest::percentDecode(value, true).value_or(std::string(value)));
+  }
 }
 
-Request::Builder::Builder(Builder&& builder): _request(std::move(builder._request)) {
-  // Nothing to do
-}
-// Constructors -
-
-// Destructor +
-Request::Builder::~Builder() {
-  // Nothing to do
-}
-// Destructor -
-
-// Methods +
-Request::Builder
-Request::Builder::path(const std::string& path) {
-  _request._path = path;
-  return std::move(*this);
+std::optional<std::string_view>
+Request::getQueryParameter(std::string_view name) const {
+  for(const auto& [key, value] : _query) {
+    if(key == name) {
+      return std::string_view(value);
+    }
+  }
+  return std::nullopt;
 }
 
-Request::Builder
-Request::Builder::verb(const std::string& verb) {
-  _request._verb = verb;
-  return std::move(*this);
+void
+Request::addQueryParameter(std::string_view name, std::string_view value) {
+  _query.emplace_back(name, value);
 }
 
-Request::Builder
-Request::Builder::header(const std::string& name, const std::string& value) {
-  _request._headers.add(name, value);
-  return std::move(*this);
+std::optional<std::string_view>
+Request::getPathParameter(std::string_view name) const {
+  auto iter = _pathParameters.find(name);
+  if(iter == _pathParameters.end()) {
+    return std::nullopt;
+  }
+  return std::string_view(iter->second);
 }
 
-Request::Builder
-Request::Builder::header(const std::string& name, const std::vector<std::string>& values) {
-  _request._headers.add(name, values);
-  return std::move(*this);
+std::optional<MediaType>
+Request::getContentType() const {
+  std::optional<std::string_view> header = _headers.get(anch::rest::header::CONTENT_TYPE);
+  if(!header) {
+    return std::nullopt;
+  }
+  return MediaType::parse(*header);
 }
 
-Request::Builder
-Request::Builder::headers(const anch::rest::Headers& headers) {
-  _request._headers = headers;
-  return std::move(*this);
+std::vector<MediaType>
+Request::getAccept() const {
+  std::optional<std::string> header = _headers.format(anch::rest::header::ACCEPT);
+  if(!header) {
+    return std::vector<MediaType>();
+  }
+  return MediaType::parseAccept(*header);
 }
 
-Request::Builder
-Request::Builder::contentType(const std::string& contentType) {
-  _request.setContentType(contentType);
-  return std::move(*this);
+bool
+Request::hasBody() const noexcept {
+  return static_cast<bool>(_body);
 }
 
-Request::Builder
-Request::Builder::accept(const std::string& mediaType) {
-  _request.setAccept({mediaType});
-  return std::move(*this);
+std::istream&
+Request::getBody() const {
+  if(!_body) {
+    throw std::logic_error("Request has no body");
+  }
+  return *_body;
 }
 
-Request::Builder
-Request::Builder::accept(const std::vector<std::string>& mediaTypes) {
-  _request.setAccept(mediaTypes);
-  return std::move(*this);
+void
+Request::setBody(std::unique_ptr<std::istream> body) {
+  _body = std::move(body);
 }
 
-Request
-Request::Builder::build() {
-  return std::move(_request);
+void
+Request::setBody(std::string body) {
+  _body = std::make_unique<std::istringstream>(std::move(body));
 }
-// Methods -
-// HTTP request builder -
+
+Method
+Request::getMethod() const noexcept {
+  return _method;
+}
+
+void
+Request::setMethod(Method method) noexcept {
+  _method = method;
+}
+
+const std::string&
+Request::getPath() const noexcept {
+  return _path;
+}
+
+void
+Request::setPath(std::string_view path) {
+  _path = path;
+}
+
+const std::vector<std::pair<std::string, std::string>>&
+Request::getQueryParameters() const noexcept {
+  return _query;
+}
+
+Headers&
+Request::getHeaders() noexcept {
+  return _headers;
+}
+
+const Headers&
+Request::getHeaders() const noexcept {
+  return _headers;
+}
+
+const std::map<std::string, std::string, std::less<>>&
+Request::getPathParameters() const noexcept {
+  return _pathParameters;
+}
+
+void
+Request::setPathParameters(std::map<std::string, std::string, std::less<>> parameters) {
+  _pathParameters = std::move(parameters);
+}
+// Request -
+
+std::optional<std::string>
+anch::rest::percentDecode(std::string_view value, bool plusAsSpace) {
+  std::string res;
+  res.reserve(value.size());
+  for(std::size_t i = 0 ; i < value.size() ; ++i) {
+    const char c = value[i];
+    if(c == '%') {
+      if(i + 2 >= value.size()) {
+	return std::nullopt;
+      }
+      const int high = hexValue(value[i + 1]);
+      const int low = hexValue(value[i + 2]);
+      if(high < 0 || low < 0) {
+	return std::nullopt;
+      }
+      res += static_cast<char>(high * 16 + low);
+      i += 2;
+    } else if(plusAsSpace && c == '+') {
+      res += ' ';
+    } else {
+      res += c;
+    }
+  }
+  return res;
+}
+
+std::string
+anch::rest::percentEncode(std::string_view value) {
+  static constexpr std::string_view HEX = "0123456789ABCDEF";
+  std::string res;
+  res.reserve(value.size());
+  for(char c : value) {
+    const bool unreserved = (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9')
+      || c == '-' || c == '.' || c == '_' || c == '~';
+    if(unreserved) {
+      res += c;
+    } else {
+      const auto byte = static_cast<unsigned char>(c);
+      res += '%';
+      res += HEX[byte >> 4];
+      res += HEX[byte & 0x0F];
+    }
+  }
+  return res;
+}

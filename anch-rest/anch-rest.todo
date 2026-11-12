@@ -1,0 +1,64 @@
+anch-rest : réécriture (décidée le 2026-11-12)
+=============================================
+
+Décisions
+---------
+- Réécriture complète (l'ancien code ne compilait plus) en gardant les idées : paramètres de chemin
+  typés, corps de réponse écrit par une fonction (streaming), découpage en bibliothèques.
+- Serveur : module nginx natif.
+- Codecs choisis par route, vérifiés à la compilation (plus de registre global à base de std::any).
+- Client synchrone.
+
+Bibliothèques
+-------------
+anch-rest-common   modèle HTTP indépendant du transport (Method, Status, Headers, MediaType,
+                   Request, Response, codecs Json / Text)
+anch-rest-server   déclaration des endpoints (Api) et routage              -> common
+anch-rest-client   façade Client et interface Transport                    -> common
+anch-rest-curl     Transport libcurl                                       -> client
+anch-rest-nginx    pont C++ <-> nginx et module C                          -> server
+
+Étapes
+------
+[x] 1. common + server, testés sans réseau (Api::handle)
+[ ] 2. client + transport curl, testés contre un serveur HTTP de test (anch-network)
+[ ] 3. module nginx
+
+Serveur
+-------
+- Déclaration :
+    api.get("/pets/{id}", [](const Request& req, uint64_t id) -> std::optional<Pet> {...}).produces<Json>();
+    api.post("/pets", [](Body<Pet> pet) { return Response(Status::CREATED); }).consumes<Json>();
+    api.filter([](Request& req, const Next& next) { return next(req); });
+- Signature du handler déduite : const Request& en premier (facultatif), paramètres de chemin dans
+  l'ordre du motif (convertis par ParamConverter<T>, 400 si invalide), Body<T> en dernier (facultatif,
+  désérialisé selon Content-Type, 415 si non géré, 400 si invalide).
+- Retour : Response, T (sérialisé selon Accept, 406 si non acceptable), std::optional<T> (404 si vide),
+  void (204).
+- Une route par (méthode, motif) ; plusieurs codecs par route. Routage par arbre de segments : littéral
+  prioritaire sur paramètre ; 404, 405 (avec Allow) ; HEAD servi par la route GET sans corps.
+- Api::validate() : vérifie que chaque route a les codecs nécessaires (appelé par les adaptateurs au
+  démarrage).
+- HttpException(status) dans un handler -> ce statut ; autre exception -> 500 sans détail.
+
+nginx (étape 3)
+---------------
+- L'application est un .so qui exporte un point d'entrée C (macro ANCH_REST_APPLICATION(createApi)).
+- Module C pur : directive "anch_rest_app /path/libapi.so;" dans une location, dlopen au démarrage
+  du worker.
+- nginx est non bloquant : les handlers sont exécutés dans un pool de threads nginx
+  (ngx_thread_task_post, nginx compilé avec --with-threads) ; corps lu avec
+  ngx_http_read_client_request_body.
+
+Client (étape 2)
+----------------
+- Transport : une seule méthode virtuelle Response send(const Request&).
+- Client : URL de base, headers par défaut, paramètres de chemin et de requête encodés, filtres
+  (authentification Basic / Bearer), timeouts et proxy (configuration du transport).
+    Pet pet = client.get("/pets/{id}", 42).accept<Json>().as<Pet>();   // HttpError si statut >= 400
+- Un handle curl par Client (pas thread-safe).
+
+Plus tard
+---------
+- anch-oas-gen : générer les déclarations d'endpoints et un client typé.
+- OPTIONS automatique, CORS.
