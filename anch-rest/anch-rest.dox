@@ -5,7 +5,7 @@
  * \section rest_intro_seq Introduction
  *
  * AnCH REST library declares REST APIs independently of HTTP servers, and provides an HTTP client
- * abstraction (being rewritten, see \c anch-rest.todo ).
+ * over native HTTP libraries (see \c anch-rest.todo for the work in progress).
  *
  * \section rest_libs_sec Libraries
  *
@@ -14,6 +14,8 @@
  *   \ref anch::rest::Response "Response") and codecs (\ref anch::rest::Json "Json" based on anch-json,
  *   \ref anch::rest::Text "Text").
  * - \c anch-rest-server : endpoints declaration and routing (\ref anch::rest::Api "Api").
+ * - \c anch-rest-client : HTTP client (\ref anch::rest::Client "Client") over a \ref anch::rest::Transport "Transport".
+ * - \c anch-rest-curl : libcurl transport (\ref anch::rest::CurlTransport "CurlTransport"), option \c ANCH_REST_CURL .
  *
  * \section rest_server_sec Endpoints declaration
  *
@@ -45,4 +47,22 @@ anch::rest::Response response = api.handle(request); // done by HTTP server adap
  * Errors: invalid path parameter or body \c 400 , unknown path \c 404 , unknown method \c 405 (with
  * \c Allow ), not acceptable \c 406 , unsupported media type \c 415 , \ref anch::rest::HttpException "HttpException"
  * status, other exceptions \c 500 .
+ *
+ * \section rest_client_sec Client
+ *
+ * Path placeholders are replaced in order and percent-encoded. Accepted codecs are part of the call
+ * type: \c as<T>() is checked at compile time and deserializes the response with the codec matching
+ * its \c Content-Type :
+ * \code{.cpp}
+anch::rest::TransportConfig config;
+config.timeout = std::chrono::seconds(5);
+anch::rest::Client client(std::make_unique<anch::rest::CurlTransport>(config), "https://api.example.com/v1");
+client.filter(anch::rest::bearerAuth(token));
+
+Pet pet = client.get("/pets/{id}", 42).accept<anch::rest::Json>().as<Pet>(); // HttpError when status >= 400
+anch::rest::Response created = client.post("/pets").body<anch::rest::Json>(pet).send();
+client.del("/pets/{id}", 42).execute();
+\endcode
+ *
+ * Network errors (connection refused, timeout, TLS) are reported with \ref anch::rest::TransportError "TransportError".
  */

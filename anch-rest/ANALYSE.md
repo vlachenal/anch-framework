@@ -7,7 +7,8 @@ Analyse du 2026-10-27, revue le 2026-11-12. Vue d'ensemble : [../ANALYSE.md](../
 Réécriture décidée le 2026-11-12 : conception et étapes dans [anch-rest.todo](anch-rest.todo).
 
 - **Étape 1 terminée le 2026-11-12** : `anch-rest-common` (modèle HTTP, codecs `Json` / `Text`) et `anch-rest-server` (`Api` : déclaration des endpoints, routage, négociation, filtres) ; 17 tests, propres sous ASan / UBSan.
-- `client/`, `curl/` et `nginx/` : ancien code, non compilé, à réécrire (étapes 2 et 3).
+- **Étape 2 terminée le 2026-11-12** : `anch-rest-client` (`Client`, `Call`, `Transport`, filtres d'authentification) et `anch-rest-curl` (`CurlTransport`, option `ANCH_REST_CURL`) ; 16 tests de plus (33 au total), dont 8 de bout en bout contre un serveur HTTP de test (anch-network), propres sous ASan / UBSan.
+- `nginx/` : ancien squelette, non compilé, à réécrire (étape 3).
 - Toujours désactivé par défaut (`ANCH_BUILD_REST=OFF`).
 
 ## Ancien code (avant réécriture)

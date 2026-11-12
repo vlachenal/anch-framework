@@ -1,6 +1,6 @@
 /*
   ANCH Framework: ANother C++ Hack is a C++ framework based on C++11 standard
-  Copyright (C) 2020 Vincent Lachenal
+  Copyright (C) 2012 Vincent Lachenal
 
   This file is part of ANCH Framework.
 
@@ -19,245 +19,426 @@
 */
 #pragma once
 
+#include <concepts>
+#include <memory>
+#include <ostream>
 #include <string>
-#include <optional>
+#include <string_view>
+#include <type_traits>
+#include <vector>
 
-#include "rest/clientIface.hpp"
+#include "rest/codec.hpp"
+#include "rest/filter.hpp"
+#include "rest/headers.hpp"
+#include "rest/httpError.hpp"
+#include "rest/method.hpp"
 #include "rest/request.hpp"
-
+#include "rest/response.hpp"
+#include "rest/transport.hpp"
 
 namespace anch::rest {
 
-  class WebClient {
+  /*!
+   * Value which can be used as path or query parameter: strings, numbers, \c bool and types with
+   * stream injection operator
+   *
+   * \tparam T the value type
+   *
+   * \since 0.1
+   */
+  template<typename T>
+  concept ParameterValue = std::convertible_to<const T&, std::string_view>
+    || std::is_arithmetic_v<T>
+    || requires(std::ostream& out, const T& value) { out << value; };
+
+  /*!
+   * Format parameter value
+   *
+   * \param value the value
+   *
+   * \return the formatted value (not encoded)
+   *
+   * \since 0.1
+   */
+  template<anch::rest::ParameterValue T>
+  std::string toParameterString(const T& value);
+
+  class Client;
+
+  /*!
+   * Request being built by \ref Client .\n
+   * Accepted codecs are part of the type: \ref accept adds a codec and \ref as deserializes the response
+   * with the accepted codec matching its \c Content-Type :
+   * \code{.cpp}
+Pet pet = client.get("/pets/{id}", 42).accept<anch::rest::Json>().as<Pet>();
+   * \endcode
+   * A call is sent once: \ref send , \ref execute and \ref as are called on rvalues.
+   *
+   * \tparam Codecs the accepted codecs
+   *
+   * \author Vincent Lachenal
+   *
+   * \since 0.1
+   */
+  template<typename... Codecs>
+  class Call {
+
+    /*! Calls with other codecs are friends (\ref accept ) */
+    template<typename...>
+    friend class Call;
+
     // Attributes +
   private:
-    /*! HTTP client implementation */
-    anch::rest::ClientIface& _client;
+    /*! The client */
+    anch::rest::Client* _client;
 
-    /*! Optional base path to prepend to request path */
-    std::optional<std::string> _basePath;
+    /*! The request */
+    anch::rest::Request _request;
     // Attributes -
 
     // Constructors +
   public:
     /*!
-     * \ref WebClient constructor
+     * \ref Call constructor
      *
-     * \param client the HTTP client implementation to use
-     * \param basePath the optional base path
+     * \param client the client
+     * \param request the request
      */
-    WebClient(anch::rest::ClientIface& client, std::optional<std::string> basePath = std::optional<std::string>());
+    Call(anch::rest::Client& client, anch::rest::Request request);
     // Constructors -
-
-    // Destructor +
-  public:
-    /*!
-     * \ref WebClient destructor
-     */
-    virtual ~WebClient();
-    // Destructor -
 
     // Methods +
   public:
     /*!
-     * Map path parameters and execute GET HTTP method
+     * Set request header
      *
-     * \tparam P the path parameters types
+     * \param name the header name
+     * \param value the header value
      *
-     * \param request the request
-     * \param params the path parameters
-     *
-     * \return return the response
+     * \return \c this
      */
-    template<typename... P>
-    anch::rest::Response
-    GET(anch::rest::Request& request, P... params);
+    Call& header(std::string_view name, std::string_view value) &;
 
     /*!
-     * Execute GET HTTP method
+     * Set request header
      *
-     * \tparam P the path parameters types
+     * \param name the header name
+     * \param value the header value
      *
-     * \param path the path
-     * \param params the path parameters
-     *
-     * \return return the response
+     * \return \c this
      */
-    template<typename... P>
-    anch::rest::Response
-    GET(const std::string& path, P... params);
+    Call&& header(std::string_view name, std::string_view value) &&;
 
     /*!
-     * Map path parameters and execute POST HTTP method
+     * Add query parameter (it is encoded)
      *
-     * \tparam P the path parameters types
+     * \param name the parameter name
+     * \param value the parameter value
      *
-     * \param request the request
-     * \param params the path parameters
-     *
-     * \return return the response
+     * \return \c this
      */
-    template<typename... P>
-    anch::rest::Response
-    POST(anch::rest::Request& request, P... params);
+    template<anch::rest::ParameterValue T>
+    Call& query(std::string_view name, const T& value) &;
 
     /*!
-     * Map path parameters and execute PUT HTTP method
+     * Add query parameter (it is encoded)
      *
-     * \tparam P the path parameters types
+     * \param name the parameter name
+     * \param value the parameter value
      *
-     * \param request the request
-     * \param params the path parameters
-     *
-     * \return return the response
+     * \return \c this
      */
-    template<typename... P>
-    anch::rest::Response
-    PUT(anch::rest::Request& request, P... params);
+    template<anch::rest::ParameterValue T>
+    Call&& query(std::string_view name, const T& value) &&;
 
     /*!
-     * Map path parameters and execute PATCH HTTP method
+     * Accept codec media type (added to \c Accept header)
      *
-     * \tparam P the path parameters types
+     * \tparam C the codec
      *
-     * \param request the request
-     * \param params the path parameters
-     *
-     * \return return the response
+     * \return the call with this codec
      */
-    template<typename... P>
-    anch::rest::Response
-    PATCH(anch::rest::Request& request, P... params);
+    template<typename C>
+    Call<Codecs..., C> accept() &&;
 
     /*!
-     * Map path parameters and execute DELETE HTTP method
+     * Set body serialized with codec (\c Content-Type is the codec media type)
      *
-     * \tparam P the path parameters types
+     * \tparam C the codec
      *
-     * \param request the request
-     * \param params the path parameters
+     * \param value the body value
      *
-     * \return return the response
+     * \return \c this
      */
-    template<typename... P>
-    anch::rest::Response
-    DELETE(anch::rest::Request& request, P... params);
+    template<typename C, typename T>
+    Call& body(const T& value) &;
 
     /*!
-     * Map path parameters and execute DELETE HTTP method
+     * Set body serialized with codec (\c Content-Type is the codec media type)
      *
-     * \tparam P the path parameters types
+     * \tparam C the codec
      *
-     * \param path the path
-     * \param params the path parameters
+     * \param value the body value
      *
-     * \return return the response
+     * \return \c this
      */
-    template<typename... P>
-    anch::rest::Response
-    DELETE(const std::string& path, P... params);
+    template<typename C, typename T>
+    Call&& body(const T& value) &&;
 
     /*!
-     * Map path parameters and execute HEAD HTTP method
+     * Set body content
      *
-     * \tparam P the path parameters types
+     * \param content the body content
+     * \param contentType the content type
      *
-     * \param request the request
-     * \param params the path parameters
-     *
-     * \return return the response
+     * \return \c this
      */
-    template<typename... P>
-    anch::rest::Response
-    HEAD(anch::rest::Request& request, P... params);
+    Call& body(std::string content, std::string_view contentType) &;
 
     /*!
-     * Map path parameters and execute HEAD HTTP method
+     * Set body content
      *
-     * \tparam P the path parameters types
+     * \param content the body content
+     * \param contentType the content type
      *
-     * \param path the path
-     * \param params the path parameters
-     *
-     * \return return the response
+     * \return \c this
      */
-    template<typename... P>
-    anch::rest::Response
-    HEAD(const std::string& path, P... params);
+    Call&& body(std::string content, std::string_view contentType) &&;
 
     /*!
-     * Map path parameters and execute OPTIONS HTTP method
+     * Send request
      *
-     * \tparam P the path parameters types
+     * \return the response, whatever its status
      *
-     * \param request the request
-     * \param params the path parameters
-     *
-     * \return return the response
+     * \throw anch::rest::TransportError when request fails
      */
-    template<typename... P>
-    anch::rest::Response
-    OPTIONS(anch::rest::Request& request, P... params);
+    anch::rest::Response send() &&;
 
     /*!
-     * Map path parameters and execute OPTIONS HTTP method
+     * Send request and check response status
      *
-     * \tparam P the path parameters types
-     *
-     * \param path the path
-     * \param params the path parameters
-     *
-     * \return return the response
+     * \throw anch::rest::HttpError when status is an error (>= 400)
+     * \throw anch::rest::TransportError when request fails
      */
-    template<typename... P>
-    anch::rest::Response
-    OPTIONS(const std::string& path, P... params);
+    void execute() &&;
 
     /*!
-     * Map path parameters and execute CONNECT HTTP method
+     * Send request and deserialize response with the accepted codec matching its \c Content-Type
      *
-     * \tparam P the path parameters types
+     * \tparam T the result type (default constructible)
      *
-     * \param request the request
-     * \param params the path parameters
+     * \return the response value
      *
-     * \return return the response
+     * \throw anch::rest::HttpError when status is an error (>= 400)
+     * \throw anch::rest::TransportError when request fails
+     * \throw std::runtime_error when response content type is not accepted
+     * \throw std::exception codec errors
      */
-    template<typename... P>
-    anch::rest::Response
-    CONNECT(anch::rest::Request& request, P... params);
+    template<typename T>
+    T as() &&;
 
     /*!
-     * Map path parameters and execute CONNECT HTTP method
+     * Request getter
      *
-     * \tparam P the path parameters types
-     *
-     * \param path the path
-     * \param params the path parameters
-     *
-     * \return return the response
+     * \return the request
      */
-    template<typename... P>
-    anch::rest::Response
-    CONNECT(const std::string& path, P... params);
-
-    /*!
-     * Map path parameters and execute TRACE HTTP method
-     *
-     * \tparam P the path parameters types
-     *
-     * \param path the path
-     * \param params the path parameters
-     *
-     * \return return the response
-     */
-    template<typename... P>
-    anch::rest::Response
-    TRACE(const std::string& path, P... params);
+    anch::rest::Request& getRequest() noexcept;
     // Methods -
 
   };
 
-}  // anch::rest
+  /*!
+   * HTTP client: builds requests and sends them through a \ref Transport .\n
+   * \code{.cpp}
+anch::rest::Client client(std::make_unique<anch::rest::CurlTransport>(), "https://api.example.com/v1");
+client.filter(anch::rest::bearerAuth(token));
+Pet pet = client.get("/pets/{id}", 42).accept<anch::rest::Json>().as<Pet>();
+anch::rest::Response res = client.post("/pets").body<anch::rest::Json>(pet).send();
+   * \endcode
+   * Path parameters (\c {name} placeholders) are replaced in order and percent-encoded.\n
+   * Default headers (\c User-Agent is \c anch-rest ) are set when the request does not set them, then
+   * filters are executed in declaration order before the transport.\n
+   * A client is as thread safe as its transport.
+   *
+   * \author Vincent Lachenal
+   *
+   * \since 0.1
+   */
+  class Client {
+
+    // Attributes +
+  private:
+    /*! Transport */
+    std::unique_ptr<anch::rest::Transport> _transport;
+
+    /*! Base URL, without trailing slash */
+    std::string _baseUrl;
+
+    /*! Default headers */
+    anch::rest::Headers _headers;
+
+    /*! Filters */
+    std::vector<anch::rest::Filter> _filters;
+    // Attributes -
+
+    // Constructors +
+  public:
+    /*!
+     * \ref Client constructor
+     *
+     * \param transport the transport
+     * \param baseUrl the base URL (\c https://api.example.com/v1 )
+     */
+    Client(std::unique_ptr<anch::rest::Transport> transport, std::string_view baseUrl);
+    // Constructors -
+
+    // Methods +
+  public:
+    /*!
+     * Set default header
+     *
+     * \param name the header name
+     * \param value the header value
+     *
+     * \return \c this
+     */
+    Client& header(std::string_view name, std::string_view value);
+
+    /*!
+     * Add filter
+     *
+     * \param filter the filter
+     *
+     * \return \c this
+     */
+    Client& filter(anch::rest::Filter filter);
+
+    /*!
+     * Start a request
+     *
+     * \param method the method
+     * \param path the path relative to base URL, with \c {name} placeholders
+     * \param parameters the path parameters, in placeholders order
+     *
+     * \return the call
+     *
+     * \throw std::invalid_argument when the number of parameters does not match placeholders
+     */
+    template<anch::rest::ParameterValue... P>
+    anch::rest::Call<> request(anch::rest::Method method, std::string_view path, const P&... parameters);
+
+    /*!
+     * Start a \c GET request (see \ref request )
+     *
+     * \param path the path
+     * \param parameters the path parameters
+     *
+     * \return the call
+     */
+    template<anch::rest::ParameterValue... P>
+    anch::rest::Call<> get(std::string_view path, const P&... parameters);
+
+    /*!
+     * Start a \c POST request (see \ref request )
+     *
+     * \param path the path
+     * \param parameters the path parameters
+     *
+     * \return the call
+     */
+    template<anch::rest::ParameterValue... P>
+    anch::rest::Call<> post(std::string_view path, const P&... parameters);
+
+    /*!
+     * Start a \c PUT request (see \ref request )
+     *
+     * \param path the path
+     * \param parameters the path parameters
+     *
+     * \return the call
+     */
+    template<anch::rest::ParameterValue... P>
+    anch::rest::Call<> put(std::string_view path, const P&... parameters);
+
+    /*!
+     * Start a \c PATCH request (see \ref request )
+     *
+     * \param path the path
+     * \param parameters the path parameters
+     *
+     * \return the call
+     */
+    template<anch::rest::ParameterValue... P>
+    anch::rest::Call<> patch(std::string_view path, const P&... parameters);
+
+    /*!
+     * Start a \c DELETE request (see \ref request )
+     *
+     * \param path the path
+     * \param parameters the path parameters
+     *
+     * \return the call
+     */
+    template<anch::rest::ParameterValue... P>
+    anch::rest::Call<> del(std::string_view path, const P&... parameters);
+
+    /*!
+     * Start a \c HEAD request (see \ref request )
+     *
+     * \param path the path
+     * \param parameters the path parameters
+     *
+     * \return the call
+     */
+    template<anch::rest::ParameterValue... P>
+    anch::rest::Call<> head(std::string_view path, const P&... parameters);
+
+    /*!
+     * Send request: default headers, filters, then transport
+     *
+     * \param request the request
+     *
+     * \return the response
+     *
+     * \throw anch::rest::TransportError when request fails
+     */
+    anch::rest::Response send(anch::rest::Request& request);
+
+    /*!
+     * Get request URL: base URL, path and encoded query parameters
+     *
+     * \param request the request
+     *
+     * \return the URL
+     */
+    std::string url(const anch::rest::Request& request) const;
+
+    /*!
+     * Replace path placeholders (\c {name} ) with percent-encoded parameters
+     *
+     * \param path the path
+     * \param parameters the parameters, in placeholders order
+     *
+     * \return the path
+     *
+     * \throw std::invalid_argument when the number of parameters does not match placeholders
+     */
+    static std::string formatPath(std::string_view path, const std::vector<std::string>& parameters);
+
+  private:
+    /*!
+     * Execute filters from index then transport
+     *
+     * \param request the request
+     * \param index the filter index
+     *
+     * \return the response
+     */
+    anch::rest::Response next(anch::rest::Request& request, std::size_t index);
+    // Methods -
+
+  };
+
+}
 
 #include "rest/impl/client.hpp"

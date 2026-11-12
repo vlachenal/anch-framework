@@ -159,6 +159,13 @@ return anch::rest::Response(anch::rest::Status::CREATED).header(anch::rest::head
     void writeBody(std::ostream& out) const;
 
     /*!
+     * Get body content (body is written in a string)
+     *
+     * \return the body content, empty when there is no body
+     */
+    std::string content() const;
+
+    /*!
      * Remove body (headers are kept)
      */
     void clearBody() noexcept;

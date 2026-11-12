@@ -1,6 +1,6 @@
 /*
   ANCH Framework: ANother C++ Hack is a C++ framework based on C++11 standard
-  Copyright (C) 2020 Vincent Lachenal
+  Copyright (C) 2012 Vincent Lachenal
 
   This file is part of ANCH Framework.
 
@@ -19,23 +19,46 @@
 */
 #pragma once
 
-#include <string>
-#include <optional>
-
-#include "rest/auth.hpp"
+#include "rest/httpException.hpp"
+#include "rest/response.hpp"
 
 namespace anch::rest {
 
-  struct ProxyConfig {
-    std::string host;
-    uint16_t port;
-    std::optional<anch::rest::Authentication> auth;
+  /*!
+   * Error response (status >= 400) received by \ref Client .
+   *
+   * \author Vincent Lachenal
+   *
+   * \since 0.1
+   */
+  class HttpError: public anch::rest::HttpException {
+
+    // Attributes +
+  private:
+    /*! The error response */
+    anch::rest::Response _response;
+    // Attributes -
+
+    // Constructors +
+  public:
+    /*!
+     * \ref HttpError constructor
+     *
+     * \param response the error response
+     */
+    explicit HttpError(anch::rest::Response response);
+    // Constructors -
+
+    // Accessors +
+  public:
+    /*!
+     * Response getter
+     *
+     * \return the error response (headers and body)
+     */
+    const anch::rest::Response& getResponse() const noexcept;
+    // Accessors -
+
   };
 
-  struct ClientConfg {
-    uint16_t connectionTimeout;
-    uint16_t socketTimeout;
-    std::optional<anch::rest::ProxyConfig> proxy;
-  };
-
-}  // anch::rest
+}

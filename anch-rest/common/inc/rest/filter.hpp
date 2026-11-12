@@ -1,6 +1,6 @@
 /*
   ANCH Framework: ANother C++ Hack is a C++ framework based on C++11 standard
-  Copyright (C) 2020 Vincent Lachenal
+  Copyright (C) 2012 Vincent Lachenal
 
   This file is part of ANCH Framework.
 
@@ -17,26 +17,22 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "rest/basicAuth.hpp"
+#pragma once
 
-#include <sstream>
+#include <functional>
 
-#include "crypto/b2t/base64.hpp"
+#include "rest/request.hpp"
+#include "rest/response.hpp"
 
-using anch::rest::BasicAuthentication;
+namespace anch::rest {
 
-BasicAuthentication::BasicAuthentication(const std::string& login, const std::string& password) {
-  std::istringstream iss(login + ":" + password);
-  std::ostringstream oss;
-  anch::crypto::Base64::encode(iss, oss);
-  _auth = oss.str();
-}
+  /*! Next step of a filter chain (next filter, then endpoint on server side or transport on client side) */
+  using Next = std::function<anch::rest::Response(anch::rest::Request&)>;
 
-BasicAuthentication::~BasicAuthentication() {
-  // Nothing to do
-}
+  /*!
+   * Filter: executed around endpoints (server) or requests (client), it can change the request or the
+   * response, or answer itself without calling \c next
+   */
+  using Filter = std::function<anch::rest::Response(anch::rest::Request&, const anch::rest::Next&)>;
 
-void
-BasicAuthentication::setAuthentication(anch::rest::Headers& headers, const std::string& header) {
-  headers.put(header, _auth);
 }

@@ -20,6 +20,7 @@
 #include "rest/response.hpp"
 
 #include <memory>
+#include <sstream>
 
 using anch::rest::BodyWriter;
 using anch::rest::Headers;
@@ -87,6 +88,13 @@ Response::writeBody(std::ostream& out) const {
   if(_body) {
     _body(out);
   }
+}
+
+std::string
+Response::content() const {
+  std::ostringstream out;
+  writeBody(out);
+  return out.str();
 }
 
 void

@@ -27,17 +27,12 @@
 #include <vector>
 
 #include "rest/endpoint.hpp"
+#include "rest/filter.hpp"
 #include "rest/method.hpp"
 #include "rest/request.hpp"
 #include "rest/response.hpp"
 
 namespace anch::rest {
-
-  /*! Next step of a filter chain (next filter or endpoint) */
-  using Next = std::function<anch::rest::Response(anch::rest::Request&)>;
-
-  /*! Filter: executed around endpoints, it can change request or response, or answer itself */
-  using Filter = std::function<anch::rest::Response(anch::rest::Request&, const anch::rest::Next&)>;
 
   /*!
    * REST API: endpoints declaration and routing, independent of the HTTP server.\n

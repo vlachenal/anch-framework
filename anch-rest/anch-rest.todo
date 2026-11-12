@@ -21,7 +21,7 @@ anch-rest-nginx    pont C++ <-> nginx et module C                          -> se
 Étapes
 ------
 [x] 1. common + server, testés sans réseau (Api::handle)
-[ ] 2. client + transport curl, testés contre un serveur HTTP de test (anch-network)
+[x] 2. client + transport curl, testés contre un serveur HTTP de test (anch-network)
 [ ] 3. module nginx
 
 Serveur
@@ -52,11 +52,15 @@ nginx (étape 3)
 
 Client (étape 2)
 ----------------
-- Transport : une seule méthode virtuelle Response send(const Request&).
+- Transport : une seule méthode virtuelle Response send(const std::string& url, const Request&).
 - Client : URL de base, headers par défaut, paramètres de chemin et de requête encodés, filtres
   (authentification Basic / Bearer), timeouts et proxy (configuration du transport).
     Pet pet = client.get("/pets/{id}", 42).accept<Json>().as<Pet>();   // HttpError si statut >= 400
-- Un handle curl par Client (pas thread-safe).
+- Un handle curl par transport, requêtes sérialisées par un mutex ; corps de requête mis en mémoire avant envoi.
+- Codecs acceptés dans le type de l'appel (Call<Codecs...>) : as<T>() vérifie à la compilation qu'un codec accepté
+  désérialise T, et choisit à l'exécution celui qui correspond au Content-Type de la réponse.
+- send() renvoie la réponse quel que soit son statut ; execute() et as<T>() lèvent HttpError si statut >= 400.
+- Filtres communs au client et au serveur (rest/filter.hpp) ; basicAuth() / bearerAuth().
 
 Plus tard
 ---------

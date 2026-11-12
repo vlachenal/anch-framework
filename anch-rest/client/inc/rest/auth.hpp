@@ -1,6 +1,6 @@
 /*
   ANCH Framework: ANother C++ Hack is a C++ framework based on C++11 standard
-  Copyright (C) 2020 Vincent Lachenal
+  Copyright (C) 2012 Vincent Lachenal
 
   This file is part of ANCH Framework.
 
@@ -19,31 +19,45 @@
 */
 #pragma once
 
-#include "rest/headers.hpp"
-#include "rest/constants.hpp"
+#include <string>
+#include <string_view>
+
+#include "rest/filter.hpp"
 
 namespace anch::rest {
 
   /*!
-   * \brief HTTP authentication
+   * HTTP Basic authentication filter: sets \c Authorization header
    *
-   * HTTP authentication scheme interface
+   * \param user the user
+   * \param password the password
    *
-   * \author Vincent Lachenal
+   * \return the filter
    *
    * \since 0.1
    */
-  class Authentication {
+  anch::rest::Filter basicAuth(std::string_view user, std::string_view password);
 
-  public:
-    /*!
-     * Add authentication to HTTP headers
-     *
-     * \param headers the request headers
-     * \param header the header to set (default to Authorization)
-     */
-    virtual void setAuthentication(anch::rest::Headers& headers, const std::string& header = anch::rest::CommonHeaders::AUTHORIZATION) = 0;
+  /*!
+   * Bearer token authentication filter: sets \c Authorization header
+   *
+   * \param token the token
+   *
+   * \return the filter
+   *
+   * \since 0.1
+   */
+  anch::rest::Filter bearerAuth(std::string_view token);
 
-  };
+  /*!
+   * Base64 encoding (RFC 4648, with padding)
+   *
+   * \param value the value to encode
+   *
+   * \return the encoded value
+   *
+   * \since 0.1
+   */
+  std::string base64Encode(std::string_view value);
 
-}  // anch::rest
+}
