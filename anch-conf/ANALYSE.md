@@ -4,18 +4,22 @@ Analyse du 2026-10-27. Vue d'ensemble : [../ANALYSE.md](../ANALYSE.md).
 
 Hors périmètre : la configuration en cascade par profil est en construction (voir `cascade.todo`). Le module n'a pas été analysé en détail.
 
-## Observations
+## État
 
-- **`_loaded` jamais mis à `true`** — constaté le 2026-10-29, **corrigé provisoirement le 2026-10-30** : `load()` met désormais `_loaded = true` (`src/conf/configuration.cpp:205`), ce qui débloque `Configuration::inst()` (le test `SQLConnectionFactorySQLite` d'`anch-sql` passe de nouveau).
-  Limite de ce correctif provisoire : l'affectation est dans la branche `else` de `placeholders.collect()`. Quand la configuration contient des placeholders (par exemple `test-placeholders.ini`), `resolve()` est appelé mais `_loaded` reste à `false` : `inst()` lève toujours `NOT_LOADED`, et un second appel à `load()` recharge tout. À reprendre lors de la finalisation des résolveurs.
+Cascade et placeholders terminés le 2026-11-12 (voir [cascade.todo](cascade.todo)) : 26 tests, propres sous ASan / UBSan.
 
-- Résolveurs et placeholders en cours : le test `testPlaceHolders.cpp` vérifie pour l'instant que `${env=USER}` reste non résolu (l'assertion sur la valeur résolue est commentée).
-- `src/conf/configuration.cpp:165-167` : `std::getenv("ANCH_PROFILES")` est appelé deux fois alors que le résultat du premier appel est déjà dans `env`.
-- `Configuration::loader()` renvoie une instance `static` : les appels concurrents à `name()` / `profiles()` / `load()` ne sont pas protégés (à garder en tête si le chargement peut se faire depuis plusieurs threads).
-- 13 tests passent.
+## Constats corrigés le 2026-11-12
 
-## À approfondir
-- [ ] Mettre `_loaded = true` aussi après `placeholders.resolve()` (ou en fin de `load()`).
-- [ ] Analyse complète une fois la cascade terminée (includes, profils par défaut, `ANCH_PROFILES`).
-- [ ] Détection de cycles dans les placeholders (`${a}` qui renvoie vers `${b}` qui renvoie vers `${a}`).
-- [ ] Détection de cycles dans les `includes`.
+- **`splitTrim` bouclait à l'infini dès que la liste contenait deux éléments** (`while(std::size_t pos = str.find(...) != npos)` : `pos` valait le résultat de la comparaison) : `ANCH_PROFILES=dev,ut` ou deux includes bloquaient `load()`. Le découpage s'arrêtait aussi au premier espace d'un élément.
+- `Configuration::section("a.b.c")` : même défaut de découpage.
+- Les profils étaient chargés avant la lecture des includes : les fichiers `<include>-<profil>` n'étaient jamais lus ; ils le sont maintenant, après les includes.
+- Clé `default-profiles` (décrite dans `cascade.todo`) prise en compte, `default-profile` gardée.
+- Include introuvable signalé avec le nom du fichier principal ; double `getenv("ANCH_PROFILES")`.
+- `ConfError` préfixait `UNKNOWN:` tous les messages sauf `NOT_READABLE` et `PARSING_ERROR`.
+- **Placeholders jamais résolus** (`resolve()` vide) et **`_loaded` resté à `false`** quand la configuration en contenait. Résolution réécrite : événementielle (file synchrone propre au chargement, pas d'`EventBus` asynchrone et singleton), watchdog de profondeur, cycles et références absentes en erreur, valeurs résolues littérales. Les traces `std::cout` sont supprimées.
+
+## Reste
+
+- `Configuration::loader()` renvoie une instance `static` : les appels concurrents pendant le chargement ne sont pas protégés.
+- anch-ini : les espaces avant `=` font partie de la clé (`cle = valeur` donne la clé `"cle "`).
+- Résolveur `arg` protégé mais non enregistré ; placeholders imbriqués non supportés (erreur explicite).

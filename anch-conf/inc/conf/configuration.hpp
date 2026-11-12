@@ -1,5 +1,5 @@
 /*
-  ANCH Framework: ANother C++ Hack is a C++ framework based on C++11 standard
+  ANCH Framework: ANother C++ Hack is a C++ framework based on C++23 standard
   Copyright (C) 2012 Vincent Lachenal
 
   This file is part of ANCH Framework.
@@ -15,7 +15,7 @@
   GNU Lesser General Public License for more details.
 
   You should have received a copy of the GNU Lesser General Public License
-  along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
+  along with ANCH Framework.  If not, see <https://www.gnu.org/licenses/>.
 */
 #pragma once
 
@@ -142,15 +142,21 @@ namespace anch::conf {
     /*!
      * Parse \ref Configuration from base name.\n
      * Configuration will load configuration files in this order:
-     *  - look for <name> file with registered extenions (default name to application ; ini, conf, cnf and properties extensions will always been registered) in folders
+     *  - look for \<name\> file with registered extenions (default name to application ; ini, conf, cnf and properties extensions will always been registered) in folders
      *  - raise error when file is not found
      *  - load the first file found (others will be ignored)
-     *  - load includes files
-     *  - for each active profiles, repeat the previous loading with <file>-<profile>.<extension>
+     *  - load included files (\c anch::conf.includes , comma separated list in main file): an included
+     *    file which is not found is an error
+     *  - active profiles are the profiles set with \ref profiles , or \c ANCH_PROFILES environment
+     *    variable, or \c anch::conf.default-profiles (comma separated lists)
+     *  - for each active profile, in order, load \<name\>-\<profile\> then \<include\>-\<profile\> files when
+     *    they exist: later files override previous values
+     *  - resolve placeholders (see \ref Placeholders )
      *
      * \return the \ref Configuration
      *
-     * \throw anch::conf::ConfError on file open or resolution error (codes: CONF_NOT_FOUND)
+     * \throw anch::conf::ConfError on file open or resolution error (codes: CONF_NOT_FOUND, RES_NOT_FOUND,
+     *        NOT_RES, PARSING_ERROR, CYCLE)
      * \throw anch::ini::ParserError INI file parser error
      */
     Configuration& load();
@@ -158,7 +164,7 @@ namespace anch::conf {
     /*!
      * Get section
      *
-     * \param section the section's path
+     * \param path the section's path (dotted path, \c . for root section)
      *
      * \return the section when found, \c NULL otherwise.
      */
@@ -167,7 +173,7 @@ namespace anch::conf {
     /*!
      * Get value
      *
-     * \param param the value's path
+     * \param path the value's path (dotted path)
      *
      * \return the optional result
      */

@@ -1,5 +1,5 @@
 /*
-  ANCH Framework: ANother C++ Hack is a C++ framework based on C++11 standard
+  ANCH Framework: ANother C++ Hack is a C++ framework based on C++23 standard
   Copyright (C) 2012 Vincent Lachenal
 
   This file is part of ANCH Framework.
@@ -15,76 +15,74 @@
   GNU Lesser General Public License for more details.
 
   You should have received a copy of the GNU Lesser General Public License
-  along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
+  along with ANCH Framework.  If not, see <https://www.gnu.org/licenses/>.
 */
 #pragma once
 
-#include <string>
-#include <map>
+#include <cstddef>
 
 #include "conf/section.hpp"
 #include "conf/confError.hpp"
 
-#include "events/eventBus.hpp"
-
 namespace anch::conf {
 
-  struct ResConfEvt;
-  struct ConfPlaceholders;
-
   /*!
-   * \brief Register placeholders
+   * \brief Configuration placeholders resolution
    *
-   * This class aims to collect and resvol placeholders
+   * A placeholder is <tt>${alternative|alternative|...}</tt> in a configuration value. An alternative is
+   * either <tt>resolver=argument</tt> (\c env=HOME , \c conf=section.key , registered resolvers) or a
+   * default value. The first alternative which resolves is used:
+   * \code{.ini}
+url=http://${env=HOST|localhost}:${conf=server.port}/
+   * \endcode
    *
-   * \since 0.1
+   * Resolution is event driven: values without pending dependency are resolved first; each resolved
+   * value is written in its section and fires a "resolved" event in a synchronous queue. Values which
+   * reference it with \c conf= are then completed and fire their own event, until the queue is empty.\n
+   * \n
+   * Resolved values are literal: a value which contains <tt>${...}</tt> after resolution (for example an
+   * environment variable) is not interpreted again. With the watchdog, resolution always terminates:
+   * - a resolution chain longer than the maximum depth is an error (\c CYCLE )
+   * - values still waiting when the queue is empty reference each other: the cycle is an error (\c CYCLE )
+   *
+   * Other errors: unknown resolver (\c RES_NOT_FOUND ), placeholder without resolvable alternative
+   * (\c NOT_RES ), invalid syntax such as nested placeholders (\c PARSING_ERROR ).
    *
    * \author Vincent Lachenal
+   *
+   * \since 0.2
    */
   class Placeholders {
 
     // Attributes +
+  public:
+    /*! Default maximum resolution chain length */
+    static constexpr std::size_t DEFAULT_MAX_DEPTH = 64;
+
   private:
-    /*! The \ref anch::conf::Section to parse */
+    /*! Root section */
     anch::conf::Section& _section;
 
-    /*! The collected placeholders to replace */
-    std::map<std::string, anch::conf::ConfPlaceholders> _values;
-
-    /*! The event bus to use if needed */
-    anch::events::EventBus<anch::conf::ResConfEvt>* _evtBus;
+    /*! Maximum resolution chain length (watchdog) */
+    std::size_t _maxDepth;
     // Attributes -
 
     // Constructors +
   public:
     /*!
-     * Forbids \ref Placeholders default constructor
-     */
-    Placeholders() = delete;
-
-    /*!
-     * Forbids \ref Placeholders copy constructor
-     *
-     * \param other \ref Placeholders not to copy
-     */
-    Placeholders(const Placeholders& other) = delete;
-
-    /*!
-     * Forbids \ref Placeholders move constructor
-     *
-     * \param other \ref Placeholders not to move
-     */
-    Placeholders(Placeholders&& other) = delete;
-
-    /*!
      * \ref Placeholders constructor
      *
-     * \param section the section to analyze
+     * \param section the root section (resolved values are written in it)
+     * \param maxDepth the maximum resolution chain length
      */
-    Placeholders(anch::conf::Section& section) noexcept;
+    explicit Placeholders(anch::conf::Section& section, std::size_t maxDepth = DEFAULT_MAX_DEPTH) noexcept;
+
+    /*! Prohibit \ref Placeholders copy */
+    Placeholders(const Placeholders&) = delete;
     // Constructors -
 
     // Destructor +
+  public:
     /*!
      * \ref Placeholders destructor
      */
@@ -94,45 +92,18 @@ namespace anch::conf {
     // Methods +
   public:
     /*!
-     * Collect placeholders from 'root' \ref anch::conf::Section
+     * Resolve every placeholder of the section and its subsections
      *
-     * \return \c true when placeholders has been detected, \c false otherwise
+     * \return the number of resolved values
      *
-     * \throw anch::conf::ConfError on file open or resolution error (codes: RES_NOT_FOUND)
+     * \throw anch::conf::ConfError on resolution error
      */
-    bool collect();
+    std::size_t resolve();
 
-    /*!
-     * Resolve all placeholders
-     *
-     * \throw anch::conf::ConfError on file open or resolution error (codes: NOT_RES)
-     */
-    void resolve();
-
-  private:
-    /*!
-     * Collect placeholders in \ref anch::conf::Section
-     *
-     * \param section the \ref anch::conf::Section
-     * \param path the section's path (default to empty string for root \ref anch::conf::Section)
-     *
-     * \throw anch::conf::ConfError on file open or resolution error (codes: RES_NOT_FOUND)
-     */
-    void collect(anch::conf::Section& section, const std::string& path = "");
-
-    /*!
-     * Parse placeholders
-     *
-     * \param cph the configuration placeholder to fill
-     * \param placeholder the placeholder to parse
-     *
-     * \throw anch::conf::ConfError RES_NOT_FOUND when resolver has not been registered
-     */
-    void parsePlaceholder(anch::conf::ConfPlaceholders& cph, const std::string& placeholder);
+    /*! Prohibit \ref Placeholders copy */
+    Placeholders& operator=(const Placeholders&) = delete;
     // Methods -
 
   };
 
 }
-
-#include "impl/placeholders.hpp"

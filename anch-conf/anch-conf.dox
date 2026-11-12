@@ -8,94 +8,56 @@
  *
  * \section res_req_sec Prerequisites
  *
- * - \ref anch-ini this is the default configuration file parser (it will be register with extensions \c ini , \c conf , \c cnf and \c properties files)
+ * - \ref page_ini "anch-ini": this is the default configuration file parser (it will be register with extensions \c ini , \c conf , \c cnf and \c properties files)
  *
  * \section res_install_sec Installation
  *
- * make install
+ * CMake target \c anch::conf:
+ * \code{.cmake}
+find_package(Anch REQUIRED)
+target_link_libraries(my-app PRIVATE anch::conf)
+\endcode
+ * See \ref install_sec "installation".
  *
  * \section res_concept_sec Conception
  *
- * AnCH configuration library is a thread safe configuration files management library.\n
- * Every configurations will be store in application cache and will be available with static methods.\n
- * \n
- * Configuration files has to be formatted with classic key=value syntax. It supports comments with \c # character.\n
- * Configuration files can also contains categories which will be declared between brackets.\n
- * \n
- * Configuration file example:\n
- * \code{.txt}
-# Some comment
-key=value
-key1=value1
+ * Configuration is loaded once with \ref anch::conf::Configuration::loader "Configuration::loader()" and
+ * read with \ref anch::conf::Configuration::inst "Configuration::inst()". Values are read with dotted paths
+ * (\c section.subsection.key ).
+ *
+ * \subsection res_cascade_sec Cascade
+ *
+ * \code{.ini}
+# application.ini
+anch::conf.includes=database,security
+anch::conf.default-profiles=dev
 
-[category]
-key=value # Other comment
-key2=value2
+[server]
+host=${env=HOST|localhost}
+url=http://${conf=server.host}:${conf=server.port}/
 \endcode
- * \n
- * Library interface is done in a single class: \ref anch::conf::Configuration "anch::conf::Configuration".\n
- * Configuration files are retrieved through \c getConfiguration static method which returns a \ref anch::conf::Configuration "anch::conf::Configuration" instance.\n
- * Configuration parameters are retrieved through \c getParameter method.
+ *
+ * Loading order (later files override previous values): \c application , included files
+ * (\c database , \c security ), then for each active profile \c application-\<profile\> and
+ * \c \<include\>-\<profile\> when they exist. Active profiles are given to \c profiles() , or set in
+ * \c ANCH_PROFILES environment variable, or \c anch::conf.default-profiles .
+ *
+ * \subsection res_placeholders_sec Placeholders
+ *
+ * <tt>${alternative|alternative|...}</tt>: an alternative is <tt>resolver=argument</tt> (\c env , \c conf
+ * or registered resolvers) or a default value; the first alternative which resolves is used.
+ * Resolution is event driven (a resolved value completes the values which reference it) and has a
+ * watchdog: cycles and too long resolution chains are errors (\c CYCLE ). Resolved values are literal.
  *
  * \section res_example_sec Example
  *
- * Configuration file "test.ini":
- * \code{.txt}
-# Comments
-
-toto=tata
-tata=tutu # test with comments
-
-[TOTO]
-toto=titi
-\endcode
- * \n
- * C++ example:
  * \code{.cpp}
-#include <iostream>
+#include "conf/configuration.hpp"
 
-#include "configuration/configuration.hpp"
-
-
-using std::cout;
-using std::endl;
-using std::string;
-
-using anch::configuration::Configuration;
-
-
-int
-main(void) {
-  cout << "Enter in test configuration" << endl;
-
-  cout << "Parse file" << endl;
-  const Configuration& res = Configuration::getConfiguration("test.ini");
-  cout << "File has been parsed" << endl;
-
-  string value;
-  bool found = res.getParameter(value,"toto");
-  if(found) {
-    cout << "toto=" << value << endl;
-  } else {
-    cout << "toto has not been found" << endl;
-  }
-
-  found = res.getParameter(value,"toto","TOTO");
-  if(found) {
-    cout << "TOTO/toto=" << value << endl;
-  } else {
-    cout << "TOTO/toto has not been found" << endl;
-  }
-
-  found = res.getParameter(value,"tata");
-  if(found) {
-    cout << "tata=" << value << endl;
-  } else {
-    cout << "tata has not been found" << endl;
-  }
-
-
-  cout << "Exit test configuration" << endl;
-  return 0;
-}\endcode
+const anch::conf::Configuration& conf = anch::conf::Configuration::loader()
+  .name("application")
+  .folders({"/etc/myapp", "."})
+  .load();
+std::optional<std::string> url = conf.value("server.url");
+\endcode
  */

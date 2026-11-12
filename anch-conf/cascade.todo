@@ -1,18 +1,23 @@
-fonction register pour la lib à utiliser pour lire un fichier à partir de son extension (anch-ini => .ini, .conf, .properties ; anch-json => .json ; anch-yaml => .yaml, .yml ; anch-xml => .xml ; ...)
+Configuration en cascade (terminée le 2026-11-12)
+==================================================
 
-parsing complet
+Fait
+----
+- Section anch::conf du fichier principal : includes et default-profiles (default-profile accepté)
+  includes=file1,file2
+  default-profiles=dev
+- Listes séparées par ',' et nettoyées des espaces.
+- Profils : paramètre, sinon ANCH_PROFILES, sinon default-profiles.
+- Ordre de chargement (les fichiers suivants écrasent les précédents) : principal, includes, puis pour
+  chaque profil <nom>-<profil> et <include>-<profil>. Include absent : erreur ; fichier de profil absent :
+  pas d'erreur.
+- Placeholders ${résolveur=argument|...|défaut} : résolution événementielle (file synchrone propre au
+  chargement), valeurs résolues littérales, watchdog (profondeur maximale, cycles en erreur CYCLE), clé
+  conf absente sans alternative en erreur NOT_RES.
 
-dans la section anch::conf
-
-[anch::conf]
-includes=file1,file2
-default-profiles=dev
-
-split des includes par ','
-si pas de profile en paramètre ni de profile dans les variables d'environnement (ANCH_PROFILES) alors la liste des profiles est default-profiles (split par ',')
-
-chargement des includes AVEC les profiles (même règle que ci-dessous)
-si un des fichiers inclus n'existe pas, plantage
-
-chargement des profiles (même nom de fichier suffixé par -<profile>)
-si le fichier suffixé n'existe pas, pas d'erreur
+Reste
+-----
+- fonction register pour la lib à utiliser pour lire un fichier à partir de son extension (anch-ini =>
+  .ini, .conf, .properties ; anch-json => .json ; anch-yaml => .yaml, .yml ; anch-xml => .xml ; ...)
+- résolveur arg (arguments de ligne de commande) : nom protégé mais pas de résolveur enregistré
+- anch-ini : les espaces avant '=' font partie de la clé ("cle = valeur" donne la clé "cle ")

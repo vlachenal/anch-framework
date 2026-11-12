@@ -1,5 +1,5 @@
 /*
-  ANCH Framework: ANother C++ Hack is a C++ framework based on C++11 standard
+  ANCH Framework: ANother C++ Hack is a C++ framework based on C++23 standard
   Copyright (C) 2012 Vincent Lachenal
 
   This file is part of ANCH Framework.
@@ -15,7 +15,7 @@
   GNU Lesser General Public License for more details.
 
   You should have received a copy of the GNU Lesser General Public License
-  along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
+  along with ANCH Framework.  If not, see <https://www.gnu.org/licenses/>.
 */
 #pragma once
 
@@ -49,15 +49,15 @@ namespace anch::conf {
    * \brief Value resolvers' registry
    *
    * Provides singleton class with manage value resolvers.\n
-   * Values which will be try to be resolve have the following syntax: \c{${<resolver>:value}<arguments>}
+   * Values which will be resolved have the following syntax: <tt>${resolver=argument|...|default}</tt> (see \ref anch::conf::Placeholders "Placeholders")
    *
    * \since 0.1
    *
    * \author Vincent Lachenal
    */
   class Resolvers: public anch::Singleton<Resolvers> {
-    friend anch::conf::Configuration;
-    friend anch::Singleton<Resolvers>;
+    friend class anch::conf::Configuration;
+    friend class anch::Singleton<Resolvers>;
 
     // Attributes +
   public:
@@ -119,7 +119,7 @@ namespace anch::conf {
      *
      * \return \c this
      *
-     * \throw \c anch::conf::ConfError when extension as already been registered
+     * \throw anch::conf::ConfError when extension as already been registered
      */
     Resolvers& registerResolver(Resolver resolver, const std::string& key);
 

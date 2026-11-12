@@ -1,5 +1,5 @@
 /*
-  ANCH Framework: ANother C++ Hack is a C++ framework based on C++11 standard
+  ANCH Framework: ANother C++ Hack is a C++ framework based on C++23 standard
   Copyright (C) 2012 Vincent Lachenal
 
   This file is part of ANCH Framework.
@@ -15,7 +15,7 @@
   GNU Lesser General Public License for more details.
 
   You should have received a copy of the GNU Lesser General Public License
-  along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
+  along with ANCH Framework.  If not, see <https://www.gnu.org/licenses/>.
 */
 #pragma once
 
@@ -53,8 +53,8 @@ namespace anch::conf {
    * \author Vincent Lachenal
    */
   class Parsers: public anch::Singleton<Parsers> {
-    friend anch::conf::Configuration;
-    friend anch::Singleton<Parsers>;
+    friend class anch::conf::Configuration;
+    friend class anch::Singleton<Parsers>;
 
     // Attributes +
   private:
@@ -104,7 +104,7 @@ namespace anch::conf {
      * \param parser the parser to register
      * \param extensions the extensions to associate to the parser
      *
-     * \throw \c anch::conf::ConfError when extension as already been registered
+     * \throw anch::conf::ConfError when extension as already been registered
      */
     Parsers& registerParser(Parser parser, const std::set<std::string>& extensions);
 

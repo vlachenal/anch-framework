@@ -1,0 +1,8 @@
+/*!
+ * \namespace anch::conf
+ *
+ * \brief AnCH configuration library namespace.
+ *
+ * Configuration files cascade (includes and profiles) and placeholders resolution. See
+ * \ref page_res "AnCH configuration library documentation".
+ */

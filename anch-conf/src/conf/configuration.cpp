@@ -1,5 +1,5 @@
 /*
-  ANCH Framework: ANother C++ Hack is a C++ framework based on C++11 standard
+  ANCH Framework: ANother C++ Hack is a C++ framework based on C++23 standard
   Copyright (C) 2012 Vincent Lachenal
 
   This file is part of ANCH Framework.
@@ -15,13 +15,15 @@
   GNU Lesser General Public License for more details.
 
   You should have received a copy of the GNU Lesser General Public License
-  along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
+  along with ANCH Framework.  If not, see <https://www.gnu.org/licenses/>.
 */
 #include "conf/configuration.hpp"
 
 #include <filesystem>
+#include <cstdlib>
+#include <functional>
+#include <sstream>
 #include <string_view>
-#include <regex>
 
 #include "conf/parsers.hpp"
 #include "conf/placeholders.hpp"
@@ -31,44 +33,36 @@ using anch::conf::Section;
 using anch::conf::Parsers;
 using anch::conf::Placeholders;
 
-const std::string ANCH_CONF("anch::conf");
-const std::string ANCH_DEFAULT_PROFILE("anch::conf.default-profile");
+const std::string ANCH_DEFAULT_PROFILES("anch::conf.default-profiles");
+const std::string ANCH_DEFAULT_PROFILE("anch::conf.default-profile"); // deprecated: default-profiles
 const std::string ANCH_CONF_INC("anch::conf.includes");
 
-const std::regex PH_PATTERN("\\$\\{([^}]+)\\}");
-const std::regex RSV_PATTERN("(([^=|]+)=)?([^|]+)");
-
 /*!
- * Split \c std::string using delimiter, trim left and right and add items in \c std::vector when not empty
+ * Split string on delimiter and trim items (empty items are ignored)
  *
  * \param delim the delimiter
- * \param str the \c std::string to split
- * \param res the \c std::vector to fill
+ * \param str the string to split
+ *
+ * \return the items
  */
-void
-splitTrim(char delim, const std::string& str, std::vector<std::string>& res) {
-  std::size_t cur = 0;
-  while(std::size_t pos = str.find(delim, cur) != str.npos) {
-    // trim left +
-    std::string_view val = str.substr(cur, pos);
-    val.remove_prefix(std::min(val.find_first_not_of(" "), val.size()));
-    // trim left -
-    // trim right +
-    auto trimPos = val.find(' ');
-    if(trimPos != val.npos) {
-      val.remove_suffix(val.size() - trimPos);
+std::vector<std::string>
+splitTrim(char delim, std::string_view str) {
+  std::vector<std::string> res;
+  while(true) {
+    const std::size_t pos = str.find(delim);
+    std::string_view item = str.substr(0, pos);
+    const std::size_t first = item.find_first_not_of(" \t");
+    if(first != std::string_view::npos) {
+      res.emplace_back(item.substr(first, item.find_last_not_of(" \t") - first + 1));
     }
-    // trim right -
-    res.push_back(val.data());
-    cur = pos + 1;
+    if(pos == std::string_view::npos) {
+      break;
+    }
+    str.remove_prefix(pos + 1);
   }
-  res.push_back(str.substr(cur));
+  return res;
 }
 
-
-/*!
- * Configuration file and parser to use
- */
 struct ConfFile {
   std::filesystem::path file;
   const anch::conf::Parser* parser = NULL;
@@ -140,72 +134,69 @@ Configuration::load() {
   if(_loaded) {
     return *this;
   }
-
   // Add current folder as default when not set +
   if(_folders.empty()) {
     _folders.push_back(".");
   }
   // Add current folder as default when not set -
 
-  // Check files in any folder for any extension +
+  // Main file +
   std::optional<ConfFile> conf = selectConfFile(_folders, _name);
   if(!conf.has_value()) {
     std::ostringstream oss;
     oss << "File " << _name << " has not been found with registered extensions";
     throw ConfError(oss.str(), ConfError::ErrorCode::CONF_NOT_FOUND);
   }
-  // Check files in any folder for any extension -
-
-  // Parse file and fill section +
   std::invoke(*conf->parser, conf->file, _root);
-  // Parse file and fill section -
+  // Main file -
 
-  // Add profiles with environment variable (if found) when not set +
+  // Included files (declared in main file) +
+  _includes.clear();
+  std::optional<std::string> includes = value(ANCH_CONF_INC);
+  if(includes.has_value()) {
+    _includes = splitTrim(',', includes.value());
+  }
+  for(const std::string& inc: _includes) {
+    conf = selectConfFile(_folders, inc);
+    if(!conf.has_value()) {
+      std::ostringstream oss;
+      oss << "Included file " << inc << " has not been found with registered extensions";
+      throw ConfError(oss.str(), ConfError::ErrorCode::CONF_NOT_FOUND);
+    }
+    std::invoke(*conf->parser, conf->file, _root);
+  }
+  // Included files -
+
+  // Profiles: parameter, then ANCH_PROFILES environment variable, then default profiles +
   if(_profiles.empty()) {
-    char* env = std::getenv("ANCH_PROFILES");
+    const char* env = std::getenv("ANCH_PROFILES");
     if(env != NULL) {
-      splitTrim(',', std::getenv("ANCH_PROFILES"), _profiles);
+      _profiles = splitTrim(',', env);
     }
   }
   if(_profiles.empty()) {
-    std::optional<std::string> defProf = value(ANCH_DEFAULT_PROFILE);
+    std::optional<std::string> defProf = value(ANCH_DEFAULT_PROFILES);
+    if(!defProf.has_value()) {
+      defProf = value(ANCH_DEFAULT_PROFILE);
+    }
     if(defProf.has_value()) {
-      splitTrim(',', defProf.value(), _profiles);
+      _profiles = splitTrim(',', defProf.value());
     }
   }
-  // Add profiles with environment variable (if found) when not set -
+  // Profiles -
 
-  // Load configuration from profiles +
+  // Profile files override previous values, in profiles order +
   for(const std::string& profile: _profiles) {
     loadProfile(profile);
   }
-  // Load configuration from profiles -
+  // Profile files -
 
-  // Parse included files +
-  std::optional<std::string> includes = value(ANCH_CONF_INC);
-  if(includes.has_value()) {
-    splitTrim(',', includes.value(), _includes);
-    for(const std::string& inc: _includes) {
-      conf = selectConfFile(_folders, inc);
-      if(!conf.has_value()) {
-	std::ostringstream oss;
-	oss << "Included file " << _name << " has not been found with registered extensions";
-	throw ConfError(oss.str(), ConfError::ErrorCode::CONF_NOT_FOUND);
-      }
-      std::invoke(*conf->parser, conf->file, _root);
-    }
-  }
-  // Parse included files -
-
-  // Resolve value with place holders +
+  // Resolve values with placeholders +
   Placeholders placeholders(_root);
-  if(placeholders.collect()) {
-    placeholders.resolve();
-  } else {
-    _loaded = true;
-  }
-  // Resolve value with place holders -
+  placeholders.resolve();
+  // Resolve values with placeholders -
 
+  _loaded = true;
   return *this;
 }
 
@@ -238,25 +229,19 @@ Configuration::section(const std::string& path) const noexcept {
     return sec;
   }
   // if path == '.' return root section -
-  // Split path on '.' +
-  std::size_t cur = 0;
-  while(std::size_t pos = path.find('.', cur) != path.npos) {
-    auto iter = sec->getSections().find(path.substr(cur, pos));
+  std::string_view rest(path);
+  while(true) {
+    const std::size_t pos = rest.find('.');
+    auto iter = sec->getSections().find(std::string(rest.substr(0, pos)));
     if(iter == sec->getSections().end()) {
       return NULL;
     }
     sec = &iter->second;
-    cur = pos + 1;
+    if(pos == std::string_view::npos) {
+      return sec;
+    }
+    rest.remove_prefix(pos + 1);
   }
-  // Split path on '.' -
-  // Get last split characters string +
-  auto iter = sec->getSections().find(path.substr(cur));
-  if(iter == sec->getSections().end()) {
-    return NULL;
-  }
-  // Get last split characters string -
-  sec = &iter->second;
-  return sec;
 }
 
 std::optional<std::string>

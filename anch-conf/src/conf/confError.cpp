@@ -1,5 +1,5 @@
 /*
-  ANCH Framework: ANother C++ Hack is a C++ framework based on C++11 standard
+  ANCH Framework: ANother C++ Hack is a C++ framework based on C++23 standard
   Copyright (C) 2012 Vincent Lachenal
 
   This file is part of ANCH Framework.
@@ -15,7 +15,7 @@
   GNU Lesser General Public License for more details.
 
   You should have received a copy of the GNU Lesser General Public License
-  along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
+  along with ANCH Framework.  If not, see <https://www.gnu.org/licenses/>.
 */
 #include "conf/confError.hpp"
 
@@ -32,6 +32,30 @@ ConfError::ConfError(const std::string& msg, ConfError::ErrorCode code): _code(c
     break;
   case ConfError::ErrorCode::PARSING_ERROR:
     oss << "PARSING_ERROR: ";
+    break;
+  case ConfError::ErrorCode::CONF_NOT_FOUND:
+    oss << "CONF_NOT_FOUND: ";
+    break;
+  case ConfError::ErrorCode::RES_NOT_FOUND:
+    oss << "RES_NOT_FOUND: ";
+    break;
+  case ConfError::ErrorCode::RES_PROTECTED:
+    oss << "RES_PROTECTED: ";
+    break;
+  case ConfError::ErrorCode::NOT_RES:
+    oss << "NOT_RES: ";
+    break;
+  case ConfError::ErrorCode::PARSER_NOT_FOUND:
+    oss << "PARSER_NOT_FOUND: ";
+    break;
+  case ConfError::ErrorCode::PARSER_PROTECTED:
+    oss << "PARSER_PROTECTED: ";
+    break;
+  case ConfError::ErrorCode::NOT_LOADED:
+    oss << "NOT_LOADED: ";
+    break;
+  case ConfError::ErrorCode::CYCLE:
+    oss << "CYCLE: ";
     break;
   default:
     oss << "UNKNOWN: ";

@@ -1,5 +1,5 @@
 /*
-  ANCH Framework: ANother C++ Hack is a C++ framework based on C++11 standard
+  ANCH Framework: ANother C++ Hack is a C++ framework based on C++23 standard
   Copyright (C) 2012 Vincent Lachenal
 
   This file is part of ANCH Framework.
@@ -15,301 +15,316 @@
   GNU Lesser General Public License for more details.
 
   You should have received a copy of the GNU Lesser General Public License
-  along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
+  along with ANCH Framework.  If not, see <https://www.gnu.org/licenses/>.
 */
 #include "conf/placeholders.hpp"
 
-#include <regex>
+#include <algorithm>
+#include <deque>
+#include <map>
+#include <optional>
+#include <string>
+#include <string_view>
+#include <variant>
 #include <vector>
 
 #include "conf/resolvers.hpp"
 
-#include "events/observer.hpp"
-
-#include <iostream> // \todo remove
-
-using anch::conf::Placeholders;
-using anch::conf::Section;
-using anch::conf::Resolvers;
 using anch::conf::ConfError;
+using anch::conf::Placeholders;
+using anch::conf::Resolvers;
+using anch::conf::Section;
 
-namespace anch::conf {
+namespace {
 
-  /*!
-   * Resolved configuration event
-   *
-   * \since 0.1
-   *
-   * \author Vincent Lachenal
-   */
-  struct ResConfEvt {
-
-    /*! Configuration path */
-    std::string conf;
-
-    /*! Value */
-    std::string val;
-
+  /*! Placeholder alternative: resolver and argument, or default value (empty resolver) */
+  struct Alternative {
+    std::string resolver;
+    std::string argument;
   };
 
-  /*!
-   * \brief Placeholder items
-   *
-   * Placeholder items contain the resolver (empty when default value) and argument
-   *
-   * \since 0.1
-   *
-   * \author Vincent Lachenal
-   */
-  struct SubPlaceholder: anch::events::Observer<ResConfEvt> {
-
-    /*! Resolver (empty when default value) */
-    std::string res;
-
-    /*! Resolver argument */
-    std::string arg;
-
-    /*! The found value (default to empty => not found) */
-    std::optional<std::string> val;
-
-    /*!
-     * \ref SubPlaceholder default constructor
-     */
-    SubPlaceholder() noexcept {
-      // Nothing to do
-    }
-
-    /*!
-     * \ref SubPlaceholder desctructor
-     */
-    virtual ~SubPlaceholder() noexcept {
-      // Nothing to do
-    }
-
-    /*!
-     * Handle \ref anch::conf::ResConfEvt event
-     *
-     * \param event the event to manage
-     */
-    virtual void handle([[ maybe_unused ]] const anch::events::Event<ResConfEvt>& event) noexcept {
-      // \todo plop
-    }
-
-    /*!
-     * Placeholder item has been resolved
-     *
-     * \return \c true when subplaceholder has resolved, \c false otherwise
-     */
-    bool resvoled() noexcept {
-      return val.has_value();
-    }
-
+  /*! Placeholder: ${alternative|alternative|...} */
+  struct Placeholder {
+    /*! Placeholder text for error messages */
+    std::string text;
+    /*! Alternatives, in priority order */
+    std::vector<Alternative> alternatives;
+    /*! Resolved value */
+    std::optional<std::string> value;
+    /*! Configuration path being waited */
+    std::optional<std::string> waiting;
   };
 
-  /*!
-   * Sub placeholder
-   *
-   * \since 0.1
-   *
-   * \author Vincent Lachenal
-   */
-  struct SubPlaceholders {
-
-    /*! Parent configuration placeholders */
-    ConfPlaceholders& cph;
-
-    /*! Subplaceholders */
-    std::vector<anch::conf::SubPlaceholder> subs;
-
-    /*!
-     * \ref SubPlaceholders constructor
-     *
-     * \param cphs the parent \ref ConfPlaceholders
-     */
-    SubPlaceholders(ConfPlaceholders& cphs) noexcept: cph(cphs), subs() {
-      // Nothing to do
-    }
-
-    /*!
-     * \ref SubPlaceholders destructor
-     */
-    virtual ~SubPlaceholders() noexcept {
-      // Nothing to do
-    }
-
-  };
-
-  /*!
-   * Configuration placeholders
-   *
-   * \since 0.1
-   *
-   * \author Vincent Lachenal
-   */
-  struct ConfPlaceholders {
-
-    /*! Configuration path */
+  /*! Configuration value with placeholders: literal parts and placeholders */
+  struct Node {
     std::string path;
+    Section* section = nullptr;
+    std::string key;
+    std::vector<std::variant<std::string, Placeholder>> parts;
+    bool resolved = false;
+  };
 
-    /*! Placeholders for this configuration */
-    std::map<std::string, std::vector<anch::conf::SubPlaceholder>> placeholders;
+  /*! "Resolved" event: configuration path and resolution chain which led to it */
+  struct Resolved {
+    std::string path;
+    std::vector<std::string> chain;
+  };
 
-    /*! Placeholders has been resolved flag */
-    bool resolved;
-
-    /*! The event bus to use if needed */
-    anch::events::EventBus<anch::conf::ResConfEvt>* evtBus;
-
-    /*!
-     * \ref ConfPlaceholders default constructor
-     */
-    ConfPlaceholders(): path(), placeholders(), resolved(false), evtBus(NULL) {
-      // Nothing to do
+  std::string_view
+  trim(std::string_view value) noexcept {
+    const std::size_t first = value.find_first_not_of(" \t");
+    if(first == std::string_view::npos) {
+      return std::string_view();
     }
+    return value.substr(first, value.find_last_not_of(" \t") - first + 1);
+  }
 
-    /*!
-     * \ref ConfPlaceholders desstructor
-     */
-    virtual ~ConfPlaceholders() noexcept {
-      // Nothing to do
-    }
-    /*!
-     * Try to resolv configuration placeholders
-     *
-     * \return \c true when every placeholder has been resolved, \c false otherwise
-     */
-    bool resolv() {
-      // \todo try to resolv configuration path, store it when resolv and fire event
-      return false;
-    }
-
-    /*!
-     * Subplaceholders getter
-     *
-     * \param key the subplaceholder key
-     *
-     * \return the subplaceholder
-     *
-     * \throw ... when not found
-     */
-    inline
-    std::vector<anch::conf::SubPlaceholder>&
-    getSubs(const std::string& key) {
-      auto iter = placeholders.find(key);
-      if(iter == placeholders.end()) {
-	// \todo raise error
+  std::string
+  join(const std::vector<std::string>& chain) {
+    std::string res;
+    for(const std::string& path : chain) {
+      if(!res.empty()) {
+	res += " -> ";
       }
-      return iter->second;
+      res += path;
+    }
+    return res;
+  }
+
+  /*! Resolution of one configuration */
+  class Resolution {
+  private:
+    Section& _root;
+    std::size_t _maxDepth;
+    std::map<std::string, Node> _nodes;
+    std::map<std::string, std::vector<std::string>> _dependents;
+    std::deque<Resolved> _queue;
+
+  public:
+    Resolution(Section& root, std::size_t maxDepth): _root(root), _maxDepth(maxDepth), _nodes(), _dependents(), _queue() {
     }
 
+    std::size_t
+    run() {
+      collect(_root, "");
+      // Values without pending dependency
+      for(auto& [path, node] : _nodes) {
+	if(evaluate(node)) {
+	  complete(node, {path});
+	}
+      }
+      // Propagation
+      std::size_t events = 0;
+      while(!_queue.empty()) {
+	Resolved event = std::move(_queue.front());
+	_queue.pop_front();
+	if(++events > _nodes.size()) { // each value is resolved once: should never happen
+	  throw ConfError("Placeholders resolution watchdog: too many events", ConfError::ErrorCode::CYCLE);
+	}
+	auto dependents = _dependents.find(event.path);
+	if(dependents == _dependents.end()) {
+	  continue;
+	}
+	for(const std::string& path : dependents->second) {
+	  Node& node = _nodes.at(path);
+	  if(node.resolved) {
+	    continue;
+	  }
+	  std::vector<std::string> chain = event.chain;
+	  chain.push_back(path);
+	  if(chain.size() > _maxDepth) {
+	    throw ConfError("Placeholders resolution chain is longer than " + std::to_string(_maxDepth) + ": " + join(chain),
+			    ConfError::ErrorCode::CYCLE);
+	  }
+	  if(evaluate(node)) {
+	    complete(node, std::move(chain));
+	  }
+	}
+      }
+      checkUnresolved();
+      return _nodes.size();
+    }
+
+  private:
+    void
+    collect(Section& section, const std::string& path) {
+      const std::string base = path.empty() ? path : path + '.';
+      for(const auto& [key, value] : section.getValues()) {
+	if(value.find("${") == std::string::npos) {
+	  continue;
+	}
+	Node node;
+	node.path = base + key;
+	node.section = &section;
+	node.key = key;
+	node.parts = parse(value, node.path);
+	_nodes.emplace(node.path, std::move(node));
+      }
+      for(const auto& [name, sub] : section.getSections()) {
+	collect(section.section(name), base + name);
+      }
+    }
+
+    static std::vector<std::variant<std::string, Placeholder>>
+    parse(std::string_view value, const std::string& path) {
+      std::vector<std::variant<std::string, Placeholder>> parts;
+      std::size_t pos = 0;
+      while(pos < value.size()) {
+	const std::size_t open = value.find("${", pos);
+	if(open == std::string_view::npos) {
+	  parts.emplace_back(std::string(value.substr(pos)));
+	  break;
+	}
+	if(open > pos) {
+	  parts.emplace_back(std::string(value.substr(pos, open - pos)));
+	}
+	const std::size_t close = value.find('}', open);
+	if(close == std::string_view::npos) {
+	  throw ConfError("Unclosed placeholder in " + path, ConfError::ErrorCode::PARSING_ERROR);
+	}
+	std::string_view content = value.substr(open + 2, close - open - 2);
+	Placeholder placeholder;
+	placeholder.text = std::string(value.substr(open, close - open + 1));
+	if(content.find("${") != std::string_view::npos) {
+	  throw ConfError("Nested placeholders are not supported: " + placeholder.text + " in " + path,
+			  ConfError::ErrorCode::PARSING_ERROR);
+	}
+	while(true) {
+	  const std::size_t bar = content.find('|');
+	  std::string_view alternative = trim(content.substr(0, bar));
+	  if(alternative.empty()) {
+	    throw ConfError("Empty alternative in " + placeholder.text + " in " + path, ConfError::ErrorCode::PARSING_ERROR);
+	  }
+	  const std::size_t equal = alternative.find('=');
+	  if(equal == std::string_view::npos) {
+	    placeholder.alternatives.push_back(Alternative{std::string(), std::string(alternative)});
+	  } else {
+	    Alternative alt{std::string(trim(alternative.substr(0, equal))), std::string(trim(alternative.substr(equal + 1)))};
+	    if(!Resolvers::getInstance().hasResolver(alt.resolver)) {
+	      throw ConfError("Resolver " + alt.resolver + " has not been found (" + placeholder.text + " in " + path + ')',
+			      ConfError::ErrorCode::RES_NOT_FOUND);
+	    }
+	    placeholder.alternatives.push_back(std::move(alt));
+	  }
+	  if(bar == std::string_view::npos) {
+	    break;
+	  }
+	  content = content.substr(bar + 1);
+	}
+	parts.emplace_back(std::move(placeholder));
+	pos = close + 1;
+      }
+      return parts;
+    }
+
+    /*! Evaluate pending placeholders: true when every placeholder is resolved */
+    bool
+    evaluate(Node& node) {
+      bool complete = true;
+      for(auto& part : node.parts) {
+	Placeholder* placeholder = std::get_if<Placeholder>(&part);
+	if(placeholder != nullptr && !placeholder->value && !evaluate(node, *placeholder)) {
+	  complete = false;
+	}
+      }
+      return complete;
+    }
+
+    bool
+    evaluate(Node& node, Placeholder& placeholder) {
+      placeholder.waiting.reset();
+      for(const Alternative& alt : placeholder.alternatives) {
+	if(alt.resolver.empty()) { // default value
+	  placeholder.value = alt.argument;
+	  return true;
+	}
+	if(alt.resolver == Resolvers::CONF) {
+	  auto dependency = _nodes.find(alt.argument);
+	  if(dependency != _nodes.end() && !dependency->second.resolved) { // wait for "resolved" event
+	    placeholder.waiting = alt.argument;
+	    std::vector<std::string>& dependents = _dependents[alt.argument];
+	    if(std::find(dependents.begin(), dependents.end(), node.path) == dependents.end()) {
+	      dependents.push_back(node.path);
+	    }
+	    return false;
+	  }
+	  placeholder.value = Section::getValue(alt.argument, _root);
+	} else {
+	  placeholder.value = std::invoke(Resolvers::getInstance().getResolver(alt.resolver), alt.argument, std::nullopt);
+	}
+	if(placeholder.value) {
+	  return true;
+	}
+      }
+      throw ConfError("Unable to resolve " + placeholder.text + " in " + node.path, ConfError::ErrorCode::NOT_RES);
+    }
+
+    /*! Write resolved value and fire "resolved" event */
+    void
+    complete(Node& node, std::vector<std::string> chain) {
+      std::string value;
+      for(const auto& part : node.parts) {
+	if(const std::string* literal = std::get_if<std::string>(&part)) {
+	  value += *literal;
+	} else {
+	  value += *std::get<Placeholder>(part).value;
+	}
+      }
+      node.section->putValue(node.key, value);
+      node.resolved = true;
+      _queue.push_back(Resolved{node.path, std::move(chain)});
+    }
+
+    /*! Values still waiting reference each other: report the cycle */
+    void
+    checkUnresolved() const {
+      for(const auto& [path, node] : _nodes) {
+	if(node.resolved) {
+	  continue;
+	}
+	std::vector<std::string> chain;
+	const Node* current = &node;
+	while(std::find(chain.begin(), chain.end(), current->path) == chain.end()) {
+	  chain.push_back(current->path);
+	  current = &_nodes.at(waitingOn(*current));
+	}
+	// Keep the cycle only (values leading to it are not part of it)
+	chain.erase(chain.begin(), std::find(chain.begin(), chain.end(), current->path));
+	chain.push_back(current->path);
+	throw ConfError("Placeholders resolution cycle: " + join(chain), ConfError::ErrorCode::CYCLE);
+      }
+    }
+
+    static const std::string&
+    waitingOn(const Node& node) {
+      for(const auto& part : node.parts) {
+	const Placeholder* placeholder = std::get_if<Placeholder>(&part);
+	if(placeholder != nullptr && placeholder->waiting) {
+	  return *placeholder->waiting;
+	}
+      }
+      throw ConfError("Unresolved value " + node.path, ConfError::ErrorCode::NOT_RES); // should not happen
+    }
   };
 
 }
 
-
-const std::regex PH_PATTERN("\\$\\{( )*([^}]+)( )*\\}");
-const std::regex RSV_PATTERN("(([^=|]+)( )*=)?(( )*([^|]+))");
-
-
 // Constructors +
-Placeholders::Placeholders(anch::conf::Section& section) noexcept:
-  _section(section),
-  _values(),
-  _evtBus(NULL) {
+Placeholders::Placeholders(Section& section, std::size_t maxDepth) noexcept: _section(section), _maxDepth(maxDepth) {
   // Nothing to do
 }
 // Constructors -
 
 // Destructor +
 Placeholders::~Placeholders() noexcept {
-  _values.clear();
-  if(_evtBus != NULL) {
-    _evtBus->release();
-    _evtBus = NULL;
-  }
+  // Nothing to do
 }
 // Destructor -
 
 // Methods +
-void
+std::size_t
 Placeholders::resolve() {
-  if(_values.empty()) {
-    std::cout << "No placeholder has been found" << std::endl;
-    return;
-  }
-  _evtBus = new anch::events::EventBus<ResConfEvt>();
-  std::cout << std::endl << "Resolve placeholders" << std::endl;
-  for(auto iter = _values.begin() ; iter != _values.end() ; ++iter) {
-    std::cout << "Try to resolve placeholder " << iter->first << std::endl;
-    // \todo resolve placeholder
-  }
-}
-
-auto RIT_END = std::sregex_iterator();
-
-void
-Placeholders::parsePlaceholder(anch::conf::ConfPlaceholders& cph, const std::string& placeholder) {
-  std::cout << "Parse placeholder " << placeholder << " for key " << cph.path << std::endl;
-  auto sub = std::sregex_iterator(placeholder.begin(), placeholder.end(), RSV_PATTERN);
-  if(sub == RIT_END) {
-    return;
-  }
-  std::vector<anch::conf::SubPlaceholder> subs;
-  for(/*std::size_t i = 0*/ ; sub != RIT_END ; ++sub/*, ++i*/) {
-    std::cout << "Found: resolver = '" << sub->str(2) << "' ; value = '" << sub->str(6) << '\'' << std::endl;
-    anch::conf::SubPlaceholder item;
-    item.res = sub->str(2);
-    if(item.res == "") { // default value
-      item.val = sub->str(6);
-    } else if(!Resolvers::getInstance().hasResolver(item.res)) { // check if resolver exists
-      std::ostringstream oss;
-      oss << "Resolver " << item.res << " has not been found";
-      throw ConfError(oss.str(), ConfError::ErrorCode::RES_NOT_FOUND);
-    } else {
-      item.arg = sub->str(6);
-    }
-    if(item.res == Resolvers::ENV) { // resolv environment variable
-      item.val = std::invoke(Resolvers::getInstance().getResolver(Resolvers::ENV), item.arg, "");
-      std::cout << "Found env " << item.arg << ": " << item.val.value_or("not found") << std::endl;
-    } else if(item.res == Resolvers::CONF) {
-      std::optional<std::string> val = _section.getValue<std::string>(item.arg);
-      if(!val.has_value()) {
-	continue;
-      }
-      if(val.has_value() /* && val does not match placeholder ... */) {
-	item.val = val.value();
-      } else {
-	// \todo register placeholder as event's consumer
-      }
-    }
-    subs.push_back(item);
-  }
-  cph.placeholders[placeholder] = subs;
-}
-
-void
-Placeholders::collect(Section& section, const std::string& path) {
-  std::cout << std::endl << "Parse placeholder in section: " << (path.empty() ? "." : path) << std::endl;
-  std::string basePath = path.empty() ? path : path + '.';
-  for(auto iter = section.getValues().begin() ; iter != section.getValues().end() ; ++iter) {
-    std::string valuePath = basePath + iter->first;
-    std::cout << std::endl << "Parse value " << iter->second << " for key " << valuePath << std::endl;
-    auto sub = std::sregex_iterator(iter->second.begin(), iter->second.end(), PH_PATTERN);
-    if(sub == RIT_END) {
-      continue;
-    }
-    anch::conf::ConfPlaceholders cph;
-    cph.path = valuePath;
-    cph.evtBus = _evtBus;
-    for(/*std::size_t i = 0*/ ; sub != RIT_END ; ++sub/*, ++i*/) { // sub->str(0) matches the complete PH_PATTERN with ${}
-      parsePlaceholder(cph, sub->str(2));
-    }
-    if(!cph.resolv()) {
-      _values[valuePath] = cph;
-    }
-  }
-  for(auto iter = section.getSections().begin() ; iter != section.getSections().end() ; ++iter) {
-    collect(section.section(iter->first), basePath + iter->first);
-  }
+  Resolution resolution(_section, _maxDepth);
+  return resolution.run();
 }
 // Methods -
