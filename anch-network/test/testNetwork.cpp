@@ -44,8 +44,11 @@ using anch::network::UdpSocket;
 
 using namespace std::chrono_literals;
 
-/*! Timeout of every blocking reception: a broken test fails instead of hanging */
-constexpr auto TIMEOUT = 5s;
+/*!
+ * Timeout of every blocking reception: a broken test fails instead of hanging.\n
+ * It is a safety net only: tests run under sanitizers on loaded CI machines.
+ */
+constexpr auto TIMEOUT = 30s;
 
 /*!
  * Run server side in a thread: accept one connection and call handler with the stream

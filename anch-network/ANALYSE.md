@@ -72,3 +72,6 @@ Correspondance avec la refonte : N1 (`Address` copie l'adresse), N2 / N3 / N7 (t
 - [ ] Ajouter une option CMake pour compiler les tests avec ASan / UBSan (par exemple un preset `asan`) : vérifié à la main le 2026-11-03.
 - [ ] Non bloquant (`poll`, délais de connexion), TLS (wrapper OpenSSL, voir `anch-crypto`), sockets Unix (`AF_UNIX`) : non implémentés.
 - [ ] Runners socket d'`anch-ut` (T2 à T4) : pourront s'appuyer sur `TcpServer` / `TcpStream`.
+
+## 2026-11-12 : délais des tests en CI
+`tcp-large` échouait en CI (« Server has read 0 bytes ») : tous les tests étaient lancés en même temps (preset `"jobs": 0` = parallélisme illimité) sous ASan sur 4 vCPU, et la lecture de la réponse dépassait le délai de réception de 5 s des tests. Le workflow limite maintenant `ctest` au nombre de CPU et le délai de sécurité des tests passe à 30 s. Pas de défaut dans la bibliothèque.

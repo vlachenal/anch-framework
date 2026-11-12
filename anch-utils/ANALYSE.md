@@ -124,6 +124,10 @@ Tests : instance unique sous concurrence (20 threads synchronisés par `std::lat
 - `anch-device` : `CPU` laisse ses drapeaux non initialisés si la feuille 1 de `cpuid` n'existe pas ;
 - toutes : `virtual` sur les destructeurs et suppressions de copie devenus inutiles.
 
+### U18. `ResourcePool` : emprunteurs servis sans ordre (famine sous contention) — vérifié (CI) — **corrigé le 2026-11-12**
+`borrowResource` attendait sur une seule `std::condition_variable` : un emprunteur réveillé pouvait être doublé indéfiniment par ceux qui tournaient déjà. Sur la CI (tous les tests lancés en même temps sous ASan sur 4 vCPU), `res-pool-concurrent` échouait (26 `TimeoutException` après 10 s). Mesure sur un cœur saturé, 16 threads, 4 ressources : attente maximale d'un emprunt 13 079 ms.
+Correction : file d'attente FIFO (une variable de condition par emprunteur en attente, seul le premier est réveillé, un nouvel arrivant ne double pas ceux qui attendent, un emprunteur en timeout se retire et réveille le suivant). Même mesure : 138 ms. Test `res-pool-fifo` ajouté.
+
 ## Points positifs
 - `Singleton` repose sur une variable `static` locale : initialisation sûre entre threads.
 - 43 tests passent.

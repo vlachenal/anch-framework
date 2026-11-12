@@ -14,7 +14,7 @@ The framework is a single CMake project (CMake >= 3.25): the root `CMakeLists.tx
 cmake --preset debug                        # configure
 cmake --build --preset debug                # build everything
 cmake --build --preset debug --target anch-conf-parse   # build one target
-ctest --preset debug                        # run all tests
+ctest --preset debug -j "$(nproc)"          # run all tests (presets "jobs": 0 means unlimited parallelism)
 ctest --preset debug -L conf                # run one module's tests (label = module name without 'anch-')
 ctest --preset debug -R anch-conf-pattern   # run tests by name
 ```

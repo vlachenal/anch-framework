@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include <algorithm>
+
 namespace anch {
 
   // ResourcePoolState +
@@ -38,8 +40,16 @@ namespace anch {
 	  // Resource will be destroyed outside the lock and created again on demand
 	}
       }
+      notifyFirstWaiter();
     }
-    _wait.notify_one();
+  }
+
+  template<anch::Validable T>
+  void
+  ResourcePoolState<T>::notifyFirstWaiter() noexcept {
+    if(!_waiters.empty()) {
+      _waiters.front()->notify_one();
+    }
   }
   // ResourcePoolState -
 
@@ -115,20 +125,34 @@ namespace anch {
     anch::ResourcePoolState<T>& state = *_state;
     std::unique_lock<std::mutex> lock(state._mutex);
     // Available resource or free slot (when there is no available resource, _used is the number of created resources)
-    if(!state._wait.wait_for(lock, _timeout, [this, &state]() {
+    auto ready = [this, &state]() {
       return !state._availables.empty() || state._used < _maxSize;
-    })) {
-      throw anch::TimeoutException(_timeout, "Resource could not be retrieved.");
+    };
+    if(!state._waiters.empty() || !ready()) {
+      // Wait behind previous borrowers: they are served first (FIFO)
+      std::condition_variable turn;
+      state._waiters.push_back(&turn);
+      bool served = turn.wait_for(lock, _timeout, [&state, &turn, &ready]() {
+	return state._waiters.front() == &turn && ready();
+      });
+      state._waiters.erase(std::find(state._waiters.begin(), state._waiters.end(), &turn));
+      if(!served) {
+	state.notifyFirstWaiter(); // next borrower can be ready now
+	throw anch::TimeoutException(_timeout, "Resource could not be retrieved.");
+      }
     }
     ++state._used;
+    std::shared_ptr<T> ptr;
     if(!state._availables.empty()) {
-      std::shared_ptr<T> ptr = std::move(state._availables.front());
+      ptr = std::move(state._availables.front());
       state._availables.pop_front();
+    }
+    state.notifyFirstWaiter(); // other resources can be ready for next borrower
+    if(ptr) {
       return anch::PoolableResource<T>(_state, std::move(ptr));
     }
     // Slot is reserved: create resource outside the lock
     lock.unlock();
-    std::shared_ptr<T> ptr;
     try {
       ptr = make_ptr(_config);
     } catch(...) {

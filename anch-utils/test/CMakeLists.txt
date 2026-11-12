@@ -30,6 +30,7 @@ add_test(NAME anch-res-pool-move-test COMMAND anch-res-pool-test -t res-pool-mov
 add_test(NAME anch-res-pool-creation-failure-test COMMAND anch-res-pool-test -t res-pool-creation-failure)
 add_test(NAME anch-res-pool-outlive-test COMMAND anch-res-pool-test -t res-pool-outlive)
 add_test(NAME anch-res-pool-concurrent-test COMMAND anch-res-pool-test -t res-pool-concurrent)
+add_test(NAME anch-res-pool-fifo-test COMMAND anch-res-pool-test -t res-pool-fifo)
 add_test(NAME anch-fluent-foreach COMMAND anch-fluent-test -t foreach)
 add_test(NAME anch-fluent-foreach-modify COMMAND anch-fluent-test -t foreach-modify)
 add_test(NAME anch-fluent-copy-skip-limit COMMAND anch-fluent-test -t copy-skip-limit)

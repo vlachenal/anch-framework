@@ -39,7 +39,8 @@ jobs:
         run: cmake --build --preset asan --parallel "$(nproc)"
 
       - name: Test
-        run: ctest --preset asan
+        # Preset "jobs": 0 runs every test at once: limit parallelism to the number of CPUs
+        run: ctest --preset asan -j "$(nproc)"
 
       - name: Upload test logs
         if: failure()

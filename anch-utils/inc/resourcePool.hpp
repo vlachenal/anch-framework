@@ -134,8 +134,11 @@ namespace anch {
     /*! State mutex */
     std::mutex _mutex;
 
-    /*! Wait condition variable (used with \c _mutex) */
-    std::condition_variable _wait;
+    /*!
+     * Borrowers waiting for a resource, in arrival order: each one waits on its own condition variable and
+     * only the first one is woken up (borrowers are served in FIFO order)
+     */
+    std::deque<std::condition_variable*> _waiters;
 
     /*! Available resources */
     std::deque<std::shared_ptr<T>> _availables;
@@ -157,6 +160,11 @@ namespace anch {
      * \param valid \c true if the resource can be reused, \c false otherwise
      */
     void release(std::shared_ptr<T> res, bool valid) noexcept;
+
+    /*!
+     * Wake up the first waiting borrower (\c _mutex has to be locked)
+     */
+    void notifyFirstWaiter() noexcept;
     // Methods -
 
   };
@@ -247,6 +255,8 @@ namespace anch {
    * Intialize pool size will instanciate resources for imediate use.\n
    * Resources will be instanciated with their configuration, outside the pool lock.\n
    * If no resource is available, pool will wait until timeout (default to 100ms) is reached.\n
+   * Waiting borrowers are served in arrival order (FIFO): a borrower can not be overtaken by later ones,
+   * so waiting times stay bounded under contention.\n
    * Resources are automatically released through their destructor: \c release() is called on resources which
    * implement it (\ref Releasable), then invalid resources are destroyed and will be replaced on demand.\n
    * If you have only one action to do, you can use <tt>pool.borrowResource().get().doAction()</tt> ;

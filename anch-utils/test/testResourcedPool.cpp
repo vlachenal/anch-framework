@@ -22,6 +22,7 @@
 #include <atomic>
 #include <chrono>
 #include <memory>
+#include <mutex>
 #include <stdexcept>
 #include <thread>
 #include <type_traits>
@@ -232,7 +233,7 @@ testConcurrent() {
   constexpr std::size_t MAX_SIZE = 4;
   constexpr int NB_THREADS = 16;
   constexpr int NB_BORROWS = 500;
-  Pool pool(config, MAX_SIZE, 0, 10s);
+  Pool pool(config, MAX_SIZE, 0, 60s); // safety timeout: the test fails instead of hanging
   std::atomic<int> sharedUse = 0;
   std::atomic<int> errors = 0;
   std::atomic<std::size_t> concurrent = 0;
@@ -269,6 +270,39 @@ testConcurrent() {
 }
 
 void
+testFifo() {
+  resetCounters();
+  Config config;
+  Pool pool(config, 1, 0, 60s);
+  std::vector<int> order;
+  std::mutex orderMutex;
+  std::vector<std::thread> threads;
+  {
+    auto res = pool.borrowResource(); // every borrower waits
+    for(int i = 0 ; i < 3 ; ++i) {
+      threads.emplace_back([&pool, &order, &orderMutex, i]() {
+	auto borrowed = pool.borrowResource();
+	std::lock_guard<std::mutex> lock(orderMutex);
+	order.push_back(i);
+      });
+      std::this_thread::sleep_for(300ms); // borrower i is waiting before borrower i + 1
+    }
+    // A new borrower can not overtake waiting ones: it times out
+    pool.setTimeout(50ms);
+    try {
+      auto late = pool.borrowResource();
+      anch::ut::fail("Late borrower has overtaken waiting borrowers");
+    } catch(const anch::TimeoutException&) {
+      // expected
+    }
+  }
+  for(std::thread& thread : threads) {
+    thread.join();
+  }
+  anch::ut::assertThat(order == std::vector<int>({0, 1, 2}), "Borrowers have not been served in arrival order");
+}
+
+void
 anch::ut::setup(anch::ut::UnitTests& tests) {
   tests
     .name("AnCH resource pool unit tests")
@@ -283,6 +317,7 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("res-pool-creation-failure", testCreationFailure)
     .add("res-pool-outlive", testOutlivePool)
     .add("res-pool-concurrent", testConcurrent)
+    .add("res-pool-fifo", testFifo)
     ;
 }
 // Anch unit tests -
