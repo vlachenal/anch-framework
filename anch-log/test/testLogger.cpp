@@ -35,6 +35,9 @@ using anch::log::LoggerFactory;
 using anch::log::Logger;
 
 
+/*! Number of messages written by each thread in rotate test */
+constexpr int ROTATE_MESSAGES = 5000;
+
 void
 testMultiThread(const Logger& log, int nbLog) {
   for(int i = 0 ; i < nbLog ; ++i) {
@@ -46,16 +49,41 @@ void
 testRotate() {
   std::cout << "Enter in testRotate" << std::endl;
 
+  // Previous runs archives
+  std::filesystem::remove("test.log");
+  for(int i = 0 ; i < 10 ; ++i) {
+    std::filesystem::remove("test.log." + std::to_string(i));
+  }
   anch::conf::Configuration::loader().name("anch-logger").load();
   static auto LOG = LoggerFactory::getLogger("anch::logger::Logger");
   std::cout << "Logger has been retrieved" << std::endl;
   LOG.info("anch-logger");
 
-  std::thread th = std::thread(testMultiThread, LOG, 200000);
-  for(int i = 0 ; i < 200000 ; ++i) {
+  // 2 x 5000 messages (about 900 KB) with max-size=64K and max-rotate-files=3: many rotations, 3 archives kept
+  std::thread th = std::thread(testMultiThread, LOG, ROTATE_MESSAGES);
+  for(int i = 0 ; i < ROTATE_MESSAGES ; ++i) {
     LOG.info("Message n° ", i, " from main thread");
   }
   th.join();
+
+  std::size_t main = 0;
+  std::size_t second = 0;
+  for(const char* file : {"test.log", "test.log.0", "test.log.1", "test.log.2"}) {
+    anch::ut::assertThat(std::filesystem::exists(file), "{} has not been created", file);
+    std::uintmax_t size = std::filesystem::file_size(file);
+    anch::ut::assertThat(size <= 64 * 1024 + 200, "{} is too large: {} bytes", file, size);
+    std::ifstream input(file);
+    std::string line;
+    while(std::getline(input, line)) {
+      if(line.find("from main thread") != std::string::npos) {
+	++main;
+      } else if(line.find("from the second thread") != std::string::npos) {
+	++second;
+      }
+    }
+  }
+  anch::ut::assertThat(!std::filesystem::exists("test.log.3"), "Only 3 archives have to be kept");
+  anch::ut::assertThat(main > 0 && second > 0, "Messages of both threads have to be written ({} and {})", main, second);
 
   std::cout << "Exit testRotate" << std::endl;
 }
