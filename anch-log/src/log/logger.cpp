@@ -19,6 +19,8 @@
 */
 #include "log/logger.hpp"
 
+#include "log/mdc.hpp"
+
 using std::string;
 using std::vector;
 
@@ -40,4 +42,27 @@ Logger::Logger(const string& name,
 
 Logger::~Logger() {
   // Nothing to do
+}
+
+bool
+Logger::isEnabled(const Level& level) const noexcept {
+  return level >= _level && !_writers.empty();
+}
+
+void
+Logger::write(const Level& level, const string& message) const noexcept {
+  try {
+    anch::log::MDC.put("level", anch::log::LEVEL_LABEL.at(level));
+    anch::log::MDC.put("logger", _name);
+  } catch(...) {
+    // Logging must never stop the application (this method is noexcept)
+    return;
+  }
+  for(Writer* writer : _writers) {
+    try {
+      writer->write(message);
+    } catch(...) {
+      // A writer error must not prevent other writers to log, nor stop the application
+    }
+  }
 }

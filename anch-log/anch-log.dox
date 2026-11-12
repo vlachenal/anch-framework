@@ -30,6 +30,12 @@
  *
  * Each level has a method in Logger class which is named like level in lower case. These methods take a variable number of arguments which have to have stream injection operator definition.\n
  * \n
+ * Messages can also be logged with stream injection operator by including \c log/stream.hpp . Levels are defined in \c anch::log::lvl namespace:
+ * \code{.cpp}
+LOG << anch::log::lvl::debug << "value=" << value;
+\endcode
+ * The message is written at the end of the expression. Levels lower than \c ANCH_LOG_MIN_LEVEL (CMake option, level name, default to \c TRACE ) are removed at compile time ; logger level is checked at runtime for the others. Values are always evaluated.\n
+ * \n
  * User can define several writers to log messages in separate files and console. Three writer types are available:
  * - Low priority writer: writer maintains a message queue which will be dequeued in another thread to avoid loosing time in writing files. This writer should be used with an high logging level to avoid to increase memory usage. This writer is thread safe.
  * - Thread safe writer: writer is access with mutex to avoid concurrent access. This is the default writer.

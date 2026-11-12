@@ -132,6 +132,29 @@ namespace anch::log {
     template<typename T, typename... Q>
     void fatal(const T& value, const Q&... values) const noexcept;
 
+    /*!
+     * Check if a message in this level will be written by this logger
+     *
+     * \param level The message level
+     *
+     * \return \c true when level is greater or equal to the logger level and the logger has writers
+     *
+     * \since 0.1
+     */
+    bool isEnabled(const anch::log::Level& level) const noexcept;
+
+    /*!
+     * Write an already formatted message on every writer.\n
+     * The level is not checked: check it with \ref isEnabled before formatting the message.\n
+     * Writer errors are ignored: a writer error does not prevent other writers to log.
+     *
+     * \param level The message level
+     * \param message The message to write
+     *
+     * \since 0.1
+     */
+    void write(const anch::log::Level& level, const std::string& message) const noexcept;
+
   private:
     /*!
      * Log a message\n
