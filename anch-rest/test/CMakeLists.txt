@@ -51,3 +51,23 @@ if(ANCH_REST_CLIENT_LIB AND ANCH_REST_CURL AND ANCH_REST_SERVER_LIB)
   add_test(NAME anch-rest-curl-timeout COMMAND anch-rest-curl-test -t timeout)
   # Tests share a local HTTP server on a free port: the server is started for each test executable
 endif()
+
+if(ANCH_REST_SERVER_LIB AND ANCH_REST_NGINX)
+  # Test application, also used by nginx/test/run-nginx-test.sh
+  add_library(anch-rest-nginx-test-app MODULE ../nginx/test/petApp.cpp)
+  anch_target_build_options(anch-rest-nginx-test-app)
+  target_link_libraries(anch-rest-nginx-test-app PRIVATE anch::rest-nginx)
+  set_target_properties(anch-rest-nginx-test-app PROPERTIES
+    LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
+    CXX_VISIBILITY_PRESET hidden)
+
+  anch_add_executable(anch-rest-nginx-test SOURCES testNginx.cpp LIBS anch::rest-nginx anch::ut ${CMAKE_DL_LIBS})
+  target_compile_definitions(anch-rest-nginx-test PRIVATE ANCH_REST_NGINX_TEST_APP="$<TARGET_FILE:anch-rest-nginx-test-app>")
+  add_dependencies(anch-rest-nginx-test anch-rest-nginx-test-app)
+
+  add_test(NAME anch-rest-nginx-create-error COMMAND anch-rest-nginx-test -t create-error)
+  add_test(NAME anch-rest-nginx-get COMMAND anch-rest-nginx-test -t get)
+  add_test(NAME anch-rest-nginx-post COMMAND anch-rest-nginx-test -t post)
+  add_test(NAME anch-rest-nginx-request COMMAND anch-rest-nginx-test -t request)
+  add_test(NAME anch-rest-nginx-errors COMMAND anch-rest-nginx-test -t errors)
+endif()

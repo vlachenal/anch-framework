@@ -22,7 +22,7 @@ anch-rest-nginx    pont C++ <-> nginx et module C                          -> se
 ------
 [x] 1. common + server, testés sans réseau (Api::handle)
 [x] 2. client + transport curl, testés contre un serveur HTTP de test (anch-network)
-[ ] 3. module nginx
+[x] 3. module nginx
 
 Serveur
 -------
@@ -41,14 +41,22 @@ Serveur
   démarrage).
 - HttpException(status) dans un handler -> ce statut ; autre exception -> 500 sans détail.
 
-nginx (étape 3)
----------------
+nginx (étape 3, fait)
+---------------------
 - L'application est un .so qui exporte un point d'entrée C (macro ANCH_REST_APPLICATION(createApi)).
 - Module C pur : directive "anch_rest_app /path/libapi.so;" dans une location, dlopen au démarrage
   du worker.
 - nginx est non bloquant : les handlers sont exécutés dans un pool de threads nginx
   (ngx_thread_task_post, nginx compilé avec --with-threads) ; corps lu avec
   ngx_http_read_client_request_body.
+- ABI C (nginx/inc/rest/anch_rest_nginx.h, version 1) : le module ne voit pas de C++. Chaque application
+  génère sa propre table de fonctions (pas d'état partagé entre applications d'un même nginx).
+- dlopen à la lecture de la configuration (erreurs visibles avec nginx -t), Api créée dans chaque worker
+  (après le fork) ; échec de création journalisé, la location répond 500.
+- anch_rest_thread_pool <nom>|off (pool "default" par défaut) ; corps en mémoire ou en fichier temporaire.
+- Test d'intégration : nginx/test/run-nginx-test.sh <sources nginx> <build AnCH> (validé avec nginx 1.30.6).
+- Limites : les routes voient l'URI complète (pas de retrait du préfixe de location) ; corps de réponse
+  copié en mémoire ; HEAD répond Content-Length: 0.
 
 Client (étape 2)
 ----------------

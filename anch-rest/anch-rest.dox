@@ -16,6 +16,8 @@
  * - \c anch-rest-server : endpoints declaration and routing (\ref anch::rest::Api "Api").
  * - \c anch-rest-client : HTTP client (\ref anch::rest::Client "Client") over a \ref anch::rest::Transport "Transport".
  * - \c anch-rest-curl : libcurl transport (\ref anch::rest::CurlTransport "CurlTransport"), option \c ANCH_REST_CURL .
+ * - \c anch-rest-nginx : nginx applications bridge (\c ANCH_REST_APPLICATION ), option \c ANCH_REST_NGINX ,
+ *   and nginx module sources (\c nginx/ , installed in \c share/anch/nginx-module ).
  *
  * \section rest_server_sec Endpoints declaration
  *
@@ -65,4 +67,41 @@ client.del("/pets/{id}", 42).execute();
 \endcode
  *
  * Network errors (connection refused, timeout, TLS) are reported with \ref anch::rest::TransportError "TransportError".
+ *
+ * \section rest_nginx_sec nginx module
+ *
+ * An application is a shared library which declares its API factory:
+ * \code{.cpp}
+std::unique_ptr<anch::rest::Api>
+createApi(std::string_view config) { // config: second anch_rest_app argument
+  auto api = std::make_unique<anch::rest::Api>();
+  api->get("/api/pets/{id}", findPet).produces<anch::rest::Json>(); // routes see the whole URI
+  return api;
+}
+
+ANCH_REST_APPLICATION(createApi)
+\endcode
+ *
+ * The module is built with nginx (\c --with-threads to execute handlers in a thread pool):
+ * \code{.txt}
+./configure --with-threads --with-compat --add-dynamic-module=<anch-rest/nginx>
+make modules
+\endcode
+ *
+ * nginx configuration:
+ * \code{.txt}
+load_module modules/ngx_http_anch_rest_module.so;
+thread_pool default threads=16;
+http {
+  server {
+    location /api/ {
+      anch_rest_app /usr/lib/libmyapi.so "/etc/myapi.conf";
+      anch_rest_thread_pool default;   # default value; "off" executes handlers in the event loop
+    }
+  }
+}
+\endcode
+ *
+ * Libraries are loaded when configuration is read (\c nginx -t reports loading errors) and APIs are
+ * created in each worker process.
  */

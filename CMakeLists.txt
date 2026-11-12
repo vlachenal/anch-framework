@@ -45,6 +45,7 @@ option(ANCH_SQL_SQLITE3 "AnCH SQLite3 support" ON)
 option(ANCH_REST_SERVER_LIB "Build anch-rest server library" ON)
 option(ANCH_REST_CLIENT_LIB "Build anch-rest client library" ON)
 option(ANCH_REST_CURL "Build anch-rest libcurl transport" ON)
+option(ANCH_REST_NGINX "Build anch-rest nginx applications bridge" ON)
 set(ANCH_LOG_MIN_LEVEL TRACE CACHE STRING "anch-log compile-time level: stream messages in lower levels are removed")
 set_property(CACHE ANCH_LOG_MIN_LEVEL PROPERTY STRINGS TRACE DEBUG INFO WARN ERROR FATAL)
 # Options -

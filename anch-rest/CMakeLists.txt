@@ -18,6 +18,19 @@ if(ANCH_REST_SERVER_LIB)
     INCLUDE_DIRS server/inc
     SOURCES ${server_sources}
     PUBLIC_DEPS anch::rest-common anch::uuid)
+
+  # nginx applications bridge (the nginx module itself is built with nginx, see nginx/config)
+  if(ANCH_REST_NGINX)
+    anch_rest_sources(nginx_sources nginx)
+    anch_add_library(anch-rest-nginx
+      INCLUDE_DIRS nginx/inc
+      SOURCES ${nginx_sources}
+      PUBLIC_DEPS anch::rest-server)
+    install(FILES nginx/config nginx/ngx_http_anch_rest_module.c
+      DESTINATION ${CMAKE_INSTALL_DATADIR}/anch/nginx-module)
+    install(FILES nginx/inc/rest/anch_rest_nginx.h
+      DESTINATION ${CMAKE_INSTALL_DATADIR}/anch/nginx-module/inc/rest)
+  endif()
 endif()
 # REST API declaration and routing -
 
