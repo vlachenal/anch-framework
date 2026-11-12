@@ -1,0 +1,8 @@
+/*!
+ * \namespace anch::ut
+ *
+ * \brief AnCH unit tests library namespace.
+ *
+ * A test executable implements \ref anch::ut::setup to register its tests; assertions are
+ * \ref anch::ut::assertThat and \ref anch::ut::assertTrue . See \ref page_ut "AnCH unit tests library documentation".
+ */

@@ -1,0 +1,7 @@
+<map id="anch::log::LoggerFactory" name="anch::log::LoggerFactory">
+<area shape="rect" id="Node000001" title="Logger factory." alt="" coords="32,457,186,527"/>
+<area shape="rect" id="Node000002" href="$classanch_1_1_singleton.html" title=" " alt="" coords="5,275,213,408"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="111,420,112,458,107,457,108,425"/>
+<area shape="rect" id="Node000003" href="$classanch_1_1_singleton.html" title="Meyers&#39; singleton implementation." alt="" coords="43,5,175,203"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="110,215,112,275,107,274,109,220"/>
+</map>

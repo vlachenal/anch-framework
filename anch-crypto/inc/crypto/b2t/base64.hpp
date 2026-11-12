@@ -1,5 +1,5 @@
 /*
-  ANCH Framework: ANother C++ Hack is a C++ framework based on C++11 standard
+  ANCH Framework: ANother C++ Hack is a C++ framework based on C++23 standard
   Copyright (C) 2012 Vincent Lachenal
 
   This file is part of ANCH Framework.
@@ -15,7 +15,7 @@
   GNU Lesser General Public License for more details.
 
   You should have received a copy of the GNU Lesser General Public License
-  along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
+  along with ANCH Framework.  If not, see <https://www.gnu.org/licenses/>.
 */
 #pragma once
 
@@ -192,6 +192,7 @@ namespace anch::crypto {
      *
      * \param data the data stream to decode
      * \param output the stream to write in
+     * \param options the decoding options (alphabet and padding)
      *
      * \throw std::bad_cast invalid base 64 stream
      */
@@ -203,6 +204,7 @@ namespace anch::crypto {
      * \param data the data stream to decode
      *
      * \return the base64 decoded data
+     * \param options the decoding options (alphabet and padding)
      *
      * \throw std::bad_cast invalid base 64 stream
      */
@@ -213,6 +215,7 @@ namespace anch::crypto {
      *
      * \param data the data string to decode
      * \param output the stream to write in
+     * \param options the decoding options (alphabet and padding)
      *
      * \throw std::bad_cast invalid base 64 stream
      */
@@ -224,6 +227,7 @@ namespace anch::crypto {
      * \param data the data string to decode
      *
      * \return the base64 decoded data
+     * \param options the decoding options (alphabet and padding)
      *
      * \throw std::bad_cast invalid base 64 stream
      */
@@ -235,6 +239,7 @@ namespace anch::crypto {
      * \param data the data bytes to decode
      * \param length the data length
      * \param output the stream to write in
+     * \param options the decoding options (alphabet and padding)
      *
      * \throw std::bad_cast invalid base 64 stream
      */
@@ -247,6 +252,7 @@ namespace anch::crypto {
      * \param length the data length
      *
      * \return the base64 decoded data
+     * \param options the decoding options (alphabet and padding)
      *
      * \throw std::bad_cast invalid base 64 stream
      */

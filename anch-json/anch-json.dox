@@ -12,48 +12,70 @@
  *
  * \section json_install_sec Installation
  *
- * make install
+ * CMake target \c anch::json:
+ * \code{.cmake}
+find_package(Anch REQUIRED)
+target_link_libraries(my-app PRIVATE anch::json)
+\endcode
+ * See \ref install_sec "installation".
  *
  * \section json_concept_sec Conception
  *
- * Fields which have to be serialized and deserialized have to be declared in application consuming AnCH JSON library.\n
- * Fields registation is performed by implementing the function \c registerFields(anch::json::JSONMapper<T>&) where \c T is the type of your class/structure. You can regiter fields directly or functions which take a const reference of \c T as unique parameter.\n
- * For compose type, you have to specified the base type in template (see example below).
+ * Serialized fields are declared by specializing \ref anch::json::registerObject for each type: fields are
+ * registered with their JSON key and their member pointer (or a getter function). Containers and
+ * \c std::optional fields give their value type as template argument.\n
  * \n
- * Seralization can be performed by calling function \c anch::json::serialize(T&,std::ostream&) or by retrieving the \c JSONMapper through \c JSONFactory
+ * \c anch::json::serialize writes JSON in a stream or returns a string ; \c anch::json::deserialize reads a
+ * stream and raises \ref anch::json::MappingError on invalid JSON (with its position). Mapping options
+ * (\ref anch::json::MappingOptions ) control unknown fields, \c null values and limits (depth, payload size).\n
+ * With \c ANCH_UUID and \c ANCH_DATE options, \c anch::UUID , \c anch::date::Date and
+ * \c std::chrono::year_month_day are mapped as strings (RFC 3339 for dates).
  *
  * \section json_example_sec Examples
  *
- * Serialize structure into JSON format:
  * \code{.cpp}
-struct Test {
-  std::string _id;
-  std::string _value;
-  std::vector<int32_t> _nums;
-  inline const std::string& getValue() const {
-    return _value;
-  }
+#include "json/json.hpp"
+
+#include <iostream>
+#include <optional>
+#include <sstream>
+#include <string>
+#include <vector>
+
+struct Pet {
+  uint64_t id;
+  std::string name;
+  std::vector<std::string> tags;
+  std::optional<std::string> owner;
 };
 
+// Declare serialized fields (once per type)
 template<>
 void
-anch::json::registerFields(JSONMapper<Test>& mapper) {
+anch::json::registerObject(anch::json::ObjectMapper<Pet>& mapper) {
   mapper
-    .registerField("id", &Test::_id)
-    .registerField("value", std::function<const std::string&(const Test&)>(&Test::getValue))
-    .registerField<int32_t>("nums", &Test::_nums)
-    ;
+    .registerField("id", &Pet::id)
+    .registerField("name", &Pet::name)
+    .registerField<std::string>("tags", &Pet::tags) // container: element type is given
+    .registerField<std::string>("owner", &Pet::owner); // std::optional: value type is given too
 }
 
-int main(void) {
-  Test test;
-  test._id = "deb94ebc-be28-4899-981a-29199b7a487d";
-  test._value = "this is a value";
-  test._nums = {1,2,3,4};
-  std::ostringstream oss;
-  anch::json::serialize(test, oss);
-  std::cout << "Serialized test: " << oss.str() << std::endl;
-  std::string res = anch::json::serialize(test);
-  std::cout << "Serialized test as string: " << res << std::endl;
-}\endcode
+int
+main() {
+  Pet pet{1, "Rex", {"dog", "good boy"}, std::nullopt};
+  std::string json = anch::json::serialize(pet);
+  std::cout << json << std::endl;
+
+  std::istringstream input(R"({"id":2,"name":"Médor","tags":["cat"],"owner":"Vincent"})");
+  Pet parsed = anch::json::deserialize<Pet>(input);     // anch::json::MappingError when invalid
+  std::cout << parsed.name << " " << parsed.owner.value_or("-") << std::endl;
+  return 0;
+}
+\endcode
+ *
+ * Output:
+ * \code{.txt}
+{"id":1,"name":"Rex","tags":["dog","good boy"]}
+Médor Vincent
+\endcode
  */

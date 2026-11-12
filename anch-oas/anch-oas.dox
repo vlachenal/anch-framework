@@ -80,8 +80,8 @@ petstore::model::Pet pet = anch::json::deserialize<petstore::model::Pet>(input);
  * | other component schema | alias ( \c using ) |
  *
  * - Optional and \c nullable properties are \c std::optional ; arrays and maps are empty when absent.
- * - Inline objects and enumerations are named after their path: \c <Model><Property> , \c <Model><Property>Item for
- *   array items and \c <Model><Property>Value for map values.
+ * - Inline objects and enumerations are named after their path: \c \<Model\>\<Property\> , \c \<Model\>\<Property\>Item for
+ *   array items and \c \<Model\>\<Property\>Value for map values.
  * - \c allOf merges the properties of every schema: inherited properties keep the types of the model which declares
  *   them.
  * - Recursive references (a model which contains itself directly or through other models) are \c std::shared_ptr ;

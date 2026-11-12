@@ -1,5 +1,5 @@
 /*
-  ANCH Framework: ANother C++ Hack is a C++ framework based on C++11 standard
+  ANCH Framework: ANother C++ Hack is a C++ framework based on C++23 standard
   Copyright (C) 2020 Vincent Lachenal
 
   This file is part of ANCH Framework.
@@ -15,7 +15,7 @@
   GNU Lesser General Public License for more details.
 
   You should have received a copy of the GNU Lesser General Public License
-  along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
+  along with ANCH Framework.  If not, see <https://www.gnu.org/licenses/>.
 */
 #pragma once
 
@@ -47,13 +47,13 @@ namespace anch::json {
     /*! Boolean 'false' value (no value) */
     FALSE,
 
-    /*! Field value (value stored as \ref std::string) */
+    /*! Field value (value stored as \c std::string) */
     FIELD,
 
     /*! Number value (value stored as \c double) */
     NUMBER,
 
-    /*! String value (value as stored \ref std::string) */
+    /*! String value (value as stored \c std::string) */
     STRING,
 
     /*! Begin object (no value) */
@@ -91,12 +91,12 @@ namespace anch::json {
     // Constructors +
   public:
     /*!
-     * Forbids \ref JSONEvent default constructor
+     * Forbids \c JSONEvent default constructor
      */
     JSONItem() = delete;
 
     /*!
-     * \ref JSONEvent constructor
+     * \c JSONEvent constructor
      *
      * \param type the event type
      * \param context the context for reading found value when needed
@@ -107,7 +107,7 @@ namespace anch::json {
     // Destructor +
   public:
     /*!
-     * \ref JSONEvent destructor
+     * \c JSONEvent destructor
      */
     virtual ~JSONItem() noexcept;
     // Destructor -

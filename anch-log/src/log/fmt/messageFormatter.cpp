@@ -1,5 +1,5 @@
 /*
-  ANCH Framework: ANother C++ Hack is a C++ framework based on C++11 standard
+  ANCH Framework: ANother C++ Hack is a C++ framework based on C++23 standard
   Copyright (C) 2012 Vincent Lachenal
 
   This file is part of ANCH Framework.
@@ -15,7 +15,7 @@
   GNU Lesser General Public License for more details.
 
   You should have received a copy of the GNU Lesser General Public License
-  along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
+  along with ANCH Framework.  If not, see <https://www.gnu.org/licenses/>.
 */
 #include "log/fmt/messageFormatter.hpp"
 
@@ -133,7 +133,7 @@ MessageFormatter::formatMessage(const std::string& category,
     case FormatterType::THREAD_ID:
     case FormatterType::CONST:
     case FormatterType::DATE:
-    case FormatterType::ANCH_DATE:
+    case FormatterType::PRECISE_DATE:
     case FormatterType::MDC:
       formatter->formatValue(NULL, out);
       break;

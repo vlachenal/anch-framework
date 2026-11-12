@@ -1,0 +1,7 @@
+/*!
+ * \namespace anch::cutils
+ *
+ * \brief AnCH C utilities library namespace.
+ *
+ * C++ streams over C file descriptors and callbacks. See \ref page_cutils "AnCH CUtils library documentation".
+ */

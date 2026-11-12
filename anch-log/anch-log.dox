@@ -4,136 +4,97 @@
  *
  * \section log_intro_seq Introduction
  *
- * AnCH logigng library aims to provide facilities for applications logging.
+ * AnCH logging library provides configurable loggers which write messages through writers (console,
+ * files with rotation), with a map diagnostic context.
  *
  * \section log_prereq_sec Prerequisites
  *
- * - boost library (until standard C++ library implements regular expression)
- * - pthread library
- * - anch-resource library
- * - anch-date library
+ * - anch-conf: logging configuration is read in the \c anch::log section of the application configuration
+ * - anch-date: high precision dates in messages
+ * - anch-utils: singletons
  *
  * \section log_install_sec Installation
  *
- * TODO fill this section
+ * CMake target \c anch::log:
+ * \code{.cmake}
+find_package(Anch REQUIRED)
+target_link_libraries(my-app PRIVATE anch::log)
+\endcode
+ * See \ref install_sec "installation".
  *
  * \section log_concept_sec Usage
  *
- * The library is used in a similar way that log4j. So the classes which will be used are \ref anch::log::LoggerFactory "LoggerFactory" to initialize and retrieve logger instances and \ref anch::log::Logger "Logger" to log messages.\n
- * Messages are logged with level which can be (from the lowest to the highest):
- * - \c TRACE
- * - \c DEBUG
- * - \c INFO
- * - \c WARN
- * - \c ERROR
- * - \c FATAL
- *
- * Each level has a method in Logger class which is named like level in lower case. These methods take a variable number of arguments which have to have stream injection operator definition.\n
+ * Loggers are retrieved with \ref anch::log::LoggerFactory::getLogger "LoggerFactory::getLogger" once the
+ * configuration has been loaded. Logger names are hierarchical (\c org::myapp::Main ): the most specific
+ * configured logger applies (\c org::myapp , then \c org , then the default logger).\n
  * \n
- * Messages can also be logged with stream injection operator by including \c log/stream.hpp . Levels are defined in \c anch::log::lvl namespace:
- * \code{.cpp}
-LOG << anch::log::lvl::debug << "value=" << value;
-\endcode
- * The message is written at the end of the expression. Levels lower than \c ANCH_LOG_MIN_LEVEL (CMake option, level name, default to \c TRACE ) are removed at compile time ; logger level is checked at runtime for the others. Values are always evaluated.\n
- * \n
- * User can define several writers to log messages in separate files and console. Three writer types are available:
- * - Low priority writer: writer maintains a message queue which will be dequeued in another thread to avoid loosing time in writing files. This writer should be used with an high logging level to avoid to increase memory usage. This writer is thread safe.
- * - Thread safe writer: writer is access with mutex to avoid concurrent access. This is the default writer.
- * - Basic writer: writer which is not thread safe.
+ * Messages are logged with level methods (\c trace , \c debug , \c info , \c warn , \c error , \c fatal ),
+ * which concatenate their arguments, or with stream injection (\c log/stream.hpp ):
+ * - levels are types in \ref anch::log::lvl namespace: <tt>LOG << anch::log::lvl::debug << "value=" << value;</tt>
+ * - the message is written at the end of the expression ;
+ * - levels lower than \c ANCH_LOG_MIN_LEVEL CMake option (\c TRACE by default) are removed at compile time.
  *
- * Loggers are defined by category. They are retrieved if the logger name starts with category. Categories are associated with writers and minimum logging level.
+ * Arguments are always evaluated, even when the level is disabled. Logging never throws.
  *
- * \subsection log_concept_conf_sec Configuration file
+ * \subsection log_concept_conf_sec Configuration
  *
- * AnCH logger configuration file is \c anch-logger.conf in the execution directory. You can defined another configuration file by defining \c \_ANCH_LOGGER_CONFIG_FILE_ variable.\n
- * \n
- * The file has to defined some writers and loggers (see sections below).\n
- * Global configuration variables which can be set are:
- * - \c low.priority : use low priority writers which will write messages in other threads. Possible value: \c 0 or \c 1 . Default to \c 0 . The value can be override by writers.
- * - \c thread.safe :  writers are protected against concurrent access. Possible value: \c 0 or \c 1 . Default to \c 1 . The value can be override by writers.
+ * - \c anch::log.thread-safe : writers are protected against concurrent access (default \c true ).
+ * - \c anch::log.low-priority : writers write messages in a dedicated thread (default \c false ).
+ * - \c [anch::log.writer.\<name\>] : writer declaration:
+ *   - \c module : \c console or \c file ;
+ *   - \c pattern : message pattern: \c $c logger name, \c $p level, \c $m message, \c $t thread identifier,
+ *     \c $d{strftime format} date, \c $D{anch-date format} high precision date, \c $C{key} MDC value ;
+ *   - \c path , \c max-size (with \c K , \c M , \c G or \c T unit) and \c max-rotate-files for file writers ;
+ *   - \c thread-safe and \c low-priority override the global values.
+ * - \c [anch::log.logger] : default logger ; \c [anch::log.logger.\<name\>] : logger for a name prefix:
+ *   - \c writers : comma separated writer names ;
+ *   - \c level : \c trace , \c debug , \c info , \c warn , \c error or \c fatal .
  *
- * \subsubsection log_concept_conf_writer_sec Writers
- *
- * Writers are declared in \c [WRITER::<writer>] section.\n
- * \c [WRITER::console] is a predefined writer which log messages in \c std::cout . The only configuration value for console is \c writer.pattern .\n
- * \n
- * Configuration values for writters are:
- * - \c writer.pattern : pattern for message formatting. Formatting values:
- *   - \c \%c : the category (logger name).
- *   - \c \%p : the level.
- *   - \c \%m : the message.
- *   - \c \%t : the thread identifier.
- *   - \c \%d{date_format} : the date (using C++ date formatter).
- *   - \c \%D{date_format} : the date (using anch-date formatter with high precision clock).
- *   - Characters to print.
- * - \c writer.filepath : log file path.
- * - \c writer.max.size : the maximum log file size. Optional. Possible value: number + 'K', 'M' or 'G' (for kilobyte, megabyte and gigabyte).
- * - \c writer.max.rotate.index : the maximum number of file to keep. Optional and active only if \c writer.max.size is set.
- * - \c writer.low.priority : use a low priority writer which will write messages in another thread. Possible value: \c 0 or \c 1 . Default to \c 0 .
- * - \c writer.thread.safe : writer is protected against concurrent access. Possible value: \c 0 or \c 1 . Default to \c 1 .
- *
- * \subsubsection log_concept_conf_cat_sec Categories
- *
- * Categories are declared in \c [CATEGORY::<category>] section.\n
- * \c [CATEGORY::default] is a predefined category which will be used if no other category match the wanted logger.\n
- * \n
- * Configuration values for categories are:
- * - \c logger.writers : the writers to use. Possible value: writers list separated by \c ',' .
- * - \c logger.level : the minimum level of messages which will be logged by this logger. Possible value: level in lower case.
+ * Without \c anch::log section, messages are written on the console.
  *
  * \section log_example_sec Example
  *
- * Configuration file:
- * \code{.txt}
-# Use low priority writers
-low.priority=1
+ * \c application.ini :
+ * \code{.ini}
+[anch::log.writer.console]
+module=console
+pattern=$d{%Y-%m-%d %H:%M:%S} - $c: $p - $m
 
-# std::cout writer
-[WRITER::console]
-writer.pattern=$d{%Y-%m-%d %H:%M:%S} - $c: $p - $m
+[anch::log.writer.file]
+module=file
+path=./application.log
+pattern=$d{%Y-%m-%d %H:%M:%S} [$t] $p $c - $m
+max-size=10M
+max-rotate-files=5
 
-# A file writer
-[WRITER::test]
-writer.filepath=./test.log
-writer.pattern=$d{%Y-%m-%d %H:%M:%S} - $c [Thread $t] - $p - $m
-writer.max.size=10M
-writer.max.rotate.index=9
+[anch::log.logger]
+writers=console
+level=info
 
-
-# Default logger configuration
-[CATEGORY::default]
-logger.writers=console
-logger.level=trace
-
-# Logger configuration for my application
-[CATEGORY::org::myapp]
-logger.writers=console,test
-logger.level=debug
+[anch::log.logger.org::myapp]
+writers=console,file
+level=debug
 \endcode
  *
- * Application code:
  * \code{.cpp}
-#include <iostream>
-
-#include "logger/loggerFactory.hpp"
-
-using std::cout;
-using std::endl;
-
-using anch::log::LoggerFactory;
-using anch::log::Logger;
+#include "conf/configuration.hpp"
+#include "log/loggerFactory.hpp"
+#include "log/stream.hpp"
 
 int
-main(void) {
+main() {
+  anch::conf::Configuration::loader().name("application").load(); // application.ini (anch::log section)
+  const anch::log::Logger& LOG = anch::log::LoggerFactory::getLogger("org::myapp::Main");
 
-  const Logger& LOG = LoggerFactory::getLogger("org::myapp::Test"); // Use application logger
-  const Logger& DEF_LOG = LoggerFactory::getLogger("XYZ"); // Use default logger
-
-  DEF_LOG.info(_ANCH_LOGGER_CONFIG_FILE_); // Log only in console
-  for(int i = 0 ; i < 10 ; i++) {
-    LOG.info("Message n° ", i); // Log in console and file
-  }
-
+  LOG.info("Application started with ", 3, " workers");               // variadic API
+  LOG << anch::log::lvl::debug << "value=" << 42 << ", ratio=" << 0.5; // stream API
   return 0;
-}\endcode
+}
+\endcode
+ *
+ * Console output:
+ * \code{.txt}
+2026-11-12 21:35:07 - org::myapp::Main: INFO - Application started with 3 workers
+2026-11-12 21:35:07 - org::myapp::Main: DEBUG - value=42, ratio=0.5
+\endcode
  */

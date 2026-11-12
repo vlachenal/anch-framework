@@ -1,7 +1,7 @@
 /*!
- * \namespace anch::logger::formatter
+ * \namespace anch::log::fmt
  *
- * \brief Logger formatter internalnamespace.
+ * \brief Logger message formatters.
  *
- * It contains AnCH logger library internal classes for messages formatting.
+ * It contains AnCH logger library internal classes for messages formatting (writer patterns).
  */

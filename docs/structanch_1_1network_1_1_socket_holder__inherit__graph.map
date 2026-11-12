@@ -1,0 +1,5 @@
+<map id="anch::network::SocketHolder" name="anch::network::SocketHolder">
+<area shape="rect" id="Node000001" title="Socket owner base class of TcpStream." alt="" coords="6,5,186,75"/>
+<area shape="rect" id="Node000002" href="$classanch_1_1network_1_1_tcp_stream.html" title="TCP connection as a std::iostream." alt="" coords="5,123,186,320"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="96,87,98,123,93,122,95,92"/>
+</map>

@@ -1,5 +1,5 @@
 /*
-  ANCH Framework: ANother C++ Hack is a C++ framework based on C++11 standard
+  ANCH Framework: ANother C++ Hack is a C++ framework based on C++23 standard
   Copyright (C) 2012 Vincent Lachenal
 
   This file is part of ANCH Framework.
@@ -15,7 +15,7 @@
   GNU Lesser General Public License for more details.
 
   You should have received a copy of the GNU Lesser General Public License
-  along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
+  along with ANCH Framework.  If not, see <https://www.gnu.org/licenses/>.
 */
 #pragma once
 
@@ -28,21 +28,27 @@ namespace anch::crypto {
   /*
    * SHA512 defintion
    */
+  /*! \cond INTERNAL */
   extern template class Hash<64,128>;
   extern template const std::array<uint8_t,64>& Hash<64,128>::digest(const std::string& data);
   extern template const std::array<uint8_t,64>& Hash<64,128>::digest(std::istream& stream);
+  /*! \endcond */
 
+  /*! \cond INTERNAL */
   extern template class SHA2<64,128,uint64_t,80,SHA512_VALUES>;
   extern template class SHA384_512<64,SHA512_VALUES>;
   extern template SHA384_512<64,SHA512_VALUES>::SHA384_512(const std::string& data);
   extern template SHA384_512<64,SHA512_VALUES>::SHA384_512(const std::wstring& data);
   extern template SHA384_512<64,SHA512_VALUES>::SHA384_512(std::istream& stream);
+  /*! \endcond */
   /*!
    * SHA512 defintion
    */
   using SHA512 = SHA384_512<64,SHA512_VALUES>;
 
   /*! HMAC SHA512 definition */
+  /*! \cond INTERNAL */
   extern template SHA512 HMAC<SHA512>(const std::string&, const std::string&);
+  /*! \endcond */
 
 }

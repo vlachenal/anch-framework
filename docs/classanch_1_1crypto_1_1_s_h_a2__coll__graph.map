@@ -1,0 +1,20 @@
+<map id="anch::crypto::SHA2&lt; O, B, W, R, I &gt;" name="anch::crypto::SHA2&lt; O, B, W, R, I &gt;">
+<area shape="rect" id="Node000001" title="SHA2 abstract class." alt="" coords="25,995,150,1187"/>
+<area shape="rect" id="Node000002" href="$classanch_1_1crypto_1_1_hash.html" title="Hash algorithm abstract class." alt="" coords="5,645,127,923"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="77,935,84,995,78,995,76,940"/>
+<area shape="rect" id="Node000003" href="$structanch_1_1crypto_1_1_s_h_a2_1_1_context.html" title=" " alt="" coords="151,720,344,848"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="216,846,147,981,143,979,213,850"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="74,288,191,357"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="121,360,113,401,103,456,101,515,110,573,124,608,142,643,184,706,179,708,137,646,119,611,105,574,96,515,98,455,107,400,122,354"/>
+<area shape="rect" id="Node000008" href="$structanch_1_1crypto_1_1_s_h_a2_1_1_context.html" title=" " alt="" coords="165,429,330,573"/>
+<area shape="poly" id="edge9_Node000008_Node000004" title=" " alt="" coords="154,354,195,415,190,416,155,360"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="162,147,258,216"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="184,231,154,289,149,287,185,226"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="216,288,362,357"/>
+<area shape="poly" id="edge7_Node000007_Node000005" title=" " alt="" coords="236,226,273,288,268,289,237,232"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="201,5,220,75"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="210,72,213,130,208,130,210,77"/>
+<area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="316,355,333,380,352,432,359,475,356,519,345,574,323,643,295,706,290,704,318,641,340,573,350,519,354,475,347,433,328,382,316,360"/>
+<area shape="poly" id="edge10_Node000008_Node000007" title=" " alt="" coords="282,355,271,414,265,412,280,360"/>
+<area shape="poly" id="edge8_Node000003_Node000008" title=" " alt="" coords="248,586,250,721,245,720,247,591"/>
+</map>

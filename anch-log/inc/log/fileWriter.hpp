@@ -1,5 +1,5 @@
 /*
-  ANCH Framework: ANother C++ Hack is a C++ framework based on C++11 standard
+  ANCH Framework: ANother C++ Hack is a C++ framework based on C++23 standard
   Copyright (C) 2012 Vincent Lachenal
 
   This file is part of ANCH Framework.
@@ -15,7 +15,7 @@
   GNU Lesser General Public License for more details.
 
   You should have received a copy of the GNU Lesser General Public License
-  along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
+  along with ANCH Framework.  If not, see <https://www.gnu.org/licenses/>.
 */
 #pragma once
 
@@ -37,7 +37,7 @@ namespace anch::log {
    * - \c path: the log file path (mandatory ; its directory has to exist) ;
    * - \c max-size: maximum file size before rotation, in bytes, with optional unit \c K, \c M, \c G or \c T
    *   (powers of 1024). No rotation when not set ;
-   * - \c max-rotate-files: number of archives to keep (\c <path>.0 is the most recent). Default to 1.
+   * - \c max-rotate-files: number of archives to keep (\c \<path\>.0 is the most recent). Default to 1.
    *   With 0, the file is truncated on rotation.
    *
    * File system errors during rotation are ignored: the current file is kept and rotation is tried again later.
@@ -118,7 +118,7 @@ namespace anch::log {
      *
      * \param index the archive index
      *
-     * \return \c <path>.<index>
+     * \return \c \<path\>.\<index\>
      */
     std::filesystem::path archive(std::uint32_t index) const;
     // Methods -

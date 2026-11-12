@@ -14,7 +14,12 @@
  *
  * \section uuid_install_sec Installation
  *
- * make install
+ * CMake target \c anch::uuid:
+ * \code{.cmake}
+find_package(Anch REQUIRED)
+target_link_libraries(my-app PRIVATE anch::uuid)
+\endcode
+ * See \ref install_sec "installation".
  *
  * \section uuid_concept_sec Conception
  *
@@ -32,30 +37,24 @@
  *
  * \section uuid_example_sec Examples
  *
- * Generate and parse UUIDs:
  * \code{.cpp}
-  anch::device::registerMACAddressUUIDProvider();
-  anch::crypto::registerMD5UUIDProvider();
-  anch::crypto::registerSHA1UUIDProvider();
+#include "uuid.hpp"
+#include "crypto/hash/sha1.hpp"
 
-  UUID mac = UUID::generateUUID(UUID::Version::MAC_ADDRESS);
-  std::cout << "MAC address UUID: " << mac << std::endl;
-  UUID md5 = UUID::generateUUID(UUID::Version::MD5_HASH, "Ta mère suce des bites en enfer !");
-  std::cout << "MD5 hash UUID:    " << md5 << std::endl;
-  UUID random = UUID::random();
-  std::cout << "Random UUID:      " << random << std::endl;
-  UUID sha1 = UUID::generateUUID(UUID::Version::SHA1_HASH, "Ta mère suce des bites en enfer !");
-  std::cout << "SHA1 hash UUID:   " << sha1 << std::endl;
-  std::string macStr = static_cast<std::string>(mac);
-  std::cout << "UUID MAC address UUID conversion:   " << macStr << std::endl;
-  std::cout << "UUID MAC address string conversion: " << UUID(macStr) << std::endl;
-  std::string md5Str = static_cast<std::string>(md5);
-  std::cout << "UUID MD5 address UUID conversion:   " << md5Str << std::endl;
-  std::cout << "UUID MD5 address string conversion: " << UUID(md5Str) << std::endl;
-  std::string randomStr = static_cast<std::string>(random);
-  std::cout << "UUID RANDOM address UUID conversion:   " << randomStr << std::endl;
-  std::cout << "UUID RANDOM address string conversion: " << UUID(randomStr) << std::endl;
-  std::string sha1Str = static_cast<std::string>(sha1);
-  std::cout << "UUID SHA1 address UUID conversion:   " << sha1Str << std::endl;
-  std::cout << "UUID SHA1 address string conversion: " << UUID(sha1Str) << std::endl;\endcode
+#include <iostream>
+
+int
+main() {
+  anch::UUID random = anch::UUID::random();                     // version 4
+  std::cout << random << std::endl;
+
+  anch::UUID parsed("550e8400-e29b-41d4-a716-446655440000");    // std::invalid_argument when invalid
+  std::cout << parsed.toString() << " version " << static_cast<int>(parsed.getVersion()) << std::endl;
+
+  anch::crypto::registerSHA1UUIDProvider();                     // version 5 provider (anch-crypto)
+  anch::UUID named = anch::UUID::generateUUID(anch::UUID::Version::SHA1_HASH, "anch-framework");
+  std::cout << named << " " << (named == anch::UUID::generateUUID(anch::UUID::Version::SHA1_HASH, "anch-framework")) << std::endl;
+  return 0;
+}
+\endcode
  */

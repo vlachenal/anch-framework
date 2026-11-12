@@ -1,0 +1,7 @@
+/*!
+ * \namespace anch::cli
+ *
+ * \brief AnCH command line interface library namespace.
+ *
+ * Arguments parsing and terminal output formatting. See \ref page_cli "AnCH CLI library documentation".
+ */

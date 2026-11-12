@@ -1,5 +1,5 @@
 /*
-  ANCH Framework: ANother C++ Hack is a C++ framework based on C++11 standard
+  ANCH Framework: ANother C++ Hack is a C++ framework based on C++23 standard
   Copyright (C) 2012 Vincent Lachenal
 
   This file is part of ANCH Framework.
@@ -15,7 +15,7 @@
   GNU Lesser General Public License for more details.
 
   You should have received a copy of the GNU Lesser General Public License
-  along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
+  along with ANCH Framework.  If not, see <https://www.gnu.org/licenses/>.
 */
 #pragma once
 
@@ -35,7 +35,7 @@ namespace anch::ini {
    *
    * \return the root section
    *
-   * \throw \ref anch::ini::ParseError parsing exception
+   * \throw anch::ini::ParseError parsing exception
    */
   anch::ini::Section parse(const std::string& path);
 
@@ -46,7 +46,7 @@ namespace anch::ini {
    *
    * \return the root section
    *
-   * \throw \ref anch::ini::ParseError parsing exception
+   * \throw anch::ini::ParseError parsing exception
    */
   anch::ini::Section parse(const std::filesystem::path& path);
 
@@ -56,7 +56,7 @@ namespace anch::ini {
    * \param path the file's path
    * \param section the section to fill
    *
-   * \throw \ref anch::ini::ParseError parsing exception
+   * \throw anch::ini::ParseError parsing exception
    */
   void merge(const std::filesystem::path& path, anch::ini::Section& section);
 

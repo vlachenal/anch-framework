@@ -1,5 +1,5 @@
 /*
-  ANCH Framework: ANother C++ Hack is a C++ framework based on C++11 standard
+  ANCH Framework: ANother C++ Hack is a C++ framework based on C++23 standard
   Copyright (C) 2012 Vincent Lachenal
 
   This file is part of ANCH Framework.
@@ -15,7 +15,7 @@
   GNU Lesser General Public License for more details.
 
   You should have received a copy of the GNU Lesser General Public License
-  along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
+  along with ANCH Framework.  If not, see <https://www.gnu.org/licenses/>.
 */
 #pragma once
 
@@ -112,7 +112,7 @@ namespace anch::ini {
      *
      * \return empty optional value when not found, the value otherwise
      *
-     * \throw \ref std::bad_cast exception on cast error
+     * \throw std::bad_cast on cast error
      */
     template<typename T>
     std::optional<T> getValue(const std::string& key) const;
@@ -125,7 +125,7 @@ namespace anch::ini {
      *
      * \return default value when not found, the value otherwise
      *
-     * \throw \ref std::bad_cast exception on cast error
+     * \throw std::bad_cast on cast error
      */
     template<typename T>
     T getValue(const std::string& key, const T& defaultValue) const;

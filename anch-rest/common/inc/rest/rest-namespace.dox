@@ -1,0 +1,27 @@
+/*!
+ * \namespace anch::rest
+ *
+ * \brief AnCH REST library namespace.
+ *
+ * It contains the HTTP model (\ref anch::rest::Request "Request", \ref anch::rest::Response "Response", ...),
+ * codecs, the server API declaration (\ref anch::rest::Api "Api") and the HTTP client
+ * (\ref anch::rest::Client "Client"). See \ref page_rest "AnCH REST library documentation".
+ */
+
+/*!
+ * \namespace anch::rest::header
+ *
+ * \brief Common HTTP header names.
+ */
+
+/*!
+ * \namespace anch::rest::media
+ *
+ * \brief Common media types.
+ */
+
+/*!
+ * \namespace anch::rest::nginx
+ *
+ * \brief nginx applications bridge (see \c ANCH_REST_APPLICATION ).
+ */

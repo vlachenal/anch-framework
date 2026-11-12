@@ -12,7 +12,12 @@
  *
  * \section ini_install_sec Installation
  *
- * make install
+ * CMake target \c anch::ini:
+ * \code{.cmake}
+find_package(Anch REQUIRED)
+target_link_libraries(my-app PRIVATE anch::ini)
+\endcode
+ * See \ref install_sec "installation".
  *
  * \section ini_concept_sec Conception
  *

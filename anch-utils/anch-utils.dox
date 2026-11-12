@@ -1,0 +1,61 @@
+/*! \page page_utils AnCH utils library documentation
+ *
+ * \tableofcontents
+ *
+ * \section utils_intro_seq Introduction
+ *
+ * AnCH utils is a header only library of general purpose utilities, used by the other AnCH libraries.
+ *
+ * \section utils_prereq_sec Prerequisites
+ *
+ * None.
+ *
+ * \section utils_install_sec Installation
+ *
+ * CMake target \c anch::utils (header only):
+ * \code{.cmake}
+find_package(Anch REQUIRED)
+target_link_libraries(my-app PRIVATE anch::utils)
+\endcode
+ * See \ref install_sec "installation".
+ *
+ * \section utils_concept_sec Content
+ *
+ * - \ref anch::convert "convert" (\c convert.hpp ): strict string to number conversion (\c std::from_chars ).
+ * - \ref anch::ThreadPool "ThreadPool" (\c threadPool.hpp ): fixed number of persistent workers which execute
+ *   queued tasks.
+ * - \ref anch::ResourcePool "ResourcePool" (\c resourcePool.hpp ): pool of resources (connections, ...)
+ *   borrowed with RAII and validated when they are returned.
+ * - \ref anch::Singleton "Singleton" (\c singleton.hpp ): Meyers' singleton base class.
+ * - \c Flux , \c Fluent , \c collectors.hpp : streaming and fluent collection processing.
+ * - \c endianness.hpp , \c stringUtils.hpp , \c lessPtrCompare.hpp , \c optional.hpp : small helpers.
+ *
+ * \section utils_example_sec Example
+ *
+ * \code{.cpp}
+#include "convert.hpp"
+#include "threadPool.hpp"
+
+#include <atomic>
+#include <chrono>
+#include <iostream>
+
+int
+main() {
+  // Strict number conversion (std::invalid_argument or std::out_of_range on error)
+  int value = anch::convert<int>("42");
+  double ratio = anch::convert<double>("0.5");
+
+  // Thread pool: tasks are executed by persistent workers
+  std::atomic<int> sum = 0;
+  anch::ThreadPool pool(4);
+  pool.start();
+  for(int i = 1 ; i <= 10 ; ++i) {
+    pool.add([&sum](int n) { sum += n; }, i);
+  }
+  pool.awaitTermination(std::chrono::seconds(0));  // waits for queued tasks (0: no timeout), then stops
+  std::cout << value * ratio << " " << sum << std::endl;
+  return 0;
+}
+\endcode
+ */

@@ -1,5 +1,5 @@
 /*
-  ANCH Framework: ANother C++ Hack is a C++ framework based on C++11 standard
+  ANCH Framework: ANother C++ Hack is a C++ framework based on C++23 standard
   Copyright (C) 2012 Vincent Lachenal
 
   This file is part of ANCH Framework.
@@ -15,7 +15,7 @@
   GNU Lesser General Public License for more details.
 
   You should have received a copy of the GNU Lesser General Public License
-  along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
+  along with ANCH Framework.  If not, see <https://www.gnu.org/licenses/>.
 */
 #pragma once
 
@@ -36,7 +36,7 @@ namespace anch {
   /*!
    * Concept used to validate resource.\n
    * Objects in resource pool must implements this following methods:
-   * - \code{bool isValid() const}
+   * - <tt>bool isValid() const</tt>
    *
    * \author Vincent Lachenal
    *
@@ -49,7 +49,7 @@ namespace anch {
 
   /*!
    * Concept of resources which have to be released when they are returned to their pool.\n
-   * When a pooled resource implements \code{void release()}, it is called before validation each time the resource is
+   * When a pooled resource implements <tt>void release()</tt>, it is called before validation each time the resource is
    * returned to the pool (an exception invalidates the resource).
    * \author Vincent Lachenal
    * \since 0.2
@@ -119,7 +119,7 @@ namespace anch {
   /*!
    * \brief Resource pool shared state (internal usage).
    *
-   * State shared between \ref ResourcePool and its borrowed \ref PoolableResource.\n
+   * State shared between \ref anch::ResourcePool "ResourcePool" and its borrowed \ref anch::PoolableResource "PoolableResource".\n
    * It is kept alive by borrowed resources: a resource can be released after its pool destruction.\n
    * Every member is protected by \c _mutex.
    *
@@ -186,7 +186,7 @@ namespace anch {
     // Constructors +
   public:
     /*!
-     * \ref PoolableResource constructor (should only be called by \ref ResourcePool)
+     * \ref anch::PoolableResource "PoolableResource" constructor (should only be called by \ref anch::ResourcePool "ResourcePool")
      *
      * \param state the pool state
      * \param ptr the resource
@@ -249,8 +249,8 @@ namespace anch {
    * If no resource is available, pool will wait until timeout (default to 100ms) is reached.\n
    * Resources are automatically released through their destructor: \c release() is called on resources which
    * implement it (\ref Releasable), then invalid resources are destroyed and will be replaced on demand.\n
-   * If you have only one action to do, you can use \code{pool.borrowResource().get().doAction()} ;
-   * otherwise you should to keep \c anch::PoolableResource until all actions have been done (with \code{auto res = pool.borrowResource()}).\n
+   * If you have only one action to do, you can use <tt>pool.borrowResource().get().doAction()</tt> ;
+   * otherwise you should to keep \c anch::PoolableResource until all actions have been done (with <tt>auto res = pool.borrowResource()</tt>).\n
    * Borrowed resources can outlive their pool: they will be destroyed when released.\n
    * You can specifiy an \c std::shared_ptr creation function as third template parameter. By default, \c std::make_shared<T> will be used.
    * It can be usefull for polymorphism dynamic allocation.

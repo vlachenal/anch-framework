@@ -1,6 +1,6 @@
 /*
-  ANCH Framework: ANother C++ Hack is a C++ framework based on C++11 standard
-  Copyright (C) 2012 Vincent Lachenal
+  ANCH Framework: ANother C++ Hack is a C++ framework based on C++23 standard
+  Copyright (C) 2026 Vincent Lachenal
 
   This file is part of ANCH Framework.
 
@@ -15,7 +15,7 @@
   GNU Lesser General Public License for more details.
 
   You should have received a copy of the GNU Lesser General Public License
-  along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
+  along with ANCH Framework.  If not, see <https://www.gnu.org/licenses/>.
 */
 #pragma once
 
@@ -51,7 +51,7 @@ LOG << anch::log::lvl::debug << "value=" << value;
    *
    * \author Vincent Lachenal
    *
-   * \since 0.1
+   * \since 0.2
    */
   template<anch::log::Level L>
   struct LevelTag {
@@ -61,12 +61,12 @@ LOG << anch::log::lvl::debug << "value=" << value;
 
   /*!
    * Disabled log line.\n
-   * Returned for levels lower than \ref MIN_LEVEL : every operation does nothing and is removed by the compiler.\n
+   * Returned for levels lower than \ref anch::log::MIN_LEVEL "MIN_LEVEL" : every operation does nothing and is removed by the compiler.\n
    * Values are still evaluated.
    *
    * \author Vincent Lachenal
    *
-   * \since 0.1
+   * \since 0.2
    */
   class NoopStream {
 
@@ -92,7 +92,7 @@ LOG << anch::log::lvl::debug << "value=" << value;
 
   /*!
    * Log line.\n
-   * Returned for levels greater or equal to \ref MIN_LEVEL . The logger level is checked once at construction:
+   * Returned for levels greater or equal to \ref anch::log::MIN_LEVEL "MIN_LEVEL" . The logger level is checked once at construction:
    * when level is disabled, values are not formatted.\n
    * The message is written when the line is destroyed, i.e. at the end of the full expression.\n
    * \n
@@ -103,7 +103,7 @@ LOG << anch::log::lvl::debug << "value=" << value;
    *
    * \author Vincent Lachenal
    *
-   * \since 0.1
+   * \since 0.2
    */
   class LogLine {
 
@@ -180,14 +180,14 @@ LOG << anch::log::lvl::debug << "value=" << value;
 
   /*!
    * Start a log line.\n
-   * Return type depends on level: \ref NoopStream when level is lower than \ref MIN_LEVEL , \ref LogLine otherwise.
+   * Return type depends on level: \ref NoopStream when level is lower than \ref anch::log::MIN_LEVEL "MIN_LEVEL" , \ref LogLine otherwise.
    *
    * \param logger The logger
    * \param level The level (\c anch::log::lvl::debug , ...)
    *
    * \return the log line
    *
-   * \since 0.1
+   * \since 0.2
    */
   template<anch::log::Level L>
   [[nodiscard]] auto operator<<(const anch::log::Logger& logger, anch::log::LevelTag<L> level) noexcept;

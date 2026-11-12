@@ -1,0 +1,7 @@
+/*!
+ * \namespace anch::ini
+ *
+ * \brief AnCH INI library namespace.
+ *
+ * INI files parser and sections. See \ref page_ini "AnCH INI library documentation".
+ */

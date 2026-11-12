@@ -1,0 +1,7 @@
+<map id="anch::conf::Resolvers" name="anch::conf::Resolvers">
+<area shape="rect" id="Node000001" title="Value resolvers&#39; registry." alt="" coords="28,457,166,655"/>
+<area shape="rect" id="Node000002" href="$classanch_1_1_singleton.html" title=" " alt="" coords="5,275,189,408"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="98,420,100,458,95,457,96,425"/>
+<area shape="rect" id="Node000003" href="$classanch_1_1_singleton.html" title="Meyers&#39; singleton implementation." alt="" coords="31,5,163,203"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="98,215,100,275,95,274,97,220"/>
+</map>

@@ -1,7 +1,19 @@
 /*!
- * \namespace anch::logger
+ * \namespace anch::log
  *
- * \brief Logger namespace.
+ * \brief AnCH logging library namespace.
  *
- * It contains ready (and easy) to use logger library.
+ * It contains the logging library: \ref anch::log::LoggerFactory "LoggerFactory" retrieves configured
+ * \ref anch::log::Logger "Logger" instances, which write messages through writers. Messages can be logged
+ * with variadic methods (\c LOG.info("value=", value) ) or with stream injection (\c log/stream.hpp ).
+ */
+
+/*!
+ * \namespace anch::log::lvl
+ *
+ * \brief Logging levels as types for the stream API.
+ *
+ * \code{.cpp}
+LOG << anch::log::lvl::debug << "value=" << value;
+\endcode
  */

@@ -1,0 +1,12 @@
+<map id="anch::ResourcePoolState&lt; T &gt;" name="anch::ResourcePoolState&lt; T &gt;">
+<area shape="rect" id="Node000001" title="Resource pool shared state (internal usage)." alt="" coords="5,467,196,579"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="8,317,81,387"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="53,384,71,442,74,451,69,451,66,443,52,389"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="105,309,254,395"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="162,392,136,453,131,450,158,396"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="119,5,138,75"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="122,72,117,141,118,178,122,215,134,255,151,294,145,294,129,257,117,217,112,179,112,140,121,77"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="200,147,303,216"/>
+<area shape="poly" id="edge5_Node000005_Node000004" title=" " alt="" coords="138,49,213,133,208,135,138,54"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="232,228,199,311,194,309,230,232"/>
+</map>

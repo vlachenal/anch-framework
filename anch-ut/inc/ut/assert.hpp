@@ -1,5 +1,5 @@
 /*
-  ANCH Framework: ANother C++ Hack is a C++ framework based on C++11 standard
+  ANCH Framework: ANother C++ Hack is a C++ framework based on C++23 standard
   Copyright (C) 2020 Vincent Lachenal
 
   This file is part of ANCH Framework.
@@ -15,7 +15,7 @@
   GNU Lesser General Public License for more details.
 
   You should have received a copy of the GNU Lesser General Public License
-  along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
+  along with ANCH Framework.  If not, see <https://www.gnu.org/licenses/>.
 */
 #pragma once
 
@@ -37,7 +37,7 @@ namespace anch::ut {
   /*!
    * \brief Assertion message with its location
    *
-   * Format string of \ref assertThat : the format string is checked at compile time against the arguments types
+   * Format string of \ref anch::ut::assertThat "assertThat" : the format string is checked at compile time against the arguments types
    * (as \c std::format does) and the location of the call is captured.\n
    * It is built implicitly from a string literal ; it should not be used directly.
    *
@@ -122,8 +122,8 @@ namespace anch::ut {
   /*!
    * Assert clause with error message formatting
    *
-   * \deprecated Use \ref assertThat : \c assert is also the \c <cassert> macro, so calls are expanded by the macro when
-   * \c <cassert> is included (the name is written between parentheses here so that this header always compiles).
+   * \deprecated Use \ref anch::ut::assertThat "assertThat" : \c assert is also the \c \<cassert\> macro, so calls are expanded by the macro when
+   * \c \<cassert\> is included (the name is written between parentheses here so that this header always compiles).
    * The message is checked only when the assertion fails and the location is not reported.
    *
    * \tparam T the arguments
@@ -135,7 +135,7 @@ namespace anch::ut {
    * \throw anch::ut::AssertException \c check is \c false
    */
   template<typename... T>
-  [[deprecated("Use anch::ut::assertThat: assert conflicts with <cassert> macro")]]
+  [[deprecated("Use anch::ut::assertThat: assert conflicts with the assert macro of cassert header")]]
   void (assert)(bool check, std::string_view message, const T&... args);
 
   /*!
@@ -146,7 +146,7 @@ namespace anch::ut {
    * \param field the field name
    * \param expected the expected value
    * \param value the current value
-   * \param out the output stream to print in when \c false (default to \c{std::cout})
+   * \param out the output stream to print in when \c false (default to <tt>std::cout</tt>)
    *
    * \return \c true when expect equals to value, \c false otherwise
    */
@@ -161,7 +161,7 @@ namespace anch::ut {
    * \param field the field name
    * \param expected the expected value
    * \param value the current value
-   * \param out the output stream to print in when \c false (default to \c{std::cout})
+   * \param out the output stream to print in when \c false (default to <tt>std::cout</tt>)
    *
    * \return \c true when expect equals to value, \c false otherwise
    */
@@ -176,7 +176,7 @@ namespace anch::ut {
    * \param field the field name
    * \param expected the expected value
    * \param value the current value
-   * \param out the output stream to print in when \c false (default to \c{std::cout})
+   * \param out the output stream to print in when \c false (default to <tt>std::cout</tt>)
    *
    * \return \c true when expect equals to value, \c false otherwise
    */
@@ -191,7 +191,7 @@ namespace anch::ut {
    * \param field the field name
    * \param expected the expected value
    * \param value the current value
-   * \param out the output stream to print in when \c false (default to \c{std::cout})
+   * \param out the output stream to print in when \c false (default to <tt>std::cout</tt>)
    *
    * \return \c true when expect equals to value, \c false otherwise
    */
@@ -206,7 +206,7 @@ namespace anch::ut {
    * \param field the field name
    * \param expected the expected value
    * \param value the current value
-   * \param out the output stream to print in when \c false (default to \c{std::cout})
+   * \param out the output stream to print in when \c false (default to <tt>std::cout</tt>)
    *
    * \return \c true when expect equals to value, \c false otherwise
    */
@@ -222,7 +222,7 @@ namespace anch::ut {
    * \param field the field name
    * \param expected the expected value
    * \param value the current value
-   * \param out the output stream to print in when \c false (default to \c{std::cout})
+   * \param out the output stream to print in when \c false (default to <tt>std::cout</tt>)
    *
    * \return \c true when expect equals to value, \c false otherwise
    */
@@ -237,7 +237,7 @@ namespace anch::ut {
    * \param field the field name
    * \param expected the expected value
    * \param value the current value
-   * \param out the output stream to print in when \c false (default to \c{std::cout})
+   * \param out the output stream to print in when \c false (default to <tt>std::cout</tt>)
    *
    * \return \c true when expect equals to value, \c false otherwise
    */

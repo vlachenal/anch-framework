@@ -12,7 +12,12 @@
  *
  * \section date_install_sec Installation
  *
- * TODO fill this section
+ * CMake target \c anch::date:
+ * \code{.cmake}
+find_package(Anch REQUIRED)
+target_link_libraries(my-app PRIVATE anch::date)
+\endcode
+ * See \ref install_sec "installation".
  *
  * \section date_concept_sec Usage
  *

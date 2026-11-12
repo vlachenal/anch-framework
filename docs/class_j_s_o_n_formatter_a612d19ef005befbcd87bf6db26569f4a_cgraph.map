@@ -1,0 +1,21 @@
+<map id="JSONFormatter::handle" name="JSONFormatter::handle">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,164,165,191"/>
+<area shape="rect" id="Node000002" href="$class_j_s_o_n_formatter.html#a4cea26090e621d708c7ea842ce30a667" title=" " alt="" coords="213,5,383,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="93,162,140,104,173,71,211,42,225,37,221,40,214,46,177,75,144,107,98,165"/>
+<area shape="rect" id="Node000003" href="$structanch_1_1cli_1_1_formatter.html#a79ca7f3c4c3f43686cbc4753d1c22878" title=" " alt="" coords="231,56,365,99"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="109,161,212,108,227,104,223,107,214,113,112,166"/>
+<area shape="rect" id="Node000005" href="$structanch_1_1cli_1_1_formatter.html#ab800062df42fd040f2bec7d90a12a158" title=" " alt="" coords="231,123,365,165"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="164,162,218,155,213,158,166,167"/>
+<area shape="rect" id="Node000006" href="$structanch_1_1cli_1_1_formatter.html#a3f3f357ba8d33f26def00f272408f7ca" title=" " alt="" coords="231,189,365,232"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="165,187,218,197,213,199,166,192"/>
+<area shape="rect" id="Node000007" href="$structanch_1_1cli_1_1_formatter.html#a345122bef7a5bc894dd14ebe401fe8b3" title=" " alt="" coords="231,256,365,299"/>
+<area shape="poly" id="edge8_Node000001_Node000007" title=" " alt="" coords="111,189,214,242,227,249,222,250,212,246,110,194"/>
+<area shape="rect" id="Node000008" href="$classanch_1_1json_1_1_writer_context.html#a9066ce1eb6c28842de1ecd9edfc3141b" title=" " alt="" coords="213,347,382,389"/>
+<area shape="poly" id="edge10_Node000001_Node000008" title=" " alt="" coords="98,188,148,244,214,309,251,338,246,337,211,313,144,247,97,194"/>
+<area shape="rect" id="Node000004" href="$structanch_1_1cli_1_1_formatter.html#ada4525554eda054bc4f616826de8e016" title=" " alt="" coords="431,156,565,199"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="357,96,384,108,453,147,447,148,382,113,358,102"/>
+<area shape="poly" id="edge5_Node000005_Node000004" title=" " alt="" coords="365,153,418,163,413,164,366,158"/>
+<area shape="poly" id="edge7_Node000006_Node000004" title=" " alt="" coords="365,197,418,190,413,192,366,202"/>
+<area shape="poly" id="edge9_Node000007_Node000004" title=" " alt="" coords="356,253,382,242,448,208,452,206,384,246,358,258"/>
+<area shape="poly" id="edge11_Node000008_Node000008" title=" " alt="" coords="260,345,258,337,264,328,278,322,298,320,319,322,334,331,329,331,318,328,298,325,279,327,268,332,263,338,264,348"/>
+</map>

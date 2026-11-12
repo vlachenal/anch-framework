@@ -1,5 +1,5 @@
 /*
-  ANCH Framework: ANother C++ Hack is a C++ framework based on C++11 standard
+  ANCH Framework: ANother C++ Hack is a C++ framework based on C++23 standard
   Copyright (C) 2012 Vincent Lachenal
 
   This file is part of ANCH Framework.
@@ -15,7 +15,7 @@
   GNU Lesser General Public License for more details.
 
   You should have received a copy of the GNU Lesser General Public License
-  along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
+  along with ANCH Framework.  If not, see <https://www.gnu.org/licenses/>.
 */
 #pragma once
 
@@ -44,7 +44,7 @@ namespace anch::rest {
    *
    * \tparam T the value type
    *
-   * \since 0.1
+   * \since 0.2
    */
   template<typename T>
   concept ParameterValue = std::convertible_to<const T&, std::string_view>
@@ -58,7 +58,7 @@ namespace anch::rest {
    *
    * \return the formatted value (not encoded)
    *
-   * \since 0.1
+   * \since 0.2
    */
   template<anch::rest::ParameterValue T>
   std::string toParameterString(const T& value);
@@ -78,7 +78,7 @@ Pet pet = client.get("/pets/{id}", 42).accept<anch::rest::Json>().as<Pet>();
    *
    * \author Vincent Lachenal
    *
-   * \since 0.1
+   * \since 0.2
    */
   template<typename... Codecs>
   class Call {
@@ -262,7 +262,7 @@ anch::rest::Response res = client.post("/pets").body<anch::rest::Json>(pet).send
    *
    * \author Vincent Lachenal
    *
-   * \since 0.1
+   * \since 0.2
    */
   class Client {
 

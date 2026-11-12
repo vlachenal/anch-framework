@@ -1,5 +1,5 @@
 /*
-  ANCH Framework: ANother C++ Hack is a C++ framework based on C++11 standard
+  ANCH Framework: ANother C++ Hack is a C++ framework based on C++23 standard
   Copyright (C) 2012 Vincent Lachenal
 
   This file is part of ANCH Framework.
@@ -15,7 +15,7 @@
   GNU Lesser General Public License for more details.
 
   You should have received a copy of the GNU Lesser General Public License
-  along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
+  along with ANCH Framework.  If not, see <https://www.gnu.org/licenses/>.
 */
 #pragma once
 
@@ -139,7 +139,7 @@ namespace anch::log {
      *
      * \return \c true when level is greater or equal to the logger level and the logger has writers
      *
-     * \since 0.1
+     * \since 0.2
      */
     bool isEnabled(const anch::log::Level& level) const noexcept;
 
@@ -151,7 +151,7 @@ namespace anch::log {
      * \param level The message level
      * \param message The message to write
      *
-     * \since 0.1
+     * \since 0.2
      */
     void write(const anch::log::Level& level, const std::string& message) const noexcept;
 

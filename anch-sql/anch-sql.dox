@@ -4,22 +4,27 @@
  *
  * \section sql_intro_seq Introduction
  *
- * AnCH logger library aims to provide facilities to manage SQL database interactions.
+ * AnCH SQL library aims to provide facilities to manage SQL database interactions.
  *
  * \section sql_prereq_sec Prerequisites
  *
- * You need anch-utils library header files to compile this library for SQL connection pool.\n
- * SQL connection needs AnCH resource library.
+ * anch-utils (connection pool), anch-conf (connection factory configuration) and the client library of each
+ * driver: libmariadb (or libmysqlclient), libpq and libsqlite3.
  *
  * \section sql_install_sec Installation
  *
- * TODO fill this section
+ * CMake target \c anch::sql, option \c ANCH_BUILD_SQL ; drivers \c anch::mysql , \c anch::postgresql and \c anch::sqlite are loaded at runtime:
+ * \code{.cmake}
+find_package(Anch REQUIRED)
+target_link_libraries(my-app PRIVATE anch::sql)
+\endcode
+ * See \ref install_sec "installation".
  *
  * \section sql_concept_sec Conception
  *
- * AnCH SQL library is an layout to manage SQL client. Managed SQL clients are SQLite3, PostgreSQL and MySQL/MariaDB.\n
+ * AnCH SQL library is a layer to manage SQL client. Managed SQL clients are SQLite3, PostgreSQL and MySQL/MariaDB.\n
  * \n
- * SQl interfaces are inspired by Java JDBC. You will find \ref anch::sql::Connection "Connection", \ref anch::sql::ResultSet "ResultSet", ... \todo list other classes.
+ * SQl interfaces are inspired by Java JDBC. You will find \ref anch::sql::Connection "Connection", \ref anch::sql::ResultSet "ResultSet",, \ref anch::sql::PreparedStatement "PreparedStatement" and \ref anch::sql::SqlException "SqlException".
  * \ref anch::sql::ResultSet "ResultSet" can be handle with row mapper and complete extract \c std::function "std::function" trough queryMapRow and queryExtract methods.
  * These methods will release \ref anch::sql::ResultSet "ResultSet".\n
  * \n

@@ -12,7 +12,12 @@
  *
  * \section cli_install_sec Installation
  *
- * make install
+ * CMake target \c anch::cli:
+ * \code{.cmake}
+find_package(Anch REQUIRED)
+target_link_libraries(my-app PRIVATE anch::cli)
+\endcode
+ * See \ref install_sec "installation".
  *
  * \section cli_concept_sec Conception
  *
@@ -32,13 +37,12 @@
  * Generate and parse CLIs:
  * \code{.cpp}
   App application = {
-    .name = "toto",
-    .version = "0.1 alpha 42",
-    .author = "Vincent Lachenal",
-    .copyright = "No copyrigth - it is a fuking unit test",
+    .name = "my-app",
+    .version = "1.0.0",
+    .author = "John Doe",
+    .copyright = "Copyright (C) 2026 John Doe",
     .licence = "WTFPL 2.0",
-    .banner = "Ceci est une bannière",
-    .bannerPath = "/etc/fstab"
+    .banner = "My application"
   };
   // Application options are declared ...
   Options opts;

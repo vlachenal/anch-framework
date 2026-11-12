@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 3.25)
 # ANother C++ Hack
 # Build every AnCH Framework components
 project(anch-framework
-  VERSION 0.1.0
+  VERSION 0.2.0
   DESCRIPTION "AnCH Framework - Another C++ Hack"
   HOMEPAGE_URL "https://vlachenal.github.io/anch-framework/"
   LANGUAGES CXX)

@@ -15,23 +15,30 @@
  *
  * \section crypto_prereq_sec Prerequisites
  *
- * You only need anch-utils library header files to compile this library.
+ * anch-utils (header only) and anch-uuid (MD5 and SHA1 UUID providers).\n
+ * This library has been written for fun and is not audited: prefer a reviewed library (such as OpenSSL) for
+ * security sensitive applications.
  *
  * \section crypto_install_sec Installation
  *
- * TODO fill this section
+ * CMake target \c anch::crypto, option \c ANCH_BUILD_CRYPTO:
+ * \code{.cmake}
+find_package(Anch REQUIRED)
+target_link_libraries(my-app PRIVATE anch::crypto)
+\endcode
+ * See \ref install_sec "installation".
  *
  * \section crypto_concept_sec Conception
  *
  * \subsection hash_concept_sec Hashes
  *
  * Every hash implementation inherits the \ref anch::crypto::Hash class.\n
- * \ref anch::crypto::Hash "Hash" is a template class which is parameterized by its ouput and block size. These parameters are used to other algorithms based on hash like \ref anch::crypto::HMAC.\n
+ * \ref anch::crypto::Hash "Hash" is a template class which is parameterized by its ouput and block size. These parameters are used to other algorithms based on hash like \ref anch::crypto::HMAC "HMAC".\n
  * \n
  * For now, implemented hashes are:
  * - \ref anch::crypto::MD5
  * - \ref anch::crypto::SHA1
- * - \ref anch::crypto::SHA2 : \ref anch::crypto::SHA224 and \ref anch::crypto::SHA256 which are type defintions of \ref anch::crypto::SHA224_256 ; \ref anch::crypto::SHA384 and \ref anch::crypto::SHA512 which are type defintions of \ref anch::crypto::SHA384_512
+ * - \ref anch::crypto::SHA2 : \ref anch::crypto::SHA224 and \ref anch::crypto::SHA256 which are type defintions of \c anch::crypto::SHA224_256 ; \ref anch::crypto::SHA384 and \ref anch::crypto::SHA512 which are type defintions of \c anch::crypto::SHA384_512
  *
  * The \ref anch::crypto::SHA384 "SHA384" and \ref anch::crypto::SHA512 "SHA512" are optimized for 64-bits CPU. 32-bits CPU optimization isplanned for later.\n
  * \n
@@ -45,7 +52,7 @@
  *
  * \subsection cipher_concept_sec Encryption
  *
- * Only \ref anch::crypto::AES is implemented for now. Other alogrithms are planned for implementation (DES, Triple DES, Camellia, ...).\n
+ * Only \ref anch::crypto::AES is implemented for now. \n
  *
  * \ref anch::crypto::AES "AES" has only 2 methods:
  * - cipher which takes two uint8_t[16] as input and output parameters.
@@ -53,9 +60,48 @@
  *
  * Secret key is expanded on instanciation and is reused for each block (on each call).\n
  * \n
- * Future cipher block algorithms will have similar methods to implements different cipher block mode of operation (ECB, CBC, CTR, ...) with parallelization through \ref anch::ThreadPool "ThreadPool".
+ * Block cipher modes of operation (\c ECB , \c CBC , \c CFB , \c OFB , \c PCBC and \c CTR ) cipher and decipher
+ * streams with a block cipher and a padding (\c PKCS5Padding , \c ISO7816_4Padding , \c ANSIX923 , \c ZeroPadding ).
  *
  * \section crypto_example_sec Examples
  *
- * TODO fill this section
+ * \code{.cpp}
+#include "crypto/b2t/base64.hpp"
+#include "crypto/cipher/aes256.hpp"
+#include "crypto/cipher/cbc.hpp"
+#include "crypto/hash/sha256.hpp"
+#include "crypto/hmac.hpp"
+#include "crypto/padding/pkcs5Padding.hpp"
+
+#include <array>
+#include <iostream>
+#include <sstream>
+
+using anch::crypto::SHA256;
+
+int
+main() {
+  // Hash: digest is computed by the constructor, operator<< writes it in hexadecimal
+  std::cout << SHA256("abc") << std::endl;
+
+  // HMAC with any hash
+  std::cout << anch::crypto::HMAC<SHA256>("key", "The quick brown fox jumps over the lazy dog") << std::endl;
+
+  // Base64
+  std::string encoded = anch::crypto::Base64::encode(std::string("AnCH framework"));
+  std::cout << encoded << " -> " << anch::crypto::Base64::decode(encoded) << std::endl;
+
+  // AES-256 in CBC mode with PKCS#5 padding (streams)
+  std::array<uint8_t,16> iv = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
+  const std::string key = "0123456789abcdef0123456789abcdef"; // 32 bytes
+  std::istringstream plain("secret message");
+  std::ostringstream ciphered;
+  anch::crypto::CBC<anch::crypto::AES256, anch::crypto::PKCS5Padding>(iv).cipher(plain, ciphered, key);
+  std::istringstream input(ciphered.str());
+  std::ostringstream deciphered;
+  anch::crypto::CBC<anch::crypto::AES256, anch::crypto::PKCS5Padding>(iv).decipher(input, deciphered, key);
+  std::cout << deciphered.str() << std::endl;
+  return 0;
+}
+\endcode
  */

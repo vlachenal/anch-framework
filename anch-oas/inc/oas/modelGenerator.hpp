@@ -1,5 +1,5 @@
 /*
-  ANCH Framework: ANother C++ Hack is a C++ framework based on C++11 standard
+  ANCH Framework: ANother C++ Hack is a C++ framework based on C++23 standard
   Copyright (C) 2026 Vincent Lachenal
 
   This file is part of ANCH Framework.
@@ -15,7 +15,7 @@
   GNU Lesser General Public License for more details.
 
   You should have received a copy of the GNU Lesser General Public License
-  along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
+  along with ANCH Framework.  If not, see <https://www.gnu.org/licenses/>.
 */
 #pragma once
 
@@ -38,7 +38,7 @@ namespace anch::oas {
     /*! Namespace of generated models (\c :: separated identifiers) */
     std::string ns = "model";
 
-    /*! Generated files base name: <name>.hpp and <name>.cpp */
+    /*! Generated files base name: \<name\>.hpp and \<name\>.cpp */
     std::string name = "models";
 
     /*! Map \c uuid string format to \c anch::UUID (needs \c ANCH_UUID in anch-json), \c std::string otherwise */
@@ -95,7 +95,7 @@ namespace anch::oas {
    *    \c std::chrono::year_month_day for \c date format), \c integer → \c int32_t / \c int64_t ,
    *    \c number → \c float / \c double , \c boolean → \c bool ;
    *  - objects with properties and \c allOf compositions → structures, inline objects get a name built from their
-   *    path (<Model><Property>) ;
+   *    path (\<Model\>\<Property\>) ;
    *  - string enumerations → <tt>enum class</tt> (unknown values are rejected on deserialization) ;
    *  - \c array → \c std::vector , objects with \c additionalProperties schema only → <tt>std::map<std::string,T></tt> ;
    *  - optional and \c nullable properties → \c std::optional , arrays and maps are empty when absent ;

@@ -1,5 +1,5 @@
 /*
-  ANCH Framework: ANother C++ Hack is a C++ framework based on C++11 standard
+  ANCH Framework: ANother C++ Hack is a C++ framework based on C++23 standard
   Copyright (C) 2012 Vincent Lachenal
 
   This file is part of ANCH Framework.
@@ -15,7 +15,7 @@
   GNU Lesser General Public License for more details.
 
   You should have received a copy of the GNU Lesser General Public License
-  along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
+  along with ANCH Framework.  If not, see <https://www.gnu.org/licenses/>.
 */
 #pragma once
 
@@ -71,8 +71,8 @@ namespace anch::sql {
    */
   class ClausesBuilder {
     friend ClausesBuilder anch::sql::clauses();
-    friend anch::sql::SelectBuilder;
-    friend anch::sql::FromBuilder;
+    friend class anch::sql::SelectBuilder;
+    friend class anch::sql::FromBuilder;
 
     // Attributes +
   private:
@@ -243,7 +243,7 @@ namespace anch::sql {
      * Due to many database engine limitation about the maximum number of prepared
      * statement per connection, \c IN operator will never be treated with place holder
      * prepared statement values.\n
-     * You can format text values with \ref SQL utility methods.
+     * You can format text values with \c SQL utility methods.
      *
      * \tparam T the values' type
      *
@@ -259,7 +259,7 @@ namespace anch::sql {
      * Due to many database engine limitation about the maximum number of prepared
      * statement per connection, <tt>NOT IN</tt> operator will never be treated with place holder
      * prepared statement values.\n
-     * You can format text values with \ref SQL utility methods.
+     * You can format text values with \c SQL utility methods.
      *
      * \tparam T the values' type
      * \param values the values

@@ -1,5 +1,5 @@
 /*
-  ANCH Framework: ANother C++ Hack is a C++ framework based on C++11 standard
+  ANCH Framework: ANother C++ Hack is a C++ framework based on C++23 standard
   Copyright (C) 2020 Vincent Lachenal
 
   This file is part of ANCH Framework.
@@ -15,7 +15,7 @@
   GNU Lesser General Public License for more details.
 
   You should have received a copy of the GNU Lesser General Public License
-  along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
+  along with ANCH Framework.  If not, see <https://www.gnu.org/licenses/>.
 */
 #pragma once
 
@@ -74,7 +74,7 @@ namespace anch::json {
    */
   template<typename T>
   class ObjectMapper: public anch::json::GenericMapper<ObjectMapper<T>, T> {
-    friend anch::json::Factory<T>;
+    friend class anch::json::Factory<T>;
     template<typename U>
     friend void anch::json::registerObject(ObjectMapper<U>&);
 

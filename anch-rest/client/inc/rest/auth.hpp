@@ -1,5 +1,5 @@
 /*
-  ANCH Framework: ANother C++ Hack is a C++ framework based on C++11 standard
+  ANCH Framework: ANother C++ Hack is a C++ framework based on C++23 standard
   Copyright (C) 2012 Vincent Lachenal
 
   This file is part of ANCH Framework.
@@ -15,7 +15,7 @@
   GNU Lesser General Public License for more details.
 
   You should have received a copy of the GNU Lesser General Public License
-  along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
+  along with ANCH Framework.  If not, see <https://www.gnu.org/licenses/>.
 */
 #pragma once
 
@@ -34,7 +34,7 @@ namespace anch::rest {
    *
    * \return the filter
    *
-   * \since 0.1
+   * \since 0.2
    */
   anch::rest::Filter basicAuth(std::string_view user, std::string_view password);
 
@@ -45,7 +45,7 @@ namespace anch::rest {
    *
    * \return the filter
    *
-   * \since 0.1
+   * \since 0.2
    */
   anch::rest::Filter bearerAuth(std::string_view token);
 
@@ -56,7 +56,7 @@ namespace anch::rest {
    *
    * \return the encoded value
    *
-   * \since 0.1
+   * \since 0.2
    */
   std::string base64Encode(std::string_view value);
 

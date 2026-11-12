@@ -1,0 +1,17 @@
+<map id="anch::events::Observer&lt; T &gt;" name="anch::events::Observer&lt; T &gt;">
+<area shape="rect" id="Node000001" title="An observer interface of the observers/observable design pattern." alt="" coords="411,5,588,96"/>
+<area shape="rect" id="Node000002" href="$classanch_1_1events_1_1_event_handler.html" title="An event handler." alt="" coords="5,168,178,339"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="395,80,295,117,242,142,192,170,180,178,176,175,189,166,239,137,293,112,398,77"/>
+<area shape="rect" id="Node000003" href="$classanch_1_1events_1_1_observer.html" title=" " alt="" coords="202,200,382,307"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="394,68,349,89,328,104,310,122,299,139,293,159,288,201,283,199,288,158,295,137,306,118,325,100,347,84,398,65"/>
+<area shape="rect" id="Node000005" href="$classanch_1_1events_1_1_observer.html" title=" " alt="" coords="405,200,552,307"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="495,109,486,201,481,199,492,113"/>
+<area shape="rect" id="Node000007" href="$classanch_1_1events_1_1_observer.html" title=" " alt="" coords="576,200,741,307"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="578,103,594,118,621,158,642,201,636,200,616,161,590,122,578,108"/>
+<area shape="rect" id="Node000008" href="$classanch_1_1events_1_1_observer.html" title=" " alt="" coords="772,200,918,307"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="602,55,647,62,693,74,737,93,777,118,795,135,810,156,832,201,827,199,806,159,791,139,774,122,735,97,691,80,646,67,604,60"/>
+<area shape="rect" id="Node000004" href="$class_error_observer.html" title=" " alt="" coords="231,409,352,564"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="293,320,294,411,289,409,290,324"/>
+<area shape="rect" id="Node000006" href="$class_j_s_o_n_formatter.html" title=" " alt="" coords="412,388,544,585"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="480,320,481,390,476,387,477,324"/>
+</map>

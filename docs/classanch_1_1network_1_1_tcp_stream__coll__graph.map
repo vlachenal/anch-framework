@@ -1,0 +1,11 @@
+<map id="anch::network::TcpStream" name="anch::network::TcpStream">
+<area shape="rect" id="Node000001" title="TCP connection as a std::iostream." alt="" coords="98,585,279,783"/>
+<area shape="rect" id="Node000002" href="$structanch_1_1network_1_1_socket_holder.html" title="Socket owner base class of TcpStream." alt="" coords="5,435,185,504"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="117,515,148,585,143,586,115,520"/>
+<area shape="rect" id="Node000003" href="$classanch_1_1network_1_1_socket.html" title="Network socket (POSIX)." alt="" coords="24,5,166,331"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="96,328,98,418,93,417,95,333"/>
+<area shape="rect" id="Node000004" href="$classanch_1_1cutils_1_1_c_i_o_stream.html" title=" " alt="" coords="209,403,360,536"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="251,547,235,587,230,584,247,551"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="241,133,328,203"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="286,215,287,403,282,402,283,220"/>
+</map>

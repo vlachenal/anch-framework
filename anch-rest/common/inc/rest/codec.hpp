@@ -1,6 +1,6 @@
 /*
-  ANCH Framework: ANother C++ Hack is a C++ framework based on C++11 standard
-  Copyright (C) 2012 Vincent Lachenal
+  ANCH Framework: ANother C++ Hack is a C++ framework based on C++23 standard
+  Copyright (C) 2026 Vincent Lachenal
 
   This file is part of ANCH Framework.
 
@@ -15,7 +15,7 @@
   GNU Lesser General Public License for more details.
 
   You should have received a copy of the GNU Lesser General Public License
-  along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
+  along with ANCH Framework.  If not, see <https://www.gnu.org/licenses/>.
 */
 #pragma once
 
@@ -32,12 +32,12 @@ namespace anch::rest {
    * A codec is a type with static functions:
    * - \c mediaType() : the media type it handles
    * - \c serialize(const T&, std::ostream&) : write value
-   * - \c deserialize(T&, std::istream&) : read value (\ref Deserializer ). Errors are reported with exceptions.
+   * - \c deserialize(T&, std::istream&) : read value (\ref anch::rest::Deserializer "Deserializer" ). Errors are reported with exceptions.
    *
    * \tparam C the codec type
    * \tparam T the value type
    *
-   * \since 0.1
+   * \since 0.2
    */
   template<typename C, typename T>
   concept Serializer = requires(const T& value, std::ostream& out) {
@@ -46,12 +46,12 @@ namespace anch::rest {
   };
 
   /*!
-   * Codec which deserializes \c T values (see \ref Serializer )
+   * Codec which deserializes \c T values (see \ref anch::rest::Serializer "Serializer" )
    *
    * \tparam C the codec type
    * \tparam T the value type
    *
-   * \since 0.1
+   * \since 0.2
    */
   template<typename C, typename T>
   concept Deserializer = requires(T& value, std::istream& input) {
@@ -64,7 +64,7 @@ namespace anch::rest {
    *
    * \author Vincent Lachenal
    *
-   * \since 0.1
+   * \since 0.2
    */
   struct Text {
 

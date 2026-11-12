@@ -1,5 +1,5 @@
 /*
-  ANCH Framework: ANother C++ Hack is a C++ framework based on C++11 standard
+  ANCH Framework: ANother C++ Hack is a C++ framework based on C++23 standard
   Copyright (C) 2012 Vincent Lachenal
 
   This file is part of ANCH Framework.
@@ -15,7 +15,7 @@
   GNU Lesser General Public License for more details.
 
   You should have received a copy of the GNU Lesser General Public License
-  along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
+  along with ANCH Framework.  If not, see <https://www.gnu.org/licenses/>.
 */
 #pragma once
 
@@ -28,6 +28,7 @@ namespace anch::crypto {
   /*
    * SHA224 defintion
    */
+  /*! \cond INTERNAL */
   extern template class Hash<28,64>;
   extern template const std::array<uint8_t,28>& Hash<28,64>::digest(const std::string& data);
   //extern template const std::array<uint8_t,28>& Hash<28,64>::digest(const std::wstring& data);
@@ -38,12 +39,15 @@ namespace anch::crypto {
   //extern template SHA224_256<28,SHA224_VALUES>::SHA224_256(const std::wstring& data);
   extern template SHA224_256<28,SHA224_VALUES>::SHA224_256(std::istream& stream);
   //extern template SHA224_256<28,SHA224_VALUES>::SHA224_256(std::wistream& stream);
+  /*! \endcond */
   /*!
    * SHA224 definition
    */
   using SHA224 = SHA224_256<28,SHA224_VALUES>;
 
   /*! HMAC SHA224 definition */
+  /*! \cond INTERNAL */
   extern template SHA224 HMAC<SHA224>(const std::string&, const std::string&);
+  /*! \endcond */
 
 }  // anch::crypto

@@ -12,7 +12,12 @@
  *
  * \section ut_install_sec Installation
  *
- * make install
+ * CMake target \c anch::ut:
+ * \code{.cmake}
+find_package(Anch REQUIRED)
+target_link_libraries(my-app PRIVATE anch::ut)
+\endcode
+ * See \ref install_sec "installation".
  *
  * \section ut_concept_sec Conception
  *
@@ -30,11 +35,11 @@
  *\n
  * Unit tests name and description can be registered in this function with \c name and \c description \c anch::ut::UnitTests methods.\n
  *\n
- * It will make executable with \c help argument (\c -h or \c --help for help): \c -l or \c --list-tests to list registered unit test, \c -t or \c --test <the test to run> to run a specific test and nothing to run all tests.\n
+ * It will make executable with \c help argument (\c -h or \c --help for help): \c -l or \c --list-tests to list registered unit test, \c -t or \c --test followed by the test name to run a specific test and nothing to run all tests.\n
  *\n
  * \c anch::ut::assertThat function is based on \c std::format function with \c {} paceholders: the message has to be
  * a string literal, and it is checked at compile time against the arguments (literal braces are written \c {{ and \c }} ).
- * \c anch::ut::assert is a deprecated alias: it conflicts with the \c <cassert> macro.\n
+ * \c anch::ut::assert is a deprecated alias: it conflicts with the \c \<cassert\> macro.\n
  * Failed assertions (\c assertThat , \c assertTrue , \c assertFalse and \c fail ) report their file and line.\n
  *\n
  * A failed assertion in a thread other than the test one terminates the process: wrap thread functions with

@@ -1,0 +1,68 @@
+/*! \page page_network AnCH network library documentation
+ *
+ * \tableofcontents
+ *
+ * \section network_intro_seq Introduction
+ *
+ * AnCH network library provides TCP and UDP sockets, IPv4 and IPv6, with C++ streams for TCP.
+ *
+ * \section network_prereq_sec Prerequisites
+ *
+ * anch-cutils: streams over sockets.
+ *
+ * \section network_install_sec Installation
+ *
+ * CMake target \c anch::network:
+ * \code{.cmake}
+find_package(Anch REQUIRED)
+target_link_libraries(my-app PRIVATE anch::network)
+\endcode
+ * See \ref install_sec "installation".
+ *
+ * \section network_concept_sec Usage
+ *
+ * - \ref anch::network::TcpStream "TcpStream" is a connected TCP socket and a \c std::iostream : use
+ *   \c << , \c >> , \c std::getline , ... \c shutdown half-closes the connection (end of transmission).
+ * - \ref anch::network::TcpServer "TcpServer" listens on an address (port \c 0 for a free port) and accepts
+ *   connections as \ref anch::network::TcpStream "TcpStream".
+ * - \ref anch::network::UdpSocket "UdpSocket" sends and receives datagrams.
+ * - \ref anch::network::Socket "Socket" is the RAII socket descriptor ; errors are
+ *   \ref anch::network::IOException "IOException" (a \c std::system_error with \c errno ).
+ *
+ * \c SIGPIPE is never raised: writing on a closed connection raises an exception (or sets the stream bad bit).
+ *
+ * \section network_example_sec Example
+ *
+ * Echo server and client:
+ * \code{.cpp}
+#include "network/tcpServer.hpp"
+#include "network/tcpStream.hpp"
+
+#include <iostream>
+#include <string>
+#include <thread>
+
+int
+main() {
+  anch::network::TcpServer server("127.0.0.1", 0);              // port 0: free port
+  uint16_t port = server.getAddress().getPort();
+
+  std::thread echo([&server]() {
+    anch::network::TcpStream peer = server.accept();              // TcpStream is a std::iostream
+    std::string line;
+    while(std::getline(peer, line)) {
+      peer << "echo: " << line << std::endl;
+    }
+  });
+
+  anch::network::TcpStream client("127.0.0.1", port);
+  client << "hello" << std::endl;
+  std::string answer;
+  std::getline(client, answer);
+  std::cout << answer << std::endl;
+  client.shutdown();                                              // end of transmission: server loop ends
+  echo.join();
+  return 0;
+}
+\endcode
+ */

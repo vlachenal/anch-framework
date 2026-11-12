@@ -1,0 +1,49 @@
+/*! \page page_device AnCH device library documentation
+ *
+ * \tableofcontents
+ *
+ * \section device_intro_seq Introduction
+ *
+ * AnCH device library provides information about the machine: network interfaces and CPU features.
+ *
+ * \section device_prereq_sec Prerequisites
+ *
+ * anch-uuid: MAC address UUID provider.
+ *
+ * \section device_install_sec Installation
+ *
+ * CMake target \c anch::device:
+ * \code{.cmake}
+find_package(Anch REQUIRED)
+target_link_libraries(my-app PRIVATE anch::device)
+\endcode
+ * See \ref install_sec "installation".
+ *
+ * \section device_concept_sec Usage
+ *
+ * - \ref anch::device::Network "Network" lists network interfaces (\c getifaddrs : IPv4, IPv6, MAC address,
+ *   MTU, ...). Interfaces are loaded once ; \c reload refreshes them.
+ * - \ref anch::device::CPU "CPU" detects CPU features at runtime (\c CPUID instruction on x86: AES-NI, MMX,
+ *   SSE, ...). anch-crypto uses it to select AES-NI.
+ * - \c anch::device::registerMACAddressUUIDProvider registers MAC address based UUID providers in anch-uuid.
+ *
+ * \section device_example_sec Example
+ *
+ * \code{.cpp}
+#include "device/cpu.hpp"
+#include "device/network.hpp"
+
+#include <iostream>
+
+int
+main() {
+  for(const auto& [name, interface] : anch::device::Network::getInterfaces()) {
+    std::cout << name << " " << interface.getIpAddress() << " " << interface.getMacAddress()
+              << (interface.isUp() ? " up" : " down") << std::endl;
+  }
+  const anch::device::CPU& cpu = anch::device::CPU::getInstance();
+  std::cout << "AES-NI: " << cpu.isAES() << std::endl;
+  return 0;
+}
+\endcode
+ */

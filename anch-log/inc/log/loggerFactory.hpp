@@ -1,5 +1,5 @@
 /*
-  ANCH Framework: ANother C++ Hack is a C++ framework based on C++11 standard
+  ANCH Framework: ANother C++ Hack is a C++ framework based on C++23 standard
   Copyright (C) 2012 Vincent Lachenal
 
   This file is part of ANCH Framework.
@@ -15,7 +15,7 @@
   GNU Lesser General Public License for more details.
 
   You should have received a copy of the GNU Lesser General Public License
-  along with ANCH Framework.  If not, see <http://www.gnu.org/licenses/>.
+  along with ANCH Framework.  If not, see <https://www.gnu.org/licenses/>.
 */
 #pragma once
 
@@ -88,6 +88,10 @@ namespace anch::log {
      *
      * \return The loggerr instance
      */
+#if __has_cpp_attribute(gnu::no_dangling)
+    // Loggers are owned by the factory: the reference does not depend on the name argument lifetime
+    [[gnu::no_dangling]]
+#endif
     static const anch::log::Logger& getLogger(const std::string& loggerName);
 
   private:
