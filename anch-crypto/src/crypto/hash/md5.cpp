@@ -117,21 +117,18 @@ MD5::Context::reset() {
 
 // Constructors +
 MD5::MD5(): Hash() {
-  _digest = &(_context.digest);
+  // Nothing to do
 }
 
 MD5::MD5(const std::string& data) {
-  _digest = &(_context.digest);
   Hash::digest(data);
 }
 
 MD5::MD5(std::istream& stream) {
-  _digest = &(_context.digest);
   Hash::digest(stream);
 }
 
 MD5::MD5(const uint8_t* data, std::size_t len) {
-  _digest = &(_context.digest);
   Hash::digest(data, len);
 }
 // Constructors -

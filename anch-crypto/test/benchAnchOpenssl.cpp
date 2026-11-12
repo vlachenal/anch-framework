@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <vector>
 
 #include "crypto/cipher/cbc.hpp"
 #include "crypto/cipher/aes256.hpp"
@@ -71,24 +72,23 @@ main(void) {
     std::ostringstream inStrStream;
     inStrStream << input->rdbuf();
     std::string plaintext = inStrStream.str();
-    uint8_t* ciphertext = new uint8_t[plaintext.size() + 16];
+    std::vector<uint8_t> ciphertext(plaintext.size() + 16);
 
     /* Provide the message to be encrypted, and obtain the encrypted output.
      * EVP_EncryptUpdate can be called multiple times if necessary
      */
-    if(1 != EVP_EncryptUpdate(ctx, ciphertext, &len, reinterpret_cast<const unsigned char*>(plaintext.data()), static_cast<int>(plaintext.size())))
+    if(1 != EVP_EncryptUpdate(ctx, ciphertext.data(), &len, reinterpret_cast<const unsigned char*>(plaintext.data()), static_cast<int>(plaintext.size())))
       handleErrors();
     ciphertext_len = len;
 
     /* Finalise the encryption. Further ciphertext bytes may be written at
      * this stage.
      */
-    if(1 != EVP_EncryptFinal_ex(ctx, ciphertext + len, &len))
+    if(1 != EVP_EncryptFinal_ex(ctx, ciphertext.data() + len, &len))
       handleErrors();
     ciphertext_len += len;
 
-    for(int i = 0 ; i < ciphertext_len ; i++)
-      cbcOutCipher << ciphertext[i];
+    cbcOutCipher.write(reinterpret_cast<const char*>(ciphertext.data()), ciphertext_len);
     cbcOutCipher.flush();
 
     /* Clean up */
@@ -110,7 +110,7 @@ main(void) {
     std::ostringstream inCipherStream;
     inCipherStream << input->rdbuf();
     std::string cipherText = inCipherStream.str();
-    uint8_t* plainText = new uint8_t[cipherText.size() + 16];
+    std::vector<uint8_t> plainText(cipherText.size() + 16);
 
     start = std::chrono::high_resolution_clock::now();
 
@@ -134,19 +134,18 @@ main(void) {
     /* Provide the message to be decrypted, and obtain the plaintext output.
      * EVP_DecryptUpdate can be called multiple times if necessary
      */
-    if(1 != EVP_DecryptUpdate(ctxd, plainText, &len, reinterpret_cast<const unsigned char*>(cipherText.data()), static_cast<int>(cipherText.size())))
+    if(1 != EVP_DecryptUpdate(ctxd, plainText.data(), &len, reinterpret_cast<const unsigned char*>(cipherText.data()), static_cast<int>(cipherText.size())))
       handleErrors();
     plaintext_len = len;
 
     /* Finalise the decryption. Further plaintext bytes may be written at
      * this stage.
      */
-    if(1 != EVP_DecryptFinal_ex(ctxd, plainText + len, &len))
+    if(1 != EVP_DecryptFinal_ex(ctxd, plainText.data() + len, &len))
       handleErrors();
     plaintext_len += len;
 
-    for(int i = 0 ; i < plaintext_len ; i++)
-      cbcOutDecipher << plainText[i];
+    cbcOutDecipher.write(reinterpret_cast<const char*>(plainText.data()), plaintext_len);
     cbcOutDecipher.flush();
 
     /* Clean up */

@@ -37,10 +37,6 @@ namespace anch::crypto {
   template<std::size_t O, std::size_t B>
   class Hash {
 
-  protected:
-    /*! Digest */
-    std::array<uint8_t,O>* _digest;
-
     // Methods +
   public:
     /*!

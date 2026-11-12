@@ -40,7 +40,7 @@ namespace anch::crypto {
 
   template<std::size_t O, std::size_t B, typename W, uint32_t R, const std::array<W,8>& I>
   SHA2<O,B,W,R,I>::SHA2(): Hash<O,B>(), _context() {
-    Hash<O,B>::_digest = &_context.digest;
+    // Nothing to do
   }
 
   template<std::size_t O, std::size_t B, typename W, uint32_t R, const std::array<W,8>& I>
@@ -51,7 +51,7 @@ namespace anch::crypto {
   template<std::size_t O, std::size_t B, typename W, uint32_t R, const std::array<W,8>& I>
   const std::array<uint8_t,O>&
   SHA2<O,B,W,R,I>::digest() const {
-    return *Hash<O,B>::_digest;
+    return _context.digest;
   }
 
   template<std::size_t O, std::size_t B, typename W, uint32_t R, const std::array<W,8>& I>
@@ -88,16 +88,15 @@ namespace anch::crypto {
   template<std::size_t O, std::size_t B, typename W, uint32_t R, const std::array<W,8>& I>
   void
   SHA2<O,B,W,R,I>::finalize() {
+    static_assert(O % sizeof(W) == 0 && O <= sizeof(W) * 8, "Digest has to be made of state words");
     uint64_t messageSize = _context.size;
-    uint8_t sizeInBits[sizeof(W) * 2];
-    if(anch::isLittleEndian()) {
+    // Message length in bits is written on 64 bits (the 128 bits length of SHA-384/512 is padded with zeros)
+    uint8_t sizeInBits[sizeof(uint64_t)];
+    if constexpr (anch::isLittleEndian()) {
       anch::byteSwap(messageSize << 3, sizeInBits);
     } else {
-      uint64_t tmp = messageSize << 3;
-      const uint8_t* words = reinterpret_cast<const uint8_t*>(&tmp);
-      for(std::size_t i = 0 ; i < sizeof(W) * 2 ; ++i) {
-	sizeInBits[i] = words[i];
-      }
+      const uint64_t tmp = messageSize << 3;
+      std::memcpy(sizeInBits, &tmp, sizeof(uint64_t));
     }
 
     addData((const uint8_t*)"\200", 1);
@@ -111,16 +110,15 @@ namespace anch::crypto {
       addData(zero, B - 1 - 8 - static_cast<size_t>(messageSize & (B - 1)));
     }
 
-    addData(sizeInBits, 8);
+    addData(sizeInBits, sizeof(uint64_t));
 
-    if(anch::isLittleEndian()) {
-      for(std::size_t i = 0 ; i < 8 ; i++) {
+    // Digest is made of the O / sizeof(W) first state words (SHA-224 and SHA-384 are truncated)
+    if constexpr (anch::isLittleEndian()) {
+      for(std::size_t i = 0 ; i < O / sizeof(W) ; i++) {
 	anch::byteSwap(_context.state[i], _context.digest.data() + (i * sizeof(W)));
       }
     } else {
-      std::memcpy(_context.digest.data(),
-		  _context.state.data(),
-		  sizeof(W) * O);
+      std::memcpy(_context.digest.data(), _context.state.data(), O);
     }
   }
 

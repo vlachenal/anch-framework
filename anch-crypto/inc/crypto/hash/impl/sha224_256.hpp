@@ -49,7 +49,7 @@ namespace anch::crypto {
      * \ref SHA224_256 default constructor
      */
     SHA224_256(): SHA2<O,64,uint32_t,64,I>() {
-      Hash<O,64>::_digest = &SHA2<O,64,uint32_t,64,I>::_context.digest;
+      // Nothing to do
     }
 
     /*!
@@ -59,7 +59,6 @@ namespace anch::crypto {
      */
     SHA224_256(const std::string& data):
       SHA2<O,64,uint32_t,64,I>() {
-      Hash<O,64>::_digest = &SHA2<O,64,uint32_t,64,I>::_context.digest;
       Hash<O,64>::digest(data);
     }
 
@@ -70,7 +69,6 @@ namespace anch::crypto {
      */
     SHA224_256(std::istream& stream):
       SHA2<O,64,uint32_t,64,I>() {
-      Hash<O,64>::_digest = &SHA2<O,64,uint32_t,64,I>::_context.digest;
       Hash<O,64>::digest(stream);
     }
 
@@ -83,7 +81,6 @@ namespace anch::crypto {
      */
     SHA224_256(const uint8_t* data, std::size_t len):
       SHA2<O,64,uint32_t,64,I>() {
-      Hash<O,64>::_digest = &SHA2<O,64,uint32_t,64,I>::_context.digest;
       Hash<O,64>::digest(data, len);
     }
     // Constructors -

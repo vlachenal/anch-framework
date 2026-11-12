@@ -18,6 +18,17 @@ Correction : le tampon local est arrondi au multiple de 16 octets supérieur et 
 `inc/crypto/hash/impl/sha2.hpp`, `transform` : `B` est la taille du bloc en octets (64 ou 128), mais `bytesSwap(chunk->words, B)` inversait `B` mots alors que le bloc n'en contient que 16 (64/4 et 128/8). Les mots suivants n'étaient pas initialisés (comportement indéfini), puis réécrits par le calcul du message schedule : le hash était juste. Détecté par GCC quand `anch::byteSwap` est passé à `std::byteswap` + `memcpy`.
 Correction : inverser `B / sizeof(W)` mots. Reste : la boucle du message schedule va jusqu'à `B` (128 pour SHA-384/512) au lieu de `R` (80) : calculs inutiles.
 
+### C4. SHA-224 / SHA-384 : écriture au-delà du condensat — vérifié (ASan) — **corrigé le 2026-11-12**
+`inc/crypto/hash/impl/sha2.hpp`, `finalize` : les 8 mots d'état étaient toujours copiés dans le condensat (32 octets en SHA-224, 64 octets en SHA-384), qui ne fait que 28 ou 48 octets. En SHA-384, 16 octets étaient écrits au-delà de l'objet (`stack-buffer-overflow`). En SHA-224, les 4 octets en trop tombaient par chance dans le bourrage d'alignement du contexte. La branche gros-boutiste copiait `sizeof(W) * O` octets et lisait 16 octets dans un entier de 8 pour la taille du message en SHA-384/512.
+Correction : seuls les `O / sizeof(W)` premiers mots sont copiés (`static_assert` sur la taille), `memcpy` de `O` octets et taille du message sur 8 octets en gros-boutiste ; `if constexpr` sur le boutisme.
+
+### C5. `Hash::digest(const std::string&)` : référence sur un pointeur nul en SHA-1 — vérifié (UBSan) — **corrigé le 2026-11-12**
+`inc/crypto/hash/impl/hash.hpp` renvoyait `*_digest`, pointeur vers le condensat que `SHA1` ne renseignait jamais (les tests passaient par chance). Ce pointeur interne devenait aussi invalide après copie d'un objet de hachage (il pointait vers le condensat de l'original).
+Correction : `_digest` est supprimé de `Hash` (et de `SHA2`, `SHA224_256`, `MD5`) ; les méthodes `digest(...)` renvoient le résultat de la méthode virtuelle `digest()`.
+
+### C6. Tests : lecture hors limites et fuites — vérifié (ASan) — **corrigé le 2026-11-12**
+`test/testSHA1.cpp` (`sha1-sec-password`) copiait `getBlockSize()` (64) octets du condensat SHA-1 au lieu de `getOutputSize()` (20). `test/benchAnchOpenssl.cpp` ne libérait pas ses tampons `new uint8_t[]` (remplacés par `std::vector`).
+
 ## Points positifs
 - 117 tests passent, plus un benchmark comparatif avec OpenSSL (`benchAnchOpenssl.cpp`), utile pour la future migration.
 

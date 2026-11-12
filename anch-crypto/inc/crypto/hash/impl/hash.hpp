@@ -27,7 +27,7 @@ namespace anch::crypto {
     reset();
     addData(reinterpret_cast<const uint8_t*>(data.data()), data.length());
     finalize();
-    return *_digest;
+    return digest();
   }
 
   template<std::size_t O, std::size_t B>

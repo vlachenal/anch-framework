@@ -76,7 +76,7 @@ testSecPasswd() {
   std::string salt = outSalt.str(); // 16 characters
   std::string saltPasswd = salt + password; // 34 characters
   for(int i = 0 ; i < 1500 ; ++i) {
-    saltPasswd.assign(reinterpret_cast<const char*>(SHA1(saltPasswd).digest().data()), SHA1::getBlockSize()); // 20 characters
+    saltPasswd.assign(reinterpret_cast<const char*>(SHA1(saltPasswd).digest().data()), SHA1::getOutputSize()); // 20 characters
   }
   uint8_t saltDigest[36];
   std::memcpy(saltDigest, salt.data(), 16);
