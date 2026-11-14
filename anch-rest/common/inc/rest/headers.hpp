@@ -191,6 +191,8 @@ namespace anch::rest::header {
   inline constexpr std::string_view AUTHORIZATION = "Authorization";
   /*! \c Cache-Control header */
   inline constexpr std::string_view CACHE_CONTROL = "Cache-Control";
+  /*! \c Content-Disposition header */
+  inline constexpr std::string_view CONTENT_DISPOSITION = "Content-Disposition";
   /*! \c Content-Length header */
   inline constexpr std::string_view CONTENT_LENGTH = "Content-Length";
   /*! \c Content-Type header */

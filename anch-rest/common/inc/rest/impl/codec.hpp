@@ -48,6 +48,24 @@ namespace anch::rest::detail {
 
 namespace anch::rest {
 
+  inline std::string
+  readContent(std::istream& input, std::size_t maxSize) {
+    std::string res;
+    char buffer[8192];
+    while(input) {
+      input.read(buffer, sizeof(buffer));
+      const auto count = static_cast<std::size_t>(input.gcount());
+      if(count == 0) {
+	break;
+      }
+      if(count > maxSize - res.size()) {
+	throw anch::rest::ContentTooLarge("Content is larger than " + std::to_string(maxSize) + " bytes");
+      }
+      res.append(buffer, count);
+    }
+    return res;
+  }
+
   template<typename C, typename T>
   requires anch::rest::Serializer<C, T>
   anch::rest::MediaType

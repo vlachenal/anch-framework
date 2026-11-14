@@ -20,6 +20,7 @@
 #include "rest/auth.hpp"
 #include "rest/client.hpp"
 #include "rest/formCodec.hpp"
+#include "rest/multipartCodec.hpp"
 #include "rest/jsonCodec.hpp"
 
 #include <iterator>
@@ -216,6 +217,25 @@ testForm() {
 }
 
 void
+testMultipart() {
+  Fixture fixture;
+  anch::rest::Form form;
+  form.add("description", "Rex").addFile("photo", "rex.png", anch::rest::MediaType("image", "png"), "PNG...");
+  fixture.client.post("/pets/{id}/photo", 1).body<anch::rest::Multipart>(form).send();
+  std::optional<anch::rest::MediaType> type = anch::rest::MediaType::parse(fixture.transport->headers.get("Content-Type").value_or(""));
+  anch::ut::assertThat(type && type->essence() == "multipart/form-data" && type->getParameter("boundary"), "Unexpected content type '{}'",
+		       fixture.transport->headers.get("Content-Type").value_or(""));
+  const std::string delimiter = "--" + std::string(*type->getParameter("boundary"));
+  anch::ut::assertThat(fixture.transport->body == delimiter + "\r\nContent-Disposition: form-data; name=\"description\"\r\n\r\nRex\r\n"
+		       + delimiter + "\r\nContent-Disposition: form-data; name=\"photo\"; filename=\"rex.png\"\r\nContent-Type: image/png\r\n\r\nPNG...\r\n"
+		       + delimiter + "--\r\n", "Unexpected body '{}'", fixture.transport->body);
+  fixture.transport->response = Response().contentType("multipart/form-data; boundary=srv")
+    .body("--srv\r\nContent-Disposition: form-data; name=\"id\"\r\n\r\n42\r\n--srv--\r\n");
+  anch::rest::Form result = fixture.client.get("/card").accept<anch::rest::Multipart>().as<anch::rest::Form>();
+  anch::ut::assertThat(result.field("id") == "42", "Unexpected response form");
+}
+
+void
 testAs() {
   Fixture fixture;
   fixture.transport->response = Response().contentType("application/json; charset=utf-8").body("{\"id\":1,\"name\":\"Rex\"}");
@@ -315,6 +335,7 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("as", testAs)
     .add("codec-media-type", testCodecMediaType)
     .add("form", testForm)
+    .add("multipart", testMultipart)
     .add("constraints", testConstraints)
     .add("http-error", testHttpError)
     .add("filters", testFilters)

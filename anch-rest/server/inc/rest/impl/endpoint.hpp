@@ -184,6 +184,8 @@ namespace anch::rest {
       BodyType value{};
       try {
 	_deserializers[i](value, request.getBody(), *contentType);
+      } catch(const anch::rest::ContentTooLarge& e) {
+	throw anch::rest::HttpException(anch::rest::Status::CONTENT_TOO_LARGE, e.what());
       } catch(const std::exception& e) {
 	throw anch::rest::HttpException(anch::rest::Status::BAD_REQUEST, e.what());
       }

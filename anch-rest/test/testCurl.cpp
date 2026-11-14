@@ -20,6 +20,7 @@
 #include "rest/api.hpp"
 #include "rest/auth.hpp"
 #include "rest/client.hpp"
+#include "rest/multipartCodec.hpp"
 #include "rest/curlTransport.hpp"
 #include "rest/httpException.hpp"
 #include "rest/jsonCodec.hpp"
@@ -102,6 +103,13 @@ namespace {
     }).consumes<Json>();
     api->post("/owners", [](Body<Owner> owner) { return Response(Status::CREATED).contentType("text/plain").body(owner->name); }).consumes<Json>();
     api->get("/owners/invalid", []() { return Owner{""}; }).produces<Json>();
+    api->post("/upload", [](Body<anch::rest::Form> form) {
+      anch::rest::Form res;
+      for(const anch::rest::Part& part : *form) {
+	res.add(part.getName(), std::string(part.getFilename().value_or("-")) + ' ' + std::to_string(part.size()));
+      }
+      return res;
+    }).consumes<anch::rest::Multipart>().produces<anch::rest::Multipart>();
     api->del("/pets/{id}", [](uint64_t id) {
       if(id != 1) {
 	throw HttpException(Status::NOT_FOUND, "no pet " + std::to_string(id));
@@ -182,6 +190,20 @@ testConstraints() {
 }
 
 void
+testMultipart() {
+  Client client = makeClient();
+  std::string binary(256, '\0');
+  for(std::size_t i = 0 ; i < binary.size() ; ++i) {
+    binary[i] = static_cast<char>(i);
+  }
+  anch::rest::Form form;
+  form.add("description", "Médor").addFile("photo", "médor.png", anch::rest::MediaType("image", "png"), binary);
+  anch::rest::Form res = client.post("/upload").body<anch::rest::Multipart>(form).accept<anch::rest::Multipart>().as<anch::rest::Form>();
+  anch::ut::assertThat(res.field("description") == "- 6" && res.field("photo") == "médor.png 256", "Unexpected response '{}' '{}'",
+		       res.field("description").value_or(""), res.field("photo").value_or(""));
+}
+
+void
 testHttpError() {
   Client client = makeClient();
   try {
@@ -257,6 +279,7 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("get-json", testGetJson)
     .add("parameters", testParameters)
     .add("post-json", testPostJson)
+    .add("multipart", testMultipart)
     .add("constraints", testConstraints)
     .add("http-error", testHttpError)
     .add("head", testHead)

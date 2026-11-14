@@ -21,6 +21,7 @@
 #include "rest/formCodec.hpp"
 #include "rest/headers.hpp"
 #include "rest/mediaType.hpp"
+#include "rest/multipartCodec.hpp"
 #include "rest/method.hpp"
 #include "rest/request.hpp"
 #include "rest/response.hpp"
@@ -188,6 +189,197 @@ testFormUrlEncoded() {
   anch::ut::assertThat(back.size() == form.size() && back.field("name") == "Médor le chien" && back.field("") == "anonymous", "Round trip has to keep fields");
 }
 
+namespace {
+
+  Form
+  readMultipart(std::string_view body, std::string_view contentType = "multipart/form-data; boundary=XyZ") {
+    Form form;
+    std::istringstream input{std::string(body)};
+    anch::rest::Multipart::deserialize(form, input, *MediaType::parse(contentType), anch::rest::Side::SERVER);
+    return form;
+  }
+
+  template<typename E>
+  std::string
+  multipartError(std::string_view body, std::string_view contentType = "multipart/form-data; boundary=XyZ") {
+    try {
+      readMultipart(body, contentType);
+    } catch(const E& e) {
+      return e.what();
+    } catch(const std::exception& e) {
+      return std::string("unexpected exception: ") + e.what();
+    }
+    return "no error";
+  }
+
+}
+
+void
+testMultipart() {
+  using namespace std::string_literals;
+  // Body as written by browsers and curl, with preamble and epilogue
+  const std::string body =
+    "preamble\r\n"
+    "--XyZ\r\n"
+    "Content-Disposition: form-data; name=\"description\"\r\n"
+    "\r\n"
+    "Rex, le \"chien\"\r\n"
+    "--XyZ\r\n"
+    "content-disposition: FORM-DATA; name=photo; filename=\"rex.png\"\r\n"
+    "Content-Type: image/png\r\n"
+    "X-Custom: value\r\n"
+    "\r\n"
+    "\x89PNG\r\n\x1a\n\0--Xy\r\n"
+    "--XyZ  \r\n"
+    "Content-Disposition: form-data; name=\"doc\"; filename=\"a.txt\"; filename*=UTF-8''%E2%82%AC.txt\r\n"
+    "\r\n"
+    "\r\n"
+    "--XyZ\r\n"
+    "Content-Disposition: form-data; name=\"json\"\r\n"
+    "Content-Type: application/json; charset=utf-8\r\n"
+    "\r\n"
+    "{\"a\":1}\r\n"
+    "--XyZ--\r\n"
+    "epilogue"s;
+  Form form = readMultipart(body, "multipart/form-data; boundary=\"XyZ\"");
+  anch::ut::assertThat(form.size() == 4, "Unexpected size {}", form.size());
+  anch::ut::assertThat(form.field("description") == "Rex, le \"chien\"", "Unexpected description '{}'", form.field("description").value_or(""));
+  const anch::rest::Part* photo = form.part("photo");
+  anch::ut::assertThat(photo != nullptr && photo->isFile() && photo->getFilename() == "rex.png" && photo->getMediaType().essence() == "image/png",
+		       "Unexpected photo part");
+  anch::ut::assertThat(photo->content() == std::string_view("\x89PNG\r\n\x1a\n\0--Xy", 13), "Binary content has to be kept ({} bytes)", photo->size());
+  anch::ut::assertThat(photo->getHeaders().get("X-Custom") == "value", "Other part headers have to be kept");
+  const anch::rest::Part* doc = form.part("doc");
+  anch::ut::assertThat(doc->getFilename() == "€.txt" && doc->getMediaType().essence() == "application/octet-stream" && doc->size() == 0,
+		       "filename* has priority, files are application/octet-stream by default");
+  anch::ut::assertThat(form.part("json")->getMediaType().getParameter("charset") == "utf-8", "Field media type has to be kept");
+  anch::ut::assertThat(form.part("description")->getMediaType().essence() == "text/plain", "Fields are text/plain by default");
+
+  // Round trip with a random boundary
+  Form written;
+  written.add("na\"me\r\n", "value").add("json", "{}");
+  anch::rest::Part json("typed", "{}");
+  json.setMediaType(MediaType("application", "json"));
+  json.getHeaders().add("X-Custom", "value");
+  written.add(std::move(json));
+  written.addFile("file", "r\"ex.bin", MediaType("application", "octet-stream"), std::string("\0\r\n--anch-\r\n", 12));
+  MediaType type = anch::rest::Multipart::contentType(written);
+  MediaType other = anch::rest::Multipart::contentType(written);
+  anch::ut::assertThat(type.essence() == "multipart/form-data" && type.getParameter("boundary")->size() == 37
+		       && type.getParameter("boundary") != other.getParameter("boundary"), "Unexpected boundary '{}'", type.toString());
+  std::ostringstream out;
+  anch::rest::Multipart::serialize(written, out, type, anch::rest::Side::CLIENT);
+  const std::string delimiter = "--" + std::string(*type.getParameter("boundary"));
+  anch::ut::assertThat(out.str().starts_with(delimiter + "\r\nContent-Disposition: form-data; name=\"na%22me%0D%0A\"\r\n\r\nvalue\r\n")
+		       && out.str().ends_with("\r\n" + delimiter + "--\r\n"), "Unexpected body '{}'", out.str());
+  anch::ut::assertThat(out.str().find("name=\"json\"\r\n\r\n") != std::string::npos, "text/plain fields have no Content-Type");
+  anch::ut::assertThat(out.str().find("name=\"typed\"\r\nContent-Type: application/json\r\nX-Custom: value\r\n\r\n{}") != std::string::npos,
+		       "Typed fields have a Content-Type");
+  Form back = readMultipart(out.str(), type.toString());
+  anch::ut::assertThat(back.size() == 4 && back.field("na%22me%0D%0A") == "value" && back.part("typed")->getMediaType().essence() == "application/json"
+		       && back.part("typed")->getHeaders().get("X-Custom") == "value", "Round trip has to keep parts");
+  anch::ut::assertThat(back.part("file")->getFilename() == "r%22ex.bin" && back.part("file")->content() == std::string_view("\0\r\n--anch-\r\n", 12),
+		       "Round trip has to keep files");
+
+  // Writing errors
+  auto writeError = [](const Form& value, const MediaType& contentType) {
+    std::ostringstream ignored;
+    try {
+      anch::rest::Multipart::serialize(value, ignored, contentType, anch::rest::Side::CLIENT);
+    } catch(const std::invalid_argument&) {
+      return true;
+    }
+    return false;
+  };
+  anch::ut::assertThat(writeError(written, MediaType("multipart", "form-data")), "Boundary is required");
+  MediaType fixed("multipart", "form-data");
+  fixed.setParameter("boundary", "abc");
+  anch::ut::assertThat(writeError(Form().add("a", "x\r\n--abc\r\n"), fixed), "Boundary must not appear in parts");
+  anch::rest::Part injected("a", "x");
+  injected.getHeaders().add("X-Injected", "a\r\nContent-Type: text/html");
+  anch::ut::assertThat(writeError(Form().add(std::move(injected)), fixed), "CR / LF in part headers have to be refused");
+  anch::ut::assertThat(readMultipart("--XyZ--").empty(), "Empty multipart body");
+}
+
+void
+testMultipartMalformed() {
+  const std::string part = "--XyZ\r\nContent-Disposition: form-data; name=\"a\"\r\n\r\nvalue\r\n";
+  auto expect = [](std::string_view body, std::string_view message, std::string_view contentType = "multipart/form-data; boundary=XyZ") {
+    std::string error = multipartError<std::invalid_argument>(body, contentType);
+    anch::ut::assertThat(error.find(message) != std::string::npos, "Expected '{}', found '{}'", message, error);
+  };
+  expect(part + "--XyZ--", "Missing multipart boundary", "multipart/form-data");
+  expect(part + "--XyZ--", "Invalid multipart boundary", "multipart/form-data; boundary=\"" + std::string(71, 'a') + "\"");
+  expect("no delimiter", "Missing multipart delimiter");
+  expect(part, "Missing multipart close delimiter");
+  expect(part + "--XyZ", "Missing multipart close delimiter");
+  expect("--XyZ\r\nContent-Disposition: form-data; name=\"a\"\r\n\r\nvalue", "Missing multipart close delimiter");
+  expect("--XyZ\r\nContent-Disposition: form-data; name=\"a\"\r\n", "Unterminated multipart part headers");
+  expect("--XyZgarbage\r\n" + part + "--XyZ--", "Invalid multipart delimiter line");
+  expect("--XyZ\nContent-Disposition: form-data; name=\"a\"\n\nvalue\n--XyZ--", "Invalid multipart delimiter line");
+  expect("--XyZ\r\n\r\nvalue\r\n--XyZ--", "Missing multipart Content-Disposition header");
+  expect("--XyZ\r\nContent-Disposition: attachment; name=\"a\"\r\n\r\nv\r\n--XyZ--", "Invalid multipart Content-Disposition");
+  expect("--XyZ\r\nContent-Disposition: form-data; name=\"a\r\n\r\nv\r\n--XyZ--", "Invalid multipart");
+  expect("--XyZ\r\nContent-Disposition: form-data; filename=\"a\"\r\n\r\nv\r\n--XyZ--", "Missing multipart part name");
+  expect("--XyZ\r\nContent-Disposition: form-data; name=\"a\"\r\nContent-Disposition: form-data; name=\"b\"\r\n\r\nv\r\n--XyZ--",
+	 "Duplicate multipart Content-Disposition header");
+  expect("--XyZ\r\nContent-Disposition: form-data; name=\"a\"\r\nContent-Type: nonsense\r\n\r\nv\r\n--XyZ--", "Invalid multipart part Content-Type");
+  expect("--XyZ\r\nContent-Disposition: form-data; name=\"a\"\r\nNo colon\r\n\r\nv\r\n--XyZ--", "Invalid multipart part header");
+  expect("--XyZ\r\nContent-Disposition: form-data; name=\"a\"\r\n folded: header\r\n\r\nv\r\n--XyZ--", "Invalid multipart part header");
+}
+
+void
+testMultipartLimits() {
+  anch::rest::FormLimits& limits = anch::rest::Multipart::limits(anch::rest::Side::SERVER);
+  const anch::rest::FormLimits saved = limits;
+  const std::string part = "--XyZ\r\nContent-Disposition: form-data; name=\"a\"\r\n\r\nvalue\r\n";
+  auto expect = [](std::string_view body, std::string_view message) {
+    std::string error = multipartError<anch::rest::ContentTooLarge>(body);
+    anch::ut::assertThat(error.find(message) != std::string::npos, "Expected '{}', found '{}'", message, error);
+  };
+  limits.maxParts = 2;
+  anch::ut::assertThat(readMultipart(part + part + "--XyZ--").size() == 2, "Parts at limit have to be accepted");
+  expect(part + part + part + "--XyZ--", "more than 2 parts");
+  limits = saved;
+  limits.maxPartSize = 5;
+  anch::ut::assertThat(readMultipart(part + "--XyZ--").field("a") == "value", "Part at limit has to be accepted");
+  expect("--XyZ\r\nContent-Disposition: form-data; name=\"a\"\r\n\r\nvalue!\r\n--XyZ--", "part is larger than 5 bytes");
+  expect("--XyZ\r\nContent-Disposition: form-data; name=\"a\"\r\n\r\n" + std::string(100, 'x'), "part is larger than 5 bytes");
+  limits = saved;
+  limits.maxHeadersSize = 48; // headers below are 48 bytes
+  anch::ut::assertThat(readMultipart("--XyZ\r\nContent-Disposition: form-data; name=\"a\"\r\nX: y\r\n\r\nv\r\n--XyZ--").size() == 1,
+		       "Headers at limit have to be accepted");
+  expect("--XyZ\r\nContent-Disposition: form-data; name=\"a\"\r\nX: yz\r\n\r\nv\r\n--XyZ--", "headers are larger than 48 bytes");
+  expect("--XyZ\r\nContent-Disposition: form-data; name=\"a\"" + std::string(100, ' '), "headers are larger than 48 bytes");
+  limits = saved;
+  limits.maxSize = 32;
+  expect(part + "--XyZ--", "Content is larger than 32 bytes");
+  limits = saved;
+
+  // URL-encoded forms
+  anch::rest::FormLimits& url = FormUrlEncoded::limits(anch::rest::Side::SERVER);
+  const anch::rest::FormLimits urlSaved = url;
+  auto readUrl = [](std::string_view body) {
+    Form form;
+    std::istringstream input{std::string(body)};
+    try {
+      FormUrlEncoded::deserialize(form, input, *MediaType::parse("application/x-www-form-urlencoded"), anch::rest::Side::SERVER);
+    } catch(const anch::rest::ContentTooLarge& e) {
+      return std::string(e.what());
+    }
+    return std::string("no error");
+  };
+  url.maxParts = 2;
+  anch::ut::assertThat(readUrl("a=1&b=2") == "no error" && readUrl("a=1&b=2&c=3") == "Form has more than 2 fields", "Unexpected fields limit");
+  url = urlSaved;
+  url.maxPartSize = 3;
+  anch::ut::assertThat(readUrl("a=1") == "no error" && readUrl("a=12") == "Form field is larger than 3 bytes", "Unexpected field size limit");
+  url = urlSaved;
+  url.maxSize = 4;
+  anch::ut::assertThat(readUrl("a=12&") == "Content is larger than 4 bytes", "Unexpected size limit");
+  url = urlSaved;
+}
+
 void
 anch::ut::setup(anch::ut::UnitTests& tests) {
   tests
@@ -201,5 +393,8 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("response", testResponse)
     .add("form", testForm)
     .add("form-url-encoded", testFormUrlEncoded)
+    .add("multipart", testMultipart)
+    .add("multipart-malformed", testMultipartMalformed)
+    .add("multipart-limits", testMultipartLimits)
     ;
 }

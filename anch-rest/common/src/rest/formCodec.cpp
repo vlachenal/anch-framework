@@ -72,6 +72,13 @@ FormUrlEncoded::encode(std::string_view value) {
   return res;
 }
 
+anch::rest::FormLimits&
+FormUrlEncoded::limits(Side side) {
+  static anch::rest::FormLimits server{2 * 1024 * 1024, 1000, 2 * 1024 * 1024, 0};
+  static anch::rest::FormLimits client{2 * 1024 * 1024, 1000, 2 * 1024 * 1024, 0};
+  return (side == Side::SERVER) ? server : client;
+}
+
 void
 FormUrlEncoded::serialize(const Form& form, std::ostream& out) {
   bool first = true;
@@ -88,13 +95,14 @@ FormUrlEncoded::serialize(const Form& form, std::ostream& out) {
 }
 
 void
-FormUrlEncoded::deserialize(Form& form, std::istream& input, const MediaType& contentType, Side) {
+FormUrlEncoded::deserialize(Form& form, std::istream& input, const MediaType& contentType, Side side) {
+  const anch::rest::FormLimits& limits = FormUrlEncoded::limits(side);
   std::optional<std::string_view> charset = contentType.getParameter("charset");
   const anch::rest::CaseInsensitiveLess less;
   if(charset && (less(*charset, "utf-8") || less("utf-8", *charset))) {
     throw std::invalid_argument("Unsupported form charset '" + std::string(*charset) + "'");
   }
-  const std::string content((std::istreambuf_iterator<char>(input)), std::istreambuf_iterator<char>());
+  const std::string content = anch::rest::readContent(input, limits.maxSize);
   std::string_view rest = content;
   while(!rest.empty()) {
     const std::size_t amp = rest.find('&');
@@ -102,6 +110,12 @@ FormUrlEncoded::deserialize(Form& form, std::istream& input, const MediaType& co
     rest = (amp == std::string_view::npos) ? std::string_view() : rest.substr(amp + 1);
     if(pair.empty()) {
       continue;
+    }
+    if(form.size() == limits.maxParts) {
+      throw anch::rest::ContentTooLarge("Form has more than " + std::to_string(limits.maxParts) + " fields");
+    }
+    if(pair.size() > limits.maxPartSize) {
+      throw anch::rest::ContentTooLarge("Form field is larger than " + std::to_string(limits.maxPartSize) + " bytes");
     }
     const std::size_t equal = pair.find('=');
     std::string name = decode(pair.substr(0, equal));

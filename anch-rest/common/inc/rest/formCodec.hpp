@@ -59,6 +59,15 @@ client.post("/login").body<anch::rest::FormUrlEncoded>(anch::rest::Form().add("u
     static std::string_view mediaType() noexcept;
 
     /*!
+     * Get limits of a side, to change before handling requests. Default: 2 MiB body, 1000 fields.
+     *
+     * \param side the side
+     *
+     * \return the limits
+     */
+    static anch::rest::FormLimits& limits(anch::rest::Side side);
+
+    /*!
      * Write form
      *
      * \param form the form
@@ -77,6 +86,7 @@ client.post("/login").body<anch::rest::FormUrlEncoded>(anch::rest::Form().add("u
      * \param side the side which reads form
      *
      * \throw std::invalid_argument when encoding is invalid or when charset is not UTF-8
+     * \throw ContentTooLarge when body is over \ref limits
      */
     static void deserialize(anch::rest::Form& form, std::istream& input, const anch::rest::MediaType& contentType,
 			    anch::rest::Side side);

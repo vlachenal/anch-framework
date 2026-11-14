@@ -19,6 +19,7 @@
 */
 #include "rest/api.hpp"
 #include "rest/formCodec.hpp"
+#include "rest/multipartCodec.hpp"
 #include "rest/httpException.hpp"
 #include "rest/jsonCodec.hpp"
 
@@ -539,6 +540,51 @@ testForm() {
 }
 
 void
+testMultipart() {
+  Api api;
+  api.post("/pets/{id}/photo", [](uint64_t id, Body<anch::rest::Form> form) {
+    const anch::rest::Part* photo = form->part("photo");
+    if(photo == nullptr || !photo->isFile()) {
+      throw HttpException(Status::BAD_REQUEST, "Missing photo");
+    }
+    return std::to_string(id) + ' ' + std::string(form->field("description").value_or("")) + ' ' + std::string(*photo->getFilename()) + ' '
+      + photo->getMediaType().essence() + ' ' + std::to_string(photo->size());
+  }).consumes<anch::rest::Multipart>().consumes<anch::rest::FormUrlEncoded>().produces<Text>();
+  api.get("/pets/{id}/card", [](uint64_t id) {
+    return anch::rest::Form().add("id", std::to_string(id)).addFile("card", "card.txt", anch::rest::MediaType("text", "plain"), "Rex");
+  }).produces<anch::rest::Multipart>();
+  api.validate();
+  const std::string body = "--b\r\nContent-Disposition: form-data; name=\"description\"\r\n\r\nRex\r\n"
+    "--b\r\nContent-Disposition: form-data; name=\"photo\"; filename=\"rex.png\"\r\nContent-Type: image/png\r\n\r\nPNG...\r\n--b--\r\n";
+  Response uploaded = call(api, Method::POST, "/pets/1/photo", "", "multipart/form-data; boundary=b", body);
+  expectStatus(uploaded, Status::OK);
+  anch::ut::assertThat(bodyOf(uploaded) == "1 Rex rex.png image/png 6", "Unexpected body '{}'", bodyOf(uploaded));
+  Response noBoundary = call(api, Method::POST, "/pets/1/photo", "", "multipart/form-data", body);
+  expectStatus(noBoundary, Status::BAD_REQUEST);
+  anch::ut::assertThat(bodyOf(noBoundary) == "Missing multipart boundary", "Unexpected body '{}'", bodyOf(noBoundary));
+  expectStatus(call(api, Method::POST, "/pets/1/photo", "", "application/x-www-form-urlencoded", "description=Rex"), Status::BAD_REQUEST);
+
+  // Limits: 413
+  anch::rest::FormLimits& limits = anch::rest::Multipart::limits(anch::rest::Side::SERVER);
+  const anch::rest::FormLimits saved = limits;
+  limits.maxPartSize = 4;
+  Response tooLarge = call(api, Method::POST, "/pets/1/photo", "", "multipart/form-data; boundary=b", body);
+  limits = saved;
+  expectStatus(tooLarge, Status::CONTENT_TOO_LARGE);
+  anch::ut::assertThat(bodyOf(tooLarge) == "Multipart part is larger than 4 bytes", "Unexpected body '{}'", bodyOf(tooLarge));
+
+  // Multipart response: boundary of Content-Type is the one of the body
+  Response card = call(api, Method::GET, "/pets/7/card");
+  std::optional<anch::rest::MediaType> type = anch::rest::MediaType::parse(headerOf(card, "Content-Type"));
+  anch::ut::assertThat(type && type->essence() == "multipart/form-data" && type->getParameter("boundary"), "Unexpected content type '{}'",
+		       headerOf(card, "Content-Type"));
+  std::istringstream input(bodyOf(card));
+  anch::rest::Form form;
+  anch::rest::Multipart::deserialize(form, input, *type, anch::rest::Side::CLIENT);
+  anch::ut::assertThat(form.field("id") == "7" && form.part("card")->getFilename() == "card.txt", "Unexpected multipart response");
+}
+
+void
 testRegistration() {
   Api api;
   api.get("/pets/{id}", [](uint64_t) {});
@@ -592,6 +638,7 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("cors", testCors)
     .add("codec-media-type", testCodecMediaType)
     .add("form", testForm)
+    .add("multipart", testMultipart)
     .add("errors", testErrors)
     .add("registration", testRegistration)
     .add("validate", testValidate)

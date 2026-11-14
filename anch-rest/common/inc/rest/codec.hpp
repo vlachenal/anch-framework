@@ -22,6 +22,7 @@
 #include <concepts>
 #include <istream>
 #include <ostream>
+#include <stdexcept>
 #include <string>
 #include <string_view>
 
@@ -41,6 +42,34 @@ namespace anch::rest {
     /*! Client: request bodies are written, responses bodies are read */
     CLIENT
   };
+
+  /*!
+   * Content is larger than a codec limit. Server answers \c 413 (Content Too Large) when it is
+   * raised by a request body deserialization.
+   *
+   * \author Vincent Lachenal
+   *
+   * \since 0.2
+   */
+  class ContentTooLarge: public std::length_error {
+  public:
+    /*! Use \c std::length_error constructors */
+    using std::length_error::length_error;
+  };
+
+  /*!
+   * Read whole content
+   *
+   * \param input the input stream
+   * \param maxSize the maximum content size in bytes
+   *
+   * \return the content
+   *
+   * \throw ContentTooLarge when content is larger than \c maxSize
+   *
+   * \since 0.2
+   */
+  std::string readContent(std::istream& input, std::size_t maxSize);
 
   /*!
    * Codec which serializes \c T values.\n

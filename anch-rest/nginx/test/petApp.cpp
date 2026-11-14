@@ -22,6 +22,7 @@
  * anch_rest_app directive (or with dlopen by anch-rest-nginx-test).
  */
 #include "rest/jsonCodec.hpp"
+#include "rest/multipartCodec.hpp"
 #include "rest/nginxApplication.hpp"
 
 #include <chrono>
@@ -78,6 +79,14 @@ createPetApi(std::string_view config) {
     std::this_thread::sleep_for(std::chrono::milliseconds(1000));
     return std::string("slow");
   }).produces<Text>();
+  api->post("/api/pets/{id}/photo", [](uint64_t id, Body<anch::rest::Form> form) {
+    const anch::rest::Part* photo = form->part("photo");
+    if(photo == nullptr || !photo->isFile()) {
+      throw anch::rest::HttpException(Status::BAD_REQUEST, "Missing photo");
+    }
+    return std::to_string(id) + ' ' + std::string(form->field("description").value_or("")) + ' '
+      + std::string(*photo->getFilename()) + ' ' + photo->getMediaType().essence() + ' ' + std::to_string(photo->size());
+  }).consumes<anch::rest::Multipart>().produces<Text>();
   api->get("/api/crash", []() -> Response { throw std::runtime_error("crash"); });
   api->cors({.origins = {"https://app.example.com"}, .headers = {"Content-Type"}, .maxAge = std::chrono::minutes(10)});
   return api;

@@ -109,8 +109,26 @@ anch-oas
        rest/paramConverter.hpp (ParamConverter reste dans anch-rest-server, pas de dépendance anch-uuid dans
        common). Tests http-form, http-form-url-encoded, api-form et client-form. Limites (nombre de champs,
        taille) : avec celles du codec Multipart, étape 3.
-[ ] 3. Multipart en mémoire + limites + tests (corps malformés : boundary absent, fin manquante, en-têtes
-       trop longs, noms avec CR/LF), sous ASan / UBSan.
+[x] 3. Multipart en mémoire + limites + tests (corps malformés : boundary absent, fin manquante, en-têtes
+       trop longs, noms avec CR/LF), sous ASan / UBSan. Fait le 2026-11-14 : rest/multipartCodec.hpp.
+       * Lecture : boundary obligatoire (1..70), délimiteurs en CRLF strict (LF seul refusé : navigateurs,
+         curl et notre client écrivent CRLF), bourrage après délimiteur accepté, préambule / épilogue
+         ignorés, délimiteur de fin obligatoire ; Content-Disposition form-data + name obligatoires,
+         filename* (RFC 5987, UTF-8) prioritaire sur filename ; Content-Type de partie (text/plain par
+         défaut, application/octet-stream pour les fichiers) ; autres en-têtes conservés, repli
+         (obs-fold) refusé. Noms lus tels quels (pas de décodage de %22 / %0D / %0A).
+       * Écriture : boundary "anch-" + 32 alphanumériques (mt19937_64 thread_local amorcé par
+         random_device), retiré s'il apparaît dans une partie ; noms et noms de fichier échappés comme
+         les navigateurs (" CR LF -> %22 %0D %0A) ; Content-Type écrit pour les fichiers et les champs
+         non text/plain ; CR / LF refusés dans les autres en-têtes de partie.
+       * Limites par côté (FormLimits : taille du corps, nombre de parties, taille d'une partie, taille
+         des en-têtes d'une partie), aussi appliquées à FormUrlEncoded (2 MiB, 1000 champs) ; Multipart :
+         16 MiB, 1000 parties, 16 MiB, 16 KiB. Dépassement -> ContentTooLarge (std::length_error), 413
+         côté serveur (Endpoint::readBody). readContent(input, maxSize) lit un corps borné.
+       * Tests : http-multipart (corps navigateur, binaire, aller-retour), http-multipart-malformed (17
+         cas), http-multipart-limits, api-multipart (upload, 400, 413, réponse multipart),
+         client-multipart, curl-multipart (bout en bout) ; nginx : upload curl -F en fichier temporaire
+         et client_max_body_size (413 de nginx).
 [ ] 4. FormMapper<T> écrit à la main, puis généré par anch-oas.
 [ ] 5. Contenu de partie en flux (gros fichiers), côté serveur puis client.
 

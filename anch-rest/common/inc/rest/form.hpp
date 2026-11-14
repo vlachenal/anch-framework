@@ -32,6 +32,28 @@
 namespace anch::rest {
 
   /*!
+   * Form codecs limits, by side ( \ref FormUrlEncoded::limits , \ref Multipart::limits ): a body over a
+   * limit raises \ref ContentTooLarge ( \c 413 on server side).
+   *
+   * \author Vincent Lachenal
+   *
+   * \since 0.2
+   */
+  struct FormLimits {
+    /*! Maximum body size in bytes */
+    std::size_t maxSize;
+
+    /*! Maximum number of parts (fields and files) */
+    std::size_t maxParts;
+
+    /*! Maximum size of a part content in bytes */
+    std::size_t maxPartSize;
+
+    /*! Maximum size of a part headers in bytes ( \c multipart/form-data ) */
+    std::size_t maxHeadersSize;
+  };
+
+  /*!
    * Form part: a field ( \c text/plain by default) or a file (with a file name,
    * \c application/octet-stream by default).\n
    * \n
