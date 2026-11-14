@@ -1,0 +1,109 @@
+Corps multipart et formulaires : proposition (2026-11-14)
+=========================================================
+
+État actuel
+-----------
+- anch-rest : seules les constantes MULTIPART_FORM_DATA et APP_FORM_URLENCODED existent
+  (common/inc/rest/mediaType.hpp). Codecs : Json et Text. Contournement : endpoint avec
+  const Request& en premier argument, découpage du flux request.getBody() à la main.
+- anch-oas : codecOf() (src/oas/endpointGenerator.cpp) ne connaît que application/json et text/plain ;
+  une opération avec un corps multipart/form-data ou x-www-form-urlencoded est ignorée avec un warning
+  (erreur avec --strict). Le champ "encoding" des media type objects n'est pas lu.
+
+Deux obstacles dans le modèle de codecs actuel
+----------------------------------------------
+1. Lecture : Endpoint::readBody ne compare que type/subtype et le désérialiseur ne reçoit que le flux.
+   Le paramètre boundary du Content-Type de la requête n'arrive pas jusqu'au codec.
+2. Écriture : Content-Type = C::mediaType(), chaîne fixe (endpoint : _produced[index].toString() ;
+   client : body<C>(value) -> body(out.str(), C::mediaType())). Le boundary doit être ajouté par le
+   codec au moment de l'écriture.
+
+Proposition : étendre le contrat des codecs (rétrocompatible), comme pour Side :
+- deserialize(value, input, const MediaType& contentType, Side) : utilisé s'il est défini ;
+  deserializeBody choisit la forme la plus riche disponible (contentType+side > side > simple).
+  readBody passe *contentType.
+- serialize(value, out, MediaType& contentType, Side) : le codec reçoit son media type et peut y
+  ajouter des paramètres (boundary). Endpoint::serialize et Call::body<C>() utilisent alors le media type
+  modifié. Pour un corps de réponse écrit en streaming (body writer), le Content-Type est fixé avant
+  l'écriture : le boundary est donc tiré au sort avant (fonction optionnelle
+  C::contentType(const T&) -> MediaType, appelée avant le writer ; sinon C::mediaType()).
+  À trancher : une seule fonction contentType(const T&) suffit peut-être pour les deux côtés et évite le
+  MediaType& en sortie.
+
+Modèle commun (anch-rest-common, rest/form.hpp)
+-----------------------------------------------
+- anch::rest::Part : nom (Content-Disposition name), nom de fichier optionnel (filename / filename*
+  RFC 5987), Headers propres à la partie, MediaType (text/plain par défaut sans filename,
+  application/octet-stream avec), contenu.
+- anch::rest::Form : liste ordonnée de Part (un nom peut être répété : tableaux), accesseurs
+  field(name) -> optional<string_view>, fields(name), file(name), add(name, value),
+  addFile(name, filename, mediaType, content).
+- Contenu des parties, v1 : en mémoire (std::string). v2 : flux (std::istream / fichier temporaire)
+  pour les gros fichiers, l'écriture côté client pouvant lire un fichier sans le charger.
+- Champs texte convertis avec ParamConverter (comme les paramètres de requête) :
+  form.get<T>(name), form.required<T>(name) -> 400 si absent ou invalide côté serveur.
+
+Codecs
+------
+- anch::rest::Multipart (multipart/form-data, RFC 7578 / RFC 2046) : Form <-> corps.
+  * Lecture : boundary obligatoire (sinon 400), délimiteurs CRLF (tolérer LF seul ?), en-têtes de partie
+    (Content-Disposition, Content-Type, Content-Transfer-Encoding ignoré), préambule et épilogue ignorés,
+    fin "--boundary--" obligatoire.
+  * Écriture : boundary aléatoire (anch-crypto ou std::random_device, 1..70 caractères RFC 2046),
+    noms échappés (guillemets, CR/LF interdits).
+  * Limites anti-abus (options du codec, comme Json::options) : nombre de parties, taille d'une partie,
+    taille des en-têtes de partie. Dépassement -> 413 côté serveur.
+- anch::rest::FormUrlEncoded (application/x-www-form-urlencoded) : même Form (parties sans fichier),
+  lecture avec percentDecode(value, true), écriture en encodage WHATWG. Pas de boundary : le contrat
+  actuel suffit.
+- Objets typés : FormMapper<T> (toForm(const T&, Form&), fromForm(T&, const Form&)), écrit à la main ou
+  généré par anch-oas. Les codecs acceptent Form et tout T ayant un FormMapper :
+    api.post("/pets/{id}/photo", handler).consumes<Multipart>();     // Body<Form> ou Body<UploadPhoto>
+    client.post("/pets/{id}/photo", 42).body<Multipart>(form).send();
+  Champ objet d'un modèle : partie application/json sérialisée avec anch-json (défaut OAS) ; contraintes
+  anch-json vérifiées selon le côté, comme le codec Json.
+
+Transports
+----------
+- curl : rien de spécial (corps déjà sérialisé) ; pas de curl_mime, pour garder le transport neutre.
+- nginx : corps en mémoire ou fichier temporaire, déjà exposé en flux : OK. Vérifier
+  client_max_body_size dans le test d'intégration.
+- Réponses multipart (multipart/mixed, byteranges) : hors périmètre de la v1.
+
+anch-oas
+--------
+- spec : lire MediaTypeObject.encoding (contentType, headers ; style / explode pour urlencoded).
+- codecOf : multipart/form-data -> Multipart, application/x-www-form-urlencoded -> FormUrlEncoded.
+- Schéma du corps (object, inline ou $ref) :
+  * modèle <Operation>Request (ou le composant référencé) généré comme aujourd'hui, avec un
+    FormMapper<T> généré en plus (fichier NAME-forms.hpp/.cpp ? ou dans les modèles avec une option) ;
+  * propriété string format binary (3.0) ou contentMediaType (3.1) -> anch::rest::Part (fichier,
+    filename conservé) ; array de binary -> std::vector<Part> ;
+  * scalaires -> champs convertis par ParamConverter ; arrays de scalaires -> parties répétées ;
+  * objets -> partie JSON (ou encoding.contentType) ;
+  * required -> fromForm lève 400 si absent ; constraints anch-json appliquées aux champs scalaires
+    et JSON (même génération que les modèles).
+- Corps sans schéma ou schéma non object : Body<Form> brut (pas de warning).
+- Corps déclarant JSON et multipart : consumes<Json, Multipart>() si le même type peut être mappé
+  dans les deux cas, sinon deux handlers ? À trancher (ou multipart ignoré avec warning en v1).
+- format binary en application/octet-stream : à traiter à part (corps brut std::string / flux), même
+  piste que les réponses binaires aujourd'hui renvoyées en anch::rest::Response.
+- Tests : génération exacte (gen-endpoints-multipart), petstore uploadImage
+  (POST /pet/{petId}/uploadImage) compilé et exécuté serveur / client.
+
+Étapes proposées
+----------------
+[ ] 1. Contrat des codecs : MediaType transmis à la lecture et Content-Type fourni par le codec à
+       l'écriture (tests api-* et client-* existants inchangés).
+[ ] 2. Form / Part + FormUrlEncoded (le plus simple, sans boundary).
+[ ] 3. Multipart en mémoire + limites + tests (corps malformés : boundary absent, fin manquante, en-têtes
+       trop longs, noms avec CR/LF), sous ASan / UBSan.
+[ ] 4. FormMapper<T> écrit à la main, puis généré par anch-oas.
+[ ] 5. Contenu de partie en flux (gros fichiers), côté serveur puis client.
+
+Questions ouvertes
+------------------
+- Une fonction contentType(const T&) ou le MediaType& passé à serialize ?
+- Part en mémoire seulement en v1, ou flux dès le départ (contraint l'API de Part) ?
+- Où placer FormMapper généré par anch-oas : avec les modèles (dépendance anch-rest des modèles) ou dans
+  un fichier séparé (modèles indépendants d'anch-rest, comme aujourd'hui) ? Séparé paraît préférable.

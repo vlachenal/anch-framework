@@ -82,3 +82,5 @@ Plus tard
   requiredQueryParameter ajoutés à anch-rest). Restent : paramètres header / cookie, paramètres enum / tableau,
   contraintes des paramètres de chemin et de requête, découpage par tag.
 - OPTIONS automatique, CORS.
+- [ ] Corps multipart/form-data et application/x-www-form-urlencoded (anch-rest et anch-oas) : proposition
+  dans multipart.todo (2026-11-14).
