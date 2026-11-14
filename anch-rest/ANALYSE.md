@@ -23,3 +23,28 @@ Réécriture décidée et terminée le 2026-11-12 : conception et étapes dans [
 ## Constats annexes
 
 - anch-json : `anch::json::serialize(std::string, out)` ne compile pas : `std::string` correspond à la surcharge des conteneurs `C<T>` avec `T = char`. Contourné dans le codec `Json` (type explicite).
+
+## Passe du 2026-11-14
+
+Relecture des sources de `common`, `server`, `client`, `curl`, `nginx` (pont C++ et module C), `protobuf` et `grpc` (`thrift` et les en-têtes du client non relus), et vérifications par exécution sous ASan / UBSan. Aucun défaut majeur.
+
+Vérifié par exécution :
+- `multipart/form-data` : délimiteur placé à chaque position autour de la limite du bloc de lecture de 64 Kio (140 positions, parts en mémoire puis en fichier temporaire, contenu terminé par `\r` ou contenant des quasi-délimiteurs) : contenu relu à l'identique. 30 000 corps mutés : aucun plantage, aucun blocage, aucun fichier temporaire oublié.
+- Cas limites : préambule et épilogue ignorés, fins de ligne `\n` seules refusées, en-têtes repliés refusés, `filename*` prioritaire sur `filename`.
+
+Constats mineurs :
+
+### R1. Nom de fichier multipart : les `\` sont supprimés — vérifié
+`filename="C:\dir\f.txt"` est lu `C:dirf.txt` : `parseDisposition` traite `\` comme un échappement de chaîne entre guillemets, alors que les navigateurs n'échappent pas (ils encodent `"` en `%22`, ce que `escape()` fait à l'écriture). Le sens écriture / lecture n'est pas symétrique non plus : un nom `a"b` est écrit `a%22b` et relu `a%22b`.
+Piste : ne traiter que `\"` et `\\` comme échappements, ou aucun, et décoder `%22`, `%0D`, `%0A` à la lecture.
+
+### R2. Métadonnées de réponse RPC à valeurs multiples — lecture
+`handleRpc` (`protobuf/inc/rest/impl/rpcApi.hpp`) recopie les métadonnées avec `Response::header`, qui remplace la valeur : seule la dernière valeur d'un nom est envoyée (Connect et gRPC-Web), alors que le serveur gRPC les envoie toutes.
+
+### R3. `CurlTransport` : corps en flux et redirection — lecture
+Un corps envoyé en flux (`Content-Length` connu) ne peut pas être relu : sans `CURLOPT_SEEKFUNCTION`, une redirection 307 / 308 ou une authentification qui renvoie le corps échoue (`CURLE_SEND_FAIL_REWIND`). Les valeurs d'en-têtes ne sont pas contrôlées (`\r\n` dans une valeur ajoute des en-têtes), et la taille de la réponse lue en mémoire n'est pas bornée.
+
+### R4. Réponse à `HEAD` : `Content-Length: 0` — lecture
+`Api::dispatch` sert `HEAD` avec la route `GET` puis retire le corps ; le module nginx envoie alors `Content-Length: 0` au lieu de la longueur de la réponse `GET`.
+
+À savoir : le corps JSON n'a pas de limite propre côté serveur (voir J19 dans `anch-json`).

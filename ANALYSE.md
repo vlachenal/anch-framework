@@ -28,10 +28,11 @@ Statut des constats :
 | anch-sql | [anch-sql/ANALYSE.md](anch-sql/ANALYSE.md) | corrigé le 2026-11-03 (S5, S9 à S15) : requêtes préparées (nombre de paramètres donné par la base, analyseur lexical pour les `?` PostgreSQL, `NULL`, paramètres non liés refusés), erreurs fatales qui invalident la connexion (MySQL ne les détectait jamais), transaction terminée au retour dans le pool, erreurs de lecture des résultats ; cache des requêtes préparées borné (LRU, désallocation côté serveur, S17, 2026-11-14) ; à décider : validation implicite à la libération (S16) |
 | anch-crypto | [anch-crypto/ANALYSE.md](anch-crypto/ANALYSE.md) | non analysé (hors périmètre) ; lecture hors limites AES-192 et lecture non initialisée SHA-2 corrigées ; débordement SHA-224 / SHA-384 et pointeur nul SHA-1 trouvés par ASan / UBSan, corrigés le 2026-11-12 (C4 à C6) |
 | anch-conf | [anch-conf/ANALYSE.md](anch-conf/ANALYSE.md) | cascade et placeholders terminés le 2026-11-12 : boucle infinie de `splitTrim` (deux profils ou includes), ordre profils / includes, résolution événementielle avec watchdog et détection de cycles |
-| anch-ini | [anch-ini/ANALYSE.md](anch-ini/ANALYSE.md) | en construction ; conversion numérique correcte (modèle pour les autres modules) |
+| anch-ini | [anch-ini/ANALYSE.md](anch-ini/ANALYSE.md) | analysé le 2026-11-14 (I1 à I5) : lignes commentées contenant `=` lues comme des valeurs et valeur vide ignorée, corrigés (I1, I2) ; restent I3 à I5 |
 | anch-cli | [anch-cli/ANALYSE.md](anch-cli/ANALYSE.md) | corrigé le 2026-11-03 (CL1 à CL10) : valeurs numériques hors limites ou vides, fichiers non ouverts, couleurs désactivées hors terminal / `NO_COLOR`, `operator<<` du `Formatter` hors namespace, `--no-term-fmt` déclaré par l'application, positionnel multiple non final, options répétées, codes ANSI dans les exceptions ; reste CL11 (`--`) ; CL12 (`--opt=val` / `-pval` non gérés) et CL13 (`pipe` sur un terminal) sont des choix |
 | anch-cutils | [anch-cutils/ANALYSE.md](anch-cutils/ANALYSE.md) | corrigé le 2026-11-02 : tampons de lecture et d'écriture séparés, écritures partielles et erreurs gérées, vidage de `TcpStream` avant fermeture |
 | anch-rest | [anch-rest/ANALYSE.md](anch-rest/ANALYSE.md) | réécrit le 2026-11-12 : modèle HTTP, serveur (`Api`), client et transport curl, module nginx ; testé en CI (job `asan` et workflow `nginx` avec nginx 1.30.6) ; désactivé par défaut |
+| anch-oas | [anch-oas/ANALYSE.md](anch-oas/ANALYSE.md) | vérifié le 2026-11-14 avec un document piégeux : code généré compilable ; O1 à O3 mineurs |
 | anch-app | [anch-app/ANALYSE.md](anch-app/ANALYSE.md) | débuté ; `after()` virtuel appelé depuis le destructeur, premier `-v` = `DEBUG` |
 
 `anch-csv` (CMake seulement) et `anch-batch` (fichier `.todo` seulement) sont vides.
@@ -86,6 +87,42 @@ Problèmes révélés par la migration :
 - `anch-conf` : `Configuration::load()` ne mettait jamais `_loaded` à `true` (corrigé provisoirement le 2026-10-30, sauf en présence de placeholders) ;
 - `anch-cli` : deux tests lisaient `Makefile`, qui n'existe pas avec d'autres générateurs (corrigé) ;
 - `anch-rest` : ne compile plus (erreur dans `mapperRegistry.hpp`), module désactivé par défaut.
+
+## Passe du 2026-11-14
+
+Après les réécritures et corrections des 2026-10-31 au 2026-11-14. Build complet (anch-rest, Protobuf, gRPC, Thrift, pilotes SQL) sous ASan / UBSan : **771/771 tests**.
+
+Méthode : relecture du code le plus récent (anch-rest, anch-sql pour le cache des requêtes préparées, anch-conf) et du code jamais analysé (anch-ini), puis vérifications par exécution sous ASan / UBSan : fuzz par mutation des lecteurs JSON et multipart, documents invalides, document OpenAPI piégeux compilé après génération.
+Non relus dans cette passe : anch-crypto, anch-utils, anch-events, anch-network, anch-cutils, anch-date, anch-uuid, anch-device, anch-ut, anch-cli (corrigés entre le 2026-10-31 et le 2026-11-10, couverts seulement par leurs tests), `anch-rest/thrift`.
+
+| Constat | Module | Statut |
+|---|---|---|
+| I1 : une ligne commentée contenant `=` devient une valeur | anch-ini | corrigé le 2026-11-14 |
+| I2 : `clé=` (valeur vide) ignorée | anch-ini | corrigé le 2026-11-14 |
+| S18 : URI PostgreSQL sans encodage (mot de passe avec `@`, `/`, `%`) | anch-sql | corrigé le 2026-11-14 |
+| J19 : `deserialize_max_field_char` jamais appliqué, corps JSON non borné | anch-json, anch-rest | vérifié |
+| J15 à J18 : données après la racine, virgule finale, caractères de contrôle, UTF-8 invalide acceptés | anch-json | vérifié |
+| L17 : diagnostics d'anch-log sur la sortie standard | anch-log | corrigé le 2026-11-14 |
+| X1 : fonctions exportées dans l'espace de noms global | transverse | corrigé le 2026-11-14 |
+| C7, C8 : Base64, données binaires tronquées et lecture hors limites sans remplissage | anch-crypto | vérifié |
+| R1 à R4, O1 à O3 : mineurs | anch-rest, anch-oas | voir fichiers |
+
+Sans défaut trouvé : lecteur JSON (2,7 millions de documents mutés, résultat identique pour toutes les tailles de tampon), lecteur multipart (délimiteur à cheval sur les blocs de lecture, 30 000 corps mutés), générateur anch-oas (identifiants réservés, collisions de noms, récursion).
+
+### X1. Fonctions exportées dans l'espace de noms global — vérifié (`nm -DC`) — **corrigé le 2026-11-14**
+Des fonctions utilitaires définies dans les `.cpp` sans `static` ni namespace anonyme sont exportées par les bibliothèques partagées avec des noms très génériques :
+- `libanch-crypto.so` : `encode`, `decode`, `generateMD5UUID`, `generateSHA1UUID` ;
+- `libanch-cli.so` : `setString`, `setTrue`, `setFalse`, `setPath`, `pushVec`, `openOFS`, … (17 fonctions) ;
+- `libanch-conf.so` : `splitTrim`, `selectConfFile`, structure `ConfFile` ;
+- `libanch-ini.so` : `parseValue`, `parseSection`, `parseLine`, `addIndent`, `printSection` ;
+- `libanch-logger.so` : `toLevel`, `parseWriters`, `getAllWriters`, `createDefaultWriter`, `tokenizeLoggerName` ;
+- `libanch-json.so` : `lexUnknownArray`, `lexUnknownObject`, `lexUnknownStr`, `parseUnknownNumber`, `computeErrorMessage` ;
+- `libanch-device.so` : `generateUUIDv1`, `generateUUIDv6` ; `libanch-unit.so` : `doNothing`.
+
+Une application (ou une autre bibliothèque) qui définit une fonction de même signature la substitue silencieusement à celle de la bibliothèque (interposition de symboles), ou viole l'ODR en liaison statique. anch-rest et anch-oas utilisent déjà des namespaces anonymes.
+Correction : les 52 fonctions sont `static` (liaison interne), les classes locales `Core1` à `Core4` (MD5), `ConfFile` (anch-conf) et `MySQLInitializer` (pilote MySQL) sont dans un namespace anonyme. `nm -DC` ne montre plus, hors namespace `anch`, que les points d'entrée voulus (`create_connection`, `create_shared_connection`, `delete_connection` des pilotes SQL, `main` d'anch-ut). 774/774 tests sous ASan / UBSan, 694/694 en release.
+Effet de bord : `decode` devenu `static` est intégré par GCC en release, ce qui a révélé une lecture non initialisée dans Base64 (voir C7 / C8 dans `anch-crypto`).
+Reste possible : `-fvisibility=hidden` avec une macro d'export.
 
 ## Divers
 

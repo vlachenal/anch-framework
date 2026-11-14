@@ -84,6 +84,27 @@ Correction : dans `lexInteger`, `lexUInteger` et `lexNumber`, `res.ec == result_
 - Comportement à connaître : avec libstdc++, un flottant trop petit pour un `double` (`1e-400`) est aussi signalé `result_out_of_range`, donc refusé avec `POTENTIAL_OVERFLOW` (avant : accepté sans modifier la valeur). Les dénormaux représentables (`4.9e-324`) sont acceptés. Si l'on préfère arrondir ces valeurs à 0, il faut traiter ce cas à part.
 - J7 (troncature vers les types 32 / 16 bits et `float` dans les mappers) n'est pas concerné par ce correctif : il reste à faire.
 
+### J15. Données après la valeur racine acceptées — vérifié (2026-11-14)
+`{"s":"a"} x`, `{"s":"a"}}` et `{"s":"a"}{"s":"b"}` sont acceptés : la lecture s'arrête à la fin de la première valeur sans regarder la suite. Côté serveur (`anch-rest`), un corps suivi de n'importe quoi est donc valide.
+Piste : après la valeur racine, n'accepter que des espaces jusqu'à la fin du flux (option si la lecture de plusieurs documents sur un même flux est voulue).
+
+### J16. Virgule finale acceptée dans un objet mappé — vérifié (2026-11-14)
+`{"s":"a",}` est accepté, alors que `[1,]` et `{"a":1,}` dans une `std::map` sont refusés.
+
+### J17. Caractères de contrôle bruts acceptés dans les chaînes — vérifié (2026-11-14)
+Une tabulation, un saut de ligne ou `0x1b` non échappés dans une chaîne sont acceptés (la RFC 8259 impose l'échappement des caractères < 0x20). Sans gravité : ils sont échappés correctement à la réécriture.
+
+### J18. UTF-8 invalide accepté et réécrit tel quel — vérifié (2026-11-14)
+`"\xff\xfe"` ou une séquence tronquée (`"\xc3"`) sont acceptés puis écrits sans changement : la sortie n'est plus de l'UTF-8 valide. Les contraintes `minLength` / `maxLength` comptent alors des points de code sur une séquence invalide.
+Piste : option de validation UTF-8 à la lecture (coût à mesurer), au moins côté serveur.
+
+### J19. `deserialize_max_field_char` n'est jamais appliqué — vérifié (2026-11-14)
+L'option (défaut `512`, commentaire `\todo keep it ?`) n'est lue nulle part : une chaîne de 2 000 000 de caractères est acceptée avec la valeur par défaut. Comme `max_payload` vaut `0` (illimité) par défaut, et que le codec `Json` d'`anch-rest` copie ces valeurs par défaut, la taille d'un corps JSON n'est bornée que par le serveur HTTP (`client_max_body_size` de nginx).
+Piste : supprimer l'option (une contrainte `maxLength` par champ et `max_payload` couvrent le besoin) ou l'appliquer ; donner une valeur par défaut non nulle à `max_payload` côté serveur dans `anch::rest::Json::options(Side::SERVER)`.
+
+### Fuzz du 2026-11-14 — aucun défaut
+2,7 millions de lectures de documents mutés (structure avec chaînes, entiers, flottants, `optional`, `vector`, `set`, `list`, `map`, objets imbriqués, UUID), sous ASan / UBSan, avec et sans champs ignorés, avec `buffer_size` de 1, 2, 3, 5, 8, 17, 64 et 1024 : aucun plantage, aucun blocage, et le résultat (succès ou erreur, valeur relue) est identique quelle que soit la taille du tampon.
+
 ## Performances
 
 Mesures : `anch-json-bench` sur `test/data_set.json` (1001 personnes, 311 Ko compacts), preset `release` (avec `ANCH_HARDENING` et `ANCH_NATIVE_ARCH`), moyenne de 10 000 itérations, 3 exécutions.
