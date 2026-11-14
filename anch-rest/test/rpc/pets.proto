@@ -1,0 +1,28 @@
+// anch-rest RPC tests: Protocol Buffers pet store
+syntax = "proto3";
+
+package anch.test.pets;
+
+message Pet {
+  int64 id = 1;
+  string name = 2;
+  repeated string tags = 3;
+}
+
+message GetPetRequest {
+  int64 id = 1;
+}
+
+message DeletePetRequest {
+  int64 id = 1;
+}
+
+message Empty {
+}
+
+service PetStore {
+  rpc GetPet(GetPetRequest) returns (Pet);
+  rpc AddPet(Pet) returns (Pet);
+  // Not implemented by the test service
+  rpc DeletePet(DeletePetRequest) returns (Empty);
+}

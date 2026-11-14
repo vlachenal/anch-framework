@@ -54,6 +54,68 @@ if(ANCH_REST_CLIENT_LIB)
 endif()
 # Client and transports -
 
+# Protocol Buffers codecs and RPC (Connect / gRPC-Web) +
+set(ANCH_REST_PROTOBUF_ENABLED OFF)
+if(ANCH_REST_PROTOBUF)
+  find_package(Protobuf CONFIG QUIET)
+  if(Protobuf_FOUND)
+    set(ANCH_REST_PROTOBUF_ENABLED ON)
+    anch_rest_sources(protobuf_sources protobuf)
+    anch_add_library(anch-rest-protobuf
+      INCLUDE_DIRS protobuf/inc
+      SOURCES ${protobuf_sources}
+      PUBLIC_DEPS anch::rest-common protobuf::libprotobuf)
+    # Protobuf changes generated messages layout under AddressSanitizer (PROTOBUF_MESSAGE_GLOBALS): code
+    # compiled with ASan crashes with a system libprotobuf built without it
+    if(CMAKE_CXX_FLAGS MATCHES "-fsanitize=[^ ]*address")
+      target_compile_definitions(anch-rest-protobuf PUBLIC PROTOBUF_MESSAGE_GLOBALS_TEMPORARY_OPTOUT)
+    endif()
+  else()
+    message(STATUS "Protobuf not found: anch-rest-protobuf is not built")
+  endif()
+endif()
+set(ANCH_REST_PROTOBUF_ENABLED ${ANCH_REST_PROTOBUF_ENABLED} PARENT_SCOPE)
+# Protocol Buffers codecs and RPC (Connect / gRPC-Web) -
+
+# gRPC server +
+set(ANCH_REST_GRPC_ENABLED OFF)
+if(ANCH_REST_GRPC AND ANCH_REST_PROTOBUF_ENABLED)
+  find_package(gRPC CONFIG QUIET)
+  if(gRPC_FOUND)
+    set(ANCH_REST_GRPC_ENABLED ON)
+    anch_rest_sources(grpc_sources grpc)
+    anch_add_library(anch-rest-grpc
+      INCLUDE_DIRS grpc/inc
+      SOURCES ${grpc_sources}
+      PUBLIC_DEPS anch::rest-protobuf gRPC::grpc++)
+  else()
+    message(STATUS "gRPC not found: anch-rest-grpc is not built")
+  endif()
+elseif(ANCH_REST_GRPC)
+  message(STATUS "anch-rest-protobuf is not built: anch-rest-grpc is not built")
+endif()
+set(ANCH_REST_GRPC_ENABLED ${ANCH_REST_GRPC_ENABLED} PARENT_SCOPE)
+# gRPC server -
+
+# Apache Thrift codecs and RPC +
+set(ANCH_REST_THRIFT_ENABLED OFF)
+if(ANCH_REST_THRIFT)
+  find_package(Thrift CONFIG QUIET)
+  find_package(Boost CONFIG QUIET) # Thrift C++ headers include Boost headers
+  if(Thrift_FOUND AND Boost_FOUND)
+    set(ANCH_REST_THRIFT_ENABLED ON)
+    anch_rest_sources(thrift_sources thrift)
+    anch_add_library(anch-rest-thrift
+      INCLUDE_DIRS thrift/inc
+      SOURCES ${thrift_sources}
+      PUBLIC_DEPS anch::rest-common thrift::thrift Boost::headers)
+  else()
+    message(STATUS "Thrift or Boost headers not found: anch-rest-thrift is not built")
+  endif()
+endif()
+set(ANCH_REST_THRIFT_ENABLED ${ANCH_REST_THRIFT_ENABLED} PARENT_SCOPE)
+# Apache Thrift codecs and RPC -
+
 if(ANCH_BUILD_TESTS)
   add_subdirectory(test)
 endif()

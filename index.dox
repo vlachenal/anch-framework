@@ -31,7 +31,7 @@
  * | \ref page_json "anch-json" | JSON serialization and deserialization |
  * | \ref page_crypto "anch-crypto" | Hashes, HMAC, Base64, AES and block cipher modes (not audited) |
  * | \ref page_sql "anch-sql" | SQL abstraction layer and connection pools for MySQL/MariaDB, PostgreSQL and SQLite |
- * | \ref page_rest "anch-rest" | REST API declaration (nginx module), HTTP client (libcurl) |
+ * | \ref page_rest "anch-rest" | REST API declaration (nginx module), HTTP client (libcurl), Protobuf / gRPC / Connect and Thrift RPC |
  * | \ref page_oas "anch-oas" | OpenAPI 3.0 models generator (\c anch-oas-gen ) |
  *
  * \c anch-app (application bootstrap) is a work in progress and is not documented yet.
@@ -46,6 +46,8 @@
  * - SQL drivers: libmariadb (or libmysqlclient), libpq, libsqlite3
  * - anch-rest curl transport: libcurl
  * - anch-rest nginx module: nginx sources (built with \c --with-threads )
+ * - anch-rest Protobuf codecs and RPC: Protobuf (and gRPC for the gRPC server), built when they are found
+ * - anch-rest Thrift codecs and RPC: Thrift and Boost headers, built when they are found
  *
  * \section install_sec Installation
  *
@@ -80,7 +82,7 @@ target_link_libraries(my-app PRIVATE anch::conf anch::log anch::json)
  * - anch-json: anch-events, anch-utils ; anch-uuid and anch-date with \c ANCH_UUID and \c ANCH_DATE options
  * - anch-crypto: anch-uuid, anch-utils
  * - anch-sql: anch-conf, anch-date, anch-utils
- * - anch-rest: anch-json ; anch-uuid for the server library
+ * - anch-rest: anch-json, anch-uuid
  * - anch-oas: anch-json
  *
  * \section version_sec Versions

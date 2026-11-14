@@ -23,7 +23,8 @@ jobs:
       options: --cap-add SYS_PTRACE
     steps:
       - name: Install dependencies
-        run: pacman -Syu --noconfirm --needed git cmake pkgconf openssl sqlite mariadb postgresql curl
+        # thrift, boost (Thrift C++ headers), protobuf and grpc: anch-rest RPC libraries
+        run: pacman -Syu --noconfirm --needed git cmake pkgconf openssl sqlite mariadb postgresql curl thrift boost protobuf grpc
 
       - uses: actions/checkout@v4
 
@@ -31,9 +32,13 @@ jobs:
         run: sh .github/scripts/start-databases.sh .
 
       - name: Configure
+        shell: bash
         run: |
+          set -o pipefail
           gcc --version | head -1
-          cmake --preset asan -DANCH_BUILD_REST=ON
+          cmake --preset asan -DANCH_BUILD_REST=ON 2>&1 | tee configure.log
+          # Optional anch-rest libraries are disabled when their packages are not found: they have to be built here
+          if grep "is not built" configure.log; then exit 1; fi
 
       - name: Build
         run: cmake --build --preset asan --parallel "$(nproc)"

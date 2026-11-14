@@ -26,6 +26,18 @@ if(@ANCH_BUILD_REST@ AND @ANCH_REST_CLIENT_LIB@ AND @ANCH_REST_CURL@)
   find_dependency(CURL)
 endif()
 
+# anch-rest Protobuf, gRPC and Thrift libraries public headers include these libraries headers
+if(@ANCH_BUILD_REST@ AND @ANCH_REST_PROTOBUF_ENABLED@)
+  find_dependency(Protobuf CONFIG)
+endif()
+if(@ANCH_BUILD_REST@ AND @ANCH_REST_GRPC_ENABLED@)
+  find_dependency(gRPC CONFIG)
+endif()
+if(@ANCH_BUILD_REST@ AND @ANCH_REST_THRIFT_ENABLED@)
+  find_dependency(Thrift CONFIG)
+  find_dependency(Boost CONFIG)
+endif()
+
 include(${CMAKE_CURRENT_LIST_DIR}/AnchTargets.cmake)
 
 check_required_components(Anch)

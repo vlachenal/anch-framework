@@ -81,6 +81,24 @@ Client (étape 2)
 - send() renvoie la réponse quel que soit son statut ; execute() et as<T>() lèvent HttpError si statut >= 400.
 - Filtres communs au client et au serveur (rest/filter.hpp) ; basicAuth() / bearerAuth().
 
+RPC (2026-11-14)
+----------------
+- anch-rest-protobuf (ANCH_REST_PROTOBUF, construite si Protobuf est trouvé) : codecs Protobuf
+  (application/x-protobuf) et ProtobufJson (mapping JSON officiel, champs inconnus refusés côté serveur, ignorés
+  côté client). RpcService : registre de méthodes unaires <Req, Res>, RpcError (codes gRPC), RpcContext
+  (métadonnées), taille de message maximale (4 MiB). installRpc(api, service) : POST /pkg.Service/Method en
+  Connect (application/proto, application/json, erreurs JSON {code, message} avec le statut HTTP du protocole)
+  et gRPC-Web (trames, trailers grpc-status / grpc-message, binaire et JSON). callRpc<Res>() : client Connect.
+- anch-rest-grpc (ANCH_REST_GRPC) : GrpcServer (HTTP/2, CallbackGenericService) sert les mêmes RpcService aux
+  clients gRPC natifs (stubs grpc_cpp_plugin). Appels unaires seulement (pas de streaming).
+- Sous ASan, Protobuf change la disposition des messages générés (PROTOBUF_MESSAGE_GLOBALS) : la libprotobuf du
+  système n'étant pas instrumentée, anch-rest-protobuf définit PROTOBUF_MESSAGE_GLOBALS_TEMPORARY_OPTOUT
+  (PUBLIC) quand -fsanitize=address est utilisé.
+- anch-rest-thrift (ANCH_REST_THRIFT, Thrift et en-têtes Boost) : codecs binary / compact / JSON, RPC sur HTTP
+  (installThrift) et ThriftTransport pour les clients générés.
+- CI : thrift, boost, protobuf et grpc installés dans le job asan, qui échoue si une de ces bibliothèques n'est
+  pas construite.
+
 Plus tard
 ---------
 - [x] anch-oas-gen : générer les déclarations d'endpoints et un client typé (2026-11-14 : --server / --client,
