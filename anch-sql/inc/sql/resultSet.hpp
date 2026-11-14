@@ -64,6 +64,9 @@ namespace anch::sql {
   private:
     /*! Connection which has executed the query (errors are reported to it ; \c NULL when unknown) */
     Connection* _connection;
+
+    /*! Prepared statement which has executed the query (\c NULL when none) */
+    PreparedStatement* _statement;
     // Attributes -
 
     // Constructors +

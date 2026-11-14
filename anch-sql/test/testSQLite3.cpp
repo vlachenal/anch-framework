@@ -458,6 +458,11 @@ testSqlError() {
 }
 
 void
+testCache() {
+  testStatementCache(*dbCon, true);
+}
+
+void
 anch::ut::setup(anch::ut::UnitTests& tests) {
   tests
     .name("AnCH SQLite3 unit tests")
@@ -478,5 +483,6 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("stmt-operators", testOperators)
     .add("stmt-null", testNull)
     .add("sql-error", testSqlError)
+    .add("statement-cache", testCache)
     ;
 }

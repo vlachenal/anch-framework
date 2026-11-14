@@ -483,6 +483,55 @@ testFatal() {
 }
 
 void
+testCache() {
+  testStatementCache(*dbCon, false);
+}
+
+/*!
+ * Number of statements prepared by the session on the server side
+ */
+int64_t
+serverStatements(Connection& conn) {
+  int64_t count = -1;
+  conn.queryMapRow("SELECT COUNT(*) FROM pg_prepared_statements", [&count](ResultSet& res) {
+    count = res.get<int64_t>(0).value_or(-1);
+  });
+  return count;
+}
+
+void
+testCacheDeallocate() {
+  PostgreSQLConnection conn({
+      .driver = "",
+      .database = "anch_test",
+      .hostname = "localhost",
+      .port = 5432,
+      .user = "anch",
+      .password = "anch",
+      .application = "postgresql-cache",
+      .statementCacheSize = 2
+    });
+  for(int i = 1 ; i <= 5 ; ++i) {
+    countRows(conn, "SELECT COUNT(*) FROM T_Test WHERE id <= ? AND " + std::to_string(i) + " = " + std::to_string(i), i);
+  }
+  int64_t count = serverStatements(conn);
+  anch::ut::assertThat(count == 2, "Evicted statements should be deallocated on the server: {} prepared statements instead of 2", count);
+  // Eviction in an aborted transaction +
+  conn.begin();
+  try {
+    conn.update("INSERT INTO T_Unknown (a) VALUES (1)");
+  } catch(const anch::sql::SqlException&) {
+    // Expected: transaction is aborted
+  }
+  conn.setStatementCacheSize(1);
+  conn.rollback();
+  count = serverStatements(conn);
+  anch::ut::assertThat(count == 1, "Statement evicted in an aborted transaction should be deallocated: {} prepared statements instead of 1", count);
+  anch::ut::assertTrue(conn.isValid(), "Connection should still be valid");
+  // Eviction in an aborted transaction -
+}
+
+void
 anch::ut::setup(anch::ut::UnitTests& tests) {
   tests
     .name("AnCH PostgreSQL unit tests")
@@ -504,5 +553,7 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("12-stmt-null", testNull)
     .add("13-sql-error", testSqlError)
     .add("14-fatal-error", testFatal)
+    .add("15-statement-cache", testCache)
+    .add("16-statement-cache-deallocate", testCacheDeallocate)
     ;
 }

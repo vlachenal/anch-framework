@@ -48,7 +48,7 @@ SQLite3Connection::SQLite3Connection(const std::string& database): Connection(),
   }
 }
 
-SQLite3Connection::SQLite3Connection(const SqlConnectionConfiguration& config): Connection(), _conn() {
+SQLite3Connection::SQLite3Connection(const SqlConnectionConfiguration& config): Connection(config.statementCacheSize), _conn() {
   std::string connStr = "file:";
   connStr += config.database;
   int res = sqlite3_open_v2(connStr.data(), &_conn, SQLITE_OPEN_URI | SQLITE_OPEN_READWRITE, NULL);
@@ -64,10 +64,7 @@ SQLite3Connection::SQLite3Connection(const SqlConnectionConfiguration& config): 
 // Destructor +
 SQLite3Connection::~SQLite3Connection() {
   release();
-  for(auto iter = _stmts.begin() ; iter != _stmts.end() ; ++iter) {
-    delete iter->second;
-  }
-  _stmts.clear();
+  clearStatements(); // statements have to be finalized before closing connection
   sqlite3_close(_conn);
 }
 // Destructor -

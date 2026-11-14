@@ -25,18 +25,22 @@ using anch::sql::PreparedStatement;
 
 
 // Constructors +
-Connection::Connection(): _valid(true), _transaction(false), _stmts(), _errors(false) {
-  // Nothing to do
+Connection::Connection(std::size_t statementCacheSize):
+  _valid(true),
+  _transaction(false),
+  _stmts(),
+  _stmtsIndex(),
+  _stmtsMax(statementCacheSize),
+  _errors(false) {
+  if(statementCacheSize == 0) {
+    throw SqlException("Prepared statement cache size has to be at least 1");
+  }
 }
 // Constructors -
 
 // Destructor +
 Connection::~Connection() noexcept {
-  // Delete prepared statements +
-  for(auto iter = _stmts.begin() ; iter != _stmts.end() ; ++iter) {
-    delete iter->second;
-  }
-  // Delete prepared statements -
+  clearStatements(); // connection can already be closed by driver: statements are not deallocated
 }
 // Destructor -
 
@@ -154,19 +158,80 @@ Connection::update(const std::string& query) {
 
 PreparedStatement&
 Connection::prepareStatement(const std::string& query) {
-  auto iter = _stmts.find(query);
-  if(iter == _stmts.end()) { // Not found => create and return it
-    PreparedStatement* stmt = guard([this, &query]() { return makePrepared(query); });
-    stmt->_connection = this;
-    try {
-      _stmts[query] = stmt;
-    } catch(...) {
-      delete stmt;
-      throw;
+  auto found = _stmtsIndex.find(std::string_view(query));
+  if(found != _stmtsIndex.end()) { // Cached => becomes the most recently used
+    _stmts.splice(_stmts.begin(), _stmts, found->second);
+    return *found->second->statement;
+  }
+  // Not found => create, cache and return it +
+  PreparedStatement* stmt = guard([this, &query]() { return makePrepared(query); });
+  stmt->_connection = this;
+  try {
+    _stmts.push_front(CachedStatement{query, stmt});
+  } catch(...) {
+    stmt->deallocate();
+    delete stmt;
+    throw;
+  }
+  try {
+    _stmtsIndex.emplace(std::string_view(_stmts.front().query), _stmts.begin());
+  } catch(...) {
+    _stmts.pop_front();
+    stmt->deallocate();
+    delete stmt;
+    throw;
+  }
+  evictStatements();
+  return *stmt;
+  // Not found => create, cache and return it -
+}
+
+void
+Connection::evictStatements() noexcept {
+  auto iter = _stmts.end();
+  while(_stmts.size() > _stmtsMax && iter != _stmts.begin()) {
+    --iter;
+    if(iter == _stmts.begin()) { // the most recently used statement is kept
+      break;
     }
-    return *stmt;
-  } else {
-    return *iter->second;
+    if(iter->statement->_openResults > 0) { // statement is used by a result set
+      continue;
+    }
+    PreparedStatement* stmt = iter->statement;
+    _stmtsIndex.erase(std::string_view(iter->query)); // key is a view of the entry query: erased first
+    iter = _stmts.erase(iter);
+    stmt->deallocate();
+    delete stmt;
   }
 }
+
+void
+Connection::clearStatements() noexcept {
+  _stmtsIndex.clear();
+  for(CachedStatement& entry : _stmts) {
+    delete entry.statement;
+  }
+  _stmts.clear();
+}
 // Methods -
+
+// Accessors +
+std::size_t
+Connection::getStatementCacheSize() const noexcept {
+  return _stmtsMax;
+}
+
+void
+Connection::setStatementCacheSize(std::size_t size) {
+  if(size == 0) {
+    throw SqlException("Prepared statement cache size has to be at least 1");
+  }
+  _stmtsMax = size;
+  evictStatements();
+}
+
+std::size_t
+Connection::getCachedStatementCount() const noexcept {
+  return _stmts.size();
+}
+// Accessors -

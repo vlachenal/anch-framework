@@ -109,3 +109,39 @@ testFatalError(anch::sql::Connection& conn, std::function<void(anch::sql::Connec
   }
   anch::ut::assertFalse(conn.isValid(), "Killed connection should be invalid");
 }
+
+/*!
+ * Bounded prepared statement cache: evicted statements are prepared again
+ *
+ * \param conn the connection (its cache size is restored)
+ * \param nested check that the outer statement of nested queries is not evicted while its rows are read (only for
+ *        drivers which can run a query while reading another one's rows)
+ */
+inline void
+testStatementCache(anch::sql::Connection& conn, bool nested) {
+  std::size_t size = conn.getStatementCacheSize();
+  conn.setStatementCacheSize(2);
+  try {
+    for(int i = 1 ; i <= 4 ; ++i) { // distinct queries: each one evicts the least recently used statement
+      int64_t count = countRows(conn, "SELECT COUNT(*) FROM T_Test WHERE id <= ? AND " + std::to_string(i) + " = " + std::to_string(i), i);
+      anch::ut::assertThat(count == i, "Found {} rows instead of {}", count, i);
+    }
+    anch::ut::assertThat(conn.getCachedStatementCount() == 2, "{} cached statements instead of 2", conn.getCachedStatementCount());
+    int64_t count = countRows(conn, "SELECT COUNT(*) FROM T_Test WHERE id <= ? AND 1 = 1", 3); // evicted: prepared again
+    anch::ut::assertThat(count == 3, "Found {} rows instead of 3", count);
+    if(nested) {
+      int64_t rows = 0;
+      int64_t sum = 0;
+      conn.queryMapRow("SELECT id FROM T_Test WHERE id <= ? ORDER BY id", [&conn, &rows, &sum](anch::sql::ResultSet& row) {
+	int64_t id = row.get<int64_t>(0).value_or(0);
+	++rows;
+	sum += countRows(conn, "SELECT COUNT(*) FROM T_Test WHERE id = ? AND " + std::to_string(id) + " = " + std::to_string(id), id);
+      }, 4);
+      anch::ut::assertThat(rows == 4 && sum == 4, "Nested queries: {} rows and {} sub-query rows instead of 4 and 4", rows, sum);
+    }
+  } catch(...) {
+    conn.setStatementCacheSize(size);
+    throw;
+  }
+  conn.setStatementCacheSize(size);
+}

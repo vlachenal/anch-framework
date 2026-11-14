@@ -51,6 +51,7 @@ namespace anch::sql {
   class PreparedStatement {
 
     friend class Connection;
+    friend class ResultSet;
 
     // Attributes +
   protected:
@@ -66,6 +67,9 @@ namespace anch::sql {
   private:
     /*! Connection which has prepared this statement (errors are reported to it) */
     anch::sql::Connection* _connection;
+
+    /*! Number of alive result sets of this statement (it can not be evicted from cache while they are alive) */
+    std::size_t _openResults;
     // Attributes -
 
     // Constructors +
@@ -286,6 +290,15 @@ namespace anch::sql {
      * \throw SqlException any error (with connection status)
      */
     virtual uint64_t doExecuteUpdate() = 0;
+
+    /*!
+     * Deallocate statement on the server side (called when the statement is evicted from the connection cache, while
+     * the connection is open ; default: nothing to do).\n
+     * Drivers which deallocate statements in their destructor (MySQL, SQLite3) do not have to implement it.
+     *
+     * \since 0.2
+     */
+    virtual void deallocate() noexcept;
 
   private:
     /*!

@@ -23,6 +23,7 @@
 #include <iostream>
 #include <list>
 #include <functional>
+#include <memory>
 #include <string.h>
 
 #include "conf/configuration.hpp"
@@ -346,6 +347,12 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
 #ifdef ANCH_SQL_SQLITE3
     .add("sql-factory-sqlite3", std::bind(testSQLFactory, "anch_sqlite"))
     .add("sql-pool-sqlite3", []() { testPool("anch_sqlite", nullptr, nullptr); })
+    .add("sql-factory-statement-cache-size", []() {
+      std::size_t size = fact->getPool("anch_sqlite").borrowResource().get().getStatementCacheSize();
+      anch::ut::assertThat(size == 16, "Pool connection statement cache size is {} instead of 16", size);
+      std::unique_ptr<Connection> conn(fact->createConnection("anch_sqlite"));
+      anch::ut::assertThat(conn->getStatementCacheSize() == 16, "Connection statement cache size is {} instead of 16", conn->getStatementCacheSize());
+    })
 #endif
     ;
 }

@@ -18,7 +18,12 @@
   along with ANCH Framework.  If not, see <https://www.gnu.org/licenses/>.
 */
 #pragma once
+#include <cstddef>
 #include <functional>
+#include <list>
+#include <string>
+#include <string_view>
+#include <unordered_map>
 
 #include "sql/sqlException.hpp"
 #include "sql/resultSet.hpp"
@@ -26,6 +31,13 @@
 
 
 namespace anch::sql {
+
+  /*!
+   * Default maximum number of prepared statements cached by a connection (see \ref Connection::prepareStatement )
+   *
+   * \since 0.2
+   */
+  inline constexpr std::size_t DEFAULT_STATEMENT_CACHE_SIZE = 256;
 
   /*!
    * \brief SQL database connection configuration
@@ -57,6 +69,12 @@ namespace anch::sql {
 
     /*! Client application */
     std::string application = "AnCH";
+
+    /*!
+     * Maximum number of prepared statements cached by each connection (at least \c 1 ; key
+     * \c statement-cache-size in configuration)
+     */
+    std::size_t statementCacheSize = DEFAULT_STATEMENT_CACHE_SIZE;
   };
 
   /*!
@@ -68,7 +86,12 @@ namespace anch::sql {
    * reported to the connection. A fatal error (\ref SqlException::isOK is \c false : connection lost, out of memory,
    * protocol error, ...) invalidates the connection: \ref isValid returns \c false and connection pools destroy it
    * instead of reusing it. Other errors (syntax, constraint, ...) keep the connection valid, but the current
-   * transaction will be rolled back by \ref release .
+   * transaction will be rolled back by \ref release .\n
+   * \n
+   * Prepared statements: \ref prepareStatement keeps the prepared statements in a bounded cache (least recently used
+   * statement first evicted, see \ref setStatementCacheSize ). A statement is never evicted while one of its result
+   * sets is alive: the cache can then temporarily exceed its maximum size. An evicted statement is deallocated on the
+   * server side.
    *
    * \author Vincent Lachenal
    *
@@ -87,8 +110,22 @@ namespace anch::sql {
     /*! Is in SQL transaction */
     bool _transaction;
 
-    /*! Prepared statements */
-    std::map<std::string, PreparedStatement*> _stmts;
+    /*! Prepared statement cache entry */
+    struct CachedStatement {
+      /*! SQL query (cache key) */
+      std::string query;
+      /*! Prepared statement */
+      PreparedStatement* statement;
+    };
+
+    /*! Prepared statements (the most recently used first) */
+    std::list<CachedStatement> _stmts;
+
+    /*! Prepared statements index (keys are views of \ref CachedStatement::query ) */
+    std::unordered_map<std::string_view, std::list<CachedStatement>::iterator> _stmtsIndex;
+
+    /*! Maximum number of cached prepared statements */
+    std::size_t _stmtsMax;
 
     /*! Error on current calls */
     bool _errors;
@@ -97,11 +134,13 @@ namespace anch::sql {
     // Constructors +
   public:
     /*!
-     * \ref Connection default constructor
+     * \ref Connection constructor
      *
-     * \throw SqlException any error
+     * \param statementCacheSize the maximum number of cached prepared statements (at least \c 1 )
+     *
+     * \throw SqlException invalid cache size
      */
-    Connection();
+    explicit Connection(std::size_t statementCacheSize = DEFAULT_STATEMENT_CACHE_SIZE);
 
     /*!
      * Prohibit \ref Connection copy constructor
@@ -159,7 +198,10 @@ namespace anch::sql {
     void release() noexcept;
 
     /*!
-     * Prepare SQL statement if not already done.
+     * Prepare SQL statement if not already done.\n
+     * The statement is cached by the connection (see \ref setStatementCacheSize ): the returned reference remains
+     * valid until the statement is evicted, that is to say at least until \c statementCacheSize - 1 other queries
+     * have been prepared on this connection (and as long as one of its result sets is alive).
      *
      * \param query the SQL query
      *
@@ -407,6 +449,22 @@ namespace anch::sql {
     void onError(const SqlException& error) noexcept;
 
     /*!
+     * Delete every cached prepared statement without deallocating it on the server side.\n
+     * Drivers which have to release statements before closing their connection call it in their destructor.
+     *
+     * \since 0.2
+     */
+    void clearStatements() noexcept;
+
+  private:
+    /*!
+     * Evict the least recently used prepared statements while the cache exceeds its maximum size (the most recently
+     * used statement and the statements with alive result sets are kept)
+     */
+    void evictStatements() noexcept;
+
+  protected:
+    /*!
      * Check driver connection status (called by \ref isValid ; default to \c true )
      *
      * \return \c true when the driver connection is usable, \c false otherwise
@@ -418,6 +476,36 @@ namespace anch::sql {
 
     // Accessors +
   public:
+    /*!
+     * Maximum number of cached prepared statements getter
+     *
+     * \return the maximum number of cached prepared statements
+     *
+     * \since 0.2
+     */
+    std::size_t getStatementCacheSize() const noexcept;
+
+    /*!
+     * Maximum number of cached prepared statements setter: least recently used statements are evicted when the cache
+     * exceeds the new size
+     *
+     * \param size the maximum number of cached prepared statements (at least \c 1 )
+     *
+     * \throw SqlException invalid size
+     *
+     * \since 0.2
+     */
+    void setStatementCacheSize(std::size_t size);
+
+    /*!
+     * Number of cached prepared statements getter
+     *
+     * \return the number of cached prepared statements
+     *
+     * \since 0.2
+     */
+    std::size_t getCachedStatementCount() const noexcept;
+
     /*!
      * Valid status getter: \c false once a fatal error has occurred, or when the driver reports a broken
      * connection. Connection pools destroy invalid connections instead of reusing them.

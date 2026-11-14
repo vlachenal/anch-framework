@@ -46,6 +46,9 @@ struct Calls {
   int created = 0;
   int commits = 0;
   int rollbacks = 0;
+  int prepared = 0;
+  int deallocated = 0;
+  int deleted = 0;
 };
 Calls calls;
 
@@ -92,6 +95,10 @@ public:
   Failure& _failure;
   MockStatement(const std::string& query, Failure& failure): PreparedStatement(), _failure(failure) {
     setParameterCount(anch::sql::findPlaceholders(query, anch::sql::SqlSyntax::STANDARD).size());
+    ++calls.prepared;
+  }
+  virtual ~MockStatement() noexcept {
+    ++calls.deleted;
   }
   const std::vector<std::optional<std::string>>& values() const {
     return _values;
@@ -104,6 +111,9 @@ protected:
   virtual uint64_t doExecuteUpdate() override {
     raise(_failure);
     return 1;
+  }
+  virtual void deallocate() noexcept override {
+    ++calls.deallocated;
   }
 };
 
@@ -118,7 +128,7 @@ public:
   /*! Result set failure */
   Failure _fetchFailure = Failure::NONE;
 
-  MockConnection(): Connection() {
+  explicit MockConnection(std::size_t statementCacheSize = anch::sql::DEFAULT_STATEMENT_CACHE_SIZE): Connection(statementCacheSize) {
     ++calls.created;
   }
 
@@ -293,6 +303,64 @@ testPoolReleasesTransaction() {
 }
 
 void
+testStatementCacheLru() {
+  MockConnection conn(2);
+  PreparedStatement* a = &conn.prepareStatement("SELECT a FROM t WHERE id = ?");
+  PreparedStatement* b = &conn.prepareStatement("SELECT b FROM t WHERE id = ?");
+  anch::ut::assertTrue(&conn.prepareStatement("SELECT a FROM t WHERE id = ?") == a, "Cached statement should be reused");
+  anch::ut::assertThat(calls.prepared == 2, "Cached statement should not be prepared again: {} prepared", calls.prepared);
+  conn.prepareStatement("SELECT c FROM t WHERE id = ?"); // 'b' is the least recently used statement
+  anch::ut::assertThat(conn.getCachedStatementCount() == 2, "Cache should be bounded: {} statements", conn.getCachedStatementCount());
+  anch::ut::assertThat(calls.deallocated == 1 && calls.deleted == 1, "Evicted statement should be deallocated and deleted: {} deallocated, {} deleted", calls.deallocated, calls.deleted);
+  anch::ut::assertTrue(&conn.prepareStatement("SELECT a FROM t WHERE id = ?") == a, "Recently used statement should be kept");
+  anch::ut::assertThat(conn.update("UPDATE t SET b = ? WHERE id = ?", 1, 2) == 1, "Update should succeed");
+  anch::ut::assertThat(calls.prepared == 4, "Evicted statement should be prepared again: {} prepared", calls.prepared);
+  (void)b;
+}
+
+void
+testStatementCacheBusy() {
+  MockConnection conn(1);
+  ResultSet* res = conn.query("SELECT a FROM t WHERE id = ?", 1);
+  conn.prepareStatement("SELECT b FROM t WHERE id = ?");
+  anch::ut::assertThat(conn.getCachedStatementCount() == 2, "Statement with an alive result set should not be evicted: {} statements", conn.getCachedStatementCount());
+  anch::ut::assertThat(calls.deleted == 0, "No statement should be deleted: {} deleted", calls.deleted);
+  int rows = 0;
+  while(res->next()) {
+    ++rows;
+  }
+  anch::ut::assertThat(rows == 2, "Result set should still be readable: {} rows", rows);
+  delete res;
+  conn.prepareStatement("SELECT c FROM t WHERE id = ?");
+  anch::ut::assertThat(conn.getCachedStatementCount() == 1, "Cache should come back to its size: {} statements", conn.getCachedStatementCount());
+  anch::ut::assertThat(calls.deallocated == 2, "Both statements should be evicted: {} deallocated", calls.deallocated);
+  // Nested queries: the outer statement is kept while its rows are read +
+  rows = 0;
+  conn.queryMapRow("SELECT a FROM t WHERE id = ?", [&conn, &rows](ResultSet&) {
+    conn.queryMapRow("SELECT d FROM t WHERE id = ?", [&rows](ResultSet&) { ++rows; }, 2);
+  }, 1);
+  anch::ut::assertThat(rows == 4, "Nested queries should read every row: {} rows", rows);
+  // Nested queries: the outer statement is kept while its rows are read -
+}
+
+void
+testStatementCacheSize() {
+  {
+    MockConnection conn;
+    anch::ut::assertThat(conn.getStatementCacheSize() == anch::sql::DEFAULT_STATEMENT_CACHE_SIZE, "Default size: {}", conn.getStatementCacheSize());
+    expectError([&conn]() { conn.setStatementCacheSize(0); }, "Size 0 should be refused");
+    for(int i = 0 ; i < 5 ; ++i) {
+      conn.prepareStatement("SELECT a FROM t WHERE id = " + std::to_string(i));
+    }
+    conn.setStatementCacheSize(2);
+    anch::ut::assertThat(conn.getCachedStatementCount() == 2, "Reducing size should evict statements: {} statements", conn.getCachedStatementCount());
+    anch::ut::assertThat(calls.deallocated == 3, "{} deallocated", calls.deallocated);
+  }
+  anch::ut::assertThat(calls.deallocated == 3 && calls.deleted == 5, "Connection destruction should delete statements without deallocating them: {} deallocated, {} deleted", calls.deallocated, calls.deleted);
+  expectError([]() { MockConnection conn(0); }, "Connection with size 0 should be refused");
+}
+
+void
 anch::ut::setup(anch::ut::UnitTests& tests) {
   tests
     .name("AnCH SQL connection errors unit tests")
@@ -306,5 +374,8 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("result-set-errors", testResultSetErrors)
     .add("pool-discards-invalid", testPoolDiscardsInvalid)
     .add("pool-releases-transaction", testPoolReleasesTransaction)
+    .add("statement-cache-lru", testStatementCacheLru)
+    .add("statement-cache-busy", testStatementCacheBusy)
+    .add("statement-cache-size", testStatementCacheSize)
     ;
 }

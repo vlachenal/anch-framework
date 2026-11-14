@@ -89,6 +89,13 @@ SqlConnectionFactory::SqlConnectionFactory(): _configs(), _pools() {
     if(port.has_value()) {
       conConf.port = port.value();
     }
+    auto cacheSize = connection.getValue<std::size_t>("statement-cache-size");
+    if(cacheSize.has_value()) {
+      if(cacheSize.value() == 0) {
+	throw SqlException("Configuration " + iter->first + ": statement-cache-size has to be at least 1");
+      }
+      conConf.statementCacheSize = cacheSize.value();
+    }
     _configs[iter->first] = conConf;
     // Connection configuration -
 

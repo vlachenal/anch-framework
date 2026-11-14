@@ -115,6 +115,22 @@ PostgreSQLPreparedStatement::doExecuteUpdate() {
   PQclear(res);
   return nbRows;
 }
+
+void
+PostgreSQLPreparedStatement::deallocate() noexcept {
+#ifdef LIBPQ_HAS_CLOSE_PREPARED
+  PQclear(PQclosePrepared(_conn, _stmtId.data()));
+#else
+  if(PQtransactionStatus(_conn) != PQTRANS_IDLE && PQtransactionStatus(_conn) != PQTRANS_INTRANS) {
+    return; // aborted transaction or connection busy: DEALLOCATE would fail
+  }
+  try {
+    PQclear(PQexec(_conn, ("DEALLOCATE " + _stmtId).data())); // identifier is generated: no quoting needed
+  } catch(...) {
+    // Statement is deallocated with the session
+  }
+#endif
+}
 // Methods -
 
 #endif // ANCH_SQL_POSTGRESQL

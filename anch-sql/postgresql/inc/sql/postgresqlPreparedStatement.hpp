@@ -95,6 +95,13 @@ namespace anch::sql {
      * \throw SqlException any error
      */
     virtual uint64_t doExecuteUpdate() override;
+
+    /*!
+     * Deallocate statement on the server side (protocol close message, also accepted in an aborted transaction ;
+     * \c DEALLOCATE with libpq older than 17, skipped in an aborted transaction). Errors are ignored: the statement
+     * is deallocated with the session anyway.
+     */
+    virtual void deallocate() noexcept override;
     // Methods -
 
   };

@@ -53,7 +53,7 @@ PostgreSQLConnection::PostgreSQLConnection(const std::string& connStr): _conn() 
 }
 
 PostgreSQLConnection::PostgreSQLConnection(const SqlConnectionConfiguration& config):
-  Connection(),
+  Connection(config.statementCacheSize),
   _conn(NULL) {
   std::ostringstream conninfo;
   conninfo << "postgresql://";

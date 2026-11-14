@@ -52,6 +52,14 @@ target_link_libraries(my-app PRIVATE anch::sql)
  * When a connection is returned to its pool, \c Connection::release ends its transaction (rollback after an error,
  * commit otherwise), then invalid connections are destroyed instead of being reused.
  *
+ * \subsection sql_conception_stmt_cache_sec Prepared statements cache
+ *
+ * Each connection keeps its prepared statements in a bounded cache (\c statement-cache-size key of the connection
+ * section, \c 256 by default, \c Connection::setStatementCacheSize ). The least recently used statement is evicted
+ * and deallocated on the server side when the cache is full ; a statement is not evicted while one of its result sets
+ * is alive. Queries built with literal values (\c IN lists of the builder for example) are distinct cache entries:
+ * bind values with \c ? placeholders whenever possible.
+ *
  * \section sql_example_sec Example
  *
  * SQL connection example:
@@ -198,28 +206,33 @@ main(void) {
  *
  * Pool configuration example:
  * \code{.txt}
-[anch_mysql]
+[anch::sql.anch_mysql]
 driver=MySQL
 host=localhost
 port=3306
 user=anch
 password=anch
 database=anch_test
-pool_maxsize=20
-pool_initsize=2
 
-[anch_pgsql]
+[anch::sql.anch_mysql.pool]
+max-size=20
+init-size=2
+
+[anch::sql.anch_pgsql]
 driver=PostgreSQL
 host=localhost
 port=5432
 user=anch
 password=anch
 database=anch_test
-pool_maxsize=20
-pool_initsize=2
-pool_timeout=200
+statement-cache-size=512
 
-[anch_sqlite]
+[anch::sql.anch_pgsql.pool]
+max-size=20
+init-size=2
+timeout=200
+
+[anch::sql.anch_sqlite]
 driver=SQLite3
 database=anch.db\endcode
  *

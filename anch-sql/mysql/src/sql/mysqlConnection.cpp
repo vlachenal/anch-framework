@@ -75,7 +75,7 @@ private:
 };
 
 // Constructors +
-MySQLConnection::MySQLConnection(const SqlConnectionConfiguration& config): Connection() {
+MySQLConnection::MySQLConnection(const SqlConnectionConfiguration& config): Connection(config.statementCacheSize) {
 
   MySQLInitializer::getInstance(); // Initialize MySQL library if not already done
 

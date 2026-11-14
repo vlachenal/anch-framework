@@ -29,7 +29,7 @@ using anch::sql::ResultSet;
 using anch::sql::SqlException;
 
 
-PreparedStatement::PreparedStatement() noexcept: _values(), _bound(), _nbPlaceholders(0), _connection(NULL) {
+PreparedStatement::PreparedStatement() noexcept: _values(), _bound(), _nbPlaceholders(0), _connection(NULL), _openResults(0) {
   // Nothing to do
 }
 
@@ -40,14 +40,16 @@ PreparedStatement::~PreparedStatement() noexcept {
 ResultSet*
 PreparedStatement::executeQuery() {
   checkBindings();
+  ResultSet* res = NULL;
   if(_connection == NULL) {
-    return doExecuteQuery();
-  }
-  return _connection->guard([this]() {
-    ResultSet* res = doExecuteQuery();
+    res = doExecuteQuery();
+  } else {
+    res = _connection->guard([this]() { return doExecuteQuery(); });
     res->_connection = _connection;
-    return res;
-  });
+  }
+  res->_statement = this; // statement is kept in connection cache while the result set is alive
+  ++_openResults;
+  return res;
 }
 
 uint64_t
@@ -69,6 +71,11 @@ PreparedStatement::setParameterCount(std::size_t count) {
 std::size_t
 PreparedStatement::getParameterCount() const noexcept {
   return _nbPlaceholders;
+}
+
+void
+PreparedStatement::deallocate() noexcept {
+  // Nothing to do by default
 }
 
 void

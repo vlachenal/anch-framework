@@ -484,6 +484,11 @@ testFatal() {
 }
 
 void
+testCache() {
+  testStatementCache(*dbCon, false);
+}
+
+void
 anch::ut::setup(anch::ut::UnitTests& tests) {
   tests
     .name("AnCH MySQL unit tests")
@@ -505,5 +510,6 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("12-stmt-null", testNull)
     .add("13-sql-error", testSqlError)
     .add("14-fatal-error", testFatal)
+    .add("15-statement-cache", testCache)
     ;
 }

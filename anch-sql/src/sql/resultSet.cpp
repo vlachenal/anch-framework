@@ -26,7 +26,7 @@
 using anch::sql::ResultSet;
 
 
-ResultSet::ResultSet() noexcept: _fields(), _connection(NULL) {
+ResultSet::ResultSet() noexcept: _fields(), _connection(NULL), _statement(NULL) {
   // Nothing to do
 }
 
@@ -39,7 +39,9 @@ ResultSet::next() {
 }
 
 ResultSet::~ResultSet() noexcept {
-  // Nothing to do
+  if(_statement != NULL) {
+    --_statement->_openResults;
+  }
 }
 
 const anch::date::DateFormatter&
