@@ -98,7 +98,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('structanch_1_1
 <div id="dynsection-0-summary" class="dynsummary">
 </div>
 <div id="dynsection-0-content" class="dyncontent hidden">
-<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="structanch_1_1json_1_1_mapping_options__coll__graph.svg" width="210" height="267"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="structanch_1_1json_1_1_mapping_options__coll__graph.svg" width="210" height="310"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-attribs" class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
@@ -106,10 +106,12 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a1bae822e06ea3633055038c291997b85" id="r_a1bae822e06ea3633055038c291997b85"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#a1bae822e06ea3633055038c291997b85">serialize_empty_col</a> = true</td></tr>
 <tr class="memitem:adadf488f9661046c6a757088f486b3c2" id="r_adadf488f9661046c6a757088f486b3c2"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#adadf488f9661046c6a757088f486b3c2">serialize_null</a> = false</td></tr>
 <tr class="memitem:a970b8a55a3abe5bbf1b230b685c9c280" id="r_a970b8a55a3abe5bbf1b230b685c9c280"><td class="memItemLeft">uint16_t&#160;</td><td class="memItemRight"><a class="el" href="#a970b8a55a3abe5bbf1b230b685c9c280">prettify_nbs</a> = 0</td></tr>
+<tr class="memitem:a3942cccb14f60e0c96ee7501a273eb77" id="r_a3942cccb14f60e0c96ee7501a273eb77"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#a3942cccb14f60e0c96ee7501a273eb77">serialize_check_constraints</a> = false</td></tr>
 <tr class="memitem:a9a73d4355f14264ff26f7936036f13ca" id="r_a9a73d4355f14264ff26f7936036f13ca"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#a9a73d4355f14264ff26f7936036f13ca">deserialize_ignore_unknown_field</a> = false</td></tr>
 <tr class="memitem:a471bdfa768f8e945fa0a7fd9d46ca107" id="r_a471bdfa768f8e945fa0a7fd9d46ca107"><td class="memItemLeft">int64_t&#160;</td><td class="memItemRight"><a class="el" href="#a471bdfa768f8e945fa0a7fd9d46ca107">deserialize_max_discard_char</a> = 0</td></tr>
 <tr class="memitem:a197bfa9b01700f0bbf714e91a6086f5a" id="r_a197bfa9b01700f0bbf714e91a6086f5a"><td class="memItemLeft">std::size_t&#160;</td><td class="memItemRight"><a class="el" href="#a197bfa9b01700f0bbf714e91a6086f5a">deserialize_max_field_char</a> = 512</td></tr>
 <tr class="memitem:ab49f1978c8a9b932bceaaf8ceb528927" id="r_ab49f1978c8a9b932bceaaf8ceb528927"><td class="memItemLeft">std::size_t&#160;</td><td class="memItemRight"><a class="el" href="#ab49f1978c8a9b932bceaaf8ceb528927">max_payload</a> = 0</td></tr>
+<tr class="memitem:a5f8e3a33251408da358e8a9932993bf1" id="r_a5f8e3a33251408da358e8a9932993bf1"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#a5f8e3a33251408da358e8a9932993bf1">deserialize_check_constraints</a> = true</td></tr>
 <tr class="memitem:a8bb239795af16afa0024aca16452b863" id="r_a8bb239795af16afa0024aca16452b863"><td class="memItemLeft">std::size_t&#160;</td><td class="memItemRight"><a class="el" href="#a8bb239795af16afa0024aca16452b863">max_depth</a> = 512</td></tr>
 <tr class="memitem:a5b5dc1b630fc2e406cb066126781744f" id="r_a5b5dc1b630fc2e406cb066126781744f"><td class="memItemLeft">std::size_t&#160;</td><td class="memItemRight"><a class="el" href="#a5b5dc1b630fc2e406cb066126781744f">buffer_size</a> = 1024</td></tr>
 </table>
@@ -131,6 +133,22 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>Buffer size (used for deserialization for now) </p>
+
+</div>
+</div>
+<a id="a5f8e3a33251408da358e8a9932993bf1" name="a5f8e3a33251408da358e8a9932993bf1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5f8e3a33251408da358e8a9932993bf1">&#9670;&#160;</a></span>deserialize_check_constraints</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool anch::json::MappingOptions::deserialize_check_constraints = true</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Check fields constraints ( <code>required</code> , <code>minLength</code> , <code>minimum</code> , ... given to <code>ObjectMapper::registerField</code> ) after reading values: <a class="el" href="classanch_1_1json_1_1_mapping_error.html" title="anch::json::MappingError">anch::json::MappingError</a> is raised with <code>MISSING_FIELD</code> or <code>CONSTRAINT_VIOLATION</code> error code. Default to <code>true</code> : usually enabled on server side to refuse invalid requests, disabled on client side where server responses are trusted.</p>
+<dl class="section since"><dt>Since</dt><dd>0.2 </dd></dl>
 
 </div>
 </div>
@@ -160,7 +178,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Maximum discard characters before raising error. Use <code>-1</code> value for unlimited discard characters. It can be usefull at development stage </p>
+<p><a class="el" href="structanch_1_1json_1_1_maximum.html" title="Maximum value constraint ( maximum and exclusiveMaximum ).">Maximum</a> discard characters before raising error. Use <code>-1</code> value for unlimited discard characters. It can be usefull at development stage </p>
 
 </div>
 </div>
@@ -175,7 +193,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Maximum field characters before raising error. Use <code>0</code> value for unlimited field's value characters </p>
+<p><a class="el" href="structanch_1_1json_1_1_maximum.html" title="Maximum value constraint ( maximum and exclusiveMaximum ).">Maximum</a> field characters before raising error. Use <code>0</code> value for unlimited field's value characters </p>
 
 </div>
 </div>
@@ -190,7 +208,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Maximum nesting depth of objects and arrays (root object or array is level <code>1</code> ) before raising error. It protects parser against stack overflow. Use <code>0</code> value for unlimited depth. Default to <code>512</code> </p>
+<p><a class="el" href="structanch_1_1json_1_1_maximum.html" title="Maximum value constraint ( maximum and exclusiveMaximum ).">Maximum</a> nesting depth of objects and arrays (root object or array is level <code>1</code> ) before raising error. It protects parser against stack overflow. Use <code>0</code> value for unlimited depth. Default to <code>512</code> </p>
 
 </div>
 </div>
@@ -205,7 +223,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Maximum number of characters read from input stream before raising error. Use <code>0</code> value for unlimited payload </p>
+<p><a class="el" href="structanch_1_1json_1_1_maximum.html" title="Maximum value constraint ( maximum and exclusiveMaximum ).">Maximum</a> number of characters read from input stream before raising error. Use <code>0</code> value for unlimited payload </p>
 
 </div>
 </div>
@@ -221,6 +239,23 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>Serialization indentation number of spaces (<code>0</code> means no prettifying). Default to <code>0</code> </p>
+
+</div>
+</div>
+<a id="a3942cccb14f60e0c96ee7501a273eb77" name="a3942cccb14f60e0c96ee7501a273eb77"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3942cccb14f60e0c96ee7501a273eb77">&#9670;&#160;</a></span>serialize_check_constraints</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool anch::json::MappingOptions::serialize_check_constraints = false</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Check fields constraints ( <code>minLength</code> , <code>minimum</code> , ... given to <code>ObjectMapper::registerField</code> ) before writing values: <a class="el" href="classanch_1_1json_1_1_mapping_error.html" title="anch::json::MappingError">anch::json::MappingError</a> is raised with <code>CONSTRAINT_VIOLATION</code> error code (the output stream contains the JSON written before the error). Default to <code>false</code> : usually enabled on client side to not send invalid requests, disabled on server side where responses are built by the server itself.<br  />
+<a class="el" href="structanch_1_1json_1_1_required.html" title="Required field constraint.">Required</a> fields are always written ( <code>null</code> , <code></code>[] or <code>{}</code> when empty, whatever <code>serialize_null</code> and <code>serialize_empty_col</code> options are).</p>
+<dl class="section since"><dt>Since</dt><dd>0.2 </dd></dl>
 
 </div>
 </div>

@@ -144,6 +144,9 @@ Typedefs</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-enum-members" class="groupheader"><a id="enum-members" name="enum-members"></a>
 Enumerations</h2></td></tr>
+<tr class="memitem:a23481a98e2fc63d6045769b147e165f0" id="r_a23481a98e2fc63d6045769b147e165f0"><td class="memItemLeft">enum class &#160;</td><td class="memItemRight"><a class="el" href="#a23481a98e2fc63d6045769b147e165f0">Side</a> { <a class="el" href="#a23481a98e2fc63d6045769b147e165f0a3d27c95bfdbea691b250894d96852844">SERVER</a>
+, <a class="el" href="#a23481a98e2fc63d6045769b147e165f0aef10c650df47bffd6399e5e78da2a9b1">CLIENT</a>
+ }</td></tr>
 <tr class="memitem:a524693d8e18aa5c97af671e4dc0b6d71" id="r_a524693d8e18aa5c97af671e4dc0b6d71"><td class="memItemLeft">enum class &#160;</td><td class="memItemRight"><a class="el" href="#a524693d8e18aa5c97af671e4dc0b6d71">Method</a> { <br />
 &#160;&#160;<a class="el" href="#a524693d8e18aa5c97af671e4dc0b6d71a7528035a93ee69cedb1dbddb2f0bfcc8">GET</a>
 , <a class="el" href="#a524693d8e18aa5c97af671e4dc0b6d71ae15e216fc1c639f787b1231ecdfa1bf8">HEAD</a>
@@ -243,6 +246,12 @@ Functions</h2></td></tr>
 <tr class="memitem:a7ef4f6b4909423a684b1a7e851c30024" id="r_a7ef4f6b4909423a684b1a7e851c30024"><td class="memItemLeft">std::string&#160;</td><td class="memItemRight"><a class="el" href="#a7ef4f6b4909423a684b1a7e851c30024">base64Encode</a> (std::string_view value)</td></tr>
 <tr class="memitem:a24d2c2f5ea4b0c29dce43629767193cb" id="r_a24d2c2f5ea4b0c29dce43629767193cb"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="conceptanch_1_1rest_1_1_parameter_value.html">anch::rest::ParameterValue</a> T&gt; </td></tr>
 <tr class="memitem:a24d2c2f5ea4b0c29dce43629767193cb template"><td class="memItemLeft">std::string&#160;</td><td class="memItemRight"><a class="el" href="#a24d2c2f5ea4b0c29dce43629767193cb">toParameterString</a> (const T &amp;value)</td></tr>
+<tr class="memitem:a53a0518a127667827e53d35936fc3db2" id="r_a53a0518a127667827e53d35936fc3db2"><td class="memTemplParams" colspan="2">template&lt;typename C, typename T&gt; <br />
+requires <a class="el" href="conceptanch_1_1rest_1_1_serializer.html">anch::rest::Serializer</a>&lt;C, T&gt;</td></tr>
+<tr class="memitem:a53a0518a127667827e53d35936fc3db2 template"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a53a0518a127667827e53d35936fc3db2">serializeBody</a> (const T &amp;value, std::ostream &amp;out, <a class="el" href="#a23481a98e2fc63d6045769b147e165f0">anch::rest::Side</a> side)</td></tr>
+<tr class="memitem:a756c1c51f7503d8c85c5fa67fc8da1e4" id="r_a756c1c51f7503d8c85c5fa67fc8da1e4"><td class="memTemplParams" colspan="2">template&lt;typename C, typename T&gt; <br />
+requires <a class="el" href="conceptanch_1_1rest_1_1_deserializer.html">anch::rest::Deserializer</a>&lt;C, T&gt;</td></tr>
+<tr class="memitem:a756c1c51f7503d8c85c5fa67fc8da1e4 template"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a756c1c51f7503d8c85c5fa67fc8da1e4">deserializeBody</a> (T &amp;value, std::istream &amp;input, <a class="el" href="#a23481a98e2fc63d6045769b147e165f0">anch::rest::Side</a> side)</td></tr>
 <tr class="memitem:ab4d6e4080428586549f9d65b3cda4dc0" id="r_ab4d6e4080428586549f9d65b3cda4dc0"><td class="memItemLeft">std::optional&lt; std::size_t &gt;&#160;</td><td class="memItemRight"><a class="el" href="#ab4d6e4080428586549f9d65b3cda4dc0">negotiate</a> (const std::vector&lt; <a class="el" href="classanch_1_1rest_1_1_media_type.html">anch::rest::MediaType</a> &gt; &amp;accept, const std::vector&lt; <a class="el" href="classanch_1_1rest_1_1_media_type.html">anch::rest::MediaType</a> &gt; &amp;available)</td></tr>
 <tr class="memitem:ae0be2a3030d4b41a0f5f2e8a6526f610" id="r_ae0be2a3030d4b41a0f5f2e8a6526f610"><td class="memItemLeft">std::string_view&#160;</td><td class="memItemRight"><a class="el" href="#ae0be2a3030d4b41a0f5f2e8a6526f610">toString</a> (<a class="el" href="#a524693d8e18aa5c97af671e4dc0b6d71">anch::rest::Method</a> method) noexcept</td></tr>
 <tr class="memitem:ac23b86ecf6f7a1cab85c37d6184b8faa" id="r_ac23b86ecf6f7a1cab85c37d6184b8faa"><td class="memItemLeft">std::optional&lt; <a class="el" href="#a524693d8e18aa5c97af671e4dc0b6d71">anch::rest::Method</a> &gt;&#160;</td><td class="memItemRight"><a class="el" href="#ac23b86ecf6f7a1cab85c37d6184b8faa">parseMethod</a> (std::string_view name) noexcept</td></tr>
@@ -250,6 +259,10 @@ Functions</h2></td></tr>
 <tr class="memitem:aadcc90785c3b9f4fad487621bed9cb4b" id="r_aadcc90785c3b9f4fad487621bed9cb4b"><td class="memItemLeft">std::string&#160;</td><td class="memItemRight"><a class="el" href="#aadcc90785c3b9f4fad487621bed9cb4b">percentEncode</a> (std::string_view value)</td></tr>
 <tr class="memitem:ad5b33b499064b915e80272936f41add9" id="r_ad5b33b499064b915e80272936f41add9"><td class="memItemLeft">constexpr uint16_t&#160;</td><td class="memItemRight"><a class="el" href="#ad5b33b499064b915e80272936f41add9">code</a> (<a class="el" href="#a8c6f914e6bbc639b2eae1c9633cd9a98">anch::rest::Status</a> status) noexcept</td></tr>
 <tr class="memitem:a552896a9c01778fdc2fd221c08ad54da" id="r_a552896a9c01778fdc2fd221c08ad54da"><td class="memItemLeft">std::string_view&#160;</td><td class="memItemRight"><a class="el" href="#a552896a9c01778fdc2fd221c08ad54da">reasonPhrase</a> (<a class="el" href="#a8c6f914e6bbc639b2eae1c9633cd9a98">anch::rest::Status</a> status) noexcept</td></tr>
+<tr class="memitem:afafc486ce719a29ad543c2d507985b3b" id="r_afafc486ce719a29ad543c2d507985b3b"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="conceptanch_1_1rest_1_1_path_parameter.html">anch::rest::PathParameter</a> T&gt; </td></tr>
+<tr class="memitem:afafc486ce719a29ad543c2d507985b3b template"><td class="memItemLeft">std::optional&lt; T &gt;&#160;</td><td class="memItemRight"><a class="el" href="#afafc486ce719a29ad543c2d507985b3b">queryParameter</a> (const <a class="el" href="classanch_1_1rest_1_1_request.html">anch::rest::Request</a> &amp;request, std::string_view name)</td></tr>
+<tr class="memitem:a67f5130e07ac20fbfb49f77adda71117" id="r_a67f5130e07ac20fbfb49f77adda71117"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="conceptanch_1_1rest_1_1_path_parameter.html">anch::rest::PathParameter</a> T&gt; </td></tr>
+<tr class="memitem:a67f5130e07ac20fbfb49f77adda71117 template"><td class="memItemLeft">T&#160;</td><td class="memItemRight"><a class="el" href="#a67f5130e07ac20fbfb49f77adda71117">requiredQueryParameter</a> (const <a class="el" href="classanch_1_1rest_1_1_request.html">anch::rest::Request</a> &amp;request, std::string_view name)</td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>AnCH REST library namespace. </p>
@@ -341,6 +354,36 @@ Functions</h2></td></tr>
 <tr><td class="fieldname"><a id="a524693d8e18aa5c97af671e4dc0b6d71a2d3e4144aa384b18849ab9a8abad74d6" name="a524693d8e18aa5c97af671e4dc0b6d71a2d3e4144aa384b18849ab9a8abad74d6"></a>TRACE&#160;</td><td class="fielddoc"><p>TRACE method </p>
 </td></tr>
 <tr><td class="fieldname"><a id="a524693d8e18aa5c97af671e4dc0b6d71a63bc9a3997d66d835d9f3ec29451407d" name="a524693d8e18aa5c97af671e4dc0b6d71a63bc9a3997d66d835d9f3ec29451407d"></a>PATCH&#160;</td><td class="fielddoc"><p>PATCH method </p>
+</td></tr>
+</table>
+
+</div>
+</div>
+<a id="a23481a98e2fc63d6045769b147e165f0" name="a23481a98e2fc63d6045769b147e165f0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a23481a98e2fc63d6045769b147e165f0">&#9670;&#160;</a></span>Side</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum class <a class="el" href="#a23481a98e2fc63d6045769b147e165f0">anch::rest::Side</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel strong">strong</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p><a class="el" href="#a23481a98e2fc63d6045769b147e165f0">Side</a> which uses a codec. Codecs can behave according to it: <a class="el" href="structanch_1_1rest_1_1_json.html" title="anch::rest::Json">anch::rest::Json</a> checks constraints of values the server receives and of values the client sends.</p>
+<dl class="section since"><dt>Since</dt><dd>0.2 </dd></dl>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a23481a98e2fc63d6045769b147e165f0a3d27c95bfdbea691b250894d96852844" name="a23481a98e2fc63d6045769b147e165f0a3d27c95bfdbea691b250894d96852844"></a>SERVER&#160;</td><td class="fielddoc"><p>Server: request bodies are read, responses bodies are written </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a23481a98e2fc63d6045769b147e165f0aef10c650df47bffd6399e5e78da2a9b1" name="a23481a98e2fc63d6045769b147e165f0aef10c650df47bffd6399e5e78da2a9b1"></a>CLIENT&#160;</td><td class="fielddoc"><p><a class="el" href="classanch_1_1rest_1_1_client.html">Client</a>: request bodies are written, responses bodies are read </p>
 </td></tr>
 </table>
 
@@ -512,6 +555,58 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a756c1c51f7503d8c85c5fa67fc8da1e4" name="a756c1c51f7503d8c85c5fa67fc8da1e4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a756c1c51f7503d8c85c5fa67fc8da1e4">&#9670;&#160;</a></span>deserializeBody()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename C, typename T&gt; <br />
+requires <a class="el" href="conceptanch_1_1rest_1_1_deserializer.html">anch::rest::Deserializer</a>&lt;C, T&gt;</div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void anch::rest::deserializeBody </td>
+          <td>(</td>
+          <td class="paramtype">T &amp;</td>          <td class="paramname"><span class="paramname"><em>value</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::istream &amp;</td>          <td class="paramname"><span class="paramname"><em>input</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="#a23481a98e2fc63d6045769b147e165f0">anch::rest::Side</a></td>          <td class="paramname"><span class="paramname"><em>side</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Deserialize value with codec: its <code>deserialize(value, input, side)</code> function is used when it is defined, <code>deserialize(value, input)</code> otherwise</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">C</td><td>the codec type </td></tr>
+    <tr><td class="paramname">T</td><td>the value type</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">value</td><td>the value to fill </td></tr>
+    <tr><td class="paramname">input</td><td>the input stream </td></tr>
+    <tr><td class="paramname">side</td><td>the side which deserializes value</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section since"><dt>Since</dt><dd>0.2 </dd></dl>
+<div id="dynsection-4" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-4-summary" class="dynsummary">
+</div>
+<div id="dynsection-4-content" class="dyncontent hidden">
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespaceanch_1_1rest_a756c1c51f7503d8c85c5fa67fc8da1e4_cgraph.svg" width="191" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+
+</div>
+</div>
 <a id="ab4d6e4080428586549f9d65b3cda4dc0" name="ab4d6e4080428586549f9d65b3cda4dc0"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab4d6e4080428586549f9d65b3cda4dc0">&#9670;&#160;</a></span>negotiate()</h2>
 
@@ -539,10 +634,10 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the selected media type index, empty when no media type is acceptable </dd></dl>
-<div id="dynsection-4" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-4-summary" class="dynsummary">
+<div id="dynsection-5" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-5-summary" class="dynsummary">
 </div>
-<div id="dynsection-4-content" class="dyncontent hidden">
+<div id="dynsection-5-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespaceanch_1_1rest_ab4d6e4080428586549f9d65b3cda4dc0_cgraph.svg" width="151" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -578,10 +673,10 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the method, empty when the method is unknown </dd></dl>
-<div id="dynsection-5" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-5-summary" class="dynsummary">
+<div id="dynsection-6" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-6-summary" class="dynsummary">
 </div>
-<div id="dynsection-5-content" class="dyncontent hidden">
+<div id="dynsection-6-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespaceanch_1_1rest_ac23b86ecf6f7a1cab85c37d6184b8faa_cgraph.svg" width="174" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -614,10 +709,10 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the decoded value, empty when value is invalid </dd></dl>
-<div id="dynsection-6" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-6-summary" class="dynsummary">
+<div id="dynsection-7" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-7-summary" class="dynsummary">
 </div>
-<div id="dynsection-6-content" class="dyncontent hidden">
+<div id="dynsection-7-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespaceanch_1_1rest_adf2ce74c5c19d78de60bac9ab8b5a024_cgraph.svg" width="187" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -645,11 +740,62 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the encoded value </dd></dl>
-<div id="dynsection-7" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-7-summary" class="dynsummary">
+<div id="dynsection-8" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-8-summary" class="dynsummary">
 </div>
-<div id="dynsection-7-content" class="dyncontent hidden">
+<div id="dynsection-8-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespaceanch_1_1rest_aadcc90785c3b9f4fad487621bed9cb4b_cgraph.svg" width="186" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+
+</div>
+</div>
+<a id="afafc486ce719a29ad543c2d507985b3b" name="afafc486ce719a29ad543c2d507985b3b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afafc486ce719a29ad543c2d507985b3b">&#9670;&#160;</a></span>queryParameter()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="conceptanch_1_1rest_1_1_path_parameter.html">anch::rest::PathParameter</a> T&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">std::optional&lt; T &gt; anch::rest::queryParameter </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classanch_1_1rest_1_1_request.html">anch::rest::Request</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>request</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::string_view</td>          <td class="paramname"><span class="paramname"><em>name</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p><a class="el" href="classanch_1_1_optional.html" title="std::optional usefull methods.">Optional</a> query parameter converted with <a class="el" href="structanch_1_1rest_1_1_param_converter.html" title="anch::rest::ParamConverter">ParamConverter</a></p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>the parameter type</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">request</td><td>the request </td></tr>
+    <tr><td class="paramname">name</td><td>the parameter name</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>the parameter value, empty when the parameter is absent</dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classanch_1_1rest_1_1_http_exception.html">anch::rest::HttpException</a></td><td><code>400</code> when value is invalid</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section since"><dt>Since</dt><dd>0.2 </dd></dl>
+<div id="dynsection-9" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-9-summary" class="dynsummary">
+</div>
+<div id="dynsection-9-content" class="dyncontent hidden">
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespaceanch_1_1rest_afafc486ce719a29ad543c2d507985b3b_cgraph.svg" width="191" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
 </div>
@@ -684,11 +830,114 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the reason phrase (<code>"OK"</code> , ...), empty for unknown status </dd></dl>
-<div id="dynsection-8" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-8-summary" class="dynsummary">
+<div id="dynsection-10" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-10-summary" class="dynsummary">
 </div>
-<div id="dynsection-8-content" class="dyncontent hidden">
+<div id="dynsection-10-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespaceanch_1_1rest_a552896a9c01778fdc2fd221c08ad54da_cgraph.svg" width="179" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+
+</div>
+</div>
+<a id="a67f5130e07ac20fbfb49f77adda71117" name="a67f5130e07ac20fbfb49f77adda71117"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a67f5130e07ac20fbfb49f77adda71117">&#9670;&#160;</a></span>requiredQueryParameter()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="conceptanch_1_1rest_1_1_path_parameter.html">anch::rest::PathParameter</a> T&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">T anch::rest::requiredQueryParameter </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classanch_1_1rest_1_1_request.html">anch::rest::Request</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>request</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::string_view</td>          <td class="paramname"><span class="paramname"><em>name</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Required query parameter converted with <a class="el" href="structanch_1_1rest_1_1_param_converter.html" title="anch::rest::ParamConverter">ParamConverter</a></p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>the parameter type</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">request</td><td>the request </td></tr>
+    <tr><td class="paramname">name</td><td>the parameter name</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>the parameter value</dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classanch_1_1rest_1_1_http_exception.html">anch::rest::HttpException</a></td><td><code>400</code> when parameter is absent or its value is invalid</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section since"><dt>Since</dt><dd>0.2 </dd></dl>
+<div id="dynsection-11" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-11-summary" class="dynsummary">
+</div>
+<div id="dynsection-11-content" class="dyncontent hidden">
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespaceanch_1_1rest_a67f5130e07ac20fbfb49f77adda71117_cgraph.svg" width="179" height="78"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+
+</div>
+</div>
+<a id="a53a0518a127667827e53d35936fc3db2" name="a53a0518a127667827e53d35936fc3db2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a53a0518a127667827e53d35936fc3db2">&#9670;&#160;</a></span>serializeBody()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename C, typename T&gt; <br />
+requires <a class="el" href="conceptanch_1_1rest_1_1_serializer.html">anch::rest::Serializer</a>&lt;C, T&gt;</div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void anch::rest::serializeBody </td>
+          <td>(</td>
+          <td class="paramtype">const T &amp;</td>          <td class="paramname"><span class="paramname"><em>value</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::ostream &amp;</td>          <td class="paramname"><span class="paramname"><em>out</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="#a23481a98e2fc63d6045769b147e165f0">anch::rest::Side</a></td>          <td class="paramname"><span class="paramname"><em>side</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Serialize value with codec: its <code>serialize(value, out, side)</code> function is used when it is defined, <code>serialize(value, out)</code> otherwise</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">C</td><td>the codec type </td></tr>
+    <tr><td class="paramname">T</td><td>the value type</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">value</td><td>the value </td></tr>
+    <tr><td class="paramname">out</td><td>the output stream </td></tr>
+    <tr><td class="paramname">side</td><td>the side which serializes value</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section since"><dt>Since</dt><dd>0.2 </dd></dl>
+<div id="dynsection-12" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-12-summary" class="dynsummary">
+</div>
+<div id="dynsection-12-content" class="dyncontent hidden">
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespaceanch_1_1rest_a53a0518a127667827e53d35936fc3db2_cgraph.svg" width="176" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
 </div>
@@ -718,10 +967,10 @@ template&lt;<a class="el" href="conceptanch_1_1rest_1_1_parameter_value.html">an
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the formatted value (not encoded)</dd></dl>
 <dl class="section since"><dt>Since</dt><dd>0.2 </dd></dl>
-<div id="dynsection-9" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-9-summary" class="dynsummary">
+<div id="dynsection-13" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-13-summary" class="dynsummary">
 </div>
-<div id="dynsection-9-content" class="dyncontent hidden">
+<div id="dynsection-13-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespaceanch_1_1rest_a24d2c2f5ea4b0c29dce43629767193cb_cgraph.svg" width="203" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -757,10 +1006,10 @@ template&lt;<a class="el" href="conceptanch_1_1rest_1_1_parameter_value.html">an
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the method name (<code>"GET"</code> , ...) </dd></dl>
-<div id="dynsection-10" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-10-summary" class="dynsummary">
+<div id="dynsection-14" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-14-summary" class="dynsummary">
 </div>
-<div id="dynsection-10-content" class="dyncontent hidden">
+<div id="dynsection-14-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespaceanch_1_1rest_ae0be2a3030d4b41a0f5f2e8a6526f610_cgraph.svg" width="143" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 

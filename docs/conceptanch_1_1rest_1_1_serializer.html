@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('conceptanch_1_
 <div class="line">    { C::mediaType() } -&gt; std::convertible_to&lt;std::string_view&gt;;</div>
 <div class="line">    C::serialize(value, out);</div>
 <div class="line">  }</div>
-<div class="ttc" id="aconceptanch_1_1rest_1_1_serializer_html"><div class="ttname"><a href="conceptanch_1_1rest_1_1_serializer.html">anch::rest::Serializer</a></div><div class="ttdef"><b>Definition</b> codec.hpp:43</div></div>
+<div class="ttc" id="aconceptanch_1_1rest_1_1_serializer_html"><div class="ttname"><a href="conceptanch_1_1rest_1_1_serializer.html">anch::rest::Serializer</a></div><div class="ttdef"><b>Definition</b> codec.hpp:60</div></div>
 </div><!-- fragment --><a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Codec which serializes <code>T</code> values.<br  />
 A codec is a type with static functions:</p><ul>
@@ -105,6 +105,7 @@ A codec is a type with static functions:</p><ul>
 <li><code>serialize(const T&amp;, std::ostream&amp;)</code> : write value</li>
 <li><code>deserialize(T&amp;, std::istream&amp;)</code> : read value (<a class="el" href="conceptanch_1_1rest_1_1_deserializer.html" title="anch::rest::Deserializer">Deserializer</a> ). Errors are reported with exceptions.</li>
 </ul>
+<p>Codecs can also have <code>serialize(const T&amp;, std::ostream&amp;, anch::rest::Side)</code> and <code>deserialize(T&amp;, std::istream&amp;, anch::rest::Side)</code> functions: server and client use them when they are defined (see <a class="el" href="namespaceanch_1_1rest.html#a53a0518a127667827e53d35936fc3db2" title="anch::rest::serializeBody">anch::rest::serializeBody</a> and <a class="el" href="namespaceanch_1_1rest.html#a756c1c51f7503d8c85c5fa67fc8da1e4" title="anch::rest::deserializeBody">anch::rest::deserializeBody</a> ).</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">C</td><td>the codec type </td></tr>

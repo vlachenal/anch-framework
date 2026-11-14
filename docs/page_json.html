@@ -145,12 +145,194 @@ Examples</h1>
 <div class="line">  std::cout &lt;&lt; parsed.name &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; parsed.owner.value_or(<span class="stringliteral">&quot;-&quot;</span>) &lt;&lt; std::endl;</div>
 <div class="line">  <span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>
-<div class="ttc" id="aclassanch_1_1json_1_1_object_mapper_html"><div class="ttname"><a href="classanch_1_1json_1_1_object_mapper.html">anch::json::ObjectMapper</a></div><div class="ttdoc">JSON complex object mapper.</div><div class="ttdef"><b>Definition</b> mapper.hpp:76</div></div>
+<div class="ttc" id="aclassanch_1_1json_1_1_object_mapper_html"><div class="ttname"><a href="classanch_1_1json_1_1_object_mapper.html">anch::json::ObjectMapper</a></div><div class="ttdoc">JSON complex object mapper.</div><div class="ttdef"><b>Definition</b> mapper.hpp:84</div></div>
 <div class="ttc" id="anamespaceanch_1_1json_html_a1415ec0e37fa3b446aec0387a5b1cdf4"><div class="ttname"><a href="namespaceanch_1_1json.html#a1415ec0e37fa3b446aec0387a5b1cdf4">anch::json::deserialize</a></div><div class="ttdeci">void deserialize(T &amp;value, std::istream &amp;input, const anch::json::MappingOptions &amp;options=anch::json::DEFAULT_MAPPING_OPTIONS)</div></div>
 <div class="ttc" id="anamespaceanch_1_1json_html_a787cc091cecc4ca05ebd5030dec3f766"><div class="ttname"><a href="namespaceanch_1_1json.html#a787cc091cecc4ca05ebd5030dec3f766">anch::json::serialize</a></div><div class="ttdeci">void serialize(const T &amp;value, std::ostream &amp;out, const anch::json::MappingOptions &amp;options=anch::json::DEFAULT_MAPPING_OPTIONS)</div></div>
 <div class="ttc" id="anamespaceanch_1_1json_html_aaf8fbe1c8f5cf3231e85e9549b474322"><div class="ttname"><a href="namespaceanch_1_1json.html#aaf8fbe1c8f5cf3231e85e9549b474322">anch::json::registerObject</a></div><div class="ttdeci">void registerObject(anch::json::ObjectMapper&lt; T &gt; &amp;mapper)</div></div>
 </div><!-- fragment --><p>Output: </p><div class="fragment"><div class="line">{<span class="stringliteral">&quot;id&quot;</span>:1,<span class="stringliteral">&quot;name&quot;</span>:<span class="stringliteral">&quot;Rex&quot;</span>,<span class="stringliteral">&quot;tags&quot;</span>:[<span class="stringliteral">&quot;dog&quot;</span>,<span class="stringliteral">&quot;good boy&quot;</span>]}</div>
 <div class="line">Médor Vincent</div>
+</div><!-- fragment --><h1 class="doxsection"><a class="anchor" id="json_required_sec"></a>
+Required fields and error path</h1>
+<p>Constraints can be given when a field is registered. <a class="el" href="namespaceanch_1_1json.html#ad430f4c7dfcc3e1dfacc9f3cf59de4cd" title="anch::json::required">anch::json::required</a> checks on deserialization that the field is present (error code <code>MISSING_FIELD</code> , every missing field is listed in the message) and that its value is not <code>null</code> , unless the field can hold <code>null</code> ( <code>std::optional</code> , <code>std::shared_ptr</code> , <code>std::unique_ptr</code> or pointer ; error code <code>CONSTRAINT_VIOLATION</code> ). Fields which are not required are not checked: a <code>null</code> value leaves them unchanged.<br  />
+ <br  />
+ <a class="el" href="classanch_1_1json_1_1_mapping_error.html#a5210f0a73960da33cef76d3f77652c35" title="anch::json::MappingError::getPath">anch::json::MappingError::getPath</a> gives the JSON Pointer (RFC 6901) of the value in error, from the deserialized root value ; <code>what()</code> starts with this path.</p>
+<div class="fragment"><div class="line"><span class="keyword">struct </span>Pet {</div>
+<div class="line">  uint64_t id;</div>
+<div class="line">  std::string name;</div>
+<div class="line">  std::optional&lt;std::string&gt; owner;</div>
+<div class="line">};</div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">struct </span>Shelter {</div>
+<div class="line">  std::vector&lt;Pet&gt; pets;</div>
+<div class="line">};</div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">template</span>&lt;&gt;</div>
+<div class="line"><span class="keywordtype">void</span></div>
+<div class="line"><a class="code hl_function" href="namespaceanch_1_1json.html#aaf8fbe1c8f5cf3231e85e9549b474322">anch::json::registerObject</a>(<a class="code hl_class" href="classanch_1_1json_1_1_object_mapper.html">anch::json::ObjectMapper&lt;Pet&gt;</a>&amp; mapper) {</div>
+<div class="line">  mapper</div>
+<div class="line">    .registerField(<span class="stringliteral">&quot;id&quot;</span>, &amp;Pet::id, <a class="code hl_variable" href="namespaceanch_1_1json.html#ad430f4c7dfcc3e1dfacc9f3cf59de4cd">anch::json::required</a>)</div>
+<div class="line">    .registerField(<span class="stringliteral">&quot;name&quot;</span>, &amp;Pet::name, <a class="code hl_variable" href="namespaceanch_1_1json.html#ad430f4c7dfcc3e1dfacc9f3cf59de4cd">anch::json::required</a>)</div>
+<div class="line">    .registerField&lt;std::string&gt;(<span class="stringliteral">&quot;owner&quot;</span>, &amp;Pet::owner, <a class="code hl_variable" href="namespaceanch_1_1json.html#ad430f4c7dfcc3e1dfacc9f3cf59de4cd">anch::json::required</a>); <span class="comment">// has to be present, can be null</span></div>
+<div class="line">}</div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">template</span>&lt;&gt;</div>
+<div class="line"><span class="keywordtype">void</span></div>
+<div class="line"><a class="code hl_function" href="namespaceanch_1_1json.html#aaf8fbe1c8f5cf3231e85e9549b474322">anch::json::registerObject</a>(<a class="code hl_class" href="classanch_1_1json_1_1_object_mapper.html">anch::json::ObjectMapper&lt;Shelter&gt;</a>&amp; mapper) {</div>
+<div class="line">  mapper</div>
+<div class="line">    .registerField&lt;Pet&gt;(<span class="stringliteral">&quot;pets&quot;</span>, &amp;Shelter::pets, <a class="code hl_variable" href="namespaceanch_1_1json.html#ad430f4c7dfcc3e1dfacc9f3cf59de4cd">anch::json::required</a>);</div>
+<div class="line">}</div>
+<div class="line"> </div>
+<div class="line"><span class="keywordtype">int</span></div>
+<div class="line">main() {</div>
+<div class="line">  <span class="keywordflow">for</span>(<span class="keyword">const</span> <span class="keywordtype">char</span>* json : {R<span class="stringliteral">&quot;({&quot;pets&quot;:[{&quot;id&quot;:1,&quot;name&quot;:&quot;Rex&quot;,&quot;owner&quot;:null},{&quot;id&quot;:2,&quot;owner&quot;:&quot;Vincent&quot;}]})&quot;,</span></div>
+<div class="line"><span class="stringliteral">                          R</span><span class="stringliteral">&quot;({&quot;pets&quot;:[{&quot;id&quot;:1,&quot;name&quot;:null,&quot;owner&quot;:null}]})&quot;}) {</span></div>
+<div class="line"><span class="stringliteral">    </span><span class="keywordflow">try</span> {</div>
+<div class="line">      std::istringstream input(json);</div>
+<div class="line">      [[maybe_unused]] Shelter shelter = <a class="code hl_function" href="namespaceanch_1_1json.html#a1415ec0e37fa3b446aec0387a5b1cdf4">anch::json::deserialize&lt;Shelter&gt;</a>(input);</div>
+<div class="line">    } <span class="keywordflow">catch</span>(<span class="keyword">const</span> <a class="code hl_class" href="classanch_1_1json_1_1_mapping_error.html">anch::json::MappingError</a>&amp; error) {</div>
+<div class="line">      std::cout &lt;&lt; <a class="code hl_variable" href="namespaceanch_1_1log_1_1lvl.html#a0a008e13f76fe20262762ac7da5d2061">error</a>.getPath() &lt;&lt; <span class="stringliteral">&quot; -&gt; &quot;</span> &lt;&lt; <a class="code hl_variable" href="namespaceanch_1_1log_1_1lvl.html#a0a008e13f76fe20262762ac7da5d2061">error</a>.what() &lt;&lt; std::endl;</div>
+<div class="line">    }</div>
+<div class="line">  }</div>
+<div class="line">  <span class="keywordflow">return</span> 0;</div>
+<div class="line">}</div>
+<div class="ttc" id="aclassanch_1_1json_1_1_mapping_error_html"><div class="ttname"><a href="classanch_1_1json_1_1_mapping_error.html">anch::json::MappingError</a></div><div class="ttdoc">Mapping error.</div><div class="ttdef"><b>Definition</b> mappingError.hpp:76</div></div>
+<div class="ttc" id="anamespaceanch_1_1json_html_ad430f4c7dfcc3e1dfacc9f3cf59de4cd"><div class="ttname"><a href="namespaceanch_1_1json.html#ad430f4c7dfcc3e1dfacc9f3cf59de4cd">anch::json::required</a></div><div class="ttdeci">constexpr anch::json::Required required</div><div class="ttdef"><b>Definition</b> constraints.hpp:475</div></div>
+<div class="ttc" id="anamespaceanch_1_1log_1_1lvl_html_a0a008e13f76fe20262762ac7da5d2061"><div class="ttname"><a href="namespaceanch_1_1log_1_1lvl.html#a0a008e13f76fe20262762ac7da5d2061">anch::log::lvl::error</a></div><div class="ttdeci">constexpr anch::log::LevelTag&lt; anch::log::Level::ERROR &gt; error</div><div class="ttdef"><b>Definition</b> stream.hpp:212</div></div>
+</div><!-- fragment --><p>Output: </p><div class="fragment"><div class="line">/pets/1 -&gt; /pets/1: Missing required field <span class="stringliteral">&#39;name&#39;</span> near <span class="stringliteral">&#39;&quot;Vincent&quot;}]}&#39;</span></div>
+<div class="line">/pets/0/name -&gt; /pets/0/name: Required field can not be null near <span class="stringliteral">&#39;name&quot;:null,&quot;owner&quot;:n&#39;</span></div>
+</div><!-- fragment --><h1 class="doxsection"><a class="anchor" id="json_constraints_sec"></a>
+Value constraints</h1>
+<p>Value constraints are given at registration too (header <code><a class="el" href="constraints_8hpp_source.html">json/constraints.hpp</a></code> ). They are checked after the field value has been read and raise <a class="el" href="classanch_1_1json_1_1_mapping_error.html" title="anch::json::MappingError">anch::json::MappingError</a> with <code>CONSTRAINT_VIOLATION</code> error code. <code>null</code> and absent values are not checked ( <a class="el" href="namespaceanch_1_1json.html#ad430f4c7dfcc3e1dfacc9f3cf59de4cd" title="anch::json::required">anch::json::required</a> checks presence). Constraints are checked at compile time against the field type: <code>minLength</code> on an integer field does not compile.</p>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Constraint  </th><th class="markdownTableHeadNone">Field type  </th><th class="markdownTableHeadNone">JSON Schema keyword  </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>anch::json::minLength(n)</code> , <code>anch::json::maxLength(n)</code>  </td><td class="markdownTableBodyNone">string (length in Unicode code points)  </td><td class="markdownTableBodyNone"><code>minLength</code> , <code>maxLength</code>  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><code>anch::json::pattern(regex)</code>  </td><td class="markdownTableBodyNone">string (searched, not anchored)  </td><td class="markdownTableBodyNone"><code>pattern</code>  </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>anch::json::format(name)</code>  </td><td class="markdownTableBodyNone">string (registered formats only)  </td><td class="markdownTableBodyNone"><code>format</code>  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><code>anch::json::minimum(v)</code> , <code>anch::json::maximum(v)</code> , <code>anch::json::exclusiveMinimum(v)</code> , <code>anch::json::exclusiveMaximum(v)</code>  </td><td class="markdownTableBodyNone">number  </td><td class="markdownTableBodyNone"><code>minimum</code> , <code>maximum</code> , <code>exclusiveMinimum</code> , <code>exclusiveMaximum</code>  </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>anch::json::multipleOf(v)</code>  </td><td class="markdownTableBodyNone">number (exact for integers, relative tolerance for floating point numbers)  </td><td class="markdownTableBodyNone"><code>multipleOf</code>  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><code>anch::json::minItems(n)</code> , <code>anch::json::maxItems(n)</code> , <code><a class="el" href="namespaceanch_1_1json.html#a59269307cc9684ee7e9d78c1ecf09877">anch::json::uniqueItems</a></code>  </td><td class="markdownTableBodyNone">collection  </td><td class="markdownTableBodyNone"><code>minItems</code> , <code>maxItems</code> , <code>uniqueItems</code>  </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>anch::json::minProperties(n)</code> , <code>anch::json::maxProperties(n)</code>  </td><td class="markdownTableBodyNone">map  </td><td class="markdownTableBodyNone"><code>minProperties</code> , <code>maxProperties</code>  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><code><a class="el" href="namespaceanch_1_1json.html#a31aeb88406559df8e27df5f5bc346b7e">anch::json::allowed</a></code>({...})  </td><td class="markdownTableBodyNone">any comparable type  </td><td class="markdownTableBodyNone"><code>enum</code>  </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>anch::json::items(constraints...)</code>  </td><td class="markdownTableBodyNone">collection or map: constraints are checked on every item  </td><td class="markdownTableBodyNone"><code>items</code> , <code>additionalProperties</code>  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><code>anch::json::custom&lt;T&gt;(predicate, message)</code>  </td><td class="markdownTableBodyNone"><code>T</code>  </td><td class="markdownTableBodyNone"></td></tr>
+</table>
+<p>Patterns use <code>std::regex</code> (ECMAScript grammar, on bytes: no UTF-8 character classes) by default: <a class="el" href="namespaceanch_1_1json.html#a0c63ce0b8f5fa90e87aa826e2cf47ccb" title="anch::json::setPatternCompiler">anch::json::setPatternCompiler</a> plugs another engine. Formats are checked by validators registered with <a class="el" href="namespaceanch_1_1json.html#a2833944070b6745cbcab58addcba2867" title="anch::json::registerFormat">anch::json::registerFormat</a> ( <code>email</code> , <code>hostname</code> , <code>ipv4</code> , <code>ipv6</code> , <code>uri</code> , <code>byte</code> , and <code>uuid</code> , <code>date-time</code> , <code>date</code> with <code>ANCH_UUID</code> / <code>ANCH_DATE</code> are built-in) ; unknown formats are not checked.<br  />
+ Integers bounds are compared without conversion (an <code>uint64_t</code> field accepts <code>minimum</code>(-1) ).</p>
+<div class="fragment"><div class="line"><span class="keyword">struct </span>Pet {</div>
+<div class="line">  std::string name;</div>
+<div class="line">  int32_t age;</div>
+<div class="line">  std::vector&lt;std::string&gt; tags;</div>
+<div class="line">  std::map&lt;std::string,int64_t&gt; scores;</div>
+<div class="line">  std::optional&lt;std::string&gt; color;</div>
+<div class="line">};</div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">template</span>&lt;&gt;</div>
+<div class="line"><span class="keywordtype">void</span></div>
+<div class="line"><a class="code hl_function" href="namespaceanch_1_1json.html#aaf8fbe1c8f5cf3231e85e9549b474322">anch::json::registerObject</a>(<a class="code hl_class" href="classanch_1_1json_1_1_object_mapper.html">anch::json::ObjectMapper&lt;Pet&gt;</a>&amp; mapper) {</div>
+<div class="line">  mapper</div>
+<div class="line">    .registerField(<span class="stringliteral">&quot;name&quot;</span>, &amp;Pet::name, <a class="code hl_variable" href="namespaceanch_1_1json.html#ad430f4c7dfcc3e1dfacc9f3cf59de4cd">anch::json::required</a>, <a class="code hl_function" href="namespaceanch_1_1json.html#a90c4e0fb6e1ec5aa59dc87829b5d0b7f">anch::json::minLength</a>(1), <a class="code hl_function" href="namespaceanch_1_1json.html#a32e11f4009f53a2d07f9250647e3abb5">anch::json::maxLength</a>(32))</div>
+<div class="line">    .registerField(<span class="stringliteral">&quot;age&quot;</span>, &amp;Pet::age, <a class="code hl_function" href="namespaceanch_1_1json.html#aeff5145713082eee32fcbe818738ce00">anch::json::minimum</a>(0), <a class="code hl_function" href="namespaceanch_1_1json.html#aca261a702b13caccd529d892d2aa677e">anch::json::maximum</a>(50))</div>
+<div class="line">    .registerField&lt;std::string&gt;(<span class="stringliteral">&quot;tags&quot;</span>, &amp;Pet::tags, <a class="code hl_function" href="namespaceanch_1_1json.html#afa49f230cd133aee54b6ea9f11343c1f">anch::json::maxItems</a>(5), <a class="code hl_variable" href="namespaceanch_1_1json.html#a59269307cc9684ee7e9d78c1ecf09877">anch::json::uniqueItems</a>,</div>
+<div class="line">                                <a class="code hl_function" href="namespaceanch_1_1json.html#a064a970c9b316a004b2874c0f128e7a4">anch::json::items</a>(<a class="code hl_function" href="namespaceanch_1_1json.html#a90c4e0fb6e1ec5aa59dc87829b5d0b7f">anch::json::minLength</a>(1)))      <span class="comment">// checked on every tag</span></div>
+<div class="line">    .registerField&lt;int64_t&gt;(<span class="stringliteral">&quot;scores&quot;</span>, &amp;Pet::scores, <a class="code hl_function" href="namespaceanch_1_1json.html#a064a970c9b316a004b2874c0f128e7a4">anch::json::items</a>(<a class="code hl_function" href="namespaceanch_1_1json.html#a6e31df57fed4775684c0cacf396d1c63">anch::json::multipleOf</a>(5)))</div>
+<div class="line">    .registerField&lt;std::string&gt;(<span class="stringliteral">&quot;color&quot;</span>, &amp;Pet::color, <a class="code hl_function" href="namespaceanch_1_1json.html#a31aeb88406559df8e27df5f5bc346b7e">anch::json::allowed</a>({<span class="stringliteral">&quot;black&quot;</span>, <span class="stringliteral">&quot;white&quot;</span>})); <span class="comment">// checked when not null</span></div>
+<div class="line">}</div>
+<div class="line"> </div>
+<div class="line"><span class="keywordtype">int</span></div>
+<div class="line">main() {</div>
+<div class="line">  <span class="keywordflow">for</span>(<span class="keyword">const</span> <span class="keywordtype">char</span>* json : {R<span class="stringliteral">&quot;({&quot;name&quot;:&quot;Rex&quot;,&quot;age&quot;:3,&quot;tags&quot;:[&quot;dog&quot;,&quot;&quot;]})&quot;,</span></div>
+<div class="line"><span class="stringliteral">                          R</span><span class="stringliteral">&quot;({&quot;name&quot;:&quot;Rex&quot;,&quot;age&quot;:3,&quot;scores&quot;:{&quot;agility&quot;:12}})&quot;,</span></div>
+<div class="line"><span class="stringliteral">                          R</span><span class="stringliteral">&quot;({&quot;name&quot;:&quot;Rex&quot;,&quot;age&quot;:-1})&quot;,</span></div>
+<div class="line"><span class="stringliteral">                          R</span><span class="stringliteral">&quot;({&quot;name&quot;:&quot;Rex&quot;,&quot;color&quot;:&quot;brown&quot;})&quot;}) {</span></div>
+<div class="line"><span class="stringliteral">    </span><span class="keywordflow">try</span> {</div>
+<div class="line">      std::istringstream input(json);</div>
+<div class="line">      [[maybe_unused]] Pet pet = <a class="code hl_function" href="namespaceanch_1_1json.html#a1415ec0e37fa3b446aec0387a5b1cdf4">anch::json::deserialize&lt;Pet&gt;</a>(input);</div>
+<div class="line">    } <span class="keywordflow">catch</span>(<span class="keyword">const</span> <a class="code hl_class" href="classanch_1_1json_1_1_mapping_error.html">anch::json::MappingError</a>&amp; error) {</div>
+<div class="line">      std::cout &lt;&lt; <a class="code hl_variable" href="namespaceanch_1_1log_1_1lvl.html#a0a008e13f76fe20262762ac7da5d2061">error</a>.what() &lt;&lt; std::endl;</div>
+<div class="line">    }</div>
+<div class="line">  }</div>
+<div class="line">  <span class="keywordflow">return</span> 0;</div>
+<div class="line">}</div>
+<div class="ttc" id="anamespaceanch_1_1json_html_a064a970c9b316a004b2874c0f128e7a4"><div class="ttname"><a href="namespaceanch_1_1json.html#a064a970c9b316a004b2874c0f128e7a4">anch::json::items</a></div><div class="ttdeci">anch::json::Items&lt; std::decay_t&lt; C &gt;... &gt; items(C &amp;&amp;... constraints)</div></div>
+<div class="ttc" id="anamespaceanch_1_1json_html_a31aeb88406559df8e27df5f5bc346b7e"><div class="ttname"><a href="namespaceanch_1_1json.html#a31aeb88406559df8e27df5f5bc346b7e">anch::json::allowed</a></div><div class="ttdeci">auto allowed(std::initializer_list&lt; A &gt; values)</div></div>
+<div class="ttc" id="anamespaceanch_1_1json_html_a32e11f4009f53a2d07f9250647e3abb5"><div class="ttname"><a href="namespaceanch_1_1json.html#a32e11f4009f53a2d07f9250647e3abb5">anch::json::maxLength</a></div><div class="ttdeci">constexpr anch::json::MaxLength maxLength(std::size_t length)</div></div>
+<div class="ttc" id="anamespaceanch_1_1json_html_a59269307cc9684ee7e9d78c1ecf09877"><div class="ttname"><a href="namespaceanch_1_1json.html#a59269307cc9684ee7e9d78c1ecf09877">anch::json::uniqueItems</a></div><div class="ttdeci">constexpr anch::json::UniqueItems uniqueItems</div><div class="ttdef"><b>Definition</b> constraints.hpp:755</div></div>
+<div class="ttc" id="anamespaceanch_1_1json_html_a6e31df57fed4775684c0cacf396d1c63"><div class="ttname"><a href="namespaceanch_1_1json.html#a6e31df57fed4775684c0cacf396d1c63">anch::json::multipleOf</a></div><div class="ttdeci">anch::json::MultipleOf&lt; N &gt; multipleOf(N value)</div></div>
+<div class="ttc" id="anamespaceanch_1_1json_html_a90c4e0fb6e1ec5aa59dc87829b5d0b7f"><div class="ttname"><a href="namespaceanch_1_1json.html#a90c4e0fb6e1ec5aa59dc87829b5d0b7f">anch::json::minLength</a></div><div class="ttdeci">constexpr anch::json::MinLength minLength(std::size_t length)</div></div>
+<div class="ttc" id="anamespaceanch_1_1json_html_aca261a702b13caccd529d892d2aa677e"><div class="ttname"><a href="namespaceanch_1_1json.html#aca261a702b13caccd529d892d2aa677e">anch::json::maximum</a></div><div class="ttdeci">constexpr anch::json::Maximum&lt; N &gt; maximum(N value, bool exclusive=false)</div></div>
+<div class="ttc" id="anamespaceanch_1_1json_html_aeff5145713082eee32fcbe818738ce00"><div class="ttname"><a href="namespaceanch_1_1json.html#aeff5145713082eee32fcbe818738ce00">anch::json::minimum</a></div><div class="ttdeci">constexpr anch::json::Minimum&lt; N &gt; minimum(N value, bool exclusive=false)</div></div>
+<div class="ttc" id="anamespaceanch_1_1json_html_afa49f230cd133aee54b6ea9f11343c1f"><div class="ttname"><a href="namespaceanch_1_1json.html#afa49f230cd133aee54b6ea9f11343c1f">anch::json::maxItems</a></div><div class="ttdeci">constexpr anch::json::MaxItems maxItems(std::size_t count)</div></div>
+</div><!-- fragment --><p>Output: </p><div class="fragment"><div class="line">/tags/1: Length 0 is lower than minLength 1 near <span class="stringliteral">&#39;[&quot;dog&quot;,&quot;&quot;]}&#39;</span></div>
+<div class="line">/scores/agility: Value 12 is not a multiple of 5 near <span class="stringliteral">&#39;ility&quot;:12}}&#39;</span></div>
+<div class="line">/age: Value -1 is lower than minimum 0 near <span class="stringliteral">&#39;&quot;,&quot;age&quot;:-1}&#39;</span></div>
+<div class="line">/color: Value <span class="stringliteral">&#39;brown&#39;</span> is not allowed (allowed: <span class="stringliteral">&#39;black&#39;</span>, <span class="stringliteral">&#39;white&#39;</span>) near &#39;r<span class="stringliteral">&quot;:&quot;</span>brown<span class="stringliteral">&quot;}&#39;</span></div>
+</div><!-- fragment --><h1 class="doxsection"><a class="anchor" id="json_check_sec"></a>
+Constraints checks on deserialization and serialization</h1>
+<p>Constraints ( <a class="el" href="namespaceanch_1_1json.html#ad430f4c7dfcc3e1dfacc9f3cf59de4cd" title="anch::json::required">anch::json::required</a> and value constraints) are checked according to mapping options:</p><ul>
+<li><code>deserialize_check_constraints</code> (default <code>true</code> ): after values have been read ;</li>
+<li><code>serialize_check_constraints</code> (default <code>false</code> ): before values are written. The error has no input excerpt (message is <code>"&lt;path&gt;: &lt;constraint message&gt;"</code> ) and the output contains the JSON written before the error.</li>
+</ul>
+<p>Required fields are always written, even when empty: <code>null</code> for empty <code>std::optional</code> and pointers, <code></code>[] and <code>{}</code> for empty containers, whatever <code>serialize_null</code> and <code>serialize_empty_col</code> options are (the document would be refused by the other side otherwise).<br  />
+ <br  />
+ Server side checks what it receives and trusts what it builds (default options). Client side checks what it sends and trusts server responses: </p><div class="fragment"><div class="line"><a class="code hl_struct" href="structanch_1_1json_1_1_mapping_options.html">anch::json::MappingOptions</a> client;</div>
+<div class="line">client.<a class="code hl_variable" href="structanch_1_1json_1_1_mapping_options.html#a3942cccb14f60e0c96ee7501a273eb77">serialize_check_constraints</a> = <span class="keyword">true</span>;    <span class="comment">// invalid requests are not sent</span></div>
+<div class="line">client.<a class="code hl_variable" href="structanch_1_1json_1_1_mapping_options.html#a5f8e3a33251408da358e8a9932993bf1">deserialize_check_constraints</a> = <span class="keyword">false</span>; <span class="comment">// responses are trusted</span></div>
+<div class="ttc" id="astructanch_1_1json_1_1_mapping_options_html"><div class="ttname"><a href="structanch_1_1json_1_1_mapping_options.html">anch::json::MappingOptions</a></div><div class="ttdoc">JSON mapping options.</div><div class="ttdef"><b>Definition</b> mappingOptions.hpp:36</div></div>
+<div class="ttc" id="astructanch_1_1json_1_1_mapping_options_html_a3942cccb14f60e0c96ee7501a273eb77"><div class="ttname"><a href="structanch_1_1json_1_1_mapping_options.html#a3942cccb14f60e0c96ee7501a273eb77">anch::json::MappingOptions::serialize_check_constraints</a></div><div class="ttdeci">bool serialize_check_constraints</div><div class="ttdef"><b>Definition</b> mappingOptions.hpp:57</div></div>
+<div class="ttc" id="astructanch_1_1json_1_1_mapping_options_html_a5f8e3a33251408da358e8a9932993bf1"><div class="ttname"><a href="structanch_1_1json_1_1_mapping_options.html#a5f8e3a33251408da358e8a9932993bf1">anch::json::MappingOptions::deserialize_check_constraints</a></div><div class="ttdeci">bool deserialize_check_constraints</div><div class="ttdef"><b>Definition</b> mappingOptions.hpp:80</div></div>
+</div><!-- fragment --><h1 class="doxsection"><a class="anchor" id="json_validate_sec"></a>
+Validation</h1>
+<p><a class="el" href="namespaceanch_1_1json.html#a58c5d4760a7c1cc64a50e1133079beec" title="anch::json::validate">anch::json::validate</a> checks an object without serializing it: constraints of its fields and of its nested values (objects, collections items, maps values, <code>std::optional</code> and pointers values). Unlike serialization and deserialization checks, it does not stop on the first violation: every violation is returned with its path. Mapping options are not used. Fields registered with a setter only are not checked, and required fields are not checked (an object always has its fields). <a class="el" href="namespaceanch_1_1json.html#a3d5b63983bc046a69bd7dc539af11459" title="anch::json::isValid">anch::json::isValid</a> returns <code>true</code> when there is no violation.</p>
+<div class="fragment"><div class="line"><span class="keyword">struct </span>Pet {</div>
+<div class="line">  std::string name;</div>
+<div class="line">  int32_t age = 0;</div>
+<div class="line">  std::vector&lt;std::string&gt; tags;</div>
+<div class="line">};</div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">struct </span>Shelter {</div>
+<div class="line">  std::vector&lt;Pet&gt; pets;</div>
+<div class="line">};</div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">template</span>&lt;&gt;</div>
+<div class="line"><span class="keywordtype">void</span></div>
+<div class="line"><a class="code hl_function" href="namespaceanch_1_1json.html#aaf8fbe1c8f5cf3231e85e9549b474322">anch::json::registerObject</a>(<a class="code hl_class" href="classanch_1_1json_1_1_object_mapper.html">anch::json::ObjectMapper&lt;Pet&gt;</a>&amp; mapper) {</div>
+<div class="line">  mapper</div>
+<div class="line">    .registerField(<span class="stringliteral">&quot;name&quot;</span>, &amp;Pet::name, <a class="code hl_variable" href="namespaceanch_1_1json.html#ad430f4c7dfcc3e1dfacc9f3cf59de4cd">anch::json::required</a>, <a class="code hl_function" href="namespaceanch_1_1json.html#a90c4e0fb6e1ec5aa59dc87829b5d0b7f">anch::json::minLength</a>(1))</div>
+<div class="line">    .registerField(<span class="stringliteral">&quot;age&quot;</span>, &amp;Pet::age, <a class="code hl_function" href="namespaceanch_1_1json.html#aeff5145713082eee32fcbe818738ce00">anch::json::minimum</a>(0))</div>
+<div class="line">    .registerField&lt;std::string&gt;(<span class="stringliteral">&quot;tags&quot;</span>, &amp;Pet::tags, <a class="code hl_function" href="namespaceanch_1_1json.html#a064a970c9b316a004b2874c0f128e7a4">anch::json::items</a>(<a class="code hl_function" href="namespaceanch_1_1json.html#a90c4e0fb6e1ec5aa59dc87829b5d0b7f">anch::json::minLength</a>(1)));</div>
+<div class="line">}</div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">template</span>&lt;&gt;</div>
+<div class="line"><span class="keywordtype">void</span></div>
+<div class="line"><a class="code hl_function" href="namespaceanch_1_1json.html#aaf8fbe1c8f5cf3231e85e9549b474322">anch::json::registerObject</a>(<a class="code hl_class" href="classanch_1_1json_1_1_object_mapper.html">anch::json::ObjectMapper&lt;Shelter&gt;</a>&amp; mapper) {</div>
+<div class="line">  mapper</div>
+<div class="line">    .registerField&lt;Pet&gt;(<span class="stringliteral">&quot;pets&quot;</span>, &amp;Shelter::pets, <a class="code hl_function" href="namespaceanch_1_1json.html#afa49f230cd133aee54b6ea9f11343c1f">anch::json::maxItems</a>(10));</div>
+<div class="line">}</div>
+<div class="line"> </div>
+<div class="line"><span class="keywordtype">int</span></div>
+<div class="line">main() {</div>
+<div class="line">  Shelter shelter{{Pet{<span class="stringliteral">&quot;Rex&quot;</span>, 3, {<span class="stringliteral">&quot;dog&quot;</span>}}, Pet{<span class="stringliteral">&quot;&quot;</span>, -1, {<span class="stringliteral">&quot;cat&quot;</span>, <span class="stringliteral">&quot;&quot;</span>}}}};</div>
+<div class="line">  <span class="keywordflow">for</span>(<span class="keyword">const</span> <a class="code hl_struct" href="structanch_1_1json_1_1_violation.html">anch::json::Violation</a>&amp; violation : <a class="code hl_function" href="namespaceanch_1_1json.html#a58c5d4760a7c1cc64a50e1133079beec">anch::json::validate</a>(shelter)) { <span class="comment">// every violation</span></div>
+<div class="line">    std::cout &lt;&lt; violation.path &lt;&lt; <span class="stringliteral">&quot;: &quot;</span> &lt;&lt; violation.message &lt;&lt; std::endl;</div>
+<div class="line">  }</div>
+<div class="line">  <span class="keywordflow">return</span> 0;</div>
+<div class="line">}</div>
+<div class="ttc" id="anamespaceanch_1_1json_html_a58c5d4760a7c1cc64a50e1133079beec"><div class="ttname"><a href="namespaceanch_1_1json.html#a58c5d4760a7c1cc64a50e1133079beec">anch::json::validate</a></div><div class="ttdeci">std::vector&lt; anch::json::Violation &gt; validate(const T &amp;value)</div></div>
+<div class="ttc" id="astructanch_1_1json_1_1_violation_html"><div class="ttname"><a href="structanch_1_1json_1_1_violation.html">anch::json::Violation</a></div><div class="ttdoc">Constraint violation found by anch::json::validate.</div><div class="ttdef"><b>Definition</b> constraints.hpp:52</div></div>
+</div><!-- fragment --><p>Output: </p><div class="fragment"><div class="line">/pets/1/name: Length 0 is lower than minLength 1</div>
+<div class="line">/pets/1/age: Value -1 is lower than minimum 0</div>
+<div class="line">/pets/1/tags/1: Length 0 is lower than minLength 1</div>
 </div><!-- fragment --> </div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->

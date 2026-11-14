@@ -1,0 +1,7 @@
+<map id="anch::json::Violation" name="anch::json::Violation">
+<area shape="rect" id="Node000001" title="Constraint violation found by anch::json::validate." alt="" coords="5,303,134,372"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="35,140,104,209"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="71,207,72,286,67,285,68,211"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="12,5,127,91"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="70,103,72,140,67,140,69,108"/>
+</map>

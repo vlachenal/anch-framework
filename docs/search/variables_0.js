@@ -40,7 +40,7 @@ var searchData=
   ['_5fused_37',['_used',['../structanch_1_1_resource_pool_state.html#a2384bdfea3dfec994d036ed509cf4e57',1,'anch::ResourcePoolState']]],
   ['_5fvalid_38',['_valid',['../classanch_1_1sql_1_1_connection.html#ad2775ca00279b54856dc0cdcb87c17d0',1,'anch::sql::Connection']]],
   ['_5fvalues_39',['_values',['../classanch_1_1sql_1_1_prepared_statement.html#a0d9ab01e6f9fe195743a0158bbfb96ce',1,'anch::sql::PreparedStatement']]],
-  ['_5fwait_40',['_wait',['../structanch_1_1_resource_pool_state.html#ae4fd276ad9e38a57c85a5c8c2a26b35c',1,'anch::ResourcePoolState']]],
+  ['_5fwaiters_40',['_waiters',['../structanch_1_1_resource_pool_state.html#a9bee38c0b3d0a983f4f8fe3efb28b3a5',1,'anch::ResourcePoolState']]],
   ['_5fwdays_41',['_wdays',['../classanch_1_1date_1_1_date.html#a9270d4a48015f7d47cfa34ea2bec5685',1,'anch::date::Date']]],
   ['_5fydays_42',['_ydays',['../classanch_1_1date_1_1_date.html#a65625b90843b51a6a953eac96cdf464b',1,'anch::date::Date']]],
   ['_5fyears_43',['_years',['../classanch_1_1date_1_1_date.html#a40d5826d0023e5919d70ae34ab9a6a18',1,'anch::date::Date']]]

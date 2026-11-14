@@ -10,6 +10,7 @@ var classanch_1_1json_1_1_writer_context =
     [ "endArray", "classanch_1_1json_1_1_writer_context.html#ad8a827827795df0e2b513a4266d0ca19", null ],
     [ "endObject", "classanch_1_1json_1_1_writer_context.html#aa23d223e660846bf72894e4519039adb", null ],
     [ "next", "classanch_1_1json_1_1_writer_context.html#a515e174edace2e927a95d2c49218ba4b", null ],
+    [ "options", "classanch_1_1json_1_1_writer_context.html#ad278d93c8d82d46072a62945c62dbad6", null ],
     [ "write", "classanch_1_1json_1_1_writer_context.html#aab222fd969cd083272a8537b6df44e87", null ],
     [ "write", "classanch_1_1json_1_1_writer_context.html#a6e1b11301d450331e33845e1dcc50f98", null ],
     [ "writeEmptyArray", "classanch_1_1json_1_1_writer_context.html#a5c49f813ead476e0542ab7a9e8366e23", null ],

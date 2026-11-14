@@ -90,7 +90,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('structanch_1_1
 </div><!--header-->
 <div class="contents">
 
-<p><a class="el" href="structanch_1_1oas_1_1_open_a_p_i.html" title="OpenAPI 3.0 document (models part).">OpenAPI</a> 3.0 components object (schemas only).  
+<p><a class="el" href="structanch_1_1oas_1_1_open_a_p_i.html" title="OpenAPI 3.0 document (models and endpoints parts).">OpenAPI</a> 3.0 components object (schemas, parameters, request bodies and responses).  
  <a href="#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="spec_8hpp_source.html">spec.hpp</a>&gt;</code></p>
@@ -104,12 +104,63 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('structanch_1_1
 <tr class="heading"><td colspan="2"><h2 id="header-pub-attribs" class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:a18df0b5834b174ad479ee3210c7a4ab2" id="r_a18df0b5834b174ad479ee3210c7a4ab2"><td class="memItemLeft">std::map&lt; std::string, <a class="el" href="structanch_1_1oas_1_1_schema.html">anch::oas::Schema</a> &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a18df0b5834b174ad479ee3210c7a4ab2">schemas</a></td></tr>
+<tr class="memitem:a04506f956ea30d4f49e9d390500a38e0" id="r_a04506f956ea30d4f49e9d390500a38e0"><td class="memItemLeft">std::map&lt; std::string, <a class="el" href="structanch_1_1oas_1_1_parameter.html">anch::oas::Parameter</a> &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a04506f956ea30d4f49e9d390500a38e0">parameters</a></td></tr>
+<tr class="memitem:a9f1c3749e5ac10b711ad594b13c9ba92" id="r_a9f1c3749e5ac10b711ad594b13c9ba92"><td class="memItemLeft">std::map&lt; std::string, <a class="el" href="structanch_1_1oas_1_1_request_body.html">anch::oas::RequestBody</a> &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a9f1c3749e5ac10b711ad594b13c9ba92">requestBodies</a></td></tr>
+<tr class="memitem:a94f3136d278c4763f5cf49405424e75b" id="r_a94f3136d278c4763f5cf49405424e75b"><td class="memItemLeft">std::map&lt; std::string, <a class="el" href="structanch_1_1oas_1_1_response_object.html">anch::oas::ResponseObject</a> &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a94f3136d278c4763f5cf49405424e75b">responses</a></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<div class="textblock"><p><a class="el" href="structanch_1_1oas_1_1_open_a_p_i.html" title="OpenAPI 3.0 document (models part).">OpenAPI</a> 3.0 components object (schemas only). </p>
+<div class="textblock"><p><a class="el" href="structanch_1_1oas_1_1_open_a_p_i.html" title="OpenAPI 3.0 document (models and endpoints parts).">OpenAPI</a> 3.0 components object (schemas, parameters, request bodies and responses). </p>
 <dl class="section since"><dt>Since</dt><dd>0.1</dd></dl>
 <dl class="section author"><dt>Author</dt><dd>Vincent Lachenal </dd></dl>
 </div><a name="doc-variable-members" id="doc-variable-members"></a><h2 id="header-doc-variable-members" class="groupheader">Member Data Documentation</h2>
+<a id="a04506f956ea30d4f49e9d390500a38e0" name="a04506f956ea30d4f49e9d390500a38e0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a04506f956ea30d4f49e9d390500a38e0">&#9670;&#160;</a></span>parameters</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::map&lt;std::string,<a class="el" href="structanch_1_1oas_1_1_parameter.html">anch::oas::Parameter</a>&gt; anch::oas::Components::parameters</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Parameters indexed by their names</p>
+<dl class="section since"><dt>Since</dt><dd>0.2 </dd></dl>
+
+</div>
+</div>
+<a id="a9f1c3749e5ac10b711ad594b13c9ba92" name="a9f1c3749e5ac10b711ad594b13c9ba92"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9f1c3749e5ac10b711ad594b13c9ba92">&#9670;&#160;</a></span>requestBodies</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::map&lt;std::string,<a class="el" href="structanch_1_1oas_1_1_request_body.html">anch::oas::RequestBody</a>&gt; anch::oas::Components::requestBodies</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Request bodies indexed by their names</p>
+<dl class="section since"><dt>Since</dt><dd>0.2 </dd></dl>
+
+</div>
+</div>
+<a id="a94f3136d278c4763f5cf49405424e75b" name="a94f3136d278c4763f5cf49405424e75b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a94f3136d278c4763f5cf49405424e75b">&#9670;&#160;</a></span>responses</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::map&lt;std::string,<a class="el" href="structanch_1_1oas_1_1_response_object.html">anch::oas::ResponseObject</a>&gt; anch::oas::Components::responses</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Responses indexed by their names</p>
+<dl class="section since"><dt>Since</dt><dd>0.2 </dd></dl>
+
+</div>
+</div>
 <a id="a18df0b5834b174ad479ee3210c7a4ab2" name="a18df0b5834b174ad479ee3210c7a4ab2"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a18df0b5834b174ad479ee3210c7a4ab2">&#9670;&#160;</a></span>schemas</h2>
 

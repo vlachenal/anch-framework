@@ -90,7 +90,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('structanch_1_1
 </div><!--header-->
 <div class="contents">
 
-<p><a class="el" href="structanch_1_1oas_1_1_open_a_p_i.html" title="OpenAPI 3.0 document (models part).">OpenAPI</a> 3.0 schema object.  
+<p><a class="el" href="structanch_1_1oas_1_1_open_a_p_i.html" title="OpenAPI 3.0 document (models and endpoints parts).">OpenAPI</a> 3.0 schema object.  
  <a href="#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="spec_8hpp_source.html">spec.hpp</a>&gt;</code></p>
@@ -117,9 +117,22 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:afbea57b606d738aabb210bdbb4c395de" id="r_afbea57b606d738aabb210bdbb4c395de"><td class="memItemLeft">std::vector&lt; <a class="el" href="structanch_1_1oas_1_1_schema.html">anch::oas::Schema</a> &gt;&#160;</td><td class="memItemRight"><a class="el" href="#afbea57b606d738aabb210bdbb4c395de">allOf</a></td></tr>
 <tr class="memitem:a0dd8790d3f0f22992a5fdb6925f53ac7" id="r_a0dd8790d3f0f22992a5fdb6925f53ac7"><td class="memItemLeft">std::vector&lt; <a class="el" href="structanch_1_1oas_1_1_schema.html">anch::oas::Schema</a> &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a0dd8790d3f0f22992a5fdb6925f53ac7">oneOf</a></td></tr>
 <tr class="memitem:a22176686605ecea549e1b787b2fb36c4" id="r_a22176686605ecea549e1b787b2fb36c4"><td class="memItemLeft">std::vector&lt; <a class="el" href="structanch_1_1oas_1_1_schema.html">anch::oas::Schema</a> &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a22176686605ecea549e1b787b2fb36c4">anyOf</a></td></tr>
+<tr class="memitem:a2a8918458936e83ddebb37bd731461e3" id="r_a2a8918458936e83ddebb37bd731461e3"><td class="memItemLeft">std::optional&lt; uint64_t &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a2a8918458936e83ddebb37bd731461e3">minLength</a></td></tr>
+<tr class="memitem:a4772de15a157e23e5cc5ae6f1f91b02a" id="r_a4772de15a157e23e5cc5ae6f1f91b02a"><td class="memItemLeft">std::optional&lt; uint64_t &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a4772de15a157e23e5cc5ae6f1f91b02a">maxLength</a></td></tr>
+<tr class="memitem:a10fe86f655e80d84a5d55042a472e11a" id="r_a10fe86f655e80d84a5d55042a472e11a"><td class="memItemLeft">std::optional&lt; std::string &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a10fe86f655e80d84a5d55042a472e11a">pattern</a></td></tr>
+<tr class="memitem:ac44425c8fa3b8308fc892a5be9791c5c" id="r_ac44425c8fa3b8308fc892a5be9791c5c"><td class="memItemLeft">std::optional&lt; <a class="el" href="structanch_1_1oas_1_1_scalar.html">anch::oas::Scalar</a> &gt;&#160;</td><td class="memItemRight"><a class="el" href="#ac44425c8fa3b8308fc892a5be9791c5c">minimum</a></td></tr>
+<tr class="memitem:a97f61716a1fb14e8c19a6dfe4d9df83c" id="r_a97f61716a1fb14e8c19a6dfe4d9df83c"><td class="memItemLeft">std::optional&lt; <a class="el" href="structanch_1_1oas_1_1_scalar.html">anch::oas::Scalar</a> &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a97f61716a1fb14e8c19a6dfe4d9df83c">maximum</a></td></tr>
+<tr class="memitem:a4b8e1a39c5c5c72290b70fc97c41a3cd" id="r_a4b8e1a39c5c5c72290b70fc97c41a3cd"><td class="memItemLeft">std::optional&lt; bool &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a4b8e1a39c5c5c72290b70fc97c41a3cd">exclusiveMinimum</a></td></tr>
+<tr class="memitem:aa7850ad8f03fed99c3271e801147c4ce" id="r_aa7850ad8f03fed99c3271e801147c4ce"><td class="memItemLeft">std::optional&lt; bool &gt;&#160;</td><td class="memItemRight"><a class="el" href="#aa7850ad8f03fed99c3271e801147c4ce">exclusiveMaximum</a></td></tr>
+<tr class="memitem:a1dfa5e8769ef9b397eb8d6b7ad37a0b2" id="r_a1dfa5e8769ef9b397eb8d6b7ad37a0b2"><td class="memItemLeft">std::optional&lt; <a class="el" href="structanch_1_1oas_1_1_scalar.html">anch::oas::Scalar</a> &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a1dfa5e8769ef9b397eb8d6b7ad37a0b2">multipleOf</a></td></tr>
+<tr class="memitem:a2f4cdd5994eeb9628b899b8811fe2fc8" id="r_a2f4cdd5994eeb9628b899b8811fe2fc8"><td class="memItemLeft">std::optional&lt; uint64_t &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a2f4cdd5994eeb9628b899b8811fe2fc8">minItems</a></td></tr>
+<tr class="memitem:ada18675b6c554da491bc14623077fd50" id="r_ada18675b6c554da491bc14623077fd50"><td class="memItemLeft">std::optional&lt; uint64_t &gt;&#160;</td><td class="memItemRight"><a class="el" href="#ada18675b6c554da491bc14623077fd50">maxItems</a></td></tr>
+<tr class="memitem:a8b88dd3a6beaf578857aaee5362c15ba" id="r_a8b88dd3a6beaf578857aaee5362c15ba"><td class="memItemLeft">std::optional&lt; bool &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a8b88dd3a6beaf578857aaee5362c15ba">uniqueItems</a></td></tr>
+<tr class="memitem:ae71076be48c18be8ebfcf7116edf6850" id="r_ae71076be48c18be8ebfcf7116edf6850"><td class="memItemLeft">std::optional&lt; uint64_t &gt;&#160;</td><td class="memItemRight"><a class="el" href="#ae71076be48c18be8ebfcf7116edf6850">minProperties</a></td></tr>
+<tr class="memitem:a5f981cf6977027178f305ec155392787" id="r_a5f981cf6977027178f305ec155392787"><td class="memItemLeft">std::optional&lt; uint64_t &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a5f981cf6977027178f305ec155392787">maxProperties</a></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<div class="textblock"><p><a class="el" href="structanch_1_1oas_1_1_open_a_p_i.html" title="OpenAPI 3.0 document (models part).">OpenAPI</a> 3.0 schema object. </p>
+<div class="textblock"><p><a class="el" href="structanch_1_1oas_1_1_open_a_p_i.html" title="OpenAPI 3.0 document (models and endpoints parts).">OpenAPI</a> 3.0 schema object. </p>
 <p>Only the keywords used to generate models are kept: other keywords are ignored.</p>
 <dl class="section since"><dt>Since</dt><dd>0.1</dd></dl>
 <dl class="section author"><dt>Author</dt><dd>Vincent Lachenal </dd></dl>
@@ -199,6 +212,38 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="aa7850ad8f03fed99c3271e801147c4ce" name="aa7850ad8f03fed99c3271e801147c4ce"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa7850ad8f03fed99c3271e801147c4ce">&#9670;&#160;</a></span>exclusiveMaximum</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::optional&lt;bool&gt; anch::oas::Schema::exclusiveMaximum</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p><code>maximum</code> is exclusive</p>
+<dl class="section since"><dt>Since</dt><dd>0.2 </dd></dl>
+
+</div>
+</div>
+<a id="a4b8e1a39c5c5c72290b70fc97c41a3cd" name="a4b8e1a39c5c5c72290b70fc97c41a3cd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4b8e1a39c5c5c72290b70fc97c41a3cd">&#9670;&#160;</a></span>exclusiveMinimum</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::optional&lt;bool&gt; anch::oas::Schema::exclusiveMinimum</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p><code>minimum</code> is exclusive</p>
+<dl class="section since"><dt>Since</dt><dd>0.2 </dd></dl>
+
+</div>
+</div>
 <a id="a2bd8a351b93cd0281089f21b09b48e0b" name="a2bd8a351b93cd0281089f21b09b48e0b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2bd8a351b93cd0281089f21b09b48e0b">&#9670;&#160;</a></span>format</h2>
 
@@ -229,6 +274,150 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a97f61716a1fb14e8c19a6dfe4d9df83c" name="a97f61716a1fb14e8c19a6dfe4d9df83c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a97f61716a1fb14e8c19a6dfe4d9df83c">&#9670;&#160;</a></span>maximum</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::optional&lt;<a class="el" href="structanch_1_1oas_1_1_scalar.html">anch::oas::Scalar</a>&gt; anch::oas::Schema::maximum</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Number maximum (as written in the document)</p>
+<dl class="section since"><dt>Since</dt><dd>0.2 </dd></dl>
+
+</div>
+</div>
+<a id="ada18675b6c554da491bc14623077fd50" name="ada18675b6c554da491bc14623077fd50"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ada18675b6c554da491bc14623077fd50">&#9670;&#160;</a></span>maxItems</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::optional&lt;uint64_t&gt; anch::oas::Schema::maxItems</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Array maximum number of items</p>
+<dl class="section since"><dt>Since</dt><dd>0.2 </dd></dl>
+
+</div>
+</div>
+<a id="a4772de15a157e23e5cc5ae6f1f91b02a" name="a4772de15a157e23e5cc5ae6f1f91b02a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4772de15a157e23e5cc5ae6f1f91b02a">&#9670;&#160;</a></span>maxLength</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::optional&lt;uint64_t&gt; anch::oas::Schema::maxLength</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>String maximum length</p>
+<dl class="section since"><dt>Since</dt><dd>0.2 </dd></dl>
+
+</div>
+</div>
+<a id="a5f981cf6977027178f305ec155392787" name="a5f981cf6977027178f305ec155392787"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5f981cf6977027178f305ec155392787">&#9670;&#160;</a></span>maxProperties</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::optional&lt;uint64_t&gt; anch::oas::Schema::maxProperties</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Object maximum number of properties</p>
+<dl class="section since"><dt>Since</dt><dd>0.2 </dd></dl>
+
+</div>
+</div>
+<a id="ac44425c8fa3b8308fc892a5be9791c5c" name="ac44425c8fa3b8308fc892a5be9791c5c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac44425c8fa3b8308fc892a5be9791c5c">&#9670;&#160;</a></span>minimum</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::optional&lt;<a class="el" href="structanch_1_1oas_1_1_scalar.html">anch::oas::Scalar</a>&gt; anch::oas::Schema::minimum</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Number minimum (as written in the document)</p>
+<dl class="section since"><dt>Since</dt><dd>0.2 </dd></dl>
+
+</div>
+</div>
+<a id="a2f4cdd5994eeb9628b899b8811fe2fc8" name="a2f4cdd5994eeb9628b899b8811fe2fc8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2f4cdd5994eeb9628b899b8811fe2fc8">&#9670;&#160;</a></span>minItems</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::optional&lt;uint64_t&gt; anch::oas::Schema::minItems</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Array minimum number of items</p>
+<dl class="section since"><dt>Since</dt><dd>0.2 </dd></dl>
+
+</div>
+</div>
+<a id="a2a8918458936e83ddebb37bd731461e3" name="a2a8918458936e83ddebb37bd731461e3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2a8918458936e83ddebb37bd731461e3">&#9670;&#160;</a></span>minLength</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::optional&lt;uint64_t&gt; anch::oas::Schema::minLength</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>String minimum length</p>
+<dl class="section since"><dt>Since</dt><dd>0.2 </dd></dl>
+
+</div>
+</div>
+<a id="ae71076be48c18be8ebfcf7116edf6850" name="ae71076be48c18be8ebfcf7116edf6850"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae71076be48c18be8ebfcf7116edf6850">&#9670;&#160;</a></span>minProperties</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::optional&lt;uint64_t&gt; anch::oas::Schema::minProperties</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Object minimum number of properties</p>
+<dl class="section since"><dt>Since</dt><dd>0.2 </dd></dl>
+
+</div>
+</div>
+<a id="a1dfa5e8769ef9b397eb8d6b7ad37a0b2" name="a1dfa5e8769ef9b397eb8d6b7ad37a0b2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1dfa5e8769ef9b397eb8d6b7ad37a0b2">&#9670;&#160;</a></span>multipleOf</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::optional&lt;<a class="el" href="structanch_1_1oas_1_1_scalar.html">anch::oas::Scalar</a>&gt; anch::oas::Schema::multipleOf</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Number divisor (as written in the document)</p>
+<dl class="section since"><dt>Since</dt><dd>0.2 </dd></dl>
+
+</div>
+</div>
 <a id="aaa5dacbff8e5f8d66078ab492215b514" name="aaa5dacbff8e5f8d66078ab492215b514"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aaa5dacbff8e5f8d66078ab492215b514">&#9670;&#160;</a></span>nullable</h2>
 
@@ -256,6 +445,22 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>Composition: exactly one schema </p>
+
+</div>
+</div>
+<a id="a10fe86f655e80d84a5d55042a472e11a" name="a10fe86f655e80d84a5d55042a472e11a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a10fe86f655e80d84a5d55042a472e11a">&#9670;&#160;</a></span>pattern</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::optional&lt;std::string&gt; anch::oas::Schema::pattern</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>String pattern (documented, not checked)</p>
+<dl class="section since"><dt>Since</dt><dd>0.2 </dd></dl>
 
 </div>
 </div>
@@ -331,6 +536,22 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>Type ( <code>string</code> , <code>integer</code> , <code>number</code> , <code>boolean</code> , <code>array</code> or <code>object</code> ) </p>
+
+</div>
+</div>
+<a id="a8b88dd3a6beaf578857aaee5362c15ba" name="a8b88dd3a6beaf578857aaee5362c15ba"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8b88dd3a6beaf578857aaee5362c15ba">&#9670;&#160;</a></span>uniqueItems</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::optional&lt;bool&gt; anch::oas::Schema::uniqueItems</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Array items are unique</p>
+<dl class="section since"><dt>Since</dt><dd>0.2 </dd></dl>
 
 </div>
 </div>

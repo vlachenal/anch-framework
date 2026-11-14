@@ -57,7 +57,7 @@ var searchData=
   ['getparameters_54',['getParameters',['../classanch_1_1rest_1_1_media_type.html#a0143c99048cca33a0730d138231c8c41',1,'anch::rest::MediaType']]],
   ['getparser_55',['getParser',['../classanch_1_1conf_1_1_parsers.html#ac00f889c4ea5180bd8e3593299045131',1,'anch::conf::Parsers']]],
   ['getparsers_56',['getParsers',['../classanch_1_1conf_1_1_parsers.html#a701b3500991a96c566843fb5e03f96d6',1,'anch::conf::Parsers']]],
-  ['getpath_57',['getPath',['../classanch_1_1rest_1_1_request.html#a75e42a01280f394d7b8c17c089bd68b8',1,'anch::rest::Request']]],
+  ['getpath_57',['getPath',['../classanch_1_1json_1_1_mapping_error.html#a5210f0a73960da33cef76d3f77652c35',1,'anch::json::MappingError::getPath()'],['../classanch_1_1rest_1_1_request.html#a75e42a01280f394d7b8c17c089bd68b8',1,'anch::rest::Request::getPath()'],['../class_mapping_error.html#a5210f0a73960da33cef76d3f77652c35',1,'MappingError::getPath()']]],
   ['getpathparameter_58',['getPathParameter',['../classanch_1_1rest_1_1_request.html#a6d4a256197caaf59d038e436981f9947',1,'anch::rest::Request']]],
   ['getpathparametercount_59',['getPathParameterCount',['../classanch_1_1rest_1_1_route.html#a13724a026a831fe9a6373b896afaba1f',1,'anch::rest::Route::getPathParameterCount()'],['../classanch_1_1rest_1_1_endpoint.html#a15f4506b38befd872d6f92703f1467cb',1,'anch::rest::Endpoint::getPathParameterCount()']]],
   ['getpathparameters_60',['getPathParameters',['../classanch_1_1rest_1_1_request.html#ad9fbd242d32287519c8c60a93ec92071',1,'anch::rest::Request']]],

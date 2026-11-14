@@ -19,5 +19,7 @@ var searchData=
   ['anch_20unit_20tests_20library_20documentation_16',['AnCH unit tests library documentation',['../page_ut.html',1,'']]],
   ['anch_20utils_20library_20documentation_17',['AnCH utils library documentation',['../page_utils.html',1,'']]],
   ['anch_20uuid_20library_20documentation_18',['AnCH UUID library documentation',['../page_uuid.html',1,'']]],
-  ['assisted_20development_19',['AI assisted development',['../index.html#ai_sec',1,'']]]
+  ['and_20error_20path_19',['Required fields and error path',['../page_json.html#json_required_sec',1,'']]],
+  ['and_20serialization_20',['Constraints checks on deserialization and serialization',['../page_json.html#json_check_sec',1,'']]],
+  ['assisted_20development_21',['AI assisted development',['../index.html#ai_sec',1,'']]]
 ];

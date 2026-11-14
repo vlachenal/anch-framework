@@ -5,5 +5,6 @@ var classanch_1_1rest_1_1_endpoint =
     [ "consumes", "classanch_1_1rest_1_1_endpoint.html#a10cbd47b804bd2743848281b1e066b77", null ],
     [ "getPathParameterCount", "classanch_1_1rest_1_1_endpoint.html#a15f4506b38befd872d6f92703f1467cb", null ],
     [ "handle", "classanch_1_1rest_1_1_endpoint.html#abd7cef0ac5120731319ab6bee958f84b", null ],
-    [ "produces", "classanch_1_1rest_1_1_endpoint.html#ac1a86a92cf90ac958dcacef774adfd49", null ]
+    [ "produces", "classanch_1_1rest_1_1_endpoint.html#ac1a86a92cf90ac958dcacef774adfd49", null ],
+    [ "status", "classanch_1_1rest_1_1_endpoint.html#ac3e54f290fe48dd1e69f67763bc46405", null ]
 ];

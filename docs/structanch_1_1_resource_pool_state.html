@@ -98,17 +98,18 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('structanch_1_1
 <div id="dynsection-0-summary" class="dynsummary">
 </div>
 <div id="dynsection-0-content" class="dyncontent hidden">
-<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="structanch_1_1_resource_pool_state__coll__graph.svg" width="347" height="584"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="structanch_1_1_resource_pool_state__coll__graph.svg" width="588" height="584"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a70cec41f3b25c0fde655b21f2f31e511" id="r_a70cec41f3b25c0fde655b21f2f31e511"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a70cec41f3b25c0fde655b21f2f31e511">release</a> (std::shared_ptr&lt; T &gt; res, bool valid) noexcept</td></tr>
+<tr class="memitem:acf6b59ffa3571bc2183ec6de8f81e53f" id="r_acf6b59ffa3571bc2183ec6de8f81e53f"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#acf6b59ffa3571bc2183ec6de8f81e53f">notifyFirstWaiter</a> () noexcept</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-attribs" class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:a441601493511479c14eab45b0f3b8ed6" id="r_a441601493511479c14eab45b0f3b8ed6"><td class="memItemLeft">std::mutex&#160;</td><td class="memItemRight"><a class="el" href="#a441601493511479c14eab45b0f3b8ed6">_mutex</a></td></tr>
-<tr class="memitem:ae4fd276ad9e38a57c85a5c8c2a26b35c" id="r_ae4fd276ad9e38a57c85a5c8c2a26b35c"><td class="memItemLeft">std::condition_variable&#160;</td><td class="memItemRight"><a class="el" href="#ae4fd276ad9e38a57c85a5c8c2a26b35c">_wait</a></td></tr>
+<tr class="memitem:a9bee38c0b3d0a983f4f8fe3efb28b3a5" id="r_a9bee38c0b3d0a983f4f8fe3efb28b3a5"><td class="memItemLeft">std::deque&lt; std::condition_variable * &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a9bee38c0b3d0a983f4f8fe3efb28b3a5">_waiters</a></td></tr>
 <tr class="memitem:a492de321fa2bc485d69a6ff5c95c49e0" id="r_a492de321fa2bc485d69a6ff5c95c49e0"><td class="memItemLeft">std::deque&lt; std::shared_ptr&lt; T &gt; &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a492de321fa2bc485d69a6ff5c95c49e0">_availables</a></td></tr>
 <tr class="memitem:a2384bdfea3dfec994d036ed509cf4e57" id="r_a2384bdfea3dfec994d036ed509cf4e57"><td class="memItemLeft">std::size_t&#160;</td><td class="memItemRight"><a class="el" href="#a2384bdfea3dfec994d036ed509cf4e57">_used</a> = 0</td></tr>
 <tr class="memitem:ad4231ca7c8853a91b7e7c2db09f738dc" id="r_ad4231ca7c8853a91b7e7c2db09f738dc"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#ad4231ca7c8853a91b7e7c2db09f738dc">_closed</a> = false</td></tr>
@@ -122,6 +123,34 @@ Every member is protected by <code>_mutex</code>.</p>
 <dl class="section author"><dt>Author</dt><dd>Vincent Lachenal</dd></dl>
 <dl class="section since"><dt>Since</dt><dd>0.1 </dd></dl>
 </div><a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
+<a id="acf6b59ffa3571bc2183ec6de8f81e53f" name="acf6b59ffa3571bc2183ec6de8f81e53f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acf6b59ffa3571bc2183ec6de8f81e53f">&#9670;&#160;</a></span>notifyFirstWaiter()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="conceptanch_1_1_validable.html">anch::Validable</a> T&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="structanch_1_1_resource_pool_state.html">anch::ResourcePoolState</a>&lt; T &gt;::notifyFirstWaiter </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel noexcept">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Wake up the first waiting borrower (<code>_mutex</code> has to be locked) </p>
+
+</div>
+</div>
 <a id="a70cec41f3b25c0fde655b21f2f31e511" name="a70cec41f3b25c0fde655b21f2f31e511"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a70cec41f3b25c0fde655b21f2f31e511">&#9670;&#160;</a></span>release()</h2>
 
@@ -232,8 +261,8 @@ template&lt;<a class="el" href="conceptanch_1_1_validable.html">anch::Validable<
 
 </div>
 </div>
-<a id="ae4fd276ad9e38a57c85a5c8c2a26b35c" name="ae4fd276ad9e38a57c85a5c8c2a26b35c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae4fd276ad9e38a57c85a5c8c2a26b35c">&#9670;&#160;</a></span>_wait</h2>
+<a id="a9bee38c0b3d0a983f4f8fe3efb28b3a5" name="a9bee38c0b3d0a983f4f8fe3efb28b3a5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9bee38c0b3d0a983f4f8fe3efb28b3a5">&#9670;&#160;</a></span>_waiters</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -241,11 +270,11 @@ template&lt;<a class="el" href="conceptanch_1_1_validable.html">anch::Validable<
 template&lt;<a class="el" href="conceptanch_1_1_validable.html">anch::Validable</a> T&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">std::condition_variable <a class="el" href="structanch_1_1_resource_pool_state.html">anch::ResourcePoolState</a>&lt; T &gt;::_wait</td>
+          <td class="memname">std::deque&lt;std::condition_variable*&gt; <a class="el" href="structanch_1_1_resource_pool_state.html">anch::ResourcePoolState</a>&lt; T &gt;::_waiters</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Wait condition variable (used with <code>_mutex</code>) </p>
+<p>Borrowers waiting for a resource, in arrival order: each one waits on its own condition variable and only the first one is woken up (borrowers are served in FIFO order) </p>
 
 </div>
 </div>

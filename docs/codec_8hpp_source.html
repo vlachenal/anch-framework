@@ -118,43 +118,63 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('codec_8hpp_sou
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceanch_1_1rest.html">anch::rest</a> {</div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span></div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>  <span class="keyword">template</span>&lt;<span class="keyword">typename</span> C, <span class="keyword">typename</span> T&gt;</div>
-<div class="foldopen" id="foldopen00043" data-start="{" data-end="}">
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno"><a class="line" href="conceptanch_1_1rest_1_1_serializer.html">   43</a></span>  <span class="keyword">concept </span><a class="code hl_concept" href="conceptanch_1_1rest_1_1_serializer.html">Serializer</a> = <span class="keyword">requires</span>(<span class="keyword">const</span> T&amp; value, std::ostream&amp; out) {</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    { C::mediaType() } -&gt; std::convertible_to&lt;std::string_view&gt;;</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    C::serialize(value, out);</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>  };</div>
+<div class="foldopen" id="foldopen00036" data-start="{" data-end="};">
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno"><a class="line" href="namespaceanch_1_1rest.html#a23481a98e2fc63d6045769b147e165f0">   36</a></span>  <span class="keyword">enum class</span> <a class="code hl_enumeration" href="namespaceanch_1_1rest.html#a23481a98e2fc63d6045769b147e165f0">Side</a> {</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno"><a class="line" href="namespaceanch_1_1rest.html#a23481a98e2fc63d6045769b147e165f0a3d27c95bfdbea691b250894d96852844">   38</a></span>    <a class="code hl_enumvalue" href="namespaceanch_1_1rest.html#a23481a98e2fc63d6045769b147e165f0a3d27c95bfdbea691b250894d96852844">SERVER</a>,</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno"><a class="line" href="namespaceanch_1_1rest.html#a23481a98e2fc63d6045769b147e165f0aef10c650df47bffd6399e5e78da2a9b1">   40</a></span>    <a class="code hl_enumvalue" href="namespaceanch_1_1rest.html#a23481a98e2fc63d6045769b147e165f0aef10c650df47bffd6399e5e78da2a9b1">CLIENT</a></div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>  };</div>
 </div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span></div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>  <span class="keyword">template</span>&lt;<span class="keyword">typename</span> C, <span class="keyword">typename</span> T&gt;</div>
-<div class="foldopen" id="foldopen00057" data-start="{" data-end="}">
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno"><a class="line" href="conceptanch_1_1rest_1_1_deserializer.html">   57</a></span>  <span class="keyword">concept </span><a class="code hl_concept" href="conceptanch_1_1rest_1_1_deserializer.html">Deserializer</a> = <span class="keyword">requires</span>(T&amp; value, std::istream&amp; input) {</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    { C::mediaType() } -&gt; std::convertible_to&lt;std::string_view&gt;;</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    C::deserialize(value, input);</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>  };</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span></div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>  <span class="keyword">template</span>&lt;<span class="keyword">typename</span> C, <span class="keyword">typename</span> T&gt;</div>
+<div class="foldopen" id="foldopen00060" data-start="{" data-end="}">
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno"><a class="line" href="conceptanch_1_1rest_1_1_serializer.html">   60</a></span>  <span class="keyword">concept </span><a class="code hl_concept" href="conceptanch_1_1rest_1_1_serializer.html">Serializer</a> = <span class="keyword">requires</span>(<span class="keyword">const</span> T&amp; value, std::ostream&amp; out) {</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    { C::mediaType() } -&gt; std::convertible_to&lt;std::string_view&gt;;</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    C::serialize(value, out);</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>  };</div>
 </div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span></div>
-<div class="foldopen" id="foldopen00069" data-start="{" data-end="};">
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno"><a class="line" href="structanch_1_1rest_1_1_text.html">   69</a></span>  <span class="keyword">struct </span><a class="code hl_struct" href="structanch_1_1rest_1_1_text.html">Text</a> {</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span></div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno"><a class="line" href="structanch_1_1rest_1_1_text.html#a415b5f297f57696a6a202a470b2a4db0">   76</a></span>    <span class="keyword">static</span> std::string_view <a class="code hl_function" href="structanch_1_1rest_1_1_text.html#a415b5f297f57696a6a202a470b2a4db0">mediaType</a>() noexcept;</div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span></div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>    template&lt;typename T&gt;</div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>    requires requires(std::ostream&amp; out, const T&amp; value) { out &lt;&lt; value; }</div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno"><a class="line" href="structanch_1_1rest_1_1_text.html#ac842132612ba7cf7b6c0a0e6fcef2b04">   86</a></span>    <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code hl_function" href="structanch_1_1rest_1_1_text.html#ac842132612ba7cf7b6c0a0e6fcef2b04">serialize</a>(<span class="keyword">const</span> T&amp; value, std::ostream&amp; out);</div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span></div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno"><a class="line" href="structanch_1_1rest_1_1_text.html#a594d4b9f77b8bc172feba5abea5a81b2">   94</a></span>    <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code hl_function" href="structanch_1_1rest_1_1_text.html#a594d4b9f77b8bc172feba5abea5a81b2">deserialize</a>(std::string&amp; value, std::istream&amp; input);</div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span> </div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>  };</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span></div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>  <span class="keyword">template</span>&lt;<span class="keyword">typename</span> C, <span class="keyword">typename</span> T&gt;</div>
+<div class="foldopen" id="foldopen00074" data-start="{" data-end="}">
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno"><a class="line" href="conceptanch_1_1rest_1_1_deserializer.html">   74</a></span>  <span class="keyword">concept </span><a class="code hl_concept" href="conceptanch_1_1rest_1_1_deserializer.html">Deserializer</a> = <span class="keyword">requires</span>(T&amp; value, std::istream&amp; input) {</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    { C::mediaType() } -&gt; std::convertible_to&lt;std::string_view&gt;;</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    C::deserialize(value, input);</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>  };</div>
 </div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span> </div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>}</div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span> </div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span><span class="preprocessor">#include &quot;rest/impl/codec.hpp&quot;</span></div>
-<div class="ttc" id="aconceptanch_1_1rest_1_1_deserializer_html"><div class="ttname"><a href="conceptanch_1_1rest_1_1_deserializer.html">anch::rest::Deserializer</a></div><div class="ttdef"><b>Definition</b> codec.hpp:57</div></div>
-<div class="ttc" id="aconceptanch_1_1rest_1_1_serializer_html"><div class="ttname"><a href="conceptanch_1_1rest_1_1_serializer.html">anch::rest::Serializer</a></div><div class="ttdef"><b>Definition</b> codec.hpp:43</div></div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span></div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>  <span class="keyword">template</span>&lt;<span class="keyword">typename</span> C, <span class="keyword">typename</span> T&gt;</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>  <span class="keyword">requires</span> <a class="code hl_concept" href="conceptanch_1_1rest_1_1_serializer.html">anch::rest::Serializer&lt;C, T&gt;</a></div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno"><a class="line" href="namespaceanch_1_1rest.html#a53a0518a127667827e53d35936fc3db2">   94</a></span>  <span class="keywordtype">void</span> <a class="code hl_function" href="namespaceanch_1_1rest.html#a53a0518a127667827e53d35936fc3db2">serializeBody</a>(<span class="keyword">const</span> T&amp; value, std::ostream&amp; out, <a class="code hl_enumeration" href="namespaceanch_1_1rest.html#a23481a98e2fc63d6045769b147e165f0">anch::rest::Side</a> side);</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span></div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>  <span class="keyword">template</span>&lt;<span class="keyword">typename</span> C, <span class="keyword">typename</span> T&gt;</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>  <span class="keyword">requires</span> <a class="code hl_concept" href="conceptanch_1_1rest_1_1_deserializer.html">anch::rest::Deserializer&lt;C, T&gt;</a></div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno"><a class="line" href="namespaceanch_1_1rest.html#a756c1c51f7503d8c85c5fa67fc8da1e4">  111</a></span>  <span class="keywordtype">void</span> <a class="code hl_function" href="namespaceanch_1_1rest.html#a756c1c51f7503d8c85c5fa67fc8da1e4">deserializeBody</a>(T&amp; value, std::istream&amp; input, <a class="code hl_enumeration" href="namespaceanch_1_1rest.html#a23481a98e2fc63d6045769b147e165f0">anch::rest::Side</a> side);</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span></div>
+<div class="foldopen" id="foldopen00120" data-start="{" data-end="};">
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno"><a class="line" href="structanch_1_1rest_1_1_text.html">  120</a></span>  <span class="keyword">struct </span><a class="code hl_struct" href="structanch_1_1rest_1_1_text.html">Text</a> {</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span></div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno"><a class="line" href="structanch_1_1rest_1_1_text.html#a415b5f297f57696a6a202a470b2a4db0">  127</a></span>    <span class="keyword">static</span> std::string_view <a class="code hl_function" href="structanch_1_1rest_1_1_text.html#a415b5f297f57696a6a202a470b2a4db0">mediaType</a>() noexcept;</div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span></div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>    template&lt;typename T&gt;</div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>    requires requires(std::ostream&amp; out, const T&amp; value) { out &lt;&lt; value; }</div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno"><a class="line" href="structanch_1_1rest_1_1_text.html#ac842132612ba7cf7b6c0a0e6fcef2b04">  137</a></span>    <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code hl_function" href="structanch_1_1rest_1_1_text.html#ac842132612ba7cf7b6c0a0e6fcef2b04">serialize</a>(<span class="keyword">const</span> T&amp; value, std::ostream&amp; out);</div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span></div>
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno"><a class="line" href="structanch_1_1rest_1_1_text.html#a594d4b9f77b8bc172feba5abea5a81b2">  145</a></span>    <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code hl_function" href="structanch_1_1rest_1_1_text.html#a594d4b9f77b8bc172feba5abea5a81b2">deserialize</a>(std::string&amp; value, std::istream&amp; input);</div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span> </div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>  };</div>
+</div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span> </div>
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>}</div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span> </div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span><span class="preprocessor">#include &quot;rest/impl/codec.hpp&quot;</span></div>
+<div class="ttc" id="aconceptanch_1_1rest_1_1_deserializer_html"><div class="ttname"><a href="conceptanch_1_1rest_1_1_deserializer.html">anch::rest::Deserializer</a></div><div class="ttdef"><b>Definition</b> codec.hpp:74</div></div>
+<div class="ttc" id="aconceptanch_1_1rest_1_1_serializer_html"><div class="ttname"><a href="conceptanch_1_1rest_1_1_serializer.html">anch::rest::Serializer</a></div><div class="ttdef"><b>Definition</b> codec.hpp:60</div></div>
 <div class="ttc" id="anamespaceanch_1_1rest_html"><div class="ttname"><a href="namespaceanch_1_1rest.html">anch::rest</a></div><div class="ttdoc">AnCH REST library namespace.</div><div class="ttdef"><b>Definition</b> auth.hpp:27</div></div>
-<div class="ttc" id="astructanch_1_1rest_1_1_text_html"><div class="ttname"><a href="structanch_1_1rest_1_1_text.html">anch::rest::Text</a></div><div class="ttdef"><b>Definition</b> codec.hpp:69</div></div>
+<div class="ttc" id="anamespaceanch_1_1rest_html_a23481a98e2fc63d6045769b147e165f0"><div class="ttname"><a href="namespaceanch_1_1rest.html#a23481a98e2fc63d6045769b147e165f0">anch::rest::Side</a></div><div class="ttdeci">Side</div><div class="ttdef"><b>Definition</b> codec.hpp:36</div></div>
+<div class="ttc" id="anamespaceanch_1_1rest_html_a23481a98e2fc63d6045769b147e165f0a3d27c95bfdbea691b250894d96852844"><div class="ttname"><a href="namespaceanch_1_1rest.html#a23481a98e2fc63d6045769b147e165f0a3d27c95bfdbea691b250894d96852844">anch::rest::Side::SERVER</a></div><div class="ttdeci">@ SERVER</div><div class="ttdef"><b>Definition</b> codec.hpp:38</div></div>
+<div class="ttc" id="anamespaceanch_1_1rest_html_a23481a98e2fc63d6045769b147e165f0aef10c650df47bffd6399e5e78da2a9b1"><div class="ttname"><a href="namespaceanch_1_1rest.html#a23481a98e2fc63d6045769b147e165f0aef10c650df47bffd6399e5e78da2a9b1">anch::rest::Side::CLIENT</a></div><div class="ttdeci">@ CLIENT</div><div class="ttdef"><b>Definition</b> codec.hpp:40</div></div>
+<div class="ttc" id="anamespaceanch_1_1rest_html_a53a0518a127667827e53d35936fc3db2"><div class="ttname"><a href="namespaceanch_1_1rest.html#a53a0518a127667827e53d35936fc3db2">anch::rest::serializeBody</a></div><div class="ttdeci">void serializeBody(const T &amp;value, std::ostream &amp;out, anch::rest::Side side)</div></div>
+<div class="ttc" id="anamespaceanch_1_1rest_html_a756c1c51f7503d8c85c5fa67fc8da1e4"><div class="ttname"><a href="namespaceanch_1_1rest.html#a756c1c51f7503d8c85c5fa67fc8da1e4">anch::rest::deserializeBody</a></div><div class="ttdeci">void deserializeBody(T &amp;value, std::istream &amp;input, anch::rest::Side side)</div></div>
+<div class="ttc" id="astructanch_1_1rest_1_1_text_html"><div class="ttname"><a href="structanch_1_1rest_1_1_text.html">anch::rest::Text</a></div><div class="ttdef"><b>Definition</b> codec.hpp:120</div></div>
 <div class="ttc" id="astructanch_1_1rest_1_1_text_html_a415b5f297f57696a6a202a470b2a4db0"><div class="ttname"><a href="structanch_1_1rest_1_1_text.html#a415b5f297f57696a6a202a470b2a4db0">anch::rest::Text::mediaType</a></div><div class="ttdeci">static std::string_view mediaType() noexcept</div></div>
 <div class="ttc" id="astructanch_1_1rest_1_1_text_html_a594d4b9f77b8bc172feba5abea5a81b2"><div class="ttname"><a href="structanch_1_1rest_1_1_text.html#a594d4b9f77b8bc172feba5abea5a81b2">anch::rest::Text::deserialize</a></div><div class="ttdeci">static void deserialize(std::string &amp;value, std::istream &amp;input)</div></div>
 <div class="ttc" id="astructanch_1_1rest_1_1_text_html_ac842132612ba7cf7b6c0a0e6fcef2b04"><div class="ttname"><a href="structanch_1_1rest_1_1_text.html#ac842132612ba7cf7b6c0a0e6fcef2b04">anch::rest::Text::serialize</a></div><div class="ttdeci">static void serialize(const T &amp;value, std::ostream &amp;out)</div></div>

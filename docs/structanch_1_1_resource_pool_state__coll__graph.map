@@ -1,12 +1,15 @@
 <map id="anch::ResourcePoolState&lt; T &gt;" name="anch::ResourcePoolState&lt; T &gt;">
-<area shape="rect" id="Node000001" title="Resource pool shared state (internal usage)." alt="" coords="5,467,196,579"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="8,317,81,387"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="53,384,71,442,74,451,69,451,66,443,52,389"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="105,309,254,395"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="162,392,136,453,131,450,158,396"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="119,5,138,75"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="122,72,117,141,118,178,122,215,134,255,151,294,145,294,129,257,117,217,112,179,112,140,121,77"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="200,147,303,216"/>
-<area shape="poly" id="edge5_Node000005_Node000004" title=" " alt="" coords="138,49,213,133,208,135,138,54"/>
-<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="232,228,199,311,194,309,230,232"/>
+<area shape="rect" id="Node000001" title="Resource pool shared state (internal usage)." alt="" coords="88,467,278,579"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,317,78,387"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="70,384,129,453,124,455,69,389"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="102,309,264,395"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="184,392,186,451,180,449,182,397"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="321,147,424,216"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="304,189,278,196,248,206,221,221,198,242,189,257,183,274,180,310,175,309,178,273,184,255,194,238,218,217,246,201,276,191,309,185"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="298,309,447,395"/>
+<area shape="poly" id="edge7_Node000006_Node000004" title=" " alt="" coords="374,229,375,311,370,309,371,233"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="430,5,448,75"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="431,58,398,133,393,130,428,63"/>
+<area shape="poly" id="edge6_Node000006_Node000005" title=" " alt="" coords="448,47,470,68,487,98,505,150,515,194,512,238,491,287,478,303,462,317,459,313,474,300,486,284,507,236,510,195,500,151,482,100,465,72,448,52"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="328,393,259,458,256,453,324,396"/>
 </map>

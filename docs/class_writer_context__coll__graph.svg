@@ -71,16 +71,16 @@
 <text xml:space="preserve" text-anchor="start" x="6.88" y="-102.25" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
 <text xml:space="preserve" text-anchor="start" x="16.88" y="-102.25" font-family="Helvetica,sans-Serif" font-size="10.00">~WriterContext()</text>
 <text xml:space="preserve" text-anchor="start" x="6.88" y="-86.25" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text xml:space="preserve" text-anchor="start" x="16.88" y="-86.25" font-family="Helvetica,sans-Serif" font-size="10.00">writeNull()</text>
+<text xml:space="preserve" text-anchor="start" x="16.88" y="-86.25" font-family="Helvetica,sans-Serif" font-size="10.00">options()</text>
 <text xml:space="preserve" text-anchor="start" x="6.88" y="-70.25" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text xml:space="preserve" text-anchor="start" x="16.88" y="-70.25" font-family="Helvetica,sans-Serif" font-size="10.00">writeEmptyArray()</text>
+<text xml:space="preserve" text-anchor="start" x="16.88" y="-70.25" font-family="Helvetica,sans-Serif" font-size="10.00">writeNull()</text>
 <text xml:space="preserve" text-anchor="start" x="6.88" y="-54.25" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text xml:space="preserve" text-anchor="start" x="16.88" y="-54.25" font-family="Helvetica,sans-Serif" font-size="10.00">writeEmptyObject()</text>
+<text xml:space="preserve" text-anchor="start" x="16.88" y="-54.25" font-family="Helvetica,sans-Serif" font-size="10.00">writeEmptyArray()</text>
 <text xml:space="preserve" text-anchor="start" x="6.88" y="-38.25" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text xml:space="preserve" text-anchor="start" x="16.88" y="-38.25" font-family="Helvetica,sans-Serif" font-size="10.00">writeField()</text>
+<text xml:space="preserve" text-anchor="start" x="16.88" y="-38.25" font-family="Helvetica,sans-Serif" font-size="10.00">writeEmptyObject()</text>
 <text xml:space="preserve" text-anchor="start" x="6.88" y="-22.25" font-family="Helvetica,sans-Serif" font-size="10.00">+</text>
-<text xml:space="preserve" text-anchor="start" x="16.88" y="-22.25" font-family="Helvetica,sans-Serif" font-size="10.00">writeRawField()</text>
-<text xml:space="preserve" text-anchor="start" x="16.88" y="-6.25" font-family="Helvetica,sans-Serif" font-size="10.00">and 10 more...</text>
+<text xml:space="preserve" text-anchor="start" x="16.88" y="-22.25" font-family="Helvetica,sans-Serif" font-size="10.00">writeField()</text>
+<text xml:space="preserve" text-anchor="start" x="16.88" y="-6.25" font-family="Helvetica,sans-Serif" font-size="10.00">and 11 more...</text>
 </a>
 </g>
 </g>

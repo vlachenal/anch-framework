@@ -125,6 +125,7 @@ class anch::ResourcePool&lt; T, C, make_ptr &gt;</div><p>Generic resource pool u
 Intialize pool size will instanciate resources for imediate use.<br  />
 Resources will be instanciated with their configuration, outside the pool lock.<br  />
 If no resource is available, pool will wait until timeout (default to 100ms) is reached.<br  />
+Waiting borrowers are served in arrival order (FIFO): a borrower can not be overtaken by later ones, so waiting times stay bounded under contention.<br  />
 Resources are automatically released through their destructor: <code>release()</code> is called on resources which implement it (<a class="el" href="conceptanch_1_1_releasable.html" title="Releasable">Releasable</a>), then invalid resources are destroyed and will be replaced on demand.<br  />
 If you have only one action to do, you can use <span class="tt">pool.borrowResource().get().doAction()</span> ; otherwise you should to keep <code><a class="el" href="classanch_1_1_poolable_resource.html" title="Generic poolable resource.">anch::PoolableResource</a></code> until all actions have been done (with <span class="tt">auto res = pool.borrowResource()</span>).<br  />
 Borrowed resources can outlive their pool: they will be destroyed when released.<br  />

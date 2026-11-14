@@ -1,9 +1,9 @@
 <map id="GeneratorOptions" name="GeneratorOptions">
-<area shape="rect" id="Node000001" title=" " alt="" coords="193,747,306,816"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="103,576,230,661"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="189,659,227,732,222,732,186,664"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="193,832,306,901"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="103,629,230,715"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="186,712,231,817,226,817,183,717"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="37,400,117,469"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="94,467,141,560,136,561,93,472"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="91,467,147,613,142,614,89,472"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="18,243,136,328"/>
 <area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="77,340,80,400,75,400,77,346"/>
 <area shape="rect" id="Node000005" title=" " alt="" coords="5,124,149,193"/>
@@ -11,13 +11,13 @@
 <area shape="rect" id="Node000006" title=" " alt="" coords="33,5,122,75"/>
 <area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="77,87,80,124,75,124,77,92"/>
 <area shape="rect" id="Node000007" title=" " alt="" coords="141,400,270,469"/>
-<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="196,482,178,577,173,575,194,486"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="199,482,176,630,171,629,196,486"/>
 <area shape="rect" id="Node000008" title=" " alt="" coords="196,251,214,320"/>
 <area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="206,317,208,383,203,382,205,323"/>
-<area shape="rect" id="Node000009" href="$structanch_1_1oas_1_1_model_options.html" title="Models generation options." alt="" coords="254,563,410,675"/>
-<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="306,673,276,734,272,730,301,676"/>
+<area shape="rect" id="Node000009" href="$structanch_1_1oas_1_1_model_options.html" title="Models generation options." alt="" coords="254,584,410,760"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="297,758,272,818,268,815,292,761"/>
 <area shape="rect" id="Node000010" title=" " alt="" coords="298,400,366,469"/>
-<area shape="poly" id="edge9_Node000009_Node000010" title=" " alt="" coords="333,467,334,546,329,545,331,472"/>
+<area shape="poly" id="edge9_Node000009_Node000010" title=" " alt="" coords="333,467,334,568,329,566,331,471"/>
 <area shape="rect" id="Node000011" title=" " alt="" coords="274,243,389,328"/>
-<area shape="poly" id="edge10_Node000010_Node000011" title=" " alt="" coords="333,340,334,401,329,400,331,345"/>
+<area shape="poly" id="edge10_Node000010_Node000011" title=" " alt="" coords="333,340,334,401,329,400,331,346"/>
 </map>

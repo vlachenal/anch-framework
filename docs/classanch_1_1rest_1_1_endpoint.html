@@ -95,7 +95,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('classanch_1_1r
 <div id="dynsection-0-summary" class="dynsummary">
 </div>
 <div id="dynsection-0-content" class="dyncontent hidden">
-<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classanch_1_1rest_1_1_endpoint__inherit__graph.svg" width="183" height="539"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classanch_1_1rest_1_1_endpoint__inherit__graph.svg" width="183" height="560"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 <div id="dynsection-1" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Collaboration diagram for anch::rest::Endpoint&lt; F &gt;:</div>
 <div id="dynsection-1-summary" class="dynsummary">
@@ -111,6 +111,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ac1a86a92cf90ac958dcacef774adfd49 template"><td class="memItemLeft"><a class="el" href="#ae11c7bdf321bd83fbac4ea020465bfa8">Endpoint</a> &amp;&#160;</td><td class="memItemRight"><a class="el" href="#ac1a86a92cf90ac958dcacef774adfd49">produces</a> ()</td></tr>
 <tr class="memitem:a10cbd47b804bd2743848281b1e066b77" id="r_a10cbd47b804bd2743848281b1e066b77"><td class="memTemplParams" colspan="2">template&lt;typename C&gt; </td></tr>
 <tr class="memitem:a10cbd47b804bd2743848281b1e066b77 template"><td class="memItemLeft"><a class="el" href="#ae11c7bdf321bd83fbac4ea020465bfa8">Endpoint</a> &amp;&#160;</td><td class="memItemRight"><a class="el" href="#a10cbd47b804bd2743848281b1e066b77">consumes</a> ()</td></tr>
+<tr class="memitem:ac3e54f290fe48dd1e69f67763bc46405" id="r_ac3e54f290fe48dd1e69f67763bc46405"><td class="memItemLeft"><a class="el" href="#ae11c7bdf321bd83fbac4ea020465bfa8">Endpoint</a> &amp;&#160;</td><td class="memItemRight"><a class="el" href="#ac3e54f290fe48dd1e69f67763bc46405">status</a> (<a class="el" href="namespaceanch_1_1rest.html#a8c6f914e6bbc639b2eae1c9633cd9a98">anch::rest::Status</a> status)</td></tr>
 <tr class="memitem:abd7cef0ac5120731319ab6bee958f84b" id="r_abd7cef0ac5120731319ab6bee958f84b"><td class="memItemLeft">virtual <a class="el" href="classanch_1_1rest_1_1_response.html">anch::rest::Response</a>&#160;</td><td class="memItemRight"><a class="el" href="#abd7cef0ac5120731319ab6bee958f84b">handle</a> (<a class="el" href="classanch_1_1rest_1_1_request.html">anch::rest::Request</a> &amp;request, std::vector&lt; std::string &gt; &amp;parameters) override</td></tr>
 <tr class="memitem:a15f4506b38befd872d6f92703f1467cb" id="r_a15f4506b38befd872d6f92703f1467cb"><td class="memItemLeft">virtual std::size_t&#160;</td><td class="memItemRight"><a class="el" href="#a15f4506b38befd872d6f92703f1467cb">getPathParameterCount</a> () const noexcept override</td></tr>
 <tr class="memitem:a5f2f8194d62e3abb626937ca5901ae6d" id="r_a5f2f8194d62e3abb626937ca5901ae6d"><td class="memItemLeft">virtual std::optional&lt; std::string &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a5f2f8194d62e3abb626937ca5901ae6d">check</a> () const override</td></tr>
@@ -373,6 +374,40 @@ template&lt;typename C&gt; </div>
 </div>
 <div id="dynsection-4-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classanch_1_1rest_1_1_endpoint_ac1a86a92cf90ac958dcacef774adfd49_cgraph.svg" width="336" height="54"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+
+</div>
+</div>
+<a id="ac3e54f290fe48dd1e69f67763bc46405" name="ac3e54f290fe48dd1e69f67763bc46405"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac3e54f290fe48dd1e69f67763bc46405">&#9670;&#160;</a></span>status()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename F&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#ae11c7bdf321bd83fbac4ea020465bfa8">Endpoint</a> &amp; <a class="el" href="classanch_1_1rest_1_1_endpoint.html">anch::rest::Endpoint</a>&lt; F &gt;::status </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespaceanch_1_1rest.html#a8c6f914e6bbc639b2eae1c9633cd9a98">anch::rest::Status</a></td>          <td class="paramname"><span class="paramname"><em>status</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Set success status: status of responses with serialized result ( <code>200</code> by default) or of <code>void</code> endpoints ( <code>204</code> by default), such as <code>201</code> or <code>202</code> . Endpoints which return <a class="el" href="classanch_1_1rest_1_1_response.html" title="anch::rest::Response">anch::rest::Response</a> set their status themselves, and empty <code>std::optional</code> results are still <code>404</code> .</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">status</td><td>the success status</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>this</code> </dd></dl>
+<dl class="section since"><dt>Since</dt><dd>0.2 </dd></dl>
+<div id="dynsection-5" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-5-summary" class="dynsummary">
+</div>
+<div id="dynsection-5-content" class="dyncontent hidden">
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classanch_1_1rest_1_1_endpoint_ac3e54f290fe48dd1e69f67763bc46405_cgraph.svg" width="336" height="78"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
 </div>

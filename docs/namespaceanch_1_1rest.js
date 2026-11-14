@@ -74,16 +74,24 @@ var namespaceanch_1_1rest =
       [ "TRACE", "namespaceanch_1_1rest.html#a524693d8e18aa5c97af671e4dc0b6d71a2d3e4144aa384b18849ab9a8abad74d6", null ],
       [ "PATCH", "namespaceanch_1_1rest.html#a524693d8e18aa5c97af671e4dc0b6d71a63bc9a3997d66d835d9f3ec29451407d", null ]
     ] ],
+    [ "Side", "namespaceanch_1_1rest.html#a23481a98e2fc63d6045769b147e165f0", [
+      [ "SERVER", "namespaceanch_1_1rest.html#a23481a98e2fc63d6045769b147e165f0a3d27c95bfdbea691b250894d96852844", null ],
+      [ "CLIENT", "namespaceanch_1_1rest.html#a23481a98e2fc63d6045769b147e165f0aef10c650df47bffd6399e5e78da2a9b1", null ]
+    ] ],
     [ "Status", "namespaceanch_1_1rest.html#a8c6f914e6bbc639b2eae1c9633cd9a98", null ],
     [ "base64Encode", "namespaceanch_1_1rest.html#a7ef4f6b4909423a684b1a7e851c30024", null ],
     [ "basicAuth", "namespaceanch_1_1rest.html#ad71a8aa21b04ceaaf3989b1958781f8f", null ],
     [ "bearerAuth", "namespaceanch_1_1rest.html#a5ac5ed34612911d026d9588ec271005e", null ],
     [ "code", "namespaceanch_1_1rest.html#ad5b33b499064b915e80272936f41add9", null ],
+    [ "deserializeBody", "namespaceanch_1_1rest.html#a756c1c51f7503d8c85c5fa67fc8da1e4", null ],
     [ "negotiate", "namespaceanch_1_1rest.html#ab4d6e4080428586549f9d65b3cda4dc0", null ],
     [ "parseMethod", "namespaceanch_1_1rest.html#ac23b86ecf6f7a1cab85c37d6184b8faa", null ],
     [ "percentDecode", "namespaceanch_1_1rest.html#adf2ce74c5c19d78de60bac9ab8b5a024", null ],
     [ "percentEncode", "namespaceanch_1_1rest.html#aadcc90785c3b9f4fad487621bed9cb4b", null ],
+    [ "queryParameter", "namespaceanch_1_1rest.html#afafc486ce719a29ad543c2d507985b3b", null ],
     [ "reasonPhrase", "namespaceanch_1_1rest.html#a552896a9c01778fdc2fd221c08ad54da", null ],
+    [ "requiredQueryParameter", "namespaceanch_1_1rest.html#a67f5130e07ac20fbfb49f77adda71117", null ],
+    [ "serializeBody", "namespaceanch_1_1rest.html#a53a0518a127667827e53d35936fc3db2", null ],
     [ "toParameterString", "namespaceanch_1_1rest.html#a24d2c2f5ea4b0c29dce43629767193cb", null ],
     [ "toString", "namespaceanch_1_1rest.html#ae0be2a3030d4b41a0f5f2e8a6526f610", null ]
 ];

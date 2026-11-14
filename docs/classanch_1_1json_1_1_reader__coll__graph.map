@@ -1,29 +1,29 @@
 <map id="anch::json::Reader" name="anch::json::Reader">
-<area shape="rect" id="Node000001" title="JSON reader based on events." alt="" coords="311,1165,432,1427"/>
-<area shape="rect" id="Node000002" href="$classanch_1_1events_1_1_observable.html" title=" " alt="" coords="5,825,170,996"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="125,1007,154,1063,186,1114,215,1151,248,1186,314,1247,309,1248,244,1190,211,1155,181,1118,149,1065,125,1012"/>
-<area shape="rect" id="Node000003" href="$classanch_1_1events_1_1_observable.html" title="An observable implementation of the observers/observable design pattern." alt="" coords="183,417,374,593"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="171,582,139,617,112,659,96,699,87,742,83,785,83,826,77,826,78,785,82,741,91,698,107,656,135,614,173,577"/>
-<area shape="rect" id="Node000004" href="$classanch_1_1events_1_1_observable.html" title=" " alt="" coords="196,825,356,996"/>
-<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="278,606,279,826,274,825,277,611"/>
-<area shape="rect" id="Node000005" href="$classanch_1_1events_1_1_observable.html" title=" " alt="" coords="379,825,559,996"/>
-<area shape="poly" id="edge6_Node000005_Node000003" title=" " alt="" coords="369,602,405,656,423,698,438,741,459,826,454,825,433,743,418,700,400,659,369,608"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="302,1008,342,1166,337,1165,299,1013"/>
-<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="446,1008,407,1167,402,1164,442,1012"/>
-<area shape="rect" id="Node000006" href="$classanch_1_1json_1_1_reader_context.html" title="JSON reader context." alt="" coords="607,705,774,1116"/>
-<area shape="poly" id="edge7_Node000001_Node000006" title=" " alt="" coords="601,1076,572,1118,503,1191,433,1251,430,1247,500,1187,568,1114,597,1080"/>
-<area shape="rect" id="Node000007" title=" " alt="" coords="510,471,590,540"/>
-<area shape="poly" id="edge8_Node000006_Node000007" title=" " alt="" coords="565,537,613,656,624,689,619,689,608,658,564,543"/>
+<area shape="rect" id="Node000001" title="JSON reader based on events." alt="" coords="311,1208,432,1469"/>
+<area shape="rect" id="Node000002" href="$classanch_1_1events_1_1_observable.html" title=" " alt="" coords="5,868,170,1039"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="125,1050,154,1105,186,1157,215,1194,248,1229,314,1290,309,1291,244,1233,211,1197,181,1160,149,1108,125,1055"/>
+<area shape="rect" id="Node000003" href="$classanch_1_1events_1_1_observable.html" title="An observable implementation of the observers/observable design pattern." alt="" coords="183,439,374,615"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="171,615,140,656,112,701,97,742,89,785,84,869,78,868,83,784,92,741,107,699,135,652,174,611"/>
+<area shape="rect" id="Node000004" href="$classanch_1_1events_1_1_observable.html" title=" " alt="" coords="196,868,356,1039"/>
+<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="279,627,279,869,274,868,277,632"/>
+<area shape="rect" id="Node000005" href="$classanch_1_1events_1_1_observable.html" title=" " alt="" coords="379,868,559,1039"/>
+<area shape="poly" id="edge6_Node000005_Node000003" title=" " alt="" coords="358,624,405,699,437,784,457,869,452,868,432,786,400,701,358,629"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="302,1051,342,1208,337,1208,299,1055"/>
+<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="446,1051,407,1209,402,1207,442,1055"/>
+<area shape="rect" id="Node000006" href="$classanch_1_1json_1_1_reader_context.html" title="JSON reader context." alt="" coords="607,748,774,1159"/>
+<area shape="poly" id="edge7_Node000001_Node000006" title=" " alt="" coords="601,1119,572,1160,503,1233,433,1294,430,1289,500,1229,568,1157,597,1122"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="510,492,590,561"/>
+<area shape="poly" id="edge8_Node000006_Node000007" title=" " alt="" coords="563,558,613,699,623,732,618,731,608,701,561,563"/>
 <area shape="rect" id="Node000008" title=" " alt="" coords="492,243,609,328"/>
-<area shape="poly" id="edge9_Node000007_Node000008" title=" " alt="" coords="551,340,553,471,548,470,550,345"/>
+<area shape="poly" id="edge9_Node000007_Node000008" title=" " alt="" coords="551,340,553,493,548,492,550,345"/>
 <area shape="rect" id="Node000009" title=" " alt="" coords="478,124,622,193"/>
 <area shape="poly" id="edge10_Node000008_Node000009" title=" " alt="" coords="551,206,553,243,548,242,550,211"/>
 <area shape="rect" id="Node000010" title=" " alt="" coords="506,5,595,75"/>
 <area shape="poly" id="edge11_Node000009_Node000010" title=" " alt="" coords="551,87,553,125,548,124,550,92"/>
-<area shape="rect" id="Node000011" href="$structanch_1_1json_1_1_mapping_options.html" title="JSON mapping options." alt="" coords="615,377,814,633"/>
-<area shape="poly" id="edge12_Node000006_Node000011" title=" " alt="" coords="708,631,706,690,701,688,706,635"/>
-<area shape="rect" id="Node000012" title=" " alt="" coords="837,471,906,540"/>
-<area shape="poly" id="edge13_Node000006_Node000012" title=" " alt="" coords="862,538,829,634,783,734,779,731,824,632,859,542"/>
+<area shape="rect" id="Node000011" href="$structanch_1_1json_1_1_mapping_options.html" title="JSON mapping options." alt="" coords="615,377,814,676"/>
+<area shape="poly" id="edge12_Node000006_Node000011" title=" " alt="" coords="707,673,705,732,700,730,705,678"/>
+<area shape="rect" id="Node000012" title=" " alt="" coords="837,492,906,561"/>
+<area shape="poly" id="edge13_Node000006_Node000012" title=" " alt="" coords="865,559,850,616,829,677,783,780,779,777,824,675,845,614,862,563"/>
 <area shape="rect" id="Node000013" title=" " alt="" coords="814,243,929,328"/>
-<area shape="poly" id="edge14_Node000012_Node000013" title=" " alt="" coords="873,340,874,472,869,470,871,345"/>
+<area shape="poly" id="edge14_Node000012_Node000013" title=" " alt="" coords="873,340,874,493,869,491,871,345"/>
 </map>

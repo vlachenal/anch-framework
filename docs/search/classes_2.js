@@ -25,5 +25,6 @@ var searchData=
   ['cpu_22',['CPU',['../classanch_1_1device_1_1_c_p_u.html',1,'anch::device']]],
   ['cstreambuf_23',['CStreambuf',['../classanch_1_1cutils_1_1_c_streambuf.html',1,'anch::cutils']]],
   ['ctr_24',['CTR',['../classanch_1_1crypto_1_1_c_t_r.html',1,'anch::crypto']]],
-  ['curltransport_25',['CurlTransport',['../classanch_1_1rest_1_1_curl_transport.html',1,'anch::rest']]]
+  ['curltransport_25',['CurlTransport',['../classanch_1_1rest_1_1_curl_transport.html',1,'anch::rest']]],
+  ['custom_26',['Custom',['../structanch_1_1json_1_1_custom.html',1,'anch::json']]]
 ];

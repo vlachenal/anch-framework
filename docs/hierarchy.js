@@ -2,6 +2,7 @@ var hierarchy =
 [
     [ "anch::oas::AdditionalProperties", "structanch_1_1oas_1_1_additional_properties.html", null ],
     [ "anch::network::Address", "classanch_1_1network_1_1_address.html", null ],
+    [ "anch::json::Allowed&lt; A &gt;", "structanch_1_1json_1_1_allowed.html", null ],
     [ "anch_rest_application_t", "structanch__rest__application__t.html", null ],
     [ "anch_rest_header_t", "structanch__rest__header__t.html", null ],
     [ "anch_rest_request_t", "structanch__rest__request__t.html", null ],
@@ -57,6 +58,7 @@ var hierarchy =
       [ "anch::sql::SQLite3Connection", "classanch_1_1sql_1_1_s_q_lite3_connection.html", null ]
     ] ],
     [ "anch::crypto::SHA2&lt; O, B, W, R, I &gt;::Context&lt; Init &gt;", "structanch_1_1crypto_1_1_s_h_a2_1_1_context.html", null ],
+    [ "anch::json::Custom&lt; V &gt;", "structanch_1_1json_1_1_custom.html", null ],
     [ "anch::date::Date", "classanch_1_1date_1_1_date.html", [
       [ "anch::sql::Date", "classanch_1_1sql_1_1_date.html", null ],
       [ "anch::sql::Time", "classanch_1_1sql_1_1_time.html", null ],
@@ -84,6 +86,7 @@ var hierarchy =
     [ "anch::json::Factory&lt; T &gt;", "classanch_1_1json_1_1_factory.html", null ],
     [ "anch::Fluent&lt; T, C &gt;", "classanch_1_1_fluent.html", null ],
     [ "anch::Flux&lt; T &gt;", "classanch_1_1_flux.html", null ],
+    [ "anch::json::Format", "structanch_1_1json_1_1_format.html", null ],
     [ "anch::cli::Formatter", "structanch_1_1cli_1_1_formatter.html", null ],
     [ "FormatterOptions", "struct_formatter_options.html", null ],
     [ "anch::oas::GeneratedModels", "structanch_1_1oas_1_1_generated_models.html", null ],
@@ -138,6 +141,7 @@ var hierarchy =
       ] ]
     ] ],
     [ "anch::crypto::ISO7816_4Padding", "classanch_1_1crypto_1_1_i_s_o7816__4_padding.html", null ],
+    [ "anch::json::Items&lt; C &gt;", "structanch_1_1json_1_1_items.html", null ],
     [ "anch::rest::Json", "structanch_1_1rest_1_1_json.html", null ],
     [ "anch::json::JSONItem", "classanch_1_1json_1_1_j_s_o_n_item.html", null ],
     [ "JSONItem", "class_j_s_o_n_item.html", null ],
@@ -150,9 +154,19 @@ var hierarchy =
     [ "anch::log::MapDiagnosticContext", "classanch_1_1log_1_1_map_diagnostic_context.html", null ],
     [ "anch::json::MappingOptions", "structanch_1_1json_1_1_mapping_options.html", null ],
     [ "MappingOptions", "struct_mapping_options.html", null ],
+    [ "anch::json::Maximum&lt; N &gt;", "structanch_1_1json_1_1_maximum.html", null ],
+    [ "anch::json::MaxItems", "structanch_1_1json_1_1_max_items.html", null ],
+    [ "anch::json::MaxLength", "structanch_1_1json_1_1_max_length.html", null ],
+    [ "anch::json::MaxProperties", "structanch_1_1json_1_1_max_properties.html", null ],
     [ "anch::rest::MediaType", "classanch_1_1rest_1_1_media_type.html", null ],
+    [ "anch::oas::MediaTypeObject", "structanch_1_1oas_1_1_media_type_object.html", null ],
     [ "anch::log::fmt::MessageFormatter", "classanch_1_1log_1_1fmt_1_1_message_formatter.html", null ],
+    [ "anch::json::Minimum&lt; N &gt;", "structanch_1_1json_1_1_minimum.html", null ],
+    [ "anch::json::MinItems", "structanch_1_1json_1_1_min_items.html", null ],
+    [ "anch::json::MinLength", "structanch_1_1json_1_1_min_length.html", null ],
+    [ "anch::json::MinProperties", "structanch_1_1json_1_1_min_properties.html", null ],
     [ "anch::oas::ModelOptions", "structanch_1_1oas_1_1_model_options.html", null ],
+    [ "anch::json::MultipleOf&lt; N &gt;", "structanch_1_1json_1_1_multiple_of.html", null ],
     [ "anch::device::Network", "classanch_1_1device_1_1_network.html", null ],
     [ "anch::device::NetworkInterface", "classanch_1_1device_1_1_network_interface.html", null ],
     [ "anch::log::NoopStream", "classanch_1_1log_1_1_noop_stream.html", null ],
@@ -177,6 +191,7 @@ var hierarchy =
     ] ],
     [ "anch::events::ObserverList&lt; T &gt;", "classanch_1_1events_1_1_observer_list.html", null ],
     [ "anch::oas::OpenAPI", "structanch_1_1oas_1_1_open_a_p_i.html", null ],
+    [ "anch::oas::Operation", "structanch_1_1oas_1_1_operation.html", null ],
     [ "std::optional", null, [
       [ "anch::Optional< T >", "classanch_1_1_optional.html", null ]
     ] ],
@@ -185,6 +200,9 @@ var hierarchy =
     [ "anch::rest::ParamConverter&lt; bool &gt;", "structanch_1_1rest_1_1_param_converter_3_01bool_01_4.html", null ],
     [ "anch::rest::ParamConverter&lt; std::string &gt;", "structanch_1_1rest_1_1_param_converter_3_01std_1_1string_01_4.html", null ],
     [ "anch::rest::ParamConverter&lt; T &gt;", "structanch_1_1rest_1_1_param_converter_3_01_t_01_4.html", null ],
+    [ "anch::oas::Parameter", "structanch_1_1oas_1_1_parameter.html", null ],
+    [ "anch::oas::PathItem", "structanch_1_1oas_1_1_path_item.html", null ],
+    [ "anch::json::Pattern", "structanch_1_1json_1_1_pattern.html", null ],
     [ "anch::crypto::PKCS5Padding", "classanch_1_1crypto_1_1_p_k_c_s5_padding.html", null ],
     [ "anch::conf::Placeholders", "classanch_1_1conf_1_1_placeholders.html", null ],
     [ "anch::PoolableResource&lt; T &gt;", "classanch_1_1_poolable_resource.html", null ],
@@ -200,9 +218,12 @@ var hierarchy =
       [ "anch::json::Reader", "classanch_1_1json_1_1_reader.html", null ]
     ] ],
     [ "anch::rest::Request", "classanch_1_1rest_1_1_request.html", null ],
+    [ "anch::oas::RequestBody", "structanch_1_1oas_1_1_request_body.html", null ],
+    [ "anch::json::Required", "structanch_1_1json_1_1_required.html", null ],
     [ "anch::ResourcePool&lt; T, C, make_ptr &gt;", "classanch_1_1_resource_pool.html", null ],
     [ "anch::ResourcePoolState&lt; T &gt;", "structanch_1_1_resource_pool_state.html", null ],
     [ "anch::rest::Response", "classanch_1_1rest_1_1_response.html", null ],
+    [ "anch::oas::ResponseObject", "structanch_1_1oas_1_1_response_object.html", null ],
     [ "anch::sql::ResultSet", "classanch_1_1sql_1_1_result_set.html", [
       [ "anch::sql::MySQLPreparedStatementResultSet", "classanch_1_1sql_1_1_my_s_q_l_prepared_statement_result_set.html", null ],
       [ "anch::sql::MySQLResultSet", "classanch_1_1sql_1_1_my_s_q_l_result_set.html", null ],
@@ -275,8 +296,11 @@ var hierarchy =
     ] ],
     [ "anch::rest::TransportConfig", "structanch_1_1rest_1_1_transport_config.html", null ],
     [ "anch::network::UdpSocket", "classanch_1_1network_1_1_udp_socket.html", null ],
+    [ "anch::json::UniqueItems", "structanch_1_1json_1_1_unique_items.html", null ],
     [ "anch::ut::UnitTests", "classanch_1_1ut_1_1_unit_tests.html", null ],
     [ "anch::UUID", "classanch_1_1_u_u_i_d.html", null ],
+    [ "anch::json::ValidationContext", "classanch_1_1json_1_1_validation_context.html", null ],
+    [ "anch::json::Violation", "structanch_1_1json_1_1_violation.html", null ],
     [ "anch::log::Writer", "classanch_1_1log_1_1_writer.html", [
       [ "anch::log::ConsoleWriter", "classanch_1_1log_1_1_console_writer.html", null ],
       [ "anch::log::FileWriter", "classanch_1_1log_1_1_file_writer.html", [

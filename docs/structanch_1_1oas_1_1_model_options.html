@@ -98,7 +98,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('structanch_1_1
 <div id="dynsection-0-summary" class="dynsummary">
 </div>
 <div id="dynsection-0-content" class="dyncontent hidden">
-<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="structanch_1_1oas_1_1_model_options__coll__graph.svg" width="167" height="420"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="structanch_1_1oas_1_1_model_options__coll__graph.svg" width="167" height="506"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-attribs" class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
@@ -108,12 +108,64 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a8aba1e5b4ab103b10c1bd2d64c2ed41d" id="r_a8aba1e5b4ab103b10c1bd2d64c2ed41d"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#a8aba1e5b4ab103b10c1bd2d64c2ed41d">uuid</a> = true</td></tr>
 <tr class="memitem:abf5fd7c6bcebee614df26d3182be647c" id="r_abf5fd7c6bcebee614df26d3182be647c"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#abf5fd7c6bcebee614df26d3182be647c">date</a> = true</td></tr>
 <tr class="memitem:aca9a563db5e32d718d97f1cf0809f7cc" id="r_aca9a563db5e32d718d97f1cf0809f7cc"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#aca9a563db5e32d718d97f1cf0809f7cc">strict</a> = false</td></tr>
+<tr class="memitem:a626d60612c8af3649968190052b289a4" id="r_a626d60612c8af3649968190052b289a4"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#a626d60612c8af3649968190052b289a4">constraints</a> = true</td></tr>
+<tr class="memitem:ab5b70f81f39dc9ec21051ab9ee046aa7" id="r_ab5b70f81f39dc9ec21051ab9ee046aa7"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#ab5b70f81f39dc9ec21051ab9ee046aa7">server</a> = false</td></tr>
+<tr class="memitem:a3804a0c05c396bcf81df49761aeb42c6" id="r_a3804a0c05c396bcf81df49761aeb42c6"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#a3804a0c05c396bcf81df49761aeb42c6">client</a> = false</td></tr>
+<tr class="memitem:aa1d9cdff6253f32c60682d4bb0e2f547" id="r_aa1d9cdff6253f32c60682d4bb0e2f547"><td class="memItemLeft">std::string&#160;</td><td class="memItemRight"><a class="el" href="#aa1d9cdff6253f32c60682d4bb0e2f547">api</a></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Models generation options. </p>
 <dl class="section since"><dt>Since</dt><dd>0.1</dd></dl>
 <dl class="section author"><dt>Author</dt><dd>Vincent Lachenal </dd></dl>
 </div><a name="doc-variable-members" id="doc-variable-members"></a><h2 id="header-doc-variable-members" class="groupheader">Member Data Documentation</h2>
+<a id="aa1d9cdff6253f32c60682d4bb0e2f547" name="aa1d9cdff6253f32c60682d4bb0e2f547"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa1d9cdff6253f32c60682d4bb0e2f547">&#9670;&#160;</a></span>api</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string anch::oas::ModelOptions::api</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>API name: service is &lt;api&gt;Service and client is &lt;api&gt;Client (default: document title in PascalCase)</p>
+<dl class="section since"><dt>Since</dt><dd>0.2 </dd></dl>
+
+</div>
+</div>
+<a id="a3804a0c05c396bcf81df49761aeb42c6" name="a3804a0c05c396bcf81df49761aeb42c6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3804a0c05c396bcf81df49761aeb42c6">&#9670;&#160;</a></span>client</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool anch::oas::ModelOptions::client = false</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Generate endpoints client side ( <code>paths</code> ): typed client based on <code><a class="el" href="classanch_1_1rest_1_1_client.html">anch::rest::Client</a></code> (&lt;name&gt;-client.hpp and &lt;name&gt;-client.cpp)</p>
+<dl class="section since"><dt>Since</dt><dd>0.2 </dd></dl>
+
+</div>
+</div>
+<a id="a626d60612c8af3649968190052b289a4" name="a626d60612c8af3649968190052b289a4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a626d60612c8af3649968190052b289a4">&#9670;&#160;</a></span>constraints</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool anch::oas::ModelOptions::constraints = true</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Generate value constraints ( <code>minLength</code> , <code>minimum</code> , <code>minItems</code> , ...) in mappers. Required properties are always checked.</p>
+<dl class="section since"><dt>Since</dt><dd>0.2 </dd></dl>
+
+</div>
+</div>
 <a id="abf5fd7c6bcebee614df26d3182be647c" name="abf5fd7c6bcebee614df26d3182be647c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#abf5fd7c6bcebee614df26d3182be647c">&#9670;&#160;</a></span>date</h2>
 
@@ -156,6 +208,22 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>Namespace of generated models (<code>::</code> separated identifiers) </p>
+
+</div>
+</div>
+<a id="ab5b70f81f39dc9ec21051ab9ee046aa7" name="ab5b70f81f39dc9ec21051ab9ee046aa7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab5b70f81f39dc9ec21051ab9ee046aa7">&#9670;&#160;</a></span>server</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool anch::oas::ModelOptions::server = false</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Generate endpoints server side ( <code>paths</code> ): service interface and its registration in <code><a class="el" href="classanch_1_1rest_1_1_api.html">anch::rest::Api</a></code> (&lt;name&gt;-server.hpp and &lt;name&gt;-server.cpp)</p>
+<dl class="section since"><dt>Since</dt><dd>0.2 </dd></dl>
 
 </div>
 </div>

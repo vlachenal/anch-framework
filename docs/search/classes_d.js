@@ -16,5 +16,6 @@ var searchData=
   ['observerlist_3c_20std_3a_3astreamsize_20_3e_13',['ObserverList&lt; std::streamsize &gt;',['../classanch_1_1events_1_1_observer_list.html',1,'anch::events']]],
   ['ofb_14',['OFB',['../classanch_1_1crypto_1_1_o_f_b.html',1,'anch::crypto']]],
   ['openapi_15',['OpenAPI',['../structanch_1_1oas_1_1_open_a_p_i.html',1,'anch::oas']]],
-  ['optional_16',['Optional',['../classanch_1_1_optional.html',1,'anch']]]
+  ['operation_16',['Operation',['../structanch_1_1oas_1_1_operation.html',1,'anch::oas']]],
+  ['optional_17',['Optional',['../classanch_1_1_optional.html',1,'anch']]]
 ];
