@@ -20,7 +20,10 @@
 #pragma once
 
 #include <concepts>
+#include <cstdint>
+#include <istream>
 #include <memory>
+#include <optional>
 #include <ostream>
 #include <string>
 #include <string_view>
@@ -40,6 +43,24 @@
 namespace anch::rest {
 
   class Client;
+
+  /*!
+   * Raw request body: stream sent as is (media types without codec)
+   *
+   * \author Vincent Lachenal
+   *
+   * \since 0.2
+   */
+  struct RawBody {
+    /*! Body stream */
+    std::unique_ptr<std::istream> input;
+
+    /*! Content type (empty: chosen by the caller, generated clients use the declared media type) */
+    std::string contentType = std::string();
+
+    /*! Body size ( \c Content-Length , streamed by the libcurl transport), empty when unknown */
+    std::optional<std::uint64_t> size = std::nullopt;
+  };
 
   /*!
    * Request being built by \ref Client .\n
@@ -180,6 +201,47 @@ Pet pet = client.get("/pets/{id}", 42).accept<anch::rest::Json>().as<Pet>();
      * \return \c this
      */
     Call&& body(std::string content, std::string_view contentType) &&;
+
+    /*!
+     * Set body stream: it is read by the transport when the request is sent (with a size, the libcurl
+     * transport streams it: large bodies are not loaded in memory)
+     *
+     * \param input the body stream
+     * \param contentType the content type
+     * \param size the body size ( \c Content-Length ), empty when unknown
+     *
+     * \return \c this
+     */
+    Call& body(std::unique_ptr<std::istream> input, std::string_view contentType, std::optional<std::uint64_t> size = std::nullopt) &;
+
+    /*!
+     * Set body stream (see above)
+     *
+     * \param input the body stream
+     * \param contentType the content type
+     * \param size the body size ( \c Content-Length ), empty when unknown
+     *
+     * \return \c this
+     */
+    Call&& body(std::unique_ptr<std::istream> input, std::string_view contentType, std::optional<std::uint64_t> size = std::nullopt) &&;
+
+    /*!
+     * Set raw body (see above)
+     *
+     * \param raw the raw body
+     *
+     * \return \c this
+     */
+    Call& body(anch::rest::RawBody raw) &;
+
+    /*!
+     * Set raw body (see above)
+     *
+     * \param raw the raw body
+     *
+     * \return \c this
+     */
+    Call&& body(anch::rest::RawBody raw) &&;
 
     /*!
      * Send request

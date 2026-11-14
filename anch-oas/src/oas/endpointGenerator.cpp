@@ -274,7 +274,7 @@ Generator::buildOperation(const std::string& method, const std::string& path, co
   for(const Parameter& param : operation.parameters) {
     addParameter(param);
   }
-  std::set<std::string> args = {"request", "service", "call", "body"};
+  std::set<std::string> args = {"request", "service", "call", "body", "contentType"};
   auto argName = [&args](const std::string& base) {
     std::string res = memberName(base);
     while(args.contains(res)) {
@@ -346,54 +346,66 @@ Generator::buildOperation(const std::string& method, const std::string& path, co
       }
     }
     const std::string where = "paths." + path + "." + method;
-    Type type;
-    if(schema == nullptr && !forms.empty()) {
-      // Form body: model of the first form media type with schema, anch::rest::Form without schema
-      for(const FormContent& form : forms) {
-	if(form.schema != nullptr) {
-	  schema = form.schema;
-	  break;
-	}
+    // Media types without codec, JSON and text without schema, no media type (*/*): raw stream
+    std::vector<std::string> rawTypes;
+    for(const auto& [mediaType, content] : body->content) {
+      const std::string codec = codecOf(mediaType);
+      if(codec.empty() || ((codec == TEXT_CODEC || codec == JSON_CODEC) && !content.schema.has_value())) {
+	rawTypes.push_back(mediaType);
       }
-      if(schema == nullptr) {
-	type.cpp = "anch::rest::Form";
-	_rawForm = true;
+    }
+    Type type;
+    if(schema == nullptr && forms.empty()) {
+      op.raw = true;
+      op.bodyArg = "body";
+      op.bodyDescription = body->description.value_or("");
+      const bool single = rawTypes.size() == 1 && rawTypes.front().find('*') == std::string::npos;
+      op.rawContentType = single ? rawTypes.front() : std::string("application/octet-stream");
+    } else {
+      if(schema == nullptr && !forms.empty()) {
+	// Form body: model of the first form media type with schema, anch::rest::Form without schema
+	for(const FormContent& form : forms) {
+	  if(form.schema != nullptr) {
+	    schema = form.schema;
+	    break;
+	  }
+	}
+	if(schema == nullptr) {
+	  type.cpp = "anch::rest::Form";
+	  _rawForm = true;
+	} else {
+	  type = resolve(*schema, pascal(name) + "Request");
+	  if(!type.model || type.container != Container::NONE) {
+	    throw Unsupported{"form request body which is not an object"};
+	  }
+	}
       } else {
 	type = resolve(*schema, pascal(name) + "Request");
-	if(!type.model || type.container != Container::NONE) {
-	  throw Unsupported{"form request body which is not an object"};
+	if(text && type.cpp == "std::string" && type.container == Container::NONE && !type.model && !type.enumeration) {
+	  op.consumes.push_back(TEXT_CODEC);
+	}
+	if(op.consumes.empty()) {
+	  throw Unsupported{"text/plain request body which is not a string"};
 	}
       }
-    } else {
-      if(schema == nullptr) {
-	throw Unsupported{"request body media types (only application/json, text/plain, multipart/form-data and "
-			  "application/x-www-form-urlencoded are supported)"};
-      }
-      type = resolve(*schema, pascal(name) + "Request");
-      if(text && type.cpp == "std::string" && type.container == Container::NONE && !type.model && !type.enumeration) {
-	op.consumes.push_back(TEXT_CODEC);
-      }
-      if(op.consumes.empty()) {
-	throw Unsupported{"text/plain request body which is not a string"};
-      }
-    }
-    // Form codecs with the same body type
-    for(const FormContent& form : forms) {
-      const bool mapped = type.model && type.container == Container::NONE;
-      if(form.schema == nullptr ? (type.cpp == "anch::rest::Form" || mapped) : (mapped && sameSchema(form.schema, schema))) {
-	op.consumes.push_back(form.codec);
-	_formCodecs.insert(form.codec);
-	if(mapped) {
-	  FormMapping& mapping = _forms[type.cpp];
-	  mapping.multipart = mapping.multipart || form.codec == MULTIPART_CODEC;
+      // Form codecs with the same body type
+      for(const FormContent& form : forms) {
+	const bool mapped = type.model && type.container == Container::NONE;
+	if(form.schema == nullptr ? (type.cpp == "anch::rest::Form" || mapped) : (mapped && sameSchema(form.schema, schema))) {
+	  op.consumes.push_back(form.codec);
+	  _formCodecs.insert(form.codec);
+	  if(mapped) {
+	    FormMapping& mapping = _forms[type.cpp];
+	    mapping.multipart = mapping.multipart || form.codec == MULTIPART_CODEC;
+	  }
+	} else {
+	  _warnings.push_back(where + ": " + form.mediaType + " request body is ignored (its schema is not the one of the other media types)");
 	}
-      } else {
-	_warnings.push_back(where + ": " + form.mediaType + " request body is ignored (its schema is not the one of the other media types)");
       }
+      op.body = type;
+      op.bodyArg = "body";
+      op.bodyDescription = body->description.value_or("");
     }
-    op.body = type;
-    op.bodyArg = "body";
-    op.bodyDescription = body->description.value_or("");
   }
   // Request body -
   // Responses +
@@ -480,13 +492,18 @@ Generator::argumentType(const Type& type, bool optional) const {
 }
 
 std::string
-Generator::signature(const Op& op, bool defaults) const {
+Generator::signature(const Op& op, bool defaults, bool client) const {
   std::vector<std::string> args;
   for(const OpParameter& param : op.pathParameters) {
     args.push_back(argumentType(param.type, false) + " " + param.arg);
   }
   if(op.body.has_value()) {
     args.push_back(argumentType(op.body.value(), false) + " " + op.bodyArg);
+  } else if(op.raw && client) {
+    args.push_back("anch::rest::RawBody " + op.bodyArg);
+  } else if(op.raw) {
+    args.push_back("std::istream& " + op.bodyArg);
+    args.push_back("std::string_view contentType");
   }
   for(const OpParameter& param : op.queryParameters) {
     args.push_back(argumentType(param.type, !param.required) + " " + param.arg + ((defaults && !param.required) ? " = std::nullopt" : ""));
@@ -509,8 +526,13 @@ Generator::resultType(const Op& op) const {
   return "anch::rest::Response";
 }
 
+bool
+Generator::hasRawBody() const {
+  return std::any_of(_operations.begin(), _operations.end(), [](const Op& op) { return op.raw; });
+}
+
 void
-Generator::writeOperationDoc(std::ostream& out, const Op& op, const std::string& indent) const {
+Generator::writeOperationDoc(std::ostream& out, const Op& op, const std::string& indent, bool client) const {
   std::string doc = document(op.description, op.method == "del" ? "DELETE " + op.path : [&op]() {
     std::string method = op.method;
     std::transform(method.begin(), method.end(), method.begin(), [](unsigned char c) { return static_cast<char>(std::toupper(c)); });
@@ -525,6 +547,13 @@ Generator::writeOperationDoc(std::ostream& out, const Op& op, const std::string&
   }
   if(op.body.has_value()) {
     params.push_back("\\param " + op.bodyArg + " " + (op.bodyDescription.empty() ? std::string("the request body") : op.bodyDescription));
+  } else if(op.raw && client) {
+    params.push_back("\\param " + op.bodyArg + " " + (op.bodyDescription.empty() ? std::string("the request body") : op.bodyDescription)
+		     + " (stream sent as is, content type " + commentSafe(op.rawContentType) + " by default)");
+  } else if(op.raw) {
+    params.push_back("\\param " + op.bodyArg + " " + (op.bodyDescription.empty() ? std::string("the request body") : op.bodyDescription)
+		     + " (stream)");
+    params.push_back("\\param contentType the request body content type (empty when absent)");
   }
   for(const OpParameter& param : op.queryParameters) {
     params.push_back("\\param " + param.arg + " " + (param.description.empty() ? "query parameter " + param.name : param.description)
@@ -721,9 +750,11 @@ Generator::writeServerHeader(std::ostream& out) const {
   writeBanner(out);
   out << "#pragma once\n\n"
       << "#include <cstdint>\n"
+      << (hasRawBody() ? "#include <istream>\n" : "")
       << "#include <map>\n"
       << "#include <optional>\n"
       << "#include <string>\n"
+      << (hasRawBody() ? "#include <string_view>\n" : "")
       << "#include <vector>\n\n"
       << "#include \"" << _options.name << ".hpp\"\n"
       << "#include \"" << _options.name << "-forms.hpp\"\n\n"
@@ -737,8 +768,8 @@ Generator::writeServerHeader(std::ostream& out) const {
       << "    virtual ~" << service << "() = default;\n";
   for(const Op& op : _operations) {
     out << '\n';
-    writeOperationDoc(out, op, "    ");
-    out << "    virtual " << resultType(op) << ' ' << signature(op, false) << " = 0;\n";
+    writeOperationDoc(out, op, "    ", false);
+    out << "    virtual " << resultType(op) << ' ' << signature(op, false, false) << " = 0;\n";
   }
   out << "  };\n\n";
   writeDoc(out, "  ", "Register " + service + " endpoints\n\n\\param api the anch-rest API\n\\param service the service (it has to "
@@ -755,6 +786,7 @@ Generator::writeServerSource(std::ostream& out) const {
       << "#include \"rest/body.hpp\"\n"
       << "#include \"rest/codec.hpp\"\n"
       << formCodecInclude(false)
+      << (hasRawBody() ? "#include \"rest/headers.hpp\"\n" : "")
       << "#include \"rest/jsonCodec.hpp\"\n"
       << formCodecInclude(true)
       << "#include \"rest/paramConverter.hpp\"\n"
@@ -767,7 +799,7 @@ Generator::writeServerSource(std::ostream& out) const {
   for(const Op& op : _operations) {
     std::vector<std::string> params;
     std::vector<std::string> args;
-    if(!op.queryParameters.empty()) {
+    if(!op.queryParameters.empty() || op.raw) {
       params.push_back("const anch::rest::Request& request");
     }
     for(const OpParameter& param : op.pathParameters) {
@@ -777,6 +809,10 @@ Generator::writeServerSource(std::ostream& out) const {
     if(op.body.has_value()) {
       params.push_back("anch::rest::Body<" + cppType(op.body.value(), false, false) + "> " + op.bodyArg);
       args.push_back("*" + op.bodyArg);
+    } else if(op.raw) {
+      params.push_back("std::istream& " + op.bodyArg);
+      args.push_back(op.bodyArg);
+      args.push_back("request.getHeaders().get(anch::rest::header::CONTENT_TYPE).value_or(std::string_view())");
     }
     for(const OpParameter& param : op.queryParameters) {
       args.push_back(std::string("anch::rest::") + (param.required ? "requiredQueryParameter" : "queryParameter") + "<"
@@ -833,8 +869,8 @@ Generator::writeClientHeader(std::ostream& out) const {
       << "    explicit " << client << "(anch::rest::Client& client);\n";
   for(const Op& op : _operations) {
     out << '\n';
-    writeOperationDoc(out, op, "    ");
-    out << "    " << resultType(op) << ' ' << signature(op, true) << ";\n";
+    writeOperationDoc(out, op, "    ", true);
+    out << "    " << resultType(op) << ' ' << signature(op, true, true) << ";\n";
   }
   out << "  };\n\n"
       << "}  // " << _options.ns << "\n";
@@ -862,7 +898,7 @@ Generator::writeClientSource(std::ostream& out) const {
       pathArgs.push_back(param.arg);
     }
     out << "\n  " << resultType(op) << "\n"
-	<< "  " << client << "::" << signature(op, false) << " {\n"
+	<< "  " << client << "::" << signature(op, false, true) << " {\n"
 	<< "    anch::rest::Call<> call = _client." << op.method << '(' << join(pathArgs, ", ") << ");\n";
     for(const OpParameter& param : op.queryParameters) {
       if(param.required) {
@@ -875,6 +911,11 @@ Generator::writeClientSource(std::ostream& out) const {
     }
     if(op.body.has_value()) {
       out << "    call.body<" << op.consumes.front() << ">(" << op.bodyArg << ");\n";
+    } else if(op.raw) {
+      out << "    if(" << op.bodyArg << ".contentType.empty()) {\n"
+	  << "      " << op.bodyArg << ".contentType = " << literal(op.rawContentType) << ";\n"
+	  << "    }\n"
+	  << "    call.body(std::move(" << op.bodyArg << "));\n";
     }
     std::string accept;
     for(const std::string& codec : op.produces) {

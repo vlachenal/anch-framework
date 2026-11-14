@@ -24,6 +24,7 @@
 #include <istream>
 #include <optional>
 #include <ostream>
+#include <sstream>
 #include <string>
 #include <tuple>
 #include <type_traits>
@@ -163,8 +164,11 @@ namespace anch::rest::detail {
     /*! Body value type (\c std::monostate when there is no body) */
     using BodyType = typename IsBody<Last>::Type;
 
+    /*! Last argument is the raw body stream ( \c std::istream& , whatever the \c Content-Type is) */
+    static constexpr bool RAW_BODY = COUNT > 0 && std::is_same_v<typename ElementOr<COUNT - 1, Args>::Type, std::istream&>;
+
     /*! Number of path parameters */
-    static constexpr std::size_t PATH_COUNT = COUNT - (HAS_REQUEST ? 1 : 0) - (HAS_BODY ? 1 : 0);
+    static constexpr std::size_t PATH_COUNT = COUNT - (HAS_REQUEST ? 1 : 0) - ((HAS_BODY || RAW_BODY) ? 1 : 0);
 
     /*!
      * Path parameter type
@@ -298,6 +302,8 @@ namespace anch::rest {
    * - path parameters, in pattern order (types supported by \ref ParamConverter , \c 400 when invalid)
    * - \ref Body (optional): deserialized with the codec matching \c Content-Type (\c 415 when not
    *   consumed, \c 400 when missing or invalid)
+   * - or <tt>std::istream&</tt> (optional): raw body stream, whatever the \c Content-Type is (absent
+   *   included, no codec: read it with <tt>const Request&</tt> ), empty without body
    *
    * Function result:
    * - \ref Response : sent as is

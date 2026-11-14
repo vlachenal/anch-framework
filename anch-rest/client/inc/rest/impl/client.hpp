@@ -115,6 +115,37 @@ namespace anch::rest {
   }
 
   template<typename... Codecs>
+  Call<Codecs...>&
+  Call<Codecs...>::body(std::unique_ptr<std::istream> input, std::string_view contentType, std::optional<std::uint64_t> size) & {
+    _request.getHeaders().set(anch::rest::header::CONTENT_TYPE, contentType);
+    if(size) {
+      _request.getHeaders().set(anch::rest::header::CONTENT_LENGTH, std::to_string(*size));
+    } else {
+      _request.getHeaders().remove(anch::rest::header::CONTENT_LENGTH);
+    }
+    _request.setBody(std::move(input));
+    return *this;
+  }
+
+  template<typename... Codecs>
+  Call<Codecs...>&&
+  Call<Codecs...>::body(std::unique_ptr<std::istream> input, std::string_view contentType, std::optional<std::uint64_t> size) && {
+    return std::move(body(std::move(input), contentType, size));
+  }
+
+  template<typename... Codecs>
+  Call<Codecs...>&
+  Call<Codecs...>::body(anch::rest::RawBody raw) & {
+    return body(std::move(raw.input), raw.contentType, raw.size);
+  }
+
+  template<typename... Codecs>
+  Call<Codecs...>&&
+  Call<Codecs...>::body(anch::rest::RawBody raw) && {
+    return std::move(body(std::move(raw)));
+  }
+
+  template<typename... Codecs>
   anch::rest::Response
   Call<Codecs...>::send() && {
     return _client->send(_request);

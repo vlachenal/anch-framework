@@ -40,6 +40,12 @@ Serveur
 - Api::validate() : vérifie que chaque route a les codecs nécessaires (appelé par les adaptateurs au
   démarrage).
 - HttpException(status) dans un handler -> ce statut ; autre exception -> 500 sans détail.
+- Corps brut (2026-11-14) : std::istream& en dernier argument reçoit le corps quel que soit son Content-Type
+  (absent compris, flux vide sans corps) ; client : Call::body(flux, contentType, taille) et RawBody (envoyé en
+  flux par curl avec la taille). anch-oas : tout media type sans codec connu (*/*, octet-stream, image/png...),
+  JSON / texte sans schéma et corps sans media type -> std::istream& body + std::string_view contentType
+  (serveur), anch::rest::RawBody (client, media type déclaré par défaut s'il est unique et concret,
+  application/octet-stream sinon).
 - Contraintes anch-json (2026-11-14) : le codec Json a des options par côté (Json::options(Side)) ; côté
   serveur, les corps de requête sont vérifiés (400 avec le chemin de la valeur invalide), pas les réponses ;
   côté client, les requêtes sont vérifiées avant envoi (MappingError, rien n'est envoyé), les réponses du

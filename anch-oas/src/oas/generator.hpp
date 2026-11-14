@@ -671,6 +671,11 @@ namespace anch::oas::detail {
     std::vector<std::string> consumes;
     /*! Request body description */
     std::string bodyDescription;
+    /*! Request body is a raw stream (media types without codec): \c std::istream& server side,
+     * \c anch::rest::RawBody client side */
+    bool raw = false;
+    /*! Content type sent by the client for raw bodies without content type */
+    std::string rawContentType;
     /*! Result kind */
     ResultKind result = ResultKind::VOID;
     /*! Result type ( \c VALUE and \c OPTIONAL ) */
@@ -853,7 +858,7 @@ namespace anch::oas::detail {
     /*!
      * Operation method declaration (without return type and class name)
      */
-    std::string signature(const Op& op, bool defaults) const;
+    std::string signature(const Op& op, bool defaults, bool client) const;
 
     /*!
      * Operation result C++ type
@@ -883,7 +888,12 @@ namespace anch::oas::detail {
     void writeServerSource(std::ostream& out) const;
     void writeClientHeader(std::ostream& out) const;
     void writeClientSource(std::ostream& out) const;
-    void writeOperationDoc(std::ostream& out, const Op& op, const std::string& indent) const;
+    void writeOperationDoc(std::ostream& out, const Op& op, const std::string& indent, bool client) const;
+
+    /*!
+     * Some operation has a raw body
+     */
+    bool hasRawBody() const;
     // Endpoints (endpointGenerator.cpp) -
 
     void

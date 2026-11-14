@@ -182,7 +182,11 @@ std::vector<petstore::model::Tag> tags = client.listPets("AB");      // optional
  * - request body: \c application/json ( \c anch::rest::Json ), \c text/plain ( \c anch::rest::Text , strings
  *   only), \c multipart/form-data ( \c anch::rest::Multipart ) and \c application/x-www-form-urlencoded
  *   ( \c anch::rest::FormUrlEncoded ) ; references to \c #/components/requestBodies/ are followed (see
- *   \ref oas_forms_sec "form bodies") ;
+ *   \ref oas_forms_sec "form bodies"). Other media types ( \c *\/\* , \c application/octet-stream , \c image/png , ...),
+ *   JSON and text without schema and request bodies without media type are raw streams: <tt>std::istream& body,
+ *   std::string_view contentType</tt> server side (request \c Content-Type , empty when absent),
+ *   \c anch::rest::RawBody client side (stream, content type and size: the declared media type is sent when content
+ *   type is empty if it is the only one and concrete, \c application/octet-stream otherwise) ;
  * - result: success response ( \c 2xx ) with content → its type, with a \c 404 response → \c std::optional (empty
  *   result is a \c 404 response server side, \c 404 response is an empty result client side), without content →
  *   \c void , several success responses or other media types → \c anch::rest::Response . Status other than
@@ -193,8 +197,7 @@ std::vector<petstore::model::Tag> tags = client.listPets("AB");      // optional
  *
  * Not generated (warning, or error with \c --strict ): \c head , \c options and \c trace operations (anch-rest
  * serves \c HEAD with \c GET routes), path segments which are not whole parameters ( \c /files/{name}.json ),
- * undeclared path parameters, parameters of other types (enumerations, arrays, objects), request bodies of other
- * media types. Header and cookie parameters are not generated (warning). Constraints of path and query parameters
+ * undeclared path parameters, parameters of other types (enumerations, arrays, objects). Header and cookie parameters are not generated (warning). Constraints of path and query parameters
  * are not checked.
  *
  * \section oas_forms_sec Form bodies

@@ -81,6 +81,7 @@ add_test(NAME oas-gen-constraints-warnings COMMAND anch-oas-generator-test -t ge
 add_test(NAME oas-gen-endpoints COMMAND anch-oas-generator-test -t gen-endpoints)
 add_test(NAME oas-gen-endpoints-warnings COMMAND anch-oas-generator-test -t gen-endpoints-warnings)
 add_test(NAME oas-gen-forms COMMAND anch-oas-generator-test -t gen-forms)
+add_test(NAME oas-gen-raw-body COMMAND anch-oas-generator-test -t gen-raw-body)
 add_test(NAME oas-models-pet COMMAND anch-oas-models-test -t models-pet)
 add_test(NAME oas-models-optional COMMAND anch-oas-models-test -t models-optional)
 add_test(NAME oas-models-nullable-enum COMMAND anch-oas-models-test -t models-nullable-enum)

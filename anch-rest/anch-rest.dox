@@ -50,6 +50,17 @@ anch::rest::Response response = api.handle(request); // done by HTTP server adap
  * \c Allow ), not acceptable \c 406 , unsupported media type \c 415 , \ref anch::rest::HttpException "HttpException"
  * status, other exceptions \c 500 . \c OPTIONS without endpoint is answered with \c 204 and \c Allow .
  *
+ * Media types without codec are read as a stream: a <tt>std::istream&</tt> last argument receives the raw
+ * body whatever its \c Content-Type is (absent included, empty stream without body). The client sends a
+ * stream with \c Call::body(input, contentType, size) or \c anch::rest::RawBody (streamed by the libcurl
+ * transport when the size is known):
+ * \code{.cpp}
+api.put("/pets/{id}/image", [](const anch::rest::Request& request, uint64_t id, std::istream& image) {
+    saveImage(id, request.getHeaders().get(anch::rest::header::CONTENT_TYPE).value_or(""), image);
+  });
+client.put("/pets/{id}/image", 42).body(std::make_unique<std::ifstream>("rex.png", std::ios::binary), "image/png", size).execute();
+\endcode
+ *
  * \section rest_form_sec Forms
  *
  * \ref anch::rest::Form "Form" is an ordered list of \ref anch::rest::Part "Part" (fields and files, a

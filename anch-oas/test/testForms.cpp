@@ -17,9 +17,11 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ANCH Framework.  If not, see <https://www.gnu.org/licenses/>.
 */
+#include <initializer_list>
 #include <iterator>
 #include <memory>
 #include <optional>
+#include <sstream>
 #include <string>
 #include <string_view>
 #include <vector>
@@ -73,6 +75,14 @@ namespace {
       photo.thumbnails = static_cast<int32_t>(body.thumbnails.size());
       photo.tags = body.tags;
       photo.owner = body.owner ? body.owner->name : std::string("-");
+      return photo;
+    }
+
+    virtual Photo uploadImage(int64_t id, std::istream& body, std::string_view contentType) override {
+      Photo photo;
+      photo.id = id;
+      photo.mediaType = contentType.empty() ? std::string("-") : std::string(contentType);
+      photo.size = static_cast<int64_t>(std::distance(std::istreambuf_iterator<char>(body), std::istreambuf_iterator<char>()));
       return photo;
     }
 
@@ -152,6 +162,19 @@ testFormsServer() {
   Response tooLong = call(api, "/owners", "application/x-www-form-urlencoded", "name=Vincent+Lachenal");
   anch::ut::assertThat(tooLong.getStatus() == Status::BAD_REQUEST && tooLong.content().starts_with("/name: "), "Unexpected response '{}'",
 		       tooLong.content());
+  // Raw body: any content type, absent included
+  for(const auto& [contentType, expected] : std::initializer_list<std::pair<std::string_view, std::string_view>>{
+      {"image/png", "\"mediaType\":\"image/png\""}, {"image/jpeg", "\"mediaType\":\"image/jpeg\""}, {"", "\"mediaType\":\"-\""}}) {
+    Request request(Method::PUT, "/pets/9/image");
+    request.getHeaders().set("Accept", "application/json");
+    if(!contentType.empty()) {
+      request.getHeaders().set("Content-Type", contentType);
+    }
+    request.setBody(std::string(1234, 'p'));
+    Response image = api.handle(request);
+    anch::ut::assertThat(image.getStatus() == Status::OK && image.content().find(expected) != std::string::npos
+			 && image.content().find("\"size\":1234") != std::string::npos, "Unexpected response '{}'", image.content());
+  }
   // Raw form
   Response raw = call(api, "/raw", "multipart/form-data; boundary=b", "--b\r\nContent-Disposition: form-data; name=\"x\"\r\n\r\n1\r\n--b--\r\n");
   anch::ut::assertThat(raw.getStatus() == Status::NO_CONTENT && service.raw_ && service.raw_->field("x") == "1", "Raw form has to be received");
@@ -175,6 +198,10 @@ testFormsClient() {
 		       && photo.size == 8 && photo.thumbnails == 1 && photo.tags == std::vector<std::string>({"dog"}) && photo.owner == "Vincent",
 		       "Unexpected photo");
   anch::ut::assertThat(client.createOwner(Owner{.email = "rex@example.com", .name = "Rex"}) == "Rex rex@example.com", "Unexpected owner");
+  Photo image = client.uploadImage(4, anch::rest::RawBody{std::make_unique<std::istringstream>(std::string(500, 'i')), "", 500});
+  anch::ut::assertThat(image.id == 4 && image.mediaType == "image/png" && image.size == 500, "Declared content type expected by default");
+  image = client.uploadImage(5, anch::rest::RawBody{std::make_unique<std::istringstream>("JPG"), "image/jpeg", std::nullopt});
+  anch::ut::assertThat(image.mediaType == "image/jpeg" && image.size == 3, "Given content type expected");
   anch::rest::Form form;
   form.add("y", "2");
   client.raw(form);

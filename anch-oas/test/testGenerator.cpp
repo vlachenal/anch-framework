@@ -489,6 +489,52 @@ testForms() {
 }
 
 void
+testRawBody() {
+  std::string document = pathsSpec(R"({
+    "/any":{"post":{"operationId":"any","requestBody":{"content":{"*/*":{"schema":{"type":"string","format":"binary"}}}},"responses":{"204":{"description":"ok"}}}},
+    "/none":{"post":{"operationId":"none","requestBody":{"content":{}},"responses":{"204":{"description":"ok"}}}},
+    "/png/{id}":{"put":{"operationId":"upload","parameters":[{"name":"id","in":"path","required":true,"schema":{"type":"integer","format":"int64"}},
+        {"name":"q","in":"query","required":true,"schema":{"type":"string"}},{"name":"p","in":"query","schema":{"type":"integer","format":"int32"}}],
+      "requestBody":{"description":"PNG image","content":{"image/png":{"schema":{"type":"string","format":"binary"}}}},
+      "responses":{"200":{"description":"ok","content":{"application/json":{"schema":{"$ref":"#/components/schemas/Pet"}}}}}}},
+    "/images":{"post":{"operationId":"images","requestBody":{"content":{"image/png":{},"image/jpeg":{}}},"responses":{"204":{"description":"ok"}}}},
+    "/json":{"post":{"operationId":"json","requestBody":{"content":{"application/json":{}}},"responses":{"204":{"description":"ok"}}}},
+    "/mixed":{"post":{"operationId":"mixed","requestBody":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/Pet"}},"image/png":{}}},
+      "responses":{"204":{"description":"ok"}}}}})",
+    R"({"Pet":{"type":"object","properties":{"name":{"type":"string"}}}})");
+  ModelOptions options;
+  options.server = true;
+  options.client = true;
+  GeneratedModels models = generate(document, options);
+  anch::ut::assertThat(models.warnings.empty(), "No warning expected ; found {}", models.warnings.size());
+  // Service: body stream and its content type
+  contains(models.serverHeader, "#include <istream>\n");
+  contains(models.serverHeader, "#include <string_view>\n");
+  contains(models.serverHeader, "virtual void any(std::istream& body, std::string_view contentType) = 0;");
+  contains(models.serverHeader, "virtual void none(std::istream& body, std::string_view contentType) = 0;");
+  contains(models.serverHeader, "virtual Pet upload(int64_t id, std::istream& body, std::string_view contentType, const std::string& q, "
+	   "const std::optional<int32_t>& p) = 0;");
+  contains(models.serverHeader, "\\param body PNG image (stream)\n     * \\param contentType the request body content type (empty when absent)");
+  contains(models.serverHeader, "virtual void json(std::istream& body, std::string_view contentType) = 0;");
+  contains(models.serverHeader, "virtual void mixed(const Pet& body) = 0;");
+  contains(models.serverSource, "#include \"rest/headers.hpp\"\n");
+  contains(models.serverSource, "api.put(\"/png/{id}\", [&service](const anch::rest::Request& request, int64_t id, std::istream& body) -> Pet {\n"
+	   "      return service.upload(id, body, request.getHeaders().get(anch::rest::header::CONTENT_TYPE).value_or(std::string_view()), "
+	   "anch::rest::requiredQueryParameter<std::string>(request, \"q\"), anch::rest::queryParameter<int32_t>(request, \"p\"));\n"
+	   "    }).produces<anch::rest::Json>();");
+  contains(models.serverSource, "}).consumes<anch::rest::Json>();");
+  // Client: raw body with the declared content type by default
+  contains(models.clientHeader, "Pet upload(int64_t id, anch::rest::RawBody body, const std::string& q, const std::optional<int32_t>& p = std::nullopt);");
+  contains(models.clientHeader, "\\param body PNG image (stream sent as is, content type image/png by default)");
+  contains(models.clientSource, "    if(body.contentType.empty()) {\n      body.contentType = \"image/png\";\n    }\n    call.body(std::move(body));\n");
+  for(const char* op : {"any", "none", "images"}) {
+    contains(models.clientSource, std::string("MyPetsClient::") + op + "(anch::rest::RawBody body) {\n    anch::rest::Call<> call = _client.post(\"/" + op
+	     + "\");\n    if(body.contentType.empty()) {\n      body.contentType = \"application/octet-stream\";");
+  }
+  contains(models.clientSource, "body.contentType = \"application/json\";");
+}
+
+void
 testEndpointsWarnings() {
   std::string document = pathsSpec(R"({
     "/a/{x}.json":{"get":{"operationId":"a","parameters":[{"name":"x","in":"path","required":true,"schema":{"type":"string"}}],"responses":{}}},
@@ -506,14 +552,14 @@ testEndpointsWarnings() {
   for(const char* warning : {"paths./a/{x}.json.get: path segment '{x}.json' (anch-rest parameters are whole segments): not generated",
 			     "paths./b/{y}.get: path parameter 'y' is not declared: not generated",
 			     "paths./c.get: query parameter 't' of type std::vector<std::string> (anch-rest parameters are strings, numbers, booleans and UUID): not generated",
-			     "paths./c.post: request body media types (only application/json, text/plain, multipart/form-data and application/x-www-form-urlencoded are supported): not generated",
 			     "paths./c.put: header parameter 'X-Id' is not generated",
 			     "paths./c.options: HEAD, OPTIONS and TRACE methods (HEAD is served by GET routes): not generated",
 			     "paths./f/{s}.get: path parameter 's' of type S (anch-rest parameters are strings, numbers, booleans and UUID): not generated"}) {
     anch::ut::assertThat(std::find(models.warnings.begin(), models.warnings.end(), warning) != models.warnings.end(), "Warning '{}' not found", warning);
   }
-  anch::ut::assertThat(models.warnings.size() == 7, "7 warnings expected ; found {}", models.warnings.size());
+  anch::ut::assertThat(models.warnings.size() == 6, "6 warnings expected ; found {}", models.warnings.size());
   contains(models.serverHeader, "class TestService {");
+  contains(models.serverHeader, "virtual void d(std::istream& body, std::string_view contentType) = 0;");
   contains(models.serverHeader, "virtual void e() = 0;");
   anch::ut::assertThat(models.serverHeader.find(" a(") == std::string::npos && models.serverHeader.find(" c(") == std::string::npos,
 		       "Unsupported operations should not be generated");
@@ -553,5 +599,6 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("gen-endpoints", testEndpoints)
     .add("gen-endpoints-warnings", testEndpointsWarnings)
     .add("gen-forms", testForms)
+    .add("gen-raw-body", testRawBody)
     ;
 }

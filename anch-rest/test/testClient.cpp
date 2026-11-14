@@ -292,6 +292,18 @@ testMultipartStream() {
 }
 
 void
+testRawBody() {
+  Fixture fixture;
+  fixture.client.put("/blobs/{id}", 7).body(std::make_unique<std::istringstream>(std::string(1000, 'b')), "image/png", 1000).send();
+  anch::ut::assertThat(fixture.transport->method == Method::PUT && fixture.transport->body == std::string(1000, 'b')
+		       && fixture.transport->headers.get("Content-Type") == "image/png" && fixture.transport->headers.get("Content-Length") == "1000",
+		       "Unexpected raw body request");
+  fixture.client.post("/blobs").body(std::make_unique<std::istringstream>("abc"), "application/octet-stream").send();
+  anch::ut::assertThat(fixture.transport->body == "abc" && !fixture.transport->headers.has("Content-Length"),
+		       "Body without size has no Content-Length");
+}
+
+void
 testFormMapper() {
   Fixture fixture;
   UploadPhoto upload{"Rex", std::nullopt, {"a"}, anch::rest::Part("x", "rex.png", anch::rest::MediaType("image", "png"), "PNG"), std::nullopt};
@@ -415,6 +427,7 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("multipart", testMultipart)
     .add("form-mapper", testFormMapper)
     .add("multipart-stream", testMultipartStream)
+    .add("raw-body", testRawBody)
     .add("constraints", testConstraints)
     .add("http-error", testHttpError)
     .add("filters", testFilters)

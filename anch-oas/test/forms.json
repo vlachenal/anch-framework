@@ -31,6 +31,16 @@
         }
       }
     },
+    "/pets/{id}/image": {
+      "put": {
+        "operationId": "uploadImage",
+        "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "integer", "format": "int64"}}],
+        "requestBody": {"content": {"image/png": {"schema": {"type": "string", "format": "binary"}}}},
+        "responses": {
+          "200": {"description": "Photo", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/Photo"}}}}
+        }
+      }
+    },
     "/owners": {
       "post": {
         "operationId": "createOwner",

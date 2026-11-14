@@ -162,6 +162,10 @@ namespace anch::rest {
     }();
     if constexpr (Sig::HAS_BODY) {
       return std::apply(_function, std::tuple_cat(prefix, std::move(values), std::make_tuple(readBody(request))));
+    } else if constexpr (Sig::RAW_BODY) {
+      std::istringstream empty;
+      std::istream& body = request.hasBody() ? request.getBody() : empty;
+      return std::apply(_function, std::tuple_cat(prefix, std::move(values), std::forward_as_tuple(body)));
     } else {
       return std::apply(_function, std::tuple_cat(prefix, std::move(values)));
     }

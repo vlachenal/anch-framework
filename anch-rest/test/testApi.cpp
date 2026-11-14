@@ -683,6 +683,32 @@ testFormMapper() {
 }
 
 void
+testRawBody() {
+  Api api;
+  api.post("/files/{name}", [](const Request& request, std::string name, std::istream& body) {
+    std::string content{std::istreambuf_iterator<char>(body), std::istreambuf_iterator<char>()};
+    return name + ' ' + std::string(request.getHeaders().get("Content-Type").value_or("-")) + ' ' + content;
+  }).produces<Text>();
+  api.put("/blobs/{id}", [](uint64_t id, std::istream& body) {
+    return Response(Status::CREATED).body(std::to_string(id) + ' '
+					  + std::to_string(std::distance(std::istreambuf_iterator<char>(body), std::istreambuf_iterator<char>())));
+  });
+  api.validate();
+  for(const auto& [contentType, expected] : std::initializer_list<std::pair<std::string_view, std::string_view>>{
+      {"", "a.png - PNG"}, {"*/*", "a.png */* PNG"}, {"image/png", "a.png image/png PNG"}, {"application/json", "a.png application/json PNG"}}) {
+    Response response = call(api, Method::POST, "/files/a.png", "", contentType, "PNG");
+    expectStatus(response, Status::OK);
+    anch::ut::assertThat(bodyOf(response) == expected, "Unexpected body '{}' for content type '{}'", bodyOf(response), contentType);
+  }
+  Response empty = call(api, Method::POST, "/files/b");
+  anch::ut::assertThat(bodyOf(empty) == "b - ", "Request without body has an empty stream, found '{}'", bodyOf(empty));
+  Response blob = call(api, Method::PUT, "/blobs/7", "", "application/octet-stream", std::string(100000, 'x'));
+  expectStatus(blob, Status::CREATED);
+  anch::ut::assertThat(bodyOf(blob) == "7 100000", "Unexpected body '{}'", bodyOf(blob));
+  expectStatus(call(api, Method::PUT, "/blobs/x", "", "application/octet-stream", "x"), Status::BAD_REQUEST);
+}
+
+void
 testRegistration() {
   Api api;
   api.get("/pets/{id}", [](uint64_t) {});
@@ -738,6 +764,7 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("form", testForm)
     .add("multipart", testMultipart)
     .add("form-mapper", testFormMapper)
+    .add("raw-body", testRawBody)
     .add("errors", testErrors)
     .add("registration", testRegistration)
     .add("validate", testValidate)
