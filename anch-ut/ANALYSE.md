@@ -166,3 +166,36 @@ Correction : la suite échoue (voir T12).
 - [ ] Terminer `anch_add_tests` dans `AnchTest.cmake` en s'appuyant sur `--gen-ctest` (T2).
 - [ ] Implémenter `--gen-ctest` et les runners socket (`--runner`, `--start`, `--stop`) : refusés pour l'instant (T3, T4).
 - [ ] Plugin GCC (`anch-ut-gcc-attr-plugin`) : toujours non analysé.
+- [ ] Initialiser une suite une seule fois sous CTest (non prioritaire, voir ci-dessous).
+
+## Piste : initialisation unique d'une suite sous CTest (2026-11-14, non prioritaire)
+
+Constat : CTest ne communique pas avec le processus de test (il lance une commande, lit son code de sortie et sa sortie). Comme chaque `add_test(... -t <cas>)` est un processus, `initialize()` est rejoué pour chaque cas (voir T17 : coût faible, sauf initialisation lourde).
+
+Moyen côté CTest : les fixtures (CMake ≥ 3.7) :
+```cmake
+add_test(NAME suite-init COMMAND suite-test --start)
+add_test(NAME suite-stop COMMAND suite-test --stop)
+set_tests_properties(suite-init PROPERTIES FIXTURES_SETUP   suite)
+set_tests_properties(suite-stop PROPERTIES FIXTURES_CLEANUP suite)
+add_test(NAME suite-case COMMAND suite-test -t case)
+set_tests_properties(suite-case PROPERTIES FIXTURES_REQUIRED suite)
+```
+- Le setup passe avant les tests qui le requièrent, le cleanup après, même avec `-j`.
+- Avec `-R` / `-L`, setup et cleanup sont ajoutés automatiquement (`-FS`, `-FC`, `-FA` pour les exclure).
+- Si le setup échoue, les tests dépendants ne sont pas lancés (comptés en échec) ; le cleanup est exécuté même si des tests échouent.
+- `RESOURCE_LOCK` pour sérialiser les cas qui partagent un état non concurrent.
+
+Deux cas :
+1. **Contexte externe** (base, fichiers, serveur, schéma SQL) : les fixtures suffisent. Il manque dans anch-ut une option pour n'exécuter que l'initialisation ou que la désinitialisation, et une séparation entre initialisation globale (une fois, par la fixture) et initialisation locale au processus (connexion, objets), puisque `initialize()` est aujourd'hui appelé par chaque processus. Simple ; règlerait notamment les suites SQL (S6 d'`anch-sql`).
+2. **Contexte en mémoire** : non partageable entre processus, il faut un processus qui vive pendant toute la suite. C'est ce que prévoient `--start` / `--stop` / `--runner` (T3, T4) :
+   - `--start -r file://./suite.sock` (`FIXTURES_SETUP`) : lance un `SocketServerRunner` qui appelle `initialize()` une fois ;
+   - `-r file://./suite.sock -t <cas>` (`FIXTURES_REQUIRED`) : le client fait exécuter le cas par le serveur et renvoie son code de sortie ;
+   - `--stop -r ...` (`FIXTURES_CLEANUP`) : `uninitialize()` puis arrêt du serveur.
+
+Points de vigilance pour le cas 2 :
+- `--start` doit rendre la main : `fork`, attendre que la socket soit prête, puis `exit(0)` ; le serveur doit rediriger stdout / stderr (fichier de log), sinon CTest attend la fermeture des pipes et le setup ne se termine jamais.
+- La sortie du cas doit être renvoyée au client, sinon `PASS_REGULAR_EXPRESSION` et les journaux CTest ne la voient pas.
+- Isolation : un plantage dans un cas tue le serveur et tous les cas suivants, contrairement au modèle actuel (un processus par cas). Un `fork` par cas côté serveur garderait l'isolation en partageant l'état initialisé (copy-on-write).
+- Serveur orphelin ou socket restante après un plantage : à nettoyer par `--start`, ou timeout et échec clair côté client.
+- Parallélisme (`-j`) : clients simultanés ; le serveur sérialise, l'état partagé est thread-safe, ou `RESOURCE_LOCK`.
