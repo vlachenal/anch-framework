@@ -187,6 +187,34 @@ getNumFailIncomplete() {
   }
 }
 
+void
+commentedKeyValue() {
+  std::cout << "Execute commentedKeyValue" << std::endl;
+  anch::ut::assertTrue(section.getSections().contains("comments"), "comments section not found");
+  const anch::ini::Section& sec = section.getSections().find("comments")->second;
+  for(const auto& [key, value] : sec.getValues()) {
+    std::cout << "comments/" << key << '=' << value << std::endl;
+  }
+  anch::ut::assertThat(sec.getValues().size() == 1, "Commented lines should be ignored: {} values found instead of 1", sec.getValues().size());
+  anch::ut::assertTrue(sec.getSections().empty(), "Commented lines should not create sections");
+  auto val = section.getValue<std::string>("comments.kept");
+  anch::ut::assertTrue(val.has_value(), "comments/kept not found");
+  anch::ut::assertThat(val.value() == "1", "comments/kept is '{}' instead of '1'", val.value());
+}
+
+void
+emptyValue() {
+  std::cout << "Execute emptyValue" << std::endl;
+  for(const std::string key : {"empty.none", "empty.spaces", "empty.comment"}) {
+    auto val = section.getValue<std::string>(key);
+    anch::ut::assertThat(val.has_value(), "{} not found", key);
+    anch::ut::assertThat(val.value().empty(), "{} is '{}' instead of empty", key, val.value());
+  }
+  auto val = section.getValue<std::string>("empty.filled");
+  anch::ut::assertTrue(val.has_value(), "empty/filled not found");
+  anch::ut::assertThat(val.value() == "x", "empty/filled is '{}' instead of 'x'", val.value());
+}
+
 
 void
 anch::ut::setup(anch::ut::UnitTests& tests) {
@@ -210,5 +238,7 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("parser-num-range", getNumFailRange)
     .add("parser-num-invalid", getNumFailInvalid)
     .add("parser-num-incomplete", getNumFailIncomplete)
+    .add("parser-comment-keyval", commentedKeyValue)
+    .add("parser-empty-value", emptyValue)
     ;
 }

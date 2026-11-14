@@ -32,7 +32,7 @@ using anch::ini::ParserError;
 
 // Static intialization +
 const std::regex SECTION_REGEX = std::regex("^( |\t)*\\[([^#; \t]+)\\]");
-const std::regex KEYVAL_REGEX = std::regex("^[#; \t]*([^=]+)( |\t)*=( |\t)*(.+)");
+const std::regex KEYVAL_REGEX = std::regex("^[ \t]*([^=]+)( |\t)*=( |\t)*(.*)"); // value can be empty
 //const std::regex COMMENT_REGEX = std::regex("( |\t)*([^\\\\][#|;].*)$");
 // Static intialization -
 
@@ -42,7 +42,7 @@ const std::regex KEYVAL_REGEX = std::regex("^[#; \t]*([^=]+)( |\t)*=( |\t)*(.+)"
  * \param value the value
  * \param section the current section
  */
-std::string
+static std::string
 parseValue(const std::string& value, std::istream& input) {
   std::ostringstream oss;
   std::string spaces;
@@ -100,7 +100,7 @@ parseValue(const std::string& value, std::istream& input) {
  * \param section the current section
  * \param input the input stream
  */
-void
+static void
 parseValue(const std::string& key, const std::string& value, Section& section, std::istream& input) {
   auto pos = key.find('.');
   if(pos != key.npos) {
@@ -118,7 +118,7 @@ parseValue(const std::string& key, const std::string& value, Section& section, s
  *
  * \return the found section
  */
-Section&
+static Section&
 parseSection(const std::string& name, Section& section) {
   auto pos = name.find('.');
   if(pos != name.npos) {
@@ -135,10 +135,16 @@ parseSection(const std::string& name, Section& section) {
  * \param section the root \ref Section
  * \param input the input stream
  */
-Section*
+static Section*
 parseLine(const std::string& line, Section& section, Section& root, std::istream& input) {
   std::smatch match;
   Section* res = &section;
+  // Empty and comment lines are ignored (a commented line can contain '=') +
+  const std::size_t first = line.find_first_not_of(" \t");
+  if(first == std::string::npos || line[first] == '#' || line[first] == ';') {
+    return res;
+  }
+  // Empty and comment lines are ignored -
   if(std::regex_search(line, match, SECTION_REGEX)) {
     res = &parseSection(match[2], root);
 

@@ -247,14 +247,14 @@ Section::operator = (const Section& other) {
 }
 // Operators +
 
-void
+static void
 addIndent(uint32_t indent, std::ostringstream& oss) {
   for(uint32_t i = 0 ; i < indent ; ++i) {
     oss << ' ';
   }
 }
 
-void
+static void
 printSection(const anch::ini::Section& section,
 	     std::ostringstream& oss,
 	     const std::string& name = "root",
