@@ -20,14 +20,53 @@
 #pragma once
 
 #include <iterator>
+#include <optional>
+#include <stdexcept>
+#include <utility>
+
+namespace anch::rest::detail {
+
+  /*!
+   * Parse codec media type
+   *
+   * \param mediaType the codec media type
+   *
+   * \return the media type
+   *
+   * \throw std::invalid_argument when media type is invalid
+   */
+  inline anch::rest::MediaType
+  codecMediaType(std::string_view mediaType) {
+    std::optional<anch::rest::MediaType> res = anch::rest::MediaType::parse(mediaType);
+    if(!res) {
+      throw std::invalid_argument("Invalid codec media type '" + std::string(mediaType) + "'");
+    }
+    return std::move(*res);
+  }
+
+}
 
 namespace anch::rest {
 
   template<typename C, typename T>
   requires anch::rest::Serializer<C, T>
+  anch::rest::MediaType
+  contentTypeOf(const T& value) {
+    if constexpr (requires { { C::contentType(value) } -> std::convertible_to<anch::rest::MediaType>; }) {
+      return C::contentType(value);
+    } else {
+      return anch::rest::detail::codecMediaType(C::mediaType());
+    }
+  }
+
+  template<typename C, typename T>
+  requires anch::rest::Serializer<C, T>
   void
-  serializeBody(const T& value, std::ostream& out, anch::rest::Side side) {
-    if constexpr (requires { C::serialize(value, out, side); }) {
+  serializeBody(const T& value, std::ostream& out, [[maybe_unused]] const anch::rest::MediaType& contentType,
+		[[maybe_unused]] anch::rest::Side side) {
+    if constexpr (requires { C::serialize(value, out, contentType, side); }) {
+      C::serialize(value, out, contentType, side);
+    } else if constexpr (requires { C::serialize(value, out, side); }) {
       C::serialize(value, out, side);
     } else {
       C::serialize(value, out);
@@ -37,8 +76,11 @@ namespace anch::rest {
   template<typename C, typename T>
   requires anch::rest::Deserializer<C, T>
   void
-  deserializeBody(T& value, std::istream& input, anch::rest::Side side) {
-    if constexpr (requires { C::deserialize(value, input, side); }) {
+  deserializeBody(T& value, std::istream& input, [[maybe_unused]] const anch::rest::MediaType& contentType,
+		  [[maybe_unused]] anch::rest::Side side) {
+    if constexpr (requires { C::deserialize(value, input, contentType, side); }) {
+      C::deserialize(value, input, contentType, side);
+    } else if constexpr (requires { C::deserialize(value, input, side); }) {
       C::deserialize(value, input, side);
     } else {
       C::deserialize(value, input);

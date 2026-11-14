@@ -22,6 +22,7 @@
 #include "rest/jsonCodec.hpp"
 
 #include <chrono>
+#include <iterator>
 #include <optional>
 #include <sstream>
 #include <stdexcept>
@@ -75,6 +76,39 @@ anch::json::registerObject(anch::json::ObjectMapper<Owner>& mapper) {
     ;
 }
 // Model -
+
+// Codec with media type parameters (as a multipart codec with its boundary) +
+struct Bounded {
+  static std::string_view
+  mediaType() noexcept {
+    return "multipart/x-test";
+  }
+
+  static anch::rest::MediaType
+  contentType(const std::string& value) {
+    anch::rest::MediaType type("multipart", "x-test");
+    type.setParameter("boundary", "b" + std::to_string(value.size()));
+    return type;
+  }
+
+  static void
+  serialize(const std::string& value, std::ostream& out, const anch::rest::MediaType& contentType, anch::rest::Side side) {
+    out << "--" << contentType.getParameter("boundary").value_or("") << ' ' << (side == anch::rest::Side::SERVER ? "server" : "client")
+	<< ' ' << value;
+  }
+
+  static void
+  deserialize(std::string& value, std::istream& input, const anch::rest::MediaType& contentType, anch::rest::Side side) {
+    std::optional<std::string_view> boundary = contentType.getParameter("boundary");
+    if(!boundary) {
+      throw std::invalid_argument("missing boundary");
+    }
+    value = std::string(*boundary) + ' ' + (side == anch::rest::Side::SERVER ? "server" : "client") + ' '
+      + std::string(std::istreambuf_iterator<char>(input), std::istreambuf_iterator<char>());
+  }
+};
+static_assert(!anch::rest::Serializer<Bounded, int> && !anch::rest::Deserializer<Bounded, int>);
+// Codec with media type parameters -
 
 // Helpers +
 namespace {
@@ -459,6 +493,23 @@ testCors() {
 }
 
 void
+testCodecMediaType() {
+  Api api;
+  api.post("/echo", [](Body<std::string> body) { return *body; }).consumes<Bounded>().produces<Bounded>();
+  api.validate();
+  Response response = call(api, Method::POST, "/echo", "multipart/x-test", "multipart/x-test; boundary=xyz", "hello");
+  expectStatus(response, Status::OK);
+  // Deserialized value is "xyz server hello" (16 characters): its content type is computed before it is written
+  std::optional<anch::rest::MediaType> type = anch::rest::MediaType::parse(headerOf(response, "Content-Type"));
+  anch::ut::assertThat(type && type->essence() == "multipart/x-test" && type->getParameter("boundary") == "b16",
+		       "Unexpected content type '{}'", headerOf(response, "Content-Type"));
+  anch::ut::assertThat(bodyOf(response) == "--b16 server xyz server hello", "Unexpected body '{}'", bodyOf(response));
+  Response missing = call(api, Method::POST, "/echo", "", "multipart/x-test", "hello");
+  expectStatus(missing, Status::BAD_REQUEST);
+  anch::ut::assertThat(bodyOf(missing) == "missing boundary", "Unexpected body '{}'", bodyOf(missing));
+}
+
+void
 testRegistration() {
   Api api;
   api.get("/pets/{id}", [](uint64_t) {});
@@ -510,6 +561,7 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("status-and-query", testStatusAndQuery)
     .add("filters", testFilters)
     .add("cors", testCors)
+    .add("codec-media-type", testCodecMediaType)
     .add("errors", testErrors)
     .add("registration", testRegistration)
     .add("validate", testValidate)

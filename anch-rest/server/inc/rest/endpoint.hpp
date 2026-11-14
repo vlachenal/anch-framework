@@ -345,14 +345,23 @@ namespace anch::rest {
     /*! Produced media types */
     std::vector<anch::rest::MediaType> _produced;
 
+    /*! Result writer of a produced media type */
+    struct Writer {
+      /*! Get result \c Content-Type (codec \c contentType() or \c mediaType() ) */
+      std::function<anch::rest::MediaType(const Value&)> contentType;
+
+      /*! Serialize result with its \c Content-Type */
+      std::function<void(const Value&, std::ostream&, const anch::rest::MediaType&)> write;
+    };
+
     /*! Serializers (one per produced media type) */
-    std::vector<std::function<void(const Value&, std::ostream&)>> _serializers;
+    std::vector<Writer> _serializers;
 
     /*! Consumed media types */
     std::vector<anch::rest::MediaType> _consumed;
 
     /*! Deserializers (one per consumed media type) */
-    std::vector<std::function<void(BodyType&, std::istream&)>> _deserializers;
+    std::vector<std::function<void(BodyType&, std::istream&, const anch::rest::MediaType&)>> _deserializers;
 
     /*! Success status of serialized results and of \c void endpoints (default: \c 200 and \c 204 ) */
     std::optional<anch::rest::Status> _status;

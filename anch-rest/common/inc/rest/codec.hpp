@@ -25,6 +25,8 @@
 #include <string>
 #include <string_view>
 
+#include "rest/mediaType.hpp"
+
 namespace anch::rest {
 
   /*!
@@ -47,9 +49,17 @@ namespace anch::rest {
    * - \c serialize(const T&, std::ostream&) : write value
    * - \c deserialize(T&, std::istream&) : read value (\ref anch::rest::Deserializer "Deserializer" ). Errors are reported with exceptions.
    *
-   * Codecs can also have \c serialize(const T&, std::ostream&, anch::rest::Side) and
-   * \c deserialize(T&, std::istream&, anch::rest::Side) functions: server and client use them when they are
-   * defined (see \ref anch::rest::serializeBody and \ref anch::rest::deserializeBody ).
+   * Codecs can also have richer functions (one \c serialize / \c deserialize form is enough), which server and
+   * client use when they are defined (see
+   * \ref anch::rest::contentTypeOf , \ref anch::rest::serializeBody and \ref anch::rest::deserializeBody ):
+   * - \c contentType(const T&) -> \ref anch::rest::MediaType "MediaType" : \c Content-Type of the serialized
+   *   value, computed before serialization (a multipart codec adds its \c boundary parameter) ;
+   * - \c serialize(const T&, std::ostream&, anch::rest::Side) or
+   *   \c serialize(const T&, std::ostream&, const anch::rest::MediaType&, anch::rest::Side) : the media type is
+   *   the one returned by \c contentType() ;
+   * - \c deserialize(T&, std::istream&, anch::rest::Side) or
+   *   \c deserialize(T&, std::istream&, const anch::rest::MediaType&, anch::rest::Side) : the media type is the
+   *   \c Content-Type of the body, with its parameters ( \c charset , \c boundary , ...).
    *
    * \tparam C the codec type
    * \tparam T the value type
@@ -57,10 +67,13 @@ namespace anch::rest {
    * \since 0.2
    */
   template<typename C, typename T>
-  concept Serializer = requires(const T& value, std::ostream& out) {
+  concept Serializer = requires {
     { C::mediaType() } -> std::convertible_to<std::string_view>;
-    C::serialize(value, out);
-  };
+  } && (requires(const T& value, std::ostream& out) { C::serialize(value, out); }
+	|| requires(const T& value, std::ostream& out, anch::rest::Side side) { C::serialize(value, out, side); }
+	|| requires(const T& value, std::ostream& out, const anch::rest::MediaType& contentType, anch::rest::Side side) {
+	  C::serialize(value, out, contentType, side);
+	});
 
   /*!
    * Codec which deserializes \c T values (see \ref anch::rest::Serializer "Serializer" )
@@ -71,44 +84,68 @@ namespace anch::rest {
    * \since 0.2
    */
   template<typename C, typename T>
-  concept Deserializer = requires(T& value, std::istream& input) {
+  concept Deserializer = requires {
     { C::mediaType() } -> std::convertible_to<std::string_view>;
-    C::deserialize(value, input);
-  };
+  } && (requires(T& value, std::istream& input) { C::deserialize(value, input); }
+	|| requires(T& value, std::istream& input, anch::rest::Side side) { C::deserialize(value, input, side); }
+	|| requires(T& value, std::istream& input, const anch::rest::MediaType& contentType, anch::rest::Side side) {
+	  C::deserialize(value, input, contentType, side);
+	});
 
   /*!
-   * Serialize value with codec: its \c serialize(value, out, side) function is used when it is defined,
-   * \c serialize(value, out) otherwise
+   * Get \c Content-Type of a value serialized with codec: its \c contentType(value) function is used when it is
+   * defined, \c mediaType() otherwise
+   *
+   * \tparam C the codec type
+   * \tparam T the value type
+   *
+   * \param value the value
+   *
+   * \return the media type
+   *
+   * \throw std::invalid_argument when codec media type is invalid
+   *
+   * \since 0.2
+   */
+  template<typename C, typename T>
+  requires anch::rest::Serializer<C, T>
+  anch::rest::MediaType contentTypeOf(const T& value);
+
+  /*!
+   * Serialize value with codec: its \c serialize(value, out, contentType, side) function is used when it is
+   * defined, then \c serialize(value, out, side) , then \c serialize(value, out)
    *
    * \tparam C the codec type
    * \tparam T the value type
    *
    * \param value the value
    * \param out the output stream
+   * \param contentType the body media type (from \ref contentTypeOf )
    * \param side the side which serializes value
    *
    * \since 0.2
    */
   template<typename C, typename T>
   requires anch::rest::Serializer<C, T>
-  void serializeBody(const T& value, std::ostream& out, anch::rest::Side side);
+  void serializeBody(const T& value, std::ostream& out, const anch::rest::MediaType& contentType, anch::rest::Side side);
 
   /*!
-   * Deserialize value with codec: its \c deserialize(value, input, side) function is used when it is defined,
-   * \c deserialize(value, input) otherwise
+   * Deserialize value with codec: its \c deserialize(value, input, contentType, side) function is used when it is
+   * defined, then \c deserialize(value, input, side) , then \c deserialize(value, input)
    *
    * \tparam C the codec type
    * \tparam T the value type
    *
    * \param value the value to fill
    * \param input the input stream
+   * \param contentType the body media type ( \c Content-Type with its parameters)
    * \param side the side which deserializes value
    *
    * \since 0.2
    */
   template<typename C, typename T>
   requires anch::rest::Deserializer<C, T>
-  void deserializeBody(T& value, std::istream& input, anch::rest::Side side);
+  void deserializeBody(T& value, std::istream& input, const anch::rest::MediaType& contentType, anch::rest::Side side);
 
   /*!
    * \c text/plain codec: serializes values with stream injection operator, deserializes strings.

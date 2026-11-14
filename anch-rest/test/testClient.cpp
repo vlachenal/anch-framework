@@ -43,6 +43,39 @@ using anch::rest::Response;
 using anch::rest::Status;
 using anch::rest::Text;
 
+// Codec with media type parameters (as a multipart codec with its boundary) +
+struct Bounded {
+  static std::string_view
+  mediaType() noexcept {
+    return "multipart/x-test";
+  }
+
+  static anch::rest::MediaType
+  contentType(const std::string& value) {
+    anch::rest::MediaType type("multipart", "x-test");
+    type.setParameter("boundary", "b" + std::to_string(value.size()));
+    return type;
+  }
+
+  static void
+  serialize(const std::string& value, std::ostream& out, const anch::rest::MediaType& contentType, anch::rest::Side side) {
+    out << "--" << contentType.getParameter("boundary").value_or("") << ' ' << (side == anch::rest::Side::SERVER ? "server" : "client")
+	<< ' ' << value;
+  }
+
+  static void
+  deserialize(std::string& value, std::istream& input, const anch::rest::MediaType& contentType, anch::rest::Side side) {
+    std::optional<std::string_view> boundary = contentType.getParameter("boundary");
+    if(!boundary) {
+      throw std::invalid_argument("missing boundary");
+    }
+    value = std::string(*boundary) + ' ' + (side == anch::rest::Side::SERVER ? "server" : "client") + ' '
+      + std::string(std::istreambuf_iterator<char>(input), std::istreambuf_iterator<char>());
+  }
+};
+static_assert(!anch::rest::Serializer<Bounded, int> && !anch::rest::Deserializer<Bounded, int>);
+// Codec with media type parameters -
+
 // Fake transport +
 namespace {
 
@@ -159,6 +192,18 @@ testBody() {
 }
 
 void
+testCodecMediaType() {
+  Fixture fixture;
+  fixture.transport->response = Response().contentType("multipart/x-test; boundary=srv").body("data");
+  std::string result = fixture.client.post("/echo").body<Bounded>(std::string("hi")).accept<Bounded>().as<std::string>();
+  std::optional<anch::rest::MediaType> type = anch::rest::MediaType::parse(fixture.transport->headers.get("Content-Type").value_or(""));
+  anch::ut::assertThat(type && type->essence() == "multipart/x-test" && type->getParameter("boundary") == "b2",
+		       "Unexpected request content type '{}'", fixture.transport->headers.get("Content-Type").value_or(""));
+  anch::ut::assertThat(fixture.transport->body == "--b2 client hi", "Unexpected request body '{}'", fixture.transport->body);
+  anch::ut::assertThat(result == "srv client data", "Response has to be read with its content type parameters, found '{}'", result);
+}
+
+void
 testAs() {
   Fixture fixture;
   fixture.transport->response = Response().contentType("application/json; charset=utf-8").body("{\"id\":1,\"name\":\"Rex\"}");
@@ -256,6 +301,7 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("headers", testHeaders)
     .add("body", testBody)
     .add("as", testAs)
+    .add("codec-media-type", testCodecMediaType)
     .add("constraints", testConstraints)
     .add("http-error", testHttpError)
     .add("filters", testFilters)

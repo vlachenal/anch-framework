@@ -48,24 +48,6 @@ namespace anch::rest::detail {
     return std::move(*res);
   }
 
-  /*!
-   * Parse codec media type
-   *
-   * \param mediaType the codec media type
-   *
-   * \return the media type
-   *
-   * \throw std::invalid_argument when media type is invalid
-   */
-  inline anch::rest::MediaType
-  codecMediaType(std::string_view mediaType) {
-    std::optional<anch::rest::MediaType> res = anch::rest::MediaType::parse(mediaType);
-    if(!res) {
-      throw std::invalid_argument("Invalid codec media type '" + std::string(mediaType) + "'");
-    }
-    return std::move(*res);
-  }
-
 }
 
 namespace anch::rest {
@@ -108,9 +90,14 @@ namespace anch::rest {
     static_assert(Sig::SERIALIZED, "produces() needs an endpoint which returns a value (not void nor anch::rest::Response)");
     static_assert(anch::rest::Serializer<C, Value>, "Codec can not serialize endpoint result");
     _produced.push_back(anch::rest::detail::codecMediaType(C::mediaType()));
-    _serializers.emplace_back([](const Value& value, std::ostream& out) {
-      anch::rest::serializeBody<C>(value, out, anch::rest::Side::SERVER);
-    });
+    _serializers.push_back(Writer{
+	[](const Value& value) {
+	  return anch::rest::contentTypeOf<C>(value);
+	},
+	[](const Value& value, std::ostream& out, const anch::rest::MediaType& contentType) {
+	  anch::rest::serializeBody<C>(value, out, contentType, anch::rest::Side::SERVER);
+	}
+      });
     return *this;
   }
 
@@ -121,8 +108,8 @@ namespace anch::rest {
     static_assert(Sig::HAS_BODY, "consumes() needs an endpoint with an anch::rest::Body<T> argument");
     static_assert(anch::rest::Deserializer<C, BodyType>, "Codec can not deserialize endpoint body");
     _consumed.push_back(anch::rest::detail::codecMediaType(C::mediaType()));
-    _deserializers.emplace_back([](BodyType& value, std::istream& input) {
-      anch::rest::deserializeBody<C>(value, input, anch::rest::Side::SERVER);
+    _deserializers.emplace_back([](BodyType& value, std::istream& input, const anch::rest::MediaType& contentType) {
+      anch::rest::deserializeBody<C>(value, input, contentType, anch::rest::Side::SERVER);
     });
     return *this;
   }
@@ -196,7 +183,7 @@ namespace anch::rest {
       }
       BodyType value{};
       try {
-	_deserializers[i](value, request.getBody());
+	_deserializers[i](value, request.getBody(), *contentType);
       } catch(const std::exception& e) {
 	throw anch::rest::HttpException(anch::rest::Status::BAD_REQUEST, e.what());
       }
@@ -209,12 +196,14 @@ namespace anch::rest {
   anch::rest::Response
   Endpoint<F>::serialize(Value value, std::size_t index) const {
     // Body writer has to be copyable: value is shared
+    // Content type is computed before writing: headers are sent before the body is streamed
     auto shared = std::make_shared<const Value>(std::move(value));
-    std::function<void(const Value&, std::ostream&)> serializer = _serializers[index];
+    auto contentType = std::make_shared<const anch::rest::MediaType>(_serializers[index].contentType(*shared));
+    std::function<void(const Value&, std::ostream&, const anch::rest::MediaType&)> write = _serializers[index].write;
     return anch::rest::Response(_status.value_or(anch::rest::Status::OK))
-      .contentType(_produced[index].toString())
-      .stream([shared, serializer](std::ostream& out) {
-	serializer(*shared, out);
+      .contentType(contentType->toString())
+      .stream([shared, contentType, write](std::ostream& out) {
+	write(*shared, out, *contentType);
       });
   }
 

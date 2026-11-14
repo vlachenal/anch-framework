@@ -93,17 +93,24 @@ anch-oas
 
 Étapes proposées
 ----------------
-[ ] 1. Contrat des codecs : MediaType transmis à la lecture et Content-Type fourni par le codec à
-       l'écriture (tests api-* et client-* existants inchangés).
+[x] 1. Contrat des codecs : MediaType transmis à la lecture et Content-Type fourni par le codec à
+       l'écriture (tests api-* et client-* existants inchangés). Fait le 2026-11-14 :
+       contentTypeOf<C>(value) (C::contentType(value) sinon C::mediaType()), calculé avant l'écriture
+       (en-têtes envoyés avant le corps en streaming) ; serializeBody / deserializeBody reçoivent le
+       MediaType et choisissent la forme la plus riche (contentType+side > side > simple) ; les concepts
+       Serializer / Deserializer acceptent n'importe quelle forme (un codec multipart n'a pas de forme
+       simple). Tests api-codec-media-type et client-codec-media-type.
 [ ] 2. Form / Part + FormUrlEncoded (le plus simple, sans boundary).
 [ ] 3. Multipart en mémoire + limites + tests (corps malformés : boundary absent, fin manquante, en-têtes
        trop longs, noms avec CR/LF), sous ASan / UBSan.
 [ ] 4. FormMapper<T> écrit à la main, puis généré par anch-oas.
 [ ] 5. Contenu de partie en flux (gros fichiers), côté serveur puis client.
 
-Questions ouvertes
-------------------
-- Une fonction contentType(const T&) ou le MediaType& passé à serialize ?
-- Part en mémoire seulement en v1, ou flux dès le départ (contraint l'API de Part) ?
-- Où placer FormMapper généré par anch-oas : avec les modèles (dépendance anch-rest des modèles) ou dans
-  un fichier séparé (modèles indépendants d'anch-rest, comme aujourd'hui) ? Séparé paraît préférable.
+Questions tranchées (2026-11-14)
+--------------------------------
+- Content-Type à l'écriture : fonction optionnelle C::contentType(const T&) -> MediaType, appelée avant
+  serialize, qui reçoit ce MediaType (serialize(value, out, const MediaType&, Side)).
+- Part en mémoire en v1, mais API neutre (content() -> std::string_view, open() -> std::istream&) pour
+  passer au flux à l'étape 5 sans casser l'API.
+- FormMapper générés par anch-oas dans un fichier séparé (NAME-forms.hpp / .cpp) : les modèles restent
+  indépendants d'anch-rest.
