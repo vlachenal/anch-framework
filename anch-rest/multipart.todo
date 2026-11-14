@@ -41,7 +41,7 @@ Modèle commun (anch-rest-common, rest/form.hpp)
 - Contenu des parties, v1 : en mémoire (std::string). v2 : flux (std::istream / fichier temporaire)
   pour les gros fichiers, l'écriture côté client pouvant lire un fichier sans le charger.
 - Champs texte convertis avec ParamConverter (comme les paramètres de requête) :
-  form.get<T>(name), form.required<T>(name) -> 400 si absent ou invalide côté serveur.
+  formField<T>(form, name), requiredFormField<T>(form, name) -> 400 si absent ou invalide côté serveur.
 
 Codecs
 ------
@@ -100,7 +100,15 @@ anch-oas
        MediaType et choisissent la forme la plus riche (contentType+side > side > simple) ; les concepts
        Serializer / Deserializer acceptent n'importe quelle forme (un codec multipart n'a pas de forme
        simple). Tests api-codec-media-type et client-codec-media-type.
-[ ] 2. Form / Part + FormUrlEncoded (le plus simple, sans boundary).
+[x] 2. Form / Part + FormUrlEncoded (le plus simple, sans boundary). Fait le 2026-11-14 :
+       rest/form.hpp (Part : nom, nom de fichier, MediaType, Headers, content() / open() -> unique_ptr<istream>
+       / size() ; Form : parties ordonnées, add / addFile, has, field / fields, part / parts) et
+       rest/formCodec.hpp (FormUrlEncoded : écriture WHATWG, parties fichier refusées ; lecture '+' = espace,
+       paires vides ignorées, encodage invalide ou charset autre qu'UTF-8 -> invalid_argument, donc 400).
+       Conversion typée côté serveur : formField<T>(form, name) / requiredFormField<T>(form, name) dans
+       rest/paramConverter.hpp (ParamConverter reste dans anch-rest-server, pas de dépendance anch-uuid dans
+       common). Tests http-form, http-form-url-encoded, api-form et client-form. Limites (nombre de champs,
+       taille) : avec celles du codec Multipart, étape 3.
 [ ] 3. Multipart en mémoire + limites + tests (corps malformés : boundary absent, fin manquante, en-têtes
        trop longs, noms avec CR/LF), sous ASan / UBSan.
 [ ] 4. FormMapper<T> écrit à la main, puis généré par anch-oas.
@@ -110,7 +118,7 @@ Questions tranchées (2026-11-14)
 --------------------------------
 - Content-Type à l'écriture : fonction optionnelle C::contentType(const T&) -> MediaType, appelée avant
   serialize, qui reçoit ce MediaType (serialize(value, out, const MediaType&, Side)).
-- Part en mémoire en v1, mais API neutre (content() -> std::string_view, open() -> std::istream&) pour
+- Part en mémoire en v1, mais API neutre (content() -> std::string_view, open() -> unique_ptr<istream>) pour
   passer au flux à l'étape 5 sans casser l'API.
 - FormMapper générés par anch-oas dans un fichier séparé (NAME-forms.hpp / .cpp) : les modèles restent
   indépendants d'anch-rest.

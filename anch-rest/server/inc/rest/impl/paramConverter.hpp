@@ -101,4 +101,29 @@ namespace anch::rest {
     return std::move(*res);
   }
 
+  template<anch::rest::PathParameter T>
+  std::optional<T>
+  formField(const anch::rest::Form& form, std::string_view name) {
+    std::optional<std::string_view> value = form.field(name);
+    if(!value) {
+      return std::nullopt;
+    }
+    std::optional<T> res = anch::rest::ParamConverter<T>::convert(*value);
+    if(!res) {
+      throw anch::rest::HttpException(anch::rest::Status::BAD_REQUEST,
+				      "Invalid form field '" + std::string(name) + "': '" + std::string(*value) + "'");
+    }
+    return res;
+  }
+
+  template<anch::rest::PathParameter T>
+  T
+  requiredFormField(const anch::rest::Form& form, std::string_view name) {
+    std::optional<T> res = anch::rest::formField<T>(form, name);
+    if(!res) {
+      throw anch::rest::HttpException(anch::rest::Status::BAD_REQUEST, "Missing form field '" + std::string(name) + "'");
+    }
+    return std::move(*res);
+  }
+
 }

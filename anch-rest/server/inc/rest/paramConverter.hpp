@@ -26,6 +26,7 @@
 
 #include "uuid.hpp"
 
+#include "rest/form.hpp"
 #include "rest/request.hpp"
 
 namespace anch::rest {
@@ -168,6 +169,42 @@ namespace anch::rest {
    */
   template<anch::rest::PathParameter T>
   T requiredQueryParameter(const anch::rest::Request& request, std::string_view name);
+
+  /*!
+   * Optional form field converted with \ref anch::rest::ParamConverter "ParamConverter" (first part
+   * with this name)
+   *
+   * \tparam T the field type
+   *
+   * \param form the form
+   * \param name the field name
+   *
+   * \return the field value, empty when the field is absent
+   *
+   * \throw anch::rest::HttpException \c 400 when value is invalid
+   *
+   * \since 0.2
+   */
+  template<anch::rest::PathParameter T>
+  std::optional<T> formField(const anch::rest::Form& form, std::string_view name);
+
+  /*!
+   * Required form field converted with \ref anch::rest::ParamConverter "ParamConverter" (first part
+   * with this name)
+   *
+   * \tparam T the field type
+   *
+   * \param form the form
+   * \param name the field name
+   *
+   * \return the field value
+   *
+   * \throw anch::rest::HttpException \c 400 when field is absent or its value is invalid
+   *
+   * \since 0.2
+   */
+  template<anch::rest::PathParameter T>
+  T requiredFormField(const anch::rest::Form& form, std::string_view name);
 
 }
 

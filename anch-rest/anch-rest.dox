@@ -50,6 +50,23 @@ anch::rest::Response response = api.handle(request); // done by HTTP server adap
  * \c Allow ), not acceptable \c 406 , unsupported media type \c 415 , \ref anch::rest::HttpException "HttpException"
  * status, other exceptions \c 500 . \c OPTIONS without endpoint is answered with \c 204 and \c Allow .
  *
+ * \section rest_form_sec Forms
+ *
+ * \ref anch::rest::Form "Form" is an ordered list of \ref anch::rest::Part "Part" (fields and files, a
+ * name can be repeated). \ref anch::rest::FormUrlEncoded "FormUrlEncoded" codec reads and writes
+ * \c application/x-www-form-urlencoded bodies; fields are converted on server side like query
+ * parameters:
+ * \code{.cpp}
+api.post("/login", [](anch::rest::Body<anch::rest::Form> form) {
+    std::string user = anch::rest::requiredFormField<std::string>(*form, "user"); // 400 when missing
+    std::optional<bool> remember = anch::rest::formField<bool>(*form, "remember"); // 400 when invalid
+    ...
+  })
+  .consumes<anch::rest::FormUrlEncoded>();
+
+client.post("/login").body<anch::rest::FormUrlEncoded>(anch::rest::Form().add("user", "rex").add("password", pwd)).send();
+\endcode
+ *
  * \section rest_cors_sec CORS
  *
  * Cross-Origin Resource Sharing is enabled on the API. Allowed methods are the methods of the routes

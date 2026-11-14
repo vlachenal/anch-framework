@@ -18,6 +18,7 @@
   along with ANCH Framework.  If not, see <https://www.gnu.org/licenses/>.
 */
 #include "rest/api.hpp"
+#include "rest/formCodec.hpp"
 #include "rest/httpException.hpp"
 #include "rest/jsonCodec.hpp"
 
@@ -510,6 +511,34 @@ testCodecMediaType() {
 }
 
 void
+testForm() {
+  Api api;
+  api.post("/pets", [](Body<anch::rest::Form> form) {
+    const std::string name = anch::rest::requiredFormField<std::string>(*form, "name");
+    const std::optional<uint32_t> age = anch::rest::formField<uint32_t>(*form, "age");
+    return name + ' ' + (age ? std::to_string(*age) : std::string("?")) + ' ' + std::to_string(form->fields("tag").size());
+  }).consumes<anch::rest::FormUrlEncoded>().produces<Text>();
+  api.get("/search", []() { return anch::rest::Form().add("q", "a b").add("page", "2"); }).produces<anch::rest::FormUrlEncoded>();
+  api.validate();
+  const std::string_view form = "application/x-www-form-urlencoded";
+  Response created = call(api, Method::POST, "/pets", "", form, "name=M%C3%A9dor&age=3&tag=a&tag=b");
+  expectStatus(created, Status::OK);
+  anch::ut::assertThat(bodyOf(created) == "Médor 3 2", "Unexpected body '{}'", bodyOf(created));
+  anch::ut::assertThat(bodyOf(call(api, Method::POST, "/pets", "", form, "name=Rex")) == "Rex ? 0", "Optional field has to be empty");
+  Response missing = call(api, Method::POST, "/pets", "", form, "age=3");
+  expectStatus(missing, Status::BAD_REQUEST);
+  anch::ut::assertThat(bodyOf(missing) == "Missing form field 'name'", "Unexpected body '{}'", bodyOf(missing));
+  Response invalid = call(api, Method::POST, "/pets", "", form, "name=Rex&age=old");
+  expectStatus(invalid, Status::BAD_REQUEST);
+  anch::ut::assertThat(bodyOf(invalid) == "Invalid form field 'age': 'old'", "Unexpected body '{}'", bodyOf(invalid));
+  expectStatus(call(api, Method::POST, "/pets", "", form, "name=%zz"), Status::BAD_REQUEST);
+  expectStatus(call(api, Method::POST, "/pets", "", "application/x-www-form-urlencoded; charset=latin1", "name=Rex"), Status::BAD_REQUEST);
+  expectStatus(call(api, Method::POST, "/pets", "", "multipart/form-data; boundary=x", "name=Rex"), Status::UNSUPPORTED_MEDIA_TYPE);
+  Response search = call(api, Method::GET, "/search");
+  anch::ut::assertThat(headerOf(search, "Content-Type") == form && bodyOf(search) == "q=a+b&page=2", "Unexpected form response '{}'", bodyOf(search));
+}
+
+void
 testRegistration() {
   Api api;
   api.get("/pets/{id}", [](uint64_t) {});
@@ -562,6 +591,7 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("filters", testFilters)
     .add("cors", testCors)
     .add("codec-media-type", testCodecMediaType)
+    .add("form", testForm)
     .add("errors", testErrors)
     .add("registration", testRegistration)
     .add("validate", testValidate)

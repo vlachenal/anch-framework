@@ -17,6 +17,8 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ANCH Framework.  If not, see <https://www.gnu.org/licenses/>.
 */
+#include "rest/form.hpp"
+#include "rest/formCodec.hpp"
 #include "rest/headers.hpp"
 #include "rest/mediaType.hpp"
 #include "rest/method.hpp"
@@ -24,11 +26,15 @@
 #include "rest/response.hpp"
 #include "rest/status.hpp"
 
+#include <iterator>
 #include <sstream>
+#include <stdexcept>
 
 #include "ut/assert.hpp"
 #include "ut/unit.hpp"
 
+using anch::rest::Form;
+using anch::rest::FormUrlEncoded;
 using anch::rest::Headers;
 using anch::rest::MediaType;
 using anch::rest::Method;
@@ -116,6 +122,73 @@ testResponse() {
 }
 
 void
+testForm() {
+  Form form;
+  form.add("name", "Rex").add("tags", "dog").add("tags", "brown")
+    .addFile("photo", "rex.png", MediaType("image", "png"), "PNG...");
+  anch::ut::assertThat(form.size() == 4 && !form.empty() && form.has("photo") && !form.has("Name"), "Unexpected parts");
+  anch::ut::assertThat(form.field("name") == "Rex" && !form.field("age"), "Unexpected field");
+  anch::ut::assertThat(form.fields("tags") == std::vector<std::string_view>({"dog", "brown"}), "Repeated fields have to be kept in order");
+  const anch::rest::Part* name = form.part("name");
+  anch::ut::assertThat(name != nullptr && !name->isFile() && name->getMediaType().essence() == "text/plain" && !name->getFilename(),
+		       "Field part has to be text/plain without file name");
+  const anch::rest::Part* photo = form.part("photo");
+  anch::ut::assertThat(photo != nullptr && photo->isFile() && photo->getFilename() == "rex.png" && photo->getMediaType().essence() == "image/png"
+		       && photo->size() == 6, "Unexpected file part");
+  std::unique_ptr<std::istream> input = photo->open();
+  anch::ut::assertThat(std::string(std::istreambuf_iterator<char>(*input), std::istreambuf_iterator<char>()) == "PNG...", "open() has to read content");
+  anch::ut::assertThat(form.parts("tags").size() == 2 && form.part("unknown") == nullptr, "Unexpected parts by name");
+}
+
+void
+testFormUrlEncoded() {
+  // Serialization
+  std::ostringstream out;
+  FormUrlEncoded::serialize(Form().add("name", "Médor le chien").add("q", "a&b=c+d*-._~").add("empty", ""), out);
+  anch::ut::assertThat(out.str() == "name=M%C3%A9dor+le+chien&q=a%26b%3Dc%2Bd*-._%7E&empty=", "Unexpected body '{}'", out.str());
+  std::ostringstream file;
+  bool refused = false;
+  try {
+    FormUrlEncoded::serialize(Form().addFile("photo", "rex.png", MediaType("image", "png"), "PNG"), file);
+  } catch(const std::invalid_argument&) {
+    refused = true;
+  }
+  anch::ut::assertThat(refused, "File parts can not be URL-encoded");
+
+  // Deserialization
+  auto read = [](std::string_view body, std::string_view contentType = "application/x-www-form-urlencoded") {
+    Form form;
+    std::istringstream input{std::string(body)};
+    FormUrlEncoded::deserialize(form, input, *MediaType::parse(contentType), anch::rest::Side::SERVER);
+    return form;
+  };
+  Form form = read("name=M%C3%A9dor+le+chien&&tags=a&tags=b&flag&=anonymous&e=");
+  anch::ut::assertThat(form.size() == 6, "Unexpected size {}", form.size());
+  anch::ut::assertThat(form.field("name") == "Médor le chien", "Unexpected name '{}'", form.field("name").value_or(""));
+  anch::ut::assertThat(form.fields("tags") == std::vector<std::string_view>({"a", "b"}), "Unexpected tags");
+  anch::ut::assertThat(form.field("flag") == "" && form.field("") == "anonymous" && form.field("e") == "", "Unexpected empty values");
+  anch::ut::assertThat(read("").empty(), "Empty body is an empty form");
+  anch::ut::assertThat(read("a=1", "application/x-www-form-urlencoded; charset=UTF-8").field("a") == "1", "UTF-8 charset has to be accepted");
+  auto invalid = [&read](std::string_view body, std::string_view contentType) {
+    try {
+      read(body, contentType);
+    } catch(const std::invalid_argument&) {
+      return true;
+    }
+    return false;
+  };
+  anch::ut::assertThat(invalid("a=%zz", "application/x-www-form-urlencoded"), "Invalid encoding has to be refused");
+  anch::ut::assertThat(invalid("a=%", "application/x-www-form-urlencoded"), "Truncated encoding has to be refused");
+  anch::ut::assertThat(invalid("a=1", "application/x-www-form-urlencoded; charset=iso-8859-1"), "Other charsets have to be refused");
+
+  // Round trip
+  std::ostringstream again;
+  FormUrlEncoded::serialize(form, again);
+  Form back = read(again.str());
+  anch::ut::assertThat(back.size() == form.size() && back.field("name") == "Médor le chien" && back.field("") == "anonymous", "Round trip has to keep fields");
+}
+
+void
 anch::ut::setup(anch::ut::UnitTests& tests) {
   tests
     .name("AnCH REST HTTP model unit tests")
@@ -126,5 +199,7 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("accept", testAccept)
     .add("request-target", testRequestTarget)
     .add("response", testResponse)
+    .add("form", testForm)
+    .add("form-url-encoded", testFormUrlEncoded)
     ;
 }

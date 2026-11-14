@@ -19,6 +19,7 @@
 */
 #include "rest/auth.hpp"
 #include "rest/client.hpp"
+#include "rest/formCodec.hpp"
 #include "rest/jsonCodec.hpp"
 
 #include <iterator>
@@ -204,6 +205,17 @@ testCodecMediaType() {
 }
 
 void
+testForm() {
+  Fixture fixture;
+  fixture.client.post("/login").body<anch::rest::FormUrlEncoded>(anch::rest::Form().add("user", "rex").add("password", "s3cr&t")).send();
+  anch::ut::assertThat(fixture.transport->headers.get("Content-Type") == "application/x-www-form-urlencoded"
+		       && fixture.transport->body == "user=rex&password=s3cr%26t", "Unexpected request body '{}'", fixture.transport->body);
+  fixture.transport->response = Response().contentType("application/x-www-form-urlencoded").body("token=abc+def");
+  anch::rest::Form form = fixture.client.get("/token").accept<anch::rest::FormUrlEncoded>().as<anch::rest::Form>();
+  anch::ut::assertThat(form.field("token") == "abc def", "Unexpected token '{}'", form.field("token").value_or(""));
+}
+
+void
 testAs() {
   Fixture fixture;
   fixture.transport->response = Response().contentType("application/json; charset=utf-8").body("{\"id\":1,\"name\":\"Rex\"}");
@@ -302,6 +314,7 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("body", testBody)
     .add("as", testAs)
     .add("codec-media-type", testCodecMediaType)
+    .add("form", testForm)
     .add("constraints", testConstraints)
     .add("http-error", testHttpError)
     .add("filters", testFilters)
