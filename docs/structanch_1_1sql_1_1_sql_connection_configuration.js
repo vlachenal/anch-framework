@@ -6,5 +6,6 @@ var structanch_1_1sql_1_1_sql_connection_configuration =
     [ "hostname", "structanch_1_1sql_1_1_sql_connection_configuration.html#a8541600f17f143e77dda93f05f89c9da", null ],
     [ "password", "structanch_1_1sql_1_1_sql_connection_configuration.html#a4f574e8bb8c3287ae5a123a83532126d", null ],
     [ "port", "structanch_1_1sql_1_1_sql_connection_configuration.html#a83331953bd125ac72fe7589d2bc57fec", null ],
+    [ "statementCacheSize", "structanch_1_1sql_1_1_sql_connection_configuration.html#a8535b56f0afe9452f4f0f2704a639116", null ],
     [ "user", "structanch_1_1sql_1_1_sql_connection_configuration.html#ad11afc04bcae1a6d4feeace3cfa7a3ad", null ]
 ];

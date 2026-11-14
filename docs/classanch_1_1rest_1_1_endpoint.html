@@ -138,6 +138,7 @@ Function arguments are, in order:</p><ul>
 <li><span class="tt">const <a class="el" href="classanch_1_1rest_1_1_request.html">anch::rest::Request</a>&amp;</span> (optional)</li>
 <li>path parameters, in pattern order (types supported by <a class="el" href="structanch_1_1rest_1_1_param_converter.html" title="ParamConverter">ParamConverter</a> , <code>400</code> when invalid)</li>
 <li><a class="el" href="classanch_1_1rest_1_1_body.html" title="Body">Body</a> (optional): deserialized with the codec matching <code>Content-Type</code> (<code>415</code> when not consumed, <code>400</code> when missing or invalid)</li>
+<li>or <span class="tt">std::istream&amp;</span> (optional): raw body stream, whatever the <code>Content-Type</code> is (absent included, no codec: read it with <span class="tt">const <a class="el" href="classanch_1_1rest_1_1_request.html">Request</a>&amp;</span> ), empty without body</li>
 </ul>
 <p>Function result:</p><ul>
 <li><a class="el" href="classanch_1_1rest_1_1_response.html" title="Response">Response</a> : sent as is</li>

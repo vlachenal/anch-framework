@@ -4,6 +4,7 @@ var classanch_1_1sql_1_1_prepared_statement =
     [ "PreparedStatement", "classanch_1_1sql_1_1_prepared_statement.html#a8516e53b0ca2b5b2d28b6a9ee7ae9c48", null ],
     [ "~PreparedStatement", "classanch_1_1sql_1_1_prepared_statement.html#aaac605d28c1b23e86714027b5c9c013a", null ],
     [ "clearParameters", "classanch_1_1sql_1_1_prepared_statement.html#ad4c607d857c29a88d8ca53a08905e7ec", null ],
+    [ "deallocate", "classanch_1_1sql_1_1_prepared_statement.html#a84bd8b814d41428afa7da3549ac9d39a", null ],
     [ "doExecuteQuery", "classanch_1_1sql_1_1_prepared_statement.html#a079417b21b8addb224ddd2bd9a043f53", null ],
     [ "doExecuteUpdate", "classanch_1_1sql_1_1_prepared_statement.html#a22adcb0c9708dad3cd973a19b8d5afc8", null ],
     [ "executeQuery", "classanch_1_1sql_1_1_prepared_statement.html#a4da240920607c4d599a6abcf565ca66f", null ],

@@ -98,7 +98,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('structanch_1_1
 <div id="dynsection-0-summary" class="dynsummary">
 </div>
 <div id="dynsection-0-content" class="dyncontent hidden">
-<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="structanch_1_1sql_1_1_sql_connection_configuration__coll__graph.svg" width="168" height="479"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="structanch_1_1sql_1_1_sql_connection_configuration__coll__graph.svg" width="168" height="500"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-attribs" class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
@@ -110,6 +110,7 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:ad11afc04bcae1a6d4feeace3cfa7a3ad" id="r_ad11afc04bcae1a6d4feeace3cfa7a3ad"><td class="memItemLeft">std::string&#160;</td><td class="memItemRight"><a class="el" href="#ad11afc04bcae1a6d4feeace3cfa7a3ad">user</a></td></tr>
 <tr class="memitem:a4f574e8bb8c3287ae5a123a83532126d" id="r_a4f574e8bb8c3287ae5a123a83532126d"><td class="memItemLeft">std::string&#160;</td><td class="memItemRight"><a class="el" href="#a4f574e8bb8c3287ae5a123a83532126d">password</a></td></tr>
 <tr class="memitem:a662de2c81a98c2d2a3297018b183b7b5" id="r_a662de2c81a98c2d2a3297018b183b7b5"><td class="memItemLeft">std::string&#160;</td><td class="memItemRight"><a class="el" href="#a662de2c81a98c2d2a3297018b183b7b5">application</a> = &quot;AnCH&quot;</td></tr>
+<tr class="memitem:a8535b56f0afe9452f4f0f2704a639116" id="r_a8535b56f0afe9452f4f0f2704a639116"><td class="memItemLeft">std::size_t&#160;</td><td class="memItemRight"><a class="el" href="#a8535b56f0afe9452f4f0f2704a639116">statementCacheSize</a> = <a class="el" href="namespaceanch_1_1sql.html#afe217ba398ee3e4ffb1bac83555b556c">DEFAULT_STATEMENT_CACHE_SIZE</a></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>SQL database connection configuration. </p>
@@ -204,6 +205,21 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>SQL database port </p>
+
+</div>
+</div>
+<a id="a8535b56f0afe9452f4f0f2704a639116" name="a8535b56f0afe9452f4f0f2704a639116"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8535b56f0afe9452f4f0f2704a639116">&#9670;&#160;</a></span>statementCacheSize</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::size_t anch::sql::SqlConnectionConfiguration::statementCacheSize = <a class="el" href="namespaceanch_1_1sql.html#afe217ba398ee3e4ffb1bac83555b556c">DEFAULT_STATEMENT_CACHE_SIZE</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Maximum number of prepared statements cached by each connection (at least <code>1</code> ; key <code>statement-cache-size</code> in configuration) </p>
 
 </div>
 </div>

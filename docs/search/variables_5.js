@@ -9,5 +9,6 @@ var searchData=
   ['example_6',['example',['../structanch_1_1cli_1_1_arg.html#afc4130db98d38cd22deb672117da02d6',1,'anch::cli::Arg']]],
   ['exclusive_7',['exclusive',['../structanch_1_1json_1_1_minimum.html#a785fd95864fc562eaf40fc64a88e02fd',1,'anch::json::Minimum::exclusive'],['../structanch_1_1json_1_1_maximum.html#a0d727cb769fb72f22a4c228712dd7b95',1,'anch::json::Maximum::exclusive']]],
   ['exclusivemaximum_8',['exclusiveMaximum',['../structanch_1_1oas_1_1_schema.html#aa7850ad8f03fed99c3271e801147c4ce',1,'anch::oas::Schema']]],
-  ['exclusiveminimum_9',['exclusiveMinimum',['../structanch_1_1oas_1_1_schema.html#a4b8e1a39c5c5c72290b70fc97c41a3cd',1,'anch::oas::Schema']]]
+  ['exclusiveminimum_9',['exclusiveMinimum',['../structanch_1_1oas_1_1_schema.html#a4b8e1a39c5c5c72290b70fc97c41a3cd',1,'anch::oas::Schema']]],
+  ['exposedheaders_10',['exposedHeaders',['../structanch_1_1rest_1_1_cors_options.html#addfa2ef6cad2575a08ebb04b2f5dff88',1,'anch::rest::CorsOptions']]]
 ];

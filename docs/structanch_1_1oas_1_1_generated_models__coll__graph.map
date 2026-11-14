@@ -1,14 +1,14 @@
 <map id="anch::oas::GeneratedModels" name="anch::oas::GeneratedModels">
-<area shape="rect" id="Node000001" title="Generated models." alt="" coords="116,507,294,576"/>
+<area shape="rect" id="Node000001" title="Generated models." alt="" coords="116,549,294,619"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="188,163,257,232"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="241,229,252,255,266,319,272,370,269,421,252,484,247,494,243,490,247,482,263,420,267,371,260,320,247,257,240,234"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="65,335,220,404"/>
-<area shape="poly" id="edge4_Node000004_Node000002" title=" " alt="" coords="194,234,183,257,158,320,153,317,178,255,197,229"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="241,229,252,255,268,331,276,392,272,452,252,526,247,537,243,533,247,524,266,451,271,392,263,332,247,257,240,234"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="65,356,220,425"/>
+<area shape="poly" id="edge4_Node000004_Node000002" title=" " alt="" coords="194,234,183,257,166,299,155,340,150,339,161,297,178,255,196,230"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="165,5,280,91"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="223,103,225,163,220,162,222,108"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="155,401,184,482,187,492,182,490,179,484,152,406"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="153,423,184,524,187,535,182,533,179,526,149,427"/>
 <area shape="rect" id="Node000005" title=" " alt="" coords="5,163,109,232"/>
-<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="63,244,76,279,93,308,113,334,108,335,89,311,71,281,63,249"/>
+<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="65,244,78,279,98,319,121,356,116,357,93,322,73,281,65,249"/>
 <area shape="rect" id="Node000006" title=" " alt="" coords="48,13,66,83"/>
 <area shape="poly" id="edge6_Node000005_Node000006" title=" " alt="" coords="57,80,60,146,55,145,57,85"/>
 </map>

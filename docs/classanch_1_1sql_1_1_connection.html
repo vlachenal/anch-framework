@@ -107,9 +107,13 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('classanch_1_1s
 <div class="center"><div class="zoom"><iframe scrolling="no" loading="lazy" frameborder="0" src="classanch_1_1sql_1_1_connection__coll__graph.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
 </div>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-nested-classes" class="groupheader"><a id="nested-classes" name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:CachedStatement" id="r_CachedStatement"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structanch_1_1sql_1_1_connection_1_1_cached_statement.html">CachedStatement</a></td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a7283620d533ffdd5327220d33465e906" id="r_a7283620d533ffdd5327220d33465e906"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a7283620d533ffdd5327220d33465e906">Connection</a> ()</td></tr>
+<tr class="memitem:ab0e13a97daa922c349e418913b03fb03" id="r_ab0e13a97daa922c349e418913b03fb03"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#ab0e13a97daa922c349e418913b03fb03">Connection</a> (std::size_t statementCacheSize=<a class="el" href="namespaceanch_1_1sql.html#afe217ba398ee3e4ffb1bac83555b556c">DEFAULT_STATEMENT_CACHE_SIZE</a>)</td></tr>
 <tr class="memitem:a6ba457795fe611971de58c26709f1114" id="r_a6ba457795fe611971de58c26709f1114"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a6ba457795fe611971de58c26709f1114">Connection</a> (const Connection &amp;)=delete</td></tr>
 <tr class="memitem:ac7ab72ae63c11f7a0cbbf904a1ff6069" id="r_ac7ab72ae63c11f7a0cbbf904a1ff6069"><td class="memItemLeft">virtual&#160;</td><td class="memItemRight"><a class="el" href="#ac7ab72ae63c11f7a0cbbf904a1ff6069">~Connection</a> () noexcept</td></tr>
 <tr class="memitem:a1ccc5bb6d2a36c927625c155ae35e23a" id="r_a1ccc5bb6d2a36c927625c155ae35e23a"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a1ccc5bb6d2a36c927625c155ae35e23a">startTransaction</a> ()</td></tr>
@@ -132,6 +136,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ad3ec5cab9f60dece303d571fb185a8e5 template"><td class="memItemLeft">uint64_t&#160;</td><td class="memItemRight"><a class="el" href="#ad3ec5cab9f60dece303d571fb185a8e5">update</a> (const std::string &amp;query, const T &amp;value, const Q &amp;... values)</td></tr>
 <tr class="memitem:a16bb2c8695a30f4aa4832017662aa034" id="r_a16bb2c8695a30f4aa4832017662aa034"><td class="memTemplParams" colspan="2">template&lt;typename T, typename Iterable&gt; </td></tr>
 <tr class="memitem:a16bb2c8695a30f4aa4832017662aa034 template"><td class="memItemLeft">uint64_t&#160;</td><td class="memItemRight"><a class="el" href="#a16bb2c8695a30f4aa4832017662aa034">batchUpdate</a> (const std::string &amp;query, std::function&lt; void(PreparedStatement &amp;, const T &amp;)&gt; mapper, const Iterable &amp;values)</td></tr>
+<tr class="memitem:a1bbb3cd123bf47ce5c9a146e5aad4474" id="r_a1bbb3cd123bf47ce5c9a146e5aad4474"><td class="memItemLeft">std::size_t&#160;</td><td class="memItemRight"><a class="el" href="#a1bbb3cd123bf47ce5c9a146e5aad4474">getStatementCacheSize</a> () const noexcept</td></tr>
+<tr class="memitem:ad2e668e988d7bfac2997885cff9a36e5" id="r_ad2e668e988d7bfac2997885cff9a36e5"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#ad2e668e988d7bfac2997885cff9a36e5">setStatementCacheSize</a> (std::size_t size)</td></tr>
+<tr class="memitem:a4ff1b41ca1d4f02d879c295f638a65e2" id="r_a4ff1b41ca1d4f02d879c295f638a65e2"><td class="memItemLeft">std::size_t&#160;</td><td class="memItemRight"><a class="el" href="#a4ff1b41ca1d4f02d879c295f638a65e2">getCachedStatementCount</a> () const noexcept</td></tr>
 <tr class="memitem:ad940302808cfd3e736377e23195102d7" id="r_ad940302808cfd3e736377e23195102d7"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#ad940302808cfd3e736377e23195102d7">isValid</a> () const noexcept</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pro-methods" class="groupheader"><a id="pro-methods" name="pro-methods"></a>
@@ -145,6 +152,7 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:af0240aafd1454ecf42f2a47e257205e1" id="r_af0240aafd1454ecf42f2a47e257205e1"><td class="memTemplParams" colspan="2">template&lt;typename F&gt; </td></tr>
 <tr class="memitem:af0240aafd1454ecf42f2a47e257205e1 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><a class="el" href="#af0240aafd1454ecf42f2a47e257205e1">guard</a> (F &amp;&amp;func) -&gt; decltype(func())</td></tr>
 <tr class="memitem:a4590b5f0499e5aa8fcb57573888713dd" id="r_a4590b5f0499e5aa8fcb57573888713dd"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a4590b5f0499e5aa8fcb57573888713dd">onError</a> (const <a class="el" href="classanch_1_1sql_1_1_sql_exception.html">SqlException</a> &amp;error) noexcept</td></tr>
+<tr class="memitem:a7ef6c673c47461b1b6e860b2565aba91" id="r_a7ef6c673c47461b1b6e860b2565aba91"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a7ef6c673c47461b1b6e860b2565aba91">clearStatements</a> () noexcept</td></tr>
 <tr class="memitem:af64e1b19ea2f788ebce2113c07f049c4" id="r_af64e1b19ea2f788ebce2113c07f049c4"><td class="memItemLeft">virtual bool&#160;</td><td class="memItemRight"><a class="el" href="#af64e1b19ea2f788ebce2113c07f049c4">checkConnection</a> () const noexcept</td></tr>
 <tr class="memitem:a9d5130305d03d1f17388efe6b65f77e9" id="r_a9d5130305d03d1f17388efe6b65f77e9"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a9d5130305d03d1f17388efe6b65f77e9">setValid</a> (bool valid) noexcept</td></tr>
 </table><table class="memberdecls">
@@ -152,7 +160,9 @@ Protected Member Functions</h2></td></tr>
 Protected Attributes</h2></td></tr>
 <tr class="memitem:ad2775ca00279b54856dc0cdcb87c17d0" id="r_ad2775ca00279b54856dc0cdcb87c17d0"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#ad2775ca00279b54856dc0cdcb87c17d0">_valid</a></td></tr>
 <tr class="memitem:aa8d608cc64a33ac023006d778bd22500" id="r_aa8d608cc64a33ac023006d778bd22500"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#aa8d608cc64a33ac023006d778bd22500">_transaction</a></td></tr>
-<tr class="memitem:ab35f3d23f97a63c1d479bf094d537dcf" id="r_ab35f3d23f97a63c1d479bf094d537dcf"><td class="memItemLeft">std::map&lt; std::string, PreparedStatement * &gt;&#160;</td><td class="memItemRight"><a class="el" href="#ab35f3d23f97a63c1d479bf094d537dcf">_stmts</a></td></tr>
+<tr class="memitem:a6dbcf5be1474e7fadba4eb70864ca84d" id="r_a6dbcf5be1474e7fadba4eb70864ca84d"><td class="memItemLeft">std::list&lt; <a class="el" href="structanch_1_1sql_1_1_connection_1_1_cached_statement.html">CachedStatement</a> &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a6dbcf5be1474e7fadba4eb70864ca84d">_stmts</a></td></tr>
+<tr class="memitem:add96c2df384aa6fdb3c1bc0cad5d5381" id="r_add96c2df384aa6fdb3c1bc0cad5d5381"><td class="memItemLeft">std::unordered_map&lt; std::string_view, std::list&lt; <a class="el" href="structanch_1_1sql_1_1_connection_1_1_cached_statement.html">CachedStatement</a> &gt;::iterator &gt;&#160;</td><td class="memItemRight"><a class="el" href="#add96c2df384aa6fdb3c1bc0cad5d5381">_stmtsIndex</a></td></tr>
+<tr class="memitem:a7de4152cdc1bb6ddd841bdf51439b048" id="r_a7de4152cdc1bb6ddd841bdf51439b048"><td class="memItemLeft">std::size_t&#160;</td><td class="memItemRight"><a class="el" href="#a7de4152cdc1bb6ddd841bdf51439b048">_stmtsMax</a></td></tr>
 <tr class="memitem:a8301f123a651173c79f092dc5413e9ee" id="r_a8301f123a651173c79f092dc5413e9ee"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#a8301f123a651173c79f092dc5413e9ee">_errors</a></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-friends" class="groupheader"><a id="friends" name="friends"></a>
@@ -166,28 +176,44 @@ class&#160;</td><td class="memItemRight"><b>ResultSet</b></td></tr>
 <div class="textblock"><p>SQL connection virtual class. </p>
 <p>Abstract layer for SQL connections management.<br  />
 <br  />
-Errors: every <a class="el" href="classanch_1_1sql_1_1_sql_exception.html" title="SqlException">SqlException</a> raised by the connection, its prepared statements and its result sets is reported to the connection. A fatal error (<a class="el" href="classanch_1_1sql_1_1_sql_exception.html#a04a4447ba4b6c0f284acf82902853bde" title="SqlException::isOK">SqlException::isOK</a> is <code>false</code> : connection lost, out of memory, protocol error, ...) invalidates the connection: <a class="el" href="#ad940302808cfd3e736377e23195102d7" title="isValid">isValid</a> returns <code>false</code> and connection pools destroy it instead of reusing it. Other errors (syntax, constraint, ...) keep the connection valid, but the current transaction will be rolled back by <a class="el" href="#acd326c720ce84c1d9e5e9c48d9c12efa" title="release">release</a> .</p>
+Errors: every <a class="el" href="classanch_1_1sql_1_1_sql_exception.html" title="SqlException">SqlException</a> raised by the connection, its prepared statements and its result sets is reported to the connection. A fatal error (<a class="el" href="classanch_1_1sql_1_1_sql_exception.html#a04a4447ba4b6c0f284acf82902853bde" title="SqlException::isOK">SqlException::isOK</a> is <code>false</code> : connection lost, out of memory, protocol error, ...) invalidates the connection: <a class="el" href="#ad940302808cfd3e736377e23195102d7" title="isValid">isValid</a> returns <code>false</code> and connection pools destroy it instead of reusing it. Other errors (syntax, constraint, ...) keep the connection valid, but the current transaction will be rolled back by <a class="el" href="#acd326c720ce84c1d9e5e9c48d9c12efa" title="release">release</a> .<br  />
+<br  />
+Prepared statements: <a class="el" href="#a84eef94d63f28f41e552275de7ae5313" title="prepareStatement">prepareStatement</a> keeps the prepared statements in a bounded cache (least recently used statement first evicted, see <a class="el" href="#ad2e668e988d7bfac2997885cff9a36e5" title="setStatementCacheSize">setStatementCacheSize</a> ). A statement is never evicted while one of its result sets is alive: the cache can then temporarily exceed its maximum size. An evicted statement is deallocated on the server side.</p>
 <dl class="section author"><dt>Author</dt><dd>Vincent Lachenal</dd></dl>
 <dl class="section since"><dt>Since</dt><dd>0.1 </dd></dl>
 </div><a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a7283620d533ffdd5327220d33465e906" name="a7283620d533ffdd5327220d33465e906"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7283620d533ffdd5327220d33465e906">&#9670;&#160;</a></span>Connection() <span class="overload">[1/2]</span></h2>
+<a id="ab0e13a97daa922c349e418913b03fb03" name="ab0e13a97daa922c349e418913b03fb03"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab0e13a97daa922c349e418913b03fb03">&#9670;&#160;</a></span>Connection() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">anch::sql::Connection::Connection </td>
           <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td class="paramtype">std::size_t</td>          <td class="paramname"><span class="paramname"><em>statementCacheSize</em></span><span class="paramdefsep"> = </span><span class="paramdefval"><a class="el" href="namespaceanch_1_1sql.html#afe217ba398ee3e4ffb1bac83555b556c">DEFAULT_STATEMENT_CACHE_SIZE</a></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel explicit">explicit</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
-<p><a class="el" href="classanch_1_1sql_1_1_connection.html" title="Connection">Connection</a> default constructor</p>
+<p><a class="el" href="classanch_1_1sql_1_1_connection.html" title="Connection">Connection</a> constructor</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">statementCacheSize</td><td>the maximum number of cached prepared statements (at least <code>1</code> )</td></tr>
+  </table>
+  </dd>
+</dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classanch_1_1sql_1_1_sql_exception.html" title="SQL exception.">SqlException</a></td><td>any error </td></tr>
+    <tr><td class="paramname"><a class="el" href="classanch_1_1sql_1_1_sql_exception.html" title="SQL exception.">SqlException</a></td><td>invalid cache size </td></tr>
   </table>
   </dd>
 </dl>
@@ -369,6 +395,40 @@ template&lt;typename T, typename Iterable&gt; </div>
 
 </div>
 </div>
+<a id="a7ef6c673c47461b1b6e860b2565aba91" name="a7ef6c673c47461b1b6e860b2565aba91"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7ef6c673c47461b1b6e860b2565aba91">&#9670;&#160;</a></span>clearStatements()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void anch::sql::Connection::clearStatements </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span><span class="mlabel noexcept">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Delete every cached prepared statement without deallocating it on the server side.<br  />
+Drivers which have to release statements before closing their connection call it in their destructor.</p>
+<dl class="section since"><dt>Since</dt><dd>0.2 </dd></dl>
+<div id="dynsection-6" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-6-summary" class="dynsummary">
+</div>
+<div id="dynsection-6-content" class="dyncontent hidden">
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classanch_1_1sql_1_1_connection_a7ef6c673c47461b1b6e860b2565aba91_cgraph.svg" width="159" height="78"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+
+</div>
+</div>
 <a id="a24cb2316e7568026f9aac3085ed1d7bc" name="a24cb2316e7568026f9aac3085ed1d7bc"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a24cb2316e7568026f9aac3085ed1d7bc">&#9670;&#160;</a></span>commit()</h2>
 
@@ -391,10 +451,10 @@ If there is not transaction, this method does nothing.</p>
   </table>
   </dd>
 </dl>
-<div id="dynsection-6" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-6-summary" class="dynsummary">
+<div id="dynsection-7" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-7-summary" class="dynsummary">
 </div>
-<div id="dynsection-6-content" class="dyncontent hidden">
+<div id="dynsection-7-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classanch_1_1sql_1_1_connection_a24cb2316e7568026f9aac3085ed1d7bc_cgraph.svg" width="159" height="78"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -438,10 +498,10 @@ If there is not transaction, this method does nothing.</p>
 </dl>
 
 <p>Implemented in <a class="el" href="classanch_1_1sql_1_1_my_s_q_l_connection.html#a17138ef1487fa52c7960a89866e214f4">anch::sql::MySQLConnection</a>, <a class="el" href="classanch_1_1sql_1_1_postgre_s_q_l_connection.html#a379f3d2ca7424f46c2c6defa029e78f4">anch::sql::PostgreSQLConnection</a>, and <a class="el" href="classanch_1_1sql_1_1_s_q_lite3_connection.html#ad4bb442927652ad12e4ce44b59b4a92c">anch::sql::SQLite3Connection</a>.</p>
-<div id="dynsection-7" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-7-summary" class="dynsummary">
+<div id="dynsection-8" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-8-summary" class="dynsummary">
 </div>
-<div id="dynsection-7-content" class="dyncontent hidden">
+<div id="dynsection-8-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classanch_1_1sql_1_1_connection_a62516b966f5d6e14afb9aa11c3f8caaf_cgraph.svg" width="356" height="78"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -485,11 +545,79 @@ If there is not transaction, this method does nothing.</p>
 </dl>
 
 <p>Implemented in <a class="el" href="classanch_1_1sql_1_1_my_s_q_l_connection.html#a4fa98f481722a54be2cd357b4a50942a">anch::sql::MySQLConnection</a>, <a class="el" href="classanch_1_1sql_1_1_postgre_s_q_l_connection.html#a872fa794129ccc3046311d5efb90f47f">anch::sql::PostgreSQLConnection</a>, and <a class="el" href="classanch_1_1sql_1_1_s_q_lite3_connection.html#a3fa20864a1259ce31c1763b43ff97824">anch::sql::SQLite3Connection</a>.</p>
-<div id="dynsection-8" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-8-summary" class="dynsummary">
+<div id="dynsection-9" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-9-summary" class="dynsummary">
 </div>
-<div id="dynsection-8-content" class="dyncontent hidden">
+<div id="dynsection-9-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classanch_1_1sql_1_1_connection_a5f510bea8040c310c7f71c6d4cff078a_cgraph.svg" width="356" height="78"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+
+</div>
+</div>
+<a id="a4ff1b41ca1d4f02d879c295f638a65e2" name="a4ff1b41ca1d4f02d879c295f638a65e2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4ff1b41ca1d4f02d879c295f638a65e2">&#9670;&#160;</a></span>getCachedStatementCount()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::size_t anch::sql::Connection::getCachedStatementCount </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel noexcept">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Number of cached prepared statements getter</p>
+<dl class="section return"><dt>Returns</dt><dd>the number of cached prepared statements</dd></dl>
+<dl class="section since"><dt>Since</dt><dd>0.2 </dd></dl>
+<div id="dynsection-10" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-10-summary" class="dynsummary">
+</div>
+<div id="dynsection-10-content" class="dyncontent hidden">
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classanch_1_1sql_1_1_connection_a4ff1b41ca1d4f02d879c295f638a65e2_cgraph.svg" width="199" height="78"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+
+</div>
+</div>
+<a id="a1bbb3cd123bf47ce5c9a146e5aad4474" name="a1bbb3cd123bf47ce5c9a146e5aad4474"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1bbb3cd123bf47ce5c9a146e5aad4474">&#9670;&#160;</a></span>getStatementCacheSize()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::size_t anch::sql::Connection::getStatementCacheSize </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel noexcept">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Maximum number of cached prepared statements getter</p>
+<dl class="section return"><dt>Returns</dt><dd>the maximum number of cached prepared statements</dd></dl>
+<dl class="section since"><dt>Since</dt><dd>0.2 </dd></dl>
+<div id="dynsection-11" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-11-summary" class="dynsummary">
+</div>
+<div id="dynsection-11-content" class="dyncontent hidden">
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classanch_1_1sql_1_1_connection_a1bbb3cd123bf47ce5c9a146e5aad4474_cgraph.svg" width="183" height="78"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
 </div>
@@ -539,10 +667,10 @@ template&lt;typename F&gt; </div>
   </dd>
 </dl>
 <dl class="section since"><dt>Since</dt><dd>0.2 </dd></dl>
-<div id="dynsection-9" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-9-summary" class="dynsummary">
+<div id="dynsection-12" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-12-summary" class="dynsummary">
 </div>
-<div id="dynsection-9-content" class="dyncontent hidden">
+<div id="dynsection-12-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classanch_1_1sql_1_1_connection_af0240aafd1454ecf42f2a47e257205e1_cgraph.svg" width="159" height="78"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -572,10 +700,10 @@ template&lt;typename F&gt; </div>
 </div><div class="memdoc">
 <p>Valid status getter: <code>false</code> once a fatal error has occurred, or when the driver reports a broken connection. <a class="el" href="classanch_1_1sql_1_1_connection.html" title="SQL connection virtual class.">Connection</a> pools destroy invalid connections instead of reusing them.</p>
 <dl class="section return"><dt>Returns</dt><dd>the status </dd></dl>
-<div id="dynsection-10" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-10-summary" class="dynsummary">
+<div id="dynsection-13" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-13-summary" class="dynsummary">
 </div>
-<div id="dynsection-10-content" class="dyncontent hidden">
+<div id="dynsection-13-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classanch_1_1sql_1_1_connection_ad940302808cfd3e736377e23195102d7_cgraph.svg" width="159" height="78"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -619,10 +747,10 @@ template&lt;typename F&gt; </div>
 </dl>
 
 <p>Implemented in <a class="el" href="classanch_1_1sql_1_1_my_s_q_l_connection.html#aca4645c4145217bdb215d11ba9495b3f">anch::sql::MySQLConnection</a>, <a class="el" href="classanch_1_1sql_1_1_postgre_s_q_l_connection.html#a42b73e29e55ae4edab74871e0ef74329">anch::sql::PostgreSQLConnection</a>, and <a class="el" href="classanch_1_1sql_1_1_s_q_lite3_connection.html#a8f045125bf2d8dabe723407222b4fdde">anch::sql::SQLite3Connection</a>.</p>
-<div id="dynsection-11" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-11-summary" class="dynsummary">
+<div id="dynsection-14" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-14-summary" class="dynsummary">
 </div>
-<div id="dynsection-11-content" class="dyncontent hidden">
+<div id="dynsection-14-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classanch_1_1sql_1_1_connection_a95a8c8f0c544e2abb54b3e2243b861de_cgraph.svg" width="356" height="78"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -658,10 +786,10 @@ template&lt;typename F&gt; </div>
   </dd>
 </dl>
 <dl class="section since"><dt>Since</dt><dd>0.2 </dd></dl>
-<div id="dynsection-12" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-12-summary" class="dynsummary">
+<div id="dynsection-15" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-15-summary" class="dynsummary">
 </div>
-<div id="dynsection-12-content" class="dyncontent hidden">
+<div id="dynsection-15-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classanch_1_1sql_1_1_connection_a4590b5f0499e5aa8fcb57573888713dd_cgraph.svg" width="159" height="78"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -681,7 +809,8 @@ template&lt;typename F&gt; </div>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Prepare SQL statement if not already done.</p>
+<p>Prepare SQL statement if not already done.<br  />
+The statement is cached by the connection (see <a class="el" href="#ad2e668e988d7bfac2997885cff9a36e5" title="setStatementCacheSize">setStatementCacheSize</a> ): the returned reference remains valid until the statement is evicted, that is to say at least until <code>statementCacheSize</code> - 1 other queries have been prepared on this connection (and as long as one of its result sets is alive).</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">query</td><td>the SQL query</td></tr>
@@ -695,10 +824,10 @@ template&lt;typename F&gt; </div>
   </table>
   </dd>
 </dl>
-<div id="dynsection-13" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-13-summary" class="dynsummary">
+<div id="dynsection-16" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-16-summary" class="dynsummary">
 </div>
-<div id="dynsection-13-content" class="dyncontent hidden">
+<div id="dynsection-16-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classanch_1_1sql_1_1_connection_a84eef94d63f28f41e552275de7ae5313_cgraph.svg" width="356" height="78"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -732,10 +861,10 @@ template&lt;typename F&gt; </div>
   </table>
   </dd>
 </dl>
-<div id="dynsection-14" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-14-summary" class="dynsummary">
+<div id="dynsection-17" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-17-summary" class="dynsummary">
 </div>
-<div id="dynsection-14-content" class="dyncontent hidden">
+<div id="dynsection-17-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classanch_1_1sql_1_1_connection_a81b8bf61bf16b985e11e15dc0e556443_cgraph.svg" width="159" height="78"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -782,10 +911,10 @@ template&lt;typename T, typename... Q&gt; </div>
   </table>
   </dd>
 </dl>
-<div id="dynsection-15" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-15-summary" class="dynsummary">
+<div id="dynsection-18" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-18-summary" class="dynsummary">
 </div>
-<div id="dynsection-15-content" class="dyncontent hidden">
+<div id="dynsection-18-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classanch_1_1sql_1_1_connection_a7d84dd0c6769e1b42cf23cc5b6e6fd1f_cgraph.svg" width="356" height="78"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -837,10 +966,10 @@ template&lt;typename T, typename... Q&gt; </div>
   </table>
   </dd>
 </dl>
-<div id="dynsection-16" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-16-summary" class="dynsummary">
+<div id="dynsection-19" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-19-summary" class="dynsummary">
 </div>
-<div id="dynsection-16-content" class="dyncontent hidden">
+<div id="dynsection-19-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classanch_1_1sql_1_1_connection_affcdb78efbbe95748ba52aec2f7ca57e_cgraph.svg" width="356" height="168"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -878,10 +1007,10 @@ template&lt;typename T, typename... Q&gt; </div>
   </table>
   </dd>
 </dl>
-<div id="dynsection-17" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-17-summary" class="dynsummary">
+<div id="dynsection-20" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-20-summary" class="dynsummary">
 </div>
-<div id="dynsection-17-content" class="dyncontent hidden">
+<div id="dynsection-20-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classanch_1_1sql_1_1_connection_a7d80a549d5f15247a258719086c27e02_cgraph.svg" width="159" height="78"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -933,10 +1062,10 @@ template&lt;typename T, typename... Q&gt; </div>
   </table>
   </dd>
 </dl>
-<div id="dynsection-18" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-18-summary" class="dynsummary">
+<div id="dynsection-21" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-21-summary" class="dynsummary">
 </div>
-<div id="dynsection-18-content" class="dyncontent hidden">
+<div id="dynsection-21-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classanch_1_1sql_1_1_connection_a4450e4f4c4e41ddb1ae49023b2755edb_cgraph.svg" width="356" height="168"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -974,10 +1103,10 @@ template&lt;typename T, typename... Q&gt; </div>
   </table>
   </dd>
 </dl>
-<div id="dynsection-19" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-19-summary" class="dynsummary">
+<div id="dynsection-22" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-22-summary" class="dynsummary">
 </div>
-<div id="dynsection-19-content" class="dyncontent hidden">
+<div id="dynsection-22-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classanch_1_1sql_1_1_connection_a390a1dbd0f930770a9df5d9dc698587a_cgraph.svg" width="159" height="78"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -1007,10 +1136,10 @@ template&lt;typename T, typename... Q&gt; </div>
 </div><div class="memdoc">
 <p>Release connection: end the current transaction (rollback when an error has been reported since the last release, commit otherwise).<br  />
 It is called when the connection is returned to its pool and when it is destroyed. If the transaction can be neither committed nor rolled back, the connection is invalidated (its transaction state is unknown). </p>
-<div id="dynsection-20" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-20-summary" class="dynsummary">
+<div id="dynsection-23" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-23-summary" class="dynsummary">
 </div>
-<div id="dynsection-20-content" class="dyncontent hidden">
+<div id="dynsection-23-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classanch_1_1sql_1_1_connection_acd326c720ce84c1d9e5e9c48d9c12efa_cgraph.svg" width="159" height="78"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -1038,10 +1167,10 @@ If there is not transaction, this method does nothing.</p>
   </table>
   </dd>
 </dl>
-<div id="dynsection-21" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-21-summary" class="dynsummary">
+<div id="dynsection-24" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-24-summary" class="dynsummary">
 </div>
-<div id="dynsection-21-content" class="dyncontent hidden">
+<div id="dynsection-24-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classanch_1_1sql_1_1_connection_a03dd1d91e38f6051b68b7973fd5903dc_cgraph.svg" width="159" height="78"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -1078,10 +1207,10 @@ If there is not transaction, this method does nothing.</p>
 </dl>
 
 <p>Implemented in <a class="el" href="classanch_1_1sql_1_1_my_s_q_l_connection.html#a8e622006d90bc306bddfa6ef9019e708">anch::sql::MySQLConnection</a>, <a class="el" href="classanch_1_1sql_1_1_postgre_s_q_l_connection.html#af343059519b8b7df1b86eddc4d220056">anch::sql::PostgreSQLConnection</a>, and <a class="el" href="classanch_1_1sql_1_1_s_q_lite3_connection.html#af7a6bca1a3df500263a8e90122283063">anch::sql::SQLite3Connection</a>.</p>
-<div id="dynsection-22" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-22-summary" class="dynsummary">
+<div id="dynsection-25" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-25-summary" class="dynsummary">
 </div>
-<div id="dynsection-22-content" class="dyncontent hidden">
+<div id="dynsection-25-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classanch_1_1sql_1_1_connection_a08ed70337ffef4525fd401bbf8ebbab4_cgraph.svg" width="159" height="78"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -1118,10 +1247,10 @@ If there is not transaction, this method does nothing.</p>
 </dl>
 
 <p>Implemented in <a class="el" href="classanch_1_1sql_1_1_my_s_q_l_connection.html#a17bf2595ed8cffcc4ccce62f9ead99f6">anch::sql::MySQLConnection</a>, <a class="el" href="classanch_1_1sql_1_1_postgre_s_q_l_connection.html#ac3cdb34c7a3ac60a7e8c91210b7317b8">anch::sql::PostgreSQLConnection</a>, and <a class="el" href="classanch_1_1sql_1_1_s_q_lite3_connection.html#a14d3da39e0b3f8d5ba4ea602104fae77">anch::sql::SQLite3Connection</a>.</p>
-<div id="dynsection-23" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-23-summary" class="dynsummary">
+<div id="dynsection-26" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-26-summary" class="dynsummary">
 </div>
-<div id="dynsection-23-content" class="dyncontent hidden">
+<div id="dynsection-26-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classanch_1_1sql_1_1_connection_a6b0d219dafbfe23945396b5c50816cdd_cgraph.svg" width="159" height="78"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -1158,11 +1287,48 @@ If there is not transaction, this method does nothing.</p>
 </dl>
 
 <p>Implemented in <a class="el" href="classanch_1_1sql_1_1_my_s_q_l_connection.html#a4c8838c73f88d446e75a74a83fa5212f">anch::sql::MySQLConnection</a>, <a class="el" href="classanch_1_1sql_1_1_postgre_s_q_l_connection.html#a8ab94d4e8d06326e6c7f689955962210">anch::sql::PostgreSQLConnection</a>, and <a class="el" href="classanch_1_1sql_1_1_s_q_lite3_connection.html#ae9e5607035ee0a0ab2a4aeb843521eac">anch::sql::SQLite3Connection</a>.</p>
-<div id="dynsection-24" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-24-summary" class="dynsummary">
+<div id="dynsection-27" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-27-summary" class="dynsummary">
 </div>
-<div id="dynsection-24-content" class="dyncontent hidden">
+<div id="dynsection-27-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classanch_1_1sql_1_1_connection_a60c10a1cf66f4158e0e587405112f7b0_cgraph.svg" width="164" height="78"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+
+</div>
+</div>
+<a id="ad2e668e988d7bfac2997885cff9a36e5" name="ad2e668e988d7bfac2997885cff9a36e5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad2e668e988d7bfac2997885cff9a36e5">&#9670;&#160;</a></span>setStatementCacheSize()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void anch::sql::Connection::setStatementCacheSize </td>
+          <td>(</td>
+          <td class="paramtype">std::size_t</td>          <td class="paramname"><span class="paramname"><em>size</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Maximum number of cached prepared statements setter: least recently used statements are evicted when the cache exceeds the new size</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">size</td><td>the maximum number of cached prepared statements (at least <code>1</code> )</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classanch_1_1sql_1_1_sql_exception.html" title="SQL exception.">SqlException</a></td><td>invalid size</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section since"><dt>Since</dt><dd>0.2 </dd></dl>
+<div id="dynsection-28" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-28-summary" class="dynsummary">
+</div>
+<div id="dynsection-28-content" class="dyncontent hidden">
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classanch_1_1sql_1_1_connection_ad2e668e988d7bfac2997885cff9a36e5_cgraph.svg" width="183" height="78"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
 </div>
@@ -1196,10 +1362,10 @@ If there is not transaction, this method does nothing.</p>
   </table>
   </dd>
 </dl>
-<div id="dynsection-25" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-25-summary" class="dynsummary">
+<div id="dynsection-29" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-29-summary" class="dynsummary">
 </div>
-<div id="dynsection-25-content" class="dyncontent hidden">
+<div id="dynsection-29-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classanch_1_1sql_1_1_connection_a9d5130305d03d1f17388efe6b65f77e9_cgraph.svg" width="159" height="78"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -1227,10 +1393,10 @@ If there is a transaction on this database connection, this method does nothing.
   </table>
   </dd>
 </dl>
-<div id="dynsection-26" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-26-summary" class="dynsummary">
+<div id="dynsection-30" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-30-summary" class="dynsummary">
 </div>
-<div id="dynsection-26-content" class="dyncontent hidden">
+<div id="dynsection-30-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classanch_1_1sql_1_1_connection_a1ccc5bb6d2a36c927625c155ae35e23a_cgraph.svg" width="159" height="78"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -1264,10 +1430,10 @@ If there is a transaction on this database connection, this method does nothing.
   </table>
   </dd>
 </dl>
-<div id="dynsection-27" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-27-summary" class="dynsummary">
+<div id="dynsection-31" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-31-summary" class="dynsummary">
 </div>
-<div id="dynsection-27-content" class="dyncontent hidden">
+<div id="dynsection-31-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classanch_1_1sql_1_1_connection_a104eaa16b2b443da5a6eb50c0562cb28_cgraph.svg" width="356" height="78"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -1314,10 +1480,10 @@ template&lt;typename T, typename... Q&gt; </div>
   </table>
   </dd>
 </dl>
-<div id="dynsection-28" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-28-summary" class="dynsummary">
+<div id="dynsection-32" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-32-summary" class="dynsummary">
 </div>
-<div id="dynsection-28-content" class="dyncontent hidden">
+<div id="dynsection-32-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classanch_1_1sql_1_1_connection_ad3ec5cab9f60dece303d571fb185a8e5_cgraph.svg" width="552" height="119"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -1347,8 +1513,8 @@ template&lt;typename T, typename... Q&gt; </div>
 
 </div>
 </div>
-<a id="ab35f3d23f97a63c1d479bf094d537dcf" name="ab35f3d23f97a63c1d479bf094d537dcf"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab35f3d23f97a63c1d479bf094d537dcf">&#9670;&#160;</a></span>_stmts</h2>
+<a id="a6dbcf5be1474e7fadba4eb70864ca84d" name="a6dbcf5be1474e7fadba4eb70864ca84d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6dbcf5be1474e7fadba4eb70864ca84d">&#9670;&#160;</a></span>_stmts</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1357,7 +1523,7 @@ template&lt;typename T, typename... Q&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::map&lt;std::string, PreparedStatement*&gt; anch::sql::Connection::_stmts</td>
+          <td class="memname">std::list&lt;<a class="el" href="structanch_1_1sql_1_1_connection_1_1_cached_statement.html">CachedStatement</a>&gt; anch::sql::Connection::_stmts</td>
         </tr>
       </table>
   </td>
@@ -1366,7 +1532,53 @@ template&lt;typename T, typename... Q&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Prepared statements </p>
+<p>Prepared statements (the most recently used first) </p>
+
+</div>
+</div>
+<a id="add96c2df384aa6fdb3c1bc0cad5d5381" name="add96c2df384aa6fdb3c1bc0cad5d5381"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#add96c2df384aa6fdb3c1bc0cad5d5381">&#9670;&#160;</a></span>_stmtsIndex</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::unordered_map&lt;std::string_view, std::list&lt;<a class="el" href="structanch_1_1sql_1_1_connection_1_1_cached_statement.html">CachedStatement</a>&gt;::iterator&gt; anch::sql::Connection::_stmtsIndex</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Prepared statements index (keys are views of <a class="el" href="structanch_1_1sql_1_1_connection_1_1_cached_statement.html#ae610c20b914431e96a8ef64e04cab3ac" title="CachedStatement::query">CachedStatement::query</a> ) </p>
+
+</div>
+</div>
+<a id="a7de4152cdc1bb6ddd841bdf51439b048" name="a7de4152cdc1bb6ddd841bdf51439b048"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7de4152cdc1bb6ddd841bdf51439b048">&#9670;&#160;</a></span>_stmtsMax</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::size_t anch::sql::Connection::_stmtsMax</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Maximum number of cached prepared statements </p>
 
 </div>
 </div>

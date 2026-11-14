@@ -186,6 +186,10 @@ Functions</h2></td></tr>
 <tr class="memitem:a5301e8f784e6635af24b7a163ef65d57" id="r_a5301e8f784e6635af24b7a163ef65d57"><td class="memItemLeft">std::vector&lt; std::size_t &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a5301e8f784e6635af24b7a163ef65d57">findPlaceholders</a> (std::string_view query, const <a class="el" href="structanch_1_1sql_1_1_sql_syntax.html">anch::sql::SqlSyntax</a> &amp;syntax)</td></tr>
 <tr class="memitem:ab1d27961965fa2a2ccdc186863905ebd" id="r_ab1d27961965fa2a2ccdc186863905ebd"><td class="memItemLeft">std::string&#160;</td><td class="memItemRight"><a class="el" href="#ab1d27961965fa2a2ccdc186863905ebd">numberPlaceholders</a> (std::string_view query, const std::vector&lt; std::size_t &gt; &amp;positions, char prefix='$')</td></tr>
 <tr class="memitem:a322a938c82f4b6c5ab176a7f0c6516d1" id="r_a322a938c82f4b6c5ab176a7f0c6516d1"><td class="memItemLeft">std::shared_ptr&lt; <a class="el" href="classanch_1_1sql_1_1_connection.html">Connection</a> &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a322a938c82f4b6c5ab176a7f0c6516d1">make_shared_connection</a> (const <a class="el" href="structanch_1_1sql_1_1_sql_connection_configuration.html">SqlConnectionConfiguration</a> &amp;config)</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-var-members" class="groupheader"><a id="var-members" name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:afe217ba398ee3e4ffb1bac83555b556c" id="r_afe217ba398ee3e4ffb1bac83555b556c"><td class="memItemLeft">constexpr std::size_t&#160;</td><td class="memItemRight"><a class="el" href="#afe217ba398ee3e4ffb1bac83555b556c">DEFAULT_STATEMENT_CACHE_SIZE</a> = 256</td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>SQL namespace. </p>
@@ -992,6 +996,31 @@ template&lt;typename T&gt; </div>
 <div id="dynsection-21-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespaceanch_1_1sql_a7fdff1ec77f6fdf268b440957eafa965_cgraph.svg" width="128" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
+
+</div>
+</div>
+<a name="doc-var-members" id="doc-var-members"></a><h2 id="header-doc-var-members" class="groupheader">Variable Documentation</h2>
+<a id="afe217ba398ee3e4ffb1bac83555b556c" name="afe217ba398ee3e4ffb1bac83555b556c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afe217ba398ee3e4ffb1bac83555b556c">&#9670;&#160;</a></span>DEFAULT_STATEMENT_CACHE_SIZE</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::size_t anch::sql::DEFAULT_STATEMENT_CACHE_SIZE = 256</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Default maximum number of prepared statements cached by a connection (see <a class="el" href="classanch_1_1sql_1_1_connection.html#a84eef94d63f28f41e552275de7ae5313" title="Connection::prepareStatement">Connection::prepareStatement</a> )</p>
+<dl class="section since"><dt>Since</dt><dd>0.2 </dd></dl>
 
 </div>
 </div>

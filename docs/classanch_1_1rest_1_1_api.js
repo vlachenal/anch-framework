@@ -4,6 +4,7 @@ var classanch_1_1rest_1_1_api =
     [ "Api", "classanch_1_1rest_1_1_api.html#ad3034f98d0e9afef163e9ed2b5118395", null ],
     [ "Api", "classanch_1_1rest_1_1_api.html#a66ae145520b63a2009d399f7313455bb", null ],
     [ "~Api", "classanch_1_1rest_1_1_api.html#aa5d89ad2afea6b1f086c0459ca8862c8", null ],
+    [ "cors", "classanch_1_1rest_1_1_api.html#aa36d87d7de6dae4c528a763ac1be41f2", null ],
     [ "del", "classanch_1_1rest_1_1_api.html#a59dc2c9ab77d6422a6a70690e2c0f76c", null ],
     [ "filter", "classanch_1_1rest_1_1_api.html#ae53143d6fc0298cdf1e8da5ab6709612", null ],
     [ "get", "classanch_1_1rest_1_1_api.html#af548e2d20bb21cd43fc144d58faad1c0", null ],

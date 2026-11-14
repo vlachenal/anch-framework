@@ -53,5 +53,6 @@ var namespaceanch_1_1sql =
     [ "notIn", "namespaceanch_1_1sql.html#a1eaa89fa4ffb44702f142553f33f14df", null ],
     [ "notLike", "namespaceanch_1_1sql.html#ac0d58abaca992f078573a634fca9e035", null ],
     [ "numberPlaceholders", "namespaceanch_1_1sql.html#ab1d27961965fa2a2ccdc186863905ebd", null ],
-    [ "select", "namespaceanch_1_1sql.html#a7fdff1ec77f6fdf268b440957eafa965", null ]
+    [ "select", "namespaceanch_1_1sql.html#a7fdff1ec77f6fdf268b440957eafa965", null ],
+    [ "DEFAULT_STATEMENT_CACHE_SIZE", "namespaceanch_1_1sql.html#afe217ba398ee3e4ffb1bac83555b556c", null ]
 ];

@@ -98,7 +98,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('classanch_1_1s
 <div id="dynsection-0-summary" class="dynsummary">
 </div>
 <div id="dynsection-0-content" class="dyncontent hidden">
-<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classanch_1_1sql_1_1_my_s_q_l_prepared_statement__inherit__graph.svg" width="207" height="598"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><div class="zoom"><iframe scrolling="no" loading="lazy" frameborder="0" src="classanch_1_1sql_1_1_my_s_q_l_prepared_statement__inherit__graph.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
 </div>
 <div id="dynsection-1" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Collaboration diagram for anch::sql::MySQLPreparedStatement:</div>
 <div id="dynsection-1-summary" class="dynsummary">
@@ -115,7 +115,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a33fa75d310483ea08d42db3ef53a09cd inherit pub_methods_classanch_1_1sql_1_1_prepared_statement" id="r_a33fa75d310483ea08d42db3ef53a09cd"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="classanch_1_1sql_1_1_prepared_statement.html#a33fa75d310483ea08d42db3ef53a09cd">PreparedStatement</a> () noexcept</td></tr>
 <tr class="memitem:a8516e53b0ca2b5b2d28b6a9ee7ae9c48 inherit pub_methods_classanch_1_1sql_1_1_prepared_statement" id="r_a8516e53b0ca2b5b2d28b6a9ee7ae9c48"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="classanch_1_1sql_1_1_prepared_statement.html#a8516e53b0ca2b5b2d28b6a9ee7ae9c48">PreparedStatement</a> (const PreparedStatement &amp;)=delete</td></tr>
 <tr class="memitem:aaac605d28c1b23e86714027b5c9c013a inherit pub_methods_classanch_1_1sql_1_1_prepared_statement" id="r_aaac605d28c1b23e86714027b5c9c013a"><td class="memItemLeft">virtual&#160;</td><td class="memItemRight"><a class="el" href="classanch_1_1sql_1_1_prepared_statement.html#aaac605d28c1b23e86714027b5c9c013a">~PreparedStatement</a> () noexcept</td></tr>
-<tr class="memitem:a4da240920607c4d599a6abcf565ca66f inherit pub_methods_classanch_1_1sql_1_1_prepared_statement" id="r_a4da240920607c4d599a6abcf565ca66f"><td class="memItemLeft"><a class="el" href="classanch_1_1sql_1_1_result_set.html">ResultSet</a> *&#160;</td><td class="memItemRight"><a class="el" href="classanch_1_1sql_1_1_prepared_statement.html#a4da240920607c4d599a6abcf565ca66f">executeQuery</a> ()</td></tr>
+<tr class="memitem:a4da240920607c4d599a6abcf565ca66f inherit pub_methods_classanch_1_1sql_1_1_prepared_statement" id="r_a4da240920607c4d599a6abcf565ca66f"><td class="memItemLeft">ResultSet *&#160;</td><td class="memItemRight"><a class="el" href="classanch_1_1sql_1_1_prepared_statement.html#a4da240920607c4d599a6abcf565ca66f">executeQuery</a> ()</td></tr>
 <tr class="memitem:a8b30ebdbc1b1a8455977b8f9cb4fbbee inherit pub_methods_classanch_1_1sql_1_1_prepared_statement" id="r_a8b30ebdbc1b1a8455977b8f9cb4fbbee"><td class="memItemLeft">uint64_t&#160;</td><td class="memItemRight"><a class="el" href="classanch_1_1sql_1_1_prepared_statement.html#a8b30ebdbc1b1a8455977b8f9cb4fbbee">executeUpdate</a> ()</td></tr>
 <tr class="memitem:a5caf9c9fbf2542940cd2d4a9b802c2e3 inherit pub_methods_classanch_1_1sql_1_1_prepared_statement" id="r_a5caf9c9fbf2542940cd2d4a9b802c2e3"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="classanch_1_1sql_1_1_prepared_statement.html#a5caf9c9fbf2542940cd2d4a9b802c2e3">set</a> (std::size_t idx, int16_t value)</td></tr>
 <tr class="memitem:ae01b343dd9c1832fca21c70e2fa9bb9a inherit pub_methods_classanch_1_1sql_1_1_prepared_statement" id="r_ae01b343dd9c1832fca21c70e2fa9bb9a"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="classanch_1_1sql_1_1_prepared_statement.html#ae01b343dd9c1832fca21c70e2fa9bb9a">set</a> (std::size_t idx, uint16_t value)</td></tr>
@@ -136,10 +136,11 @@ Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pro-methods" class="groupheader"><a id="pro-methods" name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
-<tr class="memitem:a6088a44c5ad2d2a8faf42bff581cd184" id="r_a6088a44c5ad2d2a8faf42bff581cd184"><td class="memItemLeft">virtual <a class="el" href="classanch_1_1sql_1_1_result_set.html">ResultSet</a> *&#160;</td><td class="memItemRight"><a class="el" href="#a6088a44c5ad2d2a8faf42bff581cd184">doExecuteQuery</a> () override</td></tr>
+<tr class="memitem:a6088a44c5ad2d2a8faf42bff581cd184" id="r_a6088a44c5ad2d2a8faf42bff581cd184"><td class="memItemLeft">virtual ResultSet *&#160;</td><td class="memItemRight"><a class="el" href="#a6088a44c5ad2d2a8faf42bff581cd184">doExecuteQuery</a> () override</td></tr>
 <tr class="memitem:a2aae51cd37d9c7d05b6e19e15340199c" id="r_a2aae51cd37d9c7d05b6e19e15340199c"><td class="memItemLeft">virtual uint64_t&#160;</td><td class="memItemRight"><a class="el" href="#a2aae51cd37d9c7d05b6e19e15340199c">doExecuteUpdate</a> () override</td></tr>
 <tr class="inherit_header pro_methods_classanch_1_1sql_1_1_prepared_statement"><td colspan="2" class="dyn-inherit"><span class="dynarrow"><span class="arrowhead closed"></span></span>Protected Member Functions inherited from <a class="el" href="classanch_1_1sql_1_1_prepared_statement.html">anch::sql::PreparedStatement</a></td></tr>
 <tr class="memitem:a4eb551cf4b8f5eb349aedb61b011ba66 inherit pro_methods_classanch_1_1sql_1_1_prepared_statement" id="r_a4eb551cf4b8f5eb349aedb61b011ba66"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="classanch_1_1sql_1_1_prepared_statement.html#a4eb551cf4b8f5eb349aedb61b011ba66">setParameterCount</a> (std::size_t count)</td></tr>
+<tr class="memitem:a84bd8b814d41428afa7da3549ac9d39a inherit pro_methods_classanch_1_1sql_1_1_prepared_statement" id="r_a84bd8b814d41428afa7da3549ac9d39a"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="classanch_1_1sql_1_1_prepared_statement.html#a84bd8b814d41428afa7da3549ac9d39a">deallocate</a> () noexcept</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-inherited" class="groupheader"><a id="inherited" name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
@@ -226,7 +227,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual <a class="el" href="classanch_1_1sql_1_1_result_set.html">ResultSet</a> * anch::sql::MySQLPreparedStatement::doExecuteQuery </td>
+          <td class="memname">virtual ResultSet * anch::sql::MySQLPreparedStatement::doExecuteQuery </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>

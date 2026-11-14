@@ -1,12 +1,12 @@
 <map id="anch::sql::PreparedStatement" name="anch::sql::PreparedStatement">
-<area shape="rect" id="Node000001" title="SQL prepared statement." alt="" coords="73,467,256,813"/>
+<area shape="rect" id="Node000001" title="SQL prepared statement." alt="" coords="73,467,256,835"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="5,309,161,395"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="95,392,114,450,108,451,95,397"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="95,392,113,450,107,451,94,397"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="113,147,216,216"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="101,229,95,241,84,275,82,310,77,309,79,274,90,239,103,224"/>
 <area shape="rect" id="Node000005" title=" " alt="" coords="186,317,306,387"/>
 <area shape="poly" id="edge5_Node000005_Node000003" title=" " alt="" coords="206,225,216,239,233,279,243,318,238,318,228,280,211,241,206,230"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="155,5,174,75"/>
 <area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="165,72,167,130,162,130,164,77"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="237,384,221,451,216,449,235,389"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="238,384,222,451,217,449,236,389"/>
 </map>

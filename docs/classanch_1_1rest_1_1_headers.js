@@ -9,6 +9,7 @@ var classanch_1_1rest_1_1_headers =
     [ "get", "classanch_1_1rest_1_1_headers.html#a457f57d8e66d6e96874de9350115bbc6", null ],
     [ "getAll", "classanch_1_1rest_1_1_headers.html#a0e6e6c7fc7f9678257b666351fa19f1c", null ],
     [ "has", "classanch_1_1rest_1_1_headers.html#a00465c009e8e348eb30f8fceabae113d", null ],
+    [ "operator==", "classanch_1_1rest_1_1_headers.html#a9d610e816eca2be4e6983513c979b1bb", null ],
     [ "remove", "classanch_1_1rest_1_1_headers.html#a1fbe5f2770e4f3d3f8e8291e770d9339", null ],
     [ "set", "classanch_1_1rest_1_1_headers.html#a1ab438ab277ab5c7ac4b2c1925e75f90", null ],
     [ "size", "classanch_1_1rest_1_1_headers.html#ad3fc9605c1a265ea0d32b1f82579ff95", null ]

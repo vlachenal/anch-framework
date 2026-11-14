@@ -112,7 +112,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a33fa75d310483ea08d42db3ef53a09cd" id="r_a33fa75d310483ea08d42db3ef53a09cd"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a33fa75d310483ea08d42db3ef53a09cd">PreparedStatement</a> () noexcept</td></tr>
 <tr class="memitem:a8516e53b0ca2b5b2d28b6a9ee7ae9c48" id="r_a8516e53b0ca2b5b2d28b6a9ee7ae9c48"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a8516e53b0ca2b5b2d28b6a9ee7ae9c48">PreparedStatement</a> (const PreparedStatement &amp;)=delete</td></tr>
 <tr class="memitem:aaac605d28c1b23e86714027b5c9c013a" id="r_aaac605d28c1b23e86714027b5c9c013a"><td class="memItemLeft">virtual&#160;</td><td class="memItemRight"><a class="el" href="#aaac605d28c1b23e86714027b5c9c013a">~PreparedStatement</a> () noexcept</td></tr>
-<tr class="memitem:a4da240920607c4d599a6abcf565ca66f" id="r_a4da240920607c4d599a6abcf565ca66f"><td class="memItemLeft"><a class="el" href="classanch_1_1sql_1_1_result_set.html">ResultSet</a> *&#160;</td><td class="memItemRight"><a class="el" href="#a4da240920607c4d599a6abcf565ca66f">executeQuery</a> ()</td></tr>
+<tr class="memitem:a4da240920607c4d599a6abcf565ca66f" id="r_a4da240920607c4d599a6abcf565ca66f"><td class="memItemLeft">ResultSet *&#160;</td><td class="memItemRight"><a class="el" href="#a4da240920607c4d599a6abcf565ca66f">executeQuery</a> ()</td></tr>
 <tr class="memitem:a8b30ebdbc1b1a8455977b8f9cb4fbbee" id="r_a8b30ebdbc1b1a8455977b8f9cb4fbbee"><td class="memItemLeft">uint64_t&#160;</td><td class="memItemRight"><a class="el" href="#a8b30ebdbc1b1a8455977b8f9cb4fbbee">executeUpdate</a> ()</td></tr>
 <tr class="memitem:a5caf9c9fbf2542940cd2d4a9b802c2e3" id="r_a5caf9c9fbf2542940cd2d4a9b802c2e3"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a5caf9c9fbf2542940cd2d4a9b802c2e3">set</a> (std::size_t idx, int16_t value)</td></tr>
 <tr class="memitem:ae01b343dd9c1832fca21c70e2fa9bb9a" id="r_ae01b343dd9c1832fca21c70e2fa9bb9a"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#ae01b343dd9c1832fca21c70e2fa9bb9a">set</a> (std::size_t idx, uint16_t value)</td></tr>
@@ -134,8 +134,9 @@ Public Member Functions</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 id="header-pro-methods" class="groupheader"><a id="pro-methods" name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
 <tr class="memitem:a4eb551cf4b8f5eb349aedb61b011ba66" id="r_a4eb551cf4b8f5eb349aedb61b011ba66"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a4eb551cf4b8f5eb349aedb61b011ba66">setParameterCount</a> (std::size_t count)</td></tr>
-<tr class="memitem:a079417b21b8addb224ddd2bd9a043f53" id="r_a079417b21b8addb224ddd2bd9a043f53"><td class="memItemLeft">virtual <a class="el" href="classanch_1_1sql_1_1_result_set.html">ResultSet</a> *&#160;</td><td class="memItemRight"><a class="el" href="#a079417b21b8addb224ddd2bd9a043f53">doExecuteQuery</a> ()=0</td></tr>
+<tr class="memitem:a079417b21b8addb224ddd2bd9a043f53" id="r_a079417b21b8addb224ddd2bd9a043f53"><td class="memItemLeft">virtual ResultSet *&#160;</td><td class="memItemRight"><a class="el" href="#a079417b21b8addb224ddd2bd9a043f53">doExecuteQuery</a> ()=0</td></tr>
 <tr class="memitem:a22adcb0c9708dad3cd973a19b8d5afc8" id="r_a22adcb0c9708dad3cd973a19b8d5afc8"><td class="memItemLeft">virtual uint64_t&#160;</td><td class="memItemRight"><a class="el" href="#a22adcb0c9708dad3cd973a19b8d5afc8">doExecuteUpdate</a> ()=0</td></tr>
+<tr class="memitem:a84bd8b814d41428afa7da3549ac9d39a" id="r_a84bd8b814d41428afa7da3549ac9d39a"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="#a84bd8b814d41428afa7da3549ac9d39a">deallocate</a> () noexcept</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pro-attribs" class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
@@ -147,6 +148,8 @@ Protected Attributes</h2></td></tr>
 Friends</h2></td></tr>
 <tr class="memitem:a54a11fdc71e1679a42fa0c0e3856673d" id="r_a54a11fdc71e1679a42fa0c0e3856673d"><td class="memItemLeft"><a id="a54a11fdc71e1679a42fa0c0e3856673d" name="a54a11fdc71e1679a42fa0c0e3856673d"></a>
 class&#160;</td><td class="memItemRight"><b>Connection</b></td></tr>
+<tr class="memitem:a409719f61e9439051d21243690a5e416" id="r_a409719f61e9439051d21243690a5e416"><td class="memItemLeft"><a id="a409719f61e9439051d21243690a5e416" name="a409719f61e9439051d21243690a5e416"></a>
+class&#160;</td><td class="memItemRight"><b>ResultSet</b></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>SQL prepared statement. </p>
@@ -280,6 +283,42 @@ Errors are reported to the connection: a fatal error invalidates it (see <a clas
 
 </div>
 </div>
+<a id="a84bd8b814d41428afa7da3549ac9d39a" name="a84bd8b814d41428afa7da3549ac9d39a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a84bd8b814d41428afa7da3549ac9d39a">&#9670;&#160;</a></span>deallocate()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void anch::sql::PreparedStatement::deallocate </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span><span class="mlabel virtual">virtual</span><span class="mlabel noexcept">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Deallocate statement on the server side (called when the statement is evicted from the connection cache, while the connection is open ; default: nothing to do).<br  />
+Drivers which deallocate statements in their destructor (MySQL, SQLite3) do not have to implement it.</p>
+<dl class="section since"><dt>Since</dt><dd>0.2 </dd></dl>
+
+<p>Reimplemented in <a class="el" href="classanch_1_1sql_1_1_postgre_s_q_l_prepared_statement.html#a2fcbbdd12ba5fa4b7d930ce23ea087b9">anch::sql::PostgreSQLPreparedStatement</a>.</p>
+<div id="dynsection-5" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-5-summary" class="dynsummary">
+</div>
+<div id="dynsection-5-content" class="dyncontent hidden">
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classanch_1_1sql_1_1_prepared_statement_a84bd8b814d41428afa7da3549ac9d39a_cgraph.svg" width="206" height="78"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+
+</div>
+</div>
 <a id="a079417b21b8addb224ddd2bd9a043f53" name="a079417b21b8addb224ddd2bd9a043f53"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a079417b21b8addb224ddd2bd9a043f53">&#9670;&#160;</a></span>doExecuteQuery()</h2>
 
@@ -290,7 +329,7 @@ Errors are reported to the connection: a fatal error invalidates it (see <a clas
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual <a class="el" href="classanch_1_1sql_1_1_result_set.html">ResultSet</a> * anch::sql::PreparedStatement::doExecuteQuery </td>
+          <td class="memname">virtual ResultSet * anch::sql::PreparedStatement::doExecuteQuery </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
@@ -312,10 +351,10 @@ Errors are reported to the connection: a fatal error invalidates it (see <a clas
 </dl>
 
 <p>Implemented in <a class="el" href="classanch_1_1sql_1_1_my_s_q_l_prepared_statement.html#a6088a44c5ad2d2a8faf42bff581cd184">anch::sql::MySQLPreparedStatement</a>, <a class="el" href="classanch_1_1sql_1_1_postgre_s_q_l_prepared_statement.html#a0155fb3918cac989426721330a56e550">anch::sql::PostgreSQLPreparedStatement</a>, and <a class="el" href="classanch_1_1sql_1_1_s_q_lite3_prepared_statement.html#ac5c96bd15dc4dc1f8039aac4302e15ca">anch::sql::SQLite3PreparedStatement</a>.</p>
-<div id="dynsection-5" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-5-summary" class="dynsummary">
+<div id="dynsection-6" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-6-summary" class="dynsummary">
 </div>
-<div id="dynsection-5-content" class="dyncontent hidden">
+<div id="dynsection-6-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classanch_1_1sql_1_1_prepared_statement_a079417b21b8addb224ddd2bd9a043f53_cgraph.svg" width="206" height="78"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -353,10 +392,10 @@ Errors are reported to the connection: a fatal error invalidates it (see <a clas
 </dl>
 
 <p>Implemented in <a class="el" href="classanch_1_1sql_1_1_my_s_q_l_prepared_statement.html#a2aae51cd37d9c7d05b6e19e15340199c">anch::sql::MySQLPreparedStatement</a>, <a class="el" href="classanch_1_1sql_1_1_postgre_s_q_l_prepared_statement.html#affeb2354686b7e5af06ebe341c003f09">anch::sql::PostgreSQLPreparedStatement</a>, and <a class="el" href="classanch_1_1sql_1_1_s_q_lite3_prepared_statement.html#a53a1a04bf4c182a525fdd26d25a0841e">anch::sql::SQLite3PreparedStatement</a>.</p>
-<div id="dynsection-6" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-6-summary" class="dynsummary">
+<div id="dynsection-7" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-7-summary" class="dynsummary">
 </div>
-<div id="dynsection-6-content" class="dyncontent hidden">
+<div id="dynsection-7-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classanch_1_1sql_1_1_prepared_statement_a22adcb0c9708dad3cd973a19b8d5afc8_cgraph.svg" width="206" height="78"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -369,7 +408,7 @@ Errors are reported to the connection: a fatal error invalidates it (see <a clas
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classanch_1_1sql_1_1_result_set.html">ResultSet</a> * anch::sql::PreparedStatement::executeQuery </td>
+          <td class="memname">ResultSet * anch::sql::PreparedStatement::executeQuery </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
@@ -384,10 +423,10 @@ Errors are reported to the connection: a fatal error invalidates it (see <a clas
   </table>
   </dd>
 </dl>
-<div id="dynsection-7" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-7-summary" class="dynsummary">
+<div id="dynsection-8" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-8-summary" class="dynsummary">
 </div>
-<div id="dynsection-7-content" class="dyncontent hidden">
+<div id="dynsection-8-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classanch_1_1sql_1_1_prepared_statement_a4da240920607c4d599a6abcf565ca66f_cgraph.svg" width="206" height="78"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -415,10 +454,10 @@ Errors are reported to the connection: a fatal error invalidates it (see <a clas
   </table>
   </dd>
 </dl>
-<div id="dynsection-8" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-8-summary" class="dynsummary">
+<div id="dynsection-9" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-9-summary" class="dynsummary">
 </div>
-<div id="dynsection-8-content" class="dyncontent hidden">
+<div id="dynsection-9-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classanch_1_1sql_1_1_prepared_statement_a8b30ebdbc1b1a8455977b8f9cb4fbbee_cgraph.svg" width="206" height="78"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -449,10 +488,10 @@ Errors are reported to the connection: a fatal error invalidates it (see <a clas
 <p>Number of parameters getter</p>
 <dl class="section return"><dt>Returns</dt><dd>the number of parameters</dd></dl>
 <dl class="section since"><dt>Since</dt><dd>0.2 </dd></dl>
-<div id="dynsection-9" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-9-summary" class="dynsummary">
+<div id="dynsection-10" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-10-summary" class="dynsummary">
 </div>
-<div id="dynsection-9-content" class="dyncontent hidden">
+<div id="dynsection-10-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classanch_1_1sql_1_1_prepared_statement_a39594667e386b9f95169b255fee87fca_cgraph.svg" width="206" height="78"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -498,10 +537,10 @@ Errors are reported to the connection: a fatal error invalidates it (see <a clas
   </table>
   </dd>
 </dl>
-<div id="dynsection-10" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-10-summary" class="dynsummary">
+<div id="dynsection-11" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-11-summary" class="dynsummary">
 </div>
-<div id="dynsection-10-content" class="dyncontent hidden">
+<div id="dynsection-11-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classanch_1_1sql_1_1_prepared_statement_a599db5c625e6978aa0f17ed2a31e8bf6_cgraph.svg" width="500" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -547,10 +586,10 @@ Errors are reported to the connection: a fatal error invalidates it (see <a clas
   </table>
   </dd>
 </dl>
-<div id="dynsection-11" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-11-summary" class="dynsummary">
+<div id="dynsection-12" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-12-summary" class="dynsummary">
 </div>
-<div id="dynsection-11-content" class="dyncontent hidden">
+<div id="dynsection-12-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classanch_1_1sql_1_1_prepared_statement_a8b7d4afc0ec417ca2a227dcb913db445_cgraph.svg" width="500" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -596,10 +635,10 @@ Errors are reported to the connection: a fatal error invalidates it (see <a clas
   </table>
   </dd>
 </dl>
-<div id="dynsection-12" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-12-summary" class="dynsummary">
+<div id="dynsection-13" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-13-summary" class="dynsummary">
 </div>
-<div id="dynsection-12-content" class="dyncontent hidden">
+<div id="dynsection-13-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classanch_1_1sql_1_1_prepared_statement_a69fd42fcf435389d43c45a48e2766843_cgraph.svg" width="500" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -637,10 +676,10 @@ Errors are reported to the connection: a fatal error invalidates it (see <a clas
   </table>
   </dd>
 </dl>
-<div id="dynsection-13" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-13-summary" class="dynsummary">
+<div id="dynsection-14" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-14-summary" class="dynsummary">
 </div>
-<div id="dynsection-13-content" class="dyncontent hidden">
+<div id="dynsection-14-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classanch_1_1sql_1_1_prepared_statement_a0c69c1db4440ef85341a96675a11e570_cgraph.svg" width="500" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -687,10 +726,10 @@ template&lt;typename T&gt; </div>
   </dd>
 </dl>
 <dl class="section since"><dt>Since</dt><dd>0.2 </dd></dl>
-<div id="dynsection-14" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-14-summary" class="dynsummary">
+<div id="dynsection-15" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-15-summary" class="dynsummary">
 </div>
-<div id="dynsection-14-content" class="dyncontent hidden">
+<div id="dynsection-15-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classanch_1_1sql_1_1_prepared_statement_a82e76b15c51d3634f3d761e9c607595c_cgraph.svg" width="500" height="128"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -728,10 +767,10 @@ template&lt;typename T&gt; </div>
   </table>
   </dd>
 </dl>
-<div id="dynsection-15" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-15-summary" class="dynsummary">
+<div id="dynsection-16" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-16-summary" class="dynsummary">
 </div>
-<div id="dynsection-15-content" class="dyncontent hidden">
+<div id="dynsection-16-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classanch_1_1sql_1_1_prepared_statement_a2eacc1bcae7569e41567c34c824c7100_cgraph.svg" width="500" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -769,10 +808,10 @@ template&lt;typename T&gt; </div>
   </table>
   </dd>
 </dl>
-<div id="dynsection-16" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-16-summary" class="dynsummary">
+<div id="dynsection-17" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-17-summary" class="dynsummary">
 </div>
-<div id="dynsection-16-content" class="dyncontent hidden">
+<div id="dynsection-17-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classanch_1_1sql_1_1_prepared_statement_a5caf9c9fbf2542940cd2d4a9b802c2e3_cgraph.svg" width="231" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -810,10 +849,10 @@ template&lt;typename T&gt; </div>
   </table>
   </dd>
 </dl>
-<div id="dynsection-17" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-17-summary" class="dynsummary">
+<div id="dynsection-18" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-18-summary" class="dynsummary">
 </div>
-<div id="dynsection-17-content" class="dyncontent hidden">
+<div id="dynsection-18-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classanch_1_1sql_1_1_prepared_statement_a343e4ad1387a33a28f9cdfeb1aa37a79_cgraph.svg" width="500" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -851,10 +890,10 @@ template&lt;typename T&gt; </div>
   </table>
   </dd>
 </dl>
-<div id="dynsection-18" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-18-summary" class="dynsummary">
+<div id="dynsection-19" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-19-summary" class="dynsummary">
 </div>
-<div id="dynsection-18-content" class="dyncontent hidden">
+<div id="dynsection-19-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classanch_1_1sql_1_1_prepared_statement_a4327fb290d0b8e527f8121446cec4d95_cgraph.svg" width="500" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -892,10 +931,10 @@ template&lt;typename T&gt; </div>
   </table>
   </dd>
 </dl>
-<div id="dynsection-19" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-19-summary" class="dynsummary">
+<div id="dynsection-20" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-20-summary" class="dynsummary">
 </div>
-<div id="dynsection-19-content" class="dyncontent hidden">
+<div id="dynsection-20-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classanch_1_1sql_1_1_prepared_statement_ae01b343dd9c1832fca21c70e2fa9bb9a_cgraph.svg" width="500" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -933,10 +972,10 @@ template&lt;typename T&gt; </div>
   </table>
   </dd>
 </dl>
-<div id="dynsection-20" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-20-summary" class="dynsummary">
+<div id="dynsection-21" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-21-summary" class="dynsummary">
 </div>
-<div id="dynsection-20-content" class="dyncontent hidden">
+<div id="dynsection-21-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classanch_1_1sql_1_1_prepared_statement_a2b3abc6f7ed0df7a3c33ddf801a916ef_cgraph.svg" width="500" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -974,10 +1013,10 @@ template&lt;typename T&gt; </div>
   </table>
   </dd>
 </dl>
-<div id="dynsection-21" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-21-summary" class="dynsummary">
+<div id="dynsection-22" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-22-summary" class="dynsummary">
 </div>
-<div id="dynsection-21-content" class="dyncontent hidden">
+<div id="dynsection-22-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classanch_1_1sql_1_1_prepared_statement_aef6b894159746ca747afda5dd067d245_cgraph.svg" width="500" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -1011,10 +1050,10 @@ template&lt;typename T&gt; </div>
   </dd>
 </dl>
 <dl class="section since"><dt>Since</dt><dd>0.2 </dd></dl>
-<div id="dynsection-22" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-22-summary" class="dynsummary">
+<div id="dynsection-23" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-23-summary" class="dynsummary">
 </div>
-<div id="dynsection-22-content" class="dyncontent hidden">
+<div id="dynsection-23-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classanch_1_1sql_1_1_prepared_statement_a128354e659cb706d0153709233734e2b_cgraph.svg" width="206" height="78"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -1049,10 +1088,10 @@ template&lt;typename T&gt; </div>
   </table>
   </dd>
 </dl>
-<div id="dynsection-23" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-23-summary" class="dynsummary">
+<div id="dynsection-24" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-24-summary" class="dynsummary">
 </div>
-<div id="dynsection-23-content" class="dyncontent hidden">
+<div id="dynsection-24-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classanch_1_1sql_1_1_prepared_statement_a4eb551cf4b8f5eb349aedb61b011ba66_cgraph.svg" width="206" height="78"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 

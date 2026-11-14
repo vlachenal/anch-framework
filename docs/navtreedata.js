@@ -133,12 +133,15 @@ var NAVTREE =
       [ "Mapping", "page_oas.html#oas_mapping_sec", null ],
       [ "Constraints", "page_oas.html#oas_constraints_sec", null ],
       [ "Limitations", "page_oas.html#oas_limits_sec", null ],
-      [ "Endpoints", "page_oas.html#oas_endpoints_sec", null ]
+      [ "Endpoints", "page_oas.html#oas_endpoints_sec", null ],
+      [ "Form bodies", "page_oas.html#oas_forms_sec", null ]
     ] ],
     [ "AnCH REST library documentation", "page_rest.html", [
       [ "Introduction", "page_rest.html#rest_intro_seq", null ],
       [ "Libraries", "page_rest.html#rest_libs_sec", null ],
       [ "Endpoints declaration", "page_rest.html#rest_server_sec", null ],
+      [ "Forms", "page_rest.html#rest_form_sec", null ],
+      [ "CORS", "page_rest.html#rest_cors_sec", null ],
       [ "Client", "page_rest.html#rest_client_sec", null ],
       [ "Fields constraints", "page_rest.html#rest_constraints_sec", null ],
       [ "nginx module", "page_rest.html#rest_nginx_sec", null ]
@@ -150,7 +153,8 @@ var NAVTREE =
       [ "Conception", "page_sql.html#sql_concept_sec", [
         [ "Prepared statements", "page_sql.html#sql_conception_stmt_sec", null ],
         [ "Errors", "page_sql.html#sql_conception_errors_sec", null ],
-        [ "SQL connection pool", "page_sql.html#sql_conception_pool_sec", null ]
+        [ "SQL connection pool", "page_sql.html#sql_conception_pool_sec", null ],
+        [ "Prepared statements cache", "page_sql.html#sql_conception_stmt_cache_sec", null ]
       ] ],
       [ "Example", "page_sql.html#sql_example_sec", null ]
     ] ],
@@ -222,16 +226,17 @@ var NAVTREEINDEX =
 "classanch_1_1json_1_1_j_s_o_n_mapper.html#afcbd0d846afd6315d73591237d6a1dc5",
 "classanch_1_1log_1_1_logger_configuration.html#a786ab99b6cce2386dd4a56c222f9de83",
 "classanch_1_1network_1_1_socket.html#ad4b6a1ff22869250c84fbd127faa0832",
-"classanch_1_1rest_1_1_media_type.html#ac2d165edf1c2a380ad543638becd8d10",
-"classanch_1_1sql_1_1_connection.html#ab35f3d23f97a63c1d479bf094d537dcf",
-"classanch_1_1sql_1_1_prepared_statement.html#a0c69c1db4440ef85341a96675a11e570",
-"classanch_1_1sql_1_1_time.html#aec34d01b615e3fcaf2fbefb2739df597",
-"dir_fe5553ee4b4b1c8670091b99a1c9862b.html",
-"namespaceanch_1_1json.html#a0216cc459829f5957a799ffa4a91ce5d",
-"namespaceanch_1_1ut.html#ac7356430bb6df263e817a92377c34dc0",
-"structanch_1_1cli_1_1_app.html",
-"structanch_1_1oas_1_1_additional_properties.html",
-"structanch_1_1rest_1_1_param_converter_3_01std_1_1string_01_4.html"
+"classanch_1_1rest_1_1_headers.html#a2d57f7634547dff7fed5a2344db3ff87",
+"classanch_1_1sql_1_1_clauses_builder.html#a8aaa5fa5663a99b00b3a604c15441adb",
+"classanch_1_1sql_1_1_my_s_q_l_prepared_statement.html#a982a943ef172181314d7c1c1572f6d8a",
+"classanch_1_1sql_1_1_s_q_lite3_result_set.html#a48f3bf039d86e2a1f7cb898e52a4f230",
+"conceptanch_1_1json_1_1_value_constraint.html",
+"namespaceanch.html#a076ca536c9623533b33cd90c2db4f5e6",
+"namespaceanch_1_1network.html#aa518b6bd398c963767bf1974e5c113be",
+"page_oas.html",
+"structanch_1_1events_1_1_event.html",
+"structanch_1_1oas_1_1_path_item.html#a03922ea896a8c530cd6eb21352b38fb5",
+"structanch_1_1rest_1_1_transport_config.html#af619a3c323bbe1ee78ade6a0eca23806"
 ];
 
 const SYNCONMSG = 'click to disable panel synchronization';

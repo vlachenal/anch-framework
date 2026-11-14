@@ -118,6 +118,9 @@ Errors</h2>
 SQL connection pool</h2>
 <p>SQL connection pools are configured in configuration file dbCon.conf<br  />
  When a connection is returned to its pool, <code>Connection::release</code> ends its transaction (rollback after an error, commit otherwise), then invalid connections are destroyed instead of being reused.</p>
+<h2 class="doxsection"><a class="anchor" id="sql_conception_stmt_cache_sec"></a>
+Prepared statements cache</h2>
+<p>Each connection keeps its prepared statements in a bounded cache (<code>statement-cache-size</code> key of the connection section, <code>256</code> by default, <code>Connection::setStatementCacheSize</code> ). The least recently used statement is evicted and deallocated on the server side when the cache is full ; a statement is not evicted while one of its result sets is alive. Queries built with literal values (<code>IN</code> lists of the builder for example) are distinct cache entries: bind values with <code></code>? placeholders whenever possible.</p>
 <h1 class="doxsection"><a class="anchor" id="sql_example_sec"></a>
 Example</h1>
 <p>SQL connection example: </p><div class="fragment"><div class="line"><span class="preprocessor">#include &quot;sql/postgresqlConnection.hpp&quot;</span></div>
@@ -259,34 +262,40 @@ Example</h1>
 <div class="line">  std::cout &lt;&lt; <span class="stringliteral">&quot;Exit PostgreSQL unit tests&quot;</span> &lt;&lt; std::endl;</div>
 <div class="line">  <span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>
-<div class="ttc" id="aclassanch_1_1sql_1_1_connection_html"><div class="ttname"><a href="classanch_1_1sql_1_1_connection.html">anch::sql::Connection</a></div><div class="ttdoc">SQL connection virtual class.</div><div class="ttdef"><b>Definition</b> connection.hpp:77</div></div>
+<div class="ttc" id="aclassanch_1_1sql_1_1_connection_html"><div class="ttname"><a href="classanch_1_1sql_1_1_connection.html">anch::sql::Connection</a></div><div class="ttdoc">SQL connection virtual class.</div><div class="ttdef"><b>Definition</b> connection.hpp:100</div></div>
 <div class="ttc" id="aclassanch_1_1sql_1_1_postgre_s_q_l_connection_html"><div class="ttname"><a href="classanch_1_1sql_1_1_postgre_s_q_l_connection.html">anch::sql::PostgreSQLConnection</a></div><div class="ttdoc">PostgreSQL connection.</div><div class="ttdef"><b>Definition</b> postgresqlConnection.hpp:69</div></div>
 <div class="ttc" id="aclassanch_1_1sql_1_1_result_set_html"><div class="ttname"><a href="classanch_1_1sql_1_1_result_set.html">anch::sql::ResultSet</a></div><div class="ttdoc">SQL result representation.</div><div class="ttdef"><b>Definition</b> resultSet.hpp:54</div></div>
 <div class="ttc" id="aclassanch_1_1sql_1_1_sql_exception_html"><div class="ttname"><a href="classanch_1_1sql_1_1_sql_exception.html">anch::sql::SqlException</a></div><div class="ttdoc">SQL exception.</div><div class="ttdef"><b>Definition</b> sqlException.hpp:37</div></div>
-</div><!-- fragment --><p>Pool configuration example: </p><div class="fragment"><div class="line">[anch_mysql]</div>
+</div><!-- fragment --><p>Pool configuration example: </p><div class="fragment"><div class="line">[<a class="code hl_namespace" href="namespaceanch_1_1sql.html">anch::sql</a>.anch_mysql]</div>
 <div class="line">driver=MySQL</div>
 <div class="line">host=localhost</div>
 <div class="line">port=3306</div>
 <div class="line">user=<a class="code hl_namespace" href="namespaceanch.html">anch</a></div>
 <div class="line">password=<a class="code hl_namespace" href="namespaceanch.html">anch</a></div>
 <div class="line">database=anch_test</div>
-<div class="line">pool_maxsize=20</div>
-<div class="line">pool_initsize=2</div>
 <div class="line"> </div>
-<div class="line">[anch_pgsql]</div>
+<div class="line">[<a class="code hl_namespace" href="namespaceanch_1_1sql.html">anch::sql</a>.anch_mysql.pool]</div>
+<div class="line">max-size=20</div>
+<div class="line">init-size=2</div>
+<div class="line"> </div>
+<div class="line">[<a class="code hl_namespace" href="namespaceanch_1_1sql.html">anch::sql</a>.anch_pgsql]</div>
 <div class="line">driver=PostgreSQL</div>
 <div class="line">host=localhost</div>
 <div class="line">port=5432</div>
 <div class="line">user=<a class="code hl_namespace" href="namespaceanch.html">anch</a></div>
 <div class="line">password=<a class="code hl_namespace" href="namespaceanch.html">anch</a></div>
 <div class="line">database=anch_test</div>
-<div class="line">pool_maxsize=20</div>
-<div class="line">pool_initsize=2</div>
-<div class="line">pool_timeout=200</div>
+<div class="line">statement-cache-size=512</div>
 <div class="line"> </div>
-<div class="line">[anch_sqlite]</div>
+<div class="line">[<a class="code hl_namespace" href="namespaceanch_1_1sql.html">anch::sql</a>.anch_pgsql.pool]</div>
+<div class="line">max-size=20</div>
+<div class="line">init-size=2</div>
+<div class="line">timeout=200</div>
+<div class="line"> </div>
+<div class="line">[<a class="code hl_namespace" href="namespaceanch_1_1sql.html">anch::sql</a>.anch_sqlite]</div>
 <div class="line">driver=SQLite3</div>
 <div class="line">database=<a class="code hl_namespace" href="namespaceanch.html">anch</a>.db</div>
+<div class="ttc" id="anamespaceanch_1_1sql_html"><div class="ttname"><a href="namespaceanch_1_1sql.html">anch::sql</a></div><div class="ttdoc">SQL namespace.</div><div class="ttdef"><b>Definition</b> clauses.hpp:25</div></div>
 <div class="ttc" id="anamespaceanch_html"><div class="ttname"><a href="namespaceanch.html">anch</a></div><div class="ttdoc">AnCH framework base namespace.</div><div class="ttdef"><b>Definition</b> app.hpp:28</div></div>
 </div><!-- fragment --><p>Pool example: </p><div class="fragment"><div class="line"><span class="preprocessor">#include &quot;sql/sqlConnectionFactory.hpp&quot;</span></div>
 <div class="line"> </div>

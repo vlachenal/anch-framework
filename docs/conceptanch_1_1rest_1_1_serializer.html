@@ -93,11 +93,15 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('conceptanch_1_
 <p><code>#include &lt;<a class="el" href="codec_8hpp_source.html">codec.hpp</a>&gt;</code></p>
 <h2 id="header-conceptdef" class="groupheader">Concept definition</h2>
 <div class="fragment"><div class="line">  <span class="keyword">template</span>&lt;<span class="keyword">typename</span> C, <span class="keyword">typename</span> T&gt;</div>
-<div class="line">  <span class="keyword">concept </span><a class="code hl_concept" href="conceptanch_1_1rest_1_1_serializer.html">Serializer</a> = <span class="keyword">requires</span>(<span class="keyword">const</span> T&amp; value, std::ostream&amp; out) {</div>
+<div class="line">  <span class="keyword">concept </span><a class="code hl_concept" href="conceptanch_1_1rest_1_1_serializer.html">Serializer</a> = <span class="keyword">requires</span> {</div>
 <div class="line">    { C::mediaType() } -&gt; std::convertible_to&lt;std::string_view&gt;;</div>
-<div class="line">    C::serialize(value, out);</div>
-<div class="line">  }</div>
-<div class="ttc" id="aconceptanch_1_1rest_1_1_serializer_html"><div class="ttname"><a href="conceptanch_1_1rest_1_1_serializer.html">anch::rest::Serializer</a></div><div class="ttdef"><b>Definition</b> codec.hpp:60</div></div>
+<div class="line">  } &amp;&amp; (<span class="keyword">requires</span>(<span class="keyword">const</span> T&amp; value, std::ostream&amp; out) { C::serialize(value, out); }</div>
+<div class="line">        || <span class="keyword">requires</span>(<span class="keyword">const</span> T&amp; value, std::ostream&amp; out, <a class="code hl_enumeration" href="namespaceanch_1_1rest.html#a23481a98e2fc63d6045769b147e165f0">anch::rest::Side</a> side) { C::serialize(value, out, side); }</div>
+<div class="line">        || <span class="keyword">requires</span>(<span class="keyword">const</span> T&amp; value, std::ostream&amp; out, <span class="keyword">const</span> anch::rest::MediaType&amp; contentType, <a class="code hl_enumeration" href="namespaceanch_1_1rest.html#a23481a98e2fc63d6045769b147e165f0">anch::rest::Side</a> side) {</div>
+<div class="line">          C::serialize(value, out, contentType, side);</div>
+<div class="line">        })</div>
+<div class="ttc" id="aconceptanch_1_1rest_1_1_serializer_html"><div class="ttname"><a href="conceptanch_1_1rest_1_1_serializer.html">anch::rest::Serializer</a></div><div class="ttdef"><b>Definition</b> codec.hpp:121</div></div>
+<div class="ttc" id="anamespaceanch_1_1rest_html_a23481a98e2fc63d6045769b147e165f0"><div class="ttname"><a href="namespaceanch_1_1rest.html#a23481a98e2fc63d6045769b147e165f0">anch::rest::Side</a></div><div class="ttdeci">Side</div><div class="ttdef"><b>Definition</b> codec.hpp:42</div></div>
 </div><!-- fragment --><a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Codec which serializes <code>T</code> values.<br  />
 A codec is a type with static functions:</p><ul>
@@ -105,7 +109,12 @@ A codec is a type with static functions:</p><ul>
 <li><code>serialize(const T&amp;, std::ostream&amp;)</code> : write value</li>
 <li><code>deserialize(T&amp;, std::istream&amp;)</code> : read value (<a class="el" href="conceptanch_1_1rest_1_1_deserializer.html" title="anch::rest::Deserializer">Deserializer</a> ). Errors are reported with exceptions.</li>
 </ul>
-<p>Codecs can also have <code>serialize(const T&amp;, std::ostream&amp;, anch::rest::Side)</code> and <code>deserialize(T&amp;, std::istream&amp;, anch::rest::Side)</code> functions: server and client use them when they are defined (see <a class="el" href="namespaceanch_1_1rest.html#a53a0518a127667827e53d35936fc3db2" title="anch::rest::serializeBody">anch::rest::serializeBody</a> and <a class="el" href="namespaceanch_1_1rest.html#a756c1c51f7503d8c85c5fa67fc8da1e4" title="anch::rest::deserializeBody">anch::rest::deserializeBody</a> ).</p>
+<p>Codecs can also have richer functions (one <code>serialize</code> / <code>deserialize</code> form is enough), which server and client use when they are defined (see <a class="el" href="namespaceanch_1_1rest.html#a05094cccf4a076cd7fa9044670651abc" title="anch::rest::contentTypeOf">anch::rest::contentTypeOf</a> , <a class="el" href="namespaceanch_1_1rest.html#adfae76ce6e83b26969ec767b640890d1" title="anch::rest::serializeBody">anch::rest::serializeBody</a> and <a class="el" href="namespaceanch_1_1rest.html#afe8c1e31ccd2ead9a0a0e9350dbd9dfc" title="anch::rest::deserializeBody">anch::rest::deserializeBody</a> ):</p><ul>
+<li><code>contentType(const T&amp;)</code> -&gt; <a class="el" href="classanch_1_1rest_1_1_media_type.html" title="anch::rest::MediaType">MediaType</a> : <code>Content-Type</code> of the serialized value, computed before serialization (a multipart codec adds its <code>boundary</code> parameter) ;</li>
+<li><code>serialize(const T&amp;, std::ostream&amp;, anch::rest::Side)</code> or <code>serialize(const T&amp;, std::ostream&amp;, const anch::rest::MediaType&amp;, anch::rest::Side)</code> : the media type is the one returned by <code>contentType()</code> ;</li>
+<li><code>deserialize(T&amp;, std::istream&amp;, anch::rest::Side)</code> or <code>deserialize(T&amp;, std::istream&amp;, const anch::rest::MediaType&amp;, anch::rest::Side)</code> : the media type is the <code>Content-Type</code> of the body, with its parameters ( <code>charset</code> , <code>boundary</code> , ...) ;</li>
+<li><code>stream(const T&amp;, const anch::rest::MediaType&amp;, anch::rest::Side)</code> -&gt; <a class="el" href="structanch_1_1rest_1_1_body_stream.html" title="anch::rest::BodyStream">BodyStream</a> : client sends the stream instead of serializing the value in memory.</li>
+</ul>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">C</td><td>the codec type </td></tr>

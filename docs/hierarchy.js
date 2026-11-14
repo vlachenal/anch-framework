@@ -42,6 +42,8 @@ var hierarchy =
       [ "anch::crypto::PCBC< Cipher, Padding >", "classanch_1_1crypto_1_1_p_c_b_c.html", null ]
     ] ],
     [ "anch::rest::Body&lt; T &gt;", "classanch_1_1rest_1_1_body.html", null ],
+    [ "anch::rest::BodyStream", "structanch_1_1rest_1_1_body_stream.html", null ],
+    [ "anch::sql::Connection::CachedStatement", "structanch_1_1sql_1_1_connection_1_1_cached_statement.html", null ],
     [ "anch::rest::Call&lt; Codecs &gt;", "classanch_1_1rest_1_1_call.html", null ],
     [ "anch::rest::CaseInsensitiveLess", "structanch_1_1rest_1_1_case_insensitive_less.html", null ],
     [ "anch::cutils::cbuffer", "structanch_1_1cutils_1_1cbuffer.html", null ],
@@ -58,6 +60,7 @@ var hierarchy =
       [ "anch::sql::SQLite3Connection", "classanch_1_1sql_1_1_s_q_lite3_connection.html", null ]
     ] ],
     [ "anch::crypto::SHA2&lt; O, B, W, R, I &gt;::Context&lt; Init &gt;", "structanch_1_1crypto_1_1_s_h_a2_1_1_context.html", null ],
+    [ "anch::rest::CorsOptions", "structanch_1_1rest_1_1_cors_options.html", null ],
     [ "anch::json::Custom&lt; V &gt;", "structanch_1_1json_1_1_custom.html", null ],
     [ "anch::date::Date", "classanch_1_1date_1_1_date.html", [
       [ "anch::sql::Date", "classanch_1_1sql_1_1_date.html", null ],
@@ -75,6 +78,11 @@ var hierarchy =
       [ "anch::json::MappingError", "classanch_1_1json_1_1_mapping_error.html", null ],
       [ "anch::sql::SqlException", "classanch_1_1sql_1_1_sql_exception.html", null ],
       [ "anch::ut::AssertException", "classanch_1_1ut_1_1_assert_exception.html", null ],
+      [ "std::logic_error", null, [
+        [ "std::length_error", null, [
+          [ "anch::rest::ContentTooLarge", "classanch_1_1rest_1_1_content_too_large.html", null ]
+        ] ]
+      ] ],
       [ "std::runtime_error", null, [
         [ "anch::oas::GeneratorError", "classanch_1_1oas_1_1_generator_error.html", null ],
         [ "anch::rest::HttpException", "classanch_1_1rest_1_1_http_exception.html", [
@@ -86,9 +94,13 @@ var hierarchy =
     [ "anch::json::Factory&lt; T &gt;", "classanch_1_1json_1_1_factory.html", null ],
     [ "anch::Fluent&lt; T, C &gt;", "classanch_1_1_fluent.html", null ],
     [ "anch::Flux&lt; T &gt;", "classanch_1_1_flux.html", null ],
+    [ "anch::rest::Form", "classanch_1_1rest_1_1_form.html", null ],
     [ "anch::json::Format", "structanch_1_1json_1_1_format.html", null ],
     [ "anch::cli::Formatter", "structanch_1_1cli_1_1_formatter.html", null ],
     [ "FormatterOptions", "struct_formatter_options.html", null ],
+    [ "anch::rest::FormLimits", "structanch_1_1rest_1_1_form_limits.html", null ],
+    [ "anch::rest::FormMapper&lt; T &gt;", "structanch_1_1rest_1_1_form_mapper.html", null ],
+    [ "anch::rest::FormUrlEncoded", "structanch_1_1rest_1_1_form_url_encoded.html", null ],
     [ "anch::oas::GeneratedModels", "structanch_1_1oas_1_1_generated_models.html", null ],
     [ "GeneratorOptions", "struct_generator_options.html", null ],
     [ "anch::json::GenericMapper&lt; M, T &gt;", "classanch_1_1json_1_1_generic_mapper.html", null ],
@@ -166,6 +178,7 @@ var hierarchy =
     [ "anch::json::MinLength", "structanch_1_1json_1_1_min_length.html", null ],
     [ "anch::json::MinProperties", "structanch_1_1json_1_1_min_properties.html", null ],
     [ "anch::oas::ModelOptions", "structanch_1_1oas_1_1_model_options.html", null ],
+    [ "anch::rest::Multipart", "structanch_1_1rest_1_1_multipart.html", null ],
     [ "anch::json::MultipleOf&lt; N &gt;", "structanch_1_1json_1_1_multiple_of.html", null ],
     [ "anch::device::Network", "classanch_1_1device_1_1_network.html", null ],
     [ "anch::device::NetworkInterface", "classanch_1_1device_1_1_network_interface.html", null ],
@@ -201,6 +214,7 @@ var hierarchy =
     [ "anch::rest::ParamConverter&lt; std::string &gt;", "structanch_1_1rest_1_1_param_converter_3_01std_1_1string_01_4.html", null ],
     [ "anch::rest::ParamConverter&lt; T &gt;", "structanch_1_1rest_1_1_param_converter_3_01_t_01_4.html", null ],
     [ "anch::oas::Parameter", "structanch_1_1oas_1_1_parameter.html", null ],
+    [ "anch::rest::Part", "classanch_1_1rest_1_1_part.html", null ],
     [ "anch::oas::PathItem", "structanch_1_1oas_1_1_path_item.html", null ],
     [ "anch::json::Pattern", "structanch_1_1json_1_1_pattern.html", null ],
     [ "anch::crypto::PKCS5Padding", "classanch_1_1crypto_1_1_p_k_c_s5_padding.html", null ],
@@ -211,6 +225,7 @@ var hierarchy =
       [ "anch::sql::PostgreSQLPreparedStatement", "classanch_1_1sql_1_1_postgre_s_q_l_prepared_statement.html", null ],
       [ "anch::sql::SQLite3PreparedStatement", "classanch_1_1sql_1_1_s_q_lite3_prepared_statement.html", null ]
     ] ],
+    [ "anch::rest::RawBody", "structanch_1_1rest_1_1_raw_body.html", null ],
     [ "anch::json::ReaderContext", "classanch_1_1json_1_1_reader_context.html", [
       [ "anch::json::Reader", "classanch_1_1json_1_1_reader.html", null ]
     ] ],

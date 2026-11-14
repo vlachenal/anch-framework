@@ -95,7 +95,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('classanch_1_1r
 <div id="dynsection-0-summary" class="dynsummary">
 </div>
 <div id="dynsection-0-content" class="dyncontent hidden">
-<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classanch_1_1rest_1_1_api__coll__graph.svg" width="107" height="379"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classanch_1_1rest_1_1_api__coll__graph.svg" width="112" height="294"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
@@ -117,6 +117,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a59dc2c9ab77d6422a6a70690e2c0f76c" id="r_a59dc2c9ab77d6422a6a70690e2c0f76c"><td class="memTemplParams" colspan="2">template&lt;typename F&gt; </td></tr>
 <tr class="memitem:a59dc2c9ab77d6422a6a70690e2c0f76c template"><td class="memItemLeft"><a class="el" href="classanch_1_1rest_1_1_endpoint.html">anch::rest::Endpoint</a>&lt; std::decay_t&lt; F &gt; &gt; &amp;&#160;</td><td class="memItemRight"><a class="el" href="#a59dc2c9ab77d6422a6a70690e2c0f76c">del</a> (std::string_view pattern, F &amp;&amp;function)</td></tr>
 <tr class="memitem:ae53143d6fc0298cdf1e8da5ab6709612" id="r_ae53143d6fc0298cdf1e8da5ab6709612"><td class="memItemLeft"><a class="el" href="#ae9c4a94faad2b33e0576569a648a6c24">Api</a> &amp;&#160;</td><td class="memItemRight"><a class="el" href="#ae53143d6fc0298cdf1e8da5ab6709612">filter</a> (<a class="el" href="namespaceanch_1_1rest.html#a73bf9bdb415fd8a3ddfb23675dc0c876">anch::rest::Filter</a> filter)</td></tr>
+<tr class="memitem:aa36d87d7de6dae4c528a763ac1be41f2" id="r_aa36d87d7de6dae4c528a763ac1be41f2"><td class="memItemLeft"><a class="el" href="#ae9c4a94faad2b33e0576569a648a6c24">Api</a> &amp;&#160;</td><td class="memItemRight"><a class="el" href="#aa36d87d7de6dae4c528a763ac1be41f2">cors</a> (<a class="el" href="structanch_1_1rest_1_1_cors_options.html">anch::rest::CorsOptions</a> options)</td></tr>
 <tr class="memitem:a143d7b86953df1b874b5d3c6e98316fd" id="r_a143d7b86953df1b874b5d3c6e98316fd"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a143d7b86953df1b874b5d3c6e98316fd">validate</a> () const</td></tr>
 <tr class="memitem:ac4252cf62e09916589eea43e9729f16c" id="r_ac4252cf62e09916589eea43e9729f16c"><td class="memItemLeft"><a class="el" href="classanch_1_1rest_1_1_response.html">anch::rest::Response</a>&#160;</td><td class="memItemRight"><a class="el" href="#ac4252cf62e09916589eea43e9729f16c">handle</a> (<a class="el" href="classanch_1_1rest_1_1_request.html">anch::rest::Request</a> &amp;request) noexcept</td></tr>
 <tr class="memitem:a49ad8e6ab3ca14e1868995579839385c" id="r_a49ad8e6ab3ca14e1868995579839385c"><td class="memItemLeft"><a class="el" href="#ae9c4a94faad2b33e0576569a648a6c24">Api</a> &amp;&#160;</td><td class="memItemRight"><a class="el" href="#a49ad8e6ab3ca14e1868995579839385c">operator=</a> (const <a class="el" href="#ae9c4a94faad2b33e0576569a648a6c24">Api</a> &amp;)=delete</td></tr>
@@ -132,7 +133,7 @@ Public Member Functions</h2></td></tr>
 <div class="line">api.<a class="code hl_function" href="#afc0f655bd29d3ca07f2d3a1ea7d2b595">post</a>(<span class="stringliteral">&quot;/pets&quot;</span>, [](<a class="code hl_class" href="classanch_1_1rest_1_1_body.html">anch::rest::Body&lt;Pet&gt;</a> pet) { <span class="keywordflow">return</span> savePet(*pet); })</div>
 <div class="line">  .consumes&lt;anch::rest::Json&gt;().produces&lt;<a class="code hl_struct" href="structanch_1_1rest_1_1_json.html">anch::rest::Json</a>&gt;();</div>
 <div class="line">api.<a class="code hl_function" href="#a143d7b86953df1b874b5d3c6e98316fd">validate</a>();</div>
-<div class="ttc" id="aclassanch_1_1rest_1_1_api_html"><div class="ttname"><a href="classanch_1_1rest_1_1_api.html">anch::rest::Api</a></div><div class="ttdef"><b>Definition</b> api.hpp:64</div></div>
+<div class="ttc" id="aclassanch_1_1rest_1_1_api_html"><div class="ttname"><a href="classanch_1_1rest_1_1_api.html">anch::rest::Api</a></div><div class="ttdef"><b>Definition</b> api.hpp:73</div></div>
 <div class="ttc" id="aclassanch_1_1rest_1_1_api_html_a143d7b86953df1b874b5d3c6e98316fd"><div class="ttname"><a href="#a143d7b86953df1b874b5d3c6e98316fd">anch::rest::Api::validate</a></div><div class="ttdeci">void validate() const</div></div>
 <div class="ttc" id="aclassanch_1_1rest_1_1_api_html_af548e2d20bb21cd43fc144d58faad1c0"><div class="ttname"><a href="#af548e2d20bb21cd43fc144d58faad1c0">anch::rest::Api::get</a></div><div class="ttdeci">anch::rest::Endpoint&lt; std::decay_t&lt; F &gt; &gt; &amp; get(std::string_view pattern, F &amp;&amp;function)</div></div>
 <div class="ttc" id="aclassanch_1_1rest_1_1_api_html_afc0f655bd29d3ca07f2d3a1ea7d2b595"><div class="ttname"><a href="#afc0f655bd29d3ca07f2d3a1ea7d2b595">anch::rest::Api::post</a></div><div class="ttdeci">anch::rest::Endpoint&lt; std::decay_t&lt; F &gt; &gt; &amp; post(std::string_view pattern, F &amp;&amp;function)</div></div>
@@ -140,7 +141,9 @@ Public Member Functions</h2></td></tr>
 <div class="ttc" id="astructanch_1_1rest_1_1_json_html"><div class="ttname"><a href="structanch_1_1rest_1_1_json.html">anch::rest::Json</a></div><div class="ttdef"><b>Definition</b> jsonCodec.hpp:48</div></div>
 </div><!-- fragment --><p> <a class="el" href="classanch_1_1rest_1_1_endpoint.html">Endpoint</a> arguments and results are described in <a class="el" href="classanch_1_1rest_1_1_endpoint.html" title="Endpoint">Endpoint</a> .<br  />
  <br  />
- <a class="el" href="#ac4252cf62e09916589eea43e9729f16c" title="handle">handle</a> never throws: an <a class="el" href="classanch_1_1rest_1_1_http_exception.html" title="HttpException">HttpException</a> is answered with its status, any other exception with <code>500</code> . No route for path is <code>404</code> , no route for method is <code>405</code> (with <code>Allow</code> header). <code>HEAD</code> requests are answered by <code>GET</code> endpoints without body.<br  />
+ <a class="el" href="#ac4252cf62e09916589eea43e9729f16c" title="handle">handle</a> never throws: an <a class="el" href="classanch_1_1rest_1_1_http_exception.html" title="HttpException">HttpException</a> is answered with its status, any other exception with <code>500</code> . No route for path is <code>404</code> , no route for method is <code>405</code> (with <code>Allow</code> header). <code>HEAD</code> requests are answered by <code>GET</code> endpoints without body. <code>OPTIONS</code> requests without <code>OPTIONS</code> endpoint are answered with <code>204</code> and the <code>Allow</code> header ( <code>OPTIONS</code> <code>*</code> with <code>204</code> ).<br  />
+ <br  />
+ Cross-Origin Resource Sharing is enabled with <a class="el" href="#aa36d87d7de6dae4c528a763ac1be41f2" title="cors">cors</a> : preflight requests are answered before filters (they have no credentials), and CORS headers are added to every response, errors included.<br  />
  <br  />
  Routes and filters have to be declared before handling requests; <a class="el" href="#ac4252cf62e09916589eea43e9729f16c" title="handle">handle</a> can then be called from several threads.</p>
 <dl class="section author"><dt>Author</dt><dd>Vincent Lachenal</dd></dl>
@@ -261,6 +264,44 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
+<a id="aa36d87d7de6dae4c528a763ac1be41f2" name="aa36d87d7de6dae4c528a763ac1be41f2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa36d87d7de6dae4c528a763ac1be41f2">&#9670;&#160;</a></span>cors()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#ae9c4a94faad2b33e0576569a648a6c24">Api</a> &amp; anch::rest::Api::cors </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structanch_1_1rest_1_1_cors_options.html">anch::rest::CorsOptions</a></td>          <td class="paramname"><span class="paramname"><em>options</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Enable Cross-Origin Resource Sharing (CORS), see <a class="el" href="structanch_1_1rest_1_1_cors_options.html" title="CorsOptions">CorsOptions</a> .<br  />
+Preflight requests ( <code>OPTIONS</code> with <code>Origin</code> and <code>Access-Control-Request-Method</code> headers) are answered without executing filters: <code>204</code> with <code>Access-Control-Allow-*</code> headers, <code>403</code> when origin, method or a requested header is not allowed, <code>404</code> when path is unknown. Other responses get <code>Access-Control-Allow-Origin</code> (and <code>Access-Control-Expose-Headers</code> , <code>Access-Control-Allow-Credentials</code> ) when their origin is allowed.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">options</td><td>the CORS options</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>this</code> </dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname">std::invalid_argument</td><td>when there is no origin or when <code>"*"</code> origin is used with credentials </td></tr>
+  </table>
+  </dd>
+</dl>
+<div id="dynsection-3" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-3-summary" class="dynsummary">
+</div>
+<div id="dynsection-3-content" class="dyncontent hidden">
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classanch_1_1rest_1_1_api_aa36d87d7de6dae4c528a763ac1be41f2_cgraph.svg" width="332" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+
+</div>
+</div>
 <a id="a59dc2c9ab77d6422a6a70690e2c0f76c" name="a59dc2c9ab77d6422a6a70690e2c0f76c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a59dc2c9ab77d6422a6a70690e2c0f76c">&#9670;&#160;</a></span>del()</h2>
 
@@ -315,10 +356,10 @@ template&lt;typename F&gt; </div>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><code>this</code> </dd></dl>
-<div id="dynsection-3" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-3-summary" class="dynsummary">
+<div id="dynsection-4" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-4-summary" class="dynsummary">
 </div>
-<div id="dynsection-3-content" class="dyncontent hidden">
+<div id="dynsection-4-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classanch_1_1rest_1_1_api_ae53143d6fc0298cdf1e8da5ab6709612_cgraph.svg" width="332" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -419,10 +460,10 @@ template&lt;typename F&gt; </div>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><code>this</code> </dd></dl>
-<div id="dynsection-4" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-4-summary" class="dynsummary">
+<div id="dynsection-5" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-5-summary" class="dynsummary">
 </div>
-<div id="dynsection-4-content" class="dyncontent hidden">
+<div id="dynsection-5-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classanch_1_1rest_1_1_api_a8f171c063c64e98127d0e48acce4ebed_cgraph.svg" width="372" height="88"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -451,10 +492,10 @@ template&lt;typename F&gt; </div>
 </table>
 </div><div class="memdoc">
 <p>Prohibit <a class="el" href="classanch_1_1rest_1_1_api.html" title="Api">Api</a> copy </p>
-<div id="dynsection-5" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-5-summary" class="dynsummary">
+<div id="dynsection-6" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-6-summary" class="dynsummary">
 </div>
-<div id="dynsection-5-content" class="dyncontent hidden">
+<div id="dynsection-6-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classanch_1_1rest_1_1_api_a49ad8e6ab3ca14e1868995579839385c_cgraph.svg" width="362" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
