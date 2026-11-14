@@ -26,7 +26,7 @@
 
 using anch::json::ErrorCode;
 
-void
+static void
 parseUnknownNumber(anch::json::ReaderContext& context) {
   context.discard(); // first number character (checked by caller)
   std::string_view chars = anch::json::scanNumber(context, anch::json::isNumberChar);
@@ -35,7 +35,7 @@ parseUnknownNumber(anch::json::ReaderContext& context) {
   }
 }
 
-void
+static void
 lexUnknownStr(anch::json::ReaderContext& context) {
   char current = '\0';
   context.next(current);
@@ -58,7 +58,7 @@ lexUnknownStr(anch::json::ReaderContext& context) {
   return;
 }
 
-void
+static void
 lexUnknownArray(anch::json::ReaderContext& context) {
   anch::json::DepthGuard guard(context);
   char current = context.discard();
@@ -78,7 +78,7 @@ lexUnknownArray(anch::json::ReaderContext& context) {
   } while(true);
 }
 
-void
+static void
 lexUnknownObject(anch::json::ReaderContext& context) {
   anch::json::DepthGuard guard(context);
   char current = context.discard();

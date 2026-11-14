@@ -353,7 +353,7 @@ ArgHandler::arg(anch::cli::Arg& arg) {
 }
 
 template<typename O>
-void
+static void
 hasMoreArg(int argc, int idx, const O& option) {
   if(idx == argc - 1) { // reach last argument
     std::ostringstream oss;

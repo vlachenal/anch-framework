@@ -193,7 +193,7 @@ randomClockSequence(uint16_t& clockSeqLow, uint16_t& clockSeqHighRes) {
  *
  * \return the UUID
  */
-UUID
+static UUID
 generateUUIDv1(const std::string& macAddress = "") {
   uint64_t timestamp = nextTimestamp();
   uint16_t clockSeqLow;
@@ -216,7 +216,7 @@ generateUUIDv1(const std::string& macAddress = "") {
  *
  * \return the UUID
  */
-UUID
+static UUID
 generateUUIDv6(const std::string& macAddress = "") {
   uint64_t timestamp = nextTimestamp();
   uint16_t clockSeqLow;

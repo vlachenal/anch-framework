@@ -27,7 +27,7 @@ using anch::json::MappingError;
 using anch::json::ErrorCode;
 
 
-std::string
+static std::string
 computeErrorMessage(const ErrorCode& code, const anch::json::ReaderContext& context, std::string_view message) {
   int64_t offset = static_cast<int64_t>(context.offset);
   int64_t begin = offset - 10;

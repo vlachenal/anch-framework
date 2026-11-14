@@ -33,6 +33,8 @@ using anch::UUID;
 
 
 // Core functions +
+namespace {
+
 class Core1 {
 public:
   inline static uint32_t apply(uint32_t a, uint32_t b, uint32_t c) {
@@ -60,6 +62,8 @@ public:
     return (b ^ (a | ~c));
   }
 };
+
+}
 // Core functions -
 
 
@@ -71,7 +75,7 @@ template class Hash<16,64>;
  * \param buf The bytes to process
  * \param count The number of operation to do
  */
-inline void
+static inline void
 byteSwap(uint32_t* buf, uint8_t count) {
   const uint32_t byteOrderTest = 0x1;
   if(reinterpret_cast<const uint8_t*>(&byteOrderTest)[0] == 0) { // endianess test
@@ -308,7 +312,7 @@ MD5::transform() {
  *
  * \return the UUID
  */
-UUID
+static UUID
 generateMD5UUID(const std::string& data) {
   MD5 hash(data);
   const std::array<uint8_t,16>& digest = hash.digest();

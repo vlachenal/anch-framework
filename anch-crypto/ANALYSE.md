@@ -32,5 +32,16 @@ Correction : `_digest` est supprimé de `Hash` (et de `SHA2`, `SHA224_256`, `MD5
 ## Points positifs
 - 117 tests passent, plus un benchmark comparatif avec OpenSSL (`benchAnchOpenssl.cpp`), utile pour la future migration.
 
+### C7. Base64 : données binaires tronquées au premier octet nul — vérifié (2026-11-14)
+`Base64::decode(const char*, uint64_t, std::ostream&, uint8_t)` (`src/crypto/b2t/base64.cpp`) écrit chaque groupe décodé avec `output << buffer`, c'est-à-dire comme une chaîne C : l'écriture s'arrête au premier octet nul du groupe.
+Reproduction : les 6 octets `00 01 02 41 00 42` sont encodés en `AAECQQBC` ; leur décodage rend 1 octet (`41`). Seul le texte sans octet nul fait l'aller-retour.
+Piste : compter les octets décodés de chaque groupe et les écrire avec `output.write`.
+
+### C8. Base64 : lecture hors limites sans remplissage — vérifié (ASan, 2026-11-14)
+La même fonction avance de 4 caractères par groupe avec `length -= 4` sur un `uint64_t` : quand la longueur n'est pas un multiple de 4, elle passe sous zéro et la boucle continue au-delà des données, jusqu'à un `=` ou un caractère invalide (`std::bad_cast`).
+Reproduction : `Base64::encode("AB", URL | NOPADDING)` donne `QUI` ; `Base64::decode` de ces 3 caractères (tampon de 3 octets) : `heap-buffer-overflow` en lecture. La bibliothèque ne relit donc pas sa propre sortie sans remplissage.
+Un groupe final d'un seul caractère (invalide) lisait aussi `bytes[1]` non initialisé : le tableau est maintenant initialisé à zéro (avertissement `-Wmaybe-uninitialized` devenu bloquant en release après X1) ; le reste n'est pas corrigé.
+Piste : borner chaque groupe à `min(4, length)` et refuser un groupe d'un seul caractère.
+
 ## À approfondir
 - [ ] Définir l'API du wrapper OpenSSL (EVP) en gardant les interfaces actuelles (`Hash`, `BlockCipher`, `HMAC`).

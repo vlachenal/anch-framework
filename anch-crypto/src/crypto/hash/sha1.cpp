@@ -50,7 +50,7 @@ typedef union {
  * \param buf The 4-bytes words to process
  * \param count The number of operation to do
  */
-inline void
+static inline void
 bytesSwap(uint32_t* buf, uint8_t count) {
   if(anch::isLittleEndian()) {
     uint8_t* words = reinterpret_cast<uint8_t*>(buf);
@@ -68,7 +68,7 @@ bytesSwap(uint32_t* buf, uint8_t count) {
  * \param value The integer to process
  * \param shift The number of bits to shift
  */
-inline uint32_t
+static inline uint32_t
 rol32(uint32_t value, unsigned int shift){
   return ((value << shift) | value >> (32 - shift));
 }
@@ -79,7 +79,7 @@ rol32(uint32_t value, unsigned int shift){
  * \param chunk The SHA1 chunk
  * \param position The position
  */
-inline uint32_t
+static inline uint32_t
 word(SHA1Chunk& chunk, unsigned int position) {
   return (chunk.words[position & 0xf] = rol32(chunk.words[(position + 13)  & 0xf]
 					      ^ chunk.words[(position + 8) & 0xf]
@@ -99,7 +99,7 @@ word(SHA1Chunk& chunk, unsigned int position) {
  * \param y The fourth parameter
  * \param z The fifth parameter
  */
-inline void
+static inline void
 round0(SHA1Chunk& chunk,
        const unsigned int position,
        uint32_t& v,
@@ -122,7 +122,7 @@ round0(SHA1Chunk& chunk,
  * \param y The fourth parameter
  * \param z The fifth parameter
  */
-inline void
+static inline void
 round1(SHA1Chunk& chunk,
        const unsigned int position,
        uint32_t& v,
@@ -145,7 +145,7 @@ round1(SHA1Chunk& chunk,
  * \param y The fourth parameter
  * \param z The fifth parameter
  */
-inline void
+static inline void
 round2(SHA1Chunk& chunk,
        const unsigned int position,
        uint32_t& v,
@@ -168,7 +168,7 @@ round2(SHA1Chunk& chunk,
  * \param y The fourth parameter
  * \param z The fifth parameter
  */
-inline void
+static inline void
 round3(SHA1Chunk& chunk,
        const unsigned int position,
        uint32_t& v,
@@ -191,7 +191,7 @@ round3(SHA1Chunk& chunk,
  * \param y The fourth parameter
  * \param z The fifth parameter
  */
-inline void
+static inline void
 round4(SHA1Chunk& chunk,
        const unsigned int position,
        uint32_t& v,
@@ -429,7 +429,7 @@ SHA1::finalize() {
  *
  * \return the UUID
  */
-UUID
+static UUID
 generateSHA1UUID(const std::string& data) {
   SHA1 hash(data);
   const std::array<uint8_t,20>& digest = hash.digest();

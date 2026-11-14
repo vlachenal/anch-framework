@@ -45,7 +45,7 @@ const std::string ANCH_CONF_INC("anch::conf.includes");
  *
  * \return the items
  */
-std::vector<std::string>
+static std::vector<std::string>
 splitTrim(char delim, std::string_view str) {
   std::vector<std::string> res;
   while(true) {
@@ -63,10 +63,14 @@ splitTrim(char delim, std::string_view str) {
   return res;
 }
 
+namespace {
+
 struct ConfFile {
   std::filesystem::path file;
   const anch::conf::Parser* parser = NULL;
 };
+
+}
 
 
 /*!
@@ -77,7 +81,7 @@ struct ConfFile {
  *
  * \return empty when not found, the file and parser to use otherwise
  */
-std::optional<ConfFile>
+static std::optional<ConfFile>
 selectConfFile(const std::vector<std::string>& folders, const std::string& name) {
   Parsers& parsers = Parsers::getInstance();
   for(auto fiter = folders.begin() ; fiter != folders.end() ; ++fiter) { // for each folder

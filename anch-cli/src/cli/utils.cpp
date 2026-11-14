@@ -31,7 +31,7 @@
 
 using anch::cli::BindArg;
 
-void
+static void
 setTrue(bool& dest, const std::string&) {
   dest = true;
 }
@@ -41,7 +41,7 @@ anch::cli::bindTrue(bool& dest) {
   return std::bind_front(setTrue, std::ref(dest));
 }
 
-void
+static void
 setFalse(bool& dest, const std::string&) {
   dest = false;
 }
@@ -110,7 +110,7 @@ anch::cli::bindNum(double& dest) {
   return std::bind_front(setNum<double>, std::ref(dest));
 }
 
-void
+static void
 setString(std::string& dest, const std::string& val) {
   dest = val;
 }
@@ -120,7 +120,7 @@ anch::cli::bindStr(std::string& dest) {
   return std::bind_front(setString, std::ref(dest));
 }
 
-void
+static void
 setOptString(std::optional<std::string>& dest, const std::string& val) {
   dest = val;
 }
@@ -130,7 +130,7 @@ anch::cli::bindStr(std::optional<std::string>& dest) {
   return std::bind_front(setOptString, std::ref(dest));
 }
 
-void
+static void
 pushVec(std::vector<std::string>& dest, const std::string& val) {
   dest.push_back(val);
 }
@@ -140,7 +140,7 @@ anch::cli::bindCol(std::vector<std::string>& dest) {
   return std::bind_front(pushVec, std::ref(dest));
 }
 
-void
+static void
 pushList(std::list<std::string>& dest, const std::string& val) {
   dest.push_back(val);
 }
@@ -150,7 +150,7 @@ anch::cli::bindCol(std::list<std::string>& dest) {
   return std::bind_front(pushList, std::ref(dest));
 }
 
-void
+static void
 pushSet(std::set<std::string>& dest, const std::string& val) {
   dest.insert(val);
 }
@@ -160,7 +160,7 @@ anch::cli::bindCol(std::set<std::string>& dest) {
   return std::bind_front(pushSet, std::ref(dest));
 }
 
-void
+static void
 setPath(std::filesystem::path& dest, const std::string& val) {
   dest = std::filesystem::path(val);
 }
@@ -170,7 +170,7 @@ anch::cli::bindPath(std::filesystem::path& dest) {
   return std::bind_front(setPath, std::ref(dest));
 }
 
-void
+static void
 setIFS(std::shared_ptr<std::istream>& dest, const std::string& val) {
   std::filesystem::path path(val);
   if(!std::filesystem::exists(path)) {
@@ -202,7 +202,7 @@ setIFS(std::shared_ptr<std::istream>& dest, const std::string& val) {
  *
  * \throw std::invalid_argument file can not be opened
  */
-std::shared_ptr<std::ofstream>
+static std::shared_ptr<std::ofstream>
 openOFS(const std::string& val, std::ios_base::openmode mode) {
   auto file = std::make_shared<std::ofstream>(std::filesystem::path(val), mode);
   if(!file->is_open()) {
@@ -218,7 +218,7 @@ anch::cli::bindIFS(std::shared_ptr<std::istream>& dest) {
   return std::bind_front(setIFS, std::ref(dest));
 }
 
-void
+static void
 setOS(std::shared_ptr<std::ostream>& dest, const std::string& val) {
   dest = openOFS(val, std::ios_base::out);
 }
@@ -228,7 +228,7 @@ anch::cli::bindOFS(std::shared_ptr<std::ostream>& dest) {
   return std::bind_front(setOS, std::ref(dest));
 }
 
-void
+static void
 setOFS(std::shared_ptr<std::ofstream>& dest, std::ios_base::openmode mode, const std::string& val) {
   dest = openOFS(val, mode);
 }
@@ -238,7 +238,7 @@ anch::cli::bindOFS(std::shared_ptr<std::ofstream>& dest, std::ios_base::openmode
   return std::bind_front(setOFS, std::ref(dest), mode);
 }
 
-void
+static void
 setInputStream(std::shared_ptr<std::istream>& dest, std::istream& in) {
   dest = std::make_shared<std::istream>(in.rdbuf());
 }
@@ -248,7 +248,7 @@ anch::cli::bindPipe(std::shared_ptr<std::istream>& dest) {
   return std::bind_front(setInputStream, std::ref(dest));
 }
 
-void
+static void
 setOutputStream(std::shared_ptr<std::ostream>& dest, std::ostream& out) {
   dest = std::make_shared<std::ostream>(out.rdbuf());
 }

@@ -59,7 +59,7 @@ Base64::~Base64() {
 
 
 // Encoding methods +
-uint8_t
+static uint8_t
 encode(const uint8_t* data, uint64_t length, char* buffer, const char alphabet[64], bool padding) noexcept {
   uint8_t read = 0;
   buffer[0] = alphabet[data[0] >> 2];
@@ -141,10 +141,10 @@ Base64::encode(const uint8_t* data, uint64_t length, uint8_t options) noexcept {
 // Encoding methods -
 
 // Decoding methods +
-void
+static void
 decode(const char* data, uint64_t length, uint8_t buffer[4], const char alphabet[64]) {
   uint8_t current;
-  char bytes[4];
+  char bytes[4] = {}; // a group of one character (invalid) does not read uninitialized values
   uint8_t read;
   for(read = 0 ; read < 4 && read < length && data[read] != '='; read++) {
     current = static_cast<uint8_t>(data[read]);

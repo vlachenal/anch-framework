@@ -26,7 +26,7 @@
 using anch::ut::UnitTests;
 
 // default function which does nothing
-void doNothing() {
+static void doNothing() {
   // Nothing to do
 }
 

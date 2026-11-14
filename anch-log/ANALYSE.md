@@ -87,6 +87,10 @@ Correction : rotation avec `std::error_code` (en cas d'échec, le fichier couran
 - `MDCFormatter` copiait tout le contexte à chaque message ;
 - `DateFormatter` : `std::localtime` (L5) remplacé par `localtime_r`, et le tampon de `strftime` n'était pas défini quand le format est trop long.
 
+### L17. Messages de diagnostic écrits sur la sortie standard — lecture (2026-11-14) — **corrigé le 2026-11-14**
+`src/log/loggerFactory.cpp` écrit sur `std::cout` les messages « Section anch::log has not been found. Load default configuration. », « No configuration has been found. Everything will be logged in console. », « Writer … has not been registered », etc. Toute application qui journalise sans configuration reçoit ces lignes dans sa sortie standard : gênant pour un outil dont la sortie est redirigée ou lue par un autre programme (`anch-oas-gen`, `anch-json-formatter`, un filtre en ligne de commande).
+Correction : les six messages de `loggerFactory.cpp` sont écrits sur `std::cerr`. Le writer console (`termWriter.cpp`) écrit toujours sur la sortie standard : c'est son rôle.
+
 ## Corrections du 2026-11-02 : détails
 - `FileWriter` : `max-size` lu avec `std::from_chars` en `uint64_t`, unités `K`, `M`, `G`, `T` (puissances de 1024), dépassement et unités invalides refusés (L2) ; `max-rotate-files=N` garde N archives (`.0` la plus récente), 1 par défaut, 0 = fichier tronqué (L3, L4) ; flux `std::ofstream` par valeur, ouverture vérifiée (L6) ; un chemin sans répertoire (`test.log`) est accepté.
 - `LowPriorityWriter` : thread démarré par le constructeur (`std::jthread`), variable de condition au lieu d'une attente active, messages en file écrits avant la destruction (L1).

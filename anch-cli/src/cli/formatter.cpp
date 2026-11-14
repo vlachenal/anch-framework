@@ -128,7 +128,7 @@ Formatter::bgColor(const std::array<uint8_t,3>& color) {
   return *this;
 }
 
-void
+static void
 addSeparator(std::ostream& stream, bool first) {
   if(!first) {
     stream << ';';
@@ -137,7 +137,7 @@ addSeparator(std::ostream& stream, bool first) {
   }
 }
 
-void
+static void
 addColor(std::ostream& stream, const Formatter& fmt, bool background, bool& first) {
   int offset = 30;
   std::optional<Color> color;
@@ -163,7 +163,7 @@ addColor(std::ostream& stream, const Formatter& fmt, bool background, bool& firs
   }
 }
 
-void
+static void
 addEffects(std::ostream& stream, const Formatter& fmt, bool& first) {
   if(fmt._bold.has_value()) {
     addSeparator(stream, first);

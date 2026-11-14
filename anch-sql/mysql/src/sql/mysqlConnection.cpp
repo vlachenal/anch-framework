@@ -39,6 +39,8 @@ using anch::sql::PreparedStatement;
 using anch::sql::MySQLPreparedStatement;
 
 
+namespace {
+
 /*!
  * \brief MySQL (un)initializer
  *
@@ -73,6 +75,8 @@ private:
   }
 
 };
+
+}
 
 // Constructors +
 MySQLConnection::MySQLConnection(const SqlConnectionConfiguration& config): Connection(config.statementCacheSize) {
