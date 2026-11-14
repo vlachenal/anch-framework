@@ -26,6 +26,8 @@
 #include <charconv>
 #include <cstring>
 #include <sstream>
+#include <string>
+#include <vector>
 
 #include "libpq-fe.h"
 
@@ -55,33 +57,30 @@ PostgreSQLConnection::PostgreSQLConnection(const std::string& connStr): _conn() 
 PostgreSQLConnection::PostgreSQLConnection(const SqlConnectionConfiguration& config):
   Connection(config.statementCacheSize),
   _conn(NULL) {
-  std::ostringstream conninfo;
-  conninfo << "postgresql://";
-  if(!config.user.empty()) {
-    conninfo << config.user;
-    if(!config.password.empty()) {
-      conninfo << ":";
-      conninfo << config.password;
+  // Parameters are given one by one: values are used as they are, whatever characters they contain
+  // (a connection URI would need them to be percent-encoded)
+  const std::string port = config.port > 0 ? std::to_string(config.port) : std::string();
+  std::vector<const char*> keywords;
+  std::vector<const char*> values;
+  auto add = [&keywords, &values](const char* keyword, const std::string& value) {
+    if(!value.empty()) {
+      keywords.push_back(keyword);
+      values.push_back(value.data());
     }
-    conninfo << "@";
+  };
+  add("host", config.hostname);
+  add("port", port);
+  add("dbname", config.database);
+  add("user", config.user);
+  if(!config.user.empty()) {
+    add("password", config.password);
   }
-  if(!config.hostname.empty()) {
-    conninfo << config.hostname;
-  }
-  if(config.port > 0) {
-    conninfo << ":";
-    conninfo << config.port;
-  }
-  if(!config.database.empty()) {
-    conninfo << "/";
-    conninfo << config.database;
-  }
-  conninfo << "?keepalives=1";
-  if(!config.application.empty()) {
-    conninfo << "&application_name=";
-    conninfo << config.application;
-  }
-  _conn = PQconnectdb(conninfo.str().data());
+  add("application_name", config.application);
+  keywords.push_back("keepalives");
+  values.push_back("1");
+  keywords.push_back(NULL);
+  values.push_back(NULL);
+  _conn = PQconnectdbParams(keywords.data(), values.data(), 0); // dbname is not expanded as a connection string
   if(PQstatus(_conn) != CONNECTION_OK) {
     _valid = false;
     std::ostringstream msg;

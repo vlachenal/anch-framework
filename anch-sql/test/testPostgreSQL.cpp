@@ -532,6 +532,48 @@ testCacheDeallocate() {
 }
 
 void
+testConnectionParameters() {
+  // Application name with URI reserved characters is given as it is
+  const std::string application = "my app & co=1 %41 @/#?";
+  PostgreSQLConnection conn({
+      .driver = "",
+      .database = "anch_test",
+      .hostname = "localhost",
+      .port = 5432,
+      .user = "anch",
+      .password = "anch",
+      .application = application
+    });
+  std::string found;
+  conn.queryMapRow("SELECT current_setting('application_name')", [&found](ResultSet& res) {
+    found = res.get<std::string>(0).value_or("");
+  });
+  anch::ut::assertThat(found == application, "Application name is '{}' instead of '{}'", found, application);
+  // Password with URI reserved characters: it reaches the server (accepted without password check, refused as a
+  // wrong password otherwise) instead of changing host, port or database
+  try {
+    PostgreSQLConnection wrong({
+	.driver = "",
+	.database = "anch_test",
+	.hostname = "localhost",
+	.port = 5432,
+	.user = "anch",
+	.password = "p@ss/w%rd#?&host=nowhere",
+	.application = "postgresql-password"
+      });
+    std::string database;
+    wrong.queryMapRow("SELECT current_database()", [&database](ResultSet& res) {
+      database = res.get<std::string>(0).value_or("");
+    });
+    anch::ut::assertThat(database == "anch_test", "Connected to database '{}' instead of 'anch_test'", database);
+  } catch(const SqlException& e) {
+    const std::string message = e.what();
+    anch::ut::assertThat(message.find("password authentication failed") != std::string::npos,
+			 "Password should be refused by the server, found: {}", message);
+  }
+}
+
+void
 anch::ut::setup(anch::ut::UnitTests& tests) {
   tests
     .name("AnCH PostgreSQL unit tests")
@@ -555,5 +597,6 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("14-fatal-error", testFatal)
     .add("15-statement-cache", testCache)
     .add("16-statement-cache-deallocate", testCacheDeallocate)
+    .add("17-connection-parameters", testConnectionParameters)
     ;
 }

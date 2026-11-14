@@ -106,6 +106,16 @@ Correction : cache LRU borné par connexion (`statement-cache-size`, 256 par dé
 Tests : `statement-cache-lru`, `statement-cache-busy`, `statement-cache-size` (sans base) ; `statement-cache` pour les trois pilotes, `16-statement-cache-deallocate` (`pg_prepared_statements`, éviction dans une transaction en erreur) ; `sql-factory-statement-cache-size` (configuration). Sous ASan / UBSan également.
 Restent (non traités) : une erreur `cached plan must not change result type` (PostgreSQL, SQLSTATE `0A000`, après un changement de schéma) laisse la requête en erreur dans le cache jusqu'à son éviction ou la fermeture de la connexion ; ré-exécuter une requête dont un `ResultSet` est encore ouvert (même texte SQL dans un `queryMapRow` imbriqué) réinitialise le curseur extérieur avec SQLite.
 
+### S18. PostgreSQL : URI de connexion construite sans encodage — vérifié (2026-11-14) — **corrigé le 2026-11-14**
+`PostgreSQLConnection(const SqlConnectionConfiguration&)` concatène utilisateur, mot de passe, hôte, base et `application` dans une URI `postgresql://…` sans encodage pour-cent. Vérifié avec `PQconninfoParse` sur les URI ainsi produites :
+- mot de passe `p@ss` : mot de passe `p`, hôte `ss@localhost` ;
+- mot de passe `pa/ss` : hôte `anch`, port `pa`, base `ss@localhost:5432/anch_test` ;
+- mot de passe contenant `%` : URI refusée (`invalid percent-encoded token`) ;
+- `application` contenant une espace : URI refusée ; contenant `&` : ajoute des paramètres de connexion (`sslmode=disable` par exemple).
+
+Correction : les valeurs sont passées séparément à `PQconnectdbParams` (mots-clés `host`, `port`, `dbname`, `user`, `password`, `application_name`, `keepalives`), sans URI ni expansion de `dbname` ; les valeurs vides sont omises, comme avant. Le constructeur qui reçoit une chaîne de connexion est inchangé.
+Test `17-connection-parameters` (`PostgreSQL-connection-parameters`), qui échoue avant correction : nom d'application `my app & co=1 %41 @/#?` relu à l'identique par `current_setting('application_name')` ; mot de passe `p@ss/w%rd#?&host=nowhere` transmis au serveur (connexion à `anch_test` quand le serveur ne contrôle pas le mot de passe, sinon refus `password authentication failed`). En local le serveur accepte les connexions `localhost` sans contrôle : la branche « refus » n'est exercée qu'en CI (`--auth-host=scram-sha-256`). 774/774 tests sous ASan / UBSan.
+
 ## À approfondir
 - [x] Gestion des erreurs fatales et pool (S10, S11) ; reste : messages et codes d'erreur structurés (`SqlException` n'a qu'un message et un booléen).
 - [ ] Validation à l'emprunt : une connexion restée longtemps dans le pool peut avoir été fermée par le serveur (`wait_timeout` MySQL) ; elle n'est invalidée qu'à sa première utilisation, qui échoue.
