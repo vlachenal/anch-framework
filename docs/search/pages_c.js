@@ -1,7 +1,5 @@
 var searchData=
 [
-  ['oas_20library_20documentation_0',['AnCH OAS library documentation',['../page_oas.html',1,'']]],
-  ['observable_1',['Observer/Observable',['../page_events.html#evt_concept_observ_sec',1,'']]],
-  ['observer_20observable_2',['Observer/Observable',['../page_events.html#evt_concept_observ_sec',1,'']]],
-  ['on_20deserialization_20and_20serialization_3',['Constraints checks on deserialization and serialization',['../page_json.html#json_check_sec',1,'']]]
+  ['network_20library_20documentation_0',['AnCH network library documentation',['../page_network.html',1,'']]],
+  ['nginx_20module_1',['nginx module',['../page_rest.html#rest_nginx_sec',1,'']]]
 ];

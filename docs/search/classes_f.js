@@ -14,5 +14,8 @@ var searchData=
   ['responseobject_11',['ResponseObject',['../structanch_1_1oas_1_1_response_object.html',1,'anch::oas']]],
   ['resultset_12',['ResultSet',['../classanch_1_1sql_1_1_result_set.html',1,'anch::sql']]],
   ['route_13',['Route',['../classanch_1_1rest_1_1_route.html',1,'anch::rest']]],
-  ['runner_14',['Runner',['../classanch_1_1ut_1_1_runner.html',1,'anch::ut']]]
+  ['rpccontext_14',['RpcContext',['../classanch_1_1rest_1_1_rpc_context.html',1,'anch::rest']]],
+  ['rpcerror_15',['RpcError',['../classanch_1_1rest_1_1_rpc_error.html',1,'anch::rest']]],
+  ['rpcservice_16',['RpcService',['../classanch_1_1rest_1_1_rpc_service.html',1,'anch::rest']]],
+  ['runner_17',['Runner',['../classanch_1_1ut_1_1_runner.html',1,'anch::ut']]]
 ];

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['yellow_0',['YELLOW',['../namespaceanch_1_1cli.html#ab4a823e5d1e55628b319225775da39d8a8a568e5f41b7e4da88fe5c4a00aad34e',1,'anch::cli']]]
+  ['vnull_0',['VNULL',['../namespaceanch_1_1json.html#aa39e48b07b65032096fb6d205da99f4ba933815b48a60fd3ece2576e52727cbd9',1,'anch::json']]]
 ];

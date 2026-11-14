@@ -1,10 +1,10 @@
 var searchData=
 [
-  ['parser_5fnot_5ffound_0',['PARSER_NOT_FOUND',['../classanch_1_1conf_1_1_conf_error.html#abab53c9d1f2453e51ae897e44e05b7a7a1ac0cc9046dc2cb773d65a05b7df6b07',1,'anch::conf::ConfError']]],
-  ['parser_5fprotected_1',['PARSER_PROTECTED',['../classanch_1_1conf_1_1_conf_error.html#abab53c9d1f2453e51ae897e44e05b7a7a2bb3a71b90df3e6e268362deb5bf09dd',1,'anch::conf::ConfError']]],
-  ['parsing_5ferror_2',['PARSING_ERROR',['../classanch_1_1conf_1_1_conf_error.html#abab53c9d1f2453e51ae897e44e05b7a7a5df1e7f3b823038573a810fe0710d890',1,'anch::conf::ConfError::PARSING_ERROR'],['../classanch_1_1ini_1_1_parser_error.html#a2d5d885e252170535f9ddabf23c236b4a5df1e7f3b823038573a810fe0710d890',1,'anch::ini::ParserError::PARSING_ERROR']]],
-  ['patch_3',['PATCH',['../namespaceanch_1_1rest.html#a524693d8e18aa5c97af671e4dc0b6d71a63bc9a3997d66d835d9f3ec29451407d',1,'anch::rest']]],
-  ['post_4',['POST',['../namespaceanch_1_1rest.html#a524693d8e18aa5c97af671e4dc0b6d71aa02439ec229d8be0e74b0c1602392310',1,'anch::rest']]],
-  ['potential_5foverflow_5',['POTENTIAL_OVERFLOW',['../namespaceanch_1_1json.html#a56742fecea7bc19952b3e35c013ad931a04e397fe5e6aceef56a981fed1919ae9',1,'anch::json']]],
-  ['put_6',['PUT',['../namespaceanch_1_1rest.html#a524693d8e18aa5c97af671e4dc0b6d71a3e75383a5992a6d15fb81e872e46e256',1,'anch::rest']]]
+  ['not_5ffound_0',['NOT_FOUND',['../namespaceanch_1_1rest.html#a537b7f4601ac49935bda8c0ea3f449eda8c02547a8a3b02382bac3557bcb2280d',1,'anch::rest']]],
+  ['not_5floaded_1',['NOT_LOADED',['../classanch_1_1conf_1_1_conf_error.html#abab53c9d1f2453e51ae897e44e05b7a7a64d839b006f22e6c066be3e30d3a6d49',1,'anch::conf::ConfError']]],
+  ['not_5freadable_2',['NOT_READABLE',['../classanch_1_1conf_1_1_conf_error.html#abab53c9d1f2453e51ae897e44e05b7a7a9547794ad47ead502399954092c567ba',1,'anch::conf::ConfError::NOT_READABLE'],['../classanch_1_1ini_1_1_parser_error.html#a2d5d885e252170535f9ddabf23c236b4a9547794ad47ead502399954092c567ba',1,'anch::ini::ParserError::NOT_READABLE']]],
+  ['not_5fres_3',['NOT_RES',['../classanch_1_1conf_1_1_conf_error.html#abab53c9d1f2453e51ae897e44e05b7a7aa1b015ca2d040b286c23e8e0053b4286',1,'anch::conf::ConfError']]],
+  ['not_5fset_4',['NOT_SET',['../classanch_1_1_u_u_i_d.html#a6ee815d96c7a3fec3e5ed88f05e600f6a1c250a21210b7b88a14db9a0cbe71162',1,'anch::UUID']]],
+  ['nul_5',['NUL',['../structanch_1_1oas_1_1_scalar.html#a720183290b8a96b1d030ab1ebc7ce2b6a890f5fe6581170eeff26bec1c1e6a023',1,'anch::oas::Scalar']]],
+  ['number_6',['NUMBER',['../structanch_1_1oas_1_1_scalar.html#a720183290b8a96b1d030ab1ebc7ce2b6a34f55eca38e0605a84f169ff61a2a396',1,'anch::oas::Scalar::NUMBER'],['../namespaceanch_1_1json.html#aa39e48b07b65032096fb6d205da99f4ba34f55eca38e0605a84f169ff61a2a396',1,'anch::json::NUMBER']]]
 ];

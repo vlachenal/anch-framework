@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['validable_0',['Validable',['../conceptanch_1_1_validable.html',1,'anch']]],
-  ['valueconstraint_1',['ValueConstraint',['../conceptanch_1_1json_1_1_value_constraint.html',1,'anch::json']]]
+  ['thriftstruct_0',['ThriftStruct',['../conceptanch_1_1rest_1_1_thrift_struct.html',1,'anch::rest']]]
 ];

@@ -27,7 +27,7 @@ var searchData=
   ['like_24',['like',['../classanch_1_1sql_1_1_clauses_builder.html#a35ad9167c5f3e7c3ba4ef5515fb85feb',1,'anch::sql::ClausesBuilder::like()'],['../namespaceanch_1_1sql.html#aba042a9eeaba85d4222d44132b8d64f5',1,'anch::sql::like()']]],
   ['limit_25',['limit',['../classanch_1_1_fluent.html#a0cf31a2bcaa210030eac3d057fa3a83e',1,'anch::Fluent']]],
   ['limits_26',['limits',['../structanch_1_1rest_1_1_form_url_encoded.html#a8e917736ded5e34924a41d7ee6762461',1,'anch::rest::FormUrlEncoded::limits()'],['../structanch_1_1rest_1_1_multipart.html#aa37ae39c789f40cd43bf90c872989222',1,'anch::rest::Multipart::limits()']]],
-  ['listen_27',['listen',['../classanch_1_1network_1_1_socket.html#aa0c647c54631d677db74472be86684d2',1,'anch::network::Socket']]],
+  ['listen_27',['listen',['../classanch_1_1network_1_1_socket.html#aa0c647c54631d677db74472be86684d2',1,'anch::network::Socket::listen()'],['../classanch_1_1rest_1_1_grpc_server.html#ad8bb26247ec4ba50a07f7e41a158c51a',1,'anch::rest::GrpcServer::listen()']]],
   ['load_28',['load',['../classanch_1_1conf_1_1_configuration.html#adc3986262aebe2f4279ce1eef12f35c6',1,'anch::conf::Configuration']]],
   ['loader_29',['loader',['../classanch_1_1conf_1_1_configuration.html#ae2ccaec3fe047808d5ba32307254642a',1,'anch::conf::Configuration']]],
   ['location_30',['location',['../classanch_1_1ut_1_1_assert_exception.html#a196652e7ebd2157638b7eb597b9ddc9b',1,'anch::ut::AssertException']]],

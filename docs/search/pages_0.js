@@ -20,6 +20,8 @@ var searchData=
   ['anch_20utils_20library_20documentation_17',['AnCH utils library documentation',['../page_utils.html',1,'']]],
   ['anch_20uuid_20library_20documentation_18',['AnCH UUID library documentation',['../page_uuid.html',1,'']]],
   ['and_20error_20path_19',['Required fields and error path',['../page_json.html#json_required_sec',1,'']]],
-  ['and_20serialization_20',['Constraints checks on deserialization and serialization',['../page_json.html#json_check_sec',1,'']]],
-  ['assisted_20development_21',['AI assisted development',['../index.html#ai_sec',1,'']]]
+  ['and_20grpc_20',['Protocol Buffers and gRPC',['../page_rest.html#rest_protobuf_sec',1,'']]],
+  ['and_20serialization_21',['Constraints checks on deserialization and serialization',['../page_json.html#json_check_sec',1,'']]],
+  ['apache_20thrift_22',['Apache Thrift',['../page_rest.html#rest_thrift_sec',1,'']]],
+  ['assisted_20development_23',['AI assisted development',['../index.html#ai_sec',1,'']]]
 ];

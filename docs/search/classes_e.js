@@ -19,5 +19,7 @@ var searchData=
   ['postgresqlpreparedstatement_16',['PostgreSQLPreparedStatement',['../classanch_1_1sql_1_1_postgre_s_q_l_prepared_statement.html',1,'anch::sql']]],
   ['postgresqlresultset_17',['PostgreSQLResultSet',['../classanch_1_1sql_1_1_postgre_s_q_l_result_set.html',1,'anch::sql']]],
   ['preparedstatement_18',['PreparedStatement',['../classanch_1_1sql_1_1_prepared_statement.html',1,'anch::sql']]],
-  ['primitivemapper_19',['PrimitiveMapper',['../classanch_1_1json_1_1_primitive_mapper.html',1,'anch::json']]]
+  ['primitivemapper_19',['PrimitiveMapper',['../classanch_1_1json_1_1_primitive_mapper.html',1,'anch::json']]],
+  ['protobuf_20',['Protobuf',['../structanch_1_1rest_1_1_protobuf.html',1,'anch::rest']]],
+  ['protobufjson_21',['ProtobufJson',['../structanch_1_1rest_1_1_protobuf_json.html',1,'anch::rest']]]
 ];

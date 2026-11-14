@@ -1,7 +1,11 @@
 var searchData=
 [
-  ['dce_5fsecurity_0',['DCE_SECURITY',['../classanch_1_1_u_u_i_d.html#a6ee815d96c7a3fec3e5ed88f05e600f6affa23ee2a831cf77de87152b513c4119',1,'anch::UUID']]],
-  ['debug_1',['DEBUG',['../namespaceanch_1_1log.html#a90b75e44c6c1aec3a8054f354210dfcfadc30ec20708ef7b0f641ef78b7880a15',1,'anch::log']]],
-  ['default_2',['DEFAULT',['../namespaceanch_1_1cli.html#ab4a823e5d1e55628b319225775da39d8a5b39c8b553c821e7cddc6da64b5bd2ee',1,'anch::cli']]],
-  ['delete_3',['DELETE',['../namespaceanch_1_1rest.html#a524693d8e18aa5c97af671e4dc0b6d71a32f68a60cef40faedbc6af20298c1a1e',1,'anch::rest']]]
+  ['cancelled_0',['CANCELLED',['../namespaceanch_1_1rest.html#a537b7f4601ac49935bda8c0ea3f449eda9f935beb31030ad0d4d26126c0f39bf2',1,'anch::rest']]],
+  ['client_1',['CLIENT',['../namespaceanch_1_1rest.html#a23481a98e2fc63d6045769b147e165f0aef10c650df47bffd6399e5e78da2a9b1',1,'anch::rest']]],
+  ['compact_2',['COMPACT',['../namespaceanch_1_1rest.html#a5ef5daf8391167a192950579e82bd55cabbd53c25a2b976c1757ce1f9dbe8bd1f',1,'anch::rest']]],
+  ['conf_5fnot_5ffound_3',['CONF_NOT_FOUND',['../classanch_1_1conf_1_1_conf_error.html#abab53c9d1f2453e51ae897e44e05b7a7a4b1cffc4195363e33214718ffe677b33',1,'anch::conf::ConfError']]],
+  ['connect_4',['CONNECT',['../namespaceanch_1_1rest.html#a524693d8e18aa5c97af671e4dc0b6d71ab57e2519e26151feacdbe52076bc39ec',1,'anch::rest']]],
+  ['constraint_5fviolation_5',['CONSTRAINT_VIOLATION',['../namespaceanch_1_1json.html#a56742fecea7bc19952b3e35c013ad931a1d67a525f6cada988939ffdd393cae45',1,'anch::json']]],
+  ['cyan_6',['CYAN',['../namespaceanch_1_1cli.html#ab4a823e5d1e55628b319225775da39d8a344dd8cd533280795b9db82ef0c92749',1,'anch::cli']]],
+  ['cycle_7',['CYCLE',['../classanch_1_1conf_1_1_conf_error.html#abab53c9d1f2453e51ae897e44e05b7a7a11729ccb73dc5f4f62d40435e8a0c078',1,'anch::conf::ConfError']]]
 ];

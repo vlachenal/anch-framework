@@ -41,7 +41,7 @@ var searchData=
   ['limitations_38',['Limitations',['../page_oas.html#oas_limits_sec',1,'']]],
   ['limits_39',['limits',['../structanch_1_1rest_1_1_form_url_encoded.html#a8e917736ded5e34924a41d7ee6762461',1,'anch::rest::FormUrlEncoded::limits()'],['../structanch_1_1rest_1_1_multipart.html#aa37ae39c789f40cd43bf90c872989222',1,'anch::rest::Multipart::limits()']]],
   ['list_40',['List',['../deprecated.html',1,'Deprecated List'],['../todo.html',1,'Todo List']]],
-  ['listen_41',['listen',['../classanch_1_1network_1_1_socket.html#aa0c647c54631d677db74472be86684d2',1,'anch::network::Socket']]],
+  ['listen_41',['listen',['../classanch_1_1network_1_1_socket.html#aa0c647c54631d677db74472be86684d2',1,'anch::network::Socket::listen()'],['../classanch_1_1rest_1_1_grpc_server.html#ad8bb26247ec4ba50a07f7e41a158c51a',1,'anch::rest::GrpcServer::listen()']]],
   ['load_42',['load',['../classanch_1_1conf_1_1_configuration.html#adc3986262aebe2f4279ce1eef12f35c6',1,'anch::conf::Configuration']]],
   ['loader_43',['loader',['../classanch_1_1conf_1_1_configuration.html#ae2ccaec3fe047808d5ba32307254642a',1,'anch::conf::Configuration']]],
   ['local_44',['LOCAL',['../namespaceanch_1_1date_1_1rfc3339.html#a1f1f9648f73037d4557b2bfea472c831a54b4c4075463b2e02cd69f5cd139b5b2',1,'anch::date::rfc3339']]],

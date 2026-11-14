@@ -30,5 +30,6 @@ var searchData=
   ['bold_27',['bold',['../structanch_1_1cli_1_1_formatter.html#a79ca7f3c4c3f43686cbc4753d1c22878',1,'anch::cli::Formatter']]],
   ['borrowresource_28',['borrowResource',['../classanch_1_1_resource_pool.html#a2e85a9736de17fb72f12b98a8d5264ea',1,'anch::ResourcePool']]],
   ['build_29',['build',['../classanch_1_1sql_1_1_select_builder.html#a66dd51f8b83a286d050d61c46356254e',1,'anch::sql::SelectBuilder::build()'],['../classanch_1_1sql_1_1_select_builder_part.html#ab0e684ea5ddd21441fb4dde35bea6e97',1,'anch::sql::SelectBuilderPart::build()']]],
-  ['byteswap_30',['byteSwap',['../namespaceanch.html#ab863b625157e9863354d2edee670a1dc',1,'anch']]]
+  ['builder_30',['builder',['../classanch_1_1rest_1_1_grpc_server.html#a63a252d66e95209f09cfe3eb43e9afb9',1,'anch::rest::GrpcServer']]],
+  ['byteswap_31',['byteSwap',['../namespaceanch.html#ab863b625157e9863354d2edee670a1dc',1,'anch']]]
 ];

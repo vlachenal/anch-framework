@@ -132,7 +132,7 @@ Libraries</h1>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><a class="el" href="page_sql.html" title="AnCH SQL library documentation">anch-sql</a>  </td><td class="markdownTableBodyNone">SQL abstraction layer and connection pools for MySQL/MariaDB, PostgreSQL and SQLite  </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><a class="el" href="page_rest.html" title="AnCH REST library documentation">anch-rest</a>  </td><td class="markdownTableBodyNone">REST API declaration (nginx module), HTTP client (libcurl)  </td></tr>
+<td class="markdownTableBodyNone"><a class="el" href="page_rest.html" title="AnCH REST library documentation">anch-rest</a>  </td><td class="markdownTableBodyNone">REST API declaration (nginx module), HTTP client (libcurl), Protobuf / gRPC / Connect and Thrift RPC  </td></tr>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><a class="el" href="page_oas.html" title="AnCH OAS library documentation">anch-oas</a>  </td><td class="markdownTableBodyNone">OpenAPI 3.0 models generator (<code>anch-oas-gen</code> )  </td></tr>
 </table>
@@ -148,6 +148,8 @@ Prerequisites</h1>
 <li>SQL drivers: libmariadb (or libmysqlclient), libpq, libsqlite3</li>
 <li>anch-rest curl transport: libcurl</li>
 <li>anch-rest nginx module: nginx sources (built with <code>--with-threads</code> )</li>
+<li>anch-rest Protobuf codecs and RPC: Protobuf (and gRPC for the gRPC server), built when they are found</li>
+<li>anch-rest Thrift codecs and RPC: Thrift and Boost headers, built when they are found</li>
 </ul>
 <h1 class="doxsection"><a class="anchor" id="install_sec"></a>
 Installation</h1>
@@ -172,7 +174,7 @@ Libraries dependencies</h1>
 <li>anch-json: anch-events, anch-utils ; anch-uuid and anch-date with <code>ANCH_UUID</code> and <code>ANCH_DATE</code> options</li>
 <li>anch-crypto: anch-uuid, anch-utils</li>
 <li>anch-sql: anch-conf, anch-date, anch-utils</li>
-<li>anch-rest: anch-json ; anch-uuid for the server library</li>
+<li>anch-rest: anch-json, anch-uuid</li>
 <li>anch-oas: anch-json</li>
 </ul>
 <h1 class="doxsection"><a class="anchor" id="version_sec"></a>

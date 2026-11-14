@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['side_0',['Side',['../namespaceanch_1_1rest.html#a23481a98e2fc63d6045769b147e165f0',1,'anch::rest']]],
-  ['sockettype_1',['SocketType',['../namespaceanch_1_1network.html#aa518b6bd398c963767bf1974e5c113be',1,'anch::network']]],
-  ['status_2',['Status',['../namespaceanch_1_1rest.html#a8c6f914e6bbc639b2eae1c9633cd9a98',1,'anch::rest']]]
+  ['rpccode_0',['RpcCode',['../namespaceanch_1_1rest.html#a537b7f4601ac49935bda8c0ea3f449ed',1,'anch::rest']]],
+  ['rpcformat_1',['RpcFormat',['../namespaceanch_1_1rest.html#a6fc81b53b966c3492af9be68a76d2d72',1,'anch::rest']]]
 ];

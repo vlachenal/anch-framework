@@ -88,6 +88,7 @@ var hierarchy =
         [ "anch::rest::HttpException", "classanch_1_1rest_1_1_http_exception.html", [
           [ "anch::rest::HttpError", "classanch_1_1rest_1_1_http_error.html", null ]
         ] ],
+        [ "anch::rest::RpcError", "classanch_1_1rest_1_1_rpc_error.html", null ],
         [ "anch::rest::TransportError", "classanch_1_1rest_1_1_transport_error.html", null ]
       ] ]
     ] ],
@@ -110,6 +111,7 @@ var hierarchy =
     [ "anch::json::GenericMapper&lt; PrimitiveMapper&lt; T &gt;, T &gt;", "classanch_1_1json_1_1_generic_mapper.html", [
       [ "anch::json::PrimitiveMapper< T >", "classanch_1_1json_1_1_primitive_mapper.html", null ]
     ] ],
+    [ "anch::rest::GrpcServer", "classanch_1_1rest_1_1_grpc_server.html", null ],
     [ "anch::crypto::Hash&lt; O, B &gt;", "classanch_1_1crypto_1_1_hash.html", [
       [ "anch::crypto::SHA2< O, B, W, R, I >", "classanch_1_1crypto_1_1_s_h_a2.html", null ]
     ] ],
@@ -225,6 +227,8 @@ var hierarchy =
       [ "anch::sql::PostgreSQLPreparedStatement", "classanch_1_1sql_1_1_postgre_s_q_l_prepared_statement.html", null ],
       [ "anch::sql::SQLite3PreparedStatement", "classanch_1_1sql_1_1_s_q_lite3_prepared_statement.html", null ]
     ] ],
+    [ "anch::rest::Protobuf", "structanch_1_1rest_1_1_protobuf.html", null ],
+    [ "anch::rest::ProtobufJson", "structanch_1_1rest_1_1_protobuf_json.html", null ],
     [ "anch::rest::RawBody", "structanch_1_1rest_1_1_raw_body.html", null ],
     [ "anch::json::ReaderContext", "classanch_1_1json_1_1_reader_context.html", [
       [ "anch::json::Reader", "classanch_1_1json_1_1_reader.html", null ]
@@ -248,6 +252,8 @@ var hierarchy =
     [ "anch::rest::Route", "classanch_1_1rest_1_1_route.html", [
       [ "anch::rest::Endpoint< F >", "classanch_1_1rest_1_1_endpoint.html", null ]
     ] ],
+    [ "anch::rest::RpcContext", "classanch_1_1rest_1_1_rpc_context.html", null ],
+    [ "anch::rest::RpcService", "classanch_1_1rest_1_1_rpc_service.html", null ],
     [ "anch::ut::Runner", "classanch_1_1ut_1_1_runner.html", [
       [ "anch::ut::DefaultRunner", "classanch_1_1ut_1_1_default_runner.html", [
         [ "anch::ut::SocketServerRunner", "classanch_1_1ut_1_1_socket_server_runner.html", null ]
@@ -306,10 +312,14 @@ var hierarchy =
     [ "anch::rest::Text", "structanch_1_1rest_1_1_text.html", null ],
     [ "anch::ut::ThreadErrors", "classanch_1_1ut_1_1_thread_errors.html", null ],
     [ "anch::ThreadPool", "classanch_1_1_thread_pool.html", null ],
+    [ "anch::rest::ThriftCodec&lt; P &gt;", "structanch_1_1rest_1_1_thrift_codec.html", null ],
     [ "anch::rest::Transport", "classanch_1_1rest_1_1_transport.html", [
       [ "anch::rest::CurlTransport", "classanch_1_1rest_1_1_curl_transport.html", null ]
     ] ],
     [ "anch::rest::TransportConfig", "structanch_1_1rest_1_1_transport_config.html", null ],
+    [ "apache::thrift::transport::TVirtualTransport", null, [
+      [ "anch::rest::ThriftTransport", "classanch_1_1rest_1_1_thrift_transport.html", null ]
+    ] ],
     [ "anch::network::UdpSocket", "classanch_1_1network_1_1_udp_socket.html", null ],
     [ "anch::json::UniqueItems", "structanch_1_1json_1_1_unique_items.html", null ],
     [ "anch::ut::UnitTests", "classanch_1_1ut_1_1_unit_tests.html", null ],

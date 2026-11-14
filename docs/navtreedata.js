@@ -144,6 +144,8 @@ var NAVTREE =
       [ "CORS", "page_rest.html#rest_cors_sec", null ],
       [ "Client", "page_rest.html#rest_client_sec", null ],
       [ "Fields constraints", "page_rest.html#rest_constraints_sec", null ],
+      [ "Protocol Buffers and gRPC", "page_rest.html#rest_protobuf_sec", null ],
+      [ "Apache Thrift", "page_rest.html#rest_thrift_sec", null ],
       [ "nginx module", "page_rest.html#rest_nginx_sec", null ]
     ] ],
     [ "AnCH SQL library documentation", "page_sql.html", [
@@ -226,17 +228,18 @@ var NAVTREEINDEX =
 "classanch_1_1json_1_1_j_s_o_n_mapper.html#afcbd0d846afd6315d73591237d6a1dc5",
 "classanch_1_1log_1_1_logger_configuration.html#a786ab99b6cce2386dd4a56c222f9de83",
 "classanch_1_1network_1_1_socket.html#ad4b6a1ff22869250c84fbd127faa0832",
-"classanch_1_1rest_1_1_headers.html#a2d57f7634547dff7fed5a2344db3ff87",
-"classanch_1_1sql_1_1_clauses_builder.html#a8aaa5fa5663a99b00b3a604c15441adb",
-"classanch_1_1sql_1_1_my_s_q_l_prepared_statement.html#a982a943ef172181314d7c1c1572f6d8a",
-"classanch_1_1sql_1_1_s_q_lite3_result_set.html#a48f3bf039d86e2a1f7cb898e52a4f230",
-"conceptanch_1_1json_1_1_value_constraint.html",
-"namespaceanch.html#a076ca536c9623533b33cd90c2db4f5e6",
-"namespaceanch_1_1network.html#aa518b6bd398c963767bf1974e5c113be",
-"page_oas.html",
-"structanch_1_1events_1_1_event.html",
-"structanch_1_1oas_1_1_path_item.html#a03922ea896a8c530cd6eb21352b38fb5",
-"structanch_1_1rest_1_1_transport_config.html#af619a3c323bbe1ee78ade6a0eca23806"
+"classanch_1_1rest_1_1_grpc_server.html#abcdae69f09f05ca98d33ba5dd94e185f",
+"classanch_1_1rest_1_1_rpc_service.html#a90049ac5722f420e8dfb474f0adb8678",
+"classanch_1_1sql_1_1_from_builder.html#a80c9b7299c6e0fdb01ef60dc975ab16f",
+"classanch_1_1sql_1_1_result_set.html#ae6f38723bc20d66f31ff4d1c5d3f22f4",
+"classanch_1_1ut_1_1_thread_errors.html#a24e548c212e7a1ed1cd135f91986e336",
+"functions_p.html",
+"namespaceanch_1_1json.html#aa28386fee3234cd201226f6190c4ac36",
+"namespaceanch_1_1ut.html#a5807365083f07c004e3320587fa0c5b9",
+"structanch_1_1_less_ptr_compare.html",
+"structanch_1_1json_1_1_required.html",
+"structanch_1_1rest_1_1_cors_options.html",
+"structanch__rest__request__t.html#a1e722ea3ddb4b5d18248e779cbd0676f"
 ];
 
 const SYNCONMSG = 'click to disable panel synchronization';
