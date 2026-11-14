@@ -69,7 +69,7 @@ Client (étape 2)
 - Client : URL de base, headers par défaut, paramètres de chemin et de requête encodés, filtres
   (authentification Basic / Bearer), timeouts et proxy (configuration du transport).
     Pet pet = client.get("/pets/{id}", 42).accept<Json>().as<Pet>();   // HttpError si statut >= 400
-- Un handle curl par transport, requêtes sérialisées par un mutex ; corps de requête mis en mémoire avant envoi.
+- Un handle curl par transport, requêtes sérialisées par un mutex ; corps de requête mis en mémoire avant envoi, sauf s'il a un Content-Length (envoyé en flux, CURLOPT_READFUNCTION : multipart).
 - Codecs acceptés dans le type de l'appel (Call<Codecs...>) : as<T>() vérifie à la compilation qu'un codec accepté
   désérialise T, et choisit à l'exécution celui qui correspond au Content-Type de la réponse.
 - send() renvoie la réponse quel que soit son statut ; execute() et as<T>() lèvent HttpError si statut >= 400.
@@ -88,6 +88,6 @@ Plus tard
   credentials : un filtre d'authentification le refuserait), en-têtes CORS ajoutés à toutes les réponses, erreurs
   et 500 compris. Préflight refusé (origine, méthode, en-tête) -> 403 sans en-têtes CORS ; chemin inconnu -> 404.
   Vary: Origin quand les origines sont listées.
-- [ ] Corps multipart/form-data et application/x-www-form-urlencoded (anch-rest et anch-oas) : proposition
-  dans multipart.todo (2026-11-14) ; étapes 1 à 4 faites (codecs, Form / Part, Multipart en mémoire avec
-  limites, FormMapper écrit à la main et généré par anch-oas), reste l'étape 5 (parties en flux).
+- [x] Corps multipart/form-data et application/x-www-form-urlencoded (anch-rest et anch-oas), 2026-11-14 :
+  détail et restes dans multipart.todo (codecs, Form / Part, limites, FormMapper écrit à la main et généré
+  par anch-oas, parties en flux avec fichiers temporaires, envoi en flux par le client curl).

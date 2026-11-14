@@ -19,12 +19,49 @@
 */
 #include "rest/form.hpp"
 
+#include <algorithm>
+#include <array>
+#include <fstream>
+#include <iterator>
 #include <sstream>
+#include <stdexcept>
+#include <system_error>
 
 using anch::rest::Form;
 using anch::rest::Headers;
 using anch::rest::MediaType;
 using anch::rest::Part;
+
+// File content +
+struct Part::FileContent {
+  /*! File path */
+  std::filesystem::path path;
+
+  /*! File size */
+  std::size_t size;
+
+  /*! Temporary file: deleted with this content */
+  bool temporary;
+
+  FileContent(const std::filesystem::path& file, bool deleted):
+    path(file),
+    size(static_cast<std::size_t>(std::filesystem::file_size(file))),
+    temporary(deleted) {
+    // Nothing to do
+  }
+
+  FileContent(const FileContent&) = delete;
+
+  FileContent& operator=(const FileContent&) = delete;
+
+  ~FileContent() {
+    if(temporary) {
+      std::error_code ignored;
+      std::filesystem::remove(path, ignored);
+    }
+  }
+};
+// File content -
 
 // Part +
 Part::Part(): Part(std::string_view(), std::string()) {
@@ -36,7 +73,9 @@ Part::Part(std::string_view name, std::string content):
   _filename(),
   _mediaType("text", "plain"),
   _headers(),
-  _content(std::move(content)) {
+  _content(std::move(content)),
+  _file(),
+  _loaded(false) {
   // Nothing to do
 }
 
@@ -45,23 +84,109 @@ Part::Part(std::string_view name, std::string_view filename, MediaType mediaType
   _filename(std::string(filename)),
   _mediaType(std::move(mediaType)),
   _headers(),
-  _content(std::move(content)) {
+  _content(std::move(content)),
+  _file(),
+  _loaded(false) {
   // Nothing to do
 }
 
+Part
+Part::fromFile(std::string_view name, const std::filesystem::path& path, MediaType mediaType, std::optional<std::string_view> filename) {
+  // Size is read before the part is built: an unknown file is not deleted
+  auto file = std::make_shared<const FileContent>(path, false);
+  Part part(name, filename ? *filename : std::string_view(path.filename().native()), std::move(mediaType), std::string());
+  part._file = std::move(file);
+  return part;
+}
+
+Part
+Part::fromTemporaryFile(std::string_view name, const std::filesystem::path& path, MediaType mediaType,
+			std::optional<std::string_view> filename) {
+  std::shared_ptr<const FileContent> file;
+  try {
+    file = std::make_shared<const FileContent>(path, true);
+  } catch(...) {
+    std::error_code ignored;
+    std::filesystem::remove(path, ignored);
+    throw;
+  }
+  Part part = filename ? Part(name, *filename, std::move(mediaType), std::string()) : Part(name, std::string());
+  if(!filename) {
+    part.setMediaType(std::move(mediaType));
+  }
+  part._file = std::move(file);
+  return part;
+}
+
 std::string_view
-Part::content() const noexcept {
+Part::content() const {
+  if(_file && !_loaded) {
+    std::ifstream input(_file->path, std::ios::binary);
+    if(!input) {
+      throw std::runtime_error("Unable to read part file '" + _file->path.string() + "'");
+    }
+    _content.assign(std::istreambuf_iterator<char>(input), std::istreambuf_iterator<char>());
+    _loaded = true;
+  }
   return _content;
 }
 
 std::unique_ptr<std::istream>
 Part::open() const {
+  if(_file) {
+    auto input = std::make_unique<std::ifstream>(_file->path, std::ios::binary);
+    if(!*input) {
+      throw std::runtime_error("Unable to read part file '" + _file->path.string() + "'");
+    }
+    return input;
+  }
   return std::make_unique<std::istringstream>(_content);
 }
 
 std::size_t
 Part::size() const noexcept {
-  return _content.size();
+  return _file ? _file->size : _content.size();
+}
+
+bool
+Part::isInMemory() const noexcept {
+  return !_file;
+}
+
+std::optional<std::filesystem::path>
+Part::getPath() const {
+  if(!_file) {
+    return std::nullopt;
+  }
+  return _file->path;
+}
+
+bool
+Part::operator==(const Part& other) const {
+  if(_name != other._name || _filename != other._filename || !(_mediaType == other._mediaType) || _headers != other._headers
+     || size() != other.size()) {
+    return false;
+  }
+  if(isInMemory() && other.isInMemory()) {
+    return _content == other._content;
+  }
+  if(_file && _file == other._file) {
+    return true;
+  }
+  // Compare streams by blocks
+  std::unique_ptr<std::istream> left = open();
+  std::unique_ptr<std::istream> right = other.open();
+  std::array<char, 8192> leftBuffer;
+  std::array<char, 8192> rightBuffer;
+  while(*left && *right) {
+    left->read(leftBuffer.data(), leftBuffer.size());
+    right->read(rightBuffer.data(), rightBuffer.size());
+    if(left->gcount() != right->gcount()
+       || !std::equal(leftBuffer.begin(), leftBuffer.begin() + left->gcount(), rightBuffer.begin())) {
+      return false;
+    }
+  }
+  return true;
 }
 
 bool
@@ -137,7 +262,7 @@ Form::has(std::string_view name) const noexcept {
 }
 
 std::optional<std::string_view>
-Form::field(std::string_view name) const noexcept {
+Form::field(std::string_view name) const {
   const Part* found = part(name);
   if(found == nullptr) {
     return std::nullopt;

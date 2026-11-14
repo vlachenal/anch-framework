@@ -99,8 +99,24 @@ struct anch::rest::FormMapper<UploadPhoto> {
 api.post("/pets/{id}/photo", [](uint64_t id, anch::rest::Body<UploadPhoto> upload) { ... }).consumes<anch::rest::Multipart>();
 \endcode
  *
- * Parts are kept in memory. Bodies are limited by side (\ref anch::rest::FormLimits "FormLimits" :
- * body size, number of parts, part size, part headers size): over a limit, server answers \c 413 .
+ * Bodies are limited by side (\ref anch::rest::FormLimits "FormLimits" : body size, number of parts,
+ * part size, part headers size): over a limit, server answers \c 413 .
+ *
+ * Large files do not need memory: multipart parts larger than \c FormLimits::maxMemoryPartSize (1 MiB)
+ * are read in temporary files (deleted with their last part copy), parts are written from their file
+ * and the client streams multipart bodies ( \c Content-Length is known, libcurl transport reads the
+ * stream):
+ * \code{.cpp}
+anch::rest::FormLimits& limits = anch::rest::Multipart::limits(anch::rest::Side::SERVER);
+limits.maxSize = limits.maxPartSize = 1024 * 1024 * 1024; // 1 GiB uploads, read in temporary files
+limits.temporaryDirectory = "/var/tmp/uploads";
+
+anch::rest::Form upload;
+upload.add(anch::rest::Part::fromFile("video", "/data/video.mp4", anch::rest::MediaType("video", "mp4")));
+client.post("/videos").body<anch::rest::Multipart>(upload).send(); // read from the file while it is sent
+\endcode
+ * \ref anch::rest::Part::open "Part::open()" reads a part in memory or in a file;
+ * \ref anch::rest::Part::content "Part::content()" loads a file in memory.
  *
  * \section rest_cors_sec CORS
  *

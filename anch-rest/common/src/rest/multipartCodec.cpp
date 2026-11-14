@@ -19,10 +19,17 @@
 */
 #include "rest/multipartCodec.hpp"
 
+#include <array>
+#include <cstdlib>
+#include <fstream>
 #include <map>
 #include <optional>
 #include <random>
 #include <stdexcept>
+#include <system_error>
+#include <variant>
+
+#include <unistd.h>
 
 #include "rest/headers.hpp"
 #include "rest/request.hpp"
@@ -166,12 +173,19 @@ namespace {
     return anch::rest::percentDecode(value.substr(language + 1));
   }
 
-  /*! Build part from its headers block (header lines ended by CRLF) and its content */
-  Part
-  readPart(std::string_view headers, std::string_view content) {
-    std::optional<Disposition> disposition;
+  /*! Part headers: name, file name, media type and other headers */
+  struct PartHeaders {
+    std::string name;
+    std::optional<std::string> filename;
     std::optional<MediaType> mediaType;
     anch::rest::Headers others;
+  };
+
+  /*! Parse part headers block (header lines ended by CRLF) */
+  PartHeaders
+  parsePartHeaders(std::string_view headers) {
+    std::optional<Disposition> disposition;
+    PartHeaders res;
     while(!headers.empty()) {
       const std::size_t eol = headers.find(CRLF);
       std::string_view line = headers.substr(0, eol);
@@ -191,15 +205,15 @@ namespace {
 	  throw std::invalid_argument("Invalid multipart Content-Disposition '" + std::string(value) + "'");
 	}
       } else if(equalsIgnoreCase(name, anch::rest::header::CONTENT_TYPE)) {
-	if(mediaType) {
+	if(res.mediaType) {
 	  throw std::invalid_argument("Duplicate multipart part Content-Type header");
 	}
-	mediaType = MediaType::parse(value);
-	if(!mediaType) {
+	res.mediaType = MediaType::parse(value);
+	if(!res.mediaType) {
 	  throw std::invalid_argument("Invalid multipart part Content-Type '" + std::string(value) + "'");
 	}
       } else {
-	others.add(name, value);
+	res.others.add(name, value);
       }
     }
     if(!disposition) {
@@ -209,26 +223,185 @@ namespace {
     if(name == disposition->parameters.end()) {
       throw std::invalid_argument("Missing multipart part name");
     }
-    std::optional<std::string> filename;
+    res.name = name->second;
     if(auto extended = disposition->parameters.find("filename*"); extended != disposition->parameters.end()) {
-      filename = decodeExtended(extended->second);
+      res.filename = decodeExtended(extended->second);
     }
-    if(auto plain = disposition->parameters.find("filename"); !filename && plain != disposition->parameters.end()) {
-      filename = plain->second;
+    if(auto plain = disposition->parameters.find("filename"); !res.filename && plain != disposition->parameters.end()) {
+      res.filename = plain->second;
     }
-    Part part = filename
-      ? Part(name->second, *filename, mediaType.value_or(MediaType("application", "octet-stream")), std::string(content))
-      : Part(name->second, std::string(content));
-    if(mediaType && !filename) {
-      part.setMediaType(std::move(*mediaType));
+    return res;
+  }
+
+  /*! Body reader: sliding buffer over input stream, body size limit */
+  class Reader {
+  private:
+    /*! Read block size */
+    static constexpr std::size_t BLOCK = 64 * 1024;
+
+    std::istream& _input;
+    std::size_t _maxSize;
+    std::string _buffer;
+    std::size_t _pos = 0;
+    std::size_t _total = 0;
+    bool _eof = false;
+
+  public:
+    Reader(std::istream& input, std::size_t maxSize): _input(input), _maxSize(maxSize) {
     }
-    for(const auto& [header, values] : others) {
-      for(const std::string& value : values) {
-	part.getHeaders().add(header, value);
+
+    /*! Available data */
+    std::string_view
+    view() const noexcept {
+      return std::string_view(_buffer).substr(_pos);
+    }
+
+    void
+    consume(std::size_t count) noexcept {
+      _pos += count;
+    }
+
+    /*! Read until \c count bytes are available: \c false at end of input with less bytes */
+    bool
+    fill(std::size_t count) {
+      while(_buffer.size() - _pos < count && !_eof) {
+	if(_pos > 0) {
+	  _buffer.erase(0, _pos);
+	  _pos = 0;
+	}
+	const std::size_t size = _buffer.size();
+	_buffer.resize(size + BLOCK);
+	_input.read(_buffer.data() + size, static_cast<std::streamsize>(BLOCK));
+	const auto read = static_cast<std::size_t>(_input.gcount());
+	_buffer.resize(size + read);
+	if(read == 0) {
+	  _eof = true;
+	  break;
+	}
+	if(read > _maxSize - _total) {
+	  throw anch::rest::ContentTooLarge("Content is larger than " + std::to_string(_maxSize) + " bytes");
+	}
+	_total += read;
+      }
+      return _buffer.size() - _pos >= count;
+    }
+
+    /*! Read more data: \c false at end of input */
+    bool
+    more() {
+      return fill(view().size() + 1);
+    }
+  };
+
+  /*! Temporary file being written, removed when it is not handed over to a part */
+  class TemporaryFile {
+  private:
+    std::filesystem::path _path;
+    std::ofstream _out;
+    bool _owned = true;
+
+  public:
+    explicit TemporaryFile(const std::filesystem::path& directory) {
+      std::string pattern = ((directory.empty() ? std::filesystem::temp_directory_path() : directory) / "anch-part-XXXXXX").string();
+      const int fd = ::mkstemp(pattern.data());
+      if(fd < 0) {
+	throw std::system_error(errno, std::generic_category(), "Unable to create multipart temporary file in '" + pattern + "'");
+      }
+      ::close(fd);
+      _path = pattern;
+      _out.open(_path, std::ios::binary | std::ios::trunc);
+      if(!_out) {
+	std::error_code ignored;
+	std::filesystem::remove(_path, ignored);
+	throw std::runtime_error("Unable to write multipart temporary file '" + _path.string() + "'");
       }
     }
-    return part;
-  }
+
+    TemporaryFile(const TemporaryFile&) = delete;
+
+    TemporaryFile& operator=(const TemporaryFile&) = delete;
+
+    ~TemporaryFile() {
+      if(_owned) {
+	_out.close();
+	std::error_code ignored;
+	std::filesystem::remove(_path, ignored);
+      }
+    }
+
+    void
+    write(std::string_view data) {
+      _out.write(data.data(), static_cast<std::streamsize>(data.size()));
+      if(!_out) {
+	throw std::runtime_error("Unable to write multipart temporary file '" + _path.string() + "'");
+      }
+    }
+
+    /*! Close file and hand it over (to a part) */
+    std::filesystem::path
+    release() {
+      _out.close();
+      if(!_out) {
+	throw std::runtime_error("Unable to write multipart temporary file '" + _path.string() + "'");
+      }
+      _owned = false;
+      return _path;
+    }
+  };
+
+  /*! Part content: in memory, then in a temporary file over memory limit */
+  class PartContent {
+  private:
+    const FormLimits& _limits;
+    std::string _memory;
+    std::unique_ptr<TemporaryFile> _file;
+    std::size_t _size = 0;
+
+  public:
+    explicit PartContent(const FormLimits& limits): _limits(limits) {
+    }
+
+    void
+    write(std::string_view data) {
+      if(data.size() > _limits.maxPartSize - _size) {
+	throw anch::rest::ContentTooLarge("Multipart part is larger than " + std::to_string(_limits.maxPartSize) + " bytes");
+      }
+      _size += data.size();
+      if(!_file && _memory.size() + data.size() > _limits.maxMemoryPartSize) {
+	_file = std::make_unique<TemporaryFile>(_limits.temporaryDirectory);
+	_file->write(_memory);
+	_memory.clear();
+	_memory.shrink_to_fit();
+      }
+      if(_file) {
+	_file->write(data);
+      } else {
+	_memory.append(data);
+      }
+    }
+
+    Part
+    toPart(PartHeaders&& headers) {
+      Part part;
+      if(_file) {
+	MediaType type = headers.mediaType.value_or(headers.filename ? MediaType("application", "octet-stream") : MediaType("text", "plain"));
+	part = Part::fromTemporaryFile(headers.name, _file->release(), std::move(type), headers.filename);
+      } else if(headers.filename) {
+	part = Part(headers.name, *headers.filename, headers.mediaType.value_or(MediaType("application", "octet-stream")), std::move(_memory));
+      } else {
+	part = Part(headers.name, std::move(_memory));
+	if(headers.mediaType) {
+	  part.setMediaType(std::move(*headers.mediaType));
+	}
+      }
+      for(const auto& [header, values] : headers.others) {
+	for(const std::string& value : values) {
+	  part.getHeaders().add(header, value);
+	}
+      }
+      return part;
+    }
+  };
 
   /*! Escape name or file name as browsers do (HTML multipart/form-data encoding algorithm) */
   std::string
@@ -253,15 +426,145 @@ namespace {
     }
   }
 
+  /*! Check if a part in memory contains value (files are not read) */
   bool
   contains(const Form& form, std::string_view value) {
     for(const Part& part : form) {
-      if(part.content().find(value) != std::string_view::npos) {
+      if(part.isInMemory() && part.content().find(value) != std::string_view::npos) {
 	return true;
       }
     }
     return false;
   }
+
+  /*! Part headers block written before its content */
+  std::string
+  partHeaders(const Part& part, std::string_view delimiter) {
+    static const MediaType TEXT("text", "plain");
+    std::string res(delimiter);
+    res += CRLF;
+    res += "Content-Disposition: form-data; name=\"" + escape(part.getName()) + '"';
+    if(part.isFile()) {
+      res += "; filename=\"" + escape(*part.getFilename()) + '"';
+    }
+    res += CRLF;
+    if(part.isFile() || !(part.getMediaType() == TEXT)) {
+      res += "Content-Type: " + part.getMediaType().toString();
+      res += CRLF;
+    }
+    for(const auto& [name, values] : part.getHeaders()) {
+      checkHeader(name);
+      for(const std::string& value : values) {
+	checkHeader(value);
+	res += name + ": " + value;
+	res += CRLF;
+      }
+    }
+    res += CRLF;
+    return res;
+  }
+
+  /*! Check that boundary does not appear in parts in memory */
+  void
+  checkParts(const Form& form, std::string_view inner) {
+    for(const Part& part : form) {
+      if(part.isInMemory() && part.content().find(inner) != std::string_view::npos) {
+	throw std::invalid_argument("Multipart boundary appears in part '" + part.getName() + "'");
+      }
+    }
+  }
+
+  /*! Multipart body stream: generated headers and parts contents, read on demand */
+  class BodyBuffer: public std::streambuf {
+  private:
+    /*! Body segments: text or part index */
+    std::vector<std::variant<std::string, std::size_t>> _segments;
+    /*! Form copy (parts files are shared) */
+    Form _form;
+    /*! Current segment */
+    std::size_t _index = 0;
+    /*! Current segment is started */
+    bool _started = false;
+    /*! Current part stream */
+    std::unique_ptr<std::istream> _part;
+    /*! Part read buffer */
+    std::array<char, 64 * 1024> _buffer;
+
+  public:
+    BodyBuffer(Form form, std::string_view delimiter): _form(std::move(form)) {
+      std::size_t index = 0;
+      for(const Part& part : _form) {
+	_segments.emplace_back(partHeaders(part, delimiter));
+	_segments.emplace_back(index++);
+	_segments.emplace_back(std::string(CRLF));
+      }
+      _segments.emplace_back(std::string(delimiter) + "--" + std::string(CRLF));
+    }
+
+    /*! Body size */
+    std::uint64_t
+    size() const {
+      std::uint64_t res = 0;
+      for(const auto& segment : _segments) {
+	res += std::holds_alternative<std::string>(segment) ? std::get<std::string>(segment).size() : _form.getParts()[std::get<std::size_t>(segment)].size();
+      }
+      return res;
+    }
+
+  protected:
+    virtual int_type
+    underflow() override {
+      while(_index < _segments.size()) {
+	auto& segment = _segments[_index];
+	if(std::holds_alternative<std::string>(segment)) {
+	  std::string& text = std::get<std::string>(segment);
+	  if(!_started && !text.empty()) {
+	    _started = true;
+	    setg(text.data(), text.data(), text.data() + text.size());
+	    return traits_type::to_int_type(*gptr());
+	  }
+	} else {
+	  const Part& part = _form.getParts()[std::get<std::size_t>(segment)];
+	  if(part.isInMemory()) {
+	    if(!_started && part.size() != 0) {
+	      _started = true;
+	      std::string_view content = part.content();
+	      char* data = const_cast<char*>(content.data()); // read only get area
+	      setg(data, data, data + content.size());
+	      return traits_type::to_int_type(*gptr());
+	    }
+	  } else {
+	    if(!_part) {
+	      _part = part.open();
+	    }
+	    _part->read(_buffer.data(), static_cast<std::streamsize>(_buffer.size()));
+	    const std::streamsize read = _part->gcount();
+	    if(read > 0) {
+	      setg(_buffer.data(), _buffer.data(), _buffer.data() + read);
+	      return traits_type::to_int_type(*gptr());
+	    }
+	    if(_part->bad()) {
+	      throw std::runtime_error("Unable to read multipart part '" + part.getName() + "'");
+	    }
+	  }
+	}
+	++_index;
+	_started = false;
+	_part.reset();
+      }
+      return traits_type::eof();
+    }
+  };
+
+  /*! Input stream which owns its buffer */
+  class BodyInput: public std::istream {
+  private:
+    std::unique_ptr<BodyBuffer> _body;
+
+  public:
+    explicit BodyInput(std::unique_ptr<BodyBuffer> body): std::istream(body.get()), _body(std::move(body)) {
+    }
+  };
 
 }
 
@@ -284,8 +587,8 @@ Multipart::mediaType() noexcept {
 
 FormLimits&
 Multipart::limits(Side side) {
-  static FormLimits server{16 * 1024 * 1024, 1000, 16 * 1024 * 1024, 16 * 1024};
-  static FormLimits client{16 * 1024 * 1024, 1000, 16 * 1024 * 1024, 16 * 1024};
+  static FormLimits server{16 * 1024 * 1024, 1000, 16 * 1024 * 1024, 16 * 1024, 1024 * 1024, {}};
+  static FormLimits client{16 * 1024 * 1024, 1000, 16 * 1024 * 1024, 16 * 1024, 1024 * 1024, {}};
   return (side == Side::SERVER) ? server : client;
 }
 
@@ -303,30 +606,27 @@ Multipart::contentType(const Form& form) {
 void
 Multipart::serialize(const Form& form, std::ostream& out, const MediaType& contentType, Side) {
   const std::string delimiter = "--" + std::string(checkBoundary(contentType));
-  const std::string inner = std::string(CRLF) + delimiter;
-  const MediaType text("text", "plain");
+  checkParts(form, std::string(CRLF) + delimiter);
   for(const Part& part : form) {
-    if(part.content().find(inner) != std::string_view::npos) {
-      throw std::invalid_argument("Multipart boundary appears in part '" + part.getName() + "'");
-    }
-    out << delimiter << CRLF << "Content-Disposition: form-data; name=\"" << escape(part.getName()) << '"';
-    if(part.isFile()) {
-      out << "; filename=\"" << escape(*part.getFilename()) << '"';
+    out << partHeaders(part, delimiter);
+    if(part.isInMemory()) {
+      out << part.content();
+    } else if(part.size() != 0) {
+      std::unique_ptr<std::istream> input = part.open();
+      out << input->rdbuf();
     }
     out << CRLF;
-    if(part.isFile() || !(part.getMediaType() == text)) {
-      out << "Content-Type: " << part.getMediaType().toString() << CRLF;
-    }
-    for(const auto& [name, values] : part.getHeaders()) {
-      checkHeader(name);
-      for(const std::string& value : values) {
-	checkHeader(value);
-	out << name << ": " << value << CRLF;
-      }
-    }
-    out << CRLF << part.content() << CRLF;
   }
   out << delimiter << "--" << CRLF;
+}
+
+anch::rest::BodyStream
+Multipart::stream(const Form& form, const MediaType& contentType, Side) {
+  const std::string delimiter = "--" + std::string(checkBoundary(contentType));
+  checkParts(form, std::string(CRLF) + delimiter);
+  auto body = std::make_unique<BodyBuffer>(form, delimiter);
+  const std::uint64_t size = body->size();
+  return anch::rest::BodyStream{std::make_unique<BodyInput>(std::move(body)), size};
 }
 
 void
@@ -334,61 +634,89 @@ Multipart::deserialize(Form& form, std::istream& input, const MediaType& content
   const FormLimits& limits = Multipart::limits(side);
   const std::string delimiter = "--" + std::string(checkBoundary(contentType));
   const std::string inner = std::string(CRLF) + delimiter;
-  const std::string body = anch::rest::readContent(input, limits.maxSize);
-  const std::string_view view = body;
+  Reader reader(input, limits.maxSize);
 
-  // First delimiter: at body start or after preamble
-  std::size_t pos = 0;
-  if(!view.starts_with(delimiter)) {
-    pos = view.find(inner);
-    if(pos == std::string_view::npos) {
-      throw std::invalid_argument("Missing multipart delimiter");
+  // First delimiter: at body start or after preamble (ignored)
+  reader.fill(delimiter.size());
+  if(!reader.view().starts_with(delimiter)) {
+    while(true) {
+      const std::size_t found = reader.view().find(inner);
+      if(found != std::string_view::npos) {
+	reader.consume(found + CRLF.size());
+	break;
+      }
+      if(reader.view().size() >= inner.size()) {
+	reader.consume(reader.view().size() - inner.size() + 1);
+      }
+      if(!reader.more()) {
+	throw std::invalid_argument("Missing multipart delimiter");
+      }
     }
-    pos += CRLF.size();
   }
   while(true) {
-    pos += delimiter.size();
-    if(view.substr(pos).starts_with("--")) {
+    reader.consume(delimiter.size());
+    reader.fill(2);
+    if(reader.view().starts_with("--")) {
       return; // close delimiter, epilogue is ignored
     }
-    while(pos < view.size() && OWS.find(view[pos]) != std::string_view::npos) {
-      ++pos; // transport padding
+    while(reader.fill(1) && OWS.find(reader.view().front()) != std::string_view::npos) {
+      reader.consume(1); // transport padding
     }
-    if(pos >= view.size()) {
+    if(!reader.fill(1)) {
       throw std::invalid_argument("Missing multipart close delimiter");
     }
-    if(!view.substr(pos).starts_with(CRLF)) {
+    reader.fill(CRLF.size());
+    if(!reader.view().starts_with(CRLF)) {
       throw std::invalid_argument("Invalid multipart delimiter line");
     }
-    pos += CRLF.size();
+    reader.consume(CRLF.size());
     if(form.size() == limits.maxParts) {
       throw anch::rest::ContentTooLarge("Multipart body has more than " + std::to_string(limits.maxParts) + " parts");
     }
 
-    // Headers: lines until an empty line (CRLF of delimiter line starts the search)
-    const std::size_t headersEnd = view.find("\r\n\r\n", pos - CRLF.size());
-    const std::size_t headersSize = (headersEnd == std::string_view::npos ? view.size() : headersEnd + CRLF.size()) - pos;
-    if(headersSize > limits.maxHeadersSize) {
-      throw anch::rest::ContentTooLarge("Multipart part headers are larger than " + std::to_string(limits.maxHeadersSize) + " bytes");
-    }
-    if(headersEnd == std::string_view::npos) {
-      throw std::invalid_argument("Unterminated multipart part headers");
-    }
-    const std::string_view headers = view.substr(pos, headersSize);
-    const std::size_t contentStart = headersEnd + 2 * CRLF.size();
-
-    // Content: until next delimiter
-    const std::size_t contentEnd = view.find(inner, contentStart);
-    if(contentEnd == std::string_view::npos) {
-      if(view.size() - contentStart > limits.maxPartSize) {
-	throw anch::rest::ContentTooLarge("Multipart part is larger than " + std::to_string(limits.maxPartSize) + " bytes");
+    // Headers: lines until an empty line
+    std::string headers;
+    reader.fill(CRLF.size());
+    if(reader.view().starts_with(CRLF)) {
+      reader.consume(CRLF.size());
+    } else {
+      while(true) {
+	const std::size_t found = reader.view().find("\r\n\r\n");
+	const std::size_t size = (found == std::string_view::npos) ? reader.view().size() : found + CRLF.size();
+	if(size > limits.maxHeadersSize) {
+	  throw anch::rest::ContentTooLarge("Multipart part headers are larger than " + std::to_string(limits.maxHeadersSize) + " bytes");
+	}
+	if(found != std::string_view::npos) {
+	  headers = reader.view().substr(0, size);
+	  reader.consume(found + 2 * CRLF.size());
+	  break;
+	}
+	if(!reader.more()) {
+	  throw std::invalid_argument("Unterminated multipart part headers");
+	}
       }
-      throw std::invalid_argument("Missing multipart close delimiter");
     }
-    if(contentEnd - contentStart > limits.maxPartSize) {
-      throw anch::rest::ContentTooLarge("Multipart part is larger than " + std::to_string(limits.maxPartSize) + " bytes");
+    PartHeaders parsed = parsePartHeaders(headers);
+
+    // Content: until next delimiter (the end of the available data can be the start of a delimiter)
+    PartContent content(limits);
+    while(true) {
+      const std::size_t found = reader.view().find(inner);
+      if(found != std::string_view::npos) {
+	content.write(reader.view().substr(0, found));
+	reader.consume(found + CRLF.size());
+	break;
+      }
+      if(reader.view().size() >= inner.size()) {
+	const std::size_t size = reader.view().size() - inner.size() + 1;
+	content.write(reader.view().substr(0, size));
+	reader.consume(size);
+      }
+      if(!reader.more()) {
+	content.write(reader.view()); // size limit before missing delimiter error
+	throw std::invalid_argument("Missing multipart close delimiter");
+      }
     }
-    form.add(readPart(headers, view.substr(contentStart, contentEnd - contentStart)));
-    pos = contentEnd + CRLF.size();
+    form.add(content.toPart(std::move(parsed)));
   }
 }

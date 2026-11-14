@@ -19,6 +19,7 @@
 */
 #pragma once
 
+#include <filesystem>
 #include <istream>
 #include <memory>
 #include <optional>
@@ -51,20 +52,31 @@ namespace anch::rest {
 
     /*! Maximum size of a part headers in bytes ( \c multipart/form-data ) */
     std::size_t maxHeadersSize;
+
+    /*! Maximum size of a part kept in memory ( \c multipart/form-data ): larger parts are written in temporary
+     * files, deleted with their last \ref Part copy */
+    std::size_t maxMemoryPartSize;
+
+    /*! Directory of temporary files (default: \c std::filesystem::temp_directory_path() ) */
+    std::filesystem::path temporaryDirectory;
   };
 
   /*!
    * Form part: a field ( \c text/plain by default) or a file (with a file name,
    * \c application/octet-stream by default).\n
    * \n
-   * Content is kept in memory. It is read with \ref content or \ref open : use \ref open to read
-   * file contents, it will not need the whole content in memory in later versions.
+   * Content is in memory or in a file ( \ref fromFile , \ref fromTemporaryFile , large parts read by
+   * \ref Multipart ). It is read with \ref open (stream) or with \ref content , which loads a file
+   * content in memory on first call: use \ref open for files. Copies of a part share its file.
    *
    * \author Vincent Lachenal
    *
    * \since 0.2
    */
   class Part {
+
+    /*! File content */
+    struct FileContent;
 
     // Attributes +
   private:
@@ -80,8 +92,14 @@ namespace anch::rest {
     /*! Other part headers */
     anch::rest::Headers _headers;
 
-    /*! Content */
-    std::string _content;
+    /*! Content (in memory, or loaded file content) */
+    mutable std::string _content;
+
+    /*! File content ( \c nullptr in memory) */
+    std::shared_ptr<const FileContent> _file;
+
+    /*! File content has been loaded in \c _content */
+    mutable bool _loaded;
     // Attributes -
 
     // Constructors +
@@ -109,16 +127,48 @@ namespace anch::rest {
      * \param content the content
      */
     Part(std::string_view name, std::string_view filename, anch::rest::MediaType mediaType, std::string content);
+
+    /*!
+     * Create part from a file: content is read from the file when it is used (the file is not deleted)
+     *
+     * \param name the part name
+     * \param path the file path
+     * \param mediaType the content media type
+     * \param filename the file name (default: \c path file name)
+     *
+     * \return the part
+     *
+     * \throw std::filesystem::filesystem_error when file size can not be read
+     */
+    static Part fromFile(std::string_view name, const std::filesystem::path& path, anch::rest::MediaType mediaType,
+			 std::optional<std::string_view> filename = std::nullopt);
+
+    /*!
+     * Create part from a temporary file: the file is deleted with the last part copy
+     *
+     * \param name the part name
+     * \param path the file path
+     * \param mediaType the content media type
+     * \param filename the file name (empty for a field)
+     *
+     * \return the part
+     *
+     * \throw std::filesystem::filesystem_error when file size can not be read
+     */
+    static Part fromTemporaryFile(std::string_view name, const std::filesystem::path& path, anch::rest::MediaType mediaType,
+				  std::optional<std::string_view> filename);
     // Constructors -
 
     // Methods +
   public:
     /*!
-     * Get content
+     * Get content: file content is loaded in memory on first call
      *
      * \return the content
+     *
+     * \throw std::runtime_error when file can not be read
      */
-    std::string_view content() const noexcept;
+    std::string_view content() const;
 
     /*!
      * Open content stream
@@ -142,13 +192,27 @@ namespace anch::rest {
     bool isFile() const noexcept;
 
     /*!
-     * Equality operator: name, file name, media type, headers and content are compared
+     * Check if content is in memory (not in a file)
+     *
+     * \return \c true when content is in memory
+     */
+    bool isInMemory() const noexcept;
+
+    /*!
+     * Get content file path
+     *
+     * \return the path, empty for content in memory
+     */
+    std::optional<std::filesystem::path> getPath() const;
+
+    /*!
+     * Equality operator: name, file name, media type, headers and content are compared (files are read)
      *
      * \param other the part to compare
      *
      * \return \c true when parts are equal
      */
-    bool operator==(const Part& other) const = default;
+    bool operator==(const Part& other) const;
     // Methods -
 
     // Accessors +
@@ -287,7 +351,7 @@ std::vector<std::string_view> tags = form.fields("tags");
      *
      * \return the content, empty when there is no part with this name
      */
-    std::optional<std::string_view> field(std::string_view name) const noexcept;
+    std::optional<std::string_view> field(std::string_view name) const;
 
     /*!
      * Get every part content with name

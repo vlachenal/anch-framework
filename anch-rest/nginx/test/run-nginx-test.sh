@@ -49,7 +49,7 @@ http {
   client_body_buffer_size 1k;
   server {
     listen 127.0.0.1:${port};
-    location /api/ { anch_rest_app ${app} "nginx configuration"; }
+    location /api/ { anch_rest_app ${app} "nginx configuration"; client_max_body_size 20m; }
     location /fail/ { anch_rest_app ${app} fail; }
     location /static/ { root ${work}/www; }
   }
@@ -100,7 +100,9 @@ check "CORS preflight refused" '403' "$(curl -s -o /dev/null -w '%{http_code}' -
 check "CORS GET" 'https://app.example.com' "$(curl -s -D /tmp/headers.$$ -o /dev/null -H 'Origin: https://app.example.com' "${url}/api/pets/1"; grep -i '^Access-Control-Allow-Origin:' /tmp/headers.$$ | tr -d '\r' | cut -d' ' -f2-)"
 head -c 300000 /dev/urandom > "${work}/photo.png"
 check "multipart upload (curl -F, body in temporary file)" '200 1 Rex photo.png image/png 300000' "$(curl -s -o /tmp/body.$$ -w '%{http_code}' -F 'description=Rex' -F "photo=@${work}/photo.png;type=image/png" "${url}/api/pets/1/photo"; printf ' %s' "$(cat /tmp/body.$$)")"
-head -c 1100000 /dev/urandom > "${work}/big.png"
+head -c 5000000 /dev/urandom > "${work}/large.png"
+check "multipart upload of 5 MB (part in a temporary file)" '200 1  large.png application/octet-stream 5000000' "$(curl -s -o /tmp/body.$$ -w '%{http_code}' -F "photo=@${work}/large.png;type=application/octet-stream" "${url}/api/pets/1/photo"; printf ' %s' "$(cat /tmp/body.$$)")"
+head -c 21000000 /dev/zero > "${work}/big.png"
 check "multipart over client_max_body_size" '413' "$(curl -s -o /dev/null -w '%{http_code}' -F "photo=@${work}/big.png" "${url}/api/pets/1/photo")"
 check "exception" '500' "$(curl -s -o /dev/null -w '%{http_code}' "${url}/api/crash")"
 check "application creation failure" '500' "$(curl -s -o /dev/null -w '%{http_code}' "${url}/fail/pets/1")"

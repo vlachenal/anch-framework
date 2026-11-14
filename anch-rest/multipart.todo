@@ -148,7 +148,26 @@ anch-oas
        * Tests : api-form-mapper, client-form-mapper, oas-gen-forms (code généré), oas-forms-server /
          oas-forms-client (forms.json généré, compilé et exécuté serveur / client).
        * Restent : encoding (contentType / headers des parties), enums et dates en champs de formulaire.
-[ ] 5. Contenu de partie en flux (gros fichiers), côté serveur puis client.
+[x] 5. Contenu de partie en flux (gros fichiers), côté serveur puis client. Fait le 2026-11-14 :
+       * Part : contenu en mémoire ou dans un fichier (Part::fromFile, jamais supprimé ;
+         Part::fromTemporaryFile, supprimé avec la dernière copie) ; open() lit le fichier en flux, size()
+         sans lecture, content() charge le fichier au premier appel ; isInMemory(), getPath() ;
+         operator== compare les contenus par blocs.
+       * Lecture : parseur incrémental (blocs de 64 KiB, tampon glissant qui garde la fin possible d'un
+         délimiteur) ; partie en mémoire jusqu'à FormLimits::maxMemoryPartSize (1 MiB) puis fichier
+         temporaire mkstemp dans FormLimits::temporaryDirectory (temp_directory_path() par défaut),
+         supprimé en cas d'erreur ; mêmes messages d'erreur et limites qu'avant.
+       * Écriture : serialize copie les parties depuis leur fichier ; contrat de codec optionnel
+         stream(value, contentType, side) -> BodyStream {input, size} ; Multipart::stream concatène
+         en-têtes et parties lus à la demande, taille calculée sans lecture ; Call::body<C>() l'utilise
+         (Content-Length) ; CurlTransport envoie en flux les corps avec Content-Length
+         (CURLOPT_READFUNCTION), les autres restent en mémoire. Les parties en fichier ne sont pas
+         parcourues pour vérifier le boundary (aléatoire, 32 caractères).
+       * Tests : part-file, multipart-stream (bascule en fichier, suppression, erreurs, délimiteurs à
+         cheval sur les blocs), multipart-stream-write, client-multipart-stream, curl-multipart-large
+         (8 MiB depuis le disque) ; nginx : upload de 5 Mo, client_max_body_size 20m.
+       * Restent : encoding (contentType / headers des parties), enums et dates en champs de formulaire
+         (anch-oas) ; réponses multipart/mixed et byteranges hors périmètre.
 
 Questions tranchées (2026-11-14)
 --------------------------------

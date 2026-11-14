@@ -20,6 +20,9 @@
 #pragma once
 
 #include <concepts>
+#include <cstdint>
+#include <memory>
+#include <optional>
 #include <istream>
 #include <ostream>
 #include <stdexcept>
@@ -58,6 +61,23 @@ namespace anch::rest {
   };
 
   /*!
+   * Body read as a stream: codecs which define
+   * <tt>stream(const T&, const anch::rest::MediaType&, anch::rest::Side) -> anch::rest::BodyStream</tt> let the
+   * client send large bodies without building them in memory (see \ref Multipart ).
+   *
+   * \author Vincent Lachenal
+   *
+   * \since 0.2
+   */
+  struct BodyStream {
+    /*! Body stream */
+    std::unique_ptr<std::istream> input;
+
+    /*! Body size ( \c Content-Length ), empty when unknown */
+    std::optional<std::uint64_t> size;
+  };
+
+  /*!
    * Read whole content
    *
    * \param input the input stream
@@ -88,7 +108,9 @@ namespace anch::rest {
    *   the one returned by \c contentType() ;
    * - \c deserialize(T&, std::istream&, anch::rest::Side) or
    *   \c deserialize(T&, std::istream&, const anch::rest::MediaType&, anch::rest::Side) : the media type is the
-   *   \c Content-Type of the body, with its parameters ( \c charset , \c boundary , ...).
+   *   \c Content-Type of the body, with its parameters ( \c charset , \c boundary , ...) ;
+   * - \c stream(const T&, const anch::rest::MediaType&, anch::rest::Side) -> \ref anch::rest::BodyStream "BodyStream" :
+   *   client sends the stream instead of serializing the value in memory.
    *
    * \tparam C the codec type
    * \tparam T the value type

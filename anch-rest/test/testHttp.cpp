@@ -27,6 +27,8 @@
 #include "rest/response.hpp"
 #include "rest/status.hpp"
 
+#include <filesystem>
+#include <fstream>
 #include <iterator>
 #include <sstream>
 #include <stdexcept>
@@ -380,6 +382,159 @@ testMultipartLimits() {
   url = urlSaved;
 }
 
+namespace {
+
+  /*! Temporary directory of tests: created empty */
+  std::filesystem::path
+  temporaryDirectory(const std::string& name) {
+    std::filesystem::path dir = std::filesystem::current_path() / name;
+    std::filesystem::remove_all(dir);
+    std::filesystem::create_directories(dir);
+    return dir;
+  }
+
+  std::size_t
+  fileCount(const std::filesystem::path& dir) {
+    return static_cast<std::size_t>(std::distance(std::filesystem::directory_iterator(dir), std::filesystem::directory_iterator()));
+  }
+
+  std::string
+  pattern(std::size_t size, std::size_t seed = 0) {
+    std::string res(size, '\0');
+    for(std::size_t i = 0 ; i < size ; ++i) {
+      res[i] = static_cast<char>((i * 31 + seed) % 251);
+    }
+    return res;
+  }
+
+  std::string
+  readAll(std::istream& input) {
+    return std::string(std::istreambuf_iterator<char>(input), std::istreambuf_iterator<char>());
+  }
+
+}
+
+void
+testPartFile() {
+  const std::filesystem::path dir = temporaryDirectory("part-file");
+  const std::filesystem::path path = dir / "photo.png";
+  {
+    std::ofstream out(path, std::ios::binary);
+    out << "PNG...";
+  }
+  {
+    anch::rest::Part part = anch::rest::Part::fromFile("photo", path, MediaType("image", "png"));
+    anch::ut::assertThat(!part.isInMemory() && part.getPath() == path && part.size() == 6 && part.getFilename() == "photo.png" && part.isFile(),
+			 "Unexpected file part");
+    std::unique_ptr<std::istream> input = part.open();
+    anch::ut::assertThat(readAll(*input) == "PNG..." && part.content() == "PNG...", "Unexpected file content");
+    anch::rest::Part memory("photo", "photo.png", MediaType("image", "png"), "PNG...");
+    anch::rest::Part copy = anch::rest::Part::fromFile("photo", path, MediaType("image", "png"));
+    anch::ut::assertThat(part == memory && memory == copy && part == copy, "File and memory parts have to be equal");
+    anch::ut::assertThat(!(part == anch::rest::Part("photo", "photo.png", MediaType("image", "png"), "PNG..!")), "Different contents");
+    anch::ut::assertThat(anch::rest::Part::fromFile("photo", path, MediaType("image", "png"), "other.png").getFilename() == "other.png",
+			 "File name has to be kept");
+  }
+  anch::ut::assertThat(std::filesystem::exists(path), "User file must not be deleted");
+  bool missing = false;
+  try {
+    anch::rest::Part::fromFile("photo", dir / "missing", MediaType("image", "png"));
+  } catch(const std::filesystem::filesystem_error&) {
+    missing = true;
+  }
+  anch::ut::assertThat(missing, "Missing file has to be refused");
+  // Temporary file: deleted with its last copy
+  {
+    anch::rest::Part copy;
+    {
+      anch::rest::Part part = anch::rest::Part::fromTemporaryFile("field", path, MediaType("text", "plain"), std::nullopt);
+      anch::ut::assertThat(!part.isFile() && part.getMediaType().essence() == "text/plain", "Temporary field without file name");
+      copy = part;
+    }
+    anch::ut::assertThat(std::filesystem::exists(path) && copy.size() == 6, "Temporary file has to be kept while a copy exists");
+  }
+  anch::ut::assertThat(!std::filesystem::exists(path), "Temporary file has to be deleted with its last copy");
+  std::filesystem::remove_all(dir);
+}
+
+void
+testMultipartStream() {
+  anch::rest::FormLimits& limits = anch::rest::Multipart::limits(anch::rest::Side::SERVER);
+  const anch::rest::FormLimits saved = limits;
+  const std::filesystem::path dir = temporaryDirectory("multipart-stream");
+  limits.temporaryDirectory = dir;
+  limits.maxMemoryPartSize = 1000;
+  const std::string big = pattern(300000);
+  {
+    // Large part in a temporary file, small part in memory
+    const std::string body = "--XyZ\r\nContent-Disposition: form-data; name=\"photo\"; filename=\"rex.png\"\r\n\r\n" + big
+      + "\r\n--XyZ\r\nContent-Disposition: form-data; name=\"small\"\r\n\r\nvalue\r\n"
+      + "--XyZ\r\nContent-Disposition: form-data; name=\"text\"\r\nContent-Type: text/csv\r\n\r\n" + std::string(2000, 'x') + "\r\n--XyZ--";
+    Form form = readMultipart(body);
+    const anch::rest::Part* photo = form.part("photo");
+    anch::ut::assertThat(photo != nullptr && !photo->isInMemory() && photo->size() == big.size() && photo->getFilename() == "rex.png"
+			 && photo->getMediaType().essence() == "application/octet-stream", "Large part has to be in a file");
+    std::unique_ptr<std::istream> input = photo->open();
+    anch::ut::assertThat(readAll(*input) == big, "Large part content has to be kept");
+    anch::ut::assertThat(form.part("small")->isInMemory() && form.field("small") == "value", "Small part has to be in memory");
+    const anch::rest::Part* text = form.part("text");
+    anch::ut::assertThat(!text->isInMemory() && !text->isFile() && text->getMediaType().essence() == "text/csv" && form.field("text") == std::string(2000, 'x'),
+			 "Large field has to be in a file");
+    anch::ut::assertThat(fileCount(dir) == 2, "2 temporary files expected, found {}", fileCount(dir));
+  }
+  anch::ut::assertThat(fileCount(dir) == 0, "Temporary files have to be deleted with the form");
+  // Malformed body and limit after files are created: no file left
+  multipartError<std::invalid_argument>("--XyZ\r\nContent-Disposition: form-data; name=\"a\"\r\n\r\n" + big + "\r\n--XyZ\r\n"
+					"Content-Disposition: form-data; name=\"b\"\r\n\r\n" + big);
+  limits.maxPartSize = 200000;
+  std::string error = multipartError<anch::rest::ContentTooLarge>("--XyZ\r\nContent-Disposition: form-data; name=\"a\"\r\n\r\n" + big + "\r\n--XyZ--");
+  anch::ut::assertThat(error == "Multipart part is larger than 200000 bytes", "Unexpected error '{}'", error);
+  anch::ut::assertThat(fileCount(dir) == 0, "Temporary files have to be deleted on error, found {}", fileCount(dir));
+  limits.maxPartSize = saved.maxPartSize;
+  // Delimiters across read blocks (64 KiB): every offset around the block end
+  for(std::size_t size = 65536 - 140 ; size < 65536 - 90 ; ++size) {
+    const std::string content = pattern(size, size);
+    const std::string body = "--XyZ\r\nContent-Disposition: form-data; name=\"a\"\r\n\r\n" + content
+      + "\r\n--XyZ\r\nContent-Disposition: form-data; name=\"b\"\r\n\r\nB\r\n--XyZ--";
+    Form form = readMultipart(body);
+    anch::ut::assertThat(form.size() == 2 && form.part("a")->size() == size && form.field("a") == content && form.field("b") == "B",
+			 "Unexpected parts for content of {} bytes", size);
+  }
+  // Content with partial delimiters
+  const std::string tricky = "\r\n--Xy\r\n--X\r\n-" + std::string(70000, '-') + "\r\n--XyZ-";
+  Form form = readMultipart("--XyZ\r\nContent-Disposition: form-data; name=\"a\"\r\n\r\n" + tricky.substr(0, tricky.size() - 8) + "\r\n--XyZ--");
+  anch::ut::assertThat(form.field("a") == tricky.substr(0, tricky.size() - 8), "Partial delimiters have to be kept in content");
+  limits = saved;
+  std::filesystem::remove_all(dir);
+}
+
+void
+testMultipartStreamWrite() {
+  const std::filesystem::path dir = temporaryDirectory("multipart-stream-write");
+  const std::filesystem::path path = dir / "big.bin";
+  const std::string big = pattern(500000);
+  {
+    std::ofstream out(path, std::ios::binary);
+    out << big;
+  }
+  Form form;
+  form.add("description", "Rex").add(anch::rest::Part::fromFile("photo", path, MediaType("application", "octet-stream")))
+    .addFile("empty", "empty.txt", MediaType("text", "plain"), "");
+  const MediaType type = anch::rest::Multipart::contentType(form);
+  std::ostringstream out;
+  anch::rest::Multipart::serialize(form, out, type, anch::rest::Side::CLIENT);
+  anch::rest::BodyStream stream = anch::rest::Multipart::stream(form, type, anch::rest::Side::CLIENT);
+  const std::string streamed = readAll(*stream.input);
+  anch::ut::assertThat(streamed == out.str() && stream.size == streamed.size(), "Stream has to be the serialized body ({} / {} bytes, size {})",
+		       streamed.size(), out.str().size(), stream.size.value_or(0));
+  std::istringstream input(streamed);
+  Form back;
+  anch::rest::Multipart::deserialize(back, input, type, anch::rest::Side::SERVER);
+  anch::ut::assertThat(back.field("description") == "Rex" && back.part("photo")->size() == big.size() && *back.part("photo") == *form.part("photo")
+		       && back.part("empty")->size() == 0, "Unexpected form read from stream");
+  std::filesystem::remove_all(dir);
+}
+
 void
 anch::ut::setup(anch::ut::UnitTests& tests) {
   tests
@@ -396,5 +551,8 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("multipart", testMultipart)
     .add("multipart-malformed", testMultipartMalformed)
     .add("multipart-limits", testMultipartLimits)
+    .add("part-file", testPartFile)
+    .add("multipart-stream", testMultipartStream)
+    .add("multipart-stream-write", testMultipartStreamWrite)
     ;
 }

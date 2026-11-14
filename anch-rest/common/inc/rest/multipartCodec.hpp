@@ -39,6 +39,10 @@ namespace anch::rest {
    * written for files and for fields which are not \c text/plain , other part headers are written as
    * they are (CR and LF are refused).\n
    * \n
+   * Parts larger than \ref FormLimits::maxMemoryPartSize are read in temporary files (deleted with their
+   * last \ref Part copy) and file parts are written from their file: large bodies do not need memory.
+   * The client sends bodies with \ref stream .\n
+   * \n
    * Reading: \c boundary parameter is required, delimiters end with CRLF, preamble and epilogue are
    * ignored, close delimiter is required. Each part needs a <tt>Content-Disposition: form-data</tt>
    * header with a \c name ; \c filename* (RFC 5987, UTF-8) has priority over \c filename . Part
@@ -74,7 +78,8 @@ client.post("/pets/{id}/photo", 42).body<anch::rest::Multipart>(form).send();
 
     /*!
      * Get limits of a side, to change before handling requests. Default: 16 MiB body, 1000 parts,
-     * 16 MiB part, 16 KiB part headers.
+     * 16 MiB part, 16 KiB part headers, 1 MiB part in memory (larger parts are written in temporary
+     * files).
      *
      * \param side the side
      *
@@ -127,6 +132,22 @@ client.post("/pets/{id}/photo", 42).body<anch::rest::Multipart>(form).send();
 			  anch::rest::Side side);
 
     /*!
+     * Get form body as a stream: parts are read when the stream is read (files are not loaded in
+     * memory), body size is known
+     *
+     * \param form the form (copied in the stream, parts files are shared)
+     * \param contentType the body media type (with its boundary)
+     * \param side the side which writes form
+     *
+     * \return the body stream and its size
+     *
+     * \throw std::invalid_argument when boundary is missing or invalid, when it appears in a part in
+     *        memory or when a part header has CR or LF
+     */
+    static anch::rest::BodyStream stream(const anch::rest::Form& form, const anch::rest::MediaType& contentType,
+					 anch::rest::Side side);
+
+    /*!
      * Read form
      *
      * \param form the form to fill
@@ -152,6 +173,20 @@ client.post("/pets/{id}/photo", 42).body<anch::rest::Multipart>(form).send();
      */
     template<anch::rest::FormMapped T>
     static void serialize(const T& value, std::ostream& out, const anch::rest::MediaType& contentType, anch::rest::Side side);
+
+    /*!
+     * Get body of a value mapped with its \ref FormMapper as a stream
+     *
+     * \tparam T the value type
+     *
+     * \param value the value
+     * \param contentType the body media type (with its boundary)
+     * \param side the side which writes value
+     *
+     * \return the body stream and its size
+     */
+    template<anch::rest::FormMapped T>
+    static anch::rest::BodyStream stream(const T& value, const anch::rest::MediaType& contentType, anch::rest::Side side);
 
     /*!
      * Read value mapped with its \ref FormMapper

@@ -23,6 +23,8 @@
 #include "rest/multipartCodec.hpp"
 #include "rest/jsonCodec.hpp"
 
+#include <filesystem>
+#include <fstream>
 #include <iterator>
 #include <memory>
 #include <sstream>
@@ -270,6 +272,26 @@ testMultipart() {
 }
 
 void
+testMultipartStream() {
+  // File parts are streamed by the transport with Content-Length
+  const std::filesystem::path path = std::filesystem::current_path() / "client-stream.bin";
+  {
+    std::ofstream out(path, std::ios::binary);
+    out << std::string(100000, 'z');
+  }
+  Fixture fixture;
+  anch::rest::Form form;
+  form.add("description", "Rex").add(anch::rest::Part::fromFile("photo", path, anch::rest::MediaType("image", "png")));
+  fixture.client.post("/photo").body<anch::rest::Multipart>(form).send();
+  std::filesystem::remove(path);
+  anch::ut::assertThat(fixture.transport->headers.get("Content-Length") == std::to_string(fixture.transport->body.size()),
+		       "Content-Length {} expected, found '{}'", fixture.transport->body.size(),
+		       fixture.transport->headers.get("Content-Length").value_or(""));
+  anch::ut::assertThat(fixture.transport->body.find(std::string(100000, 'z')) != std::string::npos
+		       && fixture.transport->body.find("filename=\"client-stream.bin\"") != std::string::npos, "File has to be sent");
+}
+
+void
 testFormMapper() {
   Fixture fixture;
   UploadPhoto upload{"Rex", std::nullopt, {"a"}, anch::rest::Part("x", "rex.png", anch::rest::MediaType("image", "png"), "PNG"), std::nullopt};
@@ -392,6 +414,7 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("form", testForm)
     .add("multipart", testMultipart)
     .add("form-mapper", testFormMapper)
+    .add("multipart-stream", testMultipartStream)
     .add("constraints", testConstraints)
     .add("http-error", testHttpError)
     .add("filters", testFilters)

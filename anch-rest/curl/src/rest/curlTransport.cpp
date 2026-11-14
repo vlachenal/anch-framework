@@ -19,8 +19,10 @@
 */
 #include "rest/curlTransport.hpp"
 
+#include <charconv>
 #include <iterator>
 #include <memory>
+#include <optional>
 
 #include <curl/curl.h>
 
@@ -49,6 +51,35 @@ namespace {
     std::string body;
     Headers headers;
   };
+
+  /*! Read request body stream (errors abort the transfer) */
+  std::size_t
+  readBody(char* buffer, std::size_t size, std::size_t count, void* userdata) noexcept {
+    std::istream* input = static_cast<std::istream*>(userdata);
+    input->read(buffer, static_cast<std::streamsize>(size * count));
+    if(input->bad()) {
+      return CURL_READFUNC_ABORT;
+    }
+    return static_cast<std::size_t>(input->gcount());
+  }
+
+  /*! Check if header name is Content-Length (case insensitive) */
+  bool
+  isContentLength(std::string_view name) noexcept {
+    const anch::rest::CaseInsensitiveLess less;
+    return !less(name, anch::rest::header::CONTENT_LENGTH) && !less(anch::rest::header::CONTENT_LENGTH, name);
+  }
+
+  /*! Request body size from Content-Length header */
+  std::optional<curl_off_t>
+  contentLength(const anch::rest::Request& request) {
+    std::optional<std::string_view> value = request.getHeaders().get(anch::rest::header::CONTENT_LENGTH);
+    curl_off_t length = 0;
+    if(!value || std::from_chars(value->data(), value->data() + value->size(), length).ec != std::errc() || length < 0) {
+      return std::nullopt;
+    }
+    return length;
+  }
 
   std::size_t
   writeBody(char* data, std::size_t size, std::size_t count, void* userdata) {
@@ -145,8 +176,15 @@ CurlTransport::send(const std::string& url, const Request& request) {
   // Configuration -
 
   // Method and body +
+  // Body with Content-Length is streamed (large bodies), other bodies are read in memory
   std::string body;
-  if(request.hasBody()) {
+  const std::optional<curl_off_t> length = request.hasBody() ? contentLength(request) : std::nullopt;
+  if(length) {
+    check(curl_easy_setopt(curl, CURLOPT_POST, 1L), errors);
+    check(curl_easy_setopt(curl, CURLOPT_READFUNCTION, readBody), errors);
+    check(curl_easy_setopt(curl, CURLOPT_READDATA, &request.getBody()), errors);
+    check(curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE_LARGE, *length), errors);
+  } else if(request.hasBody()) {
     std::istream& input = request.getBody();
     body.assign(std::istreambuf_iterator<char>(input), std::istreambuf_iterator<char>());
     check(curl_easy_setopt(curl, CURLOPT_POSTFIELDS, body.data()), errors);
@@ -163,6 +201,9 @@ CurlTransport::send(const std::string& url, const Request& request) {
   // Headers +
   HeaderList headers;
   for(const auto& [name, values] : request.getHeaders()) {
+    if(length && isContentLength(name)) {
+      continue; // set by curl from body size
+    }
     for(const std::string& value : values) {
       headers.append(name + ": " + value);
     }

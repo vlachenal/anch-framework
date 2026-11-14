@@ -26,6 +26,8 @@
 #include "rest/jsonCodec.hpp"
 
 #include <chrono>
+#include <filesystem>
+#include <fstream>
 #include <memory>
 #include <optional>
 #include <string>
@@ -110,6 +112,16 @@ namespace {
       }
       return res;
     }).consumes<anch::rest::Multipart>().produces<anch::rest::Multipart>();
+    api->post("/checksum", [](Body<anch::rest::Form> form) {
+      const anch::rest::Part* part = form->part("file");
+      std::unique_ptr<std::istream> input = part->open();
+      uint64_t sum = 0;
+      char c = 0;
+      while(input->get(c)) {
+	sum = sum * 31 + static_cast<unsigned char>(c);
+      }
+      return std::to_string(part->size()) + ' ' + std::to_string(sum) + ' ' + (part->isInMemory() ? "memory" : "file");
+    }).consumes<anch::rest::Multipart>().produces<anch::rest::Text>();
     api->del("/pets/{id}", [](uint64_t id) {
       if(id != 1) {
 	throw HttpException(Status::NOT_FOUND, "no pet " + std::to_string(id));
@@ -204,6 +216,32 @@ testMultipart() {
 }
 
 void
+testMultipartLarge() {
+  // 8 MiB file sent from disk (streamed by the client) and read in a temporary file by the server
+  const std::filesystem::path path = std::filesystem::current_path() / "curl-large.bin";
+  uint64_t sum = 0;
+  {
+    std::ofstream out(path, std::ios::binary);
+    for(std::size_t i = 0 ; i < 8 * 1024 * 1024 ; ++i) {
+      const char c = static_cast<char>((i * 7 + i / 4096) % 256);
+      sum = sum * 31 + static_cast<unsigned char>(c);
+      out.put(c);
+    }
+  }
+  anch::rest::FormLimits& limits = anch::rest::Multipart::limits(anch::rest::Side::SERVER);
+  const anch::rest::FormLimits saved = limits;
+  limits.maxSize = 32 * 1024 * 1024;
+  limits.maxPartSize = 32 * 1024 * 1024;
+  Client client = makeClient();
+  anch::rest::Form form;
+  form.add(anch::rest::Part::fromFile("file", path, anch::rest::MediaType("application", "octet-stream")));
+  std::string res = client.post("/checksum").body<anch::rest::Multipart>(form).accept<Text>().as<std::string>();
+  limits = saved;
+  std::filesystem::remove(path);
+  anch::ut::assertThat(res == std::to_string(8 * 1024 * 1024) + ' ' + std::to_string(sum) + " file", "Unexpected response '{}'", res);
+}
+
+void
 testHttpError() {
   Client client = makeClient();
   try {
@@ -280,6 +318,7 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("parameters", testParameters)
     .add("post-json", testPostJson)
     .add("multipart", testMultipart)
+    .add("multipart-large", testMultipartLarge)
     .add("constraints", testConstraints)
     .add("http-error", testHttpError)
     .add("head", testHead)

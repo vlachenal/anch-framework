@@ -77,9 +77,20 @@ namespace anch::rest {
   Call<Codecs...>::body(const T& value) & {
     static_assert(anch::rest::Serializer<C, T>, "Codec can not serialize body");
     const anch::rest::MediaType contentType = anch::rest::contentTypeOf<C>(value);
-    std::ostringstream out;
-    anch::rest::serializeBody<C>(value, out, contentType, anch::rest::Side::CLIENT);
-    return body(out.str(), contentType.toString());
+    if constexpr (requires { { C::stream(value, contentType, anch::rest::Side::CLIENT) } -> std::same_as<anch::rest::BodyStream>; }) {
+      // Body is read by the transport: large bodies are not built in memory
+      anch::rest::BodyStream stream = C::stream(value, contentType, anch::rest::Side::CLIENT);
+      _request.getHeaders().set(anch::rest::header::CONTENT_TYPE, contentType.toString());
+      if(stream.size) {
+	_request.getHeaders().set(anch::rest::header::CONTENT_LENGTH, std::to_string(*stream.size));
+      }
+      _request.setBody(std::move(stream.input));
+      return *this;
+    } else {
+      std::ostringstream out;
+      anch::rest::serializeBody<C>(value, out, contentType, anch::rest::Side::CLIENT);
+      return body(out.str(), contentType.toString());
+    }
   }
 
   template<typename... Codecs>

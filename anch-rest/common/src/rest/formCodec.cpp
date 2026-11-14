@@ -74,8 +74,8 @@ FormUrlEncoded::encode(std::string_view value) {
 
 anch::rest::FormLimits&
 FormUrlEncoded::limits(Side side) {
-  static anch::rest::FormLimits server{2 * 1024 * 1024, 1000, 2 * 1024 * 1024, 0};
-  static anch::rest::FormLimits client{2 * 1024 * 1024, 1000, 2 * 1024 * 1024, 0};
+  static anch::rest::FormLimits server{2 * 1024 * 1024, 1000, 2 * 1024 * 1024, 0, 2 * 1024 * 1024, {}};
+  static anch::rest::FormLimits client{2 * 1024 * 1024, 1000, 2 * 1024 * 1024, 0, 2 * 1024 * 1024, {}};
   return (side == Side::SERVER) ? server : client;
 }
 

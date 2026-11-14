@@ -38,6 +38,14 @@ namespace anch::rest {
   }
 
   template<anch::rest::FormMapped T>
+  anch::rest::BodyStream
+  Multipart::stream(const T& value, const anch::rest::MediaType& contentType, anch::rest::Side side) {
+    anch::rest::Form form;
+    anch::rest::FormMapper<T>::toForm(value, form, side);
+    return Multipart::stream(form, contentType, side);
+  }
+
+  template<anch::rest::FormMapped T>
   void
   Multipart::deserialize(T& value, std::istream& input, const anch::rest::MediaType& contentType, anch::rest::Side side) {
     anch::rest::Form form;
