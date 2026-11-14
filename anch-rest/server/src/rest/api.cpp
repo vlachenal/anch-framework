@@ -27,6 +27,7 @@
 #include "rest/httpException.hpp"
 
 using anch::rest::Api;
+using anch::rest::CorsOptions;
 using anch::rest::Filter;
 using anch::rest::HttpException;
 using anch::rest::Method;
@@ -47,6 +48,16 @@ struct Api::Node {
   std::map<Method, std::unique_ptr<Route>> routes;
 };
 // Routing tree node -
+
+// Match +
+struct Api::Match {
+  /*! Matching node */
+  Node* node;
+
+  /*! Path parameter values, in pattern order */
+  std::vector<std::string> parameters;
+};
+// Match -
 
 namespace {
 
@@ -70,14 +81,79 @@ namespace {
     return segment.size() >= 2 && segment.front() == '{' && segment.back() == '}';
   }
 
+  /*! Join methods with ", " */
+  std::string
+  formatMethods(const std::set<Method>& methods) {
+    std::string res;
+    for(Method method : methods) {
+      if(!res.empty()) {
+	res += ", ";
+      }
+      res += anch::rest::toString(method);
+    }
+    return res;
+  }
+
+  /*! Join values with ", " */
+  std::string
+  join(const std::vector<std::string>& values) {
+    std::string res;
+    for(const std::string& value : values) {
+      if(!res.empty()) {
+	res += ", ";
+      }
+      res += value;
+    }
+    return res;
+  }
+
+  /*! Compare strings ignoring case */
+  bool
+  equalsIgnoreCase(std::string_view left, std::string_view right) noexcept {
+    const anch::rest::CaseInsensitiveLess less;
+    return !less(left, right) && !less(right, left);
+  }
+
+  /*! Check if list contains "*" */
+  bool
+  hasWildcard(const std::vector<std::string>& values) noexcept {
+    return std::find(values.begin(), values.end(), "*") != values.end();
+  }
+
+  /*! Check if origin is allowed */
+  bool
+  isAllowedOrigin(const CorsOptions& options, std::string_view origin) noexcept {
+    return hasWildcard(options.origins)
+      || std::find(options.origins.begin(), options.origins.end(), origin) != options.origins.end();
+  }
+
+  /*! Split comma separated header names, whitespaces are trimmed and empty names are ignored */
+  std::vector<std::string_view>
+  splitNames(std::string_view value) {
+    std::vector<std::string_view> names;
+    while(!value.empty()) {
+      const std::size_t comma = value.find(',');
+      std::string_view name = value.substr(0, comma);
+      value = (comma == std::string_view::npos) ? std::string_view() : value.substr(comma + 1);
+      const std::size_t first = name.find_first_not_of(" \t");
+      if(first == std::string_view::npos) {
+	continue;
+      }
+      name = name.substr(first, name.find_last_not_of(" \t") - first + 1);
+      names.push_back(name);
+    }
+    return names;
+  }
+
 }
 
 // Constructors +
-Api::Api(): _root(std::make_unique<Node>()), _filters() {
+Api::Api(): _root(std::make_unique<Node>()), _filters(), _cors() {
   // Nothing to do
 }
 
-Api::Api(Api&& other) noexcept: _root(std::move(other._root)), _filters(std::move(other._filters)) {
+Api::Api(Api&& other) noexcept: _root(std::move(other._root)), _filters(std::move(other._filters)),
+				 _cors(std::move(other._cors)) {
   // Nothing to do
 }
 // Constructors -
@@ -93,6 +169,7 @@ Api&
 Api::operator=(Api&& other) noexcept {
   _root = std::move(other._root);
   _filters = std::move(other._filters);
+  _cors = std::move(other._cors);
   return *this;
 }
 
@@ -155,6 +232,18 @@ Api::filter(Filter filter) {
   return *this;
 }
 
+Api&
+Api::cors(CorsOptions options) {
+  if(options.origins.empty()) {
+    throw std::invalid_argument("CORS: at least one origin is required");
+  }
+  if(options.credentials && hasWildcard(options.origins)) {
+    throw std::invalid_argument("CORS: credentials can not be allowed for every origin ('*')");
+  }
+  _cors = std::move(options);
+  return *this;
+}
+
 void
 Api::validate() const {
   std::string errors;
@@ -183,20 +272,113 @@ Api::validate() const {
 Response
 Api::handle(Request& request) noexcept {
   try {
-    return next(request, 0);
-  } catch(const HttpException& e) {
-    try {
-      Response response(e.getStatus());
-      if(*e.what() != '\0') {
-	response.contentType(anch::rest::Text::mediaType()).body(e.what());
-      }
-      return response;
-    } catch(...) {
-      return Response(e.getStatus());
+    if(_cors && request.getMethod() == Method::OPTIONS
+       && request.getHeaders().has(anch::rest::header::ORIGIN)
+       && request.getHeaders().has(anch::rest::header::ACCESS_CONTROL_REQUEST_METHOD)) {
+      return preflight(request);
     }
+    Response response = next(request, 0);
+    addCorsHeaders(request, response);
+    return response;
+  } catch(const HttpException& e) {
+    return error(request, e.getStatus(), e.what());
   } catch(...) {
-    return Response(Status::INTERNAL_SERVER_ERROR);
+    return error(request, Status::INTERNAL_SERVER_ERROR, "");
   }
+}
+
+Response
+Api::error(const Request& request, Status status, const char* message) const noexcept {
+  try {
+    Response response(status);
+    if(*message != '\0') {
+      response.contentType(anch::rest::Text::mediaType()).body(message);
+    }
+    addCorsHeaders(request, response);
+    return response;
+  } catch(...) {
+    return Response(status);
+  }
+}
+
+void
+Api::addCorsHeaders(const Request& request, Response& response) const {
+  if(!_cors) {
+    return;
+  }
+  if(!hasWildcard(_cors->origins)) {
+    // Response depends on origin
+    response.getHeaders().add(anch::rest::header::VARY, anch::rest::header::ORIGIN);
+  }
+  std::optional<std::string_view> origin = request.getHeaders().get(anch::rest::header::ORIGIN);
+  if(!origin || !isAllowedOrigin(*_cors, *origin)) {
+    return;
+  }
+  response.header(anch::rest::header::ACCESS_CONTROL_ALLOW_ORIGIN, hasWildcard(_cors->origins) ? std::string_view("*") : *origin);
+  if(_cors->credentials) {
+    response.header(anch::rest::header::ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
+  }
+  if(!_cors->exposedHeaders.empty()) {
+    response.header(anch::rest::header::ACCESS_CONTROL_EXPOSE_HEADERS, join(_cors->exposedHeaders));
+  }
+}
+
+Response
+Api::preflight(const Request& request) const {
+  Response response(Status::NO_CONTENT);
+  response.header(anch::rest::header::VARY, "Origin, Access-Control-Request-Method, Access-Control-Request-Headers");
+  const Response forbidden = Response(Status::FORBIDDEN).header(anch::rest::header::VARY, "Origin, Access-Control-Request-Method, Access-Control-Request-Headers");
+
+  // Origin
+  const std::string_view origin = *request.getHeaders().get(anch::rest::header::ORIGIN);
+  if(!isAllowedOrigin(*_cors, origin)) {
+    return forbidden;
+  }
+
+  // Method
+  std::vector<Match> matches = match(request);
+  if(matches.empty()) {
+    throw HttpException(Status::NOT_FOUND);
+  }
+  const std::set<Method> allowed = allowedMethods(matches);
+  std::optional<Method> method = anch::rest::parseMethod(*request.getHeaders().get(anch::rest::header::ACCESS_CONTROL_REQUEST_METHOD));
+  if(!method || !allowed.contains(*method)) {
+    return forbidden;
+  }
+
+  // Headers
+  const std::string requested = request.getHeaders().format(anch::rest::header::ACCESS_CONTROL_REQUEST_HEADERS).value_or("");
+  const std::vector<std::string_view> names = splitNames(requested);
+  if(!hasWildcard(_cors->headers)) {
+    for(std::string_view name : names) {
+      auto found = std::find_if(_cors->headers.begin(), _cors->headers.end(), [name](const std::string& header) {
+	return equalsIgnoreCase(header, name);
+      });
+      if(found == _cors->headers.end()) {
+	return forbidden;
+      }
+    }
+  }
+
+  response.header(anch::rest::header::ACCESS_CONTROL_ALLOW_ORIGIN, hasWildcard(_cors->origins) ? std::string_view("*") : origin);
+  response.header(anch::rest::header::ACCESS_CONTROL_ALLOW_METHODS, formatMethods(allowed));
+  if(!names.empty()) {
+    std::string headers;
+    for(std::string_view name : names) {
+      if(!headers.empty()) {
+	headers += ", ";
+      }
+      headers += name;
+    }
+    response.header(anch::rest::header::ACCESS_CONTROL_ALLOW_HEADERS, headers);
+  }
+  if(_cors->credentials) {
+    response.header(anch::rest::header::ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
+  }
+  if(_cors->maxAge) {
+    response.header(anch::rest::header::ACCESS_CONTROL_MAX_AGE, std::to_string(_cors->maxAge->count()));
+  }
+  return response;
 }
 
 Response
@@ -209,8 +391,8 @@ Api::next(Request& request, std::size_t index) {
   });
 }
 
-Response
-Api::dispatch(Request& request) {
+std::vector<Api::Match>
+Api::match(const Request& request) const {
   // Decode path segments
   std::vector<std::string> segments;
   for(std::string_view segment : splitPath(request.getPath())) {
@@ -222,10 +404,6 @@ Api::dispatch(Request& request) {
   }
 
   // Find matching nodes: literal segments first, then parameters (depth first)
-  struct Match {
-    Node* node;
-    std::vector<std::string> parameters;
-  };
   std::vector<Match> matches;
   std::vector<std::string> parameters;
   std::function<void(Node*, std::size_t)> explore = [&](Node* node, std::size_t depth) {
@@ -246,12 +424,35 @@ Api::dispatch(Request& request) {
     }
   };
   explore(_root.get(), 0);
+  return matches;
+}
+
+std::set<Method>
+Api::allowedMethods(const std::vector<Match>& matches) {
+  std::set<Method> allowed{Method::OPTIONS};
+  for(const Match& match : matches) {
+    for(const auto& [method, route] : match.node->routes) {
+      allowed.insert(method);
+      if(method == Method::GET) {
+	allowed.insert(Method::HEAD);
+      }
+    }
+  }
+  return allowed;
+}
+
+Response
+Api::dispatch(Request& request) {
+  const Method method = request.getMethod();
+  if(method == Method::OPTIONS && request.getPath() == "*") {
+    return Response(Status::NO_CONTENT);
+  }
+  std::vector<Match> matches = match(request);
   if(matches.empty()) {
     throw HttpException(Status::NOT_FOUND);
   }
 
   // Select route for method (HEAD falls back to GET)
-  const Method method = request.getMethod();
   for(const bool fallback : {false, true}) {
     if(fallback && method != Method::HEAD) {
       break;
@@ -276,22 +477,10 @@ Api::dispatch(Request& request) {
     }
   }
 
-  // Path exists for other methods
-  std::set<Method> allowed;
-  for(const Match& match : matches) {
-    for(const auto& [allowedMethod, route] : match.node->routes) {
-      allowed.insert(allowedMethod);
-      if(allowedMethod == Method::GET) {
-	allowed.insert(Method::HEAD);
-      }
-    }
-  }
-  std::string allow;
-  for(Method allowedMethod : allowed) {
-    if(!allow.empty()) {
-      allow += ", ";
-    }
-    allow += anch::rest::toString(allowedMethod);
+  // Path exists for other methods (OPTIONS without endpoint is answered with Allow)
+  const std::string allow = formatMethods(allowedMethods(matches));
+  if(method == Method::OPTIONS) {
+    return Response(Status::NO_CONTENT).header(anch::rest::header::ALLOW, allow);
   }
   return Response(Status::METHOD_NOT_ALLOWED).header(anch::rest::header::ALLOW, allow);
 }

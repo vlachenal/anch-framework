@@ -169,6 +169,22 @@ namespace anch::rest::header {
 
   /*! \c Accept header */
   inline constexpr std::string_view ACCEPT = "Accept";
+  /*! \c Access-Control-Allow-Credentials header (CORS) */
+  inline constexpr std::string_view ACCESS_CONTROL_ALLOW_CREDENTIALS = "Access-Control-Allow-Credentials";
+  /*! \c Access-Control-Allow-Headers header (CORS) */
+  inline constexpr std::string_view ACCESS_CONTROL_ALLOW_HEADERS = "Access-Control-Allow-Headers";
+  /*! \c Access-Control-Allow-Methods header (CORS) */
+  inline constexpr std::string_view ACCESS_CONTROL_ALLOW_METHODS = "Access-Control-Allow-Methods";
+  /*! \c Access-Control-Allow-Origin header (CORS) */
+  inline constexpr std::string_view ACCESS_CONTROL_ALLOW_ORIGIN = "Access-Control-Allow-Origin";
+  /*! \c Access-Control-Expose-Headers header (CORS) */
+  inline constexpr std::string_view ACCESS_CONTROL_EXPOSE_HEADERS = "Access-Control-Expose-Headers";
+  /*! \c Access-Control-Max-Age header (CORS) */
+  inline constexpr std::string_view ACCESS_CONTROL_MAX_AGE = "Access-Control-Max-Age";
+  /*! \c Access-Control-Request-Headers header (CORS) */
+  inline constexpr std::string_view ACCESS_CONTROL_REQUEST_HEADERS = "Access-Control-Request-Headers";
+  /*! \c Access-Control-Request-Method header (CORS) */
+  inline constexpr std::string_view ACCESS_CONTROL_REQUEST_METHOD = "Access-Control-Request-Method";
   /*! \c Allow header */
   inline constexpr std::string_view ALLOW = "Allow";
   /*! \c Authorization header */
@@ -183,8 +199,12 @@ namespace anch::rest::header {
   inline constexpr std::string_view ETAG = "ETag";
   /*! \c Location header */
   inline constexpr std::string_view LOCATION = "Location";
+  /*! \c Origin header */
+  inline constexpr std::string_view ORIGIN = "Origin";
   /*! \c User-Agent header */
   inline constexpr std::string_view USER_AGENT = "User-Agent";
+  /*! \c Vary header */
+  inline constexpr std::string_view VARY = "Vary";
   /*! \c WWW-Authenticate header */
   inline constexpr std::string_view WWW_AUTHENTICATE = "WWW-Authenticate";
   /*! \c X-Correlation-ID header */

@@ -48,7 +48,25 @@ anch::rest::Response response = api.handle(request); // done by HTTP server adap
  *
  * Errors: invalid path parameter or body \c 400 , unknown path \c 404 , unknown method \c 405 (with
  * \c Allow ), not acceptable \c 406 , unsupported media type \c 415 , \ref anch::rest::HttpException "HttpException"
- * status, other exceptions \c 500 .
+ * status, other exceptions \c 500 . \c OPTIONS without endpoint is answered with \c 204 and \c Allow .
+ *
+ * \section rest_cors_sec CORS
+ *
+ * Cross-Origin Resource Sharing is enabled on the API. Allowed methods are the methods of the routes
+ * matching the path. Preflight requests are answered before filters (they have no credentials) and
+ * CORS headers are added to every response, errors included:
+ * \code{.cpp}
+api.cors({
+  .origins = {"https://app.example.com"},           // "*" for every origin
+  .headers = {"Content-Type", "Authorization"},     // "*" for every requested header
+  .exposedHeaders = {"Location"},
+  .credentials = true,                              // not allowed with "*" origin
+  .maxAge = std::chrono::hours(1)
+});
+\endcode
+ *
+ * A preflight with a not allowed origin, method or header is answered with \c 403 without CORS
+ * headers. \c Vary: \c Origin is added when origins are listed.
  *
  * \section rest_client_sec Client
  *

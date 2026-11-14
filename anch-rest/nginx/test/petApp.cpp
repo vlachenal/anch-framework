@@ -79,6 +79,7 @@ createPetApi(std::string_view config) {
     return std::string("slow");
   }).produces<Text>();
   api->get("/api/crash", []() -> Response { throw std::runtime_error("crash"); });
+  api->cors({.origins = {"https://app.example.com"}, .headers = {"Content-Type"}, .maxAge = std::chrono::minutes(10)});
   return api;
 }
 

@@ -141,6 +141,24 @@ testErrors() {
 }
 
 void
+testCors() {
+  Result preflight = call("OPTIONS", "/api/pets", {{str("Origin"), str("https://app.example.com")},
+						   {str("Access-Control-Request-Method"), str("POST")},
+						   {str("Access-Control-Request-Headers"), str("content-type")}});
+  anch::ut::assertThat(preflight.status == 204, "Unexpected preflight status {}", preflight.status);
+  anch::ut::assertThat(preflight.header("Access-Control-Allow-Origin") == "https://app.example.com"
+		       && preflight.header("Access-Control-Allow-Methods") == "POST, OPTIONS"
+		       && preflight.header("Access-Control-Allow-Headers") == "content-type"
+		       && preflight.header("Access-Control-Max-Age") == "600", "Unexpected preflight headers");
+  Result options = call("OPTIONS", "/api/pets/1");
+  anch::ut::assertThat(options.status == 204 && options.header("Allow") == "GET, HEAD, OPTIONS", "Unexpected OPTIONS response {} '{}'",
+		       options.status, options.header("Allow"));
+  Result get = call("GET", "/api/pets/1", {{str("Origin"), str("https://app.example.com")}});
+  anch::ut::assertThat(get.status == 200 && get.header("Access-Control-Allow-Origin") == "https://app.example.com"
+		       && get.header("Vary") == "Origin", "Unexpected CORS headers on GET");
+}
+
+void
 anch::ut::setup(anch::ut::UnitTests& tests) {
   tests
     .name("AnCH REST nginx bridge unit tests")
@@ -152,5 +170,6 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("post", testPost)
     .add("request", testRequest)
     .add("errors", testErrors)
+    .add("cors", testCors)
     ;
 }

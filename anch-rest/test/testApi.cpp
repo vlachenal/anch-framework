@@ -21,6 +21,7 @@
 #include "rest/httpException.hpp"
 #include "rest/jsonCodec.hpp"
 
+#include <chrono>
 #include <optional>
 #include <sstream>
 #include <stdexcept>
@@ -149,7 +150,7 @@ testMethodNotAllowed() {
   api.post("/pets", []() { return Response(Status::CREATED); });
   Response response = call(api, Method::PUT, "/pets");
   expectStatus(response, Status::METHOD_NOT_ALLOWED);
-  anch::ut::assertThat(response.getHeaders().get("Allow") == "GET, HEAD, POST", "Unexpected Allow '{}'",
+  anch::ut::assertThat(response.getHeaders().get("Allow") == "GET, HEAD, POST, OPTIONS", "Unexpected Allow '{}'",
 		       response.getHeaders().get("Allow").value_or(""));
 }
 
@@ -317,6 +318,146 @@ testErrors() {
   anch::ut::assertThat(!crash.hasBody(), "Internal errors must not be exposed");
 }
 
+std::string
+headerOf(const Response& response, std::string_view name) {
+  return response.getHeaders().format(name).value_or("<none>");
+}
+
+void
+testOptions() {
+  Api api;
+  api.get("/pets", []() { return Response(); });
+  api.post("/pets", []() { return Response(Status::CREATED); });
+  api.del("/pets/{id}", [](uint64_t) {});
+  api.route(Method::OPTIONS, "/owners", []() { return Response().header("Allow", "custom"); });
+  Response pets = call(api, Method::OPTIONS, "/pets");
+  expectStatus(pets, Status::NO_CONTENT);
+  anch::ut::assertThat(headerOf(pets, "Allow") == "GET, HEAD, POST, OPTIONS", "Unexpected Allow '{}'", headerOf(pets, "Allow"));
+  anch::ut::assertThat(!pets.hasBody(), "OPTIONS response has no body");
+  Response pet = call(api, Method::OPTIONS, "/pets/12");
+  anch::ut::assertThat(headerOf(pet, "Allow") == "DELETE, OPTIONS", "Unexpected Allow '{}'", headerOf(pet, "Allow"));
+  Response owners = call(api, Method::OPTIONS, "/owners");
+  expectStatus(owners, Status::OK);
+  anch::ut::assertThat(headerOf(owners, "Allow") == "custom", "OPTIONS endpoint has to be used");
+  expectStatus(call(api, Method::OPTIONS, "/unknown"), Status::NOT_FOUND);
+  Response any = call(api, Method::OPTIONS, "*");
+  expectStatus(any, Status::NO_CONTENT);
+  anch::ut::assertThat(headerOf(any, "Allow") == "<none>", "OPTIONS * has no Allow");
+  expectStatus(call(api, Method::GET, "*"), Status::NOT_FOUND);
+}
+
+Response
+corsCall(Api& api, Method method, std::string_view target, std::initializer_list<std::pair<std::string_view, std::string_view>> headers) {
+  Request request(method, target);
+  for(const auto& [name, value] : headers) {
+    request.getHeaders().add(name, value);
+  }
+  return api.handle(request);
+}
+
+void
+testCors() {
+  Api api;
+  api.get("/pets", []() { return Response().header("Location", "/pets/1"); });
+  api.put("/pets/{id}", [](uint64_t) {});
+  api.get("/crash", []() -> Response { throw std::runtime_error("crash"); });
+  api.filter([](Request& request, const anch::rest::Next& next) {
+    if(!request.getHeaders().has("Authorization")) {
+      return Response(Status::UNAUTHORIZED);
+    }
+    return next(request);
+  });
+  api.cors({
+      .origins = {"https://app.example.com", "https://admin.example.com"},
+      .headers = {"Content-Type", "Authorization"},
+      .exposedHeaders = {"Location", "X-Request-ID"},
+      .credentials = true,
+      .maxAge = std::chrono::minutes(10)
+    });
+  const std::string_view origin = "https://app.example.com";
+
+  // Preflight: answered before filters (no Authorization)
+  Response preflight = corsCall(api, Method::OPTIONS, "/pets/12", {{"Origin", origin}, {"Access-Control-Request-Method", "PUT"},
+								  {"Access-Control-Request-Headers", "content-type, authorization"}});
+  expectStatus(preflight, Status::NO_CONTENT);
+  anch::ut::assertThat(headerOf(preflight, "Access-Control-Allow-Origin") == origin, "Unexpected origin '{}'", headerOf(preflight, "Access-Control-Allow-Origin"));
+  anch::ut::assertThat(headerOf(preflight, "Access-Control-Allow-Methods") == "PUT, OPTIONS", "Unexpected methods '{}'", headerOf(preflight, "Access-Control-Allow-Methods"));
+  anch::ut::assertThat(headerOf(preflight, "Access-Control-Allow-Headers") == "content-type, authorization", "Unexpected headers '{}'", headerOf(preflight, "Access-Control-Allow-Headers"));
+  anch::ut::assertThat(headerOf(preflight, "Access-Control-Allow-Credentials") == "true", "Credentials have to be allowed");
+  anch::ut::assertThat(headerOf(preflight, "Access-Control-Max-Age") == "600", "Unexpected max age '{}'", headerOf(preflight, "Access-Control-Max-Age"));
+  anch::ut::assertThat(headerOf(preflight, "Vary") == "Origin, Access-Control-Request-Method, Access-Control-Request-Headers", "Unexpected Vary '{}'", headerOf(preflight, "Vary"));
+  Response noHeaders = corsCall(api, Method::OPTIONS, "/pets", {{"Origin", origin}, {"Access-Control-Request-Method", "GET"}});
+  expectStatus(noHeaders, Status::NO_CONTENT);
+  anch::ut::assertThat(headerOf(noHeaders, "Access-Control-Allow-Headers") == "<none>", "No requested header, no allowed header");
+
+  // Refused preflights
+  auto refused = [&api](std::string_view target, std::string_view from, std::string_view method, std::string_view headers) {
+    Response response = corsCall(api, Method::OPTIONS, target, {{"Origin", from}, {"Access-Control-Request-Method", method},
+								{"Access-Control-Request-Headers", headers}});
+    expectStatus(response, Status::FORBIDDEN);
+    anch::ut::assertThat(headerOf(response, "Access-Control-Allow-Origin") == "<none>", "Refused preflight has no CORS headers");
+  };
+  refused("/pets/12", "https://evil.example.com", "PUT", "");
+  refused("/pets/12", origin, "POST", "");
+  refused("/pets/12", origin, "BREW", "");
+  refused("/pets/12", origin, "PUT", "Content-Type, X-Secret");
+  expectStatus(corsCall(api, Method::OPTIONS, "/unknown", {{"Origin", origin}, {"Access-Control-Request-Method", "GET"}}), Status::NOT_FOUND);
+
+  // OPTIONS without Access-Control-Request-Method is not a preflight: filters are executed
+  expectStatus(corsCall(api, Method::OPTIONS, "/pets", {{"Origin", origin}}), Status::UNAUTHORIZED);
+
+  // Actual requests: CORS headers on success and on errors
+  for(const auto& [target, status] : std::initializer_list<std::pair<std::string_view, Status>>{
+      {"/pets", Status::OK}, {"/unknown", Status::NOT_FOUND}, {"/crash", Status::INTERNAL_SERVER_ERROR}}) {
+    Response response = corsCall(api, Method::GET, target, {{"Origin", "https://admin.example.com"}, {"Authorization", "Bearer token"}});
+    expectStatus(response, status);
+    anch::ut::assertThat(headerOf(response, "Access-Control-Allow-Origin") == "https://admin.example.com", "{}: unexpected origin '{}'",
+			 target, headerOf(response, "Access-Control-Allow-Origin"));
+    anch::ut::assertThat(headerOf(response, "Access-Control-Expose-Headers") == "Location, X-Request-ID", "{}: unexpected exposed headers '{}'",
+			 target, headerOf(response, "Access-Control-Expose-Headers"));
+    anch::ut::assertThat(headerOf(response, "Access-Control-Allow-Credentials") == "true", "{}: credentials have to be allowed", target);
+    anch::ut::assertThat(headerOf(response, "Vary") == "Origin", "{}: unexpected Vary '{}'", target, headerOf(response, "Vary"));
+  }
+  Response unauthorized = corsCall(api, Method::GET, "/pets", {{"Origin", origin}});
+  expectStatus(unauthorized, Status::UNAUTHORIZED);
+  anch::ut::assertThat(headerOf(unauthorized, "Access-Control-Allow-Origin") == origin, "Filter response has to get CORS headers");
+  Response evil = corsCall(api, Method::GET, "/pets", {{"Origin", "https://evil.example.com"}, {"Authorization", "Bearer token"}});
+  expectStatus(evil, Status::OK);
+  anch::ut::assertThat(headerOf(evil, "Access-Control-Allow-Origin") == "<none>" && headerOf(evil, "Vary") == "Origin",
+		       "Not allowed origin gets no CORS headers");
+  Response sameOrigin = corsCall(api, Method::GET, "/pets", {{"Authorization", "Bearer token"}});
+  anch::ut::assertThat(headerOf(sameOrigin, "Access-Control-Allow-Origin") == "<none>", "Request without origin gets no CORS headers");
+
+  // Every origin and every header
+  Api open;
+  open.post("/pets", []() { return Response(Status::CREATED); });
+  open.cors({.origins = {"*"}, .headers = {"*"}});
+  Response openPreflight = corsCall(open, Method::OPTIONS, "/pets", {{"Origin", "https://any.example.com"}, {"Access-Control-Request-Method", "POST"},
+								    {"Access-Control-Request-Headers", "X-Custom"}});
+  expectStatus(openPreflight, Status::NO_CONTENT);
+  anch::ut::assertThat(headerOf(openPreflight, "Access-Control-Allow-Origin") == "*", "Every origin has to be allowed");
+  anch::ut::assertThat(headerOf(openPreflight, "Access-Control-Allow-Headers") == "X-Custom", "Requested headers have to be allowed");
+  anch::ut::assertThat(headerOf(openPreflight, "Access-Control-Allow-Credentials") == "<none>" && headerOf(openPreflight, "Access-Control-Max-Age") == "<none>",
+		       "No credentials and no max age by default");
+  Response created = corsCall(open, Method::POST, "/pets", {{"Origin", "null"}});
+  expectStatus(created, Status::CREATED);
+  anch::ut::assertThat(headerOf(created, "Access-Control-Allow-Origin") == "*" && headerOf(created, "Vary") == "<none>",
+		       "'*' origin does not vary");
+
+  // Invalid options
+  auto invalid = [](anch::rest::CorsOptions options) {
+    Api other;
+    try {
+      other.cors(std::move(options));
+    } catch(const std::invalid_argument&) {
+      return true;
+    }
+    return false;
+  };
+  anch::ut::assertThat(invalid({}), "Origins are required");
+  anch::ut::assertThat(invalid({.origins = {"*"}, .credentials = true}), "Credentials are not allowed with '*'");
+}
+
 void
 testRegistration() {
   Api api;
@@ -360,6 +501,7 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("routing", testRouting)
     .add("method-not-allowed", testMethodNotAllowed)
     .add("head", testHead)
+    .add("options", testOptions)
     .add("path-parameters", testPathParameters)
     .add("results", testResults)
     .add("negotiation", testNegotiation)
@@ -367,6 +509,7 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("constraints", testConstraints)
     .add("status-and-query", testStatusAndQuery)
     .add("filters", testFilters)
+    .add("cors", testCors)
     .add("errors", testErrors)
     .add("registration", testRegistration)
     .add("validate", testValidate)

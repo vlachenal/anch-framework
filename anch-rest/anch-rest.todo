@@ -81,6 +81,12 @@ Plus tard
   interface <Api>Service + registerEndpoints, classe <Api>Client ; Endpoint::status et queryParameter /
   requiredQueryParameter ajoutés à anch-rest). Restent : paramètres header / cookie, paramètres enum / tableau,
   contraintes des paramètres de chemin et de requête, découpage par tag.
-- OPTIONS automatique, CORS.
+- [x] OPTIONS automatique, CORS (2026-11-14) : OPTIONS sans route OPTIONS -> 204 + Allow (OPTIONS inclus, aussi
+  dans les 405) ; OPTIONS * -> 204. Api::cors(CorsOptions) : origines exactes ou "*", en-têtes autorisés ou "*"
+  (en-têtes demandés renvoyés), en-têtes exposés, credentials (interdit avec "*"), max-age ; méthodes déduites des
+  routes du chemin. CORS au niveau de l'Api, pas un filtre : préflight traité avant les filtres (pas de
+  credentials : un filtre d'authentification le refuserait), en-têtes CORS ajoutés à toutes les réponses, erreurs
+  et 500 compris. Préflight refusé (origine, méthode, en-tête) -> 403 sans en-têtes CORS ; chemin inconnu -> 404.
+  Vary: Origin quand les origines sont listées.
 - [ ] Corps multipart/form-data et application/x-www-form-urlencoded (anch-rest et anch-oas) : proposition
   dans multipart.todo (2026-11-14).
