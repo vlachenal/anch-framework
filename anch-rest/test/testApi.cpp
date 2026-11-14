@@ -24,6 +24,9 @@
 #include <optional>
 #include <sstream>
 #include <stdexcept>
+#include <initializer_list>
+#include <utility>
+#include <iostream>
 #include <string>
 #include <vector>
 
@@ -54,6 +57,20 @@ anch::json::registerObject(anch::json::ObjectMapper<Pet>& mapper) {
   mapper
     .registerField("id", &Pet::id)
     .registerField("name", &Pet::name)
+    ;
+}
+
+struct Owner {
+  std::string name;
+  std::optional<std::string> email;
+};
+
+template<>
+void
+anch::json::registerObject(anch::json::ObjectMapper<Owner>& mapper) {
+  mapper
+    .registerField("name", &Owner::name, anch::json::required, anch::json::minLength(1), anch::json::maxLength(10))
+    .registerField<std::string>("email", &Owner::email, anch::json::format("email"))
     ;
 }
 // Model -
@@ -205,6 +222,34 @@ testBody() {
 }
 
 void
+testConstraints() {
+  Api api;
+  api.post("/owners", [](Body<Owner> owner) { return Response(Status::CREATED).body(owner->name); }).consumes<Json>();
+  api.get("/owners/invalid", []() { return Owner{"", "x"}; }).produces<Json>();
+  expectStatus(call(api, Method::POST, "/owners", "", "application/json", R"({"name":"Rex","email":"rex@pets.org"})"), Status::CREATED);
+  // Request bodies are checked: 400 with the path of the invalid value
+  for(auto [body, message] : std::initializer_list<std::pair<const char*, const char*>>{
+      {R"({"email":"rex@pets.org"})", "Missing required field 'name'"},
+      {R"({"name":""})", "/name: Length 0 is lower than minLength 1"},
+      {R"({"name":"Rex","email":"rex"})", "/email: Value is not a valid email (format)"}}) {
+    Response invalid = call(api, Method::POST, "/owners", "", "application/json", body);
+    expectStatus(invalid, Status::BAD_REQUEST);
+    anch::ut::assertThat(bodyOf(invalid).starts_with(message), "'{}' expected ; found '{}'", message, bodyOf(invalid));
+  }
+  // Responses are not checked by the server
+  Response response = call(api, Method::GET, "/owners/invalid", "application/json");
+  expectStatus(response, Status::OK);
+  anch::ut::assertThat(bodyOf(response) == R"({"name":"","email":"x"})", "Unexpected body '{}'", bodyOf(response));
+  // Server stays strict: unknown fields and whitespaces are refused
+  expectStatus(call(api, Method::POST, "/owners", "", "application/json", R"({"name":"Rex","age":3})"), Status::BAD_REQUEST);
+  expectStatus(call(api, Method::POST, "/owners", "", "application/json", R"({ "name": "Rex" })"), Status::BAD_REQUEST);
+  // Server options can be changed
+  Json::options(anch::rest::Side::SERVER).deserialize_check_constraints = false;
+  expectStatus(call(api, Method::POST, "/owners", "", "application/json", R"({"name":""})"), Status::CREATED);
+  Json::options(anch::rest::Side::SERVER).deserialize_check_constraints = true;
+}
+
+void
 testFilters() {
   Api api;
   std::vector<std::string> calls;
@@ -292,6 +337,7 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("results", testResults)
     .add("negotiation", testNegotiation)
     .add("body", testBody)
+    .add("constraints", testConstraints)
     .add("filters", testFilters)
     .add("errors", testErrors)
     .add("registration", testRegistration)

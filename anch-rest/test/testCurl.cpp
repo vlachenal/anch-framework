@@ -65,6 +65,18 @@ anch::json::registerObject(anch::json::ObjectMapper<Pet>& mapper) {
     .registerField("name", &Pet::name)
     ;
 }
+
+struct Owner {
+  std::string name;
+};
+
+template<>
+void
+anch::json::registerObject(anch::json::ObjectMapper<Owner>& mapper) {
+  mapper
+    .registerField("name", &Owner::name, anch::json::required, anch::json::minLength(1))
+    ;
+}
 // Model -
 
 // Server +
@@ -88,6 +100,8 @@ namespace {
     api->post("/pets", [](Body<Pet> pet) {
       return Response(Status::CREATED).header("Location", "/pets/" + std::to_string(pet->id)).contentType("text/plain").body(pet->name);
     }).consumes<Json>();
+    api->post("/owners", [](Body<Owner> owner) { return Response(Status::CREATED).contentType("text/plain").body(owner->name); }).consumes<Json>();
+    api->get("/owners/invalid", []() { return Owner{""}; }).produces<Json>();
     api->del("/pets/{id}", [](uint64_t id) {
       if(id != 1) {
 	throw HttpException(Status::NOT_FOUND, "no pet " + std::to_string(id));
@@ -142,6 +156,29 @@ testPostJson() {
   anch::ut::assertThat(response.getHeaders().get("location") == "/pets/7" && response.content() == "Médor", "Unexpected response '{}'", response.content());
   Response invalid = client.post("/pets").body("{\"id\":", "application/json").send();
   anch::ut::assertThat(invalid.getStatus() == Status::BAD_REQUEST, "Invalid JSON has to be refused");
+}
+
+void
+testConstraints() {
+  // Server and client in the same process: each one uses its own options
+  Client client = makeClient();
+  Response created = client.post("/owners").body<Json>(Owner{"Vincent"}).send();
+  anch::ut::assertThat(created.getStatus() == Status::CREATED, "Expected 201, found {}", anch::rest::code(created.getStatus()));
+  // Client refuses to send invalid request
+  bool refused = false;
+  try {
+    client.post("/owners").body<Json>(Owner{""}).send();
+  } catch(const anch::json::MappingError& e) {
+    refused = (e.getPath() == "/name");
+  }
+  anch::ut::assertThat(refused, "Client should refuse invalid request");
+  // Server refuses invalid request (sent without client check)
+  Response invalid = client.post("/owners").body(R"({"name":""})", "application/json").send();
+  anch::ut::assertThat(invalid.getStatus() == Status::BAD_REQUEST && invalid.content().starts_with("/name: Length 0 is lower than minLength 1"),
+		       "Unexpected response {} '{}'", anch::rest::code(invalid.getStatus()), invalid.content());
+  // Client trusts server response
+  Owner owner = client.get("/owners/invalid").accept<Json>().as<Owner>();
+  anch::ut::assertThat(owner.name.empty(), "Response should be trusted");
 }
 
 void
@@ -220,6 +257,7 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("get-json", testGetJson)
     .add("parameters", testParameters)
     .add("post-json", testPostJson)
+    .add("constraints", testConstraints)
     .add("http-error", testHttpError)
     .add("head", testHead)
     .add("auth", testAuth)

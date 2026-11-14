@@ -29,25 +29,68 @@ namespace anch::rest {
     return "application/json";
   }
 
+  inline anch::json::MappingOptions&
+  Json::options(anch::rest::Side side) {
+    static anch::json::MappingOptions server = []() {
+      anch::json::MappingOptions options = anch::json::DEFAULT_MAPPING_OPTIONS;
+      options.deserialize_check_constraints = true;
+      options.serialize_check_constraints = false;
+      return options;
+    }();
+    static anch::json::MappingOptions client = []() {
+      anch::json::MappingOptions options = anch::json::DEFAULT_MAPPING_OPTIONS;
+      options.deserialize_check_constraints = false;
+      options.serialize_check_constraints = true;
+      options.deserialize_ignore_unknown_field = true; // server responses are trusted: newer fields are ignored
+      options.deserialize_max_discard_char = -1;       // indented responses are accepted
+      return options;
+    }();
+    return (side == anch::rest::Side::SERVER) ? server : client;
+  }
+
   template<typename T>
   void
   Json::serialize(const T& value, std::ostream& out) {
+    Json::serialize(value, out, anch::json::DEFAULT_MAPPING_OPTIONS);
+  }
+
+  template<typename T>
+  void
+  Json::serialize(const T& value, std::ostream& out, anch::rest::Side side) {
+    Json::serialize(value, out, Json::options(side));
+  }
+
+  template<typename T>
+  void
+  Json::serialize(const T& value, std::ostream& out, const anch::json::MappingOptions& options) {
     if constexpr (std::is_same_v<T, std::string>) {
       // std::string would match anch-json container overload (C<T> with T = char)
-      anch::json::serialize<std::string>(value, out);
+      anch::json::serialize<std::string>(value, out, options);
     } else {
-      anch::json::serialize(value, out);
+      anch::json::serialize(value, out, options);
     }
   }
 
   template<typename T>
   void
   Json::deserialize(T& value, std::istream& input) {
+    Json::deserialize(value, input, anch::json::DEFAULT_MAPPING_OPTIONS);
+  }
+
+  template<typename T>
+  void
+  Json::deserialize(T& value, std::istream& input, anch::rest::Side side) {
+    Json::deserialize(value, input, Json::options(side));
+  }
+
+  template<typename T>
+  void
+  Json::deserialize(T& value, std::istream& input, const anch::json::MappingOptions& options) {
     if constexpr (std::is_same_v<T, std::string>) {
       // std::string would match anch-json container overload (C<T> with T = char)
-      anch::json::deserialize<std::string>(value, input);
+      anch::json::deserialize<std::string>(value, input, options);
     } else {
-      anch::json::deserialize(value, input);
+      anch::json::deserialize(value, input, options);
     }
   }
 

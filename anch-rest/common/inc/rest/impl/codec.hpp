@@ -23,6 +23,28 @@
 
 namespace anch::rest {
 
+  template<typename C, typename T>
+  requires anch::rest::Serializer<C, T>
+  void
+  serializeBody(const T& value, std::ostream& out, anch::rest::Side side) {
+    if constexpr (requires { C::serialize(value, out, side); }) {
+      C::serialize(value, out, side);
+    } else {
+      C::serialize(value, out);
+    }
+  }
+
+  template<typename C, typename T>
+  requires anch::rest::Deserializer<C, T>
+  void
+  deserializeBody(T& value, std::istream& input, anch::rest::Side side) {
+    if constexpr (requires { C::deserialize(value, input, side); }) {
+      C::deserialize(value, input, side);
+    } else {
+      C::deserialize(value, input);
+    }
+  }
+
   inline std::string_view
   Text::mediaType() noexcept {
     return "text/plain";

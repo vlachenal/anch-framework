@@ -40,6 +40,11 @@ Serveur
 - Api::validate() : vérifie que chaque route a les codecs nécessaires (appelé par les adaptateurs au
   démarrage).
 - HttpException(status) dans un handler -> ce statut ; autre exception -> 500 sans détail.
+- Contraintes anch-json (2026-11-14) : le codec Json a des options par côté (Json::options(Side)) ; côté
+  serveur, les corps de requête sont vérifiés (400 avec le chemin de la valeur invalide), pas les réponses ;
+  côté client, les requêtes sont vérifiées avant envoi (MappingError, rien n'est envoyé), les réponses du
+  serveur sont crues et lues avec tolérance (champs inconnus ignorés, espaces acceptés). Les codecs peuvent définir serialize/deserialize avec un argument Side
+  (serializeBody / deserializeBody choisissent la bonne forme).
 
 nginx (étape 3, fait)
 ---------------------

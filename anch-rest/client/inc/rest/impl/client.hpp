@@ -95,7 +95,7 @@ namespace anch::rest {
   Call<Codecs...>::body(const T& value) & {
     static_assert(anch::rest::Serializer<C, T>, "Codec can not serialize body");
     std::ostringstream out;
-    C::serialize(value, out);
+    anch::rest::serializeBody<C>(value, out, anch::rest::Side::CLIENT);
     return body(out.str(), C::mediaType());
   }
 
@@ -155,7 +155,7 @@ namespace anch::rest {
 	if(type && codecType && type->getType() == codecType->getType() && type->getSubtype() == codecType->getSubtype()) {
 	  T value{};
 	  std::istringstream input(response.content());
-	  C::deserialize(value, input);
+	  anch::rest::deserializeBody<C>(value, input, anch::rest::Side::CLIENT);
 	  result = std::move(value);
 	  return true;
 	}

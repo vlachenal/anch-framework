@@ -68,6 +68,25 @@ client.del("/pets/{id}", 42).execute();
  *
  * Network errors (connection refused, timeout, TLS) are reported with \ref anch::rest::TransportError "TransportError".
  *
+ * \section rest_constraints_sec Fields constraints
+ *
+ * anch-json fields constraints ( \c anch::json::required , \c anch::json::minLength , ...) are checked by the
+ * \ref anch::rest::Json "Json" codec according to the side which uses it ( \ref anch::rest::Side "Side" ):
+ * - server: request bodies are checked (invalid body: \c 400 response, its body is the error message with the
+ *   path of the invalid value, such as <tt>/name: Length 0 is lower than minLength 1</tt>), responses are not ;
+ * - client: request bodies are checked before being sent ( \c body<Json>(value) raises
+ *   \c anch::json::MappingError , nothing is sent), server responses are trusted and read with tolerance
+ *   (unknown fields are ignored, indented responses are accepted).
+ *
+ * Each side has its own mapping options (server and client can run in the same process), which can be changed at
+ * application initialization:
+ * \code{.cpp}
+anch::rest::Json::options(anch::rest::Side::SERVER).serialize_check_constraints = true; // also check responses
+anch::rest::Json::options(anch::rest::Side::CLIENT).deserialize_ignore_unknown_field = false; // strict client
+\endcode
+ * Other codecs can behave according to the side with \c serialize(value, out, side) and
+ * \c deserialize(value, input, side) functions.
+ *
  * \section rest_nginx_sec nginx module
  *
  * An application is a shared library which declares its API factory:

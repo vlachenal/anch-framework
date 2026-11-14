@@ -24,6 +24,10 @@
 #include <iterator>
 #include <memory>
 #include <stdexcept>
+#include <optional>
+#include <initializer_list>
+#include <utility>
+#include <iostream>
 #include <string>
 #include <vector>
 
@@ -96,6 +100,20 @@ anch::json::registerObject(anch::json::ObjectMapper<Pet>& mapper) {
   mapper
     .registerField("id", &Pet::id)
     .registerField("name", &Pet::name)
+    ;
+}
+
+struct Owner {
+  std::string name;
+  std::optional<std::string> email;
+};
+
+template<>
+void
+anch::json::registerObject(anch::json::ObjectMapper<Owner>& mapper) {
+  mapper
+    .registerField("name", &Owner::name, anch::json::required, anch::json::minLength(1), anch::json::maxLength(10))
+    .registerField<std::string>("email", &Owner::email, anch::json::format("email"))
     ;
 }
 
@@ -200,6 +218,35 @@ testBase64() {
 }
 
 void
+testConstraints() {
+  Fixture fixture;
+  // Invalid request is not sent
+  try {
+    fixture.client.post("/owners").body<Json>(Owner{"", std::nullopt}).send();
+    anch::ut::fail("Invalid request should not be sent");
+  } catch(const anch::json::MappingError& e) {
+    std::cout << e.what() << std::endl;
+    anch::ut::assertThat(e.getPath() == "/name", "Expected path '/name' ; found '{}'", e.getPath());
+  }
+  anch::ut::assertThat(fixture.transport->url.empty(), "Transport should not be called");
+  fixture.client.post("/owners").body<Json>(Owner{"Vincent", "vincent@anch.org"}).send();
+  anch::ut::assertThat(fixture.transport->body == R"({"name":"Vincent","email":"vincent@anch.org"})", "Unexpected body '{}'", fixture.transport->body);
+  // Responses are trusted: constraints are not checked
+  fixture.transport->response = Response().contentType("application/json").body(R"({"email":"x"})");
+  Owner owner = fixture.client.get("/owners/1").accept<Json>().as<Owner>();
+  anch::ut::assertThat(owner.name.empty() && owner.email == "x", "Response should be trusted");
+  // Responses are read with tolerance: unknown fields and whitespaces
+  fixture.transport->response = Response().contentType("application/json").body("{\n  \"name\": \"Rex\",\n  \"age\": 3,\n  \"tags\": [ \"a\", { \"b\": 1 } ]\n}");
+  owner = fixture.client.get("/owners/1").accept<Json>().as<Owner>();
+  anch::ut::assertThat(owner.name == "Rex", "Unexpected name '{}'", owner.name);
+  // Client options can be changed
+  Json::options(anch::rest::Side::CLIENT).serialize_check_constraints = false;
+  fixture.client.post("/owners").body<Json>(Owner{"", std::nullopt}).send();
+  anch::ut::assertThat(fixture.transport->body == R"({"name":""})", "Unexpected body '{}'", fixture.transport->body);
+  Json::options(anch::rest::Side::CLIENT).serialize_check_constraints = true;
+}
+
+void
 anch::ut::setup(anch::ut::UnitTests& tests) {
   tests
     .name("AnCH REST client unit tests")
@@ -209,6 +256,7 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("headers", testHeaders)
     .add("body", testBody)
     .add("as", testAs)
+    .add("constraints", testConstraints)
     .add("http-error", testHttpError)
     .add("filters", testFilters)
     .add("base64", testBase64)

@@ -99,7 +99,7 @@ namespace anch::rest {
     static_assert(anch::rest::Serializer<C, Value>, "Codec can not serialize endpoint result");
     _produced.push_back(anch::rest::detail::codecMediaType(C::mediaType()));
     _serializers.emplace_back([](const Value& value, std::ostream& out) {
-      C::serialize(value, out);
+      anch::rest::serializeBody<C>(value, out, anch::rest::Side::SERVER);
     });
     return *this;
   }
@@ -112,7 +112,7 @@ namespace anch::rest {
     static_assert(anch::rest::Deserializer<C, BodyType>, "Codec can not deserialize endpoint body");
     _consumed.push_back(anch::rest::detail::codecMediaType(C::mediaType()));
     _deserializers.emplace_back([](BodyType& value, std::istream& input) {
-      C::deserialize(value, input);
+      anch::rest::deserializeBody<C>(value, input, anch::rest::Side::SERVER);
     });
     return *this;
   }

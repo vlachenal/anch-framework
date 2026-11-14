@@ -28,11 +28,28 @@
 namespace anch::rest {
 
   /*!
+   * Side which uses a codec. Codecs can behave according to it: \ref anch::rest::Json checks constraints of values
+   * the server receives and of values the client sends.
+   *
+   * \since 0.2
+   */
+  enum class Side {
+    /*! Server: request bodies are read, responses bodies are written */
+    SERVER,
+    /*! Client: request bodies are written, responses bodies are read */
+    CLIENT
+  };
+
+  /*!
    * Codec which serializes \c T values.\n
    * A codec is a type with static functions:
    * - \c mediaType() : the media type it handles
    * - \c serialize(const T&, std::ostream&) : write value
    * - \c deserialize(T&, std::istream&) : read value (\ref anch::rest::Deserializer "Deserializer" ). Errors are reported with exceptions.
+   *
+   * Codecs can also have \c serialize(const T&, std::ostream&, anch::rest::Side) and
+   * \c deserialize(T&, std::istream&, anch::rest::Side) functions: server and client use them when they are
+   * defined (see \ref anch::rest::serializeBody and \ref anch::rest::deserializeBody ).
    *
    * \tparam C the codec type
    * \tparam T the value type
@@ -58,6 +75,40 @@ namespace anch::rest {
     { C::mediaType() } -> std::convertible_to<std::string_view>;
     C::deserialize(value, input);
   };
+
+  /*!
+   * Serialize value with codec: its \c serialize(value, out, side) function is used when it is defined,
+   * \c serialize(value, out) otherwise
+   *
+   * \tparam C the codec type
+   * \tparam T the value type
+   *
+   * \param value the value
+   * \param out the output stream
+   * \param side the side which serializes value
+   *
+   * \since 0.2
+   */
+  template<typename C, typename T>
+  requires anch::rest::Serializer<C, T>
+  void serializeBody(const T& value, std::ostream& out, anch::rest::Side side);
+
+  /*!
+   * Deserialize value with codec: its \c deserialize(value, input, side) function is used when it is defined,
+   * \c deserialize(value, input) otherwise
+   *
+   * \tparam C the codec type
+   * \tparam T the value type
+   *
+   * \param value the value to fill
+   * \param input the input stream
+   * \param side the side which deserializes value
+   *
+   * \since 0.2
+   */
+  template<typename C, typename T>
+  requires anch::rest::Deserializer<C, T>
+  void deserializeBody(T& value, std::istream& input, anch::rest::Side side);
 
   /*!
    * \c text/plain codec: serializes values with stream injection operator, deserializes strings.
