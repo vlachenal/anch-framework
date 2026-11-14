@@ -63,7 +63,8 @@ void
 parseArgs(int argc, char** argv, GeneratorOptions& opts) {
   anch::cli::App app = {
     .name = "anch-oas-gen",
-    .description = "Generate C++ models and their anch-json deserializers from OpenAPI 3.0 document schemas (JSON format)",
+    .description = "Generate C++ models and their anch-json deserializers from OpenAPI 3.0 document schemas (JSON format), "
+                   "and anch-rest endpoints (server and client) from its paths",
     .version = ANCH_OAS_VERSION,
     .author = "Vincent Lachenal",
     .licence = "LGPLv3"
@@ -77,6 +78,12 @@ parseArgs(int argc, char** argv, GeneratorOptions& opts) {
      .description = "Models namespace (default to model)", .example = "petstore::model"},
     {.handler = anch::cli::bindStr(opts.models.name), .sopt = 'f', .lopt = "file", .value = true, .name = "NAME",
      .description = "Generated files base name: NAME.hpp and NAME.cpp (default to models)"},
+    {.handler = anch::cli::bindTrue(opts.models.server), .lopt = "server",
+     .description = "Generate server endpoints: service interface and its registration in anch-rest API (NAME-server.hpp and NAME-server.cpp)"},
+    {.handler = anch::cli::bindTrue(opts.models.client), .lopt = "client",
+     .description = "Generate typed anch-rest client (NAME-client.hpp and NAME-client.cpp)"},
+    {.handler = anch::cli::bindStr(opts.models.api), .lopt = "api-name", .value = true, .name = "API",
+     .description = "Service and client names prefix: APIService and APIClient (default to document title in PascalCase)", .example = "PetStore"},
     {.handler = anch::cli::bindFalse(opts.models.uuid), .lopt = "no-uuid",
      .description = "Map uuid format to std::string instead of anch::UUID"},
     {.handler = anch::cli::bindFalse(opts.models.date), .lopt = "no-date",
@@ -139,6 +146,14 @@ main(int argc, char** argv) {
     std::filesystem::create_directories(opts.output);
     writeFile(opts.output / (opts.models.name + ".hpp"), models.header);
     writeFile(opts.output / (opts.models.name + ".cpp"), models.source);
+    if(opts.models.server) {
+      writeFile(opts.output / (opts.models.name + "-server.hpp"), models.serverHeader);
+      writeFile(opts.output / (opts.models.name + "-server.cpp"), models.serverSource);
+    }
+    if(opts.models.client) {
+      writeFile(opts.output / (opts.models.name + "-client.hpp"), models.clientHeader);
+      writeFile(opts.output / (opts.models.name + "-client.cpp"), models.clientSource);
+    }
   } catch(const anch::json::MappingError& error) {
     std::cerr << "Invalid OpenAPI document: " << error.what() << std::endl;
     return 1;

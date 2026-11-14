@@ -336,6 +336,119 @@ testConstraintsWarnings() {
   checkError<GeneratorError>([&]() { generate(document, options); }, "A.b: uniqueItems is not supported for boolean arrays");
 }
 
+/*!
+ * OpenAPI document with paths and schemas
+ */
+std::string
+pathsSpec(const std::string& paths, const std::string& schemas = "{}") {
+  return R"({"openapi":"3.0.3","info":{"title":"My pets","version":"1"},"paths":)" + paths + R"(,"components":{"schemas":)" + schemas + "}}";
+}
+
+void
+testEndpoints() {
+  std::string document = pathsSpec(R"({
+    "/pets/{id}":{"parameters":[{"name":"id","in":"path","required":true,"schema":{"type":"integer","format":"int64"}}],
+      "get":{"operationId":"get-pet","summary":"Get pet","parameters":[{"name":"full","in":"query","schema":{"type":"boolean"}}],
+        "responses":{"200":{"description":"ok","content":{"application/json":{"schema":{"$ref":"#/components/schemas/Pet"}}}},"404":{"description":"no"}}},
+      "post":{"operationId":"class","requestBody":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/Pet"}},"text/plain":{"schema":{"type":"string"}}}},
+        "responses":{"202":{"description":"accepted"}}},
+      "delete":{"responses":{"204":{"description":"deleted"}}}},
+    "/pets":{"get":{"operationId":"listPets","parameters":[{"name":"q","in":"query","required":true,"schema":{"type":"string"}},
+        {"name":"page","in":"query","schema":{"type":"integer","format":"int32"}}],
+        "responses":{"200":{"description":"ok","content":{"application/json":{"schema":{"type":"array","items":{"$ref":"#/components/schemas/Pet"}}}}},
+          "206":{"description":"partial","content":{"application/json":{"schema":{"type":"array","items":{"$ref":"#/components/schemas/Pet"}}}}}}},
+      "put":{"operationId":"replace","requestBody":{"content":{"application/json":{"schema":{"type":"object","properties":{"a":{"type":"string"}}}}}},
+        "responses":{"201":{"description":"ok","content":{"application/json":{"schema":{"type":"object","properties":{"b":{"type":"string"}}}}}}}}}})",
+    R"({"Pet":{"type":"object","properties":{"name":{"type":"string"}}}})");
+  ModelOptions options;
+  options.server = true;
+  options.client = true;
+  GeneratedModels models = generate(document, options);
+  // Service
+  contains(models.serverHeader, "#include \"models.hpp\"");
+  contains(models.serverHeader, "class MyPetsService {");
+  contains(models.serverHeader, "virtual std::optional<Pet> getPet(int64_t id, const std::optional<bool>& full) = 0;");
+  contains(models.serverHeader, "virtual void class_(int64_t id, const Pet& body) = 0;");
+  contains(models.serverHeader, "virtual void deletePetsById(int64_t id) = 0;");
+  contains(models.serverHeader, "virtual anch::rest::Response listPets(const std::string& q, const std::optional<int32_t>& page) = 0;");
+  contains(models.serverHeader, "virtual ReplaceResponse replace(const ReplaceRequest& body) = 0;");
+  contains(models.serverHeader, "void registerEndpoints(anch::rest::Api& api, MyPetsService& service);");
+  // Registration
+  contains(models.serverSource, "api.get(\"/pets/{id}\", [&service](const anch::rest::Request& request, int64_t id) -> std::optional<Pet> {\n"
+	   "      return service.getPet(id, anch::rest::queryParameter<bool>(request, \"full\"));\n"
+	   "    }).produces<anch::rest::Json>();");
+  contains(models.serverSource, "api.post(\"/pets/{id}\", [&service](int64_t id, anch::rest::Body<Pet> body) -> void {\n"
+	   "      service.class_(id, *body);\n"
+	   "    }).consumes<anch::rest::Json>().status(anch::rest::Status::ACCEPTED);");
+  contains(models.serverSource, "api.del(\"/pets/{id}\", [&service](int64_t id) -> void {");
+  contains(models.serverSource, "return service.listPets(anch::rest::requiredQueryParameter<std::string>(request, \"q\"), "
+	   "anch::rest::queryParameter<int32_t>(request, \"page\"));\n    });");
+  contains(models.serverSource, ".consumes<anch::rest::Json>().produces<anch::rest::Json>().status(anch::rest::Status::CREATED);");
+  // Inline models
+  contains(models.header, "struct ReplaceRequest {");
+  contains(models.header, "struct ReplaceResponse {");
+  // Client
+  contains(models.clientHeader, "class MyPetsClient {");
+  contains(models.clientHeader, "std::optional<Pet> getPet(int64_t id, const std::optional<bool>& full = std::nullopt);");
+  contains(models.clientHeader, "anch::rest::Response listPets(const std::string& q, const std::optional<int32_t>& page = std::nullopt);");
+  contains(models.clientSource, "    anch::rest::Call<> call = _client.get(\"/pets/{id}\", id);\n"
+	   "    if(full) {\n"
+	   "      call.query(\"full\", *full);\n"
+	   "    }\n"
+	   "    try {\n"
+	   "      return std::move(call).accept<anch::rest::Json>().as<Pet>();\n"
+	   "    } catch(const anch::rest::HttpError& error) {\n"
+	   "      if(error.getStatus() == anch::rest::Status::NOT_FOUND) {");
+  contains(models.clientSource, "    call.body<anch::rest::Json>(body);\n    std::move(call).execute();");
+  contains(models.clientSource, "    call.query(\"q\", q);\n");
+  contains(models.clientSource, "    return std::move(call).send();");
+  anch::ut::assertThat(models.warnings.size() == 1, "1 warning expected ; found {}", models.warnings.size());
+  contains(models.warnings[0], "paths./pets/{id}.delete: operationId is missing, method is named deletePetsById");
+  // Endpoints are generated only when asked
+  models = generate(document);
+  anch::ut::assertThat(models.serverHeader.empty() && models.clientHeader.empty(), "No endpoint expected");
+  anch::ut::assertThat(models.header.find("ReplaceRequest") == std::string::npos, "Operations inline models are generated with endpoints only");
+}
+
+void
+testEndpointsWarnings() {
+  std::string document = pathsSpec(R"({
+    "/a/{x}.json":{"get":{"operationId":"a","parameters":[{"name":"x","in":"path","required":true,"schema":{"type":"string"}}],"responses":{}}},
+    "/b/{y}":{"get":{"operationId":"b","responses":{}}},
+    "/c":{"get":{"operationId":"c","parameters":[{"name":"t","in":"query","schema":{"type":"array","items":{"type":"string"}}}],"responses":{}},
+      "post":{"operationId":"d","requestBody":{"content":{"application/xml":{"schema":{"type":"string"}}}},"responses":{}},
+      "put":{"operationId":"e","parameters":[{"name":"X-Id","in":"header","schema":{"type":"string"}}],"responses":{}},
+      "options":{"responses":{}}},
+    "/f/{s}":{"get":{"operationId":"f","parameters":[{"name":"s","in":"path","required":true,"schema":{"$ref":"#/components/schemas/S"}}],"responses":{}}}})",
+    R"({"S":{"type":"string","enum":["a","b"]}})");
+  ModelOptions options;
+  options.server = true;
+  options.api = "Test";
+  GeneratedModels models = generate(document, options);
+  for(const char* warning : {"paths./a/{x}.json.get: path segment '{x}.json' (anch-rest parameters are whole segments): not generated",
+			     "paths./b/{y}.get: path parameter 'y' is not declared: not generated",
+			     "paths./c.get: query parameter 't' of type std::vector<std::string> (anch-rest parameters are strings, numbers, booleans and UUID): not generated",
+			     "paths./c.post: request body media types (only application/json and text/plain with schema are supported): not generated",
+			     "paths./c.put: header parameter 'X-Id' is not generated",
+			     "paths./c.options: HEAD, OPTIONS and TRACE methods (HEAD is served by GET routes): not generated",
+			     "paths./f/{s}.get: path parameter 's' of type S (anch-rest parameters are strings, numbers, booleans and UUID): not generated"}) {
+    anch::ut::assertThat(std::find(models.warnings.begin(), models.warnings.end(), warning) != models.warnings.end(), "Warning '{}' not found", warning);
+  }
+  anch::ut::assertThat(models.warnings.size() == 7, "7 warnings expected ; found {}", models.warnings.size());
+  contains(models.serverHeader, "class TestService {");
+  contains(models.serverHeader, "virtual void e() = 0;");
+  anch::ut::assertThat(models.serverHeader.find(" a(") == std::string::npos && models.serverHeader.find(" c(") == std::string::npos,
+		       "Unsupported operations should not be generated");
+  // Strict mode
+  options.strict = true;
+  checkError<GeneratorError>([&]() { generate(document, options); }, "paths./a/{x}.json.get: path segment '{x}.json'");
+  // Invalid API name
+  ModelOptions invalid;
+  invalid.server = true;
+  invalid.api = "my-api";
+  checkError<GeneratorError>([&]() { generate(document, invalid); }, "Invalid API name 'my-api'");
+}
+
 void
 anch::ut::setup(anch::ut::UnitTests& tests) {
   tests
@@ -359,5 +472,7 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("gen-required", testRequired)
     .add("gen-constraints", testConstraints)
     .add("gen-constraints-warnings", testConstraintsWarnings)
+    .add("gen-endpoints", testEndpoints)
+    .add("gen-endpoints-warnings", testEndpointsWarnings)
     ;
 }

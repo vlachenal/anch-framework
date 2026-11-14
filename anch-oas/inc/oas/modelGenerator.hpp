@@ -57,6 +57,26 @@ namespace anch::oas {
      * \since 0.2
      */
     bool constraints = true;
+
+    /*! Generate endpoints server side ( \c paths ): service interface and its registration in \c anch::rest::Api
+     * (\<name\>-server.hpp and \<name\>-server.cpp)
+     *
+     * \since 0.2
+     */
+    bool server = false;
+
+    /*! Generate endpoints client side ( \c paths ): typed client based on \c anch::rest::Client
+     * (\<name\>-client.hpp and \<name\>-client.cpp)
+     *
+     * \since 0.2
+     */
+    bool client = false;
+
+    /*! API name: service is \<api\>Service and client is \<api\>Client (default: document title in PascalCase)
+     *
+     * \since 0.2
+     */
+    std::string api;
   };
 
   /*!
@@ -73,7 +93,32 @@ namespace anch::oas {
     /*! Source content: anch-json mappers */
     std::string source;
 
-    /*! Warnings: schemas and properties which have not been generated, constraints which have been ignored */
+    /*! Server header content: service interface (when \c server option is set)
+     *
+     * \since 0.2
+     */
+    std::string serverHeader;
+
+    /*! Server source content: endpoints registration (when \c server option is set)
+     *
+     * \since 0.2
+     */
+    std::string serverSource;
+
+    /*! Client header content: typed client declaration (when \c client option is set)
+     *
+     * \since 0.2
+     */
+    std::string clientHeader;
+
+    /*! Client source content: typed client implementation (when \c client option is set)
+     *
+     * \since 0.2
+     */
+    std::string clientSource;
+
+    /*! Warnings: schemas, properties and operations which have not been generated, constraints which have been
+     * ignored */
     std::vector<std::string> warnings;
   };
 
@@ -119,6 +164,9 @@ namespace anch::oas {
    *
    * Not supported (warning, or error in strict mode): \c oneOf / \c anyOf , free-form objects, nested containers
    * (array of arrays, ...), references outside \c #/components/schemas .
+   *
+   * With \c server and \c client options, anch-rest endpoints are generated from the document paths: service interface,
+   * its registration in \c anch::rest::Api and typed client (see \ref oas_endpoints_sec "endpoints generation").
    *
    * \param api the OpenAPI document
    * \param options the generation options

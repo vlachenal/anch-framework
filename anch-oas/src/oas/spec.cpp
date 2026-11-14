@@ -29,6 +29,12 @@
 using anch::oas::AdditionalProperties;
 using anch::oas::Components;
 using anch::oas::Info;
+using anch::oas::MediaTypeObject;
+using anch::oas::Operation;
+using anch::oas::Parameter;
+using anch::oas::PathItem;
+using anch::oas::RequestBody;
+using anch::oas::ResponseObject;
 using anch::oas::OpenAPI;
 using anch::oas::Scalar;
 using anch::oas::Schema;
@@ -183,6 +189,78 @@ anch::json::registerObject(anch::json::ObjectMapper<Schema>& mapper) {
 
 template<>
 void
+anch::json::registerObject(anch::json::ObjectMapper<MediaTypeObject>& mapper) {
+  mapper
+    .registerField<Schema>("schema", &MediaTypeObject::schema)
+    ;
+}
+
+template<>
+void
+anch::json::registerObject(anch::json::ObjectMapper<Parameter>& mapper) {
+  mapper
+    .registerField<std::string>("$ref", &Parameter::ref)
+    .registerField("name", &Parameter::name)
+    .registerField("in", &Parameter::in)
+    .registerField<std::string>("description", &Parameter::description)
+    .registerField<bool>("required", &Parameter::required)
+    .registerField<Schema>("schema", &Parameter::schema)
+    ;
+}
+
+template<>
+void
+anch::json::registerObject(anch::json::ObjectMapper<RequestBody>& mapper) {
+  mapper
+    .registerField<std::string>("$ref", &RequestBody::ref)
+    .registerField<std::string>("description", &RequestBody::description)
+    .registerField<bool>("required", &RequestBody::required)
+    .registerField<MediaTypeObject>("content", &RequestBody::content)
+    ;
+}
+
+template<>
+void
+anch::json::registerObject(anch::json::ObjectMapper<ResponseObject>& mapper) {
+  mapper
+    .registerField<std::string>("$ref", &ResponseObject::ref)
+    .registerField<std::string>("description", &ResponseObject::description)
+    .registerField<MediaTypeObject>("content", &ResponseObject::content)
+    ;
+}
+
+template<>
+void
+anch::json::registerObject(anch::json::ObjectMapper<Operation>& mapper) {
+  mapper
+    .registerField<std::string>("operationId", &Operation::operationId)
+    .registerField<std::string>("summary", &Operation::summary)
+    .registerField<std::string>("description", &Operation::description)
+    .registerField<bool>("deprecated", &Operation::deprecated)
+    .registerField<Parameter>("parameters", &Operation::parameters)
+    .registerField<RequestBody>("requestBody", &Operation::requestBody)
+    .registerField<ResponseObject>("responses", &Operation::responses)
+    ;
+}
+
+template<>
+void
+anch::json::registerObject(anch::json::ObjectMapper<PathItem>& mapper) {
+  mapper
+    .registerField<Parameter>("parameters", &PathItem::parameters)
+    .registerField<Operation>("get", &PathItem::get)
+    .registerField<Operation>("put", &PathItem::put)
+    .registerField<Operation>("post", &PathItem::post)
+    .registerField<Operation>("delete", &PathItem::del)
+    .registerField<Operation>("patch", &PathItem::patch)
+    .registerField<Operation>("head", &PathItem::head)
+    .registerField<Operation>("options", &PathItem::options)
+    .registerField<Operation>("trace", &PathItem::trace)
+    ;
+}
+
+template<>
+void
 anch::json::registerObject(anch::json::ObjectMapper<Info>& mapper) {
   mapper
     .registerField("title", &Info::title)
@@ -195,6 +273,9 @@ void
 anch::json::registerObject(anch::json::ObjectMapper<Components>& mapper) {
   mapper
     .registerField<Schema>("schemas", &Components::schemas)
+    .registerField<Parameter>("parameters", &Components::parameters)
+    .registerField<RequestBody>("requestBodies", &Components::requestBodies)
+    .registerField<ResponseObject>("responses", &Components::responses)
     ;
 }
 
@@ -204,6 +285,7 @@ anch::json::registerObject(anch::json::ObjectMapper<OpenAPI>& mapper) {
   mapper
     .registerField("openapi", &OpenAPI::openapi)
     .registerField("info", &OpenAPI::info)
+    .registerField<PathItem>("paths", &OpenAPI::paths)
     .registerField("components", &OpenAPI::components)
     ;
 }

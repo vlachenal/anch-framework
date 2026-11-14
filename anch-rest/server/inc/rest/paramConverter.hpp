@@ -26,6 +26,8 @@
 
 #include "uuid.hpp"
 
+#include "rest/request.hpp"
+
 namespace anch::rest {
 
   /*!
@@ -132,6 +134,40 @@ namespace anch::rest {
   concept PathParameter = requires(std::string_view value) {
     { anch::rest::ParamConverter<T>::convert(value) } -> std::same_as<std::optional<T>>;
   };
+
+  /*!
+   * Optional query parameter converted with \ref anch::rest::ParamConverter "ParamConverter"
+   *
+   * \tparam T the parameter type
+   *
+   * \param request the request
+   * \param name the parameter name
+   *
+   * \return the parameter value, empty when the parameter is absent
+   *
+   * \throw anch::rest::HttpException \c 400 when value is invalid
+   *
+   * \since 0.2
+   */
+  template<anch::rest::PathParameter T>
+  std::optional<T> queryParameter(const anch::rest::Request& request, std::string_view name);
+
+  /*!
+   * Required query parameter converted with \ref anch::rest::ParamConverter "ParamConverter"
+   *
+   * \tparam T the parameter type
+   *
+   * \param request the request
+   * \param name the parameter name
+   *
+   * \return the parameter value
+   *
+   * \throw anch::rest::HttpException \c 400 when parameter is absent or its value is invalid
+   *
+   * \since 0.2
+   */
+  template<anch::rest::PathParameter T>
+  T requiredQueryParameter(const anch::rest::Request& request, std::string_view name);
 
 }
 

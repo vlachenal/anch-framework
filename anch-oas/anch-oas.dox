@@ -4,10 +4,12 @@
  *
  * \section oas_intro_seq Introduction
  *
- * AnCH OAS library parses OpenAPI 3.0 documents and generates C++ code from them. Only models are generated for now:
- * \c anch-oas-gen generates C++ structures and enumerations from the document schemas ( \c components.schemas ) with
- * their \ref page_json "anch-json" mappers, so that API payloads can be deserialized (and serialized) with
- * \c anch::json::deserialize and \c anch::json::serialize .
+ * AnCH OAS library parses OpenAPI 3.0 documents and generates C++ code from them: \c anch-oas-gen generates C++
+ * structures and enumerations from the document schemas ( \c components.schemas ) with their
+ * \ref page_json "anch-json" mappers, so that API payloads can be deserialized (and serialized) with
+ * \c anch::json::deserialize and \c anch::json::serialize . With \c --server and \c --client options, it also
+ * generates \ref page_rest "anch-rest" endpoints from the document paths: a service interface registered in
+ * \c anch::rest::Api and a typed client (see \ref oas_endpoints_sec ).
  *
  * \section oas_prereq_sec Prerequisites
  *
@@ -37,7 +39,12 @@ cat petstore.json | anch-oas-gen -o gen                              # document 
  * - \c --no-uuid : \c uuid format is mapped to \c std::string instead of \c anch::UUID ;
  * - \c --no-date : \c date-time and \c date formats are mapped to \c std::string instead of \c anch::date::Date and
  *   \c std::chrono::year_month_day ;
- * - \c --strict : unsupported schemas raise an error instead of a warning.
+ * - \c --server : generates the service interface and its endpoints registration ( \c NAME-server.hpp and
+ *   \c NAME-server.cpp ) ;
+ * - \c --client : generates the typed client ( \c NAME-client.hpp and \c NAME-client.cpp ) ;
+ * - \c --api-name : service and client names prefix (default to the document title in PascalCase) ;
+ * - \c --no-constraints : value constraints are not generated ;
+ * - \c --strict : unsupported schemas and operations raise an error instead of a warning.
  *
  * Unchanged files are not rewritten. With CMake, a stamp file tracks the generation:
  * \code{.cmake}
@@ -138,4 +145,53 @@ petstore::model::Pet pet = anch::json::deserialize<petstore::model::Pet>(input);
  * \c deserialize_ignore_unknown_field to accept them. Formats without registered validator ( \c password , ...) are
  * not checked: validators can be added with \c anch::json::registerFormat . Constraints of component schemas which are deserialized directly
  * (alias of array deserialized as root value) are not checked: only properties constraints are.
+ *
+ * \section oas_endpoints_sec Endpoints
+ *
+ * With \c --server and \c --client , each operation of the document paths ( \c get , \c put , \c post ,
+ * \c delete and \c patch ) is a method of the \c \<API\>Service interface (server side) and of the
+ * \c \<API\>Client class (client side). Both are in the models namespace and depend on anch-rest
+ * ( \c anch::rest-server and \c anch::rest-client CMake targets).
+ * \code{.cpp}
+// Server: implement the service and register its endpoints
+class Store: public petstore::model::PetStoreService {
+public:
+  std::optional<petstore::model::Pet> getPet(int64_t id) override;   // GET /pets/{id} (404 when empty)
+  petstore::model::Tag createTag(const petstore::model::Tag& body) override; // POST /pets (201)
+  // ...
+};
+Store store;
+anch::rest::Api api;
+petstore::model::registerEndpoints(api, store);
+api.validate();
+
+// Client: typed calls over an anch-rest client (transport, base URL and filters are configured by the caller)
+anch::rest::Client rest(std::make_unique<anch::rest::CurlTransport>(), "https://api.example.com");
+petstore::model::PetStoreClient client(rest);
+std::optional<petstore::model::Pet> pet = client.getPet(1);
+std::vector<petstore::model::Tag> tags = client.listPets("AB");      // optional query parameters default to std::nullopt
+ * \endcode
+ *
+ * Generation rules:
+ * - method name: \c operationId in camelCase ( \c get-pet → \c getPet ), derived from the method and the path when
+ *   it is missing ( \c DELETE \c /pets/{id} → \c deletePetsById , with a warning) ;
+ * - arguments: path parameters in path order, request body ( \c const \c T& \c body ), required query parameters,
+ *   optional query parameters ( \c std::optional ). Path item and operation parameters are merged, references to
+ *   \c #/components/parameters/ are followed. Path and query parameters are strings, numbers, booleans or UUID
+ *   (converted by \c anch::rest::ParamConverter : invalid or missing value is a \c 400 response) ;
+ * - request body: \c application/json ( \c anch::rest::Json ) and \c text/plain ( \c anch::rest::Text , strings
+ *   only) ; references to \c #/components/requestBodies/ are followed ;
+ * - result: success response ( \c 2xx ) with content → its type, with a \c 404 response → \c std::optional (empty
+ *   result is a \c 404 response server side, \c 404 response is an empty result client side), without content →
+ *   \c void , several success responses or other media types → \c anch::rest::Response . Status other than
+ *   \c 200 (or \c 204 for \c void ) is set with \c Endpoint::status ( \c 201 , \c 202 , ...). Error responses
+ *   are not generated: client raises \c anch::rest::HttpError ;
+ * - inline schemas of bodies and responses are models named \c \<Operation\>Request and
+ *   \c \<Operation\>Response , with their constraints (checked as described in \ref page_rest "anch-rest").
+ *
+ * Not generated (warning, or error with \c --strict ): \c head , \c options and \c trace operations (anch-rest
+ * serves \c HEAD with \c GET routes), path segments which are not whole parameters ( \c /files/{name}.json ),
+ * undeclared path parameters, parameters of other types (enumerations, arrays, objects), request bodies of other
+ * media types. Header and cookie parameters are not generated (warning). Constraints of path and query parameters
+ * are not checked.
  */

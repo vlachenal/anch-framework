@@ -250,6 +250,33 @@ testConstraints() {
 }
 
 void
+testStatusAndQuery() {
+  Api api;
+  api.post("/pets", [](Body<Pet> pet) { return *pet; }).consumes<Json>().produces<Json>().status(Status::CREATED);
+  api.del("/pets/{id}", [](uint64_t) {}).status(Status::ACCEPTED);
+  api.get("/pets/{id}", findPet).produces<Json>().status(Status::NON_AUTHORITATIVE_INFORMATION);
+  api.get("/search", [](const Request& request) {
+    std::optional<int32_t> limit = anch::rest::queryParameter<int32_t>(request, "limit");
+    std::string name = anch::rest::requiredQueryParameter<std::string>(request, "name");
+    return Response().body(name + " " + (limit ? std::to_string(*limit) : std::string("-")));
+  });
+  Response created = call(api, Method::POST, "/pets", "application/json", "application/json", R"({"id":7,"name":"Rex"})");
+  expectStatus(created, Status::CREATED);
+  anch::ut::assertThat(bodyOf(created) == R"({"id":7,"name":"Rex"})", "Unexpected body '{}'", bodyOf(created));
+  expectStatus(call(api, Method::DELETE, "/pets/7"), Status::ACCEPTED);
+  expectStatus(call(api, Method::GET, "/pets/1", "application/json"), Status::NON_AUTHORITATIVE_INFORMATION);
+  expectStatus(call(api, Method::GET, "/pets/2", "application/json"), Status::NOT_FOUND); // empty optional is still 404
+  anch::ut::assertThat(bodyOf(call(api, Method::GET, "/search?name=Rex%20Jr&limit=3")) == "Rex Jr 3", "Unexpected search");
+  anch::ut::assertThat(bodyOf(call(api, Method::GET, "/search?name=Rex")) == "Rex -", "Optional parameter has to be empty");
+  Response missing = call(api, Method::GET, "/search?limit=3");
+  expectStatus(missing, Status::BAD_REQUEST);
+  anch::ut::assertThat(bodyOf(missing) == "Missing query parameter 'name'", "Unexpected message '{}'", bodyOf(missing));
+  Response invalid = call(api, Method::GET, "/search?name=Rex&limit=x");
+  expectStatus(invalid, Status::BAD_REQUEST);
+  anch::ut::assertThat(bodyOf(invalid) == "Invalid query parameter 'limit': 'x'", "Unexpected message '{}'", bodyOf(invalid));
+}
+
+void
 testFilters() {
   Api api;
   std::vector<std::string> calls;
@@ -338,6 +365,7 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("negotiation", testNegotiation)
     .add("body", testBody)
     .add("constraints", testConstraints)
+    .add("status-and-query", testStatusAndQuery)
     .add("filters", testFilters)
     .add("errors", testErrors)
     .add("registration", testRegistration)

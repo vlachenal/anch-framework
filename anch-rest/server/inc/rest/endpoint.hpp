@@ -353,6 +353,9 @@ namespace anch::rest {
 
     /*! Deserializers (one per consumed media type) */
     std::vector<std::function<void(BodyType&, std::istream&)>> _deserializers;
+
+    /*! Success status of serialized results and of \c void endpoints (default: \c 200 and \c 204 ) */
+    std::optional<anch::rest::Status> _status;
     // Attributes -
 
     // Constructors +
@@ -390,6 +393,20 @@ namespace anch::rest {
      */
     template<typename C>
     Endpoint& consumes();
+
+    /*!
+     * Set success status: status of responses with serialized result ( \c 200 by default) or of \c void
+     * endpoints ( \c 204 by default), such as \c 201 or \c 202 . Endpoints which return
+     * \ref anch::rest::Response set their status themselves, and empty \c std::optional results are still
+     * \c 404 .
+     *
+     * \param status the success status
+     *
+     * \return \c this
+     *
+     * \since 0.2
+     */
+    Endpoint& status(anch::rest::Status status);
 
     /*!
      * Execute endpoint

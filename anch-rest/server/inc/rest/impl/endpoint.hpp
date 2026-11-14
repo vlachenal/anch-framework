@@ -87,8 +87,18 @@ namespace anch::rest {
     _produced(),
     _serializers(),
     _consumed(),
-    _deserializers() {
+    _deserializers(),
+    _status() {
     // Nothing to do
+  }
+
+  template<typename F>
+  Endpoint<F>&
+  Endpoint<F>::status(anch::rest::Status status) {
+    static_assert(Sig::SERIALIZED || std::is_void_v<typename Sig::Result>,
+		  "status() needs an endpoint which returns a value or void (anch::rest::Response sets its status)");
+    _status = status;
+    return *this;
   }
 
   template<typename F>
@@ -132,7 +142,7 @@ namespace anch::rest {
     auto sequence = std::make_index_sequence<Sig::PATH_COUNT>();
     if constexpr (std::is_void_v<typename Sig::Result>) {
       invoke(request, parameters, sequence);
-      return anch::rest::Response(anch::rest::Status::NO_CONTENT);
+      return anch::rest::Response(_status.value_or(anch::rest::Status::NO_CONTENT));
     } else if constexpr (!Sig::SERIALIZED) {
       return invoke(request, parameters, sequence);
     } else if constexpr (Sig::OPTIONAL) {
@@ -201,7 +211,7 @@ namespace anch::rest {
     // Body writer has to be copyable: value is shared
     auto shared = std::make_shared<const Value>(std::move(value));
     std::function<void(const Value&, std::ostream&)> serializer = _serializers[index];
-    return anch::rest::Response(anch::rest::Status::OK)
+    return anch::rest::Response(_status.value_or(anch::rest::Status::OK))
       .contentType(_produced[index].toString())
       .stream([shared, serializer](std::ostream& out) {
 	serializer(*shared, out);

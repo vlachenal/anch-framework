@@ -22,6 +22,9 @@
 #include <charconv>
 #include <stdexcept>
 #include <system_error>
+#include <utility>
+
+#include "rest/httpException.hpp"
 
 namespace anch::rest {
 
@@ -71,6 +74,31 @@ namespace anch::rest {
     } catch(const std::invalid_argument&) {
       return std::nullopt;
     }
+  }
+
+  template<anch::rest::PathParameter T>
+  std::optional<T>
+  queryParameter(const anch::rest::Request& request, std::string_view name) {
+    std::optional<std::string_view> value = request.getQueryParameter(name);
+    if(!value) {
+      return std::nullopt;
+    }
+    std::optional<T> res = anch::rest::ParamConverter<T>::convert(*value);
+    if(!res) {
+      throw anch::rest::HttpException(anch::rest::Status::BAD_REQUEST,
+				      "Invalid query parameter '" + std::string(name) + "': '" + std::string(*value) + "'");
+    }
+    return res;
+  }
+
+  template<anch::rest::PathParameter T>
+  T
+  requiredQueryParameter(const anch::rest::Request& request, std::string_view name) {
+    std::optional<T> res = anch::rest::queryParameter<T>(request, name);
+    if(!res) {
+      throw anch::rest::HttpException(anch::rest::Status::BAD_REQUEST, "Missing query parameter '" + std::string(name) + "'");
+    }
+    return std::move(*res);
   }
 
 }

@@ -77,5 +77,8 @@ Client (étape 2)
 
 Plus tard
 ---------
-- anch-oas-gen : générer les déclarations d'endpoints et un client typé.
+- [x] anch-oas-gen : générer les déclarations d'endpoints et un client typé (2026-11-14 : --server / --client,
+  interface <Api>Service + registerEndpoints, classe <Api>Client ; Endpoint::status et queryParameter /
+  requiredQueryParameter ajoutés à anch-rest). Restent : paramètres header / cookie, paramètres enum / tableau,
+  contraintes des paramètres de chemin et de requête, découpage par tag.
 - OPTIONS automatique, CORS.

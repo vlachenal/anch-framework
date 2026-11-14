@@ -6,15 +6,90 @@
     "version": "1.2.0"
   },
   "paths": {
+    "/pets": {
+      "get": {
+        "operationId": "listPets",
+        "summary": "List pets",
+        "parameters": [
+          { "name": "status", "in": "query", "required": true, "description": "Pets status", "schema": { "$ref": "#/components/schemas/Code" } },
+          { "name": "limit", "in": "query", "schema": { "type": "integer", "format": "int32" } }
+        ],
+        "responses": { "200": { "description": "Pets", "content": { "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/Tag" } } } } } }
+      },
+      "post": {
+        "operationId": "createTag",
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Tag" } } } },
+        "responses": {
+          "201": { "description": "Created", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Tag" } } } },
+          "400": { "description": "Invalid tag" }
+        }
+      }
+    },
     "/pets/{id}": {
+      "parameters": [ { "$ref": "#/components/parameters/PetId" } ],
       "get": {
         "operationId": "getPet",
-        "parameters": [ { "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } } ],
-        "responses": { "200": { "description": "The pet", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Pet" } } } } }
+        "responses": {
+          "200": { "description": "The pet", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Pet" } } } },
+          "404": { "$ref": "#/components/responses/NotFound" }
+        }
+      },
+      "put": {
+        "operationId": "updateTag",
+        "deprecated": true,
+        "requestBody": { "$ref": "#/components/requestBodies/TagBody" },
+        "responses": { "204": { "description": "Updated" }, "404": { "$ref": "#/components/responses/NotFound" } }
+      },
+      "delete": { "responses": { "204": { "description": "Deleted" } } }
+    },
+    "/pets/{id}/name": {
+      "parameters": [ { "$ref": "#/components/parameters/PetId" } ],
+      "get": {
+        "operationId": "getPetName",
+        "responses": { "200": { "description": "Name", "content": { "text/plain": { "schema": { "type": "string" } } } } }
+      },
+      "put": {
+        "operationId": "renamePet",
+        "requestBody": { "content": { "text/plain": { "schema": { "type": "string" } } } },
+        "responses": { "202": { "description": "Accepted" } }
       }
+    },
+    "/pets/{id}/photo": {
+      "get": {
+        "operationId": "getPetPhoto",
+        "parameters": [ { "$ref": "#/components/parameters/PetId" } ],
+        "responses": { "200": { "description": "Photo", "content": { "image/png": { } } } }
+      }
+    },
+    "/adoptions": {
+      "post": {
+        "operationId": "adopt",
+        "requestBody": { "content": { "application/json": { "schema": { "type": "object", "required": [ "petId" ], "properties": { "petId": { "type": "integer", "format": "int64", "minimum": 1 } } } } } },
+        "responses": { "201": { "description": "Adopted", "content": { "application/json": { "schema": { "type": "object", "properties": { "id": { "type": "string", "format": "uuid" } } } } } } }
+      }
+    },
+    "/files/{name}.json": {
+      "get": { "operationId": "getFile", "parameters": [ { "name": "name", "in": "path", "required": true, "schema": { "type": "string" } } ], "responses": { "200": { "description": "File" } } }
+    },
+    "/search": {
+      "get": {
+        "operationId": "search",
+        "parameters": [ { "name": "tags", "in": "query", "schema": { "type": "array", "items": { "type": "string" } } } ],
+        "responses": { "200": { "description": "Results" } }
+      },
+      "head": { "operationId": "searchHead", "responses": { "200": { "description": "Results" } } }
     }
   },
   "components": {
+    "parameters": {
+      "PetId": { "name": "id", "in": "path", "required": true, "description": "Pet identifier", "schema": { "type": "integer", "format": "int64" } }
+    },
+    "requestBodies": {
+      "TagBody": { "description": "The tag", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Tag" } } } }
+    },
+    "responses": {
+      "NotFound": { "description": "Pet not found" }
+    },
     "schemas": {
       "Status": {
         "type": "string",

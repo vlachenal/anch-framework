@@ -228,7 +228,151 @@ namespace anch::oas {
   };
 
   /*!
-   * \brief OpenAPI 3.0 components object (schemas only)
+   * \brief OpenAPI 3.0 media type object
+   *
+   * \since 0.2
+   *
+   * \author Vincent Lachenal
+   */
+  struct MediaTypeObject {
+    /*! Content schema */
+    std::optional<anch::oas::Schema> schema;
+  };
+
+  /*!
+   * \brief OpenAPI 3.0 parameter object
+   *
+   * \since 0.2
+   *
+   * \author Vincent Lachenal
+   */
+  struct Parameter {
+    /*! Reference ( \c $ref to \c #/components/parameters/ ) */
+    std::optional<std::string> ref;
+
+    /*! Name */
+    std::string name;
+
+    /*! Location ( \c path , \c query , \c header or \c cookie ) */
+    std::string in;
+
+    /*! Description */
+    std::optional<std::string> description;
+
+    /*! Parameter is required (always for path parameters) */
+    std::optional<bool> required;
+
+    /*! Schema */
+    std::optional<anch::oas::Schema> schema;
+  };
+
+  /*!
+   * \brief OpenAPI 3.0 request body object
+   *
+   * \since 0.2
+   *
+   * \author Vincent Lachenal
+   */
+  struct RequestBody {
+    /*! Reference ( \c $ref to \c #/components/requestBodies/ ) */
+    std::optional<std::string> ref;
+
+    /*! Description */
+    std::optional<std::string> description;
+
+    /*! Body is required */
+    std::optional<bool> required;
+
+    /*! Content by media type */
+    std::map<std::string,anch::oas::MediaTypeObject> content;
+  };
+
+  /*!
+   * \brief OpenAPI 3.0 response object
+   *
+   * \since 0.2
+   *
+   * \author Vincent Lachenal
+   */
+  struct ResponseObject {
+    /*! Reference ( \c $ref to \c #/components/responses/ ) */
+    std::optional<std::string> ref;
+
+    /*! Description */
+    std::optional<std::string> description;
+
+    /*! Content by media type */
+    std::map<std::string,anch::oas::MediaTypeObject> content;
+  };
+
+  /*!
+   * \brief OpenAPI 3.0 operation object
+   *
+   * \since 0.2
+   *
+   * \author Vincent Lachenal
+   */
+  struct Operation {
+    /*! Operation identifier */
+    std::optional<std::string> operationId;
+
+    /*! Summary */
+    std::optional<std::string> summary;
+
+    /*! Description */
+    std::optional<std::string> description;
+
+    /*! Operation is deprecated */
+    std::optional<bool> deprecated;
+
+    /*! Parameters */
+    std::vector<anch::oas::Parameter> parameters;
+
+    /*! Request body */
+    std::optional<anch::oas::RequestBody> requestBody;
+
+    /*! Responses by status code ( \c 200 , \c 2XX , \c default , ...) */
+    std::map<std::string,anch::oas::ResponseObject> responses;
+  };
+
+  /*!
+   * \brief OpenAPI 3.0 path item object
+   *
+   * \since 0.2
+   *
+   * \author Vincent Lachenal
+   */
+  struct PathItem {
+    /*! Parameters shared by operations */
+    std::vector<anch::oas::Parameter> parameters;
+
+    /*! \c GET operation */
+    std::optional<anch::oas::Operation> get;
+
+    /*! \c PUT operation */
+    std::optional<anch::oas::Operation> put;
+
+    /*! \c POST operation */
+    std::optional<anch::oas::Operation> post;
+
+    /*! \c DELETE operation */
+    std::optional<anch::oas::Operation> del;
+
+    /*! \c PATCH operation */
+    std::optional<anch::oas::Operation> patch;
+
+    /*! \c HEAD operation (not generated) */
+    std::optional<anch::oas::Operation> head;
+
+    /*! \c OPTIONS operation (not generated) */
+    std::optional<anch::oas::Operation> options;
+
+    /*! \c TRACE operation (not generated) */
+    std::optional<anch::oas::Operation> trace;
+  };
+
+  /*!
+   * \brief OpenAPI 3.0 components object (schemas, parameters, request bodies and responses)
    *
    * \since 0.1
    *
@@ -237,10 +381,28 @@ namespace anch::oas {
   struct Components {
     /*! Schemas indexed by their names */
     std::map<std::string,anch::oas::Schema> schemas;
+
+    /*! Parameters indexed by their names
+     *
+     * \since 0.2
+     */
+    std::map<std::string,anch::oas::Parameter> parameters;
+
+    /*! Request bodies indexed by their names
+     *
+     * \since 0.2
+     */
+    std::map<std::string,anch::oas::RequestBody> requestBodies;
+
+    /*! Responses indexed by their names
+     *
+     * \since 0.2
+     */
+    std::map<std::string,anch::oas::ResponseObject> responses;
   };
 
   /*!
-   * \brief OpenAPI 3.0 document (models part)
+   * \brief OpenAPI 3.0 document (models and endpoints parts)
    *
    * \since 0.1
    *
@@ -252,6 +414,12 @@ namespace anch::oas {
 
     /*! API informations */
     anch::oas::Info info;
+
+    /*! Paths
+     *
+     * \since 0.2
+     */
+    std::map<std::string,anch::oas::PathItem> paths;
 
     /*! Components */
     anch::oas::Components components;
