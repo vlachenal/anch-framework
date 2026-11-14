@@ -27,24 +27,6 @@
 
 namespace anch::rest {
 
-  template<anch::rest::ParameterValue T>
-  std::string
-  toParameterString(const T& value) {
-    if constexpr (std::is_same_v<T, bool>) {
-      return value ? "true" : "false";
-    } else if constexpr (std::convertible_to<const T&, std::string_view>) {
-      return std::string(std::string_view(value));
-    } else if constexpr (std::is_arithmetic_v<T>) {
-      char buffer[64];
-      auto [ptr, ec] = std::to_chars(buffer, buffer + sizeof(buffer), value);
-      return std::string(buffer, ptr);
-    } else {
-      std::ostringstream out;
-      out << value;
-      return out.str();
-    }
-  }
-
   // Call +
   template<typename... Codecs>
   Call<Codecs...>::Call(anch::rest::Client& client, anch::rest::Request request):

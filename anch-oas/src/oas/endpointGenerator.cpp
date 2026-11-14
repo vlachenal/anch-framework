@@ -31,6 +31,9 @@ using anch::oas::RequestBody;
 using anch::oas::ResponseObject;
 using anch::oas::Schema;
 using anch::oas::detail::Container;
+using anch::oas::detail::Field;
+using anch::oas::detail::FormMapping;
+using anch::oas::detail::Model;
 using anch::oas::detail::Generator;
 using anch::oas::detail::Op;
 using anch::oas::detail::OpParameter;
@@ -55,6 +58,12 @@ namespace {
 
   /*! Text codec */
   const std::string TEXT_CODEC = "anch::rest::Text";
+
+  /*! \c multipart/form-data codec */
+  const std::string MULTIPART_CODEC = "anch::rest::Multipart";
+
+  /*! \c application/x-www-form-urlencoded codec */
+  const std::string FORM_CODEC = "anch::rest::FormUrlEncoded";
 
   /*! Types which can be path and query parameters ( \c anch::rest::ParamConverter ) */
   const std::set<std::string> PARAMETER_TYPES = {"std::string", "int32_t", "int64_t", "float", "double", "bool", "anch::UUID"};
@@ -88,8 +97,34 @@ namespace {
     if(type == "text/plain") {
       return TEXT_CODEC;
     }
+    if(type == "multipart/form-data") {
+      return MULTIPART_CODEC;
+    }
+    if(type == "application/x-www-form-urlencoded") {
+      return FORM_CODEC;
+    }
     return std::string();
   }
+
+  /*!
+   * Check if two schemas are the same: same object or same reference
+   */
+  bool
+  sameSchema(const Schema* left, const Schema* right) {
+    return left == right || (left != nullptr && right != nullptr && left->ref.has_value() && left->ref == right->ref);
+  }
+
+  /*!
+   * Form body media type
+   */
+  struct FormContent {
+    /*! Media type */
+    std::string mediaType;
+    /*! Codec */
+    std::string codec;
+    /*! Schema ( \c nullptr without schema) */
+    const Schema* schema;
+  };
 
   /*!
    * Success status code ( \c 2xx , \c 2XX is \c 200 )
@@ -294,6 +329,7 @@ Generator::buildOperation(const std::string& method, const std::string& path, co
     }
     const Schema* schema = nullptr;
     bool text = false;
+    std::vector<FormContent> forms; // multipart/form-data first
     for(const auto& [mediaType, content] : body->content) {
       std::string codec = codecOf(mediaType);
       if(codec == JSON_CODEC && content.schema.has_value()) {
@@ -304,17 +340,56 @@ Generator::buildOperation(const std::string& method, const std::string& path, co
 	if(schema == nullptr && content.schema.has_value()) {
 	  schema = &content.schema.value();
 	}
+      } else if(codec == MULTIPART_CODEC || codec == FORM_CODEC) {
+	FormContent form{mediaType, codec, content.schema.has_value() ? &content.schema.value() : nullptr};
+	forms.insert(codec == MULTIPART_CODEC ? forms.begin() : forms.end(), std::move(form));
       }
     }
-    if(schema == nullptr) {
-      throw Unsupported{"request body media types (only application/json and text/plain with schema are supported)"};
+    const std::string where = "paths." + path + "." + method;
+    Type type;
+    if(schema == nullptr && !forms.empty()) {
+      // Form body: model of the first form media type with schema, anch::rest::Form without schema
+      for(const FormContent& form : forms) {
+	if(form.schema != nullptr) {
+	  schema = form.schema;
+	  break;
+	}
+      }
+      if(schema == nullptr) {
+	type.cpp = "anch::rest::Form";
+	_rawForm = true;
+      } else {
+	type = resolve(*schema, pascal(name) + "Request");
+	if(!type.model || type.container != Container::NONE) {
+	  throw Unsupported{"form request body which is not an object"};
+	}
+      }
+    } else {
+      if(schema == nullptr) {
+	throw Unsupported{"request body media types (only application/json, text/plain, multipart/form-data and "
+			  "application/x-www-form-urlencoded are supported)"};
+      }
+      type = resolve(*schema, pascal(name) + "Request");
+      if(text && type.cpp == "std::string" && type.container == Container::NONE && !type.model && !type.enumeration) {
+	op.consumes.push_back(TEXT_CODEC);
+      }
+      if(op.consumes.empty()) {
+	throw Unsupported{"text/plain request body which is not a string"};
+      }
     }
-    Type type = resolve(*schema, pascal(name) + "Request");
-    if(text && type.cpp == "std::string" && type.container == Container::NONE && !type.model && !type.enumeration) {
-      op.consumes.push_back(TEXT_CODEC);
-    }
-    if(op.consumes.empty()) {
-      throw Unsupported{"text/plain request body which is not a string"};
+    // Form codecs with the same body type
+    for(const FormContent& form : forms) {
+      const bool mapped = type.model && type.container == Container::NONE;
+      if(form.schema == nullptr ? (type.cpp == "anch::rest::Form" || mapped) : (mapped && sameSchema(form.schema, schema))) {
+	op.consumes.push_back(form.codec);
+	_formCodecs.insert(form.codec);
+	if(mapped) {
+	  FormMapping& mapping = _forms[type.cpp];
+	  mapping.multipart = mapping.multipart || form.codec == MULTIPART_CODEC;
+	}
+      } else {
+	_warnings.push_back(where + ": " + form.mediaType + " request body is ignored (its schema is not the one of the other media types)");
+      }
     }
     op.body = type;
     op.bodyArg = "body";
@@ -474,6 +549,172 @@ Generator::writeOperationDoc(std::ostream& out, const Op& op, const std::string&
   writeDoc(out, indent, doc);
 }
 
+std::string
+Generator::formCodecInclude(bool multipart) const {
+  if(multipart) {
+    return _formCodecs.contains(MULTIPART_CODEC) ? "#include \"rest/multipartCodec.hpp\"\n" : "";
+  }
+  return _formCodecs.contains(FORM_CODEC) ? "#include \"rest/formCodec.hpp\"\n" : "";
+}
+
+void
+Generator::buildFormMappings() {
+  for(auto& [name, mapping] : _forms) {
+    auto found = _models.find(name);
+    if(found == _models.end()) {
+      continue;
+    }
+    const Model& model = found->second;
+    for(const Field& field : model.fields) {
+      const std::string key = literal(field.json);
+      const std::string member = "value." + field.member;
+      Type element = field.type;
+      element.cpp = qualified(field.type);
+      const std::string cpp = cppType(element, false, field.pointer);
+      const bool scalar = field.type.container != Container::MAP && !field.type.model && !field.type.enumeration
+	&& PARAMETER_TYPES.contains(field.type.cpp);
+      if(field.pointer) {
+	warn(name + "." + field.json, "recursive model in form body");
+	continue;
+      }
+      if(field.part) {
+	mapping.write.push_back("anch::rest::addFormFile(form, " + key + ", " + member + ");");
+	if(field.type.container == Container::VECTOR) {
+	  mapping.read.push_back(member + " = anch::rest::formFiles(form, " + key + ");");
+	} else {
+	  mapping.read.push_back(member + " = anch::rest::" + (field.optional ? "formFile" : "requiredFormFile") + "(form, " + key + ");");
+	}
+      } else if(scalar) {
+	mapping.write.push_back("anch::rest::addFormField(form, " + key + ", " + member + ");");
+	if(field.type.container == Container::VECTOR) {
+	  mapping.read.push_back(member + " = anch::rest::formFields<" + field.type.cpp + ">(form, " + key + ");");
+	} else {
+	  mapping.read.push_back(member + " = anch::rest::" + (field.optional ? "formField" : "requiredFormField") + "<" + field.type.cpp
+				 + ">(form, " + key + ");");
+	}
+      } else if(mapping.multipart && (field.type.model || field.type.container != Container::NONE)) {
+	// Objects and arrays: application/json parts
+	mapping.side = true;
+	if(field.optional) {
+	  mapping.write.push_back("if(" + member + ") {\n  anch::rest::addJsonFormField(form, " + key + ", *" + member + ", side);\n}");
+	  mapping.read.push_back(member + " = anch::rest::jsonFormField<" + cpp + ">(form, " + key + ", side);");
+	} else {
+	  mapping.write.push_back("anch::rest::addJsonFormField(form, " + key + ", " + member + ", side);");
+	  if(field.required) {
+	    mapping.read.push_back(member + " = anch::rest::requiredJsonFormField<" + cpp + ">(form, " + key + ", side);");
+	  } else {
+	    mapping.read.push_back(member + " = anch::rest::jsonFormField<" + cpp + ">(form, " + key + ", side).value_or(" + cpp + "());");
+	  }
+	}
+      } else {
+	warn(name + "." + field.json, "form field of type " + cppType(field.type, false, false) + " (form fields are strings, numbers, "
+	     "booleans, UUID and files, multipart/form-data objects and arrays are JSON parts)");
+      }
+    }
+    if(_options.constraints) {
+      mapping.read.push_back("anch::rest::checkFormConstraints(value, side);");
+      mapping.side = true;
+    }
+  }
+}
+
+void
+Generator::writeFormsHeader(std::ostream& out) const {
+  writeBanner(out);
+  out << "#pragma once\n\n"
+      << "#include \"" << _options.name << ".hpp\"\n\n"
+      << "#include \"rest/codec.hpp\"\n"
+      << "#include \"rest/form.hpp\"\n"
+      << "#include \"rest/formMapper.hpp\"\n";
+  if(_forms.empty()) {
+    out << "\n// No form body model\n";
+    return;
+  }
+  out << "\nnamespace anch::rest {\n";
+  for(const auto& [name, mapping] : _forms) {
+    if(!_models.contains(name)) {
+      continue;
+    }
+    const std::string type = "::" + _options.ns + "::" + name;
+    out << '\n';
+    writeDoc(out, "  ", "\\c " + type + " form mapping (" + (mapping.multipart ? "multipart/form-data" : "application/x-www-form-urlencoded")
+	     + " body)");
+    out << "  template<>\n"
+	<< "  struct FormMapper<" << type << "> {\n"
+	<< "    /*!\n"
+	<< "     * Write value in form\n"
+	<< "     *\n"
+	<< "     * \\param value the value\n"
+	<< "     * \\param form the form\n"
+	<< "     * \\param side the side which writes form\n"
+	<< "     */\n"
+	<< "    static void toForm(const " << type << "& value, anch::rest::Form& form, anch::rest::Side side);\n\n"
+	<< "    /*!\n"
+	<< "     * Read value from form\n"
+	<< "     *\n"
+	<< "     * \\param value the value to fill\n"
+	<< "     * \\param form the form\n"
+	<< "     * \\param side the side which reads form\n"
+	<< "     *\n"
+	<< "     * \\throw anch::rest::HttpException \\c 400 when a required field is missing or a value is invalid\n"
+	<< "     */\n"
+	<< "    static void fromForm(" << type << "& value, const anch::rest::Form& form, anch::rest::Side side);\n"
+	<< "  };\n";
+  }
+  out << "\n}  // anch::rest\n";
+}
+
+void
+Generator::writeFormsSource(std::ostream& out) const {
+  writeBanner(out);
+  out << "#include \"" << _options.name << "-forms.hpp\"\n";
+  if(_forms.empty()) {
+    out << "\n// No form body model\n";
+    return;
+  }
+  out << "\n#include <string>\n"
+      << "#include <vector>\n\n"
+      << "#include \"rest/httpException.hpp\"\n"
+      << "#include \"rest/jsonCodec.hpp\"\n"
+      << "#include \"rest/paramConverter.hpp\"\n\n"
+      << "namespace anch::rest {\n";
+  auto writeBody = [&out](const std::vector<std::string>& statements) {
+    for(const std::string& statement : statements) {
+      std::istringstream lines(statement);
+      std::string line;
+      while(std::getline(lines, line)) {
+	out << "    " << line << '\n';
+      }
+    }
+  };
+  auto usesSide = [](const std::vector<std::string>& statements) {
+    return std::any_of(statements.begin(), statements.end(), [](const std::string& statement) {
+      return statement.find("side)") != std::string::npos;
+    });
+  };
+  for(const auto& [name, mapping] : _forms) {
+    if(!_models.contains(name)) {
+      continue;
+    }
+    const std::string type = "::" + _options.ns + "::" + name;
+    const std::string unusedWrite = mapping.write.empty() ? "[[maybe_unused]] " : "";
+    const std::string unusedRead = mapping.read.empty() ? "[[maybe_unused]] " : "";
+    out << "\n  // " << name << " +\n"
+	<< "  void\n"
+	<< "  FormMapper<" << type << ">::toForm(" << unusedWrite << "const " << type << "& value, " << unusedWrite
+	<< "anch::rest::Form& form, " << (usesSide(mapping.write) ? "" : "[[maybe_unused]] ") << "anch::rest::Side side) {\n";
+    writeBody(mapping.write);
+    out << "  }\n\n"
+	<< "  void\n"
+	<< "  FormMapper<" << type << ">::fromForm(" << unusedRead << type << "& value, " << unusedRead
+	<< "const anch::rest::Form& form, " << (usesSide(mapping.read) ? "" : "[[maybe_unused]] ") << "anch::rest::Side side) {\n";
+    writeBody(mapping.read);
+    out << "  }\n"
+	<< "  // " << name << " -\n";
+  }
+  out << "\n}  // anch::rest\n";
+}
+
 void
 Generator::writeServerHeader(std::ostream& out) const {
   std::string service = apiName() + "Service";
@@ -484,7 +725,8 @@ Generator::writeServerHeader(std::ostream& out) const {
       << "#include <optional>\n"
       << "#include <string>\n"
       << "#include <vector>\n\n"
-      << "#include \"" << _options.name << ".hpp\"\n\n"
+      << "#include \"" << _options.name << ".hpp\"\n"
+      << "#include \"" << _options.name << "-forms.hpp\"\n\n"
       << "#include \"rest/api.hpp\"\n"
       << "#include \"rest/response.hpp\"\n\n"
       << "namespace " << _options.ns << " {\n\n";
@@ -512,7 +754,9 @@ Generator::writeServerSource(std::ostream& out) const {
   out << "#include \"" << _options.name << "-server.hpp\"\n\n"
       << "#include \"rest/body.hpp\"\n"
       << "#include \"rest/codec.hpp\"\n"
+      << formCodecInclude(false)
       << "#include \"rest/jsonCodec.hpp\"\n"
+      << formCodecInclude(true)
       << "#include \"rest/paramConverter.hpp\"\n"
       << "#include \"rest/request.hpp\"\n"
       << "#include \"rest/status.hpp\"\n\n"
@@ -568,7 +812,8 @@ Generator::writeClientHeader(std::ostream& out) const {
       << "#include <optional>\n"
       << "#include <string>\n"
       << "#include <vector>\n\n"
-      << "#include \"" << _options.name << ".hpp\"\n\n"
+      << "#include \"" << _options.name << ".hpp\"\n"
+      << "#include \"" << _options.name << "-forms.hpp\"\n\n"
       << "#include \"rest/client.hpp\"\n"
       << "#include \"rest/response.hpp\"\n\n"
       << "namespace " << _options.ns << " {\n\n";
@@ -602,8 +847,10 @@ Generator::writeClientSource(std::ostream& out) const {
   out << "#include \"" << _options.name << "-client.hpp\"\n\n"
       << "#include <utility>\n\n"
       << "#include \"rest/codec.hpp\"\n"
+      << formCodecInclude(false)
       << "#include \"rest/httpError.hpp\"\n"
       << "#include \"rest/jsonCodec.hpp\"\n"
+      << formCodecInclude(true)
       << "#include \"rest/status.hpp\"\n\n"
       << "namespace " << _options.ns << " {\n\n"
       << "  " << client << "::" << client << "(anch::rest::Client& client): _client(client) {\n"

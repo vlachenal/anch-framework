@@ -25,6 +25,7 @@
 
 #include <iterator>
 #include <memory>
+#include <sstream>
 #include <stdexcept>
 #include <optional>
 #include <initializer_list>
@@ -152,6 +153,39 @@ anch::json::registerObject(anch::json::ObjectMapper<Owner>& mapper) {
     ;
 }
 
+// Form mapping +
+struct UploadPhoto {
+  std::string description;
+  std::optional<uint32_t> age;
+  std::vector<std::string> tags;
+  anch::rest::Part photo;
+  std::optional<Pet> pet;
+};
+
+template<>
+struct anch::rest::FormMapper<UploadPhoto> {
+  static void
+  toForm(const UploadPhoto& value, anch::rest::Form& form, anch::rest::Side side) {
+    anch::rest::addFormField(form, "description", value.description);
+    anch::rest::addFormField(form, "age", value.age);
+    anch::rest::addFormField(form, "tags", value.tags);
+    anch::rest::addFormFile(form, "photo", value.photo);
+    if(value.pet) {
+      anch::rest::addJsonFormField(form, "pet", *value.pet, side);
+    }
+  }
+
+  static void
+  fromForm(UploadPhoto& value, const anch::rest::Form& form, anch::rest::Side side) {
+    value.description = anch::rest::requiredFormField<std::string>(form, "description");
+    value.age = anch::rest::formField<uint32_t>(form, "age");
+    value.tags = anch::rest::formFields<std::string>(form, "tags");
+    value.photo = anch::rest::requiredFormFile(form, "photo");
+    value.pet = anch::rest::jsonFormField<Pet>(form, "pet", side);
+  }
+};
+// Form mapping -
+
 void
 testFormatPath() {
   anch::ut::assertThat(Client::formatPath("/owners/{owner}/pets/{id}", {"a b/c", "42"}) == "/owners/a%20b%2Fc/pets/42",
@@ -233,6 +267,27 @@ testMultipart() {
     .body("--srv\r\nContent-Disposition: form-data; name=\"id\"\r\n\r\n42\r\n--srv--\r\n");
   anch::rest::Form result = fixture.client.get("/card").accept<anch::rest::Multipart>().as<anch::rest::Form>();
   anch::ut::assertThat(result.field("id") == "42", "Unexpected response form");
+}
+
+void
+testFormMapper() {
+  Fixture fixture;
+  UploadPhoto upload{"Rex", std::nullopt, {"a"}, anch::rest::Part("x", "rex.png", anch::rest::MediaType("image", "png"), "PNG"), std::nullopt};
+  fixture.client.post("/pets/{id}/photo", 1).body<anch::rest::Multipart>(upload).send();
+  std::optional<anch::rest::MediaType> type = anch::rest::MediaType::parse(fixture.transport->headers.get("Content-Type").value_or(""));
+  anch::ut::assertThat(type && type->essence() == "multipart/form-data" && type->getParameter("boundary"), "Unexpected content type");
+  std::istringstream input(fixture.transport->body);
+  anch::rest::Form form;
+  anch::rest::Multipart::deserialize(form, input, *type, anch::rest::Side::SERVER);
+  anch::ut::assertThat(form.size() == 3 && form.field("description") == "Rex" && !form.has("age") && form.field("tags") == "a"
+		       && form.part("photo")->getFilename() == "rex.png", "Unexpected sent form");
+  bool refused = false;
+  try {
+    fixture.client.post("/pets/{id}/photo", 1).body<anch::rest::FormUrlEncoded>(upload).send();
+  } catch(const std::invalid_argument&) {
+    refused = true;
+  }
+  anch::ut::assertThat(refused, "File can not be URL-encoded");
 }
 
 void
@@ -336,6 +391,7 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("codec-media-type", testCodecMediaType)
     .add("form", testForm)
     .add("multipart", testMultipart)
+    .add("form-mapper", testFormMapper)
     .add("constraints", testConstraints)
     .add("http-error", testHttpError)
     .add("filters", testFilters)

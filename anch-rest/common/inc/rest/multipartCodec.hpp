@@ -26,6 +26,7 @@
 
 #include "rest/codec.hpp"
 #include "rest/form.hpp"
+#include "rest/formMapper.hpp"
 #include "rest/mediaType.hpp"
 
 namespace anch::rest {
@@ -44,7 +45,9 @@ namespace anch::rest {
    * \c Content-Type is \c text/plain by default, \c application/octet-stream for files. Other part
    * headers are kept ( \c Content-Transfer-Encoding is not applied). Malformed bodies raise
    * \c std::invalid_argument ( \c 400 on server side), bodies over \ref limits raise
-   * \ref ContentTooLarge ( \c 413 ).
+   * \ref ContentTooLarge ( \c 413 ).\n
+   * \n
+   * Types with a \ref FormMapper are read and written through a \ref Form .
    * \code{.cpp}
 api.post("/pets/{id}/photo", [](uint64_t id, anch::rest::Body<anch::rest::Form> form) {
   const anch::rest::Part* photo = form->part("photo");
@@ -90,6 +93,26 @@ client.post("/pets/{id}/photo", 42).body<anch::rest::Multipart>(form).send();
     static anch::rest::MediaType contentType(const anch::rest::Form& form);
 
     /*!
+     * Get body media type of a value mapped with its \ref FormMapper : \c multipart/form-data with a
+     * random boundary (\ref serialize refuses it if it appears in a part)
+     *
+     * \tparam T the value type
+     *
+     * \param value the value
+     *
+     * \return the media type
+     */
+    template<anch::rest::FormMapped T>
+    static anch::rest::MediaType contentType(const T& value);
+
+    /*!
+     * Get random boundary: \c "anch-" and 32 alphanumeric characters
+     *
+     * \return the boundary
+     */
+    static std::string randomBoundary();
+
+    /*!
      * Write form
      *
      * \param form the form
@@ -117,6 +140,34 @@ client.post("/pets/{id}/photo", 42).body<anch::rest::Multipart>(form).send();
     static void deserialize(anch::rest::Form& form, std::istream& input, const anch::rest::MediaType& contentType,
 			    anch::rest::Side side);
 
+    /*!
+     * Write value mapped with its \ref FormMapper
+     *
+     * \tparam T the value type
+     *
+     * \param value the value
+     * \param out the output stream
+     * \param contentType the body media type (with its boundary)
+     * \param side the side which writes value
+     */
+    template<anch::rest::FormMapped T>
+    static void serialize(const T& value, std::ostream& out, const anch::rest::MediaType& contentType, anch::rest::Side side);
+
+    /*!
+     * Read value mapped with its \ref FormMapper
+     *
+     * \tparam T the value type
+     *
+     * \param value the value to fill
+     * \param input the input stream
+     * \param contentType the body media type (with its boundary)
+     * \param side the side which reads value
+     */
+    template<anch::rest::FormMapped T>
+    static void deserialize(T& value, std::istream& input, const anch::rest::MediaType& contentType, anch::rest::Side side);
+
   };
 
 }
+
+#include "rest/impl/multipartCodec.hpp"

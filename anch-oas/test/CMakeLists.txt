@@ -12,6 +12,7 @@ add_custom_command(
   BYPRODUCTS ${models_dir}/petstore.hpp ${models_dir}/petstore.cpp
     ${models_dir}/petstore-server.hpp ${models_dir}/petstore-server.cpp
     ${models_dir}/petstore-client.hpp ${models_dir}/petstore-client.cpp
+    ${models_dir}/petstore-forms.hpp ${models_dir}/petstore-forms.cpp
   COMMAND anch-oas-gen -i ${CMAKE_CURRENT_SOURCE_DIR}/petstore.json -o ${models_dir} -n petstore::model -f petstore
     --server --client
   COMMAND ${CMAKE_COMMAND} -E touch ${models_dir}/petstore.stamp
@@ -27,7 +28,7 @@ target_include_directories(anch-oas-models-test PRIVATE ${models_dir})
 # Endpoints generated from petstore.json (anch-rest server and client) +
 if(TARGET anch::rest-server AND TARGET anch::rest-client)
   anch_add_executable(anch-oas-endpoints-test SOURCES testEndpoints.cpp ${models_dir}/petstore.cpp
-    ${models_dir}/petstore-server.cpp ${models_dir}/petstore-client.cpp
+    ${models_dir}/petstore-server.cpp ${models_dir}/petstore-client.cpp ${models_dir}/petstore-forms.cpp
     LIBS anch::rest-server anch::rest-client anch::uuid anch::ut)
   add_dependencies(anch-oas-endpoints-test anch-oas-petstore-models)
   target_include_directories(anch-oas-endpoints-test PRIVATE ${models_dir})
@@ -35,6 +36,29 @@ if(TARGET anch::rest-server AND TARGET anch::rest-client)
   add_test(NAME oas-endpoints-client COMMAND anch-oas-endpoints-test -t endpoints-client)
 endif()
 # Endpoints generated from petstore.json (anch-rest server and client) -
+
+# Form bodies generated from forms.json (anch-rest server and client) +
+if(TARGET anch::rest-server AND TARGET anch::rest-client)
+  add_custom_command(
+    OUTPUT ${models_dir}/photos.stamp
+    BYPRODUCTS ${models_dir}/photos.hpp ${models_dir}/photos.cpp
+      ${models_dir}/photos-server.hpp ${models_dir}/photos-server.cpp
+      ${models_dir}/photos-client.hpp ${models_dir}/photos-client.cpp
+      ${models_dir}/photos-forms.hpp ${models_dir}/photos-forms.cpp
+    COMMAND anch-oas-gen -i ${CMAKE_CURRENT_SOURCE_DIR}/forms.json -o ${models_dir} -n photos::model -f photos --server --client
+    COMMAND ${CMAKE_COMMAND} -E touch ${models_dir}/photos.stamp
+    DEPENDS anch-oas-gen ${CMAKE_CURRENT_SOURCE_DIR}/forms.json
+    COMMENT "Generating pet photos models")
+  add_custom_target(anch-oas-photos-models DEPENDS ${models_dir}/photos.stamp)
+  anch_add_executable(anch-oas-forms-test SOURCES testForms.cpp ${models_dir}/photos.cpp
+    ${models_dir}/photos-server.cpp ${models_dir}/photos-client.cpp ${models_dir}/photos-forms.cpp
+    LIBS anch::rest-server anch::rest-client anch::ut)
+  add_dependencies(anch-oas-forms-test anch-oas-photos-models)
+  target_include_directories(anch-oas-forms-test PRIVATE ${models_dir})
+  add_test(NAME oas-forms-server COMMAND anch-oas-forms-test -t forms-server)
+  add_test(NAME oas-forms-client COMMAND anch-oas-forms-test -t forms-client)
+endif()
+# Form bodies generated from forms.json (anch-rest server and client) -
 
 add_test(NAME oas-spec-version COMMAND anch-oas-generator-test -t spec-version)
 add_test(NAME oas-spec-invalid-json COMMAND anch-oas-generator-test -t spec-invalid-json)
@@ -56,6 +80,7 @@ add_test(NAME oas-gen-constraints COMMAND anch-oas-generator-test -t gen-constra
 add_test(NAME oas-gen-constraints-warnings COMMAND anch-oas-generator-test -t gen-constraints-warnings)
 add_test(NAME oas-gen-endpoints COMMAND anch-oas-generator-test -t gen-endpoints)
 add_test(NAME oas-gen-endpoints-warnings COMMAND anch-oas-generator-test -t gen-endpoints-warnings)
+add_test(NAME oas-gen-forms COMMAND anch-oas-generator-test -t gen-forms)
 add_test(NAME oas-models-pet COMMAND anch-oas-models-test -t models-pet)
 add_test(NAME oas-models-optional COMMAND anch-oas-models-test -t models-optional)
 add_test(NAME oas-models-nullable-enum COMMAND anch-oas-models-test -t models-nullable-enum)

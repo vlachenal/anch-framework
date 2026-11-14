@@ -117,6 +117,19 @@ namespace anch::oas {
      */
     std::string clientSource;
 
+    /*! Forms header content: \c anch::rest::FormMapper of form bodies models (when \c server or \c client option
+     * is set)
+     *
+     * \since 0.2
+     */
+    std::string formsHeader;
+
+    /*! Forms source content: \c anch::rest::FormMapper implementations (when \c server or \c client option is set)
+     *
+     * \since 0.2
+     */
+    std::string formsSource;
+
     /*! Warnings: schemas, properties and operations which have not been generated, constraints which have been
      * ignored */
     std::vector<std::string> warnings;

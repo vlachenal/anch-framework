@@ -8,7 +8,7 @@ anch_rest_sources(common_sources common)
 anch_add_library(anch-rest-common
   INCLUDE_DIRS common/inc
   SOURCES ${common_sources}
-  PUBLIC_DEPS anch::json)
+  PUBLIC_DEPS anch::json anch::uuid)
 # HTTP model and codecs -
 
 # REST API declaration and routing +
@@ -17,7 +17,7 @@ if(ANCH_REST_SERVER_LIB)
   anch_add_library(anch-rest-server
     INCLUDE_DIRS server/inc
     SOURCES ${server_sources}
-    PUBLIC_DEPS anch::rest-common anch::uuid)
+    PUBLIC_DEPS anch::rest-common)
 
   # nginx applications bridge (the nginx module itself is built with nginx, see nginx/config)
   if(ANCH_REST_NGINX)

@@ -179,8 +179,10 @@ std::vector<petstore::model::Tag> tags = client.listPets("AB");      // optional
  *   optional query parameters ( \c std::optional ). Path item and operation parameters are merged, references to
  *   \c #/components/parameters/ are followed. Path and query parameters are strings, numbers, booleans or UUID
  *   (converted by \c anch::rest::ParamConverter : invalid or missing value is a \c 400 response) ;
- * - request body: \c application/json ( \c anch::rest::Json ) and \c text/plain ( \c anch::rest::Text , strings
- *   only) ; references to \c #/components/requestBodies/ are followed ;
+ * - request body: \c application/json ( \c anch::rest::Json ), \c text/plain ( \c anch::rest::Text , strings
+ *   only), \c multipart/form-data ( \c anch::rest::Multipart ) and \c application/x-www-form-urlencoded
+ *   ( \c anch::rest::FormUrlEncoded ) ; references to \c #/components/requestBodies/ are followed (see
+ *   \ref oas_forms_sec "form bodies") ;
  * - result: success response ( \c 2xx ) with content → its type, with a \c 404 response → \c std::optional (empty
  *   result is a \c 404 response server side, \c 404 response is an empty result client side), without content →
  *   \c void , several success responses or other media types → \c anch::rest::Response . Status other than
@@ -194,4 +196,22 @@ std::vector<petstore::model::Tag> tags = client.listPets("AB");      // optional
  * undeclared path parameters, parameters of other types (enumerations, arrays, objects), request bodies of other
  * media types. Header and cookie parameters are not generated (warning). Constraints of path and query parameters
  * are not checked.
+ *
+ * \section oas_forms_sec Form bodies
+ *
+ * Form request bodies ( \c multipart/form-data and \c application/x-www-form-urlencoded ) need an object schema
+ * (a model) or no schema ( \c anch::rest::Form body). A model used by several media types of a body (JSON and
+ * form) gets every codec, a form media type with another schema is ignored (warning). Each form body model gets an
+ * \c anch::rest::FormMapper in \c NAME-forms.hpp and \c NAME-forms.cpp (generated with \c --server and
+ * \c --client , without mapper when the document has no form body):
+ * - \c string with \c binary format (or array of them) of a \c multipart/form-data model → \c anch::rest::Part
+ *   (file name, media type and content), not mapped in JSON: models header then includes \c rest/form.hpp
+ *   (anch-rest-common) ;
+ * - strings, numbers, booleans and UUID → fields ( \c anch::rest::ParamConverter : invalid or missing required
+ *   value is a \c 400 response), arrays of them → repeated fields ;
+ * - objects, arrays of objects and maps of \c multipart/form-data models → \c application/json parts ;
+ * - anch-json constraints are checked on server side ( \c anch::rest::checkFormConstraints ).
+ * Not generated (warning, or error with \c --strict ): enumerations and dates fields, objects of
+ * \c application/x-www-form-urlencoded models, recursive models, form bodies which are not objects. Encoding
+ * objects ( \c encoding ) are not read.
  */

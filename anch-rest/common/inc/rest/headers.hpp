@@ -159,6 +159,15 @@ namespace anch::rest {
      * \return the end iterator
      */
     Map::const_iterator end() const noexcept;
+
+    /*!
+     * Equality operator: same names (case insensitive) with same values
+     *
+     * \param other the headers to compare
+     *
+     * \return \c true when headers are equal
+     */
+    bool operator==(const Headers& other) const = default;
     // Methods -
 
   };

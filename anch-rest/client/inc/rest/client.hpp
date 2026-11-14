@@ -32,36 +32,12 @@
 #include "rest/headers.hpp"
 #include "rest/httpError.hpp"
 #include "rest/method.hpp"
+#include "rest/paramConverter.hpp"
 #include "rest/request.hpp"
 #include "rest/response.hpp"
 #include "rest/transport.hpp"
 
 namespace anch::rest {
-
-  /*!
-   * Value which can be used as path or query parameter: strings, numbers, \c bool and types with
-   * stream injection operator
-   *
-   * \tparam T the value type
-   *
-   * \since 0.2
-   */
-  template<typename T>
-  concept ParameterValue = std::convertible_to<const T&, std::string_view>
-    || std::is_arithmetic_v<T>
-    || requires(std::ostream& out, const T& value) { out << value; };
-
-  /*!
-   * Format parameter value
-   *
-   * \param value the value
-   *
-   * \return the formatted value (not encoded)
-   *
-   * \since 0.2
-   */
-  template<anch::rest::ParameterValue T>
-  std::string toParameterString(const T& value);
 
   class Client;
 

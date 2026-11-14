@@ -253,19 +253,6 @@ namespace {
     }
   }
 
-  /*! Random boundary: "anch-" and 32 alphanumeric characters */
-  std::string
-  randomBoundary() {
-    static constexpr std::string_view CHARS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-    thread_local std::mt19937_64 generator(std::random_device{}());
-    std::uniform_int_distribution<std::size_t> distribution(0, CHARS.size() - 1);
-    std::string res = "anch-";
-    for(int i = 0 ; i < 32 ; ++i) {
-      res += CHARS[distribution(generator)];
-    }
-    return res;
-  }
-
   bool
   contains(const Form& form, std::string_view value) {
     for(const Part& part : form) {
@@ -276,6 +263,18 @@ namespace {
     return false;
   }
 
+}
+
+std::string
+Multipart::randomBoundary() {
+  static constexpr std::string_view CHARS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+  thread_local std::mt19937_64 generator(std::random_device{}());
+  std::uniform_int_distribution<std::size_t> distribution(0, CHARS.size() - 1);
+  std::string res = "anch-";
+  for(int i = 0 ; i < 32 ; ++i) {
+    res += CHARS[distribution(generator)];
+  }
+  return res;
 }
 
 std::string_view

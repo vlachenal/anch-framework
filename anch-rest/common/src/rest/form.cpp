@@ -27,6 +27,10 @@ using anch::rest::MediaType;
 using anch::rest::Part;
 
 // Part +
+Part::Part(): Part(std::string_view(), std::string()) {
+  // Nothing to do
+}
+
 Part::Part(std::string_view name, std::string content):
   _name(name),
   _filename(),
@@ -68,6 +72,11 @@ Part::isFile() const noexcept {
 const std::string&
 Part::getName() const noexcept {
   return _name;
+}
+
+void
+Part::setName(std::string_view name) {
+  _name = name;
 }
 
 std::optional<std::string_view>

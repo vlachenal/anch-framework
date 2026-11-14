@@ -129,7 +129,25 @@ anch-oas
          cas), http-multipart-limits, api-multipart (upload, 400, 413, réponse multipart),
          client-multipart, curl-multipart (bout en bout) ; nginx : upload curl -F en fichier temporaire
          et client_max_body_size (413 de nginx).
-[ ] 4. FormMapper<T> écrit à la main, puis généré par anch-oas.
+[x] 4. FormMapper<T> écrit à la main, puis généré par anch-oas. Fait le 2026-11-14 :
+       * anch-rest : rest/formMapper.hpp (FormMapper<T> : toForm(value, form, side) / fromForm(value, form, side),
+         concept FormMapped ; helpers addFormField / formField / formFields, addFormFile / formFile /
+         requiredFormFile / formFiles, addJsonFormField / jsonFormField / requiredJsonFormField,
+         checkFormConstraints (anch::json::validate côté serveur)). Multipart et FormUrlEncoded acceptent tout
+         T mappé (Multipart::contentType(const T&) tire le boundary sans parcourir les parties : serialize le
+         refuse s'il y apparaît). ParamConverter, ParameterValue et toParameterString déplacés dans
+         anch-rest-common (mêmes en-têtes ; common dépend d'anch-uuid). Part constructible par défaut, Part et
+         Headers comparables (operator== des modèles générés).
+       * anch-oas : codecOf connaît multipart/form-data et x-www-form-urlencoded ; corps de formulaire = modèle
+         (schéma object) ou anch::rest::Form sans schéma ; même modèle en JSON et formulaire -> tous les codecs,
+         autre schéma -> warning. Propriété binary (ou tableau) d'un modèle multipart -> anch::rest::Part, non
+         enregistrée dans le mapper JSON (models.hpp inclut alors rest/form.hpp). FormMapper générés dans
+         NAME-forms.hpp / .cpp (toujours écrits avec --server / --client) : scalaires -> champs, tableaux de
+         scalaires -> champs répétés, objets / tableaux / maps (multipart) -> parties JSON, contraintes
+         vérifiées côté serveur ; enums, dates, objets en urlencoded, modèles récursifs -> warning.
+       * Tests : api-form-mapper, client-form-mapper, oas-gen-forms (code généré), oas-forms-server /
+         oas-forms-client (forms.json généré, compilé et exécuté serveur / client).
+       * Restent : encoding (contentType / headers des parties), enums et dates en champs de formulaire.
 [ ] 5. Contenu de partie en flux (gros fichiers), côté serveur puis client.
 
 Questions tranchées (2026-11-14)

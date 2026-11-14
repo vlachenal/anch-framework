@@ -79,9 +79,11 @@ parseArgs(int argc, char** argv, GeneratorOptions& opts) {
     {.handler = anch::cli::bindStr(opts.models.name), .sopt = 'f', .lopt = "file", .value = true, .name = "NAME",
      .description = "Generated files base name: NAME.hpp and NAME.cpp (default to models)"},
     {.handler = anch::cli::bindTrue(opts.models.server), .lopt = "server",
-     .description = "Generate server endpoints: service interface and its registration in anch-rest API (NAME-server.hpp and NAME-server.cpp)"},
+     .description = "Generate server endpoints: service interface and its registration in anch-rest API (NAME-server.hpp and NAME-server.cpp, "
+     "form bodies mappers in NAME-forms.hpp and NAME-forms.cpp)"},
     {.handler = anch::cli::bindTrue(opts.models.client), .lopt = "client",
-     .description = "Generate typed anch-rest client (NAME-client.hpp and NAME-client.cpp)"},
+     .description = "Generate typed anch-rest client (NAME-client.hpp and NAME-client.cpp, form bodies mappers in NAME-forms.hpp and "
+     "NAME-forms.cpp)"},
     {.handler = anch::cli::bindStr(opts.models.api), .lopt = "api-name", .value = true, .name = "API",
      .description = "Service and client names prefix: APIService and APIClient (default to document title in PascalCase)", .example = "PetStore"},
     {.handler = anch::cli::bindFalse(opts.models.uuid), .lopt = "no-uuid",
@@ -146,6 +148,10 @@ main(int argc, char** argv) {
     std::filesystem::create_directories(opts.output);
     writeFile(opts.output / (opts.models.name + ".hpp"), models.header);
     writeFile(opts.output / (opts.models.name + ".cpp"), models.source);
+    if(opts.models.server || opts.models.client) {
+      writeFile(opts.output / (opts.models.name + "-forms.hpp"), models.formsHeader);
+      writeFile(opts.output / (opts.models.name + "-forms.cpp"), models.formsSource);
+    }
     if(opts.models.server) {
       writeFile(opts.output / (opts.models.name + "-server.hpp"), models.serverHeader);
       writeFile(opts.output / (opts.models.name + "-server.cpp"), models.serverSource);

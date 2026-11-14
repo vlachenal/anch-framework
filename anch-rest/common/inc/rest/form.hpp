@@ -87,6 +87,12 @@ namespace anch::rest {
     // Constructors +
   public:
     /*!
+     * \ref Part default constructor: empty field without name ( \c text/plain ), to be assigned
+     * (model members)
+     */
+    Part();
+
+    /*!
      * Field \ref Part constructor ( \c text/plain )
      *
      * \param name the part name
@@ -134,6 +140,15 @@ namespace anch::rest {
      * \return \c true when part is a file
      */
     bool isFile() const noexcept;
+
+    /*!
+     * Equality operator: name, file name, media type, headers and content are compared
+     *
+     * \param other the part to compare
+     *
+     * \return \c true when parts are equal
+     */
+    bool operator==(const Part& other) const = default;
     // Methods -
 
     // Accessors +
@@ -144,6 +159,13 @@ namespace anch::rest {
      * \return the name
      */
     const std::string& getName() const noexcept;
+
+    /*!
+     * Set part name
+     *
+     * \param name the name
+     */
+    void setName(std::string_view name);
 
     /*!
      * Get file name

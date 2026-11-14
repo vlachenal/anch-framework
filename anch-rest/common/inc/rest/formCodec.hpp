@@ -26,6 +26,7 @@
 
 #include "rest/codec.hpp"
 #include "rest/form.hpp"
+#include "rest/formMapper.hpp"
 #include "rest/mediaType.hpp"
 
 namespace anch::rest {
@@ -35,7 +36,9 @@ namespace anch::rest {
    * \n
    * Values are written with the WHATWG URL-encoded serializer (space is \c + ). On reading, \c + is
    * a space, empty pairs are ignored and a pair without \c = is a field with an empty value. Content
-   * is UTF-8: another \c charset is refused.
+   * is UTF-8: another \c charset is refused.\n
+   * \n
+   * Types with a \ref FormMapper are read and written through a \ref Form .
    * \code{.cpp}
 api.post("/login", [](anch::rest::Body<anch::rest::Form> form) {
   std::string user = anch::rest::requiredFormField<std::string>(*form, "user");
@@ -92,6 +95,33 @@ client.post("/login").body<anch::rest::FormUrlEncoded>(anch::rest::Form().add("u
 			    anch::rest::Side side);
 
     /*!
+     * Write value mapped with its \ref FormMapper
+     *
+     * \tparam T the value type
+     *
+     * \param value the value
+     * \param out the output stream
+     * \param side the side which writes value
+     *
+     * \throw std::invalid_argument when form has a file part
+     */
+    template<anch::rest::FormMapped T>
+    static void serialize(const T& value, std::ostream& out, anch::rest::Side side);
+
+    /*!
+     * Read value mapped with its \ref FormMapper
+     *
+     * \tparam T the value type
+     *
+     * \param value the value to fill
+     * \param input the input stream
+     * \param contentType the body media type
+     * \param side the side which reads value
+     */
+    template<anch::rest::FormMapped T>
+    static void deserialize(T& value, std::istream& input, const anch::rest::MediaType& contentType, anch::rest::Side side);
+
+    /*!
      * Encode value with the WHATWG URL-encoded serializer: ASCII alphanumeric characters and
      * \c *-._ are kept, space is \c + , other bytes are percent-encoded
      *
@@ -104,3 +134,5 @@ client.post("/login").body<anch::rest::FormUrlEncoded>(anch::rest::Form().add("u
   };
 
 }
+
+#include "rest/impl/formCodec.hpp"

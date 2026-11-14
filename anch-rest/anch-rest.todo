@@ -89,4 +89,5 @@ Plus tard
   et 500 compris. Préflight refusé (origine, méthode, en-tête) -> 403 sans en-têtes CORS ; chemin inconnu -> 404.
   Vary: Origin quand les origines sont listées.
 - [ ] Corps multipart/form-data et application/x-www-form-urlencoded (anch-rest et anch-oas) : proposition
-  dans multipart.todo (2026-11-14).
+  dans multipart.todo (2026-11-14) ; étapes 1 à 4 faites (codecs, Form / Part, Multipart en mémoire avec
+  limites, FormMapper écrit à la main et généré par anch-oas), reste l'étape 5 (parties en flux).

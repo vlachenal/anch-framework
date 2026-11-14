@@ -21,8 +21,10 @@
 
 #include <concepts>
 #include <optional>
+#include <ostream>
 #include <string>
 #include <string_view>
+#include <type_traits>
 
 #include "uuid.hpp"
 
@@ -205,6 +207,32 @@ namespace anch::rest {
    */
   template<anch::rest::PathParameter T>
   T requiredFormField(const anch::rest::Form& form, std::string_view name);
+
+
+  /*!
+   * Value which can be used as path or query parameter: strings, numbers, \c bool and types with
+   * stream injection operator
+   *
+   * \tparam T the value type
+   *
+   * \since 0.2
+   */
+  template<typename T>
+  concept ParameterValue = std::convertible_to<const T&, std::string_view>
+    || std::is_arithmetic_v<T>
+    || requires(std::ostream& out, const T& value) { out << value; };
+
+  /*!
+   * Format parameter value
+   *
+   * \param value the value
+   *
+   * \return the formatted value (not encoded)
+   *
+   * \since 0.2
+   */
+  template<anch::rest::ParameterValue T>
+  std::string toParameterString(const T& value);
 
 }
 

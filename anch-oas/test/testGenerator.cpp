@@ -411,6 +411,84 @@ testEndpoints() {
 }
 
 void
+testForms() {
+  std::string document = pathsSpec(R"({
+    "/up":{"post":{"operationId":"upload","requestBody":{"content":{"multipart/form-data":{"schema":{"type":"object","required":["file","n"],
+        "properties":{"file":{"type":"string","format":"binary"},"files":{"type":"array","items":{"type":"string","format":"binary"}},
+          "n":{"type":"integer","format":"int32"},"ids":{"type":"array","items":{"type":"string","format":"uuid"}},
+          "pet":{"$ref":"#/components/schemas/Pet"},"pets":{"type":"array","items":{"$ref":"#/components/schemas/Pet"}},
+          "s":{"$ref":"#/components/schemas/S"},"b64":{"type":"string","format":"byte"}}}}}},"responses":{"204":{"description":"ok"}}}},
+    "/pet":{"post":{"operationId":"pet","requestBody":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/Pet"}},
+        "application/x-www-form-urlencoded":{"schema":{"$ref":"#/components/schemas/Pet"}},
+        "multipart/form-data":{"schema":{"$ref":"#/components/schemas/Other"}}}},"responses":{"204":{"description":"ok"}}}},
+    "/raw":{"post":{"operationId":"raw","requestBody":{"content":{"application/x-www-form-urlencoded":{}}},"responses":{"204":{"description":"ok"}}}},
+    "/list":{"post":{"operationId":"list","requestBody":{"content":{"multipart/form-data":{"schema":{"type":"array","items":{"type":"string"}}}}},
+        "responses":{"204":{"description":"ok"}}}}})",
+    R"({"Pet":{"type":"object","required":["name"],"properties":{"name":{"type":"string","minLength":1},"tag":{"$ref":"#/components/schemas/Tag"}}},
+      "Tag":{"type":"object","properties":{"v":{"type":"string"}}},
+      "Other":{"type":"object","properties":{"o":{"type":"string"}}},"S":{"type":"string","enum":["a","b"]}})");
+  ModelOptions options;
+  options.server = true;
+  options.client = true;
+  GeneratedModels models = generate(document, options);
+  // Models: files are anch::rest::Part (not mapped in JSON), other binary formats are unchanged
+  contains(models.header, "#include \"rest/form.hpp\"");
+  contains(models.header, "anch::rest::Part file{};");
+  contains(models.header, "std::vector<anch::rest::Part> files;");
+  contains(models.header, "std::optional<std::string> b64;");
+  contains(models.source, "  // file: file (multipart/form-data part), not mapped in JSON\n  // files: file (multipart/form-data part), not mapped in JSON\n");
+  anch::ut::assertThat(models.source.find("\"file\", &") == std::string::npos, "Files must not be registered in JSON mapper");
+  // Form mappers
+  contains(models.formsHeader, "#include \"models.hpp\"");
+  contains(models.formsHeader, "struct FormMapper<::model::UploadRequest> {");
+  contains(models.formsHeader, "struct FormMapper<::model::Pet> {");
+  anch::ut::assertThat(models.formsHeader.find("FormMapper<::model::Tag>") == std::string::npos
+		       && models.formsHeader.find("FormMapper<::model::Other>") == std::string::npos, "Only form bodies are mapped");
+  contains(models.formsSource, "    anch::rest::addFormFile(form, \"file\", value.file);\n");
+  contains(models.formsSource, "    value.file = anch::rest::requiredFormFile(form, \"file\");\n");
+  contains(models.formsSource, "    value.files = anch::rest::formFiles(form, \"files\");\n");
+  contains(models.formsSource, "    value.n = anch::rest::requiredFormField<int32_t>(form, \"n\");\n");
+  contains(models.formsSource, "    value.ids = anch::rest::formFields<anch::UUID>(form, \"ids\");\n");
+  contains(models.formsSource, "    if(value.pet) {\n      anch::rest::addJsonFormField(form, \"pet\", *value.pet, side);\n    }\n");
+  contains(models.formsSource, "    value.pet = anch::rest::jsonFormField<::model::Pet>(form, \"pet\", side);\n");
+  contains(models.formsSource, "    anch::rest::addJsonFormField(form, \"pets\", value.pets, side);\n");
+  contains(models.formsSource, "    value.pets = anch::rest::jsonFormField<std::vector<::model::Pet>>(form, \"pets\", side).value_or(std::vector<::model::Pet>());\n");
+  contains(models.formsSource, "    value.b64 = anch::rest::formField<std::string>(form, \"b64\");\n");
+  contains(models.formsSource, "    anch::rest::checkFormConstraints(value, side);\n");
+  // URL-encoded body: objects are not mapped
+  contains(models.formsSource, "    value.name = anch::rest::requiredFormField<std::string>(form, \"name\");\n");
+  // Endpoints
+  contains(models.serverHeader, "#include \"models-forms.hpp\"");
+  contains(models.serverSource, "#include \"rest/formCodec.hpp\"\n#include \"rest/jsonCodec.hpp\"\n#include \"rest/multipartCodec.hpp\"\n");
+  contains(models.serverSource, "api.post(\"/up\", [&service](anch::rest::Body<UploadRequest> body) -> void {");
+  contains(models.serverSource, "}).consumes<anch::rest::Multipart>();");
+  contains(models.serverSource, "}).consumes<anch::rest::Json>().consumes<anch::rest::FormUrlEncoded>();");
+  contains(models.serverSource, "api.post(\"/raw\", [&service](anch::rest::Body<anch::rest::Form> body) -> void {");
+  contains(models.serverHeader, "virtual void raw(const anch::rest::Form& body) = 0;");
+  contains(models.clientSource, "    call.body<anch::rest::Multipart>(body);\n");
+  contains(models.clientSource, "    call.body<anch::rest::FormUrlEncoded>(body);\n");
+  // Warnings
+  for(const char* warning : {"UploadRequest.s: form field of type S (form fields are strings, numbers, booleans, UUID and files, multipart/form-data "
+			     "objects and arrays are JSON parts): not generated",
+			     "Pet.tag: form field of type Tag (form fields are strings, numbers, booleans, UUID and files, multipart/form-data "
+			     "objects and arrays are JSON parts): not generated",
+			     "paths./pet.post: multipart/form-data request body is ignored (its schema is not the one of the other media types)",
+			     "paths./list.post: form request body which is not an object: not generated"}) {
+    anch::ut::assertThat(std::find(models.warnings.begin(), models.warnings.end(), warning) != models.warnings.end(), "Warning '{}' not found", warning);
+  }
+  anch::ut::assertThat(models.warnings.size() == 4, "4 warnings expected ; found {}", models.warnings.size());
+  options.strict = true;
+  checkError<GeneratorError>([&]() { generate(document, options); }, "paths./list.post: form request body which is not an object");
+  // Without form body, forms files are generated without mapper
+  options = ModelOptions();
+  options.server = true;
+  models = generate(pathsSpec("{}"), options);
+  contains(models.formsHeader, "// No form body model");
+  contains(models.formsSource, "// No form body model");
+  anch::ut::assertThat(models.header.find("rest/form.hpp") == std::string::npos, "Models do not depend on anch-rest without files");
+}
+
+void
 testEndpointsWarnings() {
   std::string document = pathsSpec(R"({
     "/a/{x}.json":{"get":{"operationId":"a","parameters":[{"name":"x","in":"path","required":true,"schema":{"type":"string"}}],"responses":{}}},
@@ -428,7 +506,7 @@ testEndpointsWarnings() {
   for(const char* warning : {"paths./a/{x}.json.get: path segment '{x}.json' (anch-rest parameters are whole segments): not generated",
 			     "paths./b/{y}.get: path parameter 'y' is not declared: not generated",
 			     "paths./c.get: query parameter 't' of type std::vector<std::string> (anch-rest parameters are strings, numbers, booleans and UUID): not generated",
-			     "paths./c.post: request body media types (only application/json and text/plain with schema are supported): not generated",
+			     "paths./c.post: request body media types (only application/json, text/plain, multipart/form-data and application/x-www-form-urlencoded are supported): not generated",
 			     "paths./c.put: header parameter 'X-Id' is not generated",
 			     "paths./c.options: HEAD, OPTIONS and TRACE methods (HEAD is served by GET routes): not generated",
 			     "paths./f/{s}.get: path parameter 's' of type S (anch-rest parameters are strings, numbers, booleans and UUID): not generated"}) {
@@ -474,5 +552,6 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("gen-constraints-warnings", testConstraintsWarnings)
     .add("gen-endpoints", testEndpoints)
     .add("gen-endpoints-warnings", testEndpointsWarnings)
+    .add("gen-forms", testForms)
     ;
 }

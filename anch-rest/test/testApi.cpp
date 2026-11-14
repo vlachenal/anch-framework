@@ -112,6 +112,55 @@ struct Bounded {
 static_assert(!anch::rest::Serializer<Bounded, int> && !anch::rest::Deserializer<Bounded, int>);
 // Codec with media type parameters -
 
+// Form mapping +
+struct UploadPhoto {
+  std::string description;
+  std::optional<uint32_t> age;
+  std::vector<std::string> tags;
+  anch::rest::Part photo;
+  std::optional<Pet> pet;
+};
+
+template<>
+struct anch::rest::FormMapper<UploadPhoto> {
+  static void
+  toForm(const UploadPhoto& value, anch::rest::Form& form, anch::rest::Side side) {
+    anch::rest::addFormField(form, "description", value.description);
+    anch::rest::addFormField(form, "age", value.age);
+    anch::rest::addFormField(form, "tags", value.tags);
+    anch::rest::addFormFile(form, "photo", value.photo);
+    if(value.pet) {
+      anch::rest::addJsonFormField(form, "pet", *value.pet, side);
+    }
+  }
+
+  static void
+  fromForm(UploadPhoto& value, const anch::rest::Form& form, anch::rest::Side side) {
+    value.description = anch::rest::requiredFormField<std::string>(form, "description");
+    value.age = anch::rest::formField<uint32_t>(form, "age");
+    value.tags = anch::rest::formFields<std::string>(form, "tags");
+    value.photo = anch::rest::requiredFormFile(form, "photo");
+    value.pet = anch::rest::jsonFormField<Pet>(form, "pet", side);
+  }
+};
+// Form mapping -
+
+template<>
+struct anch::rest::FormMapper<Owner> {
+  static void
+  toForm(const Owner& value, anch::rest::Form& form, anch::rest::Side) {
+    anch::rest::addFormField(form, "name", value.name);
+    anch::rest::addFormField(form, "email", value.email);
+  }
+
+  static void
+  fromForm(Owner& value, const anch::rest::Form& form, anch::rest::Side side) {
+    value.name = anch::rest::requiredFormField<std::string>(form, "name");
+    value.email = anch::rest::formField<std::string>(form, "email");
+    anch::rest::checkFormConstraints(value, side);
+  }
+};
+
 // Helpers +
 namespace {
 
@@ -585,6 +634,55 @@ testMultipart() {
 }
 
 void
+testFormMapper() {
+  Api api;
+  api.post("/pets/{id}/photo", [](uint64_t id, Body<UploadPhoto> upload) {
+    return std::to_string(id) + ' ' + upload->description + ' ' + (upload->age ? std::to_string(*upload->age) : std::string("?")) + ' '
+      + std::to_string(upload->tags.size()) + ' ' + std::string(upload->photo.getFilename().value_or("-")) + ' '
+      + std::to_string(upload->photo.size()) + ' ' + (upload->pet ? upload->pet->name : std::string("-"));
+  }).consumes<anch::rest::Multipart>().consumes<anch::rest::FormUrlEncoded>().produces<Text>();
+  api.post("/owners", [](Body<Owner> owner) { return owner->name; }).consumes<anch::rest::FormUrlEncoded>().produces<Text>();
+  api.get("/photo", []() {
+    return UploadPhoto{"Rex", 3, {"a", "b"}, anch::rest::Part("ignored", "rex.png", anch::rest::MediaType("image", "png"), "PNG"), Pet{1, "Rex"}};
+  }).produces<anch::rest::Multipart>();
+  api.validate();
+  const std::string body = "--b\r\nContent-Disposition: form-data; name=\"description\"\r\n\r\nRex\r\n"
+    "--b\r\nContent-Disposition: form-data; name=\"tags\"\r\n\r\na\r\n"
+    "--b\r\nContent-Disposition: form-data; name=\"tags\"\r\n\r\nb\r\n"
+    "--b\r\nContent-Disposition: form-data; name=\"pet\"\r\nContent-Type: application/json\r\n\r\n{\"id\":2,\"name\":\"Médor\"}\r\n"
+    "--b\r\nContent-Disposition: form-data; name=\"photo\"; filename=\"rex.png\"\r\nContent-Type: image/png\r\n\r\nPNG...\r\n--b--\r\n";
+  Response uploaded = call(api, Method::POST, "/pets/1/photo", "", "multipart/form-data; boundary=b", body);
+  anch::ut::assertThat(bodyOf(uploaded) == "1 Rex ? 2 rex.png 6 Médor", "Unexpected body '{}'", bodyOf(uploaded));
+  Response urlEncoded = call(api, Method::POST, "/pets/1/photo", "", "application/x-www-form-urlencoded", "description=Rex&age=4&photo=inline");
+  anch::ut::assertThat(bodyOf(urlEncoded) == "1 Rex 4 0 - 6 -", "Unexpected body '{}'", bodyOf(urlEncoded));
+  Response missing = call(api, Method::POST, "/pets/1/photo", "", "application/x-www-form-urlencoded", "description=Rex");
+  expectStatus(missing, Status::BAD_REQUEST);
+  anch::ut::assertThat(bodyOf(missing) == "Missing form part 'photo'", "Unexpected body '{}'", bodyOf(missing));
+  Response invalidJson = call(api, Method::POST, "/pets/1/photo", "", "multipart/form-data; boundary=b",
+			      "--b\r\nContent-Disposition: form-data; name=\"description\"\r\n\r\nRex\r\n"
+			      "--b\r\nContent-Disposition: form-data; name=\"photo\"\r\n\r\nP\r\n"
+			      "--b\r\nContent-Disposition: form-data; name=\"pet\"\r\n\r\n{\"id\":\r\n--b--");
+  expectStatus(invalidJson, Status::BAD_REQUEST);
+
+  // anch-json constraints checked on server side
+  expectStatus(call(api, Method::POST, "/owners", "", "application/x-www-form-urlencoded", "name=Vincent"), Status::OK);
+  Response invalid = call(api, Method::POST, "/owners", "", "application/x-www-form-urlencoded", "name=");
+  expectStatus(invalid, Status::BAD_REQUEST);
+  anch::ut::assertThat(bodyOf(invalid).starts_with("/name: "), "Unexpected body '{}'", bodyOf(invalid));
+
+  // Mapped response
+  Response photo = call(api, Method::GET, "/photo");
+  std::optional<anch::rest::MediaType> type = anch::rest::MediaType::parse(headerOf(photo, "Content-Type"));
+  anch::ut::assertThat(type && type->getParameter("boundary"), "Unexpected content type '{}'", headerOf(photo, "Content-Type"));
+  std::istringstream input(bodyOf(photo));
+  UploadPhoto back;
+  anch::rest::Multipart::deserialize(back, input, *type, anch::rest::Side::CLIENT);
+  anch::ut::assertThat(back.description == "Rex" && back.age == 3u && back.tags == std::vector<std::string>({"a", "b"})
+		       && back.photo.getName() == "photo" && back.photo.getFilename() == "rex.png" && back.pet && back.pet->id == 1,
+		       "Unexpected mapped response");
+}
+
+void
 testRegistration() {
   Api api;
   api.get("/pets/{id}", [](uint64_t) {});
@@ -639,6 +737,7 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("codec-media-type", testCodecMediaType)
     .add("form", testForm)
     .add("multipart", testMultipart)
+    .add("form-mapper", testFormMapper)
     .add("errors", testErrors)
     .add("registration", testRegistration)
     .add("validate", testValidate)

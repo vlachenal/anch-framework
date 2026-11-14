@@ -163,6 +163,8 @@ namespace anch::oas::detail {
     bool optional = false;
     /*! \c std::shared_ptr field (recursive model) */
     bool pointer = false;
+    /*! File ( \c anch::rest::Part ) of a \c multipart/form-data body model: not mapped in JSON */
+    bool part = false;
     /*! Required property ( \c anch::json::required ) */
     bool required = false;
     /*! Value constraints (C++ expressions) */
@@ -616,6 +618,20 @@ namespace anch::oas::detail {
   };
 
   /*!
+   * Form mapping of a model ( \c anch::rest::FormMapper )
+   */
+  struct FormMapping {
+    /*! Model is used as \c multipart/form-data body (files and JSON parts), \c application/x-www-form-urlencoded otherwise */
+    bool multipart = false;
+    /*! \c toForm statements */
+    std::vector<std::string> write;
+    /*! \c fromForm statements */
+    std::vector<std::string> read;
+    /*! \c side argument is used */
+    bool side = false;
+  };
+
+  /*!
    * Operation result kind
    */
   enum class ResultKind {
@@ -707,6 +723,14 @@ namespace anch::oas::detail {
     bool _uuid = false;
     /*! \c anch::date::Date or \c std::chrono::year_month_day is used */
     bool _date = false;
+    /*! Models used as form bodies: their form mapping */
+    std::map<std::string,FormMapping> _forms;
+    /*! \c anch::rest::Part is used in models */
+    bool _parts = false;
+    /*! Form codecs used by operations */
+    std::set<std::string> _formCodecs;
+    /*! \c anch::rest::Form is used as raw body */
+    bool _rawForm = false;
 
   public:
     Generator(const OpenAPI& api, const ModelOptions& options): _api(api), _options(options) {
@@ -760,6 +784,7 @@ namespace anch::oas::detail {
       }
       // Models -
       std::vector<std::string> order = sortModels();
+      buildFormMappings();
       GeneratedModels res;
       std::ostringstream header;
       writeHeader(header, order);
@@ -767,6 +792,14 @@ namespace anch::oas::detail {
       std::ostringstream source;
       writeSource(source, order);
       res.source = source.str();
+      if(_options.server || _options.client) {
+	std::ostringstream formsHeader;
+	writeFormsHeader(formsHeader);
+	res.formsHeader = formsHeader.str();
+	std::ostringstream formsSource;
+	writeFormsSource(formsSource);
+	res.formsSource = formsSource.str();
+      }
       if(_options.server) {
 	std::ostringstream serverHeader;
 	writeServerHeader(serverHeader);
@@ -832,6 +865,20 @@ namespace anch::oas::detail {
      */
     std::string apiName() const;
 
+    /*!
+     * Build form mappings of form body models ( \c anch::rest::FormMapper statements and warnings)
+     */
+    void buildFormMappings();
+
+    /*!
+     * Include directive of a form codec when operations use it
+     *
+     * \param multipart \c multipart/form-data codec, \c application/x-www-form-urlencoded otherwise
+     */
+    std::string formCodecInclude(bool multipart) const;
+
+    void writeFormsHeader(std::ostream& out) const;
+    void writeFormsSource(std::ostream& out) const;
     void writeServerHeader(std::ostream& out) const;
     void writeServerSource(std::ostream& out) const;
     void writeClientHeader(std::ostream& out) const;
@@ -888,6 +935,17 @@ namespace anch::oas::detail {
       }
       _names.insert(name);
       return name;
+    }
+
+    /*!
+     * Check if schema is a file ( \c string with \c binary format) or an array of files
+     */
+    static bool
+    isBinary(const Schema& schema) {
+      if(schema.type == "array" && schema.items) {
+	return isBinary(*schema.items);
+      }
+      return schema.type == "string" && schema.format == "binary";
     }
 
     static bool
@@ -1397,6 +1455,14 @@ namespace anch::oas::detail {
 	  Field field;
 	  field.json = json;
 	  field.type = resolveProperty(json, property);
+	  auto form = _forms.find(name);
+	  if(form != _forms.end() && form->second.multipart && isBinary(*property.schema)) {
+	    // File of multipart body: anch::rest::Part keeps file name and media type
+	    field.type.cpp = "anch::rest::Part";
+	    field.type.remark = "File (multipart/form-data part)";
+	    field.part = true;
+	    _parts = true;
+	  }
 	  std::string member = memberName(json);
 	  while(members.contains(member) || _names.contains(member)) {
 	    member += '_';
@@ -1406,7 +1472,7 @@ namespace anch::oas::detail {
 	  bool nullable = field.type.nullable || property.schema->nullable.value_or(false);
 	  field.required = composite.required.contains(json);
 	  field.optional = (field.type.container == Container::NONE) && (!field.required || nullable);
-	  const Constraints& constraints = propertyConstraints(*property.schema, field.type, property.owner + "." + json);
+	  const Constraints& constraints = field.part ? Constraints{} : propertyConstraints(*property.schema, field.type, property.owner + "." + json);
 	  field.constraints = constraints.code;
 	  std::string remark = field.type.remark;
 	  if(!constraints.doc.empty()) {
@@ -1553,6 +1619,9 @@ namespace anch::oas::detail {
       }
       if(_uuid) {
 	out << "#include \"uuid.hpp\"\n";
+      }
+      if(_parts) {
+	out << "\n#include \"rest/form.hpp\"\n";
       }
       out << "\nnamespace " << _options.ns << " {\n\n";
       // Enumerations +
@@ -1708,15 +1777,24 @@ namespace anch::oas::detail {
 	for(const std::string& name : order) {
 	  const Model& model = _models.at(name);
 	  std::string type = "::" + _options.ns + "::" + name;
+	  const bool registered = std::any_of(model.fields.begin(), model.fields.end(), [](const Field& field) { return !field.part; });
 	  out << "template<>\n"
 	      << "void\n"
-	      << "anch::json::registerObject(" << (model.fields.empty() ? "[[maybe_unused]] " : "")
+	      << "anch::json::registerObject(" << (registered ? "" : "[[maybe_unused]] ")
 	      << "anch::json::ObjectMapper<" << type << ">& mapper) {\n";
-	  if(model.fields.empty()) {
+	  for(const Field& field : model.fields) {
+	    if(field.part) {
+	      out << "  // " << commentSafe(field.json) << ": file (multipart/form-data part), not mapped in JSON\n";
+	    }
+	  }
+	  if(!registered) {
 	    out << "  // No property\n";
 	  } else {
 	    out << "  mapper\n";
 	    for(const Field& field : model.fields) {
+	      if(field.part) {
+		continue;
+	      }
 	      bool exact = !field.optional && !field.pointer && field.type.container == Container::NONE;
 	      out << "    .registerField" << (exact ? "" : "<" + qualified(field.type) + ">")
 		  << '(' << literal(field.json) << ", &" << type << "::" << field.member
