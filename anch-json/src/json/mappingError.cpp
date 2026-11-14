@@ -21,6 +21,7 @@
 
 #include <sstream>
 #include <algorithm>
+#include <string>
 
 using anch::json::MappingError;
 using anch::json::ErrorCode;
@@ -54,6 +55,12 @@ computeErrorMessage(const ErrorCode& code, const anch::json::ReaderContext& cont
     case ErrorCode::POTENTIAL_OVERFLOW:
       oss << "Potential overflow";
       break;
+    case ErrorCode::MISSING_FIELD:
+      oss << "Missing required field";
+      break;
+    case ErrorCode::CONSTRAINT_VIOLATION:
+      oss << "Constraint violation";
+      break;
     default:
       oss << "Unexpected error found at " << context.offset;
     }
@@ -80,13 +87,19 @@ computeErrorMessage(const ErrorCode& code, const anch::json::ReaderContext& cont
 }
 
 // Constructors +
-MappingError::MappingError(ErrorCode code, const anch::json::ReaderContext& context): std::exception(), _code(code) {
-  _msg = computeErrorMessage(code, context, std::string_view());
+MappingError::MappingError(ErrorCode code, const anch::json::ReaderContext& context):
+  std::exception(), _code(code), _msg(), _detail(computeErrorMessage(code, context, std::string_view())), _path() {
+  computeMessage();
 }
 
 MappingError::MappingError(ErrorCode code, const anch::json::ReaderContext& context, std::string_view message):
-  std::exception(), _code(code) {
-  _msg = computeErrorMessage(code, context, message);
+  std::exception(), _code(code), _msg(), _detail(computeErrorMessage(code, context, message)), _path() {
+  computeMessage();
+}
+
+MappingError::MappingError(ErrorCode code, std::string_view message):
+  std::exception(), _code(code), _msg(), _detail(message), _path() {
+  computeMessage();
 }
 // Constructors -
 
@@ -100,5 +113,42 @@ MappingError::~MappingError() {
 const char*
 MappingError::what() const noexcept {
   return _msg.data();
+}
+
+void
+MappingError::prependField(std::string_view field) {
+  std::string path;
+  path.reserve(field.size() + _path.size() + 1);
+  path += '/';
+  for(char c : field) {
+    switch(c) {
+    case '~':
+      path += "~0";
+      break;
+    case '/':
+      path += "~1";
+      break;
+    default:
+      path += c;
+    }
+  }
+  path += _path;
+  _path = std::move(path);
+  computeMessage();
+}
+
+void
+MappingError::prependIndex(std::size_t index) {
+  _path = '/' + std::to_string(index) + _path;
+  computeMessage();
+}
+
+void
+MappingError::computeMessage() {
+  if(_path.empty()) {
+    _msg = _detail;
+  } else {
+    _msg = _path + ": " + _detail;
+  }
 }
 // Methods -

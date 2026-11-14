@@ -24,6 +24,7 @@
 #include <optional>
 #include <string>
 #include <string_view>
+#include <cstddef>
 
 #include "json/readerContext.hpp"
 
@@ -47,6 +48,18 @@ namespace anch::json {
     /*! Found too many space characters or charcters in field name (according to parsing option) */
     POTENTIAL_OVERFLOW,
 
+    /*! Required field is missing
+     *
+     * \since 0.2
+     */
+    MISSING_FIELD,
+
+    /*! Value does not respect a field constraint (\c null value in a required field which can not be \c null , ...)
+     *
+     * \since 0.2
+     */
+    CONSTRAINT_VIOLATION,
+
     /*! Unexpected error code */
     UNKNOWN = 9999
   };
@@ -67,8 +80,14 @@ namespace anch::json {
     /*! Error code */
     ErrorCode _code;
 
-    /*! Error message */
+    /*! Error message (path included) */
     std::string _msg;
+
+    /*! Error message without path */
+    std::string _detail;
+
+    /*! Path of the value in error (JSON Pointer) */
+    std::string _path;
     // Attributes -
 
     // Constructors +
@@ -90,6 +109,16 @@ namespace anch::json {
      * \param message the detailed error message
      */
     MappingError(ErrorCode code, const anch::json::ReaderContext& context, std::string_view message);
+
+    /*!
+     * \ref MappingError constructor without input (serialization error)
+     *
+     * \param code the error code
+     * \param message the error message
+     *
+     * \since 0.2
+     */
+    MappingError(ErrorCode code, std::string_view message);
     // Constructors -
 
     // Destructor +
@@ -108,15 +137,55 @@ namespace anch::json {
      * \return the error message
      */
     virtual const char* what() const noexcept override;
+
+    /*!
+     * Add object field at the beginning of the path. It is used by mappers when error is propagated from a field
+     * value.
+     *
+     * \param field the field name (escaped according to JSON Pointer rules: \c ~ as \c ~0 and \c / as \c ~1 )
+     *
+     * \since 0.2
+     */
+    void prependField(std::string_view field);
+
+    /*!
+     * Add array index at the beginning of the path. It is used by mappers when error is propagated from an array
+     * item.
+     *
+     * \param index the item index
+     *
+     * \since 0.2
+     */
+    void prependIndex(std::size_t index);
+
+  private:
+    /*!
+     * Compute error message from path and detail
+     */
+    void computeMessage();
     // Methods -
 
     // Accessors +
+  public:
     /*!
      * Error code getter
      *
      * \return the error code
      */
     anch::json::ErrorCode getErrorCode() const;
+
+    /*!
+     * Path of the value in error getter.\n
+     * The path is a JSON Pointer (RFC 6901) from the deserialized root value: \c /pets/3/name for the \c name
+     * field of the fourth item of the \c pets array. It is empty when the error is not in a field or array item
+     * value (root value, field name or separator).\n
+     * When path is not empty, \c what() message starts with the path followed by \c ": " .
+     *
+     * \return the path
+     *
+     * \since 0.2
+     */
+    const std::string& getPath() const;
     // Accessors -
 
   };

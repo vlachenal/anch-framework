@@ -61,26 +61,33 @@ namespace anch::json {
   }
 
   template<typename F>
-  void
+  bool
   lexArray(F&& addFunc, anch::json::ReaderContext& context) {
     char current = context.discard();
     if(current == 'n') {
       anch::json::lexNull(context);
-      return;
+      return false;
     } else if(current != anch::json::ARRAY_BEGIN) {
       throw anch::json::MappingError(anch::json::ErrorCode::INVALID_FORMAT, context);
     }
     anch::json::DepthGuard guard(context);
     current = context.discard();
     if(current == anch::json::ARRAY_END) {
-      return;
+      return true;
     }
     context.back();
+    std::size_t index = 0;
     do {
-      std::invoke(addFunc, context);
+      try {
+	std::invoke(addFunc, context);
+      } catch(anch::json::MappingError& error) {
+	error.prependIndex(index);
+	throw;
+      }
+      ++index;
       current = context.discard();
       if(current == anch::json::ARRAY_END) {
-	return;
+	return true;
       }
       if(current != anch::json::FIELD_SEPARATOR) {
 	throw anch::json::MappingError(anch::json::ErrorCode::INVALID_FORMAT, context);
@@ -89,19 +96,19 @@ namespace anch::json {
   }
 
   template<typename F>
-  void
+  bool
   lexMap(F&& pushFunc, anch::json::ReaderContext& context) {
     char current = context.discard();
     if(current == 'n') {
       anch::json::lexNull(context);
-      return;
+      return false;
     } else if(current != anch::json::OBJECT_BEGIN) {
       throw anch::json::MappingError(anch::json::ErrorCode::INVALID_FORMAT, context);
     }
     anch::json::DepthGuard guard(context);
     current = context.discard();
     if(current == anch::json::OBJECT_END) {
-      return;
+      return true;
     }
     context.back();
     std::string field;
@@ -117,11 +124,16 @@ namespace anch::json {
 	throw anch::json::MappingError(anch::json::ErrorCode::INVALID_FORMAT, context);
       }
       // Look for ':' -
-      std::invoke(pushFunc, std::as_const(field), context);
+      try {
+	std::invoke(pushFunc, std::as_const(field), context);
+      } catch(anch::json::MappingError& error) {
+	error.prependField(field);
+	throw;
+      }
       // Look for ',' for next field or '}' for end +
       current = context.discard();
       if(current == anch::json::OBJECT_END) {
-	return;
+	return true;
       }
       if(current != anch::json::FIELD_SEPARATOR) {
 	throw anch::json::MappingError(anch::json::ErrorCode::INVALID_FORMAT, context);

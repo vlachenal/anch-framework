@@ -27,4 +27,10 @@ namespace anch::json {
     return _code;
   }
 
+  inline
+  const std::string&
+  MappingError::getPath() const {
+    return _path;
+  }
+
 }  // anch::json

@@ -261,10 +261,12 @@ namespace anch::json {
    * \param addFunc parse and add elem to array function (callable as \c bool(anch::json::ReaderContext&))
    * \param context the context
    *
-   * \throw anch::json::MappingError parsing error
+   * \return \c false when \c null has been found, \c true otherwise
+   *
+   * \throw anch::json::MappingError parsing error (the item index is added to the error path)
    */
   template<typename F>
-  void lexArray(F&& addFunc, anch::json::ReaderContext& context);
+  bool lexArray(F&& addFunc, anch::json::ReaderContext& context);
 
   /*!
    * Parse map
@@ -274,10 +276,12 @@ namespace anch::json {
    * \param pushFunc parse and add elem to map function (callable as \c void(const std::string&, anch::json::ReaderContext&))
    * \param context the context
    *
-   * \throw anch::json::MappingError parsing error
+   * \return \c false when \c null has been found, \c true otherwise
+   *
+   * \throw anch::json::MappingError parsing error (the key is added to the error path)
    */
   template<typename F>
-  void lexMap(F&& pushFunc, anch::json::ReaderContext& context);
+  bool lexMap(F&& pushFunc, anch::json::ReaderContext& context);
   // Container lexer functions -
 
   // Unknown lexer functions +

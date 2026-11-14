@@ -23,6 +23,7 @@
 
 #include "json/json.hpp"
 #include "json/lexer.hpp"
+#include "json/numberScanner.hpp"
 #include "json/primitiveMapper.hpp"
 
 using anch::oas::AdditionalProperties;
@@ -128,14 +129,14 @@ namespace anch::json {
       return true;
     default:
       {
-	context.back();
-	double number = 0.0;
+	// Number is kept as written in the document (no conversion: integers bounds can be greater than 2^53)
+	std::string_view chars = anch::json::scanNumber(context, anch::json::isNumberChar);
+	if(!anch::json::isJsonNumber(chars)) {
+	  throw anch::json::MappingError(anch::json::ErrorCode::INVALID_FORMAT, context);
+	}
 	value.kind = Scalar::Kind::NUMBER;
-	bool res = anch::json::lexNumber(number, context);
-	std::ostringstream oss;
-	oss << number;
-	value.text = oss.str();
-	return res;
+	value.text = chars;
+	return true;
       }
     }
   }
@@ -164,6 +165,19 @@ anch::json::registerObject(anch::json::ObjectMapper<Schema>& mapper) {
     .registerField<Schema>("allOf", &Schema::allOf)
     .registerField<Schema>("oneOf", &Schema::oneOf)
     .registerField<Schema>("anyOf", &Schema::anyOf)
+    .registerField<uint64_t>("minLength", &Schema::minLength)
+    .registerField<uint64_t>("maxLength", &Schema::maxLength)
+    .registerField<std::string>("pattern", &Schema::pattern)
+    .registerField<Scalar>("minimum", &Schema::minimum)
+    .registerField<Scalar>("maximum", &Schema::maximum)
+    .registerField<bool>("exclusiveMinimum", &Schema::exclusiveMinimum)
+    .registerField<bool>("exclusiveMaximum", &Schema::exclusiveMaximum)
+    .registerField<Scalar>("multipleOf", &Schema::multipleOf)
+    .registerField<uint64_t>("minItems", &Schema::minItems)
+    .registerField<uint64_t>("maxItems", &Schema::maxItems)
+    .registerField<bool>("uniqueItems", &Schema::uniqueItems)
+    .registerField<uint64_t>("minProperties", &Schema::minProperties)
+    .registerField<uint64_t>("maxProperties", &Schema::maxProperties)
     ;
 }
 

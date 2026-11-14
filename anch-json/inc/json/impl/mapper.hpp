@@ -19,11 +19,13 @@
 */
 #pragma once
 
+#include <cstdint>
 #include <string>
-#include <set>
 #include <map>
 #include <functional>
 #include <type_traits>
+#include <utility>
+#include <vector>
 
 #include "json/constants.hpp"
 #include "json/mappingError.hpp"
@@ -35,9 +37,10 @@ namespace anch::json {
   // Generic implementations +
   // Constructors +
   template<typename T>
-  ObjectMapper<T>::ObjectMapper(): anch::json::GenericMapper<ObjectMapper<T>, T>(), _writers(), _readers() {
+  ObjectMapper<T>::ObjectMapper(): anch::json::GenericMapper<ObjectMapper<T>, T>(), _writers(), _validators(), _readers(), _required() {
     anch::json::registerObject<T>(*this);
     _writers.shrink_to_fit();
+    _validators.shrink_to_fit();
   }
   // Constructors -
 
@@ -50,34 +53,86 @@ namespace anch::json {
 
   // Fields' registration +
   template<typename T>
-  template<typename P>
+  template<typename G, typename W, typename... C>
+  void
+  ObjectMapper<T>::addWriter(const std::string& key, G get, W write, const C&... constraints) {
+    // Validator is registered only when there is something to check (it keeps mappers code small) +
+    using V = std::remove_cvref_t<std::invoke_result_t<G, const T&>>;
+    if constexpr (anch::json::hasValueConstraints<C...>() || anch::json::detail::hasNestedObjects<V>()) {
+      _validators.push_back([key, get, ...cts = constraints](const T& obj, anch::json::ValidationContext& context) -> void {
+	anch::json::detail::validateField(key, std::invoke(get, obj), context, cts...);
+      });
+    }
+    // Validator is registered only when there is something to check (it keeps mappers code small) -
+    if constexpr (anch::json::hasValueConstraints<C...>() || anch::json::isRequired<C...>()) {
+      _writers.push_back(FieldWriter{key, WriteFn([key, get, write, ...cts = constraints](const T& obj, anch::json::WriterContext& context) -> bool {
+	decltype(auto) val = std::invoke(get, obj);
+	if constexpr (anch::json::hasValueConstraints<C...>()) {
+	  anch::json::detail::checkConstraints(val, context, cts...);
+	} else {
+	  ((void)cts, ...);
+	}
+	if constexpr (anch::json::isRequired<C...>()) {
+	  if(anch::json::detail::writeEmptyRequired(key, val, context)) {
+	    return true;
+	  }
+	} else {
+	  (void)key;
+	}
+	return write(val, context);
+      })});
+    } else {
+      _writers.push_back(FieldWriter{key, WriteFn([get, write](const T& obj, anch::json::WriterContext& context) -> bool {
+	return write(std::invoke(get, obj), context);
+      })});
+    }
+  }
+
+  template<typename T>
+  void
+  ObjectMapper<T>::addReader(const std::string& key, anch::json::DeserializeFn<T>&& reader, bool required, bool nullable) {
+    FieldReader& field = _readers[key];
+    field.read = std::move(reader);
+    if(required) {
+      if(field.required == NOT_REQUIRED) {
+	field.required = _required.size();
+	_required.push_back(key);
+      }
+      field.rejectNull = !nullable;
+    }
+  }
+
+  template<typename T>
+  template<typename P, typename... C>
+  requires (anch::json::FieldConstraint<C,P> && ...)
   ObjectMapper<T>&
-  ObjectMapper<T>::registerField(const std::string& key, P T::* value) {
+  ObjectMapper<T>::registerField(const std::string& key, P T::* value, [[maybe_unused]] C&&... constraints) {
     static_assert(!std::is_reference<P>::value, "Can not deserialize reference value"); // raise compile-time error if value is a reference
-    _writers.push_back(std::function<bool(const T&, anch::json::WriterContext&)>([=, this](const T& obj, anch::json::WriterContext& context) -> bool {
+    auto write = [=, this](const auto& val, anch::json::WriterContext& context) -> bool {
       if constexpr (std::is_pointer<P>::value) { // Remove pointer on parameter type to check the main type
 	if constexpr (std::is_same<T, typename std::remove_pointer<P>>::value) { // if same, use direct call to avoid recursive instanciation
-	  return this->serialize(key, obj.*value, context);
+	  return this->serialize(key, val, context);
 	} else { // Use 'unpointered' type
-	  return anch::json::Factory<typename std::remove_pointer<P>::type>::getInstance().serialize(key, obj.*value, context);
+	  return anch::json::Factory<typename std::remove_pointer<P>::type>::getInstance().serialize(key, val, context);
 	}
 
       } else if constexpr (std::is_reference<P>::value) { // Remove reference on parameter type to check the main type
 	if constexpr (std::is_same<T, typename std::remove_reference<P>>::value) { // if same, use direct call to avoid recursive instanciation
-	  return this->serialize(key, obj.*value, context);
+	  return this->serialize(key, val, context);
 	} else { // Use 'unreferenced' type
-	  return anch::json::Factory<typename std::decay<P>::type>::getInstance().serialize(key, obj.*value, context);
+	  return anch::json::Factory<typename std::decay<P>::type>::getInstance().serialize(key, val, context);
 	}
 
       } else { // Basic type
 	if constexpr (std::is_same<P, T>::value) { // if same, use direct call to avoid recursive instanciation
-	  return this->serialize(key, obj.*value, context);
+	  return this->serialize(key, val, context);
 	} else {
-	  return anch::json::Factory<P>::getInstance().serialize(key, obj.*value, context);
+	  return anch::json::Factory<P>::getInstance().serialize(key, val, context);
 	}
       }
-    }));
-    _readers[key] = anch::json::DeserializeFn<T>([=, this](T& obj, anch::json::ReaderContext& context) -> bool {
+    };
+    addWriter(key, [value](const T& obj) -> const P& { return obj.*value; }, write, constraints...);
+    auto read = [=, this](T& obj, anch::json::ReaderContext& context) -> bool {
       if constexpr (std::is_pointer<P>::value) { // Remove pointer on parameter type to check the main type
 	using RP = typename std::remove_pointer<P>::type;
 	obj.*value = new RP();
@@ -94,91 +149,109 @@ namespace anch::json {
 	  return anch::json::Factory<P>::getInstance().deserialize(obj.*value, context);
 	}
       }
-    });
+    };
+    addReader(key, withConstraints(read, value, std::forward<C>(constraints)...), anch::json::isRequired<C...>(), anch::json::isNullable<P>());
     return *this;
   }
 
   template<typename T>
-  template<typename MT, typename P>
+  template<typename MT, typename P, typename... C>
+  requires (anch::json::FieldConstraint<C,P> && ...)
   ObjectMapper<T>&
-  ObjectMapper<T>::registerField(const std::string& key, P T::* value) {
-    _writers.push_back(std::function<bool(const T&, anch::json::WriterContext&)>([=, this](const T& obj, anch::json::WriterContext& context) -> bool {
+  ObjectMapper<T>::registerField(const std::string& key, P T::* value, [[maybe_unused]] C&&... constraints) {
+    auto write = [=, this](const auto& val, anch::json::WriterContext& context) -> bool {
       if constexpr (std::is_same<MT, T>::value) { // if same, use direct call to avoid recursive instanciation
-	return this->serialize(key, obj.*value, context);
+	return this->serialize(key, val, context);
       } else {
-	return anch::json::Factory<MT>::getInstance().serialize(key, obj.*value, context);
+	return anch::json::Factory<MT>::getInstance().serialize(key, val, context);
       }
-    }));
-    _readers[key] = anch::json::DeserializeFn<T>([=, this](T& obj, anch::json::ReaderContext& context) -> bool {
+    };
+    addWriter(key, [value](const T& obj) -> const P& { return obj.*value; }, write, constraints...);
+    auto read = [=, this](T& obj, anch::json::ReaderContext& context) -> bool {
       if constexpr (std::is_same<MT, T>::value) { // if same, use direct call to avoid recursive instanciation
 	return this->deserialize(obj.*value, context);
       } else {
 	return anch::json::Factory<MT>::getInstance().deserialize(obj.*value, context);
       }
-    });
+    };
+    addReader(key, withConstraints(read, value, std::forward<C>(constraints)...), anch::json::isRequired<C...>(), anch::json::isNullable<P>());
     return *this;
   }
 
   template<typename T>
-  template<typename P, typename MT>
+  template<typename P, typename MT, typename... C>
+  requires (anch::json::FieldConstraint<C,P> && ...)
   ObjectMapper<T>&
-  ObjectMapper<T>::registerField(const std::string& key, std::function<P(const T&)> getter) {
-    _writers.push_back(std::function<bool(const T&, anch::json::WriterContext&)>([=, this](const T& obj, anch::json::WriterContext& context) -> bool {
+  ObjectMapper<T>::registerField(const std::string& key, std::function<P(const T&)> getter, const C&... constraints) {
+    auto write = [=, this](const auto& val, anch::json::WriterContext& context) -> bool {
       if constexpr (std::is_same<MT, P>::value) { // Mapper type has not been specified
 
 	if constexpr (std::is_pointer<P>::value) { // Remove pointer on parameter type to check the main type
 	  if constexpr (std::is_same<T, typename std::remove_pointer<P>>::value) { // if same, use direct call to avoid recursive instanciation
-	    return this->serialize(key, std::invoke(getter, obj), context);
+	    return this->serialize(key, val, context);
 	  } else { // Use 'unpointered' type
-	    return anch::json::Factory<typename std::remove_pointer<P>::type>::getInstance().serialize(key, std::invoke(getter, obj), context);
+	    return anch::json::Factory<typename std::remove_pointer<P>::type>::getInstance().serialize(key, val, context);
 	  }
 
 	} else if constexpr (std::is_reference<P>::value) { // Remove reference on parameter type to check the main type
 	  if constexpr (std::is_same<T, typename std::remove_reference<P>>::value) { // if same, use direct call to avoid recursive instanciation
-	    return this->serialize(key, std::invoke(getter, obj), context);
+	    return this->serialize(key, val, context);
 	  } else { // Use 'unreferenced' type
-	    return anch::json::Factory<typename std::decay<P>::type>::getInstance().serialize(key, std::invoke(getter, obj), context);
+	    return anch::json::Factory<typename std::decay<P>::type>::getInstance().serialize(key, val, context);
 	  }
 
 	} else { // Basic type
 	  if constexpr (std::is_same<MT, T>::value) { // if same, use direct call to avoid recursive instanciation
-	    return this->serialize(key, std::invoke(getter, obj), context);
+	    return this->serialize(key, val, context);
 	  } else {
-	    return anch::json::Factory<MT>::getInstance().serialize(key, std::invoke(getter, obj), context);
+	    return anch::json::Factory<MT>::getInstance().serialize(key, val, context);
 	  }
 	}
 
       } else { // Parameter type has to be correctly set by caller when specified
 	if constexpr (std::is_same<MT, T>::value) {
-	  return this->serialize(key, std::invoke(getter, obj), context);
+	  return this->serialize(key, val, context);
 	} else {
-	  return anch::json::Factory<MT>::getInstance().serialize(key, std::invoke(getter, obj), context);
+	  return anch::json::Factory<MT>::getInstance().serialize(key, val, context);
 	}
       }
-    }));
+    };
+    addWriter(key, getter, write, constraints...);
     return *this;
   }
 
   template<typename T>
-  template<typename P, typename MT>
+  template<typename P, typename MT, typename... C>
+  requires (anch::json::FieldConstraint<C,P> && ...)
   ObjectMapper<T>&
-  ObjectMapper<T>::registerField(const std::string& key, std::function<void(T&, const P&)> setter) {
+  ObjectMapper<T>::registerField(const std::string& key, std::function<void(T&, const P&)> setter, [[maybe_unused]] C&&... constraints) {
     static_assert(!std::is_reference<P>::value, "Can not deserialize reference value"); // raise compile-time error if value is a reference
-    _readers[key] = anch::json::DeserializeFn<T>([=, this](T& obj, anch::json::ReaderContext& context) -> bool {
+    // Check value constraints before calling setter +
+    auto set = [setter, ...cts = std::forward<C>(constraints)](T& obj, const auto& inst, anch::json::ReaderContext& context) -> void {
+      if constexpr (anch::json::hasValueConstraints<C...>()) {
+	anch::json::detail::checkConstraints(inst, context, cts...);
+      } else {
+	((void)cts, ...);
+	(void)context;
+      }
+      std::invoke(setter, obj, inst);
+    };
+    // Check value constraints before calling setter -
+    addReader(key, anch::json::DeserializeFn<T>([=, this](T& obj, anch::json::ReaderContext& context) -> bool {
       if constexpr (std::is_same<MT, P>::value) { // Mapper type has not been specified
 
 	if constexpr (std::is_pointer<P>::value) { // Remove pointer on parameter type to check the main type
 	  if constexpr (std::is_same<T, typename std::remove_pointer<P>>::value) { // if same, use direct call to avoid recursive instanciation
 	    T* inst = new T();
 	    if(this->deserialize(*inst, context)) {
-	      std::invoke(setter, obj, inst);
+	      set(obj, inst, context);
 	      return true;
 	    }
 	    return false;
 	  } else { // Use 'unpointered' type
 	    P* inst = new P();
 	    if(anch::json::Factory<typename std::remove_pointer<P>::type>::getInstance().deserialize(*inst, context)) {
-	      std::invoke(setter, obj, inst);
+	      set(obj, inst, context);
 	      return true;
 	    }
 	    return false;
@@ -188,14 +261,14 @@ namespace anch::json {
 	  if constexpr (std::is_same<P, T>::value) { // if same, use direct call to avoid recursive instanciation
 	    T inst;
 	    if(this->deserialize(inst, context)) {
-	      std::invoke(setter, obj, inst);
+	      set(obj, inst, context);
 	      return true;
 	    }
 	    return false;
 	  } else {
 	    P inst;
 	    if(anch::json::Factory<P>::getInstance().deserialize(inst, context)) {
-	      std::invoke(setter, obj, inst);
+	      set(obj, inst, context);
 	      return true;
 	    }
 	    return false;
@@ -206,29 +279,46 @@ namespace anch::json {
 	if constexpr (std::is_same<MT, T>::value) {
 	  T inst;
 	  if(this->deserialize(inst, context)) {
-	    std::invoke(setter, obj, inst);
+	    set(obj, inst, context);
 	    return true;
 	  }
 	  return false;
 	} else {
 	  MT inst;
 	  if(anch::json::Factory<MT>::getInstance().deserialize(inst, context)) {
-	    std::invoke(setter, obj, inst);
+	    set(obj, inst, context);
 	    return true;
 	  }
 	  return false;
 	}
       }
-    });
+    }), anch::json::isRequired<C...>(), anch::json::isNullable<P>());
     return *this;
   }
 
   template<typename T>
-  template<typename P, typename MT>
+  template<typename P, typename MT, typename... C>
+  requires (anch::json::FieldConstraint<C,P> && ...)
   ObjectMapper<T>&
-  ObjectMapper<T>::registerField(const std::string& key, std::function<P(const T&)> getter, std::function<void(T&, const P&)> setter) {
-    registerField<P,MT>(key, getter);
-    return registerField<P,MT>(key, setter);
+  ObjectMapper<T>::registerField(const std::string& key, std::function<P(const T&)> getter, std::function<void(T&, const P&)> setter, C&&... constraints) {
+    registerField<P,MT>(key, getter, std::as_const(constraints)...);
+    return registerField<P,MT>(key, setter, std::forward<C>(constraints)...);
+  }
+  template<typename T>
+  template<typename R, typename P, typename... C>
+  anch::json::DeserializeFn<T>
+  ObjectMapper<T>::withConstraints(R& read, [[maybe_unused]] P T::* value, [[maybe_unused]] C&&... constraints) {
+    if constexpr (anch::json::hasValueConstraints<C...>()) {
+      return anch::json::DeserializeFn<T>([read, value, ...cts = std::forward<C>(constraints)](T& obj, anch::json::ReaderContext& context) -> bool {
+	if(!read(obj, context)) {
+	  return false;
+	}
+	anch::json::detail::checkConstraints(obj.*value, context, cts...);
+	return true;
+      });
+    } else {
+      return anch::json::DeserializeFn<T>(read);
+    }
   }
   // Fields' registration -
 
@@ -237,10 +327,23 @@ namespace anch::json {
   void
   ObjectMapper<T>::serializeValue(const T& value, anch::json::WriterContext& context) const {
     context.beginObject();
-    for(auto iter = _writers.begin() ; iter != _writers.end() ; ++iter) {
-      std::invoke(*iter, value, context);
+    for(const FieldWriter& writer : _writers) {
+      try {
+	std::invoke(writer.write, value, context);
+      } catch(anch::json::MappingError& error) {
+	error.prependField(writer.key);
+	throw;
+      }
     }
     context.endObject();
+  }
+
+  template<typename T>
+  [[gnu::cold]] void
+  ObjectMapper<T>::validateValue(const T& value, anch::json::ValidationContext& context) const {
+    for(const auto& validator : _validators) {
+      std::invoke(validator, value, context);
+    }
   }
 
   template<typename T>
@@ -249,15 +352,55 @@ namespace anch::json {
     if(!anch::json::objectHasValueLex(context)) {
       return false;
     }
+    if(!_required.empty() && context.options.deserialize_check_constraints) {
+      deserializeRequired(value, context);
+      return true;
+    }
     anch::json::lexObject([this, &value](const std::string& field, anch::json::ReaderContext& ctxt) -> void {
-      auto iter = _readers.find(field);
-      if(iter == _readers.cend()) {
-	ctxt.parseUnknown();
-      } else {
-	std::invoke(iter->second, value, ctxt);
-      }
+      readField(value, field, ctxt);
     }, context);
     return true;
+  }
+
+  template<typename T>
+  inline
+  const typename ObjectMapper<T>::FieldReader*
+  ObjectMapper<T>::readField(T& value, const std::string& field, anch::json::ReaderContext& context) const {
+    try {
+      auto iter = _readers.find(field);
+      if(iter == _readers.cend()) {
+	context.parseUnknown();
+	return NULL;
+      }
+      const FieldReader& reader = iter->second;
+      if(!std::invoke(reader.read, value, context) && reader.rejectNull && context.options.deserialize_check_constraints) {
+	anch::json::detail::rejectNull(context);
+      }
+      return &reader;
+    } catch(anch::json::MappingError& error) {
+      error.prependField(field);
+      throw;
+    }
+  }
+
+  template<typename T>
+  void
+  ObjectMapper<T>::deserializeRequired(T& value, anch::json::ReaderContext& context) const {
+    // Found required fields: one bit per required field (on stack up to 64 required fields)
+    uint64_t local = 0;
+    std::vector<uint64_t> words;
+    uint64_t* found = &local;
+    if(_required.size() > 64) [[unlikely]] {
+      words.assign((_required.size() + 63) / 64, 0);
+      found = words.data();
+    }
+    anch::json::lexObject([this, &value, found](const std::string& field, anch::json::ReaderContext& ctxt) -> void {
+      const FieldReader* reader = readField(value, field, ctxt);
+      if(reader != NULL && reader->required != NOT_REQUIRED) {
+	found[reader->required / 64] |= uint64_t{1} << (reader->required % 64);
+      }
+    }, context);
+    anch::json::detail::checkRequired(_required, found, context);
   }
   // Methods -
   // Generic implementations -

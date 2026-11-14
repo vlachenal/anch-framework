@@ -19,6 +19,10 @@
 */
 #pragma once
 
+#include <cstddef>
+
+#include "json/mappingError.hpp"
+
 namespace anch::json {
 
   // Raw value +
@@ -54,9 +58,16 @@ namespace anch::json {
   void
   GenericMapper<M,T>::serialize(const std::vector<T>& value, anch::json::WriterContext& context) const {
     context.beginArray();
+    std::size_t index = 0;
     for(auto iter = value.cbegin() ; iter != value.cend() ; ++iter) {
       context.next();
-      serialize(*iter, context);
+      try {
+	serialize(*iter, context);
+      } catch(anch::json::MappingError& error) {
+	error.prependIndex(index);
+	throw;
+      }
+      ++index;
     }
     context.endArray();
   }
@@ -65,9 +76,16 @@ namespace anch::json {
   void
   GenericMapper<M,T>::serialize(const std::list<T>& value, anch::json::WriterContext& context) const {
     context.beginArray();
+    std::size_t index = 0;
     for(auto iter = value.cbegin() ; iter != value.cend() ; ++iter) {
       context.next();
-      serialize(*iter, context);
+      try {
+	serialize(*iter, context);
+      } catch(anch::json::MappingError& error) {
+	error.prependIndex(index);
+	throw;
+      }
+      ++index;
     }
     context.endArray();
   }
@@ -76,9 +94,16 @@ namespace anch::json {
   void
   GenericMapper<M,T>::serialize(const std::set<T>& value, anch::json::WriterContext& context) const {
     context.beginArray();
+    std::size_t index = 0;
     for(auto iter = value.cbegin() ; iter != value.cend() ; ++iter) {
       context.next();
-      serialize(*iter, context);
+      try {
+	serialize(*iter, context);
+      } catch(anch::json::MappingError& error) {
+	error.prependIndex(index);
+	throw;
+      }
+      ++index;
     }
     context.endArray();
   }
@@ -89,7 +114,12 @@ namespace anch::json {
     context.beginObject();
     for(auto iter = value.cbegin() ; iter != value.cend() ; ++iter) {
       context.writeField(iter->first);
-      serialize(iter->second, context);
+      try {
+	serialize(iter->second, context);
+      } catch(anch::json::MappingError& error) {
+	error.prependField(iter->first);
+	throw;
+      }
     }
     context.endObject();
   }

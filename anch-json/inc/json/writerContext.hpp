@@ -101,6 +101,15 @@ namespace anch::json {
     // Methods +
   public:
     /*!
+     * Mapping options getter
+     *
+     * \return the mapping options
+     *
+     * \since 0.2
+     */
+    const anch::json::MappingOptions& options() const noexcept;
+
+    /*!
      * Write \c null value or not according to options
      *
      * \param field the field name

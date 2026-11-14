@@ -23,6 +23,14 @@
 #include <chrono>
 #include <thread>
 #include <limits>
+#include <array>
+#include <regex>
+#include <string_view>
+#include <set>
+#include <map>
+#include <stdexcept>
+#include <initializer_list>
+#include <utility>
 
 #include "json/json.hpp"
 
@@ -1189,6 +1197,728 @@ testDeserUnknownNumberKO() {
 }
 // Numbers in ignored fields -
 
+// Required fields +
+struct TestRequiredChild {
+  int64_t _id = 0;
+  std::optional<std::string> _name;
+};
+
+template<>
+void
+anch::json::registerObject(ObjectMapper<TestRequiredChild>& mapper) {
+  mapper
+    .registerField("id", &TestRequiredChild::_id, anch::json::required)
+    .registerField<std::string>("name", &TestRequiredChild::_name)
+    ;
+}
+
+struct TestRequired {
+  int64_t _id = 0;
+  std::string _name;
+  std::optional<std::string> _owner;
+  std::vector<std::string> _tags;
+  int64_t _count = 0;
+  std::vector<TestRequiredChild> _children;
+  std::map<std::string,TestRequiredChild> _byName;
+  std::string _label;
+};
+
+template<>
+void
+anch::json::registerObject(ObjectMapper<TestRequired>& mapper) {
+  mapper
+    .registerField("id", &TestRequired::_id, anch::json::required)
+    .registerField("name", &TestRequired::_name, anch::json::required)
+    .registerField<std::string>("owner", &TestRequired::_owner, anch::json::required) // can be null
+    .registerField<std::string>("tags", &TestRequired::_tags, anch::json::required) // can not be null
+    .registerField("count", &TestRequired::_count)
+    .registerField<TestRequiredChild>("children", &TestRequired::_children)
+    .registerField<TestRequiredChild>("byName", &TestRequired::_byName)
+    .registerField<std::string>("label",
+				std::function<std::string(const TestRequired&)>([](const TestRequired& obj) -> std::string {
+				  return obj._label;
+				}),
+				std::function<void(TestRequired&, const std::string&)>([](TestRequired& obj, const std::string& label) {
+				  obj._label = label;
+				}),
+				anch::json::required)
+    ;
+}
+
+template<typename T>
+void
+checkMappingError(const std::string& json, ErrorCode code, const std::string& path, const std::string& message,
+		  const anch::json::MappingOptions& options = anch::json::DEFAULT_MAPPING_OPTIONS) {
+  std::cout << "Deserialize " << json << std::endl;
+  anch::json::JSONMapper mapper(options);
+  try {
+    auto iss = std::istringstream(json);
+    [[maybe_unused]] T res = mapper.deserialize<T>(iss);
+    anch::ut::fail("This test should have failed");
+  } catch(const MappingError& e) {
+    std::cout << e.what() << std::endl;
+    anch::ut::assertThat(e.getErrorCode() == code, "Expected error code {} ; found {}", static_cast<int>(code), static_cast<int>(e.getErrorCode()));
+    anch::ut::assertThat(e.getPath() == path, "Expected path '{}' ; found '{}'", path, e.getPath());
+    std::string expected = path.empty() ? message : path + ": " + message;
+    anch::ut::assertThat(std::string(e.what()).starts_with(expected), "Message should start with '{}' ; found '{}'", expected, e.what());
+  }
+}
+
+void
+testDeserRequired() {
+  anch::json::JSONMapper mapper(anch::json::DEFAULT_MAPPING_OPTIONS);
+  {
+    auto iss = std::istringstream(R"({"label":"l","tags":["a"],"owner":"o","name":"n","id":2})");
+    TestRequired res = mapper.deserialize<TestRequired>(iss);
+    anch::ut::assertThat(res._id == 2 && res._name == "n" && res._owner == "o" && res._tags.size() == 1 && res._label == "l",
+			 "Unexpected values: {} {} {} {} {}", res._id, res._name, res._owner.value_or("<null>"), res._tags.size(), res._label);
+  }
+  {
+    // Required std::optional can be null ; field which is not required can be null
+    auto iss = std::istringstream(R"({"id":1,"name":"n","owner":null,"tags":[],"label":"l","count":null})");
+    TestRequired res = mapper.deserialize<TestRequired>(iss);
+    anch::ut::assertThat(!res._owner.has_value(), "owner should be empty");
+    anch::ut::assertThat(res._count == 0, "count should be 0 ; found {}", res._count);
+  }
+  {
+    // Field found twice
+    auto iss = std::istringstream(R"({"id":1,"id":3,"name":"n","owner":null,"tags":[],"label":"l"})");
+    TestRequired res = mapper.deserialize<TestRequired>(iss);
+    anch::ut::assertThat(res._id == 3, "id should be 3 ; found {}", res._id);
+  }
+}
+
+void
+testDeserRequiredMissing() {
+  checkMappingError<TestRequired>(R"({"id":1,"owner":null,"tags":[],"label":"l"})", ErrorCode::MISSING_FIELD, "",
+				  "Missing required field 'name' near ");
+  checkMappingError<TestRequired>(R"({"tags":[],"owner":"o"})", ErrorCode::MISSING_FIELD, "",
+				  "Missing required fields 'id', 'name', 'label' near ");
+  checkMappingError<TestRequired>("{}", ErrorCode::MISSING_FIELD, "",
+				  "Missing required fields 'id', 'name', 'owner', 'tags', 'label' near ");
+}
+
+void
+testDeserRequiredNull() {
+  checkMappingError<TestRequired>(R"({"id":null,"name":"n","owner":null,"tags":[],"label":"l"})", ErrorCode::CONSTRAINT_VIOLATION,
+				  "/id", "Required field can not be null near ");
+  checkMappingError<TestRequired>(R"({"id":1,"name":null,"owner":null,"tags":[],"label":"l"})", ErrorCode::CONSTRAINT_VIOLATION,
+				  "/name", "Required field can not be null near ");
+  checkMappingError<TestRequired>(R"({"id":1,"name":"n","owner":null,"tags":null,"label":"l"})", ErrorCode::CONSTRAINT_VIOLATION,
+				  "/tags", "Required field can not be null near ");
+  checkMappingError<TestRequired>(R"({"id":1,"name":"n","owner":null,"tags":[],"label":null})", ErrorCode::CONSTRAINT_VIOLATION,
+				  "/label", "Required field can not be null near ");
+}
+
+void
+testDeserRequiredNested() {
+  std::string base = R"({"id":1,"name":"n","owner":null,"tags":[],"label":"l",)";
+  anch::json::JSONMapper mapper(anch::json::DEFAULT_MAPPING_OPTIONS);
+  {
+    auto iss = std::istringstream(base + R"("children":[{"id":1},{"id":2,"name":"b"}],"byName":{"a":{"id":3}}})");
+    TestRequired res = mapper.deserialize<TestRequired>(iss);
+    anch::ut::assertThat(res._children.size() == 2 && res._byName.size() == 1, "2 children and 1 byName expected ; found {} and {}",
+			 res._children.size(), res._byName.size());
+  }
+  checkMappingError<TestRequired>(base + R"("children":[{"id":1},{"name":"b"}]})", ErrorCode::MISSING_FIELD, "/children/1",
+				  "Missing required field 'id' near ");
+  checkMappingError<TestRequired>(base + R"("byName":{"a":{"id":3},"b":{"id":null}}})", ErrorCode::CONSTRAINT_VIOLATION,
+				  "/byName/b/id", "Required field can not be null near ");
+}
+
+struct TestManyRequired {
+  std::array<int64_t,70> _values{};
+};
+
+template<>
+void
+anch::json::registerObject(ObjectMapper<TestManyRequired>& mapper) {
+  for(std::size_t i = 0 ; i < 70 ; ++i) {
+    mapper.registerField<int64_t>("f" + std::to_string(i),
+				  std::function<void(TestManyRequired&, const int64_t&)>([i](TestManyRequired& obj, const int64_t& value) {
+				    obj._values[i] = value;
+				  }),
+				  anch::json::required);
+  }
+}
+
+std::string
+manyRequiredJson(std::size_t skipped) {
+  std::string json = "{";
+  for(std::size_t i = 0 ; i < 70 ; ++i) {
+    if(i == skipped) {
+      continue;
+    }
+    if(json.size() > 1) {
+      json += ',';
+    }
+    json += "\"f" + std::to_string(i) + "\":" + std::to_string(i);
+  }
+  return json + "}";
+}
+
+void
+testDeserRequiredMany() {
+  anch::json::JSONMapper mapper(anch::json::DEFAULT_MAPPING_OPTIONS);
+  auto iss = std::istringstream(manyRequiredJson(70));
+  TestManyRequired res = mapper.deserialize<TestManyRequired>(iss);
+  anch::ut::assertThat(res._values[69] == 69, "f69 should be 69 ; found {}", res._values[69]);
+  // missing fields in first and second bits words
+  checkMappingError<TestManyRequired>(manyRequiredJson(3), ErrorCode::MISSING_FIELD, "", "Missing required field 'f3' near ");
+  checkMappingError<TestManyRequired>(manyRequiredJson(63), ErrorCode::MISSING_FIELD, "", "Missing required field 'f63' near ");
+  checkMappingError<TestManyRequired>(manyRequiredJson(64), ErrorCode::MISSING_FIELD, "", "Missing required field 'f64' near ");
+  checkMappingError<TestManyRequired>(manyRequiredJson(69), ErrorCode::MISSING_FIELD, "", "Missing required field 'f69' near ");
+}
+// Required fields -
+
+// Value constraints +
+struct TestPoint {
+  int64_t _x = 0;
+  bool operator==(const TestPoint&) const = default;
+};
+
+template<>
+void
+anch::json::registerObject(ObjectMapper<TestPoint>& mapper) {
+  mapper
+    .registerField("x", &TestPoint::_x)
+    ;
+}
+
+struct TestConstraints {
+  std::string _name;
+  int32_t _age = 0;
+  uint16_t _level = 1;
+  int64_t _even = 0;
+  double _price = 0.0;
+  std::vector<std::string> _tags;
+  std::map<std::string,int64_t> _scores;
+  std::optional<std::string> _color;
+  std::optional<int64_t> _grade;
+  std::vector<TestPoint> _points;
+  std::set<int64_t> _ids;
+  std::string _code;
+};
+
+template<>
+void
+anch::json::registerObject(ObjectMapper<TestConstraints>& mapper) {
+  mapper
+    .registerField("name", &TestConstraints::_name, anch::json::required, anch::json::minLength(2), anch::json::maxLength(5))
+    .registerField("age", &TestConstraints::_age, anch::json::minimum(0), anch::json::maximum(150))
+    .registerField("level", &TestConstraints::_level, anch::json::exclusiveMinimum(0), anch::json::exclusiveMaximum(10))
+    .registerField("even", &TestConstraints::_even, anch::json::multipleOf(2))
+    .registerField("price", &TestConstraints::_price, anch::json::minimum(0.0), anch::json::multipleOf(0.01))
+    .registerField<std::string>("tags", &TestConstraints::_tags, anch::json::minItems(1), anch::json::maxItems(3),
+				anch::json::uniqueItems, anch::json::items(anch::json::minLength(1)))
+    .registerField<int64_t>("scores", &TestConstraints::_scores, anch::json::minProperties(1), anch::json::maxProperties(2),
+			    anch::json::items(anch::json::minimum(0)))
+    .registerField<std::string>("color", &TestConstraints::_color, anch::json::allowed({"red", "green"}))
+    .registerField<int64_t>("grade", &TestConstraints::_grade, anch::json::allowed({1, 2, 3}))
+    .registerField<TestPoint>("points", &TestConstraints::_points, anch::json::uniqueItems)
+    .registerField<int64_t>("ids", &TestConstraints::_ids, anch::json::maxItems(2))
+    .registerField<std::string>("code",
+				std::function<void(TestConstraints&, const std::string&)>([](TestConstraints& obj, const std::string& code) {
+				  obj._code = code;
+				}),
+				anch::json::custom<std::string>([](const std::string& code) -> bool {
+				  return code.starts_with('C');
+				}, "Code has to start with 'C'"))
+    ;
+}
+
+// Constraints are checked at compile time against field types
+static_assert(anch::json::FieldConstraint<anch::json::MinLength, std::string>);
+static_assert(anch::json::FieldConstraint<anch::json::MinLength, std::optional<std::string>>);
+static_assert(!anch::json::FieldConstraint<anch::json::MinLength, int32_t>);
+static_assert(!anch::json::FieldConstraint<anch::json::MinLength, std::vector<std::string>>);
+static_assert(anch::json::FieldConstraint<anch::json::Minimum<int>, std::shared_ptr<uint64_t>>);
+static_assert(!anch::json::FieldConstraint<anch::json::Minimum<int>, bool>);
+static_assert(!anch::json::FieldConstraint<anch::json::MinItems, std::string>);
+static_assert(!anch::json::FieldConstraint<anch::json::MinItems, std::map<std::string,int>>);
+static_assert(anch::json::FieldConstraint<anch::json::MinProperties, std::map<std::string,int>>);
+static_assert(anch::json::FieldConstraint<anch::json::Items<anch::json::MinLength>, std::vector<std::string>>);
+static_assert(!anch::json::FieldConstraint<anch::json::Items<anch::json::MinLength>, std::vector<int64_t>>);
+static_assert(anch::json::FieldConstraint<anch::json::Items<anch::json::Minimum<int>>, std::map<std::string,std::optional<int64_t>>>);
+static_assert(!anch::json::FieldConstraint<anch::json::Items<anch::json::Required>, std::vector<std::string>>);
+
+const std::string CONSTRAINTS_BASE = R"({"name":"abc")";
+
+void
+checkConstraintError(const std::string& fields, const std::string& path, const std::string& message) {
+  checkMappingError<TestConstraints>(CONSTRAINTS_BASE + fields + "}", ErrorCode::CONSTRAINT_VIOLATION, path, message);
+}
+
+void
+testDeserConstraints() {
+  anch::json::JSONMapper mapper(anch::json::DEFAULT_MAPPING_OPTIONS);
+  // boundary values
+  auto iss = std::istringstream(R"({"name":"ab","age":150,"level":9,"even":-4,"price":19.99,"tags":["a","b","c"],)"
+				R"("scores":{"a":0,"b":3},"color":"green","grade":3,"points":[{"x":1},{"x":2}],"ids":[1,2],"code":"C1"})");
+  TestConstraints res = mapper.deserialize<TestConstraints>(iss);
+  anch::ut::assertThat(res._name == "ab" && res._age == 150 && res._level == 9 && res._even == -4, "Invalid values");
+  anch::ut::assertThat(res._tags.size() == 3 && res._scores.size() == 2 && res._color == "green" && res._grade == 3, "Invalid values");
+  anch::ut::assertThat(res._points.size() == 2 && res._ids.size() == 2 && res._code == "C1", "Invalid values");
+  // null and absent values are not checked
+  auto nulls = std::istringstream(R"({"name":"abcde","color":null,"grade":null,"tags":null})");
+  res = mapper.deserialize<TestConstraints>(nulls);
+  anch::ut::assertThat(!res._color.has_value() && res._tags.empty(), "Invalid null values");
+}
+
+void
+testDeserConstraintsString() {
+  checkMappingError<TestConstraints>(R"({"name":"a"})", ErrorCode::CONSTRAINT_VIOLATION, "/name", "Length 1 is lower than minLength 2");
+  checkMappingError<TestConstraints>(R"({"name":"abcdef"})", ErrorCode::CONSTRAINT_VIOLATION, "/name", "Length 6 is greater than maxLength 5");
+  // length is the number of code points: "été" is 3 code points (5 bytes), "ééééé" 5 code points (10 bytes)
+  anch::json::JSONMapper mapper(anch::json::DEFAULT_MAPPING_OPTIONS);
+  for(const char* name : {"été", "ééééé", "\\u00e9t"}) {
+    auto iss = std::istringstream(std::string(R"({"name":")") + name + "\"}");
+    [[maybe_unused]] TestConstraints res = mapper.deserialize<TestConstraints>(iss);
+  }
+  checkMappingError<TestConstraints>(R"({"name":"é"})", ErrorCode::CONSTRAINT_VIOLATION, "/name", "Length 1 is lower than minLength 2");
+  checkMappingError<TestConstraints>(R"({"name":"éééééé"})", ErrorCode::CONSTRAINT_VIOLATION, "/name", "Length 6 is greater than maxLength 5");
+}
+
+void
+testDeserConstraintsNumber() {
+  checkConstraintError(R"(,"age":-1)", "/age", "Value -1 is lower than minimum 0");
+  checkConstraintError(R"(,"age":151)", "/age", "Value 151 is greater than maximum 150");
+  checkConstraintError(R"(,"level":0)", "/level", "Value 0 is lower than or equal to exclusiveMinimum 0");
+  checkConstraintError(R"(,"level":10)", "/level", "Value 10 is greater than or equal to exclusiveMaximum 10");
+  checkConstraintError(R"(,"even":-3)", "/even", "Value -3 is not a multiple of 2");
+  checkConstraintError(R"(,"price":-0.5)", "/price", "Value -0.5 is lower than minimum 0");
+  checkConstraintError(R"(,"price":1.005)", "/price", "Value 1.005 is not a multiple of 0.01");
+  anch::json::JSONMapper mapper(anch::json::DEFAULT_MAPPING_OPTIONS);
+  for(const char* price : {"0", "0.3", "0.07", "1234567.89", "1e3"}) {
+    auto iss = std::istringstream(CONSTRAINTS_BASE + R"(,"price":)" + price + "}");
+    [[maybe_unused]] TestConstraints res = mapper.deserialize<TestConstraints>(iss);
+  }
+}
+
+void
+testDeserConstraintsItems() {
+  checkConstraintError(R"(,"tags":[])", "/tags", "Item count 0 is lower than minItems 1");
+  checkConstraintError(R"(,"tags":["a","b","c","d"])", "/tags", "Item count 4 is greater than maxItems 3");
+  checkConstraintError(R"(,"tags":["b","a","b"])", "/tags", "Items 0 and 2 are equal (uniqueItems)");
+  checkConstraintError(R"(,"tags":["a",""])", "/tags/1", "Length 0 is lower than minLength 1");
+  checkConstraintError(R"(,"points":[{"x":1},{"x":2},{"x":1}])", "/points", "Items 0 and 2 are equal (uniqueItems)");
+  checkConstraintError(R"(,"ids":[3,1,2])", "/ids", "Item count 3 is greater than maxItems 2");
+  checkConstraintError(R"(,"scores":{})", "/scores", "Property count 0 is lower than minProperties 1");
+  checkConstraintError(R"(,"scores":{"a":1,"b":2,"c":3})", "/scores", "Property count 3 is greater than maxProperties 2");
+  checkConstraintError(R"(,"scores":{"a":1,"b/c":-1})", "/scores/b~1c", "Value -1 is lower than minimum 0");
+}
+
+void
+testDeserConstraintsAllowed() {
+  checkConstraintError(R"(,"color":"blue")", "/color", "Value 'blue' is not allowed (allowed: 'red', 'green')");
+  checkConstraintError(R"(,"grade":4)", "/grade", "Value 4 is not allowed (allowed: 1, 2, 3)");
+}
+
+void
+testDeserConstraintsCustom() {
+  checkConstraintError(R"(,"code":"D1")", "/code", "Code has to start with 'C'");
+}
+
+void
+testDeserConstraintsOption() {
+  // neither value constraints nor required fields are checked
+  anch::json::MappingOptions options;
+  options.deserialize_check_constraints = false;
+  anch::json::JSONMapper mapper(options);
+  auto iss = std::istringstream(R"({"name":"a","age":-1,"tags":[],"color":"blue","code":"D"})");
+  TestConstraints res = mapper.deserialize<TestConstraints>(iss);
+  anch::ut::assertThat(res._name == "a" && res._age == -1 && res._color == "blue" && res._code == "D", "Invalid values");
+  auto missing = std::istringstream(R"({"age":-1})");
+  res = mapper.deserialize<TestConstraints>(missing);
+  anch::ut::assertThat(res._name.empty() && res._age == -1, "Missing required field should be accepted");
+  auto nulls = std::istringstream(R"({"id":null,"name":null,"owner":null,"tags":null,"label":null})");
+  [[maybe_unused]] TestRequired required = mapper.deserialize<TestRequired>(nulls);
+  // default options: required fields are checked
+  checkMappingError<TestConstraints>(R"({"age":1})", ErrorCode::MISSING_FIELD, "", "Missing required field 'name'");
+}
+
+void
+testConstraintsFactory() {
+  for(double divisor : {0.0, -1.0, std::numeric_limits<double>::quiet_NaN()}) {
+    try {
+      [[maybe_unused]] auto constraint = anch::json::multipleOf(divisor);
+      anch::ut::fail("multipleOf should refuse divisor");
+    } catch(const std::invalid_argument& e) {
+      std::cout << e.what() << std::endl;
+    }
+  }
+  std::string message;
+  anch::ut::assertThat(anch::json::minimum(-1).check(uint64_t{0}, message), "0 should be greater than -1");
+  anch::ut::assertThat(!anch::json::maximum(uint64_t{1}).check(int64_t{2}, message), "2 should be greater than 1");
+  anch::ut::assertThat(anch::json::maximum(uint64_t{1}).check(int64_t{-1}, message), "-1 should be lower than 1");
+  anch::ut::assertThat(anch::json::multipleOf(3).check(std::numeric_limits<int64_t>::min() + 2, message), "-2^63 + 2 should be a multiple of 3");
+}
+// Value constraints -
+
+// Patterns and formats +
+struct TestFormats {
+  std::string _code;
+  std::optional<std::string> _word;
+  std::optional<std::string> _email;
+  std::vector<std::string> _ips;
+  std::optional<std::string> _secret;
+  std::optional<std::string> _even;
+};
+
+template<>
+void
+anch::json::registerObject(ObjectMapper<TestFormats>& mapper) {
+  mapper
+    .registerField("code", &TestFormats::_code, anch::json::pattern("^[A-Z]{2}[0-9]+$"))
+    .registerField<std::string>("word", &TestFormats::_word, anch::json::pattern("b"))
+    .registerField<std::string>("email", &TestFormats::_email, anch::json::format("email"))
+    .registerField<std::string>("ips", &TestFormats::_ips, anch::json::items(anch::json::format("ipv4")))
+    .registerField<std::string>("secret", &TestFormats::_secret, anch::json::format("password"))
+    .registerField<std::string>("even", &TestFormats::_even, anch::json::format("even-length"))
+    ;
+}
+
+void
+checkFormatError(const std::string& json, const std::string& path, const std::string& message) {
+  checkMappingError<TestFormats>(json, ErrorCode::CONSTRAINT_VIOLATION, path, message);
+}
+
+void
+testDeserPattern() {
+  anch::json::JSONMapper mapper(anch::json::DEFAULT_MAPPING_OPTIONS);
+  auto iss = std::istringstream(R"({"code":"AB12","word":"abc"})");
+  TestFormats res = mapper.deserialize<TestFormats>(iss);
+  anch::ut::assertThat(res._code == "AB12" && res._word == "abc", "Invalid values");
+  checkFormatError(R"({"code":"ab12"})", "/code", "Value does not match pattern ^[A-Z]{2}[0-9]+$");
+  checkFormatError(R"({"code":"AB12 "})", "/code", "Value does not match pattern ^[A-Z]{2}[0-9]+$");
+  // pattern is not anchored
+  checkFormatError(R"({"code":"AB1","word":"ac"})", "/word", "Value does not match pattern b");
+}
+
+void
+testDeserPatternInvalid() {
+  for(const char* source : {"(", "[a-", "a{2,1}"}) {
+    try {
+      [[maybe_unused]] anch::json::Pattern constraint = anch::json::pattern(source);
+      anch::ut::fail(std::string("Invalid pattern should be refused: ") + source);
+    } catch(const std::regex_error& e) {
+      std::cout << source << ": " << e.what() << std::endl;
+    }
+  }
+}
+
+void
+testDeserPatternCompiler() {
+  std::string message;
+  // Compiler which matches values starting with the pattern
+  anch::json::setPatternCompiler([](std::string_view source) -> anch::json::PatternMatcher {
+    return [prefix = std::string(source)](std::string_view value) -> bool { return value.starts_with(prefix); };
+  });
+  anch::json::Pattern prefix = anch::json::pattern("(");
+  anch::ut::assertThat(prefix.check(std::string("(a"), message) && !prefix.check(std::string("a("), message), "Custom compiler should be used");
+  // Default compiler is restored
+  anch::json::setPatternCompiler(nullptr);
+  anch::json::Pattern regex = anch::json::pattern("^a+$");
+  anch::ut::assertThat(regex.check(std::string("aaa"), message) && !regex.check(std::string("ab"), message), "Default compiler should be used");
+  // Patterns built before keep their matcher
+  anch::ut::assertThat(prefix.check(std::string("(b"), message), "Matcher should not change");
+}
+
+void
+checkFormatValues(const std::string& name, std::initializer_list<const char*> valid, std::initializer_list<const char*> invalid) {
+  anch::json::Format constraint = anch::json::format(name);
+  std::string message;
+  for(const char* value : valid) {
+    anch::ut::assertThat(constraint.check(std::string(value), message), "'{}' should be a valid {}", value, name);
+  }
+  for(const char* value : invalid) {
+    anch::ut::assertThat(!constraint.check(std::string(value), message), "'{}' should not be a valid {}", value, name);
+    anch::ut::assertThat(message == "Value is not a valid " + name + " (format)", "Unexpected message '{}'", message);
+  }
+}
+
+void
+testDeserFormats() {
+  checkFormatValues("email", {"joe.bloggs@example.com", "a+b@x.io", "user@localhost", "o'hara@x.com"},
+		    {"joe", "@x.com", ".a@x.com", "a.@x.com", "a..b@x.com", "a@-x.com", "a@x..com", "a b@x.com", "a@x.com.", "a@"});
+  checkFormatValues("hostname", {"example.com", "a-b.c1", "localhost", "xn--bcher-kva.example"},
+		    {"", "-a.com", "a-.com", "a_b.com", "a..b", "a.", (std::string(64, 'a') + ".com").c_str()});
+  checkFormatValues("ipv4", {"192.168.0.1", "0.0.0.0", "255.255.255.255"}, {"256.0.0.1", "01.2.3.4", "1.2.3", "1.2.3.4.5", " 1.2.3.4", ""});
+  checkFormatValues("ipv6", {"::1", "2001:db8::8a2e:370:7334", "::ffff:192.168.0.1", "::"}, {"1:::2", "12345::", "fe80::1%eth0", "1.2.3.4", ""});
+  checkFormatValues("uri", {"https://example.com/a?b=c#d", "urn:isbn:0451450523", "mailto:a@b.c", "http://x/%20", "a+b-c.d:"},
+		    {"example.com", "//x", "1http://x", "http://x y", "http://x/%2", "http://x/%zz", "http://x/é", ""});
+  checkFormatValues("byte", {"", "YQ==", "YWI=", "YWJj", "+/+/"}, {"YQ", "Y===", "YQ=a", "Y!==", "===="});
+#ifdef ANCH_UUID
+  checkFormatValues("uuid", {"deb94ebc-be28-4899-981a-29199b7a487d"}, {"deb94ebc", "zeb94ebc-be28-4899-981a-29199b7a487d"});
+#endif
+#ifdef ANCH_DATE
+  checkFormatValues("date-time", {"2020-01-02T03:04:05Z", "2020-01-02T03:04:05.123+01:00"}, {"2020-01-02", "2020-01-02 03:04:05Z"});
+  checkFormatValues("date", {"2020-01-02", "2024-02-29"}, {"2020-02-30", "2020-01-02T03:04:05Z"});
+#endif
+  // Unknown format is an annotation
+  checkFormatValues("password", {"", "anything"}, {});
+}
+
+void
+testDeserFormatMapper() {
+  anch::json::JSONMapper mapper(anch::json::DEFAULT_MAPPING_OPTIONS);
+  auto iss = std::istringstream(R"({"code":"AB1","email":"a@b.c","ips":["1.2.3.4"],"secret":"x","even":"abc"})");
+  [[maybe_unused]] TestFormats res = mapper.deserialize<TestFormats>(iss); // even-length is not registered
+  checkFormatError(R"({"code":"AB1","email":"a@"})", "/email", "Value is not a valid email (format)");
+  checkFormatError(R"({"code":"AB1","ips":["1.2.3.4","1.2.3"]})", "/ips/1", "Value is not a valid ipv4 (format)");
+}
+
+void
+testDeserFormatRegister() {
+  // Registered after mapper creation: validators are found when values are checked
+  anch::json::registerFormat("even-length", [](std::string_view value) -> bool { return value.size() % 2 == 0; });
+  anch::json::JSONMapper mapper(anch::json::DEFAULT_MAPPING_OPTIONS);
+  auto iss = std::istringstream(R"({"code":"AB1","even":"ab"})");
+  [[maybe_unused]] TestFormats res = mapper.deserialize<TestFormats>(iss);
+  checkFormatError(R"({"code":"AB1","even":"abc"})", "/even", "Value is not a valid even-length (format)");
+  // Replace
+  anch::json::registerFormat("even-length", [](std::string_view value) -> bool { return value.size() % 2 == 1; });
+  checkFormatError(R"({"code":"AB1","even":"ab"})", "/even", "Value is not a valid even-length (format)");
+  // Remove: unknown format again
+  anch::json::registerFormat("even-length", nullptr);
+  auto removed = std::istringstream(R"({"code":"AB1","even":"ab"})");
+  res = mapper.deserialize<TestFormats>(removed);
+  // Built-in format can be replaced
+  anch::json::registerFormat("email", [](std::string_view value) -> bool { return value.ends_with("@anch"); });
+  checkFormatError(R"({"code":"AB1","email":"a@b.c"})", "/email", "Value is not a valid email (format)");
+}
+// Patterns and formats -
+
+// Serialization constraints +
+struct TestGetter {
+  int64_t _value = 0;
+};
+
+template<>
+void
+anch::json::registerObject(ObjectMapper<TestGetter>& mapper) {
+  mapper
+    .registerField<int64_t>("value",
+			    std::function<int64_t(const TestGetter&)>([](const TestGetter& obj) -> int64_t { return obj._value; }),
+			    std::function<void(TestGetter&, const int64_t&)>([](TestGetter& obj, const int64_t& value) { obj._value = value; }),
+			    anch::json::minimum(0))
+    ;
+}
+
+struct TestSerRequired {
+  std::map<std::string,int64_t> _map;
+  std::optional<std::string> _opt;
+  std::vector<int64_t> _list;
+  std::shared_ptr<TestPoint> _point;
+  std::vector<int64_t> _other;
+  std::optional<std::string> _none;
+};
+
+template<>
+void
+anch::json::registerObject(ObjectMapper<TestSerRequired>& mapper) {
+  mapper
+    .registerField<int64_t>("map", &TestSerRequired::_map, anch::json::required)
+    .registerField<std::string>("opt", &TestSerRequired::_opt, anch::json::required)
+    .registerField<int64_t>("list", &TestSerRequired::_list, anch::json::required)
+    .registerField<TestPoint>("point", &TestSerRequired::_point, anch::json::required)
+    .registerField<int64_t>("other", &TestSerRequired::_other)
+    .registerField<std::string>("none", &TestSerRequired::_none)
+    ;
+}
+
+TestConstraints
+validConstraints() {
+  TestConstraints value;
+  value._name = "abc";
+  value._tags = {"a", "b"};
+  value._scores = {{"a", 1}};
+  return value;
+}
+
+template<typename T>
+void
+checkSerError(const T& value, const std::string& path, const std::string& message) {
+  anch::json::MappingOptions options;
+  options.serialize_check_constraints = true;
+  try {
+    std::string json = anch::json::serialize(value, options);
+    anch::ut::fail("Serialization should have failed: " + json);
+  } catch(const MappingError& e) {
+    std::cout << e.what() << std::endl;
+    anch::ut::assertThat(e.getErrorCode() == ErrorCode::CONSTRAINT_VIOLATION, "CONSTRAINT_VIOLATION expected");
+    anch::ut::assertThat(e.getPath() == path, "Expected path '{}' ; found '{}'", path, e.getPath());
+    std::string expected = path + ": " + message;
+    anch::ut::assertThat(expected == e.what(), "Expected message '{}' ; found '{}'", expected, e.what());
+  }
+}
+
+void
+testSerConstraintsDefault() {
+  // serialize_check_constraints is false by default
+  TestConstraints value = validConstraints();
+  value._name = "a";
+  value._age = -1;
+  std::string json = anch::json::serialize(value);
+  anch::ut::assertThat(json.find(R"("name":"a")") != std::string::npos && json.find(R"("age":-1)") != std::string::npos, "Invalid JSON {}", json);
+}
+
+void
+testSerConstraints() {
+  anch::json::MappingOptions options;
+  options.serialize_check_constraints = true;
+  std::string json = anch::json::serialize(validConstraints(), options);
+  std::cout << json << std::endl;
+  TestConstraints value = validConstraints();
+  value._name = "a";
+  checkSerError(value, "/name", "Length 1 is lower than minLength 2");
+  value = validConstraints();
+  value._age = 151;
+  checkSerError(value, "/age", "Value 151 is greater than maximum 150");
+  value = validConstraints();
+  value._tags = {"a", ""};
+  checkSerError(value, "/tags/1", "Length 0 is lower than minLength 1");
+  value = validConstraints();
+  value._scores = {{"a", 1}, {"b/c", -1}};
+  checkSerError(value, "/scores/b~1c", "Value -1 is lower than minimum 0");
+  value = validConstraints();
+  value._color = "blue";
+  checkSerError(value, "/color", "Value 'blue' is not allowed (allowed: 'red', 'green')");
+  // nested objects and root array
+  std::vector<TestConstraints> values = {validConstraints(), validConstraints()};
+  values[1]._points = {TestPoint{1}, TestPoint{1}};
+  checkSerError(values, "/1/points", "Items 0 and 1 are equal (uniqueItems)");
+  // getter
+  checkSerError(TestGetter{-1}, "/value", "Value -1 is lower than minimum 0");
+}
+
+void
+testSerRequired() {
+  anch::json::MappingOptions options;
+  options.serialize_null = false;
+  options.serialize_empty_col = false;
+  TestSerRequired value;
+  std::string json = anch::json::serialize(value, options);
+  anch::ut::assertThat(json == R"({"map":{},"opt":null,"list":[],"point":null})", "Unexpected JSON {}", json);
+  // round trip: required fields are present
+  auto iss = std::istringstream(json);
+  [[maybe_unused]] TestSerRequired copy = anch::json::deserialize<TestSerRequired>(iss);
+  value._map = {{"a", 1}};
+  value._opt = "o";
+  value._list = {1};
+  value._point = std::make_shared<TestPoint>(TestPoint{2});
+  json = anch::json::serialize(value, options);
+  anch::ut::assertThat(json == R"({"map":{"a":1},"opt":"o","list":[1],"point":{"x":2}})", "Unexpected JSON {}", json);
+}
+// Serialization constraints -
+
+// Validation +
+struct TestNested {
+  TestConstraints _main;
+  std::optional<TestConstraints> _opt;
+  std::shared_ptr<TestConstraints> _ptr;
+  std::map<std::string,TestConstraints> _map;
+  std::vector<TestConstraints> _list;
+};
+
+template<>
+void
+anch::json::registerObject(ObjectMapper<TestNested>& mapper) {
+  mapper
+    .registerField("main", &TestNested::_main)
+    .registerField<TestConstraints>("opt", &TestNested::_opt)
+    .registerField<TestConstraints>("ptr", &TestNested::_ptr)
+    .registerField<TestConstraints>("map", &TestNested::_map, anch::json::maxProperties(1))
+    .registerField<TestConstraints>("list", &TestNested::_list)
+    ;
+}
+
+void
+checkViolations(const std::vector<anch::json::Violation>& violations, const std::vector<std::pair<std::string,std::string>>& expected) {
+  for(const anch::json::Violation& violation : violations) {
+    std::cout << violation.path << ": " << violation.message << std::endl;
+  }
+  anch::ut::assertThat(violations.size() == expected.size(), "{} violations expected ; found {}", expected.size(), violations.size());
+  for(std::size_t i = 0 ; i < expected.size() ; ++i) {
+    anch::ut::assertThat(violations[i].path == expected[i].first && violations[i].message == expected[i].second,
+			 "Expected '{}: {}' ; found '{}: {}'", expected[i].first, expected[i].second, violations[i].path, violations[i].message);
+  }
+}
+
+void
+testValidate() {
+  anch::ut::assertThat(anch::json::validate(validConstraints()).empty(), "Valid object should not have violation");
+  anch::ut::assertThat(anch::json::isValid(validConstraints()), "Valid object should be valid");
+  // Every violation is reported, in fields registration order
+  TestConstraints value = validConstraints();
+  value._name = "a";
+  value._age = -1;
+  value._tags = {"a", "", "a"};
+  value._scores = {{"a", -1}, {"b", -2}};
+  value._color = "blue";
+  anch::ut::assertThat(!anch::json::isValid(value), "Invalid object should not be valid");
+  checkViolations(anch::json::validate(value), {
+      {"/name", "Length 1 is lower than minLength 2"},
+      {"/age", "Value -1 is lower than minimum 0"},
+      {"/tags", "Items 0 and 2 are equal (uniqueItems)"},
+      {"/tags/1", "Length 0 is lower than minLength 1"},
+      {"/scores/a", "Value -1 is lower than minimum 0"},
+      {"/scores/b", "Value -2 is lower than minimum 0"},
+      {"/color", "Value 'blue' is not allowed (allowed: 'red', 'green')"}});
+  // Getter, required fields are not checked
+  checkViolations(anch::json::validate(TestGetter{-1}), {{"/value", "Value -1 is lower than minimum 0"}});
+  checkViolations(anch::json::validate(TestSerRequired{}), {});
+}
+
+void
+testValidateNested() {
+  TestNested value;
+  value._main = validConstraints();
+  value._main._name = "a";
+  checkViolations(anch::json::validate(value), {{"/main/name", "Length 1 is lower than minLength 2"}});
+  value._opt = validConstraints();
+  value._opt->_age = 200;
+  value._ptr = std::make_shared<TestConstraints>(validConstraints());
+  value._ptr->_color = "blue";
+  value._map = {{"a/b", validConstraints()}, {"c", validConstraints()}};
+  value._map["a/b"]._level = 0;
+  value._list = {validConstraints(), validConstraints()};
+  value._list[1]._tags = {};
+  checkViolations(anch::json::validate(value), {
+      {"/main/name", "Length 1 is lower than minLength 2"},
+      {"/opt/age", "Value 200 is greater than maximum 150"},
+      {"/ptr/color", "Value 'blue' is not allowed (allowed: 'red', 'green')"},
+      {"/map", "Property count 2 is greater than maxProperties 1"},
+      {"/map/a~1b/level", "Value 0 is lower than or equal to exclusiveMinimum 0"},
+      {"/list/1/tags", "Item count 0 is lower than minItems 1"}});
+  // Root containers
+  std::vector<TestConstraints> values = {validConstraints(), validConstraints()};
+  values[0]._name = "toolong";
+  checkViolations(anch::json::validate(values), {{"/0/name", "Length 7 is greater than maxLength 5"}});
+  std::map<std::string,TestConstraints> map = {{"k", validConstraints()}};
+  map["k"]._even = 3;
+  checkViolations(anch::json::validate(map), {{"/k/even", "Value 3 is not a multiple of 2"}});
+  // Primitive values have no constraint
+  anch::ut::assertThat(anch::json::validate(std::string("a")).empty() && anch::json::validate(42).empty(), "Primitives are valid");
+}
+// Validation -
+
+// Error path +
+void
+testErrorPath() {
+  // array item
+  checkMappingError<TestRequired>(R"({"id":1,"name":"n","owner":null,"tags":["a","b",3],"label":"l"})", ErrorCode::INVALID_FORMAT,
+				  "/tags/2", "Unexpected character");
+  // map key: '~' and '/' are escaped
+  checkMappingError<TestRequired>(R"({"id":1,"name":"n","owner":null,"tags":[],"label":"l","byName":{"a/b~c":{"id":"x"}}})",
+				  ErrorCode::INVALID_FORMAT, "/byName/a~1b~0c/id", "Unexpected character");
+  // unknown field
+  checkMappingError<TestRequired>(R"({"id":1,"unknown":2})", ErrorCode::UNEXPECTED_FIELD, "/unknown", "Unexpected field found");
+  // error outside value: no path
+  checkMappingError<TestRequired>(R"({"id":1"name":"n"})", ErrorCode::INVALID_FORMAT, "", "Unexpected character");
+}
+// Error path -
+
 // Error message +
 void
 checkErrorMessage(const std::string& json, const std::string& expected) {
@@ -1254,7 +1984,8 @@ testDeserUuidKO() {
         throw;
       }
       std::cout << e.what() << std::endl;
-      anch::ut::assertThat(std::string(e.what()).starts_with("Invalid UUID '"), "Message should come from UUID parser ; found '{}'", e.what());
+      anch::ut::assertThat(e.getPath() == "/id", "Path should be '/id' ; found '{}'", e.getPath());
+      anch::ut::assertThat(std::string(e.what()).starts_with("/id: Invalid UUID '"), "Message should come from UUID parser ; found '{}'", e.what());
     }
   }
 }
@@ -1324,9 +2055,10 @@ testSerDate() {
 void
 testDeserDateKO() {
   anch::json::JSONMapper mapper(anch::json::DEFAULT_MAPPING_OPTIONS);
-  for(const char* json : {R"({"timestamp":"2025-07-01 10:00:00Z"})", R"({"timestamp":"2025-07-01"})",
-                          R"({"timestamp":"3000-01-01T00:00:00Z"})", R"({"birth":"2025-02-29"})",
-                          R"({"days":["2025-01-01T00:00:00Z"]})"}) {
+  for(auto [json, path] : std::initializer_list<std::pair<const char*, std::string>>{
+      {R"({"timestamp":"2025-07-01 10:00:00Z"})", "/timestamp"}, {R"({"timestamp":"2025-07-01"})", "/timestamp"},
+      {R"({"timestamp":"3000-01-01T00:00:00Z"})", "/timestamp"}, {R"({"birth":"2025-02-29"})", "/birth"},
+      {R"({"days":["2025-01-01T00:00:00Z"]})", "/days/0"}}) {
     std::cout << "Deserialize " << json << std::endl;
     try {
       auto iss = std::istringstream(json);
@@ -1337,7 +2069,8 @@ testDeserDateKO() {
         throw;
       }
       std::cout << e.what() << std::endl;
-      anch::ut::assertThat(std::string(e.what()).starts_with("Invalid RFC 3339 "), "Message should come from RFC 3339 parser ; found '{}'", e.what());
+      anch::ut::assertThat(e.getPath() == path, "Path should be '{}' ; found '{}'", path, e.getPath());
+      anch::ut::assertThat(std::string(e.what()).starts_with(path + ": Invalid RFC 3339 "), "Message should come from RFC 3339 parser ; found '{}'", e.what());
     }
   }
 }
@@ -1389,6 +2122,31 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("json-deser-unknown-object", testDeserUnknownObject)
     .add("json-deser-unknown-number", testDeserUnknownNumber)
     .add("json-deser-unknown-number-ko", testDeserUnknownNumberKO)
+    .add("json-deser-required", testDeserRequired)
+    .add("json-deser-required-missing", testDeserRequiredMissing)
+    .add("json-deser-required-null", testDeserRequiredNull)
+    .add("json-deser-required-nested", testDeserRequiredNested)
+    .add("json-deser-required-many", testDeserRequiredMany)
+    .add("json-deser-constraints", testDeserConstraints)
+    .add("json-deser-constraints-string", testDeserConstraintsString)
+    .add("json-deser-constraints-number", testDeserConstraintsNumber)
+    .add("json-deser-constraints-items", testDeserConstraintsItems)
+    .add("json-deser-constraints-allowed", testDeserConstraintsAllowed)
+    .add("json-deser-constraints-custom", testDeserConstraintsCustom)
+    .add("json-deser-constraints-option", testDeserConstraintsOption)
+    .add("json-constraints-factory", testConstraintsFactory)
+    .add("json-deser-pattern", testDeserPattern)
+    .add("json-deser-pattern-invalid", testDeserPatternInvalid)
+    .add("json-deser-pattern-compiler", testDeserPatternCompiler)
+    .add("json-deser-formats", testDeserFormats)
+    .add("json-deser-format-mapper", testDeserFormatMapper)
+    .add("json-deser-format-register", testDeserFormatRegister)
+    .add("json-ser-constraints-default", testSerConstraintsDefault)
+    .add("json-ser-constraints", testSerConstraints)
+    .add("json-ser-required", testSerRequired)
+    .add("json-validate", testValidate)
+    .add("json-validate-nested", testValidateNested)
+    .add("json-error-path", testErrorPath)
     .add("json-error-message", testErrorMessage)
     .add("json-error-message-end", testErrorMessageEnd)
 #ifdef ANCH_UUID

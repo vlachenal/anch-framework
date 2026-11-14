@@ -82,8 +82,7 @@ namespace anch::json {
       value.push_back(std::move(val));
       return true;
     };
-    anch::json::lexArray(addFunc, context);
-    return true;
+    return anch::json::lexArray(addFunc, context);
   }
 
   template<typename M, typename T>
@@ -97,8 +96,7 @@ namespace anch::json {
       value.push_back(std::move(val));
       return true;
     };
-    anch::json::lexArray(addFunc, context);
-    return true;
+    return anch::json::lexArray(addFunc, context);
   }
 
   template<typename M, typename T>
@@ -112,8 +110,7 @@ namespace anch::json {
       value.insert(std::move(val));
       return true;
     };
-    anch::json::lexArray(addFunc, context);
-    return true;
+    return anch::json::lexArray(addFunc, context);
   }
 
   template<typename M, typename T>
@@ -127,8 +124,7 @@ namespace anch::json {
       value.push(std::move(val));
       return true;
     };
-    anch::json::lexArray(addFunc, context);
-    return true;
+    return anch::json::lexArray(addFunc, context);
   }
 
   template<typename M, typename T>
@@ -140,8 +136,7 @@ namespace anch::json {
 	value.insert({key, std::move(val)});
       }
     };
-    anch::json::lexMap(pushFunc, context);
-    return true;
+    return anch::json::lexMap(pushFunc, context);
   }
   // Deserialization -
 

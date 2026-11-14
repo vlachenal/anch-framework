@@ -80,6 +80,8 @@ petstore::model::Pet pet = anch::json::deserialize<petstore::model::Pet>(input);
  * | other component schema | alias ( \c using ) |
  *
  * - Optional and \c nullable properties are \c std::optional ; arrays and maps are empty when absent.
+ * - Required properties are registered with \c anch::json::required : deserialization fails when they are absent
+ *   ( \c MISSING_FIELD ) or \c null while they are not \c nullable ( \c CONSTRAINT_VIOLATION ).
  * - Inline objects and enumerations are named after their path: \c \<Model\>\<Property\> , \c \<Model\>\<Property\>Item for
  *   array items and \c \<Model\>\<Property\>Value for map values.
  * - \c allOf merges the properties of every schema: inherited properties keep the types of the model which declares
@@ -90,6 +92,39 @@ petstore::model::Pet pet = anch::json::deserialize<petstore::model::Pet>(input);
  *   \c _ suffix ( \c class → \c class_ ). Enumeration values are upper case words ( \c in-stock and \c inStock →
  *   \c IN_STOCK ).
  * - Properties are declared in alphabetical order (anch-json maps are ordered).
+ * - Models have a default \c operator== (every member is compared).
+ *
+ * \section oas_constraints_sec Constraints
+ *
+ * Schema constraints are generated as anch-json constraints given to \c registerField , and checked on
+ * deserialization, and on serialization when \c serialize_check_constraints option is enabled
+ * ( \c CONSTRAINT_VIOLATION error with the path of the value, see \ref json_check_sec "anch-json" for client and
+ * server recommended options). They are listed in the generated
+ * documentation of each member. \c --no-constraints disables them (required properties are still checked).
+ * Generated models can be checked without serialization with \c anch::json::validate (every violation is
+ * returned, see \ref json_validate_sec "anch-json").
+ *
+ * | OpenAPI keyword | Generated constraint |
+ * |-----------------|----------------------|
+ * | \c minLength , \c maxLength (strings) | \c anch::json::minLength , \c anch::json::maxLength (Unicode code points) |
+ * | \c minimum , \c maximum , \c exclusiveMinimum , \c exclusiveMaximum (numbers) | \c anch::json::minimum , \c anch::json::maximum , \c anch::json::exclusiveMinimum , \c anch::json::exclusiveMaximum |
+ * | \c multipleOf (numbers) | \c anch::json::multipleOf |
+ * | \c minItems , \c maxItems , \c uniqueItems (arrays) | \c anch::json::minItems , \c anch::json::maxItems , \c anch::json::uniqueItems |
+ * | \c minProperties , \c maxProperties (maps) | \c anch::json::minProperties , \c anch::json::maxProperties |
+ * | non string \c enum (numbers, booleans) | <tt>anch::json::allowed<T>({...})</tt> |
+ * | \c pattern (strings) | \c anch::json::pattern ( \c std::regex ECMAScript by default, see \c anch::json::setPatternCompiler ) |
+ * | \c format (strings which are not mapped to a C++ type) | \c anch::json::format : registered formats ( \c email , \c hostname , \c ipv4 , \c ipv6 , \c uri , \c byte , ...) are checked, other formats are not |
+ * | array \c items and map \c additionalProperties constraints | \c anch::json::items(...) |
+ *
+ * - Numbers are written as in the document (no conversion: integers bounds can be greater than 2^53). A bound
+ *   outside the range of the C++ integer type is reported with a warning.
+ * - Constraints of alias components are applied where they are used: <tt>"$ref": "#/components/schemas/Code"</tt>
+ *   with \c Code a string with \c minLength gets the \c minLength constraint.
+ * - Constraints which can not be applied are ignored with a warning (error with \c --strict ): \c minLength on an
+ *   integer, \c multipleOf which is not strictly positive, \c enum value which is not a value of the type, invalid
+ *   \c pattern , ...
+ *   String constraints of \c uuid , \c date-time and \c date formats are ignored without warning: values are
+ *   checked by their parser.
  *
  * \section oas_limits_sec Limitations
  *
@@ -99,7 +134,8 @@ petstore::model::Pet pet = anch::json::deserialize<petstore::model::Pet>(input);
  * - nested containers: array of arrays, map of arrays, ... ;
  * - references outside \c #/components/schemas/ .
  *
- * Required properties are not checked on deserialization (anch-json does not check missing fields), and properties
- * which have not been generated are unknown fields for anch-json: use \c deserialize_ignore_unknown_field to accept
- * them.
+ * Properties which have not been generated are unknown fields for anch-json: use
+ * \c deserialize_ignore_unknown_field to accept them. Formats without registered validator ( \c password , ...) are
+ * not checked: validators can be added with \c anch::json::registerFormat . Constraints of component schemas which are deserialized directly
+ * (alias of array deserialized as root value) are not checked: only properties constraints are.
  */

@@ -29,7 +29,7 @@
 
 namespace anch::json {
 
-  inline
+  [[gnu::always_inline]] inline // called for each token: has to be inlined whatever the code size of the unit is
   void
   WriterContext::write(char c) {
     if(_sbuf == NULL || _sbuf->sputc(c) == std::char_traits<char>::eof()) [[unlikely]] {
@@ -94,6 +94,12 @@ namespace anch::json {
   }
 
   inline
+  const anch::json::MappingOptions&
+  WriterContext::options() const noexcept {
+    return _options;
+  }
+
+  inline
   void
   WriterContext::writeField(const std::string& field) {
     next();
@@ -151,7 +157,7 @@ namespace anch::json {
     write(anch::json::OBJECT_END);
   }
 
-  inline
+  [[gnu::always_inline]] inline // called for each value: has to be inlined whatever the code size of the unit is
   void
   WriterContext::next() {
     if(!_firsts.back()) {

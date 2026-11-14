@@ -19,6 +19,7 @@
 */
 #pragma once
 
+#include <cstdint>
 #include <istream>
 #include <map>
 #include <memory>
@@ -74,7 +75,7 @@ namespace anch::oas {
     /*! Value kind */
     Kind kind = Kind::NUL;
 
-    /*! Value as text (string content without quotes, number, \c true or \c false ) */
+    /*! Value as text (string content without quotes, number as written in the document, \c true or \c false ) */
     std::string text;
   };
 
@@ -129,6 +130,86 @@ namespace anch::oas {
 
     /*! Composition: at least one schema */
     std::vector<anch::oas::Schema> anyOf;
+
+    // Constraints +
+    /*! String minimum length
+     *
+     * \since 0.2
+     */
+    std::optional<uint64_t> minLength;
+
+    /*! String maximum length
+     *
+     * \since 0.2
+     */
+    std::optional<uint64_t> maxLength;
+
+    /*! String pattern (documented, not checked)
+     *
+     * \since 0.2
+     */
+    std::optional<std::string> pattern;
+
+    /*! Number minimum (as written in the document)
+     *
+     * \since 0.2
+     */
+    std::optional<anch::oas::Scalar> minimum;
+
+    /*! Number maximum (as written in the document)
+     *
+     * \since 0.2
+     */
+    std::optional<anch::oas::Scalar> maximum;
+
+    /*! \c minimum is exclusive
+     *
+     * \since 0.2
+     */
+    std::optional<bool> exclusiveMinimum;
+
+    /*! \c maximum is exclusive
+     *
+     * \since 0.2
+     */
+    std::optional<bool> exclusiveMaximum;
+
+    /*! Number divisor (as written in the document)
+     *
+     * \since 0.2
+     */
+    std::optional<anch::oas::Scalar> multipleOf;
+
+    /*! Array minimum number of items
+     *
+     * \since 0.2
+     */
+    std::optional<uint64_t> minItems;
+
+    /*! Array maximum number of items
+     *
+     * \since 0.2
+     */
+    std::optional<uint64_t> maxItems;
+
+    /*! Array items are unique
+     *
+     * \since 0.2
+     */
+    std::optional<bool> uniqueItems;
+
+    /*! Object minimum number of properties
+     *
+     * \since 0.2
+     */
+    std::optional<uint64_t> minProperties;
+
+    /*! Object maximum number of properties
+     *
+     * \since 0.2
+     */
+    std::optional<uint64_t> maxProperties;
+    // Constraints -
   };
 
   /*!

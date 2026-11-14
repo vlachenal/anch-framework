@@ -21,9 +21,13 @@
 
 #include <algorithm>
 #include <cctype>
+#include <charconv>
+#include <cmath>
+#include <cstdint>
 #include <functional>
 #include <iomanip>
 #include <map>
+#include <regex>
 #include <set>
 #include <sstream>
 
@@ -164,6 +168,10 @@ namespace {
     bool optional = false;
     /*! \c std::shared_ptr field (recursive model) */
     bool pointer = false;
+    /*! Required property ( \c anch::json::required ) */
+    bool required = false;
+    /*! Value constraints (C++ expressions) */
+    std::vector<std::string> constraints;
     /*! Description */
     std::string description;
   };
@@ -453,6 +461,106 @@ namespace {
   }
 
   /*!
+   * Field constraints
+   */
+  struct Constraints {
+    /*! C++ expressions ( \c anch::json::minLength(1) , ...) */
+    std::vector<std::string> code;
+    /*! Documentation ( \c minLength \c 1 , ...) */
+    std::vector<std::string> doc;
+  };
+
+  /*!
+   * Join strings
+   *
+   * \param values the strings
+   * \param separator the separator
+   *
+   * \return the joined strings
+   */
+  std::string
+  join(const std::vector<std::string>& values, const std::string& separator) {
+    std::string res;
+    for(const std::string& value : values) {
+      if(!res.empty()) {
+	res += separator;
+      }
+      res += value;
+    }
+    return res;
+  }
+
+  /*!
+   * Check if JSON number is written as an integer (without fraction nor exponent)
+   *
+   * \param text the JSON number
+   *
+   * \return \c true for integer
+   */
+  bool
+  isIntegerText(const std::string& text) {
+    return text.find_first_of(".eE") == std::string::npos;
+  }
+
+  /*!
+   * JSON number value
+   *
+   * \param text the JSON number
+   *
+   * \return the value
+   */
+  long double
+  numberValue(const std::string& text) {
+    long double value = 0.0L;
+    std::from_chars(text.data(), text.data() + text.size(), value);
+    return value;
+  }
+
+  /*!
+   * C++ number literal from JSON number (JSON numbers are valid C++ literals, except integers which do not fit in
+   * \c int64_t : they are written as unsigned or floating point numbers)
+   *
+   * \param text the JSON number
+   *
+   * \return the C++ literal
+   */
+  std::string
+  numberLiteral(const std::string& text) {
+    if(!isIntegerText(text)) {
+      return text;
+    }
+    if(text == "-9223372036854775808") { // 9223372036854775808 does not fit in int64_t
+      return "(-9223372036854775807 - 1)";
+    }
+    int64_t signedValue = 0;
+    if(std::from_chars(text.data(), text.data() + text.size(), signedValue).ec == std::errc()) {
+      return text;
+    }
+    uint64_t unsignedValue = 0;
+    if(std::from_chars(text.data(), text.data() + text.size(), unsignedValue).ec == std::errc()) {
+      return text + "u";
+    }
+    return text + ".0";
+  }
+
+  /*!
+   * Check if JSON number is in C++ integer type range
+   *
+   * \param text the JSON number
+   * \param cpp the C++ integer type ( \c int32_t or \c int64_t )
+   *
+   * \return \c true when number is in range
+   */
+  bool
+  inRange(const std::string& text, const std::string& cpp) {
+    long double value = numberValue(text);
+    if(cpp == "int32_t") {
+      return value >= static_cast<long double>(INT32_MIN) && value <= static_cast<long double>(INT32_MAX);
+    }
+    return value >= static_cast<long double>(INT64_MIN) && value <= static_cast<long double>(INT64_MAX);
+  }
+
+  /*!
    * Decode JSON pointer token ( \c ~1 → \c / , \c ~0 → \c ~ )
    *
    * \param token the token
@@ -494,6 +602,8 @@ namespace {
     std::map<const Schema*,Type> _resolved;
     /*! Unsupported properties: reason */
     std::map<const Schema*,std::string> _unsupported;
+    /*! Properties constraints (inherited properties constraints are computed once) */
+    std::map<const Schema*,Constraints> _constraints;
     /*! Built models */
     std::map<std::string,Model> _models;
     /*! Enumerations */
@@ -597,6 +707,17 @@ namespace {
 	throw GeneratorError(path + ": " + reason);
       }
       _warnings.push_back(path + ": " + reason + ": not generated");
+    }
+
+    /*!
+     * Constraint warning: the property is generated without this constraint (error in strict mode)
+     */
+    void
+    constraintWarning(const std::string& path, const std::string& reason) {
+      if(_options.strict) {
+	throw GeneratorError(path + ": " + reason);
+      }
+      _warnings.push_back(path + ": " + reason);
     }
 
     std::string
@@ -890,6 +1011,207 @@ namespace {
       }
     }
 
+    /*!
+     * Schema which holds value constraints: references to alias components are followed
+     *
+     * \param schema the property (or items) schema
+     *
+     * \return the schema, \c nullptr for models and enumerations (they have no value constraint)
+     */
+    const Schema*
+    constrained(const Schema& schema) const {
+      const Schema* current = &schema;
+      for(std::size_t depth = 0 ; current->ref.has_value() ; ++depth) {
+	if(depth > _api.components.schemas.size()) { // recursive aliases are not generated
+	  return nullptr;
+	}
+	std::string component = componentName(current->ref.value());
+	const std::string& type = _componentTypes.at(component);
+	if(_modelNames.contains(type) || _enums.contains(type)) {
+	  return nullptr;
+	}
+	current = &_api.components.schemas.at(component);
+      }
+      return current;
+    }
+
+    /*!
+     * Value constraints of single value: string, number and enumeration constraints
+     *
+     * \param schema the schema which holds constraints ( \c nullptr for none)
+     * \param type the value type
+     * \param path the property path for warnings
+     * \param res the constraints to complete
+     */
+    void
+    valueConstraints(const Schema* schema, const Type& type, const std::string& path, Constraints& res) {
+      if(schema == nullptr || type.model || type.enumeration) {
+	return;
+      }
+      const std::string& cpp = type.cpp;
+      bool string = (cpp == "std::string");
+      bool formatted = (cpp == "anch::UUID" || cpp == "anch::date::Date" || cpp == "std::chrono::year_month_day");
+      bool integer = (cpp == "int32_t" || cpp == "int64_t");
+      bool number = integer || cpp == "float" || cpp == "double";
+      auto ignored = [&](const std::string& keyword) {
+	constraintWarning(path, keyword + " is ignored for " + cpp + " value");
+      };
+      // Strings +
+      auto length = [&](const std::optional<uint64_t>& value, const std::string& keyword) {
+	if(!value.has_value()) {
+	  return;
+	}
+	if(string) {
+	  res.code.push_back("anch::json::" + keyword + "(" + std::to_string(value.value()) + ")");
+	  res.doc.push_back(keyword + " " + std::to_string(value.value()));
+	} else if(!formatted) { // formatted strings are checked by their own parser
+	  ignored(keyword);
+	}
+      };
+      length(schema->minLength, "minLength");
+      length(schema->maxLength, "maxLength");
+      if(schema->pattern.has_value() && string) {
+	const std::string& pattern = schema->pattern.value();
+	try { // pattern is checked here: an invalid pattern would raise an error when mapper is registered
+	  std::regex check(pattern, std::regex::ECMAScript);
+	  res.code.push_back("anch::json::pattern(" + literal(pattern) + ")");
+	  res.doc.push_back("pattern " + pattern);
+	} catch(const std::regex_error& error) {
+	  constraintWarning(path, "pattern " + pattern + " is not a valid ECMAScript regular expression (" + error.what() + "): ignored");
+	}
+      }
+      if(schema->format.has_value() && string) { // unknown formats are not checked by anch-json
+	res.code.push_back("anch::json::format(" + literal(schema->format.value()) + ")");
+      }
+      // Strings -
+      // Numbers +
+      auto bound = [&](const std::optional<Scalar>& value, bool exclusive, const std::string& keyword, const std::string& exclusiveKeyword) {
+	if(!value.has_value()) {
+	  return;
+	}
+	if(!number) {
+	  ignored(keyword);
+	  return;
+	}
+	if(value->kind != Scalar::Kind::NUMBER) {
+	  constraintWarning(path, keyword + " is not a number: ignored");
+	  return;
+	}
+	if(integer && !inRange(value->text, cpp)) {
+	  constraintWarning(path, keyword + " " + value->text + " is outside " + cpp + " range");
+	}
+	const std::string& name = exclusive ? exclusiveKeyword : keyword;
+	res.code.push_back("anch::json::" + name + "(" + numberLiteral(value->text) + ")");
+	res.doc.push_back(name + " " + value->text);
+      };
+      bound(schema->minimum, schema->exclusiveMinimum.value_or(false), "minimum", "exclusiveMinimum");
+      bound(schema->maximum, schema->exclusiveMaximum.value_or(false), "maximum", "exclusiveMaximum");
+      if(schema->multipleOf.has_value()) {
+	const Scalar& divisor = schema->multipleOf.value();
+	if(!number) {
+	  ignored("multipleOf");
+	} else if(divisor.kind != Scalar::Kind::NUMBER || !(numberValue(divisor.text) > 0.0L) || !std::isfinite(numberValue(divisor.text))) {
+	  constraintWarning(path, "multipleOf has to be a strictly positive number: ignored");
+	} else {
+	  res.code.push_back("anch::json::multipleOf(" + numberLiteral(divisor.text) + ")");
+	  res.doc.push_back("multipleOf " + divisor.text);
+	}
+      }
+      // Numbers -
+      // Enumeration (string enumerations are generated as enum class) +
+      if(!schema->enumeration.empty()) {
+	std::vector<std::string> values;
+	for(const Scalar& value : schema->enumeration) {
+	  if(value.kind == Scalar::Kind::NUL) { // null is allowed by nullable
+	    continue;
+	  }
+	  bool valid = false;
+	  if(number) {
+	    valid = (value.kind == Scalar::Kind::NUMBER) && (!integer || (isIntegerText(value.text) && inRange(value.text, cpp)));
+	  } else if(cpp == "bool") {
+	    valid = (value.kind == Scalar::Kind::BOOLEAN);
+	  } else if(string) {
+	    valid = (value.kind == Scalar::Kind::STRING);
+	  }
+	  if(!valid) {
+	    constraintWarning(path, "enum value " + (value.kind == Scalar::Kind::STRING ? literal(value.text) : value.text) + " is not a "
+		 + cpp + " value: enum is not checked");
+	    values.clear();
+	    break;
+	  }
+	  values.push_back(value.kind == Scalar::Kind::STRING ? literal(value.text) : (number ? numberLiteral(value.text) : value.text));
+	}
+	if(!values.empty()) {
+	  res.code.push_back("anch::json::allowed<" + cpp + ">({" + join(values, ", ") + "})");
+	}
+      }
+      // Enumeration -
+    }
+
+    /*!
+     * Property constraints (computed once: inherited properties share their constraints and warnings)
+     *
+     * \param property the property schema
+     * \param type the property type
+     * \param path the property path for warnings
+     *
+     * \return the constraints
+     */
+    const Constraints&
+    propertyConstraints(const Schema& property, const Type& type, const std::string& path) {
+      auto found = _constraints.find(&property);
+      if(found != _constraints.end()) {
+	return found->second;
+      }
+      Constraints res;
+      const Schema* schema = _options.constraints ? constrained(property) : nullptr;
+      if(schema == nullptr) {
+	return _constraints[&property] = res;
+      }
+      auto size = [&](const std::optional<uint64_t>& value, const std::string& keyword) {
+	if(value.has_value()) {
+	  res.code.push_back("anch::json::" + keyword + "(" + std::to_string(value.value()) + ")");
+	  res.doc.push_back(keyword + " " + std::to_string(value.value()));
+	}
+      };
+      const Schema* items = nullptr;
+      switch(type.container) {
+      case Container::VECTOR:
+	size(schema->minItems, "minItems");
+	size(schema->maxItems, "maxItems");
+	if(schema->uniqueItems.value_or(false)) {
+	  if(type.cpp == "bool") { // std::vector<bool> items are not references
+	    constraintWarning(path, "uniqueItems is not supported for boolean arrays: ignored");
+	  } else {
+	    res.code.push_back("anch::json::uniqueItems");
+	    res.doc.push_back("uniqueItems");
+	  }
+	}
+	items = schema->items ? constrained(*schema->items) : nullptr;
+	break;
+      case Container::MAP:
+	size(schema->minProperties, "minProperties");
+	size(schema->maxProperties, "maxProperties");
+	items = (schema->additionalProperties.has_value() && schema->additionalProperties->schema)
+	  ? constrained(*schema->additionalProperties->schema) : nullptr;
+	break;
+      case Container::NONE:
+	valueConstraints(schema, type, path, res);
+	break;
+      }
+      if(type.container != Container::NONE) {
+	Constraints itemsConstraints;
+	valueConstraints(items, type, path + (type.container == Container::VECTOR ? "[]" : "{}"), itemsConstraints);
+	if(!itemsConstraints.code.empty()) {
+	  res.code.push_back("anch::json::items(" + join(itemsConstraints.code, ", ") + ")");
+	}
+	if(!itemsConstraints.doc.empty()) {
+	  res.doc.push_back("items: " + join(itemsConstraints.doc, ", "));
+	}
+      }
+      return _constraints[&property] = res;
+    }
+
     void
     buildModel(const std::string& name, const Schema& schema) {
       Model model;
@@ -922,8 +1244,15 @@ namespace {
 	  members.insert(member);
 	  field.member = member;
 	  bool nullable = field.type.nullable || property.schema->nullable.value_or(false);
-	  field.optional = (field.type.container == Container::NONE) && (!composite.required.contains(json) || nullable);
-	  field.description = document(describe(*property.schema), field.type.remark);
+	  field.required = composite.required.contains(json);
+	  field.optional = (field.type.container == Container::NONE) && (!field.required || nullable);
+	  const Constraints& constraints = propertyConstraints(*property.schema, field.type, property.owner + "." + json);
+	  field.constraints = constraints.code;
+	  std::string remark = field.type.remark;
+	  if(!constraints.doc.empty()) {
+	    remark += (remark.empty() ? "" : "\n") + std::string("Constraints: ") + join(constraints.doc, ", ");
+	  }
+	  field.description = document(describe(*property.schema), remark);
 	  model.fields.push_back(std::move(field));
 	} catch(const Skipped& skipped) {
 	  model.skipped.push_back(json + ": " + skipped.reason);
@@ -1098,10 +1427,10 @@ namespace {
 	    writeDoc(out, "    ", field.description);
 	    out << "    " << cppType(field.type, field.optional, field.pointer) << ' ' << field.member
 		<< initializer(field) << ";\n";
-	    if(i + 1 < model.fields.size()) {
-	      out << '\n';
-	    }
+	    out << '\n';
 	  }
+	  out << "    /*! Equality operator: every member is compared (used by \\c uniqueItems constraint) */\n"
+	      << "    bool operator==(const " << name << "&) const = default;\n";
 	  for(const std::string& skipped : model.skipped) {
 	    out << "    // Not generated: " << commentSafe(skipped) << '\n';
 	  }
@@ -1230,7 +1559,12 @@ namespace {
 	    for(const Field& field : model.fields) {
 	      bool exact = !field.optional && !field.pointer && field.type.container == Container::NONE;
 	      out << "    .registerField" << (exact ? "" : "<" + qualified(field.type) + ">")
-		  << '(' << literal(field.json) << ", &" << type << "::" << field.member << ")\n";
+		  << '(' << literal(field.json) << ", &" << type << "::" << field.member
+		  << (field.required ? ", anch::json::required" : "");
+	      for(const std::string& constraint : field.constraints) {
+		out << ", " << constraint;
+	      }
+	      out << ")\n";
 	    }
 	    out << "    ;\n";
 	  }

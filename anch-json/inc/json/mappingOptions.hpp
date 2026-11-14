@@ -44,6 +44,17 @@ namespace anch::json {
 
     /*! Serialization indentation number of spaces (\c 0 means no prettifying). Default to \c 0 */
     uint16_t prettify_nbs = 0;
+
+    /*! Check fields constraints ( \c minLength , \c minimum , ... given to \c ObjectMapper::registerField ) before
+     * writing values: \ref anch::json::MappingError is raised with \c CONSTRAINT_VIOLATION error code (the output
+     * stream contains the JSON written before the error). Default to \c false : usually enabled on client side to
+     * not send invalid requests, disabled on server side where responses are built by the server itself.\n
+     * Required fields are always written ( \c null , \c [] or \c {} when empty, whatever \c serialize_null and
+     * \c serialize_empty_col options are).
+     *
+     * \since 0.2
+     */
+    bool serialize_check_constraints = false;
     // Serialization -
 
     // Deserialization +
@@ -58,6 +69,15 @@ namespace anch::json {
 
     /*! Maximum number of characters read from input stream before raising error. Use \c 0 value for unlimited payload */
     std::size_t max_payload = 0;
+
+    /*! Check fields constraints ( \c required , \c minLength , \c minimum , ... given to \c ObjectMapper::registerField )
+     * after reading values: \ref anch::json::MappingError is raised with \c MISSING_FIELD or \c CONSTRAINT_VIOLATION
+     * error code. Default to \c true : usually enabled on server side to refuse invalid requests, disabled on client
+     * side where server responses are trusted.
+     *
+     * \since 0.2
+     */
+    bool deserialize_check_constraints = true;
 
     /*! Maximum nesting depth of objects and arrays (root object or array is level \c 1 ) before raising error. It protects parser against stack overflow. Use \c 0 value for unlimited depth. Default to \c 512 */
     std::size_t max_depth = 512;

@@ -18,6 +18,9 @@
   along with ANCH Framework.  If not, see <https://www.gnu.org/licenses/>.
 */
 #include <iostream>
+#include <tuple>
+#include <limits>
+#include <initializer_list>
 #include <map>
 #include <sstream>
 #include <string>
@@ -33,7 +36,9 @@
 #include "ut/assert.hpp"
 #include "ut/unit.hpp"
 
+using petstore::model::Adoption;
 using petstore::model::Category;
+using petstore::model::Constrained;
 using petstore::model::Dog;
 using petstore::model::Empty;
 using petstore::model::House;
@@ -222,6 +227,169 @@ testDateInvalid() {
   }
 }
 
+template<typename T>
+void
+checkMappingError(const std::string& json, anch::json::ErrorCode code, const std::string& path, const std::string& message) {
+  std::cout << "Deserialize " << json << std::endl;
+  std::istringstream input(json);
+  try {
+    T res;
+    anch::json::deserialize(res, input);
+    anch::ut::fail("This test should have failed");
+  } catch(const anch::json::MappingError& e) {
+    std::cout << e.what() << std::endl;
+    anch::ut::assertThat(e.getErrorCode() == code, "Expected error code {} ; found {}", static_cast<int>(code), static_cast<int>(e.getErrorCode()));
+    anch::ut::assertThat(e.getPath() == path, "Expected path '{}' ; found '{}'", path, e.getPath());
+    anch::ut::assertThat(std::string(e.what()).find(message) != std::string::npos, "'{}' not found in '{}'", message, e.what());
+  }
+}
+
+void
+testRequiredMissing() {
+  checkMappingError<Pet>(R"({"id":1,"status":"sold"})", anch::json::ErrorCode::MISSING_FIELD, "", "Missing required field 'name'");
+  checkMappingError<Pet>("{}", anch::json::ErrorCode::MISSING_FIELD, "", "Missing required fields 'id', 'name', 'status'");
+  // allOf: inherited and own required properties
+  checkMappingError<Dog>(R"({"id":1,"name":"a","status":"sold"})", anch::json::ErrorCode::MISSING_FIELD, "", "Missing required field 'breed'");
+  checkMappingError<Dog>(R"({"name":"a","status":"sold","breed":"x"})", anch::json::ErrorCode::MISSING_FIELD, "", "Missing required field 'id'");
+  // inline item and nested model
+  checkMappingError<Pet>(R"({"id":1,"name":"a","status":"sold","photos":[{"url":"u"},{"width":1}]})", anch::json::ErrorCode::MISSING_FIELD,
+			 "/photos/1", "Missing required field 'url'");
+  checkMappingError<Pet>(R"({"id":1,"name":"a","status":"sold","category":{"name":"c","parent":{"id":2}}})", anch::json::ErrorCode::MISSING_FIELD,
+			 "/category/parent", "Missing required field 'name'");
+  checkMappingError<Pets>(R"([{"id":1,"name":"a","status":"sold"},{"id":2,"name":"b"}])", anch::json::ErrorCode::MISSING_FIELD,
+			 "/1", "Missing required field 'status'");
+}
+
+void
+testRequiredNull() {
+  checkMappingError<Pet>(R"({"id":1,"name":null,"status":"sold"})", anch::json::ErrorCode::CONSTRAINT_VIOLATION, "/name", "Required field can not be null");
+  checkMappingError<Pet>(R"({"id":1,"name":"a","status":null})", anch::json::ErrorCode::CONSTRAINT_VIOLATION, "/status", "Required field can not be null");
+  // Property which is not required can be null
+  std::istringstream input(R"({"id":1,"name":"a","status":"sold","age":null,"photos":null})");
+  Pet pet = anch::json::deserialize<Pet>(input);
+  anch::ut::assertThat(!pet.age.has_value() && pet.photos.empty(), "age and photos should be empty");
+}
+
+void
+testRequiredNullable() {
+  {
+    std::istringstream input(R"({"petId":1,"comment":null,"visitors":[]})");
+    Adoption adoption = anch::json::deserialize<Adoption>(input);
+    anch::ut::assertThat(adoption.petId == 1 && !adoption.comment.has_value() && adoption.visitors.empty(), "Invalid adoption");
+  }
+  {
+    std::istringstream input(R"({"petId":1,"comment":"ok","visitors":["Vincent"]})");
+    Adoption adoption = anch::json::deserialize<Adoption>(input);
+    anch::ut::assertThat(adoption.comment == "ok" && adoption.visitors.size() == 1, "Invalid adoption");
+  }
+  // nullable required property has to be present
+  checkMappingError<Adoption>(R"({"petId":1,"visitors":[]})", anch::json::ErrorCode::MISSING_FIELD, "", "Missing required field 'comment'");
+  // required array: absent or null is refused
+  checkMappingError<Adoption>(R"({"petId":1,"comment":null})", anch::json::ErrorCode::MISSING_FIELD, "", "Missing required field 'visitors'");
+  checkMappingError<Adoption>(R"({"petId":1,"comment":null,"visitors":null})", anch::json::ErrorCode::CONSTRAINT_VIOLATION, "/visitors",
+			      "Required field can not be null");
+}
+
+void
+testConstraints() {
+  std::istringstream input(R"({"name":"AB","count":9,"ratio":2.5,"big":-9223372036854775808,"step":-15,"codes":["AB","CD"],)"
+			   R"("tags":[{"id":1},{"id":2}],"weights":{"a":0,"b":1.5},"grade":1.5,"flag":true,"email":"a@b.c","ref":"123-45"})");
+  Constrained value = anch::json::deserialize<Constrained>(input);
+  anch::ut::assertThat(value.name == "AB" && value.count == 9 && value.ratio == 2.5f && value.big == std::numeric_limits<int64_t>::min(),
+		       "Invalid values");
+  anch::ut::assertThat(value.codes.size() == 2 && value.tags.size() == 2 && value.weights.size() == 2 && value.grade == 1.5 && value.flag == true,
+		       "Invalid values");
+}
+
+void
+testConstraintsInvalid() {
+  using anch::json::ErrorCode;
+  for(auto [fields, path, message] : std::initializer_list<std::tuple<const char*, const char*, const char*>>{
+      {R"("name":"A")", "/name", "Length 1 is lower than minLength 2"},
+      {R"("name":"ABCDEFGHI")", "/name", "Length 9 is greater than maxLength 8"},
+      {R"("name":"AB","count":0)", "/count", "Value 0 is lower than minimum 1"},
+      {R"("name":"AB","count":10)", "/count", "Value 10 is greater than or equal to exclusiveMaximum 10"},
+      {R"("name":"AB","ratio":0)", "/ratio", "Value 0 is lower than or equal to exclusiveMinimum 0"},
+      {R"("name":"AB","ratio":0.7)", "/ratio", "is not a multiple of 0.5"},
+      {R"("name":"AB","step":7)", "/step", "Value 7 is not a multiple of 5"},
+      {R"("name":"AB","codes":[])", "/codes", "Item count 0 is lower than minItems 1"},
+      {R"("name":"AB","codes":["AB","CD","AB"])", "/codes", "Items 0 and 2 are equal (uniqueItems)"},
+      {R"("name":"AB","codes":["AB","C"])", "/codes/1", "Length 1 is lower than minLength 2"},
+      {R"("name":"AB","tags":[{"id":1,"name":"a"},{"id":1,"name":"a"}])", "/tags", "Items 0 and 1 are equal (uniqueItems)"},
+      {R"("name":"AB","weights":{"a":1,"b":2,"c":3})", "/weights", "Property count 3 is greater than maxProperties 2"},
+      {R"("name":"AB","weights":{"a":-1})", "/weights/a", "Value -1 is lower than minimum 0"},
+      {R"("name":"AB","grade":2)", "/grade", "Value 2 is not allowed (allowed: 0.5, 1, 1.5)"},
+      {R"("name":"AB","flag":false)", "/flag", "Value false is not allowed (allowed: true)"},
+      {R"("name":"Ab")", "/name", "Value does not match pattern ^[A-Z]+$"},
+      {R"("name":"AB","codes":["AB","c1"])", "/codes/1", "Value does not match pattern ^[A-Z]+$"},
+      {R"("name":"AB","email":"vincent")", "/email", "Value is not a valid email (format)"},
+      {R"("name":"AB","ref":"12-345")", "/ref", "Value does not match pattern ^\\d{3}-\\d{2}$"}}) {
+    std::string json = std::string("{") + fields + "}";
+    std::cout << "Deserialize " << json << std::endl;
+    std::istringstream input(json);
+    try {
+      [[maybe_unused]] Constrained value = anch::json::deserialize<Constrained>(input);
+      anch::ut::fail(std::string("Constraint should be checked: ") + json);
+    } catch(const anch::json::MappingError& e) {
+      std::cout << e.what() << std::endl;
+      anch::ut::assertThat(e.getErrorCode() == ErrorCode::CONSTRAINT_VIOLATION, "CONSTRAINT_VIOLATION expected");
+      anch::ut::assertThat(e.getPath() == path, "Expected path '{}' ; found '{}'", path, e.getPath());
+      anch::ut::assertThat(std::string(e.what()).find(message) != std::string::npos, "'{}' not found in '{}'", message, e.what());
+    }
+  }
+}
+
+void
+testRequiredSerialize() {
+  // Required nullable property is written as null: the document is valid for the server
+  Adoption adoption;
+  adoption.petId = 1;
+  std::string json = anch::json::serialize(adoption);
+  anch::ut::assertThat(json == R"({"comment":null,"petId":1,"visitors":[]})", "Unexpected JSON {}", json);
+  std::istringstream input(json);
+  [[maybe_unused]] Adoption copy = anch::json::deserialize<Adoption>(input);
+}
+
+void
+testConstraintsSerialize() {
+  // Client side: requests are checked before being sent, responses are trusted
+  anch::json::MappingOptions client;
+  client.serialize_check_constraints = true;
+  client.deserialize_check_constraints = false;
+  Constrained value;
+  value.name = "AB";
+  value.codes = {"AB", "c"};
+  try {
+    std::string json = anch::json::serialize(value, client);
+    anch::ut::fail("Invalid request should not be serialized: " + json);
+  } catch(const anch::json::MappingError& e) {
+    std::cout << e.what() << std::endl;
+    anch::ut::assertThat(e.getPath() == "/codes/1", "Expected path '/codes/1' ; found '{}'", e.getPath());
+  }
+  std::istringstream response(R"({"codes":["c"],"count":42})");
+  Constrained trusted = anch::json::deserialize<Constrained>(response, client);
+  anch::ut::assertThat(trusted.name.empty() && trusted.count == 42, "Response should be trusted");
+}
+
+void
+testValidate() {
+  Constrained value;
+  value.name = "a1";
+  value.count = 10;
+  value.codes = {"AB", "AB", "x"};
+  value.weights = {{"a", -1.0}};
+  std::vector<anch::json::Violation> violations = anch::json::validate(value);
+  for(const anch::json::Violation& violation : violations) {
+    std::cout << violation.path << ": " << violation.message << std::endl;
+  }
+  std::vector<std::string> paths;
+  for(const anch::json::Violation& violation : violations) {
+    paths.push_back(violation.path);
+  }
+  std::vector<std::string> expected = {"/codes", "/codes/2", "/codes/2", "/count", "/name", "/weights/a"};
+  anch::ut::assertThat(paths == expected, "Unexpected violations paths");
+}
+
 void
 anch::ut::setup(anch::ut::UnitTests& tests) {
   tests
@@ -238,6 +406,14 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("models-aliases", testAliases)
     .add("models-empty", testEmpty)
     .add("models-round-trip", testRoundTrip)
+    .add("models-required-missing", testRequiredMissing)
+    .add("models-required-null", testRequiredNull)
+    .add("models-required-nullable", testRequiredNullable)
+    .add("models-constraints", testConstraints)
+    .add("models-constraints-invalid", testConstraintsInvalid)
+    .add("models-required-serialize", testRequiredSerialize)
+    .add("models-constraints-serialize", testConstraintsSerialize)
+    .add("models-validate", testValidate)
     .add("models-date-invalid", testDateInvalid)
     ;
 }

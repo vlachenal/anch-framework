@@ -28,7 +28,7 @@ namespace anch::json {
   void lexUnknownFail(anch::json::ReaderContext& context);
   // Lexer functions used by context (declared in json/lexer.hpp) -
 
-  inline
+  [[gnu::always_inline]] inline // called for each token: has to be inlined whatever the code size of the unit is
   char
   ReaderContext::discard() {
     // Fast path: next character is not discardable +

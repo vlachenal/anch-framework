@@ -50,6 +50,13 @@ namespace anch::oas {
 
     /*! Raise an error on unsupported schema instead of skipping it with a warning */
     bool strict = false;
+
+    /*! Generate value constraints ( \c minLength , \c minimum , \c minItems , ...) in mappers. Required properties
+     * are always checked.
+     *
+     * \since 0.2
+     */
+    bool constraints = true;
   };
 
   /*!
@@ -66,7 +73,7 @@ namespace anch::oas {
     /*! Source content: anch-json mappers */
     std::string source;
 
-    /*! Warnings: schemas and properties which have not been generated */
+    /*! Warnings: schemas and properties which have not been generated, constraints which have been ignored */
     std::vector<std::string> warnings;
   };
 
@@ -99,6 +106,14 @@ namespace anch::oas {
    *  - string enumerations → <tt>enum class</tt> (unknown values are rejected on deserialization) ;
    *  - \c array → \c std::vector , objects with \c additionalProperties schema only → <tt>std::map<std::string,T></tt> ;
    *  - optional and \c nullable properties → \c std::optional , arrays and maps are empty when absent ;
+   *  - required properties are registered with \c anch::json::required (absent or not nullable \c null value is
+   *    refused on deserialization) ;
+   *  - \c minLength , \c maxLength , \c minimum , \c maximum (exclusive or not), \c multipleOf , \c minItems ,
+   *    \c maxItems , \c uniqueItems , \c minProperties , \c maxProperties and non string \c enum → anch-json value
+   *    constraints (array items and map values constraints with \c anch::json::items ) ;
+   *  - \c pattern → \c anch::json::pattern (invalid ECMAScript patterns are ignored with a warning), string
+   *    \c format (which is not mapped to a type) → \c anch::json::format ;
+   *  - models have a default \c operator== ;
    *  - recursive references → \c std::shared_ptr ;
    *  - other schemas (primitives, arrays, maps) → aliases ( \c using ).
    *

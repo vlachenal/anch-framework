@@ -17,6 +17,7 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ANCH Framework.  If not, see <https://www.gnu.org/licenses/>.
 */
+#include <algorithm>
 #include <functional>
 #include <iostream>
 #include <sstream>
@@ -150,7 +151,7 @@ testMemberNames() {
   contains(models.header, "std::optional<std::string> NULL_;");
   contains(models.header, "std::optional<std::string> errno_;");
   contains(models.header, "std::optional<std::string> B_;");
-  contains(models.source, ".registerField(\"class\", &::model::A::class_)");
+  contains(models.source, ".registerField(\"class\", &::model::A::class_, anch::json::required)");
   contains(models.source, ".registerField<std::string>(\"$id\", &::model::A::_id)");
 }
 
@@ -248,6 +249,94 @@ testPointers() {
 }
 
 void
+testRequired() {
+  GeneratedModels models = generate(spec(R"({"A":{"type":"object","required":["a","n","l","r"],"properties":{
+    "a":{"type":"string"},"n":{"type":"string","nullable":true},"l":{"type":"array","items":{"type":"integer"}},
+    "r":{"$ref":"#/components/schemas/A"},"o":{"type":"string"}}},
+    "B":{"allOf":[{"$ref":"#/components/schemas/A"},{"type":"object","required":["b"],"properties":{"b":{"type":"boolean"}}}]}})"));
+  contains(models.header, "std::string a;");
+  contains(models.header, "std::optional<std::string> n;");
+  contains(models.source, ".registerField(\"a\", &::model::A::a, anch::json::required)");
+  contains(models.source, ".registerField<std::string>(\"n\", &::model::A::n, anch::json::required)");
+  contains(models.source, ".registerField<int64_t>(\"l\", &::model::A::l, anch::json::required)");
+  contains(models.source, ".registerField<::model::A>(\"r\", &::model::A::r, anch::json::required)");
+  contains(models.source, ".registerField<std::string>(\"o\", &::model::A::o)\n");
+  // allOf: inherited and own required properties
+  contains(models.source, ".registerField(\"a\", &::model::B::a, anch::json::required)");
+  contains(models.source, ".registerField(\"b\", &::model::B::b, anch::json::required)");
+}
+
+void
+testConstraints() {
+  std::string document = spec(R"({"Id":{"type":"string","minLength":1},"A":{"type":"object","properties":{
+    "s":{"type":"string","minLength":1,"maxLength":64,"pattern":"^a+$"},"id":{"$ref":"#/components/schemas/Id"},
+    "i":{"type":"integer","format":"int32","minimum":0,"maximum":100,"exclusiveMaximum":true},
+    "u":{"type":"integer","maximum":18446744073709551615,"minimum":-9223372036854775808},"d":{"type":"number","multipleOf":0.01,"minimum":1e3},
+    "l":{"type":"array","minItems":1,"maxItems":5,"uniqueItems":true,"items":{"$ref":"#/components/schemas/Id"}},
+    "m":{"type":"object","minProperties":1,"maxProperties":3,"additionalProperties":{"type":"integer","minimum":0}},
+    "e":{"type":"integer","enum":[1,2,9007199254740993]},"b":{"type":"boolean","enum":[true,null]},"uid":{"type":"string","format":"uuid","maxLength":36},
+    "mail":{"type":"string","format":"email"},"esc":{"type":"string","pattern":"^\\d+\"$"}}}})");
+  GeneratedModels models = generate(document);
+  anch::ut::assertThat(models.warnings.size() == 1, "1 warning expected (u maximum outside int64_t range) ; found {}", models.warnings.size());
+  contains(models.warnings[0], "A.u: maximum 18446744073709551615 is outside int64_t range");
+  contains(models.source, ".registerField<std::string>(\"s\", &::model::A::s, anch::json::minLength(1), anch::json::maxLength(64), "
+	   "anch::json::pattern(\"^a+$\"))\n");
+  contains(models.header, "Constraints: minLength 1, maxLength 64, pattern ^a+$");
+  contains(models.source, ".registerField<std::string>(\"mail\", &::model::A::mail, anch::json::format(\"email\"))\n");
+  contains(models.source, ".registerField<std::string>(\"esc\", &::model::A::esc, anch::json::pattern(\"^\\\\d+\\\"$\"))\n");
+  contains(models.source, ".registerField<std::string>(\"id\", &::model::A::id, anch::json::minLength(1))\n");
+  contains(models.source, ".registerField<int32_t>(\"i\", &::model::A::i, anch::json::minimum(0), anch::json::exclusiveMaximum(100))\n");
+  contains(models.source, ".registerField<int64_t>(\"u\", &::model::A::u, anch::json::minimum((-9223372036854775807 - 1)), anch::json::maximum(18446744073709551615u))\n");
+  contains(models.source, ".registerField<double>(\"d\", &::model::A::d, anch::json::minimum(1e3), anch::json::multipleOf(0.01))\n");
+  contains(models.source, ".registerField<std::string>(\"l\", &::model::A::l, anch::json::minItems(1), anch::json::maxItems(5), "
+	   "anch::json::uniqueItems, anch::json::items(anch::json::minLength(1)))\n");
+  contains(models.header, "Constraints: minItems 1, maxItems 5, uniqueItems, items: minLength 1");
+  contains(models.source, ".registerField<int64_t>(\"m\", &::model::A::m, anch::json::minProperties(1), anch::json::maxProperties(3), "
+	   "anch::json::items(anch::json::minimum(0)))\n");
+  contains(models.source, ".registerField<int64_t>(\"e\", &::model::A::e, anch::json::allowed<int64_t>({1, 2, 9007199254740993}))\n");
+  contains(models.header, "Allowed values: 1, 2, 9007199254740993");
+  contains(models.source, ".registerField<bool>(\"b\", &::model::A::b, anch::json::allowed<bool>({true}))\n");
+  contains(models.source, ".registerField<anch::UUID>(\"uid\", &::model::A::uid)\n");
+  contains(models.header, "bool operator==(const A&) const = default;");
+  // No constraints option
+  ModelOptions options;
+  options.constraints = false;
+  models = generate(document, options);
+  anch::ut::assertThat(models.source.find("anch::json::m") == std::string::npos && models.source.find("anch::json::items") == std::string::npos
+		       && models.source.find("anch::json::allowed") == std::string::npos, "No constraint expected:\n{}", models.source);
+  anch::ut::assertThat(models.header.find("Constraints:") == std::string::npos, "No constraint documentation expected");
+}
+
+void
+testConstraintsWarnings() {
+  std::string document = spec(R"({"A":{"type":"object","properties":{
+    "i":{"type":"integer","minLength":1},"s":{"type":"string","minimum":1,"multipleOf":2},"d":{"type":"number","multipleOf":0},
+    "e":{"type":"integer","format":"int32","enum":[1,2.5]},"f":{"type":"integer","format":"int32","enum":[1,3000000000]},
+    "b":{"type":"array","uniqueItems":true,"items":{"type":"boolean"}},"x":{"type":"number","maximum":"10"},
+    "p":{"type":"string","pattern":"([a-z]"}}}})");
+  GeneratedModels models = generate(document);
+  for(const char* warning : {"A.i: minLength is ignored for int64_t value", "A.s: minimum is ignored for std::string value",
+			     "A.s: multipleOf is ignored for std::string value", "A.d: multipleOf has to be a strictly positive number: ignored",
+			     "A.e: enum value 2.5 is not a int32_t value: enum is not checked",
+			     "A.f: enum value 3000000000 is not a int32_t value: enum is not checked",
+			     "A.b: uniqueItems is not supported for boolean arrays: ignored", "A.x: maximum is not a number: ignored"}) {
+    anch::ut::assertThat(std::find(models.warnings.begin(), models.warnings.end(), warning) != models.warnings.end(), "Warning '{}' not found", warning);
+  }
+  for(const char* warning : {"A.p: pattern ([a-z] is not a valid ECMAScript regular expression ("}) {
+    anch::ut::assertThat(std::find_if(models.warnings.begin(), models.warnings.end(), [&warning](const std::string& found) -> bool {
+	  return found.starts_with(warning);
+	}) != models.warnings.end(), "Warning '{}' not found", warning);
+  }
+  anch::ut::assertThat(models.warnings.size() == 9, "9 warnings expected ; found {}", models.warnings.size());
+  contains(models.source, ".registerField<std::string>(\"p\", &::model::A::p)\n");
+  contains(models.source, ".registerField<int64_t>(\"i\", &::model::A::i)\n");
+  contains(models.source, ".registerField<int32_t>(\"e\", &::model::A::e)\n");
+  ModelOptions options;
+  options.strict = true;
+  checkError<GeneratorError>([&]() { generate(document, options); }, "A.b: uniqueItems is not supported for boolean arrays");
+}
+
+void
 anch::ut::setup(anch::ut::UnitTests& tests) {
   tests
     .name("AnCH OAS generator unit tests")
@@ -267,5 +356,8 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("gen-no-uuid", testNoUuid)
     .add("gen-no-date", testNoDate)
     .add("gen-pointers", testPointers)
+    .add("gen-required", testRequired)
+    .add("gen-constraints", testConstraints)
+    .add("gen-constraints-warnings", testConstraintsWarnings)
     ;
 }

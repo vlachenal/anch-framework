@@ -51,6 +51,7 @@ namespace anch::json {
   // isPrimitive default implemetation (default false) -
 
   template<typename T>
+  [[gnu::always_inline]] inline // called for each value: has to be inlined whatever the code size of the unit is
   auto& Factory<T>::getInstance() {
     if constexpr (isPrimitive<T>()) {
       static anch::json::PrimitiveMapper<T> instance;
@@ -164,3 +165,5 @@ namespace anch::json {
   // isPrimitive specialization -
 
 }
+
+#include "json/validation.hpp"
