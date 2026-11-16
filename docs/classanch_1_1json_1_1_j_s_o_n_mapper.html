@@ -98,7 +98,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('classanch_1_1j
 <div id="dynsection-0-summary" class="dynsummary">
 </div>
 <div id="dynsection-0-content" class="dyncontent hidden">
-<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classanch_1_1json_1_1_j_s_o_n_mapper__coll__graph.svg" width="168" height="358"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classanch_1_1json_1_1_j_s_o_n_mapper__coll__graph.svg" width="168" height="379"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
@@ -126,6 +126,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a85a7428a980c1eb092b23798554b4f9e template"><td class="memItemLeft">T&#160;</td><td class="memItemRight"><a class="el" href="#a85a7428a980c1eb092b23798554b4f9e">deserialize</a> (std::istream &amp;input)</td></tr>
 <tr class="memitem:aee00e63fcc43c5be84f0e1809768de8f" id="r_aee00e63fcc43c5be84f0e1809768de8f"><td class="memTemplParams" colspan="2">template&lt;template&lt; typename &gt; typename C, typename T&gt; </td></tr>
 <tr class="memitem:aee00e63fcc43c5be84f0e1809768de8f template"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#aee00e63fcc43c5be84f0e1809768de8f">deserialize</a> (C&lt; T &gt; &amp;values, std::istream &amp;input)</td></tr>
+<tr class="memitem:a0484bc71e12843c50ce3b4e5aa8ed2d5" id="r_a0484bc71e12843c50ce3b4e5aa8ed2d5"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
+<tr class="memitem:a0484bc71e12843c50ce3b4e5aa8ed2d5 template"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a0484bc71e12843c50ce3b4e5aa8ed2d5">deserialize</a> (<a class="el" href="classanch_1_1_flux.html">anch::Flux</a>&lt; T &gt; &amp;values, std::istream &amp;input)</td></tr>
 <tr class="memitem:ad144bceb726b95da8ff7fae9a2f6e569" id="r_ad144bceb726b95da8ff7fae9a2f6e569"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
 <tr class="memitem:ad144bceb726b95da8ff7fae9a2f6e569 template"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#ad144bceb726b95da8ff7fae9a2f6e569">deserialize</a> (std::map&lt; std::string, T &gt; &amp;values, std::istream &amp;input)</td></tr>
 </table>
@@ -212,8 +214,46 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
+<a id="a0484bc71e12843c50ce3b4e5aa8ed2d5" name="a0484bc71e12843c50ce3b4e5aa8ed2d5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0484bc71e12843c50ce3b4e5aa8ed2d5">&#9670;&#160;</a></span>deserialize() <span class="overload">[1/5]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void anch::json::JSONMapper::deserialize </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classanch_1_1_flux.html">anch::Flux</a>&lt; T &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>values</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::istream &amp;</td>          <td class="paramname"><span class="paramname"><em>input</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Deserialize JSON array into objects' flux (see <a class="el" href="namespaceanch_1_1json.html#a1415ec0e37fa3b446aec0387a5b1cdf4" title="anch::json::deserialize">anch::json::deserialize</a> )</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>the object type</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">values</td><td>the flux to push values in </td></tr>
+    <tr><td class="paramname">input</td><td>the input stream to parse</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section since"><dt>Since</dt><dd>0.2 </dd></dl>
+
+</div>
+</div>
 <a id="aee00e63fcc43c5be84f0e1809768de8f" name="aee00e63fcc43c5be84f0e1809768de8f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aee00e63fcc43c5be84f0e1809768de8f">&#9670;&#160;</a></span>deserialize() <span class="overload">[1/4]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aee00e63fcc43c5be84f0e1809768de8f">&#9670;&#160;</a></span>deserialize() <span class="overload">[2/5]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -251,7 +291,7 @@ template&lt;template&lt; typename &gt; typename C, typename T&gt; </div>
 </div>
 </div>
 <a id="a85a7428a980c1eb092b23798554b4f9e" name="a85a7428a980c1eb092b23798554b4f9e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a85a7428a980c1eb092b23798554b4f9e">&#9670;&#160;</a></span>deserialize() <span class="overload">[2/4]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a85a7428a980c1eb092b23798554b4f9e">&#9670;&#160;</a></span>deserialize() <span class="overload">[3/5]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -284,7 +324,7 @@ template&lt;typename T&gt; </div>
 </div>
 </div>
 <a id="ad144bceb726b95da8ff7fae9a2f6e569" name="ad144bceb726b95da8ff7fae9a2f6e569"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad144bceb726b95da8ff7fae9a2f6e569">&#9670;&#160;</a></span>deserialize() <span class="overload">[3/4]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ad144bceb726b95da8ff7fae9a2f6e569">&#9670;&#160;</a></span>deserialize() <span class="overload">[4/5]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -321,7 +361,7 @@ template&lt;typename T&gt; </div>
 </div>
 </div>
 <a id="a0ee9bcc03692c6d77fc501f52e79888e" name="a0ee9bcc03692c6d77fc501f52e79888e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0ee9bcc03692c6d77fc501f52e79888e">&#9670;&#160;</a></span>deserialize() <span class="overload">[4/4]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a0ee9bcc03692c6d77fc501f52e79888e">&#9670;&#160;</a></span>deserialize() <span class="overload">[5/5]</span></h2>
 
 <div class="memitem">
 <div class="memproto">

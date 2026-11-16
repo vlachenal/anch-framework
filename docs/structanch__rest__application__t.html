@@ -95,7 +95,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('structanch__re
 <div id="dynsection-0-summary" class="dynsummary">
 </div>
 <div id="dynsection-0-content" class="dyncontent hidden">
-<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="structanch__rest__application__t__coll__graph.svg" width="159" height="166"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="structanch__rest__application__t__coll__graph.svg" width="159" height="144"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-attribs" class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
@@ -103,8 +103,7 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:adf36cc517a29eeeb019f40c610d31757" id="r_adf36cc517a29eeeb019f40c610d31757"><td class="memItemLeft">unsigned int&#160;</td><td class="memItemRight"><a class="el" href="#adf36cc517a29eeeb019f40c610d31757">abi_version</a></td></tr>
 <tr class="memitem:a654e25f4681a69e5085183304abc2510" id="r_a654e25f4681a69e5085183304abc2510"><td class="memItemLeft">void *(*)&#160;</td><td class="memItemRight"><a class="el" href="#a654e25f4681a69e5085183304abc2510">create</a> (const char *config, char *error, size_t error_size)</td></tr>
 <tr class="memitem:a487d0b2daa7571dd036a1915a8641956" id="r_a487d0b2daa7571dd036a1915a8641956"><td class="memItemLeft">void(*)&#160;</td><td class="memItemRight"><a class="el" href="#a487d0b2daa7571dd036a1915a8641956">destroy</a> (void *app)</td></tr>
-<tr class="memitem:ad755abd7a5d669a999bcd5f7e946df62" id="r_ad755abd7a5d669a999bcd5f7e946df62"><td class="memItemLeft">void(*)&#160;</td><td class="memItemRight"><a class="el" href="#ad755abd7a5d669a999bcd5f7e946df62">handle</a> (void *app, const <a class="el" href="structanch__rest__request__t.html">anch_rest_request_t</a> *request, <a class="el" href="structanch__rest__response__t.html">anch_rest_response_t</a> *response)</td></tr>
-<tr class="memitem:ad2b08bd77280f5fc728d52c38c2f2e99" id="r_ad2b08bd77280f5fc728d52c38c2f2e99"><td class="memItemLeft">void(*)&#160;</td><td class="memItemRight"><a class="el" href="#ad2b08bd77280f5fc728d52c38c2f2e99">release</a> (<a class="el" href="structanch__rest__response__t.html">anch_rest_response_t</a> *response)</td></tr>
+<tr class="memitem:ac3310e32024a27765c25187027f317de" id="r_ac3310e32024a27765c25187027f317de"><td class="memItemLeft">int(*)&#160;</td><td class="memItemRight"><a class="el" href="#ac3310e32024a27765c25187027f317de">handle</a> (void *app, const <a class="el" href="structanch__rest__request__t.html">anch_rest_request_t</a> *request, const <a class="el" href="structanch__rest__response__writer__t.html">anch_rest_response_writer_t</a> *writer)</td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Application operations </p>
@@ -169,47 +168,27 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="ad755abd7a5d669a999bcd5f7e946df62" name="ad755abd7a5d669a999bcd5f7e946df62"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad755abd7a5d669a999bcd5f7e946df62">&#9670;&#160;</a></span>handle</h2>
+<a id="ac3310e32024a27765c25187027f317de" name="ac3310e32024a27765c25187027f317de"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac3310e32024a27765c25187027f317de">&#9670;&#160;</a></span>handle</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void(*) anch_rest_application_t::handle(void *app, const <a class="el" href="structanch__rest__request__t.html">anch_rest_request_t</a> *request, <a class="el" href="structanch__rest__response__t.html">anch_rest_response_t</a> *response)</td>
+          <td class="memname">int(*) anch_rest_application_t::handle(void *app, const <a class="el" href="structanch__rest__request__t.html">anch_rest_request_t</a> *request, const <a class="el" href="structanch__rest__response__writer__t.html">anch_rest_response_writer_t</a> *writer)</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Handle request (thread safe, never fails: errors are answered with status 500)</p>
+<p>Handle request (thread safe). The response is started with <code>writer-&gt;start</code> , then its body is written with <code>writer-&gt;write</code> . Errors before start are answered with status 500 by the application.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">app</td><td>the application </td></tr>
     <tr><td class="paramname">request</td><td>the request </td></tr>
-    <tr><td class="paramname">response</td><td>the response to fill </td></tr>
+    <tr><td class="paramname">writer</td><td>the response writer</td></tr>
   </table>
   </dd>
 </dl>
-
-</div>
-</div>
-<a id="ad2b08bd77280f5fc728d52c38c2f2e99" name="ad2b08bd77280f5fc728d52c38c2f2e99"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad2b08bd77280f5fc728d52c38c2f2e99">&#9670;&#160;</a></span>release</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void(*) anch_rest_application_t::release(<a class="el" href="structanch__rest__response__t.html">anch_rest_response_t</a> *response)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Release response memory</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">response</td><td>the response </td></tr>
-  </table>
-  </dd>
-</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>0</code> when response is complete, <code>-1</code> when response has been interrupted after its start (the connection has to be closed) ; a response which has not been started is answered with 500 </dd></dl>
 
 </div>
 </div>

@@ -146,7 +146,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('sql_connection
 <div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span> </div>
 <div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>    <span class="comment">// Destructor +</span></div>
 <div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>  <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>    <span class="keyword">virtual</span> ~SqlConnectionFactory();</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>    <span class="keyword">virtual</span> ~SqlConnectionFactory() <span class="keyword">noexcept</span>;</div>
 <div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>    <span class="comment">// Destructor -</span></div>
 <div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span> </div>
 <div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>    <span class="comment">// Methods +</span></div>
@@ -162,7 +162,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('sql_connection
 <div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>}</div>
 <div class="ttc" id="aclassanch_1_1_resource_pool_html"><div class="ttname"><a href="classanch_1_1_resource_pool.html">anch::ResourcePool</a></div><div class="ttdoc">Generic resource pool utility class.</div><div class="ttdef"><b>Definition</b> resourcePool.hpp:273</div></div>
 <div class="ttc" id="aclassanch_1_1_singleton_html"><div class="ttname"><a href="classanch_1_1_singleton.html">anch::Singleton</a></div><div class="ttdoc">Meyers&#39; singleton implementation.</div><div class="ttdef"><b>Definition</b> singleton.hpp:55</div></div>
-<div class="ttc" id="aclassanch_1_1sql_1_1_connection_html"><div class="ttname"><a href="classanch_1_1sql_1_1_connection.html">anch::sql::Connection</a></div><div class="ttdoc">SQL connection virtual class.</div><div class="ttdef"><b>Definition</b> connection.hpp:100</div></div>
+<div class="ttc" id="aclassanch_1_1sql_1_1_connection_html"><div class="ttname"><a href="classanch_1_1sql_1_1_connection.html">anch::sql::Connection</a></div><div class="ttdoc">SQL connection virtual class.</div><div class="ttdef"><b>Definition</b> connection.hpp:103</div></div>
 <div class="ttc" id="aclassanch_1_1sql_1_1_sql_connection_factory_html_aaa89bc4e1f68da37cd2365186ff76c42"><div class="ttname"><a href="classanch_1_1sql_1_1_sql_connection_factory.html#aaa89bc4e1f68da37cd2365186ff76c42">anch::sql::SqlConnectionFactory::getPool</a></div><div class="ttdeci">SqlConnectionPool &amp; getPool(const std::string &amp;name)</div></div>
 <div class="ttc" id="aclassanch_1_1sql_1_1_sql_connection_factory_html_ae323adb1c69f4d9991e605246a27088b"><div class="ttname"><a href="classanch_1_1sql_1_1_sql_connection_factory.html#ae323adb1c69f4d9991e605246a27088b">anch::sql::SqlConnectionFactory::createConnection</a></div><div class="ttdeci">Connection * createConnection(const std::string &amp;name)</div></div>
 <div class="ttc" id="anamespaceanch_1_1sql_html"><div class="ttname"><a href="namespaceanch_1_1sql.html">anch::sql</a></div><div class="ttdoc">SQL namespace.</div><div class="ttdef"><b>Definition</b> clauses.hpp:25</div></div>

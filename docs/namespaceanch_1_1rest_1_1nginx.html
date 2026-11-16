@@ -101,8 +101,7 @@ Typedefs</h2></td></tr>
 Functions</h2></td></tr>
 <tr class="memitem:af9f09834a77615a615fe273ce71e7024" id="r_af9f09834a77615a615fe273ce71e7024"><td class="memItemLeft">void *&#160;</td><td class="memItemRight"><a class="el" href="#af9f09834a77615a615fe273ce71e7024">create</a> (<a class="el" href="#ac4ec59565e0671a0903ac24f69579e95">Factory</a> factory, const char *config, char *error, std::size_t errorSize) noexcept</td></tr>
 <tr class="memitem:a164e5d85808f1af51a512fb94218a3ac" id="r_a164e5d85808f1af51a512fb94218a3ac"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a164e5d85808f1af51a512fb94218a3ac">destroy</a> (void *app) noexcept</td></tr>
-<tr class="memitem:a2e28de92571d2497fd78a07390e39fa6" id="r_a2e28de92571d2497fd78a07390e39fa6"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a2e28de92571d2497fd78a07390e39fa6">handle</a> (void *app, const <a class="el" href="structanch__rest__request__t.html">anch_rest_request_t</a> *request, <a class="el" href="structanch__rest__response__t.html">anch_rest_response_t</a> *response) noexcept</td></tr>
-<tr class="memitem:a6118b061d1a18bbb53f4e1e5029a3342" id="r_a6118b061d1a18bbb53f4e1e5029a3342"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a6118b061d1a18bbb53f4e1e5029a3342">release</a> (<a class="el" href="structanch__rest__response__t.html">anch_rest_response_t</a> *response) noexcept</td></tr>
+<tr class="memitem:a358bc15f37b59cb708a1b95aa3619a05" id="r_a358bc15f37b59cb708a1b95aa3619a05"><td class="memItemLeft">int&#160;</td><td class="memItemRight"><a class="el" href="#a358bc15f37b59cb708a1b95aa3619a05">handle</a> (void *app, const <a class="el" href="structanch__rest__request__t.html">anch_rest_request_t</a> *request, const <a class="el" href="structanch__rest__response__writer__t.html">anch_rest_response_writer_t</a> *writer) noexcept</td></tr>
 <tr class="memitem:ae779053b00a29a4202d5104bc08cb401" id="r_ae779053b00a29a4202d5104bc08cb401"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="#ac4ec59565e0671a0903ac24f69579e95">anch::rest::nginx::Factory</a> F&gt; </td></tr>
 <tr class="memitem:ae779053b00a29a4202d5104bc08cb401 template"><td class="memItemLeft">const <a class="el" href="structanch__rest__application__t.html">anch_rest_application_t</a> *&#160;</td><td class="memItemRight"><a class="el" href="#ae779053b00a29a4202d5104bc08cb401">application</a> () noexcept</td></tr>
 </table>
@@ -260,8 +259,8 @@ template&lt;<a class="el" href="#ac4ec59565e0671a0903ac24f69579e95">anch::rest::
 
 </div>
 </div>
-<a id="a2e28de92571d2497fd78a07390e39fa6" name="a2e28de92571d2497fd78a07390e39fa6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2e28de92571d2497fd78a07390e39fa6">&#9670;&#160;</a></span>handle()</h2>
+<a id="a358bc15f37b59cb708a1b95aa3619a05" name="a358bc15f37b59cb708a1b95aa3619a05"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a358bc15f37b59cb708a1b95aa3619a05">&#9670;&#160;</a></span>handle()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -270,7 +269,7 @@ template&lt;<a class="el" href="#ac4ec59565e0671a0903ac24f69579e95">anch::rest::
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void anch::rest::nginx::handle </td>
+          <td class="memname">int anch::rest::nginx::handle </td>
           <td>(</td>
           <td class="paramtype">void *</td>          <td class="paramname"><span class="paramname"><em>app</em></span>, </td>
         </tr>
@@ -282,7 +281,7 @@ template&lt;<a class="el" href="#ac4ec59565e0671a0903ac24f69579e95">anch::rest::
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="structanch__rest__response__t.html">anch_rest_response_t</a> *</td>          <td class="paramname"><span class="paramname"><em>response</em></span>&#160;)</td>
+          <td class="paramtype">const <a class="el" href="structanch__rest__response__writer__t.html">anch_rest_response_writer_t</a> *</td>          <td class="paramname"><span class="paramname"><em>writer</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -291,58 +290,24 @@ template&lt;<a class="el" href="#ac4ec59565e0671a0903ac24f69579e95">anch::rest::
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Handle request with API (see <a class="el" href="classanch_1_1rest_1_1_api.html#ac4252cf62e09916589eea43e9729f16c" title="anch::rest::Api::handle">anch::rest::Api::handle</a> ). Unknown methods are answered with <code>501</code> , errors with <code>500</code> .</p>
+<p>Handle request with API (see <a class="el" href="classanch_1_1rest_1_1_api.html#ac4252cf62e09916589eea43e9729f16c" title="anch::rest::Api::handle">anch::rest::Api::handle</a> ). Unknown methods are answered with <code>501</code> , errors with <code>500</code> .<br  />
+<br  />
+The request body is read in stream (<code><a class="el" href="classanch_1_1cutils_1_1_c_i_stream.html">anch::cutils::CIStream</a></code> on the module reader): it is read while nginx receives it. The response body is written in stream (<code><a class="el" href="classanch_1_1cutils_1_1_c_o_stream.html">anch::cutils::COStream</a></code> on the module writer, blocks of <code>writer-&gt;buffer_size</code> bytes): the response is started when the first block is full, with chunked transfer encoding, or at the end of the body with its length when it fits in one block. An error raised before the start is answered with <code>500</code> , an error raised after interrupts the response.<br  />
+The request outlives the response body writing: a body writer can read the request body (echo, ...).</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">app</td><td>the API </td></tr>
     <tr><td class="paramname">request</td><td>the request </td></tr>
-    <tr><td class="paramname">response</td><td>the response to fill </td></tr>
+    <tr><td class="paramname">writer</td><td>the response writer</td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section return"><dt>Returns</dt><dd><code>0</code> when response is complete, <code>-1</code> when it has been interrupted after its start </dd></dl>
 <div id="dynsection-3" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
 <div id="dynsection-3-summary" class="dynsummary">
 </div>
 <div id="dynsection-3-content" class="dyncontent hidden">
-<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespaceanch_1_1rest_1_1nginx_a2e28de92571d2497fd78a07390e39fa6_cgraph.svg" width="138" height="78"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
-
-</div>
-</div>
-<a id="a6118b061d1a18bbb53f4e1e5029a3342" name="a6118b061d1a18bbb53f4e1e5029a3342"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6118b061d1a18bbb53f4e1e5029a3342">&#9670;&#160;</a></span>release()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void anch::rest::nginx::release </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structanch__rest__response__t.html">anch_rest_response_t</a> *</td>          <td class="paramname"><span class="paramname"><em>response</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel noexcept">noexcept</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Release response memory</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">response</td><td>the response </td></tr>
-  </table>
-  </dd>
-</dl>
-<div id="dynsection-4" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-4-summary" class="dynsummary">
-</div>
-<div id="dynsection-4-content" class="dyncontent hidden">
-<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespaceanch_1_1rest_1_1nginx_a6118b061d1a18bbb53f4e1e5029a3342_cgraph.svg" width="138" height="78"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespaceanch_1_1rest_1_1nginx_a358bc15f37b59cb708a1b95aa3619a05_cgraph.svg" width="138" height="78"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
 </div>

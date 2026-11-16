@@ -34,7 +34,6 @@ var classanch_1_1sql_1_1_connection =
     [ "startTransaction", "classanch_1_1sql_1_1_connection.html#a1ccc5bb6d2a36c927625c155ae35e23a", null ],
     [ "update", "classanch_1_1sql_1_1_connection.html#a104eaa16b2b443da5a6eb50c0562cb28", null ],
     [ "update", "classanch_1_1sql_1_1_connection.html#ad3ec5cab9f60dece303d571fb185a8e5", null ],
-    [ "_errors", "classanch_1_1sql_1_1_connection.html#a8301f123a651173c79f092dc5413e9ee", null ],
     [ "_stmts", "classanch_1_1sql_1_1_connection.html#a6dbcf5be1474e7fadba4eb70864ca84d", null ],
     [ "_stmtsIndex", "classanch_1_1sql_1_1_connection.html#add96c2df384aa6fdb3c1bc0cad5d5381", null ],
     [ "_stmtsMax", "classanch_1_1sql_1_1_connection.html#a7de4152cdc1bb6ddd841bdf51439b048", null ],

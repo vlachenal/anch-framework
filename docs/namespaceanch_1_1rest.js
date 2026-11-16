@@ -40,8 +40,7 @@ var namespaceanch_1_1rest =
       [ "application", "namespaceanch_1_1rest_1_1nginx.html#ae779053b00a29a4202d5104bc08cb401", null ],
       [ "create", "namespaceanch_1_1rest_1_1nginx.html#af9f09834a77615a615fe273ce71e7024", null ],
       [ "destroy", "namespaceanch_1_1rest_1_1nginx.html#a164e5d85808f1af51a512fb94218a3ac", null ],
-      [ "handle", "namespaceanch_1_1rest_1_1nginx.html#a2e28de92571d2497fd78a07390e39fa6", null ],
-      [ "release", "namespaceanch_1_1rest_1_1nginx.html#a6118b061d1a18bbb53f4e1e5029a3342", null ]
+      [ "handle", "namespaceanch_1_1rest_1_1nginx.html#a358bc15f37b59cb708a1b95aa3619a05", null ]
     ] ],
     [ "Api", "classanch_1_1rest_1_1_api.html", "classanch_1_1rest_1_1_api" ],
     [ "Body", "classanch_1_1rest_1_1_body.html", "classanch_1_1rest_1_1_body" ],

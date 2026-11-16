@@ -5,7 +5,7 @@ var searchData=
   ['_7eapi_2',['~Api',['../classanch_1_1rest_1_1_api.html#aa5d89ad2afea6b1f086c0459ca8862c8',1,'anch::rest::Api']]],
   ['_7earghandler_3',['~ArgHandler',['../classanch_1_1cli_1_1_arg_handler.html#ac5974cefd42c2e21a3ea3ed330636fd1',1,'anch::cli::ArgHandler']]],
   ['_7eassertexception_4',['~AssertException',['../classanch_1_1ut_1_1_assert_exception.html#a498ea2c9485452defe535f8e4e75efbb',1,'anch::ut::AssertException']]],
-  ['_7ebase64_5',['~Base64',['../classanch_1_1crypto_1_1_base64.html#aa38b6672a6e867ca5b6b1782f3c01375',1,'anch::crypto::Base64']]],
+  ['_7ebase64_5',['~Base64',['../classanch_1_1crypto_1_1_base64.html#aa38b6672a6e867ca5b6b1782f3c01375',1,'anch::crypto::Base64::~Base64()'],['../class_base64.html#aa38b6672a6e867ca5b6b1782f3c01375',1,'Base64::~Base64()']]],
   ['_7eblockciphermodeofoperation_6',['~BlockCipherModeOfOperation',['../classanch_1_1crypto_1_1_block_cipher_mode_of_operation.html#ac76988b8207fd6d59b73423f3e90ddb1',1,'anch::crypto::BlockCipherModeOfOperation']]],
   ['_7ecategoryformatter_7',['~CategoryFormatter',['../classanch_1_1log_1_1fmt_1_1_category_formatter.html#aa631f8a3df08ae4cd513355b8c2914f4',1,'anch::log::fmt::CategoryFormatter']]],
   ['_7ecbc_8',['~CBC',['../classanch_1_1crypto_1_1_c_b_c.html#a6be33edb3e34429d08e1bb0d0ab746f7',1,'anch::crypto::CBC']]],

@@ -98,7 +98,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('structanch_1_1
 <div id="dynsection-0-summary" class="dynsummary">
 </div>
 <div id="dynsection-0-content" class="dyncontent hidden">
-<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="structanch_1_1json_1_1_mapping_options__coll__graph.svg" width="210" height="310"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="structanch_1_1json_1_1_mapping_options__coll__graph.svg" width="210" height="288"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-attribs" class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
@@ -109,7 +109,6 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a3942cccb14f60e0c96ee7501a273eb77" id="r_a3942cccb14f60e0c96ee7501a273eb77"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#a3942cccb14f60e0c96ee7501a273eb77">serialize_check_constraints</a> = false</td></tr>
 <tr class="memitem:a9a73d4355f14264ff26f7936036f13ca" id="r_a9a73d4355f14264ff26f7936036f13ca"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#a9a73d4355f14264ff26f7936036f13ca">deserialize_ignore_unknown_field</a> = false</td></tr>
 <tr class="memitem:a471bdfa768f8e945fa0a7fd9d46ca107" id="r_a471bdfa768f8e945fa0a7fd9d46ca107"><td class="memItemLeft">int64_t&#160;</td><td class="memItemRight"><a class="el" href="#a471bdfa768f8e945fa0a7fd9d46ca107">deserialize_max_discard_char</a> = 0</td></tr>
-<tr class="memitem:a197bfa9b01700f0bbf714e91a6086f5a" id="r_a197bfa9b01700f0bbf714e91a6086f5a"><td class="memItemLeft">std::size_t&#160;</td><td class="memItemRight"><a class="el" href="#a197bfa9b01700f0bbf714e91a6086f5a">deserialize_max_field_char</a> = 512</td></tr>
 <tr class="memitem:ab49f1978c8a9b932bceaaf8ceb528927" id="r_ab49f1978c8a9b932bceaaf8ceb528927"><td class="memItemLeft">std::size_t&#160;</td><td class="memItemRight"><a class="el" href="#ab49f1978c8a9b932bceaaf8ceb528927">max_payload</a> = 0</td></tr>
 <tr class="memitem:a5f8e3a33251408da358e8a9932993bf1" id="r_a5f8e3a33251408da358e8a9932993bf1"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#a5f8e3a33251408da358e8a9932993bf1">deserialize_check_constraints</a> = true</td></tr>
 <tr class="memitem:a8bb239795af16afa0024aca16452b863" id="r_a8bb239795af16afa0024aca16452b863"><td class="memItemLeft">std::size_t&#160;</td><td class="memItemRight"><a class="el" href="#a8bb239795af16afa0024aca16452b863">max_depth</a> = 512</td></tr>
@@ -182,21 +181,6 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a197bfa9b01700f0bbf714e91a6086f5a" name="a197bfa9b01700f0bbf714e91a6086f5a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a197bfa9b01700f0bbf714e91a6086f5a">&#9670;&#160;</a></span>deserialize_max_field_char</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::size_t anch::json::MappingOptions::deserialize_max_field_char = 512</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p><a class="el" href="structanch_1_1json_1_1_maximum.html" title="Maximum value constraint ( maximum and exclusiveMaximum ).">Maximum</a> field characters before raising error. Use <code>0</code> value for unlimited field's value characters </p>
-
-</div>
-</div>
 <a id="a8bb239795af16afa0024aca16452b863" name="a8bb239795af16afa0024aca16452b863"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a8bb239795af16afa0024aca16452b863">&#9670;&#160;</a></span>max_depth</h2>
 
@@ -223,7 +207,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p><a class="el" href="structanch_1_1json_1_1_maximum.html" title="Maximum value constraint ( maximum and exclusiveMaximum ).">Maximum</a> number of characters read from input stream before raising error. Use <code>0</code> value for unlimited payload </p>
+<p><a class="el" href="structanch_1_1json_1_1_maximum.html" title="Maximum value constraint ( maximum and exclusiveMaximum ).">Maximum</a> number of characters read from input stream before raising error ( <a class="el" href="namespaceanch_1_1json.html#a56742fecea7bc19952b3e35c013ad931ac379e50491099134897f11767ac77544" title="anch::json::ErrorCode::PAYLOAD_TOO_LARGE">anch::json::ErrorCode::PAYLOAD_TOO_LARGE</a> ). Use <code>0</code> value for unlimited payload. The length of a string field is limited with its <code>maxLength</code> constraint. </p>
 
 </div>
 </div>

@@ -163,7 +163,6 @@ Protected Attributes</h2></td></tr>
 <tr class="memitem:a6dbcf5be1474e7fadba4eb70864ca84d" id="r_a6dbcf5be1474e7fadba4eb70864ca84d"><td class="memItemLeft">std::list&lt; <a class="el" href="structanch_1_1sql_1_1_connection_1_1_cached_statement.html">CachedStatement</a> &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a6dbcf5be1474e7fadba4eb70864ca84d">_stmts</a></td></tr>
 <tr class="memitem:add96c2df384aa6fdb3c1bc0cad5d5381" id="r_add96c2df384aa6fdb3c1bc0cad5d5381"><td class="memItemLeft">std::unordered_map&lt; std::string_view, std::list&lt; <a class="el" href="structanch_1_1sql_1_1_connection_1_1_cached_statement.html">CachedStatement</a> &gt;::iterator &gt;&#160;</td><td class="memItemRight"><a class="el" href="#add96c2df384aa6fdb3c1bc0cad5d5381">_stmtsIndex</a></td></tr>
 <tr class="memitem:a7de4152cdc1bb6ddd841bdf51439b048" id="r_a7de4152cdc1bb6ddd841bdf51439b048"><td class="memItemLeft">std::size_t&#160;</td><td class="memItemRight"><a class="el" href="#a7de4152cdc1bb6ddd841bdf51439b048">_stmtsMax</a></td></tr>
-<tr class="memitem:a8301f123a651173c79f092dc5413e9ee" id="r_a8301f123a651173c79f092dc5413e9ee"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#a8301f123a651173c79f092dc5413e9ee">_errors</a></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-friends" class="groupheader"><a id="friends" name="friends"></a>
 Friends</h2></td></tr>
@@ -176,7 +175,9 @@ class&#160;</td><td class="memItemRight"><b>ResultSet</b></td></tr>
 <div class="textblock"><p>SQL connection virtual class. </p>
 <p>Abstract layer for SQL connections management.<br  />
 <br  />
-Errors: every <a class="el" href="classanch_1_1sql_1_1_sql_exception.html" title="SqlException">SqlException</a> raised by the connection, its prepared statements and its result sets is reported to the connection. A fatal error (<a class="el" href="classanch_1_1sql_1_1_sql_exception.html#a04a4447ba4b6c0f284acf82902853bde" title="SqlException::isOK">SqlException::isOK</a> is <code>false</code> : connection lost, out of memory, protocol error, ...) invalidates the connection: <a class="el" href="#ad940302808cfd3e736377e23195102d7" title="isValid">isValid</a> returns <code>false</code> and connection pools destroy it instead of reusing it. Other errors (syntax, constraint, ...) keep the connection valid, but the current transaction will be rolled back by <a class="el" href="#acd326c720ce84c1d9e5e9c48d9c12efa" title="release">release</a> .<br  />
+Errors: every <a class="el" href="classanch_1_1sql_1_1_sql_exception.html" title="SqlException">SqlException</a> raised by the connection, its prepared statements and its result sets is reported to the connection. A fatal error (<a class="el" href="classanch_1_1sql_1_1_sql_exception.html#a04a4447ba4b6c0f284acf82902853bde" title="SqlException::isOK">SqlException::isOK</a> is <code>false</code> : connection lost, out of memory, protocol error, ...) invalidates the connection: <a class="el" href="#ad940302808cfd3e736377e23195102d7" title="isValid">isValid</a> returns <code>false</code> and connection pools destroy it instead of reusing it. Other errors (syntax, constraint, ...) keep the connection valid.<br  />
+<br  />
+Transactions: without <a class="el" href="#a1ccc5bb6d2a36c927625c155ae35e23a" title="startTransaction">startTransaction</a> , each query is committed by the database (auto-commit mode). A transaction started with <a class="el" href="#a1ccc5bb6d2a36c927625c155ae35e23a" title="startTransaction">startTransaction</a> is committed only by <a class="el" href="#a24cb2316e7568026f9aac3085ed1d7bc" title="commit">commit</a> : a transaction which is not ended when the connection is released (returned to its pool or destroyed) is rolled back, with or without error.<br  />
 <br  />
 Prepared statements: <a class="el" href="#a84eef94d63f28f41e552275de7ae5313" title="prepareStatement">prepareStatement</a> keeps the prepared statements in a bounded cache (least recently used statement first evicted, see <a class="el" href="#ad2e668e988d7bfac2997885cff9a36e5" title="setStatementCacheSize">setStatementCacheSize</a> ). A statement is never evicted while one of its result sets is alive: the cache can then temporarily exceed its maximum size. An evicted statement is deallocated on the server side.</p>
 <dl class="section author"><dt>Author</dt><dd>Vincent Lachenal</dd></dl>
@@ -778,7 +779,7 @@ template&lt;typename F&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Report error: the current transaction has to be rolled back ; a fatal error invalidates the connection</p>
+<p>Report error: a fatal error invalidates the connection</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">error</td><td>the error</td></tr>
@@ -1134,7 +1135,7 @@ template&lt;typename T, typename... Q&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Release connection: end the current transaction (rollback when an error has been reported since the last release, commit otherwise).<br  />
+<p>Release connection: roll back the current transaction, if any (a transaction is committed only by <a class="el" href="#a24cb2316e7568026f9aac3085ed1d7bc" title="commit">commit</a> ).<br  />
 It is called when the connection is returned to its pool and when it is destroyed. If the transaction can be neither committed nor rolled back, the connection is invalidated (its transaction state is unknown). </p>
 <div id="dynsection-23" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
 <div id="dynsection-23-summary" class="dynsummary">
@@ -1386,7 +1387,8 @@ If there is not transaction, this method does nothing.</p>
       </table>
 </div><div class="memdoc">
 <p>Start SQL transaction.<br  />
-If there is a transaction on this database connection, this method does nothing.</p>
+If there is a transaction on this database connection, this method does nothing.<br  />
+The transaction has to be ended with <a class="el" href="#a24cb2316e7568026f9aac3085ed1d7bc" title="commit">commit</a> or <a class="el" href="#a03dd1d91e38f6051b68b7973fd5903dc" title="rollback">rollback</a> : it is rolled back by <a class="el" href="#acd326c720ce84c1d9e5e9c48d9c12efa" title="release">release</a> otherwise.</p>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
     <tr><td class="paramname"><a class="el" href="classanch_1_1sql_1_1_sql_exception.html" title="SQL exception.">SqlException</a></td><td>any error </td></tr>
@@ -1490,29 +1492,6 @@ template&lt;typename T, typename... Q&gt; </div>
 </div>
 </div>
 <a name="doc-variable-members" id="doc-variable-members"></a><h2 id="header-doc-variable-members" class="groupheader">Member Data Documentation</h2>
-<a id="a8301f123a651173c79f092dc5413e9ee" name="a8301f123a651173c79f092dc5413e9ee"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8301f123a651173c79f092dc5413e9ee">&#9670;&#160;</a></span>_errors</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool anch::sql::Connection::_errors</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Error on current calls </p>
-
-</div>
-</div>
 <a id="a6dbcf5be1474e7fadba4eb70864ca84d" name="a6dbcf5be1474e7fadba4eb70864ca84d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a6dbcf5be1474e7fadba4eb70864ca84d">&#9670;&#160;</a></span>_stmts</h2>
 

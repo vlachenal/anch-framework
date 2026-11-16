@@ -155,6 +155,7 @@ var NAVTREE =
       [ "Conception", "page_sql.html#sql_concept_sec", [
         [ "Prepared statements", "page_sql.html#sql_conception_stmt_sec", null ],
         [ "Errors", "page_sql.html#sql_conception_errors_sec", null ],
+        [ "Transactions", "page_sql.html#sql_conception_transactions_sec", null ],
         [ "SQL connection pool", "page_sql.html#sql_conception_pool_sec", null ],
         [ "Prepared statements cache", "page_sql.html#sql_conception_stmt_cache_sec", null ]
       ] ],
@@ -221,25 +222,25 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "address_8hpp_source.html",
-"classanch_1_1_thread_pool.html#a1503de7e65b8cf62e0c6c63b13f14edf",
-"classanch_1_1conf_1_1_resolvers.html#acab771d08003f08ee58c9215358fd2ad",
-"classanch_1_1crypto_1_1_s_h_a1.html#a8590c2faafe137c81c46252c45f1f0ac",
-"classanch_1_1device_1_1_network_interface.html#aa2db9aebf98a7658589c83f8c916b52e",
-"classanch_1_1json_1_1_j_s_o_n_mapper.html#afcbd0d846afd6315d73591237d6a1dc5",
-"classanch_1_1log_1_1_logger_configuration.html#a786ab99b6cce2386dd4a56c222f9de83",
-"classanch_1_1network_1_1_socket.html#ad4b6a1ff22869250c84fbd127faa0832",
-"classanch_1_1rest_1_1_grpc_server.html#abcdae69f09f05ca98d33ba5dd94e185f",
-"classanch_1_1rest_1_1_rpc_service.html#a90049ac5722f420e8dfb474f0adb8678",
-"classanch_1_1sql_1_1_from_builder.html#a80c9b7299c6e0fdb01ef60dc975ab16f",
-"classanch_1_1sql_1_1_result_set.html#ae6f38723bc20d66f31ff4d1c5d3f22f4",
-"classanch_1_1ut_1_1_thread_errors.html#a24e548c212e7a1ed1cd135f91986e336",
-"functions_p.html",
-"namespaceanch_1_1json.html#aa28386fee3234cd201226f6190c4ac36",
-"namespaceanch_1_1ut.html#a5807365083f07c004e3320587fa0c5b9",
-"structanch_1_1_less_ptr_compare.html",
-"structanch_1_1json_1_1_required.html",
-"structanch_1_1rest_1_1_cors_options.html",
-"structanch__rest__request__t.html#a1e722ea3ddb4b5d18248e779cbd0676f"
+"classanch_1_1_resource_pool.html#a5a291318acf21f63205de5bd3307e04c",
+"classanch_1_1conf_1_1_parsers.html#ac00f889c4ea5180bd8e3593299045131",
+"classanch_1_1crypto_1_1_o_f_b.html#a58b7de20f6e16d4bab7967cf0cf84038",
+"classanch_1_1device_1_1_c_p_u.html#abefe81f6d24c523f86c98bd0b5eb341a",
+"classanch_1_1json_1_1_j_s_o_n_item.html#acfa8740cc621ba8e70d0dfb0fc35b37e",
+"classanch_1_1log_1_1_log_line.html#af69b41a932ab363c071df506425e95e1",
+"classanch_1_1network_1_1_socket.html#a23744fd20f0e8d60ebfe5c8d3772865a",
+"classanch_1_1rest_1_1_form.html#a8595175d408e5fca88b5c15a619b267e",
+"classanch_1_1rest_1_1_route.html#a6bfc81eea01e023f26556b5bcf793841",
+"classanch_1_1sql_1_1_from_builder.html#a0ec29dde42dd560aa7b463ef71766f60",
+"classanch_1_1sql_1_1_prepared_statement.html#ae01b343dd9c1832fca21c70e2fa9bb9a",
+"classanch_1_1ut_1_1_runner.html#ac23720f52373ecb83e296ad964b2f68a",
+"functions_func.html",
+"namespaceanch_1_1json.html#a48b8d7d97e075724a1642acebb821c66",
+"namespaceanch_1_1rest_1_1nginx.html#ac4ec59565e0671a0903ac24f69579e95",
+"socket_client_runner_8hpp_source.html",
+"structanch_1_1json_1_1_min_length.html",
+"structanch_1_1oas_1_1_schema.html#a97f61716a1fb14e8c19a6dfe4d9df83c",
+"structanch_1_1sql_1_1_sql_syntax.html#aca6f79c3c1b3f829b2a04521e682c4b6"
 ];
 
 const SYNCONMSG = 'click to disable panel synchronization';

@@ -156,6 +156,7 @@ template&lt;typename T&gt; </div>
 </dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classanch_1_1rest_1_1_content_too_large.html">ContentTooLarge</a></td><td>input is larger than <code>max_payload</code> option </td></tr>
     <tr><td class="paramname"><a class="el" href="classanch_1_1json_1_1_mapping_error.html" title="Mapping error.">anch::json::MappingError</a></td><td>on invalid JSON </td></tr>
   </table>
   </dd>
@@ -213,6 +214,7 @@ template&lt;typename T&gt; </div>
 </dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classanch_1_1rest_1_1_content_too_large.html">ContentTooLarge</a></td><td>input is larger than <code>max_payload</code> option </td></tr>
     <tr><td class="paramname"><a class="el" href="classanch_1_1json_1_1_mapping_error.html" title="Mapping error.">anch::json::MappingError</a></td><td>on invalid JSON or constraint violation (when constraints are checked on deserialization)</td></tr>
   </table>
   </dd>
@@ -277,7 +279,7 @@ template&lt;typename T&gt; </div>
 </table>
 </div><div class="memdoc">
 <p>Mapping options of a side. They are copied from <code><a class="el" href="namespaceanch_1_1json.html#aa7e486a58287e946e65821fb429efa2c">anch::json::DEFAULT_MAPPING_OPTIONS</a></code> on first use, then constraints checks are set:</p><ul>
-<li>server: <code>deserialize_check_constraints</code> is <code>true</code> , <code>serialize_check_constraints</code> is <code>false</code> ;</li>
+<li>server: <code>deserialize_check_constraints</code> is <code>true</code> , <code>serialize_check_constraints</code> is <code>false</code> , request bodies are limited to 2 MiB ( <code>max_payload</code> , when not set in <code><a class="el" href="namespaceanch_1_1json.html#aa7e486a58287e946e65821fb429efa2c">anch::json::DEFAULT_MAPPING_OPTIONS</a></code> ): larger ones raise <a class="el" href="classanch_1_1rest_1_1_content_too_large.html" title="ContentTooLarge">ContentTooLarge</a> ( <code>413</code> );</li>
 <li>client: <code>serialize_check_constraints</code> is <code>true</code> , <code>deserialize_check_constraints</code> is <code>false</code> . Server responses are trusted and read with tolerance: unknown fields are ignored ( <code>deserialize_ignore_unknown_field</code> is <code>true</code> ) and whitespaces are accepted ( <code>deserialize_max_discard_char</code> is <code>-1</code> ).</li>
 </ul>
 <p>Options can be changed at application initialization (they are not protected against concurrent changes).</p>

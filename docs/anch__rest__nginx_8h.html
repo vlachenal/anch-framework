@@ -109,14 +109,17 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('anch__rest__ng
 Classes</h2></td></tr>
 <tr class="memitem:anch_5Frest_5Fstr_5Ft" id="r_anch_5Frest_5Fstr_5Ft"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structanch__rest__str__t.html">anch_rest_str_t</a></td></tr>
 <tr class="memitem:anch_5Frest_5Fheader_5Ft" id="r_anch_5Frest_5Fheader_5Ft"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structanch__rest__header__t.html">anch_rest_header_t</a></td></tr>
+<tr class="memitem:anch_5Frest_5Fbody_5Freader_5Ft" id="r_anch_5Frest_5Fbody_5Freader_5Ft"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structanch__rest__body__reader__t.html">anch_rest_body_reader_t</a></td></tr>
 <tr class="memitem:anch_5Frest_5Frequest_5Ft" id="r_anch_5Frest_5Frequest_5Ft"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structanch__rest__request__t.html">anch_rest_request_t</a></td></tr>
-<tr class="memitem:anch_5Frest_5Fresponse_5Ft" id="r_anch_5Frest_5Fresponse_5Ft"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structanch__rest__response__t.html">anch_rest_response_t</a></td></tr>
+<tr class="memitem:anch_5Frest_5Fresponse_5Fwriter_5Ft" id="r_anch_5Frest_5Fresponse_5Fwriter_5Ft"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structanch__rest__response__writer__t.html">anch_rest_response_writer_t</a></td></tr>
 <tr class="memitem:anch_5Frest_5Fapplication_5Ft" id="r_anch_5Frest_5Fapplication_5Ft"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structanch__rest__application__t.html">anch_rest_application_t</a></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-define-members" class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:aa712d792a6993279bf6f79a29c88ec34" id="r_aa712d792a6993279bf6f79a29c88ec34"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#aa712d792a6993279bf6f79a29c88ec34">ANCH_REST_NGINX_ABI_VERSION</a>&#160;&#160;&#160;1u</td></tr>
+<tr class="memitem:aa712d792a6993279bf6f79a29c88ec34" id="r_aa712d792a6993279bf6f79a29c88ec34"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#aa712d792a6993279bf6f79a29c88ec34">ANCH_REST_NGINX_ABI_VERSION</a>&#160;&#160;&#160;2u</td></tr>
 <tr class="memitem:ab3d8de4d6989457f6a93cb87a1d7d93f" id="r_ab3d8de4d6989457f6a93cb87a1d7d93f"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#ab3d8de4d6989457f6a93cb87a1d7d93f">ANCH_REST_APPLICATION_SYMBOL</a>&#160;&#160;&#160;&quot;anch_rest_application&quot;</td></tr>
+<tr class="memitem:ad174f6c33b83403bf643359bc9b1909f" id="r_ad174f6c33b83403bf643359bc9b1909f"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#ad174f6c33b83403bf643359bc9b1909f">ANCH_REST_READ_ERROR</a>&#160;&#160;&#160;((size_t) -1)</td></tr>
+<tr class="memitem:a9d4e7be677eaa4d2208c6417d2e6b91b" id="r_a9d4e7be677eaa4d2208c6417d2e6b91b"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#a9d4e7be677eaa4d2208c6417d2e6b91b">ANCH_REST_UNKNOWN_LENGTH</a>&#160;&#160;&#160;(-1LL)</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-typedef-members" class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 Typedefs</h2></td></tr>
@@ -124,7 +127,9 @@ Typedefs</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>AnCH REST nginx module C ABI.<br  />
-An application is a shared library which exports <code>anch_rest_application</code> (see <code>ANCH_REST_APPLICATION</code> in <code><a class="el" href="nginx_application_8hpp_source.html">rest/nginxApplication.hpp</a></code> ). The nginx module loads it with <code>dlopen</code> , creates one application per worker process, and calls <code>handle</code> from nginx thread pool threads. </p>
+An application is a shared library which exports <code>anch_rest_application</code> (see <code>ANCH_REST_APPLICATION</code> in <code><a class="el" href="nginx_application_8hpp_source.html">rest/nginxApplication.hpp</a></code> ). The nginx module loads it with <code>dlopen</code> , creates one application per worker process, and calls <code>handle</code> from nginx thread pool threads (or from the event loop when thread pool is disabled).<br  />
+<br  />
+Request and response bodies are streamed: the application reads the request body with <a class="el" href="structanch__rest__body__reader__t.html" title="anch_rest_body_reader_t">anch_rest_body_reader_t</a> and writes the response with <a class="el" href="structanch__rest__response__writer__t.html" title="anch_rest_response_writer_t">anch_rest_response_writer_t</a> . In a thread pool, these functions block until nginx has received or sent data. </p>
 </div><a name="doc-define-members" id="doc-define-members"></a><h2 id="header-doc-define-members" class="groupheader">Macro Definition Documentation</h2>
 <a id="ab3d8de4d6989457f6a93cb87a1d7d93f" name="ab3d8de4d6989457f6a93cb87a1d7d93f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab3d8de4d6989457f6a93cb87a1d7d93f">&#9670;&#160;</a></span>ANCH_REST_APPLICATION_SYMBOL</h2>
@@ -148,11 +153,41 @@ An application is a shared library which exports <code>anch_rest_application</co
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define ANCH_REST_NGINX_ABI_VERSION&#160;&#160;&#160;1u</td>
+          <td class="memname">#define ANCH_REST_NGINX_ABI_VERSION&#160;&#160;&#160;2u</td>
         </tr>
       </table>
 </div><div class="memdoc">
 <p>ABI version: the module refuses applications with another version </p>
+
+</div>
+</div>
+<a id="ad174f6c33b83403bf643359bc9b1909f" name="ad174f6c33b83403bf643359bc9b1909f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad174f6c33b83403bf643359bc9b1909f">&#9670;&#160;</a></span>ANCH_REST_READ_ERROR</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define ANCH_REST_READ_ERROR&#160;&#160;&#160;((size_t) -1)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Error returned by <a class="el" href="structanch__rest__body__reader__t.html" title="anch_rest_body_reader_t">anch_rest_body_reader_t</a> read function </p>
+
+</div>
+</div>
+<a id="a9d4e7be677eaa4d2208c6417d2e6b91b" name="a9d4e7be677eaa4d2208c6417d2e6b91b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9d4e7be677eaa4d2208c6417d2e6b91b">&#9670;&#160;</a></span>ANCH_REST_UNKNOWN_LENGTH</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define ANCH_REST_UNKNOWN_LENGTH&#160;&#160;&#160;(-1LL)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Unknown response content length (body is sent with chunked transfer encoding) </p>
 
 </div>
 </div>

@@ -1,7 +1,9 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" title=" " alt="" coords="5,31,129,57"/>
-<area shape="rect" id="Node000001" href="$classanch_1_1device_1_1_device_exception.html" title="Device error." alt="" coords="177,5,379,32"/>
-<area shape="poly" id="edge93_Node000000_Node000001" title=" " alt="" coords="144,32,179,30,174,32,145,37"/>
-<area shape="rect" id="Node000002" href="$classanch_1_1network_1_1_i_o_exception.html" title="Network input/output error." alt="" coords="186,56,370,83"/>
-<area shape="poly" id="edge94_Node000000_Node000002" title=" " alt="" coords="144,51,189,58,183,59,144,56"/>
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,5,103,32"/>
+<area shape="rect" id="Node000001" href="$classanch_1_1cutils_1_1_c_i_o_stream.html" title=" " alt="" coords="165,5,327,32"/>
+<area shape="poly" id="edge88_Node000000_Node000001" title=" " alt="" coords="118,16,167,18,162,20,119,21"/>
+<area shape="rect" id="Node000002" href="$classanch_1_1network_1_1_tcp_stream.html" title="TCP connection as a std::iostream." alt="" coords="389,31,563,57"/>
+<area shape="poly" id="edge89_Node000001_Node000002" title=" " alt="" coords="342,27,391,34,386,34,342,32"/>
+<area shape="rect" id="Node000003" href="$structanch_1_1network_1_1_socket_holder.html" title="Socket owner base class of TcpStream." alt="" coords="151,56,341,83"/>
+<area shape="poly" id="edge90_Node000003_Node000002" title=" " alt="" coords="356,55,386,54,391,53,357,60"/>
 </map>

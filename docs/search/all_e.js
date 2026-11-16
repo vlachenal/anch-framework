@@ -16,7 +16,7 @@ var searchData=
   ['nginx_20module_13',['nginx module',['../page_rest.html#rest_nginx_sec',1,'']]],
   ['nonematch_14',['noneMatch',['../classanch_1_1_fluent.html#abc69b8466a06817c01b1b99b77d25c30',1,'anch::Fluent']]],
   ['noopstream_15',['NoopStream',['../classanch_1_1log_1_1_noop_stream.html',1,'anch::log']]],
-  ['nopadding_16',['NOPADDING',['../classanch_1_1crypto_1_1_base64.html#aa8d3d99bcb486e4434d1cc81a4f4ee91',1,'anch::crypto::Base64']]],
+  ['nopadding_16',['NOPADDING',['../classanch_1_1crypto_1_1_base64.html#aa8d3d99bcb486e4434d1cc81a4f4ee91',1,'anch::crypto::Base64::NOPADDING'],['../class_base64.html#aa8d3d99bcb486e4434d1cc81a4f4ee91',1,'Base64::NOPADDING']]],
   ['not_17',['NOT',['../classanch_1_1sql_1_1_clauses_builder.html#a8f3107a894ae66579f31f4a584799aa1',1,'anch::sql::ClausesBuilder']]],
   ['not_5ffound_18',['NOT_FOUND',['../namespaceanch_1_1rest.html#a537b7f4601ac49935bda8c0ea3f449eda8c02547a8a3b02382bac3557bcb2280d',1,'anch::rest']]],
   ['not_5floaded_19',['NOT_LOADED',['../classanch_1_1conf_1_1_conf_error.html#abab53c9d1f2453e51ae897e44e05b7a7a64d839b006f22e6c066be3e30d3a6d49',1,'anch::conf::ConfError']]],

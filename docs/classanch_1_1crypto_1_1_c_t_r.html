@@ -120,7 +120,7 @@ Public Member Functions</h2></td></tr>
 Protected Member Functions</h2></td></tr>
 <tr class="memitem:a5a30e819b0615a37ed9746e163f596c7" id="r_a5a30e819b0615a37ed9746e163f596c7"><td class="memItemLeft">virtual std::size_t&#160;</td><td class="memItemRight"><a class="el" href="#a5a30e819b0615a37ed9746e163f596c7">cipherBlock</a> (std::array&lt; uint8_t, Cipher::getBlockSize()&gt; &amp;input, std::streamsize nbRead, std::array&lt; uint8_t, Cipher::getBlockSize()&gt; &amp;output, uint32_t index, Cipher &amp;cipher) override</td></tr>
 <tr class="memitem:a5320d0e89145e292bdcdb3285cde94f1" id="r_a5320d0e89145e292bdcdb3285cde94f1"><td class="memItemLeft">virtual std::size_t&#160;</td><td class="memItemRight"><a class="el" href="#a5320d0e89145e292bdcdb3285cde94f1">decipherBlock</a> (std::array&lt; uint8_t, Cipher::getBlockSize()&gt; &amp;input, std::array&lt; uint8_t, Cipher::getBlockSize()&gt; &amp;, std::streamsize nbRead, bool, std::array&lt; uint8_t, Cipher::getBlockSize()&gt; &amp;output, uint32_t index, Cipher &amp;cipher) override</td></tr>
-<tr class="memitem:a939eadadb9932ab9ebf91c05576e89f4" id="r_a939eadadb9932ab9ebf91c05576e89f4"><td class="memItemLeft">virtual const std::array&lt; uint8_t, Cipher::getBlockSize()&gt; &amp;&#160;</td><td class="memItemRight"><a class="el" href="#a939eadadb9932ab9ebf91c05576e89f4">reset</a> ()</td></tr>
+<tr class="memitem:af7e83fb460fd0c48c848c869edc78030" id="r_af7e83fb460fd0c48c848c869edc78030"><td class="memItemLeft">virtual const std::array&lt; uint8_t, Cipher::getBlockSize()&gt; &amp;&#160;</td><td class="memItemRight"><a class="el" href="#af7e83fb460fd0c48c848c869edc78030">reset</a> () override</td></tr>
 <tr class="inherit_header pro_methods_classanch_1_1crypto_1_1_block_cipher_mode_of_operation"><td colspan="2" class="dyn-inherit"><span class="dynarrow"><span class="arrowhead closed"></span></span>Protected Member Functions inherited from <a class="el" href="classanch_1_1crypto_1_1_block_cipher_mode_of_operation.html">anch::crypto::BlockCipherModeOfOperation&lt; CTR&lt; Cipher &gt;, Cipher &gt;</a></td></tr>
 <tr class="memitem:a782b2bfffec17fe256013dcb0f271f55 inherit pro_methods_classanch_1_1crypto_1_1_block_cipher_mode_of_operation" id="r_a782b2bfffec17fe256013dcb0f271f55"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="classanch_1_1crypto_1_1_block_cipher_mode_of_operation.html#a782b2bfffec17fe256013dcb0f271f55">BlockCipherModeOfOperation</a> (bool cipherParallelizable, bool decipherParallelizable, unsigned int nbThread=1)</td></tr>
 <tr class="memitem:ac76988b8207fd6d59b73423f3e90ddb1 inherit pro_methods_classanch_1_1crypto_1_1_block_cipher_mode_of_operation" id="r_ac76988b8207fd6d59b73423f3e90ddb1"><td class="memItemLeft">virtual&#160;</td><td class="memItemRight"><a class="el" href="classanch_1_1crypto_1_1_block_cipher_mode_of_operation.html#ac76988b8207fd6d59b73423f3e90ddb1">~BlockCipherModeOfOperation</a> ()</td></tr>
@@ -342,8 +342,8 @@ This method will handle initialization vector management.</p>
 
 </div>
 </div>
-<a id="a939eadadb9932ab9ebf91c05576e89f4" name="a939eadadb9932ab9ebf91c05576e89f4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a939eadadb9932ab9ebf91c05576e89f4">&#9670;&#160;</a></span>reset()</h2>
+<a id="af7e83fb460fd0c48c848c869edc78030" name="af7e83fb460fd0c48c848c869edc78030"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af7e83fb460fd0c48c848c869edc78030">&#9670;&#160;</a></span>reset()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -362,7 +362,7 @@ template&lt;typename Cipher&gt; </div>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel protected">protected</span><span class="mlabel virtual">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel override">override</span><span class="mlabel protected">protected</span><span class="mlabel virtual">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">

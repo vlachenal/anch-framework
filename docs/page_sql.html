@@ -113,11 +113,14 @@ Prepared statements</h2>
  Every parameter has to be bound before execution ; <code>NULL</code> is bound with <code>setNull</code> , a <code>NULL</code> pointer or an empty <code>std::optional</code> .</p>
 <h2 class="doxsection"><a class="anchor" id="sql_conception_errors_sec"></a>
 Errors</h2>
-<p>Errors raise <a class="el" href="classanch_1_1sql_1_1_sql_exception.html" title="anch::sql::SqlException">SqlException</a> and are reported to the connection, from its prepared statements and result sets too. A fatal error (<code>SqlException::isOK</code> is <code>false</code> : connection lost or killed, server shutdown, out of memory, protocol error) invalidates the connection. Other errors keep it valid, and its current transaction is rolled back when it is released.</p>
+<p>Errors raise <a class="el" href="classanch_1_1sql_1_1_sql_exception.html" title="anch::sql::SqlException">SqlException</a> and are reported to the connection, from its prepared statements and result sets too. A fatal error (<code>SqlException::isOK</code> is <code>false</code> : connection lost or killed, server shutdown, out of memory, protocol error) invalidates the connection. Other errors keep it valid.</p>
+<h2 class="doxsection"><a class="anchor" id="sql_conception_transactions_sec"></a>
+Transactions</h2>
+<p>Without <code>Connection::startTransaction</code> (or <code>begin</code> ), each query is committed by the database (auto-commit mode). A transaction is committed only by <code>Connection::commit</code> : a transaction which is not ended when the connection is released (returned to its pool or destroyed) is rolled back, with or without error, so that an application exception between two queries does not commit partial work.</p>
 <h2 class="doxsection"><a class="anchor" id="sql_conception_pool_sec"></a>
 SQL connection pool</h2>
 <p>SQL connection pools are configured in configuration file dbCon.conf<br  />
- When a connection is returned to its pool, <code>Connection::release</code> ends its transaction (rollback after an error, commit otherwise), then invalid connections are destroyed instead of being reused.</p>
+ When a connection is returned to its pool, <code>Connection::release</code> rolls back its unfinished transaction, then invalid connections are destroyed instead of being reused.</p>
 <h2 class="doxsection"><a class="anchor" id="sql_conception_stmt_cache_sec"></a>
 Prepared statements cache</h2>
 <p>Each connection keeps its prepared statements in a bounded cache (<code>statement-cache-size</code> key of the connection section, <code>256</code> by default, <code>Connection::setStatementCacheSize</code> ). The least recently used statement is evicted and deallocated on the server side when the cache is full ; a statement is not evicted while one of its result sets is alive. Queries built with literal values (<code>IN</code> lists of the builder for example) are distinct cache entries: bind values with <code></code>? placeholders whenever possible.</p>
@@ -128,6 +131,8 @@ Example</h1>
 <div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;functional&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;list&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;optional&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;string&gt;</span></div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">using </span><a class="code hl_class" href="classanch_1_1sql_1_1_connection.html">anch::sql::Connection</a>;</div>
 <div class="line"><span class="keyword">using </span><a class="code hl_class" href="classanch_1_1sql_1_1_postgre_s_q_l_connection.html">anch::sql::PostgreSQLConnection</a>;</div>
@@ -164,19 +169,30 @@ Example</h1>
 <div class="line">  std::cout &lt;&lt; <span class="stringliteral">&quot;Enter in PostgreSQL unit tests&quot;</span> &lt;&lt; std::endl &lt;&lt; std::endl;</div>
 <div class="line"> </div>
 <div class="line">  <span class="keywordflow">try</span> {</div>
-<div class="line">    PostgreSQLConnection dbCon(<span class="stringliteral">&quot;localhost&quot;</span>,</div>
-<div class="line">                               <span class="stringliteral">&quot;anch&quot;</span>,</div>
-<div class="line">                               <span class="stringliteral">&quot;anch&quot;</span>,</div>
-<div class="line">                               <span class="stringliteral">&quot;anch_test&quot;</span>,</div>
-<div class="line">                               5432);</div>
+<div class="line">    <a class="code hl_struct" href="structanch_1_1sql_1_1_sql_connection_configuration.html">anch::sql::SqlConnectionConfiguration</a> config;</div>
+<div class="line">    config.<a class="code hl_variable" href="structanch_1_1sql_1_1_sql_connection_configuration.html#a1bf43aadc0328ac47863c6848ee20518">driver</a> = <span class="stringliteral">&quot;PostgreSQL&quot;</span>;</div>
+<div class="line">    config.<a class="code hl_variable" href="structanch_1_1sql_1_1_sql_connection_configuration.html#af43be13d3b058a16475f95f053b5cefd">database</a> = <span class="stringliteral">&quot;anch_test&quot;</span>;</div>
+<div class="line">    config.<a class="code hl_variable" href="structanch_1_1sql_1_1_sql_connection_configuration.html#a8541600f17f143e77dda93f05f89c9da">hostname</a> = <span class="stringliteral">&quot;localhost&quot;</span>;</div>
+<div class="line">    config.<a class="code hl_variable" href="structanch_1_1sql_1_1_sql_connection_configuration.html#a83331953bd125ac72fe7589d2bc57fec">port</a> = 5432;</div>
+<div class="line">    config.<a class="code hl_variable" href="structanch_1_1sql_1_1_sql_connection_configuration.html#ad11afc04bcae1a6d4feeace3cfa7a3ad">user</a> = <span class="stringliteral">&quot;anch&quot;</span>;</div>
+<div class="line">    config.<a class="code hl_variable" href="structanch_1_1sql_1_1_sql_connection_configuration.html#a4f574e8bb8c3287ae5a123a83532126d">password</a> = <span class="stringliteral">&quot;anch&quot;</span>;</div>
+<div class="line">    PostgreSQLConnection dbCon(config);</div>
 <div class="line">    std::cout &lt;&lt; <span class="stringliteral">&quot;Connected to database&quot;</span> &lt;&lt; std::endl;</div>
-<div class="line">    dbCon.setAutoCommit(<span class="keyword">false</span>);</div>
-<div class="line">    std::cout &lt;&lt; <span class="stringliteral">&quot;Auto commit set to false&quot;</span> &lt;&lt; std::endl;</div>
-<div class="line">    dbCon.commit();</div>
-<div class="line">    std::cout &lt;&lt; <span class="stringliteral">&quot;Commit no transaction ...&quot;</span> &lt;&lt; std::endl;</div>
-<div class="line">    dbCon.rollback();</div>
-<div class="line">    std::cout &lt;&lt; <span class="stringliteral">&quot;Rollback no transaction ...&quot;</span> &lt;&lt; std::endl;</div>
-<div class="line">    dbCon.setAutoCommit(<span class="keyword">true</span>);</div>
+<div class="line"> </div>
+<div class="line">    <span class="comment">// Without transaction, each query is committed by the database (auto-commit mode)</span></div>
+<div class="line">    dbCon.update(<span class="stringliteral">&quot;UPDATE T_Test SET email = ? WHERE first_name = ?&quot;</span>, <span class="stringliteral">&quot;john@anch.org&quot;</span>, <span class="stringliteral">&quot;John&quot;</span>);</div>
+<div class="line"> </div>
+<div class="line">    <span class="comment">// A transaction is committed only by commit(): an unfinished transaction is rolled back when the connection is</span></div>
+<div class="line">    <span class="comment">// released (returned to its pool or destroyed), even without SQL error</span></div>
+<div class="line">    dbCon.begin();</div>
+<div class="line">    <span class="keywordflow">try</span> {</div>
+<div class="line">      dbCon.update(<span class="stringliteral">&quot;INSERT INTO T_Test (first_name,last_name,birth_date) VALUES (?,?,?)&quot;</span>, <span class="stringliteral">&quot;Jane&quot;</span>, <span class="stringliteral">&quot;Doe&quot;</span>, <span class="stringliteral">&quot;1971-01-01&quot;</span>);</div>
+<div class="line">      dbCon.update(<span class="stringliteral">&quot;INSERT INTO T_Test (first_name,last_name,birth_date) VALUES (?,?,?)&quot;</span>, <span class="stringliteral">&quot;Jack&quot;</span>, <span class="stringliteral">&quot;Doe&quot;</span>, <span class="stringliteral">&quot;1972-01-01&quot;</span>);</div>
+<div class="line">      dbCon.commit();</div>
+<div class="line">    } <span class="keywordflow">catch</span>(...) {</div>
+<div class="line">      dbCon.rollback();</div>
+<div class="line">      <span class="keywordflow">throw</span>;</div>
+<div class="line">    }</div>
 <div class="line"> </div>
 <div class="line">    std::cout &lt;&lt; std::endl;</div>
 <div class="line"> </div>
@@ -186,27 +202,16 @@ Example</h1>
 <div class="line">    std::string nullStr(<span class="stringliteral">&quot;NULL&quot;</span>);</div>
 <div class="line">    <span class="keywordflow">while</span>(res-&gt;next()) {</div>
 <div class="line">      std::cout &lt;&lt; <span class="stringliteral">&quot;Row &quot;</span> &lt;&lt; row &lt;&lt; std::endl;</div>
-<div class="line">      <span class="keyword">const</span> uint32_t* <span class="keywordtype">id</span> = res-&gt;get&lt;uint32_t&gt;(0);</div>
-<div class="line">      std::cout &lt;&lt; <span class="stringliteral">&quot;id=&quot;</span>;</div>
-<div class="line">      <span class="keywordflow">if</span>(<span class="keywordtype">id</span> == NULL) {</div>
-<div class="line">        std::cout &lt;&lt; <span class="stringliteral">&quot;NULL&quot;</span>;</div>
-<div class="line">      } <span class="keywordflow">else</span> {</div>
-<div class="line">        std::cout &lt;&lt; *id;</div>
-<div class="line">      }</div>
-<div class="line">      std::cout &lt;&lt; std::endl;</div>
-<div class="line">      <span class="keyword">delete</span> id;</div>
-<div class="line">      <span class="keyword">const</span> std::string* fName = res-&gt;get&lt;std::string&gt;(1);</div>
-<div class="line">      std::cout &lt;&lt; <span class="stringliteral">&quot;first name=&quot;</span> &lt;&lt; (fName == NULL ? nullStr : *fName) &lt;&lt; std::endl;</div>
-<div class="line">      <span class="keyword">delete</span> fName;</div>
-<div class="line">      <span class="keyword">const</span> std::string* lName = res-&gt;get&lt;std::string&gt;(2);</div>
-<div class="line">      std::cout &lt;&lt; <span class="stringliteral">&quot;last name=&quot;</span> &lt;&lt; (lName == NULL ? nullStr : *lName) &lt;&lt; std::endl;</div>
-<div class="line">      <span class="keyword">delete</span> lName;</div>
-<div class="line">      <span class="keyword">const</span> std::string* bDate = res-&gt;get&lt;std::string&gt;(<span class="stringliteral">&quot;birth_date&quot;</span>);</div>
-<div class="line">      std::cout &lt;&lt; <span class="stringliteral">&quot;birth date=&quot;</span> &lt;&lt; (bDate == NULL ? nullStr : *bDate) &lt;&lt; std::endl;</div>
-<div class="line">      <span class="keyword">delete</span> bDate;</div>
-<div class="line">      <span class="keyword">const</span> std::string* email = res-&gt;get&lt;std::string&gt;(4);</div>
-<div class="line">      std::cout &lt;&lt; <span class="stringliteral">&quot;email=&quot;</span> &lt;&lt; (email == NULL ? nullStr : *email) &lt;&lt; std::endl;</div>
-<div class="line">      <span class="keyword">delete</span> email;</div>
+<div class="line">      std::optional&lt;uint32_t&gt; <span class="keywordtype">id</span> = res-&gt;get&lt;uint32_t&gt;(0);</div>
+<div class="line">      std::cout &lt;&lt; <span class="stringliteral">&quot;id=&quot;</span> &lt;&lt; (<span class="keywordtype">id</span> ? std::to_string(*<span class="keywordtype">id</span>) : nullStr) &lt;&lt; std::endl;</div>
+<div class="line">      std::optional&lt;std::string&gt; fName = res-&gt;get&lt;std::string&gt;(1);</div>
+<div class="line">      std::cout &lt;&lt; <span class="stringliteral">&quot;first name=&quot;</span> &lt;&lt; fName.value_or(nullStr) &lt;&lt; std::endl;</div>
+<div class="line">      std::optional&lt;std::string&gt; lName = res-&gt;get&lt;std::string&gt;(2);</div>
+<div class="line">      std::cout &lt;&lt; <span class="stringliteral">&quot;last name=&quot;</span> &lt;&lt; lName.value_or(nullStr) &lt;&lt; std::endl;</div>
+<div class="line">      std::optional&lt;std::string&gt; bDate = res-&gt;get&lt;std::string&gt;(<span class="stringliteral">&quot;birth_date&quot;</span>);</div>
+<div class="line">      std::cout &lt;&lt; <span class="stringliteral">&quot;birth date=&quot;</span> &lt;&lt; bDate.value_or(nullStr) &lt;&lt; std::endl;</div>
+<div class="line">      std::optional&lt;std::string&gt; email = res-&gt;get&lt;std::string&gt;(4);</div>
+<div class="line">      std::cout &lt;&lt; <span class="stringliteral">&quot;email=&quot;</span> &lt;&lt; email.value_or(nullStr) &lt;&lt; std::endl;</div>
 <div class="line">      row++;</div>
 <div class="line">    }</div>
 <div class="line">    <span class="keyword">delete</span> res;</div>
@@ -262,10 +267,17 @@ Example</h1>
 <div class="line">  std::cout &lt;&lt; <span class="stringliteral">&quot;Exit PostgreSQL unit tests&quot;</span> &lt;&lt; std::endl;</div>
 <div class="line">  <span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>
-<div class="ttc" id="aclassanch_1_1sql_1_1_connection_html"><div class="ttname"><a href="classanch_1_1sql_1_1_connection.html">anch::sql::Connection</a></div><div class="ttdoc">SQL connection virtual class.</div><div class="ttdef"><b>Definition</b> connection.hpp:100</div></div>
+<div class="ttc" id="aclassanch_1_1sql_1_1_connection_html"><div class="ttname"><a href="classanch_1_1sql_1_1_connection.html">anch::sql::Connection</a></div><div class="ttdoc">SQL connection virtual class.</div><div class="ttdef"><b>Definition</b> connection.hpp:103</div></div>
 <div class="ttc" id="aclassanch_1_1sql_1_1_postgre_s_q_l_connection_html"><div class="ttname"><a href="classanch_1_1sql_1_1_postgre_s_q_l_connection.html">anch::sql::PostgreSQLConnection</a></div><div class="ttdoc">PostgreSQL connection.</div><div class="ttdef"><b>Definition</b> postgresqlConnection.hpp:69</div></div>
 <div class="ttc" id="aclassanch_1_1sql_1_1_result_set_html"><div class="ttname"><a href="classanch_1_1sql_1_1_result_set.html">anch::sql::ResultSet</a></div><div class="ttdoc">SQL result representation.</div><div class="ttdef"><b>Definition</b> resultSet.hpp:54</div></div>
 <div class="ttc" id="aclassanch_1_1sql_1_1_sql_exception_html"><div class="ttname"><a href="classanch_1_1sql_1_1_sql_exception.html">anch::sql::SqlException</a></div><div class="ttdoc">SQL exception.</div><div class="ttdef"><b>Definition</b> sqlException.hpp:37</div></div>
+<div class="ttc" id="astructanch_1_1sql_1_1_sql_connection_configuration_html"><div class="ttname"><a href="structanch_1_1sql_1_1_sql_connection_configuration.html">anch::sql::SqlConnectionConfiguration</a></div><div class="ttdoc">SQL database connection configuration.</div><div class="ttdef"><b>Definition</b> connection.hpp:51</div></div>
+<div class="ttc" id="astructanch_1_1sql_1_1_sql_connection_configuration_html_a1bf43aadc0328ac47863c6848ee20518"><div class="ttname"><a href="structanch_1_1sql_1_1_sql_connection_configuration.html#a1bf43aadc0328ac47863c6848ee20518">anch::sql::SqlConnectionConfiguration::driver</a></div><div class="ttdeci">std::string driver</div><div class="ttdef"><b>Definition</b> connection.hpp:53</div></div>
+<div class="ttc" id="astructanch_1_1sql_1_1_sql_connection_configuration_html_a4f574e8bb8c3287ae5a123a83532126d"><div class="ttname"><a href="structanch_1_1sql_1_1_sql_connection_configuration.html#a4f574e8bb8c3287ae5a123a83532126d">anch::sql::SqlConnectionConfiguration::password</a></div><div class="ttdeci">std::string password</div><div class="ttdef"><b>Definition</b> connection.hpp:68</div></div>
+<div class="ttc" id="astructanch_1_1sql_1_1_sql_connection_configuration_html_a83331953bd125ac72fe7589d2bc57fec"><div class="ttname"><a href="structanch_1_1sql_1_1_sql_connection_configuration.html#a83331953bd125ac72fe7589d2bc57fec">anch::sql::SqlConnectionConfiguration::port</a></div><div class="ttdeci">int port</div><div class="ttdef"><b>Definition</b> connection.hpp:62</div></div>
+<div class="ttc" id="astructanch_1_1sql_1_1_sql_connection_configuration_html_a8541600f17f143e77dda93f05f89c9da"><div class="ttname"><a href="structanch_1_1sql_1_1_sql_connection_configuration.html#a8541600f17f143e77dda93f05f89c9da">anch::sql::SqlConnectionConfiguration::hostname</a></div><div class="ttdeci">std::string hostname</div><div class="ttdef"><b>Definition</b> connection.hpp:59</div></div>
+<div class="ttc" id="astructanch_1_1sql_1_1_sql_connection_configuration_html_ad11afc04bcae1a6d4feeace3cfa7a3ad"><div class="ttname"><a href="structanch_1_1sql_1_1_sql_connection_configuration.html#ad11afc04bcae1a6d4feeace3cfa7a3ad">anch::sql::SqlConnectionConfiguration::user</a></div><div class="ttdeci">std::string user</div><div class="ttdef"><b>Definition</b> connection.hpp:65</div></div>
+<div class="ttc" id="astructanch_1_1sql_1_1_sql_connection_configuration_html_af43be13d3b058a16475f95f053b5cefd"><div class="ttname"><a href="structanch_1_1sql_1_1_sql_connection_configuration.html#af43be13d3b058a16475f95f053b5cefd">anch::sql::SqlConnectionConfiguration::database</a></div><div class="ttdeci">std::string database</div><div class="ttdef"><b>Definition</b> connection.hpp:56</div></div>
 </div><!-- fragment --><p>Pool configuration example: </p><div class="fragment"><div class="line">[<a class="code hl_namespace" href="namespaceanch_1_1sql.html">anch::sql</a>.anch_mysql]</div>
 <div class="line">driver=MySQL</div>
 <div class="line">host=localhost</div>

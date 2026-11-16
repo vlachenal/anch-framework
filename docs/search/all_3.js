@@ -99,10 +99,11 @@ var searchData=
   ['cryptography_20library_20documentation_96',['AnCH cryptography library documentation',['../page_crypto.html',1,'']]],
   ['cstreambuf_97',['CStreambuf',['../classanch_1_1cutils_1_1_c_streambuf.html',1,'anch::cutils::CStreambuf'],['../classanch_1_1cutils_1_1_c_streambuf.html#a2d5d3dcefdaba1650f1aefe2c0a15567',1,'anch::cutils::CStreambuf::CStreambuf(const anch::cutils::cbuffer &amp;cbuffer, anch::cutils::Direction dir)'],['../classanch_1_1cutils_1_1_c_streambuf.html#adba933a80104959fdf3d8511a66f6afb',1,'anch::cutils::CStreambuf::CStreambuf() noexcept'],['../classanch_1_1cutils_1_1_c_streambuf.html#a4ab470ece68bf1c6bce52d5a21ca16f4',1,'anch::cutils::CStreambuf::CStreambuf(const CStreambuf &amp;)=delete']]],
   ['ctr_98',['CTR',['../classanch_1_1crypto_1_1_c_t_r.html',1,'anch::crypto::CTR&lt; Cipher &gt;'],['../classanch_1_1crypto_1_1_c_t_r.html#a2497e8c0f562f176b10a8559d5936d0e',1,'anch::crypto::CTR::CTR()']]],
-  ['curltransport_99',['CurlTransport',['../classanch_1_1rest_1_1_curl_transport.html',1,'anch::rest::CurlTransport'],['../classanch_1_1rest_1_1_curl_transport.html#a82f349fc6e9482d0341a618a295c043d',1,'anch::rest::CurlTransport::CurlTransport(anch::rest::TransportConfig config=anch::rest::TransportConfig())'],['../classanch_1_1rest_1_1_curl_transport.html#a0e2e429ce75e931583fd1669d51cc026',1,'anch::rest::CurlTransport::CurlTransport(const CurlTransport &amp;)=delete']]],
-  ['custom_100',['Custom',['../structanch_1_1json_1_1_custom.html',1,'anch::json']]],
-  ['custom_101',['custom',['../namespaceanch_1_1json.html#acb28aa32184d615cab414bdb44bf45df',1,'anch::json']]],
-  ['cutils_20library_20documentation_102',['AnCH CUtils library documentation',['../page_cutils.html',1,'']]],
-  ['cyan_103',['CYAN',['../namespaceanch_1_1cli.html#ab4a823e5d1e55628b319225775da39d8a344dd8cd533280795b9db82ef0c92749',1,'anch::cli']]],
-  ['cycle_104',['CYCLE',['../classanch_1_1conf_1_1_conf_error.html#abab53c9d1f2453e51ae897e44e05b7a7a11729ccb73dc5f4f62d40435e8a0c078',1,'anch::conf::ConfError']]]
+  ['ctx_99',['ctx',['../structanch__rest__body__reader__t.html#aa354e5f8160f5c0e48668d044c98aa64',1,'anch_rest_body_reader_t::ctx'],['../structanch__rest__response__writer__t.html#a5b634a8618fefc846ee1d4eefd15ffd9',1,'anch_rest_response_writer_t::ctx']]],
+  ['curltransport_100',['CurlTransport',['../classanch_1_1rest_1_1_curl_transport.html',1,'anch::rest::CurlTransport'],['../classanch_1_1rest_1_1_curl_transport.html#a82f349fc6e9482d0341a618a295c043d',1,'anch::rest::CurlTransport::CurlTransport(anch::rest::TransportConfig config=anch::rest::TransportConfig())'],['../classanch_1_1rest_1_1_curl_transport.html#a0e2e429ce75e931583fd1669d51cc026',1,'anch::rest::CurlTransport::CurlTransport(const CurlTransport &amp;)=delete']]],
+  ['custom_101',['Custom',['../structanch_1_1json_1_1_custom.html',1,'anch::json']]],
+  ['custom_102',['custom',['../namespaceanch_1_1json.html#acb28aa32184d615cab414bdb44bf45df',1,'anch::json']]],
+  ['cutils_20library_20documentation_103',['AnCH CUtils library documentation',['../page_cutils.html',1,'']]],
+  ['cyan_104',['CYAN',['../namespaceanch_1_1cli.html#ab4a823e5d1e55628b319225775da39d8a344dd8cd533280795b9db82ef0c92749',1,'anch::cli']]],
+  ['cycle_105',['CYCLE',['../classanch_1_1conf_1_1_conf_error.html#abab53c9d1f2453e51ae897e44e05b7a7a11729ccb73dc5f4f62d40435e8a0c078',1,'anch::conf::ConfError']]]
 ];

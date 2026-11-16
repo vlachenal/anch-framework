@@ -252,10 +252,12 @@ var annotated_dup =
       [ "hash&lt; anch::UUID &gt;", "structstd_1_1hash_3_01anch_1_1_u_u_i_d_01_4.html", "structstd_1_1hash_3_01anch_1_1_u_u_i_d_01_4" ]
     ] ],
     [ "anch_rest_application_t", "structanch__rest__application__t.html", "structanch__rest__application__t" ],
+    [ "anch_rest_body_reader_t", "structanch__rest__body__reader__t.html", "structanch__rest__body__reader__t" ],
     [ "anch_rest_header_t", "structanch__rest__header__t.html", "structanch__rest__header__t" ],
     [ "anch_rest_request_t", "structanch__rest__request__t.html", "structanch__rest__request__t" ],
-    [ "anch_rest_response_t", "structanch__rest__response__t.html", "structanch__rest__response__t" ],
+    [ "anch_rest_response_writer_t", "structanch__rest__response__writer__t.html", "structanch__rest__response__writer__t" ],
     [ "anch_rest_str_t", "structanch__rest__str__t.html", "structanch__rest__str__t" ],
+    [ "Base64", "class_base64.html", "class_base64" ],
     [ "ErrorObserver", "class_error_observer.html", "class_error_observer" ],
     [ "FormatterOptions", "struct_formatter_options.html", "struct_formatter_options" ],
     [ "GeneratorOptions", "struct_generator_options.html", "struct_generator_options" ],
@@ -263,6 +265,7 @@ var annotated_dup =
     [ "JSONItem", "class_j_s_o_n_item.html", "class_j_s_o_n_item" ],
     [ "MappingError", "class_mapping_error.html", "class_mapping_error" ],
     [ "MappingOptions", "struct_mapping_options.html", "struct_mapping_options" ],
+    [ "Pet", "struct_pet.html", null ],
     [ "Reader", "class_reader.html", "class_reader" ],
     [ "ReaderContext", "class_reader_context.html", "class_reader_context" ],
     [ "WriterContext", "class_writer_context.html", "class_writer_context" ]

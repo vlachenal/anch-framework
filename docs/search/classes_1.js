@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['base64_0',['Base64',['../classanch_1_1crypto_1_1_base64.html',1,'anch::crypto']]],
+  ['base64_0',['Base64',['../classanch_1_1crypto_1_1_base64.html',1,'anch::crypto::Base64'],['../class_base64.html',1,'Base64']]],
   ['blockcipher_1',['BlockCipher',['../classanch_1_1crypto_1_1_block_cipher.html',1,'anch::crypto']]],
   ['blockcipher_3c_2016_20_3e_2',['BlockCipher&lt; 16 &gt;',['../classanch_1_1crypto_1_1_block_cipher.html',1,'anch::crypto']]],
   ['blockciphermodeofoperation_3',['BlockCipherModeOfOperation',['../classanch_1_1crypto_1_1_block_cipher_mode_of_operation.html',1,'anch::crypto']]],

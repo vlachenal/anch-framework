@@ -374,7 +374,7 @@ Parsing requires every field to have its exact size (no sign, no space) ; fields
 <dl class="section return"><dt>Returns</dt><dd>the date</dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname">std::invalid_argument</td><td>invalid format or impossible date </td></tr>
+    <tr><td class="paramname">std::invalid_argument</td><td>invalid format, impossible date or date out of range (years 1678 to 2261) </td></tr>
   </table>
   </dd>
 </dl>
@@ -415,7 +415,7 @@ Parsing requires every field to have its exact size (no sign, no space) ; fields
 </dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname">std::invalid_argument</td><td>invalid format or impossible date </td></tr>
+    <tr><td class="paramname">std::invalid_argument</td><td>invalid format, impossible date or date out of range (years 1678 to 2261) </td></tr>
   </table>
   </dd>
 </dl>

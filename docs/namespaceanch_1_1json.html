@@ -188,6 +188,7 @@ Enumerations</h2></td></tr>
 , <a class="el" href="#a56742fecea7bc19952b3e35c013ad931ac6d316099c81f4839ad197599d20edbd">MISSING_FIELD</a>
 , <br />
 &#160;&#160;<a class="el" href="#a56742fecea7bc19952b3e35c013ad931a1d67a525f6cada988939ffdd393cae45">CONSTRAINT_VIOLATION</a>
+, <a class="el" href="#a56742fecea7bc19952b3e35c013ad931ac379e50491099134897f11767ac77544">PAYLOAD_TOO_LARGE</a>
 , <a class="el" href="#a56742fecea7bc19952b3e35c013ad931a696b031073e74bf2cb98e5ef201d4aa3">UNKNOWN</a> = 9999
 <br />
  }</td></tr>
@@ -266,6 +267,8 @@ Functions</h2></td></tr>
 <tr class="memitem:af4d47efb5e9e4ba7b5e69671327d4e0b template"><td class="memItemLeft">T&#160;</td><td class="memItemRight"><a class="el" href="#af4d47efb5e9e4ba7b5e69671327d4e0b">deserialize</a> (std::istream &amp;input, const <a class="el" href="structanch_1_1json_1_1_mapping_options.html">anch::json::MappingOptions</a> &amp;options=<a class="el" href="#aa7e486a58287e946e65821fb429efa2c">anch::json::DEFAULT_MAPPING_OPTIONS</a>)</td></tr>
 <tr class="memitem:a732db6b30dcfc8c0a7c2294754d273e0" id="r_a732db6b30dcfc8c0a7c2294754d273e0"><td class="memTemplParams" colspan="2">template&lt;template&lt; typename &gt; typename C, typename T&gt; </td></tr>
 <tr class="memitem:a732db6b30dcfc8c0a7c2294754d273e0 template"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a732db6b30dcfc8c0a7c2294754d273e0">deserialize</a> (C&lt; T &gt; &amp;values, std::istream &amp;input, const <a class="el" href="structanch_1_1json_1_1_mapping_options.html">anch::json::MappingOptions</a> &amp;options=<a class="el" href="#aa7e486a58287e946e65821fb429efa2c">anch::json::DEFAULT_MAPPING_OPTIONS</a>)</td></tr>
+<tr class="memitem:a4395fd25fad50cecde91b741c992a2de" id="r_a4395fd25fad50cecde91b741c992a2de"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
+<tr class="memitem:a4395fd25fad50cecde91b741c992a2de template"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a4395fd25fad50cecde91b741c992a2de">deserialize</a> (<a class="el" href="classanch_1_1_flux.html">anch::Flux</a>&lt; T &gt; &amp;values, std::istream &amp;input, const <a class="el" href="structanch_1_1json_1_1_mapping_options.html">anch::json::MappingOptions</a> &amp;options=<a class="el" href="#aa7e486a58287e946e65821fb429efa2c">anch::json::DEFAULT_MAPPING_OPTIONS</a>)</td></tr>
 <tr class="memitem:a665a9fb52489454a2edaee1d2ecd56b1" id="r_a665a9fb52489454a2edaee1d2ecd56b1"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
 <tr class="memitem:a665a9fb52489454a2edaee1d2ecd56b1 template"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a665a9fb52489454a2edaee1d2ecd56b1">deserialize</a> (std::map&lt; std::string, T &gt; &amp;values, std::istream &amp;input, const <a class="el" href="structanch_1_1json_1_1_mapping_options.html">anch::json::MappingOptions</a> &amp;options=<a class="el" href="#aa7e486a58287e946e65821fb429efa2c">anch::json::DEFAULT_MAPPING_OPTIONS</a>)</td></tr>
 <tr class="memitem:a2f812b2021d81115b2f2724aa51cac46" id="r_a2f812b2021d81115b2f2724aa51cac46"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a2f812b2021d81115b2f2724aa51cac46">lexTrue</a> (<a class="el" href="classanch_1_1json_1_1_reader_context.html">anch::json::ReaderContext</a> &amp;context)</td></tr>
@@ -281,6 +284,7 @@ Functions</h2></td></tr>
 <tr class="memitem:ae4803c49f2b0ceee7a8f005fb275e0c8" id="r_ae4803c49f2b0ceee7a8f005fb275e0c8"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#ae4803c49f2b0ceee7a8f005fb275e0c8">lexString</a> (std::string &amp;value, <a class="el" href="classanch_1_1json_1_1_reader_context.html">anch::json::ReaderContext</a> &amp;context)</td></tr>
 <tr class="memitem:ae18820e7250822525711e46a0b92ad53" id="r_ae18820e7250822525711e46a0b92ad53"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#ae18820e7250822525711e46a0b92ad53">lexField</a> (std::string &amp;field, <a class="el" href="classanch_1_1json_1_1_reader_context.html">anch::json::ReaderContext</a> &amp;context)</td></tr>
 <tr class="memitem:ac05d1e060de2a8cc00bd43b5019f0ab9" id="r_ac05d1e060de2a8cc00bd43b5019f0ab9"><td class="memItemLeft">char&#160;</td><td class="memItemRight"><a class="el" href="#ac05d1e060de2a8cc00bd43b5019f0ab9">discardFail</a> (<a class="el" href="classanch_1_1json_1_1_reader_context.html">anch::json::ReaderContext</a> &amp;context)</td></tr>
+<tr class="memitem:a33030ef3c327e13357fd3f312139a8a4" id="r_a33030ef3c327e13357fd3f312139a8a4"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a33030ef3c327e13357fd3f312139a8a4">lexEnd</a> (<a class="el" href="classanch_1_1json_1_1_reader_context.html">anch::json::ReaderContext</a> &amp;context)</td></tr>
 <tr class="memitem:a39ce800f60845478d2c7530edd97b251" id="r_a39ce800f60845478d2c7530edd97b251"><td class="memItemLeft">char&#160;</td><td class="memItemRight"><a class="el" href="#a39ce800f60845478d2c7530edd97b251">lexDiscard</a> (<a class="el" href="classanch_1_1json_1_1_reader_context.html">anch::json::ReaderContext</a> &amp;context)</td></tr>
 <tr class="memitem:ab634797b158c82813d54f5785584eceb" id="r_ab634797b158c82813d54f5785584eceb"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#ab634797b158c82813d54f5785584eceb">lexNull</a> (<a class="el" href="classanch_1_1json_1_1_reader_context.html">anch::json::ReaderContext</a> &amp;context)</td></tr>
 <tr class="memitem:a09c93e5b43f51f0d0e72d182c8acba7c" id="r_a09c93e5b43f51f0d0e72d182c8acba7c"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#a09c93e5b43f51f0d0e72d182c8acba7c">objectHasValueLex</a> (<a class="el" href="classanch_1_1json_1_1_reader_context.html">anch::json::ReaderContext</a> &amp;context)</td></tr>
@@ -516,6 +520,9 @@ template&lt;typename T&gt; </div>
 <tr><td class="fieldname"><a id="a56742fecea7bc19952b3e35c013ad931a1d67a525f6cada988939ffdd393cae45" name="a56742fecea7bc19952b3e35c013ad931a1d67a525f6cada988939ffdd393cae45"></a>CONSTRAINT_VIOLATION&#160;</td><td class="fielddoc"><p>Value does not respect a field constraint (<code>null</code> value in a required field which can not be <code>null</code> , ...)</p>
 <dl class="section since"><dt>Since</dt><dd>0.2 </dd></dl>
 </td></tr>
+<tr><td class="fieldname"><a id="a56742fecea7bc19952b3e35c013ad931ac379e50491099134897f11767ac77544" name="a56742fecea7bc19952b3e35c013ad931ac379e50491099134897f11767ac77544"></a>PAYLOAD_TOO_LARGE&#160;</td><td class="fielddoc"><p>Input stream is larger than <code>max_payload</code> option</p>
+<dl class="section since"><dt>Since</dt><dd>0.2 </dd></dl>
+</td></tr>
 <tr><td class="fieldname"><a id="a56742fecea7bc19952b3e35c013ad931a696b031073e74bf2cb98e5ef201d4aa3" name="a56742fecea7bc19952b3e35c013ad931a696b031073e74bf2cb98e5ef201d4aa3"></a>UNKNOWN&#160;</td><td class="fielddoc"><p>Unexpected error code </p>
 </td></tr>
 </table>
@@ -655,8 +662,59 @@ template&lt;typename V&gt; </div>
 
 </div>
 </div>
+<a id="a4395fd25fad50cecde91b741c992a2de" name="a4395fd25fad50cecde91b741c992a2de"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4395fd25fad50cecde91b741c992a2de">&#9670;&#160;</a></span>deserialize() <span class="overload">[1/5]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void anch::json::deserialize </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classanch_1_1_flux.html">anch::Flux</a>&lt; T &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>values</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::istream &amp;</td>          <td class="paramname"><span class="paramname"><em>input</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structanch_1_1json_1_1_mapping_options.html">anch::json::MappingOptions</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>options</em></span><span class="paramdefsep"> = </span><span class="paramdefval"><a class="el" href="#aa7e486a58287e946e65821fb429efa2c">anch::json::DEFAULT_MAPPING_OPTIONS</a></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Deserialize JSON array into objects' flux: each object is pushed to the flux consumer, then flux is finalized.<br  />
+Consumer (and error handler when needed) have to be set before this method call.</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>the object type</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">values</td><td>the flux to push values in </td></tr>
+    <tr><td class="paramname">input</td><td>the input stream to parse </td></tr>
+    <tr><td class="paramname">options</td><td>the options to use</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section since"><dt>Since</dt><dd>0.2 </dd></dl>
+<div id="dynsection-2" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-2-summary" class="dynsummary">
+</div>
+<div id="dynsection-2-content" class="dyncontent hidden">
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespaceanch_1_1json_a4395fd25fad50cecde91b741c992a2de_cgraph.svg" width="362" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+
+</div>
+</div>
 <a id="a732db6b30dcfc8c0a7c2294754d273e0" name="a732db6b30dcfc8c0a7c2294754d273e0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a732db6b30dcfc8c0a7c2294754d273e0">&#9670;&#160;</a></span>deserialize() <span class="overload">[1/4]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a732db6b30dcfc8c0a7c2294754d273e0">&#9670;&#160;</a></span>deserialize() <span class="overload">[2/5]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -696,17 +754,17 @@ template&lt;template&lt; typename &gt; typename C, typename T&gt; </div>
   </table>
   </dd>
 </dl>
-<div id="dynsection-2" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-2-summary" class="dynsummary">
+<div id="dynsection-3" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-3-summary" class="dynsummary">
 </div>
-<div id="dynsection-2-content" class="dyncontent hidden">
+<div id="dynsection-3-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespaceanch_1_1json_a732db6b30dcfc8c0a7c2294754d273e0_cgraph.svg" width="362" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
 </div>
 </div>
 <a id="af4d47efb5e9e4ba7b5e69671327d4e0b" name="af4d47efb5e9e4ba7b5e69671327d4e0b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af4d47efb5e9e4ba7b5e69671327d4e0b">&#9670;&#160;</a></span>deserialize() <span class="overload">[2/4]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#af4d47efb5e9e4ba7b5e69671327d4e0b">&#9670;&#160;</a></span>deserialize() <span class="overload">[3/5]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -740,17 +798,17 @@ template&lt;typename T&gt; </div>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the deserialized object by copy </dd></dl>
-<div id="dynsection-3" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-3-summary" class="dynsummary">
+<div id="dynsection-4" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-4-summary" class="dynsummary">
 </div>
-<div id="dynsection-3-content" class="dyncontent hidden">
+<div id="dynsection-4-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespaceanch_1_1json_af4d47efb5e9e4ba7b5e69671327d4e0b_cgraph.svg" width="362" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
 </div>
 </div>
 <a id="a665a9fb52489454a2edaee1d2ecd56b1" name="a665a9fb52489454a2edaee1d2ecd56b1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a665a9fb52489454a2edaee1d2ecd56b1">&#9670;&#160;</a></span>deserialize() <span class="overload">[3/4]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a665a9fb52489454a2edaee1d2ecd56b1">&#9670;&#160;</a></span>deserialize() <span class="overload">[4/5]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -789,17 +847,17 @@ template&lt;typename T&gt; </div>
   </table>
   </dd>
 </dl>
-<div id="dynsection-4" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-4-summary" class="dynsummary">
+<div id="dynsection-5" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-5-summary" class="dynsummary">
 </div>
-<div id="dynsection-4-content" class="dyncontent hidden">
+<div id="dynsection-5-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespaceanch_1_1json_a665a9fb52489454a2edaee1d2ecd56b1_cgraph.svg" width="362" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
 </div>
 </div>
 <a id="a1415ec0e37fa3b446aec0387a5b1cdf4" name="a1415ec0e37fa3b446aec0387a5b1cdf4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1415ec0e37fa3b446aec0387a5b1cdf4">&#9670;&#160;</a></span>deserialize() <span class="overload">[4/4]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a1415ec0e37fa3b446aec0387a5b1cdf4">&#9670;&#160;</a></span>deserialize() <span class="overload">[5/5]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -838,10 +896,10 @@ template&lt;typename T&gt; </div>
   </table>
   </dd>
 </dl>
-<div id="dynsection-5" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-5-summary" class="dynsummary">
+<div id="dynsection-6" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-6-summary" class="dynsummary">
 </div>
-<div id="dynsection-5-content" class="dyncontent hidden">
+<div id="dynsection-6-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespaceanch_1_1json_a1415ec0e37fa3b446aec0387a5b1cdf4_cgraph.svg" width="163" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -875,10 +933,10 @@ template&lt;typename T&gt; </div>
   </table>
   </dd>
 </dl>
-<div id="dynsection-6" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-6-summary" class="dynsummary">
+<div id="dynsection-7" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-7-summary" class="dynsummary">
 </div>
-<div id="dynsection-6-content" class="dyncontent hidden">
+<div id="dynsection-7-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespaceanch_1_1json_ac05d1e060de2a8cc00bd43b5019f0ab9_cgraph.svg" width="163" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -923,10 +981,10 @@ template&lt;<a class="el" href="conceptanch_1_1json_1_1_number.html">anch::json:
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the constraint</dd></dl>
 <dl class="section since"><dt>Since</dt><dd>0.2 </dd></dl>
-<div id="dynsection-7" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-7-summary" class="dynsummary">
+<div id="dynsection-8" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-8-summary" class="dynsummary">
 </div>
-<div id="dynsection-7-content" class="dyncontent hidden">
+<div id="dynsection-8-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespaceanch_1_1json_a4f647dcd2e1cb17abba1f0fdfeefa7df_cgraph.svg" width="212" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -971,10 +1029,10 @@ template&lt;<a class="el" href="conceptanch_1_1json_1_1_number.html">anch::json:
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the constraint</dd></dl>
 <dl class="section since"><dt>Since</dt><dd>0.2 </dd></dl>
-<div id="dynsection-8" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-8-summary" class="dynsummary">
+<div id="dynsection-9" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-9-summary" class="dynsummary">
 </div>
-<div id="dynsection-8-content" class="dyncontent hidden">
+<div id="dynsection-9-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespaceanch_1_1json_a871f376ca92fa859722c4acbb5f9e382_cgraph.svg" width="208" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -1003,10 +1061,10 @@ template&lt;<a class="el" href="conceptanch_1_1json_1_1_number.html">anch::json:
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the constraint</dd></dl>
 <dl class="section since"><dt>Since</dt><dd>0.2 </dd></dl>
-<div id="dynsection-9" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-9-summary" class="dynsummary">
+<div id="dynsection-10" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-10-summary" class="dynsummary">
 </div>
-<div id="dynsection-9-content" class="dyncontent hidden">
+<div id="dynsection-10-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespaceanch_1_1json_a14ea1e59b0548c6454314e67572b90d6_cgraph.svg" width="138" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -1045,10 +1103,10 @@ template&lt;typename... C&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><code>true</code> when one of the constraints is not <a class="el" href="structanch_1_1json_1_1_required.html" title="anch::json::Required">anch::json::Required</a></dd></dl>
 <dl class="section since"><dt>Since</dt><dd>0.2 </dd></dl>
-<div id="dynsection-10" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-10-summary" class="dynsummary">
+<div id="dynsection-11" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-11-summary" class="dynsummary">
 </div>
-<div id="dynsection-10-content" class="dyncontent hidden">
+<div id="dynsection-11-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespaceanch_1_1json_a396e74bb6f16854b3e7c412dd7af9232_cgraph.svg" width="220" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -1076,10 +1134,10 @@ template&lt;typename... C&gt; </div>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><code>true</code> when valid </dd></dl>
-<div id="dynsection-11" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-11-summary" class="dynsummary">
+<div id="dynsection-12" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-12-summary" class="dynsummary">
 </div>
-<div id="dynsection-11-content" class="dyncontent hidden">
+<div id="dynsection-12-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespaceanch_1_1json_aeaebfab692db66f6e678105a06cf7295_cgraph.svg" width="184" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -1118,10 +1176,10 @@ template&lt;typename P&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><code>true</code> when type can hold <code>null</code> value</dd></dl>
 <dl class="section since"><dt>Since</dt><dd>0.2 </dd></dl>
-<div id="dynsection-12" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-12-summary" class="dynsummary">
+<div id="dynsection-13" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-13-summary" class="dynsummary">
 </div>
-<div id="dynsection-12-content" class="dyncontent hidden">
+<div id="dynsection-13-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespaceanch_1_1json_a8470556e8d43da29ce2e8127b538c044_cgraph.svg" width="158" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -1149,10 +1207,10 @@ template&lt;typename P&gt; </div>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><code>true</code> when character can be part of a number </dd></dl>
-<div id="dynsection-13" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-13-summary" class="dynsummary">
+<div id="dynsection-14" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-14-summary" class="dynsummary">
 </div>
-<div id="dynsection-13-content" class="dyncontent hidden">
+<div id="dynsection-14-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespaceanch_1_1json_a0d128fe0040c1f612f16cbf5c675f43a_cgraph.svg" width="184" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -1195,10 +1253,10 @@ You can declare any type as primitive with template function specialization.</p>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><code>true</code> if type is a JSON primitive type, <code>false</code> otherwise </dd></dl>
-<div id="dynsection-14" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-14-summary" class="dynsummary">
+<div id="dynsection-15" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-15-summary" class="dynsummary">
 </div>
-<div id="dynsection-14-content" class="dyncontent hidden">
+<div id="dynsection-15-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespaceanch_1_1json_a0a98011ef62818836029ae7fc284f7a5_cgraph.svg" width="162" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -1295,10 +1353,10 @@ template&lt;typename... C&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><code>true</code> when one of the constraints is <a class="el" href="structanch_1_1json_1_1_required.html" title="Required">Required</a></dd></dl>
 <dl class="section since"><dt>Since</dt><dd>0.2 </dd></dl>
-<div id="dynsection-15" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-15-summary" class="dynsummary">
+<div id="dynsection-16" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-16-summary" class="dynsummary">
 </div>
-<div id="dynsection-15-content" class="dyncontent hidden">
+<div id="dynsection-16-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespaceanch_1_1json_ad6806a02f081b5d1479ff266e45184b9_cgraph.svg" width="163" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -1335,10 +1393,10 @@ template&lt;typename T&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><code>true</code> when value is valid</dd></dl>
 <dl class="section since"><dt>Since</dt><dd>0.2 </dd></dl>
-<div id="dynsection-16" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-16-summary" class="dynsummary">
+<div id="dynsection-17" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-17-summary" class="dynsummary">
 </div>
-<div id="dynsection-16-content" class="dyncontent hidden">
+<div id="dynsection-17-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespaceanch_1_1json_a3d5b63983bc046a69bd7dc539af11459_cgraph.svg" width="139" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -1375,10 +1433,10 @@ template&lt;typename... C&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the constraint</dd></dl>
 <dl class="section since"><dt>Since</dt><dd>0.2 </dd></dl>
-<div id="dynsection-17" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-17-summary" class="dynsummary">
+<div id="dynsection-18" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-18-summary" class="dynsummary">
 </div>
-<div id="dynsection-17-content" class="dyncontent hidden">
+<div id="dynsection-18-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespaceanch_1_1json_a064a970c9b316a004b2874c0f128e7a4_cgraph.svg" width="132" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -1425,10 +1483,10 @@ template&lt;typename F&gt; </div>
   </table>
   </dd>
 </dl>
-<div id="dynsection-18" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-18-summary" class="dynsummary">
+<div id="dynsection-19" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-19-summary" class="dynsummary">
 </div>
-<div id="dynsection-18-content" class="dyncontent hidden">
+<div id="dynsection-19-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespaceanch_1_1json_ae418531c45cb16b7ac7bd0b6c1d6a5b3_cgraph.svg" width="148" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -1468,10 +1526,10 @@ Possible values are: <code>null</code>, <code>true</code> and <code>false</code>
   </table>
   </dd>
 </dl>
-<div id="dynsection-19" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-19-summary" class="dynsummary">
+<div id="dynsection-20" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-20-summary" class="dynsummary">
 </div>
-<div id="dynsection-19-content" class="dyncontent hidden">
+<div id="dynsection-20-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespaceanch_1_1json_af4d03a7ecdab93f7b86d49cc9839941d_cgraph.svg" width="164" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -1505,11 +1563,48 @@ Possible values are: <code>null</code>, <code>true</code> and <code>false</code>
   </table>
   </dd>
 </dl>
-<div id="dynsection-20" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-20-summary" class="dynsummary">
+<div id="dynsection-21" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-21-summary" class="dynsummary">
 </div>
-<div id="dynsection-20-content" class="dyncontent hidden">
+<div id="dynsection-21-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespaceanch_1_1json_a39ce800f60845478d2c7530edd97b251_cgraph.svg" width="163" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+
+</div>
+</div>
+<a id="a33030ef3c327e13357fd3f312139a8a4" name="a33030ef3c327e13357fd3f312139a8a4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a33030ef3c327e13357fd3f312139a8a4">&#9670;&#160;</a></span>lexEnd()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void anch::json::lexEnd </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classanch_1_1json_1_1_reader_context.html">anch::json::ReaderContext</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>context</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Check that only discardable characters (according to <code>deserialize_max_discard_char</code> option) follow the root value until the end of input stream</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">context</td><td>the parser context</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classanch_1_1json_1_1_mapping_error.html" title="Mapping error.">anch::json::MappingError</a></td><td>data has been found after the root value</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section since"><dt>Since</dt><dd>0.2 </dd></dl>
+<div id="dynsection-22" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-22-summary" class="dynsummary">
+</div>
+<div id="dynsection-22-content" class="dyncontent hidden">
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespaceanch_1_1json_a33030ef3c327e13357fd3f312139a8a4_cgraph.svg" width="140" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
 </div>
@@ -1541,10 +1636,10 @@ Possible values are: <code>null</code>, <code>true</code> and <code>false</code>
   </table>
   </dd>
 </dl>
-<div id="dynsection-21" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-21-summary" class="dynsummary">
+<div id="dynsection-23" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-23-summary" class="dynsummary">
 </div>
-<div id="dynsection-21-content" class="dyncontent hidden">
+<div id="dynsection-23-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespaceanch_1_1json_a20f66f58dc0398558d29c7a5c861e271_cgraph.svg" width="150" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -1586,10 +1681,10 @@ If " end character is not found (according to options and stream), it will raise
   </table>
   </dd>
 </dl>
-<div id="dynsection-22" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-22-summary" class="dynsummary">
+<div id="dynsection-24" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-24-summary" class="dynsummary">
 </div>
-<div id="dynsection-22-content" class="dyncontent hidden">
+<div id="dynsection-24-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespaceanch_1_1json_ae18820e7250822525711e46a0b92ad53_cgraph.svg" width="146" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -1629,10 +1724,10 @@ Possible values are: <code>null</code> and signed integer</p>
   </table>
   </dd>
 </dl>
-<div id="dynsection-23" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-23-summary" class="dynsummary">
+<div id="dynsection-25" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-25-summary" class="dynsummary">
 </div>
-<div id="dynsection-23-content" class="dyncontent hidden">
+<div id="dynsection-25-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespaceanch_1_1json_a29aab1ba208108aa0f3d3813e5fd700e_cgraph.svg" width="158" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -1679,10 +1774,10 @@ template&lt;typename F&gt; </div>
   </table>
   </dd>
 </dl>
-<div id="dynsection-24" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-24-summary" class="dynsummary">
+<div id="dynsection-26" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-26-summary" class="dynsummary">
 </div>
-<div id="dynsection-24-content" class="dyncontent hidden">
+<div id="dynsection-26-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespaceanch_1_1json_aba13f975d97ab6f5e4a8a6c41c4c7f14_cgraph.svg" width="143" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -1715,10 +1810,10 @@ template&lt;typename F&gt; </div>
   </table>
   </dd>
 </dl>
-<div id="dynsection-25" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-25-summary" class="dynsummary">
+<div id="dynsection-27" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-27-summary" class="dynsummary">
 </div>
-<div id="dynsection-25-content" class="dyncontent hidden">
+<div id="dynsection-27-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespaceanch_1_1json_ab634797b158c82813d54f5785584eceb_cgraph.svg" width="140" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -1758,10 +1853,10 @@ Possible values are: <code>null</code> and floating integer value (can parse exp
   </table>
   </dd>
 </dl>
-<div id="dynsection-26" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-26-summary" class="dynsummary">
+<div id="dynsection-28" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-28-summary" class="dynsummary">
 </div>
-<div id="dynsection-26-content" class="dyncontent hidden">
+<div id="dynsection-28-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespaceanch_1_1json_a1d79047e8becf8d6a4149e251f536ee1_cgraph.svg" width="163" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -1809,10 +1904,10 @@ The opening <code>'{'</code> has to be already consumed (see <a class="el" href=
   </table>
   </dd>
 </dl>
-<div id="dynsection-27" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-27-summary" class="dynsummary">
+<div id="dynsection-29" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-29-summary" class="dynsummary">
 </div>
-<div id="dynsection-27-content" class="dyncontent hidden">
+<div id="dynsection-29-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespaceanch_1_1json_ab398a2e216fa82f97da8c0e1bc0ccf64_cgraph.svg" width="155" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -1854,10 +1949,10 @@ If " end character is not found (according to options and stream), it will raise
   </table>
   </dd>
 </dl>
-<div id="dynsection-28" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-28-summary" class="dynsummary">
+<div id="dynsection-30" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-30-summary" class="dynsummary">
 </div>
-<div id="dynsection-28-content" class="dyncontent hidden">
+<div id="dynsection-30-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespaceanch_1_1json_ae4803c49f2b0ceee7a8f005fb275e0c8_cgraph.svg" width="151" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -1891,10 +1986,10 @@ The result will be stored in the context buffer (see <a class="el" href="#a7333f
   </table>
   </dd>
 </dl>
-<div id="dynsection-29" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-29-summary" class="dynsummary">
+<div id="dynsection-31" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-31-summary" class="dynsummary">
 </div>
-<div id="dynsection-29-content" class="dyncontent hidden">
+<div id="dynsection-31-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespaceanch_1_1json_ada9514b5182773c1aa708e7f8249db22_cgraph.svg" width="432" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -1934,10 +2029,10 @@ The opening '"' has to be already consumed.</p>
   </table>
   </dd>
 </dl>
-<div id="dynsection-30" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-30-summary" class="dynsummary">
+<div id="dynsection-32" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-32-summary" class="dynsummary">
 </div>
-<div id="dynsection-30-content" class="dyncontent hidden">
+<div id="dynsection-32-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespaceanch_1_1json_a7333f6ad9054f905310531b88cb977c0_cgraph.svg" width="198" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -1970,10 +2065,10 @@ The opening '"' has to be already consumed.</p>
   </table>
   </dd>
 </dl>
-<div id="dynsection-31" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-31-summary" class="dynsummary">
+<div id="dynsection-33" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-33-summary" class="dynsummary">
 </div>
-<div id="dynsection-31-content" class="dyncontent hidden">
+<div id="dynsection-33-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespaceanch_1_1json_a2f812b2021d81115b2f2724aa51cac46_cgraph.svg" width="143" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -2013,10 +2108,10 @@ Possible values are: <code>null</code> and unsigned integer (min value is always
   </table>
   </dd>
 </dl>
-<div id="dynsection-32" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-32-summary" class="dynsummary">
+<div id="dynsection-34" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-34-summary" class="dynsummary">
 </div>
-<div id="dynsection-32-content" class="dyncontent hidden">
+<div id="dynsection-34-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespaceanch_1_1json_ab8d1b9703986225449f7c2c0ea47445d_cgraph.svg" width="167" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -2049,10 +2144,10 @@ Possible values are: <code>null</code> and unsigned integer (min value is always
   </table>
   </dd>
 </dl>
-<div id="dynsection-33" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-33-summary" class="dynsummary">
+<div id="dynsection-35" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-35-summary" class="dynsummary">
 </div>
-<div id="dynsection-33-content" class="dyncontent hidden">
+<div id="dynsection-35-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespaceanch_1_1json_aa3605b275f02faa0866a6f774481e719_cgraph.svg" width="172" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -2085,10 +2180,10 @@ Possible values are: <code>null</code> and unsigned integer (min value is always
   </table>
   </dd>
 </dl>
-<div id="dynsection-34" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-34-summary" class="dynsummary">
+<div id="dynsection-36" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-36-summary" class="dynsummary">
 </div>
-<div id="dynsection-34-content" class="dyncontent hidden">
+<div id="dynsection-36-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespaceanch_1_1json_a90cd440d816680996f5b17b3e8274d32_cgraph.svg" width="194" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -2138,10 +2233,10 @@ template&lt;<a class="el" href="conceptanch_1_1json_1_1_number.html">anch::json:
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the constraint</dd></dl>
 <dl class="section since"><dt>Since</dt><dd>0.2 </dd></dl>
-<div id="dynsection-35" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-35-summary" class="dynsummary">
+<div id="dynsection-37" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-37-summary" class="dynsummary">
 </div>
-<div id="dynsection-35-content" class="dyncontent hidden">
+<div id="dynsection-37-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespaceanch_1_1json_aca261a702b13caccd529d892d2aa677e_cgraph.svg" width="158" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -2178,10 +2273,10 @@ template&lt;<a class="el" href="conceptanch_1_1json_1_1_number.html">anch::json:
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the constraint</dd></dl>
 <dl class="section since"><dt>Since</dt><dd>0.2 </dd></dl>
-<div id="dynsection-36" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-36-summary" class="dynsummary">
+<div id="dynsection-38" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-38-summary" class="dynsummary">
 </div>
-<div id="dynsection-36-content" class="dyncontent hidden">
+<div id="dynsection-38-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespaceanch_1_1json_afa49f230cd133aee54b6ea9f11343c1f_cgraph.svg" width="159" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -2218,10 +2313,10 @@ template&lt;<a class="el" href="conceptanch_1_1json_1_1_number.html">anch::json:
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the constraint</dd></dl>
 <dl class="section since"><dt>Since</dt><dd>0.2 </dd></dl>
-<div id="dynsection-37" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-37-summary" class="dynsummary">
+<div id="dynsection-39" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-39-summary" class="dynsummary">
 </div>
-<div id="dynsection-37-content" class="dyncontent hidden">
+<div id="dynsection-39-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespaceanch_1_1json_a32e11f4009f53a2d07f9250647e3abb5_cgraph.svg" width="164" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -2258,10 +2353,10 @@ template&lt;<a class="el" href="conceptanch_1_1json_1_1_number.html">anch::json:
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the constraint</dd></dl>
 <dl class="section since"><dt>Since</dt><dd>0.2 </dd></dl>
-<div id="dynsection-38" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-38-summary" class="dynsummary">
+<div id="dynsection-40" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-40-summary" class="dynsummary">
 </div>
-<div id="dynsection-38-content" class="dyncontent hidden">
+<div id="dynsection-40-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespaceanch_1_1json_ae49edab9102a3e3fe10e3bc5b85dc4f5_cgraph.svg" width="184" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -2311,10 +2406,10 @@ template&lt;<a class="el" href="conceptanch_1_1json_1_1_number.html">anch::json:
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the constraint</dd></dl>
 <dl class="section since"><dt>Since</dt><dd>0.2 </dd></dl>
-<div id="dynsection-39" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-39-summary" class="dynsummary">
+<div id="dynsection-41" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-41-summary" class="dynsummary">
 </div>
-<div id="dynsection-39-content" class="dyncontent hidden">
+<div id="dynsection-41-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespaceanch_1_1json_aeff5145713082eee32fcbe818738ce00_cgraph.svg" width="154" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -2351,10 +2446,10 @@ template&lt;<a class="el" href="conceptanch_1_1json_1_1_number.html">anch::json:
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the constraint</dd></dl>
 <dl class="section since"><dt>Since</dt><dd>0.2 </dd></dl>
-<div id="dynsection-40" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-40-summary" class="dynsummary">
+<div id="dynsection-42" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-42-summary" class="dynsummary">
 </div>
-<div id="dynsection-40-content" class="dyncontent hidden">
+<div id="dynsection-42-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespaceanch_1_1json_a48b8d7d97e075724a1642acebb821c66_cgraph.svg" width="155" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -2391,10 +2486,10 @@ template&lt;<a class="el" href="conceptanch_1_1json_1_1_number.html">anch::json:
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the constraint</dd></dl>
 <dl class="section since"><dt>Since</dt><dd>0.2 </dd></dl>
-<div id="dynsection-41" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-41-summary" class="dynsummary">
+<div id="dynsection-43" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-43-summary" class="dynsummary">
 </div>
-<div id="dynsection-41-content" class="dyncontent hidden">
+<div id="dynsection-43-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespaceanch_1_1json_a90c4e0fb6e1ec5aa59dc87829b5d0b7f_cgraph.svg" width="160" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -2431,10 +2526,10 @@ template&lt;<a class="el" href="conceptanch_1_1json_1_1_number.html">anch::json:
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the constraint</dd></dl>
 <dl class="section since"><dt>Since</dt><dd>0.2 </dd></dl>
-<div id="dynsection-42" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-42-summary" class="dynsummary">
+<div id="dynsection-44" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-44-summary" class="dynsummary">
 </div>
-<div id="dynsection-42-content" class="dyncontent hidden">
+<div id="dynsection-44-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespaceanch_1_1json_aa28386fee3234cd201226f6190c4ac36_cgraph.svg" width="180" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -2477,10 +2572,10 @@ template&lt;<a class="el" href="conceptanch_1_1json_1_1_number.html">anch::json:
   </dd>
 </dl>
 <dl class="section since"><dt>Since</dt><dd>0.2 </dd></dl>
-<div id="dynsection-43" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-43-summary" class="dynsummary">
+<div id="dynsection-45" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-45-summary" class="dynsummary">
 </div>
-<div id="dynsection-43-content" class="dyncontent hidden">
+<div id="dynsection-45-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespaceanch_1_1json_a6e31df57fed4775684c0cacf396d1c63_cgraph.svg" width="159" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -2514,10 +2609,10 @@ template&lt;<a class="el" href="conceptanch_1_1json_1_1_number.html">anch::json:
   </table>
   </dd>
 </dl>
-<div id="dynsection-44" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-44-summary" class="dynsummary">
+<div id="dynsection-46" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-46-summary" class="dynsummary">
 </div>
-<div id="dynsection-44-content" class="dyncontent hidden">
+<div id="dynsection-46-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespaceanch_1_1json_a09c93e5b43f51f0d0e72d182c8acba7c_cgraph.svg" width="212" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -2544,10 +2639,10 @@ template&lt;<a class="el" href="conceptanch_1_1json_1_1_number.html">anch::json:
   </table>
   </dd>
 </dl>
-<div id="dynsection-45" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-45-summary" class="dynsummary">
+<div id="dynsection-47" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-47-summary" class="dynsummary">
 </div>
-<div id="dynsection-45-content" class="dyncontent hidden">
+<div id="dynsection-47-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespaceanch_1_1json_ae31c0dd310507cbd4a1c1eda3db41cd6_cgraph.svg" width="180" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -2575,10 +2670,10 @@ End parsing at first unrecognized character.</p>
   </table>
   </dd>
 </dl>
-<div id="dynsection-46" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-46-summary" class="dynsummary">
+<div id="dynsection-48" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-48-summary" class="dynsummary">
 </div>
-<div id="dynsection-46-content" class="dyncontent hidden">
+<div id="dynsection-48-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespaceanch_1_1json_af41663c33a6427ba46b8cdeeadb90166_cgraph.svg" width="179" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -2613,10 +2708,10 @@ End parsing at first unrecognized character.</p>
   </dd>
 </dl>
 <dl class="section since"><dt>Since</dt><dd>0.2 </dd></dl>
-<div id="dynsection-47" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-47-summary" class="dynsummary">
+<div id="dynsection-49" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-49-summary" class="dynsummary">
 </div>
-<div id="dynsection-47-content" class="dyncontent hidden">
+<div id="dynsection-49-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespaceanch_1_1json_ae6d830c7b59e96d52c3d4b588f59d204_cgraph.svg" width="140" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -2657,10 +2752,10 @@ Registered formats:</p><ul>
   </dd>
 </dl>
 <dl class="section since"><dt>Since</dt><dd>0.2 </dd></dl>
-<div id="dynsection-48" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-48-summary" class="dynsummary">
+<div id="dynsection-50" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-50-summary" class="dynsummary">
 </div>
-<div id="dynsection-48-content" class="dyncontent hidden">
+<div id="dynsection-50-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespaceanch_1_1json_a2833944070b6745cbcab58addcba2867_cgraph.svg" width="184" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -2696,10 +2791,10 @@ This function has to be specialized for each class/structure which has to be ser
   </table>
   </dd>
 </dl>
-<div id="dynsection-49" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-49-summary" class="dynsummary">
+<div id="dynsection-51" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-51-summary" class="dynsummary">
 </div>
-<div id="dynsection-49-content" class="dyncontent hidden">
+<div id="dynsection-51-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespaceanch_1_1json_aaf8fbe1c8f5cf3231e85e9549b474322_cgraph.svg" width="182" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -2742,10 +2837,10 @@ The context offset is set on the first character which is not a number character
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the number characters (valid until next buffer refill) </dd></dl>
-<div id="dynsection-50" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-50-summary" class="dynsummary">
+<div id="dynsection-52" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-52-summary" class="dynsummary">
 </div>
-<div id="dynsection-50-content" class="dyncontent hidden">
+<div id="dynsection-52-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespaceanch_1_1json_a77e8c50f49aabb12e4dc74ee31f80cef_cgraph.svg" width="396" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -2794,10 +2889,10 @@ This method will lock the processing until <a class="el" href="classanch_1_1_flu
   </table>
   </dd>
 </dl>
-<div id="dynsection-51" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-51-summary" class="dynsummary">
+<div id="dynsection-53" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-53-summary" class="dynsummary">
 </div>
-<div id="dynsection-51-content" class="dyncontent hidden">
+<div id="dynsection-53-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespaceanch_1_1json_aa445d355d45b95724f21b0b6591a48f1_cgraph.svg" width="334" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -2839,10 +2934,10 @@ template&lt;template&lt; typename &gt; typename C, typename T&gt; </div>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the serialized objects as <code>std::string</code> </dd></dl>
-<div id="dynsection-52" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-52-summary" class="dynsummary">
+<div id="dynsection-54" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-54-summary" class="dynsummary">
 </div>
-<div id="dynsection-52-content" class="dyncontent hidden">
+<div id="dynsection-54-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespaceanch_1_1json_ae4d4a070d5c8ed611a2035e563112c9b_cgraph.svg" width="334" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -2889,10 +2984,10 @@ template&lt;template&lt; typename &gt; typename C, typename T&gt; </div>
   </table>
   </dd>
 </dl>
-<div id="dynsection-53" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-53-summary" class="dynsummary">
+<div id="dynsection-55" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-55-summary" class="dynsummary">
 </div>
-<div id="dynsection-53-content" class="dyncontent hidden">
+<div id="dynsection-55-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespaceanch_1_1json_a55022ebb5ba40258702c999096097736_cgraph.svg" width="334" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -2933,10 +3028,10 @@ template&lt;typename T&gt; </div>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the serialized objects as <code>std::string</code> </dd></dl>
-<div id="dynsection-54" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-54-summary" class="dynsummary">
+<div id="dynsection-56" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-56-summary" class="dynsummary">
 </div>
-<div id="dynsection-54-content" class="dyncontent hidden">
+<div id="dynsection-56-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespaceanch_1_1json_a66a65139cfd9b494df18becf631322d4_cgraph.svg" width="334" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -2982,10 +3077,10 @@ template&lt;typename T&gt; </div>
   </table>
   </dd>
 </dl>
-<div id="dynsection-55" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-55-summary" class="dynsummary">
+<div id="dynsection-57" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-57-summary" class="dynsummary">
 </div>
-<div id="dynsection-55-content" class="dyncontent hidden">
+<div id="dynsection-57-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespaceanch_1_1json_a631a62eae1be054498df6666679b4dc6_cgraph.svg" width="334" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -3026,10 +3121,10 @@ template&lt;typename T&gt; </div>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the serialized object as <code>std::string</code> </dd></dl>
-<div id="dynsection-56" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-56-summary" class="dynsummary">
+<div id="dynsection-58" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-58-summary" class="dynsummary">
 </div>
-<div id="dynsection-56-content" class="dyncontent hidden">
+<div id="dynsection-58-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespaceanch_1_1json_a7865c94e32fc802a83f5e1ae2a237497_cgraph.svg" width="334" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -3075,10 +3170,10 @@ template&lt;typename T&gt; </div>
   </table>
   </dd>
 </dl>
-<div id="dynsection-57" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-57-summary" class="dynsummary">
+<div id="dynsection-59" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-59-summary" class="dynsummary">
 </div>
-<div id="dynsection-57-content" class="dyncontent hidden">
+<div id="dynsection-59-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespaceanch_1_1json_a787cc091cecc4ca05ebd5030dec3f766_cgraph.svg" width="148" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -3107,10 +3202,10 @@ The compiler is used when patterns are built: it has to be set before mappers re
   </dd>
 </dl>
 <dl class="section since"><dt>Since</dt><dd>0.2 </dd></dl>
-<div id="dynsection-58" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-58-summary" class="dynsummary">
+<div id="dynsection-60" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-60-summary" class="dynsummary">
 </div>
-<div id="dynsection-58-content" class="dyncontent hidden">
+<div id="dynsection-60-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespaceanch_1_1json_a0c63ce0b8f5fa90e87aa826e2cf47ccb_cgraph.svg" width="212" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
@@ -3155,10 +3250,10 @@ template&lt;typename T&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the violations (empty when value is valid)</dd></dl>
 <dl class="section since"><dt>Since</dt><dd>0.2 </dd></dl>
-<div id="dynsection-59" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
-<div id="dynsection-59-summary" class="dynsummary">
+<div id="dynsection-61" class="dynheader closed"><span class="dynarrow"><span class="arrowhead closed"></span></span>Here is the call graph for this function:</div>
+<div id="dynsection-61-summary" class="dynsummary">
 </div>
-<div id="dynsection-59-content" class="dyncontent hidden">
+<div id="dynsection-61-content" class="dyncontent hidden">
 <div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="namespaceanch_1_1json_a58c5d4760a7c1cc64a50e1133079beec_cgraph.svg" width="146" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 

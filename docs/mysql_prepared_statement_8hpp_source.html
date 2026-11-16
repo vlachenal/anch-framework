@@ -131,36 +131,34 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('mysql_prepared
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>  <span class="keyword">private</span>:</div>
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    <span class="keyword">static</span> std::atomic&lt;std::uint64_t&gt; _counter;</div>
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span></div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    MYSQL* _conn;</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    MYSQL_STMT* _stmt;</div>
 <div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span></div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    MYSQL_STMT* _stmt;</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span></div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    std::string _stmtId;</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    <span class="comment">// Attributes -</span></div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span> </div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    <span class="comment">// Constructors +</span></div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>  <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno"><a class="line" href="classanch_1_1sql_1_1_my_s_q_l_prepared_statement.html#a982a943ef172181314d7c1c1572f6d8a">   72</a></span>    <a class="code hl_function" href="classanch_1_1sql_1_1_my_s_q_l_prepared_statement.html#a982a943ef172181314d7c1c1572f6d8a">MySQLPreparedStatement</a>(MYSQL* dbCon, <span class="keyword">const</span> std::string&amp; query);</div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    <span class="comment">// Constructors -</span></div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span> </div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    <span class="comment">// Destructor +</span></div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>  <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno"><a class="line" href="classanch_1_1sql_1_1_my_s_q_l_prepared_statement.html#adebc5e824f3b76e92e277c535a091542">   80</a></span>    <span class="keyword">virtual</span> <a class="code hl_function" href="classanch_1_1sql_1_1_my_s_q_l_prepared_statement.html#adebc5e824f3b76e92e277c535a091542">~MySQLPreparedStatement</a>() noexcept;</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    <span class="comment">// Destructor -</span></div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span> </div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>    <span class="comment">// Methods +</span></div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>  protected:</div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno"><a class="line" href="classanch_1_1sql_1_1_my_s_q_l_prepared_statement.html#a6088a44c5ad2d2a8faf42bff581cd184">   92</a></span>    virtual ResultSet* <a class="code hl_function" href="classanch_1_1sql_1_1_my_s_q_l_prepared_statement.html#a6088a44c5ad2d2a8faf42bff581cd184">doExecuteQuery</a>() override;</div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span></div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno"><a class="line" href="classanch_1_1sql_1_1_my_s_q_l_prepared_statement.html#a2aae51cd37d9c7d05b6e19e15340199c">  101</a></span>    virtual uint64_t <a class="code hl_function" href="classanch_1_1sql_1_1_my_s_q_l_prepared_statement.html#a2aae51cd37d9c7d05b6e19e15340199c">doExecuteUpdate</a>() override;</div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>    <span class="comment">// Methods -</span></div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span> </div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>  };</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    std::string _stmtId;</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    <span class="comment">// Attributes -</span></div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span> </div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    <span class="comment">// Constructors +</span></div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>  <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno"><a class="line" href="classanch_1_1sql_1_1_my_s_q_l_prepared_statement.html#a982a943ef172181314d7c1c1572f6d8a">   69</a></span>    <a class="code hl_function" href="classanch_1_1sql_1_1_my_s_q_l_prepared_statement.html#a982a943ef172181314d7c1c1572f6d8a">MySQLPreparedStatement</a>(MYSQL* dbCon, <span class="keyword">const</span> std::string&amp; query);</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    <span class="comment">// Constructors -</span></div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span> </div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    <span class="comment">// Destructor +</span></div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>  <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno"><a class="line" href="classanch_1_1sql_1_1_my_s_q_l_prepared_statement.html#adebc5e824f3b76e92e277c535a091542">   77</a></span>    <span class="keyword">virtual</span> <a class="code hl_function" href="classanch_1_1sql_1_1_my_s_q_l_prepared_statement.html#adebc5e824f3b76e92e277c535a091542">~MySQLPreparedStatement</a>() noexcept;</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    <span class="comment">// Destructor -</span></div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span> </div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    <span class="comment">// Methods +</span></div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>  protected:</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno"><a class="line" href="classanch_1_1sql_1_1_my_s_q_l_prepared_statement.html#a6088a44c5ad2d2a8faf42bff581cd184">   89</a></span>    virtual ResultSet* <a class="code hl_function" href="classanch_1_1sql_1_1_my_s_q_l_prepared_statement.html#a6088a44c5ad2d2a8faf42bff581cd184">doExecuteQuery</a>() override;</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span></div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno"><a class="line" href="classanch_1_1sql_1_1_my_s_q_l_prepared_statement.html#a2aae51cd37d9c7d05b6e19e15340199c">   98</a></span>    virtual uint64_t <a class="code hl_function" href="classanch_1_1sql_1_1_my_s_q_l_prepared_statement.html#a2aae51cd37d9c7d05b6e19e15340199c">doExecuteUpdate</a>() override;</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>    <span class="comment">// Methods -</span></div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span> </div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>  };</div>
 </div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span> </div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>}  <span class="comment">// anch::sql</span></div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span> </div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span><span class="preprocessor">#endif </span><span class="comment">// ANCH_SQL_MYSQL</span></div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span> </div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>}  <span class="comment">// anch::sql</span></div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span> </div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span><span class="preprocessor">#endif </span><span class="comment">// ANCH_SQL_MYSQL</span></div>
 <div class="ttc" id="aclassanch_1_1sql_1_1_my_s_q_l_connection_html"><div class="ttname"><a href="classanch_1_1sql_1_1_my_s_q_l_connection.html">anch::sql::MySQLConnection</a></div><div class="ttdoc">MySQL connection.</div><div class="ttdef"><b>Definition</b> mysqlConnection.hpp:72</div></div>
 <div class="ttc" id="aclassanch_1_1sql_1_1_my_s_q_l_prepared_statement_html_a2aae51cd37d9c7d05b6e19e15340199c"><div class="ttname"><a href="classanch_1_1sql_1_1_my_s_q_l_prepared_statement.html#a2aae51cd37d9c7d05b6e19e15340199c">anch::sql::MySQLPreparedStatement::doExecuteUpdate</a></div><div class="ttdeci">virtual uint64_t doExecuteUpdate() override</div></div>
 <div class="ttc" id="aclassanch_1_1sql_1_1_my_s_q_l_prepared_statement_html_a6088a44c5ad2d2a8faf42bff581cd184"><div class="ttname"><a href="classanch_1_1sql_1_1_my_s_q_l_prepared_statement.html#a6088a44c5ad2d2a8faf42bff581cd184">anch::sql::MySQLPreparedStatement::doExecuteQuery</a></div><div class="ttdeci">virtual ResultSet * doExecuteQuery() override</div></div>
