@@ -19,6 +19,9 @@
 */
 #include "crypto/b2t/base64.hpp"
 
+#include <algorithm>
+#include <typeinfo>
+
 using anch::crypto::Base64;
 
 
@@ -59,9 +62,22 @@ Base64::~Base64() {
 
 
 // Encoding methods +
+/*!
+ * Encode one group of at most 3 bytes.
+ *
+ * \param data the bytes to encode
+ * \param length the remaining data length
+ * \param buffer the encoded characters
+ * \param alphabet the alphabet to use
+ * \param padding add padding characters or not
+ * \param written the number of written characters
+ *
+ * \return the number of read bytes
+ */
 static uint8_t
-encode(const uint8_t* data, uint64_t length, char* buffer, const char alphabet[64], bool padding) noexcept {
+encode(const uint8_t* data, uint64_t length, char* buffer, const char alphabet[64], bool padding, uint8_t& written) noexcept {
   uint8_t read = 0;
+  written = 4;
   buffer[0] = alphabet[data[0] >> 2];
   if(length >= 3) {
     read = 3;
@@ -75,6 +91,8 @@ encode(const uint8_t* data, uint64_t length, char* buffer, const char alphabet[6
     if(padding) {
       buffer[2] = BASE64_PADDING;
       buffer[3] = BASE64_PADDING;
+    } else {
+      written = 2;
     }
 
   } else {
@@ -83,6 +101,8 @@ encode(const uint8_t* data, uint64_t length, char* buffer, const char alphabet[6
     buffer[2] = alphabet[(data[1] & 0x0F) << 2];
     if(padding) {
       buffer[3] = BASE64_PADDING;
+    } else {
+      written = 3;
     }
   }
   return read;
@@ -91,9 +111,10 @@ encode(const uint8_t* data, uint64_t length, char* buffer, const char alphabet[6
 void
 Base64::encode(std::istream& data, std::ostream& output, uint8_t options) noexcept {
   if(data) {
-    char buffer[1024];
+    // multiple of 3: only the last group of the stream can be padded
+    char buffer[1023];
     while(!data.eof()) {
-      data.read(buffer, 1024);
+      data.read(buffer, sizeof(buffer));
       encode(reinterpret_cast<uint8_t*>(buffer), static_cast<uint64_t>(data.gcount()), output, options);
     }
   }
@@ -122,11 +143,11 @@ void
 Base64::encode(const uint8_t* data, uint64_t length, std::ostream& output, uint8_t options) noexcept {
   const char* alphabet = (options & Base64::STD) == Base64::STD ? BASE64_ALPHABET : BASE64_URL_ALPHABET;
   bool padding = (options & Base64::PADDING) == Base64::PADDING;
-  char buffer[5];
-  buffer[4] = '\0';
+  char buffer[4];
+  uint8_t written;
   while(length > 0) {
-    uint8_t read = ::encode(data, length, buffer, alphabet, padding);
-    output << buffer;
+    uint8_t read = ::encode(data, length, buffer, alphabet, padding, written);
+    output.write(buffer, written);
     data += read;
     length -= read;
   }
@@ -141,36 +162,47 @@ Base64::encode(const uint8_t* data, uint64_t length, uint8_t options) noexcept {
 // Encoding methods -
 
 // Decoding methods +
-static void
-decode(const char* data, uint64_t length, uint8_t buffer[4], const char alphabet[64]) {
+/*!
+ * Decode one group of base64 characters.
+ *
+ * \param data the group characters
+ * \param length the group length (at most 4, less for the last group without padding)
+ * \param buffer the decoded bytes
+ * \param alphabet the alphabet to use
+ *
+ * \return the number of decoded bytes
+ *
+ * \throw std::bad_cast invalid character, group of only one character or of padding only
+ */
+static uint8_t
+decode(const char* data, uint64_t length, uint8_t buffer[3], const char alphabet[64]) {
   uint8_t current;
-  char bytes[4] = {}; // a group of one character (invalid) does not read uninitialized values
+  uint8_t bytes[4] = {};
   uint8_t read;
   for(read = 0 ; read < 4 && read < length && data[read] != '='; read++) {
     current = static_cast<uint8_t>(data[read]);
     if(current >= 'A' && current <= 'Z') {
-      bytes[read] = static_cast<char>(current - 'A');
+      bytes[read] = static_cast<uint8_t>(current - 'A');
     } else if(current >= 'a' && current <= 'z') {
-      bytes[read] = static_cast<char>(current + 26 - 'a');
+      bytes[read] = static_cast<uint8_t>(current + 26 - 'a');
     } else if(current >= '0' && current <= '9') {
-      bytes[read] = static_cast<char>(current + 52 - '0');
+      bytes[read] = static_cast<uint8_t>(current + 52 - '0');
     } else if((current == '+' && alphabet == BASE64_ALPHABET) || (current == '-' && alphabet == BASE64_URL_ALPHABET)) {
-      bytes[read] = static_cast<char>(62);
+      bytes[read] = 62;
     } else if((current == '/' && alphabet == BASE64_ALPHABET) || (current == '_' && alphabet == BASE64_URL_ALPHABET)) {
-      bytes[read] = static_cast<char>(63);
+      bytes[read] = 63;
     } else {
       throw std::bad_cast();
     }
   }
-  if(read > 0) {
-    buffer[0] = static_cast<uint8_t>((bytes[0] << 2) | (bytes[1] >> 4));
-    if(read > 2) {
-      buffer[1] = static_cast<uint8_t>((bytes[1] << 4) | (bytes[2] >> 2));
-      if(read > 3) {
-	buffer[2] = static_cast<uint8_t>((bytes[2] << 6) | bytes[3]);
-      }
-    }
+  if(read < 2) {
+    // padding only, or 6 bits which do not make a byte
+    throw std::bad_cast();
   }
+  buffer[0] = static_cast<uint8_t>((bytes[0] << 2) | (bytes[1] >> 4));
+  buffer[1] = static_cast<uint8_t>((bytes[1] << 4) | (bytes[2] >> 2));
+  buffer[2] = static_cast<uint8_t>((bytes[2] << 6) | bytes[3]);
+  return static_cast<uint8_t>(read - 1);
 }
 
 void
@@ -206,14 +238,13 @@ Base64::decode(const std::string& data, uint8_t options) {
 void
 Base64::decode(const char* data, uint64_t length, std::ostream& output, uint8_t options) {
   const char* alphabet = (options & Base64::STD) == Base64::STD ? BASE64_ALPHABET : BASE64_URL_ALPHABET;
-  uint8_t buffer[4];
-  buffer[3] = '\0';
+  uint8_t buffer[3];
   while(length > 0) {
-    memset(buffer, '\0', 3);
-    ::decode(data, length, buffer, alphabet);
-    output << buffer;
-    data += 4;
-    length -= 4;
+    uint64_t group = std::min<uint64_t>(4, length);
+    uint8_t decoded = ::decode(data, group, buffer, alphabet);
+    output.write(reinterpret_cast<const char*>(buffer), decoded);
+    data += group;
+    length -= group;
   }
 }
 

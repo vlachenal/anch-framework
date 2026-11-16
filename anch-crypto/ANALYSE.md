@@ -32,16 +32,27 @@ Correction : `_digest` est supprimé de `Hash` (et de `SHA2`, `SHA224_256`, `MD5
 ## Points positifs
 - 117 tests passent, plus un benchmark comparatif avec OpenSSL (`benchAnchOpenssl.cpp`), utile pour la future migration.
 
-### C7. Base64 : données binaires tronquées au premier octet nul — vérifié (2026-11-14)
+### C7. Base64 : données binaires tronquées au premier octet nul — vérifié (2026-11-14) — **corrigé le 2026-11-16**
 `Base64::decode(const char*, uint64_t, std::ostream&, uint8_t)` (`src/crypto/b2t/base64.cpp`) écrit chaque groupe décodé avec `output << buffer`, c'est-à-dire comme une chaîne C : l'écriture s'arrête au premier octet nul du groupe.
 Reproduction : les 6 octets `00 01 02 41 00 42` sont encodés en `AAECQQBC` ; leur décodage rend 1 octet (`41`). Seul le texte sans octet nul fait l'aller-retour.
-Piste : compter les octets décodés de chaque groupe et les écrire avec `output.write`.
+Correction : le décodage d'un groupe renvoie le nombre d'octets décodés, écrits avec `output.write`.
 
-### C8. Base64 : lecture hors limites sans remplissage — vérifié (ASan, 2026-11-14)
+### C8. Base64 : lecture hors limites sans remplissage — vérifié (ASan, 2026-11-14) — **corrigé le 2026-11-16**
 La même fonction avance de 4 caractères par groupe avec `length -= 4` sur un `uint64_t` : quand la longueur n'est pas un multiple de 4, elle passe sous zéro et la boucle continue au-delà des données, jusqu'à un `=` ou un caractère invalide (`std::bad_cast`).
 Reproduction : `Base64::encode("AB", URL | NOPADDING)` donne `QUI` ; `Base64::decode` de ces 3 caractères (tampon de 3 octets) : `heap-buffer-overflow` en lecture. La bibliothèque ne relit donc pas sa propre sortie sans remplissage.
 Un groupe final d'un seul caractère (invalide) lisait aussi `bytes[1]` non initialisé : le tableau est maintenant initialisé à zéro (avertissement `-Wmaybe-uninitialized` devenu bloquant en release après X1) ; le reste n'est pas corrigé.
-Piste : borner chaque groupe à `min(4, length)` et refuser un groupe d'un seul caractère.
+Correction : chaque groupe est borné à `min(4, length)` ; un groupe d'un seul caractère ou composé uniquement de `=` lève `std::bad_cast`.
+
+### C9. Base64 : encodage sans remplissage, caractères du groupe précédent écrits — vérifié (2026-11-16) — **corrigé le 2026-11-16**
+Trouvé par le test d'aller-retour de C8. Avec `NOPADDING`, le dernier groupe incomplet ne renseigne que 2 ou 3 caractères du tampon mais le tampon entier était écrit (`output << buffer`) : les caractères restants venaient du groupe précédent. Exemple : 4 octets `F0 F1 F2 F3` donnaient `8PHy8wHy` au lieu de `8PHy8w`. Seules les entrées de moins de 3 octets (tampon encore vide) étaient correctes.
+Correction : l'encodage d'un groupe renvoie le nombre de caractères écrits, écrits avec `output.write`.
+
+### C10. Base64 : encodage d'un flux, remplissage au milieu de la sortie — vérifié (2026-11-16) — **corrigé le 2026-11-16**
+`Base64::encode(std::istream&, ...)` lisait des blocs de 1024 octets et encodait chacun séparément : 1024 n'étant pas un multiple de 3, chaque bloc se terminait par un groupe d'un octet complété par `==`. Un flux de 5 000 octets donnait 6 680 caractères au lieu de 6 668, illisibles par un autre décodeur (et sans remplissage, des données fausses).
+Correction : blocs de 1023 octets (multiple de 3). Le décodage d'un flux lit des blocs de 1024 caractères (multiple de 4) et n'est pas concerné, tant que les données ne contiennent ni espace ni saut de ligne (non pris en charge).
+
+Tests ajoutés : `base64-dec-binary` (octets nuls, 256 valeurs), `base64-nopadding` (longueurs 0 à 31, alphabets standard et URL, tampon de taille exacte pour ASan), `base64-dec-invalid`, `base64-stream`. 123/123 tests anch-crypto en release et sous ASan / UBSan.
+Reste : `base64-enc-makefile` lit `Makefile`, absent avec d'autres générateurs que Make (n'encode alors rien, sans échec).
 
 ## À approfondir
 - [ ] Définir l'API du wrapper OpenSSL (EVP) en gardant les interfaces actuelles (`Hash`, `BlockCipher`, `HMAC`).

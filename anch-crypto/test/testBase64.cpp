@@ -20,6 +20,9 @@
 #include "crypto/b2t/base64.hpp"
 
 #include <fstream>
+#include <memory>
+#include <sstream>
+#include <typeinfo>
 
 #include "ut/assert.hpp"
 #include "ut/unit.hpp"
@@ -149,6 +152,69 @@ testEncMakefile() {
 }
 
 void
+testDecBinary() {
+  std::cout << "Decode binary data with null bytes (C7)" << std::endl;
+  const std::string data("\x00\x01\x02\x41\x00\x42", 6);
+  std::string enc = Base64::encode(data);
+  anch::ut::assertThat(enc == "AAECQQBC", "Unexpected encoding: {}", enc);
+  std::string dec = Base64::decode(enc);
+  anch::ut::assertThat(dec == data, "Decoded {} bytes instead of 6", dec.size());
+  std::string all;
+  for(int i = 0 ; i < 256 ; ++i) {
+    all.push_back(static_cast<char>(i));
+  }
+  anch::ut::assertTrue(Base64::decode(Base64::encode(all)) == all, "256 bytes round trip failed");
+}
+
+void
+testNoPadding() {
+  std::cout << "Round trip without padding (C8)" << std::endl;
+  std::string data;
+  for(std::size_t len = 0 ; len < 32 ; ++len) {
+    for(uint8_t opts : {static_cast<uint8_t>(Base64::URL | Base64::NOPADDING), static_cast<uint8_t>(Base64::STD | Base64::NOPADDING)}) {
+      std::string enc = Base64::encode(data, opts);
+      anch::ut::assertThat(enc.find('=') == std::string::npos, "Padding found in {}", enc);
+      // exact size buffer so that ASan detects any read past the data
+      std::unique_ptr<char[]> buffer(new char[enc.size()]);
+      std::copy(enc.begin(), enc.end(), buffer.get());
+      std::string dec = Base64::decode(buffer.get(), enc.size(), opts);
+      anch::ut::assertThat(dec == data, "Round trip failed for length {}: {}", len, enc);
+    }
+    data.push_back(static_cast<char>(0xF0 + len % 16));
+  }
+  anch::ut::assertThat(Base64::decode(std::string("QUI"), Base64::URL | Base64::NOPADDING) == "AB", "QUI is not decoded as AB");
+}
+
+void
+testDecInvalid() {
+  std::cout << "Decode invalid data" << std::endl;
+  for(const char* invalid : {"Q", "QUJDR", "QUJD====", "QU*D"}) {
+    bool thrown = false;
+    try {
+      Base64::decode(std::string(invalid));
+    } catch(const std::bad_cast&) {
+      thrown = true;
+    }
+    anch::ut::assertThat(thrown, "{} has been decoded", invalid);
+  }
+}
+
+void
+testStream() {
+  std::cout << "Encode and decode streams larger than read buffer" << std::endl;
+  std::string data;
+  for(std::size_t i = 0 ; i < 5000 ; ++i) {
+    data.push_back(static_cast<char>((i * 7) % 256));
+  }
+  std::istringstream in(data);
+  std::string enc = Base64::encode(in);
+  anch::ut::assertThat(enc == Base64::encode(data), "Stream encoding differs from string encoding ({} / {} characters)",
+		       enc.size(), Base64::encode(data).size());
+  std::istringstream encIn(enc);
+  anch::ut::assertTrue(Base64::decode(encIn) == data, "Stream round trip failed");
+}
+
+void
 anch::ut::setup(anch::ut::UnitTests& tests) {
   tests
     .name("AnCH base64 unit tests")
@@ -168,5 +234,9 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("base64-dec-fooba", testDecFooba)
     .add("base64-dec-foobar", testDecFoobar)
     .add("base64-enc-makefile", testEncMakefile)
+    .add("base64-dec-binary", testDecBinary)
+    .add("base64-nopadding", testNoPadding)
+    .add("base64-dec-invalid", testDecInvalid)
+    .add("base64-stream", testStream)
     ;
 }
