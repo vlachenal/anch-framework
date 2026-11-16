@@ -147,7 +147,6 @@ operator<<(std::ostream& os, const Tata& tata) {
     return os;
 }
 
-const std::string PLOP_TOTO("Toto");
 
 struct Toto {
   std::string plop;
@@ -737,21 +736,22 @@ testSerFlux() {
   std::ostringstream out;
   anch::Flux<Test> flux;
   std::string expected("[{\"id\":\"deb94ebc-be28-4899-981a-29199b7a487d\",\"value\":\"this is a value\",\"nums\":[1,2,3,4]},{\"id\":\"44666aab-0b63-47a1-80bb-ae84bc844289\",\"value\":\"this is another value\",\"nums\":[5,6,7,8]}]");
+  std::thread t([&flux, &tests]() {
+    for(auto iter = tests.cbegin() ; iter != tests.cend() ; ++iter) {
+      flux.push(*iter);
+    }
+    flux.finalize();
+  });
   try {
-    std::thread t([&flux, &tests]() {
-      for(auto iter = tests.cbegin() ; iter != tests.cend() ; ++iter) {
-    	flux.push(*iter);
-      }
-      flux.finalize();
-    });
-    t.detach();
     mapper.serialize(flux, out);
-    anch::ut::assertThat(out.str() == expected, "\nResult is:  {}\ninstead of: {}", out.str(), expected);
   } catch(const MappingError& error) {
+    t.join();
     std::ostringstream oss;
     oss << "Fail with " << error.what();
     anch::ut::fail(oss.str());
   }
+  t.join(); // producer uses flux until finalize returns
+  anch::ut::assertThat(out.str() == expected, "\nResult is:  {}\ninstead of: {}", out.str(), expected);
 }
 
 void

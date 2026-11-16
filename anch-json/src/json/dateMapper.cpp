@@ -73,7 +73,7 @@ PrimitiveMapper<anch::date::Date>::deserializeValue(anch::date::Date& value, anc
   return true;
 }
 
-template class PrimitiveMapper<anch::date::Date>;
+template class anch::json::PrimitiveMapper<anch::date::Date>;
 // PrimitiveMapper specialization for anch::date::Date (RFC 3339 date-time) -
 
 // PrimitiveMapper specialization for std::chrono::year_month_day (RFC 3339 full-date) +
@@ -113,7 +113,7 @@ PrimitiveMapper<year_month_day>::deserializeValue(year_month_day& value, anch::j
   return true;
 }
 
-template class PrimitiveMapper<year_month_day>;
+template class anch::json::PrimitiveMapper<year_month_day>;
 // PrimitiveMapper specialization for std::chrono::year_month_day (RFC 3339 full-date) -
 
 #endif

@@ -68,7 +68,7 @@ PrimitiveMapper<anch::UUID>::deserializeValue(anch::UUID& value, anch::json::Rea
   return true;
 }
 
-template class PrimitiveMapper<anch::UUID>;
+template class anch::json::PrimitiveMapper<anch::UUID>;
 // PrimitiveMapper specialization for anch::UUID -
 
 #endif

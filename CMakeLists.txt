@@ -25,6 +25,8 @@ option(ANCH_BUILD_TESTS "Build AnCH unit tests" ${PROJECT_IS_TOP_LEVEL})
 option(ANCH_WARNINGS_AS_ERRORS "Treat compilation warnings as errors" ON)
 option(ANCH_HARDENING "Enable hardening compilation and link options" ON)
 option(ANCH_NATIVE_ARCH "Optimize for the build machine (-march=native)" ON)
+option(ANCH_BUILD_FUZZ "Build libFuzzer targets (Clang, see fuzz preset)" OFF)
+option(ANCH_INSTALL_RPATH "Relative RPATH on installed binaries: libraries find their dependencies and SQL drivers next to them" ON)
 
 # Optional modules
 option(ANCH_BUILD_CRYPTO "Build anch-crypto" ON)
@@ -114,6 +116,9 @@ if(ANCH_BUILD_APP)
 endif()
 if(ANCH_BUILD_OAS)
   add_subdirectory(anch-oas)
+endif()
+if(ANCH_BUILD_FUZZ)
+  add_subdirectory(fuzz)
 endif()
 # Modules -
 

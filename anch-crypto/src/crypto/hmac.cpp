@@ -34,9 +34,9 @@ using anch::crypto::SHA256;
 using anch::crypto::SHA384;
 using anch::crypto::SHA512;
 
-template MD5 HMAC<MD5>(const std::string&, const std::string&);
-template SHA1 HMAC<SHA1>(const std::string&, const std::string&);
-template SHA224 HMAC<SHA224>(const std::string&, const std::string&);
-template SHA256 HMAC<SHA256>(const std::string&, const std::string&);
-template SHA384 HMAC<SHA384>(const std::string&, const std::string&);
-template SHA512 HMAC<SHA512>(const std::string&, const std::string&);
+template MD5 anch::crypto::HMAC<MD5>(const std::string&, const std::string&);
+template SHA1 anch::crypto::HMAC<SHA1>(const std::string&, const std::string&);
+template SHA224 anch::crypto::HMAC<SHA224>(const std::string&, const std::string&);
+template SHA256 anch::crypto::HMAC<SHA256>(const std::string&, const std::string&);
+template SHA384 anch::crypto::HMAC<SHA384>(const std::string&, const std::string&);
+template SHA512 anch::crypto::HMAC<SHA512>(const std::string&, const std::string&);

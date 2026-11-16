@@ -62,7 +62,7 @@ SQLite3Connection::SQLite3Connection(const SqlConnectionConfiguration& config): 
 // Constructors -
 
 // Destructor +
-SQLite3Connection::~SQLite3Connection() {
+SQLite3Connection::~SQLite3Connection() noexcept {
   release();
   clearStatements(); // statements have to be finalized before closing connection
   sqlite3_close(_conn);
@@ -154,11 +154,19 @@ SQLite3Connection::makePrepared(const std::string& query) {
  *
  * \return the SQLite3 connection
  */
+// C linkage only gives an unmangled name: the function is loaded with dlsym by the C++ connection factory
+#if defined(__clang__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wreturn-type-c-linkage"
+#endif
 extern "C"
 std::shared_ptr<Connection>
 create_shared_connection(const SqlConnectionConfiguration& config) {
   return std::make_shared<SQLite3Connection>(config);
 }
+#if defined(__clang__)
+#pragma clang diagnostic pop
+#endif
 
 /*!
  * C shared library connection maker

@@ -17,7 +17,7 @@ anch_add_library(anch-json
 if(ANCH_JSON_UTILS)
   anch_add_executable(anch-json-formatter SOURCES utils/jsonFormat.cpp
     LIBS anch::json anch::cli)
-  install(TARGETS anch-json-formatter RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+  anch_install_executable(anch-json-formatter)
 endif()
 
 if(ANCH_BUILD_TESTS)

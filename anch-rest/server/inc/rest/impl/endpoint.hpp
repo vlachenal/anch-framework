@@ -154,6 +154,7 @@ namespace anch::rest {
       anch::rest::detail::convertPathParameter<typename Sig::template PathArg<I>>(parameters[I])...
     };
     auto prefix = [&request]() {
+      static_cast<void>(request); // used by some instantiations only
       if constexpr (Sig::HAS_REQUEST) {
 	return std::forward_as_tuple(request);
       } else {

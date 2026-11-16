@@ -60,7 +60,7 @@ ReaderContext::ReaderContext(std::istream& is, const anch::json::MappingOptions&
 // Constructors -
 
 // Destructor +
-ReaderContext::~ReaderContext() {
+ReaderContext::~ReaderContext() noexcept {
   if(buffer != NULL) {
     delete[] buffer;
   }

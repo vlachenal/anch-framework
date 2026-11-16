@@ -128,7 +128,7 @@ namespace anch::date {
      * \param strDate string formatted date
      * \param date the output date (all its fields are set)
      *
-     * \throw std::invalid_argument invalid format or impossible date
+     * \throw std::invalid_argument invalid format, impossible date or date out of range (years 1678 to 2261)
      */
     void parse(const std::string& strDate, anch::date::Date& date) const;
 
@@ -139,7 +139,7 @@ namespace anch::date {
      *
      * \return the date
      *
-     * \throw std::invalid_argument invalid format or impossible date
+     * \throw std::invalid_argument invalid format, impossible date or date out of range (years 1678 to 2261)
      */
     anch::date::Date parse(const std::string& strDate) const;
 

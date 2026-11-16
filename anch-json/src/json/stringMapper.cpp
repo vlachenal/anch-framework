@@ -51,5 +51,5 @@ PrimitiveMapper<std::string>::deserializeValue(std::string& value, anch::json::R
   return anch::json::lexString(value, context);
 }
 
-template class PrimitiveMapper<std::string>;
+template class anch::json::PrimitiveMapper<std::string>;
 // PrimitiveMapper specialization for std::string -

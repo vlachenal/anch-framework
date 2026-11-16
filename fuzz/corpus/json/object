@@ -1,0 +1,1 @@
+€{"text":"a\u00e9\n","integer":-12,"small":3,"real":1.5e3,"flag":true,"optional":null,"numbers":[1,2],"strings":["x"],"children":{"a":{"id":1,"name":"b"}},"list":[{"id":2}],"child":{"id":3}}

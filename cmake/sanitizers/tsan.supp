@@ -1,0 +1,10 @@
+# ThreadSanitizer suppressions (tsan test preset).
+# Only races reported inside system libraries which are not instrumented: their internal synchronization (atomics,
+# futexes) is invisible to ThreadSanitizer. Races in AnCH code must never be suppressed here.
+
+# gRPC and Abseil: races between gRPC internal threads (event_engine)
+race:libabsl_*
+race:libgrpc*
+race:libgpr*
+# c-ares (gRPC DNS resolver): channel destruction while gRPC resolver threads stop
+race:libcares*

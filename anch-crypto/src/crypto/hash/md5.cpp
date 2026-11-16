@@ -67,7 +67,7 @@ public:
 // Core functions -
 
 
-template class Hash<16,64>;
+template class anch::crypto::Hash<16,64>;
 
 /*!
  * Swap byte

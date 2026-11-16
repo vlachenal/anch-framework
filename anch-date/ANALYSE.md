@@ -98,6 +98,10 @@ Correction : `std::format_to` (n'altère pas le flux), plus de `flush`.
 ### D16. Motif `%` inconnu ou final — lecture — comportement conservé
 Un motif inconnu (`%Q`) ou un `%` final sont écrits tels quels ; `%%` n'est pas un échappement (écrit `%%`). Avant, la regex arrêtait l'analyse du motif au `%` final et ignorait la suite. Test : `date-unknown-pattern`.
 
+### D17. `DateFormatter::parse` : dépassement signé hors de 1678-2261 — vérifié (fuzzing, UBSan) — **corrigé le 2026-11-16**
+Trouvé par la cible `anch-fuzz-date` : `1013-11-16T20:41:20.123` est accepté par le motif `%Y-%m-%dT%H:%M:%S.%s`, puis `computeTimestamp` convertit le `time_t` de `mktime` en nanosecondes sur 64 bits avec dépassement (`-30172361281 * 1000000000`, comportement indéfini). L'analyseur RFC 3339 bornait déjà les secondes, pas `DateFormatter`.
+Correction : `fromLocalTime` vérifie que les secondes tiennent en nanosecondes sur 64 bits et lève `std::invalid_argument` (« Date out of range (years 1678 to 2261) »), documenté dans `DateFormatter::parse` et `computeTimestamp`. Test `date-parse-invalid` (1013, 9999, 0000 refusés ; 1700 et 2261 acceptés).
+
 ## Points positifs
 - 5 tests passaient ; 15 depuis le 2026-11-03 (10 tests ajoutés, lancés avec `TZ=Europe/Paris`).
 - Extension par `IDatePartFormatter` / `registerFormatterPart` : conservée (le registre est désormais protégé par un mutex).

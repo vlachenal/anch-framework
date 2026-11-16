@@ -56,5 +56,5 @@ PrimitiveMapper<int16_t>::deserializeValue(int16_t& value, anch::json::ReaderCon
   return false;
 }
 
-template class PrimitiveMapper<int16_t>;
+template class anch::json::PrimitiveMapper<int16_t>;
 // PrimitiveMapper specialization for int16_t -

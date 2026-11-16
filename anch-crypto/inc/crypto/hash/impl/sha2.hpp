@@ -103,7 +103,7 @@ namespace anch::crypto {
 
     uint8_t zero[B];
     std::memset(zero, 0, B);
-    if(static_cast<int>(messageSize & (B - 1)) > (B - sizeof(W) * 2 - 1)) {
+    if(static_cast<std::size_t>(messageSize & (B - 1)) > (B - sizeof(W) * 2 - 1)) {
       addData(zero, B - 1 - static_cast<size_t>(messageSize & (B - 1)));
       addData(zero, B - 8);
     } else {

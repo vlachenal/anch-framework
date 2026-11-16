@@ -1,0 +1,65 @@
+# Test coverage (Clang source-based coverage, coverage preset): summary per module in the job summary, HTML report
+# as artifact
+name: coverage
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  coverage:
+    name: coverage
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    container:
+      image: archlinux:base-devel
+    steps:
+      - name: Install dependencies
+        run: pacman -Syu --noconfirm --needed git cmake pkgconf ccache clang llvm compiler-rt openssl sqlite mariadb postgresql curl thrift boost protobuf grpc
+
+      - uses: actions/checkout@v7
+
+      - name: Set up ccache
+        run: |
+          echo "CCACHE_DIR=$PWD/.ccache" >> "$GITHUB_ENV"
+          echo "CCACHE_BASEDIR=$PWD" >> "$GITHUB_ENV"
+          echo "CCACHE_MAXSIZE=1G" >> "$GITHUB_ENV"
+
+      - name: Restore ccache
+        uses: actions/cache@v6
+        with:
+          path: .ccache
+          key: ccache-coverage-${{ github.sha }}
+          restore-keys: ccache-coverage-
+
+      - name: Start MariaDB and PostgreSQL
+        run: sh .github/scripts/start-databases.sh .
+
+      - name: Build
+        run: |
+          cmake --preset coverage -DANCH_BUILD_REST=ON -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
+          cmake --build --preset coverage --parallel "$(nproc)"
+
+      - name: Test
+        run: ctest --preset coverage -j "$(nproc)"
+
+      - name: Report
+        run: |
+          sh cmake/coverage-report.sh build/coverage build/coverage-report
+          {
+            echo "## Test coverage (lines)"
+            echo
+            cat build/coverage-report/modules.md
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload report
+        uses: actions/upload-artifact@v7
+        with:
+          name: coverage-report
+          path: build/coverage-report/

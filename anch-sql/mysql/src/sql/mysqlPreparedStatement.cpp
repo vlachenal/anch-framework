@@ -39,7 +39,7 @@ using anch::sql::ResultSet;
 std::atomic<std::uint64_t> MySQLPreparedStatement::_counter(0);
 
 // Constructors +
-MySQLPreparedStatement::MySQLPreparedStatement(MYSQL* dbCon, const std::string& query): PreparedStatement(), _conn(dbCon) {
+MySQLPreparedStatement::MySQLPreparedStatement(MYSQL* dbCon, const std::string& query): PreparedStatement() {
   _stmt = mysql_stmt_init(dbCon);
   if(_stmt == NULL) {
     throw SqlException("MySQL out of memory", false);

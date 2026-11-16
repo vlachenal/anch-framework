@@ -58,6 +58,16 @@ namespace anch::json {
   template<typename T>
   inline
   void
+  deserialize(anch::Flux<T>& values, std::istream& input, const anch::json::MappingOptions& options) {
+    // Explicit overload: Flux is variadic, C<T> overload is not selected by every compiler
+    anch::json::ReaderContext context(input, options);
+    anch::json::Factory<T>::getInstance().deserialize(values, context);
+    anch::json::lexEnd(context);
+  }
+
+  template<typename T>
+  inline
+  void
   deserialize(std::map<std::string,T>& values, std::istream& input, const anch::json::MappingOptions& options) {
     anch::json::ReaderContext context(input, options);
     anch::json::Factory<T>::getInstance().deserialize(values, context);

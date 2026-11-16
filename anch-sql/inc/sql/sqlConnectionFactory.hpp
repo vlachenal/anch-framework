@@ -85,7 +85,7 @@ namespace anch::sql {
     /*!
      * \ref SqlConnectionFactory private destructor
      */
-    virtual ~SqlConnectionFactory();
+    virtual ~SqlConnectionFactory() noexcept;
     // Destructor -
 
     // Methods +

@@ -1,5 +1,6 @@
-# Build and test with AddressSanitizer and UndefinedBehaviorSanitizer (asan preset)
-name: asan
+# Build and test with sanitizers: AddressSanitizer and UndefinedBehaviorSanitizer (asan preset), ThreadSanitizer
+# (tsan preset, suppressions of non instrumented system libraries in cmake/sanitizers/tsan.supp)
+name: sanitizers
 
 on:
   push:
@@ -12,10 +13,18 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  asan:
-    name: ASan / UBSan
+  sanitizer:
+    name: ${{ matrix.name }}
     runs-on: ubuntu-24.04
     timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - preset: asan
+            name: ASan / UBSan
+          - preset: tsan
+            name: TSan
     # Arch Linux: recent GCC (>= 13 required), same toolchain as development environment
     container:
       image: archlinux:base-devel
@@ -40,8 +49,8 @@ jobs:
         uses: actions/cache@v6
         with:
           path: .ccache
-          key: ccache-asan-${{ github.sha }}
-          restore-keys: ccache-asan-
+          key: ccache-${{ matrix.preset }}-${{ github.sha }}
+          restore-keys: ccache-${{ matrix.preset }}-
 
       - name: Start MariaDB and PostgreSQL
         run: sh .github/scripts/start-databases.sh .
@@ -51,27 +60,27 @@ jobs:
         run: |
           set -o pipefail
           gcc --version | head -1
-          cmake --preset asan -DANCH_BUILD_REST=ON -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache 2>&1 | tee configure.log
+          cmake --preset ${{ matrix.preset }} -DANCH_BUILD_REST=ON -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache 2>&1 | tee configure.log
           # Optional anch-rest libraries are disabled when their packages are not found: they have to be built here
           if grep "is not built" configure.log; then exit 1; fi
 
       - name: Build
         run: |
           ccache --zero-stats
-          cmake --build --preset asan --parallel "$(nproc)"
+          cmake --build --preset ${{ matrix.preset }} --parallel "$(nproc)"
           ccache --show-stats
 
       - name: Test
         # Preset "jobs": 0 runs every test at once: limit parallelism to the number of CPUs
-        run: ctest --preset asan -j "$(nproc)"
+        run: ctest --preset ${{ matrix.preset }} -j "$(nproc)"
 
       - name: Upload test logs
         if: failure()
         uses: actions/upload-artifact@v7
         with:
-          name: asan-test-logs
+          name: ${{ matrix.preset }}-test-logs
           path: |
-            build/asan/Testing/Temporary/LastTest*.log
+            build/${{ matrix.preset }}/Testing/Temporary/LastTest*.log
             /tmp/mariadb.log
             /tmp/postgresql.log
           if-no-files-found: ignore

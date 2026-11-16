@@ -1,0 +1,152 @@
+# Release builds and tests with several compilers and distributions, and installation test
+name: build
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  arch:
+    name: ${{ matrix.name }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # Optimized build: -O2 and _FORTIFY_SOURCE report other warnings than debug builds
+          - preset: release
+            name: GCC release (Arch Linux)
+            packages: ""
+          - preset: clang
+            name: Clang release (Arch Linux)
+            packages: clang
+    container:
+      image: archlinux:base-devel
+    steps:
+      - name: Install dependencies
+        run: pacman -Syu --noconfirm --needed git cmake pkgconf ccache openssl sqlite mariadb postgresql curl thrift boost protobuf grpc ${{ matrix.packages }}
+
+      - uses: actions/checkout@v7
+
+      - name: Set up ccache
+        run: |
+          echo "CCACHE_DIR=$PWD/.ccache" >> "$GITHUB_ENV"
+          echo "CCACHE_BASEDIR=$PWD" >> "$GITHUB_ENV"
+          echo "CCACHE_MAXSIZE=1G" >> "$GITHUB_ENV"
+
+      - name: Restore ccache
+        uses: actions/cache@v6
+        with:
+          path: .ccache
+          key: ccache-${{ matrix.preset }}-${{ github.sha }}
+          restore-keys: ccache-${{ matrix.preset }}-
+
+      - name: Start MariaDB and PostgreSQL
+        run: sh .github/scripts/start-databases.sh .
+
+      - name: Configure
+        run: cmake --preset ${{ matrix.preset }} -DANCH_BUILD_REST=ON -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
+
+      - name: Build
+        run: |
+          ccache --zero-stats
+          cmake --build --preset ${{ matrix.preset }} --parallel "$(nproc)"
+          ccache --show-stats
+
+      - name: Test
+        run: ctest --preset ${{ matrix.preset }} -j "$(nproc)"
+
+      - name: Upload test logs
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: ${{ matrix.preset }}-test-logs
+          path: build/${{ matrix.preset }}/Testing/Temporary/LastTest*.log
+          if-no-files-found: ignore
+
+  ubuntu:
+    # Minimal supported toolchain: GCC 13 (Ubuntu 24.04 LTS). Without MySQL and PostgreSQL drivers (no server) and
+    # without anch-rest RPC libraries (Protobuf, gRPC and Thrift packages are not installed: libraries are skipped)
+    name: GCC 13 release (Ubuntu 24.04 LTS)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends g++-13 cmake pkg-config ccache libsqlite3-dev libcurl4-openssl-dev tzdata
+
+      - uses: actions/checkout@v7
+
+      - name: Set up ccache
+        run: |
+          echo "CCACHE_DIR=$PWD/.ccache" >> "$GITHUB_ENV"
+          echo "CCACHE_BASEDIR=$PWD" >> "$GITHUB_ENV"
+          echo "CCACHE_MAXSIZE=1G" >> "$GITHUB_ENV"
+
+      - name: Restore ccache
+        uses: actions/cache@v6
+        with:
+          path: .ccache
+          key: ccache-ubuntu-${{ github.sha }}
+          restore-keys: ccache-ubuntu-
+
+      - name: Configure
+        run: |
+          g++-13 --version | head -1
+          cmake --preset no-db -DANCH_BUILD_REST=ON -DCMAKE_C_COMPILER=gcc-13 -DCMAKE_CXX_COMPILER=g++-13 \
+            -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
+
+      - name: Build
+        run: |
+          ccache --zero-stats
+          cmake --build --preset no-db --parallel "$(nproc)"
+          ccache --show-stats
+
+      - name: Test
+        run: ctest --preset no-db -j "$(nproc)"
+
+      - name: Upload test logs
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: ubuntu-test-logs
+          path: build/no-db/Testing/Temporary/LastTest*.log
+          if-no-files-found: ignore
+
+  install:
+    # cmake --install, then a consumer project built with find_package(Anch) (cmake/install-test)
+    name: install (${{ matrix.libraries }} libraries)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        libraries: [shared, static]
+    container:
+      image: archlinux:base-devel
+    steps:
+      - name: Install dependencies
+        run: pacman -Syu --noconfirm --needed git cmake pkgconf openssl sqlite mariadb postgresql curl thrift boost protobuf grpc
+
+      - uses: actions/checkout@v7
+
+      - name: Install and build consumer
+        run: |
+          shared=$([ "${{ matrix.libraries }}" = shared ] && echo ON || echo OFF)
+          sh cmake/install-test/run-install-test.sh /tmp/anch-install -DANCH_BUILD_REST=ON -DBUILD_SHARED_LIBS=${shared}
+
+      - name: Upload logs
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: install-${{ matrix.libraries }}-logs
+          path: /tmp/anch-install.*.log
+          if-no-files-found: ignore

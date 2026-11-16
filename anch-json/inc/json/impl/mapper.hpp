@@ -109,6 +109,7 @@ namespace anch::json {
   ObjectMapper<T>::registerField(const std::string& key, P T::* value, [[maybe_unused]] C&&... constraints) {
     static_assert(!std::is_reference<P>::value, "Can not deserialize reference value"); // raise compile-time error if value is a reference
     auto write = [=, this](const auto& val, anch::json::WriterContext& context) -> bool {
+      static_cast<void>(this); // used by some instantiations only
       if constexpr (std::is_pointer<P>::value) { // Remove pointer on parameter type to check the main type
 	if constexpr (std::is_same<T, typename std::remove_pointer<P>>::value) { // if same, use direct call to avoid recursive instanciation
 	  return this->serialize(key, val, context);
@@ -133,6 +134,7 @@ namespace anch::json {
     };
     addWriter(key, [value](const T& obj) -> const P& { return obj.*value; }, write, constraints...);
     auto read = [=, this](T& obj, anch::json::ReaderContext& context) -> bool {
+      static_cast<void>(this); // used by some instantiations only
       if constexpr (std::is_pointer<P>::value) { // Remove pointer on parameter type to check the main type
 	using RP = typename std::remove_pointer<P>::type;
 	obj.*value = new RP();
@@ -160,6 +162,7 @@ namespace anch::json {
   ObjectMapper<T>&
   ObjectMapper<T>::registerField(const std::string& key, P T::* value, [[maybe_unused]] C&&... constraints) {
     auto write = [=, this](const auto& val, anch::json::WriterContext& context) -> bool {
+      static_cast<void>(this); // used by some instantiations only
       if constexpr (std::is_same<MT, T>::value) { // if same, use direct call to avoid recursive instanciation
 	return this->serialize(key, val, context);
       } else {
@@ -168,6 +171,7 @@ namespace anch::json {
     };
     addWriter(key, [value](const T& obj) -> const P& { return obj.*value; }, write, constraints...);
     auto read = [=, this](T& obj, anch::json::ReaderContext& context) -> bool {
+      static_cast<void>(this); // used by some instantiations only
       if constexpr (std::is_same<MT, T>::value) { // if same, use direct call to avoid recursive instanciation
 	return this->deserialize(obj.*value, context);
       } else {
@@ -184,6 +188,7 @@ namespace anch::json {
   ObjectMapper<T>&
   ObjectMapper<T>::registerField(const std::string& key, std::function<P(const T&)> getter, const C&... constraints) {
     auto write = [=, this](const auto& val, anch::json::WriterContext& context) -> bool {
+      static_cast<void>(this); // used by some instantiations only
       if constexpr (std::is_same<MT, P>::value) { // Mapper type has not been specified
 
 	if constexpr (std::is_pointer<P>::value) { // Remove pointer on parameter type to check the main type
@@ -238,6 +243,7 @@ namespace anch::json {
     };
     // Check value constraints before calling setter -
     addReader(key, anch::json::DeserializeFn<T>([=, this](T& obj, anch::json::ReaderContext& context) -> bool {
+      static_cast<void>(this); // used by some instantiations only
       if constexpr (std::is_same<MT, P>::value) { // Mapper type has not been specified
 
 	if constexpr (std::is_pointer<P>::value) { // Remove pointer on parameter type to check the main type

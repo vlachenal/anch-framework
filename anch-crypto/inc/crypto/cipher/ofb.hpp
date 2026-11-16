@@ -107,7 +107,7 @@ namespace anch::crypto {
      *
      * \return the initial context
      */
-    virtual const std::array<uint8_t,Cipher::getBlockSize()>& reset();
+    virtual const std::array<uint8_t,Cipher::getBlockSize()>& reset() override;
     // Methods -
 
   };

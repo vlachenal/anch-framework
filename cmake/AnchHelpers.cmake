@@ -96,6 +96,10 @@ function(anch_add_library target)
   target_compile_definitions(${target} ${scope} ${ANCH_PLATFORM_DEFINITION} ${ARG_PUBLIC_DEFINITIONS})
 
   # Installation +
+  if(ANCH_INSTALL_RPATH AND NOT APPLE)
+    # Dependencies (and SQL drivers loaded with dlopen) are installed in the same directory
+    set_target_properties(${target} PROPERTIES INSTALL_RPATH "$ORIGIN")
+  endif()
   install(TARGETS ${target}
     EXPORT AnchTargets
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
@@ -121,6 +125,17 @@ function(anch_add_executable target)
   add_executable(${target} ${ARG_SOURCES})
   anch_target_build_options(${target})
   target_link_libraries(${target} PRIVATE ${ARG_LIBS})
+endfunction()
+
+# Install a tool, with a relative RPATH to installed libraries (ANCH_INSTALL_RPATH).
+#
+# anch_install_executable(<target>)
+function(anch_install_executable target)
+  if(ANCH_INSTALL_RPATH AND NOT APPLE)
+    file(RELATIVE_PATH libdir ${CMAKE_INSTALL_FULL_BINDIR} ${CMAKE_INSTALL_FULL_LIBDIR})
+    set_target_properties(${target} PROPERTIES INSTALL_RPATH "$ORIGIN/${libdir}")
+  endif()
+  install(TARGETS ${target} RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 endfunction()
 
 # Copy test fixtures in current binary directory (tests are run from there).

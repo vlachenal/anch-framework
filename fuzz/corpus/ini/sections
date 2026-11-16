@@ -1,0 +1,9 @@
+; comment
+key = value
+[section]
+number=-12
+flag=true
+multi=a\\
+  b
+[section.sub]
+empty=

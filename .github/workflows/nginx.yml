@@ -17,22 +17,37 @@ env:
 
 jobs:
   nginx:
-    name: nginx module
+    name: ${{ matrix.name }}
     runs-on: ubuntu-24.04
-    timeout-minutes: 30
-    # Not instrumented: an ASan library can not be loaded by nginx
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # Not instrumented: an ASan library can not be loaded by a non instrumented nginx
+          - name: nginx module
+            preset: debug
+            cc_opt: ""
+            ld_opt: ""
+          # nginx and test application built with ThreadSanitizer: handler threads and event loop synchronization.
+          # nginx core reports races on its own atomics (spinlocks, thread pool), not understood by ThreadSanitizer:
+          # only reports with AnCH frames fail the job
+          - name: nginx module (TSan)
+            preset: tsan
+            cc_opt: "-fsanitize=thread -O1 -g"
+            ld_opt: "-fsanitize=thread"
     container:
       image: archlinux:base-devel
     steps:
       - name: Install dependencies
-        run: pacman -Syu --noconfirm --needed git cmake pkgconf curl
+        run: pacman -Syu --noconfirm --needed git cmake pkgconf curl procps-ng
 
       - uses: actions/checkout@v7
 
       - name: Build test application
         run: |
-          cmake --preset debug -DANCH_BUILD_REST=ON -DANCH_BUILD_SQL=OFF -DANCH_BUILD_CRYPTO=OFF -DANCH_BUILD_OAS=OFF
-          cmake --build --preset debug --target anch-rest-nginx-test-app --parallel "$(nproc)"
+          cmake --preset ${{ matrix.preset }} -DANCH_BUILD_REST=ON -DANCH_BUILD_SQL=OFF -DANCH_BUILD_CRYPTO=OFF -DANCH_BUILD_OAS=OFF
+          cmake --build --preset ${{ matrix.preset }} --target anch-rest-nginx-test-app --parallel "$(nproc)"
 
       - name: Download nginx
         run: |
@@ -43,15 +58,33 @@ jobs:
           tar xzf "nginx-${NGINX_VERSION}.tar.gz"
 
       - name: Test
-        run: sh anch-rest/nginx/test/run-nginx-test.sh "/tmp/nginx/nginx-${NGINX_VERSION}" build/debug /tmp/nginx-test
+        env:
+          NGINX_CC_OPT: ${{ matrix.cc_opt }}
+          NGINX_LD_OPT: ${{ matrix.ld_opt }}
+          TSAN_OPTIONS: "halt_on_error=0:log_path=/tmp/tsan/report"
+        run: |
+          mkdir -p /tmp/tsan
+          sh anch-rest/nginx/test/run-nginx-test.sh "/tmp/nginx/nginx-${NGINX_VERSION}" build/${{ matrix.preset }} /tmp/nginx-test
+
+      - name: Check ThreadSanitizer reports
+        if: matrix.preset == 'tsan'
+        run: |
+          ls /tmp/tsan/ 2> /dev/null || true
+          if grep -l -E 'ngx_http_anch_rest|anch::' /tmp/tsan/report.* 2> /dev/null; then
+            grep -h -B2 -A40 -E 'WARNING: ThreadSanitizer' /tmp/tsan/report.* | head -400
+            echo "ThreadSanitizer reports with AnCH frames"
+            exit 1
+          fi
+          echo "No ThreadSanitizer report with AnCH frames"
 
       - name: Upload logs
         if: failure()
         uses: actions/upload-artifact@v7
         with:
-          name: nginx-test-logs
+          name: nginx-test-logs-${{ matrix.preset }}
           path: |
             /tmp/nginx-test/logs/
             /tmp/nginx-test.configure.log
             /tmp/nginx-test.make.log
+            /tmp/tsan/
           if-no-files-found: ignore

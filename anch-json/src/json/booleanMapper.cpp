@@ -48,4 +48,4 @@ PrimitiveMapper<bool>::deserializeValue(bool& value, anch::json::ReaderContext& 
   return anch::json::lexBoolean(value, context);
 }
 
-template class PrimitiveMapper<bool>;
+template class anch::json::PrimitiveMapper<bool>;

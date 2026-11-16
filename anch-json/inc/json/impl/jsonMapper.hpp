@@ -99,6 +99,13 @@ namespace anch::json {
   template<typename T>
   inline
   void
+  JSONMapper::deserialize(anch::Flux<T>& values, std::istream& input) {
+    anch::json::deserialize(values, input, _options);
+  }
+
+  template<typename T>
+  inline
+  void
   JSONMapper::deserialize(std::map<std::string,T>& values, std::istream& input) {
     anch::json::deserialize(values, input, _options);
   }

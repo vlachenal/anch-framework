@@ -130,121 +130,121 @@ const uint32_t anch::crypto::ANCH_AES_RCON[11] = {
 #endif // ANCH_CPU_DETECTION || !ANCH_CPU_AES
 
 // AES-128 defintion +
-template class AES<4,10>;
+template class anch::crypto::AES<4,10>;
 
-template class BlockCipherModeOfOperation<ECB<AES<4,10>,ZeroPadding>,AES<4,10>>;
-template class ECB<AES<4,10>,ZeroPadding>;
-template class BlockCipherModeOfOperation<ECB<AES<4,10>,ANSIX923>,AES<4,10>>;
-template class ECB<AES<4,10>,ANSIX923>;
-template class BlockCipherModeOfOperation<ECB<AES<4,10>,ISO7816_4Padding>,AES<4,10>>;
-template class ECB<AES<4,10>,ISO7816_4Padding>;
-template class BlockCipherModeOfOperation<ECB<AES<4,10>,PKCS5Padding>,AES<4,10>>;
-template class ECB<AES<4,10>,PKCS5Padding>;
+template class anch::crypto::BlockCipherModeOfOperation<ECB<AES<4,10>,ZeroPadding>,AES<4,10>>;
+template class anch::crypto::ECB<AES<4,10>,ZeroPadding>;
+template class anch::crypto::BlockCipherModeOfOperation<ECB<AES<4,10>,ANSIX923>,AES<4,10>>;
+template class anch::crypto::ECB<AES<4,10>,ANSIX923>;
+template class anch::crypto::BlockCipherModeOfOperation<ECB<AES<4,10>,ISO7816_4Padding>,AES<4,10>>;
+template class anch::crypto::ECB<AES<4,10>,ISO7816_4Padding>;
+template class anch::crypto::BlockCipherModeOfOperation<ECB<AES<4,10>,PKCS5Padding>,AES<4,10>>;
+template class anch::crypto::ECB<AES<4,10>,PKCS5Padding>;
 
-template class BlockCipherModeOfOperation<CBC<AES<4,10>,ZeroPadding>,AES<4,10>>;
-template class CBC<AES<4,10>,ZeroPadding>;
-template class BlockCipherModeOfOperation<CBC<AES<4,10>,ANSIX923>,AES<4,10>>;
-template class CBC<AES<4,10>,ANSIX923>;
-template class BlockCipherModeOfOperation<CBC<AES<4,10>,ISO7816_4Padding>,AES<4,10>>;
-template class CBC<AES<4,10>,ISO7816_4Padding>;
-template class BlockCipherModeOfOperation<CBC<AES<4,10>,PKCS5Padding>,AES<4,10>>;
-template class CBC<AES<4,10>,PKCS5Padding>;
+template class anch::crypto::BlockCipherModeOfOperation<CBC<AES<4,10>,ZeroPadding>,AES<4,10>>;
+template class anch::crypto::CBC<AES<4,10>,ZeroPadding>;
+template class anch::crypto::BlockCipherModeOfOperation<CBC<AES<4,10>,ANSIX923>,AES<4,10>>;
+template class anch::crypto::CBC<AES<4,10>,ANSIX923>;
+template class anch::crypto::BlockCipherModeOfOperation<CBC<AES<4,10>,ISO7816_4Padding>,AES<4,10>>;
+template class anch::crypto::CBC<AES<4,10>,ISO7816_4Padding>;
+template class anch::crypto::BlockCipherModeOfOperation<CBC<AES<4,10>,PKCS5Padding>,AES<4,10>>;
+template class anch::crypto::CBC<AES<4,10>,PKCS5Padding>;
 
-template class BlockCipherModeOfOperation<PCBC<AES<4,10>,ZeroPadding>,AES<4,10>>;
-template class PCBC<AES<4,10>,ZeroPadding>;
-template class BlockCipherModeOfOperation<PCBC<AES<4,10>,ANSIX923>,AES<4,10>>;
-template class PCBC<AES<4,10>,ANSIX923>;
-template class BlockCipherModeOfOperation<PCBC<AES<4,10>,ISO7816_4Padding>,AES<4,10>>;
-template class PCBC<AES<4,10>,ISO7816_4Padding>;
-template class BlockCipherModeOfOperation<PCBC<AES<4,10>,PKCS5Padding>,AES<4,10>>;
-template class PCBC<AES<4,10>,PKCS5Padding>;
+template class anch::crypto::BlockCipherModeOfOperation<PCBC<AES<4,10>,ZeroPadding>,AES<4,10>>;
+template class anch::crypto::PCBC<AES<4,10>,ZeroPadding>;
+template class anch::crypto::BlockCipherModeOfOperation<PCBC<AES<4,10>,ANSIX923>,AES<4,10>>;
+template class anch::crypto::PCBC<AES<4,10>,ANSIX923>;
+template class anch::crypto::BlockCipherModeOfOperation<PCBC<AES<4,10>,ISO7816_4Padding>,AES<4,10>>;
+template class anch::crypto::PCBC<AES<4,10>,ISO7816_4Padding>;
+template class anch::crypto::BlockCipherModeOfOperation<PCBC<AES<4,10>,PKCS5Padding>,AES<4,10>>;
+template class anch::crypto::PCBC<AES<4,10>,PKCS5Padding>;
 
-template class BlockCipherModeOfOperation<CFB<AES<4,10>>,AES<4,10>>;
-template class CFB<AES<4,10>>;
+template class anch::crypto::BlockCipherModeOfOperation<CFB<AES<4,10>>,AES<4,10>>;
+template class anch::crypto::CFB<AES<4,10>>;
 
-template class BlockCipherModeOfOperation<OFB<AES<4,10>>,AES<4,10>>;
-template class OFB<AES<4,10>>;
+template class anch::crypto::BlockCipherModeOfOperation<OFB<AES<4,10>>,AES<4,10>>;
+template class anch::crypto::OFB<AES<4,10>>;
 
-template class BlockCipherModeOfOperation<CTR<AES<4,10>>,AES<4,10>>;
-template class CTR<AES<4,10>>;
+template class anch::crypto::BlockCipherModeOfOperation<CTR<AES<4,10>>,AES<4,10>>;
+template class anch::crypto::CTR<AES<4,10>>;
 // AES-128 defintion -
 
 // AES-192 defintion +
-template class AES<6,12>;
+template class anch::crypto::AES<6,12>;
 
-template class BlockCipherModeOfOperation<ECB<AES<6,12>,ZeroPadding>,AES<6,12>>;
-template class ECB<AES<6,12>,ZeroPadding>;
-template class BlockCipherModeOfOperation<ECB<AES<6,12>,ANSIX923>,AES<6,12>>;
-template class ECB<AES<6,12>,ANSIX923>;
-template class BlockCipherModeOfOperation<ECB<AES<6,12>,ISO7816_4Padding>,AES<6,12>>;
-template class ECB<AES<6,12>,ISO7816_4Padding>;
-template class BlockCipherModeOfOperation<ECB<AES<6,12>,PKCS5Padding>,AES<6,12>>;
-template class ECB<AES<6,12>,PKCS5Padding>;
+template class anch::crypto::BlockCipherModeOfOperation<ECB<AES<6,12>,ZeroPadding>,AES<6,12>>;
+template class anch::crypto::ECB<AES<6,12>,ZeroPadding>;
+template class anch::crypto::BlockCipherModeOfOperation<ECB<AES<6,12>,ANSIX923>,AES<6,12>>;
+template class anch::crypto::ECB<AES<6,12>,ANSIX923>;
+template class anch::crypto::BlockCipherModeOfOperation<ECB<AES<6,12>,ISO7816_4Padding>,AES<6,12>>;
+template class anch::crypto::ECB<AES<6,12>,ISO7816_4Padding>;
+template class anch::crypto::BlockCipherModeOfOperation<ECB<AES<6,12>,PKCS5Padding>,AES<6,12>>;
+template class anch::crypto::ECB<AES<6,12>,PKCS5Padding>;
 
-template class BlockCipherModeOfOperation<CBC<AES<6,12>,ZeroPadding>,AES<6,12>>;
-template class CBC<AES<6,12>,ZeroPadding>;
-template class BlockCipherModeOfOperation<CBC<AES<6,12>,ANSIX923>,AES<6,12>>;
-template class CBC<AES<6,12>,ANSIX923>;
-template class BlockCipherModeOfOperation<CBC<AES<6,12>,ISO7816_4Padding>,AES<6,12>>;
-template class CBC<AES<6,12>,ISO7816_4Padding>;
-template class BlockCipherModeOfOperation<CBC<AES<6,12>,PKCS5Padding>,AES<6,12>>;
-template class CBC<AES<6,12>,PKCS5Padding>;
+template class anch::crypto::BlockCipherModeOfOperation<CBC<AES<6,12>,ZeroPadding>,AES<6,12>>;
+template class anch::crypto::CBC<AES<6,12>,ZeroPadding>;
+template class anch::crypto::BlockCipherModeOfOperation<CBC<AES<6,12>,ANSIX923>,AES<6,12>>;
+template class anch::crypto::CBC<AES<6,12>,ANSIX923>;
+template class anch::crypto::BlockCipherModeOfOperation<CBC<AES<6,12>,ISO7816_4Padding>,AES<6,12>>;
+template class anch::crypto::CBC<AES<6,12>,ISO7816_4Padding>;
+template class anch::crypto::BlockCipherModeOfOperation<CBC<AES<6,12>,PKCS5Padding>,AES<6,12>>;
+template class anch::crypto::CBC<AES<6,12>,PKCS5Padding>;
 
-template class BlockCipherModeOfOperation<PCBC<AES<6,12>,ZeroPadding>,AES<6,12>>;
-template class PCBC<AES<6,12>,ZeroPadding>;
-template class BlockCipherModeOfOperation<PCBC<AES<6,12>,ANSIX923>,AES<6,12>>;
-template class PCBC<AES<6,12>,ANSIX923>;
-template class BlockCipherModeOfOperation<PCBC<AES<6,12>,ISO7816_4Padding>,AES<6,12>>;
-template class PCBC<AES<6,12>,ISO7816_4Padding>;
-template class BlockCipherModeOfOperation<PCBC<AES<6,12>,PKCS5Padding>,AES<6,12>>;
-template class PCBC<AES<6,12>,PKCS5Padding>;
+template class anch::crypto::BlockCipherModeOfOperation<PCBC<AES<6,12>,ZeroPadding>,AES<6,12>>;
+template class anch::crypto::PCBC<AES<6,12>,ZeroPadding>;
+template class anch::crypto::BlockCipherModeOfOperation<PCBC<AES<6,12>,ANSIX923>,AES<6,12>>;
+template class anch::crypto::PCBC<AES<6,12>,ANSIX923>;
+template class anch::crypto::BlockCipherModeOfOperation<PCBC<AES<6,12>,ISO7816_4Padding>,AES<6,12>>;
+template class anch::crypto::PCBC<AES<6,12>,ISO7816_4Padding>;
+template class anch::crypto::BlockCipherModeOfOperation<PCBC<AES<6,12>,PKCS5Padding>,AES<6,12>>;
+template class anch::crypto::PCBC<AES<6,12>,PKCS5Padding>;
 
-template class BlockCipherModeOfOperation<CFB<AES<6,12>>,AES<6,12>>;
-template class CFB<AES<6,12>>;
+template class anch::crypto::BlockCipherModeOfOperation<CFB<AES<6,12>>,AES<6,12>>;
+template class anch::crypto::CFB<AES<6,12>>;
 
-template class BlockCipherModeOfOperation<OFB<AES<6,12>>,AES<6,12>>;
-template class OFB<AES<6,12>>;
+template class anch::crypto::BlockCipherModeOfOperation<OFB<AES<6,12>>,AES<6,12>>;
+template class anch::crypto::OFB<AES<6,12>>;
 
-template class BlockCipherModeOfOperation<CTR<AES<6,12>>,AES<6,12>>;
-template class CTR<AES<6,12>>;
+template class anch::crypto::BlockCipherModeOfOperation<CTR<AES<6,12>>,AES<6,12>>;
+template class anch::crypto::CTR<AES<6,12>>;
 // AES-192 defintion -
 
 // AES-256 defintion +
-template class AES<8,14>;
+template class anch::crypto::AES<8,14>;
 
-template class BlockCipherModeOfOperation<ECB<AES<8,14>,ZeroPadding>,AES<8,14>>;
-template class ECB<AES<8,14>,ZeroPadding>;
-template class BlockCipherModeOfOperation<ECB<AES<8,14>,ANSIX923>,AES<8,14>>;
-template class ECB<AES<8,14>,ANSIX923>;
-template class BlockCipherModeOfOperation<ECB<AES<8,14>,ISO7816_4Padding>,AES<8,14>>;
-template class ECB<AES<8,14>,ISO7816_4Padding>;
-template class BlockCipherModeOfOperation<ECB<AES<8,14>,PKCS5Padding>,AES<8,14>>;
-template class ECB<AES<8,14>,PKCS5Padding>;
+template class anch::crypto::BlockCipherModeOfOperation<ECB<AES<8,14>,ZeroPadding>,AES<8,14>>;
+template class anch::crypto::ECB<AES<8,14>,ZeroPadding>;
+template class anch::crypto::BlockCipherModeOfOperation<ECB<AES<8,14>,ANSIX923>,AES<8,14>>;
+template class anch::crypto::ECB<AES<8,14>,ANSIX923>;
+template class anch::crypto::BlockCipherModeOfOperation<ECB<AES<8,14>,ISO7816_4Padding>,AES<8,14>>;
+template class anch::crypto::ECB<AES<8,14>,ISO7816_4Padding>;
+template class anch::crypto::BlockCipherModeOfOperation<ECB<AES<8,14>,PKCS5Padding>,AES<8,14>>;
+template class anch::crypto::ECB<AES<8,14>,PKCS5Padding>;
 
-template class BlockCipherModeOfOperation<CBC<AES<8,14>,ZeroPadding>,AES<8,14>>;
-template class CBC<AES<8,14>,ZeroPadding>;
-template class BlockCipherModeOfOperation<CBC<AES<8,14>,ANSIX923>,AES<8,14>>;
-template class CBC<AES<8,14>,ANSIX923>;
-template class BlockCipherModeOfOperation<CBC<AES<8,14>,ISO7816_4Padding>,AES<8,14>>;
-template class CBC<AES<8,14>,ISO7816_4Padding>;
-template class BlockCipherModeOfOperation<CBC<AES<8,14>,PKCS5Padding>,AES<8,14>>;
-template class CBC<AES<8,14>,PKCS5Padding>;
+template class anch::crypto::BlockCipherModeOfOperation<CBC<AES<8,14>,ZeroPadding>,AES<8,14>>;
+template class anch::crypto::CBC<AES<8,14>,ZeroPadding>;
+template class anch::crypto::BlockCipherModeOfOperation<CBC<AES<8,14>,ANSIX923>,AES<8,14>>;
+template class anch::crypto::CBC<AES<8,14>,ANSIX923>;
+template class anch::crypto::BlockCipherModeOfOperation<CBC<AES<8,14>,ISO7816_4Padding>,AES<8,14>>;
+template class anch::crypto::CBC<AES<8,14>,ISO7816_4Padding>;
+template class anch::crypto::BlockCipherModeOfOperation<CBC<AES<8,14>,PKCS5Padding>,AES<8,14>>;
+template class anch::crypto::CBC<AES<8,14>,PKCS5Padding>;
 
-template class BlockCipherModeOfOperation<PCBC<AES<8,14>,ZeroPadding>,AES<8,14>>;
-template class PCBC<AES<8,14>,ZeroPadding>;
-template class BlockCipherModeOfOperation<PCBC<AES<8,14>,ANSIX923>,AES<8,14>>;
-template class PCBC<AES<8,14>,ANSIX923>;
-template class BlockCipherModeOfOperation<PCBC<AES<8,14>,ISO7816_4Padding>,AES<8,14>>;
-template class PCBC<AES<8,14>,ISO7816_4Padding>;
-template class BlockCipherModeOfOperation<PCBC<AES<8,14>,PKCS5Padding>,AES<8,14>>;
-template class PCBC<AES<8,14>,PKCS5Padding>;
+template class anch::crypto::BlockCipherModeOfOperation<PCBC<AES<8,14>,ZeroPadding>,AES<8,14>>;
+template class anch::crypto::PCBC<AES<8,14>,ZeroPadding>;
+template class anch::crypto::BlockCipherModeOfOperation<PCBC<AES<8,14>,ANSIX923>,AES<8,14>>;
+template class anch::crypto::PCBC<AES<8,14>,ANSIX923>;
+template class anch::crypto::BlockCipherModeOfOperation<PCBC<AES<8,14>,ISO7816_4Padding>,AES<8,14>>;
+template class anch::crypto::PCBC<AES<8,14>,ISO7816_4Padding>;
+template class anch::crypto::BlockCipherModeOfOperation<PCBC<AES<8,14>,PKCS5Padding>,AES<8,14>>;
+template class anch::crypto::PCBC<AES<8,14>,PKCS5Padding>;
 
-template class BlockCipherModeOfOperation<CFB<AES<8,14>>,AES<8,14>>;
-template class CFB<AES<8,14>>;
+template class anch::crypto::BlockCipherModeOfOperation<CFB<AES<8,14>>,AES<8,14>>;
+template class anch::crypto::CFB<AES<8,14>>;
 
-template class BlockCipherModeOfOperation<OFB<AES<8,14>>,AES<8,14>>;
-template class OFB<AES<8,14>>;
+template class anch::crypto::BlockCipherModeOfOperation<OFB<AES<8,14>>,AES<8,14>>;
+template class anch::crypto::OFB<AES<8,14>>;
 
-template class BlockCipherModeOfOperation<CTR<AES<8,14>>,AES<8,14>>;
-template class CTR<AES<8,14>>;
+template class anch::crypto::BlockCipherModeOfOperation<CTR<AES<8,14>>,AES<8,14>>;
+template class anch::crypto::CTR<AES<8,14>>;
 // AES-256 defintion -

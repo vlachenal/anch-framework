@@ -5,6 +5,8 @@
 # Usage: run-nginx-test.sh <nginx sources directory> <AnCH build directory> [work directory]
 #   nginx sources: extracted nginx release (https://nginx.org/download/)
 #   AnCH build: build directory with anch-rest-nginx-test-app built (ANCH_BUILD_REST=ON)
+# NGINX_CC_OPT and NGINX_LD_OPT environment variables are given to nginx configure (--with-cc-opt, --with-ld-opt),
+# for example to build nginx with ThreadSanitizer.
 set -eu
 
 nginx_src=$(realpath "$1")
@@ -21,10 +23,14 @@ failures=0
 # Build nginx with the module +
 echo "== build nginx $(basename "${nginx_src}")"
 cd "${nginx_src}"
-if [ ! -f objs/ngx_http_anch_rest_module.so ] || [ "${module_dir}/ngx_http_anch_rest_module.c" -nt objs/ngx_http_anch_rest_module.so ]; then
+options="cc: ${NGINX_CC_OPT:-} ld: ${NGINX_LD_OPT:-}"
+if [ ! -f objs/ngx_http_anch_rest_module.so ] || [ "${module_dir}/ngx_http_anch_rest_module.c" -nt objs/ngx_http_anch_rest_module.so ] \
+     || [ "$(cat objs/anch-test-options 2> /dev/null)" != "${options}" ]; then
   ./configure --with-threads --with-compat --without-http_rewrite_module --without-http_gzip_module \
+    --with-cc-opt="${NGINX_CC_OPT:-}" --with-ld-opt="${NGINX_LD_OPT:-}" \
     --add-dynamic-module="${module_dir}" > "${work}.configure.log" 2>&1 || { tail -20 "${work}.configure.log"; exit 1; }
   make -j"$(nproc)" > "${work}.make.log" 2>&1 || { grep -E 'error|warning' "${work}.make.log" | head -20; exit 1; }
+  echo "${options}" > objs/anch-test-options
 fi
 # Build nginx with the module -
 

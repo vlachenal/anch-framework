@@ -63,10 +63,12 @@ namespace anch::json {
       context.next();
       mapper.serialize(val, context);
     });
-    value.setFinalizer([&context, &first, &finished, &cv]() {
+    value.setFinalizer([&context, &first, &finished, &cv, &m]() {
       if(!first) {
 	context.endArray();
       }
+      // Under lock: the wake up can not be lost, and serialize can not return (and destroy cv) before notification
+      std::lock_guard<std::mutex> lock(m);
       finished = true;
       cv.notify_one();
     });

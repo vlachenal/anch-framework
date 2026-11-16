@@ -6,7 +6,7 @@ anch_add_library(anch-oas
 anch_add_executable(anch-oas-gen SOURCES utils/oasGen.cpp
   LIBS anch::oas anch::cli)
 target_compile_definitions(anch-oas-gen PRIVATE ANCH_OAS_VERSION="${PROJECT_VERSION}")
-install(TARGETS anch-oas-gen RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+anch_install_executable(anch-oas-gen)
 # Models generator -
 
 if(ANCH_BUILD_TESTS)

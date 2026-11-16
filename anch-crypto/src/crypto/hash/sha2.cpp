@@ -34,9 +34,9 @@ std::array<uint32_t,8> anch::crypto::SHA224_VALUES = { {
     0xFFC00B31, 0x68581511, 0x64F98FA7, 0xBEFA4FA4
   } };
 using anch::crypto::SHA224_VALUES;
-template class SHA224_256<28,SHA224_VALUES>;
-template class Hash<28,64>;
-template class SHA2<28,64,uint32_t,64,SHA224_VALUES>;
+template class anch::crypto::SHA224_256<28,SHA224_VALUES>;
+template class anch::crypto::Hash<28,64>;
+template class anch::crypto::SHA2<28,64,uint32_t,64,SHA224_VALUES>;
 //template SHA224_256<28,SHA224_VALUES>::SHA224_256(const std::string& data);
 //template SHA224_256<28,SHA224_VALUES>::SHA224_256(std::istream& stream);
 // SHA-224 -
@@ -47,9 +47,9 @@ std::array<uint32_t,8> anch::crypto::SHA256_VALUES = { {
     0x510E527F, 0x9B05688C, 0x1F83D9AB, 0x5BE0CD19
   } };
 using anch::crypto::SHA256_VALUES;
-template class Hash<32,64>;
-template class SHA2<32,64,uint32_t,64,SHA256_VALUES>;
-template class SHA224_256<32,SHA256_VALUES>;
+template class anch::crypto::Hash<32,64>;
+template class anch::crypto::SHA2<32,64,uint32_t,64,SHA256_VALUES>;
+template class anch::crypto::SHA224_256<32,SHA256_VALUES>;
 //template SHA224_256<32,SHA256_VALUES>::SHA224_256(const std::string& data);
 //template SHA224_256<32,SHA256_VALUES>::SHA224_256(std::istream& stream);
 // SHA-256 -
@@ -60,11 +60,11 @@ std::array<uint64_t,8> anch::crypto::SHA384_VALUES = { {
     0x67332667FFC00B31, 0x8EB44A8768581511, 0xDB0C2E0D64F98FA7, 0x47B5481DBEFA4FA4
   } };
 using anch::crypto::SHA384_VALUES;
-template class Hash<48,128>;
-template class SHA2<48,128,uint64_t,80,SHA384_VALUES>;
-template class SHA384_512<48,SHA384_VALUES>;
-template SHA384_512<48,SHA384_VALUES>::SHA384_512(const std::string& data);
-template SHA384_512<48,SHA384_VALUES>::SHA384_512(std::istream& stream);
+template class anch::crypto::Hash<48,128>;
+template class anch::crypto::SHA2<48,128,uint64_t,80,SHA384_VALUES>;
+template class anch::crypto::SHA384_512<48,SHA384_VALUES>;
+template anch::crypto::SHA384_512<48,SHA384_VALUES>::SHA384_512(const std::string& data);
+template anch::crypto::SHA384_512<48,SHA384_VALUES>::SHA384_512(std::istream& stream);
 // SHA-384 -
 
 // SHA-512 +
@@ -73,9 +73,9 @@ std::array<uint64_t,8> anch::crypto::SHA512_VALUES = { {
     0x510E527FADE682D1, 0x9B05688C2B3E6C1F, 0x1F83D9ABFB41BD6B, 0x5BE0CD19137E2179
   } };
 using anch::crypto::SHA512_VALUES;
-template class Hash<64,128>;
-template class SHA2<64,128,uint64_t,80,SHA512_VALUES>;
-template class SHA384_512<64,SHA512_VALUES>;
-template SHA384_512<64,SHA512_VALUES>::SHA384_512(const std::string& data);
-template SHA384_512<64,SHA512_VALUES>::SHA384_512(std::istream& stream);;
+template class anch::crypto::Hash<64,128>;
+template class anch::crypto::SHA2<64,128,uint64_t,80,SHA512_VALUES>;
+template class anch::crypto::SHA384_512<64,SHA512_VALUES>;
+template anch::crypto::SHA384_512<64,SHA512_VALUES>::SHA384_512(const std::string& data);
+template anch::crypto::SHA384_512<64,SHA512_VALUES>::SHA384_512(std::istream& stream);
 // SHA-512 -

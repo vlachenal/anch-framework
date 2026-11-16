@@ -126,6 +126,31 @@ Correction : les 52 fonctions sont `static` (liaison interne), les classes local
 Effet de bord : `decode` devenu `static` est intégré par GCC en release, ce qui a révélé une lecture non initialisée dans Base64 (voir C7 / C8 dans `anch-crypto`).
 Reste possible : `-fvisibility=hidden` avec une macro d'export.
 
+## Industrialisation, point 1 : fiabilité vérifiée en continu (2026-11-16)
+
+Outils ajoutés (presets dans `CMakePresets.json`, workflows dans `.github/workflows`) :
+
+| Vérification | Preset / outil | Workflow | Résultat local |
+|---|---|---|---|
+| ThreadSanitizer | `tsan` (suppressions : `cmake/sanitizers/tsan.supp`, bibliothèques système non instrumentées : gRPC, Abseil, c-ares) | `sanitizers` | 790/790 |
+| Module nginx sous ThreadSanitizer | nginx et application compilés avec `-fsanitize=thread` (`NGINX_CC_OPT`, `NGINX_LD_OPT`) | `nginx` (TSan) | 41 vérifications, aucun rapport avec des frames AnCH (rapports du cœur de nginx seulement : spinlocks et pool de threads) |
+| Clang | `clang` (Clang 23) | `build` | 790/790 |
+| GCC release, Ubuntu 24.04 (GCC 13) | `release`, `no-db` | `build` | release : 790/790 ; Ubuntu 24.04 (GCC 13.3, CMake 3.28, conteneur `ubuntu:24.04`) : 743/743 |
+| Installation | `cmake/install-test/run-install-test.sh` (partagé et statique) | `build` | OK |
+| Couverture | `coverage` + `cmake/coverage-report.sh` | `coverage` | 81,8 % des lignes (anch-sql 55,7 %, anch-cli 72,2 %, anch-network 76,8 %, anch-json 79,4 %) |
+| Fuzzing | `fuzz` : 8 cibles libFuzzer (`fuzz/`) : JSON, multipart, formulaire, media type, UUID, dates, Base64, INI | `fuzz` (60 s par cible, 10 min par semaine) | 1 défaut (D17) ; 60 s par cible sans autre défaut |
+
+Défauts trouvés :
+- J20 (anch-json, TSan) : réveil perdu dans la sérialisation d'un `Flux`, et tests qui détachaient un producteur utilisant un flux local ;
+- J21 (anch-json, Clang) : désérialisation d'un `Flux` résolue vers la surcharge générique ;
+- D17 (anch-date, fuzzing) : dépassement signé pour une année hors de 1678-2261 ;
+- B6 (build, test d'installation) : bibliothèques installées sans RPATH, une dépendance indirecte (`libanch-cli.so` pour `libanch-conf.so`) n'était pas trouvée hors des répertoires système ; corrigé par `INSTALL_RPATH` relatif (`$ORIGIN`, option `ANCH_INSTALL_RPATH`), aussi pour les pilotes SQL chargés par `dlopen` ;
+- tests SQL de la fabrique (Ubuntu, preset `no-db`) : `db_con.conf` déclarait MySQL et PostgreSQL même sans leurs pilotes, et la fabrique crée un pool pour chaque base configurée ; la configuration est maintenant assemblée par CMake à partir des fragments `db_con-<pilote>.conf` des pilotes activés ;
+- tests de dates (Ubuntu) : ils imposent `TZ=Europe/Paris` et ont besoin de `tzdata` (installé explicitement dans le job Ubuntu) ;
+- conformité révélée par Clang : instanciations explicites par un nom introduit par `using` (128, anch-crypto et anch-json), `override` manquants (`reset` des modes de chiffrement), spécifications d'exception incohérentes entre déclaration et définition (destructeurs de `ReaderContext`, `SqlConnectionFactory`, `SQLite3Connection`), comparaison signée dans SHA-2, champ inutilisé (`MySQLPreparedStatement::_conn`).
+
+À noter pour anch-crypto : les classes de hachage masquent `Hash::digest(const std::string&)` (masquage de nom par `digest()`), seul le constructeur prend les données.
+
 ## Divers
 
 - L'en-tête de licence indique encore « based on C++11 standard ».

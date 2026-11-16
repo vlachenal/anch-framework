@@ -208,11 +208,19 @@ MySQLConnection::makePrepared(const std::string& query) {
  *
  * \return the MySQL connection
  */
+// C linkage only gives an unmangled name: the function is loaded with dlsym by the C++ connection factory
+#if defined(__clang__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wreturn-type-c-linkage"
+#endif
 extern "C"
 std::shared_ptr<Connection>
 create_shared_connection(const SqlConnectionConfiguration& config) {
   return std::make_shared<MySQLConnection>(config);
 }
+#if defined(__clang__)
+#pragma clang diagnostic pop
+#endif
 
 /*!
  * C shared library connection maker

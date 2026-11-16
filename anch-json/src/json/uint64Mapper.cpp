@@ -48,5 +48,5 @@ PrimitiveMapper<uint64_t>::deserializeValue(uint64_t& value, anch::json::ReaderC
   return anch::json::lexUInteger(value, context);
 }
 
-template class PrimitiveMapper<uint64_t>;
+template class anch::json::PrimitiveMapper<uint64_t>;
 // PrimitiveMapper specialization for uint64_t -

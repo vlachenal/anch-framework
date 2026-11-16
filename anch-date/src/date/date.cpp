@@ -19,6 +19,9 @@
 */
 #include "date/date.hpp"
 
+#include <limits>
+#include <stdexcept>
+
 using anch::date::Date;
 using std::chrono::nanoseconds;
 using std::chrono::seconds;
@@ -60,10 +63,18 @@ namespace {
    * \param local the local time (normalized by \c std::mktime )
    *
    * \return the time point
+   *
+   * \throw std::invalid_argument date can not be stored in nanoseconds since epoch on 64 bits (about 1678 to 2261)
    */
   sys_time<nanoseconds>
   fromLocalTime(std::tm& local) {
-    return std::chrono::time_point_cast<nanoseconds>(system_clock::from_time_t(std::mktime(&local)));
+    // Seconds whose nanoseconds (and sub-second fields) fit in 64 bits
+    constexpr std::time_t MAX_SECONDS = std::numeric_limits<std::int64_t>::max() / 1'000'000'000 - 1;
+    const std::time_t secs = std::mktime(&local);
+    if(secs < -MAX_SECONDS || secs > MAX_SECONDS) {
+      throw std::invalid_argument("Date out of range (years 1678 to 2261)");
+    }
+    return sys_time<nanoseconds>(std::chrono::duration_cast<nanoseconds>(std::chrono::seconds(secs)));
   }
 
 }

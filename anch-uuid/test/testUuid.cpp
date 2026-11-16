@@ -69,7 +69,7 @@ testUUIDPerf() {
   totalTime = 0;
   for(std::string uuid : strUuids) {
     auto start = std::chrono::high_resolution_clock::now();
-    UUID plop = UUID(uuid);
+    [[maybe_unused]] UUID plop = UUID(uuid);
     auto stop = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> dur = stop - start;
     totalTime += dur.count();
@@ -299,7 +299,7 @@ testUUIDV7Monotonic() {
   std::vector<std::vector<uint64_t>> keys(nbThreads);
   std::vector<std::thread> threads;
   for(int t = 0 ; t < nbThreads ; ++t) {
-    threads.emplace_back([&keys, t, nb]() {
+    threads.emplace_back([&keys, t]() {
       keys[static_cast<std::size_t>(t)].reserve(nb);
       for(int i = 0 ; i < nb ; ++i) {
 	std::array<uint8_t,16> bytes = UUID::randomTime().toBytes();

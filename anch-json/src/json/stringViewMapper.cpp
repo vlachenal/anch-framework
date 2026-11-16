@@ -80,5 +80,5 @@ template<>
 bool
 StringViewMapper::deserialize(std::map<std::string,std::string_view>& value, anch::json::ReaderContext& context) const = delete;
 
-template class PrimitiveMapper<std::string_view>;
+template class anch::json::PrimitiveMapper<std::string_view>;
 // PrimitiveMapper specialization for std::string_view -

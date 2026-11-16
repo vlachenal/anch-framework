@@ -205,6 +205,13 @@ Correction :
 - La position « found at » reste relative au début de l'extrait, pas à l'entrée complète (la position absolue n'est pas connue du contexte).
 - Tests : `json-error-message` (message exact, avec plus et moins de 10 caractères après l'erreur) et `json-error-message-end` (fin de données).
 
+### J20. Sérialisation d'un `Flux` : réveil perdu — vérifié (ThreadSanitizer) — **corrigé le 2026-11-16**
+`anch::json::serialize(anch::Flux<T>&, …)` attend la fin du flux sur une variable de condition, mais le finaliseur (exécuté par le thread producteur) écrivait `finished` sans le mutex : le réveil pouvait être perdu (attente infinie) et `serialize` pouvait retourner, donc détruire la variable de condition, pendant `notify_one()`. Le test `json-ser-flux` (et `anch-flux-push-async-*` dans anch-utils) détachait aussi un producteur qui utilisait le flux local après la fin du test.
+Correction : `finished` est écrit et la notification faite sous le mutex ; les tests rejoignent le producteur (`join`).
+
+### J21. Désérialisation d'un `Flux` choisie par surcharge générique avec Clang — vérifié (Clang 23) — **corrigé le 2026-11-16**
+Sans surcharge dédiée, `deserialize(flux, input)` passait par celle des conteneurs `C<T>` (paramètre modèle de modèle face au `Flux` variadique, P0522) avec GCC, mais Clang retient `deserialize(T&)` (ordre partiel, CWG 2398) : erreur d'édition des liens (`registerObject<Flux<T>>` non défini). Surcharges `anch::json::deserialize(anch::Flux<T>&, …)` et `JSONMapper::deserialize(anch::Flux<T>&, …)` ajoutées.
+
 ## Points positifs
 - Lecture en flux avec buffer configurable (`MappingOptions::buffer_size`).
 - 48 tests passent, plus un benchmark (`benchJson.cpp`).

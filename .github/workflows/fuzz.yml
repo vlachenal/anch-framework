@@ -1,0 +1,97 @@
+# libFuzzer targets (fuzz/, fuzz preset): each target is run from its corpus (fuzz/corpus/<target>) for a limited
+# time ; crashes are uploaded as artifacts (reproduce: build/fuzz/bin/anch-fuzz-<target> <crash file>)
+name: fuzz
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 3 * * 0' # weekly, longer runs
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  fuzz:
+    name: fuzz
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    container:
+      image: archlinux:base-devel
+    env:
+      # Seconds per target: 60 for pushes and pull requests, 600 for the weekly run
+      FUZZ_TIME: ${{ github.event_name == 'schedule' && '600' || '60' }}
+    steps:
+      - name: Install dependencies
+        run: pacman -Syu --noconfirm --needed git cmake pkgconf ccache clang llvm compiler-rt curl
+
+      - uses: actions/checkout@v7
+
+      - name: Set up ccache
+        run: |
+          echo "CCACHE_DIR=$PWD/.ccache" >> "$GITHUB_ENV"
+          echo "CCACHE_BASEDIR=$PWD" >> "$GITHUB_ENV"
+          echo "CCACHE_MAXSIZE=1G" >> "$GITHUB_ENV"
+
+      - name: Restore ccache
+        uses: actions/cache@v6
+        with:
+          path: .ccache
+          key: ccache-fuzz-${{ github.sha }}
+          restore-keys: ccache-fuzz-
+
+      - name: Build
+        run: |
+          cmake --preset fuzz -DANCH_BUILD_REST=ON -DANCH_BUILD_SQL=OFF -DANCH_BUILD_OAS=OFF \
+            -DANCH_REST_PROTOBUF=OFF -DANCH_REST_GRPC=OFF -DANCH_REST_THRIFT=OFF \
+            -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
+          cmake --build --preset fuzz --parallel "$(nproc)"
+
+      - name: Fuzz
+        shell: bash
+        run: |
+          mkdir -p /tmp/fuzz
+          failed=0
+          # Targets are run in parallel, one per CPU
+          run() {
+            target=$1
+            mkdir -p "/tmp/fuzz/corpus-${target}"
+            if build/fuzz/bin/anch-fuzz-${target} -max_total_time="${FUZZ_TIME}" -timeout=10 -rss_limit_mb=2048 \
+                 -artifact_prefix="/tmp/fuzz/${target}-" "/tmp/fuzz/corpus-${target}" "fuzz/corpus/${target}" \
+                 > "/tmp/fuzz/${target}.log" 2>&1; then
+              echo "OK   ${target}: $(grep -E '^#[0-9]+.*DONE' "/tmp/fuzz/${target}.log" | tail -1)"
+            else
+              echo "FAIL ${target}"
+              tail -60 "/tmp/fuzz/${target}.log"
+              return 1
+            fi
+          }
+          pids=()
+          for target in $(ls build/fuzz/bin | sed -n 's/^anch-fuzz-//p'); do
+            run "${target}" &
+            pids+=($!)
+            if [ "${#pids[@]}" -ge "$(nproc)" ]; then
+              wait "${pids[0]}" || failed=1
+              pids=("${pids[@]:1}")
+            fi
+          done
+          for pid in "${pids[@]}"; do
+            wait "${pid}" || failed=1
+          done
+          exit ${failed}
+
+      - name: Upload crashes
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: fuzz-crashes
+          path: |
+            /tmp/fuzz/*-crash-*
+            /tmp/fuzz/*-leak-*
+            /tmp/fuzz/*-timeout-*
+            /tmp/fuzz/*-oom-*
+            /tmp/fuzz/*.log
+          if-no-files-found: ignore

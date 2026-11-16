@@ -48,5 +48,5 @@ PrimitiveMapper<double>::deserializeValue(double& value, anch::json::ReaderConte
   return anch::json::lexNumber(value, context);
 }
 
-template class PrimitiveMapper<double>;
+template class anch::json::PrimitiveMapper<double>;
 // PrimitiveMapper specialization for double -

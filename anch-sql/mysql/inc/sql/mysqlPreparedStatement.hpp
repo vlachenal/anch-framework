@@ -49,9 +49,6 @@ namespace anch::sql {
     /*! Statement counter */
     static std::atomic<std::uint64_t> _counter;
 
-    /*! MySQL connection */
-    MYSQL* _conn;
-
     /*! MySQL statement */
     MYSQL_STMT* _stmt;
 

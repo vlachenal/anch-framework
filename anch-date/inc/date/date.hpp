@@ -147,6 +147,8 @@ namespace anch::date {
 
     /*!
      * Compute timestamp from local time fields (and normalize fields)
+     *
+     * \throw std::invalid_argument date out of range (years 1678 to 2261)
      */
     void computeTimestamp();
 

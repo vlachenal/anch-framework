@@ -1,0 +1,16 @@
+# Consumer project of an installed AnCH Framework (see run-install-test.sh)
+cmake_minimum_required(VERSION 3.25)
+project(anch-install-test LANGUAGES CXX)
+
+find_package(Anch REQUIRED)
+
+add_executable(anch-install-test main.cpp)
+target_link_libraries(anch-install-test PRIVATE anch::json anch::uuid anch::date anch::log anch::conf)
+if(TARGET anch::crypto)
+  target_link_libraries(anch-install-test PRIVATE anch::crypto)
+  target_compile_definitions(anch-install-test PRIVATE ANCH_TEST_CRYPTO)
+endif()
+if(TARGET anch::rest-server)
+  target_link_libraries(anch-install-test PRIVATE anch::rest-server)
+  target_compile_definitions(anch-install-test PRIVATE ANCH_TEST_REST)
+endif()

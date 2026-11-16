@@ -58,5 +58,5 @@ PrimitiveMapper<float>::deserializeValue(float& value, anch::json::ReaderContext
   return false;
 }
 
-template class PrimitiveMapper<float>;
+template class anch::json::PrimitiveMapper<float>;
 // PrimitiveMapper specialization for float -

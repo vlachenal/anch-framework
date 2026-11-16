@@ -1,0 +1,10 @@
+--XyZ
+Content-Disposition: form-data; name="a"
+
+value
+--XyZ
+Content-Disposition: form-data; name="f"; filename="f.txt"
+Content-Type: text/plain
+
+content
+--XyZ--

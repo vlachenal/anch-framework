@@ -1,6 +1,21 @@
 set_property(DIRECTORY PROPERTY LABELS sql)
 
-anch_copy_test_files(anch.db db_con.conf)
+anch_copy_test_files(anch.db)
+
+# Connection factory configuration: only enabled drivers (the factory creates a pool for each configured database) +
+file(READ ${CMAKE_CURRENT_SOURCE_DIR}/db_con.conf db_con)
+set(db_con_files db_con.conf)
+foreach(driver IN ITEMS mysql postgresql sqlite3)
+  string(TOUPPER ${driver} upper)
+  if(ANCH_SQL_${upper})
+    file(READ ${CMAKE_CURRENT_SOURCE_DIR}/db_con-${driver}.conf section)
+    string(APPEND db_con "\n${section}")
+  endif()
+  list(APPEND db_con_files db_con-${driver}.conf)
+endforeach()
+file(CONFIGURE OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/db_con.conf CONTENT "${db_con}" @ONLY)
+set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS ${db_con_files})
+# Connection factory configuration -
 
 # Drivers are loaded with dlopen() by the connection factory: they are looked up in library output directory
 set(driver_env "LD_LIBRARY_PATH=$<TARGET_FILE_DIR:anch-sql>")

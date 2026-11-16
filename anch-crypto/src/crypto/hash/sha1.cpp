@@ -32,7 +32,7 @@ using anch::crypto::Hash;
 using anch::crypto::SHA1;
 using anch::UUID;
 
-template class Hash<20,64>;
+template class anch::crypto::Hash<20,64>;
 
 
 typedef union {

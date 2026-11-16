@@ -8,7 +8,7 @@ AnCH Framework ("Another C++ Hack") is a set of small, independent C++ utility l
 
 ## Build
 
-The framework is a single CMake project (CMake >= 3.25): the root `CMakeLists.txt` adds every module with `add_subdirectory()` in dependency order, and modules depend on each other through targets (`anch::utils`, `anch::conf`, `anch::log`, ...). Presets are defined in `CMakePresets.json` (`release`, `debug`, `no-db`; build dirs in `build/<preset>`):
+The framework is a single CMake project (CMake >= 3.25): the root `CMakeLists.txt` adds every module with `add_subdirectory()` in dependency order, and modules depend on each other through targets (`anch::utils`, `anch::conf`, `anch::log`, ...). Presets are defined in `CMakePresets.json` (`release`, `debug`, `no-db`, `asan` (ASan/UBSan), `tsan` (ThreadSanitizer, suppressions of non instrumented system libraries in `cmake/sanitizers/tsan.supp`), `clang` (Release with Clang), `coverage` (Clang source-based coverage, report with `cmake/coverage-report.sh`), `fuzz` (libFuzzer targets of `fuzz/`, Clang); build dirs in `build/<preset>`):
 
 ```sh
 cmake --preset debug                        # configure
@@ -27,7 +27,9 @@ Things to know about the build:
 - Definitions used by public headers (`ANCH_POSIX`, `ANCH_UUID` and `ANCH_DATE` for anch-json, `ANCH_CPU_*` for anch-crypto, `ANCH_SQL_*` for drivers, `PROTOBUF_MESSAGE_GLOBALS_TEMPORARY_OPTOUT` for anch-rest-protobuf under ASan: Protobuf changes generated messages layout with AddressSanitizer and the system libprotobuf is not instrumented) are PUBLIC target definitions: never add them with `add_definitions()`.
 - Non-template functions defined in headers (`impl/` files) must be `inline`, otherwise linking two translation units that include them fails.
 - `anch-sql` drivers (`anch-mysql`, `anch-postgresql`, `anch-sqlite`) are loaded with `dlopen("libanch-<driver>.so")` by the connection factory; tests set `LD_LIBRARY_PATH` to the build `lib/` directory. MySQL and PostgreSQL tests need running servers.
-- `cmake --install` installs headers in `include/anch` and a CMake package: consumers use `find_package(Anch)` and `target_link_libraries(... anch::conf)`.
+- `cmake --install` installs headers in `include/anch` and a CMake package: consumers use `find_package(Anch)` and `target_link_libraries(... anch::conf)`. Installed binaries have a relative RPATH (`$ORIGIN`, option `ANCH_INSTALL_RPATH`). `cmake/install-test/run-install-test.sh <work dir> [CMake options]` installs the framework and builds a consumer project with it.
+- The code has to build with GCC (>= 13) and Clang: Clang refuses explicit instantiations through a `using` name (qualify the template: `template class anch::json::PrimitiveMapper<int16_t>;`) and reports lambda captures unused by some `if constexpr` instantiations (`static_cast<void>(this);`).
+- CI (`.github/workflows`): `sanitizers` (asan, tsan), `build` (GCC and Clang release on Arch Linux, GCC 13 on Ubuntu 24.04, installation test with shared and static libraries), `coverage`, `fuzz` (60 s per target, 10 min weekly) and `nginx` (module integration test, also with nginx and the application built with ThreadSanitizer).
 
 ## Tests (anch-ut)
 

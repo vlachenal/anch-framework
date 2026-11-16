@@ -133,7 +133,7 @@ testUniqueThreads() {
   std::vector<std::vector<UUID>> results(nbThreads);
   std::vector<std::thread> threads;
   for(int t = 0 ; t < nbThreads ; ++t) {
-    threads.emplace_back([&results, t, nb]() {
+    threads.emplace_back([&results, t]() {
       for(int i = 0 ; i < nb ; ++i) {
 	UUID::Version version = (i % 2 == 0) ? UUID::Version::MAC_ADDRESS_R : UUID::Version::MAC_ADDRESS;
 	results[static_cast<std::size_t>(t)].push_back(UUID::generateUUID(version, MAC));

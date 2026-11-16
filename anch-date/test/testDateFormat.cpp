@@ -284,7 +284,9 @@ testParseInvalid() {
   for(const char* value : {"2025-02-30 10:00:00.000", "2025-13-01 10:00:00.000", "2025-00-10 10:00:00.000",
 			   "2025-1a-01 10:00:00.000", "2025-01-01 24:00:00.000", "2025-01-01 10:60:00.000",
 			   "2025-01-01 10:00:00.-01", "2025-01-01 10:00:00+000", "2025/01/01 10:00:00.000",
-			   "2025-01-01 10:00:00.0000", " 2025-01-01 10:00:00.00"}) {
+			   "2025-01-01 10:00:00.0000", " 2025-01-01 10:00:00.00",
+			   // Out of nanoseconds on 64 bits range (signed overflow found by fuzzing)
+			   "1013-11-16 20:41:20.123", "9999-12-31 23:59:59.999", "0000-01-01 00:00:00.000"}) {
     bool raised = false;
     try {
       formatter.parse(value);
@@ -294,6 +296,8 @@ testParseInvalid() {
     anch::ut::assertThat(raised, "{} should be refused", value);
   }
   formatter.parse("2024-02-29 10:00:00.000"); // leap year
+  formatter.parse("1700-01-01 00:00:00.000"); // range limits
+  formatter.parse("2261-12-31 23:59:59.999");
 }
 
 void

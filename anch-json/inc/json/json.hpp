@@ -202,6 +202,23 @@ namespace anch::json {
 		   const anch::json::MappingOptions& options = anch::json::DEFAULT_MAPPING_OPTIONS);
 
   /*!
+   * Deserialize JSON array into objects' flux: each object is pushed to the flux consumer, then flux is finalized.\n
+   * Consumer (and error handler when needed) have to be set before this method call.
+   *
+   * \tparam T the object type
+   *
+   * \param values the flux to push values in
+   * \param input the input stream to parse
+   * \param options the options to use
+   *
+   * \since 0.2
+   */
+  template<typename T>
+  void deserialize(anch::Flux<T>& values,
+		   std::istream& input,
+		   const anch::json::MappingOptions& options = anch::json::DEFAULT_MAPPING_OPTIONS);
+
+  /*!
    * Deserialize objects
    *
    * \tparam T the object type
@@ -381,6 +398,19 @@ namespace anch::json {
      */
     template<template<typename> typename C, typename T>
     void deserialize(C<T>& values, std::istream& input);
+
+    /*!
+     * Deserialize JSON array into objects' flux (see \ref anch::json::deserialize )
+     *
+     * \tparam T the object type
+     *
+     * \param values the flux to push values in
+     * \param input the input stream to parse
+     *
+     * \since 0.2
+     */
+    template<typename T>
+    void deserialize(anch::Flux<T>& values, std::istream& input);
 
     /*!
      * Deserialize objects

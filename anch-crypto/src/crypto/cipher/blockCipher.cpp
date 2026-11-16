@@ -21,8 +21,8 @@
 
 using anch::crypto::BlockCipher;
 
-template class BlockCipher<8>;
-template class BlockCipher<16>;
+template class anch::crypto::BlockCipher<8>;
+template class anch::crypto::BlockCipher<16>;
 
 
 /*! Galois multiply by 2 lookup table */
