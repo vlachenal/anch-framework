@@ -63,7 +63,10 @@ jobs:
           NGINX_LD_OPT: ${{ matrix.ld_opt }}
           TSAN_OPTIONS: "halt_on_error=0:log_path=/tmp/tsan/report"
         run: |
+          # nginx workers run as nobody (master started as root): ThreadSanitizer stops a process which can not
+          # write its report
           mkdir -p /tmp/tsan
+          chmod 1777 /tmp/tsan
           sh anch-rest/nginx/test/run-nginx-test.sh "/tmp/nginx/nginx-${NGINX_VERSION}" build/${{ matrix.preset }} /tmp/nginx-test
 
       - name: Check ThreadSanitizer reports
