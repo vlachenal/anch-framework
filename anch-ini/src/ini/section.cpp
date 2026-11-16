@@ -19,7 +19,10 @@
 */
 #include "ini/section.hpp"
 
+#include <algorithm>
+#include <cctype>
 #include <charconv>
+#include <string_view>
 
 #include "ini/parserError.hpp"
 
@@ -233,7 +236,20 @@ Section::getValue(const std::string& path) const {
   if(!str.has_value()) {
     return val;
   }
-  val = str.value() == "true";
+  // Case is ignored ; any other value is an error, as invalid numbers
+  const std::string& value = str.value();
+  auto equals = [&value](std::string_view expected) {
+    return std::ranges::equal(value, expected, [](char a, char b) {
+      return std::tolower(static_cast<unsigned char>(a)) == b;
+    });
+  };
+  if(equals("true")) {
+    val = true;
+  } else if(equals("false")) {
+    val = false;
+  } else {
+    throw ParserError(value + " is not a boolean (true or false)", ParserError::ErrorCode::BAD_CAST);
+  }
   return val;
 }
 // Methods -

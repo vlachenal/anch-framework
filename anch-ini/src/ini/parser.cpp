@@ -32,7 +32,8 @@ using anch::ini::ParserError;
 
 // Static intialization +
 const std::regex SECTION_REGEX = std::regex("^( |\t)*\\[([^#; \t]+)\\]");
-const std::regex KEYVAL_REGEX = std::regex("^[ \t]*([^=]+)( |\t)*=( |\t)*(.*)"); // value can be empty
+// Key does not end with spaces (spaces before '=' are not part of the key) ; value can be empty
+const std::regex KEYVAL_REGEX = std::regex("^[ \t]*([^=]*[^= \t])[ \t]*=[ \t]*(.*)");
 //const std::regex COMMENT_REGEX = std::regex("( |\t)*([^\\\\][#|;].*)$");
 // Static intialization -
 
@@ -149,7 +150,7 @@ parseLine(const std::string& line, Section& section, Section& root, std::istream
     res = &parseSection(match[2], root);
 
   } else if(std::regex_search(line, match, KEYVAL_REGEX)) {
-    parseValue(match[1], match[4], section, input);
+    parseValue(match[1], match[2], section, input);
   }
   return res;
 }

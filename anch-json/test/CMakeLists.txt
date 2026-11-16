@@ -99,6 +99,7 @@ add_test(NAME json-deser-max-payload-refill-ko COMMAND anch-json-mapper-test -t 
 add_test(NAME json-deser-max-payload-limit COMMAND anch-json-mapper-test -t json-deser-max-payload-limit)
 add_test(NAME json-deser-trailing-data COMMAND anch-json-mapper-test -t json-deser-trailing-data)
 add_test(NAME json-deser-trailing-spaces COMMAND anch-json-mapper-test -t json-deser-trailing-spaces)
+add_test(NAME json-deser-trailing-comma COMMAND anch-json-mapper-test -t json-deser-trailing-comma)
 add_test(NAME json-ser-escape COMMAND anch-json-mapper-test -t json-ser-escape)
 add_test(NAME json-ser-escape-map-key COMMAND anch-json-mapper-test -t json-ser-escape-map-key)
 add_test(NAME json-deser-max-depth-unknown COMMAND anch-json-mapper-test -t json-deser-max-depth-unknown)

@@ -21,5 +21,5 @@ Cascade et placeholders terminés le 2026-11-12 (voir [cascade.todo](cascade.tod
 ## Reste
 
 - `Configuration::loader()` renvoie une instance `static` : les appels concurrents pendant le chargement ne sont pas protégés.
-- anch-ini : les espaces avant `=` font partie de la clé (`cle = valeur` donne la clé `"cle "`).
+- ~~anch-ini : les espaces avant `=` font partie de la clé (`cle = valeur` donne la clé `"cle "`).~~ Corrigé le 2026-11-16 (I3).
 - Résolveur `arg` protégé mais non enregistré ; placeholders imbriqués non supportés (erreur explicite).

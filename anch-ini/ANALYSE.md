@@ -26,11 +26,13 @@ Correction : `parseLine` ignore la ligne dès que son premier caractère non bla
 La valeur est capturée par `(.+)` : une ligne sans valeur n'est pas reconnue, la clé n'existe pas (au lieu d'une chaîne vide). Impossible de vider une valeur dans un fichier de profil.
 Correction : la valeur peut être vide (`(.*)`) : `clé=`, `clé=` suivi d'espaces ou d'un commentaire donnent une chaîne vide. Test `parser-empty-value`, qui échoue avant correction. 773/773 tests sous ASan / UBSan.
 
-### I3. Espaces avant `=` dans la clé — vérifié (déjà noté dans `anch-conf`)
+### I3. Espaces avant `=` dans la clé — vérifié (déjà noté dans `anch-conf`) — **corrigé le 2026-11-16**
 `key = value` donne la clé `"key "` : `[^=]+` est gourmand, le `( |\t)*` suivant ne capture jamais rien.
+Correction : la clé se termine par un caractère qui n'est ni un espace ni une tabulation (`([^=]*[^= \t])`) ; les espaces internes sont gardés (`inner space = v` donne la clé `inner space`). Test `parser-key-spaces` (dont `[TATA] tata = tutu` de `test.ini`, lu jusque-là sous la clé `"tata "`).
 
-### I4. `getValue<bool>` : tout ce qui n'est pas `true` vaut `false` — vérifié
+### I4. `getValue<bool>` : tout ce qui n'est pas `true` vaut `false` — vérifié — **corrigé le 2026-11-16**
 `True`, `1`, `yes` ou une faute de frappe donnent `false` sans erreur, alors que les nombres invalides lèvent `BAD_CAST`.
+Correction : `true` et `false` sans distinction de casse ; toute autre valeur (dont `1`, `yes`, une valeur vide) lève `ParserError` `BAD_CAST`, comme un nombre invalide. La documentation de `getValue` indiquait `std::bad_cast` : corrigée (`ParserError`). Concerne anch-log (`color`, `thread-safe`, `low-priority`) qui lit ses booléens par `getValue<bool>`. Tests `parser-bool-values`, `parser-bool-invalid`.
 
 ### I5. Fonctions et constantes dans l'espace de noms global — vérifié (`nm`) — **corrigé le 2026-11-14** (X1)
 `parseValue`, `parseSection`, `parseLine`, `addIndent`, `printSection` sont exportées par `libanch-ini.so` hors de tout namespace. Voir le point transverse dans [../ANALYSE.md](../ANALYSE.md).

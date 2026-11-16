@@ -89,8 +89,10 @@ Correction : dans `lexInteger`, `lexUInteger` et `lexNumber`, `res.ec == result_
 Correction : `anch::json::lexEnd`, appelée par les quatre fonctions `anch::json::deserialize` (objet, valeur retournée, collection, map), n'accepte après la valeur racine que des espaces jusqu'à la fin du flux, sinon `INVALID_FORMAT` (« Unexpected data after JSON value »). Les espaces finaux suivent `deserialize_max_discard_char` comme ceux entre les jetons : avec la valeur par défaut `0`, `{"s":"a"}\n` est refusé (`POTENTIAL_OVERFLOW`), comme `{ "s":"a"}` l'était déjà. Pas d'option pour lire plusieurs documents sur un même flux : la lecture par tampon consomme de toute façon la suite du flux.
 Tests : `json-deser-trailing-data`, `json-deser-trailing-spaces` (tampons de 3, 9 et 1 024 caractères) ; `anch-rest-api-body` (réponse `400`).
 
-### J16. Virgule finale acceptée dans un objet mappé — vérifié (2026-11-14)
+### J16. Virgule finale acceptée dans un objet mappé — vérifié (2026-11-14) — **corrigé le 2026-11-16**
 `{"s":"a",}` est accepté, alors que `[1,]` et `{"a":1,}` dans une `std::map` sont refusés.
+Les objets ignorés (`deserialize_ignore_unknown_field`) acceptaient aussi `{"y":1,}`.
+Correction : `lexObject` (objets mappés, avec ou sans champs obligatoires) n'accepte `}` à la place d'un champ que pour l'objet vide ; `lexUnknownObject` refuse `}` après une virgule. Test `json-deser-trailing-comma`.
 
 ### J17. Caractères de contrôle bruts acceptés dans les chaînes — vérifié (2026-11-14)
 Une tabulation, un saut de ligne ou `0x1b` non échappés dans une chaîne sont acceptés (la RFC 8259 impose l'échappement des caractères < 0x20). Sans gravité : ils sont échappés correctement à la réécriture.

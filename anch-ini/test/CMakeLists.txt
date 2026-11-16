@@ -22,3 +22,6 @@ add_test(NAME parser-num-invalid COMMAND anch-ini-parser-test -t parser-num-inva
 add_test(NAME parser-num-incomplete COMMAND anch-ini-parser-test -t parser-num-incomplete)
 add_test(NAME parser-comment-keyval COMMAND anch-ini-parser-test -t parser-comment-keyval)
 add_test(NAME parser-empty-value COMMAND anch-ini-parser-test -t parser-empty-value)
+add_test(NAME parser-key-spaces COMMAND anch-ini-parser-test -t parser-key-spaces)
+add_test(NAME parser-bool-values COMMAND anch-ini-parser-test -t parser-bool-values)
+add_test(NAME parser-bool-invalid COMMAND anch-ini-parser-test -t parser-bool-invalid)

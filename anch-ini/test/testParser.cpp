@@ -147,6 +147,7 @@ getBool() {
   std::cout << "Execute getBool" << std::endl;
   auto val = section.getValue<bool>("conv.bool");
   anch::ut::assertTrue(val.has_value(), "conv/bool not found");
+  anch::ut::assertTrue(val.value(), "conv/bool should be true");
   std::cout << "conv/bool=" << val.value() << std::endl;
 }
 
@@ -217,6 +218,42 @@ emptyValue() {
 
 
 void
+keySpaces() {
+  std::cout << "Execute keySpaces" << std::endl;
+  for(const std::string key : {"keys.spaced", "keys.tabbed", "keys.dotted.key", "keys.inner space", "TATA.tata"}) {
+    auto val = section.getValue<std::string>(key);
+    anch::ut::assertThat(val.has_value(), "{} not found", key);
+    anch::ut::assertThat(val.value() == "value" || val.value() == "tutu", "{} is '{}'", key, val.value());
+  }
+  anch::ut::assertThat(!section.getValue<std::string>("keys.spaced ").has_value(), "'keys.spaced ' should not exist");
+}
+
+void
+boolValues() {
+  std::cout << "Execute boolValues" << std::endl;
+  anch::ut::assertThat(section.getValue<bool>("bools.lower") == true, "bools/lower should be true");
+  anch::ut::assertThat(section.getValue<bool>("bools.upper") == true, "bools/upper should be true");
+  anch::ut::assertThat(section.getValue<bool>("bools.mixed") == false, "bools/mixed should be false");
+  anch::ut::assertThat(!section.getValue<bool>("bools.missing").has_value(), "bools/missing should not exist");
+  anch::ut::assertThat(section.getValue<bool>("bools.missing", true), "bools/missing default value should be returned");
+}
+
+void
+boolInvalid() {
+  std::cout << "Execute boolInvalid" << std::endl;
+  for(const std::string key : {"bools.one", "bools.yes", "bools.typo", "bools.empty"}) {
+    try {
+      section.getValue<bool>(key);
+      anch::ut::fail("This test should have failed");
+    } catch(const ParserError& e) {
+      std::cout << e.what() << std::endl;
+      anch::ut::assertThat(e.getErrorCode() == ParserError::ErrorCode::BAD_CAST, "Error code should be BAD_CAST for {}", key);
+    }
+  }
+}
+
+
+void
 anch::ut::setup(anch::ut::UnitTests& tests) {
   tests
     .name("AnCH INI unit tests")
@@ -240,5 +277,8 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("parser-num-incomplete", getNumFailIncomplete)
     .add("parser-comment-keyval", commentedKeyValue)
     .add("parser-empty-value", emptyValue)
+    .add("parser-key-spaces", keySpaces)
+    .add("parser-bool-values", boolValues)
+    .add("parser-bool-invalid", boolInvalid)
     ;
 }

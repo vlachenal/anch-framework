@@ -2131,6 +2131,47 @@ testDeserTrailingSpaces() {
 }
 // Data after root value -
 
+// Trailing comma +
+void
+testDeserTrailingComma() {
+  auto parse = [](const std::string& json, bool ignoreUnknown) {
+    anch::json::JSONMapper mapper({.deserialize_ignore_unknown_field = ignoreUnknown});
+    std::istringstream iss(json);
+    TestStr res;
+    mapper.deserialize(res, iss);
+    return res;
+  };
+  auto parseRequired = [](const std::string& json) {
+    std::istringstream iss(json);
+    TestRequiredChild res;
+    anch::json::JSONMapper(anch::json::DEFAULT_MAPPING_OPTIONS).deserialize(res, iss);
+    return res;
+  };
+  // Mapped object, mapped object with required fields, ignored object
+  for(auto [json, ignoreUnknown] : std::initializer_list<std::pair<const char*, bool>>{
+      {R"({"s":"a",})", false}, {R"({,})", false}, {R"({"s":"a","x":{"y":1,}})", true}, {R"({"s":"a","x":{,}})", true},
+      {R"({"s":"a","x":[1,]})", true}}) {
+    try {
+      parse(json, ignoreUnknown);
+      anch::ut::fail("This test should have failed");
+    } catch(const MappingError& e) {
+      anch::ut::assertThat(e.getErrorCode() == ErrorCode::INVALID_FORMAT, "Unexpected error for {}: {}", json, e.what());
+      std::cout << json << ": " << e.what() << std::endl;
+    }
+  }
+  try {
+    parseRequired(R"({"id":1,})");
+    anch::ut::fail("This test should have failed");
+  } catch(const MappingError& e) {
+    anch::ut::assertThat(e.getErrorCode() == ErrorCode::INVALID_FORMAT, "Unexpected error: {}", e.what());
+  }
+  // Empty objects are still accepted
+  anch::ut::assertThat(parse("{}", false)._s.empty(), "Empty object expected");
+  anch::ut::assertThat(parse(R"({"s":"a","x":{},"y":{"z":{}}})", true)._s == "a", "Ignored empty objects expected");
+  anch::ut::assertThat(parseRequired(R"({"id":1})")._id == 1, "Required field expected");
+}
+// Trailing comma -
+
 void
 anch::ut::setup(anch::ut::UnitTests& tests) {
   tests
@@ -2170,6 +2211,7 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("json-deser-max-payload-limit", testDeserMaxPayloadLimit)
     .add("json-deser-trailing-data", testDeserTrailingData)
     .add("json-deser-trailing-spaces", testDeserTrailingSpaces)
+    .add("json-deser-trailing-comma", testDeserTrailingComma)
     .add("json-ser-escape", testSerEscape)
     .add("json-ser-escape-map-key", testSerEscapeMapKey)
     .add("json-deser-max-depth-unknown", testDeserMaxDepthUnknown)

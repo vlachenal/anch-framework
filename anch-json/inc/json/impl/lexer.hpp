@@ -33,11 +33,16 @@ namespace anch::json {
     anch::json::DepthGuard guard(context);
     char current = '\0';
     std::string field;
+    bool first = true;
     do {
       // Look for field +
       if(!anch::json::lexField(field, context)) { // '}' has been found
+	if(!first) { // ",}" sequence
+	  throw anch::json::MappingError(anch::json::ErrorCode::INVALID_FORMAT, context);
+	}
 	break;
       }
+      first = false;
       // Look for field -
       // Look for ':' +
       current = context.discard();
@@ -47,7 +52,7 @@ namespace anch::json {
       // Look for ':' -
       std::invoke(onField, std::as_const(field), context);
       // Look for ',' for next field or '}' for end +
-      current = context.discard(); // \todo authorizes ",}" sequence for now ... change it ???
+      current = context.discard();
       switch(current) {
       case anch::json::FIELD_SEPARATOR: // consume next field
 	break;

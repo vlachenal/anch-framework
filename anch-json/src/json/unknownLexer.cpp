@@ -88,10 +88,7 @@ lexUnknownObject(anch::json::ReaderContext& context) {
   context.back();
   do {
     current = context.discard();
-    if(current == anch::json::OBJECT_END) {
-      return;
-    }
-    if(current != anch::json::STRING_DELIMITER) {
+    if(current != anch::json::STRING_DELIMITER) { // '}' is only allowed in empty object: ",}" is refused
       throw anch::json::MappingError(ErrorCode::INVALID_FORMAT, context);
     }
     lexUnknownStr(context);

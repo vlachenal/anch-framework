@@ -112,7 +112,8 @@ namespace anch::ini {
      *
      * \return empty optional value when not found, the value otherwise
      *
-     * \throw std::bad_cast on cast error
+     * \throw anch::ini::ParserError \c BAD_CAST on cast error: invalid or out of range number, boolean other than
+     *        \c true or \c false (case is ignored)
      */
     template<typename T>
     std::optional<T> getValue(const std::string& key) const;
@@ -125,7 +126,8 @@ namespace anch::ini {
      *
      * \return default value when not found, the value otherwise
      *
-     * \throw std::bad_cast on cast error
+     * \throw anch::ini::ParserError \c BAD_CAST on cast error: invalid or out of range number, boolean other than
+     *        \c true or \c false (case is ignored)
      */
     template<typename T>
     T getValue(const std::string& key, const T& defaultValue) const;
