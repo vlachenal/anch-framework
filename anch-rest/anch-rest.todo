@@ -58,16 +58,26 @@ nginx (étape 3, fait)
 - Module C pur : directive "anch_rest_app /path/libapi.so;" dans une location, dlopen au démarrage
   du worker.
 - nginx est non bloquant : les handlers sont exécutés dans un pool de threads nginx
-  (ngx_thread_task_post, nginx compilé avec --with-threads) ; corps lu avec
-  ngx_http_read_client_request_body.
-- ABI C (nginx/inc/rest/anch_rest_nginx.h, version 1) : le module ne voit pas de C++. Chaque application
-  génère sa propre table de fonctions (pas d'état partagé entre applications d'un même nginx).
+  (ngx_thread_task_post, nginx compilé avec --with-threads).
+- ABI C (nginx/inc/rest/anch_rest_nginx.h, version 2 depuis le 2026-11-16) : le module ne voit pas de C++.
+  Chaque application génère sa propre table de fonctions (pas d'état partagé entre applications d'un même nginx).
+- Corps en flux (2026-11-16) : lecteur (read) et écrivain (start, write) C, branchés sur CIStream / COStream
+  d'anch-cutils dans le pont C++.
+  - Pool de threads : corps de requête non tamponné (request_body_no_buffering), lu par le handler pendant la
+    réception ; réponse dans anch_rest_buffers <nombre> <taille> (4 16k par défaut), le handler attend leur envoi.
+    Le thread ne touche jamais aux structures nginx : contexte partagé (mutex, condition) et pipe de
+    notification par worker (ngx_add_channel_event ; ngx_notify n'a qu'un handler, pris par le pool de threads).
+  - Réponse démarrée au premier tampon plein (chunked) ou à la fin (Content-Length) ; erreur avant le
+    démarrage : 500 ; après : connexion fermée.
+  - Sans pool : corps tamponné par nginx et lu par blocs (fichier temporaire compris), réponse passée à nginx au
+    fil de l'écriture sans contrôle de flux.
 - dlopen à la lecture de la configuration (erreurs visibles avec nginx -t), Api créée dans chaque worker
   (après le fork) ; échec de création journalisé, la location répond 500.
-- anch_rest_thread_pool <nom>|off (pool "default" par défaut) ; corps en mémoire ou en fichier temporaire.
+- anch_rest_thread_pool <nom>|off (pool "default" par défaut).
 - Test d'intégration : nginx/test/run-nginx-test.sh <sources nginx> <build AnCH> (validé avec nginx 1.30.6).
-- Limites : les routes voient l'URI complète (pas de retrait du préfixe de location) ; corps de réponse
-  copié en mémoire ; HEAD répond Content-Length: 0.
+- Limites : les routes voient l'URI complète (pas de retrait du préfixe de location) ; HEAD répond
+  Content-Length: 0 ; un client lent occupe un thread du pool pendant l'envoi de son corps ou la réception de la
+  fin d'une réponse ; HTTP/2 non testé (module http_v2 absent du test d'intégration).
 
 Client (étape 2)
 ----------------

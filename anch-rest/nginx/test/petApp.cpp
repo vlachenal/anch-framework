@@ -24,9 +24,13 @@
 #include "rest/jsonCodec.hpp"
 #include "rest/multipartCodec.hpp"
 #include "rest/nginxApplication.hpp"
+#include "rest/paramConverter.hpp"
 
+#include <algorithm>
 #include <chrono>
+#include <istream>
 #include <optional>
+#include <ostream>
 #include <stdexcept>
 #include <string>
 #include <thread>
@@ -38,6 +42,27 @@ using anch::rest::Request;
 using anch::rest::Response;
 using anch::rest::Status;
 using anch::rest::Text;
+
+/*!
+ * Write \c size bytes of a deterministic pattern ('a' to 'z' repeated) in blocks of 1000 bytes
+ *
+ * \param out the output stream
+ * \param size the number of bytes
+ */
+void
+writePattern(std::ostream& out, uint64_t size) {
+  char block[1000];
+  for(std::size_t i = 0 ; i < sizeof(block) ; ++i) {
+    block[i] = static_cast<char>('a' + static_cast<char>(i % 26));
+  }
+  uint64_t offset = 0;
+  while(offset < size) {
+    // Pattern is continuous: each block starts at offset % 26
+    const std::size_t len = static_cast<std::size_t>(std::min<uint64_t>(size - offset, 974)); // 974 = 26 * 37 + 12
+    out.write(block + offset % 26, static_cast<std::streamsize>(len));
+    offset += len;
+  }
+}
 
 struct Pet {
   uint64_t id;
@@ -88,6 +113,48 @@ createPetApi(std::string_view config) {
       + std::string(*photo->getFilename()) + ' ' + photo->getMediaType().essence() + ' ' + std::to_string(photo->size());
   }).consumes<anch::rest::Multipart>().produces<Text>();
   api->get("/api/crash", []() -> Response { throw std::runtime_error("crash"); });
+  // Streamed bodies +
+  auto stream = [](const Request& request) {
+    const uint64_t size = anch::rest::queryParameter<uint64_t>(request, "size").value_or(0);
+    return Response(Status::OK).contentType("text/plain").stream([size](std::ostream& out) { writePattern(out, size); });
+  };
+  api->get("/api/stream", stream);
+  api->get("/big/stream", stream); // location with limit_rate and small buffers
+  api->get("/api/stream-crash", []() {
+    return Response(Status::OK).contentType("text/plain").stream([](std::ostream& out) {
+      writePattern(out, 1000000);
+      throw std::runtime_error("crash while streaming");
+    });
+  });
+  // Request body is copied to response body while it is read (request outlives response body writing)
+  api->post("/api/echo", [](const Request& request) {
+    std::istream& body = request.getBody();
+    return Response(Status::OK).contentType("application/octet-stream").stream([&body](std::ostream& out) {
+      char buffer[8192];
+      while(body.read(buffer, sizeof(buffer)) || body.gcount() > 0) {
+	out.write(buffer, body.gcount());
+      }
+      if(body.bad()) {
+	throw std::runtime_error("request body can not be read");
+      }
+    });
+  });
+  // Request body is read before response start: reading errors (413, ...) are answered by the module
+  auto count = [](const Request& request) {
+    std::istream& body = request.getBody();
+    uint64_t count = 0;
+    char buffer[8192];
+    while(body.read(buffer, sizeof(buffer)) || body.gcount() > 0) {
+      count += static_cast<uint64_t>(body.gcount());
+    }
+    if(body.bad()) {
+      throw anch::rest::HttpException(Status::BAD_REQUEST, "request body can not be read");
+    }
+    return std::to_string(count);
+  };
+  api->post("/api/count", count).produces<Text>();
+  api->post("/big/count", count).produces<Text>(); // location without body size limit
+  // Streamed bodies -
   api->cors({.origins = {"https://app.example.com"}, .headers = {"Content-Type"}, .maxAge = std::chrono::minutes(10)});
   return api;
 }

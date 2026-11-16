@@ -54,20 +54,22 @@ namespace anch::rest::nginx {
 
   /*!
    * Handle request with API (see \ref anch::rest::Api::handle ). Unknown methods are answered with
-   * \c 501 , errors with \c 500 .
+   * \c 501 , errors with \c 500 .\n
+   * \n
+   * The request body is read in stream (\c anch::cutils::CIStream on the module reader): it is read while
+   * nginx receives it. The response body is written in stream (\c anch::cutils::COStream on the module writer,
+   * blocks of \c writer->buffer_size bytes): the response is started when the first block is full, with
+   * chunked transfer encoding, or at the end of the body with its length when it fits in one block. An error
+   * raised before the start is answered with \c 500 , an error raised after interrupts the response.\n
+   * The request outlives the response body writing: a body writer can read the request body (echo, ...).
    *
    * \param app the API
    * \param request the request
-   * \param response the response to fill
-   */
-  void handle(void* app, const anch_rest_request_t* request, anch_rest_response_t* response) noexcept;
-
-  /*!
-   * Release response memory
+   * \param writer the response writer
    *
-   * \param response the response
+   * \return \c 0 when response is complete, \c -1 when it has been interrupted after its start
    */
-  void release(anch_rest_response_t* response) noexcept;
+  int handle(void* app, const anch_rest_request_t* request, const anch_rest_response_writer_t* writer) noexcept;
 
   /*!
    * Application operations for a factory

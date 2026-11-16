@@ -31,8 +31,7 @@ namespace anch::rest::nginx {
 	return anch::rest::nginx::create(F, config, error, errorSize);
       },
       &anch::rest::nginx::destroy,
-      &anch::rest::nginx::handle,
-      &anch::rest::nginx::release
+      &anch::rest::nginx::handle
     };
     return &operations;
   }

@@ -25,7 +25,8 @@ if(ANCH_REST_SERVER_LIB)
     anch_add_library(anch-rest-nginx
       INCLUDE_DIRS nginx/inc
       SOURCES ${nginx_sources}
-      PUBLIC_DEPS anch::rest-server)
+      PUBLIC_DEPS anch::rest-server
+      PRIVATE_DEPS anch::cutils) # request and response bodies in stream
     install(FILES nginx/config nginx/ngx_http_anch_rest_module.c
       DESTINATION ${CMAKE_INSTALL_DATADIR}/anch/nginx-module)
     install(FILES nginx/inc/rest/anch_rest_nginx.h

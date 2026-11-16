@@ -98,6 +98,12 @@ if(ANCH_REST_SERVER_LIB AND ANCH_REST_NGINX)
   add_test(NAME anch-rest-nginx-request COMMAND anch-rest-nginx-test -t request)
   add_test(NAME anch-rest-nginx-errors COMMAND anch-rest-nginx-test -t errors)
   add_test(NAME anch-rest-nginx-cors COMMAND anch-rest-nginx-test -t cors)
+  add_test(NAME anch-rest-nginx-stream-small COMMAND anch-rest-nginx-test -t stream-small)
+  add_test(NAME anch-rest-nginx-stream-large COMMAND anch-rest-nginx-test -t stream-large)
+  add_test(NAME anch-rest-nginx-echo COMMAND anch-rest-nginx-test -t echo)
+  add_test(NAME anch-rest-nginx-read-error COMMAND anch-rest-nginx-test -t read-error)
+  add_test(NAME anch-rest-nginx-write-cancelled COMMAND anch-rest-nginx-test -t write-cancelled)
+  add_test(NAME anch-rest-nginx-crash COMMAND anch-rest-nginx-test -t crash)
 endif()
 
 # Protocol Buffers and gRPC +

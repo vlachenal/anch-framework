@@ -27,7 +27,11 @@
  * An application is a shared library which exports \c anch_rest_application (see
  * \c ANCH_REST_APPLICATION in \c rest/nginxApplication.hpp ). The nginx module loads it with
  * \c dlopen , creates one application per worker process, and calls \c handle from nginx thread
- * pool threads.
+ * pool threads (or from the event loop when thread pool is disabled).\n
+ * \n
+ * Request and response bodies are streamed: the application reads the request body with
+ * \ref anch_rest_body_reader_t and writes the response with \ref anch_rest_response_writer_t .
+ * In a thread pool, these functions block until nginx has received or sent data.
  */
 
 #include <stddef.h>
@@ -37,10 +41,16 @@ extern "C" {
 #endif
 
 /*! ABI version: the module refuses applications with another version */
-#define ANCH_REST_NGINX_ABI_VERSION 1u
+#define ANCH_REST_NGINX_ABI_VERSION 2u
 
 /*! Application entry point symbol */
 #define ANCH_REST_APPLICATION_SYMBOL "anch_rest_application"
+
+/*! Error returned by \ref anch_rest_body_reader_t read function */
+#define ANCH_REST_READ_ERROR ((size_t) -1)
+
+/*! Unknown response content length (body is sent with chunked transfer encoding) */
+#define ANCH_REST_UNKNOWN_LENGTH (-1LL)
 
 /*! String (not null terminated) */
 typedef struct {
@@ -58,6 +68,24 @@ typedef struct {
   anch_rest_str_t value;
 } anch_rest_header_t;
 
+/*! Request body reader */
+typedef struct {
+  /*! Reader context */
+  void* ctx;
+
+  /*!
+   * Read body data: blocks until data is available
+   *
+   * \param ctx the reader context
+   * \param data the buffer to fill
+   * \param size the buffer size
+   *
+   * \return the number of read bytes (at least \c 1 ), \c 0 at the end of body,
+   *         \ref ANCH_REST_READ_ERROR on error (client closed connection, timeout, body too large, ...)
+   */
+  size_t (*read)(void* ctx, char* data, size_t size);
+} anch_rest_body_reader_t;
+
 /*! Request: memory is owned by the module and valid during \c handle call */
 typedef struct {
   /*! Method (\c GET , ...) */
@@ -70,23 +98,44 @@ typedef struct {
   size_t headers_count;
   /*! Request has a body (possibly empty) */
   int has_body;
-  /*! Body */
-  anch_rest_str_t body;
+  /*! Body reader (when \c has_body is set) */
+  anch_rest_body_reader_t body;
 } anch_rest_request_t;
 
-/*! Response: memory is owned by the application until \c release */
+/*! Response writer: valid during \c handle call */
 typedef struct {
-  /*! Status code */
-  unsigned int status;
-  /*! Headers */
-  const anch_rest_header_t* headers;
-  /*! Number of headers */
-  size_t headers_count;
-  /*! Body */
-  anch_rest_str_t body;
-  /*! Application data, released by \c release */
-  void* internal;
-} anch_rest_response_t;
+  /*! Writer context */
+  void* ctx;
+
+  /*! Preferred size of written blocks (size of module buffers) */
+  size_t buffer_size;
+
+  /*!
+   * Start response: send status and headers. It has to be called once, before \c write .
+   * Memory is copied by the module: it can be released after the call.
+   *
+   * \param ctx the writer context
+   * \param status the status code
+   * \param headers the headers (\c Content-Length is ignored)
+   * \param headers_count the number of headers
+   * \param content_length the body length, \ref ANCH_REST_UNKNOWN_LENGTH when unknown
+   *
+   * \return \c 0 on success, \c -1 when response has been cancelled (client closed connection, ...)
+   */
+  int (*start)(void* ctx, unsigned int status, const anch_rest_header_t* headers, size_t headers_count,
+               long long content_length);
+
+  /*!
+   * Write body data: blocks while module buffers are full (client is slower than application)
+   *
+   * \param ctx the writer context
+   * \param data the data
+   * \param len the data length
+   *
+   * \return the number of written bytes (at least \c 1 ), \c 0 when response has been cancelled
+   */
+  size_t (*write)(void* ctx, const char* data, size_t len);
+} anch_rest_response_writer_t;
 
 /*! Application operations */
 typedef struct {
@@ -112,20 +161,17 @@ typedef struct {
   void (*destroy)(void* app);
 
   /*!
-   * Handle request (thread safe, never fails: errors are answered with status 500)
+   * Handle request (thread safe). The response is started with \c writer->start , then its body is written
+   * with \c writer->write . Errors before start are answered with status 500 by the application.
    *
    * \param app the application
    * \param request the request
-   * \param response the response to fill
-   */
-  void (*handle)(void* app, const anch_rest_request_t* request, anch_rest_response_t* response);
-
-  /*!
-   * Release response memory
+   * \param writer the response writer
    *
-   * \param response the response
+   * \return \c 0 when response is complete, \c -1 when response has been interrupted after its start (the
+   *         connection has to be closed) ; a response which has not been started is answered with 500
    */
-  void (*release)(anch_rest_response_t* response);
+  int (*handle)(void* app, const anch_rest_request_t* request, const anch_rest_response_writer_t* writer);
 } anch_rest_application_t;
 
 /*! Application entry point type */

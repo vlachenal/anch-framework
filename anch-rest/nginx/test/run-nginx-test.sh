@@ -50,6 +50,7 @@ http {
   server {
     listen 127.0.0.1:${port};
     location /api/ { anch_rest_app ${app} "nginx configuration"; client_max_body_size 20m; }
+    location /big/ { anch_rest_app ${app} "nginx configuration"; client_max_body_size 0; anch_rest_buffers 2 4k; limit_rate 8m; }
     location /fail/ { anch_rest_app ${app} fail; }
     location /static/ { root ${work}/www; }
   }
@@ -73,6 +74,21 @@ check() {
   fi
 }
 url="http://127.0.0.1:${port}"
+sync_url="http://127.0.0.1:${sync_port}"
+# SHA-256 of /api/stream pattern ('a' to 'z' repeated)
+pattern_sha() {
+  yes abcdefghijklmnopqrstuvwxyz | tr -d '\n' | head -c "$1" | sha256sum | cut -d' ' -f1
+}
+file_sha() {
+  sha256sum "$1" | cut -d' ' -f1
+}
+header() {
+  # header <headers file> <name>
+  grep -i "^$2:" "$1" | tr -d '\r' | cut -d' ' -f2- | tr '[:upper:]' '[:lower:]'
+}
+rss() {
+  awk '/^VmRSS/ { print $2 }' "/proc/$1/status"
+}
 # Checks -
 
 echo "== nginx -t"
@@ -88,7 +104,7 @@ check "GET 404" '404' "$(curl -s -o /dev/null -w '%{http_code}' "${url}/api/pets
 check "GET 406" '406' "$(curl -s -o /dev/null -w '%{http_code}' -H 'Accept: text/html' "${url}/api/pets/1")"
 check "POST json" '201 /api/pets/7 Médor' "$(curl -s -D /tmp/headers.$$ -o /tmp/body.$$ -w '%{http_code}' -H 'Content-Type: application/json' -d '{"id":7,"name":"Médor"}' "${url}/api/pets"; printf ' %s %s' "$(grep -i '^Location:' /tmp/headers.$$ | tr -d '\r' | cut -d' ' -f2)" "$(cat /tmp/body.$$)")"
 big=$(head -c 100000 /dev/zero | tr '\0' 'a')
-check "POST body in temporary file" '201 100000' "$(printf '{"id":8,"name":"%s"}' "${big}" | curl -s -o /tmp/body.$$ -w '%{http_code}' -H 'Content-Type: application/json' --data-binary @- "${url}/api/pets"; printf ' %s' "$(wc -c < /tmp/body.$$ | tr -d ' ')")"
+check "POST body of 100 kB (unbuffered, read while received)" '201 100000' "$(printf '{"id":8,"name":"%s"}' "${big}" | curl -s -o /tmp/body.$$ -w '%{http_code}' -H 'Content-Type: application/json' --data-binary @- "${url}/api/pets"; printf ' %s' "$(wc -c < /tmp/body.$$ | tr -d ' ')")"
 check "POST without body" '400' "$(curl -s -o /dev/null -w '%{http_code}' -X POST -H 'Content-Type: application/json' "${url}/api/pets")"
 check "headers and query" 'value a b' "$(curl -s -H 'X-Test: value' "${url}/api/headers?q=a%20b")"
 check "configuration" 'nginx configuration' "$(curl -s "${url}/api/config")"
@@ -108,6 +124,58 @@ check "exception" '500' "$(curl -s -o /dev/null -w '%{http_code}' "${url}/api/cr
 check "application creation failure" '500' "$(curl -s -o /dev/null -w '%{http_code}' "${url}/fail/pets/1")"
 check "other locations" 'static' "$(curl -s "${url}/static/")"
 
+# Streamed bodies +
+curl -s -D /tmp/headers.$$ -o /dev/null "${url}/api/pets/1"
+encoding=$(header /tmp/headers.$$ Transfer-Encoding)
+check "small response: Content-Length, not chunked" '21 none' "$(header /tmp/headers.$$ Content-Length) ${encoding:-none}"
+size=67108864
+curl -s -D /tmp/headers.$$ -o "${work}/stream.out" "${url}/api/stream?size=${size}"
+check "stream of 64 MB: chunked, content" "chunked $(pattern_sha ${size})" "$(header /tmp/headers.$$ Transfer-Encoding) $(file_sha "${work}/stream.out")"
+check "stream of 100 kB with HTTP/1.0 (not chunked)" "$(pattern_sha 100000)" "$(curl -s --http1.0 "${url}/api/stream?size=100000" | sha256sum | cut -d' ' -f1)"
+# Slow client: response is not buffered in memory (flow control with handler thread)
+worker=$(pgrep -P "$(cat "${work}/nginx.pid")" | head -1)
+base=$(rss "${worker}")
+peak=${base}
+curl -s --limit-rate 16M -o "${work}/slow.out" "${url}/api/stream?size=${size}" &
+slow=$!
+while kill -0 "${slow}" 2> /dev/null; do
+  current=$(rss "${worker}")
+  [ "${current}" -gt "${peak}" ] && peak=${current}
+  sleep 0.1
+done
+wait "${slow}" || true
+growth=$(( (peak - base) / 1024 ))
+check "slow client: content" "$(pattern_sha ${size})" "$(file_sha "${work}/slow.out")"
+check "slow client: worker memory growth < 16 MB for 64 MB (${growth} MB)" 'yes' "$([ "${growth}" -lt 16 ] && echo yes || echo no)"
+rm -f "${work}/stream.out" "${work}/slow.out"
+start=$(date +%s%N)
+check "stream of 32 MB with limit_rate 8m and 2 buffers of 4k" "$(pattern_sha 32000000)" "$(curl -s "${url}/big/stream?size=32000000" | sha256sum | cut -d' ' -f1)"
+limited=$(( ($(date +%s%N) - start) / 1000000 ))
+check "limit_rate is applied: 32 MB at 8 MB/s >= 1.5 s (${limited} ms)" 'yes' "$([ "${limited}" -ge 1500 ] && echo yes || echo no)"
+# Clients which close connection while streaming: handlers are cancelled (4 threads in pool)
+for i in 1 2 3 4; do
+  curl -s -o /dev/null --max-time 1 --limit-rate 1M "${url}/api/stream?size=1000000000" &
+done
+wait || true
+check "aborted streams: thread pool is available again" '200' "$(curl -s -o /dev/null --max-time 3 -w '%{http_code}' "${url}/api/stream?size=10")"
+crash_rc=0
+crash_code=$(curl -s -o /dev/null -w '%{http_code}' "${url}/api/stream-crash") || crash_rc=$?
+check "error while streaming: interrupted response (curl error 18)" '200 18' "${crash_code} ${crash_rc}"
+# Request body in stream
+head -c 15000000 /dev/urandom > "${work}/echo.in"
+check "echo of 15 MB (Content-Length)" "200 $(file_sha "${work}/echo.in")" "$(curl -s -o "${work}/echo.out" -w '%{http_code}' --data-binary @"${work}/echo.in" "${url}/api/echo"; printf ' %s' "$(file_sha "${work}/echo.out")")"
+check "echo of 15 MB (chunked)" "200 $(file_sha "${work}/echo.in")" "$(curl -s -o "${work}/echo.out" -w '%{http_code}' -X POST -T - "${url}/api/echo" < "${work}/echo.in"; printf ' %s' "$(file_sha "${work}/echo.out")")"
+check "echo with slow client upload" "200 $(pattern_sha 2000000)" "$(pattern() { yes abcdefghijklmnopqrstuvwxyz | tr -d '\n' | head -c 2000000; }; pattern | curl -s -o "${work}/echo.out" -w '%{http_code}' --limit-rate 2M -X POST -T - "${url}/api/echo"; printf ' %s' "$(file_sha "${work}/echo.out")")"
+head -c 25000000 /dev/zero > "${work}/big.in"
+check "count of 25 MB (chunked, read before response start)" '200 25000000' "$(curl -s -o /tmp/body.$$ -w '%{http_code}' -X POST -T - "${url}/big/count" < "${work}/big.in"; printf ' %s' "$(cat /tmp/body.$$)")"
+check "chunked body over client_max_body_size: 413 from nginx" '413' "$(curl -s -o /dev/null -w '%{http_code}' -X POST -T - "${url}/api/count" < "${work}/big.in")"
+# Without thread pool: body buffered by nginx (temporary file) and read in blocks
+head -c 900000 /dev/urandom > "${work}/echo.in"
+check "thread pool off: echo of 900 kB (temporary file)" "200 $(file_sha "${work}/echo.in")" "$(curl -s -o "${work}/echo.out" -w '%{http_code}' --data-binary @"${work}/echo.in" "${sync_url}/api/echo"; printf ' %s' "$(file_sha "${work}/echo.out")")"
+check "thread pool off: stream of 5 MB" "$(pattern_sha 5000000)" "$(curl -s "${sync_url}/api/stream?size=5000000" | sha256sum | cut -d' ' -f1)"
+rm -f "${work}/echo.in" "${work}/echo.out" "${work}/big.in"
+# Streamed bodies -
+
 # Two slow requests (1 s each) on one worker: in parallel with thread pool, serialized without
 elapsed() {
   start=$(date +%s%N)
@@ -115,7 +183,7 @@ elapsed() {
   echo $(( ($(date +%s%N) - start) / 1000000 ))
 }
 threaded=$(elapsed "${url}")
-blocking=$(elapsed "http://127.0.0.1:${sync_port}")
+blocking=$(elapsed "${sync_url}")
 check "thread pool: parallel slow requests < 1.8 s (${threaded} ms)" 'yes' "$([ "${threaded}" -lt 1800 ] && echo yes || echo no)"
 check "thread pool off: serialized slow requests >= 1.9 s (${blocking} ms)" 'yes' "$([ "${blocking}" -ge 1900 ] && echo yes || echo no)"
 

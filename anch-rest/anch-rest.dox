@@ -274,6 +274,7 @@ http {
     location /api/ {
       anch_rest_app /usr/lib/libmyapi.so "/etc/myapi.conf";
       anch_rest_thread_pool default;   # default value; "off" executes handlers in the event loop
+      anch_rest_buffers 4 16k;         # default value: response buffers of a request
     }
   }
 }
@@ -281,4 +282,22 @@ http {
  *
  * Libraries are loaded when configuration is read (\c nginx -t reports loading errors) and APIs are
  * created in each worker process.
+ *
+ * Request and response bodies are streamed (\c anch::cutils::CIStream and \c anch::cutils::COStream on the
+ * module C functions):
+ * - in a thread pool, the handler is started as soon as request headers have been read. It reads the request
+ *   body while nginx receives it (unbuffered body: at most \c client_body_buffer_size bytes are waiting for the
+ *   handler), and its response body is sent while it is written, with at most \c anch_rest_buffers in memory: the
+ *   handler waits while they are being sent ;
+ * - the response is started (status and headers) when more than one buffer has been written, with chunked
+ *   transfer encoding, or at the end of the body with its \c Content-Length when it fits in one buffer. An error
+ *   raised before the start is answered with \c 500 , an error raised after closes the connection (truncated
+ *   response) ;
+ * - an application can stream a large response with \ref anch::rest::Response::stream "Response::stream" ; the
+ *   request outlives the response body writer, which can read the request body ;
+ * - a slow client keeps a thread pool thread busy while it sends its request body, or receives the end of a
+ *   response larger than buffers: thread pool size, \c client_body_timeout and \c send_timeout bound it ;
+ * - without thread pool (\c anch_rest_thread_pool \c off ), the handler is executed in the event loop: the request
+ *   body is buffered by nginx (memory, then temporary file) and read in blocks, and the response body is given to
+ *   nginx as it is written, without flow control (a large response stays in memory until it has been sent).
  */
