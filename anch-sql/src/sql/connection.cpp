@@ -30,8 +30,7 @@ Connection::Connection(std::size_t statementCacheSize):
   _transaction(false),
   _stmts(),
   _stmtsIndex(),
-  _stmtsMax(statementCacheSize),
-  _errors(false) {
+  _stmtsMax(statementCacheSize) {
   if(statementCacheSize == 0) {
     throw SqlException("Prepared statement cache size has to be at least 1");
   }
@@ -74,30 +73,20 @@ Connection::release() noexcept {
   if(!isValid()) {
     return;
   }
-  if(_transaction) {
+  if(_transaction) { // not ended with commit(): rolled back, even without error (application exception, ...)
     try {
-      if(_errors) {
-	rollback();
-      } else {
-	commit();
-      }
+      rollback();
     } catch(...) {
-      try {
-	rollback();
-      } catch(...) {
-	// Checked below
-      }
+      // Checked below
     }
     if(_transaction) { // unknown transaction state: connection must not be reused
       _valid = false;
     }
   }
-  _errors = false;
 }
 
 void
 Connection::onError(const SqlException& error) noexcept {
-  _errors = true;
   if(!error.isOK()) {
     _valid = false;
   }

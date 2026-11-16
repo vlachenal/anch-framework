@@ -43,14 +43,20 @@ target_link_libraries(my-app PRIVATE anch::sql)
  *
  * Errors raise \ref anch::sql::SqlException "SqlException" and are reported to the connection, from its prepared
  * statements and result sets too. A fatal error (\c SqlException::isOK is \c false : connection lost or killed,
- * server shutdown, out of memory, protocol error) invalidates the connection. Other errors keep it valid, and its
- * current transaction is rolled back when it is released.
+ * server shutdown, out of memory, protocol error) invalidates the connection. Other errors keep it valid.
+ *
+ * \subsection sql_conception_transactions_sec Transactions
+ *
+ * Without \c Connection::startTransaction (or \c begin ), each query is committed by the database (auto-commit
+ * mode). A transaction is committed only by \c Connection::commit : a transaction which is not ended when the
+ * connection is released (returned to its pool or destroyed) is rolled back, with or without error, so that an
+ * application exception between two queries does not commit partial work.
  *
  * \subsection sql_conception_pool_sec SQL connection pool
  *
  * SQL connection pools are configured in configuration file dbCon.conf\n
- * When a connection is returned to its pool, \c Connection::release ends its transaction (rollback after an error,
- * commit otherwise), then invalid connections are destroyed instead of being reused.
+ * When a connection is returned to its pool, \c Connection::release rolls back its unfinished transaction, then invalid
+ * connections are destroyed instead of being reused.
  *
  * \subsection sql_conception_stmt_cache_sec Prepared statements cache
  *
@@ -69,6 +75,8 @@ target_link_libraries(my-app PRIVATE anch::sql)
 #include <iostream>
 #include <functional>
 #include <list>
+#include <optional>
+#include <string>
 
 using anch::sql::Connection;
 using anch::sql::PostgreSQLConnection;
@@ -105,19 +113,30 @@ main(void) {
   std::cout << "Enter in PostgreSQL unit tests" << std::endl << std::endl;
 
   try {
-    PostgreSQLConnection dbCon("localhost",
-			       "anch",
-			       "anch",
-			       "anch_test",
-			       5432);
+    anch::sql::SqlConnectionConfiguration config;
+    config.driver = "PostgreSQL";
+    config.database = "anch_test";
+    config.hostname = "localhost";
+    config.port = 5432;
+    config.user = "anch";
+    config.password = "anch";
+    PostgreSQLConnection dbCon(config);
     std::cout << "Connected to database" << std::endl;
-    dbCon.setAutoCommit(false);
-    std::cout << "Auto commit set to false" << std::endl;
-    dbCon.commit();
-    std::cout << "Commit no transaction ..." << std::endl;
-    dbCon.rollback();
-    std::cout << "Rollback no transaction ..." << std::endl;
-    dbCon.setAutoCommit(true);
+
+    // Without transaction, each query is committed by the database (auto-commit mode)
+    dbCon.update("UPDATE T_Test SET email = ? WHERE first_name = ?", "john@anch.org", "John");
+
+    // A transaction is committed only by commit(): an unfinished transaction is rolled back when the connection is
+    // released (returned to its pool or destroyed), even without SQL error
+    dbCon.begin();
+    try {
+      dbCon.update("INSERT INTO T_Test (first_name,last_name,birth_date) VALUES (?,?,?)", "Jane", "Doe", "1971-01-01");
+      dbCon.update("INSERT INTO T_Test (first_name,last_name,birth_date) VALUES (?,?,?)", "Jack", "Doe", "1972-01-01");
+      dbCon.commit();
+    } catch(...) {
+      dbCon.rollback();
+      throw;
+    }
 
     std::cout << std::endl;
 
@@ -127,27 +146,16 @@ main(void) {
     std::string nullStr("NULL");
     while(res->next()) {
       std::cout << "Row " << row << std::endl;
-      const uint32_t* id = res->get<uint32_t>(0);
-      std::cout << "id=";
-      if(id == NULL) {
-	std::cout << "NULL";
-      } else {
-	std::cout << *id;
-      }
-      std::cout << std::endl;
-      delete id;
-      const std::string* fName = res->get<std::string>(1);
-      std::cout << "first name=" << (fName == NULL ? nullStr : *fName) << std::endl;
-      delete fName;
-      const std::string* lName = res->get<std::string>(2);
-      std::cout << "last name=" << (lName == NULL ? nullStr : *lName) << std::endl;
-      delete lName;
-      const std::string* bDate = res->get<std::string>("birth_date");
-      std::cout << "birth date=" << (bDate == NULL ? nullStr : *bDate) << std::endl;
-      delete bDate;
-      const std::string* email = res->get<std::string>(4);
-      std::cout << "email=" << (email == NULL ? nullStr : *email) << std::endl;
-      delete email;
+      std::optional<uint32_t> id = res->get<uint32_t>(0);
+      std::cout << "id=" << (id ? std::to_string(*id) : nullStr) << std::endl;
+      std::optional<std::string> fName = res->get<std::string>(1);
+      std::cout << "first name=" << fName.value_or(nullStr) << std::endl;
+      std::optional<std::string> lName = res->get<std::string>(2);
+      std::cout << "last name=" << lName.value_or(nullStr) << std::endl;
+      std::optional<std::string> bDate = res->get<std::string>("birth_date");
+      std::cout << "birth date=" << bDate.value_or(nullStr) << std::endl;
+      std::optional<std::string> email = res->get<std::string>(4);
+      std::cout << "email=" << email.value_or(nullStr) << std::endl;
       row++;
     }
     delete res;

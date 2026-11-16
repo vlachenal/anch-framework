@@ -96,9 +96,10 @@ Correction : tampons bornés à 4096 octets, valeurs plus longues relues à leur
 ### S15. PostgreSQL : nom des requêtes préparées — lecture — **corrigé le 2026-11-03**
 Le nom utilisait `std::addressof(dbCon)`, l'adresse du paramètre (sur la pile) et non de la connexion. Remplacé par `anch_stmt_<compteur>`.
 
-### S16. Validation implicite à la libération — lecture — **à décider**
+### S16. Validation implicite à la libération — lecture — **corrigé le 2026-11-16**
 `release()` valide la transaction en cours si aucune `SqlException` n'a été signalée. Si le code appelant échoue pour une autre raison (exception applicative entre deux requêtes) et rend la connexion au pool, ou détruit la connexion, le travail partiel est validé. Les pools usuels (HikariCP par exemple) annulent toute transaction non validée explicitement.
-Piste : annuler systématiquement dans `release()` (la validation devenant toujours explicite avec `commit()`).
+Correction (décidée le 2026-11-16) : `release()` annule toute transaction non terminée, avec ou sans erreur ; seule `commit()` valide une transaction. Sans `startTransaction()` / `begin()`, rien ne change : chaque requête est validée par la base (mode auto-commit, que les pilotes ne désactivent jamais) et `release()` n'a rien à faire. Le drapeau `_errors`, qui ne servait qu'à choisir entre validation et annulation, est supprimé. Documentation : `Connection`, `startTransaction`, `release`, section « Transactions » de `anch-sql.dox`, dont l'exemple utilisait encore `setAutoCommit` et un constructeur `PostgreSQLConnection` disparus (réécrit et compilé).
+Tests : `SqlConnection-release-rolls-back` (remplace `release-commits`), `SqlConnection-pool-releases-transaction`, `SqlConnection-release-unknown-state` ; `SQLConnectionPool*` (MySQL, PostgreSQL, SQLite) : transaction sans `commit()` annulée, transaction validée et requête en auto-commit conservées.
 
 ### S17. Cache des requêtes préparées non borné — lecture — **corrigé le 2026-11-14**
 `Connection::prepareStatement` gardait chaque texte SQL distinct jusqu'à la fermeture de la connexion (`std::map` sans éviction ; côté PostgreSQL, requêtes jamais désallouées avant la fin de la session). Les requêtes construites avec des valeurs littérales (listes `IN` du builder, valeurs concaténées) faisaient croître la mémoire du client et du serveur sans limite ; avec MySQL, `max_prepared_stmt_count` (16 382 par défaut, pour tout le serveur) finit par faire échouer les préparations de toutes les connexions.

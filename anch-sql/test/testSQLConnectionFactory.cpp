@@ -268,19 +268,33 @@ testPool(const std::string& db,
     anch::ut::assertThat(count == 0, "Transaction with error should be rolled back on return: {} rows", count);
   }
   // Error in transaction: rolled back when connection is returned -
-  // Transaction without error: committed when connection is returned +
+  // Transaction without error and without commit: rolled back when connection is returned +
+  {
+    auto res = pool.borrowResource();
+    res.get().begin();
+    res.get().update("INSERT INTO T_Test (first_name,last_name,birth_date) VALUES ('PoolRollback','Test','2016-03-22')");
+  }
+  {
+    auto res = pool.borrowResource();
+    int64_t count = countRows(res.get(), "SELECT COUNT(*) FROM T_Test WHERE first_name = ?", "PoolRollback");
+    anch::ut::assertThat(count == 0, "Transaction without commit should be rolled back on return: {} rows", count);
+  }
+  // Transaction without error and without commit: rolled back when connection is returned -
+  // Committed transaction and auto-commit mode: kept +
   {
     auto res = pool.borrowResource();
     res.get().begin();
     res.get().update("INSERT INTO T_Test (first_name,last_name,birth_date) VALUES ('PoolCommit','Test','2016-03-22')");
+    res.get().commit();
+    res.get().update("INSERT INTO T_Test (first_name,last_name,birth_date) VALUES ('PoolCommit','Auto','2016-03-22')");
   }
   {
     auto res = pool.borrowResource();
     int64_t count = countRows(res.get(), "SELECT COUNT(*) FROM T_Test WHERE first_name = ?", "PoolCommit");
-    anch::ut::assertThat(count == 1, "Transaction without error should be committed on return: {} rows", count);
+    anch::ut::assertThat(count == 2, "Committed transaction and auto-committed query should be kept: {} rows", count);
     res.get().update("DELETE FROM T_Test WHERE first_name = 'PoolCommit'");
   }
-  // Transaction without error: committed when connection is returned -
+  // Committed transaction and auto-commit mode: kept -
   if(!sessionId) {
     return;
   }

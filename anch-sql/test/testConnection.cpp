@@ -209,24 +209,33 @@ testSqlErrorKeepsValid() {
 }
 
 void
-testReleaseCommits() {
+testReleaseRollsBack() {
   MockConnection conn;
+  // Unfinished transaction without error (application exception between two queries, ...): rolled back
   conn.begin();
   conn.update("UPDATE t SET a = 1");
   conn.release();
-  anch::ut::assertThat(calls.commits == 1 && calls.rollbacks == 0, "Transaction should be committed: {} commits, {} rollbacks", calls.commits, calls.rollbacks);
-  conn.release(); // no transaction: nothing to do
-  anch::ut::assertThat(calls.commits == 1, "No transaction: {} commits", calls.commits);
+  anch::ut::assertThat(calls.rollbacks == 1 && calls.commits == 0, "Unfinished transaction should be rolled back: {} rollbacks, {} commits", calls.rollbacks, calls.commits);
+  anch::ut::assertTrue(conn.isValid(), "Connection should still be valid");
+  // Committed transaction: nothing to do
+  conn.begin();
+  conn.update("UPDATE t SET a = 1");
+  conn.commit();
+  conn.release();
+  anch::ut::assertThat(calls.commits == 1 && calls.rollbacks == 1, "Committed transaction should not be rolled back: {} commits, {} rollbacks", calls.commits, calls.rollbacks);
+  // No transaction (auto-commit mode): nothing to do
+  conn.update("UPDATE t SET a = 1");
+  conn.release();
+  anch::ut::assertThat(calls.commits == 1 && calls.rollbacks == 1, "No transaction: {} commits, {} rollbacks", calls.commits, calls.rollbacks);
 }
 
 void
 testReleaseUnknownState() {
   MockConnection conn;
   conn.begin();
-  conn._commitFailure = Failure::SQL;
   conn._rollbackFailure = Failure::SQL;
   conn.release();
-  anch::ut::assertFalse(conn.isValid(), "Transaction which can be neither committed nor rolled back should invalidate connection");
+  anch::ut::assertFalse(conn.isValid(), "Transaction which can not be rolled back should invalidate connection");
 }
 
 void
@@ -284,8 +293,15 @@ testPoolReleasesTransaction() {
     auto res = pool.borrowResource();
     res.get().begin();
     res.get().update("UPDATE t SET a = 1");
-  } // released: committed
-  anch::ut::assertThat(calls.commits == 1, "Transaction should be committed on return: {} commits", calls.commits);
+  } // released: rolled back, even without error
+  anch::ut::assertThat(calls.rollbacks == 1 && calls.commits == 0, "Unfinished transaction should be rolled back on return: {} rollbacks, {} commits", calls.rollbacks, calls.commits);
+  {
+    auto res = pool.borrowResource();
+    res.get().begin();
+    res.get().update("UPDATE t SET a = 1");
+    res.get().commit();
+  } // released: nothing to do
+  anch::ut::assertThat(calls.commits == 1 && calls.rollbacks == 1, "Committed transaction should be kept: {} commits, {} rollbacks", calls.commits, calls.rollbacks);
   {
     auto res = pool.borrowResource();
     MockConnection& conn = static_cast<MockConnection&>(res.get());
@@ -294,7 +310,7 @@ testPoolReleasesTransaction() {
     expectError([&conn]() { conn.update("UPDATE t SET a = 1"); }, "Update should fail");
     conn._failure = Failure::NONE;
   } // released: rolled back, connection kept
-  anch::ut::assertThat(calls.rollbacks == 1, "Transaction should be rolled back on return: {} rollbacks", calls.rollbacks);
+  anch::ut::assertThat(calls.rollbacks == 2, "Transaction with error should be rolled back on return: {} rollbacks", calls.rollbacks);
   {
     auto res = pool.borrowResource();
     anch::ut::assertTrue(res.get().isValid(), "Connection should be reused");
@@ -368,7 +384,7 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .beforeTest(resetCalls)
     .add("fatal-invalidates", testFatalInvalidates)
     .add("sql-error-keeps-valid", testSqlErrorKeepsValid)
-    .add("release-commits", testReleaseCommits)
+    .add("release-rolls-back", testReleaseRollsBack)
     .add("release-unknown-state", testReleaseUnknownState)
     .add("prepared-statement-errors", testPreparedStatementErrors)
     .add("result-set-errors", testResultSetErrors)

@@ -113,7 +113,7 @@ add_test(NAME SqlStmtWC-unterminated COMMAND anch-placeholders-test -t untermina
 anch_add_executable(anch-sql-connection-test SOURCES testConnection.cpp LIBS anch::sql anch::ut)
 add_test(NAME SqlConnection-fatal-invalidates COMMAND anch-sql-connection-test -t fatal-invalidates)
 add_test(NAME SqlConnection-sql-error-keeps-valid COMMAND anch-sql-connection-test -t sql-error-keeps-valid)
-add_test(NAME SqlConnection-release-commits COMMAND anch-sql-connection-test -t release-commits)
+add_test(NAME SqlConnection-release-rolls-back COMMAND anch-sql-connection-test -t release-rolls-back)
 add_test(NAME SqlConnection-release-unknown-state COMMAND anch-sql-connection-test -t release-unknown-state)
 add_test(NAME SqlConnection-prepared-statement-errors COMMAND anch-sql-connection-test -t prepared-statement-errors)
 add_test(NAME SqlConnection-result-set-errors COMMAND anch-sql-connection-test -t result-set-errors)

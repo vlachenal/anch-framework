@@ -85,8 +85,11 @@ namespace anch::sql {
    * Errors: every \ref SqlException raised by the connection, its prepared statements and its result sets is
    * reported to the connection. A fatal error (\ref SqlException::isOK is \c false : connection lost, out of memory,
    * protocol error, ...) invalidates the connection: \ref isValid returns \c false and connection pools destroy it
-   * instead of reusing it. Other errors (syntax, constraint, ...) keep the connection valid, but the current
-   * transaction will be rolled back by \ref release .\n
+   * instead of reusing it. Other errors (syntax, constraint, ...) keep the connection valid.\n
+   * \n
+   * Transactions: without \ref startTransaction , each query is committed by the database (auto-commit mode). A
+   * transaction started with \ref startTransaction is committed only by \ref commit : a transaction which is not
+   * ended when the connection is released (returned to its pool or destroyed) is rolled back, with or without error.\n
    * \n
    * Prepared statements: \ref prepareStatement keeps the prepared statements in a bounded cache (least recently used
    * statement first evicted, see \ref setStatementCacheSize ). A statement is never evicted while one of its result
@@ -126,9 +129,6 @@ namespace anch::sql {
 
     /*! Maximum number of cached prepared statements */
     std::size_t _stmtsMax;
-
-    /*! Error on current calls */
-    bool _errors;
     // Attributes -
 
     // Constructors +
@@ -160,7 +160,9 @@ namespace anch::sql {
   public:
     /*!
      * Start SQL transaction.\n
-     * If there is a transaction on this database connection, this method does nothing.
+     * If there is a transaction on this database connection, this method does nothing.\n
+     * The transaction has to be ended with \ref commit or \ref rollback : it is rolled back by \ref release
+     * otherwise.
      *
      * \throw SqlException any error
      */
@@ -190,8 +192,8 @@ namespace anch::sql {
     void rollback();
 
     /*!
-     * Release connection: end the current transaction (rollback when an error has been reported since the last
-     * release, commit otherwise).\n
+     * Release connection: roll back the current transaction, if any (a transaction is committed only by
+     * \ref commit ).\n
      * It is called when the connection is returned to its pool and when it is destroyed. If the transaction can be
      * neither committed nor rolled back, the connection is invalidated (its transaction state is unknown).
      */
@@ -440,7 +442,7 @@ namespace anch::sql {
     auto guard(F&& func) -> decltype(func());
 
     /*!
-     * Report error: the current transaction has to be rolled back ; a fatal error invalidates the connection
+     * Report error: a fatal error invalidates the connection
      *
      * \param error the error
      *
