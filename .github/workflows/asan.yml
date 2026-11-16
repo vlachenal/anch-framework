@@ -24,9 +24,24 @@ jobs:
     steps:
       - name: Install dependencies
         # thrift, boost (Thrift C++ headers), protobuf and grpc: anch-rest RPC libraries
-        run: pacman -Syu --noconfirm --needed git cmake pkgconf openssl sqlite mariadb postgresql curl thrift boost protobuf grpc
+        run: pacman -Syu --noconfirm --needed git cmake pkgconf ccache openssl sqlite mariadb postgresql curl thrift boost protobuf grpc
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
+
+      # ccache directory in the workspace: the cache action and the compiler see the same path in the container
+      - name: Set up ccache
+        run: |
+          echo "CCACHE_DIR=$PWD/.ccache" >> "$GITHUB_ENV"
+          echo "CCACHE_BASEDIR=$PWD" >> "$GITHUB_ENV"
+          echo "CCACHE_MAXSIZE=1G" >> "$GITHUB_ENV"
+
+      # A new cache is saved by each run (caches are immutable), restored from the most recent one
+      - name: Restore ccache
+        uses: actions/cache@v6
+        with:
+          path: .ccache
+          key: ccache-asan-${{ github.sha }}
+          restore-keys: ccache-asan-
 
       - name: Start MariaDB and PostgreSQL
         run: sh .github/scripts/start-databases.sh .
@@ -36,12 +51,15 @@ jobs:
         run: |
           set -o pipefail
           gcc --version | head -1
-          cmake --preset asan -DANCH_BUILD_REST=ON 2>&1 | tee configure.log
+          cmake --preset asan -DANCH_BUILD_REST=ON -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache 2>&1 | tee configure.log
           # Optional anch-rest libraries are disabled when their packages are not found: they have to be built here
           if grep "is not built" configure.log; then exit 1; fi
 
       - name: Build
-        run: cmake --build --preset asan --parallel "$(nproc)"
+        run: |
+          ccache --zero-stats
+          cmake --build --preset asan --parallel "$(nproc)"
+          ccache --show-stats
 
       - name: Test
         # Preset "jobs": 0 runs every test at once: limit parallelism to the number of CPUs
@@ -49,7 +67,7 @@ jobs:
 
       - name: Upload test logs
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: asan-test-logs
           path: |
