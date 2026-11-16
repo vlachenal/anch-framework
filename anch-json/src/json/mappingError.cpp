@@ -61,6 +61,9 @@ computeErrorMessage(const ErrorCode& code, const anch::json::ReaderContext& cont
     case ErrorCode::CONSTRAINT_VIOLATION:
       oss << "Constraint violation";
       break;
+    case ErrorCode::PAYLOAD_TOO_LARGE:
+      oss << "Payload is larger than " << context.options.max_payload << " characters";
+      break;
     default:
       oss << "Unexpected error found at " << context.offset;
     }

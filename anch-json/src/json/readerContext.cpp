@@ -87,7 +87,7 @@ ReaderContext::refillBuffer() {
 void
 ReaderContext::checkPayloadSize() const {
   if(options.max_payload != 0 && read > options.max_payload) {
-    throw anch::json::MappingError(anch::json::ErrorCode::POTENTIAL_OVERFLOW, *this);
+    throw anch::json::MappingError(anch::json::ErrorCode::PAYLOAD_TOO_LARGE, *this);
   }
 }
 

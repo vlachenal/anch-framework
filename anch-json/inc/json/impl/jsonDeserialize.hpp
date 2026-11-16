@@ -19,6 +19,7 @@
 */
 #pragma once
 
+#include "json/lexer.hpp"
 #include "json/readerContext.hpp"
 
 
@@ -30,6 +31,7 @@ namespace anch::json {
   deserialize(T& value, std::istream& input, const anch::json::MappingOptions& options) {
     anch::json::ReaderContext context(input, options);
     anch::json::Factory<T>::getInstance().deserialize(value, context);
+    anch::json::lexEnd(context);
   }
 
   template<typename T>
@@ -39,6 +41,7 @@ namespace anch::json {
     anch::json::ReaderContext context(input, options);
     T value;
     anch::json::Factory<T>::getInstance().deserialize(value, context);
+    anch::json::lexEnd(context);
     return value;
   }
 
@@ -48,6 +51,7 @@ namespace anch::json {
   deserialize(C<T>& values, std::istream& input, const anch::json::MappingOptions& options) {
     anch::json::ReaderContext context(input, options);
     anch::json::Factory<T>::getInstance().deserialize(values, context);
+    anch::json::lexEnd(context);
   }
 
 
@@ -57,6 +61,7 @@ namespace anch::json {
   deserialize(std::map<std::string,T>& values, std::istream& input, const anch::json::MappingOptions& options) {
     anch::json::ReaderContext context(input, options);
     anch::json::Factory<T>::getInstance().deserialize(values, context);
+    anch::json::lexEnd(context);
   }
 
 }

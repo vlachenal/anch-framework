@@ -35,6 +35,9 @@ namespace anch::rest {
       anch::json::MappingOptions options = anch::json::DEFAULT_MAPPING_OPTIONS;
       options.deserialize_check_constraints = true;
       options.serialize_check_constraints = false;
+      if(options.max_payload == 0) {
+	options.max_payload = 2 * 1024 * 1024; // request bodies are bounded, as application/x-www-form-urlencoded ones
+      }
       return options;
     }();
     static anch::json::MappingOptions client = []() {
@@ -86,11 +89,18 @@ namespace anch::rest {
   template<typename T>
   void
   Json::deserialize(T& value, std::istream& input, const anch::json::MappingOptions& options) {
-    if constexpr (std::is_same_v<T, std::string>) {
-      // std::string would match anch-json container overload (C<T> with T = char)
-      anch::json::deserialize<std::string>(value, input, options);
-    } else {
-      anch::json::deserialize(value, input, options);
+    try {
+      if constexpr (std::is_same_v<T, std::string>) {
+	// std::string would match anch-json container overload (C<T> with T = char)
+	anch::json::deserialize<std::string>(value, input, options);
+      } else {
+	anch::json::deserialize(value, input, options);
+      }
+    } catch(const anch::json::MappingError& error) {
+      if(error.getErrorCode() == anch::json::ErrorCode::PAYLOAD_TOO_LARGE) {
+	throw anch::rest::ContentTooLarge(error.what());
+      }
+      throw;
     }
   }
 

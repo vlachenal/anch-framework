@@ -84,9 +84,10 @@ Correction : dans `lexInteger`, `lexUInteger` et `lexNumber`, `res.ec == result_
 - Comportement à connaître : avec libstdc++, un flottant trop petit pour un `double` (`1e-400`) est aussi signalé `result_out_of_range`, donc refusé avec `POTENTIAL_OVERFLOW` (avant : accepté sans modifier la valeur). Les dénormaux représentables (`4.9e-324`) sont acceptés. Si l'on préfère arrondir ces valeurs à 0, il faut traiter ce cas à part.
 - J7 (troncature vers les types 32 / 16 bits et `float` dans les mappers) n'est pas concerné par ce correctif : il reste à faire.
 
-### J15. Données après la valeur racine acceptées — vérifié (2026-11-14)
+### J15. Données après la valeur racine acceptées — vérifié (2026-11-14) — **corrigé le 2026-11-16**
 `{"s":"a"} x`, `{"s":"a"}}` et `{"s":"a"}{"s":"b"}` sont acceptés : la lecture s'arrête à la fin de la première valeur sans regarder la suite. Côté serveur (`anch-rest`), un corps suivi de n'importe quoi est donc valide.
-Piste : après la valeur racine, n'accepter que des espaces jusqu'à la fin du flux (option si la lecture de plusieurs documents sur un même flux est voulue).
+Correction : `anch::json::lexEnd`, appelée par les quatre fonctions `anch::json::deserialize` (objet, valeur retournée, collection, map), n'accepte après la valeur racine que des espaces jusqu'à la fin du flux, sinon `INVALID_FORMAT` (« Unexpected data after JSON value »). Les espaces finaux suivent `deserialize_max_discard_char` comme ceux entre les jetons : avec la valeur par défaut `0`, `{"s":"a"}\n` est refusé (`POTENTIAL_OVERFLOW`), comme `{ "s":"a"}` l'était déjà. Pas d'option pour lire plusieurs documents sur un même flux : la lecture par tampon consomme de toute façon la suite du flux.
+Tests : `json-deser-trailing-data`, `json-deser-trailing-spaces` (tampons de 3, 9 et 1 024 caractères) ; `anch-rest-api-body` (réponse `400`).
 
 ### J16. Virgule finale acceptée dans un objet mappé — vérifié (2026-11-14)
 `{"s":"a",}` est accepté, alors que `[1,]` et `{"a":1,}` dans une `std::map` sont refusés.
@@ -98,9 +99,13 @@ Une tabulation, un saut de ligne ou `0x1b` non échappés dans une chaîne sont 
 `"\xff\xfe"` ou une séquence tronquée (`"\xc3"`) sont acceptés puis écrits sans changement : la sortie n'est plus de l'UTF-8 valide. Les contraintes `minLength` / `maxLength` comptent alors des points de code sur une séquence invalide.
 Piste : option de validation UTF-8 à la lecture (coût à mesurer), au moins côté serveur.
 
-### J19. `deserialize_max_field_char` n'est jamais appliqué — vérifié (2026-11-14)
+### J19. `deserialize_max_field_char` n'est jamais appliqué — vérifié (2026-11-14) — **corrigé le 2026-11-16**
 L'option (défaut `512`, commentaire `\todo keep it ?`) n'est lue nulle part : une chaîne de 2 000 000 de caractères est acceptée avec la valeur par défaut. Comme `max_payload` vaut `0` (illimité) par défaut, et que le codec `Json` d'`anch-rest` copie ces valeurs par défaut, la taille d'un corps JSON n'est bornée que par le serveur HTTP (`client_max_body_size` de nginx).
-Piste : supprimer l'option (une contrainte `maxLength` par champ et `max_payload` couvrent le besoin) ou l'appliquer ; donner une valeur par défaut non nulle à `max_payload` côté serveur dans `anch::rest::Json::options(Side::SERVER)`.
+Correction :
+- l'option est supprimée de `MappingOptions` : la contrainte `maxLength` d'un champ et `max_payload` couvrent le besoin ;
+- nouveau code d'erreur `ErrorCode::PAYLOAD_TOO_LARGE` pour `max_payload` (auparavant `POTENTIAL_OVERFLOW`, partagé avec les dépassements numériques et la profondeur) ;
+- `anch::rest::Json::options(Side::SERVER)` borne les corps à 2 Mio (`max_payload`, si `DEFAULT_MAPPING_OPTIONS` ne le fixe pas), comme `application/x-www-form-urlencoded` ; `Json::deserialize` transforme `PAYLOAD_TOO_LARGE` en `ContentTooLarge`, donc en `413` côté serveur.
+Tests : `json-deser-max-payload-*` (nouveau code) ; `anch-rest-api-body` (`413` au-delà de 2 Mio, `201` avec `max_payload = 0`).
 
 ### Fuzz du 2026-11-14 — aucun défaut
 2,7 millions de lectures de documents mutés (structure avec chaînes, entiers, flottants, `optional`, `vector`, `set`, `list`, `map`, objets imbriqués, UUID), sous ASan / UBSan, avec et sans champs ignorés, avec `buffer_size` de 1, 2, 3, 5, 8, 17, 64 et 1024 : aucun plantage, aucun blocage, et le résultat (succès ou erreur, valeur relue) est identique quelle que soit la taille du tampon.

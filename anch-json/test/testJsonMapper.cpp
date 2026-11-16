@@ -998,7 +998,7 @@ checkMaxPayloadKo(const std::string& json, std::size_t maxPayload, std::size_t b
     [[maybe_unused]] TestFloat res = mapper.deserialize<TestFloat>(iss);
     anch::ut::fail("This test should have failed");
   } catch(const MappingError& e) {
-    if(e.getErrorCode() != ErrorCode::POTENTIAL_OVERFLOW) {
+    if(e.getErrorCode() != ErrorCode::PAYLOAD_TOO_LARGE) {
       throw;
     }
     std::cout << e.what() << std::endl;
@@ -2077,6 +2077,60 @@ testDeserDateKO() {
 #endif // ANCH_DATE
 // Dates -
 
+// Data after root value +
+void
+checkTrailingKo(const std::function<void(anch::json::JSONMapper&, std::istream&)>& deser, const std::string& json,
+		ErrorCode expected, int64_t maxDiscard = 0) {
+  for(std::size_t bufferSize : {std::size_t(3), std::size_t(1024)}) {
+    anch::json::JSONMapper mapper({.deserialize_max_discard_char = maxDiscard, .buffer_size = bufferSize});
+    std::istringstream iss(json);
+    try {
+      deser(mapper, iss);
+      anch::ut::fail("This test should have failed");
+    } catch(const MappingError& e) {
+      anch::ut::assertThat(e.getErrorCode() == expected, "Unexpected error for '{}' with buffer_size={}: {}", json, bufferSize, e.what());
+      std::cout << e.what() << std::endl;
+    }
+  }
+}
+
+void
+testDeserTrailingData() {
+  auto object = [](anch::json::JSONMapper& mapper, std::istream& is) { TestStr v; mapper.deserialize(v, is); };
+  auto array = [](anch::json::JSONMapper& mapper, std::istream& is) { std::vector<TestStr> v; mapper.deserialize(v, is); };
+  auto map = [](anch::json::JSONMapper& mapper, std::istream& is) { std::map<std::string,TestStr> v; mapper.deserialize(v, is); };
+  auto value = [](anch::json::JSONMapper& mapper, std::istream& is) { [[maybe_unused]] TestStr v = mapper.deserialize<TestStr>(is); };
+  for(const char* json : {R"({"s":"a"} x)", R"({"s":"a"}})", R"({"s":"a"}{"s":"b"})", R"({"s":"a"},)"}) {
+    checkTrailingKo(object, json, ErrorCode::INVALID_FORMAT, -1);
+    checkTrailingKo(value, json, ErrorCode::INVALID_FORMAT, -1);
+  }
+  checkTrailingKo(array, R"([{"s":"a"}]])", ErrorCode::INVALID_FORMAT);
+  checkTrailingKo(array, R"([{"s":"a"}],[])", ErrorCode::INVALID_FORMAT);
+  checkTrailingKo(map, R"({"k":{"s":"a"}}x)", ErrorCode::INVALID_FORMAT);
+  // Trailing whitespaces are discardable characters, as whitespaces between tokens
+  checkTrailingKo(object, "{\"s\":\"a\"}\n", ErrorCode::POTENTIAL_OVERFLOW);
+  checkTrailingKo(object, "{\"s\":\"a\"}\n  \n", ErrorCode::POTENTIAL_OVERFLOW, 2);
+}
+
+void
+testDeserTrailingSpaces() {
+  for(std::size_t bufferSize : {std::size_t(3), std::size_t(9), std::size_t(1024)}) {
+    for(auto [json, maxDiscard] : std::initializer_list<std::pair<const char*, int64_t>>{
+	{"{\"s\":\"a\"}", 0}, {"{\"s\":\"a\"}\n", -1}, {"{\"s\":\"a\"} \r\n\t ", -1}, {"{\"s\":\"a\"}\n", 1}}) {
+      anch::json::JSONMapper mapper({.deserialize_max_discard_char = maxDiscard, .buffer_size = bufferSize});
+      std::istringstream iss(json);
+      TestStr res;
+      mapper.deserialize(res, iss);
+      anch::ut::assertThat(res._s == "a", "Unexpected value '{}' with buffer_size={}", res._s, bufferSize);
+    }
+  }
+  std::istringstream iss(R"(["a","b"]  )");
+  std::vector<std::string> values;
+  anch::json::JSONMapper({.deserialize_max_discard_char = -1}).deserialize(values, iss);
+  anch::ut::assertThat(values == std::vector<std::string>({"a", "b"}), "Unexpected array of {} values", values.size());
+}
+// Data after root value -
+
 void
 anch::ut::setup(anch::ut::UnitTests& tests) {
   tests
@@ -2114,6 +2168,8 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("json-deser-max-payload-ko", testDeserMaxPayloadKo)
     .add("json-deser-max-payload-refill-ko", testDeserMaxPayloadRefillKo)
     .add("json-deser-max-payload-limit", testDeserMaxPayloadLimit)
+    .add("json-deser-trailing-data", testDeserTrailingData)
+    .add("json-deser-trailing-spaces", testDeserTrailingSpaces)
     .add("json-ser-escape", testSerEscape)
     .add("json-ser-escape-map-key", testSerEscapeMapKey)
     .add("json-deser-max-depth-unknown", testDeserMaxDepthUnknown)

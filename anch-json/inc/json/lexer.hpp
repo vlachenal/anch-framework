@@ -205,6 +205,18 @@ namespace anch::json {
   char discardFail(anch::json::ReaderContext& context);
 
   /*!
+   * Check that only discardable characters (according to \c deserialize_max_discard_char option) follow the root
+   * value until the end of input stream
+   *
+   * \param context the parser context
+   *
+   * \throw anch::json::MappingError data has been found after the root value
+   *
+   * \since 0.2
+   */
+  void lexEnd(anch::json::ReaderContext& context);
+
+  /*!
    * Consume stream until unescapable character
    *
    * \param context the parser context

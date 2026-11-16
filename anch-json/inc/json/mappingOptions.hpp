@@ -64,10 +64,9 @@ namespace anch::json {
     /*! Maximum discard characters before raising error. Use \c -1 value for unlimited discard characters. It can be usefull at development stage */
     int64_t deserialize_max_discard_char = 0;
 
-    /*! Maximum field characters before raising error. Use \c 0 value for unlimited field's value characters */
-    std::size_t deserialize_max_field_char = 512; // \todo keep it ?
-
-    /*! Maximum number of characters read from input stream before raising error. Use \c 0 value for unlimited payload */
+    /*! Maximum number of characters read from input stream before raising error
+     * ( \ref anch::json::ErrorCode::PAYLOAD_TOO_LARGE ). Use \c 0 value for unlimited payload. The length of a string
+     * field is limited with its \c maxLength constraint. */
     std::size_t max_payload = 0;
 
     /*! Check fields constraints ( \c required , \c minLength , \c minimum , ... given to \c ObjectMapper::registerField )

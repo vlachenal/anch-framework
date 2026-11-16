@@ -44,6 +44,13 @@ anch::json::discardFail(anch::json::ReaderContext& context) {
   }
 }
 
+void
+anch::json::lexEnd(anch::json::ReaderContext& context) {
+  if(context.discard() != '\0') {
+    throw anch::json::MappingError(ErrorCode::INVALID_FORMAT, context, "Unexpected data after JSON value");
+  }
+}
+
 char
 anch::json::lexDiscard(anch::json::ReaderContext& context) {
   char current;

@@ -60,6 +60,12 @@ namespace anch::json {
      */
     CONSTRAINT_VIOLATION,
 
+    /*! Input stream is larger than \c max_payload option
+     *
+     * \since 0.2
+     */
+    PAYLOAD_TOO_LARGE,
+
     /*! Unexpected error code */
     UNKNOWN = 9999
   };

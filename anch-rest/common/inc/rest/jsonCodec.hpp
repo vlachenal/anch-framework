@@ -57,7 +57,9 @@ namespace anch::rest {
     /*!
      * Mapping options of a side. They are copied from \c anch::json::DEFAULT_MAPPING_OPTIONS on first use, then
      * constraints checks are set:
-     * - server: \c deserialize_check_constraints is \c true , \c serialize_check_constraints is \c false ;
+     * - server: \c deserialize_check_constraints is \c true , \c serialize_check_constraints is \c false , request
+     *   bodies are limited to 2 MiB ( \c max_payload , when not set in \c anch::json::DEFAULT_MAPPING_OPTIONS ):
+     *   larger ones raise \ref ContentTooLarge ( \c 413 );
      * - client: \c serialize_check_constraints is \c true , \c deserialize_check_constraints is \c false . Server
      *   responses are trusted and read with tolerance: unknown fields are ignored
      *   ( \c deserialize_ignore_unknown_field is \c true ) and whitespaces are accepted
@@ -102,6 +104,7 @@ namespace anch::rest {
      * \param value the value to fill
      * \param input the input stream
      *
+     * \throw ContentTooLarge input is larger than \c max_payload option
      * \throw anch::json::MappingError on invalid JSON
      */
     template<typename T>
@@ -114,6 +117,7 @@ namespace anch::rest {
      * \param input the input stream
      * \param side the side
      *
+     * \throw ContentTooLarge input is larger than \c max_payload option
      * \throw anch::json::MappingError on invalid JSON or constraint violation (when constraints are checked on
      *        deserialization)
      *

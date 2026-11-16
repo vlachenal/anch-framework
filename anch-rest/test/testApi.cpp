@@ -305,6 +305,16 @@ testBody() {
   Response invalid = call(api, Method::POST, "/pets", "", "application/json", "{\"id\":\"seven\"}");
   expectStatus(invalid, Status::BAD_REQUEST);
   anch::ut::assertThat(!bodyOf(invalid).empty(), "Invalid body error has to be described");
+  // Data after the JSON value is refused
+  expectStatus(call(api, Method::POST, "/pets", "", "application/json", "{\"id\":7,\"name\":\"Rex\"}{}"), Status::BAD_REQUEST);
+  // Request bodies are limited to 2 MiB by default
+  anch::ut::assertThat(Json::options(anch::rest::Side::SERVER).max_payload == 2 * 1024 * 1024, "Unexpected server max_payload {}",
+		       Json::options(anch::rest::Side::SERVER).max_payload);
+  std::string name(2 * 1024 * 1024, 'a');
+  expectStatus(call(api, Method::POST, "/pets", "", "application/json", "{\"id\":7,\"name\":\"" + name + "\"}"), Status::CONTENT_TOO_LARGE);
+  Json::options(anch::rest::Side::SERVER).max_payload = 0;
+  expectStatus(call(api, Method::POST, "/pets", "", "application/json", "{\"id\":7,\"name\":\"" + name + "\"}"), Status::CREATED);
+  Json::options(anch::rest::Side::SERVER).max_payload = 2 * 1024 * 1024;
 }
 
 void
