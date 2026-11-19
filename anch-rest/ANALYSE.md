@@ -44,8 +44,9 @@ Correction : seuls `\"` et `\\` sont des échappements (un chemin `C:\dir\f.txt`
 `handleRpc` (`protobuf/inc/rest/impl/rpcApi.hpp`) recopie les métadonnées avec `Response::header`, qui remplace la valeur : seule la dernière valeur d'un nom est envoyée (Connect et gRPC-Web), alors que le serveur gRPC les envoie toutes.
 Correction : `Headers::add` ; le service de test envoie deux valeurs de `X-Trace`, vérifiées en Connect (`anch-rest-protobuf-connect`).
 
-### R3. `CurlTransport` : corps en flux et redirection — lecture
+### R3. `CurlTransport` : corps en flux et redirection — vérifié — **corrigé le 2026-11-19**
 Un corps envoyé en flux (`Content-Length` connu) ne peut pas être relu : sans `CURLOPT_SEEKFUNCTION`, une redirection 307 / 308 ou une authentification qui renvoie le corps échoue (`CURLE_SEND_FAIL_REWIND`). Les valeurs d'en-têtes ne sont pas contrôlées (`\r\n` dans une valeur ajoute des en-têtes), et la taille de la réponse lue en mémoire n'est pas bornée.
+Correction : `CURLOPT_SEEKFUNCTION` repositionne le flux du corps (un flux qui ne se repositionne pas donne une erreur explicite de curl) ; noms et valeurs d'en-têtes avec CR, LF ou NUL (et noms vides ou avec `:`) refusés par `TransportError` avant l'envoi ; nouvelle option `TransportConfig::maxResponseSize` (64 Mio par défaut, `0` sans limite), appliquée avant le transfert quand `Content-Length` est connu (`CURLOPT_MAXFILESIZE_LARGE`) et pendant la lecture sinon. Tests `anch-rest-curl-redirect-stream` (échoue sans la correction : « rewinding of the data stream failed »), `anch-rest-curl-invalid-header` et `anch-rest-curl-response-too-large`.
 
 ### R4. Réponse à `HEAD` : `Content-Length: 0` — vérifié — **corrigé le 2026-11-19**
 `Api::dispatch` sert `HEAD` avec la route `GET` puis retire le corps ; le module nginx envoie alors `Content-Length: 0` au lieu de la longueur de la réponse `GET`.

@@ -12,6 +12,11 @@ which give its replacement and the version which removes it. Until 1.0.0, it is 
 
 ## [Unreleased]
 
+### Added
+
+- anch-rest: `TransportConfig::maxResponseSize` bounds the response body read in memory by the client (64 MiB by
+  default, `0` for no limit).
+
 ### Changed
 
 - anch-oas: inconsistent constraints (`minLength` greater than `maxLength`, `minItems` greater than `maxItems`,
@@ -26,6 +31,8 @@ which give its replacement and the version which removes it. Until 1.0.0, it is 
 - anch-rest: multipart names and file names keep backslashes (only `\"` and `\\` are escapes) and decode `%22`, `%0D`
   and `%0A` as browsers encode them; every value of multi-valued RPC response metadata is sent (Connect and
   gRPC-Web); `HEAD` responses have the `Content-Length` of the `GET` response instead of `0` with nginx.
+- anch-rest: `CurlTransport` rewinds streamed request bodies to follow 307 / 308 redirections and refuses request
+  headers with CR, LF or NUL (header injection).
 - anch-crypto: `MD5`, `SHA1` and SHA-2 classes hid the data hashing methods of `Hash` (`digest(const std::string&)`,
   `digest(const uint8_t*, std::size_t)`, `digest(std::istream&)`, ...): a hash object can be reused.
 

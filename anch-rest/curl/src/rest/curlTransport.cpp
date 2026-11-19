@@ -50,6 +50,10 @@ namespace {
   struct Received {
     std::string body;
     Headers headers;
+    /*! Maximum body size (0: no limit) */
+    std::size_t maxSize = 0;
+    /*! Body is larger than maxSize: transfer has been aborted */
+    bool tooLarge = false;
   };
 
   /*! Read request body stream (errors abort the transfer) */
@@ -61,6 +65,30 @@ namespace {
       return CURL_READFUNC_ABORT;
     }
     return static_cast<std::size_t>(input->gcount());
+  }
+
+  /*!
+   * Rewind request body stream: curl sends the body again after a 307 / 308 redirection or an authentication
+   * negotiation. Streams which can not seek make curl fail (CURLE_SEND_FAIL_REWIND).
+   */
+  int
+  seekBody(void* userdata, curl_off_t offset, int origin) noexcept {
+    std::istream* input = static_cast<std::istream*>(userdata);
+    if(origin != SEEK_SET) {
+      return CURL_SEEKFUNC_CANTSEEK;
+    }
+    input->clear();
+    input->seekg(static_cast<std::streamoff>(offset), std::ios_base::beg);
+    return input->fail() ? CURL_SEEKFUNC_CANTSEEK : CURL_SEEKFUNC_OK;
+  }
+
+  /*! Check that header can be written in request: no CR, LF or NUL (header injection), name without ':' */
+  void
+  checkHeader(std::string_view name, std::string_view value) {
+    if(name.empty() || name.find_first_of(":\r\n", 0) != std::string_view::npos || name.find('\0') != std::string_view::npos
+       || value.find_first_of("\r\n", 0) != std::string_view::npos || value.find('\0') != std::string_view::npos) {
+      throw TransportError("Invalid request header '" + std::string(name) + "': empty name, ':' in name, CR, LF or NUL");
+    }
   }
 
   /*! Check if header name is Content-Length (case insensitive) */
@@ -82,8 +110,17 @@ namespace {
   }
 
   std::size_t
-  writeBody(char* data, std::size_t size, std::size_t count, void* userdata) {
-    static_cast<Received*>(userdata)->body.append(data, size * count);
+  writeBody(char* data, std::size_t size, std::size_t count, void* userdata) noexcept {
+    Received* received = static_cast<Received*>(userdata);
+    if(received->maxSize != 0 && received->body.size() + size * count > received->maxSize) {
+      received->tooLarge = true;
+      return 0; // CURLE_WRITE_ERROR
+    }
+    try {
+      received->body.append(data, size * count);
+    } catch(...) {
+      return 0;
+    }
     return size * count;
   }
 
@@ -183,6 +220,8 @@ CurlTransport::send(const std::string& url, const Request& request) {
     check(curl_easy_setopt(curl, CURLOPT_POST, 1L), errors);
     check(curl_easy_setopt(curl, CURLOPT_READFUNCTION, readBody), errors);
     check(curl_easy_setopt(curl, CURLOPT_READDATA, &request.getBody()), errors);
+    check(curl_easy_setopt(curl, CURLOPT_SEEKFUNCTION, seekBody), errors);
+    check(curl_easy_setopt(curl, CURLOPT_SEEKDATA, &request.getBody()), errors);
     check(curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE_LARGE, *length), errors);
   } else if(request.hasBody()) {
     std::istream& input = request.getBody();
@@ -201,6 +240,9 @@ CurlTransport::send(const std::string& url, const Request& request) {
   // Headers +
   HeaderList headers;
   for(const auto& [name, values] : request.getHeaders()) {
+    for(const std::string& value : values) {
+      checkHeader(name, value);
+    }
     if(length && isContentLength(name)) {
       continue; // set by curl from body size
     }
@@ -218,11 +260,19 @@ CurlTransport::send(const std::string& url, const Request& request) {
 
   // Response +
   Received received;
+  received.maxSize = _config.maxResponseSize;
+  if(_config.maxResponseSize != 0) { // aborted before the transfer when Content-Length is known
+    check(curl_easy_setopt(curl, CURLOPT_MAXFILESIZE_LARGE, static_cast<curl_off_t>(_config.maxResponseSize)), errors);
+  }
   check(curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeBody), errors);
   check(curl_easy_setopt(curl, CURLOPT_WRITEDATA, &received), errors);
   check(curl_easy_setopt(curl, CURLOPT_HEADERFUNCTION, writeHeader), errors);
   check(curl_easy_setopt(curl, CURLOPT_HEADERDATA, &received), errors);
-  check(curl_easy_perform(curl), errors);
+  const CURLcode performed = curl_easy_perform(curl);
+  if(received.tooLarge || performed == CURLE_FILESIZE_EXCEEDED) {
+    throw TransportError("Response body is larger than " + std::to_string(_config.maxResponseSize) + " bytes");
+  }
+  check(performed, errors);
   long code = 0;
   check(curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &code), errors);
   // Response -

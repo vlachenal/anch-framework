@@ -56,6 +56,14 @@ namespace anch::rest {
 
     /*! CA certificates file, system certificates when empty */
     std::optional<std::string> caFile;
+
+    /*!
+     * Maximum response body size in bytes (the body is read in memory), \c 0 for no limit. A larger response raises
+     * \ref TransportError .
+     *
+     * \since 0.3
+     */
+    std::size_t maxResponseSize = 64 * 1024 * 1024;
   };
 
   /*!

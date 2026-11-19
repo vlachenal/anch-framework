@@ -28,10 +28,14 @@
 #include <chrono>
 #include <filesystem>
 #include <fstream>
+#include <iterator>
 #include <memory>
 #include <optional>
+#include <sstream>
 #include <string>
 #include <thread>
+#include <utility>
+#include <vector>
 
 #include "network/tcpServer.hpp"
 
@@ -130,6 +134,14 @@ namespace {
     api->get("/slow", []() {
       std::this_thread::sleep_for(std::chrono::milliseconds(1000));
       return Response();
+    });
+    // R3: streamed bodies are sent again after a 307 redirection
+    api->post("/redirect", []() {
+      return Response(Status::TEMPORARY_REDIRECT).header("Location", "/echo");
+    });
+    api->post("/echo", [](const Request& request) {
+      std::string content(std::istreambuf_iterator<char>(request.getBody()), std::istreambuf_iterator<char>());
+      return Response().contentType("text/plain").body(std::move(content));
     });
     api->get("/secured", [](const Request& request) {
       return Response().contentType("text/plain").body(std::string(request.getHeaders().get("Authorization").value_or("")));
@@ -272,6 +284,53 @@ testAuth() {
   anch::ut::assertThat(res == "Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==", "Unexpected authorization '{}'", res);
 }
 
+// R3: streamed body (with Content-Length) is rewound to follow a 307 redirection
+void
+testRedirectStream() {
+  TransportConfig config;
+  config.followRedirects = true;
+  Client client = makeClient(config);
+  std::string content(100000, 'x');
+  for(std::size_t i = 0 ; i < content.size() ; ++i) {
+    content[i] = static_cast<char>('a' + i % 26);
+  }
+  Response response = client.post("/redirect").body(std::make_unique<std::istringstream>(content), "text/plain", content.size()).send();
+  anch::ut::assertThat(response.getStatus() == Status::OK && response.content() == content, "Redirected body expected ({} {} bytes)",
+		       anch::rest::code(response.getStatus()), response.content().size());
+}
+
+// R3: header injection is refused
+void
+testInvalidHeader() {
+  Client client = makeClient();
+  for(const auto& [name, value] : std::vector<std::pair<std::string, std::string>>{{"X-Test", "a\r\nX-Injected: b"}, {"X-Test", "a\nb"},
+										      {"X-Te:st", "a"}, {"X-Test\r\n", "a"}}) {
+    try {
+      client.get("/secured").header(name, value).send();
+      anch::ut::fail("TransportError expected for header '" + name + "'");
+    } catch(const TransportError& e) {
+      anch::ut::assertThat(std::string(e.what()).starts_with("Invalid request header"), "Unexpected error '{}'", e.what());
+    }
+  }
+}
+
+// R3: response body read in memory is bounded
+void
+testResponseTooLarge() {
+  TransportConfig config;
+  config.maxResponseSize = 10;
+  Client client = makeClient(config);
+  try {
+    client.get("/pets/{id}", 1).accept<Json>().send();
+    anch::ut::fail("TransportError expected");
+  } catch(const TransportError& e) {
+    anch::ut::assertThat(std::string(e.what()) == "Response body is larger than 10 bytes", "Unexpected error '{}'", e.what());
+  }
+  config.maxResponseSize = 21;
+  Client exact = makeClient(config);
+  anch::ut::assertThat(exact.get("/pets/{id}", 1).accept<Json>().send().content().size() == 21, "Response of maxResponseSize bytes is accepted");
+}
+
 void
 testRefused() {
   uint16_t port = 0;
@@ -323,6 +382,9 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("http-error", testHttpError)
     .add("head", testHead)
     .add("auth", testAuth)
+    .add("redirect-stream", testRedirectStream)
+    .add("invalid-header", testInvalidHeader)
+    .add("response-too-large", testResponseTooLarge)
     .add("refused", testRefused)
     .add("timeout", testTimeout)
     ;
