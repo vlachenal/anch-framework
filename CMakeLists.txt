@@ -51,7 +51,7 @@ option(ANCH_REST_NGINX "Build anch-rest nginx applications bridge" ON)
 option(ANCH_REST_THRIFT "Build anch-rest Apache Thrift codecs and RPC (disabled when Thrift or Boost is not found)" ON)
 option(ANCH_REST_PROTOBUF "Build anch-rest Protocol Buffers codecs and RPC (disabled when Protobuf is not found)" ON)
 option(ANCH_REST_GRPC "Build anch-rest gRPC server (disabled when gRPC or anch-rest-protobuf is not found)" ON)
-set(ANCH_LOG_MIN_LEVEL TRACE CACHE STRING "anch-log compile-time level: stream messages in lower levels are removed")
+set(ANCH_LOG_MIN_LEVEL TRACE CACHE STRING "anch-log compile-time level: messages in lower levels are removed")
 set_property(CACHE ANCH_LOG_MIN_LEVEL PROPERTY STRINGS TRACE DEBUG INFO WARN ERROR FATAL)
 # Options -
 

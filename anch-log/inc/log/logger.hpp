@@ -81,7 +81,9 @@ namespace anch::log {
     // Methods +
   public:
     /*!
-     * Concatenate message and log it in TRACE level
+     * Concatenate message and log it in TRACE level.\n
+     * Removed at compile time when TRACE is lower than \ref anch::log::MIN_LEVEL "MIN_LEVEL" ( \c ANCH_LOG_MIN_LEVEL ).\n
+     * Values are always evaluated.
      *
      * \param value The first value of the message to concatenate
      * \param values The other values of the message to concatenate
@@ -90,7 +92,9 @@ namespace anch::log {
     void trace(const T& value, const Q&... values) const noexcept;
 
     /*!
-     * Concatenate message and log it in DEBUG level
+     * Concatenate message and log it in DEBUG level.\n
+     * Removed at compile time when DEBUG is lower than \ref anch::log::MIN_LEVEL "MIN_LEVEL" ( \c ANCH_LOG_MIN_LEVEL ).\n
+     * Values are always evaluated.
      *
      * \param value The first value of the message to concatenate
      * \param values The other values of the message to concatenate
@@ -99,7 +103,9 @@ namespace anch::log {
     void debug(const T& value, const Q&... values) const noexcept;
 
     /*!
-     * Concatenate message and log it in INFO level
+     * Concatenate message and log it in INFO level.\n
+     * Removed at compile time when INFO is lower than \ref anch::log::MIN_LEVEL "MIN_LEVEL" ( \c ANCH_LOG_MIN_LEVEL ).\n
+     * Values are always evaluated.
      *
      * \param value The first value of the message to concatenate
      * \param values The other values of the message to concatenate
@@ -108,7 +114,9 @@ namespace anch::log {
     void info(const T& value, const Q&... values) const noexcept;
 
     /*!
-     * Concatenate message and log it in WARN level
+     * Concatenate message and log it in WARN level.\n
+     * Removed at compile time when WARN is lower than \ref anch::log::MIN_LEVEL "MIN_LEVEL" ( \c ANCH_LOG_MIN_LEVEL ).\n
+     * Values are always evaluated.
      *
      * \param value The first value of the message to concatenate
      * \param values The other values of the message to concatenate
@@ -117,7 +125,9 @@ namespace anch::log {
     void warn(const T& value, const Q&... values) const noexcept;
 
     /*!
-     * Concatenate message and log it in ERROR level
+     * Concatenate message and log it in ERROR level.\n
+     * Removed at compile time when ERROR is lower than \ref anch::log::MIN_LEVEL "MIN_LEVEL" ( \c ANCH_LOG_MIN_LEVEL ).\n
+     * Values are always evaluated.
      *
      * \param value The first value of the message to concatenate
      * \param values The other values of the message to concatenate
@@ -126,7 +136,9 @@ namespace anch::log {
     void error(const T& value, const Q&... values) const noexcept;
 
     /*!
-     * Concatenate message and log it in FATAL level
+     * Concatenate message and log it in FATAL level.\n
+     * Removed at compile time when FATAL is lower than \ref anch::log::MIN_LEVEL "MIN_LEVEL" ( \c ANCH_LOG_MIN_LEVEL ).\n
+     * Values are always evaluated.
      *
      * \param value The first value of the message to concatenate
      * \param values The other values of the message to concatenate

@@ -26,37 +26,49 @@ namespace anch::log {
   template<typename T, typename... Q>
   void
   Logger::trace(const T& value, const Q&... values) const noexcept {
-    log(Level::TRACE, value, values...);
+    if constexpr (Level::TRACE >= MIN_LEVEL) {
+      log(Level::TRACE, value, values...);
+    }
   }
 
   template<typename T, typename... Q>
   void
   Logger::debug(const T& value, const Q&... values) const noexcept {
-    log(Level::DEBUG, value, values...);
+    if constexpr (Level::DEBUG >= MIN_LEVEL) {
+      log(Level::DEBUG, value, values...);
+    }
   }
 
   template<typename T, typename... Q>
   void
   Logger::info(const T& value, const Q&... values) const noexcept {
-    log(Level::INFO, value, values...);
+    if constexpr (Level::INFO >= MIN_LEVEL) {
+      log(Level::INFO, value, values...);
+    }
   }
 
   template<typename T, typename... Q>
   void
   Logger::warn(const T& value, const Q&... values) const noexcept {
-    log(Level::WARN, value, values...);
+    if constexpr (Level::WARN >= MIN_LEVEL) {
+      log(Level::WARN, value, values...);
+    }
   }
 
   template<typename T, typename... Q>
   void
   Logger::error(const T& value, const Q&... values) const noexcept {
-    log(Level::ERROR, value, values...);
+    if constexpr (Level::ERROR >= MIN_LEVEL) {
+      log(Level::ERROR, value, values...);
+    }
   }
 
   template<typename T, typename... Q>
   void
   Logger::fatal(const T& value, const Q&... values) const noexcept {
-    log(Level::FATAL, value, values...);
+    if constexpr (Level::FATAL >= MIN_LEVEL) {
+      log(Level::FATAL, value, values...);
+    }
   }
 
   template<typename T>

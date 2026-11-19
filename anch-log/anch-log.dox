@@ -32,9 +32,9 @@ target_link_libraries(my-app PRIVATE anch::log)
  * which concatenate their arguments, or with stream injection (\c log/stream.hpp ):
  * - levels are types in \ref anch::log::lvl namespace: <tt>LOG << anch::log::lvl::debug << "value=" << value;</tt>
  * - the message is written at the end of the expression ;
- * - levels lower than \c ANCH_LOG_MIN_LEVEL CMake option (\c TRACE by default) are removed at compile time.
  *
- * Arguments are always evaluated, even when the level is disabled. Logging never throws.
+ * With both APIs, messages in levels lower than \c ANCH_LOG_MIN_LEVEL CMake option (\c TRACE by default) are removed at
+ * compile time. Arguments are always evaluated, even when the level is disabled. Logging never throws.
  *
  * \subsection log_concept_conf_sec Configuration
  *

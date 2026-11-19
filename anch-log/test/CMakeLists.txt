@@ -11,7 +11,7 @@ anch_copy_test_files(
 anch_add_executable(anch-logger-test SOURCES testLogger.cpp LIBS anch::log anch::ut)
 anch_add_executable(anch-log-writers-test SOURCES testWriters.cpp LIBS anch::log anch::ut)
 anch_add_executable(anch-log-stream-test SOURCES testStream.cpp LIBS anch::log anch::ut)
-# Same tests with TRACE level removed at compile time.
+# Same tests with TRACE and DEBUG levels removed at compile time.
 # Only with default ANCH_LOG_MIN_LEVEL: otherwise anch::log already defines it and anch-log-stream-test covers it
 if(log_min_level STREQUAL "TRACE")
   anch_add_executable(anch-log-stream-min-level-test SOURCES testStream.cpp LIBS anch::log anch::ut)
@@ -42,6 +42,7 @@ add_test(NAME anch-log-stream-format-error COMMAND anch-log-stream-test -t forma
 add_test(NAME anch-log-stream-writer-error COMMAND anch-log-stream-test -t writer-error)
 add_test(NAME anch-log-stream-evaluation COMMAND anch-log-stream-test -t evaluation)
 add_test(NAME anch-log-stream-compile-level COMMAND anch-log-stream-test -t compile-level)
+add_test(NAME anch-log-stream-variadic-compile-level COMMAND anch-log-stream-test -t variadic-compile-level)
 if(log_min_level STREQUAL "TRACE")
   add_test(NAME anch-log-stream-min-level-runtime-level COMMAND anch-log-stream-min-level-test -t runtime-level)
   add_test(NAME anch-log-stream-min-level-manipulators COMMAND anch-log-stream-min-level-test -t manipulators)
@@ -49,6 +50,7 @@ if(log_min_level STREQUAL "TRACE")
   add_test(NAME anch-log-stream-min-level-writer-error COMMAND anch-log-stream-min-level-test -t writer-error)
   add_test(NAME anch-log-stream-min-level-evaluation COMMAND anch-log-stream-min-level-test -t evaluation)
   add_test(NAME anch-log-stream-min-level-compile-level COMMAND anch-log-stream-min-level-test -t compile-level)
+  add_test(NAME anch-log-stream-min-level-variadic-compile-level COMMAND anch-log-stream-min-level-test -t variadic-compile-level)
 endif()
 
 # Logger tests share the same log files: never run them in parallel

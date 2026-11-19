@@ -25,6 +25,8 @@ which give its replacement and the version which removes it. Until 1.0.0, it is 
 - anch-rest is built by default (`ANCH_BUILD_REST` is ON); `anch-rest-curl` is skipped with a CMake status message
   when libcurl is not found, as Protobuf, gRPC and Thrift libraries.
 - anch-rest: the nginx module integration test covers HTTP/2 (h2c).
+- anch-log: `ANCH_LOG_MIN_LEVEL` also applies to level methods (`trace`, `debug`, ...): messages in lower levels are
+  removed at compile time, as with the stream API. `anch::log::MIN_LEVEL` is declared in `log/levels.hpp`.
 - `ANCH_NATIVE_ARCH` (`-march=native`) is OFF by default: binaries built for the build machine CPU may not run on
   other CPUs (installed packages, CI runners sharing a compilation cache).
 

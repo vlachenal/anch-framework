@@ -172,6 +172,37 @@ testCompileLevel() {
 		       writer.messages.size(), expected.size());
 }
 
+template<Level L>
+void
+expectMessage(std::vector<std::string>& expected, const std::string& message) {
+  if constexpr (L >= anch::log::MIN_LEVEL) {
+    expected.push_back(message);
+  }
+}
+
+void
+testVariadicCompileLevel() {
+  std::vector<std::string> expected;
+  expectMessage<Level::TRACE>(expected, "trace 1");
+  expectMessage<Level::DEBUG>(expected, "debug 2");
+  expectMessage<Level::INFO>(expected, "info 3");
+  expectMessage<Level::WARN>(expected, "warn 4");
+  expectMessage<Level::ERROR>(expected, "error 5");
+  expectMessage<Level::FATAL>(expected, "fatal 6");
+  StringWriter writer;
+  Logger logger("variadic", Level::TRACE, {&writer});
+  calls = 0;
+  logger.trace("trace ", count());
+  logger.debug("debug ", count());
+  logger.info("info ", count());
+  logger.warn("warn ", count());
+  logger.error("error ", count());
+  logger.fatal("fatal ", count());
+  anch::ut::assertThat(writer.messages == expected, "Messages lower than ANCH_LOG_MIN_LEVEL must be removed: {} written, {} expected",
+		       writer.messages.size(), expected.size());
+  anch::ut::assertThat(calls == 6, "Values are evaluated even when level is removed: {} call(s)", calls);
+}
+
 void
 anch::ut::setup(anch::ut::UnitTests& tests) {
   tests
@@ -183,5 +214,6 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("writer-error", testWriterError)
     .add("evaluation", testEvaluation)
     .add("compile-level", testCompileLevel)
+    .add("variadic-compile-level", testVariadicCompileLevel)
     ;
 }

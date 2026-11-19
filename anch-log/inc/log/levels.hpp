@@ -24,6 +24,15 @@
 #include <string>
 #include <map>
 
+/*!
+ * Compile-time logging threshold: messages in lower levels are removed at compilation,\n
+ * with level methods (\ref anch::log::Logger::debug "Logger::debug" , ...) and with stream injection (\c log/stream.hpp ).\n
+ * Its value is a level name (\c TRACE, \c DEBUG, \c INFO, \c WARN, \c ERROR or \c FATAL). Default to \c TRACE .
+ */
+#ifndef ANCH_LOG_MIN_LEVEL
+#define ANCH_LOG_MIN_LEVEL TRACE
+#endif
+
 namespace anch::log {
 
   /*!
@@ -56,5 +65,13 @@ namespace anch::log {
 
   /*! Labels->levels for logging definition */
   extern ANCH_LOG_EXPORT const std::map<const std::string, const Level> LABEL_LEVEL;
+
+  /*!
+   * Compile-time logging threshold (set with \c ANCH_LOG_MIN_LEVEL ).\n
+   * Messages in lower levels are removed at compilation.
+   *
+   * \since 0.2
+   */
+  inline constexpr anch::log::Level MIN_LEVEL = anch::log::Level::ANCH_LOG_MIN_LEVEL;
 
 }

@@ -29,18 +29,7 @@
 #include "log/levels.hpp"
 #include "log/logger.hpp"
 
-/*!
- * Compile-time logging threshold: messages in lower levels are removed at compilation.\n
- * Its value is a level name (\c TRACE, \c DEBUG, \c INFO, \c WARN, \c ERROR or \c FATAL). Default to \c TRACE .
- */
-#ifndef ANCH_LOG_MIN_LEVEL
-#define ANCH_LOG_MIN_LEVEL TRACE
-#endif
-
 namespace anch::log {
-
-  /*! Compile-time logging threshold (set with \c ANCH_LOG_MIN_LEVEL ) */
-  inline constexpr anch::log::Level MIN_LEVEL = anch::log::Level::ANCH_LOG_MIN_LEVEL;
 
   /*!
    * Logging level known at compile time.\n
