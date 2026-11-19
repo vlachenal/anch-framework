@@ -367,6 +367,7 @@ namespace anch::oas::detail {
   literal(const std::string& value) {
     std::ostringstream oss;
     oss << '"';
+    char previous = '\0';
     for(char c : value) {
       switch(c) {
       case '"':
@@ -384,6 +385,9 @@ namespace anch::oas::detail {
       case '\t':
 	oss << "\\t";
 	break;
+      case '?': // ?? could start a trigraph (-Wtrigraphs)
+	oss << (previous == '?' ? "\\?" : "?");
+	break;
       default:
 	if(static_cast<unsigned char>(c) < 0x20) {
 	  oss << '\\' << std::oct << std::setw(3) << std::setfill('0') << static_cast<int>(c) << std::dec;
@@ -391,6 +395,7 @@ namespace anch::oas::detail {
 	  oss << c;
 	}
       }
+      previous = c;
     }
     oss << '"';
     return oss.str();
@@ -401,7 +406,8 @@ namespace anch::oas::detail {
    *
    * \param text the text
    *
-   * \return the text without comment end
+   * \return the text without comment end nor trigraph ( \c ??/ at end of line would continue the comment on the
+   *         next line, and \c -Wtrigraphs reports every trigraph)
    */
   inline
   std::string
@@ -409,6 +415,10 @@ namespace anch::oas::detail {
     std::size_t pos = 0;
     while((pos = text.find("*/", pos)) != std::string::npos) {
       text.replace(pos, 2, "* /");
+    }
+    pos = 0;
+    while((pos = text.find("??", pos)) != std::string::npos) {
+      text.replace(pos, 2, "? ?");
     }
     return text;
   }
@@ -528,6 +538,31 @@ namespace anch::oas::detail {
     long double value = 0.0L;
     std::from_chars(text.data(), text.data() + text.size(), value);
     return value;
+  }
+
+  /*!
+   * Check that JSON number can be written as a C++ literal: integers which fit in \c int64_t or \c uint64_t ,
+   * other numbers in \c double range (a literal outside this range does not compile with \c -Werror )
+   *
+   * \param text the JSON number
+   *
+   * \return \c true when the number can be written by \ref numberLiteral
+   */
+  inline
+  bool
+  representable(const std::string& text) {
+    const char* end = text.data() + text.size();
+    if(isIntegerText(text)) {
+      int64_t signedValue = 0;
+      uint64_t unsignedValue = 0;
+      if(std::from_chars(text.data(), end, signedValue).ec == std::errc()
+	 || std::from_chars(text.data(), end, unsignedValue).ec == std::errc()) {
+	return true;
+      }
+    }
+    double value = 0.0;
+    auto res = std::from_chars(text.data(), end, value);
+    return res.ec == std::errc() && res.ptr == end && std::isfinite(value);
   }
 
   /*!
@@ -927,6 +962,24 @@ namespace anch::oas::detail {
     }
 
     /*!
+     * Warn when a minimum size is greater than the maximum one: no value can be valid (error in strict mode)
+     *
+     * \param min the minimum
+     * \param max the maximum
+     * \param minKeyword the minimum keyword
+     * \param maxKeyword the maximum keyword
+     * \param path the property path
+     */
+    void
+    inconsistent(const std::optional<uint64_t>& min, const std::optional<uint64_t>& max,
+		 const std::string& minKeyword, const std::string& maxKeyword, const std::string& path) {
+      if(min.has_value() && max.has_value() && min.value() > max.value()) {
+	constraintWarning(path, minKeyword + " " + std::to_string(min.value()) + " is greater than " + maxKeyword + " "
+			  + std::to_string(max.value()) + ": no value is valid");
+      }
+    }
+
+    /*!
      * Constraint warning: the property is generated without this constraint (error in strict mode)
      */
     void
@@ -1298,6 +1351,9 @@ namespace anch::oas::detail {
       };
       length(schema->minLength, "minLength");
       length(schema->maxLength, "maxLength");
+      if(string) {
+	inconsistent(schema->minLength, schema->maxLength, "minLength", "maxLength", path);
+      }
       if(schema->pattern.has_value() && string) {
 	const std::string& pattern = schema->pattern.value();
 	try { // pattern is checked here: an invalid pattern would raise an error when mapper is registered
@@ -1325,6 +1381,10 @@ namespace anch::oas::detail {
 	  constraintWarning(path, keyword + " is not a number: ignored");
 	  return;
 	}
+	if(!representable(value->text)) {
+	  constraintWarning(path, keyword + " " + value->text + " is outside double range: ignored");
+	  return;
+	}
 	if(integer && !inRange(value->text, cpp)) {
 	  constraintWarning(path, keyword + " " + value->text + " is outside " + cpp + " range");
 	}
@@ -1334,11 +1394,22 @@ namespace anch::oas::detail {
       };
       bound(schema->minimum, schema->exclusiveMinimum.value_or(false), "minimum", "exclusiveMinimum");
       bound(schema->maximum, schema->exclusiveMaximum.value_or(false), "maximum", "exclusiveMaximum");
+      if(number && schema->minimum.has_value() && schema->maximum.has_value()
+	 && schema->minimum->kind == Scalar::Kind::NUMBER && schema->maximum->kind == Scalar::Kind::NUMBER
+	 && representable(schema->minimum->text) && representable(schema->maximum->text)) { // ignored bounds are not compared
+	long double min = numberValue(schema->minimum->text);
+	long double max = numberValue(schema->maximum->text);
+	bool exclusive = schema->exclusiveMinimum.value_or(false) || schema->exclusiveMaximum.value_or(false);
+	if(min > max || (exclusive && min == max)) {
+	  constraintWarning(path, "minimum " + schema->minimum->text + " and maximum " + schema->maximum->text
+			    + " are inconsistent: no value is valid");
+	}
+      }
       if(schema->multipleOf.has_value()) {
 	const Scalar& divisor = schema->multipleOf.value();
 	if(!number) {
 	  ignored("multipleOf");
-	} else if(divisor.kind != Scalar::Kind::NUMBER || !(numberValue(divisor.text) > 0.0L) || !std::isfinite(numberValue(divisor.text))) {
+	} else if(divisor.kind != Scalar::Kind::NUMBER || !(numberValue(divisor.text) > 0.0L) || !representable(divisor.text)) {
 	  constraintWarning(path, "multipleOf has to be a strictly positive number: ignored");
 	} else {
 	  res.code.push_back("anch::json::multipleOf(" + numberLiteral(divisor.text) + ")");
@@ -1355,7 +1426,8 @@ namespace anch::oas::detail {
 	  }
 	  bool valid = false;
 	  if(number) {
-	    valid = (value.kind == Scalar::Kind::NUMBER) && (!integer || (isIntegerText(value.text) && inRange(value.text, cpp)));
+	    valid = (value.kind == Scalar::Kind::NUMBER) && representable(value.text)
+	      && (!integer || (isIntegerText(value.text) && inRange(value.text, cpp)));
 	  } else if(cpp == "bool") {
 	    valid = (value.kind == Scalar::Kind::BOOLEAN);
 	  } else if(string) {
@@ -1407,6 +1479,7 @@ namespace anch::oas::detail {
       case Container::VECTOR:
 	size(schema->minItems, "minItems");
 	size(schema->maxItems, "maxItems");
+	inconsistent(schema->minItems, schema->maxItems, "minItems", "maxItems", path);
 	if(schema->uniqueItems.value_or(false)) {
 	  if(type.cpp == "bool") { // std::vector<bool> items are not references
 	    constraintWarning(path, "uniqueItems is not supported for boolean arrays: ignored");
@@ -1420,6 +1493,7 @@ namespace anch::oas::detail {
       case Container::MAP:
 	size(schema->minProperties, "minProperties");
 	size(schema->maxProperties, "maxProperties");
+	inconsistent(schema->minProperties, schema->maxProperties, "minProperties", "maxProperties", path);
 	items = (schema->additionalProperties.has_value() && schema->additionalProperties->schema)
 	  ? constrained(*schema->additionalProperties->schema) : nullptr;
 	break;
@@ -1458,6 +1532,11 @@ namespace anch::oas::detail {
       if(composite.additional != nullptr && composite.additional->schema && !composite.properties.empty()) {
 	warn(name + ".additionalProperties", "additional properties of model with properties");
 	model.skipped.push_back("additionalProperties: additional properties of model with properties");
+      }
+      for(const std::string& required : composite.required) {
+	if(!composite.properties.contains(required)) {
+	  constraintWarning(name, "required property '" + required + "' is not defined in properties");
+	}
       }
       std::set<std::string> members;
       for(const auto& [json, property] : composite.properties) {

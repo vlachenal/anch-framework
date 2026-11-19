@@ -12,6 +12,17 @@ which give its replacement and the version which removes it. Until 1.0.0, it is 
 
 ## [Unreleased]
 
+### Changed
+
+- anch-oas: inconsistent constraints (`minLength` greater than `maxLength`, `minItems` greater than `maxItems`,
+  `minProperties` greater than `maxProperties`, `minimum` greater than `maximum`) and required properties missing from
+  `properties` are reported with a warning (error with `--strict`).
+
+### Fixed
+
+- anch-oas: bounds, `multipleOf` and enumeration values outside `double` range are ignored with a warning (generated
+  code did not compile); `??` in descriptions and patterns no longer produces trigraphs in generated code.
+
 ## [0.2.0] - 2026-11-19
 
 Version 0.2 is a stabilization of the whole framework: single CMake project, C++23, rewritten libraries (anch-network,

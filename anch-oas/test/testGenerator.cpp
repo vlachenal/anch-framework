@@ -336,6 +336,52 @@ testConstraintsWarnings() {
   checkError<GeneratorError>([&]() { generate(document, options); }, "A.b: uniqueItems is not supported for boolean arrays");
 }
 
+// O1 (bounds outside double range) and O2 (inconsistent constraints, required property without definition)
+void
+testConstraintsInconsistent() {
+  std::string document = spec(R"({"A":{"type":"object","required":["s","missing"],"properties":{
+    "s":{"type":"string","minLength":5,"maxLength":2},"n":{"type":"number","minimum":10,"maximum":1},
+    "x":{"type":"number","minimum":1,"maximum":1,"exclusiveMaximum":true},"ok":{"type":"number","minimum":1,"maximum":1},
+    "v":{"type":"array","items":{"type":"string"},"minItems":3,"maxItems":1},
+    "m":{"type":"object","additionalProperties":{"type":"string"},"minProperties":2,"maxProperties":1},
+    "big":{"type":"number","minimum":1e400,"maximum":-1e400},"tiny":{"type":"number","multipleOf":1e-400},
+    "huge":{"type":"integer","maximum":1)" + std::string(400, '0') + R"(},"e":{"type":"number","enum":[1,1e400]}}}})");
+  GeneratedModels models = generate(document);
+  for(const char* warning : {"A: required property 'missing' is not defined in properties",
+			     "A.s: minLength 5 is greater than maxLength 2: no value is valid",
+			     "A.n: minimum 10 and maximum 1 are inconsistent: no value is valid",
+			     "A.x: minimum 1 and maximum 1 are inconsistent: no value is valid",
+			     "A.v: minItems 3 is greater than maxItems 1: no value is valid",
+			     "A.m: minProperties 2 is greater than maxProperties 1: no value is valid",
+			     "A.big: minimum 1e400 is outside double range: ignored",
+			     "A.big: maximum -1e400 is outside double range: ignored",
+			     "A.tiny: multipleOf has to be a strictly positive number: ignored",
+			     "A.e: enum value 1e400 is not a double value: enum is not checked"}) {
+    anch::ut::assertThat(std::find(models.warnings.begin(), models.warnings.end(), warning) != models.warnings.end(), "Warning '{}' not found", warning);
+  }
+  anch::ut::assertThat(std::find_if(models.warnings.begin(), models.warnings.end(), [](const std::string& found) -> bool {
+	return found.starts_with("A.huge: maximum 1000") && found.ends_with("is outside double range: ignored");
+      }) != models.warnings.end(), "Warning for A.huge not found");
+  anch::ut::assertThat(models.warnings.size() == 11, "11 warnings expected ; found {}", models.warnings.size());
+  anch::ut::assertThat(models.source.find("e400") == std::string::npos, "Bounds outside double range must not be generated:\n{}", models.source);
+  contains(models.source, "anch::json::minLength(5), anch::json::maxLength(2)");
+  ModelOptions options;
+  options.strict = true;
+  checkError<GeneratorError>([&]() { generate(document, options); }, "A: required property 'missing' is not defined in properties");
+}
+
+// O3: trigraphs in comments and string literals
+void
+testTrigraphs() {
+  GeneratedModels models = generate(spec(R"({"A":{"type":"object","description":"Line ending with ??/","properties":{
+    "s":{"type":"string","pattern":"^a??/$"},"e":{"type":"string","enum":["x??=y"]}}}})"));
+  anch::ut::assertThat(models.header.find("??") == std::string::npos, "Trigraph in header:\n{}", models.header);
+  anch::ut::assertThat(models.source.find("??") == std::string::npos, "Trigraph in source:\n{}", models.source);
+  contains(models.header, "Line ending with ? ?/");
+  contains(models.source, R"(anch::json::pattern("^a?\?/$"))");
+  contains(models.source, R"(text = "x?\?=y";)");
+}
+
 /*!
  * OpenAPI document with paths and schemas
  */
@@ -596,6 +642,8 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("gen-required", testRequired)
     .add("gen-constraints", testConstraints)
     .add("gen-constraints-warnings", testConstraintsWarnings)
+    .add("gen-constraints-inconsistent", testConstraintsInconsistent)
+    .add("gen-trigraphs", testTrigraphs)
     .add("gen-endpoints", testEndpoints)
     .add("gen-endpoints-warnings", testEndpointsWarnings)
     .add("gen-forms", testForms)
