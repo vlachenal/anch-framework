@@ -149,7 +149,7 @@ Défauts trouvés :
 - tests de dates (Ubuntu) : ils imposent `TZ=Europe/Paris` et ont besoin de `tzdata` (installé explicitement dans le job Ubuntu) ;
 - conformité révélée par Clang : instanciations explicites par un nom introduit par `using` (128, anch-crypto et anch-json), `override` manquants (`reset` des modes de chiffrement), spécifications d'exception incohérentes entre déclaration et définition (destructeurs de `ReaderContext`, `SqlConnectionFactory`, `SQLite3Connection`), comparaison signée dans SHA-2, champ inutilisé (`MySQLPreparedStatement::_conn`).
 
-À noter pour anch-crypto : les classes de hachage masquent `Hash::digest(const std::string&)` (masquage de nom par `digest()`), seul le constructeur prend les données.
+À noter pour anch-crypto : les classes de hachage masquaient `Hash::digest(const std::string&)` (masquage de nom par `digest()`) ; corrigé le 2026-11-19 (C11).
 
 ## Industrialisation, point 2 : versions et compatibilité (2026-11-19)
 

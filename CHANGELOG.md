@@ -22,6 +22,8 @@ which give its replacement and the version which removes it. Until 1.0.0, it is 
 
 - anch-oas: bounds, `multipleOf` and enumeration values outside `double` range are ignored with a warning (generated
   code did not compile); `??` in descriptions and patterns no longer produces trigraphs in generated code.
+- anch-crypto: `MD5`, `SHA1` and SHA-2 classes hid the data hashing methods of `Hash` (`digest(const std::string&)`,
+  `digest(const uint8_t*, std::size_t)`, `digest(std::istream&)`, ...): a hash object can be reused.
 
 ## [0.2.0] - 2026-11-19
 

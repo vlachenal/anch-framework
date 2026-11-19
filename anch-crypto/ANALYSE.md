@@ -29,6 +29,10 @@ Correction : `_digest` est supprimé de `Hash` (et de `SHA2`, `SHA224_256`, `MD5
 ### C6. Tests : lecture hors limites et fuites — vérifié (ASan) — **corrigé le 2026-11-12**
 `test/testSHA1.cpp` (`sha1-sec-password`) copiait `getBlockSize()` (64) octets du condensat SHA-1 au lieu de `getOutputSize()` (20). `test/benchAnchOpenssl.cpp` ne libérait pas ses tampons `new uint8_t[]` (remplacés par `std::vector`).
 
+### C11. Méthodes `digest(données)` de `Hash` masquées par les classes de hachage — vérifié (compilation) — **corrigé le 2026-11-19**
+`MD5`, `SHA1` et `SHA2` redéfinissent `digest()` : la redéfinition masque les surcharges héritées `digest(const std::string&)`, `digest(const uint8_t*, std::size_t)`, `digest(std::istream&)` et `digest(const std::array&)`, inaccessibles par le type dérivé (seuls les constructeurs prenaient les données, un objet ne pouvait pas être réutilisé).
+Correction : `using Hash<...>::digest;` dans les trois classes (SHA-224 à SHA-512 en héritent) ; test `hash-digest-overloads` (MD5, SHA-1, SHA-256, SHA-512, objet réutilisé), qui ne compile pas sans la correction.
+
 ## Points positifs
 - 117 tests passent, plus un benchmark comparatif avec OpenSSL (`benchAnchOpenssl.cpp`), utile pour la future migration.
 

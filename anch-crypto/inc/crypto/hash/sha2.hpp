@@ -125,6 +125,12 @@ namespace anch::crypto {
      */
     virtual const std::array<uint8_t,O>& digest() const override;
 
+    /*!
+     * Data hashing methods of \ref Hash (they would be hidden by \c digest() otherwise):
+     * \c digest(const std::string&) , \c digest(const uint8_t*,std::size_t) , \c digest(std::istream&) , ...
+     */
+    using Hash<O,B>::digest;
+
   protected:
     /*!
      * Shift n bits word from n bits to right
