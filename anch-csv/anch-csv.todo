@@ -1,0 +1,96 @@
+anch-csv : proposition de conception (2026-11-19)
+=================================================
+
+À valider avant toute implémentation. Les questions ouvertes sont en fin de fichier.
+
+Objectif
+--------
+Lire et écrire des fichiers CSV, en gros volumes (flux), et les associer à des objets C++ comme le fait
+anch-json. Utilisateurs prévus : applications, anch-rest (corps text/csv) et anch-batch (lecteurs et écrivains de
+lots).
+
+Format
+------
+- RFC 4180 par défaut : séparateur ',', champs entre guillemets quand ils contiennent le séparateur, un guillemet,
+  CR ou LF ; guillemet doublé dans un champ entre guillemets ; enregistrements terminés par CRLF à l'écriture.
+- Lecture tolérante sur les fins de ligne : CRLF et LF (CR seul refusé) ; dernière ligne sans fin de ligne acceptée.
+- Variantes par options : séparateur (';', '\t', ...), caractère de guillemet, fin de ligne écrite (CRLF / LF),
+  en-tête présent ou non, BOM UTF-8 ignoré à la lecture et écrit sur demande (Excel).
+- Champ vide et champ "" distingués à la lecture (vide -> valeur absente pour std::optional, "" -> chaîne vide).
+- Limites (comme max_payload d'anch-json) : taille maximale d'un enregistrement, nombre maximal de colonnes ; un
+  enregistrement qui n'a pas le nombre de colonnes de l'en-tête est une erreur (option pour le tolérer).
+- Encodage : octets transmis tels quels (UTF-8 attendu), pas de conversion.
+
+Niveau 1 : lecture et écriture d'enregistrements (csv/reader.hpp, csv/writer.hpp)
+--------------------------------------------------------------------------------
+- anch::csv::Reader(std::istream&, Options) : next() lit l'enregistrement suivant ; fields() donne des
+  std::string_view valides jusqu'au prochain next() (pas d'allocation par champ : tampon réutilisé) ; header(),
+  line() (numéro de ligne physique du début de l'enregistrement, pour les erreurs).
+- anch::csv::Writer(std::ostream&, Options) : write(fields) / writeRow(args...) avec échappement automatique.
+- Erreurs : anch::csv::CsvError (std::runtime_error) avec code (INVALID_FORMAT, TOO_LARGE, COLUMN_COUNT,
+  UNKNOWN_COLUMN, MISSING_COLUMN, CONVERSION), ligne et colonne.
+- Cible de fuzzing (fuzz/fuzzCsv.cpp) dès cette étape, comme pour JSON et multipart.
+
+Niveau 2 : association aux objets (csv/mapper.hpp)
+--------------------------------------------------
+Sur le modèle d'anch-json (spécialisation d'une fonction d'enregistrement par type) :
+
+  template<>
+  void
+  anch::csv::registerObject(anch::csv::Mapper<Pet>& mapper) {
+    mapper
+      .column("id", &Pet::id)
+      .column("name", &Pet::name)
+      .column("birth", &Pet::birth)                        // anch::date::Date en RFC 3339 (ANCH_DATE)
+      .column("weight", &Pet::weight, anch::csv::format("{:.2f}"))
+      ;
+  }
+
+- Colonnes associées par nom (en-tête) à la lecture, l'ordre de déclaration donne l'ordre d'écriture ; sans
+  en-tête, association par position (ordre de déclaration).
+- Types : chaînes, entiers et flottants (std::from_chars / std::to_chars : indépendants de la locale, valeurs hors
+  limites refusées), bool (true / false, valeurs configurables), std::optional<T> (champ vide), enum (fonctions de
+  conversion données), anch::UUID (ANCH_UUID) et dates RFC 3339 (ANCH_DATE) comme anch-json, conversion
+  personnalisée (fonctions lecture / écriture données à column()).
+- Colonnes inconnues ignorées par défaut (option pour les refuser), colonne obligatoire absente : MISSING_COLUMN.
+- Les objets sont plats : pas d'objets imbriqués ni de collections dans une colonne (voir question 4).
+
+Niveau 3 : flux
+---------------
+- anch::csv::deserialize(std::vector<T>&, std::istream&, Options) et serialize(const std::vector<T>&,
+  std::ostream&, Options) pour les petits volumes.
+- Gros volumes : lecture enregistrement par enregistrement, sans charger le fichier (voir question 3 pour la forme :
+  range C++23, callback ou anch::Flux comme anch-json).
+
+Intégrations (après les niveaux 1 à 3)
+--------------------------------------
+- anch-rest : codec anch::rest::Csv (text/csv, paramètre header=present|absent de la RFC 7111), lecture et
+  écriture en flux (BodyStream), dans anch-rest-common quand anch-csv est construit.
+- anch-batch : lecteur et écrivain CSV de lots (voir anch-batch/anch-batch.todo).
+
+Construction
+------------
+- Remplacer l'ancien CMakeLists.txt (hors du build, format antérieur à la migration CMake) et AnchCsv.cmake.in par
+  anch_add_library(anch-csv PUBLIC_DEPS anch::utils) ; anch::uuid et anch::date en dépendances publiques
+  optionnelles (ANCH_UUID, ANCH_DATE), comme anch-json. Option ANCH_BUILD_CSV (ON).
+- Conversion numérique : première utilisatrice de la conversion commune prévue dans anch-utils (point 4 de la
+  feuille de route : modèle de toNumber d'anch-ini), ou conversion locale à anch-csv en attendant.
+
+Étapes proposées
+----------------
+1. Reader / Writer, options, erreurs, tests RFC 4180 (guillemets, CRLF dans un champ, champs vides, BOM, limites),
+   cible de fuzzing.
+2. Mapper et registerObject, types de base, optional, UUID, dates, conversions personnalisées.
+3. Lecture en flux.
+4. Codec anch-rest, puis lecteur / écrivain anch-batch.
+
+Questions ouvertes
+------------------
+1. API d'association : API propre à anch-csv (column(), proposée) ou réutilisation du registerObject d'anch-json
+   (un seul enregistrement par type pour JSON et CSV, mais mapper JSON non prévu pour des objets plats) ?
+2. Contraintes : réutiliser celles d'anch-json (minLength, minimum, pattern, ... : dépendance vers anch-json) ou
+   aucune contrainte dans anch-csv ?
+3. Forme de la lecture en flux : range C++23 (for(const Pet& pet : anch::csv::records<Pet>(input))), callback ou
+   anch::Flux (cohérent avec anch-json mais bloquant) ?
+4. Objets imbriqués : refusés (proposé) ou aplatis en colonnes "address.city" ?
+5. Valeurs absentes : champ vide = std::nullopt (proposé), ou chaîne configurable (NULL, \N) ?

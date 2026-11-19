@@ -1,5 +1,105 @@
-anch-conf: add anch-batch arguments and environment variables management
-anch-sql: add bacth default schema
-manage steps
-manage errors
-mange continue on error
+anch-batch : proposition de conception (2026-11-19)
+===================================================
+
+À valider avant toute implémentation. Les questions ouvertes sont en fin de fichier.
+
+Notes d'origine (reprises ci-dessous) :
+- anch-conf: add anch-batch arguments and environment variables management
+- anch-sql: add batch default schema
+- manage steps
+- manage errors
+- manage continue on error
+
+Objectif
+--------
+Écrire des traitements par lots : un job enchaîne des étapes, chaque étape lit, transforme et écrit des éléments par
+lots validés ensemble ; les erreurs sont gérées par règles (ignorer, réessayer, continuer) ; l'état d'exécution est
+conservé pour reprendre un job échoué. Modèle inspiré de Spring Batch, simplifié.
+
+Modèle
+------
+- Job : nom, liste ordonnée d'étapes, paramètres (clé / valeur, ceux qui identifient une exécution sont marqués).
+- Step, deux formes :
+  - tâche : une fonction (Tasklet) appelée une fois (ou répétée tant qu'elle demande à continuer) ;
+  - par lots (chunk) : ItemReader<I> -> ItemProcessor<I,O> (optionnel ; std::nullopt filtre l'élément) ->
+    ItemWriter<O>, par lots de N éléments (intervalle de validation). Un lot écrit est validé (transaction anch-sql
+    quand l'écrivain en utilise une) avant de lire le suivant.
+- Les interfaces sont des concepts ou des std::function, comme les codecs d'anch-rest, plutôt qu'une hiérarchie de
+  classes virtuelles.
+
+Gestion des erreurs (« manage errors », « manage continue on error »)
+---------------------------------------------------------------------
+- Retry : un élément ou un lot en erreur est réessayé N fois pour les exceptions déclarées réessayables.
+- Skip : les exceptions déclarées ignorables font passer l'élément (lecture, traitement ou écriture), jusqu'à une
+  limite de N éléments ignorés par étape ; au-delà, l'étape échoue. Les éléments ignorés sont signalés à un écouteur
+  (journal, fichier de rejets).
+- Erreur d'écriture d'un lot avec skip : le lot est rejoué élément par élément pour isoler l'élément fautif.
+- Continue on error : au niveau de l'étape, son échec ne fait pas échouer le job, les étapes suivantes sont
+  exécutées et le job se termine « terminé avec erreurs ».
+- Statuts : STARTED, COMPLETED, COMPLETED_WITH_ERRORS (étapes en continue on error ou éléments ignorés), FAILED,
+  STOPPED (arrêt demandé, par signal par exemple).
+
+État d'exécution et reprise (« anch-sql: add batch default schema »)
+--------------------------------------------------------------------
+- JobRepository : exécutions de jobs et d'étapes (statut, dates, paramètres, compteurs lus / traités / écrits /
+  ignorés / validés, message d'erreur) et contexte d'exécution (positions des lecteurs) enregistré à chaque lot
+  validé.
+- Deux implémentations : en mémoire (par défaut, pas de reprise entre deux lancements) et SQL sur anch-sql, avec un
+  schéma par défaut fourni pour SQLite, PostgreSQL et MySQL (scripts installés, création optionnelle au démarrage),
+  préfixe de tables configurable.
+- Reprise d'un job échoué avec les mêmes paramètres identifiants : les étapes terminées sont sautées, l'étape échouée
+  repart de son dernier lot validé quand ses lecteurs savent se repositionner (contexte d'exécution), sinon du
+  début. Un job terminé n'est pas relancé avec les mêmes paramètres.
+
+Lancement (« anch-conf: add anch-batch arguments and environment variables management »)
+----------------------------------------------------------------------------------------
+- Ligne de commande (anch-cli) : my-batch --job import --param date=2026-11-19 --param file=in.csv [--restart]
+  [--list] ; paramètres aussi lus dans l'environnement (ANCH_BATCH_PARAM_<NOM>) et dans une section de configuration
+  (anch-conf, par exemple anch.batch.<job>), avec la priorité ligne de commande > environnement > configuration.
+- Configuration (anch-conf) : dépôt (mémoire / base anch-sql nommée), intervalles de validation, limites de skip et
+  de retry par étape, pour régler un job sans recompiler.
+- Code de sortie : 0 terminé, 1 échec, 2 terminé avec erreurs, 3 paramètres invalides, 4 job déjà terminé.
+- Arrêt propre sur SIGTERM / SIGINT : le lot en cours se termine, l'exécution passe à STOPPED et peut être reprise.
+
+Journalisation et écouteurs
+---------------------------
+- anch-log : début et fin de job et d'étape, compteurs, éléments ignorés, erreurs.
+- Écouteurs avant / après job, étape et lot (fonctions enregistrées ou anch-events) pour des rapports ou des
+  notifications.
+
+Lecteurs et écrivains fournis
+-----------------------------
+- Fichiers : lignes de texte ; CSV (anch-csv, voir anch-csv/anch-csv.todo) ; JSON (tableau lu en flux avec anch-json).
+- SQL (anch-sql) : lecteur sur une requête (ResultSet parcouru, repositionnement par clé ou par numéro de ligne) ;
+  écrivain par requête préparée exécutée pour chaque élément du lot, dans la transaction du lot.
+- Mémoire : collections (tests).
+
+Plus tard
+---------
+- Étapes en parallèle et partitionnement d'une étape (ThreadPool d'anch-utils).
+- Décisions conditionnelles entre étapes (étape suivante selon le statut).
+- Planification : hors périmètre (cron, systemd timers).
+
+Construction
+------------
+anch_add_library(anch-batch PUBLIC_DEPS anch::cli anch::conf anch::log anch::utils PRIVATE_DEPS ...) ; anch-sql en
+dépendance optionnelle pour le dépôt SQL et les lecteurs / écrivains SQL ; anch-csv et anch-json optionnels pour
+leurs lecteurs / écrivains. Option ANCH_BUILD_BATCH (OFF tant que le module n'est pas terminé).
+
+Étapes proposées
+----------------
+1. Modèle (Job, Step, tâche, lots), exécution séquentielle, dépôt en mémoire, statuts, tests.
+2. Erreurs : retry, skip avec limite, rejeu élément par élément, continue on error.
+3. Lancement : anch-cli, environnement, anch-conf, codes de sortie, arrêt sur signal.
+4. Dépôt SQL, schéma par défaut (SQLite, PostgreSQL, MySQL), reprise.
+5. Lecteurs / écrivains : lignes, CSV, JSON, SQL.
+
+Questions ouvertes
+------------------
+1. Périmètre de la première version : modèle complet par lots (proposé) ou seulement étapes de type tâche ?
+2. Lancement : lanceur propre à anch-batch (proposé), ou bâti sur anch-app (que vous concevez) ?
+3. Dépôt : mémoire par défaut et SQL optionnel (proposé), ou SQL obligatoire ?
+4. Reprise : au dernier lot validé (proposé, demande des lecteurs repositionnables) ou seulement au début de
+   l'étape échouée ?
+5. Définition des jobs : dans le code seulement (proposé), ou aussi décrite dans la configuration (étapes et
+   enchaînement dans un fichier) ?
