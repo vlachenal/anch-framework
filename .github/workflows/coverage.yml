@@ -35,8 +35,8 @@ jobs:
         uses: actions/cache@v6
         with:
           path: .ccache
-          key: ccache-coverage-${{ github.sha }}
-          restore-keys: ccache-coverage-
+          key: ccache-v2-coverage-${{ github.sha }}
+          restore-keys: ccache-v2-coverage-
 
       - name: Start MariaDB and PostgreSQL
         run: sh .github/scripts/start-databases.sh .

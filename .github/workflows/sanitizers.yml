@@ -49,8 +49,8 @@ jobs:
         uses: actions/cache@v6
         with:
           path: .ccache
-          key: ccache-${{ matrix.preset }}-${{ github.sha }}
-          restore-keys: ccache-${{ matrix.preset }}-
+          key: ccache-v2-${{ matrix.preset }}-${{ github.sha }}
+          restore-keys: ccache-v2-${{ matrix.preset }}-
 
       - name: Start MariaDB and PostgreSQL
         run: sh .github/scripts/start-databases.sh .

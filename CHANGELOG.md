@@ -25,6 +25,8 @@ which give its replacement and the version which removes it. Until 1.0.0, it is 
 - anch-rest is built by default (`ANCH_BUILD_REST` is ON); `anch-rest-curl` is skipped with a CMake status message
   when libcurl is not found, as Protobuf, gRPC and Thrift libraries.
 - anch-rest: the nginx module integration test covers HTTP/2 (h2c).
+- `ANCH_NATIVE_ARCH` (`-march=native`) is OFF by default: binaries built for the build machine CPU may not run on
+  other CPUs (installed packages, CI runners sharing a compilation cache).
 
 ### Fixed
 

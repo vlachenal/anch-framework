@@ -40,8 +40,8 @@ jobs:
         uses: actions/cache@v6
         with:
           path: .ccache
-          key: ccache-fuzz-${{ github.sha }}
-          restore-keys: ccache-fuzz-
+          key: ccache-v2-fuzz-${{ github.sha }}
+          restore-keys: ccache-v2-fuzz-
 
       - name: Build
         run: |
