@@ -9,13 +9,17 @@
  *
  * \section rest_libs_sec Libraries
  *
+ * anch-rest is built by default (option \c ANCH_BUILD_REST , since 0.3). Optional libraries are skipped with a
+ * CMake status message when their dependencies are not found.
+ *
  * - \c anch-rest-common : HTTP model (\ref anch::rest::Method "Method", \ref anch::rest::Status "Status",
  *   \ref anch::rest::Headers "Headers", \ref anch::rest::MediaType "MediaType", \ref anch::rest::Request "Request",
  *   \ref anch::rest::Response "Response") and codecs (\ref anch::rest::Json "Json" based on anch-json,
  *   \ref anch::rest::Text "Text").
  * - \c anch-rest-server : endpoints declaration and routing (\ref anch::rest::Api "Api").
  * - \c anch-rest-client : HTTP client (\ref anch::rest::Client "Client") over a \ref anch::rest::Transport "Transport".
- * - \c anch-rest-curl : libcurl transport (\ref anch::rest::CurlTransport "CurlTransport"), option \c ANCH_REST_CURL .
+ * - \c anch-rest-curl : libcurl transport (\ref anch::rest::CurlTransport "CurlTransport"), option \c ANCH_REST_CURL
+ *   (built when libcurl is found).
  * - \c anch-rest-nginx : nginx applications bridge (\c ANCH_REST_APPLICATION ), option \c ANCH_REST_NGINX ,
  *   and nginx module sources (\c nginx/ , installed in \c share/anch/nginx-module ).
  * - \c anch-rest-protobuf : Protocol Buffers codecs (\ref anch::rest::Protobuf "Protobuf",

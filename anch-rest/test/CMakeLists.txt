@@ -62,7 +62,7 @@ if(ANCH_REST_CLIENT_LIB)
   add_test(NAME anch-rest-client-base64 COMMAND anch-rest-client-test -t base64)
 endif()
 
-if(ANCH_REST_CLIENT_LIB AND ANCH_REST_CURL AND ANCH_REST_SERVER_LIB)
+if(ANCH_REST_CLIENT_LIB AND ANCH_REST_CURL_ENABLED AND ANCH_REST_SERVER_LIB)
   anch_add_executable(anch-rest-curl-test SOURCES testCurl.cpp LIBS anch::rest-curl anch::rest-server anch::network anch::ut)
 
   add_test(NAME anch-rest-curl-get-json COMMAND anch-rest-curl-test -t get-json)
@@ -124,7 +124,7 @@ if(TARGET anch::rest-protobuf AND ANCH_REST_SERVER_LIB AND ANCH_REST_CLIENT_LIB)
   anch_add_executable(anch-rest-protobuf-test SOURCES testProtobuf.cpp
     LIBS anch::rest-protobuf anch::rest-server anch::rest-client anch-rest-test-pets-proto anch::ut)
   target_include_directories(anch-rest-protobuf-test PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
-  if(ANCH_REST_CURL)
+  if(ANCH_REST_CURL_ENABLED)
     target_link_libraries(anch-rest-protobuf-test PRIVATE anch::rest-curl anch::network)
     target_compile_definitions(anch-rest-protobuf-test PRIVATE ANCH_REST_TEST_CURL)
     add_test(NAME anch-rest-protobuf-curl COMMAND anch-rest-protobuf-test -t curl)
@@ -173,7 +173,7 @@ if(TARGET anch::rest-thrift AND ANCH_REST_SERVER_LIB AND ANCH_REST_CLIENT_LIB AN
   anch_add_executable(anch-rest-thrift-test SOURCES testThrift.cpp
     LIBS anch::rest-thrift anch::rest-server anch::rest-client anch-rest-test-pets-thrift anch::ut)
   target_include_directories(anch-rest-thrift-test PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
-  if(ANCH_REST_CURL)
+  if(ANCH_REST_CURL_ENABLED)
     target_link_libraries(anch-rest-thrift-test PRIVATE anch::rest-curl anch::network)
     target_compile_definitions(anch-rest-thrift-test PRIVATE ANCH_REST_TEST_CURL)
     add_test(NAME anch-rest-thrift-curl COMMAND anch-rest-thrift-test -t curl)

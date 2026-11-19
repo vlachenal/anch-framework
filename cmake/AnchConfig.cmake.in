@@ -22,7 +22,7 @@ if(@ANCH_BUILD_SQL@ AND @ANCH_SQL_SQLITE3@)
   find_dependency(SQLite3)
 endif()
 # anch-rest-curl links libcurl (needed by static libraries)
-if(@ANCH_BUILD_REST@ AND @ANCH_REST_CLIENT_LIB@ AND @ANCH_REST_CURL@)
+if(@ANCH_BUILD_REST@ AND @ANCH_REST_CURL_ENABLED@)
   find_dependency(CURL)
 endif()
 

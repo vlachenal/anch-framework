@@ -45,7 +45,7 @@ jobs:
 
       - name: Build
         run: |
-          cmake --preset fuzz -DANCH_BUILD_REST=ON -DANCH_BUILD_SQL=OFF -DANCH_BUILD_OAS=OFF \
+          cmake --preset fuzz -DANCH_BUILD_SQL=OFF -DANCH_BUILD_OAS=OFF \
             -DANCH_REST_PROTOBUF=OFF -DANCH_REST_GRPC=OFF -DANCH_REST_THRIFT=OFF \
             -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
           cmake --build --preset fuzz --parallel "$(nproc)"

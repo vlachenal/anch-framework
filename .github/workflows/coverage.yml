@@ -43,7 +43,7 @@ jobs:
 
       - name: Build
         run: |
-          cmake --preset coverage -DANCH_BUILD_REST=ON -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
+          cmake --preset coverage -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
           cmake --build --preset coverage --parallel "$(nproc)"
 
       - name: Test

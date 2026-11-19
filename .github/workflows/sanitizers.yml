@@ -60,7 +60,7 @@ jobs:
         run: |
           set -o pipefail
           gcc --version | head -1
-          cmake --preset ${{ matrix.preset }} -DANCH_BUILD_REST=ON -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache 2>&1 | tee configure.log
+          cmake --preset ${{ matrix.preset }} -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache 2>&1 | tee configure.log
           # Optional anch-rest libraries are disabled when their packages are not found: they have to be built here
           if grep "is not built" configure.log; then exit 1; fi
 

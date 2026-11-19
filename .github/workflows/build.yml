@@ -52,7 +52,7 @@ jobs:
         run: sh .github/scripts/start-databases.sh .
 
       - name: Configure
-        run: cmake --preset ${{ matrix.preset }} -DANCH_BUILD_REST=ON -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
+        run: cmake --preset ${{ matrix.preset }} -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
 
       - name: Build
         run: |
@@ -104,7 +104,7 @@ jobs:
       - name: Configure
         run: |
           g++-13 --version | head -1
-          cmake --preset no-db -DANCH_BUILD_REST=ON -DCMAKE_C_COMPILER=gcc-13 -DCMAKE_CXX_COMPILER=g++-13 \
+          cmake --preset no-db -DCMAKE_C_COMPILER=gcc-13 -DCMAKE_CXX_COMPILER=g++-13 \
             -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
 
       - name: Build
@@ -144,7 +144,7 @@ jobs:
       - name: Install and build consumer
         run: |
           shared=$([ "${{ matrix.libraries }}" = shared ] && echo ON || echo OFF)
-          sh cmake/install-test/run-install-test.sh /tmp/anch-install -DANCH_BUILD_REST=ON -DBUILD_SHARED_LIBS=${shared}
+          sh cmake/install-test/run-install-test.sh /tmp/anch-install -DBUILD_SHARED_LIBS=${shared}
 
       - name: Upload logs
         if: failure()

@@ -46,7 +46,7 @@ jobs:
 
       - name: Build test application
         run: |
-          cmake --preset ${{ matrix.preset }} -DANCH_BUILD_REST=ON -DANCH_BUILD_SQL=OFF -DANCH_BUILD_CRYPTO=OFF -DANCH_BUILD_OAS=OFF
+          cmake --preset ${{ matrix.preset }} -DANCH_BUILD_SQL=OFF -DANCH_BUILD_CRYPTO=OFF -DANCH_BUILD_OAS=OFF
           cmake --build --preset ${{ matrix.preset }} --target anch-rest-nginx-test-app --parallel "$(nproc)"
 
       - name: Download nginx

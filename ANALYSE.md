@@ -26,13 +26,13 @@ Statut des constats :
 | anch-ut | [anch-ut/ANALYSE.md](anch-ut/ANALYSE.md) | corrigé le 2026-11-03 (T3 à T20) : format des assertions vérifié à la compilation (3 messages faux trouvés dans `anch-json`), emplacement des échecs, `ThreadErrors` pour les assertions dans les threads, ordre d'enregistrement, erreurs de `setup` / d'initialisation / de désinitialisation, couleurs hors terminal ; options de runner refusées (pas implémentées) ; reste T2 (`--gen-ctest`) |
 | anch-uuid | [anch-uuid/ANALYSE.md](anch-uuid/ANALYSE.md) | tous les constats corrigés le 2026-10-31 (UU1 à UU9) : parsing validé et 8× plus rapide, `toString` 14×, `random()` 56×, v3 / v5 conformes à la RFC 9562, v7 monotone, registre protégé, type valeur de 16 octets ordonnable et hachable ; fournisseurs v1 / v6 : voir `anch-device` |
 | anch-sql | [anch-sql/ANALYSE.md](anch-sql/ANALYSE.md) | corrigé le 2026-11-03 (S5, S9 à S15) : requêtes préparées (nombre de paramètres donné par la base, analyseur lexical pour les `?` PostgreSQL, `NULL`, paramètres non liés refusés), erreurs fatales qui invalident la connexion (MySQL ne les détectait jamais), transaction terminée au retour dans le pool, erreurs de lecture des résultats ; cache des requêtes préparées borné (LRU, désallocation côté serveur, S17, 2026-11-14) ; transaction non validée annulée au retour dans le pool (S16, 2026-11-16) |
-| anch-crypto | [anch-crypto/ANALYSE.md](anch-crypto/ANALYSE.md) | non analysé (hors périmètre) ; lecture hors limites AES-192 et lecture non initialisée SHA-2 corrigées ; débordement SHA-224 / SHA-384 et pointeur nul SHA-1 trouvés par ASan / UBSan, corrigés le 2026-11-12 (C4 à C6) ; Base64 corrigé le 2026-11-16 (C7 à C10 : octets nuls, lecture hors limites et encodage sans remplissage, flux) |
+| anch-crypto | [anch-crypto/ANALYSE.md](anch-crypto/ANALYSE.md) | non analysé (hors périmètre) ; lecture hors limites AES-192 et lecture non initialisée SHA-2 corrigées ; débordement SHA-224 / SHA-384 et pointeur nul SHA-1 trouvés par ASan / UBSan, corrigés le 2026-11-12 (C4 à C6) ; Base64 corrigé le 2026-11-16 (C7 à C10 : octets nuls, lecture hors limites et encodage sans remplissage, flux) ; masquage de `Hash::digest(données)` corrigé le 2026-11-19 (C11) |
 | anch-conf | [anch-conf/ANALYSE.md](anch-conf/ANALYSE.md) | cascade et placeholders terminés le 2026-11-12 : boucle infinie de `splitTrim` (deux profils ou includes), ordre profils / includes, résolution événementielle avec watchdog et détection de cycles |
 | anch-ini | [anch-ini/ANALYSE.md](anch-ini/ANALYSE.md) | analysé le 2026-11-14 (I1 à I5) : lignes commentées contenant `=` lues comme des valeurs et valeur vide ignorée, corrigés (I1, I2) ; espaces avant `=` dans la clé et booléens invalides lus comme `false` corrigés le 2026-11-16 (I3, I4) ; I5 corrigé avec X1 |
 | anch-cli | [anch-cli/ANALYSE.md](anch-cli/ANALYSE.md) | corrigé le 2026-11-03 (CL1 à CL10) : valeurs numériques hors limites ou vides, fichiers non ouverts, couleurs désactivées hors terminal / `NO_COLOR`, `operator<<` du `Formatter` hors namespace, `--no-term-fmt` déclaré par l'application, positionnel multiple non final, options répétées, codes ANSI dans les exceptions ; reste CL11 (`--`) ; CL12 (`--opt=val` / `-pval` non gérés) et CL13 (`pipe` sur un terminal) sont des choix |
 | anch-cutils | [anch-cutils/ANALYSE.md](anch-cutils/ANALYSE.md) | corrigé le 2026-11-02 : tampons de lecture et d'écriture séparés, écritures partielles et erreurs gérées, vidage de `TcpStream` avant fermeture |
-| anch-rest | [anch-rest/ANALYSE.md](anch-rest/ANALYSE.md) | réécrit le 2026-11-12 : modèle HTTP, serveur (`Api`), client et transport curl, module nginx ; corps en flux dans le module nginx (ABI 2, anch-cutils, contre-pression) le 2026-11-16 ; testé en CI (job `asan` et workflow `nginx` avec nginx 1.30.6) ; désactivé par défaut |
-| anch-oas | [anch-oas/ANALYSE.md](anch-oas/ANALYSE.md) | vérifié le 2026-11-14 avec un document piégeux : code généré compilable ; O1 à O3 mineurs |
+| anch-rest | [anch-rest/ANALYSE.md](anch-rest/ANALYSE.md) | réécrit le 2026-11-12 : modèle HTTP, serveur (`Api`), client et transport curl, module nginx ; corps en flux dans le module nginx (ABI 2, anch-cutils, contre-pression) le 2026-11-16 ; testé en CI (job `asan` et workflow `nginx` avec nginx 1.30.6) ; R1 à R4 corrigés, HTTP/2 testé et activé par défaut le 2026-11-19 |
+| anch-oas | [anch-oas/ANALYSE.md](anch-oas/ANALYSE.md) | vérifié le 2026-11-14 avec un document piégeux : code généré compilable ; O1 à O3 mineurs, corrigés le 2026-11-19 |
 | anch-app | [anch-app/ANALYSE.md](anch-app/ANALYSE.md) | débuté ; `after()` virtuel appelé depuis le destructeur, premier `-v` = `DEBUG` |
 
 `anch-csv` (CMake seulement) et `anch-batch` (fichier `.todo` seulement) sont vides.
@@ -45,7 +45,7 @@ Le 2026-10-30, build Debug complet depuis la racine (sources actuelles, avec le 
 |---|---|
 | tous sauf anch-sql | 100 % |
 | anch-sql | 75/75 avec serveurs MySQL et PostgreSQL, en séquentiel et avec `ctest -j` (2026-11-03) ; avant : 56/59 (S6) |
-| anch-rest, anch-app | non compilés par défaut |
+| anch-app | non compilé par défaut (anch-rest compilé par défaut depuis le 2026-11-19) |
 
 Le 2026-10-27, avec les anciens `build/` : anch-sql 39/59 (pas de serveur local), anch-rest 0/19.
 
@@ -107,7 +107,7 @@ Non relus dans cette passe : anch-crypto, anch-utils, anch-events, anch-network,
 | L17 : diagnostics d'anch-log sur la sortie standard | anch-log | corrigé le 2026-11-14 |
 | X1 : fonctions exportées dans l'espace de noms global | transverse | corrigé le 2026-11-14 |
 | C7, C8 : Base64, données binaires tronquées et lecture hors limites sans remplissage | anch-crypto | corrigé le 2026-11-16, avec C9 et C10 (encodage sans remplissage et d'un flux) |
-| R1 à R4, O1 à O3 : mineurs | anch-rest, anch-oas | voir fichiers |
+| R1 à R4, O1 à O3 : mineurs, corrigés le 2026-11-19 | anch-rest, anch-oas | voir fichiers |
 
 Sans défaut trouvé : lecteur JSON (2,7 millions de documents mutés, résultat identique pour toutes les tailles de tampon), lecteur multipart (délimiteur à cheval sur les blocs de lecture, 30 000 corps mutés), générateur anch-oas (identifiants réservés, collisions de noms, récursion).
 

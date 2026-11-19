@@ -44,15 +44,21 @@ if(ANCH_REST_CLIENT_LIB)
     PUBLIC_DEPS anch::rest-common)
 
   if(ANCH_REST_CURL)
-    find_package(CURL REQUIRED)
-    anch_rest_sources(curl_sources curl)
-    anch_add_library(anch-rest-curl
-      INCLUDE_DIRS curl/inc
-      SOURCES ${curl_sources}
-      PUBLIC_DEPS anch::rest-client
-      PRIVATE_DEPS CURL::libcurl)
+    find_package(CURL QUIET)
+    if(CURL_FOUND)
+      set(ANCH_REST_CURL_ENABLED ON)
+      anch_rest_sources(curl_sources curl)
+      anch_add_library(anch-rest-curl
+        INCLUDE_DIRS curl/inc
+        SOURCES ${curl_sources}
+        PUBLIC_DEPS anch::rest-client
+        PRIVATE_DEPS CURL::libcurl)
+    else()
+      message(STATUS "libcurl not found: anch-rest-curl is not built")
+    endif()
   endif()
 endif()
+set(ANCH_REST_CURL_ENABLED ${ANCH_REST_CURL_ENABLED} PARENT_SCOPE)
 # Client and transports -
 
 # Protocol Buffers codecs and RPC (Connect / gRPC-Web) +

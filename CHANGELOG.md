@@ -22,6 +22,8 @@ which give its replacement and the version which removes it. Until 1.0.0, it is 
 - anch-oas: inconsistent constraints (`minLength` greater than `maxLength`, `minItems` greater than `maxItems`,
   `minProperties` greater than `maxProperties`, `minimum` greater than `maximum`) and required properties missing from
   `properties` are reported with a warning (error with `--strict`).
+- anch-rest is built by default (`ANCH_BUILD_REST` is ON); `anch-rest-curl` is skipped with a CMake status message
+  when libcurl is not found, as Protobuf, gRPC and Thrift libraries.
 - anch-rest: the nginx module integration test covers HTTP/2 (h2c).
 
 ### Fixed
