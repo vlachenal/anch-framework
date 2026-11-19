@@ -110,76 +110,77 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('anch-ini_2inc_
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="comment">*/</span></div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &lt;map&gt;</span></div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#include &lt;string&gt;</span></div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &lt;optional&gt;</span></div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include &lt;filesystem&gt;</span></div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceanch_1_1ini.html">anch::ini</a> {</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span></div>
-<div class="foldopen" id="foldopen00039" data-start="{" data-end="};">
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno"><a class="line" href="classanch_1_1ini_1_1_section.html">   39</a></span>  <span class="keyword">class </span><a class="code hl_function" href="classanch_1_1ini_1_1_section.html#a8edc203dec8533b1ad6088c1bb5a0fbc">Section</a> {</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    <span class="comment">// Attributes +</span></div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>  <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    std::map&lt;std::string, Section&gt; _sections;</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span></div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    std::map&lt;std::string, std::string&gt; _values;</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    <span class="comment">// Attributes -</span></div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span> </div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    <span class="comment">// Constructors +</span></div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>  <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno"><a class="line" href="classanch_1_1ini_1_1_section.html#a8edc203dec8533b1ad6088c1bb5a0fbc">   55</a></span>    <a class="code hl_function" href="classanch_1_1ini_1_1_section.html#a8edc203dec8533b1ad6088c1bb5a0fbc">Section</a>();</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span></div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno"><a class="line" href="classanch_1_1ini_1_1_section.html#adbec1d77c765b9b6bc6af37665b40535">   62</a></span>    <a class="code hl_function" href="classanch_1_1ini_1_1_section.html#adbec1d77c765b9b6bc6af37665b40535">Section</a>(<span class="keyword">const</span> <a class="code hl_function" href="classanch_1_1ini_1_1_section.html#a8edc203dec8533b1ad6088c1bb5a0fbc">Section</a>&amp; <a class="code hl_function" href="classanch_1_1ini_1_1_section.html#a41a99b5cc49f37599baaba6afd4f9b40">section</a>);</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span></div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno"><a class="line" href="classanch_1_1ini_1_1_section.html#af33b26b51f62447acf78cfc1b02e9630">   69</a></span>    <a class="code hl_function" href="classanch_1_1ini_1_1_section.html#af33b26b51f62447acf78cfc1b02e9630">Section</a>(<a class="code hl_function" href="classanch_1_1ini_1_1_section.html#a8edc203dec8533b1ad6088c1bb5a0fbc">Section</a>&amp;&amp; <a class="code hl_function" href="classanch_1_1ini_1_1_section.html#a41a99b5cc49f37599baaba6afd4f9b40">section</a>);</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    <span class="comment">// Constructors -</span></div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span> </div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    <span class="comment">// Destructor +</span></div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>  <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno"><a class="line" href="classanch_1_1ini_1_1_section.html#adfec31dfadf0fafbb1e1d6d3d3870006">   77</a></span>    <span class="keyword">virtual</span> <a class="code hl_function" href="classanch_1_1ini_1_1_section.html#adfec31dfadf0fafbb1e1d6d3d3870006">~Section</a>();</div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    <span class="comment">// Destructor -</span></div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span> </div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    <span class="comment">// Methods +</span></div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>  <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    <span class="comment">// Getters +</span></div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno"><a class="line" href="classanch_1_1ini_1_1_section.html#afa6a487343921f94e905e15966bc8345">   88</a></span>    <span class="keyword">const</span> std::map&lt;std::string, Section&gt;&amp; <a class="code hl_function" href="classanch_1_1ini_1_1_section.html#afa6a487343921f94e905e15966bc8345">getSections</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span></div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno"><a class="line" href="classanch_1_1ini_1_1_section.html#acf1ca3dc80d59cac4a97c1d5134ec731">   95</a></span>    <span class="keyword">const</span> std::map&lt;std::string, std::string&gt;&amp; <a class="code hl_function" href="classanch_1_1ini_1_1_section.html#acf1ca3dc80d59cac4a97c1d5134ec731">getValues</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span></div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno"><a class="line" href="classanch_1_1ini_1_1_section.html#a6c050ced3348cfb48ac3dac0dd069f6e">  106</a></span>    <span class="keyword">static</span> std::optional&lt;std::string&gt; <a class="code hl_function" href="classanch_1_1ini_1_1_section.html#a6c050ced3348cfb48ac3dac0dd069f6e">getValue</a>(<span class="keyword">const</span> std::string&amp; path, <span class="keyword">const</span> <a class="code hl_function" href="classanch_1_1ini_1_1_section.html#a8edc203dec8533b1ad6088c1bb5a0fbc">Section</a>&amp; <a class="code hl_function" href="classanch_1_1ini_1_1_section.html#a41a99b5cc49f37599baaba6afd4f9b40">section</a>);</div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span></div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="line"><a id="l00119" name="l00119"></a><span class="lineno"><a class="line" href="classanch_1_1ini_1_1_section.html#a8c5c017da614a8977190d99c4939ee8e">  119</a></span>    std::optional&lt;T&gt; <a class="code hl_function" href="classanch_1_1ini_1_1_section.html#a8c5c017da614a8977190d99c4939ee8e">getValue</a>(<span class="keyword">const</span> std::string&amp; key) <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span></div>
-<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="line"><a id="l00133" name="l00133"></a><span class="lineno"><a class="line" href="classanch_1_1ini_1_1_section.html#aa7d984efd049574e6deee12c93c2b216">  133</a></span>    T <a class="code hl_function" href="classanch_1_1ini_1_1_section.html#aa7d984efd049574e6deee12c93c2b216">getValue</a>(<span class="keyword">const</span> std::string&amp; key, <span class="keyword">const</span> T&amp; defaultValue) <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>    <span class="comment">// Getters -</span></div>
-<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span> </div>
-<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>    <span class="comment">// Modifiers +</span></div>
-<div class="line"><a id="l00144" name="l00144"></a><span class="lineno"><a class="line" href="classanch_1_1ini_1_1_section.html#a41a99b5cc49f37599baaba6afd4f9b40">  144</a></span>    <a class="code hl_function" href="classanch_1_1ini_1_1_section.html#a8edc203dec8533b1ad6088c1bb5a0fbc">Section</a>&amp; <a class="code hl_function" href="classanch_1_1ini_1_1_section.html#a41a99b5cc49f37599baaba6afd4f9b40">section</a>(<span class="keyword">const</span> std::string&amp; key);</div>
-<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span></div>
-<div class="line"><a id="l00155" name="l00155"></a><span class="lineno"><a class="line" href="classanch_1_1ini_1_1_section.html#acd3d6572dbb3122ca929090f57dd1f6b">  155</a></span>    <a class="code hl_function" href="classanch_1_1ini_1_1_section.html#a8edc203dec8533b1ad6088c1bb5a0fbc">Section</a>&amp; <a class="code hl_function" href="classanch_1_1ini_1_1_section.html#acd3d6572dbb3122ca929090f57dd1f6b">putValue</a>(<span class="keyword">const</span> std::string&amp; key, <span class="keyword">const</span> std::string&amp; value);</div>
-<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>    <span class="comment">// Modifiers -</span></div>
-<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span> </div>
-<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>  <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00164" name="l00164"></a><span class="lineno"><a class="line" href="classanch_1_1ini_1_1_section.html#a1214268682e0fe734251898e648613bc">  164</a></span>    std::string <a class="code hl_function" href="classanch_1_1ini_1_1_section.html#a1214268682e0fe734251898e648613bc">debug</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span> </div>
-<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>    <span class="comment">// Operators +</span></div>
-<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>  <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00175" name="l00175"></a><span class="lineno"><a class="line" href="classanch_1_1ini_1_1_section.html#a07523c433e3758baaa18a72de5c1f18b">  175</a></span>    <a class="code hl_function" href="classanch_1_1ini_1_1_section.html#a8edc203dec8533b1ad6088c1bb5a0fbc">Section</a>&amp; <a class="code hl_function" href="classanch_1_1ini_1_1_section.html#a07523c433e3758baaa18a72de5c1f18b">operator = </a>(<span class="keyword">const</span> <a class="code hl_function" href="classanch_1_1ini_1_1_section.html#a8edc203dec8533b1ad6088c1bb5a0fbc">Section</a>&amp; other);</div>
-<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>    <span class="comment">// Operators -</span></div>
-<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>    <span class="comment">// Methods -</span></div>
-<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span> </div>
-<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>  };</div>
-</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &quot;anch-ini-export.hpp&quot;</span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &lt;map&gt;</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include &lt;string&gt;</span></div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#include &lt;optional&gt;</span></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#include &lt;filesystem&gt;</span></div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceanch_1_1ini.html">anch::ini</a> {</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span></div>
+<div class="foldopen" id="foldopen00041" data-start="{" data-end="};">
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno"><a class="line" href="classanch_1_1ini_1_1_section.html">   41</a></span>  <span class="keyword">class </span>ANCH_INI_EXPORT <a class="code hl_function" href="classanch_1_1ini_1_1_section.html#a8edc203dec8533b1ad6088c1bb5a0fbc">Section</a> {</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span> </div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    <span class="comment">// Attributes +</span></div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>  <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    std::map&lt;std::string, Section&gt; _sections;</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span></div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    std::map&lt;std::string, std::string&gt; _values;</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    <span class="comment">// Attributes -</span></div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span> </div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <span class="comment">// Constructors +</span></div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>  <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno"><a class="line" href="classanch_1_1ini_1_1_section.html#a8edc203dec8533b1ad6088c1bb5a0fbc">   57</a></span>    <a class="code hl_function" href="classanch_1_1ini_1_1_section.html#a8edc203dec8533b1ad6088c1bb5a0fbc">Section</a>();</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span></div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno"><a class="line" href="classanch_1_1ini_1_1_section.html#adbec1d77c765b9b6bc6af37665b40535">   64</a></span>    <a class="code hl_function" href="classanch_1_1ini_1_1_section.html#adbec1d77c765b9b6bc6af37665b40535">Section</a>(<span class="keyword">const</span> <a class="code hl_function" href="classanch_1_1ini_1_1_section.html#a8edc203dec8533b1ad6088c1bb5a0fbc">Section</a>&amp; <a class="code hl_function" href="classanch_1_1ini_1_1_section.html#a41a99b5cc49f37599baaba6afd4f9b40">section</a>);</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span></div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno"><a class="line" href="classanch_1_1ini_1_1_section.html#af33b26b51f62447acf78cfc1b02e9630">   71</a></span>    <a class="code hl_function" href="classanch_1_1ini_1_1_section.html#af33b26b51f62447acf78cfc1b02e9630">Section</a>(<a class="code hl_function" href="classanch_1_1ini_1_1_section.html#a8edc203dec8533b1ad6088c1bb5a0fbc">Section</a>&amp;&amp; <a class="code hl_function" href="classanch_1_1ini_1_1_section.html#a41a99b5cc49f37599baaba6afd4f9b40">section</a>);</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    <span class="comment">// Constructors -</span></div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span> </div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    <span class="comment">// Destructor +</span></div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>  <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno"><a class="line" href="classanch_1_1ini_1_1_section.html#adfec31dfadf0fafbb1e1d6d3d3870006">   79</a></span>    <span class="keyword">virtual</span> <a class="code hl_function" href="classanch_1_1ini_1_1_section.html#adfec31dfadf0fafbb1e1d6d3d3870006">~Section</a>();</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    <span class="comment">// Destructor -</span></div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span> </div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    <span class="comment">// Methods +</span></div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>  <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>    <span class="comment">// Getters +</span></div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno"><a class="line" href="classanch_1_1ini_1_1_section.html#afa6a487343921f94e905e15966bc8345">   90</a></span>    <span class="keyword">const</span> std::map&lt;std::string, Section&gt;&amp; <a class="code hl_function" href="classanch_1_1ini_1_1_section.html#afa6a487343921f94e905e15966bc8345">getSections</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span></div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno"><a class="line" href="classanch_1_1ini_1_1_section.html#acf1ca3dc80d59cac4a97c1d5134ec731">   97</a></span>    <span class="keyword">const</span> std::map&lt;std::string, std::string&gt;&amp; <a class="code hl_function" href="classanch_1_1ini_1_1_section.html#acf1ca3dc80d59cac4a97c1d5134ec731">getValues</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span></div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno"><a class="line" href="classanch_1_1ini_1_1_section.html#a6c050ced3348cfb48ac3dac0dd069f6e">  108</a></span>    <span class="keyword">static</span> std::optional&lt;std::string&gt; <a class="code hl_function" href="classanch_1_1ini_1_1_section.html#a6c050ced3348cfb48ac3dac0dd069f6e">getValue</a>(<span class="keyword">const</span> std::string&amp; path, <span class="keyword">const</span> <a class="code hl_function" href="classanch_1_1ini_1_1_section.html#a8edc203dec8533b1ad6088c1bb5a0fbc">Section</a>&amp; <a class="code hl_function" href="classanch_1_1ini_1_1_section.html#a41a99b5cc49f37599baaba6afd4f9b40">section</a>);</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span></div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno"><a class="line" href="classanch_1_1ini_1_1_section.html#a8c5c017da614a8977190d99c4939ee8e">  121</a></span>    std::optional&lt;T&gt; <a class="code hl_function" href="classanch_1_1ini_1_1_section.html#a8c5c017da614a8977190d99c4939ee8e">getValue</a>(<span class="keyword">const</span> std::string&amp; key) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span></div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno"><a class="line" href="classanch_1_1ini_1_1_section.html#aa7d984efd049574e6deee12c93c2b216">  135</a></span>    T <a class="code hl_function" href="classanch_1_1ini_1_1_section.html#aa7d984efd049574e6deee12c93c2b216">getValue</a>(<span class="keyword">const</span> std::string&amp; key, <span class="keyword">const</span> T&amp; defaultValue) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>    <span class="comment">// Getters -</span></div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span> </div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>    <span class="comment">// Modifiers +</span></div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno"><a class="line" href="classanch_1_1ini_1_1_section.html#a41a99b5cc49f37599baaba6afd4f9b40">  146</a></span>    <a class="code hl_function" href="classanch_1_1ini_1_1_section.html#a8edc203dec8533b1ad6088c1bb5a0fbc">Section</a>&amp; <a class="code hl_function" href="classanch_1_1ini_1_1_section.html#a41a99b5cc49f37599baaba6afd4f9b40">section</a>(<span class="keyword">const</span> std::string&amp; key);</div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span></div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno"><a class="line" href="classanch_1_1ini_1_1_section.html#acd3d6572dbb3122ca929090f57dd1f6b">  157</a></span>    <a class="code hl_function" href="classanch_1_1ini_1_1_section.html#a8edc203dec8533b1ad6088c1bb5a0fbc">Section</a>&amp; <a class="code hl_function" href="classanch_1_1ini_1_1_section.html#acd3d6572dbb3122ca929090f57dd1f6b">putValue</a>(<span class="keyword">const</span> std::string&amp; key, <span class="keyword">const</span> std::string&amp; value);</div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>    <span class="comment">// Modifiers -</span></div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span> </div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>  <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno"><a class="line" href="classanch_1_1ini_1_1_section.html#a1214268682e0fe734251898e648613bc">  166</a></span>    std::string <a class="code hl_function" href="classanch_1_1ini_1_1_section.html#a1214268682e0fe734251898e648613bc">debug</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span> </div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>    <span class="comment">// Operators +</span></div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>  <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00177" name="l00177"></a><span class="lineno"><a class="line" href="classanch_1_1ini_1_1_section.html#a07523c433e3758baaa18a72de5c1f18b">  177</a></span>    <a class="code hl_function" href="classanch_1_1ini_1_1_section.html#a8edc203dec8533b1ad6088c1bb5a0fbc">Section</a>&amp; operator = (<span class="keyword">const</span> <a class="code hl_function" href="classanch_1_1ini_1_1_section.html#a8edc203dec8533b1ad6088c1bb5a0fbc">Section</a>&amp; other);</div>
+<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>    <span class="comment">// Operators -</span></div>
+<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>    <span class="comment">// Methods -</span></div>
 <div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span> </div>
-<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>}</div>
+<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>  };</div>
+</div>
 <div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span> </div>
-<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span><span class="preprocessor">#include &quot;ini/impl/section.hpp&quot;</span></div>
-<div class="ttc" id="aclassanch_1_1ini_1_1_section_html_a07523c433e3758baaa18a72de5c1f18b"><div class="ttname"><a href="classanch_1_1ini_1_1_section.html#a07523c433e3758baaa18a72de5c1f18b">anch::ini::Section::operator=</a></div><div class="ttdeci">Section &amp; operator=(const Section &amp;other)</div></div>
+<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>}</div>
+<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span> </div>
+<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span><span class="preprocessor">#include &quot;ini/impl/section.hpp&quot;</span></div>
 <div class="ttc" id="aclassanch_1_1ini_1_1_section_html_a1214268682e0fe734251898e648613bc"><div class="ttname"><a href="classanch_1_1ini_1_1_section.html#a1214268682e0fe734251898e648613bc">anch::ini::Section::debug</a></div><div class="ttdeci">std::string debug() const</div></div>
 <div class="ttc" id="aclassanch_1_1ini_1_1_section_html_a41a99b5cc49f37599baaba6afd4f9b40"><div class="ttname"><a href="classanch_1_1ini_1_1_section.html#a41a99b5cc49f37599baaba6afd4f9b40">anch::ini::Section::section</a></div><div class="ttdeci">Section &amp; section(const std::string &amp;key)</div></div>
 <div class="ttc" id="aclassanch_1_1ini_1_1_section_html_a6c050ced3348cfb48ac3dac0dd069f6e"><div class="ttname"><a href="classanch_1_1ini_1_1_section.html#a6c050ced3348cfb48ac3dac0dd069f6e">anch::ini::Section::getValue</a></div><div class="ttdeci">static std::optional&lt; std::string &gt; getValue(const std::string &amp;path, const Section &amp;section)</div></div>

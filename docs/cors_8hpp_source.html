@@ -110,37 +110,39 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('cors_8hpp_sour
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="comment">*/</span></div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &lt;chrono&gt;</span></div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#include &lt;optional&gt;</span></div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &lt;string&gt;</span></div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include &lt;vector&gt;</span></div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceanch_1_1rest.html">anch::rest</a> {</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span></div>
-<div class="foldopen" id="foldopen00048" data-start="{" data-end="};">
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno"><a class="line" href="structanch_1_1rest_1_1_cors_options.html">   48</a></span>  <span class="keyword">struct </span><a class="code hl_struct" href="structanch_1_1rest_1_1_cors_options.html">CorsOptions</a> {</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span></div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno"><a class="line" href="structanch_1_1rest_1_1_cors_options.html#a19e56f6fd8e7678cf4bcca7dea0ea168">   54</a></span>    std::vector&lt;std::string&gt; <a class="code hl_variable" href="structanch_1_1rest_1_1_cors_options.html#a19e56f6fd8e7678cf4bcca7dea0ea168">origins</a> = {};</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span></div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno"><a class="line" href="structanch_1_1rest_1_1_cors_options.html#a214647e4a355e344bfe857eca8c7e21f">   60</a></span>    std::vector&lt;std::string&gt; <a class="code hl_variable" href="structanch_1_1rest_1_1_cors_options.html#a214647e4a355e344bfe857eca8c7e21f">headers</a> = {};</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span></div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno"><a class="line" href="structanch_1_1rest_1_1_cors_options.html#addfa2ef6cad2575a08ebb04b2f5dff88">   63</a></span>    std::vector&lt;std::string&gt; <a class="code hl_variable" href="structanch_1_1rest_1_1_cors_options.html#addfa2ef6cad2575a08ebb04b2f5dff88">exposedHeaders</a> = {};</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span></div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno"><a class="line" href="structanch_1_1rest_1_1_cors_options.html#a7d9213c3ca6f835c87048aae26fdb1d7">   69</a></span>    <span class="keywordtype">bool</span> <a class="code hl_variable" href="structanch_1_1rest_1_1_cors_options.html#a7d9213c3ca6f835c87048aae26fdb1d7">credentials</a> = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span></div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno"><a class="line" href="structanch_1_1rest_1_1_cors_options.html#a36e1a3c44dbcdf958e31215de521ca18">   72</a></span>    std::optional&lt;std::chrono::seconds&gt; <a class="code hl_variable" href="structanch_1_1rest_1_1_cors_options.html#a36e1a3c44dbcdf958e31215de521ca18">maxAge</a> = std::nullopt;</div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span> </div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>  };</div>
-</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &quot;anch-rest-server-export.hpp&quot;</span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &lt;chrono&gt;</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include &lt;optional&gt;</span></div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#include &lt;string&gt;</span></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#include &lt;vector&gt;</span></div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceanch_1_1rest.html">anch::rest</a> {</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span></div>
+<div class="foldopen" id="foldopen00050" data-start="{" data-end="};">
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno"><a class="line" href="structanch_1_1rest_1_1_cors_options.html">   50</a></span>  <span class="keyword">struct </span>ANCH_REST_SERVER_EXPORT <a class="code hl_struct" href="structanch_1_1rest_1_1_cors_options.html">CorsOptions</a> {</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span></div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno"><a class="line" href="structanch_1_1rest_1_1_cors_options.html#a19e56f6fd8e7678cf4bcca7dea0ea168">   56</a></span>    std::vector&lt;std::string&gt; <a class="code hl_variable" href="structanch_1_1rest_1_1_cors_options.html#a19e56f6fd8e7678cf4bcca7dea0ea168">origins</a> = {};</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span></div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno"><a class="line" href="structanch_1_1rest_1_1_cors_options.html#a214647e4a355e344bfe857eca8c7e21f">   62</a></span>    std::vector&lt;std::string&gt; <a class="code hl_variable" href="structanch_1_1rest_1_1_cors_options.html#a214647e4a355e344bfe857eca8c7e21f">headers</a> = {};</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span></div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno"><a class="line" href="structanch_1_1rest_1_1_cors_options.html#addfa2ef6cad2575a08ebb04b2f5dff88">   65</a></span>    std::vector&lt;std::string&gt; <a class="code hl_variable" href="structanch_1_1rest_1_1_cors_options.html#addfa2ef6cad2575a08ebb04b2f5dff88">exposedHeaders</a> = {};</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span></div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno"><a class="line" href="structanch_1_1rest_1_1_cors_options.html#a7d9213c3ca6f835c87048aae26fdb1d7">   71</a></span>    <span class="keywordtype">bool</span> <a class="code hl_variable" href="structanch_1_1rest_1_1_cors_options.html#a7d9213c3ca6f835c87048aae26fdb1d7">credentials</a> = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span></div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno"><a class="line" href="structanch_1_1rest_1_1_cors_options.html#a36e1a3c44dbcdf958e31215de521ca18">   74</a></span>    std::optional&lt;std::chrono::seconds&gt; <a class="code hl_variable" href="structanch_1_1rest_1_1_cors_options.html#a36e1a3c44dbcdf958e31215de521ca18">maxAge</a> = std::nullopt;</div>
 <div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span> </div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>}</div>
-<div class="ttc" id="anamespaceanch_1_1rest_html"><div class="ttname"><a href="namespaceanch_1_1rest.html">anch::rest</a></div><div class="ttdoc">AnCH REST library namespace.</div><div class="ttdef"><b>Definition</b> auth.hpp:27</div></div>
-<div class="ttc" id="astructanch_1_1rest_1_1_cors_options_html"><div class="ttname"><a href="structanch_1_1rest_1_1_cors_options.html">anch::rest::CorsOptions</a></div><div class="ttdef"><b>Definition</b> cors.hpp:48</div></div>
-<div class="ttc" id="astructanch_1_1rest_1_1_cors_options_html_a19e56f6fd8e7678cf4bcca7dea0ea168"><div class="ttname"><a href="structanch_1_1rest_1_1_cors_options.html#a19e56f6fd8e7678cf4bcca7dea0ea168">anch::rest::CorsOptions::origins</a></div><div class="ttdeci">std::vector&lt; std::string &gt; origins</div><div class="ttdef"><b>Definition</b> cors.hpp:54</div></div>
-<div class="ttc" id="astructanch_1_1rest_1_1_cors_options_html_a214647e4a355e344bfe857eca8c7e21f"><div class="ttname"><a href="structanch_1_1rest_1_1_cors_options.html#a214647e4a355e344bfe857eca8c7e21f">anch::rest::CorsOptions::headers</a></div><div class="ttdeci">std::vector&lt; std::string &gt; headers</div><div class="ttdef"><b>Definition</b> cors.hpp:60</div></div>
-<div class="ttc" id="astructanch_1_1rest_1_1_cors_options_html_a36e1a3c44dbcdf958e31215de521ca18"><div class="ttname"><a href="structanch_1_1rest_1_1_cors_options.html#a36e1a3c44dbcdf958e31215de521ca18">anch::rest::CorsOptions::maxAge</a></div><div class="ttdeci">std::optional&lt; std::chrono::seconds &gt; maxAge</div><div class="ttdef"><b>Definition</b> cors.hpp:72</div></div>
-<div class="ttc" id="astructanch_1_1rest_1_1_cors_options_html_a7d9213c3ca6f835c87048aae26fdb1d7"><div class="ttname"><a href="structanch_1_1rest_1_1_cors_options.html#a7d9213c3ca6f835c87048aae26fdb1d7">anch::rest::CorsOptions::credentials</a></div><div class="ttdeci">bool credentials</div><div class="ttdef"><b>Definition</b> cors.hpp:69</div></div>
-<div class="ttc" id="astructanch_1_1rest_1_1_cors_options_html_addfa2ef6cad2575a08ebb04b2f5dff88"><div class="ttname"><a href="structanch_1_1rest_1_1_cors_options.html#addfa2ef6cad2575a08ebb04b2f5dff88">anch::rest::CorsOptions::exposedHeaders</a></div><div class="ttdeci">std::vector&lt; std::string &gt; exposedHeaders</div><div class="ttdef"><b>Definition</b> cors.hpp:63</div></div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>  };</div>
+</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span> </div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>}</div>
+<div class="ttc" id="anamespaceanch_1_1rest_html"><div class="ttname"><a href="namespaceanch_1_1rest.html">anch::rest</a></div><div class="ttdoc">AnCH REST library namespace.</div><div class="ttdef"><b>Definition</b> auth.hpp:29</div></div>
+<div class="ttc" id="astructanch_1_1rest_1_1_cors_options_html"><div class="ttname"><a href="structanch_1_1rest_1_1_cors_options.html">anch::rest::CorsOptions</a></div><div class="ttdef"><b>Definition</b> cors.hpp:50</div></div>
+<div class="ttc" id="astructanch_1_1rest_1_1_cors_options_html_a19e56f6fd8e7678cf4bcca7dea0ea168"><div class="ttname"><a href="structanch_1_1rest_1_1_cors_options.html#a19e56f6fd8e7678cf4bcca7dea0ea168">anch::rest::CorsOptions::origins</a></div><div class="ttdeci">std::vector&lt; std::string &gt; origins</div><div class="ttdef"><b>Definition</b> cors.hpp:56</div></div>
+<div class="ttc" id="astructanch_1_1rest_1_1_cors_options_html_a214647e4a355e344bfe857eca8c7e21f"><div class="ttname"><a href="structanch_1_1rest_1_1_cors_options.html#a214647e4a355e344bfe857eca8c7e21f">anch::rest::CorsOptions::headers</a></div><div class="ttdeci">std::vector&lt; std::string &gt; headers</div><div class="ttdef"><b>Definition</b> cors.hpp:62</div></div>
+<div class="ttc" id="astructanch_1_1rest_1_1_cors_options_html_a36e1a3c44dbcdf958e31215de521ca18"><div class="ttname"><a href="structanch_1_1rest_1_1_cors_options.html#a36e1a3c44dbcdf958e31215de521ca18">anch::rest::CorsOptions::maxAge</a></div><div class="ttdeci">std::optional&lt; std::chrono::seconds &gt; maxAge</div><div class="ttdef"><b>Definition</b> cors.hpp:74</div></div>
+<div class="ttc" id="astructanch_1_1rest_1_1_cors_options_html_a7d9213c3ca6f835c87048aae26fdb1d7"><div class="ttname"><a href="structanch_1_1rest_1_1_cors_options.html#a7d9213c3ca6f835c87048aae26fdb1d7">anch::rest::CorsOptions::credentials</a></div><div class="ttdeci">bool credentials</div><div class="ttdef"><b>Definition</b> cors.hpp:71</div></div>
+<div class="ttc" id="astructanch_1_1rest_1_1_cors_options_html_addfa2ef6cad2575a08ebb04b2f5dff88"><div class="ttname"><a href="structanch_1_1rest_1_1_cors_options.html#addfa2ef6cad2575a08ebb04b2f5dff88">anch::rest::CorsOptions::exposedHeaders</a></div><div class="ttdeci">std::vector&lt; std::string &gt; exposedHeaders</div><div class="ttdef"><b>Definition</b> cors.hpp:65</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->

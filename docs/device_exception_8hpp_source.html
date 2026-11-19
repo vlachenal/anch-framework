@@ -110,31 +110,33 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('device_excepti
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="comment">*/</span></div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &lt;cerrno&gt;</span></div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#include &lt;string&gt;</span></div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &lt;system_error&gt;</span></div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceanch_1_1device.html">anch::device</a> {</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span></div>
-<div class="foldopen" id="foldopen00036" data-start="{" data-end="};">
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno"><a class="line" href="classanch_1_1device_1_1_device_exception.html">   36</a></span>  <span class="keyword">class </span><a class="code hl_function" href="classanch_1_1device_1_1_device_exception.html#a6dbfcfafd7242b0fc76310848416e1c6">DeviceException</a>: <span class="keyword">public</span> std::system_error {</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>  <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    <span class="comment">// Constructors +</span></div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno"><a class="line" href="classanch_1_1device_1_1_device_exception.html#a6dbfcfafd7242b0fc76310848416e1c6">   46</a></span>    <span class="keyword">explicit</span> <a class="code hl_function" href="classanch_1_1device_1_1_device_exception.html#a6dbfcfafd7242b0fc76310848416e1c6">DeviceException</a>(<span class="keyword">const</span> std::string&amp; message, <span class="keywordtype">int</span> errnum = errno);</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    <span class="comment">// Constructors -</span></div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    <span class="comment">// Destructor +</span></div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno"><a class="line" href="classanch_1_1device_1_1_device_exception.html#ad88751d3b62bae1db881b0bb5adabf34">   53</a></span>    <span class="keyword">virtual</span> <a class="code hl_function" href="classanch_1_1device_1_1_device_exception.html#ad88751d3b62bae1db881b0bb5adabf34">~DeviceException</a>() noexcept;</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    <span class="comment">// Destructor -</span></div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span> </div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>  };</div>
-</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &quot;anch-device-export.hpp&quot;</span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &lt;cerrno&gt;</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include &lt;string&gt;</span></div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#include &lt;system_error&gt;</span></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceanch_1_1device.html">anch::device</a> {</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span></div>
+<div class="foldopen" id="foldopen00038" data-start="{" data-end="};">
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno"><a class="line" href="classanch_1_1device_1_1_device_exception.html">   38</a></span>  <span class="keyword">class </span>ANCH_DEVICE_EXPORT <a class="code hl_function" href="classanch_1_1device_1_1_device_exception.html#a6dbfcfafd7242b0fc76310848416e1c6">DeviceException</a>: <span class="keyword">public</span> std::system_error {</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>  <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    <span class="comment">// Constructors +</span></div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno"><a class="line" href="classanch_1_1device_1_1_device_exception.html#a6dbfcfafd7242b0fc76310848416e1c6">   48</a></span>    <span class="keyword">explicit</span> <a class="code hl_function" href="classanch_1_1device_1_1_device_exception.html#a6dbfcfafd7242b0fc76310848416e1c6">DeviceException</a>(<span class="keyword">const</span> std::string&amp; message, <span class="keywordtype">int</span> errnum = errno);</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    <span class="comment">// Constructors -</span></div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    <span class="comment">// Destructor +</span></div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno"><a class="line" href="classanch_1_1device_1_1_device_exception.html#ad88751d3b62bae1db881b0bb5adabf34">   55</a></span>    <span class="keyword">virtual</span> <a class="code hl_function" href="classanch_1_1device_1_1_device_exception.html#ad88751d3b62bae1db881b0bb5adabf34">~DeviceException</a>() noexcept;</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    <span class="comment">// Destructor -</span></div>
 <div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>}  <span class="comment">// anch::device</span></div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>  };</div>
+</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span> </div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>}  <span class="comment">// anch::device</span></div>
 <div class="ttc" id="aclassanch_1_1device_1_1_device_exception_html_a6dbfcfafd7242b0fc76310848416e1c6"><div class="ttname"><a href="classanch_1_1device_1_1_device_exception.html#a6dbfcfafd7242b0fc76310848416e1c6">anch::device::DeviceException::DeviceException</a></div><div class="ttdeci">DeviceException(const std::string &amp;message, int errnum=errno)</div></div>
 <div class="ttc" id="aclassanch_1_1device_1_1_device_exception_html_ad88751d3b62bae1db881b0bb5adabf34"><div class="ttname"><a href="classanch_1_1device_1_1_device_exception.html#ad88751d3b62bae1db881b0bb5adabf34">anch::device::DeviceException::~DeviceException</a></div><div class="ttdeci">virtual ~DeviceException() noexcept</div></div>
-<div class="ttc" id="anamespaceanch_1_1device_html"><div class="ttname"><a href="namespaceanch_1_1device.html">anch::device</a></div><div class="ttdoc">Device management namespace.</div><div class="ttdef"><b>Definition</b> cpu.hpp:29</div></div>
+<div class="ttc" id="anamespaceanch_1_1device_html"><div class="ttname"><a href="namespaceanch_1_1device.html">anch::device</a></div><div class="ttdoc">Device management namespace.</div><div class="ttdef"><b>Definition</b> cpu.hpp:31</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->

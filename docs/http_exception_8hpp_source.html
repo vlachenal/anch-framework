@@ -110,39 +110,41 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('http_exception
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="comment">*/</span></div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &lt;stdexcept&gt;</span></div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#include &lt;string&gt;</span></div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span> </div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include &quot;rest/status.hpp&quot;</span></div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &quot;anch-rest-common-export.hpp&quot;</span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &lt;stdexcept&gt;</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include &lt;string&gt;</span></div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceanch_1_1rest.html">anch::rest</a> {</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span></div>
-<div class="foldopen" id="foldopen00038" data-start="{" data-end="};">
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno"><a class="line" href="classanch_1_1rest_1_1_http_exception.html">   38</a></span>  <span class="keyword">class </span><a class="code hl_function" href="classanch_1_1rest_1_1_http_exception.html#a6dca13cf12f169e148e14056c90ea010">HttpException</a>: <span class="keyword">public</span> std::runtime_error {</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    <span class="comment">// Attributes +</span></div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>  <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    <a class="code hl_enumeration" href="namespaceanch_1_1rest.html#a8c6f914e6bbc639b2eae1c9633cd9a98">anch::rest::Status</a> _status;</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    <span class="comment">// Attributes -</span></div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span> </div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    <span class="comment">// Constructors +</span></div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>  <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno"><a class="line" href="classanch_1_1rest_1_1_http_exception.html#a6dca13cf12f169e148e14056c90ea010">   54</a></span>    <a class="code hl_function" href="classanch_1_1rest_1_1_http_exception.html#a6dca13cf12f169e148e14056c90ea010">HttpException</a>(<a class="code hl_enumeration" href="namespaceanch_1_1rest.html#a8c6f914e6bbc639b2eae1c9633cd9a98">anch::rest::Status</a> status, <span class="keyword">const</span> std::string&amp; message = std::string());</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    <span class="comment">// Constructors -</span></div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span> </div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    <span class="comment">// Accessors +</span></div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>  <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno"><a class="line" href="classanch_1_1rest_1_1_http_exception.html#afab0d4b986138ce0f61effe3fef2be49">   64</a></span>    <a class="code hl_enumeration" href="namespaceanch_1_1rest.html#a8c6f914e6bbc639b2eae1c9633cd9a98">anch::rest::Status</a> <a class="code hl_function" href="classanch_1_1rest_1_1_http_exception.html#afab0d4b986138ce0f61effe3fef2be49">getStatus</a>() const noexcept;</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    <span class="comment">// Accessors -</span></div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span> </div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>  };</div>
-</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#include &quot;rest/status.hpp&quot;</span></div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceanch_1_1rest.html">anch::rest</a> {</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span></div>
+<div class="foldopen" id="foldopen00040" data-start="{" data-end="};">
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno"><a class="line" href="classanch_1_1rest_1_1_http_exception.html">   40</a></span>  <span class="keyword">class </span>ANCH_REST_COMMON_EXPORT <a class="code hl_function" href="classanch_1_1rest_1_1_http_exception.html#a6dca13cf12f169e148e14056c90ea010">HttpException</a>: <span class="keyword">public</span> std::runtime_error {</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    <span class="comment">// Attributes +</span></div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>  <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    <a class="code hl_enumeration" href="namespaceanch_1_1rest.html#a8c6f914e6bbc639b2eae1c9633cd9a98">anch::rest::Status</a> _status;</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    <span class="comment">// Attributes -</span></div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    <span class="comment">// Constructors +</span></div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>  <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno"><a class="line" href="classanch_1_1rest_1_1_http_exception.html#a6dca13cf12f169e148e14056c90ea010">   56</a></span>    <a class="code hl_function" href="classanch_1_1rest_1_1_http_exception.html#a6dca13cf12f169e148e14056c90ea010">HttpException</a>(<a class="code hl_enumeration" href="namespaceanch_1_1rest.html#a8c6f914e6bbc639b2eae1c9633cd9a98">anch::rest::Status</a> status, <span class="keyword">const</span> std::string&amp; message = std::string());</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    <span class="comment">// Constructors -</span></div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span> </div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    <span class="comment">// Accessors +</span></div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>  <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno"><a class="line" href="classanch_1_1rest_1_1_http_exception.html#afab0d4b986138ce0f61effe3fef2be49">   66</a></span>    <a class="code hl_enumeration" href="namespaceanch_1_1rest.html#a8c6f914e6bbc639b2eae1c9633cd9a98">anch::rest::Status</a> <a class="code hl_function" href="classanch_1_1rest_1_1_http_exception.html#afab0d4b986138ce0f61effe3fef2be49">getStatus</a>() const noexcept;</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    <span class="comment">// Accessors -</span></div>
 <div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span> </div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>}</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>  };</div>
+</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span> </div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>}</div>
 <div class="ttc" id="aclassanch_1_1rest_1_1_http_exception_html_a6dca13cf12f169e148e14056c90ea010"><div class="ttname"><a href="classanch_1_1rest_1_1_http_exception.html#a6dca13cf12f169e148e14056c90ea010">anch::rest::HttpException::HttpException</a></div><div class="ttdeci">HttpException(anch::rest::Status status, const std::string &amp;message=std::string())</div></div>
 <div class="ttc" id="aclassanch_1_1rest_1_1_http_exception_html_afab0d4b986138ce0f61effe3fef2be49"><div class="ttname"><a href="classanch_1_1rest_1_1_http_exception.html#afab0d4b986138ce0f61effe3fef2be49">anch::rest::HttpException::getStatus</a></div><div class="ttdeci">anch::rest::Status getStatus() const noexcept</div></div>
-<div class="ttc" id="anamespaceanch_1_1rest_html"><div class="ttname"><a href="namespaceanch_1_1rest.html">anch::rest</a></div><div class="ttdoc">AnCH REST library namespace.</div><div class="ttdef"><b>Definition</b> auth.hpp:27</div></div>
-<div class="ttc" id="anamespaceanch_1_1rest_html_a8c6f914e6bbc639b2eae1c9633cd9a98"><div class="ttname"><a href="namespaceanch_1_1rest.html#a8c6f914e6bbc639b2eae1c9633cd9a98">anch::rest::Status</a></div><div class="ttdeci">Status</div><div class="ttdef"><b>Definition</b> status.hpp:34</div></div>
+<div class="ttc" id="anamespaceanch_1_1rest_html"><div class="ttname"><a href="namespaceanch_1_1rest.html">anch::rest</a></div><div class="ttdoc">AnCH REST library namespace.</div><div class="ttdef"><b>Definition</b> auth.hpp:29</div></div>
+<div class="ttc" id="anamespaceanch_1_1rest_html_a8c6f914e6bbc639b2eae1c9633cd9a98"><div class="ttname"><a href="namespaceanch_1_1rest.html#a8c6f914e6bbc639b2eae1c9633cd9a98">anch::rest::Status</a></div><div class="ttdeci">Status</div><div class="ttdef"><b>Definition</b> status.hpp:36</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->

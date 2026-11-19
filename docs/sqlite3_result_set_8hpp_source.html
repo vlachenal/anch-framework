@@ -111,57 +111,59 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('sqlite3_result
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#ifdef ANCH_SQL_SQLITE3</span></div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span> </div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#include &quot;sql/resultSet.hpp&quot;</span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#include &quot;anch-sqlite-export.hpp&quot;</span></div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span> </div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="keyword">struct </span>sqlite3_stmt;</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include &quot;sql/resultSet.hpp&quot;</span></div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceanch_1_1sql.html">anch::sql</a> {</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span></div>
-<div class="foldopen" id="foldopen00039" data-start="{" data-end="};">
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno"><a class="line" href="classanch_1_1sql_1_1_s_q_lite3_result_set.html">   39</a></span>  <span class="keyword">class </span><a class="code hl_function" href="classanch_1_1sql_1_1_s_q_lite3_result_set.html#abf65de06b58be7b0b3e14e0ecbd602c0">SQLite3ResultSet</a>: <span class="keyword">public</span> <a class="code hl_function" href="classanch_1_1sql_1_1_result_set.html#a16ffbd77e6b524bf5630d101435f576f">ResultSet</a> {</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    <span class="comment">// Attributes +</span></div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>  <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    sqlite3_stmt* _stmt;</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span></div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    <span class="keywordtype">bool</span> _prepared;</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span></div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    <span class="keywordtype">int</span> _nbFields;</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    <span class="comment">// Attributes -</span></div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span> </div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    <span class="comment">// Constructors +</span></div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>  <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno"><a class="line" href="classanch_1_1sql_1_1_s_q_lite3_result_set.html#abf65de06b58be7b0b3e14e0ecbd602c0">   61</a></span>    <a class="code hl_function" href="classanch_1_1sql_1_1_s_q_lite3_result_set.html#abf65de06b58be7b0b3e14e0ecbd602c0">SQLite3ResultSet</a>(sqlite3_stmt* stmt, <span class="keywordtype">bool</span> prepared = <span class="keyword">false</span>) noexcept;</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    <span class="comment">// Constructors -</span></div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span> </div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    <span class="comment">// Destructor +</span></div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>  public:</div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno"><a class="line" href="classanch_1_1sql_1_1_s_q_lite3_result_set.html#adee372e559da6759db56d69b96b2466f">   69</a></span>    virtual ~<a class="code hl_function" href="classanch_1_1sql_1_1_s_q_lite3_result_set.html#abf65de06b58be7b0b3e14e0ecbd602c0">SQLite3ResultSet</a>();</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    <span class="comment">// Destructor -</span></div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span> </div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    <span class="comment">// Methods +</span></div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>  protected:</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno"><a class="line" href="classanch_1_1sql_1_1_s_q_lite3_result_set.html#a8a3a8a8da5d161d47553313714856530">   81</a></span>    virtual <span class="keywordtype">bool</span> <a class="code hl_function" href="classanch_1_1sql_1_1_s_q_lite3_result_set.html#a8a3a8a8da5d161d47553313714856530">fetchNext</a>() override;</div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span> </div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>  protected:</div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno"><a class="line" href="classanch_1_1sql_1_1_s_q_lite3_result_set.html#a463a6d7e5b06b166a7d087a020239a72">   92</a></span>    virtual <span class="keywordtype">bool</span> <a class="code hl_function" href="classanch_1_1sql_1_1_s_q_lite3_result_set.html#a463a6d7e5b06b166a7d087a020239a72">getValue</a>(std::<span class="keywordtype">size_t</span> idx, std::<span class="keywordtype">string</span>&amp; out) override;</div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span></div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno"><a class="line" href="classanch_1_1sql_1_1_s_q_lite3_result_set.html#a48f3bf039d86e2a1f7cb898e52a4f230">  103</a></span>    virtual std::optional&lt;std::<span class="keywordtype">string</span>&gt; <a class="code hl_function" href="classanch_1_1sql_1_1_s_q_lite3_result_set.html#a463a6d7e5b06b166a7d087a020239a72">getValue</a>(std::<span class="keywordtype">size_t</span> idx) override;</div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span></div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno"><a class="line" href="classanch_1_1sql_1_1_s_q_lite3_result_set.html#a6c4bd5bf1b66bc6488a07c54c89618c3">  110</a></span>    virtual const <a class="code hl_namespace" href="namespaceanch.html">anch</a>::<a class="code hl_namespace" href="namespaceanch_1_1date.html">date</a>::DateFormatter&amp; <a class="code hl_function" href="classanch_1_1sql_1_1_s_q_lite3_result_set.html#a6c4bd5bf1b66bc6488a07c54c89618c3">getDateFormatter</a>() override;</div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span></div>
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno"><a class="line" href="classanch_1_1sql_1_1_s_q_lite3_result_set.html#af56d301329acd994082759f23bce14b2">  117</a></span>    virtual const <a class="code hl_namespace" href="namespaceanch.html">anch</a>::<a class="code hl_namespace" href="namespaceanch_1_1date.html">date</a>::DateFormatter&amp; <a class="code hl_function" href="classanch_1_1sql_1_1_s_q_lite3_result_set.html#af56d301329acd994082759f23bce14b2">getTimeFormatter</a>() override;</div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span></div>
-<div class="line"><a id="l00124" name="l00124"></a><span class="lineno"><a class="line" href="classanch_1_1sql_1_1_s_q_lite3_result_set.html#a3391c5787542cddae80d03c79b97a95f">  124</a></span>    virtual const <a class="code hl_namespace" href="namespaceanch.html">anch</a>::<a class="code hl_namespace" href="namespaceanch_1_1date.html">date</a>::DateFormatter&amp; <a class="code hl_function" href="classanch_1_1sql_1_1_s_q_lite3_result_set.html#a3391c5787542cddae80d03c79b97a95f">getTimestampFormatter</a>() override;</div>
-<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>    <span class="comment">// Methods -</span></div>
-<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span> </div>
-<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>  };</div>
-</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="keyword">struct </span>sqlite3_stmt;</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceanch_1_1sql.html">anch::sql</a> {</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span></div>
+<div class="foldopen" id="foldopen00041" data-start="{" data-end="};">
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno"><a class="line" href="classanch_1_1sql_1_1_s_q_lite3_result_set.html">   41</a></span>  <span class="keyword">class </span>ANCH_SQLITE_EXPORT <a class="code hl_function" href="classanch_1_1sql_1_1_s_q_lite3_result_set.html#abf65de06b58be7b0b3e14e0ecbd602c0">SQLite3ResultSet</a>: <span class="keyword">public</span> <a class="code hl_function" href="classanch_1_1sql_1_1_result_set.html#a16ffbd77e6b524bf5630d101435f576f">ResultSet</a> {</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span> </div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    <span class="comment">// Attributes +</span></div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>  <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    sqlite3_stmt* _stmt;</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span></div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    <span class="keywordtype">bool</span> _prepared;</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span></div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <span class="keywordtype">int</span> _nbFields;</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    <span class="comment">// Attributes -</span></div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    <span class="comment">// Constructors +</span></div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>  <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno"><a class="line" href="classanch_1_1sql_1_1_s_q_lite3_result_set.html#abf65de06b58be7b0b3e14e0ecbd602c0">   63</a></span>    <a class="code hl_function" href="classanch_1_1sql_1_1_s_q_lite3_result_set.html#abf65de06b58be7b0b3e14e0ecbd602c0">SQLite3ResultSet</a>(sqlite3_stmt* stmt, <span class="keywordtype">bool</span> prepared = <span class="keyword">false</span>) noexcept;</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    <span class="comment">// Constructors -</span></div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span> </div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    <span class="comment">// Destructor +</span></div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>  public:</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno"><a class="line" href="classanch_1_1sql_1_1_s_q_lite3_result_set.html#adee372e559da6759db56d69b96b2466f">   71</a></span>    virtual ~<a class="code hl_function" href="classanch_1_1sql_1_1_s_q_lite3_result_set.html#abf65de06b58be7b0b3e14e0ecbd602c0">SQLite3ResultSet</a>();</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    <span class="comment">// Destructor -</span></div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span> </div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    <span class="comment">// Methods +</span></div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>  protected:</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno"><a class="line" href="classanch_1_1sql_1_1_s_q_lite3_result_set.html#a8a3a8a8da5d161d47553313714856530">   83</a></span>    virtual <span class="keywordtype">bool</span> <a class="code hl_function" href="classanch_1_1sql_1_1_s_q_lite3_result_set.html#a8a3a8a8da5d161d47553313714856530">fetchNext</a>() override;</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span> </div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>  protected:</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno"><a class="line" href="classanch_1_1sql_1_1_s_q_lite3_result_set.html#a463a6d7e5b06b166a7d087a020239a72">   94</a></span>    virtual <span class="keywordtype">bool</span> <a class="code hl_function" href="classanch_1_1sql_1_1_s_q_lite3_result_set.html#a463a6d7e5b06b166a7d087a020239a72">getValue</a>(std::<span class="keywordtype">size_t</span> idx, std::<span class="keywordtype">string</span>&amp; out) override;</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span></div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno"><a class="line" href="classanch_1_1sql_1_1_s_q_lite3_result_set.html#a48f3bf039d86e2a1f7cb898e52a4f230">  105</a></span>    virtual std::optional&lt;std::<span class="keywordtype">string</span>&gt; <a class="code hl_function" href="classanch_1_1sql_1_1_s_q_lite3_result_set.html#a463a6d7e5b06b166a7d087a020239a72">getValue</a>(std::<span class="keywordtype">size_t</span> idx) override;</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span></div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno"><a class="line" href="classanch_1_1sql_1_1_s_q_lite3_result_set.html#a6c4bd5bf1b66bc6488a07c54c89618c3">  112</a></span>    virtual const <a class="code hl_namespace" href="namespaceanch.html">anch</a>::<a class="code hl_namespace" href="namespaceanch_1_1date.html">date</a>::DateFormatter&amp; <a class="code hl_function" href="classanch_1_1sql_1_1_s_q_lite3_result_set.html#a6c4bd5bf1b66bc6488a07c54c89618c3">getDateFormatter</a>() override;</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span></div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno"><a class="line" href="classanch_1_1sql_1_1_s_q_lite3_result_set.html#af56d301329acd994082759f23bce14b2">  119</a></span>    virtual const <a class="code hl_namespace" href="namespaceanch.html">anch</a>::<a class="code hl_namespace" href="namespaceanch_1_1date.html">date</a>::DateFormatter&amp; <a class="code hl_function" href="classanch_1_1sql_1_1_s_q_lite3_result_set.html#af56d301329acd994082759f23bce14b2">getTimeFormatter</a>() override;</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span></div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno"><a class="line" href="classanch_1_1sql_1_1_s_q_lite3_result_set.html#a3391c5787542cddae80d03c79b97a95f">  126</a></span>    virtual const <a class="code hl_namespace" href="namespaceanch.html">anch</a>::<a class="code hl_namespace" href="namespaceanch_1_1date.html">date</a>::DateFormatter&amp; <a class="code hl_function" href="classanch_1_1sql_1_1_s_q_lite3_result_set.html#a3391c5787542cddae80d03c79b97a95f">getTimestampFormatter</a>() override;</div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>    <span class="comment">// Methods -</span></div>
 <div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span> </div>
-<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>}  <span class="comment">// anch::sql</span></div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>  };</div>
+</div>
 <div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span> </div>
-<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span><span class="preprocessor">#endif </span><span class="comment">// ANCH_SQL_SQLITE3</span></div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>}  <span class="comment">// anch::sql</span></div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span> </div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span><span class="preprocessor">#endif </span><span class="comment">// ANCH_SQL_SQLITE3</span></div>
 <div class="ttc" id="aclassanch_1_1sql_1_1_result_set_html_a16ffbd77e6b524bf5630d101435f576f"><div class="ttname"><a href="classanch_1_1sql_1_1_result_set.html#a16ffbd77e6b524bf5630d101435f576f">anch::sql::ResultSet::ResultSet</a></div><div class="ttdeci">ResultSet() noexcept</div></div>
 <div class="ttc" id="aclassanch_1_1sql_1_1_s_q_lite3_result_set_html_a3391c5787542cddae80d03c79b97a95f"><div class="ttname"><a href="classanch_1_1sql_1_1_s_q_lite3_result_set.html#a3391c5787542cddae80d03c79b97a95f">anch::sql::SQLite3ResultSet::getTimestampFormatter</a></div><div class="ttdeci">virtual const anch::date::DateFormatter &amp; getTimestampFormatter() override</div></div>
 <div class="ttc" id="aclassanch_1_1sql_1_1_s_q_lite3_result_set_html_a463a6d7e5b06b166a7d087a020239a72"><div class="ttname"><a href="classanch_1_1sql_1_1_s_q_lite3_result_set.html#a463a6d7e5b06b166a7d087a020239a72">anch::sql::SQLite3ResultSet::getValue</a></div><div class="ttdeci">virtual bool getValue(std::size_t idx, std::string &amp;out) override</div></div>
@@ -170,8 +172,8 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('sqlite3_result
 <div class="ttc" id="aclassanch_1_1sql_1_1_s_q_lite3_result_set_html_abf65de06b58be7b0b3e14e0ecbd602c0"><div class="ttname"><a href="classanch_1_1sql_1_1_s_q_lite3_result_set.html#abf65de06b58be7b0b3e14e0ecbd602c0">anch::sql::SQLite3ResultSet::SQLite3ResultSet</a></div><div class="ttdeci">SQLite3ResultSet(sqlite3_stmt *stmt, bool prepared=false) noexcept</div></div>
 <div class="ttc" id="aclassanch_1_1sql_1_1_s_q_lite3_result_set_html_af56d301329acd994082759f23bce14b2"><div class="ttname"><a href="classanch_1_1sql_1_1_s_q_lite3_result_set.html#af56d301329acd994082759f23bce14b2">anch::sql::SQLite3ResultSet::getTimeFormatter</a></div><div class="ttdeci">virtual const anch::date::DateFormatter &amp; getTimeFormatter() override</div></div>
 <div class="ttc" id="anamespaceanch_1_1date_html"><div class="ttname"><a href="namespaceanch_1_1date.html">anch::date</a></div><div class="ttdoc">Date namespace.</div></div>
-<div class="ttc" id="anamespaceanch_1_1sql_html"><div class="ttname"><a href="namespaceanch_1_1sql.html">anch::sql</a></div><div class="ttdoc">SQL namespace.</div><div class="ttdef"><b>Definition</b> clauses.hpp:25</div></div>
-<div class="ttc" id="anamespaceanch_html"><div class="ttname"><a href="namespaceanch.html">anch</a></div><div class="ttdoc">AnCH framework base namespace.</div><div class="ttdef"><b>Definition</b> app.hpp:28</div></div>
+<div class="ttc" id="anamespaceanch_1_1sql_html"><div class="ttname"><a href="namespaceanch_1_1sql.html">anch::sql</a></div><div class="ttdoc">SQL namespace.</div><div class="ttdef"><b>Definition</b> clauses.hpp:27</div></div>
+<div class="ttc" id="anamespaceanch_html"><div class="ttname"><a href="namespaceanch.html">anch</a></div><div class="ttdoc">AnCH framework base namespace.</div><div class="ttdef"><b>Definition</b> app.hpp:30</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->

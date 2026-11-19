@@ -16,7 +16,6 @@ var hierarchy =
     [ "anch::cli::ArgHandler", "classanch_1_1cli_1_1_arg_handler.html", null ],
     [ "anch::ut::AssertMessage&lt; T &gt;", "structanch_1_1ut_1_1_assert_message.html", null ],
     [ "anch::crypto::Base64", "classanch_1_1crypto_1_1_base64.html", null ],
-    [ "Base64", "class_base64.html", null ],
     [ "anch::crypto::BlockCipher&lt; B &gt;", "classanch_1_1crypto_1_1_block_cipher.html", null ],
     [ "anch::crypto::BlockCipher&lt; 16 &gt;", "classanch_1_1crypto_1_1_block_cipher.html", [
       [ "anch::crypto::AES< 4, 10 >", "classanch_1_1crypto_1_1_a_e_s.html", null ],
@@ -221,7 +220,6 @@ var hierarchy =
     [ "anch::rest::Part", "classanch_1_1rest_1_1_part.html", null ],
     [ "anch::oas::PathItem", "structanch_1_1oas_1_1_path_item.html", null ],
     [ "anch::json::Pattern", "structanch_1_1json_1_1_pattern.html", null ],
-    [ "Pet", "struct_pet.html", null ],
     [ "anch::crypto::PKCS5Padding", "classanch_1_1crypto_1_1_p_k_c_s5_padding.html", null ],
     [ "anch::conf::Placeholders", "classanch_1_1conf_1_1_placeholders.html", null ],
     [ "anch::PoolableResource&lt; T &gt;", "classanch_1_1_poolable_resource.html", null ],

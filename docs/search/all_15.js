@@ -23,7 +23,7 @@ var searchData=
   ['unsubscribe_20',['unsubscribe',['../classanch_1_1events_1_1_event_handler.html#abb8569590d0f33489c02d700b4b90fd3',1,'anch::events::EventHandler']]],
   ['ununderline_21',['UNUNDERLINE',['../namespaceanch_1_1cli.html#acb144caa56bfee23d53a0bc4f5cd00d3',1,'anch::cli']]],
   ['update_22',['update',['../classanch_1_1sql_1_1_connection.html#a104eaa16b2b443da5a6eb50c0562cb28',1,'anch::sql::Connection::update(const std::string &amp;query)'],['../classanch_1_1sql_1_1_connection.html#ad3ec5cab9f60dece303d571fb185a8e5',1,'anch::sql::Connection::update(const std::string &amp;query, const T &amp;value, const Q &amp;... values)']]],
-  ['url_23',['URL',['../classanch_1_1crypto_1_1_base64.html#aa648b7b4192a1d871ac703bd0b95d3b2',1,'anch::crypto::Base64::URL'],['../class_base64.html#aa648b7b4192a1d871ac703bd0b95d3b2',1,'Base64::URL']]],
+  ['url_23',['URL',['../classanch_1_1crypto_1_1_base64.html#aa648b7b4192a1d871ac703bd0b95d3b2',1,'anch::crypto::Base64']]],
   ['url_24',['url',['../classanch_1_1rest_1_1_client.html#ab1ad09a0247df79b184f18f45c1fd8a3',1,'anch::rest::Client']]],
   ['usage_25',['Usage',['../page_date.html#date_concept_sec',1,'Usage'],['../page_device.html#device_concept_sec',1,'Usage'],['../page_logger.html#log_concept_sec',1,'Usage'],['../page_network.html#network_concept_sec',1,'Usage'],['../page_oas.html#oas_usage_sec',1,'Usage']]],
   ['user_26',['user',['../structanch_1_1sql_1_1_sql_connection_configuration.html#ad11afc04bcae1a6d4feeace3cfa7a3ad',1,'anch::sql::SqlConnectionConfiguration']]],

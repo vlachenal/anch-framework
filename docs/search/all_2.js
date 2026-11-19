@@ -6,7 +6,7 @@ var searchData=
   ['bad_5fcast_3',['BAD_CAST',['../classanch_1_1ini_1_1_parser_error.html#a2d5d885e252170535f9ddabf23c236b4ac62875e1a599cf08e935ed0133f3de08',1,'anch::ini::ParserError']]],
   ['banner_4',['banner',['../structanch_1_1cli_1_1_app.html#a78d209439c21d2fec3f9dc46cbae670a',1,'anch::cli::App']]],
   ['bannerpath_5',['bannerPath',['../structanch_1_1cli_1_1_app.html#a19fb6f777ddfae053933459f1a20b7c9',1,'anch::cli::App']]],
-  ['base64_6',['Base64',['../classanch_1_1crypto_1_1_base64.html',1,'anch::crypto::Base64'],['../class_base64.html',1,'Base64']]],
+  ['base64_6',['Base64',['../classanch_1_1crypto_1_1_base64.html',1,'anch::crypto']]],
   ['base64encode_7',['base64Encode',['../namespaceanch_1_1rest.html#a7ef4f6b4909423a684b1a7e851c30024',1,'anch::rest']]],
   ['basicauth_8',['basicAuth',['../namespaceanch_1_1rest.html#ad71a8aa21b04ceaaf3989b1958781f8f',1,'anch::rest']]],
   ['batchupdate_9',['batchUpdate',['../classanch_1_1sql_1_1_connection.html#a16bb2c8695a30f4aa4832017662aa034',1,'anch::sql::Connection']]],

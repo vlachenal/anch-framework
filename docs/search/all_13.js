@@ -128,7 +128,7 @@ var searchData=
   ['statements_20cache_125',['Prepared statements cache',['../page_sql.html#sql_conception_stmt_cache_sec',1,'']]],
   ['status_126',['Status',['../namespaceanch_1_1rest.html#a8c6f914e6bbc639b2eae1c9633cd9a98',1,'anch::rest']]],
   ['status_127',['status',['../classanch_1_1rest_1_1_endpoint.html#ac3e54f290fe48dd1e69f67763bc46405',1,'anch::rest::Endpoint']]],
-  ['std_128',['STD',['../classanch_1_1crypto_1_1_base64.html#ae757c78364a7b1c6f2fbfa7539ab51c5',1,'anch::crypto::Base64::STD'],['../class_base64.html#ae757c78364a7b1c6f2fbfa7539ab51c5',1,'Base64::STD']]],
+  ['std_128',['STD',['../classanch_1_1crypto_1_1_base64.html#ae757c78364a7b1c6f2fbfa7539ab51c5',1,'anch::crypto::Base64']]],
   ['stop_129',['stop',['../classanch_1_1_thread_pool.html#a303181831bf04c919f839e4973e9c7b4',1,'anch::ThreadPool']]],
   ['stream_130',['stream',['../structanch_1_1rest_1_1_multipart.html#a1578d647538e50d7b8fa6a55ad2fd2c0',1,'anch::rest::Multipart::stream(const anch::rest::Form &amp;form, const anch::rest::MediaType &amp;contentType, anch::rest::Side side)'],['../structanch_1_1rest_1_1_multipart.html#af5a70db0915b7ee3d91f2d089af6d54d',1,'anch::rest::Multipart::stream(const T &amp;value, const anch::rest::MediaType &amp;contentType, anch::rest::Side side)'],['../classanch_1_1rest_1_1_response.html#a53c02b57b834c32e3eea970089848433',1,'anch::rest::Response::stream(anch::rest::BodyWriter writer) &amp;'],['../classanch_1_1rest_1_1_response.html#a31850f7fd3f58a60a217d5628012df4c',1,'anch::rest::Response::stream(anch::rest::BodyWriter writer) &amp;&amp;']]],
   ['strict_131',['strict',['../structanch_1_1oas_1_1_model_options.html#aca9a563db5e32d718d97f1cf0809f7cc',1,'anch::oas::ModelOptions']]],

@@ -257,7 +257,6 @@ var annotated_dup =
     [ "anch_rest_request_t", "structanch__rest__request__t.html", "structanch__rest__request__t" ],
     [ "anch_rest_response_writer_t", "structanch__rest__response__writer__t.html", "structanch__rest__response__writer__t" ],
     [ "anch_rest_str_t", "structanch__rest__str__t.html", "structanch__rest__str__t" ],
-    [ "Base64", "class_base64.html", "class_base64" ],
     [ "ErrorObserver", "class_error_observer.html", "class_error_observer" ],
     [ "FormatterOptions", "struct_formatter_options.html", "struct_formatter_options" ],
     [ "GeneratorOptions", "struct_generator_options.html", "struct_generator_options" ],
@@ -265,7 +264,6 @@ var annotated_dup =
     [ "JSONItem", "class_j_s_o_n_item.html", "class_j_s_o_n_item" ],
     [ "MappingError", "class_mapping_error.html", "class_mapping_error" ],
     [ "MappingOptions", "struct_mapping_options.html", "struct_mapping_options" ],
-    [ "Pet", "struct_pet.html", null ],
     [ "Reader", "class_reader.html", "class_reader" ],
     [ "ReaderContext", "class_reader_context.html", "class_reader_context" ],
     [ "WriterContext", "class_writer_context.html", "class_writer_context" ]

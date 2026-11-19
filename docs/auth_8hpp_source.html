@@ -110,23 +110,25 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('auth_8hpp_sour
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="comment">*/</span></div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &lt;string&gt;</span></div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#include &lt;string_view&gt;</span></div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span> </div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include &quot;rest/filter.hpp&quot;</span></div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &quot;anch-rest-client-export.hpp&quot;</span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &lt;string&gt;</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include &lt;string_view&gt;</span></div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
-<div class="foldopen" id="foldopen00027" data-start="{" data-end="}">
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno"><a class="line" href="namespaceanch_1_1rest.html">   27</a></span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceanch_1_1rest.html">anch::rest</a> {</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span></div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno"><a class="line" href="namespaceanch_1_1rest.html#ad71a8aa21b04ceaaf3989b1958781f8f">   39</a></span>  <a class="code hl_typedef" href="namespaceanch_1_1rest.html#a73bf9bdb415fd8a3ddfb23675dc0c876">anch::rest::Filter</a> <a class="code hl_function" href="namespaceanch_1_1rest.html#ad71a8aa21b04ceaaf3989b1958781f8f">basicAuth</a>(std::string_view user, std::string_view password);</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span></div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno"><a class="line" href="namespaceanch_1_1rest.html#a5ac5ed34612911d026d9588ec271005e">   50</a></span>  <a class="code hl_typedef" href="namespaceanch_1_1rest.html#a73bf9bdb415fd8a3ddfb23675dc0c876">anch::rest::Filter</a> <a class="code hl_function" href="namespaceanch_1_1rest.html#a5ac5ed34612911d026d9588ec271005e">bearerAuth</a>(std::string_view token);</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span></div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno"><a class="line" href="namespaceanch_1_1rest.html#a7ef4f6b4909423a684b1a7e851c30024">   61</a></span>  std::string <a class="code hl_function" href="namespaceanch_1_1rest.html#a7ef4f6b4909423a684b1a7e851c30024">base64Encode</a>(std::string_view value);</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span> </div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>}</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#include &quot;rest/filter.hpp&quot;</span></div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
+<div class="foldopen" id="foldopen00029" data-start="{" data-end="}">
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno"><a class="line" href="namespaceanch_1_1rest.html">   29</a></span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceanch_1_1rest.html">anch::rest</a> {</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span></div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno"><a class="line" href="namespaceanch_1_1rest.html#ad71a8aa21b04ceaaf3989b1958781f8f">   41</a></span>  ANCH_REST_CLIENT_EXPORT <a class="code hl_typedef" href="namespaceanch_1_1rest.html#a73bf9bdb415fd8a3ddfb23675dc0c876">anch::rest::Filter</a> <a class="code hl_function" href="namespaceanch_1_1rest.html#ad71a8aa21b04ceaaf3989b1958781f8f">basicAuth</a>(std::string_view user, std::string_view password);</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span></div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno"><a class="line" href="namespaceanch_1_1rest.html#a5ac5ed34612911d026d9588ec271005e">   52</a></span>  ANCH_REST_CLIENT_EXPORT <a class="code hl_typedef" href="namespaceanch_1_1rest.html#a73bf9bdb415fd8a3ddfb23675dc0c876">anch::rest::Filter</a> <a class="code hl_function" href="namespaceanch_1_1rest.html#a5ac5ed34612911d026d9588ec271005e">bearerAuth</a>(std::string_view token);</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span></div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno"><a class="line" href="namespaceanch_1_1rest.html#a7ef4f6b4909423a684b1a7e851c30024">   63</a></span>  ANCH_REST_CLIENT_EXPORT std::string <a class="code hl_function" href="namespaceanch_1_1rest.html#a7ef4f6b4909423a684b1a7e851c30024">base64Encode</a>(std::string_view value);</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span> </div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>}</div>
 </div>
-<div class="ttc" id="anamespaceanch_1_1rest_html"><div class="ttname"><a href="namespaceanch_1_1rest.html">anch::rest</a></div><div class="ttdoc">AnCH REST library namespace.</div><div class="ttdef"><b>Definition</b> auth.hpp:27</div></div>
+<div class="ttc" id="anamespaceanch_1_1rest_html"><div class="ttname"><a href="namespaceanch_1_1rest.html">anch::rest</a></div><div class="ttdoc">AnCH REST library namespace.</div><div class="ttdef"><b>Definition</b> auth.hpp:29</div></div>
 <div class="ttc" id="anamespaceanch_1_1rest_html_a5ac5ed34612911d026d9588ec271005e"><div class="ttname"><a href="namespaceanch_1_1rest.html#a5ac5ed34612911d026d9588ec271005e">anch::rest::bearerAuth</a></div><div class="ttdeci">anch::rest::Filter bearerAuth(std::string_view token)</div></div>
 <div class="ttc" id="anamespaceanch_1_1rest_html_a73bf9bdb415fd8a3ddfb23675dc0c876"><div class="ttname"><a href="namespaceanch_1_1rest.html#a73bf9bdb415fd8a3ddfb23675dc0c876">anch::rest::Filter</a></div><div class="ttdeci">std::function&lt; anch::rest::Response(anch::rest::Request &amp;, const anch::rest::Next &amp;)&gt; Filter</div><div class="ttdef"><b>Definition</b> filter.hpp:36</div></div>
 <div class="ttc" id="anamespaceanch_1_1rest_html_a7ef4f6b4909423a684b1a7e851c30024"><div class="ttname"><a href="namespaceanch_1_1rest.html#a7ef4f6b4909423a684b1a7e851c30024">anch::rest::base64Encode</a></div><div class="ttdeci">std::string base64Encode(std::string_view value)</div></div>

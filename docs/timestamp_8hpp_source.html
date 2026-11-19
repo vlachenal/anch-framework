@@ -110,42 +110,44 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('timestamp_8hpp
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="comment">*/</span></div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &quot;date/date.hpp&quot;</span></div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &quot;anch-sql-export.hpp&quot;</span></div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span> </div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceanch_1_1sql.html">anch::sql</a> {</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span></div>
-<div class="foldopen" id="foldopen00037" data-start="{" data-end="};">
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno"><a class="line" href="classanch_1_1sql_1_1_timestamp.html">   37</a></span>  <span class="keyword">class </span><a class="code hl_function" href="classanch_1_1sql_1_1_timestamp.html#afbc6e94a82ae263cc8cd8cea98a12ede">Timestamp</a>: <span class="keyword">public</span> <a class="code hl_class" href="classanch_1_1date_1_1_date.html">anch::date::Date</a> {</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span> </div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    <span class="comment">// Constructors +</span></div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>  <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno"><a class="line" href="classanch_1_1sql_1_1_timestamp.html#afbc6e94a82ae263cc8cd8cea98a12ede">   46</a></span>    <span class="keyword">explicit</span> <a class="code hl_function" href="classanch_1_1sql_1_1_timestamp.html#afbc6e94a82ae263cc8cd8cea98a12ede">Timestamp</a>(<span class="keywordtype">bool</span> init = <span class="keyword">true</span>);</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span></div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno"><a class="line" href="classanch_1_1sql_1_1_timestamp.html#a388ceb78ccdec68aab3b0dbe048cc970">   53</a></span>    <a class="code hl_function" href="classanch_1_1sql_1_1_timestamp.html#a388ceb78ccdec68aab3b0dbe048cc970">Timestamp</a>(<span class="keyword">const</span> <a class="code hl_class" href="classanch_1_1date_1_1_date.html">anch::date::Date</a>&amp; <a class="code hl_namespace" href="namespaceanch_1_1date.html">date</a>);</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span></div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno"><a class="line" href="classanch_1_1sql_1_1_timestamp.html#a1bdf1b2f679a9b735c508cbb596d8e8a">   60</a></span>    <a class="code hl_function" href="classanch_1_1sql_1_1_timestamp.html#a1bdf1b2f679a9b735c508cbb596d8e8a">Timestamp</a>(<span class="keyword">const</span> std::time_t&amp; time);</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span></div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno"><a class="line" href="classanch_1_1sql_1_1_timestamp.html#a1c4a1e6d2afae088c6690d5a1f4c511a">   67</a></span>    <a class="code hl_function" href="classanch_1_1sql_1_1_timestamp.html#a1c4a1e6d2afae088c6690d5a1f4c511a">Timestamp</a>(<span class="keyword">const</span> std::tm* <span class="keyword">const</span> time);</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    <span class="comment">// Constructors -</span></div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span> </div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    <span class="comment">// Destructor +</span></div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>  <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno"><a class="line" href="classanch_1_1sql_1_1_timestamp.html#af0537fa4d420e404d643ff7ac37223d2">   75</a></span>    <span class="keyword">virtual</span> <a class="code hl_function" href="classanch_1_1sql_1_1_timestamp.html#af0537fa4d420e404d643ff7ac37223d2">~Timestamp</a>();</div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    <span class="comment">// Destructor -</span></div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span> </div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>  };</div>
-</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &quot;date/date.hpp&quot;</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceanch_1_1sql.html">anch::sql</a> {</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span></div>
+<div class="foldopen" id="foldopen00039" data-start="{" data-end="};">
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno"><a class="line" href="classanch_1_1sql_1_1_timestamp.html">   39</a></span>  <span class="keyword">class </span>ANCH_SQL_EXPORT <a class="code hl_function" href="classanch_1_1sql_1_1_timestamp.html#afbc6e94a82ae263cc8cd8cea98a12ede">Timestamp</a>: <span class="keyword">public</span> <a class="code hl_class" href="classanch_1_1date_1_1_date.html">anch::date::Date</a> {</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    <span class="comment">// Constructors +</span></div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>  <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno"><a class="line" href="classanch_1_1sql_1_1_timestamp.html#afbc6e94a82ae263cc8cd8cea98a12ede">   48</a></span>    <span class="keyword">explicit</span> <a class="code hl_function" href="classanch_1_1sql_1_1_timestamp.html#afbc6e94a82ae263cc8cd8cea98a12ede">Timestamp</a>(<span class="keywordtype">bool</span> init = <span class="keyword">true</span>);</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span></div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno"><a class="line" href="classanch_1_1sql_1_1_timestamp.html#a388ceb78ccdec68aab3b0dbe048cc970">   55</a></span>    <a class="code hl_function" href="classanch_1_1sql_1_1_timestamp.html#a388ceb78ccdec68aab3b0dbe048cc970">Timestamp</a>(<span class="keyword">const</span> <a class="code hl_class" href="classanch_1_1date_1_1_date.html">anch::date::Date</a>&amp; <a class="code hl_namespace" href="namespaceanch_1_1date.html">date</a>);</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span></div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno"><a class="line" href="classanch_1_1sql_1_1_timestamp.html#a1bdf1b2f679a9b735c508cbb596d8e8a">   62</a></span>    <a class="code hl_function" href="classanch_1_1sql_1_1_timestamp.html#a1bdf1b2f679a9b735c508cbb596d8e8a">Timestamp</a>(<span class="keyword">const</span> std::time_t&amp; time);</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span></div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno"><a class="line" href="classanch_1_1sql_1_1_timestamp.html#a1c4a1e6d2afae088c6690d5a1f4c511a">   69</a></span>    <a class="code hl_function" href="classanch_1_1sql_1_1_timestamp.html#a1c4a1e6d2afae088c6690d5a1f4c511a">Timestamp</a>(<span class="keyword">const</span> std::tm* <span class="keyword">const</span> time);</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    <span class="comment">// Constructors -</span></div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span> </div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    <span class="comment">// Destructor +</span></div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>  <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno"><a class="line" href="classanch_1_1sql_1_1_timestamp.html#af0537fa4d420e404d643ff7ac37223d2">   77</a></span>    <span class="keyword">virtual</span> <a class="code hl_function" href="classanch_1_1sql_1_1_timestamp.html#af0537fa4d420e404d643ff7ac37223d2">~Timestamp</a>();</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    <span class="comment">// Destructor -</span></div>
 <div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span> </div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>}  <span class="comment">// anch::sql</span></div>
-<div class="ttc" id="aclassanch_1_1date_1_1_date_html"><div class="ttname"><a href="classanch_1_1date_1_1_date.html">anch::date::Date</a></div><div class="ttdoc">Date and time utility class.</div><div class="ttdef"><b>Definition</b> date.hpp:46</div></div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>  };</div>
+</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span> </div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>}  <span class="comment">// anch::sql</span></div>
+<div class="ttc" id="aclassanch_1_1date_1_1_date_html"><div class="ttname"><a href="classanch_1_1date_1_1_date.html">anch::date::Date</a></div><div class="ttdoc">Date and time utility class.</div><div class="ttdef"><b>Definition</b> date.hpp:48</div></div>
 <div class="ttc" id="aclassanch_1_1sql_1_1_timestamp_html_a1bdf1b2f679a9b735c508cbb596d8e8a"><div class="ttname"><a href="classanch_1_1sql_1_1_timestamp.html#a1bdf1b2f679a9b735c508cbb596d8e8a">anch::sql::Timestamp::Timestamp</a></div><div class="ttdeci">Timestamp(const std::time_t &amp;time)</div></div>
 <div class="ttc" id="aclassanch_1_1sql_1_1_timestamp_html_a1c4a1e6d2afae088c6690d5a1f4c511a"><div class="ttname"><a href="classanch_1_1sql_1_1_timestamp.html#a1c4a1e6d2afae088c6690d5a1f4c511a">anch::sql::Timestamp::Timestamp</a></div><div class="ttdeci">Timestamp(const std::tm *const time)</div></div>
 <div class="ttc" id="aclassanch_1_1sql_1_1_timestamp_html_a388ceb78ccdec68aab3b0dbe048cc970"><div class="ttname"><a href="classanch_1_1sql_1_1_timestamp.html#a388ceb78ccdec68aab3b0dbe048cc970">anch::sql::Timestamp::Timestamp</a></div><div class="ttdeci">Timestamp(const anch::date::Date &amp;date)</div></div>
 <div class="ttc" id="aclassanch_1_1sql_1_1_timestamp_html_af0537fa4d420e404d643ff7ac37223d2"><div class="ttname"><a href="classanch_1_1sql_1_1_timestamp.html#af0537fa4d420e404d643ff7ac37223d2">anch::sql::Timestamp::~Timestamp</a></div><div class="ttdeci">virtual ~Timestamp()</div></div>
 <div class="ttc" id="aclassanch_1_1sql_1_1_timestamp_html_afbc6e94a82ae263cc8cd8cea98a12ede"><div class="ttname"><a href="classanch_1_1sql_1_1_timestamp.html#afbc6e94a82ae263cc8cd8cea98a12ede">anch::sql::Timestamp::Timestamp</a></div><div class="ttdeci">Timestamp(bool init=true)</div></div>
 <div class="ttc" id="anamespaceanch_1_1date_html"><div class="ttname"><a href="namespaceanch_1_1date.html">anch::date</a></div><div class="ttdoc">Date namespace.</div></div>
-<div class="ttc" id="anamespaceanch_1_1sql_html"><div class="ttname"><a href="namespaceanch_1_1sql.html">anch::sql</a></div><div class="ttdoc">SQL namespace.</div><div class="ttdef"><b>Definition</b> clauses.hpp:25</div></div>
+<div class="ttc" id="anamespaceanch_1_1sql_html"><div class="ttname"><a href="namespaceanch_1_1sql.html">anch::sql</a></div><div class="ttdoc">SQL namespace.</div><div class="ttdef"><b>Definition</b> clauses.hpp:27</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->

@@ -182,6 +182,7 @@ var NAVTREE =
       [ "Conception", "page_uuid.html#uuid_concept_sec", null ],
       [ "Examples", "page_uuid.html#uuid_example_sec", null ]
     ] ],
+    [ "Changelog", "changelog.html", null ],
     [ "Todo List", "todo.html", null ],
     [ "Deprecated List", "deprecated.html", null ],
     [ "Namespaces", "namespaces.html", [
@@ -222,25 +223,25 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "address_8hpp_source.html",
-"classanch_1_1_resource_pool.html#a5a291318acf21f63205de5bd3307e04c",
-"classanch_1_1conf_1_1_parsers.html#ac00f889c4ea5180bd8e3593299045131",
-"classanch_1_1crypto_1_1_o_f_b.html#a58b7de20f6e16d4bab7967cf0cf84038",
-"classanch_1_1device_1_1_c_p_u.html#abefe81f6d24c523f86c98bd0b5eb341a",
-"classanch_1_1json_1_1_j_s_o_n_item.html#acfa8740cc621ba8e70d0dfb0fc35b37e",
-"classanch_1_1log_1_1_log_line.html#af69b41a932ab363c071df506425e95e1",
-"classanch_1_1network_1_1_socket.html#a23744fd20f0e8d60ebfe5c8d3772865a",
-"classanch_1_1rest_1_1_form.html#a8595175d408e5fca88b5c15a619b267e",
-"classanch_1_1rest_1_1_route.html#a6bfc81eea01e023f26556b5bcf793841",
-"classanch_1_1sql_1_1_from_builder.html#a0ec29dde42dd560aa7b463ef71766f60",
-"classanch_1_1sql_1_1_prepared_statement.html#ae01b343dd9c1832fca21c70e2fa9bb9a",
-"classanch_1_1ut_1_1_runner.html#ac23720f52373ecb83e296ad964b2f68a",
-"functions_func.html",
-"namespaceanch_1_1json.html#a48b8d7d97e075724a1642acebb821c66",
-"namespaceanch_1_1rest_1_1nginx.html#ac4ec59565e0671a0903ac24f69579e95",
-"socket_client_runner_8hpp_source.html",
-"structanch_1_1json_1_1_min_length.html",
-"structanch_1_1oas_1_1_schema.html#a97f61716a1fb14e8c19a6dfe4d9df83c",
-"structanch_1_1sql_1_1_sql_syntax.html#aca6f79c3c1b3f829b2a04521e682c4b6"
+"classanch_1_1_thread_pool.html#a045c755831a446a635fd84dc692ea84a",
+"classanch_1_1conf_1_1_resolvers.html#abd380e53bb4e25bc67e89770d01341ce",
+"classanch_1_1crypto_1_1_s_h_a1.html#a55a3a571379d6f800852bc8111b79946",
+"classanch_1_1device_1_1_network_interface.html#a7837e8f5e4a094b88d3ed1b17ec10a21",
+"classanch_1_1json_1_1_j_s_o_n_mapper.html#ad144bceb726b95da8ff7fae9a2f6e569",
+"classanch_1_1log_1_1_logger_configuration.html#a67b81e8571819e6e78f05df920c87f18",
+"classanch_1_1network_1_1_socket.html#aa78cedf7ab558fb738a7b63a96080631",
+"classanch_1_1rest_1_1_grpc_server.html#a9e550a41891cd21cb1aad489ce7ccc06",
+"classanch_1_1rest_1_1_rpc_service.html#a5eda5d224e2c81b032a39b5060f15cc4",
+"classanch_1_1sql_1_1_from_builder.html#a6ff56cc253e3aadc0739fe85bf29e2c5",
+"classanch_1_1sql_1_1_result_set.html#addd83c86b69035c36b08ce630ad59f53",
+"classanch_1_1ut_1_1_thread_errors.html",
+"functions_m.html",
+"namespaceanch_1_1json.html#a87cb151db562b4642136e63bc53b2f46",
+"namespaceanch_1_1sql.html#af53bcf90daa6aca27302328cb24c97ee",
+"struct_mapping_options.html#a5f8e3a33251408da358e8a9932993bf1",
+"structanch_1_1json_1_1_pattern.html#a1fb64154809113e6c339d5e7124a1c1e",
+"structanch_1_1rest_1_1_case_insensitive_less.html#a668efe2dcb08d341408e409e5e32ed44",
+"structanch__rest__body__reader__t.html#aa354e5f8160f5c0e48668d044c98aa64"
 ];
 
 const SYNCONMSG = 'click to disable panel synchronization';

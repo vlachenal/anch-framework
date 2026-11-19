@@ -110,33 +110,35 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('runner_8hpp_so
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="comment">*/</span></div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &lt;string&gt;</span></div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#include &lt;cstdint&gt;</span></div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span> </div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceanch_1_1ut.html">anch::ut</a> {</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span></div>
-<div class="foldopen" id="foldopen00036" data-start="{" data-end="};">
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno"><a class="line" href="classanch_1_1ut_1_1_runner.html">   36</a></span>  <span class="keyword">class </span><a class="code hl_class" href="classanch_1_1ut_1_1_runner.html">Runner</a> {</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>  <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno"><a class="line" href="classanch_1_1ut_1_1_runner.html#ad923c04e5f91cae8ab9c18e3d9bca9fe">   42</a></span>    <span class="keyword">virtual</span> <a class="code hl_function" href="classanch_1_1ut_1_1_runner.html#ad923c04e5f91cae8ab9c18e3d9bca9fe">~Runner</a>() = <span class="keywordflow">default</span>;</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span></div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno"><a class="line" href="classanch_1_1ut_1_1_runner.html#a7623d902838ad934b4aa245b7e77ad36">   49</a></span>    <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="classanch_1_1ut_1_1_runner.html#a7623d902838ad934b4aa245b7e77ad36">startup</a>() = 0;</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span></div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno"><a class="line" href="classanch_1_1ut_1_1_runner.html#a17f3e3d7b00c21e69a56bc5c6fdcbfd3">   56</a></span>    <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="classanch_1_1ut_1_1_runner.html#a17f3e3d7b00c21e69a56bc5c6fdcbfd3">shutdown</a>() = 0;</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span></div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno"><a class="line" href="classanch_1_1ut_1_1_runner.html#ac23720f52373ecb83e296ad964b2f68a">   65</a></span>    <span class="keyword">virtual</span> uint16_t <a class="code hl_function" href="classanch_1_1ut_1_1_runner.html#ac23720f52373ecb83e296ad964b2f68a">test</a>(<span class="keyword">const</span> std::string&amp; <a class="code hl_function" href="classanch_1_1ut_1_1_runner.html#ac23720f52373ecb83e296ad964b2f68a">test</a>) = 0;</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span> </div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>  };</div>
-</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &quot;anch-ut-export.hpp&quot;</span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &lt;string&gt;</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include &lt;cstdint&gt;</span></div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceanch_1_1ut.html">anch::ut</a> {</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span></div>
+<div class="foldopen" id="foldopen00038" data-start="{" data-end="};">
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno"><a class="line" href="classanch_1_1ut_1_1_runner.html">   38</a></span>  <span class="keyword">class </span>ANCH_UT_EXPORT <a class="code hl_class" href="classanch_1_1ut_1_1_runner.html">Runner</a> {</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>  <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno"><a class="line" href="classanch_1_1ut_1_1_runner.html#ad923c04e5f91cae8ab9c18e3d9bca9fe">   44</a></span>    <span class="keyword">virtual</span> <a class="code hl_function" href="classanch_1_1ut_1_1_runner.html#ad923c04e5f91cae8ab9c18e3d9bca9fe">~Runner</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span></div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno"><a class="line" href="classanch_1_1ut_1_1_runner.html#a7623d902838ad934b4aa245b7e77ad36">   51</a></span>    <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="classanch_1_1ut_1_1_runner.html#a7623d902838ad934b4aa245b7e77ad36">startup</a>() = 0;</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span></div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno"><a class="line" href="classanch_1_1ut_1_1_runner.html#a17f3e3d7b00c21e69a56bc5c6fdcbfd3">   58</a></span>    <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="classanch_1_1ut_1_1_runner.html#a17f3e3d7b00c21e69a56bc5c6fdcbfd3">shutdown</a>() = 0;</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span></div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno"><a class="line" href="classanch_1_1ut_1_1_runner.html#ac23720f52373ecb83e296ad964b2f68a">   67</a></span>    <span class="keyword">virtual</span> uint16_t <a class="code hl_function" href="classanch_1_1ut_1_1_runner.html#ac23720f52373ecb83e296ad964b2f68a">test</a>(<span class="keyword">const</span> std::string&amp; <a class="code hl_function" href="classanch_1_1ut_1_1_runner.html#ac23720f52373ecb83e296ad964b2f68a">test</a>) = 0;</div>
 <div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span> </div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>}  <span class="comment">// anch::ut</span></div>
-<div class="ttc" id="aclassanch_1_1ut_1_1_runner_html"><div class="ttname"><a href="classanch_1_1ut_1_1_runner.html">anch::ut::Runner</a></div><div class="ttdoc">Unit tests runner.</div><div class="ttdef"><b>Definition</b> runner.hpp:36</div></div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>  };</div>
+</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span> </div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>}  <span class="comment">// anch::ut</span></div>
+<div class="ttc" id="aclassanch_1_1ut_1_1_runner_html"><div class="ttname"><a href="classanch_1_1ut_1_1_runner.html">anch::ut::Runner</a></div><div class="ttdoc">Unit tests runner.</div><div class="ttdef"><b>Definition</b> runner.hpp:38</div></div>
 <div class="ttc" id="aclassanch_1_1ut_1_1_runner_html_a17f3e3d7b00c21e69a56bc5c6fdcbfd3"><div class="ttname"><a href="classanch_1_1ut_1_1_runner.html#a17f3e3d7b00c21e69a56bc5c6fdcbfd3">anch::ut::Runner::shutdown</a></div><div class="ttdeci">virtual bool shutdown()=0</div></div>
 <div class="ttc" id="aclassanch_1_1ut_1_1_runner_html_a7623d902838ad934b4aa245b7e77ad36"><div class="ttname"><a href="classanch_1_1ut_1_1_runner.html#a7623d902838ad934b4aa245b7e77ad36">anch::ut::Runner::startup</a></div><div class="ttdeci">virtual bool startup()=0</div></div>
 <div class="ttc" id="aclassanch_1_1ut_1_1_runner_html_ac23720f52373ecb83e296ad964b2f68a"><div class="ttname"><a href="classanch_1_1ut_1_1_runner.html#ac23720f52373ecb83e296ad964b2f68a">anch::ut::Runner::test</a></div><div class="ttdeci">virtual uint16_t test(const std::string &amp;test)=0</div></div>
 <div class="ttc" id="aclassanch_1_1ut_1_1_runner_html_ad923c04e5f91cae8ab9c18e3d9bca9fe"><div class="ttname"><a href="classanch_1_1ut_1_1_runner.html#ad923c04e5f91cae8ab9c18e3d9bca9fe">anch::ut::Runner::~Runner</a></div><div class="ttdeci">virtual ~Runner()=default</div></div>
-<div class="ttc" id="anamespaceanch_1_1ut_html"><div class="ttname"><a href="namespaceanch_1_1ut.html">anch::ut</a></div><div class="ttdoc">AnCH unit tests library namespace.</div><div class="ttdef"><b>Definition</b> assert.hpp:35</div></div>
+<div class="ttc" id="anamespaceanch_1_1ut_html"><div class="ttname"><a href="namespaceanch_1_1ut.html">anch::ut</a></div><div class="ttdoc">AnCH unit tests library namespace.</div><div class="ttdef"><b>Definition</b> assert.hpp:37</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->

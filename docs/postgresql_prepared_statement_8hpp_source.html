@@ -111,63 +111,65 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('postgresql_pre
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#ifdef ANCH_SQL_POSTGRESQL</span></div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span> </div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#include &quot;sql/preparedStatement.hpp&quot;</span></div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &quot;sql/postgresqlConnection.hpp&quot;</span></div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#include &lt;atomic&gt;</span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#include &quot;anch-postgresql-export.hpp&quot;</span></div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span> </div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include &quot;sql/preparedStatement.hpp&quot;</span></div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#include &quot;sql/postgresqlConnection.hpp&quot;</span></div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="keyword">typedef</span> <span class="keyword">struct </span>pg_conn PGconn;</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="preprocessor">#include &lt;atomic&gt;</span></div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceanch_1_1sql.html">anch::sql</a> {</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="keyword">typedef</span> <span class="keyword">struct </span>pg_conn PGconn;</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span> </div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>  <span class="keyword">class </span><a class="code hl_class" href="classanch_1_1sql_1_1_postgre_s_q_l_connection.html">PostgreSQLConnection</a>;</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span></div>
-<div class="foldopen" id="foldopen00044" data-start="{" data-end="};">
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno"><a class="line" href="classanch_1_1sql_1_1_postgre_s_q_l_prepared_statement.html">   44</a></span>  <span class="keyword">class </span><a class="code hl_function" href="classanch_1_1sql_1_1_postgre_s_q_l_prepared_statement.html#a3572d28981e476f77484955e21496e2a">PostgreSQLPreparedStatement</a>: <span class="keyword">public</span> <a class="code hl_function" href="classanch_1_1sql_1_1_prepared_statement.html#a33fa75d310483ea08d42db3ef53a09cd">PreparedStatement</a> {</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span> </div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    <span class="comment">// Attributes +</span></div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>  <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    <span class="keyword">static</span> std::atomic&lt;std::uint64_t&gt; _counter;</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span></div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    PGconn* _conn;</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span></div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    std::string _stmtId;</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    <span class="comment">// Attributes -</span></div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    <span class="comment">// Constructors +</span></div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>  <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno"><a class="line" href="classanch_1_1sql_1_1_postgre_s_q_l_prepared_statement.html#a3572d28981e476f77484955e21496e2a">   68</a></span>    <a class="code hl_function" href="classanch_1_1sql_1_1_postgre_s_q_l_prepared_statement.html#a3572d28981e476f77484955e21496e2a">PostgreSQLPreparedStatement</a>(PGconn* dbCon, <span class="keyword">const</span> std::string&amp; query);</div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    <span class="comment">// Constructors -</span></div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span> </div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    <span class="comment">// Destructor +</span></div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>  <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno"><a class="line" href="classanch_1_1sql_1_1_postgre_s_q_l_prepared_statement.html#a1a3baf9733557d9cc2f5ec69c8b70515">   76</a></span>    <span class="keyword">virtual</span> <a class="code hl_function" href="classanch_1_1sql_1_1_postgre_s_q_l_prepared_statement.html#a1a3baf9733557d9cc2f5ec69c8b70515">~PostgreSQLPreparedStatement</a>() noexcept;</div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>    <span class="comment">// Destructor -</span></div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span> </div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    <span class="comment">// Methods +</span></div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>  protected:</div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno"><a class="line" href="classanch_1_1sql_1_1_postgre_s_q_l_prepared_statement.html#a0155fb3918cac989426721330a56e550">   88</a></span>    virtual ResultSet* <a class="code hl_function" href="classanch_1_1sql_1_1_postgre_s_q_l_prepared_statement.html#a0155fb3918cac989426721330a56e550">doExecuteQuery</a>() override;</div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span></div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno"><a class="line" href="classanch_1_1sql_1_1_postgre_s_q_l_prepared_statement.html#affeb2354686b7e5af06ebe341c003f09">   97</a></span>    virtual uint64_t <a class="code hl_function" href="classanch_1_1sql_1_1_postgre_s_q_l_prepared_statement.html#affeb2354686b7e5af06ebe341c003f09">doExecuteUpdate</a>() override;</div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span></div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno"><a class="line" href="classanch_1_1sql_1_1_postgre_s_q_l_prepared_statement.html#a2fcbbdd12ba5fa4b7d930ce23ea087b9">  104</a></span>    virtual <span class="keywordtype">void</span> <a class="code hl_function" href="classanch_1_1sql_1_1_postgre_s_q_l_prepared_statement.html#a2fcbbdd12ba5fa4b7d930ce23ea087b9">deallocate</a>() noexcept override;</div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>    <span class="comment">// Methods -</span></div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span> </div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>  };</div>
-</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceanch_1_1sql.html">anch::sql</a> {</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span> </div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>  <span class="keyword">class </span><a class="code hl_class" href="classanch_1_1sql_1_1_postgre_s_q_l_connection.html">PostgreSQLConnection</a>;</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span></div>
+<div class="foldopen" id="foldopen00046" data-start="{" data-end="};">
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno"><a class="line" href="classanch_1_1sql_1_1_postgre_s_q_l_prepared_statement.html">   46</a></span>  <span class="keyword">class </span>ANCH_POSTGRESQL_EXPORT <a class="code hl_function" href="classanch_1_1sql_1_1_postgre_s_q_l_prepared_statement.html#a3572d28981e476f77484955e21496e2a">PostgreSQLPreparedStatement</a>: <span class="keyword">public</span> <a class="code hl_function" href="classanch_1_1sql_1_1_prepared_statement.html#a33fa75d310483ea08d42db3ef53a09cd">PreparedStatement</a> {</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    <span class="comment">// Attributes +</span></div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>  <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    <span class="keyword">static</span> std::atomic&lt;std::uint64_t&gt; _counter;</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span></div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    PGconn* _conn;</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span></div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    std::string _stmtId;</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    <span class="comment">// Attributes -</span></div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span> </div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    <span class="comment">// Constructors +</span></div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>  <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno"><a class="line" href="classanch_1_1sql_1_1_postgre_s_q_l_prepared_statement.html#a3572d28981e476f77484955e21496e2a">   70</a></span>    <a class="code hl_function" href="classanch_1_1sql_1_1_postgre_s_q_l_prepared_statement.html#a3572d28981e476f77484955e21496e2a">PostgreSQLPreparedStatement</a>(PGconn* dbCon, <span class="keyword">const</span> std::string&amp; query);</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    <span class="comment">// Constructors -</span></div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span> </div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    <span class="comment">// Destructor +</span></div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>  <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno"><a class="line" href="classanch_1_1sql_1_1_postgre_s_q_l_prepared_statement.html#a1a3baf9733557d9cc2f5ec69c8b70515">   78</a></span>    <span class="keyword">virtual</span> <a class="code hl_function" href="classanch_1_1sql_1_1_postgre_s_q_l_prepared_statement.html#a1a3baf9733557d9cc2f5ec69c8b70515">~PostgreSQLPreparedStatement</a>() noexcept;</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    <span class="comment">// Destructor -</span></div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span> </div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    <span class="comment">// Methods +</span></div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>  protected:</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno"><a class="line" href="classanch_1_1sql_1_1_postgre_s_q_l_prepared_statement.html#a0155fb3918cac989426721330a56e550">   90</a></span>    virtual ResultSet* <a class="code hl_function" href="classanch_1_1sql_1_1_postgre_s_q_l_prepared_statement.html#a0155fb3918cac989426721330a56e550">doExecuteQuery</a>() override;</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span></div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno"><a class="line" href="classanch_1_1sql_1_1_postgre_s_q_l_prepared_statement.html#affeb2354686b7e5af06ebe341c003f09">   99</a></span>    virtual uint64_t <a class="code hl_function" href="classanch_1_1sql_1_1_postgre_s_q_l_prepared_statement.html#affeb2354686b7e5af06ebe341c003f09">doExecuteUpdate</a>() override;</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span></div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno"><a class="line" href="classanch_1_1sql_1_1_postgre_s_q_l_prepared_statement.html#a2fcbbdd12ba5fa4b7d930ce23ea087b9">  106</a></span>    virtual <span class="keywordtype">void</span> <a class="code hl_function" href="classanch_1_1sql_1_1_postgre_s_q_l_prepared_statement.html#a2fcbbdd12ba5fa4b7d930ce23ea087b9">deallocate</a>() noexcept override;</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>    <span class="comment">// Methods -</span></div>
 <div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span> </div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>}  <span class="comment">// anch::sql</span></div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>  };</div>
+</div>
 <div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span> </div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span><span class="preprocessor">#endif </span><span class="comment">// ANCH_SQL_POSTGRESQL</span></div>
-<div class="ttc" id="aclassanch_1_1sql_1_1_postgre_s_q_l_connection_html"><div class="ttname"><a href="classanch_1_1sql_1_1_postgre_s_q_l_connection.html">anch::sql::PostgreSQLConnection</a></div><div class="ttdoc">PostgreSQL connection.</div><div class="ttdef"><b>Definition</b> postgresqlConnection.hpp:69</div></div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>}  <span class="comment">// anch::sql</span></div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span> </div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span><span class="preprocessor">#endif </span><span class="comment">// ANCH_SQL_POSTGRESQL</span></div>
+<div class="ttc" id="aclassanch_1_1sql_1_1_postgre_s_q_l_connection_html"><div class="ttname"><a href="classanch_1_1sql_1_1_postgre_s_q_l_connection.html">anch::sql::PostgreSQLConnection</a></div><div class="ttdoc">PostgreSQL connection.</div><div class="ttdef"><b>Definition</b> postgresqlConnection.hpp:71</div></div>
 <div class="ttc" id="aclassanch_1_1sql_1_1_postgre_s_q_l_prepared_statement_html_a0155fb3918cac989426721330a56e550"><div class="ttname"><a href="classanch_1_1sql_1_1_postgre_s_q_l_prepared_statement.html#a0155fb3918cac989426721330a56e550">anch::sql::PostgreSQLPreparedStatement::doExecuteQuery</a></div><div class="ttdeci">virtual ResultSet * doExecuteQuery() override</div></div>
 <div class="ttc" id="aclassanch_1_1sql_1_1_postgre_s_q_l_prepared_statement_html_a1a3baf9733557d9cc2f5ec69c8b70515"><div class="ttname"><a href="classanch_1_1sql_1_1_postgre_s_q_l_prepared_statement.html#a1a3baf9733557d9cc2f5ec69c8b70515">anch::sql::PostgreSQLPreparedStatement::~PostgreSQLPreparedStatement</a></div><div class="ttdeci">virtual ~PostgreSQLPreparedStatement() noexcept</div></div>
 <div class="ttc" id="aclassanch_1_1sql_1_1_postgre_s_q_l_prepared_statement_html_a2fcbbdd12ba5fa4b7d930ce23ea087b9"><div class="ttname"><a href="classanch_1_1sql_1_1_postgre_s_q_l_prepared_statement.html#a2fcbbdd12ba5fa4b7d930ce23ea087b9">anch::sql::PostgreSQLPreparedStatement::deallocate</a></div><div class="ttdeci">virtual void deallocate() noexcept override</div></div>
 <div class="ttc" id="aclassanch_1_1sql_1_1_postgre_s_q_l_prepared_statement_html_a3572d28981e476f77484955e21496e2a"><div class="ttname"><a href="classanch_1_1sql_1_1_postgre_s_q_l_prepared_statement.html#a3572d28981e476f77484955e21496e2a">anch::sql::PostgreSQLPreparedStatement::PostgreSQLPreparedStatement</a></div><div class="ttdeci">PostgreSQLPreparedStatement(PGconn *dbCon, const std::string &amp;query)</div></div>
 <div class="ttc" id="aclassanch_1_1sql_1_1_postgre_s_q_l_prepared_statement_html_affeb2354686b7e5af06ebe341c003f09"><div class="ttname"><a href="classanch_1_1sql_1_1_postgre_s_q_l_prepared_statement.html#affeb2354686b7e5af06ebe341c003f09">anch::sql::PostgreSQLPreparedStatement::doExecuteUpdate</a></div><div class="ttdeci">virtual uint64_t doExecuteUpdate() override</div></div>
 <div class="ttc" id="aclassanch_1_1sql_1_1_prepared_statement_html_a33fa75d310483ea08d42db3ef53a09cd"><div class="ttname"><a href="classanch_1_1sql_1_1_prepared_statement.html#a33fa75d310483ea08d42db3ef53a09cd">anch::sql::PreparedStatement::PreparedStatement</a></div><div class="ttdeci">PreparedStatement() noexcept</div></div>
-<div class="ttc" id="anamespaceanch_1_1sql_html"><div class="ttname"><a href="namespaceanch_1_1sql.html">anch::sql</a></div><div class="ttdoc">SQL namespace.</div><div class="ttdef"><b>Definition</b> clauses.hpp:25</div></div>
+<div class="ttc" id="anamespaceanch_1_1sql_html"><div class="ttname"><a href="namespaceanch_1_1sql.html">anch::sql</a></div><div class="ttdoc">SQL namespace.</div><div class="ttdef"><b>Definition</b> clauses.hpp:27</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->

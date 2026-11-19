@@ -110,61 +110,63 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('file_writer_8h
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="comment">*/</span></div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &lt;cstdint&gt;</span></div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#include &lt;fstream&gt;</span></div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &lt;filesystem&gt;</span></div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#include &quot;log/writer.hpp&quot;</span></div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &quot;anch-log-export.hpp&quot;</span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &lt;cstdint&gt;</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include &lt;fstream&gt;</span></div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#include &lt;filesystem&gt;</span></div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceanch_1_1log.html">anch::log</a> {</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span></div>
-<div class="foldopen" id="foldopen00049" data-start="{" data-end="};">
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno"><a class="line" href="classanch_1_1log_1_1_file_writer.html">   49</a></span>  <span class="keyword">class </span><a class="code hl_function" href="classanch_1_1log_1_1_file_writer.html#ac0fa34a9ff97c87a7868a385e4b6ec88">FileWriter</a>: <span class="keyword">public</span> <a class="code hl_function" href="classanch_1_1log_1_1_writer.html#a76c23e3d9cfd2512b7482102930618a5">Writer</a> {</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    <span class="comment">// Attributes +</span></div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>  <span class="keyword">protected</span>:</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno"><a class="line" href="classanch_1_1log_1_1_file_writer.html#a03003eb39843482c10a37c6cad0b7d1b">   54</a></span>    std::ofstream <a class="code hl_variable" href="classanch_1_1log_1_1_file_writer.html#a03003eb39843482c10a37c6cad0b7d1b">_output</a>;</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span></div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno"><a class="line" href="classanch_1_1log_1_1_file_writer.html#a4dd3f0330811cccf828cd93df81d97fb">   57</a></span>    std::filesystem::path <a class="code hl_variable" href="classanch_1_1log_1_1_file_writer.html#a4dd3f0330811cccf828cd93df81d97fb">_path</a>;</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span></div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno"><a class="line" href="classanch_1_1log_1_1_file_writer.html#a57dafd739e0c2f4b0f1ded767867e491">   60</a></span>    std::uint64_t <a class="code hl_variable" href="classanch_1_1log_1_1_file_writer.html#a57dafd739e0c2f4b0f1ded767867e491">_maxSize</a>;</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span></div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno"><a class="line" href="classanch_1_1log_1_1_file_writer.html#a372c950ef43a6e0bffc3750a6d148b6a">   63</a></span>    std::uint32_t <a class="code hl_variable" href="classanch_1_1log_1_1_file_writer.html#a372c950ef43a6e0bffc3750a6d148b6a">_maxFiles</a>;</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    <span class="comment">// Attributes -</span></div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span> </div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    <span class="comment">// Constructors +</span></div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>  <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno"><a class="line" href="classanch_1_1log_1_1_file_writer.html#ac0fa34a9ff97c87a7868a385e4b6ec88">   75</a></span>    <a class="code hl_function" href="classanch_1_1log_1_1_file_writer.html#ac0fa34a9ff97c87a7868a385e4b6ec88">FileWriter</a>(<span class="keyword">const</span> <a class="code hl_typedef" href="namespaceanch_1_1conf.html#a5b3f38f25b7b1c067807c098f13eaaac">anch::conf::Section</a>&amp; <a class="code hl_namespace" href="namespaceanch_1_1conf.html">conf</a>);</div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    <span class="comment">// Constructors -</span></div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span> </div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    <span class="comment">// Destructor +</span></div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>  <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno"><a class="line" href="classanch_1_1log_1_1_file_writer.html#a6bfdbe1edc63a88dcef5bb4cda73cafd">   83</a></span>    <span class="keyword">virtual</span> <a class="code hl_function" href="classanch_1_1log_1_1_file_writer.html#a6bfdbe1edc63a88dcef5bb4cda73cafd">~FileWriter</a>();</div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>    <span class="comment">// Destructor -</span></div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span> </div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>    <span class="comment">// Methods +</span></div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>  <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno"><a class="line" href="classanch_1_1log_1_1_file_writer.html#a6b53eb1afc7a2f17cb8326f3dfb46d6f">   94</a></span>    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classanch_1_1log_1_1_file_writer.html#a6b53eb1afc7a2f17cb8326f3dfb46d6f">write</a>(<span class="keyword">const</span> std::string&amp; message);</div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span> </div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>  <span class="keyword">protected</span>:</div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno"><a class="line" href="classanch_1_1log_1_1_file_writer.html#aeef5d323784571ab6dec0999403364ca">  102</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classanch_1_1log_1_1_file_writer.html#aeef5d323784571ab6dec0999403364ca">writeLine</a>(<span class="keyword">const</span> std::string&amp; line);</div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span></div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno"><a class="line" href="classanch_1_1log_1_1_file_writer.html#af7fdcd3e59e843e472a9180832ab6db4">  109</a></span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classanch_1_1log_1_1_file_writer.html#af7fdcd3e59e843e472a9180832ab6db4">rotate</a>();</div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span></div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno"><a class="line" href="classanch_1_1log_1_1_file_writer.html#a973cecb3df6fc598d65e1f399434d070">  114</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classanch_1_1log_1_1_file_writer.html#a973cecb3df6fc598d65e1f399434d070">rotateFiles</a>();</div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span></div>
-<div class="line"><a id="l00123" name="l00123"></a><span class="lineno"><a class="line" href="classanch_1_1log_1_1_file_writer.html#a964ff59467f652c2312642dcf6205013">  123</a></span>    std::filesystem::path <a class="code hl_function" href="classanch_1_1log_1_1_file_writer.html#a964ff59467f652c2312642dcf6205013">archive</a>(std::uint32_t index) <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>    <span class="comment">// Methods -</span></div>
-<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span> </div>
-<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>  };</div>
-</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="preprocessor">#include &quot;log/writer.hpp&quot;</span></div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceanch_1_1log.html">anch::log</a> {</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span></div>
+<div class="foldopen" id="foldopen00051" data-start="{" data-end="};">
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno"><a class="line" href="classanch_1_1log_1_1_file_writer.html">   51</a></span>  <span class="keyword">class </span>ANCH_LOG_EXPORT <a class="code hl_function" href="classanch_1_1log_1_1_file_writer.html#ac0fa34a9ff97c87a7868a385e4b6ec88">FileWriter</a>: <span class="keyword">public</span> <a class="code hl_function" href="classanch_1_1log_1_1_writer.html#a76c23e3d9cfd2512b7482102930618a5">Writer</a> {</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span> </div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    <span class="comment">// Attributes +</span></div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>  <span class="keyword">protected</span>:</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno"><a class="line" href="classanch_1_1log_1_1_file_writer.html#a03003eb39843482c10a37c6cad0b7d1b">   56</a></span>    std::ofstream <a class="code hl_variable" href="classanch_1_1log_1_1_file_writer.html#a03003eb39843482c10a37c6cad0b7d1b">_output</a>;</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span></div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno"><a class="line" href="classanch_1_1log_1_1_file_writer.html#a4dd3f0330811cccf828cd93df81d97fb">   59</a></span>    std::filesystem::path <a class="code hl_variable" href="classanch_1_1log_1_1_file_writer.html#a4dd3f0330811cccf828cd93df81d97fb">_path</a>;</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span></div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno"><a class="line" href="classanch_1_1log_1_1_file_writer.html#a57dafd739e0c2f4b0f1ded767867e491">   62</a></span>    std::uint64_t <a class="code hl_variable" href="classanch_1_1log_1_1_file_writer.html#a57dafd739e0c2f4b0f1ded767867e491">_maxSize</a>;</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span></div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno"><a class="line" href="classanch_1_1log_1_1_file_writer.html#a372c950ef43a6e0bffc3750a6d148b6a">   65</a></span>    std::uint32_t <a class="code hl_variable" href="classanch_1_1log_1_1_file_writer.html#a372c950ef43a6e0bffc3750a6d148b6a">_maxFiles</a>;</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    <span class="comment">// Attributes -</span></div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span> </div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    <span class="comment">// Constructors +</span></div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>  <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno"><a class="line" href="classanch_1_1log_1_1_file_writer.html#ac0fa34a9ff97c87a7868a385e4b6ec88">   77</a></span>    <a class="code hl_function" href="classanch_1_1log_1_1_file_writer.html#ac0fa34a9ff97c87a7868a385e4b6ec88">FileWriter</a>(<span class="keyword">const</span> <a class="code hl_typedef" href="namespaceanch_1_1conf.html#a5b3f38f25b7b1c067807c098f13eaaac">anch::conf::Section</a>&amp; <a class="code hl_namespace" href="namespaceanch_1_1conf.html">conf</a>);</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    <span class="comment">// Constructors -</span></div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span> </div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    <span class="comment">// Destructor +</span></div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>  <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno"><a class="line" href="classanch_1_1log_1_1_file_writer.html#a6bfdbe1edc63a88dcef5bb4cda73cafd">   85</a></span>    <span class="keyword">virtual</span> <a class="code hl_function" href="classanch_1_1log_1_1_file_writer.html#a6bfdbe1edc63a88dcef5bb4cda73cafd">~FileWriter</a>();</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>    <span class="comment">// Destructor -</span></div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span> </div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>    <span class="comment">// Methods +</span></div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>  <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno"><a class="line" href="classanch_1_1log_1_1_file_writer.html#a6b53eb1afc7a2f17cb8326f3dfb46d6f">   96</a></span>    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classanch_1_1log_1_1_file_writer.html#a6b53eb1afc7a2f17cb8326f3dfb46d6f">write</a>(<span class="keyword">const</span> std::string&amp; message);</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span> </div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>  <span class="keyword">protected</span>:</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno"><a class="line" href="classanch_1_1log_1_1_file_writer.html#aeef5d323784571ab6dec0999403364ca">  104</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classanch_1_1log_1_1_file_writer.html#aeef5d323784571ab6dec0999403364ca">writeLine</a>(<span class="keyword">const</span> std::string&amp; line);</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span></div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno"><a class="line" href="classanch_1_1log_1_1_file_writer.html#af7fdcd3e59e843e472a9180832ab6db4">  111</a></span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classanch_1_1log_1_1_file_writer.html#af7fdcd3e59e843e472a9180832ab6db4">rotate</a>();</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span></div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno"><a class="line" href="classanch_1_1log_1_1_file_writer.html#a973cecb3df6fc598d65e1f399434d070">  116</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classanch_1_1log_1_1_file_writer.html#a973cecb3df6fc598d65e1f399434d070">rotateFiles</a>();</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span></div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno"><a class="line" href="classanch_1_1log_1_1_file_writer.html#a964ff59467f652c2312642dcf6205013">  125</a></span>    std::filesystem::path <a class="code hl_function" href="classanch_1_1log_1_1_file_writer.html#a964ff59467f652c2312642dcf6205013">archive</a>(std::uint32_t index) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>    <span class="comment">// Methods -</span></div>
 <div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span> </div>
-<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>}</div>
-<div class="ttc" id="aclassanch_1_1log_1_1_file_writer_html_a03003eb39843482c10a37c6cad0b7d1b"><div class="ttname"><a href="classanch_1_1log_1_1_file_writer.html#a03003eb39843482c10a37c6cad0b7d1b">anch::log::FileWriter::_output</a></div><div class="ttdeci">std::ofstream _output</div><div class="ttdef"><b>Definition</b> fileWriter.hpp:54</div></div>
-<div class="ttc" id="aclassanch_1_1log_1_1_file_writer_html_a372c950ef43a6e0bffc3750a6d148b6a"><div class="ttname"><a href="classanch_1_1log_1_1_file_writer.html#a372c950ef43a6e0bffc3750a6d148b6a">anch::log::FileWriter::_maxFiles</a></div><div class="ttdeci">std::uint32_t _maxFiles</div><div class="ttdef"><b>Definition</b> fileWriter.hpp:63</div></div>
-<div class="ttc" id="aclassanch_1_1log_1_1_file_writer_html_a4dd3f0330811cccf828cd93df81d97fb"><div class="ttname"><a href="classanch_1_1log_1_1_file_writer.html#a4dd3f0330811cccf828cd93df81d97fb">anch::log::FileWriter::_path</a></div><div class="ttdeci">std::filesystem::path _path</div><div class="ttdef"><b>Definition</b> fileWriter.hpp:57</div></div>
-<div class="ttc" id="aclassanch_1_1log_1_1_file_writer_html_a57dafd739e0c2f4b0f1ded767867e491"><div class="ttname"><a href="classanch_1_1log_1_1_file_writer.html#a57dafd739e0c2f4b0f1ded767867e491">anch::log::FileWriter::_maxSize</a></div><div class="ttdeci">std::uint64_t _maxSize</div><div class="ttdef"><b>Definition</b> fileWriter.hpp:60</div></div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>  };</div>
+</div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span> </div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>}</div>
+<div class="ttc" id="aclassanch_1_1log_1_1_file_writer_html_a03003eb39843482c10a37c6cad0b7d1b"><div class="ttname"><a href="classanch_1_1log_1_1_file_writer.html#a03003eb39843482c10a37c6cad0b7d1b">anch::log::FileWriter::_output</a></div><div class="ttdeci">std::ofstream _output</div><div class="ttdef"><b>Definition</b> fileWriter.hpp:56</div></div>
+<div class="ttc" id="aclassanch_1_1log_1_1_file_writer_html_a372c950ef43a6e0bffc3750a6d148b6a"><div class="ttname"><a href="classanch_1_1log_1_1_file_writer.html#a372c950ef43a6e0bffc3750a6d148b6a">anch::log::FileWriter::_maxFiles</a></div><div class="ttdeci">std::uint32_t _maxFiles</div><div class="ttdef"><b>Definition</b> fileWriter.hpp:65</div></div>
+<div class="ttc" id="aclassanch_1_1log_1_1_file_writer_html_a4dd3f0330811cccf828cd93df81d97fb"><div class="ttname"><a href="classanch_1_1log_1_1_file_writer.html#a4dd3f0330811cccf828cd93df81d97fb">anch::log::FileWriter::_path</a></div><div class="ttdeci">std::filesystem::path _path</div><div class="ttdef"><b>Definition</b> fileWriter.hpp:59</div></div>
+<div class="ttc" id="aclassanch_1_1log_1_1_file_writer_html_a57dafd739e0c2f4b0f1ded767867e491"><div class="ttname"><a href="classanch_1_1log_1_1_file_writer.html#a57dafd739e0c2f4b0f1ded767867e491">anch::log::FileWriter::_maxSize</a></div><div class="ttdeci">std::uint64_t _maxSize</div><div class="ttdef"><b>Definition</b> fileWriter.hpp:62</div></div>
 <div class="ttc" id="aclassanch_1_1log_1_1_file_writer_html_a6b53eb1afc7a2f17cb8326f3dfb46d6f"><div class="ttname"><a href="classanch_1_1log_1_1_file_writer.html#a6b53eb1afc7a2f17cb8326f3dfb46d6f">anch::log::FileWriter::write</a></div><div class="ttdeci">virtual void write(const std::string &amp;message)</div></div>
 <div class="ttc" id="aclassanch_1_1log_1_1_file_writer_html_a6bfdbe1edc63a88dcef5bb4cda73cafd"><div class="ttname"><a href="classanch_1_1log_1_1_file_writer.html#a6bfdbe1edc63a88dcef5bb4cda73cafd">anch::log::FileWriter::~FileWriter</a></div><div class="ttdeci">virtual ~FileWriter()</div></div>
 <div class="ttc" id="aclassanch_1_1log_1_1_file_writer_html_a964ff59467f652c2312642dcf6205013"><div class="ttname"><a href="classanch_1_1log_1_1_file_writer.html#a964ff59467f652c2312642dcf6205013">anch::log::FileWriter::archive</a></div><div class="ttdeci">std::filesystem::path archive(std::uint32_t index) const</div></div>
@@ -175,7 +177,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('file_writer_8h
 <div class="ttc" id="aclassanch_1_1log_1_1_writer_html_a76c23e3d9cfd2512b7482102930618a5"><div class="ttname"><a href="classanch_1_1log_1_1_writer.html#a76c23e3d9cfd2512b7482102930618a5">anch::log::Writer::Writer</a></div><div class="ttdeci">Writer(const anch::conf::Section &amp;conf)</div></div>
 <div class="ttc" id="anamespaceanch_1_1conf_html"><div class="ttname"><a href="namespaceanch_1_1conf.html">anch::conf</a></div><div class="ttdoc">AnCH configuration library namespace.</div></div>
 <div class="ttc" id="anamespaceanch_1_1conf_html_a5b3f38f25b7b1c067807c098f13eaaac"><div class="ttname"><a href="namespaceanch_1_1conf.html#a5b3f38f25b7b1c067807c098f13eaaac">anch::conf::Section</a></div><div class="ttdeci">anch::ini::Section Section</div><div class="ttdef"><b>Definition</b> section.hpp:27</div></div>
-<div class="ttc" id="anamespaceanch_1_1log_html"><div class="ttname"><a href="namespaceanch_1_1log.html">anch::log</a></div><div class="ttdoc">AnCH logging library namespace.</div><div class="ttdef"><b>Definition</b> constants.hpp:24</div></div>
+<div class="ttc" id="anamespaceanch_1_1log_html"><div class="ttname"><a href="namespaceanch_1_1log.html">anch::log</a></div><div class="ttdoc">AnCH logging library namespace.</div><div class="ttdef"><b>Definition</b> constants.hpp:26</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->

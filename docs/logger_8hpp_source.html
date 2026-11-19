@@ -110,85 +110,87 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('logger_8hpp_so
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="comment">*/</span></div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &lt;iostream&gt;</span></div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#include &lt;sstream&gt;</span></div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &lt;vector&gt;</span></div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#include &quot;log/levels.hpp&quot;</span></div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#include &quot;log/writer.hpp&quot;</span></div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceanch_1_1log.html">anch::log</a> {</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span></div>
-<div class="foldopen" id="foldopen00045" data-start="{" data-end="};">
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno"><a class="line" href="classanch_1_1log_1_1_logger.html">   45</a></span>  <span class="keyword">class </span><a class="code hl_function" href="classanch_1_1log_1_1_logger.html#aaca68dc4ba91c29641aa19706642cf5b">Logger</a> {</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    <span class="comment">// Attributes +</span></div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>  <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    std::string _name;</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span></div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <a class="code hl_enumeration" href="namespaceanch_1_1log.html#a90b75e44c6c1aec3a8054f354210dfcf">anch::log::Level</a> _level;</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span></div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    std::vector&lt;anch::log::Writer*&gt; _writers;</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    <span class="comment">// Attributes -</span></div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    <span class="comment">// Constructors +</span></div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>  <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno"><a class="line" href="classanch_1_1log_1_1_logger.html#aaca68dc4ba91c29641aa19706642cf5b">   67</a></span>    <a class="code hl_function" href="classanch_1_1log_1_1_logger.html#aaca68dc4ba91c29641aa19706642cf5b">Logger</a>(<span class="keyword">const</span> std::string&amp; name,</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>           <span class="keyword">const</span> <a class="code hl_enumeration" href="namespaceanch_1_1log.html#a90b75e44c6c1aec3a8054f354210dfcf">anch::log::Level</a> level,</div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>           <span class="keyword">const</span> std::vector&lt;anch::log::Writer*&gt;&amp; writers);</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    <span class="comment">// Constructors -</span></div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span> </div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    <span class="comment">// Destructor +</span></div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno"><a class="line" href="classanch_1_1log_1_1_logger.html#a9ada72e0f78ff2a822520e0aceb6e8fc">   76</a></span>    <span class="keyword">virtual</span> <a class="code hl_function" href="classanch_1_1log_1_1_logger.html#a9ada72e0f78ff2a822520e0aceb6e8fc">~Logger</a>();</div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>    <span class="comment">// Destructor -</span></div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span> </div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    <span class="comment">// Methods +</span></div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>  <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span>... Q&gt;</div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno"><a class="line" href="classanch_1_1log_1_1_logger.html#a32850b680809728190f024b97cd14b51">   88</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classanch_1_1log_1_1_logger.html#a32850b680809728190f024b97cd14b51">trace</a>(<span class="keyword">const</span> T&amp; value, <span class="keyword">const</span> Q&amp;... values) <span class="keyword">const</span> <span class="keyword">noexcept</span>;</div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span></div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span>... Q&gt;</div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno"><a class="line" href="classanch_1_1log_1_1_logger.html#afac8e2ff799b449ceea0064fd680c4a9">   97</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classanch_1_1log_1_1_logger.html#afac8e2ff799b449ceea0064fd680c4a9">debug</a>(<span class="keyword">const</span> T&amp; value, <span class="keyword">const</span> Q&amp;... values) <span class="keyword">const</span> <span class="keyword">noexcept</span>;</div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span></div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span>... Q&gt;</div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno"><a class="line" href="classanch_1_1log_1_1_logger.html#a07881572d5811bcfa3924d8fad2d8e00">  106</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classanch_1_1log_1_1_logger.html#a07881572d5811bcfa3924d8fad2d8e00">info</a>(<span class="keyword">const</span> T&amp; value, <span class="keyword">const</span> Q&amp;... values) <span class="keyword">const</span> <span class="keyword">noexcept</span>;</div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span></div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span>... Q&gt;</div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno"><a class="line" href="classanch_1_1log_1_1_logger.html#abe48c280294f7064c7f0c51b3fc9e3e6">  115</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classanch_1_1log_1_1_logger.html#abe48c280294f7064c7f0c51b3fc9e3e6">warn</a>(<span class="keyword">const</span> T&amp; value, <span class="keyword">const</span> Q&amp;... values) <span class="keyword">const</span> <span class="keyword">noexcept</span>;</div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span></div>
-<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span>... Q&gt;</div>
-<div class="line"><a id="l00124" name="l00124"></a><span class="lineno"><a class="line" href="classanch_1_1log_1_1_logger.html#a5283f8effbd18a376a442cf6656b388a">  124</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classanch_1_1log_1_1_logger.html#a5283f8effbd18a376a442cf6656b388a">error</a>(<span class="keyword">const</span> T&amp; value, <span class="keyword">const</span> Q&amp;... values) <span class="keyword">const</span> <span class="keyword">noexcept</span>;</div>
-<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span></div>
-<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span>... Q&gt;</div>
-<div class="line"><a id="l00133" name="l00133"></a><span class="lineno"><a class="line" href="classanch_1_1log_1_1_logger.html#a08a5a71fde1c343cf1bdf0cb7cb57834">  133</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classanch_1_1log_1_1_logger.html#a08a5a71fde1c343cf1bdf0cb7cb57834">fatal</a>(<span class="keyword">const</span> T&amp; value, <span class="keyword">const</span> Q&amp;... values) <span class="keyword">const</span> <span class="keyword">noexcept</span>;</div>
-<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span></div>
-<div class="line"><a id="l00144" name="l00144"></a><span class="lineno"><a class="line" href="classanch_1_1log_1_1_logger.html#a2bdc0dd8112845ff93e20a4956a78b9a">  144</a></span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classanch_1_1log_1_1_logger.html#a2bdc0dd8112845ff93e20a4956a78b9a">isEnabled</a>(<span class="keyword">const</span> <a class="code hl_enumeration" href="namespaceanch_1_1log.html#a90b75e44c6c1aec3a8054f354210dfcf">anch::log::Level</a>&amp; level) <span class="keyword">const</span> <span class="keyword">noexcept</span>;</div>
-<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span></div>
-<div class="line"><a id="l00156" name="l00156"></a><span class="lineno"><a class="line" href="classanch_1_1log_1_1_logger.html#af22203f951ad19098a9afa0e46786338">  156</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classanch_1_1log_1_1_logger.html#af22203f951ad19098a9afa0e46786338">write</a>(<span class="keyword">const</span> <a class="code hl_enumeration" href="namespaceanch_1_1log.html#a90b75e44c6c1aec3a8054f354210dfcf">anch::log::Level</a>&amp; level, <span class="keyword">const</span> std::string&amp; message) <span class="keyword">const</span> <span class="keyword">noexcept</span>;</div>
-<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span> </div>
-<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>  <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>    <span class="keywordtype">void</span> log(<span class="keyword">const</span> <a class="code hl_enumeration" href="namespaceanch_1_1log.html#a90b75e44c6c1aec3a8054f354210dfcf">Level</a>&amp; level,</div>
-<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>             std::ostringstream&amp; out,</div>
-<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>             <span class="keyword">const</span> T&amp; value) <span class="keyword">const</span> <span class="keyword">noexcept</span>;</div>
-<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span></div>
-<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span>... Q&gt;</div>
-<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>    <span class="keywordtype">void</span> log(<span class="keyword">const</span> <a class="code hl_enumeration" href="namespaceanch_1_1log.html#a90b75e44c6c1aec3a8054f354210dfcf">Level</a>&amp; level,</div>
-<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>             <span class="keyword">const</span> T&amp; value,</div>
-<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>             <span class="keyword">const</span> Q&amp;... values) <span class="keyword">const</span> <span class="keyword">noexcept</span>;</div>
-<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span></div>
-<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span>... Q&gt;</div>
-<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>    <span class="keywordtype">void</span> log(<span class="keyword">const</span> <a class="code hl_enumeration" href="namespaceanch_1_1log.html#a90b75e44c6c1aec3a8054f354210dfcf">Level</a>&amp; level,</div>
-<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>             std::ostringstream&amp; out,</div>
-<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>             <span class="keyword">const</span> T&amp; value,</div>
-<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>             <span class="keyword">const</span> Q&amp;... values) <span class="keyword">const</span> <span class="keyword">noexcept</span>;</div>
-<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>    <span class="comment">// Methods -</span></div>
-<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span> </div>
-<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>  };</div>
-</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &quot;anch-log-export.hpp&quot;</span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &lt;iostream&gt;</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include &lt;sstream&gt;</span></div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#include &lt;vector&gt;</span></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="preprocessor">#include &quot;log/levels.hpp&quot;</span></div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="preprocessor">#include &quot;log/writer.hpp&quot;</span></div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceanch_1_1log.html">anch::log</a> {</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span></div>
+<div class="foldopen" id="foldopen00047" data-start="{" data-end="};">
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno"><a class="line" href="classanch_1_1log_1_1_logger.html">   47</a></span>  <span class="keyword">class </span>ANCH_LOG_EXPORT <a class="code hl_function" href="classanch_1_1log_1_1_logger.html#aaca68dc4ba91c29641aa19706642cf5b">Logger</a> {</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    <span class="comment">// Attributes +</span></div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>  <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    std::string _name;</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span></div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    <a class="code hl_enumeration" href="namespaceanch_1_1log.html#a90b75e44c6c1aec3a8054f354210dfcf">anch::log::Level</a> _level;</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span></div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    std::vector&lt;anch::log::Writer*&gt; _writers;</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    <span class="comment">// Attributes -</span></div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span> </div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    <span class="comment">// Constructors +</span></div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>  <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno"><a class="line" href="classanch_1_1log_1_1_logger.html#aaca68dc4ba91c29641aa19706642cf5b">   69</a></span>    <a class="code hl_function" href="classanch_1_1log_1_1_logger.html#aaca68dc4ba91c29641aa19706642cf5b">Logger</a>(<span class="keyword">const</span> std::string&amp; name,</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>           <span class="keyword">const</span> <a class="code hl_enumeration" href="namespaceanch_1_1log.html#a90b75e44c6c1aec3a8054f354210dfcf">anch::log::Level</a> level,</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>           <span class="keyword">const</span> std::vector&lt;anch::log::Writer*&gt;&amp; writers);</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    <span class="comment">// Constructors -</span></div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span> </div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    <span class="comment">// Destructor +</span></div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno"><a class="line" href="classanch_1_1log_1_1_logger.html#a9ada72e0f78ff2a822520e0aceb6e8fc">   78</a></span>    <span class="keyword">virtual</span> <a class="code hl_function" href="classanch_1_1log_1_1_logger.html#a9ada72e0f78ff2a822520e0aceb6e8fc">~Logger</a>();</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    <span class="comment">// Destructor -</span></div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span> </div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    <span class="comment">// Methods +</span></div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>  <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span>... Q&gt;</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno"><a class="line" href="classanch_1_1log_1_1_logger.html#a32850b680809728190f024b97cd14b51">   90</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classanch_1_1log_1_1_logger.html#a32850b680809728190f024b97cd14b51">trace</a>(<span class="keyword">const</span> T&amp; value, <span class="keyword">const</span> Q&amp;... values) <span class="keyword">const</span> <span class="keyword">noexcept</span>;</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span></div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span>... Q&gt;</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno"><a class="line" href="classanch_1_1log_1_1_logger.html#afac8e2ff799b449ceea0064fd680c4a9">   99</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classanch_1_1log_1_1_logger.html#afac8e2ff799b449ceea0064fd680c4a9">debug</a>(<span class="keyword">const</span> T&amp; value, <span class="keyword">const</span> Q&amp;... values) <span class="keyword">const</span> <span class="keyword">noexcept</span>;</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span></div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span>... Q&gt;</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno"><a class="line" href="classanch_1_1log_1_1_logger.html#a07881572d5811bcfa3924d8fad2d8e00">  108</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classanch_1_1log_1_1_logger.html#a07881572d5811bcfa3924d8fad2d8e00">info</a>(<span class="keyword">const</span> T&amp; value, <span class="keyword">const</span> Q&amp;... values) <span class="keyword">const</span> <span class="keyword">noexcept</span>;</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span></div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span>... Q&gt;</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno"><a class="line" href="classanch_1_1log_1_1_logger.html#abe48c280294f7064c7f0c51b3fc9e3e6">  117</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classanch_1_1log_1_1_logger.html#abe48c280294f7064c7f0c51b3fc9e3e6">warn</a>(<span class="keyword">const</span> T&amp; value, <span class="keyword">const</span> Q&amp;... values) <span class="keyword">const</span> <span class="keyword">noexcept</span>;</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span></div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span>... Q&gt;</div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno"><a class="line" href="classanch_1_1log_1_1_logger.html#a5283f8effbd18a376a442cf6656b388a">  126</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classanch_1_1log_1_1_logger.html#a5283f8effbd18a376a442cf6656b388a">error</a>(<span class="keyword">const</span> T&amp; value, <span class="keyword">const</span> Q&amp;... values) <span class="keyword">const</span> <span class="keyword">noexcept</span>;</div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span></div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span>... Q&gt;</div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno"><a class="line" href="classanch_1_1log_1_1_logger.html#a08a5a71fde1c343cf1bdf0cb7cb57834">  135</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classanch_1_1log_1_1_logger.html#a08a5a71fde1c343cf1bdf0cb7cb57834">fatal</a>(<span class="keyword">const</span> T&amp; value, <span class="keyword">const</span> Q&amp;... values) <span class="keyword">const</span> <span class="keyword">noexcept</span>;</div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span></div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno"><a class="line" href="classanch_1_1log_1_1_logger.html#a2bdc0dd8112845ff93e20a4956a78b9a">  146</a></span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classanch_1_1log_1_1_logger.html#a2bdc0dd8112845ff93e20a4956a78b9a">isEnabled</a>(<span class="keyword">const</span> <a class="code hl_enumeration" href="namespaceanch_1_1log.html#a90b75e44c6c1aec3a8054f354210dfcf">anch::log::Level</a>&amp; level) <span class="keyword">const</span> <span class="keyword">noexcept</span>;</div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span></div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno"><a class="line" href="classanch_1_1log_1_1_logger.html#af22203f951ad19098a9afa0e46786338">  158</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classanch_1_1log_1_1_logger.html#af22203f951ad19098a9afa0e46786338">write</a>(<span class="keyword">const</span> <a class="code hl_enumeration" href="namespaceanch_1_1log.html#a90b75e44c6c1aec3a8054f354210dfcf">anch::log::Level</a>&amp; level, <span class="keyword">const</span> std::string&amp; message) <span class="keyword">const</span> <span class="keyword">noexcept</span>;</div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span> </div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>  <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>    <span class="keywordtype">void</span> log(<span class="keyword">const</span> <a class="code hl_enumeration" href="namespaceanch_1_1log.html#a90b75e44c6c1aec3a8054f354210dfcf">Level</a>&amp; level,</div>
+<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>             std::ostringstream&amp; out,</div>
+<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>             <span class="keyword">const</span> T&amp; value) <span class="keyword">const</span> <span class="keyword">noexcept</span>;</div>
+<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span></div>
+<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span>... Q&gt;</div>
+<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>    <span class="keywordtype">void</span> log(<span class="keyword">const</span> <a class="code hl_enumeration" href="namespaceanch_1_1log.html#a90b75e44c6c1aec3a8054f354210dfcf">Level</a>&amp; level,</div>
+<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>             <span class="keyword">const</span> T&amp; value,</div>
+<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>             <span class="keyword">const</span> Q&amp;... values) <span class="keyword">const</span> <span class="keyword">noexcept</span>;</div>
+<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span></div>
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span>... Q&gt;</div>
+<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>    <span class="keywordtype">void</span> log(<span class="keyword">const</span> <a class="code hl_enumeration" href="namespaceanch_1_1log.html#a90b75e44c6c1aec3a8054f354210dfcf">Level</a>&amp; level,</div>
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>             std::ostringstream&amp; out,</div>
+<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>             <span class="keyword">const</span> T&amp; value,</div>
+<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>             <span class="keyword">const</span> Q&amp;... values) <span class="keyword">const</span> <span class="keyword">noexcept</span>;</div>
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>    <span class="comment">// Methods -</span></div>
 <div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span> </div>
-<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>}</div>
+<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>  };</div>
+</div>
 <div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span> </div>
-<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span><span class="preprocessor">#include &quot;log/impl/logger.hpp&quot;</span></div>
+<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>}</div>
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span> </div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span><span class="preprocessor">#include &quot;log/impl/logger.hpp&quot;</span></div>
 <div class="ttc" id="aclassanch_1_1log_1_1_logger_html_a07881572d5811bcfa3924d8fad2d8e00"><div class="ttname"><a href="classanch_1_1log_1_1_logger.html#a07881572d5811bcfa3924d8fad2d8e00">anch::log::Logger::info</a></div><div class="ttdeci">void info(const T &amp;value, const Q &amp;... values) const noexcept</div></div>
 <div class="ttc" id="aclassanch_1_1log_1_1_logger_html_a08a5a71fde1c343cf1bdf0cb7cb57834"><div class="ttname"><a href="classanch_1_1log_1_1_logger.html#a08a5a71fde1c343cf1bdf0cb7cb57834">anch::log::Logger::fatal</a></div><div class="ttdeci">void fatal(const T &amp;value, const Q &amp;... values) const noexcept</div></div>
 <div class="ttc" id="aclassanch_1_1log_1_1_logger_html_a2bdc0dd8112845ff93e20a4956a78b9a"><div class="ttname"><a href="classanch_1_1log_1_1_logger.html#a2bdc0dd8112845ff93e20a4956a78b9a">anch::log::Logger::isEnabled</a></div><div class="ttdeci">bool isEnabled(const anch::log::Level &amp;level) const noexcept</div></div>
@@ -199,8 +201,8 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('logger_8hpp_so
 <div class="ttc" id="aclassanch_1_1log_1_1_logger_html_abe48c280294f7064c7f0c51b3fc9e3e6"><div class="ttname"><a href="classanch_1_1log_1_1_logger.html#abe48c280294f7064c7f0c51b3fc9e3e6">anch::log::Logger::warn</a></div><div class="ttdeci">void warn(const T &amp;value, const Q &amp;... values) const noexcept</div></div>
 <div class="ttc" id="aclassanch_1_1log_1_1_logger_html_af22203f951ad19098a9afa0e46786338"><div class="ttname"><a href="classanch_1_1log_1_1_logger.html#af22203f951ad19098a9afa0e46786338">anch::log::Logger::write</a></div><div class="ttdeci">void write(const anch::log::Level &amp;level, const std::string &amp;message) const noexcept</div></div>
 <div class="ttc" id="aclassanch_1_1log_1_1_logger_html_afac8e2ff799b449ceea0064fd680c4a9"><div class="ttname"><a href="classanch_1_1log_1_1_logger.html#afac8e2ff799b449ceea0064fd680c4a9">anch::log::Logger::debug</a></div><div class="ttdeci">void debug(const T &amp;value, const Q &amp;... values) const noexcept</div></div>
-<div class="ttc" id="anamespaceanch_1_1log_html"><div class="ttname"><a href="namespaceanch_1_1log.html">anch::log</a></div><div class="ttdoc">AnCH logging library namespace.</div><div class="ttdef"><b>Definition</b> constants.hpp:24</div></div>
-<div class="ttc" id="anamespaceanch_1_1log_html_a90b75e44c6c1aec3a8054f354210dfcf"><div class="ttname"><a href="namespaceanch_1_1log.html#a90b75e44c6c1aec3a8054f354210dfcf">anch::log::Level</a></div><div class="ttdeci">Level</div><div class="ttdef"><b>Definition</b> levels.hpp:32</div></div>
+<div class="ttc" id="anamespaceanch_1_1log_html"><div class="ttname"><a href="namespaceanch_1_1log.html">anch::log</a></div><div class="ttdoc">AnCH logging library namespace.</div><div class="ttdef"><b>Definition</b> constants.hpp:26</div></div>
+<div class="ttc" id="anamespaceanch_1_1log_html_a90b75e44c6c1aec3a8054f354210dfcf"><div class="ttname"><a href="namespaceanch_1_1log.html#a90b75e44c6c1aec3a8054f354210dfcf">anch::log::Level</a></div><div class="ttdeci">Level</div><div class="ttdef"><b>Definition</b> levels.hpp:34</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->

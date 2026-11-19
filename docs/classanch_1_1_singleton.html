@@ -135,7 +135,7 @@ Usage: </p><div class="fragment"><div class="line"><span class="keyword">class <
 <div class="line">  MySingleton();</div>
 <div class="line">  ~MySingleton();</div>
 <div class="line">};</div>
-<div class="ttc" id="aclassanch_1_1_singleton_html"><div class="ttname"><a href="classanch_1_1_singleton.html">anch::Singleton</a></div><div class="ttdoc">Meyers&#39; singleton implementation.</div><div class="ttdef"><b>Definition</b> singleton.hpp:55</div></div>
+<div class="ttc" id="aclassanch_1_1_singleton_html"><div class="ttname"><a href="classanch_1_1_singleton.html">anch::Singleton</a></div><div class="ttdoc">Meyers&#39; singleton implementation.</div><div class="ttdef"><b>Definition</b> singleton.hpp:57</div></div>
 </div><!-- fragment --><ul>
 <li><code>T</code> has to inherit from <code><a class="el" href="classanch_1_1_singleton.html" title="Meyers&#39; singleton implementation.">anch::Singleton&lt;T&gt;</a></code> ;</li>
 <li><code>T</code> constructor and destructor should be private and <code><a class="el" href="classanch_1_1_singleton.html" title="Meyers&#39; singleton implementation.">anch::Singleton&lt;T&gt;</a></code> declared as friend to prevent other instances ;</li>
@@ -143,6 +143,7 @@ Usage: </p><div class="fragment"><div class="line"><span class="keyword">class <
 <li><code>T</code> destructor does not need to be <code>virtual:</code> the instance is never destroyed through a base class pointer.</li>
 </ul>
 <p><b>Destruction</b> <b>order:</b> singletons are destroyed at program exit, in the reverse order of the <b>end</b> of their construction. When a singleton uses another one in its destructor (or holds objects which depend on it), it has to call the other singleton's <a class="el" href="#a9bc6135289c49f0e855ae4e73922e53b" title="getInstance">getInstance</a> in its constructor: the other singleton will be fully constructed first, so it will be destroyed after.<br  />
+<code><a class="el" href="classanch_1_1_singleton.html" title="Meyers&#39; singleton implementation.">Singleton</a></code> has default symbols visibility: the instance is shared between AnCH libraries (built with hidden visibility) and the application.<br  />
 A singleton must not be used from a static object destructor or a detached thread after its destruction.</p>
 <dl class="section since"><dt>Since</dt><dd>0.1</dd></dl>
 <dl class="section author"><dt>Author</dt><dd>Vincent Lachenal </dd></dl>

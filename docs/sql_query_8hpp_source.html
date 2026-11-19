@@ -110,64 +110,66 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('sql_query_8hpp
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="comment">*/</span></div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &lt;string&gt;</span></div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#include &lt;list&gt;</span></div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span> </div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceanch_1_1sql.html">anch::sql</a> {</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span></div>
-<div class="foldopen" id="foldopen00041" data-start="{" data-end="};">
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno"><a class="line" href="classanch_1_1sql_1_1_s_q_l_query.html">   41</a></span>  <span class="keyword">class </span><a class="code hl_function" href="classanch_1_1sql_1_1_s_q_l_query.html#a0e6a0b50726488ea8aa1187888797616">SQLQuery</a> {</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span> </div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    <span class="comment">// Attributes +</span></div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>  <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    std::string _query;</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span></div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    std::list&lt;std::string&gt; _values;</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    <span class="comment">// Attributes -</span></div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span> </div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span> </div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    <span class="comment">// Constructors +</span></div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>  <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno"><a class="line" href="classanch_1_1sql_1_1_s_q_l_query.html#a0e6a0b50726488ea8aa1187888797616">   58</a></span>    <a class="code hl_function" href="classanch_1_1sql_1_1_s_q_l_query.html#a0e6a0b50726488ea8aa1187888797616">SQLQuery</a>() = <span class="keyword">delete</span>;</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span></div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno"><a class="line" href="classanch_1_1sql_1_1_s_q_l_query.html#a1c9895d939e3bb07ab1e9f108f5fed24">   63</a></span>    <a class="code hl_function" href="classanch_1_1sql_1_1_s_q_l_query.html#a1c9895d939e3bb07ab1e9f108f5fed24">SQLQuery</a>(<span class="keyword">const</span> <a class="code hl_function" href="classanch_1_1sql_1_1_s_q_l_query.html#a0e6a0b50726488ea8aa1187888797616">SQLQuery</a>&amp; other);</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span></div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno"><a class="line" href="classanch_1_1sql_1_1_s_q_l_query.html#a3bf9506026e9cd6dbe95a096daa2e4c9">   71</a></span>    <a class="code hl_function" href="classanch_1_1sql_1_1_s_q_l_query.html#a3bf9506026e9cd6dbe95a096daa2e4c9">SQLQuery</a>(<span class="keyword">const</span> std::string&amp; query, <span class="keyword">const</span> std::list&lt;std::string&gt;&amp; values);</div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    <span class="comment">// Constructors -</span></div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span> </div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span> </div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    <span class="comment">// Accessors +</span></div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>  <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    <span class="keyword">inline</span> <span class="keyword">const</span> std::string&amp; <a class="code hl_function" href="classanch_1_1sql_1_1_s_q_l_query.html#ab11736f46cbd63be423b89ebd67f611e">getQuery</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span></div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>    <span class="keyword">inline</span> <span class="keyword">const</span> std::list&lt;std::string&gt;&amp; <a class="code hl_function" href="classanch_1_1sql_1_1_s_q_l_query.html#a81397ee21e5d9e6399e687b0346ee39d">getValues</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>    <span class="comment">// Accessors -</span></div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span> </div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>  };</div>
-</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &quot;anch-sql-export.hpp&quot;</span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &lt;string&gt;</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include &lt;list&gt;</span></div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceanch_1_1sql.html">anch::sql</a> {</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span></div>
+<div class="foldopen" id="foldopen00043" data-start="{" data-end="};">
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno"><a class="line" href="classanch_1_1sql_1_1_s_q_l_query.html">   43</a></span>  <span class="keyword">class </span>ANCH_SQL_EXPORT <a class="code hl_function" href="classanch_1_1sql_1_1_s_q_l_query.html#a0e6a0b50726488ea8aa1187888797616">SQLQuery</a> {</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    <span class="comment">// Attributes +</span></div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>  <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    std::string _query;</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span></div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    std::list&lt;std::string&gt; _values;</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <span class="comment">// Attributes -</span></div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    <span class="comment">// Constructors +</span></div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>  <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno"><a class="line" href="classanch_1_1sql_1_1_s_q_l_query.html#a0e6a0b50726488ea8aa1187888797616">   60</a></span>    <a class="code hl_function" href="classanch_1_1sql_1_1_s_q_l_query.html#a0e6a0b50726488ea8aa1187888797616">SQLQuery</a>() = <span class="keyword">delete</span>;</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span></div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno"><a class="line" href="classanch_1_1sql_1_1_s_q_l_query.html#a1c9895d939e3bb07ab1e9f108f5fed24">   65</a></span>    <a class="code hl_function" href="classanch_1_1sql_1_1_s_q_l_query.html#a1c9895d939e3bb07ab1e9f108f5fed24">SQLQuery</a>(<span class="keyword">const</span> <a class="code hl_function" href="classanch_1_1sql_1_1_s_q_l_query.html#a0e6a0b50726488ea8aa1187888797616">SQLQuery</a>&amp; other);</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span></div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno"><a class="line" href="classanch_1_1sql_1_1_s_q_l_query.html#a3bf9506026e9cd6dbe95a096daa2e4c9">   73</a></span>    <a class="code hl_function" href="classanch_1_1sql_1_1_s_q_l_query.html#a3bf9506026e9cd6dbe95a096daa2e4c9">SQLQuery</a>(<span class="keyword">const</span> std::string&amp; query, <span class="keyword">const</span> std::list&lt;std::string&gt;&amp; values);</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    <span class="comment">// Constructors -</span></div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span> </div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span> </div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>    <span class="comment">// Accessors +</span></div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>  <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>    <span class="keyword">inline</span> <span class="keyword">const</span> std::string&amp; <a class="code hl_function" href="classanch_1_1sql_1_1_s_q_l_query.html#ab11736f46cbd63be423b89ebd67f611e">getQuery</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span></div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>    <span class="keyword">inline</span> <span class="keyword">const</span> std::list&lt;std::string&gt;&amp; <a class="code hl_function" href="classanch_1_1sql_1_1_s_q_l_query.html#a81397ee21e5d9e6399e687b0346ee39d">getValues</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>    <span class="comment">// Accessors -</span></div>
 <div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span> </div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>  <span class="keyword">const</span> std::string&amp;</div>
-<div class="foldopen" id="foldopen00095" data-start="{" data-end="}">
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno"><a class="line" href="classanch_1_1sql_1_1_s_q_l_query.html#ab11736f46cbd63be423b89ebd67f611e">   95</a></span>  <a class="code hl_function" href="classanch_1_1sql_1_1_s_q_l_query.html#ab11736f46cbd63be423b89ebd67f611e">SQLQuery::getQuery</a>()<span class="keyword"> const </span>{</div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>    <span class="keywordflow">return</span> _query;</div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>  }</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>  };</div>
 </div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span> </div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>  <span class="keyword">const</span> std::list&lt;std::string&gt;&amp;</div>
-<div class="foldopen" id="foldopen00100" data-start="{" data-end="}">
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno"><a class="line" href="classanch_1_1sql_1_1_s_q_l_query.html#a81397ee21e5d9e6399e687b0346ee39d">  100</a></span>  <a class="code hl_function" href="classanch_1_1sql_1_1_s_q_l_query.html#a81397ee21e5d9e6399e687b0346ee39d">SQLQuery::getValues</a>()<span class="keyword"> const </span>{</div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>    <span class="keywordflow">return</span> _values;</div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>  }</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span> </div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>  <span class="keyword">const</span> std::string&amp;</div>
+<div class="foldopen" id="foldopen00097" data-start="{" data-end="}">
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno"><a class="line" href="classanch_1_1sql_1_1_s_q_l_query.html#ab11736f46cbd63be423b89ebd67f611e">   97</a></span>  <a class="code hl_function" href="classanch_1_1sql_1_1_s_q_l_query.html#ab11736f46cbd63be423b89ebd67f611e">SQLQuery::getQuery</a>()<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>    <span class="keywordflow">return</span> _query;</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>  }</div>
 </div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span> </div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>}  <span class="comment">// anch::sql</span></div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span> </div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>  <span class="keyword">const</span> std::list&lt;std::string&gt;&amp;</div>
+<div class="foldopen" id="foldopen00102" data-start="{" data-end="}">
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno"><a class="line" href="classanch_1_1sql_1_1_s_q_l_query.html#a81397ee21e5d9e6399e687b0346ee39d">  102</a></span>  <a class="code hl_function" href="classanch_1_1sql_1_1_s_q_l_query.html#a81397ee21e5d9e6399e687b0346ee39d">SQLQuery::getValues</a>()<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>    <span class="keywordflow">return</span> _values;</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>  }</div>
+</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span> </div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>}  <span class="comment">// anch::sql</span></div>
 <div class="ttc" id="aclassanch_1_1sql_1_1_s_q_l_query_html_a0e6a0b50726488ea8aa1187888797616"><div class="ttname"><a href="classanch_1_1sql_1_1_s_q_l_query.html#a0e6a0b50726488ea8aa1187888797616">anch::sql::SQLQuery::SQLQuery</a></div><div class="ttdeci">SQLQuery()=delete</div></div>
 <div class="ttc" id="aclassanch_1_1sql_1_1_s_q_l_query_html_a1c9895d939e3bb07ab1e9f108f5fed24"><div class="ttname"><a href="classanch_1_1sql_1_1_s_q_l_query.html#a1c9895d939e3bb07ab1e9f108f5fed24">anch::sql::SQLQuery::SQLQuery</a></div><div class="ttdeci">SQLQuery(const SQLQuery &amp;other)</div></div>
 <div class="ttc" id="aclassanch_1_1sql_1_1_s_q_l_query_html_a3bf9506026e9cd6dbe95a096daa2e4c9"><div class="ttname"><a href="classanch_1_1sql_1_1_s_q_l_query.html#a3bf9506026e9cd6dbe95a096daa2e4c9">anch::sql::SQLQuery::SQLQuery</a></div><div class="ttdeci">SQLQuery(const std::string &amp;query, const std::list&lt; std::string &gt; &amp;values)</div></div>
-<div class="ttc" id="aclassanch_1_1sql_1_1_s_q_l_query_html_a81397ee21e5d9e6399e687b0346ee39d"><div class="ttname"><a href="classanch_1_1sql_1_1_s_q_l_query.html#a81397ee21e5d9e6399e687b0346ee39d">anch::sql::SQLQuery::getValues</a></div><div class="ttdeci">const std::list&lt; std::string &gt; &amp; getValues() const</div><div class="ttdef"><b>Definition</b> sqlQuery.hpp:100</div></div>
-<div class="ttc" id="aclassanch_1_1sql_1_1_s_q_l_query_html_ab11736f46cbd63be423b89ebd67f611e"><div class="ttname"><a href="classanch_1_1sql_1_1_s_q_l_query.html#ab11736f46cbd63be423b89ebd67f611e">anch::sql::SQLQuery::getQuery</a></div><div class="ttdeci">const std::string &amp; getQuery() const</div><div class="ttdef"><b>Definition</b> sqlQuery.hpp:95</div></div>
-<div class="ttc" id="anamespaceanch_1_1sql_html"><div class="ttname"><a href="namespaceanch_1_1sql.html">anch::sql</a></div><div class="ttdoc">SQL namespace.</div><div class="ttdef"><b>Definition</b> clauses.hpp:25</div></div>
+<div class="ttc" id="aclassanch_1_1sql_1_1_s_q_l_query_html_a81397ee21e5d9e6399e687b0346ee39d"><div class="ttname"><a href="classanch_1_1sql_1_1_s_q_l_query.html#a81397ee21e5d9e6399e687b0346ee39d">anch::sql::SQLQuery::getValues</a></div><div class="ttdeci">const std::list&lt; std::string &gt; &amp; getValues() const</div><div class="ttdef"><b>Definition</b> sqlQuery.hpp:102</div></div>
+<div class="ttc" id="aclassanch_1_1sql_1_1_s_q_l_query_html_ab11736f46cbd63be423b89ebd67f611e"><div class="ttname"><a href="classanch_1_1sql_1_1_s_q_l_query.html#ab11736f46cbd63be423b89ebd67f611e">anch::sql::SQLQuery::getQuery</a></div><div class="ttdeci">const std::string &amp; getQuery() const</div><div class="ttdef"><b>Definition</b> sqlQuery.hpp:97</div></div>
+<div class="ttc" id="anamespaceanch_1_1sql_html"><div class="ttname"><a href="namespaceanch_1_1sql.html">anch::sql</a></div><div class="ttdoc">SQL namespace.</div><div class="ttdef"><b>Definition</b> clauses.hpp:27</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->

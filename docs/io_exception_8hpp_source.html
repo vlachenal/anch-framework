@@ -110,36 +110,38 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('io_exception_8
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="comment">*/</span></div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &lt;cerrno&gt;</span></div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#include &lt;string&gt;</span></div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &lt;system_error&gt;</span></div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceanch_1_1network.html">anch::network</a> {</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span></div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno"><a class="line" href="namespaceanch_1_1network.html#a93b67b8a1b1704a0f3cbf82cfe940d00">   35</a></span>  <span class="keyword">const</span> std::error_category&amp; <a class="code hl_function" href="namespaceanch_1_1network.html#a93b67b8a1b1704a0f3cbf82cfe940d00">addrinfoCategory</a>() noexcept;</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span></div>
-<div class="foldopen" id="foldopen00045" data-start="{" data-end="};">
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno"><a class="line" href="classanch_1_1network_1_1_i_o_exception.html">   45</a></span>  class <a class="code hl_function" href="classanch_1_1network_1_1_i_o_exception.html#a12b3df963e70285f32a6639ea869433b">IOException</a>: public std::system_error {</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>  <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    <span class="comment">// Constructors +</span></div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno"><a class="line" href="classanch_1_1network_1_1_i_o_exception.html#a12b3df963e70285f32a6639ea869433b">   55</a></span>    <span class="keyword">explicit</span> <a class="code hl_function" href="classanch_1_1network_1_1_i_o_exception.html#a12b3df963e70285f32a6639ea869433b">IOException</a>(<span class="keyword">const</span> std::string&amp; message, <span class="keywordtype">int</span> errnum = errno);</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span></div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno"><a class="line" href="classanch_1_1network_1_1_i_o_exception.html#acfd327ab521f0d87031ebdfc0d1db69f">   65</a></span>    <a class="code hl_function" href="classanch_1_1network_1_1_i_o_exception.html#acfd327ab521f0d87031ebdfc0d1db69f">IOException</a>(<span class="keyword">const</span> std::string&amp; message, <span class="keyword">const</span> std::error_code&amp; code);</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    <span class="comment">// Constructors -</span></div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span> </div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    <span class="comment">// Destructor +</span></div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno"><a class="line" href="classanch_1_1network_1_1_i_o_exception.html#a135bf85504a93f9f80c8958ae5911388">   72</a></span>    <span class="keyword">virtual</span> <a class="code hl_function" href="classanch_1_1network_1_1_i_o_exception.html#a135bf85504a93f9f80c8958ae5911388">~IOException</a>() noexcept;</div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    <span class="comment">// Destructor -</span></div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span> </div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>  };</div>
-</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &quot;anch-network-export.hpp&quot;</span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &lt;cerrno&gt;</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include &lt;string&gt;</span></div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#include &lt;system_error&gt;</span></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceanch_1_1network.html">anch::network</a> {</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span></div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno"><a class="line" href="namespaceanch_1_1network.html#a93b67b8a1b1704a0f3cbf82cfe940d00">   37</a></span>  ANCH_NETWORK_EXPORT <span class="keyword">const</span> std::error_category&amp; <a class="code hl_function" href="namespaceanch_1_1network.html#a93b67b8a1b1704a0f3cbf82cfe940d00">addrinfoCategory</a>() noexcept;</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span></div>
+<div class="foldopen" id="foldopen00047" data-start="{" data-end="};">
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno"><a class="line" href="classanch_1_1network_1_1_i_o_exception.html">   47</a></span>  class ANCH_NETWORK_EXPORT <a class="code hl_function" href="classanch_1_1network_1_1_i_o_exception.html#a12b3df963e70285f32a6639ea869433b">IOException</a>: public std::system_error {</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>  <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    <span class="comment">// Constructors +</span></div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno"><a class="line" href="classanch_1_1network_1_1_i_o_exception.html#a12b3df963e70285f32a6639ea869433b">   57</a></span>    <span class="keyword">explicit</span> <a class="code hl_function" href="classanch_1_1network_1_1_i_o_exception.html#a12b3df963e70285f32a6639ea869433b">IOException</a>(<span class="keyword">const</span> std::string&amp; message, <span class="keywordtype">int</span> errnum = errno);</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span></div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno"><a class="line" href="classanch_1_1network_1_1_i_o_exception.html#acfd327ab521f0d87031ebdfc0d1db69f">   67</a></span>    <a class="code hl_function" href="classanch_1_1network_1_1_i_o_exception.html#acfd327ab521f0d87031ebdfc0d1db69f">IOException</a>(<span class="keyword">const</span> std::string&amp; message, <span class="keyword">const</span> std::error_code&amp; code);</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    <span class="comment">// Constructors -</span></div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span> </div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    <span class="comment">// Destructor +</span></div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno"><a class="line" href="classanch_1_1network_1_1_i_o_exception.html#a135bf85504a93f9f80c8958ae5911388">   74</a></span>    <span class="keyword">virtual</span> <a class="code hl_function" href="classanch_1_1network_1_1_i_o_exception.html#a135bf85504a93f9f80c8958ae5911388">~IOException</a>() noexcept;</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    <span class="comment">// Destructor -</span></div>
 <div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span> </div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>}  <span class="comment">// anch::network</span></div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>  };</div>
+</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span> </div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>}  <span class="comment">// anch::network</span></div>
 <div class="ttc" id="aclassanch_1_1network_1_1_i_o_exception_html_a12b3df963e70285f32a6639ea869433b"><div class="ttname"><a href="classanch_1_1network_1_1_i_o_exception.html#a12b3df963e70285f32a6639ea869433b">anch::network::IOException::IOException</a></div><div class="ttdeci">IOException(const std::string &amp;message, int errnum=errno)</div></div>
 <div class="ttc" id="aclassanch_1_1network_1_1_i_o_exception_html_a135bf85504a93f9f80c8958ae5911388"><div class="ttname"><a href="classanch_1_1network_1_1_i_o_exception.html#a135bf85504a93f9f80c8958ae5911388">anch::network::IOException::~IOException</a></div><div class="ttdeci">virtual ~IOException() noexcept</div></div>
 <div class="ttc" id="aclassanch_1_1network_1_1_i_o_exception_html_acfd327ab521f0d87031ebdfc0d1db69f"><div class="ttname"><a href="classanch_1_1network_1_1_i_o_exception.html#acfd327ab521f0d87031ebdfc0d1db69f">anch::network::IOException::IOException</a></div><div class="ttdeci">IOException(const std::string &amp;message, const std::error_code &amp;code)</div></div>
-<div class="ttc" id="anamespaceanch_1_1network_html"><div class="ttname"><a href="namespaceanch_1_1network.html">anch::network</a></div><div class="ttdoc">Network namespace.</div><div class="ttdef"><b>Definition</b> address.hpp:28</div></div>
+<div class="ttc" id="anamespaceanch_1_1network_html"><div class="ttname"><a href="namespaceanch_1_1network.html">anch::network</a></div><div class="ttdoc">Network namespace.</div><div class="ttdef"><b>Definition</b> address.hpp:30</div></div>
 <div class="ttc" id="anamespaceanch_1_1network_html_a93b67b8a1b1704a0f3cbf82cfe940d00"><div class="ttname"><a href="namespaceanch_1_1network.html#a93b67b8a1b1704a0f3cbf82cfe940d00">anch::network::addrinfoCategory</a></div><div class="ttdeci">const std::error_category &amp; addrinfoCategory() noexcept</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
