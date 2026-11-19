@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-ut-export.hpp"
+
 #include <cstdint>
 
 #include "ut/runner.hpp"
@@ -35,7 +37,7 @@ namespace anch::ut {
    *
    * \author Vincent Lachenal
    */
-  class DefaultRunner: public anch::ut::Runner {
+  class ANCH_UT_EXPORT DefaultRunner: public anch::ut::Runner {
 
   private:
     /*! Unit tests */

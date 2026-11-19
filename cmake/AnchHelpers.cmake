@@ -6,6 +6,7 @@
 include_guard(GLOBAL)
 
 include(GNUInstallDirs)
+include(GenerateExportHeader)
 
 # Build options +
 # Apply AnCH warnings and hardening options to a (non INTERFACE) target.
@@ -47,6 +48,10 @@ endfunction()
 #
 # Creates <target> with an anch::<export name> alias, and registers its installation
 # (library, headers in ${CMAKE_INSTALL_INCLUDEDIR}/anch, and AnchTargets export set).
+#
+# Compiled libraries are built with hidden symbols visibility: only classes, functions and
+# variables marked with the <TARGET>_EXPORT macro (ANCH_CONF_EXPORT for anch-conf, ...)
+# are exported. The macro is defined in the generated "<target>-export.hpp" header.
 function(anch_add_library target)
   cmake_parse_arguments(PARSE_ARGV 1 ARG
     "HEADER_ONLY"
@@ -83,6 +88,24 @@ function(anch_add_library target)
       SOVERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR})
     target_link_libraries(${target} PRIVATE ${ARG_PRIVATE_DEPS})
     target_compile_definitions(${target} PRIVATE ${ARG_PRIVATE_DEFINITIONS})
+
+    # Exported symbols +
+    # Inline functions keep the visibility of their class: with 'extern template' declarations, consumers built
+    # without optimization call the inline members of explicit instantiations exported by the library
+    set_target_properties(${target} PROPERTIES CXX_VISIBILITY_PRESET hidden)
+    string(MAKE_C_IDENTIFIER ${target} export_base)
+    string(TOUPPER ${export_base} export_base)
+    set(export_dir ${CMAKE_CURRENT_BINARY_DIR}/export)
+    set(export_header ${export_dir}/${target}-export.hpp)
+    generate_export_header(${target}
+      BASE_NAME ${export_base}
+      EXPORT_FILE_NAME ${export_header})
+    list(APPEND build_includes $<BUILD_INTERFACE:${export_dir}>)
+    if(NOT BUILD_SHARED_LIBS)
+      target_compile_definitions(${target} PUBLIC ${export_base}_STATIC_DEFINE)
+    endif()
+    install(FILES ${export_header} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/anch)
+    # Exported symbols -
   endif()
 
   add_library(anch::${ARG_EXPORT_NAME} ALIAS ${target})

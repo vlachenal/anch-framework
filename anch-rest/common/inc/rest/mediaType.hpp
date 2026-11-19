@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-rest-common-export.hpp"
+
 #include <map>
 #include <optional>
 #include <string>
@@ -36,7 +38,7 @@ namespace anch::rest {
    *
    * \since 0.2
    */
-  class MediaType {
+  class ANCH_REST_COMMON_EXPORT MediaType {
 
     // Attributes +
   private:
@@ -187,7 +189,7 @@ namespace anch::rest {
    *
    * \return the selected media type index, empty when no media type is acceptable
    */
-  std::optional<std::size_t> negotiate(const std::vector<anch::rest::MediaType>& accept,
+  ANCH_REST_COMMON_EXPORT std::optional<std::size_t> negotiate(const std::vector<anch::rest::MediaType>& accept,
 				       const std::vector<anch::rest::MediaType>& available);
 
 }

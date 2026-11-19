@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-rest-common-export.hpp"
+
 #include <map>
 #include <optional>
 #include <string>
@@ -34,7 +36,7 @@ namespace anch::rest {
    *
    * \since 0.2
    */
-  struct CaseInsensitiveLess {
+  struct ANCH_REST_COMMON_EXPORT CaseInsensitiveLess {
     /*! Allow lookup with \c std::string_view */
     using is_transparent = void;
 
@@ -57,7 +59,7 @@ namespace anch::rest {
    *
    * \since 0.2
    */
-  class Headers {
+  class ANCH_REST_COMMON_EXPORT Headers {
 
   public:
     /*! Header values by name */

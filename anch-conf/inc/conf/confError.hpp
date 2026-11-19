@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-conf-export.hpp"
+
 #include <exception>
 #include <string>
 
@@ -31,7 +33,7 @@ namespace anch::conf {
    *
    * \since 0.1
    */
-  class ConfError: public std::exception {
+  class ANCH_CONF_EXPORT ConfError: public std::exception {
 
   public:
     /*!*

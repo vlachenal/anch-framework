@@ -20,6 +20,8 @@
 #ifdef ANCH_SQL_SQLITE3
 #pragma once
 
+#include "anch-sqlite-export.hpp"
+
 #include "sql/connection.hpp"
 
 #include "sqlite3.h"
@@ -36,7 +38,7 @@ namespace anch::sql::sqlite {
    *
    * \since 0.2
    */
-  bool isFatal(int code) noexcept;
+  ANCH_SQLITE_EXPORT bool isFatal(int code) noexcept;
 
   /*!
    * Build SQL exception from SQLite error
@@ -49,7 +51,7 @@ namespace anch::sql::sqlite {
    *
    * \since 0.2
    */
-  SqlException error(const std::string& message, sqlite3* conn, int code);
+  ANCH_SQLITE_EXPORT SqlException error(const std::string& message, sqlite3* conn, int code);
 
 }  // anch::sql::sqlite
 
@@ -64,7 +66,7 @@ namespace anch::sql {
    *
    * \since 0.1
    */
-  class SQLite3Connection: public Connection {
+  class ANCH_SQLITE_EXPORT SQLite3Connection: public Connection {
 
     // Attributes +
   private:

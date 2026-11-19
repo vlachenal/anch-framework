@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-crypto-export.hpp"
+
 #include "crypto/hash/hash.hpp"
 
 namespace anch::crypto {
@@ -43,7 +45,7 @@ namespace anch::crypto {
    * \author Vincent Lachenal
    */
   template<std::size_t O, std::size_t B, typename W, uint32_t R, const std::array<W,8>& I>
-  class SHA2: public Hash<O,B> {
+  class ANCH_CRYPTO_EXPORT SHA2: public Hash<O,B> {
 
   protected:
     /*!

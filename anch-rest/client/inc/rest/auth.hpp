@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-rest-client-export.hpp"
+
 #include <string>
 #include <string_view>
 
@@ -36,7 +38,7 @@ namespace anch::rest {
    *
    * \since 0.2
    */
-  anch::rest::Filter basicAuth(std::string_view user, std::string_view password);
+  ANCH_REST_CLIENT_EXPORT anch::rest::Filter basicAuth(std::string_view user, std::string_view password);
 
   /*!
    * Bearer token authentication filter: sets \c Authorization header
@@ -47,7 +49,7 @@ namespace anch::rest {
    *
    * \since 0.2
    */
-  anch::rest::Filter bearerAuth(std::string_view token);
+  ANCH_REST_CLIENT_EXPORT anch::rest::Filter bearerAuth(std::string_view token);
 
   /*!
    * Base64 encoding (RFC 4648, with padding)
@@ -58,6 +60,6 @@ namespace anch::rest {
    *
    * \since 0.2
    */
-  std::string base64Encode(std::string_view value);
+  ANCH_REST_CLIENT_EXPORT std::string base64Encode(std::string_view value);
 
 }

@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-rest-protobuf-export.hpp"
+
 #include <concepts>
 #include <istream>
 #include <ostream>
@@ -55,7 +57,7 @@ pets::Pet pet = client.get("/pets/{id}", 1).accept<anch::rest::Protobuf>().as<pe
    *
    * \since 0.2
    */
-  struct Protobuf {
+  struct ANCH_REST_PROTOBUF_EXPORT Protobuf {
 
     /*!
      * Media type
@@ -118,7 +120,7 @@ pets::Pet pet = client.get("/pets/{id}", 1).accept<anch::rest::Protobuf>().as<pe
    *
    * \since 0.2
    */
-  struct ProtobufJson {
+  struct ANCH_REST_PROTOBUF_EXPORT ProtobufJson {
 
     /*!
      * Media type

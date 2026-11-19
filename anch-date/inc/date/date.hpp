@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-date-export.hpp"
+
 #include <chrono>
 #include <compare>
 #include <cstdint>
@@ -43,7 +45,7 @@ namespace anch::date {
    *
    * \author Vincent Lachenal
    */
-  class Date {
+  class ANCH_DATE_EXPORT Date {
 
     friend class IDatePartFormatter;
     friend class DateFormatter;

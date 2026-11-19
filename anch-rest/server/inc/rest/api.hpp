@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-rest-server-export.hpp"
+
 #include <functional>
 #include <memory>
 #include <optional>
@@ -70,7 +72,7 @@ api.validate();
    *
    * \since 0.2
    */
-  class Api {
+  class ANCH_REST_SERVER_EXPORT Api {
 
     /*! Routing tree node */
     struct Node;

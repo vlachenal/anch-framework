@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-date-export.hpp"
+
 #include <cstdint>
 #include <ostream>
 #include <string>
@@ -38,7 +40,7 @@ namespace anch::date {
    *
    * \author Vincent Lachenal
    */
-  class IDatePartFormatter {
+  class ANCH_DATE_EXPORT IDatePartFormatter {
   public:
     /*!
      * \ref IDatePartFormatter destructor

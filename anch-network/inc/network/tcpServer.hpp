@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-network-export.hpp"
+
 #include <cstddef>
 #include <string>
 
@@ -42,7 +44,7 @@ namespace anch::network {
    *
    * \since 0.2
    */
-  class TcpServer {
+  class ANCH_NETWORK_EXPORT TcpServer {
 
     // Attributes +
   private:

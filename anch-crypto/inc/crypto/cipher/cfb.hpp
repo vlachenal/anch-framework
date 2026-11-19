@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-crypto-export.hpp"
+
 #include "crypto/cipher/bcModOp.hpp"
 
 namespace anch::crypto {
@@ -33,7 +35,7 @@ namespace anch::crypto {
    * \author Vincent Lachenal
    */
   template<typename Cipher>
-  class CFB: public BlockCipherModeOfOperation<CFB<Cipher>,Cipher> {
+  class ANCH_CRYPTO_EXPORT CFB: public BlockCipherModeOfOperation<CFB<Cipher>,Cipher> {
 
     // Attributes +
   private:

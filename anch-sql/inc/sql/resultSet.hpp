@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-sql-export.hpp"
+
 #include <string>
 #include <vector>
 #include <sstream>
@@ -51,7 +53,7 @@ namespace anch::sql {
    *
    * \since 0.1
    */
-  class ResultSet {
+  class ANCH_SQL_EXPORT ResultSet {
 
     friend class Connection;
     friend class PreparedStatement;

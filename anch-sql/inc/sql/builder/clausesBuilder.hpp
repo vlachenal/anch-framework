@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-sql-export.hpp"
+
 #include <string>
 #include <list>
 #include <sstream>
@@ -69,7 +71,7 @@ namespace anch::sql {
    *
    * \author Vincent Lachenal
    */
-  class ClausesBuilder {
+  class ANCH_SQL_EXPORT ClausesBuilder {
     friend ClausesBuilder anch::sql::clauses();
     friend class anch::sql::SelectBuilder;
     friend class anch::sql::FromBuilder;

@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-rest-common-export.hpp"
+
 #include <stdexcept>
 #include <string>
 
@@ -35,7 +37,7 @@ namespace anch::rest {
    *
    * \since 0.2
    */
-  class HttpException: public std::runtime_error {
+  class ANCH_REST_COMMON_EXPORT HttpException: public std::runtime_error {
 
     // Attributes +
   private:

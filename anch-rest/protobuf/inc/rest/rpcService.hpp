@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-rest-protobuf-export.hpp"
+
 #include <cstddef>
 #include <cstdint>
 #include <functional>
@@ -85,7 +87,7 @@ namespace anch::rest {
    *
    * \since 0.2
    */
-  class RpcError: public std::runtime_error {
+  class ANCH_REST_PROTOBUF_EXPORT RpcError: public std::runtime_error {
 
     // Attributes +
   private:
@@ -123,7 +125,7 @@ namespace anch::rest {
    *
    * \since 0.2
    */
-  class RpcContext {
+  class ANCH_REST_PROTOBUF_EXPORT RpcContext {
 
     // Attributes +
   private:
@@ -200,7 +202,7 @@ anch::rest::installRpc(api, service); // POST /pets.PetStore/GetPet
    *
    * \since 0.2
    */
-  class RpcService {
+  class ANCH_REST_PROTOBUF_EXPORT RpcService {
 
     /*! Method: request bytes to response bytes */
     using Method = std::function<std::string(std::string_view, anch::rest::RpcFormat, anch::rest::RpcContext&)>;
@@ -329,7 +331,7 @@ namespace anch::rest::rpc {
    *
    * \since 0.2
    */
-  std::string_view connectCode(anch::rest::RpcCode code) noexcept;
+  ANCH_REST_PROTOBUF_EXPORT std::string_view connectCode(anch::rest::RpcCode code) noexcept;
 
   /*!
    * Parse Connect error code name
@@ -340,7 +342,7 @@ namespace anch::rest::rpc {
    *
    * \since 0.2
    */
-  std::optional<anch::rest::RpcCode> parseConnectCode(std::string_view name) noexcept;
+  ANCH_REST_PROTOBUF_EXPORT std::optional<anch::rest::RpcCode> parseConnectCode(std::string_view name) noexcept;
 
   /*!
    * HTTP status of a Connect error
@@ -351,7 +353,7 @@ namespace anch::rest::rpc {
    *
    * \since 0.2
    */
-  anch::rest::Status httpStatus(anch::rest::RpcCode code) noexcept;
+  ANCH_REST_PROTOBUF_EXPORT anch::rest::Status httpStatus(anch::rest::RpcCode code) noexcept;
 
   /*!
    * RPC code of an HTTP status (errors raised outside RPC handlers)
@@ -362,7 +364,7 @@ namespace anch::rest::rpc {
    *
    * \since 0.2
    */
-  anch::rest::RpcCode rpcCode(anch::rest::Status status) noexcept;
+  ANCH_REST_PROTOBUF_EXPORT anch::rest::RpcCode rpcCode(anch::rest::Status status) noexcept;
 
   /*!
    * Connect error body: <tt>{"code":"not_found","message":"..."}</tt>
@@ -373,7 +375,7 @@ namespace anch::rest::rpc {
    *
    * \since 0.2
    */
-  std::string connectError(const anch::rest::RpcError& error);
+  ANCH_REST_PROTOBUF_EXPORT std::string connectError(const anch::rest::RpcError& error);
 
   /*!
    * Parse Connect error body
@@ -385,7 +387,7 @@ namespace anch::rest::rpc {
    *
    * \since 0.2
    */
-  anch::rest::RpcError parseConnectError(anch::rest::Status status, std::string_view body);
+  ANCH_REST_PROTOBUF_EXPORT anch::rest::RpcError parseConnectError(anch::rest::Status status, std::string_view body);
 
   /*!
    * gRPC-Web frame: flag byte, big endian length (4 bytes) and data
@@ -397,7 +399,7 @@ namespace anch::rest::rpc {
    *
    * \since 0.2
    */
-  std::string grpcWebFrame(std::string_view data, bool trailers);
+  ANCH_REST_PROTOBUF_EXPORT std::string grpcWebFrame(std::string_view data, bool trailers);
 
   /*!
    * Read gRPC-Web request message frame
@@ -410,7 +412,7 @@ namespace anch::rest::rpc {
    *
    * \since 0.2
    */
-  std::string grpcWebMessage(std::string_view body);
+  ANCH_REST_PROTOBUF_EXPORT std::string grpcWebMessage(std::string_view body);
 
   /*!
    * gRPC-Web trailers frame data: \c grpc-status and \c grpc-message (percent-encoded) lines
@@ -422,7 +424,7 @@ namespace anch::rest::rpc {
    *
    * \since 0.2
    */
-  std::string grpcWebTrailers(anch::rest::RpcCode code, std::string_view message);
+  ANCH_REST_PROTOBUF_EXPORT std::string grpcWebTrailers(anch::rest::RpcCode code, std::string_view message);
 
 }
 

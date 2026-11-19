@@ -20,6 +20,8 @@
 #ifdef ANCH_SQL_SQLITE3
 #pragma once
 
+#include "anch-sqlite-export.hpp"
+
 #include "sql/preparedStatement.hpp"
 #include "sql/sqlite3Connection.hpp"
 
@@ -42,7 +44,7 @@ namespace anch::sql {
    *
    * \since 0.1
    */
-  class SQLite3PreparedStatement: public PreparedStatement {
+  class ANCH_SQLITE_EXPORT SQLite3PreparedStatement: public PreparedStatement {
 
     // Attributes +
   private:

@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-conf-export.hpp"
+
 #include <cstddef>
 
 #include "conf/section.hpp"
@@ -52,7 +54,7 @@ url=http://${env=HOST|localhost}:${conf=server.port}/
    *
    * \since 0.2
    */
-  class Placeholders {
+  class ANCH_CONF_EXPORT Placeholders {
 
     // Attributes +
   public:

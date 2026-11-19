@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-sql-export.hpp"
+
 #include "sql/builder/selectBuilder.hpp"
 #include "sql/builder/clausesBuilder.hpp"
 
@@ -31,14 +33,14 @@ namespace anch::sql {
    *
    * \return the new \ref SelectBuilder
    */
-  anch::sql::SelectBuilder select();
+  ANCH_SQL_EXPORT anch::sql::SelectBuilder select();
 
   /*!
    * Initialize a new \ref ClausesBuilder
    *
    * \return the new \ref ClausesBuilder
    */
-  anch::sql::ClausesBuilder clauses();
+  ANCH_SQL_EXPORT anch::sql::ClausesBuilder clauses();
 
   /*!
    * Initialize a new \ref ClausesBuilder

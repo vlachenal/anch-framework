@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-json-export.hpp"
+
 #include <cstddef>
 #include <stdint.h>
 
@@ -33,7 +35,7 @@ namespace anch::json {
    *
    * \since 0.1
    */
-  struct MappingOptions {
+  struct ANCH_JSON_EXPORT MappingOptions {
 
     // Serialization +
     /*! Serialize empty collection as \c [] or \c {} for map . Default to \c true ; std::optional or pointer can be used */
@@ -88,6 +90,6 @@ namespace anch::json {
   };
 
   /*! Default mapping options. It is not a constant so it can be changed in your application initialization. */
-  extern MappingOptions DEFAULT_MAPPING_OPTIONS;
+  extern ANCH_JSON_EXPORT MappingOptions DEFAULT_MAPPING_OPTIONS;
 
 }  // anch::json

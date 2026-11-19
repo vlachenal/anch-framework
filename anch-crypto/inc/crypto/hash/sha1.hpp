@@ -19,12 +19,14 @@
 */
 #pragma once
 
+#include "anch-crypto-export.hpp"
+
 #include "crypto/hash/hash.hpp"
 
 
 namespace anch::crypto {
 
-  template<typename H> H HMAC(const std::string&, const std::string&);
+  template<typename H> ANCH_CRYPTO_EXPORT H HMAC(const std::string&, const std::string&);
 
   /*!
    * \brief SHA1 hash algorithm implementation
@@ -33,7 +35,7 @@ namespace anch::crypto {
    *
    * \author Vincent Lachenal
    */
-  class SHA1: public Hash<20,64> {
+  class ANCH_CRYPTO_EXPORT SHA1: public Hash<20,64> {
 
     friend SHA1 anch::crypto::HMAC<SHA1>(const std::string&, const std::string&);
 
@@ -162,6 +164,6 @@ namespace anch::crypto {
   /*!
    * Register SHA1 UUID provider
    */
-  void registerSHA1UUIDProvider();
+  ANCH_CRYPTO_EXPORT void registerSHA1UUIDProvider();
 
 }

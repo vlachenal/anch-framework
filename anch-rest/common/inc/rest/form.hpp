@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-rest-common-export.hpp"
+
 #include <filesystem>
 #include <istream>
 #include <memory>
@@ -40,7 +42,7 @@ namespace anch::rest {
    *
    * \since 0.2
    */
-  struct FormLimits {
+  struct ANCH_REST_COMMON_EXPORT FormLimits {
     /*! Maximum body size in bytes */
     std::size_t maxSize;
 
@@ -73,7 +75,7 @@ namespace anch::rest {
    *
    * \since 0.2
    */
-  class Part {
+  class ANCH_REST_COMMON_EXPORT Part {
 
     /*! File content */
     struct FileContent;
@@ -286,7 +288,7 @@ std::vector<std::string_view> tags = form.fields("tags");
    *
    * \since 0.2
    */
-  class Form {
+  class ANCH_REST_COMMON_EXPORT Form {
 
     // Attributes +
   private:

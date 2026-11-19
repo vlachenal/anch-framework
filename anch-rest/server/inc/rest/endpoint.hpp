@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-rest-server-export.hpp"
+
 #include <cstddef>
 #include <functional>
 #include <istream>
@@ -200,7 +202,7 @@ namespace anch::rest {
    *
    * \since 0.2
    */
-  class Route {
+  class ANCH_REST_SERVER_EXPORT Route {
 
     // Attributes +
   protected:

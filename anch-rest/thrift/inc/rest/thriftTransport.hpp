@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-rest-thrift-export.hpp"
+
 #include <algorithm>
 #include <cstdint>
 #include <cstring>
@@ -52,7 +54,7 @@ pets.getPet(pet, 1);
    *
    * \since 0.2
    */
-  class ThriftTransport: public apache::thrift::transport::TVirtualTransport<ThriftTransport> {
+  class ANCH_REST_THRIFT_EXPORT ThriftTransport: public apache::thrift::transport::TVirtualTransport<ThriftTransport> {
 
     // Attributes +
   private:

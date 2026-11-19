@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-log-export.hpp"
+
 #include <string>
 
 #include "log/fmt/messageFormatter.hpp"
@@ -35,7 +37,7 @@ namespace anch::log {
    *
    * \author Vincent Lachenal
    */
-  class Writer {
+  class ANCH_LOG_EXPORT Writer {
 
     // Attributes +
   private:

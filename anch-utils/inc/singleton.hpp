@@ -45,6 +45,8 @@ namespace anch {
    * construction. When a singleton uses another one in its destructor (or holds objects which depend on it), it has to
    * call the other singleton's \ref getInstance in its constructor: the other singleton will be fully constructed first,
    * so it will be destroyed after.\n
+   * \c Singleton has default symbols visibility: the instance is shared between AnCH libraries (built with
+   * hidden visibility) and the application.\n
    * A singleton must not be used from a static object destructor or a detached thread after its destruction.
    *
    * \since 0.1
@@ -52,7 +54,7 @@ namespace anch {
    * \author Vincent Lachenal
    */
   template<typename T>
-  class Singleton {
+  class [[gnu::visibility("default")]] Singleton {
 
     // Constructors +
   protected:

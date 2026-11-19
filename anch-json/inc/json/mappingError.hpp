@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-json-export.hpp"
+
 #include <istream>
 #include <exception>
 #include <optional>
@@ -79,7 +81,7 @@ namespace anch::json {
    *
    * \since 0.1
    */
-  class MappingError: public std::exception {
+  class ANCH_JSON_EXPORT MappingError: public std::exception {
 
     // Attributes +
   private:

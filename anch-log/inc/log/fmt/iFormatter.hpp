@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-log-export.hpp"
+
 #include <iostream>
 
 namespace anch::log::fmt {
@@ -44,7 +46,7 @@ namespace anch::log::fmt {
    *
    * \author Vincent Lachenal
    */
-  class IFormatter {
+  class ANCH_LOG_EXPORT IFormatter {
   public:
     /*!
      * \ref IFormatter destructor

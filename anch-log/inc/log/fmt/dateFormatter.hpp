@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-log-export.hpp"
+
 #include "log/fmt/iFormatter.hpp"
 
 
@@ -29,7 +31,7 @@ namespace anch::log::fmt {
    *
    * \author Vincent Lachenal
    */
-  class DateFormatter: public anch::log::fmt::IFormatter {
+  class ANCH_LOG_EXPORT DateFormatter: public anch::log::fmt::IFormatter {
   private:
     // Attributes +
     /*! Date format pattern */

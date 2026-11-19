@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-rest-common-export.hpp"
+
 #include <cstdint>
 #include <string_view>
 
@@ -113,6 +115,6 @@ namespace anch::rest {
    *
    * \return the reason phrase (\c "OK" , ...), empty for unknown status
    */
-  std::string_view reasonPhrase(anch::rest::Status status) noexcept;
+  ANCH_REST_COMMON_EXPORT std::string_view reasonPhrase(anch::rest::Status status) noexcept;
 
 }

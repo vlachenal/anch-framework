@@ -116,7 +116,7 @@ namespace {
 
 }
 
-int
+ANCH_UT_EXPORT int
 main(int argc, char** argv) {
   UnitTests tests;
   try {

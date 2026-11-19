@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-sql-export.hpp"
+
 #include <exception>
 #include <string>
 
@@ -34,7 +36,7 @@ namespace anch::sql {
    *
    * \since 0.1
    */
-  class SqlException: public std::exception {
+  class ANCH_SQL_EXPORT SqlException: public std::exception {
 
     // Attributes +
   private:

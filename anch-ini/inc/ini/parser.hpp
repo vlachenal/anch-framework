@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-ini-export.hpp"
+
 #include <string>
 #include <filesystem>
 
@@ -58,7 +60,7 @@ namespace anch::ini {
    *
    * \throw anch::ini::ParseError parsing exception
    */
-  void merge(const std::filesystem::path& path, anch::ini::Section& section);
+  ANCH_INI_EXPORT void merge(const std::filesystem::path& path, anch::ini::Section& section);
 
 }
 

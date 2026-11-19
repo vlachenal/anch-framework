@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-crypto-export.hpp"
+
 #include "crypto/cipher/blockCipher.hpp"
 
 #include <bitset>
@@ -63,7 +65,7 @@ namespace anch::crypto {
    * \author Vincent Lachenal
    */
   template<std::size_t K, std::size_t R>
-  class AES: public anch::crypto::BlockCipher<16> {
+  class ANCH_CRYPTO_EXPORT AES: public anch::crypto::BlockCipher<16> {
     // Attributes +
   private:
 #if defined ANCH_CPU_DETECTION || !defined(ANCH_CPU_AES)
@@ -668,13 +670,13 @@ namespace anch::crypto {
 
 #if defined ANCH_CPU_DETECTION || !defined(ANCH_CPU_AES)
   /*! Cipher subsitution box */
-  extern const uint8_t ANCH_AES_CIPHER_SBOX[256];
+  extern ANCH_CRYPTO_EXPORT const uint8_t ANCH_AES_CIPHER_SBOX[256];
 
   /*! Decipher subsitution box */
-  extern const uint8_t ANCH_AES_DECIPHER_SBOX[256];
+  extern ANCH_CRYPTO_EXPORT const uint8_t ANCH_AES_DECIPHER_SBOX[256];
 
   /*! Round constants */
-  extern const uint32_t ANCH_AES_RCON[11];
+  extern ANCH_CRYPTO_EXPORT const uint32_t ANCH_AES_RCON[11];
 
   template<std::size_t K, std::size_t R>
   void

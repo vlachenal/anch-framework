@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-network-export.hpp"
+
 #include <cstddef>
 #include <string>
 #include <string_view>
@@ -35,7 +37,7 @@ namespace anch::network {
    *
    * \author Vincent Lachenal
    */
-  class UdpSocket {
+  class ANCH_NETWORK_EXPORT UdpSocket {
 
     // Attributes +
   public:

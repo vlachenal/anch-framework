@@ -124,7 +124,7 @@ Des fonctions utilitaires définies dans les `.cpp` sans `static` ni namespace a
 Une application (ou une autre bibliothèque) qui définit une fonction de même signature la substitue silencieusement à celle de la bibliothèque (interposition de symboles), ou viole l'ODR en liaison statique. anch-rest et anch-oas utilisent déjà des namespaces anonymes.
 Correction : les 52 fonctions sont `static` (liaison interne), les classes locales `Core1` à `Core4` (MD5), `ConfFile` (anch-conf) et `MySQLInitializer` (pilote MySQL) sont dans un namespace anonyme. `nm -DC` ne montre plus, hors namespace `anch`, que les points d'entrée voulus (`create_connection`, `create_shared_connection`, `delete_connection` des pilotes SQL, `main` d'anch-ut). 774/774 tests sous ASan / UBSan, 694/694 en release.
 Effet de bord : `decode` devenu `static` est intégré par GCC en release, ce qui a révélé une lecture non initialisée dans Base64 (voir C7 / C8 dans `anch-crypto`).
-Reste possible : `-fvisibility=hidden` avec une macro d'export.
+Visibilité masquée (`-fvisibility=hidden`) et macros d'export : faites le 2026-11-19, voir « Industrialisation, point 2 ».
 
 ## Industrialisation, point 1 : fiabilité vérifiée en continu (2026-11-16)
 
@@ -150,6 +150,20 @@ Défauts trouvés :
 - conformité révélée par Clang : instanciations explicites par un nom introduit par `using` (128, anch-crypto et anch-json), `override` manquants (`reset` des modes de chiffrement), spécifications d'exception incohérentes entre déclaration et définition (destructeurs de `ReaderContext`, `SqlConnectionFactory`, `SQLite3Connection`), comparaison signée dans SHA-2, champ inutilisé (`MySQLPreparedStatement::_conn`).
 
 À noter pour anch-crypto : les classes de hachage masquent `Hash::digest(const std::string&)` (masquage de nom par `digest()`), seul le constructeur prend les données.
+
+## Industrialisation, point 2 : versions et compatibilité (2026-11-19)
+
+Choix validés : tag `v0.2.0`, `CHANGELOG.md` (Keep a Changelog, aussi page Doxygen `changelog`), politique de dépréciation (`[[deprecated]]` + `\deprecated`, suppression à la mineure suivante avant 1.0.0, à la majeure suivante ensuite ; décrite dans `index.dox`), visibilité masquée.
+
+Visibilité des symboles :
+- `anch_add_library` compile les bibliothèques avec `CXX_VISIBILITY_PRESET hidden` (sans `VISIBILITY_INLINES_HIDDEN` : en debug, un consommateur appelle les fonctions inline des instanciations `extern template`, comme `BlockCipher<16>::getBlockSize()`, que la bibliothèque doit donc exporter ; trouvé par le preset `asan`), génère `anch-<cible>-export.hpp` (`generate_export_header`, macro `ANCH_<CIBLE>_EXPORT`, `ANCH_<CIBLE>_STATIC_DEFINE` public en statique) et l'installe ;
+- annotés : 181 classes et templates de classes publics, 165 déclarations de fonctions libres et de variables `extern`, les templates instanciés explicitement (chiffrements, hachages, `HMAC`, `PrimitiveMapper`) ou porteurs d'un état statique (`json::Factory`), les points d'entrée des pilotes SQL et le `main` d'anch-ut ; `operator<<` de `SelectBuilder`, déclaré seulement en `friend`, est redéclaré au niveau du namespace ;
+- `Singleton` et `events::detail::notifyingLists` (en-têtes seuls) ont `[[gnu::visibility("default")]]` : sinon chaque bibliothèque et l'application auraient leur propre instance (`LoggerFactory`, `Parsers`, `Resolvers`, `CPU`, `SQLSharedLibraries`) ;
+- symboles exportés : 7 156 → 6 093 (release, anch-rest compris) ; les objets uniques perdus sont des tables constantes (`ESCAPED_CHARS`, mots-clés d'anch-oas) ; aucun symbole `anch::` déclaré dans un en-tête public n'a disparu ;
+- `cmake/check-exports.sh` (job `build`) échoue si une bibliothèque exporte un symbole hors du namespace `anch` autre que les points d'entrée attendus, ou n'exporte aucun symbole `anch` ; appliqué aux anciennes bibliothèques, il signale les `setNum<T>` d'anch-cli encore exportés dans l'espace de noms global ;
+- Doxygen : macros d'export définies vides (`PREDEFINED`, `MACRO_EXPANSION` limité aux macros prédéfinies) ; `fuzz/` et `cmake/` exclus (avertissements des sources du test d'installation et des cibles de fuzzing).
+
+Vérifications : release GCC 790/790, Clang 790/790, ASan / UBSan 790/790, test d'installation partagé et statique, anch-app compilé (`ANCH_BUILD_APP=ON`).
 
 ## Divers
 

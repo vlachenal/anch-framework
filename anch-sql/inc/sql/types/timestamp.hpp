@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-sql-export.hpp"
+
 #include "date/date.hpp"
 
 
@@ -34,7 +36,7 @@ namespace anch::sql {
    *
    * \author Vincent Lachenal
    */
-  class Timestamp: public anch::date::Date {
+  class ANCH_SQL_EXPORT Timestamp: public anch::date::Date {
 
     // Constructors +
   public:

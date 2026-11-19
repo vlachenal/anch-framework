@@ -19,13 +19,15 @@
 */
 #pragma once
 
+#include "anch-json-export.hpp"
+
 namespace anch::json {
 
   // Lexer functions used by context (declared in json/lexer.hpp) +
-  char discardFail(anch::json::ReaderContext& context);
-  char lexDiscard(anch::json::ReaderContext& context);
-  void lexUnknown(anch::json::ReaderContext& context);
-  void lexUnknownFail(anch::json::ReaderContext& context);
+  ANCH_JSON_EXPORT char discardFail(anch::json::ReaderContext& context);
+  ANCH_JSON_EXPORT char lexDiscard(anch::json::ReaderContext& context);
+  ANCH_JSON_EXPORT void lexUnknown(anch::json::ReaderContext& context);
+  ANCH_JSON_EXPORT void lexUnknownFail(anch::json::ReaderContext& context);
   // Lexer functions used by context (declared in json/lexer.hpp) -
 
   [[gnu::always_inline]] inline // called for each token: has to be inlined whatever the code size of the unit is

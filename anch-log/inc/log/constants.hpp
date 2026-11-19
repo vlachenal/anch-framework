@@ -19,41 +19,43 @@
 */
 #pragma once
 
+#include "anch-log-export.hpp"
+
 #include <string>
 
 namespace anch::log {
 
   /*! '' constant */
-  extern const std::string DEFAULT;
+  extern ANCH_LOG_EXPORT const std::string DEFAULT;
 
   /*! 'module' constant */
-  extern const std::string MODULE;
+  extern ANCH_LOG_EXPORT const std::string MODULE;
 
   /*! 'thread-safe' constant */
-  extern const std::string THREAD_SAFE;
+  extern ANCH_LOG_EXPORT const std::string THREAD_SAFE;
 
   /*! 'low-priority' constant */
-  extern const std::string LOW_PRIORITY;
+  extern ANCH_LOG_EXPORT const std::string LOW_PRIORITY;
 
   /*! 'writer' constant */
-  extern const std::string WRITER;
+  extern ANCH_LOG_EXPORT const std::string WRITER;
 
   /*! 'writers' constant */
-  extern const std::string WRITERS;
+  extern ANCH_LOG_EXPORT const std::string WRITERS;
 
   /*! 'logger' constant */
-  extern const std::string LOGGER;
+  extern ANCH_LOG_EXPORT const std::string LOGGER;
 
   /*! 'level' constant */
-  extern const std::string LEVEL;
+  extern ANCH_LOG_EXPORT const std::string LEVEL;
 
   /*! 'anch::log' constant */
-  extern const std::string NS_LOG;
+  extern ANCH_LOG_EXPORT const std::string NS_LOG;
 
   /*! 'file' constant */
-  extern const std::string WRITER_FILE;
+  extern ANCH_LOG_EXPORT const std::string WRITER_FILE;
 
   /*! 'console' constant */
-  extern const std::string WRITER_TERM;
+  extern ANCH_LOG_EXPORT const std::string WRITER_TERM;
 
 }

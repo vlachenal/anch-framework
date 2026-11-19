@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-sql-export.hpp"
+
 #include "sql/connection.hpp"
 #include "sql/sqlException.hpp"
 
@@ -40,7 +42,7 @@ namespace anch::sql {
    *
    * \throw SqlException any error
    */
-  extern std::shared_ptr<Connection> make_shared_connection(const SqlConnectionConfiguration& config);
+  extern ANCH_SQL_EXPORT std::shared_ptr<Connection> make_shared_connection(const SqlConnectionConfiguration& config);
 
   /*! SQL connections pool definition */
   using SqlConnectionPool = anch::ResourcePool<Connection, SqlConnectionConfiguration, make_shared_connection>;
@@ -52,7 +54,7 @@ namespace anch::sql {
    *
    * \since 0.1
    */
-  class SqlConnectionFactory: public anch::Singleton<SqlConnectionFactory> {
+  class ANCH_SQL_EXPORT SqlConnectionFactory: public anch::Singleton<SqlConnectionFactory> {
     friend class anch::Singleton<SqlConnectionFactory>;
 
     // Attributes +

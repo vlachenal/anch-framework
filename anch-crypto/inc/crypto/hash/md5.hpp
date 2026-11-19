@@ -19,12 +19,14 @@
 */
 #pragma once
 
+#include "anch-crypto-export.hpp"
+
 #include "crypto/hash/hash.hpp"
 
 
 namespace anch::crypto {
 
-  template<typename H> H HMAC(const std::string&, const std::string&);
+  template<typename H> ANCH_CRYPTO_EXPORT H HMAC(const std::string&, const std::string&);
 
   /*!
    * \brief MD5 hash algorithm implementation
@@ -33,7 +35,7 @@ namespace anch::crypto {
    *
    * \author Vincent Lachenal
    */
-  class MD5: public Hash<16,64> {
+  class ANCH_CRYPTO_EXPORT MD5: public Hash<16,64> {
 
     friend MD5 anch::crypto::HMAC<MD5>(const std::string&, const std::string&);
 
@@ -154,6 +156,6 @@ namespace anch::crypto {
   /*!
    * Register MD5 UUID provider
    */
-  void registerMD5UUIDProvider();
+  ANCH_CRYPTO_EXPORT void registerMD5UUIDProvider();
 
 }

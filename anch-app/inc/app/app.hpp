@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-app-export.hpp"
+
 #include "app/args.hpp"
 
 #include <string>
@@ -36,7 +38,7 @@ namespace anch::app {
    *
    * \author Vincent Lachenal
    */
-  class Application {
+  class ANCH_APP_EXPORT Application {
 
     // Attributes +
   protected:

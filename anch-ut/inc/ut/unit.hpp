@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-ut-export.hpp"
+
 #include <string>
 #include <functional>
 #include <vector>
@@ -35,7 +37,7 @@ namespace anch::ut {
    *
    * \since 0.1
    */
-  class UnitTests {
+  class ANCH_UT_EXPORT UnitTests {
 
     // Attrbutes +
   private:

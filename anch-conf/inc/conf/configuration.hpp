@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-conf-export.hpp"
+
 #include <map>
 #include <optional>
 #include <string>
@@ -40,7 +42,7 @@ namespace anch::conf {
    *
    * \author Vincent Lachenal
    */
-  class Configuration {
+  class ANCH_CONF_EXPORT Configuration {
 
     // Attributes +
   private:

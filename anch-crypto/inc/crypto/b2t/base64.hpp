@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-crypto-export.hpp"
+
 #include <iostream>
 #include <sstream>
 #include <cstdint>
@@ -36,7 +38,7 @@ namespace anch::crypto {
    *
    * \author Vincent Lachenal
    */
-  class Base64 {
+  class ANCH_CRYPTO_EXPORT Base64 {
     // Attributes +
   public:
     /*! Base64 classic aplhabet flag */

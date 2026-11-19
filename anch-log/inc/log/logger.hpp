@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-log-export.hpp"
+
 #include <iostream>
 #include <sstream>
 #include <vector>
@@ -42,7 +44,7 @@ namespace anch::log {
    *
    * \author Vincent Lachenal
    */
-  class Logger {
+  class ANCH_LOG_EXPORT Logger {
     // Attributes +
   private:
     /*! Logger name */

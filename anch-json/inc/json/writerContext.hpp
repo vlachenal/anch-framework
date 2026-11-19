@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-json-export.hpp"
+
 #include <ostream>
 #include <streambuf>
 #include <string_view>
@@ -40,7 +42,7 @@ namespace anch::json {
    *
    * \since 0.1
    */
-  class WriterContext {
+  class ANCH_JSON_EXPORT WriterContext {
 
     // Attributes +
   public:

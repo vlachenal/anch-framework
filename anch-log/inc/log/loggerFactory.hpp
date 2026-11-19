@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-log-export.hpp"
+
 #include <map>
 #include <mutex>
 #include <vector>
@@ -45,7 +47,7 @@ namespace anch::log {
    *
    * \author Vincent Lachenal
    */
-  class LoggerFactory: public anch::Singleton<LoggerFactory> {
+  class ANCH_LOG_EXPORT LoggerFactory: public anch::Singleton<LoggerFactory> {
     friend class anch::Singleton<LoggerFactory>;
 
   private:

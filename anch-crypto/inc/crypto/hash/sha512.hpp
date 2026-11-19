@@ -19,12 +19,14 @@
 */
 #pragma once
 
+#include "anch-crypto-export.hpp"
+
 #include "crypto/hash/impl/sha384_512.hpp"
 
 namespace anch::crypto {
 
   /*! SHA512 initial values */
-  extern std::array<uint64_t,8> SHA512_VALUES;
+  extern ANCH_CRYPTO_EXPORT std::array<uint64_t,8> SHA512_VALUES;
   /*
    * SHA512 defintion
    */

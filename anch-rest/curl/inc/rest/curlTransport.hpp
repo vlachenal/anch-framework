@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-rest-curl-export.hpp"
+
 #include <mutex>
 #include <string>
 
@@ -36,7 +38,7 @@ namespace anch::rest {
    *
    * \since 0.2
    */
-  class CurlTransport: public anch::rest::Transport {
+  class ANCH_REST_CURL_EXPORT CurlTransport: public anch::rest::Transport {
 
     // Attributes +
   private:

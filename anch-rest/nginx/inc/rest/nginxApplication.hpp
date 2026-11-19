@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-rest-nginx-export.hpp"
+
 #include <memory>
 #include <string_view>
 
@@ -43,14 +45,14 @@ namespace anch::rest::nginx {
    *
    * \return the API, \c nullptr on error (message in \c error )
    */
-  void* create(Factory factory, const char* config, char* error, std::size_t errorSize) noexcept;
+  ANCH_REST_NGINX_EXPORT void* create(Factory factory, const char* config, char* error, std::size_t errorSize) noexcept;
 
   /*!
    * Destroy application
    *
    * \param app the API
    */
-  void destroy(void* app) noexcept;
+  ANCH_REST_NGINX_EXPORT void destroy(void* app) noexcept;
 
   /*!
    * Handle request with API (see \ref anch::rest::Api::handle ). Unknown methods are answered with
@@ -69,7 +71,7 @@ namespace anch::rest::nginx {
    *
    * \return \c 0 when response is complete, \c -1 when it has been interrupted after its start
    */
-  int handle(void* app, const anch_rest_request_t* request, const anch_rest_response_writer_t* writer) noexcept;
+  ANCH_REST_NGINX_EXPORT int handle(void* app, const anch_rest_request_t* request, const anch_rest_response_writer_t* writer) noexcept;
 
   /*!
    * Application operations for a factory

@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-ut-export.hpp"
+
 #include "ut/runner.hpp"
 #include "ut/unit.hpp"
 
@@ -33,7 +35,7 @@ namespace anch::ut {
    *
    * \author Vincent Lachenal
    */
-  class SocketClientRunner: public anch::ut::Runner {
+  class ANCH_UT_EXPORT SocketClientRunner: public anch::ut::Runner {
 
   private:
     /*! Unit tests */

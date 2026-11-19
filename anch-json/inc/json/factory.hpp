@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-json-export.hpp"
+
 
 namespace anch::json {
 
@@ -49,7 +51,7 @@ namespace anch::json {
    * \since 0.1
    */
   template<typename T>
-  class Factory {
+  class ANCH_JSON_EXPORT Factory {
 
   public:
     /*!

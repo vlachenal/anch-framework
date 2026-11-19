@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-log-export.hpp"
+
 #include <iostream>
 #include <vector>
 #include <regex>
@@ -49,7 +51,7 @@ namespace anch::log::fmt {
    *
    * \author Vincent Lachenal
    */
-  class MessageFormatter {
+  class ANCH_LOG_EXPORT MessageFormatter {
     friend class anch::log::Writer;
 
   private:

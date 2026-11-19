@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-conf-export.hpp"
+
 #include <map>
 #include <functional>
 #include <string>
@@ -52,7 +54,7 @@ namespace anch::conf {
    *
    * \author Vincent Lachenal
    */
-  class Parsers: public anch::Singleton<Parsers> {
+  class ANCH_CONF_EXPORT Parsers: public anch::Singleton<Parsers> {
     friend class anch::conf::Configuration;
     friend class anch::Singleton<Parsers>;
 

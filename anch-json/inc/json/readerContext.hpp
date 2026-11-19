@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-json-export.hpp"
+
 #include <istream>
 #include <string>
 #include <optional>
@@ -39,7 +41,7 @@ namespace anch::json {
    *
    * \since 0.1
    */
-  class ReaderContext {
+  class ANCH_JSON_EXPORT ReaderContext {
 
     // Attributes +
   public:
@@ -196,7 +198,7 @@ namespace anch::json {
    *
    * \since 0.1
    */
-  class DepthGuard {
+  class ANCH_JSON_EXPORT DepthGuard {
 
     // Attributes +
   private:

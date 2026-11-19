@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-device-export.hpp"
+
 #include <cerrno>
 #include <string>
 #include <system_error>
@@ -33,7 +35,7 @@ namespace anch::device {
    *
    * \author Vincent Lachenal
    */
-  class DeviceException: public std::system_error {
+  class ANCH_DEVICE_EXPORT DeviceException: public std::system_error {
 
   public:
     // Constructors +

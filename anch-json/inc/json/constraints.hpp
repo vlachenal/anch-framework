@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-json-export.hpp"
+
 #include <concepts>
 #include <cstddef>
 #include <cstdint>
@@ -49,7 +51,7 @@ namespace anch::json {
    *
    * \since 0.2
    */
-  struct Violation {
+  struct ANCH_JSON_EXPORT Violation {
     /*! Path of the value (JSON Pointer, empty for root value) */
     std::string path;
 
@@ -66,7 +68,7 @@ namespace anch::json {
    *
    * \since 0.2
    */
-  class ValidationContext {
+  class ANCH_JSON_EXPORT ValidationContext {
 
     // Attributes +
   private:
@@ -262,7 +264,7 @@ namespace anch::json::detail {
    *
    * \throw anch::json::MappingError \c MISSING_FIELD when at least one required field has not been found
    */
-  void checkRequired(const std::vector<std::string>& required, const uint64_t* found, anch::json::ReaderContext& context);
+  ANCH_JSON_EXPORT void checkRequired(const std::vector<std::string>& required, const uint64_t* found, anch::json::ReaderContext& context);
 
   /*!
    * Raise \c null value in required field error. It is not inlined to keep mappers code small.
@@ -271,7 +273,7 @@ namespace anch::json::detail {
    *
    * \throw anch::json::MappingError \c CONSTRAINT_VIOLATION
    */
-  [[noreturn]] void rejectNull(anch::json::ReaderContext& context);
+  [[noreturn]] ANCH_JSON_EXPORT void rejectNull(anch::json::ReaderContext& context);
 
   /*!
    * Check value format with the registered validator
@@ -281,7 +283,7 @@ namespace anch::json::detail {
    *
    * \return \c false when the format is known and the value is invalid, \c true otherwise
    */
-  bool matchesFormat(const std::string& name, std::string_view value);
+  ANCH_JSON_EXPORT bool matchesFormat(const std::string& name, std::string_view value);
 
   /*!
    * Raise constraint violation error. It is not inlined to keep mappers code small.
@@ -291,7 +293,7 @@ namespace anch::json::detail {
    *
    * \throw anch::json::MappingError \c CONSTRAINT_VIOLATION
    */
-  [[noreturn]] void violation(anch::json::ReaderContext& context, const std::string& message);
+  [[noreturn]] ANCH_JSON_EXPORT void violation(anch::json::ReaderContext& context, const std::string& message);
 
   /*!
    * Raise constraint violation error on serialization. It is not inlined to keep mappers code small.
@@ -301,7 +303,7 @@ namespace anch::json::detail {
    *
    * \throw anch::json::MappingError \c CONSTRAINT_VIOLATION
    */
-  [[noreturn]] void violation(anch::json::WriterContext& context, const std::string& message);
+  [[noreturn]] ANCH_JSON_EXPORT void violation(anch::json::WriterContext& context, const std::string& message);
 
   /*!
    * Add constraint violation to validation context (validation goes on)
@@ -309,7 +311,7 @@ namespace anch::json::detail {
    * \param context the validation context
    * \param message the violation message
    */
-  void violation(anch::json::ValidationContext& context, const std::string& message);
+  ANCH_JSON_EXPORT void violation(anch::json::ValidationContext& context, const std::string& message);
 
   /*!
    * Constraints are always checked by \ref anch::json::validate
@@ -398,7 +400,7 @@ namespace anch::json::detail {
    *
    * \return the number of code points
    */
-  std::size_t codePoints(std::string_view str);
+  ANCH_JSON_EXPORT std::size_t codePoints(std::string_view str);
 
   /*!
    * Format value for error message: quoted string, number, or empty string when value can not be formatted
@@ -483,7 +485,7 @@ mapper
    *
    * \since 0.2
    */
-  struct MinLength {
+  struct ANCH_JSON_EXPORT MinLength {
     /*! Minimum length */
     std::size_t value;
 
@@ -510,7 +512,7 @@ mapper
    *
    * \since 0.2
    */
-  struct MaxLength {
+  struct ANCH_JSON_EXPORT MaxLength {
     /*! Maximum length */
     std::size_t value;
 
@@ -632,7 +634,7 @@ mapper
    *
    * \since 0.2
    */
-  struct MinItems {
+  struct ANCH_JSON_EXPORT MinItems {
     /*! Minimum number of items */
     std::size_t value;
 
@@ -657,7 +659,7 @@ mapper
    *
    * \since 0.2
    */
-  struct MaxItems {
+  struct ANCH_JSON_EXPORT MaxItems {
     /*! Maximum number of items */
     std::size_t value;
 
@@ -682,7 +684,7 @@ mapper
    *
    * \since 0.2
    */
-  struct MinProperties {
+  struct ANCH_JSON_EXPORT MinProperties {
     /*! Minimum number of entries */
     std::size_t value;
 
@@ -707,7 +709,7 @@ mapper
    *
    * \since 0.2
    */
-  struct MaxProperties {
+  struct ANCH_JSON_EXPORT MaxProperties {
     /*! Maximum number of entries */
     std::size_t value;
 
@@ -735,7 +737,7 @@ mapper
    *
    * \since 0.2
    */
-  struct UniqueItems {
+  struct ANCH_JSON_EXPORT UniqueItems {
     /*!
      * Check value
      *
@@ -845,7 +847,7 @@ mapper.registerField<std::string>("tags", &Pet::tags, anch::json::maxItems(10), 
    *
    * \since 0.2
    */
-  void setPatternCompiler(anch::json::PatternCompiler compiler);
+  ANCH_JSON_EXPORT void setPatternCompiler(anch::json::PatternCompiler compiler);
 
   /*!
    * \brief String pattern constraint ( \c pattern )
@@ -857,7 +859,7 @@ mapper.registerField<std::string>("tags", &Pet::tags, anch::json::maxItems(10), 
    *
    * \since 0.2
    */
-  struct Pattern {
+  struct ANCH_JSON_EXPORT Pattern {
     /*! Pattern matcher */
     std::shared_ptr<const anch::json::PatternMatcher> matcher;
 
@@ -902,7 +904,7 @@ mapper.registerField<std::string>("tags", &Pet::tags, anch::json::maxItems(10), 
    *
    * \since 0.2
    */
-  void registerFormat(const std::string& name, anch::json::FormatValidator validator);
+  ANCH_JSON_EXPORT void registerFormat(const std::string& name, anch::json::FormatValidator validator);
 
   /*!
    * \brief String format constraint ( \c format )
@@ -914,7 +916,7 @@ mapper.registerField<std::string>("tags", &Pet::tags, anch::json::maxItems(10), 
    *
    * \since 0.2
    */
-  struct Format {
+  struct ANCH_JSON_EXPORT Format {
     /*! Format name */
     std::string name;
 
@@ -1178,7 +1180,7 @@ mapper.registerField<std::string>("tags", &Pet::tags, anch::json::maxItems(10), 
    *
    * \since 0.2
    */
-  anch::json::Pattern pattern(std::string_view source);
+  ANCH_JSON_EXPORT anch::json::Pattern pattern(std::string_view source);
 
   /*!
    * \c format constraint

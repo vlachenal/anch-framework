@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-sql-export.hpp"
+
 #include <string>
 #include <map>
 #include <memory>
@@ -36,7 +38,7 @@ namespace anch::sql {
    *
    * \since 0.1
    */
-  struct SQLSharedLibrary {
+  struct ANCH_SQL_EXPORT SQLSharedLibrary {
     /*! Layer library name */
     std::string layer;
 
@@ -57,7 +59,7 @@ namespace anch::sql {
    *
    * \since 0.1
    */
-  class SQLSharedLibraries: public anch::Singleton<SQLSharedLibraries> {
+  class ANCH_SQL_EXPORT SQLSharedLibraries: public anch::Singleton<SQLSharedLibraries> {
     friend class anch::Singleton<SQLSharedLibraries>;
 
     // Attributes +

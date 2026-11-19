@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-rest-common-export.hpp"
+
 #include <optional>
 #include <string_view>
 
@@ -59,7 +61,7 @@ namespace anch::rest {
    *
    * \return the method name (\c "GET" , ...)
    */
-  std::string_view toString(anch::rest::Method method) noexcept;
+  ANCH_REST_COMMON_EXPORT std::string_view toString(anch::rest::Method method) noexcept;
 
   /*!
    * Parse HTTP method name (case sensitive)
@@ -68,6 +70,6 @@ namespace anch::rest {
    *
    * \return the method, empty when the method is unknown
    */
-  std::optional<anch::rest::Method> parseMethod(std::string_view name) noexcept;
+  ANCH_REST_COMMON_EXPORT std::optional<anch::rest::Method> parseMethod(std::string_view name) noexcept;
 
 }

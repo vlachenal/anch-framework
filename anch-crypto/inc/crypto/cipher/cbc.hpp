@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-crypto-export.hpp"
+
 #include "crypto/cipher/bcModOp.hpp"
 
 namespace anch::crypto {
@@ -33,7 +35,7 @@ namespace anch::crypto {
    * \author Vincent Lachenal
    */
   template<typename Cipher, typename Padding>
-  class CBC: public BlockCipherModeOfOperation<CBC<Cipher,Padding>,Cipher> {
+  class ANCH_CRYPTO_EXPORT CBC: public BlockCipherModeOfOperation<CBC<Cipher,Padding>,Cipher> {
 
     // Attributes +
   private:

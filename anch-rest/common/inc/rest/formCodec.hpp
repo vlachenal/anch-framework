@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-rest-common-export.hpp"
+
 #include <istream>
 #include <ostream>
 #include <string>
@@ -52,7 +54,7 @@ client.post("/login").body<anch::rest::FormUrlEncoded>(anch::rest::Form().add("u
    *
    * \since 0.2
    */
-  struct FormUrlEncoded {
+  struct ANCH_REST_COMMON_EXPORT FormUrlEncoded {
 
     /*!
      * Media type

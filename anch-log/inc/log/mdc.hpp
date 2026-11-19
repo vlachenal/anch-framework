@@ -19,16 +19,18 @@
 */
 #pragma once
 
+#include "anch-log-export.hpp"
+
 #include <string>
 #include <map>
 
 namespace anch::log {
 
   /*! Thread ID key in diagnostic context */
-  extern const std::string MDC_THREAD_ID;
+  extern ANCH_LOG_EXPORT const std::string MDC_THREAD_ID;
 
   /*! MDC constant values */
-  extern std::map<std::string,std::string> MDC_CONST;
+  extern ANCH_LOG_EXPORT std::map<std::string,std::string> MDC_CONST;
 
   /*!
    * \brief Map Diagnostic Context
@@ -39,7 +41,7 @@ namespace anch::log {
    *
    * \author Vincent Lachenal
    */
-  class MapDiagnosticContext {
+  class ANCH_LOG_EXPORT MapDiagnosticContext {
 
     // Attributes +
   private:
@@ -121,7 +123,7 @@ namespace anch::log {
   };
 
   /*! \ref MapDiagnosticContext current thread instance */
-  extern thread_local MapDiagnosticContext MDC;
+  extern ANCH_LOG_EXPORT thread_local MapDiagnosticContext MDC;
 
 }
 

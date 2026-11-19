@@ -218,7 +218,7 @@ anch::sql::postgresql::error(const std::string& message, PGconn* conn, PGresult*
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wreturn-type-c-linkage"
 #endif
-extern "C"
+extern "C" ANCH_POSTGRESQL_EXPORT
 std::shared_ptr<Connection>
 create_shared_connection(const SqlConnectionConfiguration& config) {
   return std::make_shared<PostgreSQLConnection>(config);
@@ -232,7 +232,7 @@ create_shared_connection(const SqlConnectionConfiguration& config) {
  *
  * \return the PostgreSQL connection
  */
-extern "C"
+extern "C" ANCH_POSTGRESQL_EXPORT
 Connection*
 create_connection(const SqlConnectionConfiguration& config) {
   return new PostgreSQLConnection(config);
@@ -243,7 +243,7 @@ create_connection(const SqlConnectionConfiguration& config) {
  *
  * \param conn the connection to free
  */
-extern "C"
+extern "C" ANCH_POSTGRESQL_EXPORT
 void
 delete_connection(PostgreSQLConnection* conn) {
   delete conn;

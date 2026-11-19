@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-cli-export.hpp"
+
 #include <list>
 #include <vector>
 #include <set>
@@ -41,7 +43,7 @@ namespace anch::cli {
    *
    * \return the binding function
    */
-  BindArg bindTrue(bool& dest);
+  ANCH_CLI_EXPORT BindArg bindTrue(bool& dest);
 
   /*!
    * Bind \c false utility function
@@ -50,7 +52,7 @@ namespace anch::cli {
    *
    * \return the binding function
    */
-  BindArg bindFalse(bool& dest);
+  ANCH_CLI_EXPORT BindArg bindFalse(bool& dest);
 
   /*!
    * Bind \c uint16_t value utility function
@@ -60,7 +62,7 @@ namespace anch::cli {
    * \return the binding function (which raises \c std::invalid_argument when value is empty, is not a number or is
    * out of range ; \c dest is not modified in this case)
    */
-  BindArg bindNum(uint16_t& dest);
+  ANCH_CLI_EXPORT BindArg bindNum(uint16_t& dest);
 
   /*!
    * Bind \c uint16_t value utility function
@@ -70,7 +72,7 @@ namespace anch::cli {
    * \return the binding function (which raises \c std::invalid_argument when value is empty, is not a number or is
    * out of range ; \c dest is not modified in this case)
    */
-  BindArg bindNum(uint32_t& dest);
+  ANCH_CLI_EXPORT BindArg bindNum(uint32_t& dest);
 
   /*!
    * Bind \c uint32_t value utility function
@@ -80,7 +82,7 @@ namespace anch::cli {
    * \return the binding function (which raises \c std::invalid_argument when value is empty, is not a number or is
    * out of range ; \c dest is not modified in this case)
    */
-  BindArg bindNum(uint64_t& dest);
+  ANCH_CLI_EXPORT BindArg bindNum(uint64_t& dest);
 
   /*!
    * Bind \c int64_t value utility function
@@ -90,7 +92,7 @@ namespace anch::cli {
    * \return the binding function (which raises \c std::invalid_argument when value is empty, is not a number or is
    * out of range ; \c dest is not modified in this case)
    */
-  BindArg bindNum(int16_t& dest);
+  ANCH_CLI_EXPORT BindArg bindNum(int16_t& dest);
 
   /*!
    * Bind \c int32_t value utility function
@@ -100,7 +102,7 @@ namespace anch::cli {
    * \return the binding function (which raises \c std::invalid_argument when value is empty, is not a number or is
    * out of range ; \c dest is not modified in this case)
    */
-  BindArg bindNum(int32_t& dest);
+  ANCH_CLI_EXPORT BindArg bindNum(int32_t& dest);
 
   /*!
    * Bind \c int64_t value utility function
@@ -110,7 +112,7 @@ namespace anch::cli {
    * \return the binding function (which raises \c std::invalid_argument when value is empty, is not a number or is
    * out of range ; \c dest is not modified in this case)
    */
-  BindArg bindNum(int64_t& dest);
+  ANCH_CLI_EXPORT BindArg bindNum(int64_t& dest);
 
   /*!
    * Bind \c float value utility function
@@ -120,7 +122,7 @@ namespace anch::cli {
    * \return the binding function (which raises \c std::invalid_argument when value is empty, is not a number or is
    * out of range ; \c dest is not modified in this case)
    */
-  BindArg bindNum(float& dest);
+  ANCH_CLI_EXPORT BindArg bindNum(float& dest);
 
   /*!
    * Bind \c double value utility function
@@ -130,7 +132,7 @@ namespace anch::cli {
    * \return the binding function (which raises \c std::invalid_argument when value is empty, is not a number or is
    * out of range ; \c dest is not modified in this case)
    */
-  BindArg bindNum(double& dest);
+  ANCH_CLI_EXPORT BindArg bindNum(double& dest);
 
   /*!
    * Bind caracters' string value utility function
@@ -139,7 +141,7 @@ namespace anch::cli {
    *
    * \return the binding function
    */
-  BindArg bindStr(std::string& dest);
+  ANCH_CLI_EXPORT BindArg bindStr(std::string& dest);
 
   /*!
    * Bind caracters' string value utility function and macro
@@ -148,7 +150,7 @@ namespace anch::cli {
    *
    * \return the binding function
    */
-  BindArg bindStr(std::optional<std::string>& dest);
+  ANCH_CLI_EXPORT BindArg bindStr(std::optional<std::string>& dest);
 
   /*!
    * Add value to vector
@@ -157,7 +159,7 @@ namespace anch::cli {
    *
    * \return the binding function
    */
-  BindArg bindCol(std::vector<std::string>& dest);
+  ANCH_CLI_EXPORT BindArg bindCol(std::vector<std::string>& dest);
 
   /*!
    * Add value to list
@@ -166,7 +168,7 @@ namespace anch::cli {
    *
    * \return the binding function
    */
-  BindArg bindCol(std::list<std::string>& dest);
+  ANCH_CLI_EXPORT BindArg bindCol(std::list<std::string>& dest);
 
   /*!
    * Add value to set
@@ -175,7 +177,7 @@ namespace anch::cli {
    *
    * \return the binding function
    */
-  BindArg bindCol(std::set<std::string>& dest);
+  ANCH_CLI_EXPORT BindArg bindCol(std::set<std::string>& dest);
 
   /*!
    * Bind input file stream
@@ -184,7 +186,7 @@ namespace anch::cli {
    *
    * \return the binding function
    */
-  BindArg bindPath(std::filesystem::path& dest);
+  ANCH_CLI_EXPORT BindArg bindPath(std::filesystem::path& dest);
 
   /*!
    * Bind input file stream
@@ -194,7 +196,7 @@ namespace anch::cli {
    * \return the binding function (which raises \c std::invalid_argument when file does not exist, is not a regular file
    * or can not be read)
    */
-  BindArg bindIFS(std::shared_ptr<std::istream>& dest);
+  ANCH_CLI_EXPORT BindArg bindIFS(std::shared_ptr<std::istream>& dest);
 
   /*!
    * Bind output file stream
@@ -203,7 +205,7 @@ namespace anch::cli {
    *
    * \return the binding function (which raises \c std::invalid_argument when file can not be opened for writing)
    */
-  BindArg bindOFS(std::shared_ptr<std::ostream>& dest);
+  ANCH_CLI_EXPORT BindArg bindOFS(std::shared_ptr<std::ostream>& dest);
 
   /*!
    * Bind output file stream
@@ -213,25 +215,25 @@ namespace anch::cli {
    *
    * \return the binding function (which raises \c std::invalid_argument when file can not be opened for writing)
    */
-  BindArg bindOFS(std::shared_ptr<std::ofstream>& dest, std::ios_base::openmode mode = std::ios_base::out);
+  ANCH_CLI_EXPORT BindArg bindOFS(std::shared_ptr<std::ofstream>& dest, std::ios_base::openmode mode = std::ios_base::out);
 
   /*!
    * Bind \c std::cin to input stream
    *
    * \param dest the destination input stream
    */
-  std::function<void(std::istream&)> bindPipe(std::shared_ptr<std::istream>& dest);
+  ANCH_CLI_EXPORT std::function<void(std::istream&)> bindPipe(std::shared_ptr<std::istream>& dest);
 
   /*!
    * Bind \c std::cout to output stream
    *
    * \param dest the destination output stream
    */
-  std::function<void(std::ostream&)> bindCout(std::shared_ptr<std::ostream>& dest);
+  ANCH_CLI_EXPORT std::function<void(std::ostream&)> bindCout(std::shared_ptr<std::ostream>& dest);
 
   /*!
    * Disable console formatting when environment variable \c ANCH_CLI_NO_FMT is set to \c 1
    */
-  void manageEnvNoFormat();
+  ANCH_CLI_EXPORT void manageEnvNoFormat();
 
 }  // anch::cli

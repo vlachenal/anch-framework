@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-network-export.hpp"
+
 #include <chrono>
 #include <cstddef>
 #include <string>
@@ -58,7 +60,7 @@ namespace anch::network {
    *
    * \author Vincent Lachenal
    */
-  class Socket {
+  class ANCH_NETWORK_EXPORT Socket {
 
     // Attributes +
   private:

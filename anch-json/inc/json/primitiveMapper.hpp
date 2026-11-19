@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-json-export.hpp"
+
 #include <string>
 #include <vector>
 #include <map>
@@ -51,7 +53,7 @@ namespace anch::json {
    * \since 0.1
    */
   template<typename T>
-  class PrimitiveMapper: public anch::json::GenericMapper<PrimitiveMapper<T>, T> {
+  class ANCH_JSON_EXPORT PrimitiveMapper: public anch::json::GenericMapper<PrimitiveMapper<T>, T> {
     friend class anch::json::Factory<T>;
 
     // Constructors +

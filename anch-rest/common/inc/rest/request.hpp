@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-rest-common-export.hpp"
+
 #include <istream>
 #include <map>
 #include <memory>
@@ -44,7 +46,7 @@ namespace anch::rest {
    *
    * \since 0.2
    */
-  class Request {
+  class ANCH_REST_COMMON_EXPORT Request {
 
     // Attributes +
   private:
@@ -237,7 +239,7 @@ namespace anch::rest {
    *
    * \return the decoded value, empty when value is invalid
    */
-  std::optional<std::string> percentDecode(std::string_view value, bool plusAsSpace = false);
+  ANCH_REST_COMMON_EXPORT std::optional<std::string> percentDecode(std::string_view value, bool plusAsSpace = false);
 
   /*!
    * Percent-encode string (RFC 3986 unreserved characters are kept)
@@ -246,6 +248,6 @@ namespace anch::rest {
    *
    * \return the encoded value
    */
-  std::string percentEncode(std::string_view value);
+  ANCH_REST_COMMON_EXPORT std::string percentEncode(std::string_view value);
 
 }

@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-network-export.hpp"
+
 #include <cstddef>
 #include <string>
 
@@ -35,7 +37,7 @@ namespace anch::network {
    *
    * \since 0.2
    */
-  struct SocketHolder {
+  struct ANCH_NETWORK_EXPORT SocketHolder {
     /*! The socket */
     anch::network::Socket _socket;
   };
@@ -61,7 +63,7 @@ namespace anch::network {
    *
    * \author Vincent Lachenal
    */
-  class TcpStream: private anch::network::SocketHolder, public anch::cutils::CIOStream {
+  class ANCH_NETWORK_EXPORT TcpStream: private anch::network::SocketHolder, public anch::cutils::CIOStream {
 
     // Attributes +
   public:

@@ -20,6 +20,8 @@
 #ifdef ANCH_SQL_POSTGRESQL
 #pragma once
 
+#include "anch-postgresql-export.hpp"
+
 #include "sql/resultSet.hpp"
 
 
@@ -38,7 +40,7 @@ namespace anch::sql {
    *
    * \since 0.1
    */
-  class PostgreSQLResultSet: public ResultSet {
+  class ANCH_POSTGRESQL_EXPORT PostgreSQLResultSet: public ResultSet {
 
     // Attributes +
   private:

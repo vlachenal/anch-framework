@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-json-export.hpp"
+
 #include <istream>
 #include <string>
 #include <any>
@@ -77,7 +79,7 @@ namespace anch::json {
    *
    * \since 0.1
    */
-  class JSONItem {
+  class ANCH_JSON_EXPORT JSONItem {
 
     // Attributes +
   private:
@@ -142,7 +144,7 @@ namespace anch::json {
    *
    * \since 0.1
    */
-  class Reader:
+  class ANCH_JSON_EXPORT Reader:
     public anch::events::Observable<anch::json::JSONItem>,
     public anch::events::Observable<std::streamsize>,
     public anch::events::Observable<anch::json::MappingError>,

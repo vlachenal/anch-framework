@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-ut-export.hpp"
+
 #include <string>
 #include <cstdint>
 
@@ -33,7 +35,7 @@ namespace anch::ut {
    *
    * \since 0.1
    */
-  class Runner {
+  class ANCH_UT_EXPORT Runner {
 
   public:
     /*!

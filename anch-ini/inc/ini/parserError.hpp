@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-ini-export.hpp"
+
 #include <exception>
 #include <string>
 
@@ -31,7 +33,7 @@ namespace anch::ini {
    *
    * \since 0.1
    */
-  class ParserError: public std::exception {
+  class ANCH_INI_EXPORT ParserError: public std::exception {
 
   public:
     /*!*

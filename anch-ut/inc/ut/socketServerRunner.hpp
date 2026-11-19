@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-ut-export.hpp"
+
 #include <optional>
 #include <vector>
 #include <string>
@@ -46,7 +48,7 @@ namespace anch::ut {
    *
    * Messages are formatted with \c anch::json
    */
-  struct CommandMessage {
+  struct ANCH_UT_EXPORT CommandMessage {
     /*! Action (required) */
     CommandAction action;
 
@@ -63,7 +65,7 @@ namespace anch::ut {
    *
    * \author Vincent Lachenal
    */
-  class SocketServerRunner: public anch::ut::DefaultRunner {
+  class ANCH_UT_EXPORT SocketServerRunner: public anch::ut::DefaultRunner {
 
   private:
     /*! Unit tests */

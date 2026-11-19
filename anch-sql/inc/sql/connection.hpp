@@ -18,6 +18,8 @@
   along with ANCH Framework.  If not, see <https://www.gnu.org/licenses/>.
 */
 #pragma once
+
+#include "anch-sql-export.hpp"
 #include <cstddef>
 #include <functional>
 #include <list>
@@ -48,7 +50,7 @@ namespace anch::sql {
    *
    * \since 0.1
    */
-  struct SqlConnectionConfiguration {
+  struct ANCH_SQL_EXPORT SqlConnectionConfiguration {
     /*! SQL connection database type */
     std::string driver = "";
 
@@ -100,7 +102,7 @@ namespace anch::sql {
    *
    * \since 0.1
    */
-  class Connection {
+  class ANCH_SQL_EXPORT Connection {
 
     friend class PreparedStatement;
     friend class ResultSet;

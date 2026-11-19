@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-rest-grpc-export.hpp"
+
 #include <map>
 #include <memory>
 #include <string>
@@ -51,7 +53,7 @@ server.shutdown();
    *
    * \since 0.2
    */
-  class GrpcServer {
+  class ANCH_REST_GRPC_EXPORT GrpcServer {
 
     /*! Generic service which dispatches calls to RPC services */
     class Dispatcher;

@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-uuid-export.hpp"
+
 #include <iostream>
 #include <iomanip>
 #include <sstream>
@@ -46,7 +48,7 @@ namespace anch {
    *
    * \author Vincent Lachenal
    */
-  class UUID {
+  class ANCH_UUID_EXPORT UUID {
   public:
     /*!
      * The UUID versions

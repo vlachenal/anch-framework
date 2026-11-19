@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-network-export.hpp"
+
 #include <cstdint>
 #include <string>
 #include <vector>
@@ -49,7 +51,7 @@ namespace anch::network {
    *
    * \since 0.2
    */
-  class Address {
+  class ANCH_NETWORK_EXPORT Address {
 
     friend class Socket;
 

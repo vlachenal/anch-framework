@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-cli-export.hpp"
+
 #include <optional>
 #include <string>
 #include <ostream>
@@ -36,7 +38,7 @@ namespace anch::cli {
    *
    * \author Vincent Lachenal
    */
-  struct App {
+  struct ANCH_CLI_EXPORT App {
 
     /*! Application name (if not set, it will be set to executable name) */
     std::optional<std::string> name = std::optional<std::string>();

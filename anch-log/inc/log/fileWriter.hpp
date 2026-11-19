@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-log-export.hpp"
+
 #include <cstdint>
 #include <fstream>
 #include <filesystem>
@@ -46,7 +48,7 @@ namespace anch::log {
    *
    * \since 0.1
    */
-  class FileWriter: public Writer {
+  class ANCH_LOG_EXPORT FileWriter: public Writer {
 
     // Attributes +
   protected:

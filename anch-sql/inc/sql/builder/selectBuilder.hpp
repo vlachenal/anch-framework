@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-sql-export.hpp"
+
 #include <sstream>
 #include <list>
 #include <ostream>
@@ -43,7 +45,7 @@ namespace anch::sql {
    *
    * \since 0.1
    */
-  class SelectBuilder {
+  class ANCH_SQL_EXPORT SelectBuilder {
     friend SelectBuilder anch::sql::select();
     friend class anch::sql::FieldsBuilder;
     friend class anch::sql::FromBuilder;
@@ -213,5 +215,15 @@ namespace anch::sql {
     // Methods -
 
   };
+
+  /*!
+   * \ref SelectBuilder stream insertion operator (declared at namespace level to be exported)
+   *
+   * \param stream the output stream
+   * \param builder the \ref SelectBuilder
+   *
+   * \return the output stream
+   */
+  ANCH_SQL_EXPORT std::ostream& operator<<(std::ostream& stream, const SelectBuilder& builder);
 
 }  // anch::sql

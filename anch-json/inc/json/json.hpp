@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-json-export.hpp"
+
 #include <ostream>
 #include <istream>
 #include <string>
@@ -243,7 +245,7 @@ namespace anch::json {
    *
    * \since 0.1
    */
-  class JSONMapper {
+  class ANCH_JSON_EXPORT JSONMapper {
 
     // Attributes +
   private:

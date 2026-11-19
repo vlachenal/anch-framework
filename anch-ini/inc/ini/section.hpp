@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-ini-export.hpp"
+
 #include <map>
 #include <string>
 #include <optional>
@@ -36,7 +38,7 @@ namespace anch::ini {
    *
    * \since 0.1
    */
-  class Section {
+  class ANCH_INI_EXPORT Section {
 
     // Attributes +
   private:

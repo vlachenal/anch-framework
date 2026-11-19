@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-sql-export.hpp"
+
 #include <string>
 
 
@@ -31,7 +33,7 @@ namespace anch::sql {
    *
    * \return clause request part
    */
-  std::string notEquals(const std::string& column);
+  ANCH_SQL_EXPORT std::string notEquals(const std::string& column);
 
   /*!
    * Provides 'equals' clause with \c = operator
@@ -40,7 +42,7 @@ namespace anch::sql {
    *
    * \return clause request part
    */
-  std::string equals(const std::string& column);
+  ANCH_SQL_EXPORT std::string equals(const std::string& column);
 
   /*!
    * Provides 'greater' clause with \c > operator
@@ -49,7 +51,7 @@ namespace anch::sql {
    *
    * \return clause request part
    */
-  std::string greater(const std::string& column);
+  ANCH_SQL_EXPORT std::string greater(const std::string& column);
 
   /*!
    * Provides 'greater or equals' clause with \c >= operator
@@ -58,7 +60,7 @@ namespace anch::sql {
    *
    * \return clause request part
    */
-  std::string greaterEquals(const std::string& column);
+  ANCH_SQL_EXPORT std::string greaterEquals(const std::string& column);
 
   /*!
    * Provides 'lesser' clause with \c < operator
@@ -67,7 +69,7 @@ namespace anch::sql {
    *
    * \return clause request part
    */
-  std::string lesser(const std::string& column);
+  ANCH_SQL_EXPORT std::string lesser(const std::string& column);
 
   /*!
    * Provides 'lesser or equals' clause with \c <= operator
@@ -76,7 +78,7 @@ namespace anch::sql {
    *
    * \return clause request part
    */
-  std::string lesserEquals(const std::string& column);
+  ANCH_SQL_EXPORT std::string lesserEquals(const std::string& column);
 
   /*!
    * Provides 'like' clause with \c LIKE operator
@@ -85,7 +87,7 @@ namespace anch::sql {
    *
    * \return clause request part
    */
-  std::string like(const std::string& column);
+  ANCH_SQL_EXPORT std::string like(const std::string& column);
 
   /*!
    * Provides 'not like' clause with <tt>NOT LIKE</tt> operator
@@ -94,7 +96,7 @@ namespace anch::sql {
    *
    * \return clause request part
    */
-  std::string notLike(const std::string& column);
+  ANCH_SQL_EXPORT std::string notLike(const std::string& column);
 
   /*!
    * Provides 'between' clause with \c BETWEEN operator
@@ -103,7 +105,7 @@ namespace anch::sql {
    *
    * \return clause request part
    */
-  std::string between(const std::string& column);
+  ANCH_SQL_EXPORT std::string between(const std::string& column);
 
   /*!
    * Provides 'not between' clause with <tt>NOT BETWEEN</tt> operator
@@ -112,7 +114,7 @@ namespace anch::sql {
    *
    * \return clause request part
    */
-  std::string notBetween(const std::string& column);
+  ANCH_SQL_EXPORT std::string notBetween(const std::string& column);
 
   /*!
    * Provides 'in' clause with \c IN operator.
@@ -121,7 +123,7 @@ namespace anch::sql {
    *
    * \return clause request part
    */
-  std::string in(const std::string& column);
+  ANCH_SQL_EXPORT std::string in(const std::string& column);
 
   /*!
    * Provides 'not in' clause with <tt>NOT IN</tt> operator.
@@ -130,7 +132,7 @@ namespace anch::sql {
    *
    * \return clause request part
    */
-  std::string notIn(const std::string& column);
+  ANCH_SQL_EXPORT std::string notIn(const std::string& column);
 
   /*!
    * Provides 'exists' clause with \c EXISTS operator.
@@ -139,7 +141,7 @@ namespace anch::sql {
    *
    * \return clause request part
    */
-  std::string exists(const std::string& column);
+  ANCH_SQL_EXPORT std::string exists(const std::string& column);
 
   /*!
    * Provides 'not exists' clause with <tt>NOT EXISTS</tt> operator.
@@ -148,6 +150,6 @@ namespace anch::sql {
    *
    * \return clause request part
    */
-  std::string notExists(const std::string& column);
+  ANCH_SQL_EXPORT std::string notExists(const std::string& column);
 
 }  // anch::sql

@@ -159,7 +159,7 @@ SQLite3Connection::makePrepared(const std::string& query) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wreturn-type-c-linkage"
 #endif
-extern "C"
+extern "C" ANCH_SQLITE_EXPORT
 std::shared_ptr<Connection>
 create_shared_connection(const SqlConnectionConfiguration& config) {
   return std::make_shared<SQLite3Connection>(config);
@@ -173,7 +173,7 @@ create_shared_connection(const SqlConnectionConfiguration& config) {
  *
  * \return the SQLite3 connection
  */
-extern "C"
+extern "C" ANCH_SQLITE_EXPORT
 Connection*
 create_connection(const SqlConnectionConfiguration& config) {
   return new SQLite3Connection(config);
@@ -184,7 +184,7 @@ create_connection(const SqlConnectionConfiguration& config) {
  *
  * \param conn the connection to free
  */
-extern "C"
+extern "C" ANCH_SQLITE_EXPORT
 void
 delete_connection(SQLite3Connection* conn) {
   delete conn;

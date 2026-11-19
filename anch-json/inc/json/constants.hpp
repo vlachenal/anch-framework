@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-json-export.hpp"
+
 #include <string>
 #include <optional>
 
@@ -46,6 +48,6 @@ namespace anch::json {
   const char ARRAY_END =']';
 
   /*! No field name constant value */
-  extern const std::optional<std::string> EMPTY_FIELD;
+  extern ANCH_JSON_EXPORT const std::optional<std::string> EMPTY_FIELD;
 
 }  // json::anch

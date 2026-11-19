@@ -21,8 +21,9 @@
 
 namespace anch::events::detail {
 
-  /*! Observer lists which are notifying in the current thread (one entry per running notification) */
-  inline thread_local std::vector<const void*> notifyingLists;
+  /*! Observer lists which are notifying in the current thread (one entry per running notification).
+   *  Default visibility: the list is shared between shared libraries and application. */
+  [[gnu::visibility("default")]] inline thread_local std::vector<const void*> notifyingLists;
 
   /*!
    * Register a running notification in the current thread for its lifetime

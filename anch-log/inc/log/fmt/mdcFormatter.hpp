@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-log-export.hpp"
+
 #include "log/fmt/iFormatter.hpp"
 
 #include <string>
@@ -30,7 +32,7 @@ namespace anch::log::fmt {
    *
    * \author Vincent Lachenal
    */
-  class MDCFormatter: public anch::log::fmt::IFormatter {
+  class ANCH_LOG_EXPORT MDCFormatter: public anch::log::fmt::IFormatter {
 
   private:
     // Attributes +

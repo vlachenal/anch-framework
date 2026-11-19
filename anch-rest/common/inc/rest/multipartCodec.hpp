@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-rest-common-export.hpp"
+
 #include <istream>
 #include <ostream>
 #include <string>
@@ -67,7 +69,7 @@ client.post("/pets/{id}/photo", 42).body<anch::rest::Multipart>(form).send();
    *
    * \since 0.2
    */
-  struct Multipart {
+  struct ANCH_REST_COMMON_EXPORT Multipart {
 
     /*!
      * Media type

@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-log-export.hpp"
+
 #include <mutex>
 
 #include "log/fileWriter.hpp"
@@ -33,7 +35,7 @@ namespace anch::log {
    *
    * \since 0.1
    */
-  class ThreadSafeWriter: public FileWriter {
+  class ANCH_LOG_EXPORT ThreadSafeWriter: public FileWriter {
   private:
     // Attributes +
     /*! Writer mutex */

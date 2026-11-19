@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-rest-common-export.hpp"
+
 #include <concepts>
 #include <optional>
 #include <ostream>
@@ -55,7 +57,7 @@ namespace anch::rest {
    */
   template<typename T>
   requires (std::integral<T> && !std::same_as<T, bool>)
-  struct ParamConverter<T> {
+  struct ANCH_REST_COMMON_EXPORT ParamConverter<T> {
     /*!
      * Convert parameter
      *

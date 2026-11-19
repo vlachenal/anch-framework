@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-rest-common-export.hpp"
+
 #include <concepts>
 #include <cstdint>
 #include <memory>
@@ -54,7 +56,7 @@ namespace anch::rest {
    *
    * \since 0.2
    */
-  class ContentTooLarge: public std::length_error {
+  class ANCH_REST_COMMON_EXPORT ContentTooLarge: public std::length_error {
   public:
     /*! Use \c std::length_error constructors */
     using std::length_error::length_error;
@@ -69,7 +71,7 @@ namespace anch::rest {
    *
    * \since 0.2
    */
-  struct BodyStream {
+  struct ANCH_REST_COMMON_EXPORT BodyStream {
     /*! Body stream */
     std::unique_ptr<std::istream> input;
 
@@ -205,7 +207,7 @@ namespace anch::rest {
    *
    * \since 0.2
    */
-  struct Text {
+  struct ANCH_REST_COMMON_EXPORT Text {
 
     /*!
      * Media type

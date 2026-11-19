@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-sql-export.hpp"
+
 #include <string>
 #include <cstdint>
 
@@ -40,7 +42,7 @@ namespace anch::sql {
    *
    * \author Vincent Lachenal
    */
-  class SelectBuilderPart {
+  class ANCH_SQL_EXPORT SelectBuilderPart {
 
     // Attributes +
   protected:

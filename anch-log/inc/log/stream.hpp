@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-log-export.hpp"
+
 #include <optional>
 #include <ostream>
 #include <sstream>
@@ -68,7 +70,7 @@ LOG << anch::log::lvl::debug << "value=" << value;
    *
    * \since 0.2
    */
-  class NoopStream {
+  class ANCH_LOG_EXPORT NoopStream {
 
     // Methods +
   public:
@@ -105,7 +107,7 @@ LOG << anch::log::lvl::debug << "value=" << value;
    *
    * \since 0.2
    */
-  class LogLine {
+  class ANCH_LOG_EXPORT LogLine {
 
     // Attributes +
   private:

@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-rest-client-export.hpp"
+
 #include <concepts>
 #include <cstdint>
 #include <istream>
@@ -51,7 +53,7 @@ namespace anch::rest {
    *
    * \since 0.2
    */
-  struct RawBody {
+  struct ANCH_REST_CLIENT_EXPORT RawBody {
     /*! Body stream */
     std::unique_ptr<std::istream> input;
 
@@ -302,7 +304,7 @@ anch::rest::Response res = client.post("/pets").body<anch::rest::Json>(pet).send
    *
    * \since 0.2
    */
-  class Client {
+  class ANCH_REST_CLIENT_EXPORT Client {
 
     // Attributes +
   private:

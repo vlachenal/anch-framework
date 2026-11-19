@@ -20,6 +20,8 @@
 #ifdef ANCH_SQL_SQLITE3
 #pragma once
 
+#include "anch-sqlite-export.hpp"
+
 #include "sql/resultSet.hpp"
 
 struct sqlite3_stmt;
@@ -36,7 +38,7 @@ namespace anch::sql {
    *
    * \since 0.1
    */
-  class SQLite3ResultSet: public ResultSet {
+  class ANCH_SQLITE_EXPORT SQLite3ResultSet: public ResultSet {
 
     // Attributes +
   private:

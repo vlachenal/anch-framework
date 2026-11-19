@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-rest-common-export.hpp"
+
 #include <functional>
 #include <ostream>
 #include <string>
@@ -44,7 +46,7 @@ return anch::rest::Response(anch::rest::Status::CREATED).header(anch::rest::head
    *
    * \since 0.2
    */
-  class Response {
+  class ANCH_REST_COMMON_EXPORT Response {
 
     // Attributes +
   private:

@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-cli-export.hpp"
+
 #include <cstdint>
 #include <array>
 #include <optional>
@@ -69,7 +71,7 @@ namespace anch::cli {
    *
    * \author Vincent Lachenal
    */
-  struct Formatter {
+  struct ANCH_CLI_EXPORT Formatter {
 
     /*!
      * Disable console formatter globally.\n
@@ -192,25 +194,25 @@ namespace anch::cli {
   };
 
   /*! Predefined bold formatter */
-  extern anch::cli::Formatter BOLD;
+  extern ANCH_CLI_EXPORT anch::cli::Formatter BOLD;
 
   /*! Predefined unbold formatter */
-  extern anch::cli::Formatter UNBOLD;
+  extern ANCH_CLI_EXPORT anch::cli::Formatter UNBOLD;
 
   /*! Predefined underline formatter */
-  extern anch::cli::Formatter UNDERLINE;
+  extern ANCH_CLI_EXPORT anch::cli::Formatter UNDERLINE;
 
   /*! Predefined ununderline formatter */
-  extern anch::cli::Formatter UNUNDERLINE;
+  extern ANCH_CLI_EXPORT anch::cli::Formatter UNUNDERLINE;
 
   /*! Predefined blink formatter */
-  extern anch::cli::Formatter BLINK;
+  extern ANCH_CLI_EXPORT anch::cli::Formatter BLINK;
 
   /*! Predefined unblink formatter */
-  extern anch::cli::Formatter UNBLINK;
+  extern ANCH_CLI_EXPORT anch::cli::Formatter UNBLINK;
 
   /*! Predefined reset formatter */
-  extern anch::cli::Formatter RESET;
+  extern ANCH_CLI_EXPORT anch::cli::Formatter RESET;
 
   /*!
    * \c Formatter output stream operator.\n
@@ -221,6 +223,6 @@ namespace anch::cli {
    *
    * \return the output stream
    */
-  std::ostream& operator<<(std::ostream& stream, const anch::cli::Formatter& fmt);
+  ANCH_CLI_EXPORT std::ostream& operator<<(std::ostream& stream, const anch::cli::Formatter& fmt);
 
 }  // anch::cli

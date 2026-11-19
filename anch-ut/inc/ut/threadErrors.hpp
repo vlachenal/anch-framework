@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-ut-export.hpp"
+
 #include <exception>
 #include <mutex>
 
@@ -45,7 +47,7 @@ namespace anch::ut {
    *
    * \since 0.2
    */
-  class ThreadErrors {
+  class ANCH_UT_EXPORT ThreadErrors {
 
     // Attributes +
   private:

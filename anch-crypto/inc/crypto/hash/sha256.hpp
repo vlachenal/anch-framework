@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-crypto-export.hpp"
+
 #include "crypto/hash/impl/sha224_256.hpp"
 
 #include <sstream>
@@ -27,7 +29,7 @@
 namespace anch::crypto {
 
   /*! SHA256 initial values */
-  extern std::array<uint32_t,8> SHA256_VALUES;
+  extern ANCH_CRYPTO_EXPORT std::array<uint32_t,8> SHA256_VALUES;
   /*
    * SHA256 defintion
    */

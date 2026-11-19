@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-oas-export.hpp"
+
 #include <cstdint>
 #include <istream>
 #include <map>
@@ -42,7 +44,7 @@ namespace anch::oas {
    *
    * \author Vincent Lachenal
    */
-  struct AdditionalProperties {
+  struct ANCH_OAS_EXPORT AdditionalProperties {
     /*! Additional properties are allowed (\c false when \c additionalProperties is \c false ) */
     bool allowed = true;
 
@@ -57,7 +59,7 @@ namespace anch::oas {
    *
    * \author Vincent Lachenal
    */
-  struct Scalar {
+  struct ANCH_OAS_EXPORT Scalar {
     /*! Value kind */
     enum class Kind {
       /*! \c null */
@@ -88,7 +90,7 @@ namespace anch::oas {
    *
    * \author Vincent Lachenal
    */
-  struct Schema {
+  struct ANCH_OAS_EXPORT Schema {
     /*! Reference ( \c $ref ) */
     std::optional<std::string> ref;
 
@@ -219,7 +221,7 @@ namespace anch::oas {
    *
    * \author Vincent Lachenal
    */
-  struct Info {
+  struct ANCH_OAS_EXPORT Info {
     /*! API title */
     std::string title;
 
@@ -234,7 +236,7 @@ namespace anch::oas {
    *
    * \author Vincent Lachenal
    */
-  struct MediaTypeObject {
+  struct ANCH_OAS_EXPORT MediaTypeObject {
     /*! Content schema */
     std::optional<anch::oas::Schema> schema;
   };
@@ -246,7 +248,7 @@ namespace anch::oas {
    *
    * \author Vincent Lachenal
    */
-  struct Parameter {
+  struct ANCH_OAS_EXPORT Parameter {
     /*! Reference ( \c $ref to \c #/components/parameters/ ) */
     std::optional<std::string> ref;
 
@@ -273,7 +275,7 @@ namespace anch::oas {
    *
    * \author Vincent Lachenal
    */
-  struct RequestBody {
+  struct ANCH_OAS_EXPORT RequestBody {
     /*! Reference ( \c $ref to \c #/components/requestBodies/ ) */
     std::optional<std::string> ref;
 
@@ -294,7 +296,7 @@ namespace anch::oas {
    *
    * \author Vincent Lachenal
    */
-  struct ResponseObject {
+  struct ANCH_OAS_EXPORT ResponseObject {
     /*! Reference ( \c $ref to \c #/components/responses/ ) */
     std::optional<std::string> ref;
 
@@ -312,7 +314,7 @@ namespace anch::oas {
    *
    * \author Vincent Lachenal
    */
-  struct Operation {
+  struct ANCH_OAS_EXPORT Operation {
     /*! Operation identifier */
     std::optional<std::string> operationId;
 
@@ -342,7 +344,7 @@ namespace anch::oas {
    *
    * \author Vincent Lachenal
    */
-  struct PathItem {
+  struct ANCH_OAS_EXPORT PathItem {
     /*! Parameters shared by operations */
     std::vector<anch::oas::Parameter> parameters;
 
@@ -378,7 +380,7 @@ namespace anch::oas {
    *
    * \author Vincent Lachenal
    */
-  struct Components {
+  struct ANCH_OAS_EXPORT Components {
     /*! Schemas indexed by their names */
     std::map<std::string,anch::oas::Schema> schemas;
 
@@ -408,7 +410,7 @@ namespace anch::oas {
    *
    * \author Vincent Lachenal
    */
-  struct OpenAPI {
+  struct ANCH_OAS_EXPORT OpenAPI {
     /*! OpenAPI specification version */
     std::string openapi;
 
@@ -435,7 +437,7 @@ namespace anch::oas {
    * \throw anch::json::MappingError invalid JSON or document structure
    * \throw std::invalid_argument the document is not an OpenAPI 3.0 document
    */
-  anch::oas::OpenAPI parse(std::istream& input);
+  ANCH_OAS_EXPORT anch::oas::OpenAPI parse(std::istream& input);
 
 }  // anch::oas
 

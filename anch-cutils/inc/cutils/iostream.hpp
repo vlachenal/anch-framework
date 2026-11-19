@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-cutils-export.hpp"
+
 #include <cstddef>
 #include <functional>
 #include <istream>
@@ -65,7 +67,7 @@ namespace anch::cutils {
    *
    * \author Vincent Lachenal
    */
-  struct cbuffer {
+  struct ANCH_CUTILS_EXPORT cbuffer {
 
     /*! Buffer data */
     char* data = nullptr;
@@ -91,7 +93,7 @@ namespace anch::cutils {
    *
    * \author Vincent Lachenal
    */
-  class CStreambuf: public std::streambuf {
+  class ANCH_CUTILS_EXPORT CStreambuf: public std::streambuf {
 
     // Attributes +
   private:
@@ -209,7 +211,7 @@ namespace anch::cutils {
    *
    * \author Vincent Lachenal
    */
-  class CIStream: public std::istream {
+  class ANCH_CUTILS_EXPORT CIStream: public std::istream {
 
     // Attributes +
   private:
@@ -264,7 +266,7 @@ namespace anch::cutils {
    *
    * \author Vincent Lachenal
    */
-  class COStream: public std::ostream {
+  class ANCH_CUTILS_EXPORT COStream: public std::ostream {
 
     // Attributes +
   private:
@@ -320,7 +322,7 @@ namespace anch::cutils {
    *
    * \author Vincent Lachenal
    */
-  class CIOStream: public std::iostream {
+  class ANCH_CUTILS_EXPORT CIOStream: public std::iostream {
 
     // Attributes +
   private:

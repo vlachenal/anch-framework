@@ -20,6 +20,8 @@
 #ifdef ANCH_SQL_POSTGRESQL
 #pragma once
 
+#include "anch-postgresql-export.hpp"
+
 #include "sql/preparedStatement.hpp"
 #include "sql/postgresqlConnection.hpp"
 
@@ -41,7 +43,7 @@ namespace anch::sql {
    *
    * \since 0.1
    */
-  class PostgreSQLPreparedStatement: public PreparedStatement {
+  class ANCH_POSTGRESQL_EXPORT PostgreSQLPreparedStatement: public PreparedStatement {
 
     // Attributes +
   private:

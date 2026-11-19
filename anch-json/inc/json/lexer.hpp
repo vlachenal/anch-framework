@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-json-export.hpp"
+
 #include <string>
 #include <optional>
 #include <map>
@@ -55,7 +57,7 @@ namespace anch::json {
    *
    * \throw anch::json::MappingError parsing error
    */
-  void lexTrue(anch::json::ReaderContext& context);
+  ANCH_JSON_EXPORT void lexTrue(anch::json::ReaderContext& context);
 
   /*!
    * 'false' value lexer.
@@ -64,7 +66,7 @@ namespace anch::json {
    *
    * \throw anch::json::MappingError parsing error
    */
-  void lexFalse(anch::json::ReaderContext& context);
+  ANCH_JSON_EXPORT void lexFalse(anch::json::ReaderContext& context);
 
   /*!
    * Boolean value lexer.\n
@@ -77,7 +79,7 @@ namespace anch::json {
    *
    * \throw anch::json::MappingError parsing error
    */
-  bool lexBoolean(bool& value, anch::json::ReaderContext& context);
+  ANCH_JSON_EXPORT bool lexBoolean(bool& value, anch::json::ReaderContext& context);
   // Boolean lexer functions -
 
   // Integer lexer functions +
@@ -86,7 +88,7 @@ namespace anch::json {
    *
    * \param context the context
    */
-  void parseDecimal(anch::json::ReaderContext& context);
+  ANCH_JSON_EXPORT void parseDecimal(anch::json::ReaderContext& context);
 
   /*!
    * Signed integer value lexer.\n
@@ -99,7 +101,7 @@ namespace anch::json {
    *
    * \throw anch::json::MappingError parsing error
    */
-  bool lexInteger(anch::json::jint& value, anch::json::ReaderContext& context);
+  ANCH_JSON_EXPORT bool lexInteger(anch::json::jint& value, anch::json::ReaderContext& context);
 
   /*!
    * Unsigned integer value lexer.\n
@@ -112,7 +114,7 @@ namespace anch::json {
    *
    * \throw anch::json::MappingError parsing error
    */
-  bool lexUInteger(anch::json::juint& value, anch::json::ReaderContext& context);
+  ANCH_JSON_EXPORT bool lexUInteger(anch::json::juint& value, anch::json::ReaderContext& context);
   // Integer lexer functions -
 
   // Number lexer functions +
@@ -122,7 +124,7 @@ namespace anch::json {
    *
    * \param context the parser context
    */
-  void parseNumber(anch::json::ReaderContext& context);
+  ANCH_JSON_EXPORT void parseNumber(anch::json::ReaderContext& context);
 
   /*!
    * Floating integer (double) value lexer.\n
@@ -135,7 +137,7 @@ namespace anch::json {
    *
    * \throw anch::json::MappingError parsing error
    */
-  bool lexNumber(double& value, anch::json::ReaderContext& context);
+  ANCH_JSON_EXPORT bool lexNumber(double& value, anch::json::ReaderContext& context);
   // Number lexer functions -
 
   // String lexer functions +
@@ -149,7 +151,7 @@ namespace anch::json {
    *
    * \throw anch::json::MappingError invalid escape sequence or end of data before end of string
    */
-  void lexStringContent(std::string& value, anch::json::ReaderContext& context);
+  ANCH_JSON_EXPORT void lexStringContent(std::string& value, anch::json::ReaderContext& context);
 
   /*!
    * Lex string content (between the '"').\n
@@ -159,7 +161,7 @@ namespace anch::json {
    *
    * \throw anch::json::MappingError invalid escape sequence or end of data before end of string
    */
-  void lexStringContent(anch::json::ReaderContext& context);
+  ANCH_JSON_EXPORT void lexStringContent(anch::json::ReaderContext& context);
 
   /*!
    * String lexer function.\n
@@ -174,7 +176,7 @@ namespace anch::json {
    *
    * \throw anch::json::MappingError parsing error
    */
-  bool lexString(std::string& value, anch::json::ReaderContext& context);
+  ANCH_JSON_EXPORT bool lexString(std::string& value, anch::json::ReaderContext& context);
 
   /*!
    * Field lexer function.\n
@@ -189,7 +191,7 @@ namespace anch::json {
    *
    * \throw anch::json::MappingError parsing error
    */
-  bool lexField(std::string& field, anch::json::ReaderContext& context);
+  ANCH_JSON_EXPORT bool lexField(std::string& field, anch::json::ReaderContext& context);
   // String lexer functions -
 
   // Generic lexer functions +
@@ -202,7 +204,7 @@ namespace anch::json {
    *
    * \throw anch::json::MappingError discardable charater has been found
    */
-  char discardFail(anch::json::ReaderContext& context);
+  ANCH_JSON_EXPORT char discardFail(anch::json::ReaderContext& context);
 
   /*!
    * Check that only discardable characters (according to \c deserialize_max_discard_char option) follow the root
@@ -214,7 +216,7 @@ namespace anch::json {
    *
    * \since 0.2
    */
-  void lexEnd(anch::json::ReaderContext& context);
+  ANCH_JSON_EXPORT void lexEnd(anch::json::ReaderContext& context);
 
   /*!
    * Consume stream until unescapable character
@@ -225,7 +227,7 @@ namespace anch::json {
    *
    * \throw anch::json::MappingError maximum number of discardable charater has been reached
    */
-  char lexDiscard(anch::json::ReaderContext& context);
+  ANCH_JSON_EXPORT char lexDiscard(anch::json::ReaderContext& context);
 
   /*!
    * 'null' value lexer.\n
@@ -234,7 +236,7 @@ namespace anch::json {
    *
    * \throw anch::json::MappingError parsing error
    */
-  void lexNull(anch::json::ReaderContext& context);
+  ANCH_JSON_EXPORT void lexNull(anch::json::ReaderContext& context);
 
   /*!
    * Check if object has value (start with '{') or is \c null
@@ -245,7 +247,7 @@ namespace anch::json {
    *
    * \throw anch::json::MappingError parsing error
    */
-  bool objectHasValueLex(anch::json::ReaderContext& context);
+  ANCH_JSON_EXPORT bool objectHasValueLex(anch::json::ReaderContext& context);
 
   /*!
    * Object lexer function.\n
@@ -304,7 +306,7 @@ namespace anch::json {
    *
    * \throw anch::json::MappingError parsing error
    */
-  void lexUnknown(anch::json::ReaderContext& context);
+  ANCH_JSON_EXPORT void lexUnknown(anch::json::ReaderContext& context);
 
   /*!
    * Raise \c anch::json::MappingError
@@ -313,7 +315,7 @@ namespace anch::json {
    *
    * \throw anch::json::MappingError parsing error
    */
-  void lexUnknownFail(anch::json::ReaderContext& context);
+  ANCH_JSON_EXPORT void lexUnknownFail(anch::json::ReaderContext& context);
   // Unknown lexer functions +
 
 }

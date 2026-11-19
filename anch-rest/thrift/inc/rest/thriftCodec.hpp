@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-rest-thrift-export.hpp"
+
 #include <concepts>
 #include <functional>
 #include <cstdint>
@@ -73,7 +75,7 @@ namespace anch::rest {
    *
    * \since 0.2
    */
-  std::string_view thriftMediaType(anch::rest::ThriftProtocol protocol) noexcept;
+  ANCH_REST_THRIFT_EXPORT std::string_view thriftMediaType(anch::rest::ThriftProtocol protocol) noexcept;
 
   /*!
    * Get protocol of a media type ( \c application/x-thrift is the binary protocol, as Thrift HTTP
@@ -85,7 +87,7 @@ namespace anch::rest {
    *
    * \since 0.2
    */
-  std::optional<anch::rest::ThriftProtocol> thriftProtocolOf(const anch::rest::MediaType& mediaType);
+  ANCH_REST_THRIFT_EXPORT std::optional<anch::rest::ThriftProtocol> thriftProtocolOf(const anch::rest::MediaType& mediaType);
 
   /*!
    * Create Thrift protocol over a transport
@@ -97,7 +99,7 @@ namespace anch::rest {
    *
    * \since 0.2
    */
-  std::shared_ptr<apache::thrift::protocol::TProtocol> thriftProtocol(anch::rest::ThriftProtocol protocol,
+  ANCH_REST_THRIFT_EXPORT std::shared_ptr<apache::thrift::protocol::TProtocol> thriftProtocol(anch::rest::ThriftProtocol protocol,
 								    std::shared_ptr<apache::thrift::transport::TTransport> transport);
 
   /*!
@@ -110,7 +112,7 @@ namespace anch::rest {
    *
    * \since 0.2
    */
-  std::string thriftWrite(anch::rest::ThriftProtocol protocol, const std::function<void(apache::thrift::protocol::TProtocol*)>& write);
+  ANCH_REST_THRIFT_EXPORT std::string thriftWrite(anch::rest::ThriftProtocol protocol, const std::function<void(apache::thrift::protocol::TProtocol*)>& write);
 
   /*!
    * Read structure with protocol
@@ -123,7 +125,7 @@ namespace anch::rest {
    *
    * \since 0.2
    */
-  void thriftRead(anch::rest::ThriftProtocol protocol, std::string_view content,
+  ANCH_REST_THRIFT_EXPORT void thriftRead(anch::rest::ThriftProtocol protocol, std::string_view content,
 		  const std::function<void(apache::thrift::protocol::TProtocol*)>& read);
 
   /*!

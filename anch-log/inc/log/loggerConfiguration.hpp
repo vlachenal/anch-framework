@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-log-export.hpp"
+
 #include <iostream>
 #include <vector>
 
@@ -32,7 +34,7 @@ namespace anch::log {
    *
    * \author Vincent Lachenal
    */
-  class LoggerConfiguration {
+  class ANCH_LOG_EXPORT LoggerConfiguration {
   private:
     /*! Logger category */
     std::string _category;

@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-sql-export.hpp"
+
 #include <cstddef>
 #include <string>
 #include <string_view>
@@ -35,7 +37,7 @@ namespace anch::sql {
    *
    * \since 0.2
    */
-  struct SqlSyntax {
+  struct ANCH_SQL_EXPORT SqlSyntax {
 
     /*! Backslash escapes characters in string literals (MySQL) */
     bool backslashEscape = false;
@@ -89,7 +91,7 @@ namespace anch::sql {
    *
    * \since 0.2
    */
-  std::vector<std::size_t> findPlaceholders(std::string_view query, const anch::sql::SqlSyntax& syntax);
+  ANCH_SQL_EXPORT std::vector<std::size_t> findPlaceholders(std::string_view query, const anch::sql::SqlSyntax& syntax);
 
   /*!
    * Replace \c '?' placeholders by numbered placeholders (\c $1 , \c $2 , ... for PostgreSQL)
@@ -102,6 +104,6 @@ namespace anch::sql {
    *
    * \since 0.2
    */
-  std::string numberPlaceholders(std::string_view query, const std::vector<std::size_t>& positions, char prefix = '$');
+  ANCH_SQL_EXPORT std::string numberPlaceholders(std::string_view query, const std::vector<std::size_t>& positions, char prefix = '$');
 
 }  // anch::sql

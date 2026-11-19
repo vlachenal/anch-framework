@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-rest-server-export.hpp"
+
 #include <chrono>
 #include <optional>
 #include <string>
@@ -45,7 +47,7 @@ api.cors({
    *
    * \since 0.2
    */
-  struct CorsOptions {
+  struct ANCH_REST_SERVER_EXPORT CorsOptions {
 
     /*!
      * Allowed origins (\c scheme://host[:port] ), compared exactly. \c "*" allows every origin.

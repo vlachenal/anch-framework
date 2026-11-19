@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-oas-export.hpp"
+
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -34,7 +36,7 @@ namespace anch::oas {
    *
    * \author Vincent Lachenal
    */
-  struct ModelOptions {
+  struct ANCH_OAS_EXPORT ModelOptions {
     /*! Namespace of generated models (\c :: separated identifiers) */
     std::string ns = "model";
 
@@ -86,7 +88,7 @@ namespace anch::oas {
    *
    * \author Vincent Lachenal
    */
-  struct GeneratedModels {
+  struct ANCH_OAS_EXPORT GeneratedModels {
     /*! Header content: models declaration */
     std::string header;
 
@@ -142,7 +144,7 @@ namespace anch::oas {
    *
    * \author Vincent Lachenal
    */
-  class GeneratorError: public std::runtime_error {
+  class ANCH_OAS_EXPORT GeneratorError: public std::runtime_error {
   public:
     /*!
      * \ref GeneratorError constructor
@@ -188,6 +190,6 @@ namespace anch::oas {
    *
    * \throw anch::oas::GeneratorError invalid options, unknown reference or unsupported schema in strict mode
    */
-  anch::oas::GeneratedModels generateModels(const anch::oas::OpenAPI& api, const anch::oas::ModelOptions& options);
+  ANCH_OAS_EXPORT anch::oas::GeneratedModels generateModels(const anch::oas::OpenAPI& api, const anch::oas::ModelOptions& options);
 
 }  // anch::oas

@@ -20,6 +20,8 @@
 #ifdef ANCH_SQL_MYSQL
 #pragma once
 
+#include "anch-mysql-export.hpp"
+
 #include <string>
 #include <functional>
 #include "mysql.h"
@@ -41,7 +43,7 @@ namespace anch::sql::mysql {
    *
    * \since 0.2
    */
-  bool isFatal(unsigned int code) noexcept;
+  ANCH_MYSQL_EXPORT bool isFatal(unsigned int code) noexcept;
 
   /*!
    * Build SQL exception from MySQL error
@@ -54,7 +56,7 @@ namespace anch::sql::mysql {
    *
    * \since 0.2
    */
-  SqlException error(const std::string& message, unsigned int code, const char* text);
+  ANCH_MYSQL_EXPORT SqlException error(const std::string& message, unsigned int code, const char* text);
 
 }  // anch::sql::mysql
 
@@ -69,7 +71,7 @@ namespace anch::sql {
    *
    * \since 0.1
    */
-  class MySQLConnection: public Connection {
+  class ANCH_MYSQL_EXPORT MySQLConnection: public Connection {
 
     // Attributes +
   private:

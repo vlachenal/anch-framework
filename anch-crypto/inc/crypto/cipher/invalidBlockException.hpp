@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-crypto-export.hpp"
+
 #include <exception>
 #include <iostream>
 
@@ -34,7 +36,7 @@ namespace anch::crypto {
    *
    * \author Vincent Lachenal
    */
-  class InvalidBlockException: public std::exception {
+  class ANCH_CRYPTO_EXPORT InvalidBlockException: public std::exception {
 
     // Attributes +
   private:

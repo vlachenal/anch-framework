@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-crypto-export.hpp"
+
 #include "crypto/hash/sha2.hpp"
 
 #include <array>
@@ -27,7 +29,7 @@
 
 namespace anch::crypto {
 
-  template<typename H> H HMAC(const std::string&, const std::string&);
+  template<typename H> ANCH_CRYPTO_EXPORT H HMAC(const std::string&, const std::string&);
 
   /*!
    * \brief SHA2 384/512 implementation.
@@ -39,7 +41,7 @@ namespace anch::crypto {
    * \author Vincent Lachenal
    */
   template<std::size_t O, const std::array<uint64_t,8>& I>
-  class SHA384_512: public SHA2<O,128,uint64_t,80,I> {
+  class ANCH_CRYPTO_EXPORT SHA384_512: public SHA2<O,128,uint64_t,80,I> {
 
     friend SHA384_512 anch::crypto::HMAC<SHA384_512>(const std::string&, const std::string&);
 

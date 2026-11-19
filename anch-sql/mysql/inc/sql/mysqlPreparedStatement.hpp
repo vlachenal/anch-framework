@@ -20,6 +20,8 @@
 #ifdef ANCH_SQL_MYSQL
 #pragma once
 
+#include "anch-mysql-export.hpp"
+
 #include "sql/preparedStatement.hpp"
 #include "sql/mysqlConnection.hpp"
 
@@ -42,7 +44,7 @@ namespace anch::sql {
    *
    * \since 0.1
    */
-  class MySQLPreparedStatement: public PreparedStatement {
+  class ANCH_MYSQL_EXPORT MySQLPreparedStatement: public PreparedStatement {
 
     // Attributes +
   private:

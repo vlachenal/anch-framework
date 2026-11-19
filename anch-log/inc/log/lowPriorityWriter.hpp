@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-log-export.hpp"
+
 #include <condition_variable>
 #include <mutex>
 #include <queue>
@@ -38,7 +40,7 @@ namespace anch::log {
    *
    * \author Vincent Lachenal
    */
-  class LowPriorityWriter: public anch::log::FileWriter {
+  class ANCH_LOG_EXPORT LowPriorityWriter: public anch::log::FileWriter {
 
     // Attributes +
   private:

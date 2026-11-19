@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-log-export.hpp"
+
 #include <map>
 #include <set>
 #include <functional>
@@ -49,7 +51,7 @@ namespace anch::log {
    *
    * \since 0.1
    */
-  class WriterRegistry: public anch::Singleton<WriterRegistry> {
+  class ANCH_LOG_EXPORT WriterRegistry: public anch::Singleton<WriterRegistry> {
     friend class anch::Singleton<WriterRegistry>;
 
     // Attributes +

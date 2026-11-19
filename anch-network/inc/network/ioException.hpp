@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-network-export.hpp"
+
 #include <cerrno>
 #include <string>
 #include <system_error>
@@ -32,7 +34,7 @@ namespace anch::network {
    *
    * \since 0.2
    */
-  const std::error_category& addrinfoCategory() noexcept;
+  ANCH_NETWORK_EXPORT const std::error_category& addrinfoCategory() noexcept;
 
   /*!
    * \brief Network input/output error
@@ -42,7 +44,7 @@ namespace anch::network {
    *
    * \author Vincent Lachenal
    */
-  class IOException: public std::system_error {
+  class ANCH_NETWORK_EXPORT IOException: public std::system_error {
 
   public:
     // Constructors +

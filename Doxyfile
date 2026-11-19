@@ -1078,7 +1078,9 @@ EXCLUDE_PATTERNS       = */test/* \
                          */CLAUDE.md \
                          */README.md \
                          */nginx/*.c \
-                         */anch-app/*
+                         */anch-app/* \
+                         */fuzz/* \
+                         */cmake/*
 # The EXCLUDE_SYMBOLS tag can be used to specify one or more symbol names
 # (namespaces, classes, functions, etc.) that should be excluded from the
 # output. The symbol name can be a fully qualified name, a word, or if the
@@ -2437,7 +2439,7 @@ ENABLE_PREPROCESSING   = YES
 # The default value is: NO.
 # This tag requires that the tag ENABLE_PREPROCESSING is set to YES.
 
-MACRO_EXPANSION        = NO
+MACRO_EXPANSION        = YES
 
 # If the EXPAND_ONLY_PREDEF and MACRO_EXPANSION tags are both set to YES then
 # the macro expansion is limited to the macros specified with the PREDEFINED and
@@ -2445,7 +2447,7 @@ MACRO_EXPANSION        = NO
 # The default value is: NO.
 # This tag requires that the tag ENABLE_PREPROCESSING is set to YES.
 
-EXPAND_ONLY_PREDEF     = NO
+EXPAND_ONLY_PREDEF     = YES
 
 # If the SEARCH_INCLUDES tag is set to YES, the include files in the
 # INCLUDE_PATH will be searched if a #include is found.
@@ -2484,7 +2486,32 @@ PREDEFINED             = ANCH_POSIX \
                          ANCH_CPU_DETECTION \
                          ANCH_SQL_MYSQL \
                          ANCH_SQL_POSTGRESQL \
-                         ANCH_SQL_SQLITE3
+                         ANCH_SQL_SQLITE3 \
+                         ANCH_CLI_EXPORT= \
+                         ANCH_CONF_EXPORT= \
+                         ANCH_CRYPTO_EXPORT= \
+                         ANCH_CUTILS_EXPORT= \
+                         ANCH_DATE_EXPORT= \
+                         ANCH_DEVICE_EXPORT= \
+                         ANCH_INI_EXPORT= \
+                         ANCH_JSON_EXPORT= \
+                         ANCH_LOG_EXPORT= \
+                         ANCH_NETWORK_EXPORT= \
+                         ANCH_OAS_EXPORT= \
+                         ANCH_REST_COMMON_EXPORT= \
+                         ANCH_REST_SERVER_EXPORT= \
+                         ANCH_REST_NGINX_EXPORT= \
+                         ANCH_REST_CLIENT_EXPORT= \
+                         ANCH_REST_CURL_EXPORT= \
+                         ANCH_REST_PROTOBUF_EXPORT= \
+                         ANCH_REST_GRPC_EXPORT= \
+                         ANCH_REST_THRIFT_EXPORT= \
+                         ANCH_SQL_EXPORT= \
+                         ANCH_MYSQL_EXPORT= \
+                         ANCH_POSTGRESQL_EXPORT= \
+                         ANCH_SQLITE_EXPORT= \
+                         ANCH_UT_EXPORT= \
+                         ANCH_UUID_EXPORT=
 # If the MACRO_EXPANSION and EXPAND_ONLY_PREDEF tags are set to YES then this
 # tag can be used to specify a list of macro names that should be expanded. The
 # macro definition that is found in the sources will be used. Use the PREDEFINED

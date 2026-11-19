@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-app-export.hpp"
+
 #include <string>
 #include <set>
 #include <list>
@@ -41,7 +43,7 @@ namespace anch::app {
    *
    * \author Vincent Lachenal
    */
-  class Arguments {
+  class ANCH_APP_EXPORT Arguments {
 
     // Attributes +
   public:

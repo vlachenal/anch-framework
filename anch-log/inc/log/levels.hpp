@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-log-export.hpp"
+
 #include <string>
 #include <map>
 
@@ -50,9 +52,9 @@ namespace anch::log {
   };
 
   /*! Level->labels for logging defintion */
-  extern const std::map<const Level, const std::string> LEVEL_LABEL;
+  extern ANCH_LOG_EXPORT const std::map<const Level, const std::string> LEVEL_LABEL;
 
   /*! Labels->levels for logging definition */
-  extern const std::map<const std::string, const Level> LABEL_LEVEL;
+  extern ANCH_LOG_EXPORT const std::map<const std::string, const Level> LABEL_LEVEL;
 
 }

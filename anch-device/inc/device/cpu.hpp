@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-device-export.hpp"
+
 #include "singleton.hpp"
 
 #if defined(__x86_64__) || defined(__i386__)
@@ -38,7 +40,7 @@ namespace anch::device {
    *
    * \author Vincent Lachenal
    */
-  class CPU: public anch::Singleton<CPU> {
+  class ANCH_DEVICE_EXPORT CPU: public anch::Singleton<CPU> {
 
     friend class anch::Singleton<CPU>;
 

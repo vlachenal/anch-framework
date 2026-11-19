@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-crypto-export.hpp"
+
 #include <stdint.h>
 #include <cstddef>
 #include <array>
@@ -27,22 +29,22 @@
 namespace anch::crypto {
 
   /*! Galois multiply by 2 lookup table */
-  extern const uint8_t ANCH_GALOIS_MULT2[256];
+  extern ANCH_CRYPTO_EXPORT const uint8_t ANCH_GALOIS_MULT2[256];
 
   /*! Galois multiply by 3 lookup table */
-  extern const uint8_t ANCH_GALOIS_MULT3[256];
+  extern ANCH_CRYPTO_EXPORT const uint8_t ANCH_GALOIS_MULT3[256];
 
   /*! Galois multiply by 9 lookup table */
-  extern const uint8_t ANCH_GALOIS_MULT9[256];
+  extern ANCH_CRYPTO_EXPORT const uint8_t ANCH_GALOIS_MULT9[256];
 
   /*! Galois multiply by 11 lookup table */
-  extern const uint8_t ANCH_GALOIS_MULT11[256];
+  extern ANCH_CRYPTO_EXPORT const uint8_t ANCH_GALOIS_MULT11[256];
 
   /*! Galois multiply by 13 lookup table */
-  extern const uint8_t ANCH_GALOIS_MULT13[256];
+  extern ANCH_CRYPTO_EXPORT const uint8_t ANCH_GALOIS_MULT13[256];
 
   /*! Galois multiply by 14 lookup table */
-  extern const uint8_t ANCH_GALOIS_MULT14[256];
+  extern ANCH_CRYPTO_EXPORT const uint8_t ANCH_GALOIS_MULT14[256];
 
   /*!
    * \brief Block cipher interface
@@ -54,7 +56,7 @@ namespace anch::crypto {
    * \author Vincent Lachenal
    */
   template<std::size_t B>
-  class BlockCipher {
+  class ANCH_CRYPTO_EXPORT BlockCipher {
 
     // Methods +
   public:

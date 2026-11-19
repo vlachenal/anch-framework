@@ -19,11 +19,13 @@
 */
 #pragma once
 
+#include "anch-device-export.hpp"
+
 namespace anch::device {
 
   /*!
    * Register MAC address UUID (version) provider
    */
-  void registerMACAddressUUIDProvider();
+  ANCH_DEVICE_EXPORT void registerMACAddressUUIDProvider();
 
 }

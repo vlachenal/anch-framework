@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-sql-export.hpp"
+
 #include <string>
 
 #include "sql/builder/selectBuilderPart.hpp"
@@ -39,7 +41,7 @@ namespace anch::sql {
    *
    * @author Vincent Lachenal
    */
-  class FieldsBuilder: public SelectBuilderPart {
+  class ANCH_SQL_EXPORT FieldsBuilder: public SelectBuilderPart {
     friend class anch::sql::SelectBuilder;
 
     // Constructors +

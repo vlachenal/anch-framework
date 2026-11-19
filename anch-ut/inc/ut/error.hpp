@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-ut-export.hpp"
+
 #include <exception>
 #include <string>
 #include <source_location>
@@ -34,7 +36,7 @@ namespace anch::ut {
    *
    * \author Vincent Lachenal
    */
-  class AssertException: public std::exception {
+  class ANCH_UT_EXPORT AssertException: public std::exception {
 
     // Attributes +
   private:

@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-ut-export.hpp"
+
 #include <string>
 #include <string_view>
 #include <format>
@@ -79,7 +81,7 @@ namespace anch::ut {
    * \throw anch::ut::AssertException always
    */
   [[noreturn]]
-  void fail(std::string_view message = "", const std::source_location& location = std::source_location::current());
+  ANCH_UT_EXPORT void fail(std::string_view message = "", const std::source_location& location = std::source_location::current());
 
   /*!
    * Check if condition is \c true and raise unit test error otherwise

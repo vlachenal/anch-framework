@@ -63,6 +63,9 @@ jobs:
       - name: Test
         run: ctest --preset ${{ matrix.preset }} -j "$(nproc)"
 
+      - name: Check exported symbols
+        run: sh cmake/check-exports.sh build/${{ matrix.preset }}/lib
+
       - name: Upload test logs
         if: failure()
         uses: actions/upload-artifact@v7

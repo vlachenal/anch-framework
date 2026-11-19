@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-device-export.hpp"
+
 #include <string>
 #include <vector>
 
@@ -36,7 +38,7 @@ namespace anch::device {
    *
    * \author Vincent Lachenal
    */
-  class NetworkInterface {
+  class ANCH_DEVICE_EXPORT NetworkInterface {
     friend class anch::device::Network;
 
   private:

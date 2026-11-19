@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-cli-export.hpp"
+
 #include <optional>
 #include <string>
 #include <functional>
@@ -36,7 +38,7 @@ namespace anch::cli {
    *
    * \author Vincent Lachenal
    */
-  struct Arg {
+  struct ANCH_CLI_EXPORT Arg {
 
     /*! Argument function handler */
     std::function<void(const std::string&)> handler;

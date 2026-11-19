@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-cli-export.hpp"
+
 #include <string>
 #include <vector>
 #include <map>
@@ -43,7 +45,7 @@ namespace anch::cli {
    *
    * \author Vincent Lachenal
    */
-  class ArgHandler {
+  class ANCH_CLI_EXPORT ArgHandler {
 
     // Attributes +
   private:

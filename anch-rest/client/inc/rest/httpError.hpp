@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-rest-client-export.hpp"
+
 #include "rest/httpException.hpp"
 #include "rest/response.hpp"
 
@@ -31,7 +33,7 @@ namespace anch::rest {
    *
    * \since 0.2
    */
-  class HttpError: public anch::rest::HttpException {
+  class ANCH_REST_CLIENT_EXPORT HttpError: public anch::rest::HttpException {
 
     // Attributes +
   private:

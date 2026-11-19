@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-crypto-export.hpp"
+
 #include <sstream>
 #include <array>
 
@@ -35,7 +37,7 @@ namespace anch::crypto {
    * \param message the message to use
    */
   template<typename H>
-  H HMAC(const std::string& key, const std::string& message);
+  ANCH_CRYPTO_EXPORT H HMAC(const std::string& key, const std::string& message);
 
 }
 

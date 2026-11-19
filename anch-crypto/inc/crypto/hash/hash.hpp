@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-crypto-export.hpp"
+
 #include <ostream>
 #include <array>
 #include <cstdint>
@@ -35,7 +37,7 @@ namespace anch::crypto {
    * \author Vincent Lachenal
    */
   template<std::size_t O, std::size_t B>
-  class Hash {
+  class ANCH_CRYPTO_EXPORT Hash {
 
     // Methods +
   public:

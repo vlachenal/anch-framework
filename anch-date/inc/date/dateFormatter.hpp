@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-date-export.hpp"
+
 #include <memory>
 #include <ostream>
 #include <string>
@@ -57,7 +59,7 @@ namespace anch::date {
    *
    * \author Vincent Lachenal
    */
-  class DateFormatter {
+  class ANCH_DATE_EXPORT DateFormatter {
 
     // Attributes +
   private:

@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-log-export.hpp"
+
 #include <mutex>
 
 #include "log/writer.hpp"
@@ -35,7 +37,7 @@ namespace anch::log {
    *
    * \since 0.1
    */
-  class ConsoleWriter: public Writer {
+  class ANCH_LOG_EXPORT ConsoleWriter: public Writer {
 
     // Attributes +
   private:

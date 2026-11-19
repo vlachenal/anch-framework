@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-crypto-export.hpp"
+
 #include <cstddef>
 #include <stdint.h>
 
@@ -35,7 +37,7 @@ namespace anch::crypto {
    *
    * \author Vincent Lachenal
    */
-  class ZeroPadding {
+  class ANCH_CRYPTO_EXPORT ZeroPadding {
 
   public:
     /*!

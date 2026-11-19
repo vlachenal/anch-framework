@@ -20,6 +20,8 @@
 #ifdef ANCH_SQL_POSTGRESQL
 #pragma once
 
+#include "anch-postgresql-export.hpp"
+
 #include "sql/connection.hpp"
 
 
@@ -38,7 +40,7 @@ namespace anch::sql::postgresql {
    *
    * \since 0.2
    */
-  uint64_t affectedRows(PGresult* res) noexcept;
+  ANCH_POSTGRESQL_EXPORT uint64_t affectedRows(PGresult* res) noexcept;
 
   /*!
    * Build SQL exception from PostgreSQL error: it is fatal when the connection is broken (\c PQstatus )
@@ -51,7 +53,7 @@ namespace anch::sql::postgresql {
    *
    * \since 0.2
    */
-  SqlException error(const std::string& message, PGconn* conn, PGresult* res = NULL);
+  ANCH_POSTGRESQL_EXPORT SqlException error(const std::string& message, PGconn* conn, PGresult* res = NULL);
 
 }  // anch::sql::postgresql
 
@@ -66,7 +68,7 @@ namespace anch::sql {
    *
    * \since 0.1
    */
-  class PostgreSQLConnection: public Connection {
+  class ANCH_POSTGRESQL_EXPORT PostgreSQLConnection: public Connection {
 
     // Attributes +
   private:

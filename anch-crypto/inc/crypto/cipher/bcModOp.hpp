@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-crypto-export.hpp"
+
 #include "crypto/cipher/invalidBlockException.hpp"
 
 #include <istream>
@@ -49,7 +51,7 @@ namespace anch::crypto {
    * \author Vincent Lachenal
    */
   template<typename Derived, typename Cipher>
-  class BlockCipherModeOfOperation {
+  class ANCH_CRYPTO_EXPORT BlockCipherModeOfOperation {
 
     // Attributes +
   private:

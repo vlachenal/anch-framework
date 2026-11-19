@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-conf-export.hpp"
+
 #include <map>
 #include <functional>
 #include <string>
@@ -55,7 +57,7 @@ namespace anch::conf {
    *
    * \author Vincent Lachenal
    */
-  class Resolvers: public anch::Singleton<Resolvers> {
+  class ANCH_CONF_EXPORT Resolvers: public anch::Singleton<Resolvers> {
     friend class anch::conf::Configuration;
     friend class anch::Singleton<Resolvers>;
 

@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-sql-export.hpp"
+
 #include <string>
 #include <list>
 
@@ -38,7 +40,7 @@ namespace anch::sql {
    *
    * \author Vincent Lachenal
    */
-  class SQLQuery {
+  class ANCH_SQL_EXPORT SQLQuery {
 
     // Attributes +
   private:

@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-rest-common-export.hpp"
+
 #include <istream>
 #include <ostream>
 #include <string_view>
@@ -45,7 +47,7 @@ namespace anch::rest {
    *
    * \since 0.2
    */
-  struct Json {
+  struct ANCH_REST_COMMON_EXPORT Json {
 
     /*!
      * Media type

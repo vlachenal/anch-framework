@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-device-export.hpp"
+
 #include <map>
 #include <memory>
 #include <optional>
@@ -40,7 +42,7 @@ namespace anch::device {
    *
    * \author Vincent Lachenal
    */
-  class Network {
+  class ANCH_DEVICE_EXPORT Network {
 
   public:
     // Constructors +

@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-rest-client-export.hpp"
+
 #include <chrono>
 #include <optional>
 #include <stdexcept>
@@ -36,7 +38,7 @@ namespace anch::rest {
    *
    * \since 0.2
    */
-  struct TransportConfig {
+  struct ANCH_REST_CLIENT_EXPORT TransportConfig {
     /*! Connection timeout */
     std::chrono::milliseconds connectTimeout{10000};
 
@@ -64,7 +66,7 @@ namespace anch::rest {
    *
    * \since 0.2
    */
-  class TransportError: public std::runtime_error {
+  class ANCH_REST_CLIENT_EXPORT TransportError: public std::runtime_error {
   public:
     /*! Use \c std::runtime_error constructors */
     using std::runtime_error::runtime_error;
@@ -77,7 +79,7 @@ namespace anch::rest {
    *
    * \since 0.2
    */
-  class Transport {
+  class ANCH_REST_CLIENT_EXPORT Transport {
 
     // Destructor +
   public:

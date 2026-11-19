@@ -19,6 +19,8 @@
 */
 #pragma once
 
+#include "anch-date-export.hpp"
+
 #include <chrono>
 #include <cstddef>
 #include <string>
@@ -79,7 +81,7 @@ namespace anch::date::rfc3339 {
    *
    * \return the number of characters written
    */
-  std::size_t formatDateTime(const anch::date::Date& date, char* output, Offset offset = Offset::UTC) noexcept;
+  ANCH_DATE_EXPORT std::size_t formatDateTime(const anch::date::Date& date, char* output, Offset offset = Offset::UTC) noexcept;
 
   /*!
    * Format \c date-time
@@ -89,7 +91,7 @@ namespace anch::date::rfc3339 {
    *
    * \return the formatted date
    */
-  std::string formatDateTime(const anch::date::Date& date, Offset offset = Offset::UTC);
+  ANCH_DATE_EXPORT std::string formatDateTime(const anch::date::Date& date, Offset offset = Offset::UTC);
 
   /*!
    * Parse \c date-time
@@ -101,7 +103,7 @@ namespace anch::date::rfc3339 {
    * \throw std::invalid_argument invalid format, impossible date or point in time out of \ref anch::date::Date
    *        range (years 1678 to 2261)
    */
-  anch::date::Date parseDateTime(std::string_view text);
+  ANCH_DATE_EXPORT anch::date::Date parseDateTime(std::string_view text);
 
   /*!
    * Format \c full-date
@@ -113,7 +115,7 @@ namespace anch::date::rfc3339 {
    *
    * \throw std::invalid_argument invalid date (\c ok() is \c false ) or year out of 0000-9999
    */
-  std::size_t formatDate(const std::chrono::year_month_day& date, char* output);
+  ANCH_DATE_EXPORT std::size_t formatDate(const std::chrono::year_month_day& date, char* output);
 
   /*!
    * Format \c full-date
@@ -124,7 +126,7 @@ namespace anch::date::rfc3339 {
    *
    * \throw std::invalid_argument invalid date (\c ok() is \c false ) or year out of 0000-9999
    */
-  std::string formatDate(const std::chrono::year_month_day& date);
+  ANCH_DATE_EXPORT std::string formatDate(const std::chrono::year_month_day& date);
 
   /*!
    * Parse \c full-date
@@ -135,6 +137,6 @@ namespace anch::date::rfc3339 {
    *
    * \throw std::invalid_argument invalid format or impossible date
    */
-  std::chrono::year_month_day parseDate(std::string_view text);
+  ANCH_DATE_EXPORT std::chrono::year_month_day parseDate(std::string_view text);
 
 }  // anch::date::rfc3339
