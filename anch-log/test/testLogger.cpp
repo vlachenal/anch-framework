@@ -20,6 +20,7 @@
 #include "log/loggerFactory.hpp"
 
 #include <iostream>
+#include <latch>
 #include <thread>
 #include <chrono>
 #include <filesystem>
@@ -37,6 +38,9 @@ using anch::log::Logger;
 
 /*! Number of messages written by each thread in rotate test */
 constexpr int ROTATE_MESSAGES = 5000;
+
+/*! Number of messages written by each thread in rotate test once both threads have written \ref ROTATE_MESSAGES */
+constexpr int ROTATE_FINAL_MESSAGES = 10;
 
 void
 testMultiThread(const Logger& log, int nbLog) {
@@ -59,9 +63,21 @@ testRotate() {
   std::cout << "Logger has been retrieved" << std::endl;
   LOG.info("anch-logger");
 
-  // 2 x 5000 messages (about 900 KB) with max-size=64K and max-rotate-files=3: many rotations, 3 archives kept
-  std::thread th = std::thread(testMultiThread, LOG, ROTATE_MESSAGES);
+  // 2 x 5000 messages (about 900 KB) with max-size=64K and max-rotate-files=3: many rotations, 3 archives kept.
+  // Kept files hold only the last messages: when a thread finishes first, they can all come from the other one.
+  // Both threads wait for each other, then write ROTATE_FINAL_MESSAGES messages (less than 3 KB, at most one more
+  // rotation), so kept files always have messages of both threads.
+  std::latch done(2);
+  std::thread th = std::thread([&done]() {
+    testMultiThread(LOG, ROTATE_MESSAGES);
+    done.arrive_and_wait();
+    testMultiThread(LOG, ROTATE_FINAL_MESSAGES);
+  });
   for(int i = 0 ; i < ROTATE_MESSAGES ; ++i) {
+    LOG.info("Message n° ", i, " from main thread");
+  }
+  done.arrive_and_wait();
+  for(int i = 0 ; i < ROTATE_FINAL_MESSAGES ; ++i) {
     LOG.info("Message n° ", i, " from main thread");
   }
   th.join();
