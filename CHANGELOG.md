@@ -17,11 +17,15 @@ which give its replacement and the version which removes it. Until 1.0.0, it is 
 - anch-oas: inconsistent constraints (`minLength` greater than `maxLength`, `minItems` greater than `maxItems`,
   `minProperties` greater than `maxProperties`, `minimum` greater than `maximum`) and required properties missing from
   `properties` are reported with a warning (error with `--strict`).
+- anch-rest: the nginx module integration test covers HTTP/2 (h2c).
 
 ### Fixed
 
 - anch-oas: bounds, `multipleOf` and enumeration values outside `double` range are ignored with a warning (generated
   code did not compile); `??` in descriptions and patterns no longer produces trigraphs in generated code.
+- anch-rest: multipart names and file names keep backslashes (only `\"` and `\\` are escapes) and decode `%22`, `%0D`
+  and `%0A` as browsers encode them; every value of multi-valued RPC response metadata is sent (Connect and
+  gRPC-Web); `HEAD` responses have the `Content-Length` of the `GET` response instead of `0` with nginx.
 - anch-crypto: `MD5`, `SHA1` and SHA-2 classes hid the data hashing methods of `Hash` (`digest(const std::string&)`,
   `digest(const uint8_t*, std::size_t)`, `digest(std::istream&)`, ...): a hash object can be reused.
 

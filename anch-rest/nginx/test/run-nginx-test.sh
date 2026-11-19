@@ -16,6 +16,7 @@ module_dir=$(realpath "$(dirname "$0")/..")
 app="${anch_build}/lib/libanch-rest-nginx-test-app.so"
 port=18080
 sync_port=18081
+h2_port=18082
 failures=0
 
 [ -f "${app}" ] || { echo "Test application not found: ${app}"; exit 1; }
@@ -26,7 +27,7 @@ cd "${nginx_src}"
 options="cc: ${NGINX_CC_OPT:-} ld: ${NGINX_LD_OPT:-}"
 if [ ! -f objs/ngx_http_anch_rest_module.so ] || [ "${module_dir}/ngx_http_anch_rest_module.c" -nt objs/ngx_http_anch_rest_module.so ] \
      || [ "$(cat objs/anch-test-options 2> /dev/null)" != "${options}" ]; then
-  ./configure --with-threads --with-compat --without-http_rewrite_module --without-http_gzip_module \
+  ./configure --with-threads --with-compat --with-http_v2_module --without-http_rewrite_module --without-http_gzip_module \
     --with-cc-opt="${NGINX_CC_OPT:-}" --with-ld-opt="${NGINX_LD_OPT:-}" \
     --add-dynamic-module="${module_dir}" > "${work}.configure.log" 2>&1 || { tail -20 "${work}.configure.log"; exit 1; }
   make -j"$(nproc)" > "${work}.make.log" 2>&1 || { grep -E 'error|warning' "${work}.make.log" | head -20; exit 1; }
@@ -65,6 +66,12 @@ http {
     anch_rest_thread_pool off;
     location /api/ { anch_rest_app ${app} "nginx configuration"; }
   }
+  server {
+    # HTTP/2 without TLS (prior knowledge)
+    listen 127.0.0.1:${h2_port};
+    http2 on;
+    location /api/ { anch_rest_app ${app} "nginx configuration"; client_max_body_size 20m; }
+  }
 }
 CONF
 # Configuration -
@@ -81,6 +88,7 @@ check() {
 }
 url="http://127.0.0.1:${port}"
 sync_url="http://127.0.0.1:${sync_port}"
+h2_url="http://127.0.0.1:${h2_port}"
 # SHA-256 of /api/stream pattern ('a' to 'z' repeated)
 pattern_sha() {
   yes abcdefghijklmnopqrstuvwxyz | tr -d '\n' | head -c "$1" | sha256sum | cut -d' ' -f1
@@ -114,7 +122,7 @@ check "POST body of 100 kB (unbuffered, read while received)" '201 100000' "$(pr
 check "POST without body" '400' "$(curl -s -o /dev/null -w '%{http_code}' -X POST -H 'Content-Type: application/json' "${url}/api/pets")"
 check "headers and query" 'value a b' "$(curl -s -H 'X-Test: value' "${url}/api/headers?q=a%20b")"
 check "configuration" 'nginx configuration' "$(curl -s "${url}/api/config")"
-check "HEAD" '200 0' "$(curl -s -I -o /dev/null -w '%{http_code} %{size_download}' -H 'Accept: application/json' "${url}/api/pets/1")"
+check "HEAD (Content-Length of GET)" '200 0 21' "$(curl -s -I -D /tmp/headers.$$ -o /dev/null -w '%{http_code} %{size_download}' -H 'Accept: application/json' "${url}/api/pets/1"; printf ' %s' "$(header /tmp/headers.$$ Content-Length)")"
 check "405" '405 GET, HEAD, OPTIONS' "$(curl -s -D /tmp/headers.$$ -o /dev/null -w '%{http_code}' -X DELETE "${url}/api/pets/1"; printf ' %s' "$(grep -i '^Allow:' /tmp/headers.$$ | tr -d '\r' | cut -d' ' -f2-)")"
 check "OPTIONS" '204 GET, HEAD, OPTIONS' "$(curl -s -D /tmp/headers.$$ -o /dev/null -w '%{http_code}' -X OPTIONS "${url}/api/pets/1"; printf ' %s' "$(grep -i '^Allow:' /tmp/headers.$$ | tr -d '\r' | cut -d' ' -f2-)")"
 check "CORS preflight" '204 https://app.example.com POST, OPTIONS' "$(curl -s -D /tmp/headers.$$ -o /dev/null -w '%{http_code}' -X OPTIONS -H 'Origin: https://app.example.com' -H 'Access-Control-Request-Method: POST' -H 'Access-Control-Request-Headers: content-type' "${url}/api/pets"; printf ' %s %s' "$(grep -i '^Access-Control-Allow-Origin:' /tmp/headers.$$ | tr -d '\r' | cut -d' ' -f2-)" "$(grep -i '^Access-Control-Allow-Methods:' /tmp/headers.$$ | tr -d '\r' | cut -d' ' -f2-)")"
@@ -181,6 +189,22 @@ check "thread pool off: echo of 900 kB (temporary file)" "200 $(file_sha "${work
 check "thread pool off: stream of 5 MB" "$(pattern_sha 5000000)" "$(curl -s "${sync_url}/api/stream?size=5000000" | sha256sum | cut -d' ' -f1)"
 rm -f "${work}/echo.in" "${work}/echo.out" "${work}/big.in"
 # Streamed bodies -
+
+# HTTP/2 +
+check "HTTP/2: GET json" '2 200 {"id":1,"name":"Rex"}' "$(curl -s --http2-prior-knowledge -w '%{http_version} %{http_code} ' -o /tmp/body.$$ "${h2_url}/api/pets/1"; cat /tmp/body.$$)"
+check "HTTP/2: HEAD (Content-Length of GET)" '200 21' "$(curl -s --http2-prior-knowledge -I -D /tmp/headers.$$ -o /dev/null -w '%{http_code}' "${h2_url}/api/pets/1"; printf ' %s' "$(header /tmp/headers.$$ Content-Length)")"
+check "HTTP/2: POST json" '201 /api/pets/9' "$(curl -s --http2-prior-knowledge -D /tmp/headers.$$ -o /dev/null -w '%{http_code}' -H 'Content-Type: application/json' -d '{"id":9,"name":"Rex"}' "${h2_url}/api/pets"; printf ' %s' "$(header /tmp/headers.$$ Location)")"
+check "HTTP/2: stream of 64 MB" "$(pattern_sha ${size})" "$(curl -s --http2-prior-knowledge "${h2_url}/api/stream?size=${size}" | sha256sum | cut -d' ' -f1)"
+head -c 15000000 /dev/urandom > "${work}/echo.in"
+check "HTTP/2: echo of 15 MB (Content-Length)" "200 $(file_sha "${work}/echo.in")" "$(curl -s --http2-prior-knowledge -o "${work}/echo.out" -w '%{http_code}' --data-binary @"${work}/echo.in" "${h2_url}/api/echo"; printf ' %s' "$(file_sha "${work}/echo.out")")"
+check "HTTP/2: echo of 15 MB (without length)" "200 $(file_sha "${work}/echo.in")" "$(curl -s --http2-prior-knowledge -o "${work}/echo.out" -w '%{http_code}' -X POST -T - "${h2_url}/api/echo" < "${work}/echo.in"; printf ' %s' "$(file_sha "${work}/echo.out")")"
+check "HTTP/2: multipart upload" '200 1 Rex photo.png image/png 300000' "$(curl -s --http2-prior-knowledge -o /tmp/body.$$ -w '%{http_code}' -F 'description=Rex' -F "photo=@${work}/photo.png;type=image/png" "${h2_url}/api/pets/1/photo"; printf ' %s' "$(cat /tmp/body.$$)")"
+# Several streams on one connection (multiplexing), one of them cancelled by the client
+check "HTTP/2: parallel streams on one connection" "$(pattern_sha 1000000) $(pattern_sha 2000000)" "$(curl -s --http2-prior-knowledge --parallel --parallel-immediate -o "${work}/h2a.out" "${h2_url}/api/stream?size=1000000" -o "${work}/h2b.out" "${h2_url}/api/stream?size=2000000"; printf '%s %s' "$(file_sha "${work}/h2a.out")" "$(file_sha "${work}/h2b.out")")"
+curl -s --http2-prior-knowledge -o /dev/null --max-time 1 --limit-rate 1M "${h2_url}/api/stream?size=1000000000" || true
+check "HTTP/2: cancelled stream, thread pool is available again" '200' "$(curl -s --http2-prior-knowledge -o /dev/null --max-time 3 -w '%{http_code}' "${h2_url}/api/stream?size=10")"
+rm -f "${work}/echo.in" "${work}/echo.out" "${work}/h2a.out" "${work}/h2b.out"
+# HTTP/2 -
 
 # Two slow requests (1 s each) on one worker: in parallel with thread pool, serialized without
 elapsed() {

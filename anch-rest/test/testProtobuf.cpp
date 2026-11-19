@@ -175,6 +175,8 @@ testConnect() {
   anch::ut::assertThat(response.getHeaders().get("Content-Type") == "application/proto" && pet.ParseFromString(response.content())
 		       && pet.name() == "Rex" && pet.tags(1) == "vincent", "Unexpected Connect response");
   anch::ut::assertThat(response.getHeaders().get("X-Served-By") == "anch", "Response metadata has to be sent in headers");
+  anch::ut::assertThat(response.getHeaders().getAll("X-Trace") == std::vector<std::string>{"a", "b"}, "Every metadata value has to be sent ({} values)",
+		       response.getHeaders().getAll("X-Trace").size());
   Response json = post(api, path, "application/json", R"({"id":"1"})");
   expectStatus(json, Status::OK);
   anch::ut::assertThat(json.content() == R"({"id":"1","name":"Rex","tags":["dog","anonymous"]})", "Unexpected JSON '{}'", json.content());

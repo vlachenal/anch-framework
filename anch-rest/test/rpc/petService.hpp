@@ -49,6 +49,8 @@ namespace anch::test {
       pet.add_tags("dog");
       pet.add_tags(std::string(context.getRequestMetadata().get("x-user").value_or("anonymous")));
       context.getResponseMetadata().add("X-Served-By", "anch");
+      context.getResponseMetadata().add("X-Trace", "a"); // multi-valued metadata (R2)
+      context.getResponseMetadata().add("X-Trace", "b");
       return pet;
     });
     service.unary<anch::test::pets::Pet, anch::test::pets::Pet>("AddPet", [](const anch::test::pets::Pet& pet) {

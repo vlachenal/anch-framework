@@ -19,6 +19,7 @@
 */
 #include "rest/nginxApplication.hpp"
 
+#include <charconv>
 #include <cstdio>
 #include <exception>
 #include <memory>
@@ -231,10 +232,23 @@ namespace {
    * \param sender the sender
    * \param response the response
    * \param bufferSize the block size
+   * \param head \c true for a \c HEAD request
    */
   void
-  send(Sender& sender, const Response& response, std::size_t bufferSize) {
+  send(Sender& sender, const Response& response, std::size_t bufferSize, bool head) {
     sender.response(response);
+    if(head && !response.hasBody()) {
+      // HEAD response: Content-Length of the GET response (given by Api) or no length, never 0 (empty body)
+      long long length = ANCH_REST_UNKNOWN_LENGTH;
+      if(std::optional<std::string_view> value = response.getHeaders().get(anch::rest::header::CONTENT_LENGTH)) {
+	long long parsed = 0;
+	if(std::from_chars(value->data(), value->data() + value->size(), parsed).ec == std::errc() && parsed >= 0) {
+	  length = parsed;
+	}
+      }
+      sender.start(length);
+      return;
+    }
     // Declared out of try block: destructor flush is done after failure is known (pending data are dropped)
     anch::cutils::COStream out(anch::cutils::cbuffer{
 	.data = nullptr,
@@ -287,7 +301,7 @@ anch::rest::nginx::handle(void* app, const anch_rest_request_t* in, const anch_r
     // Request is kept until response body has been written: body writers can read it
     std::optional<Request> request = ::request(*in, bufferSize);
     const Response response = request ? static_cast<Api*>(app)->handle(*request) : Response(Status::NOT_IMPLEMENTED);
-    send(sender, response, bufferSize);
+    send(sender, response, bufferSize, request && request->getMethod() == anch::rest::Method::HEAD);
   } catch(...) {
     if(!sender.started()) {
       sender.error(); // nothing has been sent: internal server error

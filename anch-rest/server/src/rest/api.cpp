@@ -21,6 +21,7 @@
 
 #include <algorithm>
 #include <map>
+#include <ostream>
 #include <set>
 #include <stdexcept>
 
@@ -60,6 +61,27 @@ struct Api::Match {
 // Match -
 
 namespace {
+
+  /*! Stream buffer which only counts written bytes (length of a HEAD response body) */
+  class CountingBuffer: public std::streambuf {
+  public:
+    std::size_t count = 0;
+
+  protected:
+    std::streamsize
+    xsputn(const char*, std::streamsize n) override {
+      count += static_cast<std::size_t>(n);
+      return n;
+    }
+
+    int_type
+    overflow(int_type c) override {
+      if(!traits_type::eq_int_type(c, traits_type::eof())) {
+	++count;
+      }
+      return traits_type::not_eof(c);
+    }
+  };
 
   /*! Split path on '/', empty segments are ignored */
   std::vector<std::string_view>
@@ -470,7 +492,14 @@ Api::dispatch(Request& request) {
       }
       request.setPathParameters(std::move(named));
       Response response = route.handle(request, match.parameters);
-      if(fallback) {
+      if(fallback && response.hasBody()) {
+	// HEAD has the headers of GET: body is written without being kept to give its length (as servlets do)
+	if(!response.getHeaders().has(anch::rest::header::CONTENT_LENGTH)) {
+	  CountingBuffer counter;
+	  std::ostream out(&counter);
+	  response.writeBody(out);
+	  response.header(anch::rest::header::CONTENT_LENGTH, std::to_string(counter.count));
+	}
 	response.clearBody();
       }
       return response;

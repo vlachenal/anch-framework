@@ -35,17 +35,23 @@ Vérifié par exécution :
 
 Constats mineurs :
 
-### R1. Nom de fichier multipart : les `\` sont supprimés — vérifié
+### R1. Nom de fichier multipart : les `\` sont supprimés — vérifié — **corrigé le 2026-11-19**
 `filename="C:\dir\f.txt"` est lu `C:dirf.txt` : `parseDisposition` traite `\` comme un échappement de chaîne entre guillemets, alors que les navigateurs n'échappent pas (ils encodent `"` en `%22`, ce que `escape()` fait à l'écriture). Le sens écriture / lecture n'est pas symétrique non plus : un nom `a"b` est écrit `a%22b` et relu `a%22b`.
 Piste : ne traiter que `\"` et `\\` comme échappements, ou aucun, et décoder `%22`, `%0D`, `%0A` à la lecture.
+Correction : seuls `\"` et `\\` sont des échappements (un chemin `C:\dir\f.txt` est conservé) ; `%22`, `%0D` et `%0A` (casse ignorée) sont décodés dans les noms et noms de fichiers, l'aller-retour écriture / lecture restitue le nom d'origine (test `anch-rest-http-multipart`).
 
-### R2. Métadonnées de réponse RPC à valeurs multiples — lecture
+### R2. Métadonnées de réponse RPC à valeurs multiples — lecture — **corrigé le 2026-11-19**
 `handleRpc` (`protobuf/inc/rest/impl/rpcApi.hpp`) recopie les métadonnées avec `Response::header`, qui remplace la valeur : seule la dernière valeur d'un nom est envoyée (Connect et gRPC-Web), alors que le serveur gRPC les envoie toutes.
+Correction : `Headers::add` ; le service de test envoie deux valeurs de `X-Trace`, vérifiées en Connect (`anch-rest-protobuf-connect`).
 
 ### R3. `CurlTransport` : corps en flux et redirection — lecture
 Un corps envoyé en flux (`Content-Length` connu) ne peut pas être relu : sans `CURLOPT_SEEKFUNCTION`, une redirection 307 / 308 ou une authentification qui renvoie le corps échoue (`CURLE_SEND_FAIL_REWIND`). Les valeurs d'en-têtes ne sont pas contrôlées (`\r\n` dans une valeur ajoute des en-têtes), et la taille de la réponse lue en mémoire n'est pas bornée.
 
-### R4. Réponse à `HEAD` : `Content-Length: 0` — lecture
+### R4. Réponse à `HEAD` : `Content-Length: 0` — vérifié — **corrigé le 2026-11-19**
 `Api::dispatch` sert `HEAD` avec la route `GET` puis retire le corps ; le module nginx envoie alors `Content-Length: 0` au lieu de la longueur de la réponse `GET`.
+Correction : `Api` écrit le corps de la route `GET` dans un flux qui compte les octets (comme `HttpServlet.doHead`), pose `Content-Length` (sauf s'il est déjà donné) puis retire le corps ; le pont nginx transmet cette longueur au module pour `HEAD` (aucune longueur sans en-tête, jamais 0). Tests `anch-rest-api-head` et vérifications `HEAD` du test nginx (HTTP/1.1 et HTTP/2).
+
+### HTTP/2 du module nginx — **testé le 2026-11-19**
+Le test d'intégration compile nginx avec `--with-http_v2_module` et ajoute un serveur `http2 on;` (h2c) : GET, HEAD, POST, flux de 64 Mo, écho de 15 Mo avec et sans longueur (corps de requête non tamponné), multipart, deux flux en parallèle sur une connexion, flux annulé par le client puis pool de threads disponible. 50 vérifications, toutes réussies avec nginx 1.30.6 ; aucune modification du module nécessaire.
 
 À savoir : le corps JSON n'a pas de limite propre côté serveur (voir J19 dans `anch-json`).

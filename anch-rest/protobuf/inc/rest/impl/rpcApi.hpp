@@ -50,7 +50,7 @@ namespace anch::rest::detail {
     auto withMetadata = [&context](anch::rest::Response response) {
       for(const auto& [name, values] : context.getResponseMetadata()) {
 	for(const std::string& value : values) {
-	  response.header(name, value);
+	  response.getHeaders().add(name, value); // every value is sent (header() would keep the last one)
 	}
       }
       return response;

@@ -146,7 +146,10 @@ private:
 	out << name << ": " << value << "\r\n";
       }
     }
-    out << "Content-Length: " << content.size() << "\r\n" << "Connection: close\r\n\r\n" << content;
+    if(!response.getHeaders().has(anch::rest::header::CONTENT_LENGTH)) { // HEAD responses have the GET length
+      out << "Content-Length: " << content.size() << "\r\n";
+    }
+    out << "Connection: close\r\n\r\n" << content;
     peer << out.str();
     peer.flush();
   }

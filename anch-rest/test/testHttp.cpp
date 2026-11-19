@@ -278,9 +278,9 @@ testMultipart() {
   anch::ut::assertThat(out.str().find("name=\"typed\"\r\nContent-Type: application/json\r\nX-Custom: value\r\n\r\n{}") != std::string::npos,
 		       "Typed fields have a Content-Type");
   Form back = readMultipart(out.str(), type.toString());
-  anch::ut::assertThat(back.size() == 4 && back.field("na%22me%0D%0A") == "value" && back.part("typed")->getMediaType().essence() == "application/json"
+  anch::ut::assertThat(back.size() == 4 && back.field("na\"me\r\n") == "value" && back.part("typed")->getMediaType().essence() == "application/json"
 		       && back.part("typed")->getHeaders().get("X-Custom") == "value", "Round trip has to keep parts");
-  anch::ut::assertThat(back.part("file")->getFilename() == "r%22ex.bin" && back.part("file")->content() == std::string_view("\0\r\n--anch-\r\n", 12),
+  anch::ut::assertThat(back.part("file")->getFilename() == "r\"ex.bin" && back.part("file")->content() == std::string_view("\0\r\n--anch-\r\n", 12),
 		       "Round trip has to keep files");
 
   // Writing errors
@@ -301,6 +301,16 @@ testMultipart() {
   injected.getHeaders().add("X-Injected", "a\r\nContent-Type: text/html");
   anch::ut::assertThat(writeError(Form().add(std::move(injected)), fixed), "CR / LF in part headers have to be refused");
   anch::ut::assertThat(readMultipart("--XyZ--").empty(), "Empty multipart body");
+
+  // R1: backslashes are not escapes (except before '"' and '\\'), browsers encodings are decoded
+  Form paths = readMultipart("--XyZ\r\nContent-Disposition: form-data; name=\"a%22b%0d%0Ac%41\"; filename=\"C:\\dir\\f.txt\"\r\n\r\nx\r\n"
+			     "--XyZ\r\nContent-Disposition: form-data; name=\"q\\\"uote\"; filename=\"b\\\\s\"\r\n\r\ny\r\n--XyZ--");
+  const anch::rest::Part* path = paths.part("a\"b\r\nc%41");
+  anch::ut::assertThat(path != nullptr && path->getFilename() == "C:\\dir\\f.txt", "Windows path has to be kept: '{}'",
+		       (path != nullptr) ? path->getFilename().value_or("") : "no part");
+  const anch::rest::Part* quote = paths.part("q\"uote");
+  anch::ut::assertThat(quote != nullptr && quote->getFilename() == "b\\s", "\\\" and \\\\ are escapes: '{}'",
+		       (quote != nullptr) ? quote->getFilename().value_or("") : "no part");
 }
 
 void

@@ -123,7 +123,7 @@ namespace {
       }
       std::string parameter;
       if(pos < value.size() && value[pos] == '"') {
-	// Quoted string with backslash escapes
+	// Quoted string
 	++pos;
 	bool closed = false;
 	while(pos < value.size()) {
@@ -132,7 +132,8 @@ namespace {
 	    closed = true;
 	    break;
 	  }
-	  if(c == '\\' && pos < value.size()) {
+	  // Only \" and \\ are escapes: browsers do not escape backslashes (C:\dir\file.txt is sent as is)
+	  if(c == '\\' && pos < value.size() && (value[pos] == '"' || value[pos] == '\\')) {
 	    c = value[pos++];
 	  }
 	  parameter += c;
@@ -155,6 +156,28 @@ namespace {
 	pos = semicolon;
       }
       res.parameters.insert_or_assign(std::move(name), std::move(parameter));
+    }
+    return res;
+  }
+
+  /*!
+   * Decode name or file name as written by browsers and by \ref escape : %22, %0D and %0A are '"', CR and LF (HTML
+   * multipart/form-data encoding algorithm), other characters are kept as is
+   */
+  std::string
+  unescape(std::string_view value) {
+    std::string res;
+    res.reserve(value.size());
+    for(std::size_t i = 0 ; i < value.size() ; ++i) {
+      if(value[i] == '%' && i + 2 < value.size()) {
+	const std::string code = toLower(value.substr(i + 1, 2));
+	if(code == "22" || code == "0d" || code == "0a") {
+	  res += (code == "22") ? '"' : (code == "0d" ? '\r' : '\n');
+	  i += 2;
+	  continue;
+	}
+      }
+      res += value[i];
     }
     return res;
   }
@@ -223,12 +246,12 @@ namespace {
     if(name == disposition->parameters.end()) {
       throw std::invalid_argument("Missing multipart part name");
     }
-    res.name = name->second;
+    res.name = unescape(name->second);
     if(auto extended = disposition->parameters.find("filename*"); extended != disposition->parameters.end()) {
       res.filename = decodeExtended(extended->second);
     }
     if(auto plain = disposition->parameters.find("filename"); !res.filename && plain != disposition->parameters.end()) {
-      res.filename = plain->second;
+      res.filename = unescape(plain->second);
     }
     return res;
   }

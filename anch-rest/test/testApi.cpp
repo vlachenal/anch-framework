@@ -247,6 +247,10 @@ testHead() {
   expectStatus(response, Status::OK);
   anch::ut::assertThat(!response.hasBody() && response.getHeaders().get("Content-Type") == "application/json",
 		       "HEAD response has to keep headers without body");
+  // R4: Content-Length of the GET response
+  const std::string length = std::to_string(call(api, Method::GET, "/pets/1").content().size());
+  anch::ut::assertThat(response.getHeaders().get("Content-Length") == length, "HEAD Content-Length {} expected, found '{}'",
+		       length, response.getHeaders().get("Content-Length").value_or(""));
 }
 
 void
