@@ -89,11 +89,19 @@ target_link_libraries(my-app PRIVATE anch::conf anch::log anch::json)
  *
  * Current version is \b 0.2 . Versions are numbered A.B.C: until 1.0.0, backward compatibility is not ensured
  * and API can change on every B change. From 1.0.0, A changes will break API, B changes will add features and
- * C changes will fix bugs.\n
+ * C changes will fix bugs. Shared libraries SONAME holds A and B (\c libanch-conf.so.0.2 ).\n
+ * \n
+ * Deprecated APIs are marked with \c [[deprecated]] (compilation warning) and \c \\deprecated in their
+ * documentation, with their replacement and the version which removes them: the next B version until 1.0.0, the
+ * next A version from 1.0.0.\n
+ * \n
+ * Shared libraries are built with hidden symbols visibility: only the public API is exported, with the
+ * \c ANCH_\<NAME\>_EXPORT macros of the generated \c anch-\<name\>-export.hpp headers.\n
  * \n
  * Version 0.2 brings: single CMake project with presets and package, C++23 and GCC 13, rewritten anch-network,
  * anch-date, anch-rest and anch-conf cascade, anch-log stream API, anch-oas generator, RFC 3339 dates in
- * anch-json, many fixes found with sanitizers, and a CI with AddressSanitizer and UndefinedBehaviorSanitizer.
+ * anch-json, many fixes found with sanitizers and fuzzing, and a CI (GCC, Clang, sanitizers, coverage, fuzzing,
+ * installation). Changes and breaking changes of each version are listed in the \ref changelog "changelog".
  *
  * \section ai_sec AI assisted development
  *

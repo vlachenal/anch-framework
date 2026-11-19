@@ -124,7 +124,7 @@ namespace anch::ut {
   /*!
    * Assert clause with error message formatting
    *
-   * \deprecated Use \ref anch::ut::assertThat "assertThat" : \c assert is also the \c \<cassert\> macro, so calls are expanded by the macro when
+   * \deprecated Since 0.2, removed in 0.3. Use \ref anch::ut::assertThat "assertThat" : \c assert is also the \c \<cassert\> macro, so calls are expanded by the macro when
    * \c \<cassert\> is included (the name is written between parentheses here so that this header always compiles).
    * The message is checked only when the assertion fails and the location is not reported.
    *
@@ -137,7 +137,7 @@ namespace anch::ut {
    * \throw anch::ut::AssertException \c check is \c false
    */
   template<typename... T>
-  [[deprecated("Use anch::ut::assertThat: assert conflicts with the assert macro of cassert header")]]
+  [[deprecated("removed in 0.3, use anch::ut::assertThat: assert conflicts with the assert macro of cassert header")]]
   void (assert)(bool check, std::string_view message, const T&... args);
 
   /*!
