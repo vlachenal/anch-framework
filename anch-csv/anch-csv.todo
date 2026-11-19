@@ -33,25 +33,30 @@ Niveau 1 : lecture et écriture d'enregistrements (csv/reader.hpp, csv/writer.hp
 
 Niveau 2 : association aux objets (csv/mapper.hpp)
 --------------------------------------------------
-Sur le modèle d'anch-json (spécialisation d'une fonction d'enregistrement par type) :
+Décidé le 2026-11-19 : anch-csv reprend le registerObject d'anch-json, au travers d'une description commune aux
+formats déclarée dans anch-utils (proposition détaillée dans anch-utils/mapping.todo) :
 
   template<>
-  void
-  anch::csv::registerObject(anch::csv::Mapper<Pet>& mapper) {
-    mapper
-      .column("id", &Pet::id)
-      .column("name", &Pet::name)
-      .column("birth", &Pet::birth)                        // anch::date::Date en RFC 3339 (ANCH_DATE)
-      .column("weight", &Pet::weight, anch::csv::format("{:.2f}"))
-      ;
-  }
+  struct anch::Mapping<Pet> {   // une description pour anch-json et anch-csv
+    static void
+    registerObject(anch::ObjectMapper<Pet> auto& mapper) {
+      mapper
+        .registerField("id", &Pet::id, anch::required)
+        .registerField("name", &Pet::name, anch::minLength(1))
+        .registerField("birth", &Pet::birth)             // anch::date::Date en RFC 3339 (ANCH_DATE)
+        ;
+    }
+  };
+
+anch::csv::ObjectMapper<T> satisfait le concept anch::ObjectMapper d'anch-utils ; les contraintes communes sont
+vérifiées à la lecture comme en JSON.
 
 - Colonnes associées par nom (en-tête) à la lecture, l'ordre de déclaration donne l'ordre d'écriture ; sans
   en-tête, association par position (ordre de déclaration).
 - Types : chaînes, entiers et flottants (std::from_chars / std::to_chars : indépendants de la locale, valeurs hors
-  limites refusées), bool (true / false, valeurs configurables), std::optional<T> (champ vide), enum (fonctions de
-  conversion données), anch::UUID (ANCH_UUID) et dates RFC 3339 (ANCH_DATE) comme anch-json, conversion
-  personnalisée (fonctions lecture / écriture données à column()).
+  limites refusées), bool (true / false, valeurs configurables), std::optional<T> (champ vide), enum (anch::ScalarMapping,
+  voir anch-utils/mapping.todo), anch::UUID (ANCH_UUID) et dates RFC 3339 (ANCH_DATE) comme anch-json, conversion
+  personnalisée (anch::ScalarMapping, voir anch-utils/mapping.todo, ou getter / setter donnés à registerField).
 - Colonnes inconnues ignorées par défaut (option pour les refuser), colonne obligatoire absente : MISSING_COLUMN.
 - Les objets sont plats : pas d'objets imbriqués ni de collections dans une colonne (voir question 4).
 
@@ -80,16 +85,15 @@ Construction
 ----------------
 1. Reader / Writer, options, erreurs, tests RFC 4180 (guillemets, CRLF dans un champ, champs vides, BOM, limites),
    cible de fuzzing.
-2. Mapper et registerObject, types de base, optional, UUID, dates, conversions personnalisées.
+2. Mapper sur la description commune (après les étapes 1 et 2 d'anch-utils/mapping.todo), types de base,
+   optional, UUID, dates, conversions personnalisées.
 3. Lecture en flux.
 4. Codec anch-rest, puis lecteur / écrivain anch-batch.
 
 Questions ouvertes
 ------------------
-1. API d'association : API propre à anch-csv (column(), proposée) ou réutilisation du registerObject d'anch-json
-   (un seul enregistrement par type pour JSON et CSV, mais mapper JSON non prévu pour des objets plats) ?
-2. Contraintes : réutiliser celles d'anch-json (minLength, minimum, pattern, ... : dépendance vers anch-json) ou
-   aucune contrainte dans anch-csv ?
+1. Tranchée le 2026-11-19 : description commune avec anch-json (anch-utils/mapping.todo, ses questions 1, 2, 4, 5).
+2. Tranchée le 2026-11-19 : contraintes communes, déplacées dans anch-utils (anch-utils/mapping.todo, question 3).
 3. Forme de la lecture en flux : range C++23 (for(const Pet& pet : anch::csv::records<Pet>(input))), callback ou
    anch::Flux (cohérent avec anch-json mais bloquant) ?
 4. Objets imbriqués : refusés (proposé) ou aplatis en colonnes "address.city" ?

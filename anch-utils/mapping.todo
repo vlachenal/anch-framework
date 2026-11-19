@@ -1,0 +1,123 @@
+Description des objets et sérialiseurs unifiés : proposition (2026-11-19)
+========================================================================
+
+À valider avant toute implémentation. Les questions ouvertes sont en fin de fichier.
+
+Demande (2026-11-19) : anch-csv reprend le registerObject d'anch-json ; une interface ou un concept déclaré dans
+anch-utils est implémenté par anch-csv et anch-json ; le but est d'avoir des interfaces unifiées pour les
+sérialiseurs / désérialiseurs dans la mesure du possible.
+
+État actuel
+-----------
+- anch-json : l'utilisateur spécialise template<> void anch::json::registerObject(anch::json::ObjectMapper<T>&)
+  (souvent dans un .cpp) ; le constructeur d'ObjectMapper<T> l'appelle. registerField accepte un membre, un
+  getter, un setter ou les deux, un mapper explicite (registerField<MT>) et des contraintes.
+- Les contraintes (json/constraints.hpp : required, minLength, minimum, pattern, ...) sont déjà indépendantes du
+  format : check(valeur, message) ; seul leur espace de noms est anch::json.
+- anch-rest : concepts Serializer / Deserializer de codecs (mediaType(), serialize(value, out),
+  deserialize(value, in), formes avec Side / MediaType, stream()).
+- anch-oas génère les spécialisations anch::json::registerObject et les PrimitiveMapper des énumérations.
+
+Contrainte technique : une description commune à plusieurs formats ne peut pas être une spécialisation d'une fonction
+qui prend le mapper d'un format précis (ObjectMapper d'anch-json). Elle doit être générique sur le mapper (un
+template, instancié par chaque format avec son propre mapper), donc définie dans un en-tête. Un mapper commun à type
+effacé ne convient pas : il perdrait le type des champs, dont chaque format a besoin pour lire et écrire les valeurs.
+
+Proposition
+-----------
+
+1. Description commune (anch-utils, mapping.hpp)
+
+  // Description de Pet pour tous les formats (anch-json, anch-csv, ...)
+  template<>
+  struct anch::Mapping<Pet> {
+    static void
+    registerObject(anch::ObjectMapper<Pet> auto& mapper) {
+      mapper
+        .registerField("id", &Pet::id, anch::required)
+        .registerField("name", &Pet::name, anch::minLength(1))
+        .registerField("birth", &Pet::birth)
+        ;
+    }
+  };
+
+- anch::Mapping<T> : modèle de classe que l'utilisateur spécialise (non intrusif, comme registerObject
+  aujourd'hui) ; la fonction garde le nom registerObject et le même corps qu'avec anch-json.
+- anch::ObjectMapper<M, T> : concept que le mapper de chaque format satisfait :
+  registerField(nom, P T::*, contraintes...) qui renvoie le mapper ; getter, setter et getter + setter aussi
+  (std::function, comme anch-json). Chaque format peut proposer plus (registerField<MT> d'anch-json).
+- anch::Described<T> : concept vrai quand anch::Mapping<T> est spécialisé.
+- Forme décidée le 2026-11-19 (question 1) : spécialisation de anch::Mapping<T> avec une fonction registerObject
+  générique sur le mapper. La fonction étant un template, elle est définie dans un en-tête (ou dans un .cpp avec
+  une instanciation explicite par format).
+- Évolution prévue vers une description constexpr (forme C) : anch::Mapping<T> pourra fournir, à la place de
+  registerObject, des données constexpr
+
+    static constexpr auto fields = anch::fields(anch::field("id", &Pet::id, anch::required), ...);
+
+  que chaque format parcourt à la compilation (dans un premier temps en appelant son registerField). Les formats
+  détectent la forme présente : la forme registerObject reste valable. Pour préparer cette évolution, les
+  contraintes déplacées dans anch-utils sont autant que possible des types littéraux (pattern gardé en texte et
+  compilé au premier usage, custom accepte une lambda sans capture).
+
+2. Contraintes déplacées dans anch-utils (constraints.hpp, espace de noms anch)
+- required, minLength, maxLength, minimum, maximum, exclusiveMinimum, exclusiveMaximum, multipleOf, minItems,
+  maxItems, uniqueItems, minProperties, maxProperties, allowed, items, custom, pattern, format : vérifiées par chaque
+  format à la lecture (et à l'écriture sur option), avec les mêmes messages.
+- Validation sans format : anch::validate(value) / anch::isValid(value) à partir de anch::Mapping<T> ;
+  anch::json::validate devient un alias.
+- Les noms anch::json::* restent comme alias.
+
+3. Formats
+- anch-json : ObjectMapper<T> utilise anch::Mapping<T> quand il est spécialisé, sinon la spécialisation de
+  anch::json::registerObject<T> (rétrocompatible : code existant et code généré par anch-oas inchangés).
+- anch-csv : son mapper (anch::csv::ObjectMapper<T>) satisfait le même concept et lit anch::Mapping<T> ; colonnes
+  = champs ; un champ objet ou collection est refusé à la compilation pour CSV (voir question 4).
+- Conversion des valeurs simples (énumérations, types personnalisés) commune aux formats textuels :
+  anch::ScalarMapping<T> (vers / depuis std::string_view), utilisé par anch-csv et par anch-json pour les valeurs
+  chaînes ; les PrimitiveMapper d'anch-json restent pour les cas propres à JSON (voir question 5).
+
+4. Sérialiseurs unifiés (anch-utils, serializer.hpp)
+- Concepts anch::Serializer<F, T> / anch::Deserializer<F, T> pour un format F :
+  F::serialize(const T&, std::ostream&, const F::Options&) et F::deserialize(T&, std::istream&, const F::Options&),
+  pour les objets décrits, les collections et les valeurs simples ; formes en flux (lecture élément par élément)
+  quand le format le permet (tableau JSON, enregistrements CSV).
+- anch::json::Json et anch::csv::Csv les implémentent (les fonctions libres actuelles d'anch-json restent).
+- anch-rest : un codec générique anch::rest::FormatCodec<F> (media type, options par côté Side) construit sur ces
+  concepts ; le codec Json actuel devient FormatCodec<anch::json::Json>, Csv est obtenu sans code propre.
+  Protobuf et Thrift (code généré par leurs outils) gardent leurs codecs mais satisfont les mêmes concepts.
+
+5. anch-oas
+- Génère anch::Mapping<T> (une description pour JSON et CSV) au lieu des spécialisations
+  anch::json::registerObject, et anch::ScalarMapping pour les énumérations ; option pour garder l'ancienne forme
+  pendant la transition.
+
+Compatibilité et dépréciation
+-----------------------------
+- Spécialiser anch::json::registerObject reste possible en 0.3 ; documenté comme déprécié (une spécialisation ne
+  peut pas porter [[deprecated]] : avertissement dans la documentation et le CHANGELOG), suppression en 0.4 selon
+  la politique (question 2).
+- Alias anch::json pour les contraintes et la validation : mêmes règles.
+
+Étapes proposées
+----------------
+1. anch-utils : Mapping, concept ObjectMapper, Described, contraintes et validation déplacées (alias dans anch-json).
+2. anch-json : lecture de anch::Mapping<T>, tests sur les deux formes de description ; anch-oas génère la nouvelle
+   forme.
+3. anch-csv : Reader / Writer (anch-csv/anch-csv.todo), puis mapper sur anch::Mapping<T>.
+4. Concepts Serializer / Deserializer, Json et Csv, codec générique anch-rest.
+5. ScalarMapping pour les énumérations et types simples (anch-json, anch-csv, anch-oas).
+
+Questions ouvertes
+------------------
+1. Tranchée le 2026-11-19 : spécialisation de anch::Mapping<T> avec une fonction registerObject (forme A), avec
+   évolution possible vers une description constexpr (forme C, voir « Description commune »). Écartée : fonction
+   libre trouvée par ADL (son nom entre en conflit avec anch::json::registerObject lors de la recherche dépendante
+   des arguments, et elle ne permet pas de décrire les types de std ou de bibliothèques tierces).
+2. anch::json::registerObject : déprécié en 0.3 et supprimé en 0.4 (politique actuelle), ou gardé durablement comme
+   forme propre à JSON ?
+3. Contraintes et validation : dans anch-utils (proposé) ou dans un nouveau module anch-validation ?
+4. Champs propres à un format (nom différent en JSON et en CSV, mapper JSON explicite, champ ignoré par un format) :
+   options de champ ignorées par les autres formats (anch::json::name("..."), anch::csv::ignore), ou descriptions
+   séparées par format quand elles diffèrent ?
+5. ScalarMapping commun pour les énumérations et types simples, ou garder des conversions propres à chaque format ?

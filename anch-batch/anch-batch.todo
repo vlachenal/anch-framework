@@ -53,13 +53,28 @@ Gestion des erreurs (« manage errors », « manage continue on error »)
 
 Lancement (« anch-conf: add anch-batch arguments and environment variables management »)
 ----------------------------------------------------------------------------------------
-- Ligne de commande (anch-cli) : my-batch --job import --param date=2026-11-19 --param file=in.csv [--restart]
-  [--list] ; paramètres aussi lus dans l'environnement (ANCH_BATCH_PARAM_<NOM>) et dans une section de configuration
-  (anch-conf, par exemple anch.batch.<job>), avec la priorité ligne de commande > environnement > configuration.
+Décidé le 2026-11-19 : anch-batch est bâti sur anch-app (conçu par l'utilisateur, voir anch-app/anch-app.todo).
+- Une application de lots est une anch::app::Application : anch-batch fournit une classe dérivée (par exemple
+  anch::batch::BatchApplication) dont execute() lance le job demandé ; l'application déclare ses jobs, anch-app
+  apporte ses options communes (-v, -c, -d, profils) et le chargement de la configuration.
+- Options propres à anch-batch, déclarées par Application::arg() / args() : --job <nom>, --param nom=valeur
+  (répétable), --restart, --list ; paramètres aussi lus dans l'environnement (ANCH_BATCH_PARAM_<NOM>) et dans une
+  section de configuration (anch-conf, par exemple anch.batch.<job>), avec la priorité ligne de commande >
+  environnement > configuration.
 - Configuration (anch-conf) : dépôt (mémoire / base anch-sql nommée), intervalles de validation, limites de skip et
   de retry par étape, pour régler un job sans recompiler.
 - Code de sortie : 0 terminé, 1 échec, 2 terminé avec erreurs, 3 paramètres invalides, 4 job déjà terminé.
 - Arrêt propre sur SIGTERM / SIGINT : le lot en cours se termine, l'exécution passe à STOPPED et peut être reprise.
+
+Besoins envers anch-app (à arbitrer par l'utilisateur, qui conçoit anch-app ; anch-batch ne les implémente pas) :
+- arguments déclarés par arg() / args() réellement analysés (A3 dans anch-app/ANALYSE.md) ;
+- after() appelé de façon fiable, y compris en cas d'exception (A1) : rapport final du job ;
+- code de sortie : run() est void ; anch-batch a besoin de rendre les codes ci-dessus (valeur de retour de run() ou
+  d'execute(), ou exception portant le code) ;
+- arrêt sur signal : point d'extension d'anch-app (demande d'arrêt transmise à l'application) ou gestion des
+  signaux par anch-batch lui-même ;
+- accès à la configuration chargée par anch-app (-c, -d, profils) pour lire la section anch.batch.
+anch-batch dépend d'anch-app, désactivé par défaut (ANCH_BUILD_APP=OFF) : ANCH_BUILD_BATCH demande ANCH_BUILD_APP.
 
 Journalisation et écouteurs
 ---------------------------
@@ -82,7 +97,7 @@ Plus tard
 
 Construction
 ------------
-anch_add_library(anch-batch PUBLIC_DEPS anch::cli anch::conf anch::log anch::utils PRIVATE_DEPS ...) ; anch-sql en
+anch_add_library(anch-batch PUBLIC_DEPS anch::app anch::conf anch::log anch::utils) ; anch-sql en
 dépendance optionnelle pour le dépôt SQL et les lecteurs / écrivains SQL ; anch-csv et anch-json optionnels pour
 leurs lecteurs / écrivains. Option ANCH_BUILD_BATCH (OFF tant que le module n'est pas terminé).
 
@@ -90,14 +105,15 @@ leurs lecteurs / écrivains. Option ANCH_BUILD_BATCH (OFF tant que le module n'e
 ----------------
 1. Modèle (Job, Step, tâche, lots), exécution séquentielle, dépôt en mémoire, statuts, tests.
 2. Erreurs : retry, skip avec limite, rejeu élément par élément, continue on error.
-3. Lancement : anch-cli, environnement, anch-conf, codes de sortie, arrêt sur signal.
+3. Lancement sur anch-app (selon ses avancées) : options, environnement, anch-conf, codes de sortie, arrêt sur
+   signal.
 4. Dépôt SQL, schéma par défaut (SQLite, PostgreSQL, MySQL), reprise.
 5. Lecteurs / écrivains : lignes, CSV, JSON, SQL.
 
 Questions ouvertes
 ------------------
 1. Périmètre de la première version : modèle complet par lots (proposé) ou seulement étapes de type tâche ?
-2. Lancement : lanceur propre à anch-batch (proposé), ou bâti sur anch-app (que vous concevez) ?
+2. Tranchée le 2026-11-19 : bâti sur anch-app (voir « Lancement » et les besoins envers anch-app).
 3. Dépôt : mémoire par défaut et SQL optionnel (proposé), ou SQL obligatoire ?
 4. Reprise : au dernier lot validé (proposé, demande des lecteurs repositionnables) ou seulement au début de
    l'étape échouée ?
