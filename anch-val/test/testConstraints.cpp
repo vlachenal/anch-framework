@@ -22,6 +22,7 @@
 
 #include <cstdint>
 #include <limits>
+#include <chrono>
 #include <map>
 #include <regex>
 #include <utility>
@@ -358,6 +359,44 @@ struct anch::Mapping<Pet> {
   }
 };
 static_assert(anch::ObjectMapper<anch::val::ValidationMapper<Pet>, Pet>);
+
+// A class which is neither described nor a scalar is refused (its description is probably not visible)
+namespace {
+
+  struct Undescribed {
+    int value;
+  };
+
+  // Value type mapped as a string by formats
+  struct Money {
+    long cents;
+  };
+
+  struct Wallet {
+    Money balance;
+  };
+
+}
+
+template<>
+struct anch::val::IsScalar<Money>: std::true_type {};
+
+template<>
+struct anch::Mapping<Wallet> {
+  static void
+  registerObject(anch::ObjectMapper<Wallet> auto& mapper) {
+    mapper.registerField("balance", &Wallet::balance, anch::val::custom<Money>([](const Money& money) { return money.cents >= 0; },
+									       "Balance can not be negative"));
+  }
+};
+
+static_assert(anch::val::Validatable<Pet> && anch::val::Validatable<std::vector<std::optional<Tag>>>
+	      && anch::val::Validatable<std::map<std::string, Pet*>>);
+static_assert(anch::val::Validatable<int> && anch::val::Validatable<std::string> && anch::val::Validatable<anch::UUID>
+	      && anch::val::Validatable<std::chrono::year_month_day> && anch::val::Validatable<std::chrono::system_clock::time_point>);
+static_assert(!anch::val::Validatable<Undescribed> && !anch::val::Validatable<std::vector<Undescribed>>
+	      && !anch::val::Validatable<std::optional<Undescribed>> && !anch::val::Validatable<std::map<std::string, Undescribed>>);
+static_assert(anch::val::Validatable<Money> && anch::val::Validatable<Wallet>, "Declared scalars are validated as a whole");
 // Described types -
 
 void
@@ -385,6 +424,10 @@ testValidate() {
   anch::ut::assertThat(anch::val::validate(std::vector<Tag>{{"a"}, {""}}).size() == 1
 		       && anch::val::validate(std::vector<Tag>{{"a"}, {""}})[0].path == "/1/name", "Collection of objects");
   anch::ut::assertThat(anch::val::isValid(42) && anch::val::isValid(std::string()), "Primitive values are valid");
+  // Declared scalar: constraints of the field are checked, the value has no field
+  const std::vector<Violation> wallet = anch::val::validate(Wallet{Money{-1}});
+  anch::ut::assertThat(wallet.size() == 1 && wallet[0].path == "/balance" && wallet[0].message == "Balance can not be negative",
+		       "Declared scalar constraint");
 }
 
 void

@@ -27,6 +27,23 @@
 
 namespace anch::val::detail {
 
+  template<typename P>
+  constexpr bool
+  validatable() {
+    using V = std::remove_cvref_t<P>;
+    if constexpr (anch::val::isNullable<V>()) {
+      return validatable<anch::val::detail::Unwrap<V>>();
+    } else if constexpr (anch::val::StringLike<V>) {
+      return true;
+    } else if constexpr (anch::val::MapLike<V>) {
+      return validatable<typename V::mapped_type>();
+    } else if constexpr (anch::val::Collection<V>) {
+      return validatable<std::ranges::range_value_t<V>>();
+    } else {
+      return anch::Described<V> || anch::val::Scalar<V> || !std::is_class_v<V>;
+    }
+  }
+
   /*!
    * Check if values of type \c P can contain described objects (directly or in \c std::optional , pointers,
    * collections or maps): these values are validated
@@ -48,6 +65,9 @@ namespace anch::val::detail {
     } else if constexpr (anch::val::Collection<V>) {
       return hasNestedObjects<std::ranges::range_value_t<V>>();
     } else {
+      static_assert(anch::Described<V> || anch::val::Scalar<V> || !std::is_class_v<V>,
+		    "Class is neither described nor a scalar: declare its anch::Mapping specialization in its header, just after it"
+		    " (a description which is not visible would not be validated), or specialize anch::val::IsScalar for a value type");
       return anch::Described<V>;
     }
   }
@@ -99,6 +119,8 @@ namespace anch::val {
 
   template<typename T>
   ValidationMapper<T>::ValidationMapper(): _validators() {
+    static_assert(anch::Described<T>, "T has to be described by an anch::Mapping<T> specialization (mapping.hpp), declared in"
+		  " the header of T");
     anch::describe<T>(*this);
     _validators.shrink_to_fit();
   }

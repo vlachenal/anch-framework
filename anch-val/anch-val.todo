@@ -99,6 +99,10 @@ Implémentation de l'étape 1 (2026-11-21)
    ValidationMapper<T> (concept anch::ObjectMapper, une instance par type) ; objets imbriqués = types décrits
    (anch::Described) directement ou dans std::optional, pointeurs, collections, maps. anch::json::validate et
    isValid supprimés (changement direct) ; anch-json ne garde aucun validateur (mappers plus petits).
+   Complément (diagnostic du 2026-11-21, visibilité des descriptions) : une classe ni décrite ni scalaire est refusée
+   à la compilation (static_assert) au lieu d'être ignorée ; IsScalar<T> (nombres, énumérations, chaînes, UUID, dates,
+   std::chrono ; à spécialiser pour les types valeur), concept Validatable<T>. Règle : la spécialisation de
+   anch::Mapping se déclare dans l'en-tête du type, juste après lui.
 
 Questions (tranchées le 2026-11-21)
 -----------------------------------

@@ -117,6 +117,8 @@ namespace anch::csv {
   // Object mapper +
   template<typename T>
   ObjectMapper<T>::ObjectMapper(): _fields() {
+    static_assert(anch::Described<T>, "T has to be described by an anch::Mapping<T> specialization (mapping.hpp), declared in"
+		  " the header of T");
     anch::describe<T>(*this);
     _fields.shrink_to_fit();
   }

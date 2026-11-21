@@ -35,7 +35,9 @@ target_link_libraries(my-app PRIVATE anch::utils)
  * \section utils_mapping_sec Objects description
  *
  * A type is described once for every format (anch-json, CSV, ...) by specializing \ref anch::Mapping "Mapping":
- * its \c registerObject function registers the fields on the mapper of a format.
+ * its \c registerObject function registers the fields on the mapper of a format. The specialization is declared in
+ * the header of the type, just after it, so that every translation unit which uses the type sees it (code generated
+ * by anch-oas does so).
  * \snippet{trimleft} anch-utils/examples/mapping.cpp mapping
  *
  * A format provides a mapper which satisfies \ref anch::ObjectMapper "ObjectMapper" and gets the fields with

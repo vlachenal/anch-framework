@@ -38,7 +38,8 @@ namespace anch::json {
   // Constructors +
   template<typename T>
   ObjectMapper<T>::ObjectMapper(): anch::json::GenericMapper<ObjectMapper<T>, T>(), _writers(), _readers(), _required() {
-    static_assert(anch::Described<T>, "T has to be described by an anch::Mapping<T> specialization (mapping.hpp)");
+    static_assert(anch::Described<T>, "T has to be described by an anch::Mapping<T> specialization (mapping.hpp), declared in"
+		  " the header of T");
     anch::describe<T>(*this);
     _writers.shrink_to_fit();
   }
