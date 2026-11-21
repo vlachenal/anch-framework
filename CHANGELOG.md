@@ -80,7 +80,8 @@ and `\deprecated` in its documentation, which give its replacement, and it is re
   description (`anch::Mapping`): `ObjectReader<T>` (columns by name or by position, unknown columns ignored or
   refused, required columns, conversion and anch-val constraints errors with line and column) and `ObjectWriter<T>`
   (header, absent values as empty fields, empty strings as `""`); fields are strings, booleans, numbers, UUID, dates
-  or `std::optional` of them. anch-csv depends on anch-utils and anch-val (anch-uuid and anch-date with `ANCH_UUID`
+  or `std::optional` of them. `records<T>(input)` reads objects one by one (input range), `deserialize` and
+  `serialize` read and write vectors (and ranges). anch-csv depends on anch-utils and anch-val (anch-uuid and anch-date with `ANCH_UUID`
   and `ANCH_DATE`).
 - anch-codec: codecs shared by anch-rest and future libraries (messaging), out of anch-rest. The core
   (`anch::codec`) has no format dependency: codec concepts, `MediaType` and `Accept` negotiation, limits, `Side`

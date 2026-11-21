@@ -485,11 +485,13 @@ namespace anch::csv {
      * \throw CsvError \c CONSTRAINT_VIOLATION (with \c Options::writeCheckConstraints )
      */
     void write(const T& value);
-    // Methods -
 
-  private:
-    /*! Write header */
+    /*!
+     * Write the header when it has not been written yet (it is written before the first object): a header can be
+     * written without object
+     */
     void writeHeader();
+    // Methods -
 
   };
 
