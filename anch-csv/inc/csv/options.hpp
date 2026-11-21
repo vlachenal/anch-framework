@@ -20,11 +20,13 @@
 #pragma once
 
 #include <cstddef>
+#include <string>
 
 namespace anch::csv {
 
   /*!
    * CSV format options. Default values follow RFC 4180 (\c , separator, \c " quote, \c CRLF line endings, header).
+   * Objects mapping options are used by \ref anch::csv::ObjectReader and \ref anch::csv::ObjectWriter .
    *
    * \author Vincent Lachenal
    *
@@ -54,6 +56,21 @@ namespace anch::csv {
 
     /*! Every read record has the number of columns of the first one (header or first record) */
     bool sameColumnCount = true;
+
+    /*! Objects mapping: columns which are not fields are ignored ( \c false : \c UNKNOWN_COLUMN error) */
+    bool ignoreUnknownColumns = true;
+
+    /*! Objects mapping: fields constraints (anch-val) are checked when objects are read */
+    bool readCheckConstraints = true;
+
+    /*! Objects mapping: fields constraints (anch-val) are checked when objects are written */
+    bool writeCheckConstraints = false;
+
+    /*! Objects mapping: text of \c true booleans */
+    std::string trueValue = "true";
+
+    /*! Objects mapping: text of \c false booleans */
+    std::string falseValue = "false";
   };
 
 }

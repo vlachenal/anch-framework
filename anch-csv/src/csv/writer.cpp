@@ -51,6 +51,26 @@ Writer::write(std::span<const std::string_view> fields) {
 }
 
 void
+Writer::write(std::span<const std::string_view> fields, const std::vector<bool>& quoted) {
+  if(quoted.size() != fields.size()) {
+    throw std::invalid_argument("CSV quoted fields flags have to be given for every field");
+  }
+  for(std::size_t i = 0; i < fields.size(); ++i) {
+    if(i != 0) {
+      _output.put(_options.separator);
+    }
+    writeField(fields[i], quoted[i] || (_start && i == 0 && fields[i].starts_with("\xEF\xBB\xBF")));
+  }
+  _start = false;
+  _output << (_options.crlf ? "\r\n" : "\n");
+}
+
+const Options&
+Writer::options() const noexcept {
+  return _options;
+}
+
+void
 Writer::write(std::initializer_list<std::string_view> fields) {
   write(std::span<const std::string_view>(fields.begin(), fields.size()));
 }

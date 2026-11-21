@@ -76,7 +76,12 @@ and `\deprecated` in its documentation, which give its replacement, and it is re
   record at a time (fields as `std::string_view`, empty and empty quoted fields distinguished, `CRLF` and `LF`, BOM
   skipped, limits of record size and columns count), `Writer` quotes fields when needed (`writeRow` formats numbers
   with `std::to_chars`), `Options` (separator, quote, line ending, header, BOM), `CsvError` (code, line and column).
-  libFuzzer target `csv`. The former CMake files (out of the build) are removed. Objects mapping comes next.
+  libFuzzer target `csv`. The former CMake files (out of the build) are removed. Objects mapping on their common
+  description (`anch::Mapping`): `ObjectReader<T>` (columns by name or by position, unknown columns ignored or
+  refused, required columns, conversion and anch-val constraints errors with line and column) and `ObjectWriter<T>`
+  (header, absent values as empty fields, empty strings as `""`); fields are strings, booleans, numbers, UUID, dates
+  or `std::optional` of them. anch-csv depends on anch-utils and anch-val (anch-uuid and anch-date with `ANCH_UUID`
+  and `ANCH_DATE`).
 - anch-codec: codecs shared by anch-rest and future libraries (messaging), out of anch-rest. The core
   (`anch::codec`) has no format dependency: codec concepts, `MediaType` and `Accept` negotiation, limits, `Side`
   (trust policy), `Text`, `Codecs<...>` (codec of a content type or of a negotiation among a list resolved at

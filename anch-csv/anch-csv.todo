@@ -1,7 +1,7 @@
 anch-csv : conception (2026-11-19)
 ==================================
 
-Validée le 2026-11-21 (décisions en fin de fichier) ; étape 1 en cours.
+Validée le 2026-11-21 (décisions en fin de fichier) ; étapes 1 et 2 faites le 2026-11-21.
 
 Objectif
 --------
@@ -87,8 +87,16 @@ Construction
    vides, BOM, limites), cible de fuzzing. Le Writer met entre guillemets un premier champ qui commence par un BOM
    (sinon il serait ignoré à la relecture). Pour l'étape 2 : le Writer écrit un champ vide sans guillemets ; il faudra
    écrire "" pour une chaîne vide et rien pour std::nullopt (aller-retour avec Reader::quoted).
-2. Mapper sur la description commune (après les étapes 1 et 2 d'anch-utils/mapping.todo), types de base,
-   optional, UUID, dates, conversions personnalisées.
+2. Faite le 2026-11-21. Mapper sur la description commune : ObjectMapper<T> (concept anch::ObjectMapper),
+   ObjectReader<T> et ObjectWriter<T> sur Reader / Writer ; types : chaînes, bool (Options::trueValue / falseValue),
+   entiers et flottants (std::from_chars / std::to_chars), anch::UUID, anch::date::Date et year_month_day (RFC 3339),
+   std::optional de ces types (concept anch::csv::FieldType, le reste refusé à la compilation) ; conversions
+   personnalisées par getter / setter. Champ vide = std::nullopt, "" = chaîne vide (Writer::write avec guillemets
+   forcés) ; colonnes par nom (en-tête) ou par position (champs lus, ordre d'enregistrement ; l'écriture prend les
+   champs qui ont une valeur : membre ou getter) ; colonnes inconnues ignorées (Options::ignoreUnknownColumns),
+   colonne obligatoire absente : MISSING_COLUMN ; contraintes anch-val à la lecture (Options::readCheckConstraints,
+   CONSTRAINT_VIOLATION, nouveau code) et à l'écriture (Options::writeCheckConstraints). Énumérations : avec
+   anch::ScalarMapping (mapping.todo étape 5).
 3. Lecture en flux.
 4. Codec anch-rest, puis lecteur / écrivain anch-batch.
 
