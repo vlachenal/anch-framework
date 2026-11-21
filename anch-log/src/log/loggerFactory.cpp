@@ -92,7 +92,8 @@ tokenizeLoggerName(const std::string& loggerName) {
 }
 
 const anch::log::Logger&
-LoggerFactory::getLogger(const std::string& loggerName) {
+LoggerFactory::getLogger(std::string_view name) {
+  const std::string loggerName(name);
   LoggerFactory& self = LoggerFactory::getInstance();
   std::lock_guard<std::mutex> lock(self._mutex);
 

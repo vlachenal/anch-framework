@@ -23,6 +23,8 @@
 
 #include <map>
 #include <mutex>
+#include <string>
+#include <string_view>
 #include <vector>
 #include <cstdint>
 
@@ -84,7 +86,9 @@ namespace anch::log {
     /*!
      * Retrieve a registered logger from a logger name or create a new one
      * and register it.\n
-     * Thread safe. The returned reference is valid until program exit.
+     * Thread safe. The returned reference is valid until program exit.\n
+     * The name is a \c std::string_view : with a reference parameter, GCC 13 reports a possibly dangling reference
+     * (\c -Wdangling-reference ) when the name is a temporary, as a string literal.
      *
      * \param loggerName The logger name to retrieve
      *
@@ -94,7 +98,7 @@ namespace anch::log {
     // Loggers are owned by the factory: the reference does not depend on the name argument lifetime
     [[gnu::no_dangling]]
 #endif
-    static const anch::log::Logger& getLogger(const std::string& loggerName);
+    static const anch::log::Logger& getLogger(std::string_view loggerName);
 
   private:
     /*!

@@ -58,6 +58,8 @@ which give its replacement and the version which removes it. Until 1.0.0, it is 
   raises `std::bad_cast`), anch-oas (service with every operation of its document), anch-ut (caption).
 - Doxygen documentation is no longer committed under `docs/`: `doxygen Doxyfile` writes it in `build/docs` (`build/`
   has to exist), the `docs` workflow generates it (warnings are errors) and deploys it to GitHub Pages from `master`.
+- anch-log: `LoggerFactory::getLogger` takes a `std::string_view`: GCC 13 reported a possibly dangling reference
+  (`-Wdangling-reference`) on `const Logger& LOG = LoggerFactory::getLogger("name");`, the documented usage.
 - `Release` builds use an explicit optimization level, `ANCH_OPTIMIZATION_LEVEL` (`3` by default, `1` to `3`),
   instead of CMake default flags. New `asan-clang` preset: Clang in `Release` with `-O2`, AddressSanitizer and
   UndefinedBehaviorSanitizer (also run by the CI).
