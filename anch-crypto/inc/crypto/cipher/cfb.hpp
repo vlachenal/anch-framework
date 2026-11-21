@@ -84,7 +84,7 @@ namespace anch::crypto {
     virtual std::size_t cipherBlock(std::array<uint8_t,Cipher::getBlockSize()>& input,
 				    std::streamsize nbRead,
 				    std::array<uint8_t,Cipher::getBlockSize()>& output,
-				    uint32_t, Cipher& cipher) override;
+				    uint64_t, Cipher& cipher) override;
 
     /*!
      * Decipher a block.\n
@@ -103,7 +103,7 @@ namespace anch::crypto {
 				      std::streamsize nbRead,
 				      bool,
 				      std::array<uint8_t,Cipher::getBlockSize()>& output,
-				      uint32_t, Cipher& cipher) override;
+				      uint64_t, Cipher& cipher) override;
 
     /*!
      * Reset block cipher mode of operation context
@@ -140,7 +140,7 @@ namespace anch::crypto {
   CFB<Cipher>::cipherBlock(std::array<uint8_t,Cipher::getBlockSize()>& input,
 			   std::streamsize nbRead,
 			   std::array<uint8_t,Cipher::getBlockSize()>& output,
-			   uint32_t, Cipher& cipher) {
+			   uint64_t, Cipher& cipher) {
     std::array<uint8_t,Cipher::getBlockSize()> data;
     cipher.cipher(_ctxtVect, data);
     for(std::size_t i = 0 ; i < static_cast<std::size_t>(nbRead) ; ++i) {
@@ -157,7 +157,7 @@ namespace anch::crypto {
 			     std::streamsize nbRead,
 			     bool,
 			     std::array<uint8_t,Cipher::getBlockSize()>& output,
-			     uint32_t, Cipher& cipher) {
+			     uint64_t, Cipher& cipher) {
     std::array<uint8_t,Cipher::getBlockSize()> data;
     cipher.cipher(prevInput, data);
     for(std::size_t i = 0 ; i < static_cast<std::size_t>(nbRead) ; ++i) {

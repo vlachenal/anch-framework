@@ -25,6 +25,7 @@
 #include <iomanip>
 #include <chrono>
 #include <cstring>
+#include <algorithm>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -370,6 +371,37 @@ testMakefile() {
   std::cout << "Reference implementation time: " << md5Duration.count() << " µs" << std::endl << std::endl;
 }
 
+/*!
+ * MD5 with its incremental hashing methods available: \c Hash::digest overloads add data in one call
+ */
+class ChunkedMD5: public MD5 {
+public:
+  const std::array<uint8_t,16>&
+  digestChunks(const std::string& data, std::size_t chunkSize) {
+    reset();
+    const uint8_t* bytes = reinterpret_cast<const uint8_t*>(data.data());
+    for(std::size_t offset = 0 ; offset < data.size() ; offset += chunkSize) {
+      addData(bytes + offset, std::min(chunkSize, data.size() - offset));
+    }
+    finalize();
+    return digest();
+  }
+};
+
+void
+testChunks() {
+  std::string msg;
+  for(std::size_t i = 0 ; i < 1000 ; ++i) {
+    msg += static_cast<char>('a' + (i % 26));
+  }
+  std::array<uint8_t,16> expected = MD5(msg).digest();
+  ChunkedMD5 hash;
+  // Chunks which partially fill the 64 bytes buffer, fill it exactly and overflow it
+  for(std::size_t chunkSize : std::array<std::size_t,9>{1, 3, 7, 13, 63, 64, 65, 100, 1000}) {
+    anch::ut::assertThat(hash.digestChunks(msg, chunkSize) == expected, "Wrong digest with chunks of {} bytes", chunkSize);
+  }
+}
+
 void
 anch::ut::setup(anch::ut::UnitTests& tests) {
   tests
@@ -378,5 +410,6 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("md5-str", testMD5string)
     .add("md5-1Ma", testMillionA)
     .add("md5-makefile", testMakefile)
+    .add("md5-chunks", testChunks)
     ;
 }

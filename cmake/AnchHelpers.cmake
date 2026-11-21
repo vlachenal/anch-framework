@@ -17,6 +17,8 @@ function(anch_target_build_options target)
   if(ANCH_WARNINGS_AS_ERRORS)
     target_compile_options(${target} PRIVATE -Werror)
   endif()
+  # Explicit Release optimization level: placed after CMAKE_CXX_FLAGS_RELEASE on the command line, it overrides it
+  target_compile_options(${target} PRIVATE $<$<CONFIG:Release>:-O${ANCH_OPTIMIZATION_LEVEL}>)
   if(ANCH_NATIVE_ARCH)
     target_compile_options(${target} PRIVATE -march=native)
   endif()

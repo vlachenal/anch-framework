@@ -61,7 +61,9 @@ target_link_libraries(my-app PRIVATE anch::crypto)
  * Secret key is expanded on instanciation and is reused for each block (on each call).\n
  * \n
  * Block cipher modes of operation (\c ECB , \c CBC , \c CFB , \c OFB , \c PCBC and \c CTR ) cipher and decipher
- * streams with a block cipher and a padding (\c PKCS5Padding , \c ISO7816_4Padding , \c ANSIX923 , \c ZeroPadding ).
+ * streams with a block cipher and a padding (\c PKCS5Padding , \c ISO7816_4Padding , \c ANSIX923 , \c ZeroPadding ).\n
+ * \c CTR follows NIST SP 800-38A (as OpenSSL): its nonce is the initial counter block, incremented as a big endian
+ * integer for each block. A nonce must never be used twice with the same key.
  *
  * \section crypto_example_sec Examples
  *

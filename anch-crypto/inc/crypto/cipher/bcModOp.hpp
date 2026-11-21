@@ -144,7 +144,7 @@ namespace anch::crypto {
     virtual std::size_t cipherBlock(std::array<uint8_t,Cipher::getBlockSize()>& input,
 				    std::streamsize nbRead,
 				    std::array<uint8_t,Cipher::getBlockSize()>& output,
-				    uint32_t index,
+				    uint64_t index,
 				    Cipher& cipher) = 0;
 
     /*!
@@ -166,7 +166,7 @@ namespace anch::crypto {
 				      std::streamsize nbRead,
 				      bool lastBlock,
 				      std::array<uint8_t,Cipher::getBlockSize()>& output,
-				      uint32_t index,
+				      uint64_t index,
 				      Cipher& cipher) = 0;
 
     /*!
@@ -229,7 +229,7 @@ namespace anch::crypto {
      * \param nbRead the number of bytes which have been read
      * \param cipher the cipher instance to use
      */
-    void deferredCipherBlock(uint32_t index,
+    void deferredCipherBlock(uint64_t index,
 			     std::array<uint8_t,Cipher::getBlockSize()>& input,
 			     std::streamsize nbRead,
 			     std::array<uint8_t,Cipher::getBlockSize()>& output,
@@ -245,7 +245,7 @@ namespace anch::crypto {
      * \param nbRead the number of bytes which have been read
      * \param cipher the cipher instance to use
      */
-    virtual void deferredDecipherBlock(uint32_t index,
+    virtual void deferredDecipherBlock(uint64_t index,
 				       std::array<uint8_t, Cipher::getBlockSize()>& input,
 				       std::array<uint8_t, Cipher::getBlockSize()> prevInput,
 				       std::streamsize nbRead,
@@ -343,7 +343,7 @@ namespace anch::crypto {
     Cipher cipher(reinterpret_cast<const uint8_t*>(key.data()));
     std::array<uint8_t, Cipher::getBlockSize()> data;
     std::array<uint8_t, Cipher::getBlockSize()> out;
-    uint32_t index = 0;
+    uint64_t index = 0;
     while(!input.eof()) {
       input.read(reinterpret_cast<char*>(data.data()), static_cast<std::streamsize>(Cipher::getBlockSize()));
       std::streamsize nbRead = input.gcount();
@@ -367,7 +367,7 @@ namespace anch::crypto {
     std::array<uint8_t,Cipher::getBlockSize()>* data = new std::array<uint8_t,Cipher::getBlockSize()>[_nbThread];
     std::array<uint8_t,Cipher::getBlockSize()>* result = new std::array<uint8_t,Cipher::getBlockSize()>[_nbThread];
     std::size_t* nbWrite = new std::size_t[_nbThread];
-    uint32_t index = 0;
+    uint64_t index = 0;
     std::deque<std::thread> threads;
     std::vector<Cipher> ciph;
     ciph.push_back(Cipher(reinterpret_cast<const uint8_t*>(key.data())));
@@ -421,7 +421,7 @@ namespace anch::crypto {
     std::array<uint8_t,Cipher::getBlockSize()> cipherData;
     input.read(reinterpret_cast<char*>(data.data()), static_cast<std::streamsize>(Cipher::getBlockSize()));
     std::streamsize nbRead = input.gcount();
-    uint32_t index = 0;
+    uint64_t index = 0;
     do {
       cipherData = data;
       std::streamsize read = nbRead;
@@ -449,7 +449,7 @@ namespace anch::crypto {
     std::array<uint8_t,Cipher::getBlockSize()>* data = new std::array<uint8_t,Cipher::getBlockSize()>[_nbThread + 1];
     std::array<uint8_t,Cipher::getBlockSize()>* result = new std::array<uint8_t,Cipher::getBlockSize()>[_nbThread];
     std::size_t* nbWrite = new std::size_t[_nbThread];
-    uint32_t index = 0;
+    uint64_t index = 0;
     std::deque<std::thread> threads;
     std::vector<Cipher> ciph;
     ciph.push_back(Cipher(reinterpret_cast<const uint8_t*>(key.data())));
@@ -504,7 +504,7 @@ namespace anch::crypto {
 
   template<typename Derived, typename Cipher>
   void
-  BlockCipherModeOfOperation<Derived,Cipher>::deferredCipherBlock(uint32_t index,
+  BlockCipherModeOfOperation<Derived,Cipher>::deferredCipherBlock(uint64_t index,
 								  std::array<uint8_t,Cipher::getBlockSize()>& input,
 								  std::streamsize nbRead,
 								  std::array<uint8_t,Cipher::getBlockSize()>& output,
@@ -515,7 +515,7 @@ namespace anch::crypto {
 
   template<typename Derived, typename Cipher>
   void
-  BlockCipherModeOfOperation<Derived,Cipher>::deferredDecipherBlock(uint32_t index,
+  BlockCipherModeOfOperation<Derived,Cipher>::deferredDecipherBlock(uint64_t index,
 								    std::array<uint8_t, Cipher::getBlockSize()>& input,
 								    std::array<uint8_t, Cipher::getBlockSize()> prevInput,
 								    std::streamsize nbRead,

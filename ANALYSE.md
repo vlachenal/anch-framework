@@ -165,6 +165,64 @@ Visibilité des symboles :
 
 Vérifications : release GCC 790/790, Clang 790/790, ASan / UBSan 790/790, test d'installation partagé et statique, anch-app compilé (`ANCH_BUILD_APP=ON`).
 
+## Niveaux d'optimisation `-O2` / `-O3` (2026-11-19)
+
+Question : `-O2` avait été choisi parce que `-O3` était réputé dangereux. Est-ce toujours le cas, par bibliothèque et par compilateur ? Branche `optimization-levels`. Statut : **fait le 2026-11-21** (les 4 propositions, voir « Corrections »).
+
+### B6. `-O2` perdu à la migration CMake : `Release` compile en `-O3` — vérifié
+Les anciens `CMakeLists.txt` fixaient `ANCH_<MODULE>_COMPILE_FLAGS "-O2 -march=native -pipe"`. La migration du 2026-10-29 (ea54e3b1) ne les a pas repris : `Release` utilise la valeur par défaut de CMake, `CMAKE_CXX_FLAGS_RELEASE = -O3 -DNDEBUG` (vérifié dans `build/release/CMakeCache.txt` et `build/clang/CMakeCache.txt`). Depuis, la CI (GCC 13 Ubuntu, GCC et Clang Arch, test d'installation) compile et teste donc en `-O3`, sans échec.
+
+### Résultats (GCC 16.2.1, Clang 23.1.5, 798 tests, `Release` avec `CMAKE_CXX_FLAGS_RELEASE` forcé)
+
+| Configuration | `-O2` | `-O3` |
+|---|---|---|
+| GCC | 798/798 | 798/798 |
+| Clang | 798/798 | 798/798 |
+| GCC + ASan / UBSan | 798/798 (avec `-Wno-maybe-uninitialized`) | idem |
+| Clang + ASan / UBSan | 795/798 (C12 d'anch-crypto) | 795/798 (C12) |
+
+- Aucune différence de comportement entre `-O2` et `-O3`, avec aucun des deux compilateurs.
+- GCC + ASan + optimisation : faux positif `-Wmaybe-uninitialized` dans `std::function` de `std::regex` (libstdc++ 16), dans `anch-ini/src/ini/parser.cpp` et `anch-cli/src/cli/args.cpp` ; avec `-Werror`, le build échoue. Non lié au code du framework.
+- Clang + UBSan trouve C12 (MD5, voir [anch-crypto/ANALYSE.md](anch-crypto/ANALYSE.md)) aux deux niveaux. La CI ne le voit pas : ses sanitizers tournent en `Debug` avec GCC, qui ne vérifie pas l'indice d'un tableau membre dans une arithmétique de pointeur.
+
+Par bibliothèque : seule anch-crypto présente des comportements indéfinis qu'un optimiseur peut exploiter (C12, C13), et ils concernent déjà `-O2` (aliasing strict actif dès `-O2`). Rien n'est signalé pour les autres bibliothèques. La réputation de `-O3` date des bugs du vectoriseur de GCC 4.x ; depuis GCC 12, `-O2` vectorise aussi (modèle de coût prudent), l'écart entre les deux niveaux s'est réduit.
+
+Micro-benchmark (meilleur de 15 mesures, 3 passes entrelacées, une seule machine, quelques pour cent de bruit ; ms) :
+
+| Mesure | GCC O2 | GCC O3 | Clang O2 | Clang O3 |
+|---|---|---|---|---|
+| SHA-256 16 Mio | 60.3 | 61.7 | 107.9 | 107.9 |
+| SHA-512 16 Mio | 48.6 | 50.5 | 88.9 | 88.9 |
+| MD5 16 Mio | 20.3 | 20.3 | 24.3 | 24.3 |
+| Base64 encodage 16 Mio | 58.3 | 58.2 | 55.1 | 53.7 |
+| Base64 décodage 16 Mio | 160.1 | 150.6 | 153.5 | 145.9 |
+| AES-256 CBC 16 Mio | 118.5 | 118.5 | 133.5 | 128.1 |
+| AES-256 CTR 16 Mio | 119.4 | 119.3 | 126.5 | 126.7 |
+| JSON sérialisation 50k objets | 9.2 | 9.1 | 9.9 | 9.6 |
+| JSON désérialisation 50k objets | 15.0 | 14.6 | 16.4 | 16.0 |
+| UUID v4 + `toString` 200k | 14.1 | 12.4 | 13.2 | 12.3 |
+| Formatage de dates 500k | 324.6 | 316.2 | 297.0 | 293.9 |
+| `Logger::info` 500k | 165.2 | 166.3 | 160.2 | 167.2 |
+
+- `-O3` : de 0 à 6 % de gain (12 % sur UUID avec GCC), jusqu'à 4 % de perte sur SHA-2 avec GCC.
+- L'écart entre compilateurs domine : SHA-2 est environ 1,8 fois plus lent avec Clang qu'avec GCC (à analyser).
+- Taille totale des bibliothèques : GCC 6 270 → 6 742 Kio (+7,5 % ; anch-crypto +8 %, anch-oas +12 %, anch-ini +12 %), Clang 6 187 → 6 296 Kio (+1,8 %).
+- Une grande partie du code est en templates : pour elle, c'est le niveau de l'application cliente qui compte, pas celui des bibliothèques.
+
+Le benchmark (SHA-256/512, MD5, Base64, AES-256 CBC/CTR, JSON, UUID, `DateFormatter`, `Logger`) a été compilé à part, contre les bibliothèques de chaque build, au même niveau d'optimisation ; il n'est pas dans le dépôt.
+
+### Propositions (retenues toutes les 4 le 2026-11-21)
+1. Rendre le niveau explicite au lieu de dépendre de la valeur par défaut de CMake (option ou `CMAKE_CXX_FLAGS_RELEASE` initialisé à la racine). Recommandé : garder `-O3` ; `-O2` se défend (gains faibles, binaires plus petits avec GCC).
+2. Corriger C12 (MD5), avec un test qui appelle `addData` sur un tampon partiellement rempli.
+3. Corriger C13 (aliasing dans CTR et AES logiciel) avec `std::memcpy`.
+4. CI : job Clang + ASan / UBSan en `-O2` (il aurait trouvé C12) ; si GCC + ASan est optimisé aussi, `-Wno-maybe-uninitialized` pour ce job.
+
+### Corrections (2026-11-21)
+1. Option `ANCH_OPTIMIZATION_LEVEL` (`3` par défaut, `1` à `3`, vérifiée à la configuration) : `anch_target_build_options` ajoute `-O<niveau>` en `Release` après `CMAKE_CXX_FLAGS_RELEASE`, qu'il remplace. Les autres types de build (`RelWithDebInfo`, `MinSizeRel`, `Debug`) gardent les options de CMake.
+2. C12 corrigé, test `md5-chunks` (en échec sans la correction).
+3. C13 corrigé.
+4. Preset `asan-clang` (Clang, `Release`, `ANCH_OPTIMIZATION_LEVEL=2`, ASan / UBSan) et job `ASan / UBSan (Clang -O2)` du workflow `sanitizers`. GCC + ASan reste en `Debug` : pas besoin de `-Wno-maybe-uninitialized`.
+
 ## Divers
 
 - L'en-tête de licence indique encore « based on C++11 standard ».

@@ -159,13 +159,15 @@ MD5::addData(const uint8_t* data, size_t len) {
     ++_context.handle[1]; // Carry from low to high
   }
 
+  // _context.input is filled byte per byte: offsets are computed on bytes, not on 32 bits words
+  uint8_t* input = reinterpret_cast<uint8_t*>(_context.input);
   word = 64 - (word & 0x3f); // Space available in _context.input (at least 1)
   if(word > len) {
-    std::memcpy(_context.input + 64 - word, data, len);
+    std::memcpy(input + 64 - word, data, len);
 
   } else {
     // First chunk is an odd size
-    std::memcpy(reinterpret_cast<uint8_t*>(_context.input) + 64 - word, data, word);
+    std::memcpy(input + 64 - word, data, word);
     byteSwap(_context.input, 16);
     transform();
     data += word;
@@ -173,7 +175,7 @@ MD5::addData(const uint8_t* data, size_t len) {
 
     // Process data in 64-byte chunks
     while(len >= 64) {
-      std::memcpy(reinterpret_cast<uint8_t*>(_context.input), data, 64);
+      std::memcpy(input, data, 64);
       byteSwap(_context.input, 16);
       transform();
       data += 64;
@@ -181,8 +183,7 @@ MD5::addData(const uint8_t* data, size_t len) {
     }
 
     // Handle any remaining bytes of data.
-    std::memcpy(_context.input,
-		reinterpret_cast<const uint32_t*>(data), len);
+    std::memcpy(input, data, len);
   }
 }
 

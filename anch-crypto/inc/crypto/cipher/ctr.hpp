@@ -28,7 +28,9 @@ namespace anch::crypto {
   /*!
    * \brief Counter implementation.
    *
-   * CTR mode is also known as ICM (integer counter mode) and SIC (segmented integer counter).
+   * CTR mode is also known as ICM (integer counter mode) and SIC (segmented integer counter).\n
+   * The nonce is the initial counter block, incremented as a big endian integer for each block (NIST SP 800-38A,
+   * compatible with OpenSSL CTR mode). A nonce must never be used twice with the same key.
    *
    * \since 0.1
    *
@@ -82,7 +84,7 @@ namespace anch::crypto {
     virtual std::size_t cipherBlock(std::array<uint8_t,Cipher::getBlockSize()>& input,
 				    std::streamsize nbRead,
 				    std::array<uint8_t,Cipher::getBlockSize()>& output,
-				    uint32_t index,
+				    uint64_t index,
 				    Cipher& cipher) override;
 
     /*!
@@ -102,7 +104,7 @@ namespace anch::crypto {
 				      std::streamsize nbRead,
 				      bool,
 				      std::array<uint8_t,Cipher::getBlockSize()>& output,
-				      uint32_t index,
+				      uint64_t index,
 				      Cipher& cipher) override;
 
     /*!
@@ -111,6 +113,17 @@ namespace anch::crypto {
      * \return the initial context
      */
     virtual const std::array<uint8_t,Cipher::getBlockSize()>& reset() override;
+
+  private:
+    /*!
+     * Compute the counter block of a block: the nonce is the initial counter block, it is incremented by the block
+     * index as a big endian integer of the block size, modulo 2^(8 * block size) (standard incrementing function of
+     * NIST SP 800-38A, as OpenSSL)
+     *
+     * \param ctxtVect the counter block initialized with the nonce
+     * \param index the block index
+     */
+    static void setCounter(std::array<uint8_t,Cipher::getBlockSize()>& ctxtVect, uint64_t index);
     // Methods -
 
   };
@@ -139,11 +152,10 @@ namespace anch::crypto {
   CTR<Cipher>::cipherBlock(std::array<uint8_t,Cipher::getBlockSize()>& input,
 			   std::streamsize nbRead,
 			   std::array<uint8_t,Cipher::getBlockSize()>& output,
-			   uint32_t index,
+			   uint64_t index,
 			   Cipher& cipher) {
     std::array<uint8_t,Cipher::getBlockSize()> ctxtVect(_nonce);
-    uint16_t* counter = reinterpret_cast<uint16_t*>(&ctxtVect.data()[Cipher::getBlockSize() - 2]);
-    *counter = static_cast<uint16_t>(index);
+    setCounter(ctxtVect, index);
     std::array<uint8_t,Cipher::getBlockSize()> data;
     cipher.cipher(ctxtVect, data);
     for(std::size_t i = 0 ; i < static_cast<std::size_t>(nbRead) ; ++i) {
@@ -159,11 +171,10 @@ namespace anch::crypto {
 			     std::streamsize nbRead,
 			     bool,
 			     std::array<uint8_t,Cipher::getBlockSize()>& output,
-			     uint32_t index,
+			     uint64_t index,
 			     Cipher& cipher) {
     std::array<uint8_t,Cipher::getBlockSize()> ctxtVect(_nonce);
-    uint16_t* counter = reinterpret_cast<uint16_t*>(&ctxtVect.data()[Cipher::getBlockSize() - 2]);
-    *counter = static_cast<uint16_t>(index);
+    setCounter(ctxtVect, index);
     std::array<uint8_t,Cipher::getBlockSize()> data;
     cipher.cipher(ctxtVect, data);
     for(std::size_t i = 0 ; i < static_cast<std::size_t>(nbRead) ; ++i) {
@@ -176,6 +187,18 @@ namespace anch::crypto {
   const std::array<uint8_t,Cipher::getBlockSize()>&
   CTR<Cipher>::reset() {
     return _nonce;
+  }
+
+  template<typename Cipher>
+  inline void
+  CTR<Cipher>::setCounter(std::array<uint8_t,Cipher::getBlockSize()>& ctxtVect, uint64_t index) {
+    // Add index to the big endian counter, from the last byte, with carry
+    uint64_t carry = index;
+    for(std::size_t i = Cipher::getBlockSize() ; i > 0 && carry != 0 ; --i) {
+      uint64_t sum = ctxtVect[i - 1] + (carry & 0xff);
+      ctxtVect[i - 1] = static_cast<uint8_t>(sum & 0xff);
+      carry = (carry >> 8) + (sum >> 8);
+    }
   }
   // Methods -
 

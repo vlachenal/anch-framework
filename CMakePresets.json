@@ -37,6 +37,18 @@
       }
     },
     {
+      "name": "asan-clang",
+      "displayName": "Release -O2 with Clang, AddressSanitizer and UndefinedBehaviorSanitizer",
+      "inherits": "asan",
+      "binaryDir": "${sourceDir}/build/asan-clang",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "ANCH_OPTIMIZATION_LEVEL": "2",
+        "CMAKE_C_COMPILER": "clang",
+        "CMAKE_CXX_COMPILER": "clang++"
+      }
+    },
+    {
       "name": "tsan",
       "displayName": "Debug with ThreadSanitizer",
       "inherits": "debug",
@@ -94,6 +106,7 @@
     { "name": "debug", "configurePreset": "debug" },
     { "name": "no-db", "configurePreset": "no-db" },
     { "name": "asan", "configurePreset": "asan" },
+    { "name": "asan-clang", "configurePreset": "asan-clang" },
     { "name": "tsan", "configurePreset": "tsan" },
     { "name": "clang", "configurePreset": "clang" },
     { "name": "coverage", "configurePreset": "coverage" },
@@ -127,6 +140,11 @@
         "ASAN_OPTIONS": "detect_leaks=1:strict_string_checks=1:detect_stack_use_after_return=1",
         "UBSAN_OPTIONS": "print_stacktrace=1:halt_on_error=1"
       }
+    },
+    {
+      "name": "asan-clang",
+      "inherits": "asan",
+      "configurePreset": "asan-clang"
     },
     {
       "name": "tsan",

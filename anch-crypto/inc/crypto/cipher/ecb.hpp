@@ -81,7 +81,7 @@ namespace anch::crypto {
     virtual std::size_t cipherBlock(std::array<uint8_t,Cipher::getBlockSize()>& input,
 				    std::streamsize nbRead,
 				    std::array<uint8_t,Cipher::getBlockSize()>& output,
-				    uint32_t, Cipher& cipher) override;
+				    uint64_t, Cipher& cipher) override;
 
     /*!
      * Decipher a block.\n
@@ -100,7 +100,7 @@ namespace anch::crypto {
 				      std::streamsize nbRead,
 				      bool lastBlock,
 				      std::array<uint8_t,Cipher::getBlockSize()>& output,
-				      uint32_t, Cipher& cipher) override;
+				      uint64_t, Cipher& cipher) override;
 
     /*!
      * Reset block cipher mode of operation context
@@ -135,7 +135,7 @@ namespace anch::crypto {
   ECB<Cipher,Padding>::cipherBlock(std::array<uint8_t,Cipher::getBlockSize()>& input,
 				   std::streamsize nbRead,
 				   std::array<uint8_t,Cipher::getBlockSize()>& output,
-				   uint32_t, Cipher& cipher) {
+				   uint64_t, Cipher& cipher) {
     if(static_cast<std::size_t>(nbRead) != Cipher::getBlockSize()) {
       Padding::pad(input.data(), static_cast<std::size_t>(nbRead), Cipher::getBlockSize());
     }
@@ -150,7 +150,7 @@ namespace anch::crypto {
 				     std::streamsize nbRead,
 				     bool lastBlock,
 				     std::array<uint8_t,Cipher::getBlockSize()>& output,
-				     uint32_t, Cipher& cipher) {
+				     uint64_t, Cipher& cipher) {
     if(lastBlock && static_cast<std::size_t>(nbRead) != Cipher::getBlockSize()) {
       throw InvalidBlockException("Invalid block size");
     }

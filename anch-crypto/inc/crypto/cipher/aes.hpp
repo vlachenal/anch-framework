@@ -940,12 +940,15 @@ namespace anch::crypto {
   template<std::size_t K, std::size_t R>
   inline void
   AES<K,R>::addRoundKey(const uint32_t& round) {
-    uint32_t* key = _expKey.swKey + 4 * round;
-    uint32_t* state = reinterpret_cast<uint32_t*>(_state);
+    const uint32_t* key = _expKey.swKey + 4 * round;
+    // _state is an array of bytes: it is not accessed through a uint32_t pointer (strict aliasing, alignment)
+    uint32_t state[4];
+    std::memcpy(state, _state, sizeof(state));
     state[0] ^= key[0];
     state[1] ^= key[1];
     state[2] ^= key[2];
     state[3] ^= key[3];
+    std::memcpy(_state, state, sizeof(state));
   }
 #endif // ANCH_CPU_DETECTION || !ANCH_CPU_AES
     // Methods -

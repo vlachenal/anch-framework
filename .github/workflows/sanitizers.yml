@@ -1,4 +1,5 @@
-# Build and test with sanitizers: AddressSanitizer and UndefinedBehaviorSanitizer (asan preset), ThreadSanitizer
+# Build and test with sanitizers: AddressSanitizer and UndefinedBehaviorSanitizer (asan preset with GCC in Debug,
+# asan-clang preset with Clang in Release -O2: Clang UBSan checks more, optimized code exposes other bugs), ThreadSanitizer
 # (tsan preset, suppressions of non instrumented system libraries in cmake/sanitizers/tsan.supp)
 name: sanitizers
 
@@ -23,6 +24,9 @@ jobs:
         include:
           - preset: asan
             name: ASan / UBSan
+          - preset: asan-clang
+            name: ASan / UBSan (Clang -O2)
+            packages: clang
           - preset: tsan
             name: TSan
     # Arch Linux: recent GCC (>= 13 required), same toolchain as development environment
@@ -33,7 +37,7 @@ jobs:
     steps:
       - name: Install dependencies
         # thrift, boost (Thrift C++ headers), protobuf and grpc: anch-rest RPC libraries
-        run: pacman -Syu --noconfirm --needed git cmake pkgconf ccache openssl sqlite mariadb postgresql curl thrift boost protobuf grpc
+        run: pacman -Syu --noconfirm --needed git cmake pkgconf ccache openssl sqlite mariadb postgresql curl thrift boost protobuf grpc ${{ matrix.packages }}
 
       - uses: actions/checkout@v7
 
@@ -60,6 +64,7 @@ jobs:
         run: |
           set -o pipefail
           gcc --version | head -1
+          if command -v clang > /dev/null; then clang --version | head -1; fi
           cmake --preset ${{ matrix.preset }} -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache 2>&1 | tee configure.log
           # Optional anch-rest libraries are disabled when their packages are not found: they have to be built here
           if grep "is not built" configure.log; then exit 1; fi

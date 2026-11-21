@@ -33,6 +33,23 @@ Correction : `_digest` est supprimé de `Hash` (et de `SHA2`, `SHA224_256`, `MD5
 `MD5`, `SHA1` et `SHA2` redéfinissent `digest()` : la redéfinition masque les surcharges héritées `digest(const std::string&)`, `digest(const uint8_t*, std::size_t)`, `digest(std::istream&)` et `digest(const std::array&)`, inaccessibles par le type dérivé (seuls les constructeurs prenaient les données, un objet ne pouvait pas être réutilisé).
 Correction : `using Hash<...>::digest;` dans les trois classes (SHA-224 à SHA-512 en héritent) ; test `hash-digest-overloads` (MD5, SHA-1, SHA-256, SHA-512, objet réutilisé), qui ne compile pas sans la correction.
 
+### C12. MD5 : arithmétique de pointeur en mots au lieu d'octets dans `addData` — vérifié (Clang UBSan, 2026-11-19) — corrigé (2026-11-21)
+`src/crypto/hash/md5.cpp:164` : `std::memcpy(_context.input + 64 - word, data, len)` calcule sur un `uint32_t*`, donc le décalage est compté en mots de 4 octets ; la branche `else` (ligne 168) convertit bien en `uint8_t*`.
+- `_context.input + 64` pointe hors du tableau `uint32_t[16]` : comportement indéfini à chaque appel, même quand le résultat final est correct (`word == 64`). Clang UBSan : « index 64 out of bounds for type 'uint32_t[16]' » ; tests `hash-digest-overloads`, `UUID-MD5` et `UUID-MD5-RFC` en échec sous Clang + ASan / UBSan, en `-O2` comme en `-O3`.
+- Quand le tampon est partiellement rempli (`word < 64`), les données sont copiées `(64 - word) * 4` octets plus loin : hors de `input`, condensat faux et écriture hors limites. Pas atteint par l'API actuelle : chaque `digest()` fait un seul `addData` après `reset()`, et `digest(std::istream&)` lit des blocs de 1024 octets (multiple de 64).
+- Non vu par la CI : sanitizers en `Debug` avec GCC.
+Correction : décalages calculés sur `reinterpret_cast<uint8_t*>(_context.input)` dans les trois copies ; test `md5-chunks` (sous-classe qui appelle `addData` par morceaux de 1 à 1000 octets et compare au condensat en une fois), en échec sans la correction.
+
+### C13. CTR et AES logiciel : violations d'aliasing strict — lecture (2026-11-19) — corrigé (2026-11-21)
+- `inc/crypto/cipher/ctr.hpp:145` et `:165` : `reinterpret_cast<uint16_t*>(&ctxtVect.data()[14])` écrit un `uint16_t` dans un `std::array<uint8_t,16>` (aliasing, et alignement non garanti) ; le résultat dépend aussi de l'ordre des octets de la machine.
+- `inc/crypto/cipher/aes.hpp:944` (`addRoundKey`, voie logicielle : `ANCH_CPU_DETECTION` ou sans `ANCH_CPU_AES`) : `reinterpret_cast<uint32_t*>(_state)` sur `uint8_t _state[4][4]`, aligné sur 1 octet.
+Comportements indéfinis exploitables dès `-O2` (aliasing strict), non signalés par les tests ni par UBSan aujourd'hui. Piste : `std::memcpy` (ou décomposition octet par octet du compteur, qui fixe aussi l'ordre des octets).
+Correction : le compteur CTR est calculé octet par octet (voir C14) ; `addRoundKey` passe par `std::memcpy` vers un `uint32_t[4]` local (même résultat).
+
+### C14. CTR : compteur sur 16 bits — lecture (2026-11-21) — corrigé (2026-11-21)
+L'ancien code ne gardait que les 16 bits de poids faible de l'indice de bloc, écrits dans les 2 derniers octets du nonce dans l'ordre des octets du processeur : au-delà de 65 536 blocs (1 Mio avec AES), le flux de clé se répétait, ce qui révèle le XOR de deux portions du clair. L'indice des modes d'opération était aussi un `uint32_t` (répétition après 2^32 blocs, 64 Gio). Le format différait du CTR usuel (NIST SP 800-38A).
+Correction (changement incompatible, version 0.3) : `CTR::setCounter` ajoute l'indice au nonce, lu comme un entier gros-boutiste de la taille du bloc (modulo 2^128), comme la fonction d'incrémentation standard de NIST SP 800-38A et OpenSSL ; l'indice de bloc est un `uint64_t` dans `BlockCipherModeOfOperation` et tous les modes. Tests `nist-128` et `nist-256` (vecteurs F.5.1 et F.5.5 de SP 800-38A, compteur initial `f0…ff` qui propage la retenue sur plusieurs octets, séquentiel et 3 threads, bloc final partiel), `counter-wrap` (`ff…ff` + 1 donne `00…00`) et `no-key-stream-reuse` (blocs 0 et 65 536 différents) ; les 4 échouent avec l'ancien compteur.
+
 ## Points positifs
 - 117 tests passent, plus un benchmark comparatif avec OpenSSL (`benchAnchOpenssl.cpp`), utile pour la future migration.
 

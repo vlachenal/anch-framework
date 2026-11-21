@@ -12,6 +12,14 @@ which give its replacement and the version which removes it. Until 1.0.0, it is 
 
 ## [Unreleased]
 
+### Breaking changes
+
+- anch-crypto: `CTR` follows NIST SP 800-38A, as OpenSSL: the nonce is the initial counter block, incremented as a
+  big endian integer of the block size for each block. Data ciphered by previous versions can not be deciphered: the
+  index of the block was written in the 2 last bytes of the nonce, in the CPU byte order, and the key stream was
+  reused every 65536 blocks (1 MiB with AES). The block index of modes of operation (`cipherBlock`,
+  `decipherBlock`) is a `uint64_t`.
+
 ### Added
 
 - anch-rest: `TransportConfig::maxResponseSize` bounds the response body read in memory by the client (64 MiB by
@@ -29,6 +37,9 @@ which give its replacement and the version which removes it. Until 1.0.0, it is 
   removed at compile time, as with the stream API. `anch::log::MIN_LEVEL` is declared in `log/levels.hpp`.
 - `ANCH_NATIVE_ARCH` (`-march=native`) is OFF by default: binaries built for the build machine CPU may not run on
   other CPUs (installed packages, CI runners sharing a compilation cache).
+- `Release` builds use an explicit optimization level, `ANCH_OPTIMIZATION_LEVEL` (`3` by default, `1` to `3`),
+  instead of CMake default flags. New `asan-clang` preset: Clang in `Release` with `-O2`, AddressSanitizer and
+  UndefinedBehaviorSanitizer (also run by the CI).
 
 ### Fixed
 
@@ -41,6 +52,9 @@ which give its replacement and the version which removes it. Until 1.0.0, it is 
   headers with CR, LF or NUL (header injection).
 - anch-crypto: `MD5`, `SHA1` and SHA-2 classes hid the data hashing methods of `Hash` (`digest(const std::string&)`,
   `digest(const uint8_t*, std::size_t)`, `digest(std::istream&)`, ...): a hash object can be reused.
+- anch-crypto: `MD5` computed its buffer offset in 32 bits words instead of bytes when data was added to a partially
+  filled block (wrong digest and out of bounds write; not reached by `digest` methods, undefined behavior on each
+  call). Software AES no longer accesses its state through a `uint32_t` pointer (strict aliasing).
 
 ## [0.2.0] - 2026-11-19
 
