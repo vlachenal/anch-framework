@@ -269,6 +269,9 @@ namespace anch::json {
     template<typename R, typename P, typename... C>
     static anch::json::DeserializeFn<T> withConstraints(R& read, P T::* value, C&&... constraints);
 
+  public:
+    // Fields registration (public: the common description anch::Mapping<T> registers fields through the
+    // anch::ObjectMapper concept ; fields are registered once, when the mapper is built) +
     /*!
      * Register mapping by field
      *
@@ -353,6 +356,8 @@ namespace anch::json {
     template<typename P, typename MT = P, typename... C>
     requires (anch::val::FieldConstraint<C,P> && ...)
     ObjectMapper<T>& registerField(const std::string& key, std::function<P(const T&)> getter, std::function<void(T&, const P&)> setter, C&&... constraints);
+    // Fields registration -
+
     // Methods -
 
   };

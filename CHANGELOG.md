@@ -44,6 +44,11 @@ which give its replacement and the version which removes it. Until 1.0.0, it is 
 
 ### Added
 
+- anch-utils: common description of objects for every format (`mapping.hpp`): `anch::Mapping<T>` (specialized with
+  a `registerObject(anch::ObjectMapper<T> auto& mapper)` function), `anch::ObjectMapper<M, T>` concept (fields
+  registered with a member pointer, a getter, a setter or both), `anch::Described<T>` and `anch::describe<T>(mapper)`.
+  anch-json mappers satisfy `anch::ObjectMapper` (their `registerField` functions are public); formats read the
+  description in the next steps.
 - anch-val: fields constraints shared by formats (out of anch-json) and their checks in a context
   (`CheckContext<X>`, specialized by formats: anch-json reader and writer contexts, `ValidationContext`); `uuid`,
   `date-time` and `date` formats with anch-uuid and anch-date as optional dependencies (`ANCH_UUID`, `ANCH_DATE`).
