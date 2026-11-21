@@ -10,6 +10,7 @@ anch_add_executable(anch-string-utils-test SOURCES testStringUtils.cpp LIBS ${te
 anch_add_executable(anch-optional-test SOURCES testOptional.cpp LIBS ${test_libs})
 anch_add_executable(anch-flux-test SOURCES testFlux.cpp LIBS ${test_libs})
 anch_add_executable(anch-endianness-test SOURCES testEndianness.cpp LIBS ${test_libs})
+anch_add_executable(anch-mapping-test SOURCES testMapping.cpp LIBS ${test_libs})
 
 add_test(NAME anch-thread-pool-run-all-test COMMAND anch-thread-pool-test -t thread-pool-run-all)
 add_test(NAME anch-thread-pool-max-threads-test COMMAND anch-thread-pool-test -t thread-pool-max-threads)
@@ -96,3 +97,6 @@ add_test(NAME anch-flux-push-sync-10000-ok-test COMMAND anch-flux-test -t push-s
 add_test(NAME anch-endianness-endianness COMMAND anch-endianness-test -t endianness)
 add_test(NAME anch-endianness-byte-swap COMMAND anch-endianness-test -t byte-swap)
 add_test(NAME anch-endianness-byte-swap-in-place COMMAND anch-endianness-test -t byte-swap-in-place)
+
+add_test(NAME anch-mapping-describe COMMAND anch-mapping-test -t describe)
+add_test(NAME anch-mapping-third-party COMMAND anch-mapping-test -t third-party)

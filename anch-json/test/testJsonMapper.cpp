@@ -33,6 +33,7 @@
 #include <utility>
 
 #include "json/json.hpp"
+#include "mapping.hpp"
 
 #ifdef ANCH_UUID
 #include "uuid.hpp"
@@ -135,6 +136,9 @@ struct Tata {
       ;
   }
 };
+
+// anch-json mapper is a mapper of the common description (anch-utils/mapping.hpp)
+static_assert(anch::ObjectMapper<anch::json::ObjectMapper<Tata>, Tata>);
 
 std::ostream&
 operator<<(std::ostream& os, const Tata& tata) {

@@ -103,7 +103,11 @@ Compatibilité et dépréciation
 
 Étapes proposées
 ----------------
-1. anch-utils : Mapping, concept ObjectMapper, Described, contraintes et validation déplacées (alias dans anch-json).
+1. Faite le 2026-11-21. anch-utils (mapping.hpp) : Mapping (marqueur Undescribed dans le modèle principal),
+   concept ObjectMapper<M, T> (registerField avec membre, getter, setter, getter + setter, chacun renvoie le mapper ;
+   vérifié avec int T::* et std::function<int ...>), Described, describe<T>(mapper). Les contraintes et la validation
+   sont dans anch-val (décision 3 remplacée). anch::json::ObjectMapper satisfait le concept : ses registerField
+   deviennent publics (un concept est vérifié sans les amitiés de la classe).
 2. anch-json : lecture de anch::Mapping<T>, tests sur les deux formes de description ; anch-oas génère la nouvelle
    forme.
 3. anch-csv : Reader / Writer (anch-csv/anch-csv.todo), puis mapper sur anch::Mapping<T>.
