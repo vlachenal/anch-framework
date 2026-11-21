@@ -33,6 +33,7 @@ option(ANCH_INSTALL_RPATH "Relative RPATH on installed binaries: libraries find 
 
 # Optional modules
 option(ANCH_BUILD_CRYPTO "Build anch-crypto" ON)
+option(ANCH_BUILD_CSV "Build anch-csv" ON)
 option(ANCH_BUILD_SQL "Build anch-sql" ON)
 option(ANCH_BUILD_REST "Build anch-rest" ON)
 option(ANCH_BUILD_APP "Build anch-app" OFF)
@@ -108,6 +109,9 @@ add_subdirectory(anch-conf)
 add_subdirectory(anch-log)
 add_subdirectory(anch-device)
 add_subdirectory(anch-json)
+if(ANCH_BUILD_CSV)
+  add_subdirectory(anch-csv)
+endif()
 if(ANCH_BUILD_CRYPTO)
   add_subdirectory(anch-crypto)
 endif()

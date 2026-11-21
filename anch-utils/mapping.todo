@@ -1,7 +1,9 @@
-Description des objets et sérialiseurs unifiés : proposition (2026-11-19)
-========================================================================
+Description des objets et sérialiseurs unifiés : conception (2026-11-19)
+=======================================================================
 
-À valider avant toute implémentation. Les questions ouvertes sont en fin de fichier.
+Validée le 2026-11-21 (décisions en fin de fichier). Sérialiseurs unifiés (§4) : conception détaillée dans
+anch-codec/anch-codec.todo (étape 5, FormatCodec<F> et concepts DataFormat / FormatSerializer / FormatDeserializer
+dans anch-codec, en attente d'anch-csv).
 
 Demande (2026-11-19) : anch-csv reprend le registerObject d'anch-json ; une interface ou un concept déclaré dans
 anch-utils est implémenté par anch-csv et anch-json ; le but est d'avoir des interfaces unifiées pour les
@@ -108,16 +110,14 @@ Compatibilité et dépréciation
 4. Concepts Serializer / Deserializer, Json et Csv, codec générique anch-rest.
 5. ScalarMapping pour les énumérations et types simples (anch-json, anch-csv, anch-oas).
 
-Questions ouvertes
-------------------
+Questions (toutes tranchées)
+----------------------------
 1. Tranchée le 2026-11-19 : spécialisation de anch::Mapping<T> avec une fonction registerObject (forme A), avec
    évolution possible vers une description constexpr (forme C, voir « Description commune »). Écartée : fonction
    libre trouvée par ADL (son nom entre en conflit avec anch::json::registerObject lors de la recherche dépendante
    des arguments, et elle ne permet pas de décrire les types de std ou de bibliothèques tierces).
-2. anch::json::registerObject : déprécié en 0.3 et supprimé en 0.4 (politique actuelle), ou gardé durablement comme
-   forme propre à JSON ?
-3. Contraintes et validation : dans anch-utils (proposé) ou dans un nouveau module anch-validation ?
-4. Champs propres à un format (nom différent en JSON et en CSV, mapper JSON explicite, champ ignoré par un format) :
-   options de champ ignorées par les autres formats (anch::json::name("..."), anch::csv::ignore), ou descriptions
-   séparées par format quand elles diffèrent ?
-5. ScalarMapping commun pour les énumérations et types simples, ou garder des conversions propres à chaque format ?
+2. Tranchée le 2026-11-21 : anch::json::registerObject déprécié en 0.3, supprimé en 0.4.
+3. Tranchée le 2026-11-21 : contraintes et validation dans anch-utils.
+4. Tranchée le 2026-11-21 : options de champ ignorées par les autres formats (anch::json::name("..."),
+   anch::csv::ignore).
+5. Tranchée le 2026-11-21 : anch::ScalarMapping<T> commun aux formats pour les énumérations et types simples.
