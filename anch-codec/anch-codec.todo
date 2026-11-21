@@ -154,8 +154,8 @@ Implémentation (2026-11-21, étapes 1 à 4)
    noms (test dédié).
 5. Plus tard : FormatCodec<F> et concepts de mapping.todo §4.
 
-Étape 5 : FormatCodec<F> (proposition validée le 2026-11-21, en attente d'anch-csv)
------------------------------------------------------------------------------------
+Étape 5 : FormatCodec<F> (validée et faite le 2026-11-21)
+--------------------------------------------------------
 État : mapping.todo §4 prévoit des concepts de format et un codec générique ; anch-csv n'a pas encore de code
 (mapping.todo étape 3) et anch::Mapping<T> n'existe pas (étape 1). FormatCodec ne s'applique donc pour l'instant
 qu'à JSON ; il prépare CSV (Csv sans code propre dans anch-codec, quand anch-csv aura son format).
@@ -199,8 +199,21 @@ Questions étape 5 (tranchées le 2026-11-21 : propositions retenues)
 - A. Type de format anch::json::Json dans anch-json (json/format.hpp), sans dépendance à anch-codec.
 - B. Concepts DataFormat / FormatSerializer / FormatDeserializer ; le descripteur du registre garde le nom Format.
 - C. Politique par côté et traduction des erreurs par le trait FormatPolicy<F>, spécialisé par le plugin.
-- D. En attente : les concepts seront conçus sur deux formats réels, quand anch-csv aura son format
-     (mapping.todo étape 3) ; l'étape 5 se fera alors avec Csv.
+- D. Faite le 2026-11-21 avec Json et Csv (anch-csv étapes 1 à 3).
+
+Implémentation de l'étape 5 (2026-11-21)
+- codec/formatCodec.hpp (noyau) : concepts DataFormat (Options, MEDIA_TYPE, defaultOptions()), FormatSerializer,
+  FormatDeserializer ; FormatPolicy<F> (configure(options, side), translate(error) ; défaut : rien) ;
+  FormatCodec<F> (ANCH_CODEC_EXPORT) : mediaType, options(side) (copie de defaultOptions puis configure),
+  serialize / deserialize avec et sans Side, types ExternalSchema exclus, erreurs de lecture passées à translate.
+- anch-json : json/format.hpp, anch::json::Json (cas std::string compris) ; anch-codec-json : FormatPolicy<Json>
+  (options de chaque côté et PAYLOAD_TOO_LARGE -> ContentTooLarge), using Json = FormatCodec<anch::json::Json>,
+  instanciation explicite dans json.cpp et extern template dans l'en-tête (options uniques).
+- anch-csv : csv/format.hpp, anch::csv::Csv (listes d'objets décrits ; serialize / deserialize contraints aux types
+  décrits) ; Options::maxSize (taille totale lue). anch-codec-csv (ANCH_CODEC_CSV) : FormatPolicy<Csv> (SERVER :
+  contraintes à la lecture, 2 Mio ; CLIENT : contraintes à l'écriture, colonnes inconnues ignorées ; TOO_LARGE ->
+  ContentTooLarge), using Csv = FormatCodec<anch::csv::Csv> ; Available : Json, Csv, Protobuf..., Text.
+- Les concepts sont dans codec/formatCodec.hpp (pas codec/format.hpp, qui garde le registre).
 
 Questions (toutes tranchées le 2026-11-21)
 ------------------------------------------

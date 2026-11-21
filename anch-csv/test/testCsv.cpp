@@ -194,6 +194,11 @@ testLimits() {
   anch::ut::assertThat(readAll("a,b,c\n", options).size() == 1, "Records with maximum columns have to be read");
   error = readError("a,b,c,d\n", options);
   anch::ut::assertThat(error.getErrorCode() == ErrorCode::TOO_LARGE && error.getColumn() == 4, "Columns: {}", error.what());
+  Options total = noHeader();
+  total.maxSize = 8;
+  anch::ut::assertThat(readAll("abc\ndef\n", total).size() == 2, "Input of maximum size has to be read");
+  error = readError("abc\ndef\ngh\n", total);
+  anch::ut::assertThat(error.getErrorCode() == ErrorCode::TOO_LARGE && error.getLine() == 3, "Input size: {}", error.what());
 }
 
 void

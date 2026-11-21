@@ -90,7 +90,7 @@ namespace anch::csv {
     return anch::csv::Records<T>(input, options);
   }
 
-  template<typename T>
+  template<anch::Described T>
   void
   deserialize(std::vector<T>& values, std::istream& input, const anch::csv::Options& options) {
     values.clear();
@@ -104,6 +104,7 @@ namespace anch::csv {
   }
 
   template<std::ranges::input_range R>
+  requires anch::Described<std::remove_cvref_t<std::ranges::range_value_t<R>>>
   void
   serialize(const R& values, std::ostream& out, const anch::csv::Options& options) {
     using T = std::remove_cvref_t<std::ranges::range_value_t<R>>;

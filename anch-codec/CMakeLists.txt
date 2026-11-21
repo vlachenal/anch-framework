@@ -28,6 +28,22 @@ if(ANCH_CODEC_JSON)
 endif()
 set(ANCH_CODEC_JSON_ENABLED ${ANCH_CODEC_JSON_ENABLED} PARENT_SCOPE)
 
+# CSV (anch-csv): lists of described objects
+set(ANCH_CODEC_CSV_ENABLED OFF)
+if(ANCH_CODEC_CSV AND TARGET anch::csv)
+  set(ANCH_CODEC_CSV_ENABLED ON)
+  anch_add_library(anch-codec-csv
+    INCLUDE_DIRS csv/inc
+    SOURCES csv/src/codec/csv.cpp
+    PUBLIC_DEPS anch::codec anch::csv)
+  list(APPEND codec_headers "codec/csv.hpp")
+  list(APPEND codec_types "anch::codec::Csv")
+  list(APPEND codec_macros ANCH_CODEC_CSV_ENABLED)
+elseif(ANCH_CODEC_CSV)
+  message(STATUS "anch-csv is not built: anch-codec-csv is not built")
+endif()
+set(ANCH_CODEC_CSV_ENABLED ${ANCH_CODEC_CSV_ENABLED} PARENT_SCOPE)
+
 # Protocol Buffers (libprotobuf)
 set(ANCH_CODEC_PROTOBUF_ENABLED OFF)
 if(ANCH_CODEC_PROTOBUF)
@@ -88,7 +104,7 @@ list(JOIN codec_types ", " ANCH_CODEC_ALL_TYPES)
 set(all_dir ${CMAKE_CURRENT_BINARY_DIR}/all/inc)
 configure_file(all.hpp.in ${all_dir}/codec/all.hpp @ONLY)
 set(all_deps anch::codec)
-foreach(plugin IN ITEMS json protobuf thrift)
+foreach(plugin IN ITEMS json csv protobuf thrift)
   if(TARGET anch::codec-${plugin})
     list(APPEND all_deps anch::codec-${plugin})
   endif()

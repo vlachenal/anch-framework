@@ -10,6 +10,17 @@ add_test(NAME anch-codec-text COMMAND anch-codec-test -t text)
 add_test(NAME anch-codec-codecs COMMAND anch-codec-test -t codecs)
 add_test(NAME anch-codec-formats COMMAND anch-codec-test -t formats)
 
+anch_add_executable(anch-codec-format-test SOURCES testFormatCodec.cpp LIBS anch::codec anch::ut)
+add_test(NAME anch-codec-format-options COMMAND anch-codec-format-test -t options)
+add_test(NAME anch-codec-format-translate COMMAND anch-codec-format-test -t translate)
+
+if(ANCH_CODEC_CSV_ENABLED AND ANCH_CODEC_JSON_ENABLED)
+  anch_add_executable(anch-codec-csv-test SOURCES testCsv.cpp LIBS anch::codec-all anch::ut)
+  add_test(NAME anch-codec-csv-negotiation COMMAND anch-codec-csv-test -t negotiation)
+  add_test(NAME anch-codec-csv-sides COMMAND anch-codec-csv-test -t sides)
+  add_test(NAME anch-codec-csv-formats COMMAND anch-codec-csv-test -t formats)
+endif()
+
 if(ANCH_CODEC_JSON_ENABLED)
   anch_add_executable(anch-codec-json-test SOURCES testJson.cpp LIBS anch::codec-all anch::ut)
 

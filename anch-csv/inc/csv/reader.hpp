@@ -87,6 +87,9 @@ namespace anch::csv {
     /*! Size of current record in bytes */
     std::size_t _recordSize;
 
+    /*! Size of the read input in bytes */
+    std::size_t _size;
+
     /*! Expected number of columns, 0 when it is not known yet */
     std::size_t _columns;
     // Attributes -

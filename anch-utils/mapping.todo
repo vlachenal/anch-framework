@@ -115,7 +115,8 @@ Compatibilité et dépréciation
    de valeur) : la description n'a plus besoin de registerField<T> (forme propre à JSON, gardée). anch-oas génère
    les descriptions dans l'en-tête des modèles (le source garde les mappers d'énumérations).
 3. anch-csv : Reader / Writer (anch-csv/anch-csv.todo), puis mapper sur anch::Mapping<T>.
-4. Concepts Serializer / Deserializer, Json et Csv, codec générique anch-rest.
+4. Faite le 2026-11-21 (anch-codec étape 5) : concepts DataFormat / FormatSerializer / FormatDeserializer, formats
+   anch::json::Json et anch::csv::Csv, codec générique FormatCodec<F> dans anch-codec.
 5. ScalarMapping pour les énumérations et types simples (anch-json, anch-csv, anch-oas).
 
 Questions (toutes tranchées)

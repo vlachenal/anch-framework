@@ -27,7 +27,7 @@
 namespace anch::codec {
 
   /*!
-   * Codecs of the formats built with the framework (options \c ANCH_CODEC_JSON , ...), in preference order:
+   * Codecs of the formats built with the framework (options \c ANCH_CODEC_JSON , \c ANCH_CODEC_CSV , ...), in preference order:
    * @ANCH_CODEC_ALL_TYPES@
    *
    * \since 0.3

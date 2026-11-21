@@ -54,7 +54,7 @@ namespace {
 
 Reader::Reader(std::istream& input, const Options& options):
   _input(input.rdbuf()), _stream(input), _options(options), _pending(), _buffer(), _ends(), _quoted(), _fields(),
-  _header(), _line(1), _recordLine(1), _recordSize(0), _columns(0) {
+  _header(), _line(1), _recordLine(1), _recordSize(0), _size(0), _columns(0) {
   check(_options);
   if(_input == nullptr) {
     throw std::invalid_argument("CSV input stream has no buffer");
@@ -149,6 +149,9 @@ Reader::get() {
       _stream.setstate(std::ios::eofbit);
       return END;
     }
+  }
+  if(_options.maxSize != 0 && ++_size > _options.maxSize) {
+    fail(ErrorCode::TOO_LARGE, "input is larger than " + std::to_string(_options.maxSize) + " bytes");
   }
   if(_options.maxRecordSize != 0 && ++_recordSize > _options.maxRecordSize) {
     fail(ErrorCode::TOO_LARGE, "record is larger than " + std::to_string(_options.maxRecordSize) + " bytes");
