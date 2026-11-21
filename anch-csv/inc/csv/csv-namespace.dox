@@ -1,0 +1,13 @@
+/*!
+ * \namespace anch::csv
+ *
+ * \brief AnCH CSV library namespace.
+ *
+ * CSV records reading and writing (RFC 4180). See \ref page_csv "AnCH CSV library documentation".
+ */
+
+/*!
+ * \namespace anch::csv::detail
+ *
+ * \brief AnCH CSV implementation details.
+ */

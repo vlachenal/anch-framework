@@ -2495,6 +2495,7 @@ PREDEFINED             = ANCH_POSIX \
                          ANCH_CODEC_THRIFT_EXPORT= \
                          ANCH_CONF_EXPORT= \
                          ANCH_CRYPTO_EXPORT= \
+                         ANCH_CSV_EXPORT= \
                          ANCH_CUTILS_EXPORT= \
                          ANCH_DATE_EXPORT= \
                          ANCH_DEVICE_EXPORT= \

@@ -1,7 +1,7 @@
-anch-csv : proposition de conception (2026-11-19)
-=================================================
+anch-csv : conception (2026-11-19)
+==================================
 
-À valider avant toute implémentation. Les questions ouvertes sont en fin de fichier.
+Validée le 2026-11-21 (décisions en fin de fichier) ; étape 1 en cours.
 
 Objectif
 --------
@@ -75,7 +75,7 @@ Intégrations (après les niveaux 1 à 3)
 
 Construction
 ------------
-- Remplacer l'ancien CMakeLists.txt (hors du build, format antérieur à la migration CMake) et AnchCsv.cmake.in par
+- Fait le 2026-11-21 (étape 1) : remplacer l'ancien CMakeLists.txt (hors du build, format antérieur à la migration CMake) et AnchCsv.cmake.in par
   anch_add_library(anch-csv PUBLIC_DEPS anch::utils) ; anch::uuid et anch::date en dépendances publiques
   optionnelles (ANCH_UUID, ANCH_DATE), comme anch-json. Option ANCH_BUILD_CSV (ON).
 - Conversion numérique : première utilisatrice de la conversion commune prévue dans anch-utils (point 4 de la
@@ -83,18 +83,19 @@ Construction
 
 Étapes proposées
 ----------------
-1. Reader / Writer, options, erreurs, tests RFC 4180 (guillemets, CRLF dans un champ, champs vides, BOM, limites),
-   cible de fuzzing.
+1. Faite le 2026-11-21 : Reader / Writer, options, erreurs, tests RFC 4180 (guillemets, CRLF dans un champ, champs
+   vides, BOM, limites), cible de fuzzing. Le Writer met entre guillemets un premier champ qui commence par un BOM
+   (sinon il serait ignoré à la relecture). Pour l'étape 2 : le Writer écrit un champ vide sans guillemets ; il faudra
+   écrire "" pour une chaîne vide et rien pour std::nullopt (aller-retour avec Reader::quoted).
 2. Mapper sur la description commune (après les étapes 1 et 2 d'anch-utils/mapping.todo), types de base,
    optional, UUID, dates, conversions personnalisées.
 3. Lecture en flux.
 4. Codec anch-rest, puis lecteur / écrivain anch-batch.
 
-Questions ouvertes
-------------------
+Questions (toutes tranchées)
+----------------------------
 1. Tranchée le 2026-11-19 : description commune avec anch-json (anch-utils/mapping.todo, ses questions 1, 2, 4, 5).
 2. Tranchée le 2026-11-19 : contraintes communes, déplacées dans anch-utils (anch-utils/mapping.todo, question 3).
-3. Forme de la lecture en flux : range C++23 (for(const Pet& pet : anch::csv::records<Pet>(input))), callback ou
-   anch::Flux (cohérent avec anch-json mais bloquant) ?
-4. Objets imbriqués : refusés (proposé) ou aplatis en colonnes "address.city" ?
-5. Valeurs absentes : champ vide = std::nullopt (proposé), ou chaîne configurable (NULL, \N) ?
+3. Tranchée le 2026-11-21 : lecture en flux par un range C++23 (for(const Pet& pet : anch::csv::records<Pet>(input))).
+4. Tranchée le 2026-11-21 : objets imbriqués refusés à la compilation.
+5. Tranchée le 2026-11-21 : champ vide = std::nullopt.

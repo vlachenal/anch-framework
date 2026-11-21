@@ -1,0 +1,47 @@
+/*! \page page_csv AnCH CSV library documentation
+ *
+ * \tableofcontents
+ *
+ * \section csv_intro_seq Introduction
+ *
+ * AnCH CSV library reads and writes CSV records (RFC 4180) as streams, without loading the whole input. Objects
+ * mapping (with the description shared with anch-json) and records ranges are planned (see \c anch-csv.todo ).
+ *
+ * \section csv_install_sec Installation
+ *
+ * CMake target \c anch::csv (option \c ANCH_BUILD_CSV , ON):
+ * \code{.cmake}
+find_package(Anch REQUIRED)
+target_link_libraries(my-app PRIVATE anch::csv)
+\endcode
+ * See \ref install_sec "installation".
+ *
+ * \section csv_format_sec Format
+ *
+ * - RFC 4180 by default: \c , separator, fields quoted with \c " when they contain the separator, a quote, CR or
+ *   LF, quotes doubled in quoted fields, records written with \c CRLF .
+ * - Reading accepts \c CRLF and \c LF line endings ( \c CR alone is refused), a last record without line ending,
+ *   and skips an UTF-8 BOM. An empty field and an empty quoted field ( \c "" ) are distinguished
+ *   ( \ref anch::csv::Reader::quoted "quoted").
+ * - Bytes are kept as is (UTF-8 is expected), without conversion.
+ * - Limits: record size ( \c Options::maxRecordSize , 1 MiB) and number of columns ( \c Options::maxColumns , 1024) ;
+ *   every record has the number of columns of the header or of the first record ( \c Options::sameColumnCount ).
+ *
+ * \section csv_write_sec Writing
+ *
+ * \ref anch::csv::Writer "Writer" quotes fields when needed. \c writeRow writes strings as is, booleans as \c true /
+ * \c false and numbers with \c std::to_chars (independent of the locale):
+ * \snippet{trimleft} anch-csv/examples/csv.cpp writer
+ *
+ * \section csv_read_sec Reading
+ *
+ * \ref anch::csv::Reader "Reader" reads one record at a time: fields are \c std::string_view valid until the next
+ * record (the record buffer is reused). Errors raise \ref anch::csv::CsvError "CsvError" with a code, the line and
+ * the column:
+ * \snippet{trimleft} anch-csv/examples/csv.cpp reader
+ *
+ * \section csv_options_sec Options
+ *
+ * \ref anch::csv::Options "Options" set separator, quote, line ending, header, BOM and limits:
+ * \snippet{trimleft} anch-csv/examples/csv.cpp options
+ */
