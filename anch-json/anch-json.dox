@@ -21,9 +21,10 @@ target_link_libraries(my-app PRIVATE anch::json)
  *
  * \section json_concept_sec Conception
  *
- * Serialized fields are declared by specializing \ref anch::json::registerObject for each type: fields are
- * registered with their JSON key and their member pointer (or a getter function). Containers and
- * \c std::optional fields give their value type as template argument.\n
+ * Serialized fields are declared by the description of each type shared by formats: an \c anch::Mapping
+ * specialization (anch-utils, \c mapping.hpp , see \ref page_utils ) whose \c registerObject function registers the
+ * fields with their JSON key and their member pointer (or a getter and / or a setter). \c std::optional , pointers,
+ * collections and maps fields are mapped with the mapper of their value type.\n
  * \n
  * \c anch::json::serialize writes JSON in a stream or returns a string ; \c anch::json::deserialize reads a
  * stream and raises \ref anch::json::MappingError on invalid JSON (with its position). Mapping options

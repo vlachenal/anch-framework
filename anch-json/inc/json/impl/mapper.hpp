@@ -38,7 +38,8 @@ namespace anch::json {
   // Constructors +
   template<typename T>
   ObjectMapper<T>::ObjectMapper(): anch::json::GenericMapper<ObjectMapper<T>, T>(), _writers(), _validators(), _readers(), _required() {
-    anch::json::registerObject<T>(*this);
+    static_assert(anch::Described<T>, "T has to be described by an anch::Mapping<T> specialization (mapping.hpp)");
+    anch::describe<T>(*this);
     _writers.shrink_to_fit();
     _validators.shrink_to_fit();
   }
@@ -108,52 +109,57 @@ namespace anch::json {
   ObjectMapper<T>&
   ObjectMapper<T>::registerField(const std::string& key, P T::* value, [[maybe_unused]] C&&... constraints) {
     static_assert(!std::is_reference<P>::value, "Can not deserialize reference value"); // raise compile-time error if value is a reference
-    auto write = [=, this](const auto& val, anch::json::WriterContext& context) -> bool {
-      static_cast<void>(this); // used by some instantiations only
-      if constexpr (std::is_pointer<P>::value) { // Remove pointer on parameter type to check the main type
-	if constexpr (std::is_same<T, typename std::remove_pointer<P>>::value) { // if same, use direct call to avoid recursive instanciation
-	  return this->serialize(key, val, context);
-	} else { // Use 'unpointered' type
-	  return anch::json::Factory<typename std::remove_pointer<P>::type>::getInstance().serialize(key, val, context);
-	}
+    if constexpr (!std::is_same_v<anch::json::detail::MapperType<P>, P>) {
+      // std::optional, pointers, collections and maps: mapper of the value type
+      return this->template registerField<anch::json::detail::MapperType<P>>(key, value, std::forward<C>(constraints)...);
+    } else {
+      auto write = [=, this](const auto& val, anch::json::WriterContext& context) -> bool {
+	static_cast<void>(this); // used by some instantiations only
+	if constexpr (std::is_pointer<P>::value) { // Remove pointer on parameter type to check the main type
+	  if constexpr (std::is_same<T, typename std::remove_pointer<P>>::value) { // if same, use direct call to avoid recursive instanciation
+	    return this->serialize(key, val, context);
+	  } else { // Use 'unpointered' type
+	    return anch::json::Factory<typename std::remove_pointer<P>::type>::getInstance().serialize(key, val, context);
+	  }
 
-      } else if constexpr (std::is_reference<P>::value) { // Remove reference on parameter type to check the main type
-	if constexpr (std::is_same<T, typename std::remove_reference<P>>::value) { // if same, use direct call to avoid recursive instanciation
-	  return this->serialize(key, val, context);
-	} else { // Use 'unreferenced' type
-	  return anch::json::Factory<typename std::decay<P>::type>::getInstance().serialize(key, val, context);
-	}
+	} else if constexpr (std::is_reference<P>::value) { // Remove reference on parameter type to check the main type
+	  if constexpr (std::is_same<T, typename std::remove_reference<P>>::value) { // if same, use direct call to avoid recursive instanciation
+	    return this->serialize(key, val, context);
+	  } else { // Use 'unreferenced' type
+	    return anch::json::Factory<typename std::decay<P>::type>::getInstance().serialize(key, val, context);
+	  }
 
-      } else { // Basic type
-	if constexpr (std::is_same<P, T>::value) { // if same, use direct call to avoid recursive instanciation
-	  return this->serialize(key, val, context);
-	} else {
-	  return anch::json::Factory<P>::getInstance().serialize(key, val, context);
+	} else { // Basic type
+	  if constexpr (std::is_same<P, T>::value) { // if same, use direct call to avoid recursive instanciation
+	    return this->serialize(key, val, context);
+	  } else {
+	    return anch::json::Factory<P>::getInstance().serialize(key, val, context);
+	  }
 	}
-      }
-    };
-    addWriter(key, [value](const T& obj) -> const P& { return obj.*value; }, write, constraints...);
-    auto read = [=, this](T& obj, anch::json::ReaderContext& context) -> bool {
-      static_cast<void>(this); // used by some instantiations only
-      if constexpr (std::is_pointer<P>::value) { // Remove pointer on parameter type to check the main type
-	using RP = typename std::remove_pointer<P>::type;
-	obj.*value = new RP();
-	if constexpr (std::is_same<T, RP>::value) { // if same, use direct call to avoid recursive instanciation
-	  return this->deserialize(*(obj.*value), context);
-	} else { // Use 'unpointered' type
-	  return anch::json::Factory<typename std::remove_pointer<P>::type>::getInstance().deserialize(*(obj.*value), context);
-	}
+      };
+      addWriter(key, [value](const T& obj) -> const P& { return obj.*value; }, write, constraints...);
+      auto read = [=, this](T& obj, anch::json::ReaderContext& context) -> bool {
+	static_cast<void>(this); // used by some instantiations only
+	if constexpr (std::is_pointer<P>::value) { // Remove pointer on parameter type to check the main type
+	  using RP = typename std::remove_pointer<P>::type;
+	  obj.*value = new RP();
+	  if constexpr (std::is_same<T, RP>::value) { // if same, use direct call to avoid recursive instanciation
+	    return this->deserialize(*(obj.*value), context);
+	  } else { // Use 'unpointered' type
+	    return anch::json::Factory<typename std::remove_pointer<P>::type>::getInstance().deserialize(*(obj.*value), context);
+	  }
 
-      } else { // Basic type
-	if constexpr (std::is_same<P, T>::value) { // if same, use direct call to avoid recursive instanciation
-	  return this->deserialize(obj.*value, context);
-	} else {
-	  return anch::json::Factory<P>::getInstance().deserialize(obj.*value, context);
+	} else { // Basic type
+	  if constexpr (std::is_same<P, T>::value) { // if same, use direct call to avoid recursive instanciation
+	    return this->deserialize(obj.*value, context);
+	  } else {
+	    return anch::json::Factory<P>::getInstance().deserialize(obj.*value, context);
+	  }
 	}
-      }
-    };
-    addReader(key, withConstraints(read, value, std::forward<C>(constraints)...), anch::val::isRequired<C...>(), anch::val::isNullable<P>());
-    return *this;
+      };
+      addReader(key, withConstraints(read, value, std::forward<C>(constraints)...), anch::val::isRequired<C...>(), anch::val::isNullable<P>());
+      return *this;
+    }
   }
 
   template<typename T>

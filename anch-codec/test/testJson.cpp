@@ -43,13 +43,15 @@ struct Owner {
 };
 
 template<>
-void
-anch::json::registerObject(anch::json::ObjectMapper<Owner>& mapper) {
-  mapper
-    .registerField("name", &Owner::name, anch::val::required, anch::val::minLength(1))
-    .registerField("age", &Owner::age)
-    ;
-}
+struct anch::Mapping<Owner> {
+  static void
+  registerObject(anch::ObjectMapper<Owner> auto& mapper) {
+    mapper
+      .registerField("name", &Owner::name, anch::val::required, anch::val::minLength(1))
+      .registerField("age", &Owner::age)
+      ;
+  }
+};
 // Model -
 
 static_assert(anch::codec::Serializer<Json, Owner> && anch::codec::Deserializer<Json, Owner>);

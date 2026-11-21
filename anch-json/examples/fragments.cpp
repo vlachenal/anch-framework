@@ -32,17 +32,19 @@ struct Pet {
 };
 
 template<>
-void
-anch::json::registerObject(anch::json::ObjectMapper<Pet>& mapper) {
-  //! [required]
-  mapper
-    .registerField("id", &Pet::id, anch::val::required)
-    .registerField<std::string>("owner", &Pet::owner, anch::val::required); // std::optional: present, can be null
-  //! [required]
-  //! [items]
-  mapper.registerField<std::string>("tags", &Pet::tags, anch::val::maxItems(10), anch::val::items(anch::val::minLength(1)));
-  //! [items]
-}
+struct anch::Mapping<Pet> {
+  static void
+  registerObject(anch::ObjectMapper<Pet> auto& mapper) {
+    //! [required]
+    mapper
+      .registerField("id", &Pet::id, anch::val::required)
+      .registerField("owner", &Pet::owner, anch::val::required); // std::optional: present, can be null
+    //! [required]
+    //! [items]
+    mapper.registerField("tags", &Pet::tags, anch::val::maxItems(10), anch::val::items(anch::val::minLength(1)));
+    //! [items]
+  }
+};
 
 int
 main() {

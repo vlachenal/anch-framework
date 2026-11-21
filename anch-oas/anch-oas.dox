@@ -62,6 +62,8 @@ target_include_directories(petstore PRIVATE ${models_dir})
 target_link_libraries(petstore PRIVATE anch::json anch::uuid)
  * \endcode
  *
+ * The models header holds the types and their descriptions ( \c anch::Mapping specializations, shared by formats,
+ * with their constraints) ; the source holds the anch-json mappers of enumerations.\n
  * Generated models are used with anch-json:
  * \snippet{trimleft} anch-oas/examples/models.cpp models
  *

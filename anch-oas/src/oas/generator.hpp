@@ -830,7 +830,7 @@ namespace anch::oas::detail {
       writeHeader(header, order);
       res.header = header.str();
       std::ostringstream source;
-      writeSource(source, order);
+      writeSource(source);
       res.source = source.str();
       if(_options.server || _options.client) {
 	std::ostringstream formsHeader;
@@ -1702,7 +1702,9 @@ namespace anch::oas::detail {
 	  << "#include <optional>\n"
 	  << "#include <string>\n"
 	  << "#include <vector>\n\n"
-	  << "#include \"json/factory.hpp\"\n";
+	  << "#include \"json/factory.hpp\"\n"
+	  << "#include \"mapping.hpp\"\n"
+	  << "#include \"val/constraints.hpp\"\n";
       if(_date) {
 	out << "#include \"date/date.hpp\"\n";
       }
@@ -1769,7 +1771,7 @@ namespace anch::oas::detail {
       // Aliases -
       out << "}  // " << _options.ns << "\n";
       // anch-json declarations +
-      if(!_enums.empty() || !order.empty()) {
+      if(!_enums.empty()) {
 	out << "\nnamespace anch::json {\n\n";
 	for(const auto& [name, enumeration] : _enums) {
 	  out << "  /*! \\c ::" << _options.ns << "::" << name << " has a dedicated mapper (JSON string) */\n"
@@ -1778,14 +1780,49 @@ namespace anch::oas::detail {
 	      << "    return true;\n"
 	      << "  }\n\n";
 	}
-	for(const std::string& name : order) {
-	  out << "  /*! \\c ::" << _options.ns << "::" << name << " fields registration */\n"
-	      << "  template<>\n"
-	      << "  void registerObject(ObjectMapper<::" << _options.ns << "::" << name << ">& mapper);\n\n";
-	}
 	out << "}  // anch::json\n";
       }
       // anch-json declarations -
+      // Descriptions (anch::Mapping, for every format) +
+      if(!order.empty()) {
+	out << "\n// Descriptions +\n";
+	for(const std::string& name : order) {
+	  const Model& model = _models.at(name);
+	  std::string type = "::" + _options.ns + "::" + name;
+	  const bool registered = std::any_of(model.fields.begin(), model.fields.end(), [](const Field& field) { return !field.part; });
+	  out << "template<>\n"
+	      << "struct anch::Mapping<" << type << "> {\n"
+	      << "  static void\n"
+	      << "  registerObject(" << (registered ? "" : "[[maybe_unused]] ")
+	      << "anch::ObjectMapper<" << type << "> auto& mapper) {\n";
+	  for(const Field& field : model.fields) {
+	    if(field.part) {
+	      out << "    // " << commentSafe(field.json) << ": file (multipart/form-data part), not mapped in JSON\n";
+	    }
+	  }
+	  if(!registered) {
+	    out << "    // No property\n";
+	  } else {
+	    out << "    mapper\n";
+	    for(const Field& field : model.fields) {
+	      if(field.part) {
+		continue;
+	      }
+	      out << "      .registerField(" << literal(field.json) << ", &" << type << "::" << field.member
+		  << (field.required ? ", anch::val::required" : "");
+	      for(const std::string& constraint : field.constraints) {
+		out << ", " << constraint;
+	      }
+	      out << ")\n";
+	    }
+	    out << "      ;\n";
+	  }
+	  out << "  }\n"
+	      << "};\n\n";
+	}
+	out << "// Descriptions -\n";
+      }
+      // Descriptions -
     }
 
     void
@@ -1840,7 +1877,7 @@ namespace anch::oas::detail {
     }
 
     void
-    writeSource(std::ostream& out, const std::vector<std::string>& order) const {
+    writeSource(std::ostream& out) const {
       writeBanner(out);
       out << "#include \"" << _options.name << ".hpp\"\n\n"
 	  << "#include <map>\n"
@@ -1860,46 +1897,6 @@ namespace anch::oas::detail {
 	    << "// Enumerations -\n";
       }
       // Enumerations mappers -
-      // Models mappers +
-      if(!order.empty()) {
-	out << "\n// Models +\n";
-	for(const std::string& name : order) {
-	  const Model& model = _models.at(name);
-	  std::string type = "::" + _options.ns + "::" + name;
-	  const bool registered = std::any_of(model.fields.begin(), model.fields.end(), [](const Field& field) { return !field.part; });
-	  out << "template<>\n"
-	      << "void\n"
-	      << "anch::json::registerObject(" << (registered ? "" : "[[maybe_unused]] ")
-	      << "anch::json::ObjectMapper<" << type << ">& mapper) {\n";
-	  for(const Field& field : model.fields) {
-	    if(field.part) {
-	      out << "  // " << commentSafe(field.json) << ": file (multipart/form-data part), not mapped in JSON\n";
-	    }
-	  }
-	  if(!registered) {
-	    out << "  // No property\n";
-	  } else {
-	    out << "  mapper\n";
-	    for(const Field& field : model.fields) {
-	      if(field.part) {
-		continue;
-	      }
-	      bool exact = !field.optional && !field.pointer && field.type.container == Container::NONE;
-	      out << "    .registerField" << (exact ? "" : "<" + qualified(field.type) + ">")
-		  << '(' << literal(field.json) << ", &" << type << "::" << field.member
-		  << (field.required ? ", anch::val::required" : "");
-	      for(const std::string& constraint : field.constraints) {
-		out << ", " << constraint;
-	      }
-	      out << ")\n";
-	    }
-	    out << "    ;\n";
-	  }
-	  out << "}\n\n";
-	}
-	out << "// Models -\n";
-      }
-      // Models mappers -
     }
 
   };

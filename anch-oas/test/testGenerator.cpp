@@ -133,7 +133,7 @@ testOptions() {
   GeneratedModels models = generate(spec(R"({"A":{"type":"object","properties":{"a":{"type":"string"}}}})"), options);
   contains(models.header, "namespace my_api::v1::model {");
   contains(models.source, "#include \"api.hpp\"");
-  contains(models.source, "anch::json::ObjectMapper<::my_api::v1::model::A>& mapper");
+  contains(models.header, "anch::ObjectMapper<::my_api::v1::model::A> auto& mapper");
 }
 
 void
@@ -151,8 +151,8 @@ testMemberNames() {
   contains(models.header, "std::optional<std::string> NULL_;");
   contains(models.header, "std::optional<std::string> errno_;");
   contains(models.header, "std::optional<std::string> B_;");
-  contains(models.source, ".registerField(\"class\", &::model::A::class_, anch::val::required)");
-  contains(models.source, ".registerField<std::string>(\"$id\", &::model::A::_id)");
+  contains(models.header, ".registerField(\"class\", &::model::A::class_, anch::val::required)");
+  contains(models.header, ".registerField(\"$id\", &::model::A::_id)");
 }
 
 void
@@ -225,7 +225,7 @@ testNoDate() {
   contains(models.header, "std::chrono::year_month_day day{};");
   contains(models.header, "std::optional<anch::date::Date> when;");
   contains(models.header, "std::vector<std::chrono::year_month_day> days;");
-  contains(models.source, ".registerField<std::chrono::year_month_day>(\"days\", &::model::A::days)");
+  contains(models.header, ".registerField(\"days\", &::model::A::days)");
   ModelOptions options;
   options.date = false;
   models = generate(document, options);
@@ -256,14 +256,14 @@ testRequired() {
     "B":{"allOf":[{"$ref":"#/components/schemas/A"},{"type":"object","required":["b"],"properties":{"b":{"type":"boolean"}}}]}})"));
   contains(models.header, "std::string a;");
   contains(models.header, "std::optional<std::string> n;");
-  contains(models.source, ".registerField(\"a\", &::model::A::a, anch::val::required)");
-  contains(models.source, ".registerField<std::string>(\"n\", &::model::A::n, anch::val::required)");
-  contains(models.source, ".registerField<int64_t>(\"l\", &::model::A::l, anch::val::required)");
-  contains(models.source, ".registerField<::model::A>(\"r\", &::model::A::r, anch::val::required)");
-  contains(models.source, ".registerField<std::string>(\"o\", &::model::A::o)\n");
+  contains(models.header, ".registerField(\"a\", &::model::A::a, anch::val::required)");
+  contains(models.header, ".registerField(\"n\", &::model::A::n, anch::val::required)");
+  contains(models.header, ".registerField(\"l\", &::model::A::l, anch::val::required)");
+  contains(models.header, ".registerField(\"r\", &::model::A::r, anch::val::required)");
+  contains(models.header, ".registerField(\"o\", &::model::A::o)\n");
   // allOf: inherited and own required properties
-  contains(models.source, ".registerField(\"a\", &::model::B::a, anch::val::required)");
-  contains(models.source, ".registerField(\"b\", &::model::B::b, anch::val::required)");
+  contains(models.header, ".registerField(\"a\", &::model::B::a, anch::val::required)");
+  contains(models.header, ".registerField(\"b\", &::model::B::b, anch::val::required)");
 }
 
 void
@@ -279,31 +279,31 @@ testConstraints() {
   GeneratedModels models = generate(document);
   anch::ut::assertThat(models.warnings.size() == 1, "1 warning expected (u maximum outside int64_t range) ; found {}", models.warnings.size());
   contains(models.warnings[0], "A.u: maximum 18446744073709551615 is outside int64_t range");
-  contains(models.source, ".registerField<std::string>(\"s\", &::model::A::s, anch::val::minLength(1), anch::val::maxLength(64), "
+  contains(models.header, ".registerField(\"s\", &::model::A::s, anch::val::minLength(1), anch::val::maxLength(64), "
 	   "anch::val::pattern(\"^a+$\"))\n");
   contains(models.header, "Constraints: minLength 1, maxLength 64, pattern ^a+$");
-  contains(models.source, ".registerField<std::string>(\"mail\", &::model::A::mail, anch::val::format(\"email\"))\n");
-  contains(models.source, ".registerField<std::string>(\"esc\", &::model::A::esc, anch::val::pattern(\"^\\\\d+\\\"$\"))\n");
-  contains(models.source, ".registerField<std::string>(\"id\", &::model::A::id, anch::val::minLength(1))\n");
-  contains(models.source, ".registerField<int32_t>(\"i\", &::model::A::i, anch::val::minimum(0), anch::val::exclusiveMaximum(100))\n");
-  contains(models.source, ".registerField<int64_t>(\"u\", &::model::A::u, anch::val::minimum((-9223372036854775807 - 1)), anch::val::maximum(18446744073709551615u))\n");
-  contains(models.source, ".registerField<double>(\"d\", &::model::A::d, anch::val::minimum(1e3), anch::val::multipleOf(0.01))\n");
-  contains(models.source, ".registerField<std::string>(\"l\", &::model::A::l, anch::val::minItems(1), anch::val::maxItems(5), "
+  contains(models.header, ".registerField(\"mail\", &::model::A::mail, anch::val::format(\"email\"))\n");
+  contains(models.header, ".registerField(\"esc\", &::model::A::esc, anch::val::pattern(\"^\\\\d+\\\"$\"))\n");
+  contains(models.header, ".registerField(\"id\", &::model::A::id, anch::val::minLength(1))\n");
+  contains(models.header, ".registerField(\"i\", &::model::A::i, anch::val::minimum(0), anch::val::exclusiveMaximum(100))\n");
+  contains(models.header, ".registerField(\"u\", &::model::A::u, anch::val::minimum((-9223372036854775807 - 1)), anch::val::maximum(18446744073709551615u))\n");
+  contains(models.header, ".registerField(\"d\", &::model::A::d, anch::val::minimum(1e3), anch::val::multipleOf(0.01))\n");
+  contains(models.header, ".registerField(\"l\", &::model::A::l, anch::val::minItems(1), anch::val::maxItems(5), "
 	   "anch::val::uniqueItems, anch::val::items(anch::val::minLength(1)))\n");
   contains(models.header, "Constraints: minItems 1, maxItems 5, uniqueItems, items: minLength 1");
-  contains(models.source, ".registerField<int64_t>(\"m\", &::model::A::m, anch::val::minProperties(1), anch::val::maxProperties(3), "
+  contains(models.header, ".registerField(\"m\", &::model::A::m, anch::val::minProperties(1), anch::val::maxProperties(3), "
 	   "anch::val::items(anch::val::minimum(0)))\n");
-  contains(models.source, ".registerField<int64_t>(\"e\", &::model::A::e, anch::val::allowed<int64_t>({1, 2, 9007199254740993}))\n");
+  contains(models.header, ".registerField(\"e\", &::model::A::e, anch::val::allowed<int64_t>({1, 2, 9007199254740993}))\n");
   contains(models.header, "Allowed values: 1, 2, 9007199254740993");
-  contains(models.source, ".registerField<bool>(\"b\", &::model::A::b, anch::val::allowed<bool>({true}))\n");
-  contains(models.source, ".registerField<anch::UUID>(\"uid\", &::model::A::uid)\n");
+  contains(models.header, ".registerField(\"b\", &::model::A::b, anch::val::allowed<bool>({true}))\n");
+  contains(models.header, ".registerField(\"uid\", &::model::A::uid)\n");
   contains(models.header, "bool operator==(const A&) const = default;");
   // No constraints option
   ModelOptions options;
   options.constraints = false;
   models = generate(document, options);
-  anch::ut::assertThat(models.source.find("anch::json::m") == std::string::npos && models.source.find("anch::val::items") == std::string::npos
-		       && models.source.find("anch::val::allowed") == std::string::npos, "No constraint expected:\n{}", models.source);
+  anch::ut::assertThat(models.header.find("anch::json::m") == std::string::npos && models.header.find("anch::val::items") == std::string::npos
+		       && models.header.find("anch::val::allowed") == std::string::npos, "No constraint expected:\n{}", models.header);
   anch::ut::assertThat(models.header.find("Constraints:") == std::string::npos, "No constraint documentation expected");
 }
 
@@ -328,9 +328,9 @@ testConstraintsWarnings() {
 	}) != models.warnings.end(), "Warning '{}' not found", warning);
   }
   anch::ut::assertThat(models.warnings.size() == 9, "9 warnings expected ; found {}", models.warnings.size());
-  contains(models.source, ".registerField<std::string>(\"p\", &::model::A::p)\n");
-  contains(models.source, ".registerField<int64_t>(\"i\", &::model::A::i)\n");
-  contains(models.source, ".registerField<int32_t>(\"e\", &::model::A::e)\n");
+  contains(models.header, ".registerField(\"p\", &::model::A::p)\n");
+  contains(models.header, ".registerField(\"i\", &::model::A::i)\n");
+  contains(models.header, ".registerField(\"e\", &::model::A::e)\n");
   ModelOptions options;
   options.strict = true;
   checkError<GeneratorError>([&]() { generate(document, options); }, "A.b: uniqueItems is not supported for boolean arrays");
@@ -363,8 +363,10 @@ testConstraintsInconsistent() {
 	return found.starts_with("A.huge: maximum 1000") && found.ends_with("is outside double range: ignored");
       }) != models.warnings.end(), "Warning for A.huge not found");
   anch::ut::assertThat(models.warnings.size() == 11, "11 warnings expected ; found {}", models.warnings.size());
-  anch::ut::assertThat(models.source.find("e400") == std::string::npos, "Bounds outside double range must not be generated:\n{}", models.source);
-  contains(models.source, "anch::val::minLength(5), anch::val::maxLength(2)");
+  // Documentation lists the enum values, generated code does not use them
+  anch::ut::assertThat(models.header.find("e400)") == std::string::npos && models.header.find("e400}") == std::string::npos,
+		       "Bounds outside double range must not be generated:\n{}", models.header);
+  contains(models.header, "anch::val::minLength(5), anch::val::maxLength(2)");
   ModelOptions options;
   options.strict = true;
   checkError<GeneratorError>([&]() { generate(document, options); }, "A: required property 'missing' is not defined in properties");
@@ -378,7 +380,7 @@ testTrigraphs() {
   anch::ut::assertThat(models.header.find("??") == std::string::npos, "Trigraph in header:\n{}", models.header);
   anch::ut::assertThat(models.source.find("??") == std::string::npos, "Trigraph in source:\n{}", models.source);
   contains(models.header, "Line ending with ? ?/");
-  contains(models.source, R"(anch::val::pattern("^a?\?/$"))");
+  contains(models.header, R"(anch::val::pattern("^a?\?/$"))");
   contains(models.source, R"(text = "x?\?=y";)");
 }
 
@@ -482,7 +484,7 @@ testForms() {
   contains(models.header, "anch::rest::Part file{};");
   contains(models.header, "std::vector<anch::rest::Part> files;");
   contains(models.header, "std::optional<std::string> b64;");
-  contains(models.source, "  // file: file (multipart/form-data part), not mapped in JSON\n  // files: file (multipart/form-data part), not mapped in JSON\n");
+  contains(models.header, "    // file: file (multipart/form-data part), not mapped in JSON\n    // files: file (multipart/form-data part), not mapped in JSON\n");
   anch::ut::assertThat(models.source.find("\"file\", &") == std::string::npos, "Files must not be registered in JSON mapper");
   // Form mappers
   contains(models.formsHeader, "#include \"models.hpp\"");

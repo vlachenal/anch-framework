@@ -34,7 +34,7 @@ namespace anch::codec {
 
   /*!
    * \c application/json codec based on anch-json (anch-codec-json plugin, option \c ANCH_CODEC_JSON ): values need
-   * an anch-json mapper (\c anch::json::registerObject ).\n
+   * a description ( \c anch::Mapping , anch-utils).\n
    * \n
    * anch-rest servers and clients use mapping options of their side ( \ref options ): fields constraints (
    * \c anch::val::required , \c anch::val::minLength , ...) are checked on values the server receives (invalid

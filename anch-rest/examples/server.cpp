@@ -45,12 +45,14 @@ struct Pet {
 };
 
 template<>
-void
-anch::json::registerObject(anch::json::ObjectMapper<Pet>& mapper) {
-  mapper
-    .registerField("id", &Pet::id)
-    .registerField("name", &Pet::name, anch::val::minLength(1));
-}
+struct anch::Mapping<Pet> {
+  static void
+  registerObject(anch::ObjectMapper<Pet> auto& mapper) {
+    mapper
+      .registerField("id", &Pet::id)
+      .registerField("name", &Pet::name, anch::val::minLength(1));
+  }
+};
 
 struct UploadPhoto {
   std::string description;
@@ -58,10 +60,12 @@ struct UploadPhoto {
 };
 
 template<>
-void
-anch::json::registerObject(anch::json::ObjectMapper<UploadPhoto>& mapper) {
-  mapper.registerField("description", &UploadPhoto::description, anch::val::minLength(1));
-}
+struct anch::Mapping<UploadPhoto> {
+  static void
+  registerObject(anch::ObjectMapper<UploadPhoto> auto& mapper) {
+    mapper.registerField("description", &UploadPhoto::description, anch::val::minLength(1));
+  }
+};
 
 std::optional<Pet>
 findPet(uint64_t id) {
