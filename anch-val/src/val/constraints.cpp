@@ -24,6 +24,7 @@
 #include <mutex>
 #include <regex>
 #include <shared_mutex>
+#include <stdexcept>
 
 #include <arpa/inet.h>
 
@@ -52,11 +53,116 @@ namespace {
     };
   }
 
-  /*! Pattern compiler mutex */
+  /*! Unsupported XSD pattern construct */
+  [[noreturn]] void
+  unsupported(std::string_view source, std::string_view construct) {
+    throw std::invalid_argument("XSD pattern '" + std::string(source) + "': " + std::string(construct)
+				+ " is not supported by the default compiler (see anch::val::setPatternCompiler)");
+  }
+
+  /*!
+   * Translate XSD regular expression into ECMAScript one, matched on the whole value: only constructs which keep their
+   * meaning are translated
+   */
+  std::string
+  translateXsd(std::string_view source) {
+    std::string res;
+    bool inClass = false;
+    for(std::size_t i = 0 ; i < source.size() ; ++i) {
+      const char c = source[i];
+      const char next = (i + 1 < source.size()) ? source[i + 1] : '\0';
+      if(c == '\\') {
+	if(i + 1 == source.size()) {
+	  throw std::invalid_argument("XSD pattern '" + std::string(source) + "': '\\' at the end of the pattern");
+	}
+	++i;
+	switch(next) {
+	case 'n': case 'r': case 't': case '\\': case '|': case '.': case '?': case '*': case '+': case '(': case ')':
+	case '{': case '}': case '-': case '[': case ']': case '^':
+	  res += '\\';
+	  res += next;
+	  break;
+	case 's':
+	  res += inClass ? " \\t\\n\\r" : "[ \\t\\n\\r]";
+	  break;
+	case 'd':
+	  res += inClass ? "0-9" : "[0-9]";
+	  break;
+	case 'S':
+	case 'D':
+	  if(inClass) {
+	    unsupported(source, std::string("'\\") + next + "' in a character class");
+	  }
+	  res += (next == 'S') ? "[^ \\t\\n\\r]" : "[^0-9]";
+	  break;
+	case 'p': case 'P': case 'i': case 'I': case 'c': case 'C': case 'w': case 'W':
+	  unsupported(source, std::string("'\\") + next + "' (Unicode properties)");
+	default:
+	  throw std::invalid_argument("XSD pattern '" + std::string(source) + "': invalid escape '\\" + std::string(1, next) + "'");
+	}
+      } else if(inClass) {
+	if(c == '[' || (c == '-' && next == '[')) {
+	  unsupported(source, "character class subtraction");
+	}
+	if(c == ']') {
+	  inClass = false;
+	}
+	res += c;
+      } else if(c == '^' || c == '$') { // ordinary characters in XSD
+	res += '\\';
+	res += c;
+      } else if(c == '[') {
+	inClass = true;
+	res += c;
+	if(next == '^') {
+	  res += next;
+	  ++i;
+	}
+      } else if(c == '(' && next == '?') {
+	throw std::invalid_argument("XSD pattern '" + std::string(source) + "': '(?' is not XSD syntax");
+      } else if((c == '?' || c == '*' || c == '+' || c == '}') && next == '?') {
+	throw std::invalid_argument("XSD pattern '" + std::string(source) + "': lazy quantifiers are not XSD syntax");
+      } else {
+	res += c;
+      }
+    }
+    if(inClass) {
+      throw std::invalid_argument("XSD pattern '" + std::string(source) + "': unterminated character class");
+    }
+    return res;
+  }
+
+  /*! Default XSD pattern compiler: std::regex on the translated pattern, matched on the whole value */
+  PatternMatcher
+  compileXsd(std::string_view source) {
+    const std::string translated = translateXsd(source);
+    auto regex = std::make_shared<const std::regex>(translated, std::regex::ECMAScript);
+    return [regex](std::string_view value) -> bool {
+      return std::regex_match(value.begin(), value.end(), *regex);
+    };
+  }
+
+  /*! Pattern compilers mutex */
   std::mutex PATTERN_MUTEX;
 
-  /*! Pattern compiler (default compiler when empty) */
-  PatternCompiler PATTERN_COMPILER;
+  /*! Pattern compilers by syntax (default compiler when empty) */
+  PatternCompiler PATTERN_COMPILERS[2];
+
+  /*! Compile pattern */
+  anch::val::Pattern
+  compile(std::string_view source, anch::val::PatternSyntax syntax) {
+    PatternMatcher matcher;
+    {
+      std::lock_guard<std::mutex> lock(PATTERN_MUTEX);
+      const PatternCompiler& compiler = PATTERN_COMPILERS[static_cast<std::size_t>(syntax)];
+      if(compiler) {
+	matcher = compiler(source);
+      } else {
+	matcher = (syntax == anch::val::PatternSyntax::XSD) ? compileXsd(source) : compileRegex(source);
+      }
+    }
+    return anch::val::Pattern{std::make_shared<const PatternMatcher>(std::move(matcher)), std::string(source), syntax};
+  }
   // Patterns -
 
   // Formats +
@@ -238,18 +344,23 @@ namespace {
 
 void
 anch::val::setPatternCompiler(PatternCompiler compiler) {
+  anch::val::setPatternCompiler(anch::val::PatternSyntax::ECMASCRIPT, std::move(compiler));
+}
+
+void
+anch::val::setPatternCompiler(anch::val::PatternSyntax syntax, PatternCompiler compiler) {
   std::lock_guard<std::mutex> lock(PATTERN_MUTEX);
-  PATTERN_COMPILER = std::move(compiler);
+  PATTERN_COMPILERS[static_cast<std::size_t>(syntax)] = std::move(compiler);
 }
 
 anch::val::Pattern
 anch::val::pattern(std::string_view source) {
-  PatternMatcher matcher;
-  {
-    std::lock_guard<std::mutex> lock(PATTERN_MUTEX);
-    matcher = PATTERN_COMPILER ? PATTERN_COMPILER(source) : compileRegex(source);
-  }
-  return anch::val::Pattern{std::make_shared<const PatternMatcher>(std::move(matcher)), std::string(source)};
+  return compile(source, anch::val::PatternSyntax::ECMASCRIPT);
+}
+
+anch::val::Pattern
+anch::val::xsdPattern(std::string_view source) {
+  return compile(source, anch::val::PatternSyntax::XSD);
 }
 
 void
@@ -288,4 +399,34 @@ anch::val::detail::codePoints(std::string_view str) {
     }
   }
   return count;
+}
+
+std::optional<std::pair<std::size_t, std::size_t>>
+anch::val::detail::decimalDigits(std::string_view decimal) {
+  std::size_t pos = 0;
+  if(pos < decimal.size() && (decimal[pos] == '+' || decimal[pos] == '-')) {
+    ++pos;
+  }
+  const std::size_t intBegin = pos;
+  while(pos < decimal.size() && decimal[pos] >= '0' && decimal[pos] <= '9') {
+    ++pos;
+  }
+  std::string_view integer = decimal.substr(intBegin, pos - intBegin);
+  std::string_view fraction;
+  if(pos < decimal.size() && decimal[pos] == '.') {
+    const std::size_t fracBegin = ++pos;
+    while(pos < decimal.size() && decimal[pos] >= '0' && decimal[pos] <= '9') {
+      ++pos;
+    }
+    fraction = decimal.substr(fracBegin, pos - fracBegin);
+  }
+  if(pos != decimal.size() || (integer.empty() && fraction.empty())) {
+    return std::nullopt;
+  }
+  const std::size_t lead = integer.find_first_not_of('0');
+  integer = (lead == std::string_view::npos) ? std::string_view() : integer.substr(lead);
+  const std::size_t trail = fraction.find_last_not_of('0');
+  fraction = (trail == std::string_view::npos) ? std::string_view() : fraction.substr(0, trail + 1);
+  const std::size_t total = integer.size() + fraction.size();
+  return std::make_pair(total == 0 ? std::size_t{1} : total, fraction.size());
 }

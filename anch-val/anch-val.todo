@@ -1,7 +1,7 @@
 anch-val : conception (2026-11-21)
 ==================================
 
-Validée le 2026-11-21 (décisions en fin de fichier) ; étape 1 faite le 2026-11-21.
+Validée le 2026-11-21 (décisions en fin de fichier) ; étapes 1 et 2 faites le 2026-11-21.
 
 Demande (2026-11-21) : en vue d'un codec XML / XSD (et d'autres formats), externaliser la validation des champs dans
 une bibliothèque spécialisée, anch-val. Remplace la décision 3 de anch-utils/mapping.todo (contraintes et
@@ -84,7 +84,17 @@ Implémentation de l'étape 1 (2026-11-21)
 1. Faite le 2026-11-21. Module anch-val : déplacement des contraintes, formats, motifs, Violation, ValidationContext et de leurs tests ;
    anch-json, anch-rest, anch-oas (code généré), exemples et documentation passent
    aux nouveaux noms.
-2. Facettes XSD : length, totalDigits, fractionDigits, motifs XSD.
+2. Faite le 2026-11-21. Facettes XSD : length, totalDigits, fractionDigits, motifs XSD.
+   - PatternSyntax { ECMASCRIPT, XSD } porté par Pattern ; xsdPattern(source) ; setPatternCompiler(syntax,
+     compilateur) (setPatternCompiler(compilateur) reste pour ECMAScript).
+   - Compilateur XSD par défaut : traduction vers std::regex (regex_match sur toute la valeur) des seules
+     constructions qui gardent leur sens : ^ et $ ordinaires, \s = [ \t\n\r], \d = [0-9] (ASCII seulement),
+     échappements XSD ; refusés (std::invalid_argument) : \p{..}, \P{..}, \i, \I, \c, \C, \w, \W, \S et \D dans
+     une classe, soustraction de classes ; erreurs de syntaxe : (?, quantificateurs paresseux, échappements non XSD.
+     Un compilateur complet (ICU, PCRE2, moteur propre) se branche par setPatternCompiler(PatternSyntax::XSD, ...).
+   - length : points de code des chaînes, nombre d'éléments des collections (listes XSD).
+   - totalDigits / fractionDigits : nombres (représentation décimale la plus courte, std::to_chars fixe) et chaînes
+     décimales (xs:decimal) ; zéros de tête et zéros de fin de fraction non comptés ; infini et NaN refusés.
 3. Avec anch::Mapping<T> : anch::val::validate sur la description commune.
 
 Questions (tranchées le 2026-11-21)

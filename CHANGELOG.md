@@ -47,6 +47,10 @@ which give its replacement and the version which removes it. Until 1.0.0, it is 
 - anch-val: fields constraints shared by formats (out of anch-json) and their checks in a context
   (`CheckContext<X>`, specialized by formats: anch-json reader and writer contexts, `ValidationContext`); `uuid`,
   `date-time` and `date` formats with anch-uuid and anch-date as optional dependencies (`ANCH_UUID`, `ANCH_DATE`).
+  XSD facets: `length` (code points of strings, items of lists), `totalDigits` and `fractionDigits` (numbers and
+  decimal strings), `xsdPattern` (XSD patterns, matched on the whole value) with a pattern compiler by syntax
+  (`PatternSyntax`, `setPatternCompiler(syntax, compiler)`); the default XSD compiler translates patterns to
+  `std::regex` and refuses Unicode properties and character class subtractions.
 - anch-csv (option `ANCH_BUILD_CSV`, ON): CSV records reading and writing (RFC 4180) as streams. `Reader` reads one
   record at a time (fields as `std::string_view`, empty and empty quoted fields distinguished, `CRLF` and `LF`, BOM
   skipped, limits of record size and columns count), `Writer` quotes fields when needed (`writeRow` formats numbers

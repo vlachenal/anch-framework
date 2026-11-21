@@ -20,7 +20,10 @@
 #include "val/constraints.hpp"
 
 #include <cstdint>
+#include <limits>
 #include <map>
+#include <regex>
+#include <utility>
 #include <memory>
 #include <optional>
 #include <set>
@@ -230,6 +233,86 @@ testCheckContext() {
 }
 
 void
+testLength() {
+  anch::ut::assertThat(violation(anch::val::length(3), std::string("été")).empty(), "3 code points");
+  anch::ut::assertThat(violation(anch::val::length(2), std::string("été")) == "Length 3 is not length 2", "length on string");
+  anch::ut::assertThat(violation(anch::val::length(2), std::vector<int>{1, 2}).empty()
+		       && violation(anch::val::length(3), std::vector<int>{1, 2}) == "Item count 2 is not length 3", "length on list");
+  static_assert(!anch::val::ValueConstraint<anch::val::Length, int>);
+}
+
+void
+testDigits() {
+  // Leading zeros of the integer part and trailing zeros of the fraction are not counted
+  anch::ut::assertThat(anch::val::detail::decimalDigits("0012.500") == std::make_pair(std::size_t{3}, std::size_t{1}), "0012.500");
+  anch::ut::assertThat(anch::val::detail::decimalDigits("-0.001") == std::make_pair(std::size_t{3}, std::size_t{3}), "-0.001");
+  anch::ut::assertThat(anch::val::detail::decimalDigits("100") == std::make_pair(std::size_t{3}, std::size_t{0}), "100");
+  anch::ut::assertThat(anch::val::detail::decimalDigits("0") == std::make_pair(std::size_t{1}, std::size_t{0})
+		       && anch::val::detail::decimalDigits(".5") == std::make_pair(std::size_t{1}, std::size_t{1})
+		       && anch::val::detail::decimalDigits("+5.") == std::make_pair(std::size_t{1}, std::size_t{0}), "0, .5, +5.");
+  for(std::string_view invalid : {"", "-", ".", "1e5", "1.2.3", " 1", "0x10"}) {
+    anch::ut::assertThat(!anch::val::detail::decimalDigits(invalid).has_value(), "'{}' is not a decimal", invalid);
+  }
+  anch::ut::assertThat(violation(anch::val::totalDigits(3), 999).empty() && violation(anch::val::totalDigits(3), -1000) == "Value -1000 has 4 digits, more than totalDigits 3",
+		       "totalDigits on integer '{}'", violation(anch::val::totalDigits(3), -1000));
+  anch::ut::assertThat(violation(anch::val::totalDigits(3), 12.5).empty() && !violation(anch::val::totalDigits(2), 12.5).empty(), "totalDigits on double");
+  anch::ut::assertThat(violation(anch::val::fractionDigits(2), 0.25).empty()
+		       && violation(anch::val::fractionDigits(2), 0.125) == "Value 0.125 has 3 fraction digits, more than fractionDigits 2",
+		       "fractionDigits on double '{}'", violation(anch::val::fractionDigits(2), 0.125));
+  anch::ut::assertThat(violation(anch::val::fractionDigits(0), UINT64_MAX).empty(), "Integers have no fraction digit");
+  anch::ut::assertThat(violation(anch::val::fractionDigits(2), std::string("19.990")).empty()
+		       && violation(anch::val::totalDigits(30), std::string("123456789012345678901234567890.1")).size() > 0, "Decimal strings");
+  anch::ut::assertThat(violation(anch::val::totalDigits(5), std::string("12a")) == "Value '12a' is not a decimal", "Not a decimal");
+  anch::ut::assertThat(violation(anch::val::totalDigits(5), std::numeric_limits<double>::infinity()) == "Value inf is not a decimal",
+		       "Infinity is not a decimal '{}'", violation(anch::val::totalDigits(5), std::numeric_limits<double>::infinity()));
+}
+
+void
+testXsdPattern() {
+  // Whole value, ^ and $ are ordinary characters
+  anch::val::Pattern zip = anch::val::xsdPattern("\\d{5}");
+  anch::ut::assertThat(zip.syntax == anch::val::PatternSyntax::XSD && violation(zip, std::string("75001")).empty()
+		       && !violation(zip, std::string("750012")).empty() && !violation(zip, std::string("a75001")).empty(), "Whole value");
+  anch::ut::assertThat(violation(anch::val::xsdPattern("$[0-9]+\\.[0-9]{2}"), std::string("$10.50")).empty()
+		       && violation(anch::val::xsdPattern("^a$"), std::string("^a$")).empty(), "^ and $ are ordinary characters");
+  anch::ut::assertThat(violation(anch::val::xsdPattern("[^a-c]+(-[A-Z]{2})?"), std::string("xyz-FR")).empty()
+		       && !violation(anch::val::xsdPattern("[^a-c]+"), std::string("xay")).empty(), "Classes, groups, quantifiers");
+  anch::ut::assertThat(violation(anch::val::xsdPattern("a\\sb[\\s\\d]c"), std::string("a\tb7c")).empty()
+		       && !violation(anch::val::xsdPattern("a\\sb"), std::string("a\vb")).empty(), "\\s is space, tab, CR or LF");
+  anch::ut::assertThat(violation(anch::val::xsdPattern("a|bc"), std::string("bc")).empty()
+		       && !violation(anch::val::xsdPattern("a|bc"), std::string("abc")).empty(), "Branches match the whole value");
+  for(std::string_view unsupported : {"\\p{L}+", "\\i\\c*", "\\w+", "[a-z-[aeiou]]", "[\\S]"}) {
+    bool raised = false;
+    try {
+      anch::val::xsdPattern(unsupported);
+    } catch(const std::invalid_argument& error) {
+      raised = std::string_view(error.what()).find("not supported by the default compiler") != std::string_view::npos;
+    }
+    anch::ut::assertThat(raised, "'{}' is not supported by the default compiler", unsupported);
+  }
+  for(std::string_view invalid : {"(?:a)", "a*?", "\\b", "\\1", "[a-z", "a\\"}) {
+    bool raised = false;
+    try {
+      anch::val::xsdPattern(invalid);
+    } catch(const std::invalid_argument&) {
+      raised = true;
+    } catch(const std::regex_error&) {
+      raised = true;
+    }
+    anch::ut::assertThat(raised, "'{}' is not a valid XSD pattern", invalid);
+  }
+  // Compiler by syntax: XSD compiler does not change ECMAScript patterns
+  anch::val::setPatternCompiler(anch::val::PatternSyntax::XSD, [](std::string_view source) {
+    const std::string expected(source);
+    return anch::val::PatternMatcher([expected](std::string_view value) { return value == expected; });
+  });
+  anch::val::Pattern literal = anch::val::xsdPattern("\\p{L}");
+  anch::val::Pattern ecma = anch::val::pattern("b");
+  anch::val::setPatternCompiler(anch::val::PatternSyntax::XSD, anch::val::PatternCompiler());
+  anch::ut::assertThat(violation(literal, std::string("\\p{L}")).empty() && violation(ecma, std::string("abc")).empty(), "Compiler by syntax");
+}
+
+void
 anch::ut::setup(anch::ut::UnitTests& tests) {
   tests
     .name("AnCH validation unit tests")
@@ -242,5 +325,8 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("pattern-compiler", testPatternCompiler)
     .add("validation-context", testValidationContext)
     .add("check-context", testCheckContext)
+    .add("length", testLength)
+    .add("digits", testDigits)
+    .add("xsd-pattern", testXsdPattern)
     ;
 }
