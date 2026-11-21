@@ -17,7 +17,7 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ANCH Framework.  If not, see <https://www.gnu.org/licenses/>.
 */
-#include "rest/thriftCodec.hpp"
+#include "codec/thrift.hpp"
 
 #include <stdexcept>
 #include <vector>
@@ -28,13 +28,26 @@
 #include <thrift/protocol/TJSONProtocol.h>
 #include <thrift/transport/TBufferTransports.h>
 
-using anch::rest::ThriftProtocol;
+#include "codec/format.hpp"
+
+using anch::codec::ThriftProtocol;
 using apache::thrift::protocol::TProtocol;
 using apache::thrift::transport::TMemoryBuffer;
 using apache::thrift::transport::TTransport;
 
+namespace {
+
+  // Registered when the library is loaded: a program which uses Thrift codecs links this file (thriftWrite, ...)
+  [[maybe_unused]] const bool REGISTERED = anch::codec::registerFormat(anch::codec::Format{"thrift", {
+	std::string(anch::codec::thriftMediaType(ThriftProtocol::BINARY)),
+	std::string(anch::codec::thriftMediaType(ThriftProtocol::COMPACT)),
+	std::string(anch::codec::thriftMediaType(ThriftProtocol::JSON))
+      }});
+
+}
+
 std::string_view
-anch::rest::thriftMediaType(ThriftProtocol protocol) noexcept {
+anch::codec::thriftMediaType(ThriftProtocol protocol) noexcept {
   switch(protocol) {
   case ThriftProtocol::BINARY: return "application/vnd.apache.thrift.binary";
   case ThriftProtocol::COMPACT: return "application/vnd.apache.thrift.compact";
@@ -44,7 +57,7 @@ anch::rest::thriftMediaType(ThriftProtocol protocol) noexcept {
 }
 
 std::optional<ThriftProtocol>
-anch::rest::thriftProtocolOf(const anch::rest::MediaType& mediaType) {
+anch::codec::thriftProtocolOf(const anch::codec::MediaType& mediaType) {
   const std::string essence = mediaType.essence();
   if(essence == "application/vnd.apache.thrift.binary" || essence == "application/x-thrift") {
     return ThriftProtocol::BINARY;
@@ -59,7 +72,7 @@ anch::rest::thriftProtocolOf(const anch::rest::MediaType& mediaType) {
 }
 
 std::shared_ptr<TProtocol>
-anch::rest::thriftProtocol(ThriftProtocol protocol, std::shared_ptr<TTransport> transport) {
+anch::codec::thriftProtocol(ThriftProtocol protocol, std::shared_ptr<TTransport> transport) {
   switch(protocol) {
   case ThriftProtocol::COMPACT:
     return std::make_shared<apache::thrift::protocol::TCompactProtocol>(std::move(transport));
@@ -72,9 +85,9 @@ anch::rest::thriftProtocol(ThriftProtocol protocol, std::shared_ptr<TTransport> 
 }
 
 std::string
-anch::rest::thriftWrite(ThriftProtocol protocol, const std::function<void(TProtocol*)>& write) {
+anch::codec::thriftWrite(ThriftProtocol protocol, const std::function<void(TProtocol*)>& write) {
   auto buffer = std::make_shared<TMemoryBuffer>();
-  std::shared_ptr<TProtocol> encoder = anch::rest::thriftProtocol(protocol, buffer);
+  std::shared_ptr<TProtocol> encoder = anch::codec::thriftProtocol(protocol, buffer);
   try {
     write(encoder.get());
   } catch(const apache::thrift::TException& error) {
@@ -85,10 +98,10 @@ anch::rest::thriftWrite(ThriftProtocol protocol, const std::function<void(TProto
 }
 
 void
-anch::rest::thriftRead(ThriftProtocol protocol, std::string_view content, const std::function<void(TProtocol*)>& read) {
+anch::codec::thriftRead(ThriftProtocol protocol, std::string_view content, const std::function<void(TProtocol*)>& read) {
   std::vector<uint8_t> data(content.begin(), content.end());
   auto buffer = std::make_shared<TMemoryBuffer>(data.data(), static_cast<uint32_t>(data.size()), TMemoryBuffer::COPY);
-  std::shared_ptr<TProtocol> decoder = anch::rest::thriftProtocol(protocol, buffer);
+  std::shared_ptr<TProtocol> decoder = anch::codec::thriftProtocol(protocol, buffer);
   try {
     read(decoder.get());
   } catch(const apache::thrift::TException& error) {

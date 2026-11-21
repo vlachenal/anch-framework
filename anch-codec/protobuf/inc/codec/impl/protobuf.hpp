@@ -21,31 +21,31 @@
 
 #include <iterator>
 
-namespace anch::rest {
+namespace anch::codec {
 
-  template<anch::rest::ProtobufMessage T>
+  template<anch::codec::ProtobufMessage T>
   void
   Protobuf::serialize(const T& value, std::ostream& out) {
     Protobuf::write(value, out);
   }
 
-  template<anch::rest::ProtobufMessage T>
+  template<anch::codec::ProtobufMessage T>
   void
-  Protobuf::deserialize(T& value, std::istream& input, anch::rest::Side side) {
-    Protobuf::read(value, anch::rest::readBody(input, side));
+  Protobuf::deserialize(T& value, std::istream& input, anch::codec::Side side) {
+    Protobuf::read(value, anch::codec::readBody(input, side));
   }
 
-  template<anch::rest::ProtobufMessage T>
+  template<anch::codec::ProtobufMessage T>
   void
-  ProtobufJson::serialize(const T& value, std::ostream& out, anch::rest::Side) {
+  ProtobufJson::serialize(const T& value, std::ostream& out, anch::codec::Side) {
     out << ProtobufJson::toJson(value);
   }
 
-  template<anch::rest::ProtobufMessage T>
+  template<anch::codec::ProtobufMessage T>
   void
-  ProtobufJson::deserialize(T& value, std::istream& input, anch::rest::Side side) {
-    const std::string json = anch::rest::readBody(input, side);
-    ProtobufJson::fromJson(value, json, side == anch::rest::Side::CLIENT);
+  ProtobufJson::deserialize(T& value, std::istream& input, anch::codec::Side side) {
+    const std::string json = anch::codec::readBody(input, side);
+    ProtobufJson::fromJson(value, json, side == anch::codec::Side::CLIENT);
   }
 
 }

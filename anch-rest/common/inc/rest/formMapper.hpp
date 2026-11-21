@@ -23,7 +23,8 @@
 #include <string_view>
 #include <vector>
 
-#include "rest/codec.hpp"
+#include "codec/codec.hpp"
+
 #include "rest/form.hpp"
 #include "rest/paramConverter.hpp"
 
@@ -32,8 +33,8 @@ namespace anch::rest {
   /*!
    * Mapping between \c T and \ref Form , used by \ref FormUrlEncoded and \ref Multipart codecs to read
    * and write \c T bodies. Specializations define:
-   * - <tt>static void toForm(const T& value, anch::rest::Form& form, anch::rest::Side side)</tt>
-   * - <tt>static void fromForm(T& value, const anch::rest::Form& form, anch::rest::Side side)</tt> :
+   * - <tt>static void toForm(const T& value, anch::rest::Form& form, anch::codec::Side side)</tt>
+   * - <tt>static void fromForm(T& value, const anch::rest::Form& form, anch::codec::Side side)</tt> :
    *   errors are reported with exceptions ( \c 400 on server side)
    *
    * \snippet{trimleft} anch-rest/examples/server.cpp form mapper
@@ -56,7 +57,7 @@ namespace anch::rest {
    */
   template<typename T>
   concept FormMapped = requires(const T& value, T& target, anch::rest::Form& form, const anch::rest::Form& source,
-				anch::rest::Side side) {
+				anch::codec::Side side) {
     anch::rest::FormMapper<T>::toForm(value, form, side);
     anch::rest::FormMapper<T>::fromForm(target, source, side);
   };
@@ -142,7 +143,7 @@ namespace anch::rest {
    * \since 0.2
    */
   template<typename T>
-  void addJsonFormField(anch::rest::Form& form, std::string_view name, const T& value, anch::rest::Side side);
+  void addJsonFormField(anch::rest::Form& form, std::string_view name, const T& value, anch::codec::Side side);
 
   /*!
    * Get every field converted with \ref ParamConverter
@@ -212,7 +213,7 @@ namespace anch::rest {
    * \since 0.2
    */
   template<typename T>
-  std::optional<T> jsonFormField(const anch::rest::Form& form, std::string_view name, anch::rest::Side side);
+  std::optional<T> jsonFormField(const anch::rest::Form& form, std::string_view name, anch::codec::Side side);
 
   /*!
    * Get first part with name deserialized with \ref Json codec (constraints checked according to
@@ -230,7 +231,7 @@ namespace anch::rest {
    * \since 0.2
    */
   template<typename T>
-  T requiredJsonFormField(const anch::rest::Form& form, std::string_view name, anch::rest::Side side);
+  T requiredJsonFormField(const anch::rest::Form& form, std::string_view name, anch::codec::Side side);
 
   /*!
    * Check anch-json constraints of a value read from a form on server side ( \ref Json codec checks
@@ -245,7 +246,7 @@ namespace anch::rest {
    * \since 0.2
    */
   template<typename T>
-  void checkFormConstraints(const T& value, anch::rest::Side side);
+  void checkFormConstraints(const T& value, anch::codec::Side side);
 
 }
 

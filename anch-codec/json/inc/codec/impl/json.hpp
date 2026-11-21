@@ -22,44 +22,19 @@
 #include <string>
 #include <type_traits>
 
-namespace anch::rest {
-
-  inline std::string_view
-  Json::mediaType() noexcept {
-    return "application/json";
-  }
-
-  inline anch::json::MappingOptions&
-  Json::options(anch::rest::Side side) {
-    static anch::json::MappingOptions server = []() {
-      anch::json::MappingOptions options = anch::json::DEFAULT_MAPPING_OPTIONS;
-      options.deserialize_check_constraints = true;
-      options.serialize_check_constraints = false;
-      if(options.max_payload == 0) {
-	options.max_payload = 2 * 1024 * 1024; // request bodies are bounded, as application/x-www-form-urlencoded ones
-      }
-      return options;
-    }();
-    static anch::json::MappingOptions client = []() {
-      anch::json::MappingOptions options = anch::json::DEFAULT_MAPPING_OPTIONS;
-      options.deserialize_check_constraints = false;
-      options.serialize_check_constraints = true;
-      options.deserialize_ignore_unknown_field = true; // server responses are trusted: newer fields are ignored
-      options.deserialize_max_discard_char = -1;       // indented responses are accepted
-      return options;
-    }();
-    return (side == anch::rest::Side::SERVER) ? server : client;
-  }
+namespace anch::codec {
 
   template<typename T>
+  requires (!anch::codec::ExternalSchema<T>::value)
   void
   Json::serialize(const T& value, std::ostream& out) {
     Json::serialize(value, out, anch::json::DEFAULT_MAPPING_OPTIONS);
   }
 
   template<typename T>
+  requires (!anch::codec::ExternalSchema<T>::value)
   void
-  Json::serialize(const T& value, std::ostream& out, anch::rest::Side side) {
+  Json::serialize(const T& value, std::ostream& out, anch::codec::Side side) {
     Json::serialize(value, out, Json::options(side));
   }
 
@@ -75,14 +50,16 @@ namespace anch::rest {
   }
 
   template<typename T>
+  requires (!anch::codec::ExternalSchema<T>::value)
   void
   Json::deserialize(T& value, std::istream& input) {
     Json::deserialize(value, input, anch::json::DEFAULT_MAPPING_OPTIONS);
   }
 
   template<typename T>
+  requires (!anch::codec::ExternalSchema<T>::value)
   void
-  Json::deserialize(T& value, std::istream& input, anch::rest::Side side) {
+  Json::deserialize(T& value, std::istream& input, anch::codec::Side side) {
     Json::deserialize(value, input, Json::options(side));
   }
 
@@ -98,7 +75,7 @@ namespace anch::rest {
       }
     } catch(const anch::json::MappingError& error) {
       if(error.getErrorCode() == anch::json::ErrorCode::PAYLOAD_TOO_LARGE) {
-	throw anch::rest::ContentTooLarge(error.what());
+	throw anch::codec::ContentTooLarge(error.what());
       }
       throw;
     }

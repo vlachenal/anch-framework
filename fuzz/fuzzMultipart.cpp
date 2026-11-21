@@ -21,9 +21,10 @@
  * multipart/form-data reader fuzzer (boundary "XyZ", server limits): parts are read in memory or in temporary
  * files, then their content is read.
  */
-#include "rest/codec.hpp"
+#include "codec/codec.hpp"
+#include "codec/mediaType.hpp"
+
 #include "rest/form.hpp"
-#include "rest/mediaType.hpp"
 #include "rest/multipartCodec.hpp"
 
 #include <cstdint>
@@ -33,17 +34,17 @@
 
 extern "C" int
 LLVMFuzzerTestOneInput(const uint8_t* data, std::size_t size) {
-  static const anch::rest::MediaType type = *anch::rest::MediaType::parse("multipart/form-data; boundary=XyZ");
+  static const anch::codec::MediaType type = *anch::codec::MediaType::parse("multipart/form-data; boundary=XyZ");
   std::istringstream input(std::string(reinterpret_cast<const char*>(data), size));
   anch::rest::Form form;
   try {
-    anch::rest::Multipart::deserialize(form, input, type, anch::rest::Side::SERVER);
+    anch::rest::Multipart::deserialize(form, input, type, anch::codec::Side::SERVER);
     for(const anch::rest::Part& part : form.getParts()) {
       (void) part.content();
     }
   } catch(const std::invalid_argument&) {
     // malformed body
-  } catch(const anch::rest::ContentTooLarge&) {
+  } catch(const anch::codec::ContentTooLarge&) {
     // over limits
   }
   return 0;

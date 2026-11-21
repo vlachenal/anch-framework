@@ -24,7 +24,7 @@
 
 namespace anch::rest {
 
-  template<anch::rest::ProtobufMessage Req, anch::rest::ProtobufMessage Res, typename F>
+  template<anch::codec::ProtobufMessage Req, anch::codec::ProtobufMessage Res, typename F>
   RpcService&
   RpcService::unary(std::string_view method, F&& handler) {
     static_assert(std::is_invocable_r_v<Res, F&, const Req&, anch::rest::RpcContext&> || std::is_invocable_r_v<Res, F&, const Req&>,
@@ -34,7 +34,7 @@ namespace anch::rest {
       Req request;
       if(format == anch::rest::RpcFormat::JSON) {
 	try {
-	  anch::rest::ProtobufJson::fromJson(request, input, false);
+	  anch::codec::ProtobufJson::fromJson(request, input, false);
 	} catch(const std::invalid_argument& error) {
 	  throw anch::rest::RpcError(anch::rest::RpcCode::INVALID_ARGUMENT, error.what());
 	}
@@ -49,7 +49,7 @@ namespace anch::rest {
 	}
       }();
       if(format == anch::rest::RpcFormat::JSON) {
-	return anch::rest::ProtobufJson::toJson(response);
+	return anch::codec::ProtobufJson::toJson(response);
       }
       std::string output;
       if(!response.SerializeToString(&output)) {

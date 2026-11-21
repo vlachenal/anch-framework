@@ -28,8 +28,9 @@
 #include "crypto/hash/sha256.hpp"
 #endif
 #ifdef ANCH_TEST_REST
+#include "codec/json.hpp"
+
 #include "rest/api.hpp"
-#include "rest/jsonCodec.hpp"
 #endif
 
 #include <cstdlib>
@@ -91,7 +92,7 @@ main() {
 #ifdef ANCH_TEST_REST
   // anch-rest-server
   anch::rest::Api api;
-  api.get("/pets/{id}", [&pet](const anch::UUID&) { return pet; }).produces<anch::rest::Json>();
+  api.get("/pets/{id}", [&pet](const anch::UUID&) { return pet; }).produces<anch::codec::Json>();
   anch::rest::Request request(anch::rest::Method::GET, "/pets/4a1b5c2d-3e4f-4a5b-8c6d-7e8f9a0b1c2d");
   const anch::rest::Response response = api.handle(request);
   check(anch::rest::code(response.getStatus()) == 200 && response.content() == json, "anch-rest-server: " + response.content());

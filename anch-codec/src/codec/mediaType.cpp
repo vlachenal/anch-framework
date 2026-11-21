@@ -17,13 +17,13 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ANCH Framework.  If not, see <https://www.gnu.org/licenses/>.
 */
-#include "rest/mediaType.hpp"
+#include "codec/mediaType.hpp"
 
 #include "convert.hpp"
 
 #include <algorithm>
 
-using anch::rest::MediaType;
+using anch::codec::MediaType;
 
 namespace {
 
@@ -275,7 +275,7 @@ MediaType::getQuality() const noexcept {
 }
 
 std::optional<std::size_t>
-anch::rest::negotiate(const std::vector<MediaType>& accept, const std::vector<MediaType>& available) {
+anch::codec::negotiate(const std::vector<MediaType>& accept, const std::vector<MediaType>& available) {
   if(available.empty()) {
     return std::nullopt;
   }

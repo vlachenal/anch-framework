@@ -1,0 +1,169 @@
+anch-codec : conception (2026-11-21)
+===================================
+
+Validée le 2026-11-21 (décisions en fin de fichier).
+
+Demande (2026-11-21) : sortir la partie codec d'anch-rest dans une bibliothèque commune, pour la future bibliothèque
+de messagerie anch-msg (voir anch-msg/anch-msg.todo). Nom retenu : anch-codec.
+
+Objectif
+--------
+Un codec associe un type de contenu (MediaType) à des fonctions de sérialisation et de désérialisation de valeurs C++.
+anch-rest s'en sert pour les corps des requêtes et des réponses ; anch-msg s'en servira pour les corps des messages.
+anch-msg ne doit pas dépendre du modèle HTTP (requêtes, réponses, statuts, formulaires) pour lire un message JSON.
+
+État actuel (anch-rest)
+-----------------------
+Indépendant de HTTP, dans anch-rest-common (rest/codec.hpp, rest/mediaType.hpp, rest/jsonCodec.hpp, codec.cpp,
+mediaType.cpp) :
+- concepts Serializer<C, T> / Deserializer<C, T> : C::mediaType() et serialize / deserialize, avec trois formes
+  (valeur et flux ; plus Side ; plus MediaType et Side) ;
+- contentTypeOf, serializeBody, deserializeBody (choix de la forme du codec) ;
+- MediaType (analyse, paramètres, qualité, includes, specificity), parseAccept, negotiate, constantes media:: ;
+- ContentTooLarge, readContent, maxBodySize(Side), readBody ;
+- Side (SERVER, CLIENT) : ce que chaque côté vérifie (le serveur vérifie ce qu'il reçoit et fait confiance à ce qu'il
+  construit, le client l'inverse) et ses limites ;
+- codecs Text et Json (anch-json, options par Side).
+Dans des bibliothèques à part, à cause de leurs dépendances externes :
+- anch-rest-protobuf : Protobuf, ProtobufJson (rest/protobufCodec.hpp), et le RPC (Connect, gRPC-Web) ;
+- anch-rest-thrift : ThriftCodec<P>, ThriftBinary / Compact / Json, ThriftProtocol, thriftWrite / thriftRead
+  (rest/thriftCodec.hpp), et le RPC Thrift (installThrift, ThriftTransport).
+Propre à HTTP, reste dans anch-rest :
+- formulaires : Form, Part, FormUrlEncoded, Multipart, FormLimits, FormMapper (ils utilisent aussi Side) ;
+- BodyStream et la forme stream() des codecs (corps de requête lus par le transport pendant l'envoi) ;
+- la négociation par en-têtes (Accept, Content-Type) dans Endpoint et Client, les statuts (400, 413, 415) ;
+- le RPC (Connect, gRPC-Web, gRPC, Thrift RPC).
+Utilisateurs : 24 fichiers d'anch-rest et d'anch-oas ; le code généré par anch-oas cite anch::rest::Json,
+anch::rest::Text, anch::rest::Side et rest/jsonCodec.hpp.
+
+Proposition
+-----------
+
+1. Modules : un noyau et des plugins (décision du 2026-11-21)
+anch-codec est un noyau sans dépendance de format ; chaque format est un plugin, anch-json au même titre que les
+autres (aucun format privilégié dans le noyau).
+- anch-codec (anch::codec) : concepts, MediaType, négociation, limites, Side, Text (texte brut, sans dépendance), et
+  l'enregistrement des formats (§1 bis). Dépend d'anch-utils seulement.
+- Plugins, un par format, chacun avec son option de compilation :
+  - anch-codec-json (ANCH_CODEC_JSON, ON) : Json, dépend d'anch-json ;
+  - anch-codec-protobuf (ANCH_CODEC_PROTOBUF, ON) : Protobuf, ProtobufJson, dépend de libprotobuf ;
+  - anch-codec-thrift (ANCH_CODEC_THRIFT, ON) : ThriftCodec<P>, ThriftProtocol, thriftWrite / thriftRead, dépend de
+    Thrift et de Boost ;
+  - plus tard anch-codec-csv (anch-csv), et tout format ajouté par la suite sur le même modèle.
+  Les plugins à dépendance externe sont ignorés avec un message quand leurs paquets sont absents (comme
+  ANCH_REST_PROTOBUF et ANCH_REST_THRIFT aujourd'hui, qu'ils remplacent pour les codecs).
+- anch-rest-common dépend d'anch-codec (et d'anch-codec-json tant que son code utilise Json) ; anch-rest-protobuf
+  d'anch-codec-protobuf (il garde le RPC) ; anch-rest-thrift d'anch-codec-thrift (il garde installThrift et
+  ThriftTransport).
+- anch-codec est construit dès qu'anch-rest ou anch-msg l'est (pas d'option propre).
+
+1 bis. Enregistrement des formats selon les options de compilation
+anch-codec enregistre les formats supportés d'après les options de compilation (ANCH_CODEC_JSON, ...), pour que les
+utilisateurs (anch-rest, anch-msg, code généré par anch-oas) sachent quels formats existent sans les citer un par un.
+Les codecs actuels sont des modèles (serialize<T>) résolus à la compilation : un plugin chargé par dlopen comme les
+pilotes anch-sql ne peut pas fournir serialize<T> pour un T qu'il ne connaît pas. Proposé (question 7) :
+- à la configuration, CMake génère codec/formats.hpp (configure_file) avec une macro par plugin construit
+  (ANCH_CODEC_JSON_ENABLED, ...), définitions PUBLIC des cibles, et un en-tête codec/all.hpp qui inclut les plugins
+  construits et déclare la liste des codecs disponibles : using Available = anch::codec::Codecs<Json, Protobuf, ...> ;
+- la négociation (Accept, type d'un message reçu) parcourt une telle liste à la compilation et choisit le codec qui
+  correspond au MediaType ; anch-rest et anch-msg acceptent une liste explicite ou Available par défaut ;
+- en plus, un registre à l'exécution (anch::codec::formats() : nom, types de contenu, version) rempli par chaque
+  plugin au chargement de sa bibliothèque, pour l'introspection (journal de démarrage, OpenAPI, réponse 415 qui liste
+  les types acceptés), sans sérialisation ;
+- plus tard, avec la description commune des objets (anch-utils/mapping.todo), un codec pourra sérialiser un objet
+  décrit sans connaître T à la compilation : des plugins chargés par dlopen deviennent alors possibles.
+- Les cibles CMake et le paquet installé (find_package(Anch COMPONENTS codec-json ...)) suivent les plugins
+  construits.
+
+2. Contenu déplacé (en-têtes codec/*.hpp, espace de noms anch::codec)
+- codec/codec.hpp : Serializer, Deserializer, contentTypeOf, serializeBody / deserializeBody (renommés
+  serialize / deserialize ? voir question 6), ContentTooLarge, readContent, maxBodySize, readBody, Side ;
+- codec/mediaType.hpp : MediaType, constantes anch::codec::media ; parseAccept et negotiate (question 3) ;
+- codec/text.hpp (noyau) ; codec/json.hpp (anch-codec-json), codec/protobuf.hpp (anch-codec-protobuf),
+  codec/thrift.hpp (anch-codec-thrift) ; codec/formats.hpp généré et codec/all.hpp (§1 bis).
+- Les fichiers sont déplacés avec git mv (historique conservé), les tests purement codec aussi (codecs Protobuf et
+  Thrift de testProtobuf.cpp / testThrift.cpp, MediaType de testHttp.cpp et testClient.cpp, Json de testApi.cpp).
+
+3. Side
+Side ne décrit pas un côté HTTP mais une politique de confiance : ce qui est vérifié en lecture et en écriture, et
+les limites. Pour la messagerie : un consommateur lit des données d'origine non maîtrisée (comme un serveur), un
+producteur envoie ce qu'il construit (comme un client).
+- Proposé : garder l'énumération sous le nom anch::codec::Side { SERVER, CLIENT }, documentée comme politique
+  (SERVER : entrées vérifiées et bornées, sorties de confiance ; CLIENT : sorties vérifiées, entrées de confiance) ;
+  anch-msg utilise SERVER pour les messages reçus et CLIENT pour les messages envoyés.
+- Variante (question 2) : la renommer pour la rendre neutre, par exemple anch::codec::Policy { RECEIVER, SENDER } ou
+  { INBOUND, OUTBOUND }, ce qui touche les options Json, maxBodySize et les FormLimits d'anch-rest.
+
+4. Compatibilité (politique de dépréciation : retrait en 0.4)
+- anch-rest garde les anciens en-têtes (rest/codec.hpp, rest/mediaType.hpp, rest/jsonCodec.hpp,
+  rest/protobufCodec.hpp, rest/thriftCodec.hpp) qui incluent les nouveaux et déclarent des alias dépréciés :
+    using Json [[deprecated("removed in 0.4, use anch::codec::Json")]] = anch::codec::Json;
+  idem MediaType, Side, ContentTooLarge, Text, Protobuf, ProtobufJson, ThriftBinary... ; les fonctions
+  (contentTypeOf, readContent, negotiate...) par des fonctions inline [[deprecated]] qui appellent les
+  nouvelles ; les concepts par des concepts dépréciés qui renvoient aux nouveaux
+    template<typename C, typename T>
+    concept Serializer [[deprecated("removed in 0.4, use anch::codec::Serializer")]] = anch::codec::Serializer<C, T>;
+  (vérifié le 2026-11-21 : GCC et Clang avertissent à l'usage d'un concept déprécié).
+- anch-rest, anch-oas (code généré), exemples et pages de documentation passent aux nouveaux noms dans la même
+  version : les alias ne servent qu'au code des utilisateurs.
+- CHANGELOG : Deprecated (anciens noms), Added (anch-codec), Changed (dépendances).
+
+5. Lien avec les sérialiseurs unifiés (anch-utils/mapping.todo, §4)
+mapping.todo prévoit des concepts de format anch::Serializer<F, T> / anch::Deserializer<F, T> (F::serialize(valeur,
+flux, options)) dans anch-utils, et un codec générique anch::rest::FormatCodec<F> construit dessus (Json et Csv sans
+code propre). Proposé : ces deux éléments vont dans anch-codec (anch::codec::FormatCodec<F>), qui devient le lien
+entre les formats (anch-json, anch-csv) et leurs usages (anch-rest, anch-msg) ; mapping.todo est mis à jour en
+conséquence (question 4). Ce n'est pas un préalable : l'extraction se fait d'abord avec les codecs actuels.
+
+Implémentation (2026-11-21, étapes 1 à 4)
+-----------------------------------------
+Écarts avec la proposition, décidés pendant l'implémentation :
+- un seul en-tête généré, codec/all.hpp (anch-codec/all.hpp.in), dans la cible INTERFACE anch::codec-all qui lie le
+  noyau et les plugins construits : macros ANCH_CODEC_*_ENABLED, inclusion des plugins, using Available =
+  Codecs<Json, Protobuf, ProtobufJson, ThriftBinary, ThriftCompact, ThriftJson, Text> (plugins construits seulement,
+  Text en dernier : il sérialise toute valeur écrite avec <<). Pas de codec/formats.hpp dans le noyau (il ne connaît
+  pas les plugins).
+- anch::codec::ExternalSchema<T> (noyau) : Json n'est pas contraint (anch-json ne permet pas de savoir à la
+  compilation si un type est décrit), il serait instancié pour un message Protobuf dans Available ; les plugins
+  Protobuf et Thrift spécialisent ExternalSchema pour leurs types générés et Json les exclut.
+- Enregistrement : objet statique du .cpp de chaque plugin, avec mediaType() (et options() pour Json) définis dans
+  ce même fichier : une bibliothèque statique liée pour un codec est donc aussi enregistrée. Registre trié par nom,
+  sans doublon (même format chargé par plusieurs bibliothèques partagées).
+- BodyStream (propre à HTTP) passe dans rest/bodyStream.hpp ; rest/codec.hpp l'inclut toujours.
+- anch-rest-thrift devient header only (il ne contenait plus que le RPC) : ThriftTransport perd sa macro d'export.
+- find_package(Protobuf / Thrift / Boost GLOBAL) dans anch-codec : tests et exemples d'anch-rest utilisent leurs
+  cibles.
+- Client::as<T>() utilise Codecs<...>::deserialize.
+- maxBodySize et readBody, ajoutés en 0.3 dans anch::rest et jamais publiés, sont supprimés d'anch::rest sans alias
+  déprécié (décision du 2026-11-21) : seuls anch::codec::maxBodySize et anch::codec::readBody existent.
+- Tests : anch-codec/test (noyau, Json, Protobuf et Thrift avec pet.proto / pet.thrift) ; les tests MediaType de
+  testHttp.cpp y sont déplacés ; les tests codecs de testProtobuf.cpp / testThrift.cpp restent dans anch-rest (ils
+  vérifient les statuts HTTP 400 / 413). anch-rest-deprecated-aliases (anciens noms utilisables) et
+  anch-rest-deprecated-warnings (leur usage est signalé, la compilation est faite par le test).
+
+Étapes
+------
+1. Module anch-codec (noyau : codec / mediaType / Text, enregistrement des formats) et plugin anch-codec-json, avec
+   leurs tests ; anch-rest-common en dépend ;
+   alias dépréciés dans anch-rest ; anch-rest et anch-oas passent aux nouveaux noms.
+2. anch-codec-protobuf et anch-codec-thrift (codecs seuls ; le RPC reste dans anch-rest-*).
+3. Documentation : page anch-codec.dox (exemples dans anch-codec/examples), pages anch-rest et anch-oas, CHANGELOG,
+   CLAUDE.md (options, cibles).
+4. Vérifications : tests (anch-rest inchangé en dehors des noms), exports, installation (find_package(Anch) avec
+   anch::codec), code généré par anch-oas compilé, avertissements de dépréciation sur un utilisateur des anciens
+   noms (test dédié).
+5. Plus tard : FormatCodec<F> et concepts de mapping.todo §4.
+
+Questions (toutes tranchées le 2026-11-21)
+------------------------------------------
+1. Tranchée le 2026-11-21 : Json dans un plugin anch-codec-json, comme les autres formats ; noyau sans dépendance de
+   format, formats enregistrés selon les options de compilation (§1, §1 bis).
+2. Tranchée le 2026-11-21 : Side gardé (SERVER / CLIENT), documenté comme politique de confiance.
+3. Tranchée le 2026-11-21 : négociation (parseAccept, negotiate) dans anch-codec avec MediaType.
+4. Tranchée le 2026-11-21 : concepts de format et FormatCodec<F> de mapping.todo §4 dans anch-codec (à faire après
+   l'extraction ; mapping.todo à mettre à jour).
+5. Tranchée le 2026-11-21 : alias dépréciés dans anch-rest en 0.3, retirés en 0.4.
+6. Tranchée le 2026-11-21 : serializeBody / deserializeBody deviennent anch::codec::serialize / deserialize (anciens
+   noms dépréciés dans anch-rest).
+7. Tranchée le 2026-11-21 : liste à la compilation (codec/formats.hpp généré, Codecs<...> disponibles) et registre à
+   l'exécution pour l'introspection ; plugins dlopen seulement après la description commune de mapping.todo.

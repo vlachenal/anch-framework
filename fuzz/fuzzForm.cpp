@@ -20,10 +20,11 @@
 /*
  * application/x-www-form-urlencoded reader fuzzer (server limits).
  */
-#include "rest/codec.hpp"
+#include "codec/codec.hpp"
+#include "codec/mediaType.hpp"
+
 #include "rest/form.hpp"
 #include "rest/formCodec.hpp"
-#include "rest/mediaType.hpp"
 
 #include <cstdint>
 #include <sstream>
@@ -32,14 +33,14 @@
 
 extern "C" int
 LLVMFuzzerTestOneInput(const uint8_t* data, std::size_t size) {
-  static const anch::rest::MediaType type = *anch::rest::MediaType::parse("application/x-www-form-urlencoded");
+  static const anch::codec::MediaType type = *anch::codec::MediaType::parse("application/x-www-form-urlencoded");
   std::istringstream input(std::string(reinterpret_cast<const char*>(data), size));
   anch::rest::Form form;
   try {
-    anch::rest::FormUrlEncoded::deserialize(form, input, type, anch::rest::Side::SERVER);
+    anch::rest::FormUrlEncoded::deserialize(form, input, type, anch::codec::Side::SERVER);
   } catch(const std::invalid_argument&) {
     // malformed body
-  } catch(const anch::rest::ContentTooLarge&) {
+  } catch(const anch::codec::ContentTooLarge&) {
     // over limits
   }
   return 0;

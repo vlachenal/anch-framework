@@ -54,10 +54,10 @@ namespace {
   const std::string RESPONSES_REF = "#/components/responses/";
 
   /*! JSON codec */
-  const std::string JSON_CODEC = "anch::rest::Json";
+  const std::string JSON_CODEC = "anch::codec::Json";
 
   /*! Text codec */
-  const std::string TEXT_CODEC = "anch::rest::Text";
+  const std::string TEXT_CODEC = "anch::codec::Text";
 
   /*! \c multipart/form-data codec */
   const std::string MULTIPART_CODEC = "anch::rest::Multipart";
@@ -652,7 +652,7 @@ Generator::writeFormsHeader(std::ostream& out) const {
   writeBanner(out);
   out << "#pragma once\n\n"
       << "#include \"" << _options.name << ".hpp\"\n\n"
-      << "#include \"rest/codec.hpp\"\n"
+      << "#include \"codec/codec.hpp\"\n\n"
       << "#include \"rest/form.hpp\"\n"
       << "#include \"rest/formMapper.hpp\"\n";
   if(_forms.empty()) {
@@ -677,7 +677,7 @@ Generator::writeFormsHeader(std::ostream& out) const {
 	<< "     * \\param form the form\n"
 	<< "     * \\param side the side which writes form\n"
 	<< "     */\n"
-	<< "    static void toForm(const " << type << "& value, anch::rest::Form& form, anch::rest::Side side);\n\n"
+	<< "    static void toForm(const " << type << "& value, anch::rest::Form& form, anch::codec::Side side);\n\n"
 	<< "    /*!\n"
 	<< "     * Read value from form\n"
 	<< "     *\n"
@@ -687,7 +687,7 @@ Generator::writeFormsHeader(std::ostream& out) const {
 	<< "     *\n"
 	<< "     * \\throw anch::rest::HttpException \\c 400 when a required field is missing or a value is invalid\n"
 	<< "     */\n"
-	<< "    static void fromForm(" << type << "& value, const anch::rest::Form& form, anch::rest::Side side);\n"
+	<< "    static void fromForm(" << type << "& value, const anch::rest::Form& form, anch::codec::Side side);\n"
 	<< "  };\n";
   }
   out << "\n}  // anch::rest\n";
@@ -703,8 +703,8 @@ Generator::writeFormsSource(std::ostream& out) const {
   }
   out << "\n#include <string>\n"
       << "#include <vector>\n\n"
+      << "#include \"codec/json.hpp\"\n\n"
       << "#include \"rest/httpException.hpp\"\n"
-      << "#include \"rest/jsonCodec.hpp\"\n"
       << "#include \"rest/paramConverter.hpp\"\n\n"
       << "namespace anch::rest {\n";
   auto writeBody = [&out](const std::vector<std::string>& statements) {
@@ -731,12 +731,12 @@ Generator::writeFormsSource(std::ostream& out) const {
     out << "\n  // " << name << " +\n"
 	<< "  void\n"
 	<< "  FormMapper<" << type << ">::toForm(" << unusedWrite << "const " << type << "& value, " << unusedWrite
-	<< "anch::rest::Form& form, " << (usesSide(mapping.write) ? "" : "[[maybe_unused]] ") << "anch::rest::Side side) {\n";
+	<< "anch::rest::Form& form, " << (usesSide(mapping.write) ? "" : "[[maybe_unused]] ") << "anch::codec::Side side) {\n";
     writeBody(mapping.write);
     out << "  }\n\n"
 	<< "  void\n"
 	<< "  FormMapper<" << type << ">::fromForm(" << unusedRead << type << "& value, " << unusedRead
-	<< "const anch::rest::Form& form, " << (usesSide(mapping.read) ? "" : "[[maybe_unused]] ") << "anch::rest::Side side) {\n";
+	<< "const anch::rest::Form& form, " << (usesSide(mapping.read) ? "" : "[[maybe_unused]] ") << "anch::codec::Side side) {\n";
     writeBody(mapping.read);
     out << "  }\n"
 	<< "  // " << name << " -\n";
@@ -783,11 +783,12 @@ Generator::writeServerSource(std::ostream& out) const {
   std::string service = apiName() + "Service";
   writeBanner(out);
   out << "#include \"" << _options.name << "-server.hpp\"\n\n"
+      << "#include \"codec/codec.hpp\"\n"
+      << "#include \"codec/json.hpp\"\n"
+      << "#include \"codec/text.hpp\"\n\n"
       << "#include \"rest/body.hpp\"\n"
-      << "#include \"rest/codec.hpp\"\n"
       << formCodecInclude(false)
       << (hasRawBody() ? "#include \"rest/headers.hpp\"\n" : "")
-      << "#include \"rest/jsonCodec.hpp\"\n"
       << formCodecInclude(true)
       << "#include \"rest/paramConverter.hpp\"\n"
       << "#include \"rest/request.hpp\"\n"
@@ -882,10 +883,11 @@ Generator::writeClientSource(std::ostream& out) const {
   writeBanner(out);
   out << "#include \"" << _options.name << "-client.hpp\"\n\n"
       << "#include <utility>\n\n"
-      << "#include \"rest/codec.hpp\"\n"
+      << "#include \"codec/codec.hpp\"\n"
+      << "#include \"codec/json.hpp\"\n"
+      << "#include \"codec/text.hpp\"\n\n"
       << formCodecInclude(false)
       << "#include \"rest/httpError.hpp\"\n"
-      << "#include \"rest/jsonCodec.hpp\"\n"
       << formCodecInclude(true)
       << "#include \"rest/status.hpp\"\n\n"
       << "namespace " << _options.ns << " {\n\n"

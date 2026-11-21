@@ -18,10 +18,13 @@
   along with ANCH Framework.  If not, see <https://www.gnu.org/licenses/>.
 */
 #include "rest/auth.hpp"
+
+#include "codec/json.hpp"
+#include "codec/text.hpp"
+
 #include "rest/client.hpp"
 #include "rest/formCodec.hpp"
 #include "rest/multipartCodec.hpp"
-#include "rest/jsonCodec.hpp"
 
 #include <filesystem>
 #include <fstream>
@@ -41,12 +44,12 @@
 
 using anch::rest::Client;
 using anch::rest::HttpError;
-using anch::rest::Json;
+using anch::codec::Json;
 using anch::rest::Method;
 using anch::rest::Request;
 using anch::rest::Response;
 using anch::rest::Status;
-using anch::rest::Text;
+using anch::codec::Text;
 
 // Codec with media type parameters (as a multipart codec with its boundary) +
 struct Bounded {
@@ -55,30 +58,30 @@ struct Bounded {
     return "multipart/x-test";
   }
 
-  static anch::rest::MediaType
+  static anch::codec::MediaType
   contentType(const std::string& value) {
-    anch::rest::MediaType type("multipart", "x-test");
+    anch::codec::MediaType type("multipart", "x-test");
     type.setParameter("boundary", "b" + std::to_string(value.size()));
     return type;
   }
 
   static void
-  serialize(const std::string& value, std::ostream& out, const anch::rest::MediaType& contentType, anch::rest::Side side) {
-    out << "--" << contentType.getParameter("boundary").value_or("") << ' ' << (side == anch::rest::Side::SERVER ? "server" : "client")
+  serialize(const std::string& value, std::ostream& out, const anch::codec::MediaType& contentType, anch::codec::Side side) {
+    out << "--" << contentType.getParameter("boundary").value_or("") << ' ' << (side == anch::codec::Side::SERVER ? "server" : "client")
 	<< ' ' << value;
   }
 
   static void
-  deserialize(std::string& value, std::istream& input, const anch::rest::MediaType& contentType, anch::rest::Side side) {
+  deserialize(std::string& value, std::istream& input, const anch::codec::MediaType& contentType, anch::codec::Side side) {
     std::optional<std::string_view> boundary = contentType.getParameter("boundary");
     if(!boundary) {
       throw std::invalid_argument("missing boundary");
     }
-    value = std::string(*boundary) + ' ' + (side == anch::rest::Side::SERVER ? "server" : "client") + ' '
+    value = std::string(*boundary) + ' ' + (side == anch::codec::Side::SERVER ? "server" : "client") + ' '
       + std::string(std::istreambuf_iterator<char>(input), std::istreambuf_iterator<char>());
   }
 };
-static_assert(!anch::rest::Serializer<Bounded, int> && !anch::rest::Deserializer<Bounded, int>);
+static_assert(!anch::codec::Serializer<Bounded, int> && !anch::codec::Deserializer<Bounded, int>);
 // Codec with media type parameters -
 
 // Fake transport +
@@ -167,7 +170,7 @@ struct UploadPhoto {
 template<>
 struct anch::rest::FormMapper<UploadPhoto> {
   static void
-  toForm(const UploadPhoto& value, anch::rest::Form& form, anch::rest::Side side) {
+  toForm(const UploadPhoto& value, anch::rest::Form& form, anch::codec::Side side) {
     anch::rest::addFormField(form, "description", value.description);
     anch::rest::addFormField(form, "age", value.age);
     anch::rest::addFormField(form, "tags", value.tags);
@@ -178,7 +181,7 @@ struct anch::rest::FormMapper<UploadPhoto> {
   }
 
   static void
-  fromForm(UploadPhoto& value, const anch::rest::Form& form, anch::rest::Side side) {
+  fromForm(UploadPhoto& value, const anch::rest::Form& form, anch::codec::Side side) {
     value.description = anch::rest::requiredFormField<std::string>(form, "description");
     value.age = anch::rest::formField<uint32_t>(form, "age");
     value.tags = anch::rest::formFields<std::string>(form, "tags");
@@ -234,7 +237,7 @@ testCodecMediaType() {
   Fixture fixture;
   fixture.transport->response = Response().contentType("multipart/x-test; boundary=srv").body("data");
   std::string result = fixture.client.post("/echo").body<Bounded>(std::string("hi")).accept<Bounded>().as<std::string>();
-  std::optional<anch::rest::MediaType> type = anch::rest::MediaType::parse(fixture.transport->headers.get("Content-Type").value_or(""));
+  std::optional<anch::codec::MediaType> type = anch::codec::MediaType::parse(fixture.transport->headers.get("Content-Type").value_or(""));
   anch::ut::assertThat(type && type->essence() == "multipart/x-test" && type->getParameter("boundary") == "b2",
 		       "Unexpected request content type '{}'", fixture.transport->headers.get("Content-Type").value_or(""));
   anch::ut::assertThat(fixture.transport->body == "--b2 client hi", "Unexpected request body '{}'", fixture.transport->body);
@@ -256,9 +259,9 @@ void
 testMultipart() {
   Fixture fixture;
   anch::rest::Form form;
-  form.add("description", "Rex").addFile("photo", "rex.png", anch::rest::MediaType("image", "png"), "PNG...");
+  form.add("description", "Rex").addFile("photo", "rex.png", anch::codec::MediaType("image", "png"), "PNG...");
   fixture.client.post("/pets/{id}/photo", 1).body<anch::rest::Multipart>(form).send();
-  std::optional<anch::rest::MediaType> type = anch::rest::MediaType::parse(fixture.transport->headers.get("Content-Type").value_or(""));
+  std::optional<anch::codec::MediaType> type = anch::codec::MediaType::parse(fixture.transport->headers.get("Content-Type").value_or(""));
   anch::ut::assertThat(type && type->essence() == "multipart/form-data" && type->getParameter("boundary"), "Unexpected content type '{}'",
 		       fixture.transport->headers.get("Content-Type").value_or(""));
   const std::string delimiter = "--" + std::string(*type->getParameter("boundary"));
@@ -281,7 +284,7 @@ testMultipartStream() {
   }
   Fixture fixture;
   anch::rest::Form form;
-  form.add("description", "Rex").add(anch::rest::Part::fromFile("photo", path, anch::rest::MediaType("image", "png")));
+  form.add("description", "Rex").add(anch::rest::Part::fromFile("photo", path, anch::codec::MediaType("image", "png")));
   fixture.client.post("/photo").body<anch::rest::Multipart>(form).send();
   std::filesystem::remove(path);
   anch::ut::assertThat(fixture.transport->headers.get("Content-Length") == std::to_string(fixture.transport->body.size()),
@@ -306,13 +309,13 @@ testRawBody() {
 void
 testFormMapper() {
   Fixture fixture;
-  UploadPhoto upload{"Rex", std::nullopt, {"a"}, anch::rest::Part("x", "rex.png", anch::rest::MediaType("image", "png"), "PNG"), std::nullopt};
+  UploadPhoto upload{"Rex", std::nullopt, {"a"}, anch::rest::Part("x", "rex.png", anch::codec::MediaType("image", "png"), "PNG"), std::nullopt};
   fixture.client.post("/pets/{id}/photo", 1).body<anch::rest::Multipart>(upload).send();
-  std::optional<anch::rest::MediaType> type = anch::rest::MediaType::parse(fixture.transport->headers.get("Content-Type").value_or(""));
+  std::optional<anch::codec::MediaType> type = anch::codec::MediaType::parse(fixture.transport->headers.get("Content-Type").value_or(""));
   anch::ut::assertThat(type && type->essence() == "multipart/form-data" && type->getParameter("boundary"), "Unexpected content type");
   std::istringstream input(fixture.transport->body);
   anch::rest::Form form;
-  anch::rest::Multipart::deserialize(form, input, *type, anch::rest::Side::SERVER);
+  anch::rest::Multipart::deserialize(form, input, *type, anch::codec::Side::SERVER);
   anch::ut::assertThat(form.size() == 3 && form.field("description") == "Rex" && !form.has("age") && form.field("tags") == "a"
 		       && form.part("photo")->getFilename() == "rex.png", "Unexpected sent form");
   bool refused = false;
@@ -406,10 +409,10 @@ testConstraints() {
   owner = fixture.client.get("/owners/1").accept<Json>().as<Owner>();
   anch::ut::assertThat(owner.name == "Rex", "Unexpected name '{}'", owner.name);
   // Client options can be changed
-  Json::options(anch::rest::Side::CLIENT).serialize_check_constraints = false;
+  Json::options(anch::codec::Side::CLIENT).serialize_check_constraints = false;
   fixture.client.post("/owners").body<Json>(Owner{"", std::nullopt}).send();
   anch::ut::assertThat(fixture.transport->body == R"({"name":""})", "Unexpected body '{}'", fixture.transport->body);
-  Json::options(anch::rest::Side::CLIENT).serialize_check_constraints = true;
+  Json::options(anch::codec::Side::CLIENT).serialize_check_constraints = true;
 }
 
 void

@@ -19,8 +19,9 @@
 */
 #pragma once
 
+#include "codec/mediaType.hpp"
+
 #include "rest/headers.hpp"
-#include "rest/mediaType.hpp"
 
 /*! \cond INTERNAL */
 namespace anch::rest::detail {
@@ -30,7 +31,7 @@ namespace anch::rest::detail {
    */
   inline anch::rest::Response
   handleRpc(const anch::rest::RpcService& service, const std::string& method, const anch::rest::Request& request, std::istream& body) {
-    std::optional<anch::rest::MediaType> type = request.getContentType();
+    std::optional<anch::codec::MediaType> type = request.getContentType();
     const std::string essence = type ? type->essence() : std::string();
     bool grpcWeb = false;
     anch::rest::RpcFormat format = anch::rest::RpcFormat::BINARY;
@@ -58,8 +59,8 @@ namespace anch::rest::detail {
     try {
       std::string content;
       try {
-	content = anch::rest::readContent(body, service.getMaxMessageSize() + (grpcWeb ? 5 : 0));
-      } catch(const anch::rest::ContentTooLarge& error) {
+	content = anch::codec::readContent(body, service.getMaxMessageSize() + (grpcWeb ? 5 : 0));
+      } catch(const anch::codec::ContentTooLarge& error) {
 	throw anch::rest::RpcError(anch::rest::RpcCode::RESOURCE_EXHAUSTED, error.what());
       }
       if(grpcWeb) {

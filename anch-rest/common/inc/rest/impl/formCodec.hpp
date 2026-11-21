@@ -23,7 +23,7 @@ namespace anch::rest {
 
   template<anch::rest::FormMapped T>
   void
-  FormUrlEncoded::serialize(const T& value, std::ostream& out, anch::rest::Side side) {
+  FormUrlEncoded::serialize(const T& value, std::ostream& out, anch::codec::Side side) {
     anch::rest::Form form;
     anch::rest::FormMapper<T>::toForm(value, form, side);
     FormUrlEncoded::serialize(form, out);
@@ -31,7 +31,7 @@ namespace anch::rest {
 
   template<anch::rest::FormMapped T>
   void
-  FormUrlEncoded::deserialize(T& value, std::istream& input, const anch::rest::MediaType& contentType, anch::rest::Side side) {
+  FormUrlEncoded::deserialize(T& value, std::istream& input, const anch::codec::MediaType& contentType, anch::codec::Side side) {
     anch::rest::Form form;
     FormUrlEncoded::deserialize(form, input, contentType, side);
     anch::rest::FormMapper<T>::fromForm(value, form, side);

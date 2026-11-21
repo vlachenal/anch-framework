@@ -17,11 +17,11 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ANCH Framework.  If not, see <https://www.gnu.org/licenses/>.
 */
-#include "rest/codec.hpp"
+#include "codec/codec.hpp"
 
 std::size_t&
-anch::rest::maxBodySize(anch::rest::Side side) {
+anch::codec::maxBodySize(anch::codec::Side side) {
   static std::size_t server = 2 * 1024 * 1024; // as JSON and form bodies
   static std::size_t client = 0;               // responses are bounded by transports
-  return (side == anch::rest::Side::SERVER) ? server : client;
+  return (side == anch::codec::Side::SERVER) ? server : client;
 }

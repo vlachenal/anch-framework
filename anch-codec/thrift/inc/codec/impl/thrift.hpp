@@ -21,27 +21,27 @@
 
 #include <iterator>
 
-namespace anch::rest {
+namespace anch::codec {
 
-  template<anch::rest::ThriftProtocol P>
+  template<anch::codec::ThriftProtocol P>
   std::string_view
   ThriftCodec<P>::mediaType() noexcept {
-    return anch::rest::thriftMediaType(P);
+    return anch::codec::thriftMediaType(P);
   }
 
-  template<anch::rest::ThriftProtocol P>
-  template<anch::rest::ThriftStruct T>
+  template<anch::codec::ThriftProtocol P>
+  template<anch::codec::ThriftStruct T>
   void
   ThriftCodec<P>::serialize(const T& value, std::ostream& out) {
-    out << anch::rest::thriftWrite(P, [&value](apache::thrift::protocol::TProtocol* protocol) { value.write(protocol); });
+    out << anch::codec::thriftWrite(P, [&value](apache::thrift::protocol::TProtocol* protocol) { value.write(protocol); });
   }
 
-  template<anch::rest::ThriftProtocol P>
-  template<anch::rest::ThriftStruct T>
+  template<anch::codec::ThriftProtocol P>
+  template<anch::codec::ThriftStruct T>
   void
-  ThriftCodec<P>::deserialize(T& value, std::istream& input, anch::rest::Side side) {
-    const std::string content = anch::rest::readBody(input, side);
-    anch::rest::thriftRead(P, content, [&value](apache::thrift::protocol::TProtocol* protocol) { value.read(protocol); });
+  ThriftCodec<P>::deserialize(T& value, std::istream& input, anch::codec::Side side) {
+    const std::string content = anch::codec::readBody(input, side);
+    anch::codec::thriftRead(P, content, [&value](apache::thrift::protocol::TProtocol* protocol) { value.read(protocol); });
   }
 
 }

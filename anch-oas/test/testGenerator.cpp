@@ -422,14 +422,14 @@ testEndpoints() {
   // Registration
   contains(models.serverSource, "api.get(\"/pets/{id}\", [&service](const anch::rest::Request& request, int64_t id) -> std::optional<Pet> {\n"
 	   "      return service.getPet(id, anch::rest::queryParameter<bool>(request, \"full\"));\n"
-	   "    }).produces<anch::rest::Json>();");
+	   "    }).produces<anch::codec::Json>();");
   contains(models.serverSource, "api.post(\"/pets/{id}\", [&service](int64_t id, anch::rest::Body<Pet> body) -> void {\n"
 	   "      service.class_(id, *body);\n"
-	   "    }).consumes<anch::rest::Json>().status(anch::rest::Status::ACCEPTED);");
+	   "    }).consumes<anch::codec::Json>().status(anch::rest::Status::ACCEPTED);");
   contains(models.serverSource, "api.del(\"/pets/{id}\", [&service](int64_t id) -> void {");
   contains(models.serverSource, "return service.listPets(anch::rest::requiredQueryParameter<std::string>(request, \"q\"), "
 	   "anch::rest::queryParameter<int32_t>(request, \"page\"));\n    });");
-  contains(models.serverSource, ".consumes<anch::rest::Json>().produces<anch::rest::Json>().status(anch::rest::Status::CREATED);");
+  contains(models.serverSource, ".consumes<anch::codec::Json>().produces<anch::codec::Json>().status(anch::rest::Status::CREATED);");
   // Inline models
   contains(models.header, "struct ReplaceRequest {");
   contains(models.header, "struct ReplaceResponse {");
@@ -442,10 +442,10 @@ testEndpoints() {
 	   "      call.query(\"full\", *full);\n"
 	   "    }\n"
 	   "    try {\n"
-	   "      return std::move(call).accept<anch::rest::Json>().as<Pet>();\n"
+	   "      return std::move(call).accept<anch::codec::Json>().as<Pet>();\n"
 	   "    } catch(const anch::rest::HttpError& error) {\n"
 	   "      if(error.getStatus() == anch::rest::Status::NOT_FOUND) {");
-  contains(models.clientSource, "    call.body<anch::rest::Json>(body);\n    std::move(call).execute();");
+  contains(models.clientSource, "    call.body<anch::codec::Json>(body);\n    std::move(call).execute();");
   contains(models.clientSource, "    call.query(\"q\", q);\n");
   contains(models.clientSource, "    return std::move(call).send();");
   anch::ut::assertThat(models.warnings.size() == 1, "1 warning expected ; found {}", models.warnings.size());
@@ -505,10 +505,10 @@ testForms() {
   contains(models.formsSource, "    value.name = anch::rest::requiredFormField<std::string>(form, \"name\");\n");
   // Endpoints
   contains(models.serverHeader, "#include \"models-forms.hpp\"");
-  contains(models.serverSource, "#include \"rest/formCodec.hpp\"\n#include \"rest/jsonCodec.hpp\"\n#include \"rest/multipartCodec.hpp\"\n");
+  contains(models.serverSource, "#include \"codec/json.hpp\"\n#include \"codec/text.hpp\"\n\n#include \"rest/body.hpp\"\n#include \"rest/formCodec.hpp\"\n#include \"rest/multipartCodec.hpp\"\n");
   contains(models.serverSource, "api.post(\"/up\", [&service](anch::rest::Body<UploadRequest> body) -> void {");
   contains(models.serverSource, "}).consumes<anch::rest::Multipart>();");
-  contains(models.serverSource, "}).consumes<anch::rest::Json>().consumes<anch::rest::FormUrlEncoded>();");
+  contains(models.serverSource, "}).consumes<anch::codec::Json>().consumes<anch::rest::FormUrlEncoded>();");
   contains(models.serverSource, "api.post(\"/raw\", [&service](anch::rest::Body<anch::rest::Form> body) -> void {");
   contains(models.serverHeader, "virtual void raw(const anch::rest::Form& body) = 0;");
   contains(models.clientSource, "    call.body<anch::rest::Multipart>(body);\n");
@@ -567,8 +567,8 @@ testRawBody() {
   contains(models.serverSource, "api.put(\"/png/{id}\", [&service](const anch::rest::Request& request, int64_t id, std::istream& body) -> Pet {\n"
 	   "      return service.upload(id, body, request.getHeaders().get(anch::rest::header::CONTENT_TYPE).value_or(std::string_view()), "
 	   "anch::rest::requiredQueryParameter<std::string>(request, \"q\"), anch::rest::queryParameter<int32_t>(request, \"p\"));\n"
-	   "    }).produces<anch::rest::Json>();");
-  contains(models.serverSource, "}).consumes<anch::rest::Json>();");
+	   "    }).produces<anch::codec::Json>();");
+  contains(models.serverSource, "}).consumes<anch::codec::Json>();");
   // Client: raw body with the declared content type by default
   contains(models.clientHeader, "Pet upload(int64_t id, anch::rest::RawBody body, const std::string& q, const std::optional<int32_t>& p = std::nullopt);");
   contains(models.clientHeader, "\\param body PNG image (stream sent as is, content type image/png by default)");

@@ -34,9 +34,10 @@
 #include <variant>
 #include <vector>
 
+#include "codec/codec.hpp"
+#include "codec/mediaType.hpp"
+
 #include "rest/body.hpp"
-#include "rest/codec.hpp"
-#include "rest/mediaType.hpp"
 #include "rest/method.hpp"
 #include "rest/paramConverter.hpp"
 #include "rest/request.hpp"
@@ -351,25 +352,25 @@ namespace anch::rest {
     F _function;
 
     /*! Produced media types */
-    std::vector<anch::rest::MediaType> _produced;
+    std::vector<anch::codec::MediaType> _produced;
 
     /*! Result writer of a produced media type */
     struct Writer {
       /*! Get result \c Content-Type (codec \c contentType() or \c mediaType() ) */
-      std::function<anch::rest::MediaType(const Value&)> contentType;
+      std::function<anch::codec::MediaType(const Value&)> contentType;
 
       /*! Serialize result with its \c Content-Type */
-      std::function<void(const Value&, std::ostream&, const anch::rest::MediaType&)> write;
+      std::function<void(const Value&, std::ostream&, const anch::codec::MediaType&)> write;
     };
 
     /*! Serializers (one per produced media type) */
     std::vector<Writer> _serializers;
 
     /*! Consumed media types */
-    std::vector<anch::rest::MediaType> _consumed;
+    std::vector<anch::codec::MediaType> _consumed;
 
     /*! Deserializers (one per consumed media type) */
-    std::vector<std::function<void(BodyType&, std::istream&, const anch::rest::MediaType&)>> _deserializers;
+    std::vector<std::function<void(BodyType&, std::istream&, const anch::codec::MediaType&)>> _deserializers;
 
     /*! Success status of serialized results and of \c void endpoints (default: \c 200 and \c 204 ) */
     std::optional<anch::rest::Status> _status;

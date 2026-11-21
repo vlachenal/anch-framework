@@ -32,7 +32,7 @@
 #include <vector>
 
 #include "rest/headers.hpp"
-#include "rest/protobufCodec.hpp"
+#include "codec/protobuf.hpp"
 #include "rest/status.hpp"
 
 namespace anch::rest {
@@ -235,7 +235,7 @@ namespace anch::rest {
      *
      * \throw std::invalid_argument when method name is invalid or already declared
      */
-    template<anch::rest::ProtobufMessage Req, anch::rest::ProtobufMessage Res, typename F>
+    template<anch::codec::ProtobufMessage Req, anch::codec::ProtobufMessage Res, typename F>
     RpcService& unary(std::string_view method, F&& handler);
 
     /*!

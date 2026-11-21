@@ -1,0 +1,16 @@
+/*!
+ * \namespace anch::codec
+ *
+ * \brief AnCH codec library namespace.
+ *
+ * It contains codecs concepts (\ref anch::codec::Serializer "Serializer",
+ * \ref anch::codec::Deserializer "Deserializer"), media types (\ref anch::codec::MediaType "MediaType") and their
+ * negotiation, the \ref anch::codec::Text "Text" codec and the codecs of format plugins
+ * (\ref anch::codec::Json "Json", ...). See \ref page_codec "AnCH codec library documentation".
+ */
+
+/*!
+ * \namespace anch::codec::media
+ *
+ * \brief Common media types.
+ */

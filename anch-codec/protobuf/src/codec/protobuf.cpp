@@ -17,15 +17,28 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ANCH Framework.  If not, see <https://www.gnu.org/licenses/>.
 */
-#include "rest/protobufCodec.hpp"
+#include "codec/protobuf.hpp"
 
 #include <limits>
 #include <stdexcept>
 
 #include <google/protobuf/util/json_util.h>
 
-using anch::rest::Protobuf;
-using anch::rest::ProtobufJson;
+#include "codec/format.hpp"
+
+using anch::codec::Protobuf;
+using anch::codec::ProtobufJson;
+
+namespace {
+
+  // Registered when the library is loaded: a program which uses Protobuf or ProtobufJson links this file
+  [[maybe_unused]] const bool REGISTERED = []() {
+    anch::codec::registerFormat(anch::codec::Format{"protobuf", {std::string(Protobuf::mediaType())}});
+    anch::codec::registerFormat(anch::codec::Format{"protobuf-json", {std::string(ProtobufJson::mediaType())}});
+    return true;
+  }();
+
+}
 
 std::string_view
 Protobuf::mediaType() noexcept {

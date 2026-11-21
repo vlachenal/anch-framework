@@ -26,8 +26,9 @@
 
 #include "json/validation.hpp"
 
+#include "codec/json.hpp"
+
 #include "rest/httpException.hpp"
-#include "rest/jsonCodec.hpp"
 
 namespace anch::rest {
 
@@ -76,11 +77,11 @@ namespace anch::rest {
 
   template<typename T>
   void
-  addJsonFormField(anch::rest::Form& form, std::string_view name, const T& value, anch::rest::Side side) {
+  addJsonFormField(anch::rest::Form& form, std::string_view name, const T& value, anch::codec::Side side) {
     std::ostringstream out;
-    anch::rest::Json::serialize(value, out, side);
+    anch::codec::Json::serialize(value, out, side);
     anch::rest::Part part(name, out.str());
-    part.setMediaType(anch::rest::MediaType("application", "json"));
+    part.setMediaType(anch::codec::MediaType("application", "json"));
     form.add(std::move(part));
   }
 
@@ -128,20 +129,20 @@ namespace anch::rest {
 
   template<typename T>
   std::optional<T>
-  jsonFormField(const anch::rest::Form& form, std::string_view name, anch::rest::Side side) {
+  jsonFormField(const anch::rest::Form& form, std::string_view name, anch::codec::Side side) {
     const anch::rest::Part* part = form.part(name);
     if(part == nullptr) {
       return std::nullopt;
     }
     T value{};
     std::unique_ptr<std::istream> input = part->open();
-    anch::rest::Json::deserialize(value, *input, side);
+    anch::codec::Json::deserialize(value, *input, side);
     return value;
   }
 
   template<typename T>
   T
-  requiredJsonFormField(const anch::rest::Form& form, std::string_view name, anch::rest::Side side) {
+  requiredJsonFormField(const anch::rest::Form& form, std::string_view name, anch::codec::Side side) {
     std::optional<T> value = anch::rest::jsonFormField<T>(form, name, side);
     if(!value) {
       throw anch::rest::HttpException(anch::rest::Status::BAD_REQUEST, "Missing form part '" + std::string(name) + "'");
@@ -151,8 +152,8 @@ namespace anch::rest {
 
   template<typename T>
   void
-  checkFormConstraints(const T& value, anch::rest::Side side) {
-    if(side != anch::rest::Side::SERVER) {
+  checkFormConstraints(const T& value, anch::codec::Side side) {
+    if(side != anch::codec::Side::SERVER) {
       return;
     }
     std::vector<anch::json::Violation> violations = anch::json::validate(value);

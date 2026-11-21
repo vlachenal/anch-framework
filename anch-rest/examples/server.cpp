@@ -26,13 +26,14 @@
 #include <string_view>
 #include <vector>
 
+#include "codec/json.hpp"
+
 #include "json/json.hpp"
 #include "rest/api.hpp"
 #include "rest/cors.hpp"
 #include "rest/form.hpp"
 #include "rest/formCodec.hpp"
 #include "rest/formMapper.hpp"
-#include "rest/jsonCodec.hpp"
 #include "rest/multipartCodec.hpp"
 #include "rest/request.hpp"
 #include "rest/response.hpp"
@@ -95,11 +96,11 @@ savePhoto(uint64_t, const anch::rest::Part*) {
 //! [form mapper]
 template<>
 struct anch::rest::FormMapper<UploadPhoto> {
-  static void toForm(const UploadPhoto& value, anch::rest::Form& form, anch::rest::Side) {
+  static void toForm(const UploadPhoto& value, anch::rest::Form& form, anch::codec::Side) {
     anch::rest::addFormField(form, "description", value.description);
     anch::rest::addFormFile(form, "photo", value.photo);                  // anch::rest::Part
   }
-  static void fromForm(UploadPhoto& value, const anch::rest::Form& form, anch::rest::Side side) {
+  static void fromForm(UploadPhoto& value, const anch::rest::Form& form, anch::codec::Side side) {
     value.description = anch::rest::requiredFormField<std::string>(form, "description");
     value.photo = anch::rest::requiredFormFile(form, "photo");
     anch::rest::checkFormConstraints(value, side);
@@ -119,13 +120,13 @@ api() {
   //! [api]
   anch::rest::Api api;
   api.get("/pets/{id}", [](uint64_t id) -> std::optional<Pet> { return findPet(id); }) // 404 when empty
-    .produces<anch::rest::Json>();
+    .produces<anch::codec::Json>();
   api.post("/pets", [](anch::rest::Body<Pet> pet) {
       Pet saved = savePet(*pet);
       return anch::rest::Response(anch::rest::Status::CREATED)
         .header(anch::rest::header::LOCATION, "/pets/" + std::to_string(saved.id));
     })
-    .consumes<anch::rest::Json>();
+    .consumes<anch::codec::Json>();
   api.filter([](anch::rest::Request& request, const anch::rest::Next& next) {
       if(!request.getHeaders().has(anch::rest::header::AUTHORIZATION)) {
         return anch::rest::Response(anch::rest::Status::UNAUTHORIZED);
@@ -192,13 +193,13 @@ uploads() {
 void
 configuration() {
   //! [multipart limits]
-  anch::rest::FormLimits& limits = anch::rest::Multipart::limits(anch::rest::Side::SERVER);
+  anch::rest::FormLimits& limits = anch::rest::Multipart::limits(anch::codec::Side::SERVER);
   limits.maxSize = limits.maxPartSize = 1024 * 1024 * 1024; // 1 GiB uploads, read in temporary files
   limits.temporaryDirectory = "/var/tmp/uploads";
   //! [multipart limits]
   //! [json options]
-  anch::rest::Json::options(anch::rest::Side::SERVER).serialize_check_constraints = true; // also check responses
-  anch::rest::Json::options(anch::rest::Side::CLIENT).deserialize_ignore_unknown_field = false; // strict client
+  anch::codec::Json::options(anch::codec::Side::SERVER).serialize_check_constraints = true; // also check responses
+  anch::codec::Json::options(anch::codec::Side::CLIENT).deserialize_ignore_unknown_field = false; // strict client
   //! [json options]
 }
 

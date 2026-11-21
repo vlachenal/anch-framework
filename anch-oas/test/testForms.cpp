@@ -29,11 +29,12 @@
 #include "photos-client.hpp"
 #include "photos-server.hpp"
 
+#include "codec/mediaType.hpp"
+
 #include "rest/api.hpp"
 #include "rest/client.hpp"
 #include "rest/form.hpp"
 #include "rest/httpError.hpp"
-#include "rest/mediaType.hpp"
 #include "rest/request.hpp"
 #include "rest/response.hpp"
 #include "rest/transport.hpp"
@@ -41,7 +42,7 @@
 #include "ut/assert.hpp"
 #include "ut/unit.hpp"
 
-using anch::rest::MediaType;
+using anch::codec::MediaType;
 using anch::rest::Method;
 using anch::rest::Part;
 using anch::rest::Request;

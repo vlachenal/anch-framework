@@ -29,8 +29,9 @@
 #include <string_view>
 #include <vector>
 
+#include "codec/mediaType.hpp"
+
 #include "rest/headers.hpp"
-#include "rest/mediaType.hpp"
 
 namespace anch::rest {
 
@@ -89,7 +90,7 @@ namespace anch::rest {
     std::optional<std::string> _filename;
 
     /*! Content media type */
-    anch::rest::MediaType _mediaType;
+    anch::codec::MediaType _mediaType;
 
     /*! Other part headers */
     anch::rest::Headers _headers;
@@ -128,7 +129,7 @@ namespace anch::rest {
      * \param mediaType the content media type
      * \param content the content
      */
-    Part(std::string_view name, std::string_view filename, anch::rest::MediaType mediaType, std::string content);
+    Part(std::string_view name, std::string_view filename, anch::codec::MediaType mediaType, std::string content);
 
     /*!
      * Create part from a file: content is read from the file when it is used (the file is not deleted)
@@ -142,7 +143,7 @@ namespace anch::rest {
      *
      * \throw std::filesystem::filesystem_error when file size can not be read
      */
-    static Part fromFile(std::string_view name, const std::filesystem::path& path, anch::rest::MediaType mediaType,
+    static Part fromFile(std::string_view name, const std::filesystem::path& path, anch::codec::MediaType mediaType,
 			 std::optional<std::string_view> filename = std::nullopt);
 
     /*!
@@ -157,7 +158,7 @@ namespace anch::rest {
      *
      * \throw std::filesystem::filesystem_error when file size can not be read
      */
-    static Part fromTemporaryFile(std::string_view name, const std::filesystem::path& path, anch::rest::MediaType mediaType,
+    static Part fromTemporaryFile(std::string_view name, const std::filesystem::path& path, anch::codec::MediaType mediaType,
 				  std::optional<std::string_view> filename);
     // Constructors -
 
@@ -245,14 +246,14 @@ namespace anch::rest {
      *
      * \return the media type
      */
-    const anch::rest::MediaType& getMediaType() const noexcept;
+    const anch::codec::MediaType& getMediaType() const noexcept;
 
     /*!
      * Set content media type
      *
      * \param mediaType the media type
      */
-    void setMediaType(anch::rest::MediaType mediaType);
+    void setMediaType(anch::codec::MediaType mediaType);
 
     /*!
      * Get other part headers ( \c Content-Disposition and \c Content-Type are given by name, file
@@ -321,7 +322,7 @@ namespace anch::rest {
      *
      * \return \c this
      */
-    Form& addFile(std::string_view name, std::string_view filename, anch::rest::MediaType mediaType, std::string content);
+    Form& addFile(std::string_view name, std::string_view filename, anch::codec::MediaType mediaType, std::string content);
 
     /*!
      * Add part
