@@ -1,0 +1,17 @@
+// anch-rest documentation examples: Protocol Buffers pet store
+syntax = "proto3";
+
+package pets;
+
+message Pet {
+  int64 id = 1;
+  string name = 2;
+}
+
+message GetPetRequest {
+  int64 id = 1;
+}
+
+service PetStore {
+  rpc GetPet(GetPetRequest) returns (Pet);
+}

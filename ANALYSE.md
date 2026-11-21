@@ -257,6 +257,9 @@ Décidé le 2026-11-21 : comportement conservé et documenté dans `stringUtils.
 
 `docs/` (HTML Doxygen, 46 Mo, 6 749 fichiers, modifié par 94 commits) n'est plus dans le dépôt : `OUTPUT_DIRECTORY = build/docs`, `/docs/` ignoré. Le workflow `docs` génère la documentation (Doxygen d'Arch Linux, comme en développement ; `WARN_AS_ERROR = FAIL_ON_WARNINGS` ajouté en CI seulement) sur chaque PR et chaque push, et la déploie sur GitHub Pages depuis `master` (`upload-pages-artifact`, `deploy-pages`). Les anciens fichiers restent dans l'historique (réécriture écartée). Les 2 avertissements restants venaient de `CHANGELOG.md` : `` `\\` `` suivi d'un backtick est lu par Doxygen comme un backtick échappé, le bloc de code restait ouvert jusqu'à la fin du fichier (entrée reformulée).
 
+### Exemples compilés et exécutés (2026-11-21)
+Décidé par l'utilisateur : les exemples sont de vrais fichiers (`<module>/examples/`), inclus avec `\snippet{trimleft}` (78 extraits remplacent les 63 blocs `\code{.cpp}` des pages et en-têtes, anch-app exclu), et exécutés quand ils n'ont besoin ni de base ni de service réseau (boucle locale acceptée). Avant : 11 des 14 programmes complets compilaient ; les 50 fragments n'étaient pas vérifiables. Exemples faux trouvés : anch-ini (`std::optional` écrit sur un flux), 3 exemples anch-json sans `#include`, anch-utils (`convert` lève `std::bad_cast`, pas `std::invalid_argument`), anch-oas (service implémentant 2 des 11 opérations : document OpenAPI dédié de 3 opérations), anch-ut (légende « Serialize structure into JSON format »). Doxygen : un marqueur doit apparaître exactement deux fois par fichier (un extrait est d'un seul tenant) ; les marqueurs imbriqués sont retirés de l'extrait englobant.
+
 ## Divers
 
 - L'en-tête de licence indique encore « based on C++11 standard ».

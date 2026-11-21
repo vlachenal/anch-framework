@@ -152,6 +152,25 @@ function(anch_add_executable target)
   target_link_libraries(${target} PRIVATE ${ARG_LIBS})
 endfunction()
 
+# Declare a documentation example (<module>/examples/<file>.cpp, included in documentation with \snippet).
+# Examples are built with AnCH options. A RUN example is also a test (labels: module label and 'examples'), run
+# from the current binary directory: it has to work without database nor network service.
+#
+# anch_add_example(<name>
+#   SOURCES <file>...
+#   [LIBS <target>...]
+#   [RUN [ARGS <argument>...]])
+function(anch_add_example name)
+  cmake_parse_arguments(PARSE_ARGV 1 ARG "RUN" "" "SOURCES;LIBS;ARGS")
+  set(target anch-example-${name})
+  anch_add_executable(${target} SOURCES ${ARG_SOURCES} LIBS ${ARG_LIBS})
+  if(ARG_RUN)
+    add_test(NAME example-${name} COMMAND ${target} ${ARG_ARGS})
+    get_property(labels DIRECTORY PROPERTY LABELS)
+    set_tests_properties(example-${name} PROPERTIES LABELS "${labels};examples")
+  endif()
+endfunction()
+
 # Install a tool, with a relative RPATH to installed libraries (ANCH_INSTALL_RPATH).
 #
 # anch_install_executable(<target>)

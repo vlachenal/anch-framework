@@ -67,43 +67,5 @@ target_link_libraries(my-app PRIVATE anch::crypto)
  *
  * \section crypto_example_sec Examples
  *
- * \code{.cpp}
-#include "crypto/b2t/base64.hpp"
-#include "crypto/cipher/aes256.hpp"
-#include "crypto/cipher/cbc.hpp"
-#include "crypto/hash/sha256.hpp"
-#include "crypto/hmac.hpp"
-#include "crypto/padding/pkcs5Padding.hpp"
-
-#include <array>
-#include <iostream>
-#include <sstream>
-
-using anch::crypto::SHA256;
-
-int
-main() {
-  // Hash: digest is computed by the constructor, operator<< writes it in hexadecimal
-  std::cout << SHA256("abc") << std::endl;
-
-  // HMAC with any hash
-  std::cout << anch::crypto::HMAC<SHA256>("key", "The quick brown fox jumps over the lazy dog") << std::endl;
-
-  // Base64
-  std::string encoded = anch::crypto::Base64::encode(std::string("AnCH framework"));
-  std::cout << encoded << " -> " << anch::crypto::Base64::decode(encoded) << std::endl;
-
-  // AES-256 in CBC mode with PKCS#5 padding (streams)
-  std::array<uint8_t,16> iv = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
-  const std::string key = "0123456789abcdef0123456789abcdef"; // 32 bytes
-  std::istringstream plain("secret message");
-  std::ostringstream ciphered;
-  anch::crypto::CBC<anch::crypto::AES256, anch::crypto::PKCS5Padding>(iv).cipher(plain, ciphered, key);
-  std::istringstream input(ciphered.str());
-  std::ostringstream deciphered;
-  anch::crypto::CBC<anch::crypto::AES256, anch::crypto::PKCS5Padding>(iv).decipher(input, deciphered, key);
-  std::cout << deciphered.str() << std::endl;
-  return 0;
-}
-\endcode
+ * \snippet{trimleft} anch-crypto/examples/crypto.cpp example
  */

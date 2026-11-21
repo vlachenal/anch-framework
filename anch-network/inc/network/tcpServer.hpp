@@ -32,13 +32,7 @@ namespace anch::network {
   /*!
    * \brief TCP server: accept connections as \ref TcpStream
    *
-   * \code{.cpp}
-   * anch::network::TcpServer server("", 40099);
-   * while(running) {
-   *   anch::network::TcpStream peer = server.accept();
-   *   // handle peer (or move server.acceptSocket() to another thread and build the stream there)
-   * }
-   * \endcode
+   * \snippet{trimleft} anch-network/examples/fragments.cpp server
    *
    * \author Vincent Lachenal
    *

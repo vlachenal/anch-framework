@@ -41,14 +41,9 @@ namespace anch::rest {
    * is UTF-8: another \c charset is refused.\n
    * \n
    * Types with a \ref FormMapper are read and written through a \ref Form .
-   * \code{.cpp}
-api.post("/login", [](anch::rest::Body<anch::rest::Form> form) {
-  std::string user = anch::rest::requiredFormField<std::string>(*form, "user");
-  ...
-}).consumes<anch::rest::FormUrlEncoded>();
-
-client.post("/login").body<anch::rest::FormUrlEncoded>(anch::rest::Form().add("user", "rex")).send();
-   * \endcode
+   * \snippet{trimleft} anch-rest/examples/server.cpp form server
+   *
+   * \snippet{trimleft} anch-rest/examples/client.cpp form client
    *
    * \author Vincent Lachenal
    *

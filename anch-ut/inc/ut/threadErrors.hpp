@@ -34,14 +34,7 @@ namespace anch::ut {
    * Wrap thread functions with \ref wrap : the first exception raised in a wrapped function is kept, and it is raised
    * again in the test thread by \ref rethrow once threads have been joined.
    *
-   * \code{.cpp}
-   * anch::ut::ThreadErrors errors;
-   * std::thread thread(errors.wrap([]() {
-   *   anch::ut::assertThat(check(), "check failed in thread");
-   * }));
-   * thread.join();
-   * errors.rethrow(); // the failed assertion is reported by the runner
-   * \endcode
+   * \snippet{trimleft} anch-ut/examples/threadErrors.cpp thread
    *
    * \author Vincent Lachenal
    *

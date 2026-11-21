@@ -461,11 +461,7 @@ namespace anch::json {
    * \c std::unique_ptr or pointer): otherwise \ref anch::json::MappingError is raised with \c CONSTRAINT_VIOLATION
    * error code.
    *
-   * \code{.cpp}
-mapper
-  .registerField("id", &Pet::id, anch::json::required)
-  .registerField<std::string>("owner", &Pet::owner, anch::json::required); // std::optional: present, can be null
-   * \endcode
+   * \snippet{trimleft} anch-json/examples/fragments.cpp required
    *
    * \author Vincent Lachenal
    *
@@ -791,9 +787,7 @@ mapper
    * Constraints are checked on every item of a collection or every value of a map. Error path contains the item
    * index or the map key.
    *
-   * \code{.cpp}
-mapper.registerField<std::string>("tags", &Pet::tags, anch::json::maxItems(10), anch::json::items(anch::json::minLength(1)));
-   * \endcode
+   * \snippet{trimleft} anch-json/examples/fragments.cpp items
    *
    * \tparam C the items constraints types
    *

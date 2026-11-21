@@ -34,9 +34,7 @@ namespace anch::log {
   /*!
    * Logging level known at compile time.\n
    * Instances are defined in \c anch::log::lvl namespace and are used to start a log line:
-   * \code{.cpp}
-LOG << anch::log::lvl::debug << "value=" << value;
-   * \endcode
+   * \snippet{trimleft} anch-log/examples/log.cpp stream
    *
    * \tparam L The logging level
    *

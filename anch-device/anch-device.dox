@@ -29,21 +29,5 @@ target_link_libraries(my-app PRIVATE anch::device)
  *
  * \section device_example_sec Example
  *
- * \code{.cpp}
-#include "device/cpu.hpp"
-#include "device/network.hpp"
-
-#include <iostream>
-
-int
-main() {
-  for(const auto& [name, interface] : anch::device::Network::getInterfaces()) {
-    std::cout << name << " " << interface.getIpAddress() << " " << interface.getMacAddress()
-              << (interface.isUp() ? " up" : " down") << std::endl;
-  }
-  const anch::device::CPU& cpu = anch::device::CPU::getInstance();
-  std::cout << "AES-NI: " << cpu.isAES() << std::endl;
-  return 0;
-}
-\endcode
+ * \snippet{trimleft} anch-device/examples/device.cpp example
  */

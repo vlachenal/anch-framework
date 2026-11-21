@@ -68,9 +68,7 @@ namespace anch::rest {
    * Request being built by \ref Client .\n
    * Accepted codecs are part of the type: \ref accept adds a codec and \ref as deserializes the response
    * with the accepted codec matching its \c Content-Type :
-   * \code{.cpp}
-Pet pet = client.get("/pets/{id}", 42).accept<anch::rest::Json>().as<Pet>();
-   * \endcode
+   * \snippet{trimleft} anch-rest/examples/client.cpp get
    * A call is sent once: \ref send , \ref execute and \ref as are called on rvalues.
    *
    * \tparam Codecs the accepted codecs
@@ -289,12 +287,7 @@ Pet pet = client.get("/pets/{id}", 42).accept<anch::rest::Json>().as<Pet>();
 
   /*!
    * HTTP client: builds requests and sends them through a \ref Transport .\n
-   * \code{.cpp}
-anch::rest::Client client(std::make_unique<anch::rest::CurlTransport>(), "https://api.example.com/v1");
-client.filter(anch::rest::bearerAuth(token));
-Pet pet = client.get("/pets/{id}", 42).accept<anch::rest::Json>().as<Pet>();
-anch::rest::Response res = client.post("/pets").body<anch::rest::Json>(pet).send();
-   * \endcode
+   * \snippet{trimleft} anch-rest/examples/client.cpp client
    * Path parameters (\c {name} placeholders) are replaced in order and percent-encoded.\n
    * Default headers (\c User-Agent is \c anch-rest ) are set when the request does not set them, then
    * filters are executed in declaration order before the transport.\n

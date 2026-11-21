@@ -87,16 +87,7 @@ namespace anch::rest::nginx {
 
 /*!
  * Declare nginx application: exports \c anch_rest_application from the application shared library.
- * \code{.cpp}
-std::unique_ptr<anch::rest::Api>
-createApi(std::string_view config) {
-  auto api = std::make_unique<anch::rest::Api>();
-  api->get("/api/pets/{id}", findPet).produces<anch::rest::Json>();
-  return api;
-}
-
-ANCH_REST_APPLICATION(createApi)
- * \endcode
+ * \snippet{trimleft} anch-rest/examples/nginxApp.cpp nginx application
  *
  * \param factory the factory function (see \ref anch::rest::nginx::Factory )
  */

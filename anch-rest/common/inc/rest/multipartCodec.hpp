@@ -54,16 +54,9 @@ namespace anch::rest {
    * \ref ContentTooLarge ( \c 413 ).\n
    * \n
    * Types with a \ref FormMapper are read and written through a \ref Form .
-   * \code{.cpp}
-api.post("/pets/{id}/photo", [](uint64_t id, anch::rest::Body<anch::rest::Form> form) {
-  const anch::rest::Part* photo = form->part("photo");
-  ...
-}).consumes<anch::rest::Multipart>();
-
-anch::rest::Form form;
-form.add("description", "Rex").addFile("photo", "rex.png", anch::rest::MediaType("image", "png"), content);
-client.post("/pets/{id}/photo", 42).body<anch::rest::Multipart>(form).send();
-   * \endcode
+   * \snippet{trimleft} anch-rest/examples/server.cpp multipart server
+   *
+   * \snippet{trimleft} anch-rest/examples/client.cpp multipart client
    *
    * \author Vincent Lachenal
    *

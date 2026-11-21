@@ -38,9 +38,7 @@ namespace anch::rest {
    * HTTP response.\n
    * The body is written by a function when the response is sent, which allows streaming.\n
    * Setters return the response to chain them, on lvalues and on temporaries:
-   * \code{.cpp}
-return anch::rest::Response(anch::rest::Status::CREATED).header(anch::rest::header::LOCATION, "/pets/1");
-   * \endcode
+   * \snippet{trimleft} anch-rest/examples/server.cpp response
    *
    * \author Vincent Lachenal
    *

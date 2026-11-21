@@ -33,11 +33,7 @@ namespace anch::rest {
    * Call RPC method with Connect protocol (unary call, header only: link \c anch::rest-client ):
    * <tt>POST /package.Service/Method</tt> on client base URL. The server can be an anch-rest API
    * ( \ref installRpc ) or any Connect server.
-   * \code{.cpp}
-pets::GetPetRequest request;
-request.set_id(1);
-pets::Pet pet = anch::rest::callRpc<pets::Pet>(client, "pets.PetStore", "GetPet", request);
-   * \endcode
+   * \snippet{trimleft} anch-rest/examples/protobuf.cpp rpc client
    *
    * \tparam Res the response message type
    * \tparam Req the request message type

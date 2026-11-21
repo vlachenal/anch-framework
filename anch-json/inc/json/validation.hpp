@@ -36,11 +36,7 @@ namespace anch::json {
    * only). Required fields are not checked: an object always has its fields ( \c std::optional and pointers can be
    * empty when they are required and nullable).
    *
-   * \code{.cpp}
-for(const anch::json::Violation& violation : anch::json::validate(pet)) {
-  std::cout << violation.path << ": " << violation.message << std::endl;
-}
-   * \endcode
+   * \snippet{trimleft} anch-json/examples/fragments.cpp validate
    *
    * \tparam T the value type
    *

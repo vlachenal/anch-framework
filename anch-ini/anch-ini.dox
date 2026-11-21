@@ -30,48 +30,8 @@ target_link_libraries(my-app PRIVATE anch::ini)
  * \section ini_example_sec Examples
  *
  * INI file:
- * \code{.txt}
-# Comments
-# vnjldmsv
-# cdsnjkovdfmsnjom gefdbnjmvdfbnjiom
-
-toto=tata
-tata=tutu # test with comments
-
-[TOTO]
-toto=titi
- * \endcode
+ * \include anch-ini/examples/test.ini
  *
  * Parse INI file:
- * \code{.cpp}
-void
-addIndent(uint32_t indent) {
-  for(uint32_t i = 0 ; i < indent ; ++i) {
-    std::cout << ' ';
-  }
-}
-
-void
-printSection(const anch::ini::Section& section, const std::string& name = "root", uint32_t indent = 0) {
-  addIndent(indent);
-  std::cout << '[' << name << ']' << std::endl;
-  for(auto iter = section.getValues().begin() ; iter != section.getValues().end() ; ++iter) {
-    addIndent(indent + 1);
-    std::cout << iter->first << '=' << iter->second << std::endl;
-  }
-  for(auto iter = section.getSections().begin() ; iter != section.getSections().end() ; ++iter) {
-    printSection(iter->second, iter->first, indent + 2);
-  }
-}
-
-void
-parse() {
-  std::cout << "Parse file" << std::endl;
-  std::string file = "test.ini";
-  section = anch::ini::parse(file);
-  printSection(section);
-  std::cout << "File has been parsed" << std::endl;
-  std::cout << "TOTO.toto = " << section.getValue("TOTO.toto") << std::endl;
-}
-\endcode
+ * \snippet{trimleft} anch-ini/examples/ini.cpp example
  */

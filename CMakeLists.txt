@@ -22,6 +22,7 @@ endif()
 # Build
 option(BUILD_SHARED_LIBS "Build shared libraries (static libraries otherwise)" ON)
 option(ANCH_BUILD_TESTS "Build AnCH unit tests" ${PROJECT_IS_TOP_LEVEL})
+option(ANCH_BUILD_EXAMPLES "Build (and test) documentation examples (<module>/examples, included with \\snippet)" ${ANCH_BUILD_TESTS})
 option(ANCH_WARNINGS_AS_ERRORS "Treat compilation warnings as errors" ON)
 option(ANCH_HARDENING "Enable hardening compilation and link options" ON)
 set(ANCH_OPTIMIZATION_LEVEL 3 CACHE STRING "Optimization level of Release builds (-O<level>), instead of CMake default")
@@ -85,7 +86,7 @@ endif()
 
 find_package(Threads REQUIRED)
 
-if(ANCH_BUILD_TESTS)
+if(ANCH_BUILD_TESTS OR ANCH_BUILD_EXAMPLES)
   enable_testing()
 endif()
 # Global settings -

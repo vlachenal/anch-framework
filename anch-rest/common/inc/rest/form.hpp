@@ -275,12 +275,7 @@ namespace anch::rest {
   /*!
    * Form: ordered parts ( \c application/x-www-form-urlencoded or \c multipart/form-data bodies).
    * A name can be repeated (arrays).
-   * \code{.cpp}
-anch::rest::Form form;
-form.add("name", "Rex").add("tags", "dog").add("tags", "brown");
-std::optional<std::string_view> name = form.field("name");
-std::vector<std::string_view> tags = form.fields("tags");
-   * \endcode
+   * \snippet{trimleft} anch-rest/examples/server.cpp form
    * Fields are converted on server side with \ref anch::rest::formField "formField<T>()" and
    * \ref anch::rest::requiredFormField "requiredFormField<T>()" .
    *

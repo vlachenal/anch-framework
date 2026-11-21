@@ -34,35 +34,5 @@ target_link_libraries(my-app PRIVATE anch::network)
  * \section network_example_sec Example
  *
  * Echo server and client:
- * \code{.cpp}
-#include "network/tcpServer.hpp"
-#include "network/tcpStream.hpp"
-
-#include <iostream>
-#include <string>
-#include <thread>
-
-int
-main() {
-  anch::network::TcpServer server("127.0.0.1", 0);              // port 0: free port
-  uint16_t port = server.getAddress().getPort();
-
-  std::thread echo([&server]() {
-    anch::network::TcpStream peer = server.accept();              // TcpStream is a std::iostream
-    std::string line;
-    while(std::getline(peer, line)) {
-      peer << "echo: " << line << std::endl;
-    }
-  });
-
-  anch::network::TcpStream client("127.0.0.1", port);
-  client << "hello" << std::endl;
-  std::string answer;
-  std::getline(client, answer);
-  std::cout << answer << std::endl;
-  client.shutdown();                                              // end of transmission: server loop ends
-  echo.join();
-  return 0;
-}
-\endcode
+ * \snippet{trimleft} anch-network/examples/network.cpp example
  */

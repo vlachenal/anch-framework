@@ -47,11 +47,9 @@ namespace anch::rest {
   /*!
    * \c application/x-protobuf codec: Protocol Buffers binary encoding of \c protoc messages.
    * Invalid messages raise \c std::invalid_argument ( \c 400 on server side).
-   * \code{.cpp}
-api.post("/pets", [](anch::rest::Body<pets::Pet> pet) { return save(*pet); })
-  .consumes<anch::rest::Protobuf>().produces<anch::rest::Protobuf>();
-pets::Pet pet = client.get("/pets/{id}", 1).accept<anch::rest::Protobuf>().as<pets::Pet>();
-   * \endcode
+   * \snippet{trimleft} anch-rest/examples/protobuf.cpp protobuf codec
+   *
+   * \snippet{trimleft} anch-rest/examples/protobuf.cpp protobuf client
    *
    * \author Vincent Lachenal
    *

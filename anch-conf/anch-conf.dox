@@ -27,15 +27,7 @@ target_link_libraries(my-app PRIVATE anch::conf)
  *
  * \subsection res_cascade_sec Cascade
  *
- * \code{.ini}
-# application.ini
-anch::conf.includes=database,security
-anch::conf.default-profiles=dev
-
-[server]
-host=${env=HOST|localhost}
-url=http://${conf=server.host}:${conf=server.port}/
-\endcode
+ * \include anch-conf/examples/application.ini
  *
  * Loading order (later files override previous values): \c application , included files
  * (\c database , \c security ), then for each active profile \c application-\<profile\> and
@@ -51,13 +43,5 @@ url=http://${conf=server.host}:${conf=server.port}/
  *
  * \section res_example_sec Example
  *
- * \code{.cpp}
-#include "conf/configuration.hpp"
-
-const anch::conf::Configuration& conf = anch::conf::Configuration::loader()
-  .name("application")
-  .folders({"/etc/myapp", "."})
-  .load();
-std::optional<std::string> url = conf.value("server.url");
-\endcode
+ * \snippet{trimleft} anch-conf/examples/conf.cpp example
  */

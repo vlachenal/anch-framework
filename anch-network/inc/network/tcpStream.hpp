@@ -52,14 +52,7 @@ namespace anch::network {
    * \ref TcpStream can not be copied nor moved: it is built from a host and a port (client) or from a connected
    * \ref Socket (\ref TcpServer::accept ).
    *
-   * \code{.cpp}
-   * anch::network::TcpServer server("", 40099);
-   * anch::network::TcpStream client("localhost", 40099);
-   * anch::network::TcpStream peer = server.accept();
-   * client << "hello" << std::endl;
-   * std::string line;
-   * std::getline(peer, line);
-   * \endcode
+   * \snippet{trimleft} anch-network/examples/fragments.cpp stream
    *
    * \author Vincent Lachenal
    */

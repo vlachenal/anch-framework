@@ -28,14 +28,7 @@ namespace anch {
    * If \c T constructor throws an exception, the next \ref getInstance call will try to create the instance again.\n
    * \n
    * Usage:
-   * \code{.cpp}
-   * class MySingleton: public anch::Singleton<MySingleton> {
-   *   friend anch::Singleton<MySingleton>;
-   * private:
-   *   MySingleton();
-   *   ~MySingleton();
-   * };
-   * \endcode
+   * \snippet{trimleft} anch-utils/examples/singleton.cpp singleton
    * - \c T has to inherit from \c anch::Singleton<T> ;
    * - \c T constructor and destructor should be private and \c anch::Singleton<T> declared as friend to prevent other instances ;
    * - copy and move are prohibited by this class: there is no need to delete them in \c T ;

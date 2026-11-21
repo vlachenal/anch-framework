@@ -63,12 +63,7 @@ target_link_libraries(petstore PRIVATE anch::json anch::uuid)
  * \endcode
  *
  * Generated models are used with anch-json:
- * \code{.cpp}
-#include "petstore.hpp"
-#include "json/json.hpp"
-
-petstore::model::Pet pet = anch::json::deserialize<petstore::model::Pet>(input);
- * \endcode
+ * \snippet{trimleft} anch-oas/examples/models.cpp models
  *
  * \section oas_mapping_sec Mapping
  *
@@ -152,25 +147,10 @@ petstore::model::Pet pet = anch::json::deserialize<petstore::model::Pet>(input);
  * \c delete and \c patch ) is a method of the \c \<API\>Service interface (server side) and of the
  * \c \<API\>Client class (client side). Both are in the models namespace and depend on anch-rest
  * ( \c anch::rest-server and \c anch::rest-client CMake targets).
- * \code{.cpp}
-// Server: implement the service and register its endpoints
-class Store: public petstore::model::PetStoreService {
-public:
-  std::optional<petstore::model::Pet> getPet(int64_t id) override;   // GET /pets/{id} (404 when empty)
-  petstore::model::Tag createTag(const petstore::model::Tag& body) override; // POST /pets (201)
-  // ...
-};
-Store store;
-anch::rest::Api api;
-petstore::model::registerEndpoints(api, store);
-api.validate();
-
-// Client: typed calls over an anch-rest client (transport, base URL and filters are configured by the caller)
-anch::rest::Client rest(std::make_unique<anch::rest::CurlTransport>(), "https://api.example.com");
-petstore::model::PetStoreClient client(rest);
-std::optional<petstore::model::Pet> pet = client.getPet(1);
-std::vector<petstore::model::Tag> tags = client.listPets("AB");      // optional query parameters default to std::nullopt
- * \endcode
+ * \snippet{trimleft} anch-oas/examples/endpoints.cpp service
+ * \snippet{trimleft} anch-oas/examples/endpoints.cpp server
+ *
+ * \snippet{trimleft} anch-oas/examples/endpoints.cpp client
  *
  * Generation rules:
  * - method name: \c operationId in camelCase ( \c get-pet → \c getPet ), derived from the method and the path when

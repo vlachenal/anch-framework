@@ -1,0 +1,65 @@
+/*
+  ANCH Framework: ANother C++ Hack is a C++ framework based on C++23 standard
+  Copyright (C) 2012 Vincent Lachenal
+
+  This file is part of ANCH Framework.
+
+  ANCH Framework is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Lesser General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  ANCH Framework is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU Lesser General Public License for more details.
+
+  You should have received a copy of the GNU Lesser General Public License
+  along with ANCH Framework.  If not, see <https://www.gnu.org/licenses/>.
+*/
+#include <cstdint>
+#include <iostream>
+#include <map>
+#include <optional>
+#include <sstream>
+#include <string>
+#include <vector>
+
+#include "json/json.hpp"
+
+//! [example]
+struct Pet {
+  std::string name;
+  int32_t age = 0;
+  std::vector<std::string> tags;
+};
+
+struct Shelter {
+  std::vector<Pet> pets;
+};
+
+template<>
+void
+anch::json::registerObject(anch::json::ObjectMapper<Pet>& mapper) {
+  mapper
+    .registerField("name", &Pet::name, anch::json::required, anch::json::minLength(1))
+    .registerField("age", &Pet::age, anch::json::minimum(0))
+    .registerField<std::string>("tags", &Pet::tags, anch::json::items(anch::json::minLength(1)));
+}
+
+template<>
+void
+anch::json::registerObject(anch::json::ObjectMapper<Shelter>& mapper) {
+  mapper
+    .registerField<Pet>("pets", &Shelter::pets, anch::json::maxItems(10));
+}
+
+int
+main() {
+  Shelter shelter{{Pet{"Rex", 3, {"dog"}}, Pet{"", -1, {"cat", ""}}}};
+  for(const anch::json::Violation& violation : anch::json::validate(shelter)) { // every violation
+    std::cout << violation.path << ": " << violation.message << std::endl;
+  }
+  return 0;
+}
+//! [example]

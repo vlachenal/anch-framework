@@ -47,10 +47,7 @@ namespace anch::rest {
    * the response has the same content type. Declared exceptions and unknown methods are answered by the
    * processor (Thrift application exceptions), unsupported content types with \c 415 , invalid
    * messages with \c 400 .
-   * \code{.cpp}
-auto handler = std::make_shared<PetStoreHandler>();          // implements generated PetStoreIf
-anch::rest::installThrift(api, "/thrift/pets", std::make_shared<pets::PetStoreProcessor>(handler));
-   * \endcode
+   * \snippet{trimleft} anch-rest/examples/thrift.cpp thrift rpc
    *
    * \param api the API
    * \param path the path pattern

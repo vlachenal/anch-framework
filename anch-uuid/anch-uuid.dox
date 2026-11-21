@@ -27,34 +27,12 @@ target_link_libraries(my-app PRIVATE anch::uuid)
  * Each UUID version should have a provider for UUID generation. This library provides the random version implementation (version 4).\n
  * \n
  * \ref page_crypto anch-crypto library provides MD5 (version 3) and SHA1 (version 5) implementations. They have to be registered to be used:
- * \code{.cpp}
- anch::crypto::registerMD5UUIDProvider(); // md5.hpp
- anch::crypto::registerSHA1UUIDProvider(); // sha1.hpp\endcode
+ * \snippet{trimleft} anch-uuid/examples/providers.cpp crypto providers
  *
  * anch-device library provides MAC address (version 1) implementation. It has to be registered to be used:
- * \code{.cpp}
- anch::device::registerMACAddressUUIDProvider(); // uuidProvider.hpp\endcode
+ * \snippet{trimleft} anch-uuid/examples/providers.cpp device provider
  *
  * \section uuid_example_sec Examples
  *
- * \code{.cpp}
-#include "uuid.hpp"
-#include "crypto/hash/sha1.hpp"
-
-#include <iostream>
-
-int
-main() {
-  anch::UUID random = anch::UUID::random();                     // version 4
-  std::cout << random << std::endl;
-
-  anch::UUID parsed("550e8400-e29b-41d4-a716-446655440000");    // std::invalid_argument when invalid
-  std::cout << parsed.toString() << " version " << static_cast<int>(parsed.getVersion()) << std::endl;
-
-  anch::crypto::registerSHA1UUIDProvider();                     // version 5 provider (anch-crypto)
-  anch::UUID named = anch::UUID::generateUUID(anch::UUID::Version::SHA1_HASH, "anch-framework");
-  std::cout << named << " " << (named == anch::UUID::generateUUID(anch::UUID::Version::SHA1_HASH, "anch-framework")) << std::endl;
-  return 0;
-}
-\endcode
+ * \snippet{trimleft} anch-uuid/examples/uuid.cpp example
  */

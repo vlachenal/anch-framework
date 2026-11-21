@@ -36,22 +36,9 @@ namespace anch::rest {
    * - <tt>static void fromForm(T& value, const anch::rest::Form& form, anch::rest::Side side)</tt> :
    *   errors are reported with exceptions ( \c 400 on server side)
    *
-   * \code{.cpp}
-template<>
-struct anch::rest::FormMapper<UploadPhoto> {
-  static void toForm(const UploadPhoto& value, anch::rest::Form& form, anch::rest::Side) {
-    anch::rest::addFormField(form, "description", value.description);
-    anch::rest::addFormFile(form, "photo", value.photo);
-  }
-  static void fromForm(UploadPhoto& value, const anch::rest::Form& form, anch::rest::Side) {
-    value.description = anch::rest::formField<std::string>(form, "description");
-    value.photo = anch::rest::requiredFormFile(form, "photo");
-  }
-};
-
-api.post("/pets/{id}/photo", [](uint64_t id, anch::rest::Body<UploadPhoto> upload) { ... })
-  .consumes<anch::rest::Multipart>();
-   * \endcode
+   * \snippet{trimleft} anch-rest/examples/server.cpp form mapper
+   *
+   * \snippet{trimleft} anch-rest/examples/server.cpp form mapper api
    *
    * \tparam T the mapped type
    *

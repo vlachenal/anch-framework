@@ -180,18 +180,7 @@ namespace anch::rest {
   /*!
    * RPC service: unary methods of a Protocol Buffers service, served by \ref installRpc (Connect and
    * gRPC-Web in \ref Api , HTTP/1.1) and by \ref GrpcServer (gRPC, HTTP/2) with the same handlers.
-   * \code{.cpp}
-anch::rest::RpcService service("pets.PetStore");
-service.unary<pets::GetPetRequest, pets::Pet>("GetPet", [](const pets::GetPetRequest& request, anch::rest::RpcContext&) {
-  if(request.id() != 1) {
-    throw anch::rest::RpcError(anch::rest::RpcCode::NOT_FOUND, "no pet");
-  }
-  pets::Pet pet;
-  pet.set_id(1);
-  return pet;
-});
-anch::rest::installRpc(api, service); // POST /pets.PetStore/GetPet
-   * \endcode
+   * \snippet{trimleft} anch-rest/examples/protobuf.cpp rpc service
    * Handler errors: \ref RpcError is sent with its code and message, \ref HttpException with the
    * code of its status ( \c 400 is \c INVALID_ARGUMENT , \c 404 is \c NOT_FOUND , ...), other
    * exceptions are \c INTERNAL without message.\n

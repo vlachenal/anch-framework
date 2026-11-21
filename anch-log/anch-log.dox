@@ -55,42 +55,9 @@ target_link_libraries(my-app PRIVATE anch::log)
  * \section log_example_sec Example
  *
  * \c application.ini :
- * \code{.ini}
-[anch::log.writer.console]
-module=console
-pattern=$d{%Y-%m-%d %H:%M:%S} - $c: $p - $m
-
-[anch::log.writer.file]
-module=file
-path=./application.log
-pattern=$d{%Y-%m-%d %H:%M:%S} [$t] $p $c - $m
-max-size=10M
-max-rotate-files=5
-
-[anch::log.logger]
-writers=console
-level=info
-
-[anch::log.logger.org::myapp]
-writers=console,file
-level=debug
-\endcode
+ * \include anch-log/examples/application.ini
  *
- * \code{.cpp}
-#include "conf/configuration.hpp"
-#include "log/loggerFactory.hpp"
-#include "log/stream.hpp"
-
-int
-main() {
-  anch::conf::Configuration::loader().name("application").load(); // application.ini (anch::log section)
-  const anch::log::Logger& LOG = anch::log::LoggerFactory::getLogger("org::myapp::Main");
-
-  LOG.info("Application started with ", 3, " workers");               // variadic API
-  LOG << anch::log::lvl::debug << "value=" << 42 << ", ratio=" << 0.5; // stream API
-  return 0;
-}
-\endcode
+ * \snippet{trimleft} anch-log/examples/log.cpp example
  *
  * Console output:
  * \code{.txt}

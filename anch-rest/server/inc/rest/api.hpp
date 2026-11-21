@@ -45,14 +45,7 @@ namespace anch::rest {
    * Endpoints are declared with a method and a path pattern where path parameters are named between
    * braces (\c /pets/{id} ). Empty path segments are ignored (\c /pets/ is \c /pets ). On routing, a
    * literal segment has priority over a parameter.\n
-   * \code{.cpp}
-anch::rest::Api api;
-api.get("/pets/{id}", [](uint64_t id) -> std::optional<Pet> { return findPet(id); })
-  .produces<anch::rest::Json>();
-api.post("/pets", [](anch::rest::Body<Pet> pet) { return savePet(*pet); })
-  .consumes<anch::rest::Json>().produces<anch::rest::Json>();
-api.validate();
-   * \endcode
+   * \snippet{trimleft} anch-rest/examples/server.cpp api
    * Endpoint arguments and results are described in \ref Endpoint .\n
    * \n
    * \ref handle never throws: an \ref HttpException is answered with its status, any other exception

@@ -32,30 +32,5 @@ target_link_libraries(my-app PRIVATE anch::utils)
  *
  * \section utils_example_sec Example
  *
- * \code{.cpp}
-#include "convert.hpp"
-#include "threadPool.hpp"
-
-#include <atomic>
-#include <chrono>
-#include <iostream>
-
-int
-main() {
-  // Strict number conversion (std::invalid_argument or std::out_of_range on error)
-  int value = anch::convert<int>("42");
-  double ratio = anch::convert<double>("0.5");
-
-  // Thread pool: tasks are executed by persistent workers
-  std::atomic<int> sum = 0;
-  anch::ThreadPool pool(4);
-  pool.start();
-  for(int i = 1 ; i <= 10 ; ++i) {
-    pool.add([&sum](int n) { sum += n; }, i);
-  }
-  pool.awaitTermination(std::chrono::seconds(0));  // waits for queued tasks (0: no timeout), then stops
-  std::cout << value * ratio << " " << sum << std::endl;
-  return 0;
-}
-\endcode
+ * \snippet{trimleft} anch-utils/examples/utils.cpp example
  */

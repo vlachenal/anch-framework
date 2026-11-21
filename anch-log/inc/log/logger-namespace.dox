@@ -13,7 +13,5 @@
  *
  * \brief Logging levels as types for the stream API.
  *
- * \code{.cpp}
-LOG << anch::log::lvl::debug << "value=" << value;
-\endcode
+ * \snippet{trimleft} anch-log/examples/log.cpp stream
  */

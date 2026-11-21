@@ -1,0 +1,80 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Pet store",
+    "description": "Pet store of anch-oas documentation examples",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/pets": {
+      "get": {
+        "operationId": "listPets",
+        "summary": "List tags of pets",
+        "parameters": [
+          {"name": "status", "in": "query", "required": true, "schema": {"type": "string", "minLength": 2, "maxLength": 2}},
+          {"name": "limit", "in": "query", "schema": {"type": "integer", "format": "int32"}}
+        ],
+        "responses": {
+          "200": {
+            "description": "Tags",
+            "content": {"application/json": {"schema": {"type": "array", "items": {"$ref": "#/components/schemas/Tag"}}}}
+          }
+        }
+      },
+      "post": {
+        "operationId": "createTag",
+        "requestBody": {
+          "required": true,
+          "content": {"application/json": {"schema": {"$ref": "#/components/schemas/Tag"}}}
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {"application/json": {"schema": {"$ref": "#/components/schemas/Tag"}}}
+          },
+          "400": {"description": "Invalid tag"}
+        }
+      }
+    },
+    "/pets/{id}": {
+      "parameters": [
+        {"name": "id", "in": "path", "required": true, "schema": {"type": "integer", "format": "int64"}}
+      ],
+      "get": {
+        "operationId": "getPet",
+        "responses": {
+          "200": {
+            "description": "The pet",
+            "content": {"application/json": {"schema": {"$ref": "#/components/schemas/Pet"}}}
+          },
+          "404": {"description": "Pet not found"}
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Status": {
+        "type": "string",
+        "description": "Pet status in the store",
+        "enum": ["available", "pending", "sold"]
+      },
+      "Pet": {
+        "type": "object",
+        "required": ["id", "name", "status"],
+        "properties": {
+          "id": {"type": "integer", "format": "int64"},
+          "name": {"type": "string", "example": "Rex"},
+          "status": {"$ref": "#/components/schemas/Status"}
+        }
+      },
+      "Tag": {
+        "type": "object",
+        "properties": {
+          "id": {"type": "integer", "format": "int64"},
+          "name": {"type": "string"}
+        }
+      }
+    }
+  }
+}

@@ -33,15 +33,7 @@ namespace anch::rest {
    * \n
    * Allowed methods are not configured: they are the methods of the routes matching the request
    * path (\c HEAD with \c GET , and \c OPTIONS ).
-   * \code{.cpp}
-api.cors({
-  .origins = {"https://app.example.com"},
-  .headers = {"Content-Type", "Authorization"},
-  .exposedHeaders = {"Location"},
-  .credentials = true,
-  .maxAge = std::chrono::hours(1)
-});
-   * \endcode
+   * \snippet{trimleft} anch-rest/examples/server.cpp cors
    *
    * \author Vincent Lachenal
    *
