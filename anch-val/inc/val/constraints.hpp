@@ -34,11 +34,90 @@
 #include <string_view>
 #include <tuple>
 #include <utility>
+#include <variant>
+#include <iosfwd>
 #include <type_traits>
 #include <vector>
 
 
 namespace anch::val {
+
+  /*!
+   * \brief Path of a value from the root value (validation violations): segments are field names or map keys and
+   * collection items indexes. Formats format it their way (JSON Pointer with \ref pointer , XPath for XML, ...).
+   *
+   * \author Vincent Lachenal
+   *
+   * \since 0.3
+   */
+  class ANCH_VAL_EXPORT Path {
+  public:
+    /*! Path segment: field name or map key, or collection item index */
+    using Segment = std::variant<std::string, std::size_t>;
+
+    // Attributes +
+  private:
+    /*! Segments, from the root value */
+    std::vector<Segment> _segments;
+    // Attributes -
+
+    // Constructors +
+  public:
+    /*! Root value path */
+    Path() = default;
+
+    /*!
+     * \ref Path constructor
+     *
+     * \param segments the segments, from the root value
+     */
+    explicit Path(std::vector<Segment> segments);
+    // Constructors -
+
+    // Methods +
+  public:
+    /*!
+     * Segments getter
+     *
+     * \return the segments, from the root value
+     */
+    const std::vector<Segment>& segments() const noexcept;
+
+    /*!
+     * Check if path is the root value one
+     *
+     * \return \c true for the root value
+     */
+    bool empty() const noexcept;
+
+    /*!
+     * Format path as a JSON Pointer (RFC 6901): \c /pets/1/name , empty for the root value ( \c ~ and \c / are
+     * escaped)
+     *
+     * \return the JSON Pointer
+     */
+    std::string pointer() const;
+
+    /*!
+     * Compare paths
+     *
+     * \param other the other path
+     *
+     * \return \c true when segments are equal
+     */
+    bool operator==(const Path& other) const = default;
+    // Methods -
+  };
+
+  /*!
+   * Write path as a JSON Pointer
+   *
+   * \param out the output stream
+   * \param path the path
+   *
+   * \return the output stream
+   */
+  ANCH_VAL_EXPORT std::ostream& operator<<(std::ostream& out, const anch::val::Path& path);
 
   /*!
    * \brief Constraint violation found by a validation (see \ref anch::val::ValidationContext )
@@ -48,8 +127,8 @@ namespace anch::val {
    * \since 0.2
    */
   struct ANCH_VAL_EXPORT Violation {
-    /*! Path of the value (JSON Pointer, empty for root value) */
-    std::string path;
+    /*! Path of the value (segments: each format formats it, \c pointer() for a JSON Pointer) */
+    anch::val::Path path;
 
     /*! Violation message */
     std::string message;
@@ -68,8 +147,8 @@ namespace anch::val {
 
     // Attributes +
   private:
-    /*! Current path segments (escaped) */
-    std::vector<std::string> _path;
+    /*! Current path segments */
+    std::vector<anch::val::Path::Segment> _path;
 
     /*! Violations */
     std::vector<anch::val::Violation> _violations;
@@ -80,7 +159,7 @@ namespace anch::val {
     /*!
      * Enter object field or map entry
      *
-     * \param field the field name (escaped in path)
+     * \param field the field name or map key
      */
     void enter(std::string_view field);
 

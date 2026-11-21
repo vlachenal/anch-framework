@@ -1879,8 +1879,8 @@ checkViolations(const std::vector<anch::val::Violation>& violations, const std::
   }
   anch::ut::assertThat(violations.size() == expected.size(), "{} violations expected ; found {}", expected.size(), violations.size());
   for(std::size_t i = 0 ; i < expected.size() ; ++i) {
-    anch::ut::assertThat(violations[i].path == expected[i].first && violations[i].message == expected[i].second,
-			 "Expected '{}: {}' ; found '{}: {}'", expected[i].first, expected[i].second, violations[i].path, violations[i].message);
+    anch::ut::assertThat(violations[i].path.pointer() == expected[i].first && violations[i].message == expected[i].second,
+			 "Expected '{}: {}' ; found '{}: {}'", expected[i].first, expected[i].second, violations[i].path.pointer(), violations[i].message);
   }
 }
 

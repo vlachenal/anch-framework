@@ -201,27 +201,13 @@ namespace anch::val {
   inline
   void
   ValidationContext::enter(std::string_view field) {
-    std::string segment;
-    segment.reserve(field.size());
-    for(char c : field) {
-      switch(c) {
-      case '~':
-	segment += "~0";
-	break;
-      case '/':
-	segment += "~1";
-	break;
-      default:
-	segment += c;
-      }
-    }
-    _path.push_back(std::move(segment));
+    _path.emplace_back(std::string(field));
   }
 
   inline
   void
   ValidationContext::enter(std::size_t index) {
-    _path.push_back(std::to_string(index));
+    _path.emplace_back(index);
   }
 
   inline
@@ -233,12 +219,7 @@ namespace anch::val {
   inline
   void
   ValidationContext::add(const std::string& message) {
-    std::string path;
-    for(const std::string& segment : _path) {
-      path += '/';
-      path += segment;
-    }
-    _violations.push_back(anch::val::Violation{std::move(path), message});
+    _violations.push_back(anch::val::Violation{anch::val::Path(_path), message});
   }
 
   inline

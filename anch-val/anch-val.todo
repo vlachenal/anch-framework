@@ -76,6 +76,8 @@ Implémentation de l'étape 1 (2026-11-21)
 - Concepts StringLike, MapLike, Collection, Number et traits IsNullable / Unwrap déplacés aussi (anch-json les
   utilise depuis anch::val).
 - Violation::path reste un JSON Pointer ; le chemin par segments (XPath pour XML) viendra avec le codec XML.
+  Fait le 2026-11-21 (diagnostic, point 6) : anch::val::Path (segments std::variant<std::string, std::size_t>,
+  pointer() pour JSON Pointer, operator<<) ; ValidationContext garde les segments sans échappement.
 - Les tests des contraintes à travers la lecture JSON restent dans anch-json ; anch-val/test teste les contraintes,
   ValidationContext et un CheckContext de format.
 

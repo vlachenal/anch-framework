@@ -24,6 +24,7 @@
 #include <limits>
 #include <chrono>
 #include <map>
+#include <sstream>
 #include <regex>
 #include <utility>
 #include <memory>
@@ -209,11 +210,19 @@ testValidationContext() {
   std::vector<Violation> violations = validate(std::vector<std::string>{"ok", "", "a/b"}, anch::val::maxItems(2),
 					       anch::val::items(anch::val::minLength(1), anch::val::maxLength(2)));
   anch::ut::assertThat(violations.size() == 3, "3 violations expected, found {}", violations.size());
-  anch::ut::assertThat(violations[0].path.empty() && violations[1].path == "/1" && violations[2].path == "/2", "Unexpected paths");
+  anch::ut::assertThat(violations[0].path.empty() && violations[1].path.pointer() == "/1" && violations[2].path.pointer() == "/2", "Unexpected paths");
   std::map<std::string, std::optional<int>> map{{"a/b~c", -1}, {"z", std::nullopt}};
   violations = validate(map, anch::val::items(anch::val::minimum(0)));
-  anch::ut::assertThat(violations.size() == 1 && violations[0].path == "/a~1b~0c", "Map key escaped in path (JSON Pointer): '{}'",
-		       violations.empty() ? std::string() : violations[0].path);
+  anch::ut::assertThat(violations.size() == 1 && violations[0].path.pointer() == "/a~1b~0c", "Map key escaped in path (JSON Pointer): '{}'",
+		       violations.empty() ? std::string() : violations[0].path.pointer());
+  // Segments are kept as they are (key and index), formats format them
+  anch::ut::assertThat(violations[0].path.segments() == std::vector<anch::val::Path::Segment>{std::string("a/b~c")},
+		       "Map key segment is not escaped");
+  std::vector<Violation> items = validate(std::vector<std::string>{"", "a"}, anch::val::items(anch::val::minLength(1)));
+  anch::ut::assertThat(items.size() == 1 && items[0].path == anch::val::Path({std::size_t{0}}) && !items[0].path.empty(), "Index segment");
+  std::ostringstream out;
+  out << anch::val::Path({std::string("pets"), std::size_t{1}, std::string("name")}) << '|' << anch::val::Path();
+  anch::ut::assertThat(out.str() == "/pets/1/name|", "Path written as a JSON Pointer: '{}'", out.str());
   anch::ut::assertThat(validate(std::optional<std::string>(), anch::val::minLength(1)).empty(), "Absent value is not checked");
   anch::ut::assertThat(validate(std::make_shared<std::string>(""), anch::val::minLength(1)).size() == 1, "Pointed value is checked");
   anch::ut::assertThat(validate(std::string(""), anch::val::required).empty(), "required is checked by formats");
@@ -412,21 +421,21 @@ testValidate() {
     {"/parent/name", "Length 1 is lower than minLength 2"}};
   anch::ut::assertThat(violations.size() == expected.size(), "{} violations expected, found {}", expected.size(), violations.size());
   for(std::size_t i = 0; i < expected.size() && i < violations.size(); ++i) {
-    anch::ut::assertThat(violations[i].path == expected[i].first && violations[i].message == expected[i].second,
-			 "Violation {}: '{}' {}", i, violations[i].path, violations[i].message);
+    anch::ut::assertThat(violations[i].path.pointer() == expected[i].first && violations[i].message == expected[i].second,
+			 "Violation {}: '{}' {}", i, violations[i].path.pointer(), violations[i].message);
   }
   // Getter value is checked, setter only field is not, required is not checked
   Pet invalid{"Médor", -1, {}, std::nullopt, {}, nullptr};
   const std::vector<Violation> getter = anch::val::validate(invalid);
-  anch::ut::assertThat(getter.size() == 2 && getter[0].path == "/age" && getter[1].path == "/computed", "age and computed violations expected");
+  anch::ut::assertThat(getter.size() == 2 && getter[0].path.pointer() == "/age" && getter[1].path.pointer() == "/computed", "age and computed violations expected");
   anch::ut::assertThat(anch::val::isValid(Pet{"Médor", 1, {}, std::nullopt, {}, nullptr}), "Valid pet");
   // Collections of described objects and primitives
   anch::ut::assertThat(anch::val::validate(std::vector<Tag>{{"a"}, {""}}).size() == 1
-		       && anch::val::validate(std::vector<Tag>{{"a"}, {""}})[0].path == "/1/name", "Collection of objects");
+		       && anch::val::validate(std::vector<Tag>{{"a"}, {""}})[0].path.pointer() == "/1/name", "Collection of objects");
   anch::ut::assertThat(anch::val::isValid(42) && anch::val::isValid(std::string()), "Primitive values are valid");
   // Declared scalar: constraints of the field are checked, the value has no field
   const std::vector<Violation> wallet = anch::val::validate(Wallet{Money{-1}});
-  anch::ut::assertThat(wallet.size() == 1 && wallet[0].path == "/balance" && wallet[0].message == "Balance can not be negative",
+  anch::ut::assertThat(wallet.size() == 1 && wallet[0].path.pointer() == "/balance" && wallet[0].message == "Balance can not be negative",
 		       "Declared scalar constraint");
 }
 
