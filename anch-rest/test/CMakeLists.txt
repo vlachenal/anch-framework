@@ -15,22 +15,6 @@ add_test(NAME anch-rest-http-part-file COMMAND anch-rest-http-test -t part-file)
 add_test(NAME anch-rest-http-multipart-stream COMMAND anch-rest-http-test -t multipart-stream)
 add_test(NAME anch-rest-http-multipart-stream-write COMMAND anch-rest-http-test -t multipart-stream-write)
 
-# Deprecated codec names (moved to anch-codec, removed in 0.4) +
-anch_add_executable(anch-rest-deprecated-test SOURCES testDeprecated.cpp LIBS anch::rest-common anch::ut)
-target_compile_options(anch-rest-deprecated-test PRIVATE -Wno-deprecated-declarations)
-add_test(NAME anch-rest-deprecated-aliases COMMAND anch-rest-deprecated-test -t aliases)
-
-# Uses of deprecated names are reported: compiled by the test, outside of the build
-add_library(anch-rest-deprecated-warnings OBJECT EXCLUDE_FROM_ALL testDeprecated.cpp)
-anch_target_build_options(anch-rest-deprecated-warnings)
-target_link_libraries(anch-rest-deprecated-warnings PRIVATE anch::rest-common anch::ut)
-target_compile_options(anch-rest-deprecated-warnings PRIVATE -Werror=deprecated-declarations)
-add_test(NAME anch-rest-deprecated-warnings
-  COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target anch-rest-deprecated-warnings)
-set_tests_properties(anch-rest-deprecated-warnings PROPERTIES
-  PASS_REGULAR_EXPRESSION "deprecated-declarations")
-# Deprecated codec names -
-
 if(ANCH_REST_SERVER_LIB)
   anch_add_executable(anch-rest-api-test SOURCES testApi.cpp LIBS anch::rest-server anch::ut)
 

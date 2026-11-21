@@ -132,7 +132,7 @@ namespace anch::rest {
   void addFormFile(anch::rest::Form& form, std::string_view name, const std::vector<anch::rest::Part>& parts);
 
   /*!
-   * Add \c application/json part serialized with \ref Json codec (constraints checked according to
+   * Add \c application/json part serialized with \ref anch::codec::Json codec (constraints checked according to
    * side)
    *
    * \param form the form
@@ -199,7 +199,7 @@ namespace anch::rest {
   std::vector<anch::rest::Part> formFiles(const anch::rest::Form& form, std::string_view name);
 
   /*!
-   * Get first part with name deserialized with \ref Json codec (constraints checked according to
+   * Get first part with name deserialized with \ref anch::codec::Json codec (constraints checked according to
    * side)
    *
    * \param form the form
@@ -216,7 +216,7 @@ namespace anch::rest {
   std::optional<T> jsonFormField(const anch::rest::Form& form, std::string_view name, anch::codec::Side side);
 
   /*!
-   * Get first part with name deserialized with \ref Json codec (constraints checked according to
+   * Get first part with name deserialized with \ref anch::codec::Json codec (constraints checked according to
    * side)
    *
    * \param form the form
@@ -234,7 +234,7 @@ namespace anch::rest {
   T requiredJsonFormField(const anch::rest::Form& form, std::string_view name, anch::codec::Side side);
 
   /*!
-   * Check anch-json constraints of a value read from a form on server side ( \ref Json codec checks
+   * Check anch-json constraints of a value read from a form on server side ( \ref anch::codec::Json codec checks
    * request bodies, form mappers do the same with this function). Nothing is checked on client
    * side.
    *

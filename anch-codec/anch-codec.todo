@@ -210,7 +210,8 @@ Questions (toutes tranchées le 2026-11-21)
 3. Tranchée le 2026-11-21 : négociation (parseAccept, negotiate) dans anch-codec avec MediaType.
 4. Tranchée le 2026-11-21 : concepts de format et FormatCodec<F> de mapping.todo §4 dans anch-codec (à faire après
    l'extraction ; mapping.todo à mettre à jour).
-5. Tranchée le 2026-11-21 : alias dépréciés dans anch-rest en 0.3, retirés en 0.4.
+5. Tranchée le 2026-11-21 : alias dépréciés dans anch-rest en 0.3, retirés en 0.4 ; remplacée le même jour (pas de
+   dépréciation avant 1.0.0) : alias supprimés.
 6. Tranchée le 2026-11-21 : serializeBody / deserializeBody deviennent anch::codec::serialize / deserialize (anciens
    noms dépréciés dans anch-rest).
 7. Tranchée le 2026-11-21 : liste à la compilation (codec/formats.hpp généré, Codecs<...> disponibles) et registre à

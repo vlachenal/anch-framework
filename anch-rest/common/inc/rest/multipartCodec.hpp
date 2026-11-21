@@ -53,7 +53,7 @@ namespace anch::rest {
    * \c Content-Type is \c text/plain by default, \c application/octet-stream for files. Other part
    * headers are kept ( \c Content-Transfer-Encoding is not applied). Malformed bodies raise
    * \c std::invalid_argument ( \c 400 on server side), bodies over \ref limits raise
-   * \ref ContentTooLarge ( \c 413 ).\n
+   * \ref anch::codec::ContentTooLarge ( \c 413 ).\n
    * \n
    * Types with a \ref FormMapper are read and written through a \ref Form .
    * \snippet{trimleft} anch-rest/examples/server.cpp multipart server

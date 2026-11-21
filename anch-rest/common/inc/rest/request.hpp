@@ -129,7 +129,7 @@ namespace anch::rest {
     std::optional<anch::codec::MediaType> getContentType() const;
 
     /*!
-     * Get \c Accept header media ranges (see \ref MediaType::parseAccept )
+     * Get \c Accept header media ranges (see \ref anch::codec::MediaType::parseAccept )
      *
      * \return the media ranges, empty when header is not set
      */

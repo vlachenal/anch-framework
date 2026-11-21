@@ -57,13 +57,6 @@ namespace anch::ut {
     }
   }
 
-  template<typename... T>
-  void
-  (assert)(bool check, std::string_view message, const T&... args) {
-    if(!check) {
-      throw anch::ut::AssertException(std::vformat(message, std::make_format_args(args...)));
-    }
-  }
 
   /*!
    * Compare collections' elements one by one. The name of an element is built only when it differs.

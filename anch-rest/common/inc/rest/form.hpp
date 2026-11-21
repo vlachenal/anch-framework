@@ -37,7 +37,7 @@ namespace anch::rest {
 
   /*!
    * Form codecs limits, by side ( \ref FormUrlEncoded::limits , \ref Multipart::limits ): a body over a
-   * limit raises \ref ContentTooLarge ( \c 413 on server side).
+   * limit raises \ref anch::codec::ContentTooLarge ( \c 413 on server side).
    *
    * \author Vincent Lachenal
    *
