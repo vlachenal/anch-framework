@@ -52,8 +52,8 @@ which give its replacement and the version which removes it. Until 1.0.0, it is 
   removed at compile time, as with the stream API. `anch::log::MIN_LEVEL` is declared in `log/levels.hpp`.
 - `ANCH_NATIVE_ARCH` (`-march=native`) is OFF by default: binaries built for the build machine CPU may not run on
   other CPUs (installed packages, CI runners sharing a compilation cache).
-- Doxygen documentation is no longer committed under `docs/`: `doxygen Doxyfile` writes it in `build/docs`, the `docs`
-  workflow generates it (warnings are errors) and deploys it to GitHub Pages from `master`.
+- Doxygen documentation is no longer committed under `docs/`: `doxygen Doxyfile` writes it in `build/docs` (`build/`
+  has to exist), the `docs` workflow generates it (warnings are errors) and deploys it to GitHub Pages from `master`.
 - `Release` builds use an explicit optimization level, `ANCH_OPTIMIZATION_LEVEL` (`3` by default, `1` to `3`),
   instead of CMake default flags. New `asan-clang` preset: Clang in `Release` with `-O2`, AddressSanitizer and
   UndefinedBehaviorSanitizer (also run by the CI).

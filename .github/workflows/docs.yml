@@ -32,9 +32,11 @@ jobs:
       - uses: actions/checkout@v7
 
       - name: Generate documentation
-        # Doxyfile writes in build/docs ; warnings fail the build in CI only (Doxygen versions differ locally)
+        # Doxyfile writes in build/docs (Doxygen does not create build/) ; warnings fail the build in CI only (Doxygen
+        # versions differ locally)
         run: |
           doxygen --version
+          mkdir -p build
           { cat Doxyfile; echo "WARN_AS_ERROR = FAIL_ON_WARNINGS"; } | doxygen -
 
       - name: Upload documentation
