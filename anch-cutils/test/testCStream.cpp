@@ -38,12 +38,14 @@ struct Test {
 };
 
 template<>
-void
-anch::json::registerObject<Test>(anch::json::ObjectMapper<Test>& mapper) {
-  mapper
-    .registerField("toto", &Test::toto)
-    .registerField("titi", &Test::titi);
-}
+struct anch::Mapping<Test> {
+  static void
+  registerObject(anch::ObjectMapper<Test> auto& mapper) {
+    mapper
+      .registerField("toto", &Test::toto)
+      .registerField("titi", &Test::titi);
+  }
+};
 
 const std::string JSON("{\"toto\":\"toto\",\"titi\":42}");
 

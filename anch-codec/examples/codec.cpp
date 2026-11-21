@@ -64,12 +64,14 @@ struct Pet {
 };
 
 template<>
-void
-anch::json::registerObject(anch::json::ObjectMapper<Pet>& mapper) {
-  mapper
-    .registerField("id", &Pet::id)
-    .registerField("name", &Pet::name, anch::val::required, anch::val::minLength(1));
-}
+struct anch::Mapping<Pet> {
+  static void
+  registerObject(anch::ObjectMapper<Pet> auto& mapper) {
+    mapper
+      .registerField("id", &Pet::id)
+      .registerField("name", &Pet::name, anch::val::required, anch::val::minLength(1));
+  }
+};
 //! [model]
 
 int

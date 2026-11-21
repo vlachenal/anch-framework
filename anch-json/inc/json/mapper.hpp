@@ -29,6 +29,7 @@
 #include <limits>
 
 #include "json/constraints.hpp"
+#include "mapping.hpp"
 #include "json/genericMapper.hpp"
 #include "json/mappingOptions.hpp"
 
@@ -43,16 +44,45 @@ namespace anch::json {
   template<typename T>
   class Factory;
 
+}  // anch::json
+
+namespace anch::json::detail {
+
   /*!
-   * Fields registry function\n
-   * This function has to be specialized for each class/structure which has to be serialized/deserialized.
+   * Value type of a field: value type of \c std::optional , smart pointers and pointers, then items type of
+   * collections and maps, the field type otherwise
    *
-   * \tparam T the object type
+   * \tparam P the field type
    *
-   * \param mapper the \ref ObjectMapper to use
+   * \return the value type (\c std::type_identity )
    */
-  template<typename T>
-  void registerObject(ObjectMapper<T>& mapper);
+  template<typename P>
+  constexpr auto
+  valueTypeOf() {
+    using V = std::remove_cvref_t<P>;
+    if constexpr (anch::val::isNullable<V>()) {
+      return valueTypeOf<anch::val::detail::Unwrap<V>>();
+    } else if constexpr (anch::val::MapLike<V>) {
+      return std::type_identity<std::remove_cvref_t<typename V::mapped_type>>{};
+    } else if constexpr (anch::val::Collection<V>) {
+      return std::type_identity<std::remove_cvref_t<std::ranges::range_value_t<V>>>{};
+    } else {
+      return std::type_identity<V>{};
+    }
+  }
+
+  /*!
+   * Mapper type of a field (see \ref valueTypeOf ): fields of \c std::optional , smart pointers, collections and
+   * maps are mapped with the mapper of their value type
+   *
+   * \tparam P the field type
+   */
+  template<typename P>
+  using MapperType = typename decltype(anch::json::detail::valueTypeOf<P>())::type;
+
+}  // anch::json::detail
+
+namespace anch::json {
 
    /*! Serialization function definition */
    template<typename T>
@@ -66,7 +96,9 @@ namespace anch::json {
    * \brief JSON complex object mapper
    *
    * This is a generic template header implementation.\n
-   * Type has to be a class or a structure. The fields have to be registered through the registerObject function implementation for the specific type.\n
+   * Type has to be a class or a structure described by an \c anch::Mapping specialization (anch-utils, \c mapping.hpp ):
+   * its \c registerObject function registers the fields on this mapper. Fields of \c std::optional , smart pointers,
+   * collections and maps are mapped with the mapper of their value type.\n
    * Field constraints ( \ref anch::val::Required , value constraints like \ref anch::val::MinLength , see
    * anch-val, \c val/constraints.hpp ) can be given at registration. They are checked on deserialization
    * ( \c deserialize_check_constraints option, enabled by default) and on serialization
@@ -83,8 +115,6 @@ namespace anch::json {
   template<typename T>
   class ObjectMapper: public anch::json::GenericMapper<ObjectMapper<T>, T> {
     friend class anch::json::Factory<T>;
-    template<typename U>
-    friend void anch::json::registerObject(ObjectMapper<U>&);
 
     // Attributes +
   private:
@@ -318,7 +348,7 @@ namespace anch::json {
      *
      * \return \c this
      */
-    template<typename P, typename MT = P, typename... C>
+    template<typename P, typename MT = anch::json::detail::MapperType<P>, typename... C>
     requires (anch::val::FieldConstraint<C,P> && ...)
     ObjectMapper<T>& registerField(const std::string& key, std::function<P(const T&)> getter, const C&... constraints);
 
@@ -335,7 +365,7 @@ namespace anch::json {
      *
      * \return \c this
      */
-    template<typename P, typename MT = P, typename... C>
+    template<typename P, typename MT = anch::json::detail::MapperType<P>, typename... C>
     requires (anch::val::FieldConstraint<C,P> && ...)
     ObjectMapper<T>& registerField(const std::string& key, std::function<void(T&, const P&)> setter, C&&... constraints);
 
@@ -353,7 +383,7 @@ namespace anch::json {
      *
      * \return \c this
      */
-    template<typename P, typename MT = P, typename... C>
+    template<typename P, typename MT = anch::json::detail::MapperType<P>, typename... C>
     requires (anch::val::FieldConstraint<C,P> && ...)
     ObjectMapper<T>& registerField(const std::string& key, std::function<P(const T&)> getter, std::function<void(T&, const P&)> setter, C&&... constraints);
     // Fields registration -

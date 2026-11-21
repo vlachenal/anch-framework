@@ -108,8 +108,12 @@ Compatibilité et dépréciation
    vérifié avec int T::* et std::function<int ...>), Described, describe<T>(mapper). Les contraintes et la validation
    sont dans anch-val (décision 3 remplacée). anch::json::ObjectMapper satisfait le concept : ses registerField
    deviennent publics (un concept est vérifié sans les amitiés de la classe).
-2. anch-json : lecture de anch::Mapping<T>, tests sur les deux formes de description ; anch-oas génère la nouvelle
-   forme.
+2. Faite le 2026-11-21. anch-json : lecture de anch::Mapping<T> (constructeur d'ObjectMapper : anch::describe<T>) ;
+   anch::json::registerObject supprimé sans dépréciation (version < 1.0, décision 2 remplacée) : tous les usages
+   (tests, exemples, anch-rest, anch-codec, anch-oas/spec.cpp, fuzzing, test d'installation) convertis. Le type de
+   mapper d'un champ est déduit (anch::json::detail::MapperType : std::optional, pointeurs, collections, maps -> type
+   de valeur) : la description n'a plus besoin de registerField<T> (forme propre à JSON, gardée). anch-oas génère
+   les descriptions dans l'en-tête des modèles (le source garde les mappers d'énumérations).
 3. anch-csv : Reader / Writer (anch-csv/anch-csv.todo), puis mapper sur anch::Mapping<T>.
 4. Concepts Serializer / Deserializer, Json et Csv, codec générique anch-rest.
 5. ScalarMapping pour les énumérations et types simples (anch-json, anch-csv, anch-oas).
@@ -120,7 +124,8 @@ Questions (toutes tranchées)
    évolution possible vers une description constexpr (forme C, voir « Description commune »). Écartée : fonction
    libre trouvée par ADL (son nom entre en conflit avec anch::json::registerObject lors de la recherche dépendante
    des arguments, et elle ne permet pas de décrire les types de std ou de bibliothèques tierces).
-2. Tranchée le 2026-11-21 : anch::json::registerObject déprécié en 0.3, supprimé en 0.4.
+2. Tranchée le 2026-11-21 : anch::json::registerObject déprécié en 0.3, supprimé en 0.4 ; remplacée le même jour
+   (pas de dépréciation avant 1.0.0) : supprimé directement.
 3. Tranchée le 2026-11-21 : contraintes et validation dans anch-utils ; remplacée le même jour : bibliothèque
    anch-val (anch::val, voir anch-val/anch-val.todo).
 4. Tranchée le 2026-11-21 : options de champ ignorées par les autres formats (anch::json::name("..."),

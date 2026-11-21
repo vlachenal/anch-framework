@@ -55,31 +55,35 @@ namespace {
 }
 
 template<>
-void
-anch::json::registerObject(anch::json::ObjectMapper<Child>& mapper) {
-  mapper
-    .registerField("id", &Child::id, anch::val::required)
-    .registerField<std::string>("name", &Child::name, anch::val::maxLength(16))
-    ;
-}
+struct anch::Mapping<Child> {
+  static void
+  registerObject(anch::ObjectMapper<Child> auto& mapper) {
+    mapper
+      .registerField("id", &Child::id, anch::val::required)
+      .registerField("name", &Child::name, anch::val::maxLength(16))
+      ;
+  }
+};
 
 template<>
-void
-anch::json::registerObject(anch::json::ObjectMapper<Document>& mapper) {
-  mapper
-    .registerField("text", &Document::text)
-    .registerField("integer", &Document::integer)
-    .registerField("small", &Document::small, anch::val::minimum(1))
-    .registerField("real", &Document::real)
-    .registerField("flag", &Document::flag)
-    .registerField<std::string>("optional", &Document::optional)
-    .registerField<int32_t>("numbers", &Document::numbers)
-    .registerField<std::string>("strings", &Document::strings)
-    .registerField<Child>("children", &Document::children)
-    .registerField<Child>("list", &Document::list)
-    .registerField<Child>("child", &Document::child)
-    ;
-}
+struct anch::Mapping<Document> {
+  static void
+  registerObject(anch::ObjectMapper<Document> auto& mapper) {
+    mapper
+      .registerField("text", &Document::text)
+      .registerField("integer", &Document::integer)
+      .registerField("small", &Document::small, anch::val::minimum(1))
+      .registerField("real", &Document::real)
+      .registerField("flag", &Document::flag)
+      .registerField("optional", &Document::optional)
+      .registerField("numbers", &Document::numbers)
+      .registerField("strings", &Document::strings)
+      .registerField("children", &Document::children)
+      .registerField("list", &Document::list)
+      .registerField("child", &Document::child)
+      ;
+  }
+};
 
 extern "C" int
 LLVMFuzzerTestOneInput(const uint8_t* data, std::size_t size) {

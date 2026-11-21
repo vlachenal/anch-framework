@@ -220,42 +220,46 @@ operator<<(std::ostream& os, const Toto& toto) {
 }
 
 template<>
-void
-anch::json::registerObject(ObjectMapper<Toto>& mapper) {
-  std::cout << "Register Toto fields" << std::endl;
-  mapper
-    .registerField("plop", &Toto::plop)
-    .registerField<std::string>("plip", &Toto::plip)
-    .registerField("plap", &Toto::plap)
-    .registerField("plup", &Toto::plup)
-    .registerField("tata", &Toto::tata)
-    .registerField("plep", &Toto::plep)
-    .registerField("plyp", &Toto::plyp)
-    //.registerField("lplyp", &Toto::lplyp)
-    .registerField<Toto>("self", &Toto::self)
-    .registerField<std::string>("invisible", &Toto::empty)
-    .registerField<std::string>("ptr", &Toto::ptr)
-    .registerField("null", &Toto::null)
-    .registerField("class", std::function<std::string(const Toto&)>(&Toto::getClass))
+struct anch::Mapping<Toto> {
+  static void
+  registerObject(anch::ObjectMapper<Toto> auto& mapper) {
+    std::cout << "Register Toto fields" << std::endl;
+    mapper
+      .registerField("plop", &Toto::plop)
+      .registerField("plip", &Toto::plip)
+      .registerField("plap", &Toto::plap)
+      .registerField("plup", &Toto::plup)
+      .registerField("tata", &Toto::tata)
+      .registerField("plep", &Toto::plep)
+      .registerField("plyp", &Toto::plyp)
+      //.registerField("lplyp", &Toto::lplyp)
+      .registerField("self", &Toto::self)
+      .registerField("invisible", &Toto::empty)
+      .registerField("ptr", &Toto::ptr)
+      .registerField("null", &Toto::null)
+      .registerField("class", std::function<std::string(const Toto&)>(&Toto::getClass))
 #ifdef ANCH_UUID
-    .registerField("uuid", &Toto::uuid)
+      .registerField("uuid", &Toto::uuid)
 #endif
-    ;
-  std::cout << "Toto fields registered" << std::endl;
-}
+      ;
+    std::cout << "Toto fields registered" << std::endl;
+  }
+};
 
 template<>
-void
-anch::json::registerObject(ObjectMapper<Tata>& mapper) {
-  std::cout << "Register Tata fields" << std::endl;
-  mapper
-    .registerField("ploum", &Tata::ploum)
-    .registerField("view", std::function<const std::string_view&(const Tata&)>(&Tata::getView))
-    .registerField<uint64_t>("num_set", &Tata::numSet)
-    .registerField<std::string>("str_vector", &Tata::strVect)
-    ;
-  std::cout << "Tata fields registered" << std::endl;
-}
+struct anch::Mapping<Tata> {
+  static void
+  registerObject(anch::ObjectMapper<Tata> auto& mapper) {
+    std::cout << "Register Tata fields" << std::endl;
+    mapper
+      .registerField("ploum", &Tata::ploum)
+      .registerField("view", std::function<const std::string_view&(const Tata&)>(&Tata::getView))
+      .registerField("num_set", &Tata::numSet)
+      .registerField("str_vector", &Tata::strVect)
+      ;
+    std::cout << "Tata fields registered" << std::endl;
+  }
+};
 
 struct Test {
   std::string _id;
@@ -276,14 +280,16 @@ struct Test {
 };
 
 template<>
-void
-anch::json::registerObject(ObjectMapper<Test>& mapper) {
-  mapper
-    .registerField("id", &Test::_id)
-    .registerField("value", std::function<std::string(const Test&)>(&Test::getValue), std::function<void(Test&, const std::string&)>(&Test::setValue))
-    .registerField<int32_t>("nums", &Test::_nums)
-    ;
-}
+struct anch::Mapping<Test> {
+  static void
+  registerObject(anch::ObjectMapper<Test> auto& mapper) {
+    mapper
+      .registerField("id", &Test::_id)
+      .registerField("value", std::function<std::string(const Test&)>(&Test::getValue), std::function<void(Test&, const std::string&)>(&Test::setValue))
+      .registerField("nums", &Test::_nums)
+      ;
+  }
+};
 
 namespace plop {
   struct json_proxy {
@@ -777,16 +783,18 @@ struct TestMap {
 };
 
 template<>
-void
-anch::json::registerObject(ObjectMapper<TestMap>& mapper) {
-  mapper
-    .registerField<std::string>("strMap", &TestMap::_strMap)
-    .registerField<bool>("boolMap", &TestMap::_boolMap)
-    .registerField<int64_t>("intMap", &TestMap::_intMap)
-    .registerField<double>("doubleMap", &TestMap::_doubleMap)
-    .registerField<Test>("testMap", &TestMap::_testMap)
-    ;
-}
+struct anch::Mapping<TestMap> {
+  static void
+  registerObject(anch::ObjectMapper<TestMap> auto& mapper) {
+    mapper
+      .registerField("strMap", &TestMap::_strMap)
+      .registerField("boolMap", &TestMap::_boolMap)
+      .registerField("intMap", &TestMap::_intMap)
+      .registerField("doubleMap", &TestMap::_doubleMap)
+      .registerField("testMap", &TestMap::_testMap)
+      ;
+  }
+};
 
 void
 testSerializeMap() {
@@ -871,15 +879,17 @@ struct TestRange {
 };
 
 template<>
-void
-anch::json::registerObject(ObjectMapper<TestRange>& mapper) {
-  mapper
-    .registerField("i16", &TestRange::_i16)
-    .registerField("i32", &TestRange::_i32)
-    .registerField("u16", &TestRange::_u16)
-    .registerField("u32", &TestRange::_u32)
-    ;
-}
+struct anch::Mapping<TestRange> {
+  static void
+  registerObject(anch::ObjectMapper<TestRange> auto& mapper) {
+    mapper
+      .registerField("i16", &TestRange::_i16)
+      .registerField("i32", &TestRange::_i32)
+      .registerField("u16", &TestRange::_u16)
+      .registerField("u32", &TestRange::_u32)
+      ;
+  }
+};
 
 void
 checkRangeOverflow(const std::string& json) {
@@ -947,12 +957,14 @@ struct TestFloat {
 };
 
 template<>
-void
-anch::json::registerObject(ObjectMapper<TestFloat>& mapper) {
-  mapper
-    .registerField("f", &TestFloat::_f)
-    ;
-}
+struct anch::Mapping<TestFloat> {
+  static void
+  registerObject(anch::ObjectMapper<TestFloat> auto& mapper) {
+    mapper
+      .registerField("f", &TestFloat::_f)
+      ;
+  }
+};
 
 void
 checkFloatOverflow(const std::string& json) {
@@ -1038,12 +1050,14 @@ struct TestStr {
 };
 
 template<>
-void
-anch::json::registerObject(ObjectMapper<TestStr>& mapper) {
-  mapper
-    .registerField("s", &TestStr::_s)
-    ;
-}
+struct anch::Mapping<TestStr> {
+  static void
+  registerObject(anch::ObjectMapper<TestStr> auto& mapper) {
+    mapper
+      .registerField("s", &TestStr::_s)
+      ;
+  }
+};
 
 void
 testSerEscape() {
@@ -1083,12 +1097,14 @@ struct TestNode {
 };
 
 template<>
-void
-anch::json::registerObject(ObjectMapper<TestNode>& mapper) {
-  mapper
-    .registerField<TestNode>("c", &TestNode::_children)
-    ;
-}
+struct anch::Mapping<TestNode> {
+  static void
+  registerObject(anch::ObjectMapper<TestNode> auto& mapper) {
+    mapper
+      .registerField("c", &TestNode::_children)
+      ;
+  }
+};
 
 void
 checkDepthError(const std::function<void()>& deser) {
@@ -1208,13 +1224,15 @@ struct TestRequiredChild {
 };
 
 template<>
-void
-anch::json::registerObject(ObjectMapper<TestRequiredChild>& mapper) {
-  mapper
-    .registerField("id", &TestRequiredChild::_id, anch::val::required)
-    .registerField<std::string>("name", &TestRequiredChild::_name)
-    ;
-}
+struct anch::Mapping<TestRequiredChild> {
+  static void
+  registerObject(anch::ObjectMapper<TestRequiredChild> auto& mapper) {
+    mapper
+      .registerField("id", &TestRequiredChild::_id, anch::val::required)
+      .registerField("name", &TestRequiredChild::_name)
+      ;
+  }
+};
 
 struct TestRequired {
   int64_t _id = 0;
@@ -1228,26 +1246,28 @@ struct TestRequired {
 };
 
 template<>
-void
-anch::json::registerObject(ObjectMapper<TestRequired>& mapper) {
-  mapper
-    .registerField("id", &TestRequired::_id, anch::val::required)
-    .registerField("name", &TestRequired::_name, anch::val::required)
-    .registerField<std::string>("owner", &TestRequired::_owner, anch::val::required) // can be null
-    .registerField<std::string>("tags", &TestRequired::_tags, anch::val::required) // can not be null
-    .registerField("count", &TestRequired::_count)
-    .registerField<TestRequiredChild>("children", &TestRequired::_children)
-    .registerField<TestRequiredChild>("byName", &TestRequired::_byName)
-    .registerField<std::string>("label",
-				std::function<std::string(const TestRequired&)>([](const TestRequired& obj) -> std::string {
-				  return obj._label;
-				}),
-				std::function<void(TestRequired&, const std::string&)>([](TestRequired& obj, const std::string& label) {
-				  obj._label = label;
-				}),
-				anch::val::required)
-    ;
-}
+struct anch::Mapping<TestRequired> {
+  static void
+  registerObject(anch::ObjectMapper<TestRequired> auto& mapper) {
+    mapper
+      .registerField("id", &TestRequired::_id, anch::val::required)
+      .registerField("name", &TestRequired::_name, anch::val::required)
+      .registerField("owner", &TestRequired::_owner, anch::val::required) // can be null
+      .registerField("tags", &TestRequired::_tags, anch::val::required) // can not be null
+      .registerField("count", &TestRequired::_count)
+      .registerField("children", &TestRequired::_children)
+      .registerField("byName", &TestRequired::_byName)
+      .registerField("label",
+				  std::function<std::string(const TestRequired&)>([](const TestRequired& obj) -> std::string {
+				    return obj._label;
+				  }),
+				  std::function<void(TestRequired&, const std::string&)>([](TestRequired& obj, const std::string& label) {
+				    obj._label = label;
+				  }),
+				  anch::val::required)
+      ;
+  }
+};
 
 template<typename T>
 void
@@ -1335,16 +1355,18 @@ struct TestManyRequired {
 };
 
 template<>
-void
-anch::json::registerObject(ObjectMapper<TestManyRequired>& mapper) {
-  for(std::size_t i = 0 ; i < 70 ; ++i) {
-    mapper.registerField<int64_t>("f" + std::to_string(i),
-				  std::function<void(TestManyRequired&, const int64_t&)>([i](TestManyRequired& obj, const int64_t& value) {
-				    obj._values[i] = value;
-				  }),
-				  anch::val::required);
+struct anch::Mapping<TestManyRequired> {
+  static void
+  registerObject(anch::ObjectMapper<TestManyRequired> auto& mapper) {
+    for(std::size_t i = 0 ; i < 70 ; ++i) {
+      mapper.registerField("f" + std::to_string(i),
+				    std::function<void(TestManyRequired&, const int64_t&)>([i](TestManyRequired& obj, const int64_t& value) {
+				      obj._values[i] = value;
+				    }),
+				    anch::val::required);
+    }
   }
-}
+};
 
 std::string
 manyRequiredJson(std::size_t skipped) {
@@ -1382,12 +1404,14 @@ struct TestPoint {
 };
 
 template<>
-void
-anch::json::registerObject(ObjectMapper<TestPoint>& mapper) {
-  mapper
-    .registerField("x", &TestPoint::_x)
-    ;
-}
+struct anch::Mapping<TestPoint> {
+  static void
+  registerObject(anch::ObjectMapper<TestPoint> auto& mapper) {
+    mapper
+      .registerField("x", &TestPoint::_x)
+      ;
+  }
+};
 
 struct TestConstraints {
   std::string _name;
@@ -1405,31 +1429,33 @@ struct TestConstraints {
 };
 
 template<>
-void
-anch::json::registerObject(ObjectMapper<TestConstraints>& mapper) {
-  mapper
-    .registerField("name", &TestConstraints::_name, anch::val::required, anch::val::minLength(2), anch::val::maxLength(5))
-    .registerField("age", &TestConstraints::_age, anch::val::minimum(0), anch::val::maximum(150))
-    .registerField("level", &TestConstraints::_level, anch::val::exclusiveMinimum(0), anch::val::exclusiveMaximum(10))
-    .registerField("even", &TestConstraints::_even, anch::val::multipleOf(2))
-    .registerField("price", &TestConstraints::_price, anch::val::minimum(0.0), anch::val::multipleOf(0.01))
-    .registerField<std::string>("tags", &TestConstraints::_tags, anch::val::minItems(1), anch::val::maxItems(3),
-				anch::val::uniqueItems, anch::val::items(anch::val::minLength(1)))
-    .registerField<int64_t>("scores", &TestConstraints::_scores, anch::val::minProperties(1), anch::val::maxProperties(2),
-			    anch::val::items(anch::val::minimum(0)))
-    .registerField<std::string>("color", &TestConstraints::_color, anch::val::allowed({"red", "green"}))
-    .registerField<int64_t>("grade", &TestConstraints::_grade, anch::val::allowed({1, 2, 3}))
-    .registerField<TestPoint>("points", &TestConstraints::_points, anch::val::uniqueItems)
-    .registerField<int64_t>("ids", &TestConstraints::_ids, anch::val::maxItems(2))
-    .registerField<std::string>("code",
-				std::function<void(TestConstraints&, const std::string&)>([](TestConstraints& obj, const std::string& code) {
-				  obj._code = code;
-				}),
-				anch::val::custom<std::string>([](const std::string& code) -> bool {
-				  return code.starts_with('C');
-				}, "Code has to start with 'C'"))
-    ;
-}
+struct anch::Mapping<TestConstraints> {
+  static void
+  registerObject(anch::ObjectMapper<TestConstraints> auto& mapper) {
+    mapper
+      .registerField("name", &TestConstraints::_name, anch::val::required, anch::val::minLength(2), anch::val::maxLength(5))
+      .registerField("age", &TestConstraints::_age, anch::val::minimum(0), anch::val::maximum(150))
+      .registerField("level", &TestConstraints::_level, anch::val::exclusiveMinimum(0), anch::val::exclusiveMaximum(10))
+      .registerField("even", &TestConstraints::_even, anch::val::multipleOf(2))
+      .registerField("price", &TestConstraints::_price, anch::val::minimum(0.0), anch::val::multipleOf(0.01))
+      .registerField("tags", &TestConstraints::_tags, anch::val::minItems(1), anch::val::maxItems(3),
+				  anch::val::uniqueItems, anch::val::items(anch::val::minLength(1)))
+      .registerField("scores", &TestConstraints::_scores, anch::val::minProperties(1), anch::val::maxProperties(2),
+			      anch::val::items(anch::val::minimum(0)))
+      .registerField("color", &TestConstraints::_color, anch::val::allowed({"red", "green"}))
+      .registerField("grade", &TestConstraints::_grade, anch::val::allowed({1, 2, 3}))
+      .registerField("points", &TestConstraints::_points, anch::val::uniqueItems)
+      .registerField("ids", &TestConstraints::_ids, anch::val::maxItems(2))
+      .registerField("code",
+				  std::function<void(TestConstraints&, const std::string&)>([](TestConstraints& obj, const std::string& code) {
+				    obj._code = code;
+				  }),
+				  anch::val::custom<std::string>([](const std::string& code) -> bool {
+				    return code.starts_with('C');
+				  }, "Code has to start with 'C'"))
+      ;
+  }
+};
 
 // Constraints are checked at compile time against field types
 static_assert(anch::val::FieldConstraint<anch::val::MinLength, std::string>);
@@ -1570,17 +1596,19 @@ struct TestFormats {
 };
 
 template<>
-void
-anch::json::registerObject(ObjectMapper<TestFormats>& mapper) {
-  mapper
-    .registerField("code", &TestFormats::_code, anch::val::pattern("^[A-Z]{2}[0-9]+$"))
-    .registerField<std::string>("word", &TestFormats::_word, anch::val::pattern("b"))
-    .registerField<std::string>("email", &TestFormats::_email, anch::val::format("email"))
-    .registerField<std::string>("ips", &TestFormats::_ips, anch::val::items(anch::val::format("ipv4")))
-    .registerField<std::string>("secret", &TestFormats::_secret, anch::val::format("password"))
-    .registerField<std::string>("even", &TestFormats::_even, anch::val::format("even-length"))
-    ;
-}
+struct anch::Mapping<TestFormats> {
+  static void
+  registerObject(anch::ObjectMapper<TestFormats> auto& mapper) {
+    mapper
+      .registerField("code", &TestFormats::_code, anch::val::pattern("^[A-Z]{2}[0-9]+$"))
+      .registerField("word", &TestFormats::_word, anch::val::pattern("b"))
+      .registerField("email", &TestFormats::_email, anch::val::format("email"))
+      .registerField("ips", &TestFormats::_ips, anch::val::items(anch::val::format("ipv4")))
+      .registerField("secret", &TestFormats::_secret, anch::val::format("password"))
+      .registerField("even", &TestFormats::_even, anch::val::format("even-length"))
+      ;
+  }
+};
 
 void
 checkFormatError(const std::string& json, const std::string& path, const std::string& message) {
@@ -1699,15 +1727,17 @@ struct TestGetter {
 };
 
 template<>
-void
-anch::json::registerObject(ObjectMapper<TestGetter>& mapper) {
-  mapper
-    .registerField<int64_t>("value",
-			    std::function<int64_t(const TestGetter&)>([](const TestGetter& obj) -> int64_t { return obj._value; }),
-			    std::function<void(TestGetter&, const int64_t&)>([](TestGetter& obj, const int64_t& value) { obj._value = value; }),
-			    anch::val::minimum(0))
-    ;
-}
+struct anch::Mapping<TestGetter> {
+  static void
+  registerObject(anch::ObjectMapper<TestGetter> auto& mapper) {
+    mapper
+      .registerField("value",
+			      std::function<int64_t(const TestGetter&)>([](const TestGetter& obj) -> int64_t { return obj._value; }),
+			      std::function<void(TestGetter&, const int64_t&)>([](TestGetter& obj, const int64_t& value) { obj._value = value; }),
+			      anch::val::minimum(0))
+      ;
+  }
+};
 
 struct TestSerRequired {
   std::map<std::string,int64_t> _map;
@@ -1719,17 +1749,19 @@ struct TestSerRequired {
 };
 
 template<>
-void
-anch::json::registerObject(ObjectMapper<TestSerRequired>& mapper) {
-  mapper
-    .registerField<int64_t>("map", &TestSerRequired::_map, anch::val::required)
-    .registerField<std::string>("opt", &TestSerRequired::_opt, anch::val::required)
-    .registerField<int64_t>("list", &TestSerRequired::_list, anch::val::required)
-    .registerField<TestPoint>("point", &TestSerRequired::_point, anch::val::required)
-    .registerField<int64_t>("other", &TestSerRequired::_other)
-    .registerField<std::string>("none", &TestSerRequired::_none)
-    ;
-}
+struct anch::Mapping<TestSerRequired> {
+  static void
+  registerObject(anch::ObjectMapper<TestSerRequired> auto& mapper) {
+    mapper
+      .registerField("map", &TestSerRequired::_map, anch::val::required)
+      .registerField("opt", &TestSerRequired::_opt, anch::val::required)
+      .registerField("list", &TestSerRequired::_list, anch::val::required)
+      .registerField("point", &TestSerRequired::_point, anch::val::required)
+      .registerField("other", &TestSerRequired::_other)
+      .registerField("none", &TestSerRequired::_none)
+      ;
+  }
+};
 
 TestConstraints
 validConstraints() {
@@ -1826,16 +1858,18 @@ struct TestNested {
 };
 
 template<>
-void
-anch::json::registerObject(ObjectMapper<TestNested>& mapper) {
-  mapper
-    .registerField("main", &TestNested::_main)
-    .registerField<TestConstraints>("opt", &TestNested::_opt)
-    .registerField<TestConstraints>("ptr", &TestNested::_ptr)
-    .registerField<TestConstraints>("map", &TestNested::_map, anch::val::maxProperties(1))
-    .registerField<TestConstraints>("list", &TestNested::_list)
-    ;
-}
+struct anch::Mapping<TestNested> {
+  static void
+  registerObject(anch::ObjectMapper<TestNested> auto& mapper) {
+    mapper
+      .registerField("main", &TestNested::_main)
+      .registerField("opt", &TestNested::_opt)
+      .registerField("ptr", &TestNested::_ptr)
+      .registerField("map", &TestNested::_map, anch::val::maxProperties(1))
+      .registerField("list", &TestNested::_list)
+      ;
+  }
+};
 
 void
 checkViolations(const std::vector<anch::val::Violation>& violations, const std::vector<std::pair<std::string,std::string>>& expected) {
@@ -1958,12 +1992,14 @@ struct TestUuid {
 };
 
 template<>
-void
-anch::json::registerObject(ObjectMapper<TestUuid>& mapper) {
-  mapper
-    .registerField("id", &TestUuid::_id)
-    ;
-}
+struct anch::Mapping<TestUuid> {
+  static void
+  registerObject(anch::ObjectMapper<TestUuid> auto& mapper) {
+    mapper
+      .registerField("id", &TestUuid::_id)
+      ;
+  }
+};
 
 void
 testDeserUuid() {
@@ -2006,15 +2042,17 @@ struct TestDate {
 };
 
 template<>
-void
-anch::json::registerObject(ObjectMapper<TestDate>& mapper) {
-  mapper
-    .registerField("timestamp", &TestDate::_timestamp)
-    .registerField<anch::date::Date>("updated", &TestDate::_updated)
-    .registerField("birth", &TestDate::_birth)
-    .registerField<std::chrono::year_month_day>("days", &TestDate::_days)
-    ;
-}
+struct anch::Mapping<TestDate> {
+  static void
+  registerObject(anch::ObjectMapper<TestDate> auto& mapper) {
+    mapper
+      .registerField("timestamp", &TestDate::_timestamp)
+      .registerField("updated", &TestDate::_updated)
+      .registerField("birth", &TestDate::_birth)
+      .registerField("days", &TestDate::_days)
+      ;
+  }
+};
 
 void
 testDeserDate() {

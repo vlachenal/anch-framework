@@ -35,14 +35,16 @@ struct Pet {
 
 // Declare serialized fields (once per type)
 template<>
-void
-anch::json::registerObject(anch::json::ObjectMapper<Pet>& mapper) {
-  mapper
-    .registerField("id", &Pet::id)
-    .registerField("name", &Pet::name)
-    .registerField<std::string>("tags", &Pet::tags) // container: element type is given
-    .registerField<std::string>("owner", &Pet::owner); // std::optional: value type is given too
-}
+struct anch::Mapping<Pet> {
+  static void
+  registerObject(anch::ObjectMapper<Pet> auto& mapper) {
+    mapper
+      .registerField("id", &Pet::id)
+      .registerField("name", &Pet::name)
+      .registerField("tags", &Pet::tags) // container: element type is given
+      .registerField("owner", &Pet::owner); // std::optional: value type is given too
+  }
+};
 
 int
 main() {

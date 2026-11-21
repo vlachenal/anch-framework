@@ -39,20 +39,24 @@ struct Shelter {
 };
 
 template<>
-void
-anch::json::registerObject(anch::json::ObjectMapper<Pet>& mapper) {
-  mapper
-    .registerField("id", &Pet::id, anch::val::required)
-    .registerField("name", &Pet::name, anch::val::required)
-    .registerField<std::string>("owner", &Pet::owner, anch::val::required); // has to be present, can be null
-}
+struct anch::Mapping<Pet> {
+  static void
+  registerObject(anch::ObjectMapper<Pet> auto& mapper) {
+    mapper
+      .registerField("id", &Pet::id, anch::val::required)
+      .registerField("name", &Pet::name, anch::val::required)
+      .registerField("owner", &Pet::owner, anch::val::required); // has to be present, can be null
+  }
+};
 
 template<>
-void
-anch::json::registerObject(anch::json::ObjectMapper<Shelter>& mapper) {
-  mapper
-    .registerField<Pet>("pets", &Shelter::pets, anch::val::required);
-}
+struct anch::Mapping<Shelter> {
+  static void
+  registerObject(anch::ObjectMapper<Shelter> auto& mapper) {
+    mapper
+      .registerField("pets", &Shelter::pets, anch::val::required);
+  }
+};
 
 int
 main() {

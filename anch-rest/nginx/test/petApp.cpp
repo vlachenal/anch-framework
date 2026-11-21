@@ -72,13 +72,15 @@ struct Pet {
 };
 
 template<>
-void
-anch::json::registerObject(anch::json::ObjectMapper<Pet>& mapper) {
-  mapper
-    .registerField("id", &Pet::id)
-    .registerField("name", &Pet::name)
-    ;
-}
+struct anch::Mapping<Pet> {
+  static void
+  registerObject(anch::ObjectMapper<Pet> auto& mapper) {
+    mapper
+      .registerField("id", &Pet::id)
+      .registerField("name", &Pet::name)
+      ;
+  }
+};
 
 std::unique_ptr<Api>
 createPetApi(std::string_view config) {

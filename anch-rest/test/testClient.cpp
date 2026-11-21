@@ -136,13 +136,15 @@ struct Pet {
 };
 
 template<>
-void
-anch::json::registerObject(anch::json::ObjectMapper<Pet>& mapper) {
-  mapper
-    .registerField("id", &Pet::id)
-    .registerField("name", &Pet::name)
-    ;
-}
+struct anch::Mapping<Pet> {
+  static void
+  registerObject(anch::ObjectMapper<Pet> auto& mapper) {
+    mapper
+      .registerField("id", &Pet::id)
+      .registerField("name", &Pet::name)
+      ;
+  }
+};
 
 struct Owner {
   std::string name;
@@ -150,13 +152,15 @@ struct Owner {
 };
 
 template<>
-void
-anch::json::registerObject(anch::json::ObjectMapper<Owner>& mapper) {
-  mapper
-    .registerField("name", &Owner::name, anch::val::required, anch::val::minLength(1), anch::val::maxLength(10))
-    .registerField<std::string>("email", &Owner::email, anch::val::format("email"))
-    ;
-}
+struct anch::Mapping<Owner> {
+  static void
+  registerObject(anch::ObjectMapper<Owner> auto& mapper) {
+    mapper
+      .registerField("name", &Owner::name, anch::val::required, anch::val::minLength(1), anch::val::maxLength(10))
+      .registerField("email", &Owner::email, anch::val::format("email"))
+      ;
+  }
+};
 
 // Form mapping +
 struct UploadPhoto {

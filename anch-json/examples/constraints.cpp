@@ -37,16 +37,18 @@ struct Pet {
 };
 
 template<>
-void
-anch::json::registerObject(anch::json::ObjectMapper<Pet>& mapper) {
-  mapper
-    .registerField("name", &Pet::name, anch::val::required, anch::val::minLength(1), anch::val::maxLength(32))
-    .registerField("age", &Pet::age, anch::val::minimum(0), anch::val::maximum(50))
-    .registerField<std::string>("tags", &Pet::tags, anch::val::maxItems(5), anch::val::uniqueItems,
-                                anch::val::items(anch::val::minLength(1)))      // checked on every tag
-    .registerField<int64_t>("scores", &Pet::scores, anch::val::items(anch::val::multipleOf(5)))
-    .registerField<std::string>("color", &Pet::color, anch::val::allowed({"black", "white"})); // checked when not null
-}
+struct anch::Mapping<Pet> {
+  static void
+  registerObject(anch::ObjectMapper<Pet> auto& mapper) {
+    mapper
+      .registerField("name", &Pet::name, anch::val::required, anch::val::minLength(1), anch::val::maxLength(32))
+      .registerField("age", &Pet::age, anch::val::minimum(0), anch::val::maximum(50))
+      .registerField("tags", &Pet::tags, anch::val::maxItems(5), anch::val::uniqueItems,
+				  anch::val::items(anch::val::minLength(1)))      // checked on every tag
+      .registerField("scores", &Pet::scores, anch::val::items(anch::val::multipleOf(5)))
+      .registerField("color", &Pet::color, anch::val::allowed({"black", "white"})); // checked when not null
+  }
+};
 
 int
 main() {

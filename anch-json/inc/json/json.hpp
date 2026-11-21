@@ -37,17 +37,6 @@
 
 namespace anch::json {
 
-  /*!
-   * Fields registry function\n
-   * This function has to be specialized for each class/structure which has to be serialized/deserialized.
-   *
-   * \tparam T the object type
-   *
-   * \param mapper the \ref ObjectMapper to use
-   */
-  template<typename T>
-  void registerObject(anch::json::ObjectMapper<T>& mapper);
-
   // Serialization functions +
   // Functions which write result in output stream +
   /*!

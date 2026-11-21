@@ -79,13 +79,15 @@ namespace {
 }
 
 template<>
-void
-anch::json::registerObject(anch::json::ObjectMapper<ConnectError>& mapper) {
-  mapper
-    .registerField("code", &ConnectError::code, anch::val::required)
-    .registerField<std::string>("message", &ConnectError::message)
-    ;
-}
+struct anch::Mapping<ConnectError> {
+  static void
+  registerObject(anch::ObjectMapper<ConnectError> auto& mapper) {
+    mapper
+      .registerField("code", &ConnectError::code, anch::val::required)
+      .registerField("message", &ConnectError::message)
+      ;
+  }
+};
 
 // RpcError +
 RpcError::RpcError(RpcCode code, const std::string& message): std::runtime_error(message), _code(code) {

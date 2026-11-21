@@ -154,141 +154,161 @@ namespace anch::json {
 
 // Objects mappers +
 template<>
-void
-anch::json::registerObject(anch::json::ObjectMapper<Schema>& mapper) {
-  mapper
-    .registerField<std::string>("$ref", &Schema::ref)
-    .registerField<std::string>("type", &Schema::type)
-    .registerField<std::string>("format", &Schema::format)
-    .registerField<std::string>("title", &Schema::title)
-    .registerField<std::string>("description", &Schema::description)
-    .registerField<bool>("nullable", &Schema::nullable)
-    .registerField<Schema>("properties", &Schema::properties)
-    .registerField<std::string>("required", &Schema::required)
-    .registerField<AdditionalProperties>("additionalProperties", &Schema::additionalProperties)
-    .registerField<Schema>("items", &Schema::items)
-    .registerField<Scalar>("enum", &Schema::enumeration)
-    .registerField<Schema>("allOf", &Schema::allOf)
-    .registerField<Schema>("oneOf", &Schema::oneOf)
-    .registerField<Schema>("anyOf", &Schema::anyOf)
-    .registerField<uint64_t>("minLength", &Schema::minLength)
-    .registerField<uint64_t>("maxLength", &Schema::maxLength)
-    .registerField<std::string>("pattern", &Schema::pattern)
-    .registerField<Scalar>("minimum", &Schema::minimum)
-    .registerField<Scalar>("maximum", &Schema::maximum)
-    .registerField<bool>("exclusiveMinimum", &Schema::exclusiveMinimum)
-    .registerField<bool>("exclusiveMaximum", &Schema::exclusiveMaximum)
-    .registerField<Scalar>("multipleOf", &Schema::multipleOf)
-    .registerField<uint64_t>("minItems", &Schema::minItems)
-    .registerField<uint64_t>("maxItems", &Schema::maxItems)
-    .registerField<bool>("uniqueItems", &Schema::uniqueItems)
-    .registerField<uint64_t>("minProperties", &Schema::minProperties)
-    .registerField<uint64_t>("maxProperties", &Schema::maxProperties)
-    ;
-}
+struct anch::Mapping<Schema> {
+  static void
+  registerObject(anch::ObjectMapper<Schema> auto& mapper) {
+    mapper
+      .registerField("$ref", &Schema::ref)
+      .registerField("type", &Schema::type)
+      .registerField("format", &Schema::format)
+      .registerField("title", &Schema::title)
+      .registerField("description", &Schema::description)
+      .registerField("nullable", &Schema::nullable)
+      .registerField("properties", &Schema::properties)
+      .registerField("required", &Schema::required)
+      .registerField("additionalProperties", &Schema::additionalProperties)
+      .registerField("items", &Schema::items)
+      .registerField("enum", &Schema::enumeration)
+      .registerField("allOf", &Schema::allOf)
+      .registerField("oneOf", &Schema::oneOf)
+      .registerField("anyOf", &Schema::anyOf)
+      .registerField("minLength", &Schema::minLength)
+      .registerField("maxLength", &Schema::maxLength)
+      .registerField("pattern", &Schema::pattern)
+      .registerField("minimum", &Schema::minimum)
+      .registerField("maximum", &Schema::maximum)
+      .registerField("exclusiveMinimum", &Schema::exclusiveMinimum)
+      .registerField("exclusiveMaximum", &Schema::exclusiveMaximum)
+      .registerField("multipleOf", &Schema::multipleOf)
+      .registerField("minItems", &Schema::minItems)
+      .registerField("maxItems", &Schema::maxItems)
+      .registerField("uniqueItems", &Schema::uniqueItems)
+      .registerField("minProperties", &Schema::minProperties)
+      .registerField("maxProperties", &Schema::maxProperties)
+      ;
+  }
+};
 
 template<>
-void
-anch::json::registerObject(anch::json::ObjectMapper<MediaTypeObject>& mapper) {
-  mapper
-    .registerField<Schema>("schema", &MediaTypeObject::schema)
-    ;
-}
+struct anch::Mapping<MediaTypeObject> {
+  static void
+  registerObject(anch::ObjectMapper<MediaTypeObject> auto& mapper) {
+    mapper
+      .registerField("schema", &MediaTypeObject::schema)
+      ;
+  }
+};
 
 template<>
-void
-anch::json::registerObject(anch::json::ObjectMapper<Parameter>& mapper) {
-  mapper
-    .registerField<std::string>("$ref", &Parameter::ref)
-    .registerField("name", &Parameter::name)
-    .registerField("in", &Parameter::in)
-    .registerField<std::string>("description", &Parameter::description)
-    .registerField<bool>("required", &Parameter::required)
-    .registerField<Schema>("schema", &Parameter::schema)
-    ;
-}
+struct anch::Mapping<Parameter> {
+  static void
+  registerObject(anch::ObjectMapper<Parameter> auto& mapper) {
+    mapper
+      .registerField("$ref", &Parameter::ref)
+      .registerField("name", &Parameter::name)
+      .registerField("in", &Parameter::in)
+      .registerField("description", &Parameter::description)
+      .registerField("required", &Parameter::required)
+      .registerField("schema", &Parameter::schema)
+      ;
+  }
+};
 
 template<>
-void
-anch::json::registerObject(anch::json::ObjectMapper<RequestBody>& mapper) {
-  mapper
-    .registerField<std::string>("$ref", &RequestBody::ref)
-    .registerField<std::string>("description", &RequestBody::description)
-    .registerField<bool>("required", &RequestBody::required)
-    .registerField<MediaTypeObject>("content", &RequestBody::content)
-    ;
-}
+struct anch::Mapping<RequestBody> {
+  static void
+  registerObject(anch::ObjectMapper<RequestBody> auto& mapper) {
+    mapper
+      .registerField("$ref", &RequestBody::ref)
+      .registerField("description", &RequestBody::description)
+      .registerField("required", &RequestBody::required)
+      .registerField("content", &RequestBody::content)
+      ;
+  }
+};
 
 template<>
-void
-anch::json::registerObject(anch::json::ObjectMapper<ResponseObject>& mapper) {
-  mapper
-    .registerField<std::string>("$ref", &ResponseObject::ref)
-    .registerField<std::string>("description", &ResponseObject::description)
-    .registerField<MediaTypeObject>("content", &ResponseObject::content)
-    ;
-}
+struct anch::Mapping<ResponseObject> {
+  static void
+  registerObject(anch::ObjectMapper<ResponseObject> auto& mapper) {
+    mapper
+      .registerField("$ref", &ResponseObject::ref)
+      .registerField("description", &ResponseObject::description)
+      .registerField("content", &ResponseObject::content)
+      ;
+  }
+};
 
 template<>
-void
-anch::json::registerObject(anch::json::ObjectMapper<Operation>& mapper) {
-  mapper
-    .registerField<std::string>("operationId", &Operation::operationId)
-    .registerField<std::string>("summary", &Operation::summary)
-    .registerField<std::string>("description", &Operation::description)
-    .registerField<bool>("deprecated", &Operation::deprecated)
-    .registerField<Parameter>("parameters", &Operation::parameters)
-    .registerField<RequestBody>("requestBody", &Operation::requestBody)
-    .registerField<ResponseObject>("responses", &Operation::responses)
-    ;
-}
+struct anch::Mapping<Operation> {
+  static void
+  registerObject(anch::ObjectMapper<Operation> auto& mapper) {
+    mapper
+      .registerField("operationId", &Operation::operationId)
+      .registerField("summary", &Operation::summary)
+      .registerField("description", &Operation::description)
+      .registerField("deprecated", &Operation::deprecated)
+      .registerField("parameters", &Operation::parameters)
+      .registerField("requestBody", &Operation::requestBody)
+      .registerField("responses", &Operation::responses)
+      ;
+  }
+};
 
 template<>
-void
-anch::json::registerObject(anch::json::ObjectMapper<PathItem>& mapper) {
-  mapper
-    .registerField<Parameter>("parameters", &PathItem::parameters)
-    .registerField<Operation>("get", &PathItem::get)
-    .registerField<Operation>("put", &PathItem::put)
-    .registerField<Operation>("post", &PathItem::post)
-    .registerField<Operation>("delete", &PathItem::del)
-    .registerField<Operation>("patch", &PathItem::patch)
-    .registerField<Operation>("head", &PathItem::head)
-    .registerField<Operation>("options", &PathItem::options)
-    .registerField<Operation>("trace", &PathItem::trace)
-    ;
-}
+struct anch::Mapping<PathItem> {
+  static void
+  registerObject(anch::ObjectMapper<PathItem> auto& mapper) {
+    mapper
+      .registerField("parameters", &PathItem::parameters)
+      .registerField("get", &PathItem::get)
+      .registerField("put", &PathItem::put)
+      .registerField("post", &PathItem::post)
+      .registerField("delete", &PathItem::del)
+      .registerField("patch", &PathItem::patch)
+      .registerField("head", &PathItem::head)
+      .registerField("options", &PathItem::options)
+      .registerField("trace", &PathItem::trace)
+      ;
+  }
+};
 
 template<>
-void
-anch::json::registerObject(anch::json::ObjectMapper<Info>& mapper) {
-  mapper
-    .registerField("title", &Info::title)
-    .registerField("version", &Info::version)
-    ;
-}
+struct anch::Mapping<Info> {
+  static void
+  registerObject(anch::ObjectMapper<Info> auto& mapper) {
+    mapper
+      .registerField("title", &Info::title)
+      .registerField("version", &Info::version)
+      ;
+  }
+};
 
 template<>
-void
-anch::json::registerObject(anch::json::ObjectMapper<Components>& mapper) {
-  mapper
-    .registerField<Schema>("schemas", &Components::schemas)
-    .registerField<Parameter>("parameters", &Components::parameters)
-    .registerField<RequestBody>("requestBodies", &Components::requestBodies)
-    .registerField<ResponseObject>("responses", &Components::responses)
-    ;
-}
+struct anch::Mapping<Components> {
+  static void
+  registerObject(anch::ObjectMapper<Components> auto& mapper) {
+    mapper
+      .registerField("schemas", &Components::schemas)
+      .registerField("parameters", &Components::parameters)
+      .registerField("requestBodies", &Components::requestBodies)
+      .registerField("responses", &Components::responses)
+      ;
+  }
+};
 
 template<>
-void
-anch::json::registerObject(anch::json::ObjectMapper<OpenAPI>& mapper) {
-  mapper
-    .registerField("openapi", &OpenAPI::openapi)
-    .registerField("info", &OpenAPI::info)
-    .registerField<PathItem>("paths", &OpenAPI::paths)
-    .registerField("components", &OpenAPI::components)
-    ;
-}
+struct anch::Mapping<OpenAPI> {
+  static void
+  registerObject(anch::ObjectMapper<OpenAPI> auto& mapper) {
+    mapper
+      .registerField("openapi", &OpenAPI::openapi)
+      .registerField("info", &OpenAPI::info)
+      .registerField("paths", &OpenAPI::paths)
+      .registerField("components", &OpenAPI::components)
+      ;
+  }
+};
 // Objects mappers -
 
 OpenAPI

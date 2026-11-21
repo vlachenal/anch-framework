@@ -73,15 +73,17 @@ struct Phone {
 };
 
 template<>
-void
-anch::json::registerObject(ObjectMapper<Phone>& mapper) {
-  std::cout << "Register Phone fields" << std::endl;
-  mapper
-    .registerField("type", &Phone::type)
-    .registerField("number", &Phone::number)
-    ;
-  std::cout << "Phone fields registered" << std::endl;
-}
+struct anch::Mapping<Phone> {
+  static void
+  registerObject(anch::ObjectMapper<Phone> auto& mapper) {
+    std::cout << "Register Phone fields" << std::endl;
+    mapper
+      .registerField("type", &Phone::type)
+      .registerField("number", &Phone::number)
+      ;
+    std::cout << "Phone fields registered" << std::endl;
+  }
+};
 
 std::uniform_int_distribution<uint16_t> RZ(1000, 9999);
 
@@ -107,17 +109,19 @@ struct Address {
 };
 
 template<>
-void
-anch::json::registerObject(ObjectMapper<Address>& mapper) {
-  std::cout << "Register Address fields" << std::endl;
-  mapper
-    .registerField<std::string>("lines", &Address::lines)
-    .registerField("zip_code", &Address::zipCode)
-    .registerField("city", &Address::city)
-    .registerField("country", &Address::country)
-    ;
-  std::cout << "Address fields registered" << std::endl;
-}
+struct anch::Mapping<Address> {
+  static void
+  registerObject(anch::ObjectMapper<Address> auto& mapper) {
+    std::cout << "Register Address fields" << std::endl;
+    mapper
+      .registerField("lines", &Address::lines)
+      .registerField("zip_code", &Address::zipCode)
+      .registerField("city", &Address::city)
+      .registerField("country", &Address::country)
+      ;
+    std::cout << "Address fields registered" << std::endl;
+  }
+};
 
 struct Person {
   std::string firstName;
@@ -150,19 +154,21 @@ struct Person {
 };
 
 template<>
-void
-anch::json::registerObject(ObjectMapper<Person>& mapper) {
-  std::cout << "Register Person fields" << std::endl;
-  mapper
-    .registerField("first_name", &Person::firstName)
-    .registerField("last_name", &Person::lastName)
-    .registerField("birth_date", &Person::birthDate)
-    .registerField("email", &Person::email)
-    .registerField<Phone>("phones", &Person::phones)
-    .registerField("address", &Person::address)
-    ;
-  std::cout << "Person fields registered" << std::endl;
-}
+struct anch::Mapping<Person> {
+  static void
+  registerObject(anch::ObjectMapper<Person> auto& mapper) {
+    std::cout << "Register Person fields" << std::endl;
+    mapper
+      .registerField("first_name", &Person::firstName)
+      .registerField("last_name", &Person::lastName)
+      .registerField("birth_date", &Person::birthDate)
+      .registerField("email", &Person::email)
+      .registerField("phones", &Person::phones)
+      .registerField("address", &Person::address)
+      ;
+    std::cout << "Person fields registered" << std::endl;
+  }
+};
 
 
 struct Options {
