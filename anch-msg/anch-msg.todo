@@ -1,0 +1,136 @@
+anch-msg : proposition de conception (2026-11-21)
+=================================================
+
+À valider avant toute implémentation. Les questions ouvertes sont en fin de fichier.
+
+Demande (2026-11-21) : une bibliothèque de type JMS pour gérer les notifications asynchrones. Les corps des messages
+sont sérialisés par anch-codec (voir anch-codec/anch-codec.todo), extrait d'anch-rest.
+
+Objectif
+--------
+Envoyer et recevoir des messages par des destinations nommées (files et sujets), entre threads, processus ou
+machines, avec la même API quel que soit le fournisseur (broker) : une file en mémoire, RabbitMQ, Kafka, ... Les
+messages ont des en-têtes, des propriétés et un corps typé par son type de contenu (MediaType). Modèle inspiré de
+JMS 2.0 (API simplifiée JMSContext), sans en reprendre toute la surface.
+
+Hors périmètre (première version) : sélecteurs de messages en SQL de JMS, messages planifiés, XA (transactions
+distribuées), administration des brokers (création de files sur le serveur).
+
+Positionnement par rapport à anch-events
+----------------------------------------
+- anch-events : dans un processus, typé à la compilation (Observable<T>, EventBus<T>), sans sérialisation, sans
+  persistance ni acquittement ; un EventBus est un thread qui notifie des observateurs.
+- anch-msg : destinations nommées à l'exécution, messages sérialisés (anch-codec), acquittement, redistribution,
+  fournisseurs interchangeables ; le fournisseur mémoire fonctionne dans un processus, les autres entre processus.
+- Les deux restent séparés ; un adaptateur pourra publier les événements d'un EventBus sur un sujet (question 8).
+
+Modèle
+------
+- Message : en-têtes, propriétés, corps.
+  - en-têtes : identifiant (anch::UUID, v7 : ordonné dans le temps), horodatage (anch::date::Date), corrélation,
+    destination de réponse (replyTo), type de contenu (anch::codec::MediaType), priorité, expiration, nombre de
+    livraisons (redelivered) ;
+  - propriétés : clé / chaîne (comme les en-têtes d'anch-events et d'anch-rest) ;
+  - corps : octets (std::string) et type de contenu ; lecture et écriture typées par un codec :
+      message.body<anch::codec::Json, Pet>()             // anch::codec::Side::SERVER : corps vérifié et borné
+      producer.send<anch::codec::Json>(queue, pet);      // Side::CLIENT
+- Destination : Queue (point à point : chaque message est traité par un seul consommateur, consommateurs en
+  concurrence) ou Topic (publication / abonnement : chaque abonné reçoit chaque message ; abonnement durable nommé,
+  partagé ou non).
+- Connection : connexion à un fournisseur, créée à partir de la configuration (comme les pools d'anch-sql) :
+    [anch::msg.events]
+    driver=RabbitMQ
+    url=amqp://localhost:5672/
+    [anch::msg.events.consumers]
+    threads=4
+  Elle est partagée entre threads et crée des contextes.
+- Context (JMSContext) : unité de travail confinée à un thread, avec son mode d'acquittement ou sa transaction ;
+  crée des producteurs et des consommateurs.
+  - acquittement : AUTO (après traitement réussi d'un message par l'écouteur), CLIENT (message.acknowledge()),
+    DUPS_OK (par lots, doublons possibles) ;
+  - transaction locale : commit() / rollback() sur les envois et les réceptions du contexte, si le fournisseur la
+    permet (question 5).
+- Producer : send(destination, message) ; options : persistance, priorité, durée de vie, délai.
+- Consumer : réception synchrone receive(timeout) / receiveNoWait(), ou écouteur asynchrone
+  (setListener(std::function<void(Message&)>)), lancé par les threads de la connexion (anch::ThreadPool) ; une
+  exception de l'écouteur provoque une nouvelle livraison (mode AUTO), jusqu'à un nombre maximal puis une file
+  d'erreurs (dead letter) si le fournisseur en a une.
+- Les interfaces côté utilisateur sont des classes concrètes (Connection, Context, Producer, Consumer, Message) ; les
+  fournisseurs implémentent des classes abstraites internes (comme les pilotes d'anch-sql : Connection et
+  PreparedStatement virtuelles).
+
+Garanties
+---------
+- Livraison au moins une fois par défaut (acquittement après traitement) : un consommateur doit être idempotent
+  (l'identifiant du message permet de détecter les doublons).
+- Ordre : celui de la file pour un consommateur unique ; pas d'ordre global entre consommateurs en concurrence.
+- Chaque fournisseur déclare ce qu'il sait faire (capacités : transactions, priorités, abonnements durables,
+  délai, dead letter) ; demander une capacité absente lève une exception à la création, jamais un comportement
+  silencieusement différent.
+
+Fournisseurs
+------------
+Chargés à l'exécution comme les pilotes d'anch-sql : dlopen("libanch-msg-<driver>.so") et une fonction
+create_connection(configuration) exportée ; chaque pilote est une bibliothèque à part, construite quand sa
+bibliothèque cliente est trouvée (comme anch-rest-curl, Protobuf et Thrift).
+Candidats (bibliothèques clientes disponibles dans les paquets Arch, vérifié le 2026-11-21) :
+- mémoire : dans anch-msg, sans dépendance ; files et sujets dans le processus, threads anch::ThreadPool ; sert aux
+  tests et aux notifications asynchrones internes d'une application ;
+- RabbitMQ (AMQP 0-9-1) : librabbitmq-c ; correspondance la plus directe avec JMS (files, échanges fanout / topic
+  pour les sujets, acquittements, transactions de canal, dead letter) ;
+- Kafka : librdkafka ; les consommateurs d'un même groupe se partagent un sujet Kafka (file), chaque groupe reçoit
+  tous ses messages (sujet JMS) ; acquittement par validation de position (offset), donc dans l'ordre d'une
+  partition ; pas de priorité ni d'expiration par message ;
+- MQTT : mosquitto (libmosquitto) ; sujets seulement (pas de files), QoS 0 / 1 / 2 ; pour l'IoT ;
+- Redis Streams : hiredis ; groupes de consommateurs, acquittement XACK ;
+- STOMP (ActiveMQ, Artemis, RabbitMQ) : protocole texte sur TCP, réalisable avec anch-network sans dépendance.
+Tableau de correspondance des capacités à compléter par fournisseur avant implémentation.
+
+Erreurs
+-------
+- MsgException avec un indicateur fatal (connexion perdue), comme SqlException : une connexion invalide est recréée
+  (reconnexion avec délai croissant, configurable) ; les contextes ouverts sont invalidés.
+- Corps invalide : anch::codec lève std::invalid_argument ou ContentTooLarge ; le message est rejeté (pas de nouvelle
+  livraison) et compté.
+- Journalisation par anch-log (connexion, reconnexion, rejets).
+
+Liens avec les autres modules
+-----------------------------
+- anch-codec : corps des messages (Json, Text, Protobuf, Thrift ; MediaType dans l'en-tête de type de contenu).
+- anch-conf : configuration des connexions (sections anch::msg.<nom>).
+- anch-utils : ThreadPool (écouteurs), ResourcePool si les contextes sont mis en commun.
+- anch-uuid, anch-date : identifiants et horodatages.
+- anch-batch : une étape pourra lire ses éléments dans une file (ItemReader) ou publier ses rapports (écouteurs).
+- anch-app (conçu par l'utilisateur, non conçu ici) : besoins à arbitrer, comme pour anch-batch :
+  - démarrage des consommateurs au lancement de l'application et arrêt propre (fin des messages en cours, puis
+    fermeture des connexions) sur signal ou à la sortie ;
+  - accès à la configuration chargée par l'application (sections anch::msg).
+
+Étapes
+------
+1. anch-codec (préalable, voir anch-codec.todo).
+2. Modèle et API (Message, Destination, Connection, Context, Producer, Consumer), fournisseur mémoire, tests
+   (files, sujets, acquittements, nouvelle livraison, arrêt).
+3. Chargement des pilotes et premier fournisseur réseau ; tests d'intégration avec le broker lancé en CI (comme
+   MariaDB et PostgreSQL : .github/scripts).
+4. Autres fournisseurs selon les besoins ; adaptateur anch-events.
+5. Documentation : page anch-msg.dox avec exemples (anch-msg/examples, exécutés avec le fournisseur mémoire).
+
+Questions ouvertes
+------------------
+1. Périmètre : API générique à fournisseurs interchangeables, de type JMS (proposé), ou API d'abord fidèle à un broker
+   précis (plus simple, moins portable) ?
+2. Fournisseurs de la première version : mémoire seule, puis lequel en premier (RabbitMQ proposé, le plus proche de
+   JMS ; Kafka si le besoin est le flux d'événements à fort volume) ?
+3. Style d'API : contexte simplifié de JMS 2.0 (proposé : Connection puis Context) ou modèle JMS 1.1 complet
+   (Connection, Session, MessageProducer, MessageConsumer) ?
+4. Réception : réception synchrone et écouteurs asynchrones (proposé), ou écouteurs seulement ? Qui fournit les
+   threads des écouteurs : la connexion (proposé, configurable) ou l'application (anch-app) ?
+5. Transactions locales dès la première version, ou acquittements seulement (les transactions dépendent du
+   fournisseur : RabbitMQ oui, Kafka limité, MQTT non) ?
+6. Messages typés : corps en octets plus codec à la lecture (proposé, un consommateur peut recevoir plusieurs types),
+   ou Message<T> typé à la compilation ?
+7. Pilotes : chargés à l'exécution par dlopen comme anch-sql (proposé : l'application ne lie que les fournisseurs
+   qu'elle configure), ou liés à la compilation ?
+8. anch-events : adaptateur EventBus vers un sujet (proposé, plus tard), fournisseur mémoire bâti sur anch-events, ou
+   aucun lien ?

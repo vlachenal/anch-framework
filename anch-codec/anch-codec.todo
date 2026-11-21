@@ -1,0 +1,115 @@
+anch-codec : proposition de conception (2026-11-21)
+===================================================
+
+À valider avant toute implémentation. Les questions ouvertes sont en fin de fichier.
+
+Demande (2026-11-21) : sortir la partie codec d'anch-rest dans une bibliothèque commune, pour la future bibliothèque
+de messagerie anch-msg (voir anch-msg/anch-msg.todo). Nom retenu : anch-codec.
+
+Objectif
+--------
+Un codec associe un type de contenu (MediaType) à des fonctions de sérialisation et de désérialisation de valeurs C++.
+anch-rest s'en sert pour les corps des requêtes et des réponses ; anch-msg s'en servira pour les corps des messages.
+anch-msg ne doit pas dépendre du modèle HTTP (requêtes, réponses, statuts, formulaires) pour lire un message JSON.
+
+État actuel (anch-rest)
+-----------------------
+Indépendant de HTTP, dans anch-rest-common (rest/codec.hpp, rest/mediaType.hpp, rest/jsonCodec.hpp, codec.cpp,
+mediaType.cpp) :
+- concepts Serializer<C, T> / Deserializer<C, T> : C::mediaType() et serialize / deserialize, avec trois formes
+  (valeur et flux ; plus Side ; plus MediaType et Side) ;
+- contentTypeOf, serializeBody, deserializeBody (choix de la forme du codec) ;
+- MediaType (analyse, paramètres, qualité, includes, specificity), parseAccept, negotiate, constantes media:: ;
+- ContentTooLarge, readContent, maxBodySize(Side), readBody ;
+- Side (SERVER, CLIENT) : ce que chaque côté vérifie (le serveur vérifie ce qu'il reçoit et fait confiance à ce qu'il
+  construit, le client l'inverse) et ses limites ;
+- codecs Text et Json (anch-json, options par Side).
+Dans des bibliothèques à part, à cause de leurs dépendances externes :
+- anch-rest-protobuf : Protobuf, ProtobufJson (rest/protobufCodec.hpp), et le RPC (Connect, gRPC-Web) ;
+- anch-rest-thrift : ThriftCodec<P>, ThriftBinary / Compact / Json, ThriftProtocol, thriftWrite / thriftRead
+  (rest/thriftCodec.hpp), et le RPC Thrift (installThrift, ThriftTransport).
+Propre à HTTP, reste dans anch-rest :
+- formulaires : Form, Part, FormUrlEncoded, Multipart, FormLimits, FormMapper (ils utilisent aussi Side) ;
+- BodyStream et la forme stream() des codecs (corps de requête lus par le transport pendant l'envoi) ;
+- la négociation par en-têtes (Accept, Content-Type) dans Endpoint et Client, les statuts (400, 413, 415) ;
+- le RPC (Connect, gRPC-Web, gRPC, Thrift RPC).
+Utilisateurs : 24 fichiers d'anch-rest et d'anch-oas ; le code généré par anch-oas cite anch::rest::Json,
+anch::rest::Text, anch::rest::Side et rest/jsonCodec.hpp.
+
+Proposition
+-----------
+
+1. Modules (comme anch-rest : une bibliothèque par dépendance externe)
+- anch-codec (anch::codec) : concepts, MediaType, limites, Text, Json. Dépend d'anch-json (et d'anch-utils).
+- anch-codec-protobuf : Protobuf, ProtobufJson. Dépend de libprotobuf ; ignorée avec un message quand Protobuf est
+  absent, comme anch-rest-protobuf aujourd'hui.
+- anch-codec-thrift : ThriftCodec<P>, ThriftProtocol, thriftWrite / thriftRead. Dépend de Thrift et de Boost.
+- anch-rest-common dépend d'anch-codec ; anch-rest-protobuf d'anch-codec-protobuf (il garde le RPC) ;
+  anch-rest-thrift d'anch-codec-thrift (il garde installThrift et ThriftTransport).
+- anch-codec est construit dès qu'anch-rest ou anch-msg l'est (pas d'option propre) ; options ANCH_CODEC_PROTOBUF et
+  ANCH_CODEC_THRIFT, détectées comme ANCH_REST_PROTOBUF et ANCH_REST_THRIFT (qu'elles remplacent pour les codecs).
+
+2. Contenu déplacé (en-têtes codec/*.hpp, espace de noms anch::codec)
+- codec/codec.hpp : Serializer, Deserializer, contentTypeOf, serializeBody / deserializeBody (renommés
+  serialize / deserialize ? voir question 6), ContentTooLarge, readContent, maxBodySize, readBody, Side ;
+- codec/mediaType.hpp : MediaType, constantes anch::codec::media ; parseAccept et negotiate (question 3) ;
+- codec/text.hpp, codec/json.hpp ; codec/protobuf.hpp ; codec/thrift.hpp.
+- Les fichiers sont déplacés avec git mv (historique conservé), les tests purement codec aussi (codecs Protobuf et
+  Thrift de testProtobuf.cpp / testThrift.cpp, MediaType de testHttp.cpp et testClient.cpp, Json de testApi.cpp).
+
+3. Side
+Side ne décrit pas un côté HTTP mais une politique de confiance : ce qui est vérifié en lecture et en écriture, et
+les limites. Pour la messagerie : un consommateur lit des données d'origine non maîtrisée (comme un serveur), un
+producteur envoie ce qu'il construit (comme un client).
+- Proposé : garder l'énumération sous le nom anch::codec::Side { SERVER, CLIENT }, documentée comme politique
+  (SERVER : entrées vérifiées et bornées, sorties de confiance ; CLIENT : sorties vérifiées, entrées de confiance) ;
+  anch-msg utilise SERVER pour les messages reçus et CLIENT pour les messages envoyés.
+- Variante (question 2) : la renommer pour la rendre neutre, par exemple anch::codec::Policy { RECEIVER, SENDER } ou
+  { INBOUND, OUTBOUND }, ce qui touche les options Json, maxBodySize et les FormLimits d'anch-rest.
+
+4. Compatibilité (politique de dépréciation : retrait en 0.4)
+- anch-rest garde les anciens en-têtes (rest/codec.hpp, rest/mediaType.hpp, rest/jsonCodec.hpp,
+  rest/protobufCodec.hpp, rest/thriftCodec.hpp) qui incluent les nouveaux et déclarent des alias dépréciés :
+    using Json [[deprecated("removed in 0.4, use anch::codec::Json")]] = anch::codec::Json;
+  idem MediaType, Side, ContentTooLarge, Text, Protobuf, ProtobufJson, ThriftBinary... ; les fonctions
+  (contentTypeOf, readContent, maxBodySize, negotiate...) par des fonctions inline [[deprecated]] qui appellent les
+  nouvelles ; les concepts par des concepts dépréciés qui renvoient aux nouveaux
+    template<typename C, typename T>
+    concept Serializer [[deprecated("removed in 0.4, use anch::codec::Serializer")]] = anch::codec::Serializer<C, T>;
+  (vérifié le 2026-11-21 : GCC et Clang avertissent à l'usage d'un concept déprécié).
+- anch-rest, anch-oas (code généré), exemples et pages de documentation passent aux nouveaux noms dans la même
+  version : les alias ne servent qu'au code des utilisateurs.
+- CHANGELOG : Deprecated (anciens noms), Added (anch-codec), Changed (dépendances).
+
+5. Lien avec les sérialiseurs unifiés (anch-utils/mapping.todo, §4)
+mapping.todo prévoit des concepts de format anch::Serializer<F, T> / anch::Deserializer<F, T> (F::serialize(valeur,
+flux, options)) dans anch-utils, et un codec générique anch::rest::FormatCodec<F> construit dessus (Json et Csv sans
+code propre). Proposé : ces deux éléments vont dans anch-codec (anch::codec::FormatCodec<F>), qui devient le lien
+entre les formats (anch-json, anch-csv) et leurs usages (anch-rest, anch-msg) ; mapping.todo est mis à jour en
+conséquence (question 4). Ce n'est pas un préalable : l'extraction se fait d'abord avec les codecs actuels.
+
+Étapes
+------
+1. Module anch-codec : déplacement de codec / mediaType / Text / Json et de leurs tests ; anch-rest-common en dépend ;
+   alias dépréciés dans anch-rest ; anch-rest et anch-oas passent aux nouveaux noms.
+2. anch-codec-protobuf et anch-codec-thrift (codecs seuls ; le RPC reste dans anch-rest-*).
+3. Documentation : page anch-codec.dox (exemples dans anch-codec/examples), pages anch-rest et anch-oas, CHANGELOG,
+   CLAUDE.md (options, cibles).
+4. Vérifications : tests (anch-rest inchangé en dehors des noms), exports, installation (find_package(Anch) avec
+   anch::codec), code généré par anch-oas compilé, avertissements de dépréciation sur un utilisateur des anciens
+   noms (test dédié).
+5. Plus tard : FormatCodec<F> et concepts de mapping.todo §4.
+
+Questions ouvertes
+------------------
+1. Json dans anch-codec (proposé : anch-codec dépend alors d'anch-json) ou dans une bibliothèque anch-codec-json, pour
+   un noyau sans dépendance (anch-msg pourrait transporter du texte ou des octets sans anch-json) ?
+2. Side : garder le nom et les valeurs SERVER / CLIENT, documentés comme politique (proposé, moins de changements), ou
+   renommer (Policy { RECEIVER, SENDER }, ...) ?
+3. Négociation (parseAccept, negotiate, qualité q=) : dans anch-codec avec MediaType (proposé : un consommateur de
+   messages peut aussi choisir parmi plusieurs types) ou dans anch-rest, propre aux en-têtes HTTP ?
+4. Concepts de format et FormatCodec de mapping.todo §4 : dans anch-codec (proposé) ou dans anch-utils comme prévu ?
+5. Compatibilité : alias dépréciés en 0.3 et retirés en 0.4 (proposé, politique actuelle), ou changement direct (la
+   version 0.3 casse déjà l'ABI) ?
+6. Noms des fonctions : serializeBody / deserializeBody (« body » vient de HTTP) deviennent anch::codec::serialize /
+   deserialize (proposé), ou gardent leur nom ?
