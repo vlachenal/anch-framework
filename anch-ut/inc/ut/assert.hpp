@@ -122,25 +122,6 @@ namespace anch::ut {
   void assertThat(bool check, std::type_identity_t<anch::ut::AssertMessage<T...>> message, const T&... args);
 
   /*!
-   * Assert clause with error message formatting
-   *
-   * \deprecated Since 0.2, removed in 0.3. Use \ref anch::ut::assertThat "assertThat" : \c assert is also the \c \<cassert\> macro, so calls are expanded by the macro when
-   * \c \<cassert\> is included (the name is written between parentheses here so that this header always compiles).
-   * The message is checked only when the assertion fails and the location is not reported.
-   *
-   * \tparam T the arguments
-   *
-   * \param check \c true if test is OK, \c false otherwise
-   * \param message the message which have to be formatted
-   * \param args the message's arguments
-   *
-   * \throw anch::ut::AssertException \c check is \c false
-   */
-  template<typename... T>
-  [[deprecated("removed in 0.3, use anch::ut::assertThat: assert conflicts with the assert macro of cassert header")]]
-  void (assert)(bool check, std::string_view message, const T&... args);
-
-  /*!
    * Check if optional value is equals to expected pointer value ; print the field and expected versus current value when \c false ; return the result
    *
    * \tparam T the value type

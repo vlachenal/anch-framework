@@ -75,10 +75,5 @@ target_link_libraries(my-app PRIVATE anch::codec-json)
  * \ref anch::codec::ThriftBinary "ThriftBinary" ( \c application/vnd.apache.thrift.binary ),
  * \ref anch::codec::ThriftCompact "ThriftCompact" ( \c .compact ) and \ref anch::codec::ThriftJson "ThriftJson"
  * ( \c .json ). Their RPC (Connect, gRPC-Web, gRPC, Thrift over HTTP) is in anch-rest (see \ref page_rest).
- *
- * \section codec_compat_sec Compatibility
- *
- * The anch-rest 0.2 names ( \c anch::rest::Json , \c anch::rest::MediaType , \c anch::rest::Side ,
- * \c anch::rest::serializeBody , ... and headers \c rest/codec.hpp , \c rest/mediaType.hpp , \c rest/jsonCodec.hpp ,
- * \c rest/protobufCodec.hpp , \c rest/thriftCodec.hpp ) are deprecated aliases of anch-codec ones, removed in 0.4.
+
  */

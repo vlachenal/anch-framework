@@ -15,14 +15,6 @@
  */
 
 /*!
- * \namespace anch::rest::media
- *
- * \brief Common media types.
- *
- * \deprecated removed in 0.4, use \ref anch::codec::media
- */
-
-/*!
  * \namespace anch::rest::nginx
  *
  * \brief nginx applications bridge (see \c ANCH_REST_APPLICATION ).

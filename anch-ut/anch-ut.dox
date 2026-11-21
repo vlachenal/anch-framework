@@ -39,7 +39,6 @@ target_link_libraries(my-app PRIVATE anch::ut)
  *\n
  * \c anch::ut::assertThat function is based on \c std::format function with \c {} paceholders: the message has to be
  * a string literal, and it is checked at compile time against the arguments (literal braces are written \c {{ and \c }} ).
- * \c anch::ut::assert is a deprecated alias: it conflicts with the \c \<cassert\> macro.\n
  * Failed assertions (\c assertThat , \c assertTrue , \c assertFalse and \c fail ) report their file and line.\n
  *\n
  * A failed assertion in a thread other than the test one terminates the process: wrap thread functions with

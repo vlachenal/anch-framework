@@ -394,7 +394,7 @@ namespace anch::rest {
     /*!
      * Add a produced media type: result is serialized with codec \c C when it is negotiated
      *
-     * \tparam C the codec (see \ref Serializer )
+     * \tparam C the codec (see \ref anch::codec::Serializer )
      *
      * \return \c this
      */
@@ -405,7 +405,7 @@ namespace anch::rest {
      * Add a consumed media type: body is deserialized with codec \c C when request \c Content-Type
      * is the codec media type (parameters such as \c charset are ignored)
      *
-     * \tparam C the codec (see \ref Deserializer )
+     * \tparam C the codec (see \ref anch::codec::Deserializer )
      *
      * \return \c this
      */
