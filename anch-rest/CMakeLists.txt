@@ -1,4 +1,4 @@
-# AnCH REST: HTTP model, REST API declaration (server), client and transports
+# AnCH REST: HTTP model, REST API declaration (server), client and transports (codecs are in anch-codec)
 macro(anch_rest_sources var dir)
   file(GLOB_RECURSE ${var} CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/${dir}/src/*.cpp)
 endmacro()
@@ -8,7 +8,7 @@ anch_rest_sources(common_sources common)
 anch_add_library(anch-rest-common
   INCLUDE_DIRS common/inc
   SOURCES ${common_sources}
-  PUBLIC_DEPS anch::json anch::uuid)
+  PUBLIC_DEPS anch::codec-json anch::uuid)
 # HTTP model and codecs -
 
 # REST API declaration and routing +
@@ -61,28 +61,20 @@ endif()
 set(ANCH_REST_CURL_ENABLED ${ANCH_REST_CURL_ENABLED} PARENT_SCOPE)
 # Client and transports -
 
-# Protocol Buffers codecs and RPC (Connect / gRPC-Web) +
+# Protocol Buffers RPC (Connect / gRPC-Web) +
 set(ANCH_REST_PROTOBUF_ENABLED OFF)
-if(ANCH_REST_PROTOBUF)
-  find_package(Protobuf CONFIG QUIET)
-  if(Protobuf_FOUND)
-    set(ANCH_REST_PROTOBUF_ENABLED ON)
-    anch_rest_sources(protobuf_sources protobuf)
-    anch_add_library(anch-rest-protobuf
-      INCLUDE_DIRS protobuf/inc
-      SOURCES ${protobuf_sources}
-      PUBLIC_DEPS anch::rest-common protobuf::libprotobuf)
-    # Protobuf changes generated messages layout under AddressSanitizer (PROTOBUF_MESSAGE_GLOBALS): code
-    # compiled with ASan crashes with a system libprotobuf built without it
-    if(CMAKE_CXX_FLAGS MATCHES "-fsanitize=[^ ]*address")
-      target_compile_definitions(anch-rest-protobuf PUBLIC PROTOBUF_MESSAGE_GLOBALS_TEMPORARY_OPTOUT)
-    endif()
-  else()
-    message(STATUS "Protobuf not found: anch-rest-protobuf is not built")
-  endif()
+if(ANCH_REST_PROTOBUF AND TARGET anch::codec-protobuf)
+  set(ANCH_REST_PROTOBUF_ENABLED ON)
+  anch_rest_sources(protobuf_sources protobuf)
+  anch_add_library(anch-rest-protobuf
+    INCLUDE_DIRS protobuf/inc
+    SOURCES ${protobuf_sources}
+    PUBLIC_DEPS anch::rest-common anch::codec-protobuf)
+elseif(ANCH_REST_PROTOBUF)
+  message(STATUS "anch-codec-protobuf is not built: anch-rest-protobuf is not built")
 endif()
 set(ANCH_REST_PROTOBUF_ENABLED ${ANCH_REST_PROTOBUF_ENABLED} PARENT_SCOPE)
-# Protocol Buffers codecs and RPC (Connect / gRPC-Web) -
+# Protocol Buffers RPC (Connect / gRPC-Web) -
 
 # gRPC server +
 set(ANCH_REST_GRPC_ENABLED OFF)
@@ -104,24 +96,19 @@ endif()
 set(ANCH_REST_GRPC_ENABLED ${ANCH_REST_GRPC_ENABLED} PARENT_SCOPE)
 # gRPC server -
 
-# Apache Thrift codecs and RPC +
+# Apache Thrift RPC +
 set(ANCH_REST_THRIFT_ENABLED OFF)
-if(ANCH_REST_THRIFT)
-  find_package(Thrift CONFIG QUIET)
-  find_package(Boost CONFIG QUIET) # Thrift C++ headers include Boost headers
-  if(Thrift_FOUND AND Boost_FOUND)
-    set(ANCH_REST_THRIFT_ENABLED ON)
-    anch_rest_sources(thrift_sources thrift)
-    anch_add_library(anch-rest-thrift
-      INCLUDE_DIRS thrift/inc
-      SOURCES ${thrift_sources}
-      PUBLIC_DEPS anch::rest-common thrift::thrift Boost::headers)
-  else()
-    message(STATUS "Thrift or Boost headers not found: anch-rest-thrift is not built")
-  endif()
+if(ANCH_REST_THRIFT AND TARGET anch::codec-thrift)
+  set(ANCH_REST_THRIFT_ENABLED ON)
+  # Header only: the codecs are in anch-codec-thrift
+  anch_add_library(anch-rest-thrift HEADER_ONLY
+    INCLUDE_DIRS thrift/inc
+    PUBLIC_DEPS anch::rest-common anch::codec-thrift)
+elseif(ANCH_REST_THRIFT)
+  message(STATUS "anch-codec-thrift is not built: anch-rest-thrift is not built")
 endif()
 set(ANCH_REST_THRIFT_ENABLED ${ANCH_REST_THRIFT_ENABLED} PARENT_SCOPE)
-# Apache Thrift codecs and RPC -
+# Apache Thrift RPC -
 
 if(ANCH_BUILD_TESTS)
   add_subdirectory(test)

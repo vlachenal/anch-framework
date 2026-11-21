@@ -29,7 +29,7 @@
 #include "rest/api.hpp"
 #include "rest/body.hpp"
 #include "rest/client.hpp"
-#include "rest/protobufCodec.hpp"
+#include "codec/protobuf.hpp"
 #include "rest/rpcApi.hpp"
 #include "rest/rpcClient.hpp"
 #include "rest/transport.hpp"
@@ -128,7 +128,7 @@ testCodecs() {
     Pet saved = *pet;
     saved.set_id(7);
     return saved;
-  }).consumes<anch::rest::Protobuf>().consumes<anch::rest::ProtobufJson>().produces<anch::rest::Protobuf>().produces<anch::rest::ProtobufJson>();
+  }).consumes<anch::codec::Protobuf>().consumes<anch::codec::ProtobufJson>().produces<anch::codec::Protobuf>().produces<anch::codec::ProtobufJson>();
   api.validate();
   Pet pet;
   pet.set_name("Médor");
@@ -144,16 +144,16 @@ testCodecs() {
   anch::ut::assertThat(saved.ParseFromString(response.content()) && saved.id() == 7 && saved.name() == "Médor" && saved.tags_size() == 1,
 		       "Unexpected binary response");
   expectStatus(post(api, "/pets", "application/x-protobuf", "\xff\xff\xff"), Status::BAD_REQUEST);
-  // Server side bodies are bounded (anch::rest::maxBodySize): 413 +
+  // Server side bodies are bounded (anch::codec::maxBodySize): 413 +
   Pet large;
   large.set_name(std::string(3 * 1024 * 1024, 'a'));
   expectStatus(post(api, "/pets", "application/x-protobuf", binary(large)), Status::CONTENT_TOO_LARGE);
   expectStatus(post(api, "/pets", "application/json", "{\"name\":\"" + large.name() + "\"}"), Status::CONTENT_TOO_LARGE);
-  anch::rest::maxBodySize(anch::rest::Side::SERVER) = 0; // no limit
+  anch::codec::maxBodySize(anch::codec::Side::SERVER) = 0; // no limit
   Response unbounded = post(api, "/pets", "application/x-protobuf", binary(large));
-  anch::rest::maxBodySize(anch::rest::Side::SERVER) = 2 * 1024 * 1024;
+  anch::codec::maxBodySize(anch::codec::Side::SERVER) = 2 * 1024 * 1024;
   expectStatus(unbounded, Status::OK);
-  // Server side bodies are bounded (anch::rest::maxBodySize): 413 -
+  // Server side bodies are bounded (anch::codec::maxBodySize): 413 -
   // JSON mapping: unknown fields refused on server side
   Request json(Method::POST, "/pets");
   json.getHeaders().set("Content-Type", "application/json");
@@ -167,7 +167,7 @@ testCodecs() {
   // Client side: unknown fields are ignored
   std::istringstream input(R"({"id":"3","name":"Rex","color":"brown"})");
   Pet read;
-  anch::rest::ProtobufJson::deserialize(read, input, anch::rest::Side::CLIENT);
+  anch::codec::ProtobufJson::deserialize(read, input, anch::codec::Side::CLIENT);
   anch::ut::assertThat(read.id() == 3 && read.name() == "Rex", "Client has to ignore unknown fields");
 }
 

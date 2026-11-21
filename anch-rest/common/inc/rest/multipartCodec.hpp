@@ -26,10 +26,12 @@
 #include <string>
 #include <string_view>
 
-#include "rest/codec.hpp"
+#include "codec/codec.hpp"
+#include "codec/mediaType.hpp"
+
+#include "rest/bodyStream.hpp"
 #include "rest/form.hpp"
 #include "rest/formMapper.hpp"
-#include "rest/mediaType.hpp"
 
 namespace anch::rest {
 
@@ -80,7 +82,7 @@ namespace anch::rest {
      *
      * \return the limits
      */
-    static anch::rest::FormLimits& limits(anch::rest::Side side);
+    static anch::rest::FormLimits& limits(anch::codec::Side side);
 
     /*!
      * Get body media type: \c multipart/form-data with a random boundary which does not appear in
@@ -90,7 +92,7 @@ namespace anch::rest {
      *
      * \return the media type
      */
-    static anch::rest::MediaType contentType(const anch::rest::Form& form);
+    static anch::codec::MediaType contentType(const anch::rest::Form& form);
 
     /*!
      * Get body media type of a value mapped with its \ref FormMapper : \c multipart/form-data with a
@@ -103,7 +105,7 @@ namespace anch::rest {
      * \return the media type
      */
     template<anch::rest::FormMapped T>
-    static anch::rest::MediaType contentType(const T& value);
+    static anch::codec::MediaType contentType(const T& value);
 
     /*!
      * Get random boundary: \c "anch-" and 32 alphanumeric characters
@@ -123,8 +125,8 @@ namespace anch::rest {
      * \throw std::invalid_argument when boundary is missing or invalid, when it appears in a part or
      *        when a part header has CR or LF
      */
-    static void serialize(const anch::rest::Form& form, std::ostream& out, const anch::rest::MediaType& contentType,
-			  anch::rest::Side side);
+    static void serialize(const anch::rest::Form& form, std::ostream& out, const anch::codec::MediaType& contentType,
+			  anch::codec::Side side);
 
     /*!
      * Get form body as a stream: parts are read when the stream is read (files are not loaded in
@@ -139,8 +141,8 @@ namespace anch::rest {
      * \throw std::invalid_argument when boundary is missing or invalid, when it appears in a part in
      *        memory or when a part header has CR or LF
      */
-    static anch::rest::BodyStream stream(const anch::rest::Form& form, const anch::rest::MediaType& contentType,
-					 anch::rest::Side side);
+    static anch::rest::BodyStream stream(const anch::rest::Form& form, const anch::codec::MediaType& contentType,
+					 anch::codec::Side side);
 
     /*!
      * Read form
@@ -153,8 +155,8 @@ namespace anch::rest {
      * \throw std::invalid_argument when body is malformed
      * \throw ContentTooLarge when body is over \ref limits
      */
-    static void deserialize(anch::rest::Form& form, std::istream& input, const anch::rest::MediaType& contentType,
-			    anch::rest::Side side);
+    static void deserialize(anch::rest::Form& form, std::istream& input, const anch::codec::MediaType& contentType,
+			    anch::codec::Side side);
 
     /*!
      * Write value mapped with its \ref FormMapper
@@ -167,7 +169,7 @@ namespace anch::rest {
      * \param side the side which writes value
      */
     template<anch::rest::FormMapped T>
-    static void serialize(const T& value, std::ostream& out, const anch::rest::MediaType& contentType, anch::rest::Side side);
+    static void serialize(const T& value, std::ostream& out, const anch::codec::MediaType& contentType, anch::codec::Side side);
 
     /*!
      * Get body of a value mapped with its \ref FormMapper as a stream
@@ -181,7 +183,7 @@ namespace anch::rest {
      * \return the body stream and its size
      */
     template<anch::rest::FormMapped T>
-    static anch::rest::BodyStream stream(const T& value, const anch::rest::MediaType& contentType, anch::rest::Side side);
+    static anch::rest::BodyStream stream(const T& value, const anch::codec::MediaType& contentType, anch::codec::Side side);
 
     /*!
      * Read value mapped with its \ref FormMapper
@@ -194,7 +196,7 @@ namespace anch::rest {
      * \param side the side which reads value
      */
     template<anch::rest::FormMapped T>
-    static void deserialize(T& value, std::istream& input, const anch::rest::MediaType& contentType, anch::rest::Side side);
+    static void deserialize(T& value, std::istream& input, const anch::codec::MediaType& contentType, anch::codec::Side side);
 
   };
 

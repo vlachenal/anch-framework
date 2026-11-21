@@ -23,13 +23,14 @@
 #include <memory>
 #include <string>
 
+#include "codec/json.hpp"
+
 #include "json/json.hpp"
 #include "rest/auth.hpp"
 #include "rest/client.hpp"
 #include "rest/curlTransport.hpp"
 #include "rest/form.hpp"
 #include "rest/formCodec.hpp"
-#include "rest/jsonCodec.hpp"
 #include "rest/multipartCodec.hpp"
 
 // Client examples are built, not run: the server of the examples does not exist
@@ -55,9 +56,9 @@ client(const std::string& token) {
   anch::rest::Client client(std::make_unique<anch::rest::CurlTransport>(config), "https://api.example.com/v1");
   client.filter(anch::rest::bearerAuth(token));
   //! [get]
-  Pet pet = client.get("/pets/{id}", 42).accept<anch::rest::Json>().as<Pet>(); // HttpError when status >= 400
+  Pet pet = client.get("/pets/{id}", 42).accept<anch::codec::Json>().as<Pet>(); // HttpError when status >= 400
   //! [get]
-  anch::rest::Response created = client.post("/pets").body<anch::rest::Json>(pet).send();
+  anch::rest::Response created = client.post("/pets").body<anch::codec::Json>(pet).send();
   client.del("/pets/{id}", 42).execute();
   //! [client]
 }
@@ -72,7 +73,7 @@ bodies(anch::rest::Client& client, std::uint64_t size, const std::string& pwd, c
   //! [form client]
   //! [multipart client]
   anch::rest::Form upload;
-  upload.add("description", "Rex").addFile("photo", "rex.png", anch::rest::MediaType("image", "png"), content);
+  upload.add("description", "Rex").addFile("photo", "rex.png", anch::codec::MediaType("image", "png"), content);
   client.post("/pets/{id}/photo", 42).body<anch::rest::Multipart>(upload).send();
   //! [multipart client]
 }
@@ -81,7 +82,7 @@ void
 largeUpload(anch::rest::Client& client) {
   //! [upload file]
   anch::rest::Form upload;
-  upload.add(anch::rest::Part::fromFile("video", "/data/video.mp4", anch::rest::MediaType("video", "mp4")));
+  upload.add(anch::rest::Part::fromFile("video", "/data/video.mp4", anch::codec::MediaType("video", "mp4")));
   client.post("/videos").body<anch::rest::Multipart>(upload).send(); // read from the file while it is sent
   //! [upload file]
 }

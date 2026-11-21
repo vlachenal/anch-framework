@@ -34,7 +34,7 @@
 #include "rest/body.hpp"
 #include "rest/client.hpp"
 #include "rest/httpError.hpp"
-#include "rest/thriftCodec.hpp"
+#include "codec/thrift.hpp"
 #include "rest/thriftRpc.hpp"
 #include "rest/thriftTransport.hpp"
 #include "rest/transport.hpp"
@@ -53,7 +53,7 @@ using anch::rest::Method;
 using anch::rest::Request;
 using anch::rest::Response;
 using anch::rest::Status;
-using anch::rest::ThriftProtocol;
+using anch::codec::ThriftProtocol;
 using anch::test::thrift::Pet;
 using anch::test::thrift::PetNotFound;
 using anch::test::thrift::PetStoreClient;
@@ -130,7 +130,7 @@ namespace {
   void
   checkClient(anch::rest::Client& client, ThriftProtocol protocol) {
     auto transport = std::make_shared<anch::rest::ThriftTransport>(client, "/thrift/pets", protocol);
-    PetStoreClient pets(anch::rest::thriftProtocol(protocol, transport));
+    PetStoreClient pets(anch::codec::thriftProtocol(protocol, transport));
     Pet found;
     pets.getPet(found, 1);
     anch::ut::assertThat(found.id == 1 && found.name == "Rex" && found.__isset.tags && found.tags.size() == 1, "Unexpected pet");
@@ -156,16 +156,16 @@ testCodecs() {
     Pet saved = *body;
     saved.id = 7;
     return saved;
-  }).consumes<anch::rest::ThriftBinary>().consumes<anch::rest::ThriftCompact>().consumes<anch::rest::ThriftJson>()
-    .produces<anch::rest::ThriftBinary>().produces<anch::rest::ThriftCompact>().produces<anch::rest::ThriftJson>();
+  }).consumes<anch::codec::ThriftBinary>().consumes<anch::codec::ThriftCompact>().consumes<anch::codec::ThriftJson>()
+    .produces<anch::codec::ThriftBinary>().produces<anch::codec::ThriftCompact>().produces<anch::codec::ThriftJson>();
   api.validate();
   for(ThriftProtocol protocol : {ThriftProtocol::BINARY, ThriftProtocol::COMPACT, ThriftProtocol::JSON}) {
-    const std::string_view type = anch::rest::thriftMediaType(protocol);
+    const std::string_view type = anch::codec::thriftMediaType(protocol);
     std::ostringstream out;
     switch(protocol) {
-    case ThriftProtocol::BINARY: anch::rest::ThriftBinary::serialize(pet(0, "Rex"), out); break;
-    case ThriftProtocol::COMPACT: anch::rest::ThriftCompact::serialize(pet(0, "Rex"), out); break;
-    case ThriftProtocol::JSON: anch::rest::ThriftJson::serialize(pet(0, "Rex"), out); break;
+    case ThriftProtocol::BINARY: anch::codec::ThriftBinary::serialize(pet(0, "Rex"), out); break;
+    case ThriftProtocol::COMPACT: anch::codec::ThriftCompact::serialize(pet(0, "Rex"), out); break;
+    case ThriftProtocol::JSON: anch::codec::ThriftJson::serialize(pet(0, "Rex"), out); break;
     }
     Request request(Method::POST, "/pets");
     request.getHeaders().set("Content-Type", type);
@@ -177,31 +177,31 @@ testCodecs() {
     Pet saved;
     std::istringstream input(response.content());
     switch(protocol) {
-    case ThriftProtocol::BINARY: anch::rest::ThriftBinary::deserialize(saved, input, anch::rest::Side::CLIENT); break;
-    case ThriftProtocol::COMPACT: anch::rest::ThriftCompact::deserialize(saved, input, anch::rest::Side::CLIENT); break;
-    case ThriftProtocol::JSON: anch::rest::ThriftJson::deserialize(saved, input, anch::rest::Side::CLIENT); break;
+    case ThriftProtocol::BINARY: anch::codec::ThriftBinary::deserialize(saved, input, anch::codec::Side::CLIENT); break;
+    case ThriftProtocol::COMPACT: anch::codec::ThriftCompact::deserialize(saved, input, anch::codec::Side::CLIENT); break;
+    case ThriftProtocol::JSON: anch::codec::ThriftJson::deserialize(saved, input, anch::codec::Side::CLIENT); break;
     }
     anch::ut::assertThat(saved.id == 7 && saved.name == "Rex", "Unexpected pet with {}", type);
   }
-  // Server side bodies are bounded (anch::rest::maxBodySize): 413 +
+  // Server side bodies are bounded (anch::codec::maxBodySize): 413 +
   {
     std::ostringstream out;
-    anch::rest::ThriftBinary::serialize(pet(0, std::string(3 * 1024 * 1024, 'a')), out);
+    anch::codec::ThriftBinary::serialize(pet(0, std::string(3 * 1024 * 1024, 'a')), out);
     Request large(Method::POST, "/pets");
     large.getHeaders().set("Content-Type", "application/vnd.apache.thrift.binary");
     large.getHeaders().set("Accept", "application/vnd.apache.thrift.binary");
     large.setBody(out.str());
     expectStatus(api.handle(large), Status::CONTENT_TOO_LARGE);
-    anch::rest::maxBodySize(anch::rest::Side::SERVER) = 0; // no limit
+    anch::codec::maxBodySize(anch::codec::Side::SERVER) = 0; // no limit
     Request unbounded(Method::POST, "/pets");
     unbounded.getHeaders().set("Content-Type", "application/vnd.apache.thrift.binary");
     unbounded.getHeaders().set("Accept", "application/vnd.apache.thrift.binary");
     unbounded.setBody(out.str());
     Response response = api.handle(unbounded);
-    anch::rest::maxBodySize(anch::rest::Side::SERVER) = 2 * 1024 * 1024;
+    anch::codec::maxBodySize(anch::codec::Side::SERVER) = 2 * 1024 * 1024;
     expectStatus(response, Status::OK);
   }
-  // Server side bodies are bounded (anch::rest::maxBodySize): 413 -
+  // Server side bodies are bounded (anch::codec::maxBodySize): 413 -
   // Invalid structure and missing required field
   Request invalid(Method::POST, "/pets");
   invalid.getHeaders().set("Content-Type", "application/vnd.apache.thrift.json");
@@ -260,7 +260,7 @@ testRpc() {
   // HTTP error raised by the transport
   anch::rest::Client wrong(std::make_unique<ApiTransport>(api, "http://localhost"), "http://localhost");
   auto transport = std::make_shared<anch::rest::ThriftTransport>(wrong, "/thrift/unknown");
-  PetStoreClient pets(anch::rest::thriftProtocol(ThriftProtocol::BINARY, transport));
+  PetStoreClient pets(anch::codec::thriftProtocol(ThriftProtocol::BINARY, transport));
   bool httpError = false;
   try {
     Pet found;

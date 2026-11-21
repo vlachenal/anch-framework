@@ -21,7 +21,7 @@
  * Media type and Accept header parsers fuzzer: an accepted media type is written and parsed again to the same
  * essence.
  */
-#include "rest/mediaType.hpp"
+#include "codec/mediaType.hpp"
 
 #include <cstdint>
 #include <cstdlib>
@@ -31,13 +31,13 @@
 extern "C" int
 LLVMFuzzerTestOneInput(const uint8_t* data, std::size_t size) {
   const std::string_view input(reinterpret_cast<const char*>(data), size);
-  std::optional<anch::rest::MediaType> type = anch::rest::MediaType::parse(input);
+  std::optional<anch::codec::MediaType> type = anch::codec::MediaType::parse(input);
   if(type) {
-    std::optional<anch::rest::MediaType> again = anch::rest::MediaType::parse(type->toString());
+    std::optional<anch::codec::MediaType> again = anch::codec::MediaType::parse(type->toString());
     if(!again || again->essence() != type->essence()) {
       std::abort();
     }
   }
-  (void) anch::rest::MediaType::parseAccept(input);
+  (void) anch::codec::MediaType::parseAccept(input);
   return 0;
 }

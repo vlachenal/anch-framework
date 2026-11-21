@@ -36,10 +36,10 @@
 
 using anch::rest::Form;
 using anch::rest::FormLimits;
-using anch::rest::MediaType;
+using anch::codec::MediaType;
 using anch::rest::Multipart;
 using anch::rest::Part;
-using anch::rest::Side;
+using anch::codec::Side;
 
 namespace {
 
@@ -302,7 +302,7 @@ namespace {
 	  break;
 	}
 	if(read > _maxSize - _total) {
-	  throw anch::rest::ContentTooLarge("Content is larger than " + std::to_string(_maxSize) + " bytes");
+	  throw anch::codec::ContentTooLarge("Content is larger than " + std::to_string(_maxSize) + " bytes");
 	}
 	_total += read;
       }
@@ -387,7 +387,7 @@ namespace {
     void
     write(std::string_view data) {
       if(data.size() > _limits.maxPartSize - _size) {
-	throw anch::rest::ContentTooLarge("Multipart part is larger than " + std::to_string(_limits.maxPartSize) + " bytes");
+	throw anch::codec::ContentTooLarge("Multipart part is larger than " + std::to_string(_limits.maxPartSize) + " bytes");
       }
       _size += data.size();
       if(!_file && _memory.size() + data.size() > _limits.maxMemoryPartSize) {
@@ -605,7 +605,7 @@ Multipart::randomBoundary() {
 
 std::string_view
 Multipart::mediaType() noexcept {
-  return anch::rest::media::MULTIPART_FORM_DATA;
+  return anch::codec::media::MULTIPART_FORM_DATA;
 }
 
 FormLimits&
@@ -694,7 +694,7 @@ Multipart::deserialize(Form& form, std::istream& input, const MediaType& content
     }
     reader.consume(CRLF.size());
     if(form.size() == limits.maxParts) {
-      throw anch::rest::ContentTooLarge("Multipart body has more than " + std::to_string(limits.maxParts) + " parts");
+      throw anch::codec::ContentTooLarge("Multipart body has more than " + std::to_string(limits.maxParts) + " parts");
     }
 
     // Headers: lines until an empty line
@@ -707,7 +707,7 @@ Multipart::deserialize(Form& form, std::istream& input, const MediaType& content
 	const std::size_t found = reader.view().find("\r\n\r\n");
 	const std::size_t size = (found == std::string_view::npos) ? reader.view().size() : found + CRLF.size();
 	if(size > limits.maxHeadersSize) {
-	  throw anch::rest::ContentTooLarge("Multipart part headers are larger than " + std::to_string(limits.maxHeadersSize) + " bytes");
+	  throw anch::codec::ContentTooLarge("Multipart part headers are larger than " + std::to_string(limits.maxHeadersSize) + " bytes");
 	}
 	if(found != std::string_view::npos) {
 	  headers = reader.view().substr(0, size);

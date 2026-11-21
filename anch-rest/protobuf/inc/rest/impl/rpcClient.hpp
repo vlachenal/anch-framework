@@ -23,13 +23,13 @@
 
 namespace anch::rest {
 
-  template<anch::rest::ProtobufMessage Res, anch::rest::ProtobufMessage Req>
+  template<anch::codec::ProtobufMessage Res, anch::codec::ProtobufMessage Req>
   Res
   callRpc(anch::rest::Client& client, std::string_view service, std::string_view method, const Req& request, anch::rest::RpcFormat format) {
     const bool json = (format == anch::rest::RpcFormat::JSON);
     std::string body;
     if(json) {
-      body = anch::rest::ProtobufJson::toJson(request);
+      body = anch::codec::ProtobufJson::toJson(request);
     } else if(!request.SerializeToString(&body)) {
       throw std::runtime_error("Unable to write protobuf message " + std::string(request.GetTypeName()));
     }
@@ -44,7 +44,7 @@ namespace anch::rest {
     const std::string content = response.content();
     try {
       if(json) {
-	anch::rest::ProtobufJson::fromJson(result, content, true);
+	anch::codec::ProtobufJson::fromJson(result, content, true);
       } else if(!result.ParseFromString(content)) {
 	throw std::invalid_argument("Invalid " + std::string(result.GetTypeName()) + " message");
       }

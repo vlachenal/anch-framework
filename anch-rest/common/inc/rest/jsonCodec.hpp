@@ -19,138 +19,18 @@
 */
 #pragma once
 
-#include "anch-rest-common-export.hpp"
-
-#include <istream>
-#include <ostream>
-#include <string_view>
-
-#include "json/json.hpp"
-#include "json/mappingOptions.hpp"
+#include "codec/json.hpp"
 
 #include "rest/codec.hpp"
 
+/*!
+ * \file rest/jsonCodec.hpp
+ * \deprecated removed in 0.4: the JSON codec has moved to anch-codec-json, use \c codec/json.hpp
+ */
+
 namespace anch::rest {
 
-  /*!
-   * \c application/json codec based on anch-json: values need an anch-json mapper
-   * (\c anch::json::registerObject ).\n
-   * \n
-   * Server and client use mapping options of their side ( \ref options ): fields constraints (
-   * \c anch::json::required , \c anch::json::minLength , ...) are checked on values the server receives (invalid
-   * request body: \c 400 response with the path of the invalid value) and on values the client sends (invalid
-   * request is not sent: \c anch::json::MappingError is raised by \c Call::body ). Server responses are not
-   * checked by the server (a response which violates constraints is still sent) nor by the client (server responses
-   * are trusted).
-   *
-   * \author Vincent Lachenal
-   *
-   * \since 0.2
-   */
-  struct ANCH_REST_COMMON_EXPORT Json {
-
-    /*!
-     * Media type
-     *
-     * \return \c application/json
-     */
-    static std::string_view mediaType() noexcept;
-
-    /*!
-     * Mapping options of a side. They are copied from \c anch::json::DEFAULT_MAPPING_OPTIONS on first use, then
-     * constraints checks are set:
-     * - server: \c deserialize_check_constraints is \c true , \c serialize_check_constraints is \c false , request
-     *   bodies are limited to 2 MiB ( \c max_payload , when not set in \c anch::json::DEFAULT_MAPPING_OPTIONS ):
-     *   larger ones raise \ref ContentTooLarge ( \c 413 );
-     * - client: \c serialize_check_constraints is \c true , \c deserialize_check_constraints is \c false . Server
-     *   responses are trusted and read with tolerance: unknown fields are ignored
-     *   ( \c deserialize_ignore_unknown_field is \c true ) and whitespaces are accepted
-     *   ( \c deserialize_max_discard_char is \c -1 ).
-     *
-     * Options can be changed at application initialization (they are not protected against concurrent changes).
-     *
-     * \param side the side
-     *
-     * \return the mapping options of the side
-     *
-     * \since 0.2
-     */
-    static anch::json::MappingOptions& options(anch::rest::Side side);
-
-    /*!
-     * Serialize value
-     *
-     * \param value the value
-     * \param out the output stream
-     */
-    template<typename T>
-    static void serialize(const T& value, std::ostream& out);
-
-    /*!
-     * Serialize value with side mapping options
-     *
-     * \param value the value
-     * \param out the output stream
-     * \param side the side
-     *
-     * \throw anch::json::MappingError constraint violation (when constraints are checked on serialization)
-     *
-     * \since 0.2
-     */
-    template<typename T>
-    static void serialize(const T& value, std::ostream& out, anch::rest::Side side);
-
-    /*!
-     * Deserialize value
-     *
-     * \param value the value to fill
-     * \param input the input stream
-     *
-     * \throw ContentTooLarge input is larger than \c max_payload option
-     * \throw anch::json::MappingError on invalid JSON
-     */
-    template<typename T>
-    static void deserialize(T& value, std::istream& input);
-
-    /*!
-     * Deserialize value with side mapping options
-     *
-     * \param value the value to fill
-     * \param input the input stream
-     * \param side the side
-     *
-     * \throw ContentTooLarge input is larger than \c max_payload option
-     * \throw anch::json::MappingError on invalid JSON or constraint violation (when constraints are checked on
-     *        deserialization)
-     *
-     * \since 0.2
-     */
-    template<typename T>
-    static void deserialize(T& value, std::istream& input, anch::rest::Side side);
-
-  private:
-    /*!
-     * Serialize value with mapping options
-     *
-     * \param value the value
-     * \param out the output stream
-     * \param options the mapping options
-     */
-    template<typename T>
-    static void serialize(const T& value, std::ostream& out, const anch::json::MappingOptions& options);
-
-    /*!
-     * Deserialize value with mapping options
-     *
-     * \param value the value to fill
-     * \param input the input stream
-     * \param options the mapping options
-     */
-    template<typename T>
-    static void deserialize(T& value, std::istream& input, const anch::json::MappingOptions& options);
-
-  };
+  /*! \deprecated removed in 0.4, use \ref anch::codec::Json */
+  using Json [[deprecated("removed in 0.4, use anch::codec::Json")]] = anch::codec::Json;
 
 }
-
-#include "rest/impl/jsonCodec.hpp"

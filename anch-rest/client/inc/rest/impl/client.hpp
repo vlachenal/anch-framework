@@ -75,11 +75,11 @@ namespace anch::rest {
   template<typename C, typename T>
   Call<Codecs...>&
   Call<Codecs...>::body(const T& value) & {
-    static_assert(anch::rest::Serializer<C, T>, "Codec can not serialize body");
-    const anch::rest::MediaType contentType = anch::rest::contentTypeOf<C>(value);
-    if constexpr (requires { { C::stream(value, contentType, anch::rest::Side::CLIENT) } -> std::same_as<anch::rest::BodyStream>; }) {
+    static_assert(anch::codec::Serializer<C, T>, "Codec can not serialize body");
+    const anch::codec::MediaType contentType = anch::codec::contentTypeOf<C>(value);
+    if constexpr (requires { { C::stream(value, contentType, anch::codec::Side::CLIENT) } -> std::same_as<anch::rest::BodyStream>; }) {
       // Body is read by the transport: large bodies are not built in memory
-      anch::rest::BodyStream stream = C::stream(value, contentType, anch::rest::Side::CLIENT);
+      anch::rest::BodyStream stream = C::stream(value, contentType, anch::codec::Side::CLIENT);
       _request.getHeaders().set(anch::rest::header::CONTENT_TYPE, contentType.toString());
       if(stream.size) {
 	_request.getHeaders().set(anch::rest::header::CONTENT_LENGTH, std::to_string(*stream.size));
@@ -88,7 +88,7 @@ namespace anch::rest {
       return *this;
     } else {
       std::ostringstream out;
-      anch::rest::serializeBody<C>(value, out, contentType, anch::rest::Side::CLIENT);
+      anch::codec::serialize<C>(value, out, contentType, anch::codec::Side::CLIENT);
       return body(out.str(), contentType.toString());
     }
   }
@@ -165,33 +165,20 @@ namespace anch::rest {
   T
   Call<Codecs...>::as() && {
     static_assert(sizeof...(Codecs) > 0, "as<T>() needs an accepted codec (accept<Codec>())");
-    static_assert((anch::rest::Deserializer<Codecs, T> || ...), "No accepted codec can deserialize this type");
+    static_assert((anch::codec::Deserializer<Codecs, T> || ...), "No accepted codec can deserialize this type");
     static_assert(std::is_default_constructible_v<T>, "Result type has to be default constructible");
     anch::rest::Response response = std::move(*this).send();
     if(anch::rest::code(response.getStatus()) >= 400) {
       throw anch::rest::HttpError(std::move(response));
     }
     std::optional<std::string_view> header = response.getHeaders().get(anch::rest::header::CONTENT_TYPE);
-    std::optional<anch::rest::MediaType> type = anch::rest::MediaType::parse(header.value_or(""));
-    std::optional<T> result;
-    auto tryCodec = [&]<typename C>() {
-      if constexpr (anch::rest::Deserializer<C, T>) {
-	std::optional<anch::rest::MediaType> codecType = anch::rest::MediaType::parse(C::mediaType());
-	if(type && codecType && type->getType() == codecType->getType() && type->getSubtype() == codecType->getSubtype()) {
-	  T value{};
-	  std::istringstream input(response.content());
-	  anch::rest::deserializeBody<C>(value, input, *type, anch::rest::Side::CLIENT);
-	  result = std::move(value);
-	  return true;
-	}
-      }
-      return false;
-    };
-    (tryCodec.template operator()<Codecs>() || ...);
-    if(!result) {
+    std::optional<anch::codec::MediaType> type = anch::codec::MediaType::parse(header.value_or(""));
+    T value{};
+    std::istringstream input(response.content());
+    if(!type || !anch::codec::Codecs<Codecs...>::deserialize(value, input, *type, anch::codec::Side::CLIENT)) {
       throw std::runtime_error("Response content type '" + std::string(header.value_or("")) + "' is not accepted");
     }
-    return std::move(*result);
+    return value;
   }
 
   template<typename... Codecs>

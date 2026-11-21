@@ -22,8 +22,8 @@
 namespace anch::rest {
 
   inline
-  ThriftTransport::ThriftTransport(anch::rest::Client& client, std::string path, anch::rest::ThriftProtocol protocol):
-    _client(client), _path(std::move(path)), _contentType(anch::rest::thriftMediaType(protocol)), _request(), _response(), _position(0) {
+  ThriftTransport::ThriftTransport(anch::rest::Client& client, std::string path, anch::codec::ThriftProtocol protocol):
+    _client(client), _path(std::move(path)), _contentType(anch::codec::thriftMediaType(protocol)), _request(), _response(), _position(0) {
     // Nothing to do
   }
 

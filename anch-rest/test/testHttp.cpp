@@ -18,9 +18,11 @@
   along with ANCH Framework.  If not, see <https://www.gnu.org/licenses/>.
 */
 #include "rest/form.hpp"
+
+#include "codec/mediaType.hpp"
+
 #include "rest/formCodec.hpp"
 #include "rest/headers.hpp"
-#include "rest/mediaType.hpp"
 #include "rest/multipartCodec.hpp"
 #include "rest/method.hpp"
 #include "rest/request.hpp"
@@ -39,7 +41,7 @@
 using anch::rest::Form;
 using anch::rest::FormUrlEncoded;
 using anch::rest::Headers;
-using anch::rest::MediaType;
+using anch::codec::MediaType;
 using anch::rest::Method;
 using anch::rest::Request;
 using anch::rest::Response;
@@ -67,34 +69,6 @@ testMethodStatus() {
   anch::ut::assertThat(!anch::rest::parseMethod("get").has_value(), "Method names are case sensitive");
   anch::ut::assertThat(anch::rest::code(Status::NOT_FOUND) == 404, "NOT_FOUND has to be 404");
   anch::ut::assertThat(anch::rest::reasonPhrase(Status::IM_USED) == "IM Used" && anch::rest::code(Status::IM_USED) == 226, "IM_USED has to be 226");
-}
-
-void
-testMediaType() {
-  auto json = MediaType::parse("Application/JSON ; charset=\"UTF-8\"; foo=bar");
-  anch::ut::assertThat(json.has_value(), "Media type has to be parsed");
-  anch::ut::assertThat(json->essence() == "application/json", "Unexpected essence '{}'", json->essence());
-  anch::ut::assertThat(json->getParameter("charset") == "UTF-8", "Unexpected charset");
-  anch::ut::assertThat(json->toString() == "application/json;charset=UTF-8;foo=bar", "Unexpected format '{}'", json->toString());
-  anch::ut::assertThat(!MediaType::parse("application").has_value(), "Media type without subtype is invalid");
-  anch::ut::assertThat(!MediaType::parse("*/json").has_value(), "*/json is invalid");
-  anch::ut::assertThat(!MediaType::parse("text/plain; charset").has_value(), "Parameter without value is invalid");
-  anch::ut::assertThat(MediaType("*", "*").includes(*json) && MediaType("application", "*").includes(*json)
-		       && !MediaType("text", "*").includes(*json), "Unexpected wildcard inclusion");
-}
-
-void
-testAccept() {
-  auto accept = MediaType::parseAccept("text/*;q=0.3, text/html;q=0.7, text/html;level=1, invalid, */*;q=0.5, application/xml;q=2");
-  anch::ut::assertThat(accept.size() == 4, "Expected 4 media ranges, found {}", accept.size());
-  anch::ut::assertThat(accept[0].toString() == "text/html;level=1" && accept[1].essence() == "text/html"
-		       && accept[2].essence() == "*/*" && accept[3].essence() == "text/*", "Media ranges have to be sorted by quality");
-  std::vector<MediaType> available{MediaType("application", "json"), MediaType("text", "plain"), MediaType("text", "html")};
-  // Most specific range defines quality: text/html 0.7 > */* 0.5 > text/* 0.3
-  anch::ut::assertThat(anch::rest::negotiate(MediaType::parseAccept("text/*;q=0.3, text/html;q=0.7, */*;q=0.5"), available) == 2u, "text/html expected");
-  anch::ut::assertThat(anch::rest::negotiate({}, available) == 0u, "First media type expected without Accept");
-  anch::ut::assertThat(anch::rest::negotiate(MediaType::parseAccept("*/*, application/json;q=0"), available) == 1u, "q=0 has to exclude application/json");
-  anch::ut::assertThat(!anch::rest::negotiate(MediaType::parseAccept("image/png"), available).has_value(), "No media type expected");
 }
 
 void
@@ -162,7 +136,7 @@ testFormUrlEncoded() {
   auto read = [](std::string_view body, std::string_view contentType = "application/x-www-form-urlencoded") {
     Form form;
     std::istringstream input{std::string(body)};
-    FormUrlEncoded::deserialize(form, input, *MediaType::parse(contentType), anch::rest::Side::SERVER);
+    FormUrlEncoded::deserialize(form, input, *MediaType::parse(contentType), anch::codec::Side::SERVER);
     return form;
   };
   Form form = read("name=M%C3%A9dor+le+chien&&tags=a&tags=b&flag&=anonymous&e=");
@@ -197,7 +171,7 @@ namespace {
   readMultipart(std::string_view body, std::string_view contentType = "multipart/form-data; boundary=XyZ") {
     Form form;
     std::istringstream input{std::string(body)};
-    anch::rest::Multipart::deserialize(form, input, *MediaType::parse(contentType), anch::rest::Side::SERVER);
+    anch::rest::Multipart::deserialize(form, input, *MediaType::parse(contentType), anch::codec::Side::SERVER);
     return form;
   }
 
@@ -270,7 +244,7 @@ testMultipart() {
   anch::ut::assertThat(type.essence() == "multipart/form-data" && type.getParameter("boundary")->size() == 37
 		       && type.getParameter("boundary") != other.getParameter("boundary"), "Unexpected boundary '{}'", type.toString());
   std::ostringstream out;
-  anch::rest::Multipart::serialize(written, out, type, anch::rest::Side::CLIENT);
+  anch::rest::Multipart::serialize(written, out, type, anch::codec::Side::CLIENT);
   const std::string delimiter = "--" + std::string(*type.getParameter("boundary"));
   anch::ut::assertThat(out.str().starts_with(delimiter + "\r\nContent-Disposition: form-data; name=\"na%22me%0D%0A\"\r\n\r\nvalue\r\n")
 		       && out.str().ends_with("\r\n" + delimiter + "--\r\n"), "Unexpected body '{}'", out.str());
@@ -287,7 +261,7 @@ testMultipart() {
   auto writeError = [](const Form& value, const MediaType& contentType) {
     std::ostringstream ignored;
     try {
-      anch::rest::Multipart::serialize(value, ignored, contentType, anch::rest::Side::CLIENT);
+      anch::rest::Multipart::serialize(value, ignored, contentType, anch::codec::Side::CLIENT);
     } catch(const std::invalid_argument&) {
       return true;
     }
@@ -342,11 +316,11 @@ testMultipartMalformed() {
 
 void
 testMultipartLimits() {
-  anch::rest::FormLimits& limits = anch::rest::Multipart::limits(anch::rest::Side::SERVER);
+  anch::rest::FormLimits& limits = anch::rest::Multipart::limits(anch::codec::Side::SERVER);
   const anch::rest::FormLimits saved = limits;
   const std::string part = "--XyZ\r\nContent-Disposition: form-data; name=\"a\"\r\n\r\nvalue\r\n";
   auto expect = [](std::string_view body, std::string_view message) {
-    std::string error = multipartError<anch::rest::ContentTooLarge>(body);
+    std::string error = multipartError<anch::codec::ContentTooLarge>(body);
     anch::ut::assertThat(error.find(message) != std::string::npos, "Expected '{}', found '{}'", message, error);
   };
   limits.maxParts = 2;
@@ -369,14 +343,14 @@ testMultipartLimits() {
   limits = saved;
 
   // URL-encoded forms
-  anch::rest::FormLimits& url = FormUrlEncoded::limits(anch::rest::Side::SERVER);
+  anch::rest::FormLimits& url = FormUrlEncoded::limits(anch::codec::Side::SERVER);
   const anch::rest::FormLimits urlSaved = url;
   auto readUrl = [](std::string_view body) {
     Form form;
     std::istringstream input{std::string(body)};
     try {
-      FormUrlEncoded::deserialize(form, input, *MediaType::parse("application/x-www-form-urlencoded"), anch::rest::Side::SERVER);
-    } catch(const anch::rest::ContentTooLarge& e) {
+      FormUrlEncoded::deserialize(form, input, *MediaType::parse("application/x-www-form-urlencoded"), anch::codec::Side::SERVER);
+    } catch(const anch::codec::ContentTooLarge& e) {
       return std::string(e.what());
     }
     return std::string("no error");
@@ -469,7 +443,7 @@ testPartFile() {
 
 void
 testMultipartStream() {
-  anch::rest::FormLimits& limits = anch::rest::Multipart::limits(anch::rest::Side::SERVER);
+  anch::rest::FormLimits& limits = anch::rest::Multipart::limits(anch::codec::Side::SERVER);
   const anch::rest::FormLimits saved = limits;
   const std::filesystem::path dir = temporaryDirectory("multipart-stream");
   limits.temporaryDirectory = dir;
@@ -497,7 +471,7 @@ testMultipartStream() {
   multipartError<std::invalid_argument>("--XyZ\r\nContent-Disposition: form-data; name=\"a\"\r\n\r\n" + big + "\r\n--XyZ\r\n"
 					"Content-Disposition: form-data; name=\"b\"\r\n\r\n" + big);
   limits.maxPartSize = 200000;
-  std::string error = multipartError<anch::rest::ContentTooLarge>("--XyZ\r\nContent-Disposition: form-data; name=\"a\"\r\n\r\n" + big + "\r\n--XyZ--");
+  std::string error = multipartError<anch::codec::ContentTooLarge>("--XyZ\r\nContent-Disposition: form-data; name=\"a\"\r\n\r\n" + big + "\r\n--XyZ--");
   anch::ut::assertThat(error == "Multipart part is larger than 200000 bytes", "Unexpected error '{}'", error);
   anch::ut::assertThat(fileCount(dir) == 0, "Temporary files have to be deleted on error, found {}", fileCount(dir));
   limits.maxPartSize = saved.maxPartSize;
@@ -532,14 +506,14 @@ testMultipartStreamWrite() {
     .addFile("empty", "empty.txt", MediaType("text", "plain"), "");
   const MediaType type = anch::rest::Multipart::contentType(form);
   std::ostringstream out;
-  anch::rest::Multipart::serialize(form, out, type, anch::rest::Side::CLIENT);
-  anch::rest::BodyStream stream = anch::rest::Multipart::stream(form, type, anch::rest::Side::CLIENT);
+  anch::rest::Multipart::serialize(form, out, type, anch::codec::Side::CLIENT);
+  anch::rest::BodyStream stream = anch::rest::Multipart::stream(form, type, anch::codec::Side::CLIENT);
   const std::string streamed = readAll(*stream.input);
   anch::ut::assertThat(streamed == out.str() && stream.size == streamed.size(), "Stream has to be the serialized body ({} / {} bytes, size {})",
 		       streamed.size(), out.str().size(), stream.size.value_or(0));
   std::istringstream input(streamed);
   Form back;
-  anch::rest::Multipart::deserialize(back, input, type, anch::rest::Side::SERVER);
+  anch::rest::Multipart::deserialize(back, input, type, anch::codec::Side::SERVER);
   anch::ut::assertThat(back.field("description") == "Rex" && back.part("photo")->size() == big.size() && *back.part("photo") == *form.part("photo")
 		       && back.part("empty")->size() == 0, "Unexpected form read from stream");
   std::filesystem::remove_all(dir);
@@ -552,8 +526,6 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .description("Test headers, media types, requests and responses")
     .add("headers", testHeaders)
     .add("method-status", testMethodStatus)
-    .add("media-type", testMediaType)
-    .add("accept", testAccept)
     .add("request-target", testRequestTarget)
     .add("response", testResponse)
     .add("form", testForm)

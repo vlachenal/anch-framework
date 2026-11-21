@@ -32,7 +32,10 @@
 #include <type_traits>
 #include <vector>
 
-#include "rest/codec.hpp"
+#include "codec/codec.hpp"
+#include "codec/codecs.hpp"
+
+#include "rest/bodyStream.hpp"
 #include "rest/filter.hpp"
 #include "rest/headers.hpp"
 #include "rest/httpError.hpp"

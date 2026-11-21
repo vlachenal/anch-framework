@@ -159,7 +159,7 @@ target_link_libraries(petstore PRIVATE anch::json anch::uuid)
  *   optional query parameters ( \c std::optional ). Path item and operation parameters are merged, references to
  *   \c #/components/parameters/ are followed. Path and query parameters are strings, numbers, booleans or UUID
  *   (converted by \c anch::rest::ParamConverter : invalid or missing value is a \c 400 response) ;
- * - request body: \c application/json ( \c anch::rest::Json ), \c text/plain ( \c anch::rest::Text , strings
+ * - request body: \c application/json ( \c anch::codec::Json ), \c text/plain ( \c anch::codec::Text , strings
  *   only), \c multipart/form-data ( \c anch::rest::Multipart ) and \c application/x-www-form-urlencoded
  *   ( \c anch::rest::FormUrlEncoded ) ; references to \c #/components/requestBodies/ are followed (see
  *   \ref oas_forms_sec "form bodies"). Other media types ( \c *\/\* , \c application/octet-stream , \c image/png , ...),

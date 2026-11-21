@@ -1,0 +1,84 @@
+/*! \page page_codec AnCH codec library documentation
+ *
+ * \tableofcontents
+ *
+ * \section codec_intro_seq Introduction
+ *
+ * AnCH codec library associates content types ( \ref anch::codec::MediaType "MediaType" ) with serialization and
+ * deserialization of C++ values. anch-rest uses codecs for requests and responses bodies ; they do not depend on
+ * HTTP, so that other libraries (messaging) read and write their contents with the same codecs.
+ *
+ * \section codec_libs_sec Libraries
+ *
+ * anch-codec is built with anch-rest (since 0.3, codecs were part of anch-rest in 0.2). The core has no format
+ * dependency ; each format is a plugin library built according to its option. Plugins with external dependencies
+ * are skipped with a CMake status message when their dependencies are not found.
+ *
+ * | CMake target | Option | Content |
+ * | :----------- | :----- | :------ |
+ * | \c anch::codec | | concepts, \ref anch::codec::MediaType "MediaType" and negotiation, limits, \ref anch::codec::Side "Side", \ref anch::codec::Text "Text", \ref anch::codec::Codecs "Codecs", formats registry |
+ * | \c anch::codec-json | \c ANCH_CODEC_JSON (needed by anch-rest) | \ref anch::codec::Json "Json" (anch-json) |
+ * | \c anch::codec-protobuf | \c ANCH_CODEC_PROTOBUF (Protobuf) | \ref anch::codec::Protobuf "Protobuf", \ref anch::codec::ProtobufJson "ProtobufJson" |
+ * | \c anch::codec-thrift | \c ANCH_CODEC_THRIFT (Thrift and Boost headers) | \ref anch::codec::ThriftBinary "ThriftBinary", \ref anch::codec::ThriftCompact "ThriftCompact", \ref anch::codec::ThriftJson "ThriftJson" |
+ * | \c anch::codec-all | | \c codec/all.hpp : every plugin built and \c anch::codec::Available |
+ *
+ * \code{.cmake}
+find_package(Anch REQUIRED)
+target_link_libraries(my-app PRIVATE anch::codec-json)
+\endcode
+ * See \ref install_sec "installation".
+ *
+ * \section codec_codec_sec Codecs
+ *
+ * A codec is a type with static functions: \c mediaType() and \c serialize / \c deserialize , with one of their
+ * forms (value and stream ; plus \ref anch::codec::Side "Side" ; plus content type and side), see
+ * \ref anch::codec::Serializer "Serializer" and \ref anch::codec::Deserializer "Deserializer":
+ * \snippet{trimleft} anch-codec/examples/codec.cpp codec
+ *
+ * \ref anch::codec::contentTypeOf "contentTypeOf", \ref anch::codec::serialize "serialize" and
+ * \ref anch::codec::deserialize "deserialize" call the richest form a codec defines:
+ * \snippet{trimleft} anch-codec/examples/codec.cpp serialize
+ *
+ * \section codec_side_sec Trust policy
+ *
+ * \ref anch::codec::Side "Side" is the trust policy of the codec user: \c SERVER reads data it does not control
+ * (checked and bounded) and trusts what it builds ; \c CLIENT checks what it sends and trusts what it reads.
+ * anch-rest servers use \c SERVER and clients \c CLIENT ; a message consumer reads with \c SERVER and a producer
+ * writes with \c CLIENT .
+ * - \ref anch::codec::Json "Json" checks anch-json fields constraints on values read with \c SERVER and on values
+ *   written with \c CLIENT , and has mapping options per side ( \ref anch::codec::Json::options "options" ):
+ * \snippet{trimleft} anch-codec/examples/codec.cpp model
+ * - codecs without limit of their own read contents with \ref anch::codec::readBody "readBody", bounded by
+ *   \ref anch::codec::maxBodySize "maxBodySize" (2 MiB for \c SERVER by default): larger contents raise
+ *   \ref anch::codec::ContentTooLarge "ContentTooLarge" ( \c 413 in anch-rest servers).
+ *
+ * \section codec_select_sec Codecs selection and formats
+ *
+ * \ref anch::codec::Codecs "Codecs" is a list of codecs resolved at compilation: it selects the codec of a content
+ * type when reading, and negotiates the codec of accepted media ranges ( \c Accept , q-values) when writing:
+ * \snippet{trimleft} anch-codec/examples/codec.cpp codecs
+ *
+ * \c codec/all.hpp (target \c anch::codec-all ) is generated with the plugins built: it includes their headers,
+ * defines \c ANCH_CODEC_JSON_ENABLED , \c ANCH_CODEC_PROTOBUF_ENABLED and \c ANCH_CODEC_THRIFT_ENABLED , and declares
+ * \c anch::codec::Available , the list of their codecs (Json, Protobuf, ProtobufJson, ThriftBinary, ThriftCompact,
+ * ThriftJson, then Text). Types described by an external schema ( \ref anch::codec::ExternalSchema "ExternalSchema":
+ * Protobuf messages, Thrift structures) are not handled by Json, so the list selects the codecs of their format.
+ * Each plugin registers its format when its library is loaded ( \ref anch::codec::formats "formats", for
+ * introspection: accepted media types, startup logs, ...):
+ * \snippet{trimleft} anch-codec/examples/codec.cpp available
+ *
+ * \section codec_schema_sec Protocol Buffers and Apache Thrift
+ *
+ * \c protoc messages are read and written by \ref anch::codec::Protobuf "Protobuf" ( \c application/x-protobuf )
+ * and \ref anch::codec::ProtobufJson "ProtobufJson" ( \c application/json , Protobuf JSON mapping) codecs.
+ * Structures generated by <tt>thrift --gen cpp</tt> are read and written by
+ * \ref anch::codec::ThriftBinary "ThriftBinary" ( \c application/vnd.apache.thrift.binary ),
+ * \ref anch::codec::ThriftCompact "ThriftCompact" ( \c .compact ) and \ref anch::codec::ThriftJson "ThriftJson"
+ * ( \c .json ). Their RPC (Connect, gRPC-Web, gRPC, Thrift over HTTP) is in anch-rest (see \ref page_rest).
+ *
+ * \section codec_compat_sec Compatibility
+ *
+ * The anch-rest 0.2 names ( \c anch::rest::Json , \c anch::rest::MediaType , \c anch::rest::Side ,
+ * \c anch::rest::serializeBody , ... and headers \c rest/codec.hpp , \c rest/mediaType.hpp , \c rest/jsonCodec.hpp ,
+ * \c rest/protobufCodec.hpp , \c rest/thriftCodec.hpp ) are deprecated aliases of anch-codec ones, removed in 0.4.
+ */

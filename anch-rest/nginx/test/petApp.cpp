@@ -21,7 +21,9 @@
  * Test application for AnCH REST nginx module: built as a shared library and loaded with
  * anch_rest_app directive (or with dlopen by anch-rest-nginx-test).
  */
-#include "rest/jsonCodec.hpp"
+#include "codec/json.hpp"
+#include "codec/text.hpp"
+
 #include "rest/multipartCodec.hpp"
 #include "rest/nginxApplication.hpp"
 #include "rest/paramConverter.hpp"
@@ -37,11 +39,11 @@
 
 using anch::rest::Api;
 using anch::rest::Body;
-using anch::rest::Json;
+using anch::codec::Json;
 using anch::rest::Request;
 using anch::rest::Response;
 using anch::rest::Status;
-using anch::rest::Text;
+using anch::codec::Text;
 
 /*!
  * Write \c size bytes of a deterministic pattern ('a' to 'z' repeated) in blocks of 1000 bytes

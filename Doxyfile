@@ -2489,6 +2489,10 @@ PREDEFINED             = ANCH_POSIX \
                          ANCH_SQL_POSTGRESQL \
                          ANCH_SQL_SQLITE3 \
                          ANCH_CLI_EXPORT= \
+                         ANCH_CODEC_EXPORT= \
+                         ANCH_CODEC_JSON_EXPORT= \
+                         ANCH_CODEC_PROTOBUF_EXPORT= \
+                         ANCH_CODEC_THRIFT_EXPORT= \
                          ANCH_CONF_EXPORT= \
                          ANCH_CRYPTO_EXPORT= \
                          ANCH_CUTILS_EXPORT= \
@@ -2506,7 +2510,6 @@ PREDEFINED             = ANCH_POSIX \
                          ANCH_REST_CURL_EXPORT= \
                          ANCH_REST_PROTOBUF_EXPORT= \
                          ANCH_REST_GRPC_EXPORT= \
-                         ANCH_REST_THRIFT_EXPORT= \
                          ANCH_SQL_EXPORT= \
                          ANCH_MYSQL_EXPORT= \
                          ANCH_POSTGRESQL_EXPORT= \

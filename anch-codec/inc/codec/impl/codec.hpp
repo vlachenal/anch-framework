@@ -19,12 +19,11 @@
 */
 #pragma once
 
-#include <iterator>
 #include <optional>
 #include <stdexcept>
 #include <utility>
 
-namespace anch::rest::detail {
+namespace anch::codec::detail {
 
   /*!
    * Parse codec media type
@@ -35,9 +34,9 @@ namespace anch::rest::detail {
    *
    * \throw std::invalid_argument when media type is invalid
    */
-  inline anch::rest::MediaType
+  inline anch::codec::MediaType
   codecMediaType(std::string_view mediaType) {
-    std::optional<anch::rest::MediaType> res = anch::rest::MediaType::parse(mediaType);
+    std::optional<anch::codec::MediaType> res = anch::codec::MediaType::parse(mediaType);
     if(!res) {
       throw std::invalid_argument("Invalid codec media type '" + std::string(mediaType) + "'");
     }
@@ -46,7 +45,7 @@ namespace anch::rest::detail {
 
 }
 
-namespace anch::rest {
+namespace anch::codec {
 
   inline std::string
   readContent(std::istream& input, std::size_t maxSize) {
@@ -59,7 +58,7 @@ namespace anch::rest {
 	break;
       }
       if(count > maxSize - res.size()) {
-	throw anch::rest::ContentTooLarge("Content is larger than " + std::to_string(maxSize) + " bytes");
+	throw anch::codec::ContentTooLarge("Content is larger than " + std::to_string(maxSize) + " bytes");
       }
       res.append(buffer, count);
     }
@@ -67,27 +66,27 @@ namespace anch::rest {
   }
 
   inline std::string
-  readBody(std::istream& input, anch::rest::Side side) {
-    const std::size_t maxSize = anch::rest::maxBodySize(side);
-    return anch::rest::readContent(input, maxSize == 0 ? std::numeric_limits<std::size_t>::max() : maxSize);
+  readBody(std::istream& input, anch::codec::Side side) {
+    const std::size_t maxSize = anch::codec::maxBodySize(side);
+    return anch::codec::readContent(input, maxSize == 0 ? std::numeric_limits<std::size_t>::max() : maxSize);
   }
 
   template<typename C, typename T>
-  requires anch::rest::Serializer<C, T>
-  anch::rest::MediaType
+  requires anch::codec::Serializer<C, T>
+  anch::codec::MediaType
   contentTypeOf(const T& value) {
-    if constexpr (requires { { C::contentType(value) } -> std::convertible_to<anch::rest::MediaType>; }) {
+    if constexpr (requires { { C::contentType(value) } -> std::convertible_to<anch::codec::MediaType>; }) {
       return C::contentType(value);
     } else {
-      return anch::rest::detail::codecMediaType(C::mediaType());
+      return anch::codec::detail::codecMediaType(C::mediaType());
     }
   }
 
   template<typename C, typename T>
-  requires anch::rest::Serializer<C, T>
+  requires anch::codec::Serializer<C, T>
   void
-  serializeBody(const T& value, std::ostream& out, [[maybe_unused]] const anch::rest::MediaType& contentType,
-		[[maybe_unused]] anch::rest::Side side) {
+  serialize(const T& value, std::ostream& out, [[maybe_unused]] const anch::codec::MediaType& contentType,
+		[[maybe_unused]] anch::codec::Side side) {
     if constexpr (requires { C::serialize(value, out, contentType, side); }) {
       C::serialize(value, out, contentType, side);
     } else if constexpr (requires { C::serialize(value, out, side); }) {
@@ -98,10 +97,10 @@ namespace anch::rest {
   }
 
   template<typename C, typename T>
-  requires anch::rest::Deserializer<C, T>
+  requires anch::codec::Deserializer<C, T>
   void
-  deserializeBody(T& value, std::istream& input, [[maybe_unused]] const anch::rest::MediaType& contentType,
-		  [[maybe_unused]] anch::rest::Side side) {
+  deserialize(T& value, std::istream& input, [[maybe_unused]] const anch::codec::MediaType& contentType,
+		  [[maybe_unused]] anch::codec::Side side) {
     if constexpr (requires { C::deserialize(value, input, contentType, side); }) {
       C::deserialize(value, input, contentType, side);
     } else if constexpr (requires { C::deserialize(value, input, side); }) {
@@ -109,23 +108,6 @@ namespace anch::rest {
     } else {
       C::deserialize(value, input);
     }
-  }
-
-  inline std::string_view
-  Text::mediaType() noexcept {
-    return "text/plain";
-  }
-
-  template<typename T>
-  requires requires(std::ostream& out, const T& value) { out << value; }
-  void
-  Text::serialize(const T& value, std::ostream& out) {
-    out << value;
-  }
-
-  inline void
-  Text::deserialize(std::string& value, std::istream& input) {
-    value.assign(std::istreambuf_iterator<char>(input), std::istreambuf_iterator<char>());
   }
 
 }

@@ -25,18 +25,18 @@ namespace anch::rest {
   installThrift(anch::rest::Api& api, std::string_view path, std::shared_ptr<apache::thrift::TProcessor> processor,
 		std::size_t maxMessageSize) {
     api.post(path, [processor = std::move(processor), maxMessageSize](const anch::rest::Request& request, std::istream& body) {
-      std::optional<anch::rest::MediaType> type = request.getContentType();
-      std::optional<anch::rest::ThriftProtocol> protocol = type ? anch::rest::thriftProtocolOf(*type) : std::nullopt;
+      std::optional<anch::codec::MediaType> type = request.getContentType();
+      std::optional<anch::codec::ThriftProtocol> protocol = type ? anch::codec::thriftProtocolOf(*type) : std::nullopt;
       if(!protocol) {
 	throw anch::rest::HttpException(anch::rest::Status::UNSUPPORTED_MEDIA_TYPE);
       }
-      std::string content = anch::rest::readContent(body, maxMessageSize);
+      std::string content = anch::codec::readContent(body, maxMessageSize);
       std::vector<uint8_t> data(content.begin(), content.end());
       auto input = std::make_shared<apache::thrift::transport::TMemoryBuffer>(data.data(), static_cast<uint32_t>(data.size()),
 									      apache::thrift::transport::TMemoryBuffer::COPY);
       auto output = std::make_shared<apache::thrift::transport::TMemoryBuffer>();
       try {
-	if(!processor->process(anch::rest::thriftProtocol(*protocol, input), anch::rest::thriftProtocol(*protocol, output), nullptr)) {
+	if(!processor->process(anch::codec::thriftProtocol(*protocol, input), anch::codec::thriftProtocol(*protocol, output), nullptr)) {
 	  throw anch::rest::HttpException(anch::rest::Status::BAD_REQUEST, "Invalid Thrift message");
 	}
       } catch(const apache::thrift::TException& error) {

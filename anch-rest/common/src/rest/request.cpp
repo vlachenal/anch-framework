@@ -23,7 +23,7 @@
 #include <stdexcept>
 
 using anch::rest::Headers;
-using anch::rest::MediaType;
+using anch::codec::MediaType;
 using anch::rest::Method;
 using anch::rest::Request;
 

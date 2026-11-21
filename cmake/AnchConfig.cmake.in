@@ -26,14 +26,14 @@ if(@ANCH_BUILD_REST@ AND @ANCH_REST_CURL_ENABLED@)
   find_dependency(CURL)
 endif()
 
-# anch-rest Protobuf, gRPC and Thrift libraries public headers include these libraries headers
-if(@ANCH_BUILD_REST@ AND @ANCH_REST_PROTOBUF_ENABLED@)
+# anch-codec Protobuf and Thrift plugins and anch-rest gRPC library public headers include these libraries headers
+if(@ANCH_CODEC_PROTOBUF_ENABLED@)
   find_dependency(Protobuf CONFIG)
 endif()
 if(@ANCH_BUILD_REST@ AND @ANCH_REST_GRPC_ENABLED@)
   find_dependency(gRPC CONFIG)
 endif()
-if(@ANCH_BUILD_REST@ AND @ANCH_REST_THRIFT_ENABLED@)
+if(@ANCH_CODEC_THRIFT_ENABLED@)
   find_dependency(Thrift CONFIG)
   find_dependency(Boost CONFIG)
 endif()

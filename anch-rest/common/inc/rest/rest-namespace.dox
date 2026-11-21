@@ -4,7 +4,7 @@
  * \brief AnCH REST library namespace.
  *
  * It contains the HTTP model (\ref anch::rest::Request "Request", \ref anch::rest::Response "Response", ...),
- * codecs, the server API declaration (\ref anch::rest::Api "Api") and the HTTP client
+ * HTTP codecs (forms, multipart ; other codecs are in \ref anch::codec ), the server API declaration (\ref anch::rest::Api "Api") and the HTTP client
  * (\ref anch::rest::Client "Client"). See \ref page_rest "AnCH REST library documentation".
  */
 
@@ -18,6 +18,8 @@
  * \namespace anch::rest::media
  *
  * \brief Common media types.
+ *
+ * \deprecated removed in 0.4, use \ref anch::codec::media
  */
 
 /*!
