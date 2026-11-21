@@ -82,10 +82,14 @@ target_link_libraries(my-app PRIVATE anch::conf anch::log anch::json)
  * - anch-conf: anch-ini, anch-utils
  * - anch-log: anch-conf, anch-date, anch-utils
  * - anch-device: anch-uuid, anch-utils
- * - anch-json: anch-events, anch-utils ; anch-uuid and anch-date with \c ANCH_UUID and \c ANCH_DATE options
+ * - anch-val: none ; anch-uuid and anch-date with \c ANCH_UUID and \c ANCH_DATE options
+ * - anch-json: anch-events, anch-utils, anch-val ; anch-uuid and anch-date with \c ANCH_UUID and \c ANCH_DATE options
+ * - anch-csv: anch-utils
  * - anch-crypto: anch-uuid, anch-utils
  * - anch-sql: anch-conf, anch-date, anch-utils
- * - anch-rest: anch-json, anch-uuid
+ * - anch-codec: anch-utils ; plugins: anch-codec-json (anch-json), anch-codec-protobuf (Protobuf), anch-codec-thrift
+ *   (Thrift, Boost headers)
+ * - anch-rest: anch-codec-json, anch-uuid
  * - anch-oas: anch-json
  *
  * \section version_sec Versions
@@ -94,9 +98,10 @@ target_link_libraries(my-app PRIVATE anch::conf anch::log anch::json)
  * and API can change on every B change. From 1.0.0, A changes will break API, B changes will add features and
  * C changes will fix bugs. Shared libraries SONAME holds A and B (\c libanch-conf.so.0.2 ).\n
  * \n
- * Deprecated APIs are marked with \c [[deprecated]] (compilation warning) and \c \\deprecated in their
- * documentation, with their replacement and the version which removes them: the next B version until 1.0.0, the
- * next A version from 1.0.0.\n
+ * Until 1.0.0, APIs are changed or removed directly, without deprecation: breaking changes are listed in the
+ * \ref changelog "changelog". From 1.0.0, B and C versions keep backward compatibility: deprecated APIs are marked
+ * with \c [[deprecated]] (compilation warning) and \c \\deprecated in their documentation, with their replacement,
+ * and are removed in the next A version.\n
  * \n
  * Shared libraries are built with hidden symbols visibility: only the public API is exported, with the
  * \c ANCH_\<NAME\>_EXPORT macros of the generated \c anch-\<name\>-export.hpp headers.\n

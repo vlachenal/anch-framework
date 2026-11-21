@@ -6,9 +6,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 1.0.0, API and ABI can change on every B change (shared libraries SONAME is `libanch-<name>.so.A.B`); from 1.0.0, A
 changes break API, B changes add features and C changes fix bugs.
 
-Deprecation policy: a deprecated API is marked with `[[deprecated("...")]]` and `\deprecated` in its documentation,
-which give its replacement and the version which removes it. Until 1.0.0, it is removed in the next B version; from
-1.0.0, in the next A version.
+Deprecation policy: until 1.0.0, APIs are changed or removed directly, without deprecation (see Breaking changes).
+From 1.0.0, B and C versions keep backward compatibility: a deprecated API is marked with `[[deprecated("...")]]`
+and `\deprecated` in its documentation, which give its replacement, and it is removed in the next A version.
 
 ## [Unreleased]
 
