@@ -103,6 +103,9 @@ public:
   const std::vector<std::optional<std::string>>& values() const {
     return _values;
   }
+  void markInvalid() noexcept {
+    invalidate();
+  }
 protected:
   virtual ResultSet* doExecuteQuery() override {
     raise(_failure);
@@ -360,6 +363,57 @@ testStatementCacheBusy() {
 }
 
 void
+testStatementCacheNestedSameQuery() {
+  // A statement is not executed again while its result set is read: an other one is prepared
+  MockConnection conn(4);
+  int rows = 0;
+  PreparedStatement* outer = &conn.prepareStatement("SELECT a FROM t WHERE id = ?"); // used by queryMapRow
+  conn.queryMapRow("SELECT a FROM t WHERE id = ?", [&conn, &rows, &outer](ResultSet&) {
+    PreparedStatement& inner = conn.prepareStatement("SELECT a FROM t WHERE id = ?");
+    anch::ut::assertTrue(&inner != outer, "Busy statement should not be returned");
+    conn.queryMapRow("SELECT a FROM t WHERE id = ?", [&rows](ResultSet&) { ++rows; }, 2);
+  }, 1);
+  anch::ut::assertThat(rows == 4, "Nested queries should read every row: {} rows", rows);
+  anch::ut::assertThat(calls.prepared == 2, "Inner statement should be reused for each outer row: {} prepared", calls.prepared);
+  anch::ut::assertThat(conn.getCachedStatementCount() == 2, "Both statements should be cached: {} statements", conn.getCachedStatementCount());
+  PreparedStatement& again = conn.prepareStatement("SELECT a FROM t WHERE id = ?");
+  anch::ut::assertThat(calls.prepared == 2, "Free statement should be reused: {} prepared", calls.prepared);
+  // Busy statement replaced by an other one is evicted as any statement
+  conn.setStatementCacheSize(1);
+  anch::ut::assertThat(conn.getCachedStatementCount() == 1 && calls.deleted == 1, "{} statements, {} deleted", conn.getCachedStatementCount(), calls.deleted);
+  anch::ut::assertTrue(&conn.prepareStatement("SELECT a FROM t WHERE id = ?") == &again, "Indexed statement should be kept");
+}
+
+void
+testStatementCacheInvalidated() {
+  MockConnection conn(4);
+  dynamic_cast<MockStatement&>(conn.prepareStatement("SELECT a FROM t WHERE id = ?")).markInvalid();
+  conn.prepareStatement("SELECT a FROM t WHERE id = ?");
+  anch::ut::assertThat(calls.prepared == 2 && calls.deallocated == 1 && calls.deleted == 1,
+		       "Invalidated statement should be replaced: {} prepared, {} deallocated, {} deleted", calls.prepared, calls.deallocated, calls.deleted);
+  anch::ut::assertThat(conn.getCachedStatementCount() == 1, "{} statements", conn.getCachedStatementCount());
+  // Invalidated statement used by a result set: replaced, kept until the result set is destroyed
+  PreparedStatement& busy = conn.prepareStatement("SELECT a FROM t WHERE id = ?");
+  busy.set(1, 1);
+  ResultSet* res = busy.executeQuery();
+  dynamic_cast<MockStatement&>(busy).markInvalid();
+  calls = Calls();
+  PreparedStatement& other = conn.prepareStatement("SELECT a FROM t WHERE id = ?");
+  anch::ut::assertTrue(&other != &busy && calls.prepared == 1 && calls.deleted == 0,
+		       "Busy invalidated statement should be replaced and kept");
+  // Replacement invalidated too (free): prepared again
+  dynamic_cast<MockStatement&>(other).markInvalid();
+  conn.prepareStatement("SELECT a FROM t WHERE id = ?");
+  anch::ut::assertThat(calls.prepared == 2 && calls.deleted == 1, "{} prepared, {} deleted", calls.prepared, calls.deleted);
+  int rows = 0;
+  while(res->next()) {
+    ++rows;
+  }
+  anch::ut::assertThat(rows == 2, "Result set should still be readable: {} rows", rows);
+  delete res;
+}
+
+void
 testStatementCacheSize() {
   {
     MockConnection conn;
@@ -392,6 +446,8 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("pool-releases-transaction", testPoolReleasesTransaction)
     .add("statement-cache-lru", testStatementCacheLru)
     .add("statement-cache-busy", testStatementCacheBusy)
+    .add("statement-cache-nested-same-query", testStatementCacheNestedSameQuery)
+    .add("statement-cache-invalidated", testStatementCacheInvalidated)
     .add("statement-cache-size", testStatementCacheSize)
     ;
 }

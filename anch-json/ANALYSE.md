@@ -94,12 +94,16 @@ Tests : `json-deser-trailing-data`, `json-deser-trailing-spaces` (tampons de 3, 
 Les objets ignorés (`deserialize_ignore_unknown_field`) acceptaient aussi `{"y":1,}`.
 Correction : `lexObject` (objets mappés, avec ou sans champs obligatoires) n'accepte `}` à la place d'un champ que pour l'objet vide ; `lexUnknownObject` refuse `}` après une virgule. Test `json-deser-trailing-comma`.
 
-### J17. Caractères de contrôle bruts acceptés dans les chaînes — vérifié (2026-11-14)
+### J17. Caractères de contrôle bruts acceptés dans les chaînes — vérifié (2026-11-14) — **corrigé le 2026-11-21**
 Une tabulation, un saut de ligne ou `0x1b` non échappés dans une chaîne sont acceptés (la RFC 8259 impose l'échappement des caractères < 0x20). Sans gravité : ils sont échappés correctement à la réécriture.
+Correction (décidée le 2026-11-21 : lecture stricte, changement incompatible 0.3) : les caractères < 0x20 arrêtent la copie par blocs de `lexStringContent` et sont refusés (`INVALID_FORMAT`, « Unescaped control character in string ») ; `0x7f` reste accepté. `lexUnknownStr` (champs ignorés) passe par `lexStringContent` dans `pbuf` (déjà utilisé par `scanNumber` dans ces chemins) : mêmes contrôles, séquences d'échappement comprises (`"\q"` était accepté dans un champ ignoré). Tests `lexer-str-control-ko`, `json-deser-unknown-str-strict`.
 
 ### J18. UTF-8 invalide accepté et réécrit tel quel — vérifié (2026-11-14)
 `"\xff\xfe"` ou une séquence tronquée (`"\xc3"`) sont acceptés puis écrits sans changement : la sortie n'est plus de l'UTF-8 valide. Les contraintes `minLength` / `maxLength` comptent alors des points de code sur une séquence invalide.
 Piste : option de validation UTF-8 à la lecture (coût à mesurer), au moins côté serveur.
+Correction (2026-11-21, toujours active) : validation RFC 3629 (octets interdits, séquences tronquées, encodages trop longs, surrogates, > U+10FFFF), `INVALID_FORMAT` « Invalid UTF-8 sequence in string ». Les octets >= 0x80 arrêtent la boucle de copie ASCII, inchangée ; `scanUtf8InBuffer` (non inline) valide ensuite dans le tampon le texte mixte jusqu'au prochain caractère d'arrêt (les octets après les données valent `'\0'` jusqu'à la sentinelle : la lecture en avant s'y arrête) ; une séquence à cheval sur deux remplissages du tampon passe par `lexUtf8` (`next()`). Tests `lexer-str-utf8` (bornes de chaque longueur, tampons de 1 à 12 octets), `lexer-str-utf8-ko` (18 cas).
+Coût (GCC `-O3`, 200 000 chaînes, meilleur de 15, mesures A/B entrelacées) : chaînes ASCII inchangées (12,6 ms) ; texte très accentué (8 caractères multi-octets sur 50) 12,3 → 14,2 ms (+15 %). Une validation dans la boucle de copie elle-même ralentissait aussi les chaînes ASCII (+18 %) ; une validation caractère par caractère hors de la boucle doublait le temps du texte accentué.
+Non traité : l'écriture ne vérifie pas l'UTF-8 des chaînes produites par l'application.
 
 ### J19. `deserialize_max_field_char` n'est jamais appliqué — vérifié (2026-11-14) — **corrigé le 2026-11-16**
 L'option (défaut `512`, commentaire `\todo keep it ?`) n'est lue nulle part : une chaîne de 2 000 000 de caractères est acceptée avec la valeur par défaut. Comme `max_payload` vaut `0` (illimité) par défaut, et que le codec `Json` d'`anch-rest` copie ces valeurs par défaut, la taille d'un corps JSON n'est bornée que par le serveur HTTP (`client_max_body_size` de nginx).

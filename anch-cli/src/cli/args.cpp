@@ -373,8 +373,8 @@ ArgHandler::parse(int argc, char** argv) {
   for(int i = 1 ; i < argc ; ++i) {
     std::smatch matches;
     std::string opt(argv[i]);
-    if(opt == "--") { // trigger ignore option ('-' or '--') status
-      ignoreOpt = !ignoreOpt;
+    if(!ignoreOpt && opt == "--") { // end of options (POSIX): next arguments, '--' included, are positional
+      ignoreOpt = true;
       continue;
     }
     // \todo protect against non readable characters ...

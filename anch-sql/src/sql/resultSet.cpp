@@ -38,6 +38,13 @@ ResultSet::next() {
   return _connection->guard([this]() { return fetchNext(); });
 }
 
+void
+ResultSet::invalidateStatement() noexcept {
+  if(_statement != NULL) {
+    _statement->invalidate();
+  }
+}
+
 ResultSet::~ResultSet() noexcept {
   if(_statement != NULL) {
     --_statement->_openResults;

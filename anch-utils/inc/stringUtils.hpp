@@ -19,20 +19,25 @@
 */
 #pragma once
 
-#include <string>
 #include <algorithm>
+#include <cctype>
+#include <string>
 
 namespace anch {
 
   /*!
-   * Transform input string to lower caser
+   * Transform input string to lower case, byte per byte with \c std::tolower .\n
+   * The conversion depends on the global C locale (\c std::setlocale ): only ASCII letters are converted with the
+   * default \c "C" locale ; multibyte characters (UTF-8) are not converted.
    *
    * \param value the string to transform
    */
   void toLower(std::string& value);
 
   /*!
-   * Transform input string to upper caser
+   * Transform input string to upper case, byte per byte with \c std::toupper .\n
+   * The conversion depends on the global C locale (\c std::setlocale ): only ASCII letters are converted with the
+   * default \c "C" locale ; multibyte characters (UTF-8) are not converted.
    *
    * \param value the string to transform
    */

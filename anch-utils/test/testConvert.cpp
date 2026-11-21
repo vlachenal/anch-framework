@@ -136,6 +136,24 @@ testStringTypes() {
 }
 
 void
+testTryConvert() {
+  std::expected<uint16_t, std::errc> ok = anch::tryConvert<uint16_t>("65535");
+  anch::ut::assertThat(ok.has_value() && *ok == 65535, "65535 should be converted");
+  std::expected<double, std::errc> dbl = anch::tryConvert<double>("-1.5e3");
+  anch::ut::assertThat(dbl.has_value() && *dbl == -1500.0, "-1.5e3 should be converted");
+  for(const char* str : {"", " 1", "1 ", "+1", "-1", "1a", "0x10", "1.5", "abc"}) {
+    std::expected<uint16_t, std::errc> res = anch::tryConvert<uint16_t>(str);
+    anch::ut::assertThat(!res.has_value() && res.error() == std::errc::invalid_argument, "'{}' should be an invalid argument", str);
+  }
+  for(const char* str : {"65536", "99999999999999999999999"}) {
+    std::expected<uint16_t, std::errc> res = anch::tryConvert<uint16_t>(str);
+    anch::ut::assertThat(!res.has_value() && res.error() == std::errc::result_out_of_range, "'{}' should be out of range", str);
+  }
+  std::expected<int8_t, std::errc> neg = anch::tryConvert<int8_t>("-129");
+  anch::ut::assertThat(!neg.has_value() && neg.error() == std::errc::result_out_of_range, "-129 should be out of range");
+}
+
+void
 anch::ut::setup(anch::ut::UnitTests& tests) {
   tests
     .name("AnCH convert unit tests")
@@ -149,5 +167,6 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("conv-float", testFloat)
     .add("conv-malformed", testMalformed)
     .add("conv-string-types", testStringTypes)
+    .add("conv-try-convert", testTryConvert)
     ;
 }

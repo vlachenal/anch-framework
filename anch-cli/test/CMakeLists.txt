@@ -48,6 +48,7 @@ add_test(NAME anch-cli-utils-output-file COMMAND anch-cli-utils-test -t output-f
 add_test(NAME anch-cli-utils-repeated-flag COMMAND anch-cli-utils-test -t repeated-flag)
 add_test(NAME anch-cli-utils-repeated-value COMMAND anch-cli-utils-test -t repeated-value)
 add_test(NAME anch-cli-utils-multi-positional-last COMMAND anch-cli-utils-test -t multi-positional-last)
+add_test(NAME anch-cli-utils-end-of-options COMMAND anch-cli-utils-test -t end-of-options)
 add_test(NAME anch-cli-utils-user-no-term-fmt COMMAND anch-cli-utils-test -t user-no-term-fmt)
 add_test(NAME anch-cli-utils-formatter-no-terminal COMMAND anch-cli-utils-test -t formatter-no-terminal)
 # Binding functions and argument handler -

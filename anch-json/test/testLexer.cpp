@@ -163,6 +163,40 @@ testParseStrUnterminatedKO() {
 }
 
 void
+testParseStrControlKO() {
+  // RFC 8259: characters < 0x20 have to be escaped
+  for(const char* json : {"\"a\tb\"", "\"a\nb\"", "\"a\rb\"", "\"\x1b\"", "\"\x01\"", "\"\x1f\""}) {
+    checkParseStrKO(json);
+  }
+  checkParseStr("\"a\x7f\"", "a\x7f", 1024); // DEL does not have to be escaped
+}
+
+void
+testParseStrUtf8() {
+  // 2, 3 and 4 bytes sequences, bounds (U+80, U+7FF, U+800, U+D7FF, U+E000, U+FFFF, U+10000, U+10FFFF), across buffer boundaries
+  std::string chars = "\xC2\x80" "\xC3\xA9" "\xDF\xBF" "\xE0\xA0\x80" "\xE2\x82\xAC" "\xED\x9F\xBF" "\xEE\x80\x80"
+    "\xEF\xBF\xBF" "\xF0\x90\x80\x80" "\xF0\x9F\x98\x80" "\xF4\x8F\xBF\xBF";
+  for(std::size_t bufferSize = 1 ; bufferSize <= 12 ; ++bufferSize) {
+    checkParseStr("\"a" + chars + "b\"", "a" + chars + "b", bufferSize);
+  }
+}
+
+void
+testParseStrUtf8KO() {
+  for(const char* json : {
+      "\"\xFF\"", "\"\xFE\xFF\"",          // bytes never used in UTF-8
+      "\"\x80\"", "\"a\xBF" "b\"",             // lone continuation bytes
+      "\"\xC3\"", "\"\xE2\x82\"", "\"\xF0\x9F\x98\"", // truncated sequences
+      "\"\xC3\x28\"", "\"\xE2\x28\xAC\"",   // invalid continuation bytes
+      "\"\xC0\xAF\"", "\"\xC1\xBF\"", "\"\xE0\x80\xAF\"", "\"\xF0\x80\x80\xAF\"", // overlong encodings
+      "\"\xED\xA0\x80\"", "\"\xED\xBF\xBF\"", // UTF-16 surrogates
+      "\"\xF4\x90\x80\x80\"", "\"\xF5\x80\x80\x80\"", // > U+10FFFF
+      "\"\xC3"}) {                          // end of data in sequence
+    checkParseStrKO(json);
+  }
+}
+
+void
 testParseStrBuffer() {
   // Strings, escape and unicode sequences across buffer boundaries
   for(std::size_t bufferSize = 1 ; bufferSize <= 12 ; ++bufferSize) {
@@ -790,6 +824,9 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("lexer-str-escape-ko", testParseStrEscapeKO)
     .add("lexer-str-unterminated-ko", testParseStrUnterminatedKO)
     .add("lexer-str-buffer", testParseStrBuffer)
+    .add("lexer-str-control-ko", testParseStrControlKO)
+    .add("lexer-str-utf8", testParseStrUtf8)
+    .add("lexer-str-utf8-ko", testParseStrUtf8KO)
     // String -
     // Unsigned integer +
     .add("lexer-uint", testParseUint)

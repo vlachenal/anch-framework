@@ -19,6 +19,7 @@
 */
 #include "rest/protobufCodec.hpp"
 
+#include <limits>
 #include <stdexcept>
 
 #include <google/protobuf/util/json_util.h>
@@ -41,6 +42,14 @@ Protobuf::write(const google::protobuf::Message& message, std::ostream& out) {
 void
 Protobuf::read(google::protobuf::Message& message, std::istream& input) {
   if(!message.ParseFromIstream(&input)) {
+    throw std::invalid_argument("Invalid protobuf message " + std::string(message.GetTypeName()));
+  }
+}
+
+void
+Protobuf::read(google::protobuf::Message& message, std::string_view data) {
+  if(data.size() > static_cast<std::size_t>(std::numeric_limits<int>::max())
+     || !message.ParseFromArray(data.data(), static_cast<int>(data.size()))) {
     throw std::invalid_argument("Invalid protobuf message " + std::string(message.GetTypeName()));
   }
 }

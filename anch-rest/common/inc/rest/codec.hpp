@@ -23,6 +23,7 @@
 
 #include <concepts>
 #include <cstdint>
+#include <limits>
 #include <memory>
 #include <optional>
 #include <istream>
@@ -92,6 +93,34 @@ namespace anch::rest {
    * \since 0.2
    */
   std::string readContent(std::istream& input, std::size_t maxSize);
+
+  /*!
+   * Maximum size of bodies read in memory by codecs which have no limit of their own (Protobuf, Protobuf JSON,
+   * Thrift), to change before handling requests (\c 0 for no limit).\n
+   * Default: 2 MiB on server side, as JSON and form bodies ; no limit on client side (responses are bounded by
+   * transports: \c TransportConfig::maxResponseSize ).
+   *
+   * \param side the side
+   *
+   * \return the maximum size in bytes
+   *
+   * \since 0.3
+   */
+  ANCH_REST_COMMON_EXPORT std::size_t& maxBodySize(anch::rest::Side side);
+
+  /*!
+   * Read whole body with the limit of a side (\ref maxBodySize )
+   *
+   * \param input the input stream
+   * \param side the side
+   *
+   * \return the content
+   *
+   * \throw ContentTooLarge when content is larger than \ref maxBodySize
+   *
+   * \since 0.3
+   */
+  std::string readBody(std::istream& input, anch::rest::Side side);
 
   /*!
    * Codec which serializes \c T values.\n

@@ -39,8 +39,8 @@ namespace anch::rest {
   template<anch::rest::ThriftProtocol P>
   template<anch::rest::ThriftStruct T>
   void
-  ThriftCodec<P>::deserialize(T& value, std::istream& input) {
-    const std::string content((std::istreambuf_iterator<char>(input)), std::istreambuf_iterator<char>());
+  ThriftCodec<P>::deserialize(T& value, std::istream& input, anch::rest::Side side) {
+    const std::string content = anch::rest::readBody(input, side);
     anch::rest::thriftRead(P, content, [&value](apache::thrift::protocol::TProtocol* protocol) { value.read(protocol); });
   }
 

@@ -163,15 +163,17 @@ api.post("/pets", [](anch::rest::Body<pets::Pet> pet) { return save(*pet); })
     static void serialize(const T& value, std::ostream& out);
 
     /*!
-     * Read structure
+     * Read structure (body size is bounded by \ref maxBodySize )
      *
      * \param value the structure to fill
      * \param input the input stream
+     * \param side the side
      *
      * \throw std::invalid_argument when structure is invalid
+     * \throw ContentTooLarge when body is larger than \ref maxBodySize
      */
     template<anch::rest::ThriftStruct T>
-    static void deserialize(T& value, std::istream& input);
+    static void deserialize(T& value, std::istream& input, anch::rest::Side side);
 
   };
 

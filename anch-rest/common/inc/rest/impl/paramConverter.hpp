@@ -19,7 +19,6 @@
 */
 #pragma once
 
-#include <charconv>
 #include <sstream>
 #include <string_view>
 #include <stdexcept>
@@ -27,6 +26,7 @@
 #include <utility>
 
 #include "rest/httpException.hpp"
+#include "convert.hpp"
 
 namespace anch::rest {
 
@@ -34,23 +34,21 @@ namespace anch::rest {
   requires (std::integral<T> && !std::same_as<T, bool>)
   std::optional<T>
   ParamConverter<T>::convert(std::string_view value) noexcept {
-    T res{};
-    auto [ptr, ec] = std::from_chars(value.data(), value.data() + value.size(), res);
-    if(value.empty() || ec != std::errc() || ptr != value.data() + value.size()) {
+    std::expected<T, std::errc> res = anch::tryConvert<T>(value);
+    if(!res) {
       return std::nullopt;
     }
-    return res;
+    return *res;
   }
 
   template<std::floating_point T>
   std::optional<T>
   ParamConverter<T>::convert(std::string_view value) noexcept {
-    T res{};
-    auto [ptr, ec] = std::from_chars(value.data(), value.data() + value.size(), res);
-    if(value.empty() || ec != std::errc() || ptr != value.data() + value.size()) {
+    std::expected<T, std::errc> res = anch::tryConvert<T>(value);
+    if(!res) {
       return std::nullopt;
     }
-    return res;
+    return *res;
   }
 
   inline std::optional<bool>

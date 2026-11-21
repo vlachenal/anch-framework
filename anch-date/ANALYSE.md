@@ -102,6 +102,10 @@ Un motif inconnu (`%Q`) ou un `%` final sont écrits tels quels ; `%%` n'est pas
 Trouvé par la cible `anch-fuzz-date` : `1013-11-16T20:41:20.123` est accepté par le motif `%Y-%m-%dT%H:%M:%S.%s`, puis `computeTimestamp` convertit le `time_t` de `mktime` en nanosecondes sur 64 bits avec dépassement (`-30172361281 * 1000000000`, comportement indéfini). L'analyseur RFC 3339 bornait déjà les secondes, pas `DateFormatter`.
 Correction : `fromLocalTime` vérifie que les secondes tiennent en nanosecondes sur 64 bits et lève `std::invalid_argument` (« Date out of range (years 1678 to 2261) »), documenté dans `DateFormatter::parse` et `computeTimestamp`. Test `date-parse-invalid` (1013, 9999, 0000 refusés ; 1700 et 2261 acceptés).
 
+### D18. `Date(std::time_t)` et `Date(std::timespec)` : dépassement hors de 1678-2261 — vérifié (2026-11-21) — **corrigé le 2026-11-21**
+Suite de D17 : la conversion en nanosecondes n'était bornée que dans `fromLocalTime` (`std::tm`, `parse`). `Date(std::time_t)` et `Date(std::timespec)` passaient par `system_clock::from_time_t`, qui multiplie sans contrôle : `Date(20000000000)` (an 2603) arrête le processus (`SIGABRT`, `-ftrapv` dans la bibliothèque ; comportement indéfini sans `-ftrapv`). `tv_nsec` n'était pas vérifié (`{1, 2000000000}` donnait 3 s).
+Correction : `fromSeconds` (borne de D17) est utilisé par les trois constructeurs, qui lèvent `std::invalid_argument` ; `tv_nsec` doit être dans [0, 999999999]. Documenté dans `date.hpp`. Test `date-out-of-range` (± 2·10^10 s refusés en `time_t` et `timespec`, `tv_nsec` -1 et 10^9 refusés, bornes acceptées).
+
 ## Points positifs
 - 5 tests passaient ; 15 depuis le 2026-11-03 (10 tests ajoutés, lancés avec `TZ=Europe/Paris`).
 - Extension par `IDatePartFormatter` / `registerFormatterPart` : conservée (le registre est désormais protégé par un mutex).

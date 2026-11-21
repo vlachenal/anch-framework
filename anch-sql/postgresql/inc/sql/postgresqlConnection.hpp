@@ -55,6 +55,19 @@ namespace anch::sql::postgresql {
    */
   ANCH_POSTGRESQL_EXPORT SqlException error(const std::string& message, PGconn* conn, PGresult* res = NULL);
 
+  /*!
+   * Check if a PostgreSQL error invalidates the prepared statement which has been executed: SQLSTATE \c 0A000
+   * (\c cached \c plan \c must \c not \c change \c result \c type after a schema change) or \c 26000 (statement
+   * deallocated by \c DISCARD \c ALL or \c DEALLOCATE \c ALL )
+   *
+   * \param res the PostgreSQL result
+   *
+   * \return \c true when the statement has to be prepared again
+   *
+   * \since 0.3
+   */
+  ANCH_POSTGRESQL_EXPORT bool invalidatesStatement(const PGresult* res) noexcept;
+
 }  // anch::sql::postgresql
 
 namespace anch::sql {

@@ -109,6 +109,9 @@ PostgreSQLPreparedStatement::doExecuteUpdate() {
   // Read every result (the connection can not be used until the last one has been read) -
   ExecStatusType status = PQresultStatus(res);
   if(status != PGRES_COMMAND_OK && status != PGRES_TUPLES_OK) {
+    if(anch::sql::postgresql::invalidatesStatement(res)) {
+      invalidate();
+    }
     throw anch::sql::postgresql::error("Error while executing PostgreSQL command", _conn, res);
   }
   uint64_t nbRows = anch::sql::postgresql::affectedRows(res);

@@ -72,6 +72,9 @@ namespace anch::sql {
 
     /*! Number of alive result sets of this statement (it can not be evicted from cache while they are alive) */
     std::size_t _openResults;
+
+    /*! Statement has been invalidated by the database: it is prepared again by \ref Connection::prepareStatement */
+    bool _invalid;
     // Attributes -
 
     // Constructors +
@@ -301,6 +304,15 @@ namespace anch::sql {
      * \since 0.2
      */
     virtual void deallocate() noexcept;
+
+    /*!
+     * Invalidate statement: the database can not execute it anymore (PostgreSQL: result type changed by a schema
+     * change, statement deallocated by \c DISCARD \c ALL , ...). \ref Connection::prepareStatement prepares it
+     * again.
+     *
+     * \since 0.3
+     */
+    void invalidate() noexcept;
 
   private:
     /*!

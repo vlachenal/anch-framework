@@ -19,12 +19,13 @@
 */
 #include "rest/curlTransport.hpp"
 
-#include <charconv>
 #include <iterator>
 #include <memory>
 #include <optional>
 
 #include <curl/curl.h>
+
+#include "convert.hpp"
 
 using anch::rest::CurlTransport;
 using anch::rest::Headers;
@@ -102,11 +103,14 @@ namespace {
   std::optional<curl_off_t>
   contentLength(const anch::rest::Request& request) {
     std::optional<std::string_view> value = request.getHeaders().get(anch::rest::header::CONTENT_LENGTH);
-    curl_off_t length = 0;
-    if(!value || std::from_chars(value->data(), value->data() + value->size(), length).ec != std::errc() || length < 0) {
+    if(!value) {
       return std::nullopt;
     }
-    return length;
+    std::expected<curl_off_t, std::errc> length = anch::tryConvert<curl_off_t>(*value);
+    if(!length || *length < 0) {
+      return std::nullopt;
+    }
+    return *length;
   }
 
   std::size_t

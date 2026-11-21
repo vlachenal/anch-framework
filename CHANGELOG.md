@@ -19,9 +19,24 @@ which give its replacement and the version which removes it. Until 1.0.0, it is 
   index of the block was written in the 2 last bytes of the nonce, in the CPU byte order, and the key stream was
   reused every 65536 blocks (1 MiB with AES). The block index of modes of operation (`cipherBlock`,
   `decipherBlock`) is a `uint64_t`.
+- anch-json: strings are read as RFC 8259 and RFC 3629 require: unescaped control characters (below `0x20`) and
+  invalid UTF-8 (invalid bytes, truncated sequences, overlong encodings, surrogates, code points above U+10FFFF) are
+  refused with `ErrorCode::INVALID_FORMAT`. Strings of ignored fields are checked as mapped ones, escape sequences
+  included.
+- anch-rest: `ThriftCodec::deserialize` and `Protobuf::deserialize` take the `Side` which reads the body; server side
+  Protobuf, Protobuf JSON and Thrift bodies are bounded by `anch::rest::maxBodySize` (2 MiB by default, as JSON and
+  form bodies; `413` above).
+- anch-ut: `ut/socketClientRunner.hpp` and `ut/socketServerRunner.hpp` (not implemented) are no longer installed, and
+  the unimplemented `--runner`, `--start`, `--stop` and `--gen-ctest` options are removed.
+- anch-cli: the first `--` ends options (POSIX convention); next arguments, `--` included, are positional arguments.
+  Each `--` used to toggle options parsing.
 
 ### Added
 
+- anch-rest: `anch::rest::maxBodySize(Side)` (bodies read in memory by Protobuf and Thrift codecs, `0` for no
+  limit) and `Protobuf::read(message, std::string_view)`.
+- anch-utils: `anch::tryConvert<N>(std::string_view)` converts a string to a number without exception
+  (`std::expected<N, std::errc>`), with the rules of `anch::convert`; anch-cli, anch-ini and anch-rest use it.
 - anch-rest: `TransportConfig::maxResponseSize` bounds the response body read in memory by the client (64 MiB by
   default, `0` for no limit).
 
@@ -43,6 +58,16 @@ which give its replacement and the version which removes it. Until 1.0.0, it is 
 
 ### Fixed
 
+- anch-sql: a prepared statement used by an alive result set is no longer executed again by a nested query with the
+  same SQL text (with SQLite, the outer result set was reset at each row and the loop never ended): an other
+  statement is prepared. A PostgreSQL statement
+  invalidated by the server (`cached plan must not change result type` after a schema change, statement deallocated
+  by `DISCARD ALL`) fails once and is prepared again by the next `prepareStatement`, instead of failing until it is
+  evicted from the cache.
+- anch-date: `Date(std::time_t)` and `Date(std::timespec)` raise `std::invalid_argument` for dates out of years 1678
+  to 2261 (as `Date(const std::tm*)`) instead of aborting, and refuse a `tv_nsec` out of [0, 999999999].
+- anch-rest: a `Content-Length` header followed by other characters (`12abc`) is ignored instead of being read as
+  its numeric prefix (`HEAD` responses with nginx, request bodies of `CurlTransport`).
 - anch-oas: bounds, `multipleOf` and enumeration values outside `double` range are ignored with a warning (generated
   code did not compile); `??` in descriptions and patterns no longer produces trigraphs in generated code.
 - anch-rest: multipart names and file names keep backslashes (only `\"` and `\\` are escapes) and decode `%22`, `%0D`

@@ -198,6 +198,13 @@ namespace anch::sql {
     virtual bool fetchNext() = 0;
 
     /*!
+     * Invalidate the prepared statement which has executed the query, if any (see \ref PreparedStatement::invalidate )
+     *
+     * \since 0.3
+     */
+    void invalidateStatement() noexcept;
+
+    /*!
      * Retrieve string value from result set according to SQL database engine.
      *
      * \param idx the field index

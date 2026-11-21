@@ -60,10 +60,6 @@ namespace {
   /*! Unit tests options */
   struct UnitOptions {
     bool list = false;
-    bool start = false;
-    bool shutdown = false;
-    bool genCTEST = false;
-    std::optional<std::string> runner;
     std::vector<std::string> tests;
     std::map<std::string,std::string> env;
   };
@@ -79,21 +75,11 @@ namespace {
   parseArgs(int argc, char** argv, UnitOptions& opts) {
     std::vector<anch::cli::Arg> args = {
       {.handler = anch::cli::bindTrue(opts.list), .sopt = 'l', .lopt = "list-tests", .description = "List tests"},
-      {.handler = anch::cli::bindTrue(opts.start), .lopt = "start", .description = "Start runner (not implemented yet)"},
-      {.handler = anch::cli::bindTrue(opts.shutdown), .lopt = "stop", .description = "Stop runner (not implemented yet)"},
-      {.handler = anch::cli::bindTrue(opts.genCTEST), .lopt = "gen-ctest", .description = "Generate CTest file (not implemented yet)"},
-      {.handler = anch::cli::bindStr(opts.runner), .sopt = 'r', .lopt = "runner", .value = true, .name = "RUNNER", .description = "Use specific runner with URI specific (not implemented yet)", .example = "file://./test.sock or tcp://localhost:54321 or udp://mydomain.com:54321"},
       {.handler = anch::cli::bindCol(opts.tests), .sopt = 't', .lopt = "test", .value = true, .name = "TEST", .multi = true, .description = "Test to run (can be defined several time, tests are run in command line order) ; 'all' will run all tests in registration order ; default to 'all'"}
     };
     anch::cli::ArgHandler handler(args);
     handler.printBanner(std::cout);
     handler.handle(argc, argv);
-    // Runners and their options are not implemented: fail instead of ignoring them +
-    if(opts.runner.has_value() || opts.start || opts.shutdown || opts.genCTEST) {
-      std::cerr << "Options --runner, --start, --stop and --gen-ctest are not implemented yet" << std::endl;
-      std::exit(EXIT_FAILURE);
-    }
-    // Runners and their options are not implemented: fail instead of ignoring them -
     // Remove duplicates and keep command line order +
     std::vector<std::string> tests;
     std::set<std::string> found;

@@ -66,6 +66,12 @@ namespace anch::rest {
     return res;
   }
 
+  inline std::string
+  readBody(std::istream& input, anch::rest::Side side) {
+    const std::size_t maxSize = anch::rest::maxBodySize(side);
+    return anch::rest::readContent(input, maxSize == 0 ? std::numeric_limits<std::size_t>::max() : maxSize);
+  }
+
   template<typename C, typename T>
   requires anch::rest::Serializer<C, T>
   anch::rest::MediaType

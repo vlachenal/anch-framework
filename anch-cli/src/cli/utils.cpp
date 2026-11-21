@@ -26,7 +26,7 @@
 #include <fstream>
 #include <cstdlib>
 #include <cstring>
-#include <charconv>
+#include "convert.hpp"
 
 
 using anch::cli::BindArg;
@@ -54,20 +54,14 @@ anch::cli::bindFalse(bool& dest) {
 template<typename T>
 void
 setNum(T& dest, const std::string& val) {
-  const char* last = val.data() + val.size();
-  T value{};
-  auto res = std::from_chars(val.data(), last, value);
-  if(res.ec == std::errc::result_out_of_range) {
+  std::expected<T, std::errc> value = anch::tryConvert<T>(val);
+  if(!value) {
     std::ostringstream oss;
-    oss << "Value out of range: '" << val << '\'';
+    // empty value is an invalid argument
+    oss << (value.error() == std::errc::result_out_of_range ? "Value out of range: '" : "Invalid value: '") << val << '\'';
     throw std::invalid_argument(oss.str());
   }
-  if(res.ec != std::errc() || res.ptr != last) { // empty value is an invalid argument
-    std::ostringstream oss;
-    oss << "Invalid value: '" << val << '\'';
-    throw std::invalid_argument(oss.str());
-  }
-  dest = value;
+  dest = *value;
 }
 
 BindArg

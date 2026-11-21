@@ -54,6 +54,7 @@ Les tests passent alors que de nombreux constats sont confirmés : ils ne couvre
 ## Points transverses
 
 - **Conversions numériques** : trois implémentations différentes. `anch-ini` (`toNumber`) contrôle correctement `std::from_chars` ; `anch-cli` (CL1) oubliait `res.ec` (corrigé le 2026-11-03) ; `anch-utils` (`convert`, U9 / U10) passe par un flux ; `anch-json` (J7, J9) est corrigé. Une fonction commune dans `anch-utils`, sur le modèle de `toNumber`, réglerait les quatre.
+  **Fait le 2026-11-21** : `convert` passait déjà par `std::from_chars` depuis U9 / U10 (la remarque sur le flux était périmée). Nouvelle `anch::tryConvert<N>` (`std::expected<N, std::errc>`, mêmes règles, sans exception), sur laquelle repose `convert` ; utilisée par `anch-cli` (`bindNum`), `anch-ini` (`toNumber`, message « is out of range » au lieu de « is too big ») et `anch-rest` (`ParamConverter`, qualité des types de média, `Content-Length` de nginx et de `CurlTransport`, qui acceptaient un préfixe numérique : `12abc` lu comme 12). anch-cli et anch-ini dépendent d'`anch::utils` (en-têtes seuls, `PRIVATE`). Restent sur `std::from_chars` direct, à dessein : lexers d'anch-json (nombres JSON), champs de largeur fixe d'anch-date, taille avec unité d'anch-log (`10M`), anch-oas (valeurs déjà validées). Test `anch-convert-try-convert`.
 - **Observateurs et threads** : `Observable` (E7), `EventBus` (E1, E2) et `EventHandler` (E8) appellent les handlers en tenant des verrous ou sans protéger la liste. `anch-network` et `anch-ut` n'en dépendent plus depuis le 2026-11-03.
 - **Sanitizers** : N1, N3, U13 n'apparaissaient qu'avec ASan. Preset `asan` (`-fsanitize=address,undefined`) ajouté le 2026-11-12 : premier passage, 9 échecs dans anch-crypto (C4 à C6), corrigés ; 629/629 depuis.
 
@@ -103,7 +104,7 @@ Non relus dans cette passe : anch-crypto, anch-utils, anch-events, anch-network,
 | J19 : `deserialize_max_field_char` jamais appliqué, corps JSON non borné | anch-json, anch-rest | corrigé le 2026-11-16 (option supprimée, corps JSON serveur bornés à 2 Mio, `413`) |
 | J15 : données après la valeur racine acceptées | anch-json | corrigé le 2026-11-16 |
 | J16 : virgule finale acceptée dans un objet mappé ou ignoré | anch-json | corrigé le 2026-11-16 |
-| J17, J18 : caractères de contrôle, UTF-8 invalide acceptés | anch-json | vérifié |
+| J17, J18 : caractères de contrôle, UTF-8 invalide acceptés | anch-json | corrigé le 2026-11-21 (lecture stricte) |
 | L17 : diagnostics d'anch-log sur la sortie standard | anch-log | corrigé le 2026-11-14 |
 | X1 : fonctions exportées dans l'espace de noms global | transverse | corrigé le 2026-11-14 |
 | C7, C8 : Base64, données binaires tronquées et lecture hors limites sans remplissage | anch-crypto | corrigé le 2026-11-16, avec C9 et C10 (encodage sans remplissage et d'un flux) |
@@ -222,6 +223,35 @@ Le benchmark (SHA-256/512, MD5, Base64, AES-256 CBC/CTR, JSON, UUID, `DateFormat
 2. C12 corrigé, test `md5-chunks` (en échec sans la correction).
 3. C13 corrigé.
 4. Preset `asan-clang` (Clang, `Release`, `ANCH_OPTIMIZATION_LEVEL=2`, ASan / UBSan) et job `ASan / UBSan (Clang -O2)` du workflow `sanitizers`. GCC + ASan reste en `Debug` : pas besoin de `-Wno-maybe-uninitialized`.
+
+## Industrialisation, point 4 : constats ouverts et relecture (2026-11-21)
+
+Branche `open-findings`. Décisions de l'utilisateur : lecture JSON stricte (J17, J18), convention POSIX pour `--` (CL11), conversion numérique commune, suites de S17, relecture des modules non relus depuis leurs réécritures.
+
+| Constat | Module | Statut |
+|---|---|---|
+| J17, J18 : caractères de contrôle, UTF-8 invalide | anch-json | corrigé (changement incompatible) |
+| CL11 : `--` | anch-cli | corrigé (changement incompatible) |
+| Conversion numérique commune (`anch::tryConvert`) | anch-utils, anch-cli, anch-ini, anch-rest | fait ; `Content-Length` `12abc` n'est plus lu comme 12 |
+| Suites de S17 : requête invalidée (PostgreSQL), requête occupée ré-exécutée (boucle sans fin avec SQLite) | anch-sql | corrigé |
+| D18 : `Date(time_t)` / `Date(timespec)` arrêtent le processus hors de 1678-2261 | anch-date | corrigé |
+| R5 : corps Thrift / Protobuf non bornés côté serveur | anch-rest | corrigé (2 Mio, `maxBodySize`) |
+| UT1 : `SocketClientRunner` / `SocketServerRunner` exportés et installés, sans implémentation | anch-ut | corrigé (en-têtes privés) |
+| U11 : `toLower` / `toUpper` dépendent de la locale C, `<cctype>` non inclus | anch-utils | documenté |
+
+Relecture (lecture du code, sans constat ailleurs) : anch-utils (`ThreadPool`, `ResourcePool`, `Flux`, `Fluent`, `Singleton`, `Optional`, `endianness`), anch-events (`ObserverList`, `EventBus`), anch-network (adresses, sockets, TCP, UDP : `EINTR`, `MSG_NOSIGNAL`, troncature UDP), anch-cutils (tampons, ordre de destruction de `TcpStream`), anch-date (`DateFormatter`, RFC 3339, `Date`), anch-uuid (v4, v7 monotone RFC 9562), anch-device (interfaces, UUID v1 / v6, CPU), anch-ut (exécuteur, `exit()` pendant un test, `ThreadErrors`), anch-cli, `anch-rest/thrift`. Seule la validation à l'emprunt du pool (déjà notée dans anch-sql) reste à faire dans `ResourcePool`.
+
+### R5. Corps Thrift et Protobuf non bornés côté serveur — lecture (2026-11-21) — **corrigé le 2026-11-21**
+J19 borne les corps JSON côté serveur à 2 Mio, comme `application/x-www-form-urlencoded` et `multipart/form-data`. `ThriftCodec::deserialize` et `ProtobufJson::deserialize` lisent tout le flux en mémoire, `Protobuf::read` (`ParseFromIstream`) sans limite non plus : un corps d'endpoint Thrift ou Protobuf n'est borné que par le serveur HTTP (`client_max_body_size` de nginx, 1 Mio par défaut). `installThrift` (RPC) a déjà `maxMessageSize`.
+Correction (décidée le 2026-11-21 : même règle que J19) : `anch::rest::maxBodySize(Side)` (2 Mio côté serveur, sans limite côté client, dont les réponses sont bornées par le transport ; `0` pour aucune limite, à changer avant de traiter les requêtes) et `readBody(input, side)` ; `ThriftCodec::deserialize`, `Protobuf::deserialize` et `ProtobufJson::deserialize` lisent le corps avec cette limite (`ContentTooLarge`, donc `413`) ; `Protobuf::deserialize` et `ThriftCodec::deserialize` prennent le `Side`, comme `ProtobufJson` ; `Protobuf::read(message, std::string_view)` (`ParseFromArray`). Tests `anch-rest-protobuf-codecs` (binaire et JSON de 3 Mio : `413`, accepté avec `maxBodySize = 0`), `anch-rest-thrift-codecs` (binaire de 3 Mio).
+
+### UT1. Exécuteurs par socket : en-têtes installés sans implémentation — lecture (2026-11-21) — **corrigé le 2026-11-21**
+`ut/socketClientRunner.hpp` et `ut/socketServerRunner.hpp` sont installés et leurs classes exportées ; `SocketServerRunner` n'a qu'un constructeur et un destructeur vides, `SocketClientRunner` aucune définition (un programme qui l'utilise échoue à l'édition de liens). `main` refuse `--runner`, `--start`, `--stop` et `--gen-ctest` (« not implemented yet »), qui restent affichés dans l'aide.
+Correction (décidée le 2026-11-21 : ne plus les installer) : les deux en-têtes sont déplacés dans `src/ut/` (privés, ébauches conservées pour la suite), sans macro d'export ; les 4 options sont retirées (refusées comme argument inconnu).
+
+### U11. `toLower` / `toUpper` : locale C globale — lecture (2026-11-21) — documenté le 2026-11-21
+`std::tolower` dépend de la locale C globale : une application qui change de locale (`setlocale`) peut obtenir d'autres conversions que l'ASCII (locales turques mono-octet pour `I`, non vérifié). `<cctype>` n'est pas inclus. Aucun utilisateur dans le framework.
+Décidé le 2026-11-21 : comportement conservé et documenté dans `stringUtils.hpp` (locale C globale, ASCII seulement avec la locale `"C"`, multi-octets non convertis) ; `<cctype>` inclus.
 
 ## Divers
 

@@ -96,7 +96,9 @@ namespace anch::sql {
    * Prepared statements: \ref prepareStatement keeps the prepared statements in a bounded cache (least recently used
    * statement first evicted, see \ref setStatementCacheSize ). A statement is never evicted while one of its result
    * sets is alive: the cache can then temporarily exceed its maximum size. An evicted statement is deallocated on the
-   * server side.
+   * server side. A statement is not executed again while one of its result sets is alive (nested queries with the
+   * same SQL text): an other statement is prepared for the same query. A statement invalidated by the database
+   * (PostgreSQL: result type changed by a schema change) is prepared again.
    *
    * \author Vincent Lachenal
    *

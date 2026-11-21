@@ -71,6 +71,7 @@ if(ANCH_SQL_POSTGRESQL)
   add_test(NAME PostgreSQL-fatal-error COMMAND anch-postgresql-test -t 14-fatal-error)
   add_test(NAME PostgreSQL-statement-cache COMMAND anch-postgresql-test -t 15-statement-cache)
   add_test(NAME PostgreSQL-statement-cache-deallocate COMMAND anch-postgresql-test -t 16-statement-cache-deallocate)
+  add_test(NAME PostgreSQL-statement-invalidated COMMAND anch-postgresql-test -t 18-statement-invalidated)
   add_test(NAME PostgreSQL-connection-parameters COMMAND anch-postgresql-test -t 17-connection-parameters)
   add_test(NAME SQLConnectionFactoryPostgreSQL COMMAND anch-sql-connection-factory-test -t sql-factory-postgresql)
   add_test(NAME SQLConnectionPoolPostgreSQL COMMAND anch-sql-connection-factory-test -t sql-pool-postgresql)
@@ -79,7 +80,7 @@ if(ANCH_SQL_POSTGRESQL)
   set_tests_properties(PostgreSQL-query-manual-handling PostgreSQL-query-row-result-handling PostgreSQL-query-result-set-handling
     PostgreSQL-insert PostgreSQL-update PostgreSQL-delete PostgreSQL-query-stmt-row-result-handling PostgreSQL-insert-stmt
     PostgreSQL-update-stmt PostgreSQL-transactions PostgreSQL-stmt-operators PostgreSQL-stmt-null PostgreSQL-sql-error
-    PostgreSQL-fatal-error PostgreSQL-statement-cache PostgreSQL-statement-cache-deallocate SQLConnectionFactoryPostgreSQL SQLConnectionPoolPostgreSQL
+    PostgreSQL-fatal-error PostgreSQL-statement-cache PostgreSQL-statement-cache-deallocate PostgreSQL-statement-invalidated SQLConnectionFactoryPostgreSQL SQLConnectionPoolPostgreSQL
     PROPERTIES RESOURCE_LOCK anch_pgsql)
 endif()
 
@@ -136,6 +137,8 @@ add_test(NAME SqlConnection-pool-discards-invalid COMMAND anch-sql-connection-te
 add_test(NAME SqlConnection-pool-releases-transaction COMMAND anch-sql-connection-test -t pool-releases-transaction)
 add_test(NAME SqlConnection-statement-cache-lru COMMAND anch-sql-connection-test -t statement-cache-lru)
 add_test(NAME SqlConnection-statement-cache-busy COMMAND anch-sql-connection-test -t statement-cache-busy)
+add_test(NAME SqlConnection-statement-cache-nested-same-query COMMAND anch-sql-connection-test -t statement-cache-nested-same-query)
+add_test(NAME SqlConnection-statement-cache-invalidated COMMAND anch-sql-connection-test -t statement-cache-invalidated)
 add_test(NAME SqlConnection-statement-cache-size COMMAND anch-sql-connection-test -t statement-cache-size)
 # Connection errors and pool (without database) -
 

@@ -2133,6 +2133,24 @@ testDeserTrailingSpaces() {
 
 // Trailing comma +
 void
+testDeserUnknownStrStrict() {
+  // Ignored fields are checked as mapped ones: escape sequences, control characters, UTF-8
+  for(const char* json : {"{\"s\":\"a\",\"x\":\"\x01\"}", "{\"s\":\"a\",\"x\":\"\xFF\"}", "{\"s\":\"a\",\"x\":\"\\q\"}",
+      "{\"s\":\"a\",\"x\":[\"\xC3\"]}", "{\"s\":\"a\",\"x\":{\"\t\":1}}"}) {
+    anch::json::JSONMapper mapper({.deserialize_ignore_unknown_field = true});
+    std::istringstream iss(json);
+    TestStr res;
+    try {
+      mapper.deserialize(res, iss);
+      anch::ut::fail("This test should have failed");
+    } catch(const MappingError& e) {
+      anch::ut::assertThat(e.getErrorCode() == ErrorCode::INVALID_FORMAT, "Unexpected error: {}", e.what());
+      std::cout << e.what() << std::endl;
+    }
+  }
+}
+
+void
 testDeserTrailingComma() {
   auto parse = [](const std::string& json, bool ignoreUnknown) {
     anch::json::JSONMapper mapper({.deserialize_ignore_unknown_field = ignoreUnknown});
@@ -2212,6 +2230,7 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("json-deser-trailing-data", testDeserTrailingData)
     .add("json-deser-trailing-spaces", testDeserTrailingSpaces)
     .add("json-deser-trailing-comma", testDeserTrailingComma)
+    .add("json-deser-unknown-str-strict", testDeserUnknownStrStrict)
     .add("json-ser-escape", testSerEscape)
     .add("json-ser-escape-map-key", testSerEscapeMapKey)
     .add("json-deser-max-depth-unknown", testDeserMaxDepthUnknown)

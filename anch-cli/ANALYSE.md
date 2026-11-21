@@ -55,9 +55,10 @@ Correction : `plainArg` (`-p|--plop`) pour les messages. Test : `anch-cli-utils-
 ### CL10. Débordement de tas d'un octet dans `testCli.cpp` — lecture — **corrigé le 2026-11-03**
 `main` copiait chaque argument dans `new char[strlen(argv[i])]` puis `strcpy` : le `'\0'` final était écrit hors du tampon (et `args` n'était pas terminé par `NULL`). Correction : les pointeurs de `argv` sont réutilisés dans un `std::vector<char*>` terminé par `NULL`.
 
-### CL11. `--` bascule l'analyse des options au lieu de la terminer — lecture — non corrigé (conception)
+### CL11. `--` bascule l'analyse des options au lieu de la terminer — lecture — **corrigé le 2026-11-21**
 `parse` inverse `ignoreOpt` à chaque `--` (« trigger ignore option status ») : un second `--` réactive les options et n'est jamais transmis. La convention POSIX (`getopt`) termine l'analyse des options au premier `--` ; les `--` suivants sont des arguments positionnels. Impossible donc de passer `--` comme valeur positionnelle.
 Piste : terminer l'analyse au premier `--`, si la bascule n'est pas voulue.
+Correction (décidée le 2026-11-21 : convention POSIX) : seul le premier `--` est consommé, les arguments suivants (`--` compris) sont positionnels. Documenté dans `anch-cli.dox`. Test `anch-cli-utils-end-of-options` (`a -- -v -- --verbose` : option non lue, 4 positionnels).
 
 ### CL12. Formes `--option=valeur` et `-pvaleur` non prises en charge — lecture — conforme (choix)
 `--plop=x` donne « Unknown argument --plop=x » ; `-px` est lu comme les options `-p` et `-x`. Les deux formes sont courantes (`getopt_long`).
@@ -72,5 +73,5 @@ Remarque liée : les arguments positionnels sont toujours rendus obligatoires (`
 - [x] Test de non-régression pour CL1 (valeur hors limites, valeur vide) : `anch-cli-utils-numbers`.
 - [x] Analyser `app.hpp` et l'affichage de l'aide (2026-11-03 : `app.hpp` est une simple structure ; voir CL5, CL8, CL9).
 - [ ] Options par défaut prévues dans `anch-app/anch-app.todo` (`-v`, `-c`, `-d`).
-- [ ] Décider CL11 (`--`) ; CL12 (`--opt=val`, choix pouvant être réexaminé) et CL13 (`pipe` sur un terminal) sont voulus.
+- [x] Décider CL11 (`--`) : convention POSIX (2026-11-21) ; CL12 (`--opt=val`, choix pouvant être réexaminé) et CL13 (`pipe` sur un terminal) sont voulus.
 - [ ] `testCli.cpp` ne vérifie que des codes de sortie (avec son propre `main`) : à migrer vers anch-ut.

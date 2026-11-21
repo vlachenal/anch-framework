@@ -17,7 +17,7 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ANCH Framework.  If not, see <https://www.gnu.org/licenses/>.
 */
-#include "ut/socketServerRunner.hpp"
+#include "socketServerRunner.hpp" // work in progress: private header, not installed
 
 using anch::ut::SocketServerRunner;
 

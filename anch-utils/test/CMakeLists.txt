@@ -67,6 +67,7 @@ add_test(NAME anch-convert-decimal-as-integer COMMAND anch-convert-test -t conv-
 add_test(NAME anch-convert-float COMMAND anch-convert-test -t conv-float)
 add_test(NAME anch-convert-malformed COMMAND anch-convert-test -t conv-malformed)
 add_test(NAME anch-convert-string-types COMMAND anch-convert-test -t conv-string-types)
+add_test(NAME anch-convert-try-convert COMMAND anch-convert-test -t conv-try-convert)
 add_test(NAME anch-string-utils-upper COMMAND anch-string-utils-test -t to-upper)
 add_test(NAME anch-string-utils-lower COMMAND anch-string-utils-test -t to-lower)
 add_test(NAME anch-singleton-seq-no-wait COMMAND anch-singleton-test -t seq-no-wait)

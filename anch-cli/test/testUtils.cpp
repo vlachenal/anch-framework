@@ -153,6 +153,28 @@ testMultiPositionalLast() {
 }
 
 void
+testEndOfOptions() {
+  // POSIX: first '--' ends options, next arguments ('--' included) are positional
+  bool verbose = false;
+  std::vector<std::string> files;
+  ArgHandler handler(std::vector<Arg>{
+      {.handler = anch::cli::bindTrue(verbose), .sopt = 'v', .lopt = "verbose"},
+      {.handler = anch::cli::bindCol(files), .value = true, .name = "FILES", .multi = true}
+    });
+  char prog[] = "prog";
+  char a1[] = "a";
+  char dd1[] = "--";
+  char v[] = "-v";
+  char dd2[] = "--";
+  char verb[] = "--verbose";
+  char* argv[] = {prog, a1, dd1, v, dd2, verb, NULL};
+  handler.handle(6, argv);
+  anch::ut::assertThat(!verbose, "Options after '--' should not be parsed");
+  std::vector<std::string> expected = {"a", "-v", "--", "--verbose"};
+  anch::ut::assertThat(files == expected, "Unexpected positional arguments ({} found)", files.size());
+}
+
+void
 testUserNoTermFmt() {
   // A user defined --no-term-fmt option was replaced by a mandatory positional argument
   bool noFmt = false;
@@ -185,6 +207,7 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("repeated-flag", testRepeatedFlag)
     .add("repeated-value", testRepeatedValue)
     .add("multi-positional-last", testMultiPositionalLast)
+    .add("end-of-options", testEndOfOptions)
     .add("user-no-term-fmt", testUserNoTermFmt)
     .add("formatter-no-terminal", testFormatterNoTerminal)
     ;

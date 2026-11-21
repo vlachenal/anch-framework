@@ -29,7 +29,7 @@ using anch::sql::ResultSet;
 using anch::sql::SqlException;
 
 
-PreparedStatement::PreparedStatement() noexcept: _values(), _bound(), _nbPlaceholders(0), _connection(NULL), _openResults(0) {
+PreparedStatement::PreparedStatement() noexcept: _values(), _bound(), _nbPlaceholders(0), _connection(NULL), _openResults(0), _invalid(false) {
   // Nothing to do
 }
 
@@ -76,6 +76,11 @@ PreparedStatement::getParameterCount() const noexcept {
 void
 PreparedStatement::deallocate() noexcept {
   // Nothing to do by default
+}
+
+void
+PreparedStatement::invalidate() noexcept {
+  _invalid = true;
 }
 
 void

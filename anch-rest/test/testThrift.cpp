@@ -177,12 +177,31 @@ testCodecs() {
     Pet saved;
     std::istringstream input(response.content());
     switch(protocol) {
-    case ThriftProtocol::BINARY: anch::rest::ThriftBinary::deserialize(saved, input); break;
-    case ThriftProtocol::COMPACT: anch::rest::ThriftCompact::deserialize(saved, input); break;
-    case ThriftProtocol::JSON: anch::rest::ThriftJson::deserialize(saved, input); break;
+    case ThriftProtocol::BINARY: anch::rest::ThriftBinary::deserialize(saved, input, anch::rest::Side::CLIENT); break;
+    case ThriftProtocol::COMPACT: anch::rest::ThriftCompact::deserialize(saved, input, anch::rest::Side::CLIENT); break;
+    case ThriftProtocol::JSON: anch::rest::ThriftJson::deserialize(saved, input, anch::rest::Side::CLIENT); break;
     }
     anch::ut::assertThat(saved.id == 7 && saved.name == "Rex", "Unexpected pet with {}", type);
   }
+  // Server side bodies are bounded (anch::rest::maxBodySize): 413 +
+  {
+    std::ostringstream out;
+    anch::rest::ThriftBinary::serialize(pet(0, std::string(3 * 1024 * 1024, 'a')), out);
+    Request large(Method::POST, "/pets");
+    large.getHeaders().set("Content-Type", "application/vnd.apache.thrift.binary");
+    large.getHeaders().set("Accept", "application/vnd.apache.thrift.binary");
+    large.setBody(out.str());
+    expectStatus(api.handle(large), Status::CONTENT_TOO_LARGE);
+    anch::rest::maxBodySize(anch::rest::Side::SERVER) = 0; // no limit
+    Request unbounded(Method::POST, "/pets");
+    unbounded.getHeaders().set("Content-Type", "application/vnd.apache.thrift.binary");
+    unbounded.getHeaders().set("Accept", "application/vnd.apache.thrift.binary");
+    unbounded.setBody(out.str());
+    Response response = api.handle(unbounded);
+    anch::rest::maxBodySize(anch::rest::Side::SERVER) = 2 * 1024 * 1024;
+    expectStatus(response, Status::OK);
+  }
+  // Server side bodies are bounded (anch::rest::maxBodySize): 413 -
   // Invalid structure and missing required field
   Request invalid(Method::POST, "/pets");
   invalid.getHeaders().set("Content-Type", "application/vnd.apache.thrift.json");

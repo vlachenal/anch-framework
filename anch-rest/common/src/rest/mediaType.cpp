@@ -19,8 +19,9 @@
 */
 #include "rest/mediaType.hpp"
 
+#include "convert.hpp"
+
 #include <algorithm>
-#include <charconv>
 
 using anch::rest::MediaType;
 
@@ -110,12 +111,11 @@ namespace {
        || (value.size() > 1 && value[1] != '.')) {
       return std::nullopt;
     }
-    double res = 0.0;
-    auto [ptr, ec] = std::from_chars(value.data(), value.data() + value.size(), res);
-    if(ec != std::errc() || ptr != value.data() + value.size() || res > 1.0) {
+    std::expected<double, std::errc> res = anch::tryConvert<double>(value);
+    if(!res || *res > 1.0) {
       return std::nullopt;
     }
-    return res;
+    return *res;
   }
 
 }

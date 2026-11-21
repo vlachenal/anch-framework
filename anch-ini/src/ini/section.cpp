@@ -21,10 +21,10 @@
 
 #include <algorithm>
 #include <cctype>
-#include <charconv>
 #include <string_view>
 
 #include "ini/parserError.hpp"
+#include "convert.hpp"
 
 using anch::ini::Section;
 using anch::ini::ParserError;
@@ -103,17 +103,12 @@ Section::getValue(const std::string& path) const {
 template<typename T>
 void
 toNumber(const std::string val, T& num) {
-  const char* end = val.data() + val.size();
-  auto res = std::from_chars(val.data(), end, num);
-  if(res.ec == std::errc::invalid_argument) {
-    throw ParserError(val + " is invalid number", ParserError::ErrorCode::BAD_CAST);
+  std::expected<T, std::errc> res = anch::tryConvert<T>(val);
+  if(!res) {
+    throw ParserError(val + (res.error() == std::errc::result_out_of_range ? " is out of range" : " is invalid number"),
+		      ParserError::ErrorCode::BAD_CAST);
   }
-  if(res.ec == std::errc::result_out_of_range) {
-    throw ParserError(val + " is too big", ParserError::ErrorCode::BAD_CAST);
-  }
-  if(res.ptr != end) {
-    throw ParserError(val + " does not end with numbers", ParserError::ErrorCode::BAD_CAST);
-  }
+  num = *res;
 }
 
 template<>

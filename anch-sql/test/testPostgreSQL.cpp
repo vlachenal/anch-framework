@@ -532,6 +532,60 @@ testCacheDeallocate() {
 }
 
 void
+testStatementInvalidated() {
+  PostgreSQLConnection conn({
+      .driver = "",
+      .database = "anch_test",
+      .hostname = "localhost",
+      .port = 5432,
+      .user = "anch",
+      .password = "anch",
+      .application = "postgresql-invalidated"
+    });
+  conn.update("DROP TABLE IF EXISTS T_Invalidated");
+  conn.update("CREATE TABLE T_Invalidated (a INTEGER)");
+  conn.update("INSERT INTO T_Invalidated (a) VALUES (1)");
+  // Number of columns of the first row of 'SELECT *' (prepared statement)
+  auto columns = [&conn]() {
+    std::size_t nb = 0;
+    conn.queryMapRow("SELECT * FROM T_Invalidated WHERE a = ?", [&nb](ResultSet& row) {
+      nb = row.get<int32_t>(1).has_value() ? 2 : 1;
+    }, 1);
+    return nb;
+  };
+  auto failsOnce = [&conn, &columns](const std::string& sqlstate) {
+    try {
+      columns();
+      anch::ut::fail("Invalidated statement should fail once (SQLSTATE " + sqlstate + ")");
+    } catch(const SqlException& e) {
+      std::cout << "Expected error: " << e.what() << std::endl;
+      anch::ut::assertThat(conn.isValid(), "Connection should still be valid");
+    }
+  };
+  try {
+    std::size_t nb = 0;
+    conn.queryMapRow("SELECT * FROM T_Invalidated WHERE a = ?", [&nb](ResultSet&) { ++nb; }, 1);
+    anch::ut::assertThat(nb == 1, "{} rows instead of 1", nb);
+    // Result type changed by a schema change: 'cached plan must not change result type' (0A000) +
+    conn.update("ALTER TABLE T_Invalidated ADD COLUMN b INTEGER DEFAULT 2");
+    failsOnce("0A000");
+    nb = columns();
+    anch::ut::assertThat(nb == 2, "Statement should be prepared again with the new column: {} columns", nb);
+    // Result type changed by a schema change: 'cached plan must not change result type' (0A000) -
+    // Statements deallocated by the server (26000) +
+    conn.update("DISCARD ALL");
+    failsOnce("26000");
+    nb = columns();
+    anch::ut::assertThat(nb == 2, "Statement should be prepared again after DISCARD ALL: {} columns", nb);
+    // Statements deallocated by the server (26000) -
+  } catch(...) {
+    conn.update("DROP TABLE IF EXISTS T_Invalidated");
+    throw;
+  }
+  conn.update("DROP TABLE IF EXISTS T_Invalidated");
+}
+
+void
 testConnectionParameters() {
   // Application name with URI reserved characters is given as it is
   const std::string application = "my app & co=1 %41 @/#?";
@@ -598,5 +652,6 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("15-statement-cache", testCache)
     .add("16-statement-cache-deallocate", testCacheDeallocate)
     .add("17-connection-parameters", testConnectionParameters)
+    .add("18-statement-invalidated", testStatementInvalidated)
     ;
 }

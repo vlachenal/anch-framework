@@ -138,6 +138,15 @@ testStatementCache(anch::sql::Connection& conn, bool nested) {
 	sum += countRows(conn, "SELECT COUNT(*) FROM T_Test WHERE id = ? AND " + std::to_string(id) + " = " + std::to_string(id), id);
       }, 4);
       anch::ut::assertThat(rows == 4 && sum == 4, "Nested queries: {} rows and {} sub-query rows instead of 4 and 4", rows, sum);
+      // Same SQL text in nested query: the outer statement is not executed again (its cursor would be reset)
+      rows = 0;
+      sum = 0;
+      conn.queryMapRow("SELECT id FROM T_Test WHERE id <= ? ORDER BY id", [&conn, &rows, &sum](anch::sql::ResultSet& row) {
+	++rows;
+	int64_t id = row.get<int64_t>(0).value_or(0);
+	conn.queryMapRow("SELECT id FROM T_Test WHERE id <= ? ORDER BY id", [&sum](anch::sql::ResultSet&) { ++sum; }, id);
+      }, 4);
+      anch::ut::assertThat(rows == 4 && sum == 10, "Nested same query: {} rows and {} sub-query rows instead of 4 and 10", rows, sum);
     }
   } catch(...) {
     conn.setStatementCacheSize(size);

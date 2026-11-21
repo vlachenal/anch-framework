@@ -19,6 +19,7 @@ add_test(NAME date-parse-milliseconds COMMAND anch-date-format-test -t date-pars
 add_test(NAME date-parse-invalid COMMAND anch-date-format-test -t date-parse-invalid)
 add_test(NAME date-formatter-ownership COMMAND anch-date-format-test -t date-formatter-ownership)
 add_test(NAME date-unknown-pattern COMMAND anch-date-format-test -t date-unknown-pattern)
+add_test(NAME date-out-of-range COMMAND anch-date-format-test -t date-out-of-range)
 set_tests_properties(
   date-dst date-timespec date-conversions date-year-2-digits date-hour-12
   date-parse-reset date-parse-milliseconds date-parse-invalid date-formatter-ownership date-unknown-pattern

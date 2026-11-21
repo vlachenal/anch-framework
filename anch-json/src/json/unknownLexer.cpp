@@ -37,25 +37,8 @@ parseUnknownNumber(anch::json::ReaderContext& context) {
 
 static void
 lexUnknownStr(anch::json::ReaderContext& context) {
-  char current = '\0';
-  context.next(current);
-  while(current != '\0') {
-    switch(current) {
-    case anch::json::STRING_DELIMITER:
-      goto end_str;
-    case '\\': // ignore character and add next
-      context.next(current);
-      if(current == '\0') {
-	throw anch::json::MappingError(ErrorCode::INVALID_FORMAT, context);
-      }
-      break;
-    default:
-      break; // Ignore character
-    }
-    context.next(current);
-  }
- end_str:
-  return;
+  // Same checks as mapped strings (escape sequences, control characters, UTF-8), in the context parsing buffer
+  anch::json::lexStringContent(context);
 }
 
 static void

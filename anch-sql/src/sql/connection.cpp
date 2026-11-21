@@ -148,9 +148,22 @@ Connection::update(const std::string& query) {
 PreparedStatement&
 Connection::prepareStatement(const std::string& query) {
   auto found = _stmtsIndex.find(std::string_view(query));
-  if(found != _stmtsIndex.end()) { // Cached => becomes the most recently used
-    _stmts.splice(_stmts.begin(), _stmts, found->second);
-    return *found->second->statement;
+  if(found != _stmtsIndex.end()) {
+    auto entry = found->second;
+    PreparedStatement* cached = entry->statement;
+    if(!cached->_invalid && cached->_openResults == 0) { // Cached => becomes the most recently used
+      _stmts.splice(_stmts.begin(), _stmts, entry);
+      return *cached;
+    }
+    // Invalidated statement is prepared again. A statement used by an alive result set is not executed again
+    // (it would reset the result set): an other one is prepared, the busy one stays in cache without index entry
+    // until it is evicted.
+    _stmtsIndex.erase(found);
+    if(cached->_openResults == 0) {
+      _stmts.erase(entry);
+      cached->deallocate();
+      delete cached;
+    }
   }
   // Not found => create, cache and return it +
   PreparedStatement* stmt = guard([this, &query]() { return makePrepared(query); });
@@ -187,7 +200,11 @@ Connection::evictStatements() noexcept {
       continue;
     }
     PreparedStatement* stmt = iter->statement;
-    _stmtsIndex.erase(std::string_view(iter->query)); // key is a view of the entry query: erased first
+    // Key is a view of the entry query: erased first. Busy statements replaced by an other one have no index entry.
+    auto indexed = _stmtsIndex.find(std::string_view(iter->query));
+    if(indexed != _stmtsIndex.end() && indexed->second == iter) {
+      _stmtsIndex.erase(indexed);
+    }
     iter = _stmts.erase(iter);
     stmt->deallocate();
     delete stmt;

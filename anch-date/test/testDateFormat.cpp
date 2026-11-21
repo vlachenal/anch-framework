@@ -317,6 +317,37 @@ testUnknownPattern() {
 }
 
 void
+testOutOfRange() {
+  // Timestamps are stored in nanoseconds: dates out of years 1678 to 2261 are refused instead of aborting (-ftrapv)
+  for(std::time_t secs : {static_cast<std::time_t>(20'000'000'000LL), static_cast<std::time_t>(-20'000'000'000LL)}) {
+    try {
+      Date date(secs);
+      anch::ut::fail("time_t out of range should be refused");
+    } catch(const std::invalid_argument& e) {
+      std::cout << e.what() << std::endl;
+    }
+    try {
+      Date date(std::timespec{secs, 0});
+      anch::ut::fail("timespec out of range should be refused");
+    } catch(const std::invalid_argument& e) {
+      std::cout << e.what() << std::endl;
+    }
+  }
+  for(long nsec : {-1L, 1'000'000'000L}) {
+    try {
+      Date date(std::timespec{0, nsec});
+      anch::ut::fail("Invalid tv_nsec should be refused");
+    } catch(const std::invalid_argument& e) {
+      std::cout << e.what() << std::endl;
+    }
+  }
+  // Bounds are accepted
+  Date max(static_cast<std::time_t>(9'223'372'035LL));
+  Date min(std::timespec{static_cast<std::time_t>(-9'223'372'035LL), 999'999'999L});
+  anch::ut::assertThat(static_cast<std::time_t>(max) == 9'223'372'035LL, "Maximum date should be kept");
+}
+
+void
 anch::ut::setup(anch::ut::UnitTests& tests) {
   DateFormatter::registerFormatterPart(NanoFormatter::PATTERN, &NanoFormatter::getInstance);
   DateFormatter::registerFormatterPart(MicroFormatter::PATTERN, &MicroFormatter::getInstance);
@@ -338,5 +369,6 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("date-parse-invalid", testParseInvalid)
     .add("date-formatter-ownership", testFormatterOwnership)
     .add("date-unknown-pattern", testUnknownPattern)
+    .add("date-out-of-range", testOutOfRange)
     ;
 }

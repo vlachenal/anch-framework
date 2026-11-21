@@ -28,6 +28,7 @@ target_link_libraries(my-app PRIVATE anch::cli)
  * forms are not supported.\n
  * Multiple positional argument has to be the last positional argument. Options without value can be repeated ; options
  * with value can be repeated only when they are declared as \c multi .\n
+ * The first \c -- ends options (POSIX convention): next arguments, \c -- included, are positional arguments.\n
  *\n
  * Console formatting (\ref anch::cli::Formatter "Formatter") is disabled when standard output is not a terminal, when
  * \c NO_COLOR environment variable is set and not empty, when \c ANCH_CLI_NO_FMT is \c 1 or with \c --no-term-fmt option.

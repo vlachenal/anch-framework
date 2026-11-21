@@ -111,6 +111,8 @@ namespace anch::date {
      * \ref Date constructor
      *
      * \param time the time to set
+     *
+     * \throw std::invalid_argument date out of range (years 1678 to 2261: timestamps are stored in nanoseconds)
      */
     explicit Date(const std::time_t& time);
 
@@ -119,13 +121,17 @@ namespace anch::date {
      *
      * \param time the local time to set (\c tm_isdst has to be \c -1 when daylight saving time is unknown ; \c tm_wday
      *        and \c tm_yday are ignored ; out of range fields are normalized as \c std::mktime does)
+     *
+     * \throw std::invalid_argument date out of range (years 1678 to 2261)
      */
     explicit Date(const std::tm* const time);
 
     /*!
      * \ref Date constructor
      *
-     * \param time the time to set
+     * \param time the time to set (\c tv_nsec in [0, 999999999])
+     *
+     * \throw std::invalid_argument date out of range (years 1678 to 2261) or invalid \c tv_nsec
      */
     explicit Date(const std::timespec& time);
     // Constructors -

@@ -144,6 +144,16 @@ testCodecs() {
   anch::ut::assertThat(saved.ParseFromString(response.content()) && saved.id() == 7 && saved.name() == "Médor" && saved.tags_size() == 1,
 		       "Unexpected binary response");
   expectStatus(post(api, "/pets", "application/x-protobuf", "\xff\xff\xff"), Status::BAD_REQUEST);
+  // Server side bodies are bounded (anch::rest::maxBodySize): 413 +
+  Pet large;
+  large.set_name(std::string(3 * 1024 * 1024, 'a'));
+  expectStatus(post(api, "/pets", "application/x-protobuf", binary(large)), Status::CONTENT_TOO_LARGE);
+  expectStatus(post(api, "/pets", "application/json", "{\"name\":\"" + large.name() + "\"}"), Status::CONTENT_TOO_LARGE);
+  anch::rest::maxBodySize(anch::rest::Side::SERVER) = 0; // no limit
+  Response unbounded = post(api, "/pets", "application/x-protobuf", binary(large));
+  anch::rest::maxBodySize(anch::rest::Side::SERVER) = 2 * 1024 * 1024;
+  expectStatus(unbounded, Status::OK);
+  // Server side bodies are bounded (anch::rest::maxBodySize): 413 -
   // JSON mapping: unknown fields refused on server side
   Request json(Method::POST, "/pets");
   json.getHeaders().set("Content-Type", "application/json");

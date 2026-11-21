@@ -19,7 +19,6 @@
 */
 #include "rest/nginxApplication.hpp"
 
-#include <charconv>
 #include <cstdio>
 #include <exception>
 #include <memory>
@@ -28,6 +27,7 @@
 #include <vector>
 
 #include "cutils/iostream.hpp"
+#include "convert.hpp"
 
 using anch::rest::Api;
 using anch::rest::Method;
@@ -241,9 +241,9 @@ namespace {
       // HEAD response: Content-Length of the GET response (given by Api) or no length, never 0 (empty body)
       long long length = ANCH_REST_UNKNOWN_LENGTH;
       if(std::optional<std::string_view> value = response.getHeaders().get(anch::rest::header::CONTENT_LENGTH)) {
-	long long parsed = 0;
-	if(std::from_chars(value->data(), value->data() + value->size(), parsed).ec == std::errc() && parsed >= 0) {
-	  length = parsed;
+	std::expected<long long, std::errc> parsed = anch::tryConvert<long long>(*value);
+	if(parsed && *parsed >= 0) {
+	  length = *parsed;
 	}
       }
       sender.start(length);

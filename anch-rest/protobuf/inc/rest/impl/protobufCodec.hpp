@@ -31,8 +31,8 @@ namespace anch::rest {
 
   template<anch::rest::ProtobufMessage T>
   void
-  Protobuf::deserialize(T& value, std::istream& input) {
-    Protobuf::read(value, input);
+  Protobuf::deserialize(T& value, std::istream& input, anch::rest::Side side) {
+    Protobuf::read(value, anch::rest::readBody(input, side));
   }
 
   template<anch::rest::ProtobufMessage T>
@@ -44,7 +44,7 @@ namespace anch::rest {
   template<anch::rest::ProtobufMessage T>
   void
   ProtobufJson::deserialize(T& value, std::istream& input, anch::rest::Side side) {
-    const std::string json((std::istreambuf_iterator<char>(input)), std::istreambuf_iterator<char>());
+    const std::string json = anch::rest::readBody(input, side);
     ProtobufJson::fromJson(value, json, side == anch::rest::Side::CLIENT);
   }
 

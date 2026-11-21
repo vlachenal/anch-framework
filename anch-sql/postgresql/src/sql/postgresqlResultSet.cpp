@@ -103,6 +103,9 @@ PostgreSQLResultSet::fetchNext() {
 	while((next = PQgetResult(_conn)) != NULL) { // connection can not be used until the last result has been read
 	  PQclear(next);
 	}
+	if(anch::sql::postgresql::invalidatesStatement(error)) {
+	  invalidateStatement();
+	}
 	throw anch::sql::postgresql::error("Error while fetching PostgreSQL result", _conn, error);
       }
       _currentRow = 0;

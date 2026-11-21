@@ -88,13 +88,13 @@ add_test(NAME anch-unit-test-equals-ptr COMMAND anch-unit-test -t equals-ptr)
 add_test(NAME anch-unit-test-equals-collections COMMAND anch-unit-test -t equals-collections)
 # Equality helpers (T14, T17) -
 
-# Not implemented options are refused (T3, T4) +
+# Not implemented options (removed, UT1) are refused (T3, T4) +
 add_test(NAME anch-unit-test-runner COMMAND anch-unit-test -r tcp://localhost:54321)
 add_test(NAME anch-unit-test-gen-ctest COMMAND anch-unit-test --gen-ctest)
 set_tests_properties(anch-unit-test-runner anch-unit-test-gen-ctest PROPERTIES WILL_FAIL TRUE)
 add_test(NAME anch-unit-test-runner-message COMMAND anch-unit-test -r tcp://localhost:54321)
-set_tests_properties(anch-unit-test-runner-message PROPERTIES PASS_REGULAR_EXPRESSION "are not implemented yet")
-# Not implemented options are refused (T3, T4) -
+set_tests_properties(anch-unit-test-runner-message PROPERTIES PASS_REGULAR_EXPRESSION "Unknown argument -r")
+# Not implemented options (removed, UT1) are refused (T3, T4) -
 
 # No ANSI escape sequence when output is not a terminal (T16) +
 string(ASCII 27 _anch_esc)

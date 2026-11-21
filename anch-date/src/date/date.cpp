@@ -66,15 +66,30 @@ namespace {
    *
    * \throw std::invalid_argument date can not be stored in nanoseconds since epoch on 64 bits (about 1678 to 2261)
    */
+  /*! Maximum number of seconds from epoch which can be stored in nanoseconds (years 1678 to 2261) */
+  constexpr std::time_t MAX_SECONDS = std::numeric_limits<std::int64_t>::max() / 1'000'000'000 - 1;
+
+  /*!
+   * Convert seconds from epoch to time point in nanoseconds
+   *
+   * \param secs the seconds from epoch
+   *
+   * \return the time point
+   *
+   * \throw std::invalid_argument date out of range
+   */
   sys_time<nanoseconds>
-  fromLocalTime(std::tm& local) {
-    // Seconds whose nanoseconds (and sub-second fields) fit in 64 bits
-    constexpr std::time_t MAX_SECONDS = std::numeric_limits<std::int64_t>::max() / 1'000'000'000 - 1;
-    const std::time_t secs = std::mktime(&local);
+  fromSeconds(std::time_t secs) {
     if(secs < -MAX_SECONDS || secs > MAX_SECONDS) {
       throw std::invalid_argument("Date out of range (years 1678 to 2261)");
     }
     return sys_time<nanoseconds>(std::chrono::duration_cast<nanoseconds>(std::chrono::seconds(secs)));
+  }
+
+  sys_time<nanoseconds>
+  fromLocalTime(std::tm& local) {
+    // Seconds whose nanoseconds (and sub-second fields) fit in 64 bits
+    return fromSeconds(std::mktime(&local));
   }
 
 }
@@ -89,7 +104,7 @@ Date::Date(const system_clock::time_point& time) {
 }
 
 Date::Date(const std::time_t& time) {
-  initialize(std::chrono::time_point_cast<nanoseconds>(system_clock::from_time_t(time)));
+  initialize(fromSeconds(time));
 }
 
 Date::Date(const std::tm* const time) {
@@ -98,7 +113,10 @@ Date::Date(const std::tm* const time) {
 }
 
 Date::Date(const std::timespec& time) {
-  initialize(std::chrono::time_point_cast<nanoseconds>(system_clock::from_time_t(time.tv_sec)) + nanoseconds(time.tv_nsec));
+  if(time.tv_nsec < 0 || time.tv_nsec > 999'999'999) {
+    throw std::invalid_argument("Invalid timespec: tv_nsec has to be in [0, 999999999]");
+  }
+  initialize(fromSeconds(time.tv_sec) + nanoseconds(time.tv_nsec));
 }
 // Constructors -
 

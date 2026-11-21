@@ -205,6 +205,12 @@ SqlException
 anch::sql::postgresql::error(const std::string& message, PGconn* conn, PGresult* res) {
   return pgError(message, conn, res);
 }
+
+bool
+anch::sql::postgresql::invalidatesStatement(const PGresult* res) noexcept {
+  const char* state = PQresultErrorField(res, PG_DIAG_SQLSTATE);
+  return state != NULL && (std::strcmp(state, "0A000") == 0 || std::strcmp(state, "26000") == 0);
+}
 // Methods -
 
 // C shared library definition +

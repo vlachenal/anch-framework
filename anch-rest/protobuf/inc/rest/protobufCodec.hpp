@@ -78,15 +78,17 @@ pets::Pet pet = client.get("/pets/{id}", 1).accept<anch::rest::Protobuf>().as<pe
     static void serialize(const T& value, std::ostream& out);
 
     /*!
-     * Read message
+     * Read message (body size is bounded by \ref maxBodySize )
      *
      * \param value the message to fill
      * \param input the input stream
+     * \param side the side
      *
      * \throw std::invalid_argument when message is invalid
+     * \throw ContentTooLarge when body is larger than \ref maxBodySize
      */
     template<anch::rest::ProtobufMessage T>
-    static void deserialize(T& value, std::istream& input);
+    static void deserialize(T& value, std::istream& input, anch::rest::Side side);
 
     /*!
      * Write message (any \c protoc message)
@@ -107,6 +109,18 @@ pets::Pet pet = client.get("/pets/{id}", 1).accept<anch::rest::Protobuf>().as<pe
      * \throw std::invalid_argument when message is invalid
      */
     static void read(google::protobuf::Message& message, std::istream& input);
+
+    /*!
+     * Read message (any \c protoc message)
+     *
+     * \param message the message to fill
+     * \param data the serialized message
+     *
+     * \throw std::invalid_argument when message is invalid
+     *
+     * \since 0.3
+     */
+    static void read(google::protobuf::Message& message, std::string_view data);
 
   };
 
@@ -149,6 +163,7 @@ pets::Pet pet = client.get("/pets/{id}", 1).accept<anch::rest::Protobuf>().as<pe
      * \param side the side which reads message
      *
      * \throw std::invalid_argument when message is invalid
+     * \throw ContentTooLarge when body is larger than \ref maxBodySize
      */
     template<anch::rest::ProtobufMessage T>
     static void deserialize(T& value, std::istream& input, anch::rest::Side side);
