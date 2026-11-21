@@ -111,7 +111,9 @@ testThrift() {
 			 "Unexpected {} pet", mediaType);
   }
   ThriftPet invalid;
-  std::istringstream garbage("\xff\xff\xff");
+  // Truncated structure: string field 2 without its length. Field types are valid ones: libthrift converts the read
+  // byte to TType without check (undefined behavior reported by UBSan for out of range values such as 0xff)
+  std::istringstream garbage(std::string("\x0b\x00\x02\x00", 4));
   bool raised = false;
   try {
     Available::deserialize(invalid, garbage, MediaType("application", "vnd.apache.thrift.binary"), Side::SERVER);
