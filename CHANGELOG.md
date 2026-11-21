@@ -14,6 +14,10 @@ and `\deprecated` in its documentation, which give its replacement, and it is re
 
 ### Breaking changes
 
+- anch-val: `validate` refuses at compile time fields whose class is neither described nor a scalar (their
+  description is probably not visible: it was silently not validated); `anch::val::IsScalar<T>` declares value types
+  (numbers, enumerations, strings, UUID, dates and `std::chrono` types are scalars), `anch::val::Validatable<T>` tells
+  whether a type can be validated. Descriptions (`anch::Mapping<T>`) have to be declared in the header of their type.
 - anch-json: `anch::json::validate` and `isValid` are replaced by `anch::val::validate` and `isValid` (anch-val,
   `val/validation.hpp`), which validate the common description of objects (`anch::Mapping`) without format.
 - anch-json: `anch::json::registerObject` is removed: types are described by an `anch::Mapping<T>` specialization

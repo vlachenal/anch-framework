@@ -31,7 +31,12 @@ namespace anch {
    *
    * A type is described by specializing this class template with a \c registerObject function which registers its
    * fields on the mapper of a format ( \ref anch::ObjectMapper ). The function is a template (the mapper type is the
-   * one of each format): the specialization is declared in a header.
+   * one of each format).\n
+   * \n
+   * The specialization has to be declared in the header of the type, just after it: every translation unit which
+   * uses the type sees its description. A description which is not visible changes the behaviour of formats and
+   * validation (the type is not described there) and violates the one definition rule: formats refuse undescribed
+   * objects at compile time, and anch-val refuses classes which are neither described nor scalars.
    * \snippet{trimleft} anch-utils/examples/mapping.cpp mapping
    *
    * Fields are registered with their name and their member pointer, or a getter and / or a setter

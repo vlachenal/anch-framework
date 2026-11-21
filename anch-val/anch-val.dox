@@ -74,7 +74,11 @@ target_link_libraries(my-app PRIVATE anch::val)
  * and of their nested values (objects, collections items, maps values, \c std::optional and pointers values). It
  * does not stop on the first violation: every violation is returned with its path (JSON Pointer), in fields
  * registration order. Fields registered with a setter only are not checked, and required fields are not checked (an
- * object always has its fields). \ref anch::val::isValid returns \c true when there is no violation.
+ * object always has its fields). \ref anch::val::isValid returns \c true when there is no violation.\n
+ * Values are \ref anch::val::Validatable "validatable" when they are scalars ( \ref anch::val::IsScalar : numbers,
+ * enumerations, strings, UUID, dates, ... ; it can be specialized for other value types), described objects, or
+ * \c std::optional , pointers, collections and maps of them: a class which is neither described nor a scalar is
+ * refused at compile time, as its description is probably not visible (see \c anch::Mapping ).
  * \snippet{trimleft} anch-val/examples/val.cpp mapping
  *
  * \snippet{trimleft} anch-val/examples/val.cpp validate

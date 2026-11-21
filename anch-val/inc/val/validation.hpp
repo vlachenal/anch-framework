@@ -27,6 +27,20 @@
 
 #include "val/constraints.hpp"
 
+namespace anch::val::detail {
+
+  /*!
+   * Check if type can be validated (see \ref anch::val::Validatable )
+   *
+   * \tparam P the type
+   *
+   * \return \c true when type can be validated
+   */
+  template<typename P>
+  constexpr bool validatable();
+
+}
+
 namespace anch::val {
 
   /*!
@@ -140,6 +154,20 @@ namespace anch::val {
     // Methods -
 
   };
+
+  /*!
+   * \brief Type which can be validated: scalar ( \ref anch::val::IsScalar ), described object ( \c anch::Mapping ), or
+   * \c std::optional , pointer, collection or map of them
+   *
+   * A class which is neither described nor a scalar is refused: its description is probably not visible (it has to
+   * be declared in the header of the class, just after it).
+   *
+   * \tparam T the type
+   *
+   * \since 0.3
+   */
+  template<typename T>
+  concept Validatable = anch::val::detail::validatable<T>();
 
   /*!
    * Validate value without serializing it: constraints of the fields of described objects ( \c anch::Mapping ) and

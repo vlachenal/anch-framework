@@ -21,6 +21,7 @@
 
 #include "anch-val-export.hpp"
 
+#include <chrono>
 #include <concepts>
 #include <cstddef>
 #include <cstdint>
@@ -161,6 +162,65 @@ namespace anch::val {
    */
   template<typename V>
   concept Collection = std::ranges::sized_range<const V> && !StringLike<V> && !MapLike<V>;
+
+}  // anch::val
+
+// Value types of other libraries (declared without dependency) +
+namespace anch {
+  class UUID;
+}
+
+namespace anch::date {
+  class Date;
+}
+// Value types of other libraries -
+
+namespace anch::val {
+
+  /*!
+   * \brief Scalar type: value type checked as a whole, without fields (it is not described by \c anch::Mapping )
+   *
+   * Numbers, enumerations, strings, \c anch::UUID , \c anch::date::Date and \c std::chrono dates, time points and
+   * durations are scalars. Specialize it for other value types (a class mapped as a string by a format, ...): a
+   * validation refuses at compile time classes which are neither scalars nor described, as a description which is
+   * not visible would be silently skipped.
+   *
+   * \tparam T the type
+   *
+   * \since 0.3
+   */
+  template<typename T>
+  struct IsScalar: std::bool_constant<std::is_arithmetic_v<T> || std::is_enum_v<T> || anch::val::StringLike<T>> {};
+
+  /*! \c anch::UUID is a scalar */
+  template<>
+  struct IsScalar<anch::UUID>: std::true_type {};
+
+  /*! \c anch::date::Date is a scalar */
+  template<>
+  struct IsScalar<anch::date::Date>: std::true_type {};
+
+  /*! \c std::chrono::year_month_day is a scalar */
+  template<>
+  struct IsScalar<std::chrono::year_month_day>: std::true_type {};
+
+  /*! \c std::chrono::time_point is a scalar */
+  template<typename C, typename D>
+  struct IsScalar<std::chrono::time_point<C, D>>: std::true_type {};
+
+  /*! \c std::chrono::duration is a scalar */
+  template<typename R, typename P>
+  struct IsScalar<std::chrono::duration<R, P>>: std::true_type {};
+
+  /*!
+   * \brief Scalar type (see \ref anch::val::IsScalar )
+   *
+   * \tparam T the type
+   *
+   * \since 0.3
+   */
+  template<typename T>
+  concept Scalar = anch::val::IsScalar<std::remove_cvref_t<T>>::value;
 
 }  // anch::val
 
