@@ -154,6 +154,54 @@ Implémentation (2026-11-21, étapes 1 à 4)
    noms (test dédié).
 5. Plus tard : FormatCodec<F> et concepts de mapping.todo §4.
 
+Étape 5 : FormatCodec<F> (proposition validée le 2026-11-21, en attente d'anch-csv)
+-----------------------------------------------------------------------------------
+État : mapping.todo §4 prévoit des concepts de format et un codec générique ; anch-csv n'a pas encore de code
+(mapping.todo étape 3) et anch::Mapping<T> n'existe pas (étape 1). FormatCodec ne s'applique donc pour l'instant
+qu'à JSON ; il prépare CSV (Csv sans code propre dans anch-codec, quand anch-csv aura son format).
+
+1. Format (bibliothèque de format, sans dépendance à anch-codec : concepts structurels)
+  struct anch::json::Json {                                   // anch-json, json/format.hpp
+    using Options = anch::json::MappingOptions;
+    static constexpr std::string_view MEDIA_TYPE = "application/json";
+    static Options defaultOptions();                          // DEFAULT_MAPPING_OPTIONS
+    template<typename T> static void serialize(const T&, std::ostream&, const Options&);
+    template<typename T> static void deserialize(T&, std::istream&, const Options&);
+  };
+- Les fonctions libres anch::json::serialize / deserialize restent ; Json les appelle (cas std::string compris, qui
+  est aujourd'hui traité par le codec).
+- Concepts dans anch-codec (codec/format.hpp, avec le registre) : anch::codec::DataFormat<F> (Options, MEDIA_TYPE,
+  defaultOptions), anch::codec::FormatSerializer<F, T>, anch::codec::FormatDeserializer<F, T>. Noms : Format est
+  déjà le descripteur du registre (anch::codec::Format) ; mapping.todo prévoyait anch::Serializer<F, T>, en conflit
+  avec les concepts de codec Serializer<C, T>.
+
+2. Codec générique (anch-codec, codec/formatCodec.hpp)
+  template<anch::codec::DataFormat F>
+  struct FormatCodec {
+    static std::string_view mediaType() noexcept;             // F::MEDIA_TYPE
+    static typename F::Options& options(anch::codec::Side);   // options par côté, modifiables à l'initialisation
+    serialize(value, out) / serialize(value, out, side) ; deserialize(value, in) / deserialize(value, in, side)
+  };                                                          // T exclu quand ExternalSchema<T>
+- Politique de chaque côté et traduction des erreurs : trait anch::codec::FormatPolicy<F>, spécialisé par le plugin
+  (le format ne connaît pas Side) :
+    static void configure(typename F::Options&, anch::codec::Side);  // défaut : rien
+    static void translate(const std::exception&);                     // défaut : rien (l'exception est relancée)
+  Plugin json : configure = options actuelles de Json::options (contraintes vérifiées selon le côté, 2 Mio pour
+  SERVER, champs inconnus ignorés pour CLIENT) ; translate = PAYLOAD_TOO_LARGE -> ContentTooLarge.
+- anch::codec::Json devient using Json = FormatCodec<anch::json::Json> : API inchangée (mediaType, options(side),
+  serialize, deserialize). Les options statiques doivent rester uniques entre bibliothèques partagées :
+  instanciation explicite exportée dans anch-codec-json (extern template dans l'en-tête), comme json::Factory.
+
+3. Hors étape 5 : Csv (après anch-csv), concepts Mapping / ObjectMapper (mapping.todo étapes 1 à 3) ; Protobuf et
+   Thrift gardent leurs codecs (pas de format à options : code généré).
+
+Questions étape 5 (tranchées le 2026-11-21 : propositions retenues)
+- A. Type de format anch::json::Json dans anch-json (json/format.hpp), sans dépendance à anch-codec.
+- B. Concepts DataFormat / FormatSerializer / FormatDeserializer ; le descripteur du registre garde le nom Format.
+- C. Politique par côté et traduction des erreurs par le trait FormatPolicy<F>, spécialisé par le plugin.
+- D. En attente : les concepts seront conçus sur deux formats réels, quand anch-csv aura son format
+     (mapping.todo étape 3) ; l'étape 5 se fera alors avec Csv.
+
 Questions (toutes tranchées le 2026-11-21)
 ------------------------------------------
 1. Tranchée le 2026-11-21 : Json dans un plugin anch-codec-json, comme les autres formats ; noyau sans dépendance de
