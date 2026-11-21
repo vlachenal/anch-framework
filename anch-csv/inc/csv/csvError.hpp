@@ -45,7 +45,9 @@ namespace anch::csv {
     /*! Missing required column (objects mapping) */
     MISSING_COLUMN,
     /*! Value conversion error (objects mapping) */
-    CONVERSION
+    CONVERSION,
+    /*! Field constraint violation (objects mapping, anch-val constraints) */
+    CONSTRAINT_VIOLATION
   };
 
   /*!

@@ -4,8 +4,9 @@
  *
  * \section csv_intro_seq Introduction
  *
- * AnCH CSV library reads and writes CSV records (RFC 4180) as streams, without loading the whole input. Objects
- * mapping (with the description shared with anch-json) and records ranges are planned (see \c anch-csv.todo ).
+ * AnCH CSV library reads and writes CSV records (RFC 4180) as streams, without loading the whole input, and maps
+ * records to objects with their description shared by formats ( \c anch::Mapping , anch-utils). Records ranges are
+ * planned (see \c anch-csv.todo ).
  *
  * \section csv_install_sec Installation
  *
@@ -40,8 +41,26 @@ target_link_libraries(my-app PRIVATE anch::csv)
  * the column:
  * \snippet{trimleft} anch-csv/examples/csv.cpp reader
  *
+ * \section csv_objects_sec Objects
+ *
+ * Objects are described once for every format ( \c anch::Mapping ): fields are columns. CSV objects are flat: fields
+ * are strings, booleans, numbers, \c anch::UUID , dates (RFC 3339) or \c std::optional of them ; nested objects and
+ * collections are refused at compile time.
+ * \snippet{trimleft} anch-csv/examples/csv.cpp mapping
+ *
+ * \ref anch::csv::ObjectWriter "ObjectWriter" writes the header, then one record per object. An absent value
+ * ( \c std::nullopt ) is an empty field, an empty string an empty quoted field ( \c "" ):
+ * \snippet{trimleft} anch-csv/examples/csv.cpp objects writer
+ *
+ * \ref anch::csv::ObjectReader "ObjectReader" associates columns with fields by name (or by position without
+ * header). Columns which are not fields are ignored ( \c Options::ignoreUnknownColumns ), required fields
+ * ( \c anch::val::required ) columns have to be present. Conversion errors and anch-val constraints violations
+ * ( \c Options::readCheckConstraints ) raise \ref anch::csv::CsvError "CsvError" with the line and the column:
+ * \snippet{trimleft} anch-csv/examples/csv.cpp objects reader
+ *
  * \section csv_options_sec Options
  *
- * \ref anch::csv::Options "Options" set separator, quote, line ending, header, BOM and limits:
+ * \ref anch::csv::Options "Options" set separator, quote, line ending, header, BOM, limits and objects mapping
+ * (unknown columns, constraints checks, booleans texts):
  * \snippet{trimleft} anch-csv/examples/csv.cpp options
  */

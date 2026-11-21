@@ -177,6 +177,13 @@ namespace anch::csv {
      * \return the column names
      */
     const std::vector<std::string>& header() const noexcept;
+
+    /*!
+     * Options getter
+     *
+     * \return the options
+     */
+    const anch::csv::Options& options() const noexcept;
     // Accessors -
 
   private:

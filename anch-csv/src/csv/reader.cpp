@@ -132,6 +132,11 @@ Reader::header() const noexcept {
   return _header;
 }
 
+const Options&
+Reader::options() const noexcept {
+  return _options;
+}
+
 int
 Reader::get() {
   int c;

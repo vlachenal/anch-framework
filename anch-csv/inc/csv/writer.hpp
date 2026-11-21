@@ -28,6 +28,7 @@
 #include <span>
 #include <string_view>
 #include <type_traits>
+#include <vector>
 
 #include "csv/options.hpp"
 
@@ -160,7 +161,26 @@ namespace anch::csv {
      */
     template<typename... V>
     void writeRow(const V&... values);
+
+    /*!
+     * Write a record whose fields can be quoted even without special character: an empty quoted field ( \c "" ) is
+     * an empty string, an empty field an absent value
+     *
+     * \param fields the fields
+     * \param quoted the fields to quote (same size as \c fields )
+     */
+    void write(std::span<const std::string_view> fields, const std::vector<bool>& quoted);
     // Methods -
+
+    // Accessors +
+  public:
+    /*!
+     * Options getter
+     *
+     * \return the options
+     */
+    const anch::csv::Options& options() const noexcept;
+    // Accessors -
 
   private:
     /*!

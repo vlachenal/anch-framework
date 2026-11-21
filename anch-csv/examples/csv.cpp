@@ -19,12 +19,35 @@
 */
 // anch-csv documentation examples (anch-csv.dox)
 #include "csv/csvError.hpp"
+#include "csv/mapper.hpp"
 #include "csv/reader.hpp"
 #include "csv/writer.hpp"
 
+#include <cstdint>
 #include <iostream>
+#include <optional>
 #include <sstream>
 #include <string>
+
+//! [mapping]
+struct Pet {
+  uint64_t id;
+  std::string name;
+  std::optional<std::string> nickname;
+};
+
+// Description shared by formats (anch-utils): fields are columns
+template<>
+struct anch::Mapping<Pet> {
+  static void
+  registerObject(anch::ObjectMapper<Pet> auto& mapper) {
+    mapper
+      .registerField("id", &Pet::id, anch::val::required)
+      .registerField("name", &Pet::name, anch::val::required, anch::val::minLength(1))
+      .registerField("nickname", &Pet::nickname);
+  }
+};
+//! [mapping]
 
 int
 main() {
@@ -49,6 +72,23 @@ main() {
     return 1;
   }
   //! [reader]
+
+  //! [objects writer]
+  std::stringstream pets;
+  anch::csv::Writer petsWriter(pets);
+  anch::csv::ObjectWriter<Pet> objectsWriter(petsWriter); // header, then one record per object
+  objectsWriter.write(Pet{1, "Rex", std::nullopt});        // 1,Rex,     (absent nickname)
+  objectsWriter.write(Pet{2, "Médor", std::string()});     // 2,Médor,"" (empty nickname)
+  //! [objects writer]
+
+  //! [objects reader]
+  anch::csv::Reader petsReader(pets);
+  anch::csv::ObjectReader<Pet> objectsReader(petsReader);  // columns associated with fields by name
+  Pet pet;
+  while(objectsReader.read(pet)) {
+    std::cout << pet.id << ' ' << pet.name << (pet.nickname ? " has a nickname" : "") << std::endl;
+  }
+  //! [objects reader]
 
   //! [options]
   anch::csv::Options options;
