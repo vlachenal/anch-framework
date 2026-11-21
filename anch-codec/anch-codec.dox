@@ -18,6 +18,7 @@
  * | :----------- | :----- | :------ |
  * | \c anch::codec | | concepts, \ref anch::codec::MediaType "MediaType" and negotiation, limits, \ref anch::codec::Side "Side", \ref anch::codec::Text "Text", \ref anch::codec::Codecs "Codecs", formats registry |
  * | \c anch::codec-json | \c ANCH_CODEC_JSON (needed by anch-rest) | \ref anch::codec::Json "Json" (anch-json) |
+ * | \c anch::codec-csv | \c ANCH_CODEC_CSV (anch-csv) | \ref anch::codec::Csv "Csv" (lists of described objects) |
  * | \c anch::codec-protobuf | \c ANCH_CODEC_PROTOBUF (Protobuf) | \ref anch::codec::Protobuf "Protobuf", \ref anch::codec::ProtobufJson "ProtobufJson" |
  * | \c anch::codec-thrift | \c ANCH_CODEC_THRIFT (Thrift and Boost headers) | \ref anch::codec::ThriftBinary "ThriftBinary", \ref anch::codec::ThriftCompact "ThriftCompact", \ref anch::codec::ThriftJson "ThriftJson" |
  * | \c anch::codec-all | | \c codec/all.hpp : every plugin built and \c anch::codec::Available |
@@ -39,6 +40,16 @@ target_link_libraries(my-app PRIVATE anch::codec-json)
  * \ref anch::codec::deserialize "deserialize" call the richest form a codec defines:
  * \snippet{trimleft} anch-codec/examples/codec.cpp serialize
  *
+ * \section codec_format_sec Data formats
+ *
+ * A data format ( \ref anch::codec::DataFormat "DataFormat": \c anch::json::Json , \c anch::csv::Csv ) serializes
+ * values with options, without depending on anch-codec. \ref anch::codec::FormatCodec "FormatCodec" makes a codec of
+ * it: media type, options of each side copied from the format default options and configured by the format
+ * \ref anch::codec::FormatPolicy "FormatPolicy" (specialized by its plugin, which also translates errors into
+ * \ref anch::codec::ContentTooLarge "ContentTooLarge"). \ref anch::codec::Json "Json" is
+ * \c FormatCodec<anch::json::Json> and \ref anch::codec::Csv "Csv" \c FormatCodec<anch::csv::Csv> ; a new text
+ * format gets its codec without code of its own.
+ *
  * \section codec_side_sec Trust policy
  *
  * \ref anch::codec::Side "Side" is the trust policy of the codec user: \c SERVER reads data it does not control
@@ -46,7 +57,8 @@ target_link_libraries(my-app PRIVATE anch::codec-json)
  * anch-rest servers use \c SERVER and clients \c CLIENT ; a message consumer reads with \c SERVER and a producer
  * writes with \c CLIENT .
  * - \ref anch::codec::Json "Json" checks anch-json fields constraints on values read with \c SERVER and on values
- *   written with \c CLIENT , and has mapping options per side ( \ref anch::codec::Json::options "options" ):
+ *   written with \c CLIENT , and has mapping options per side ( \ref anch::codec::FormatCodec::options "options" ,
+ *   configured by \ref anch::codec::FormatPolicy<anch::json::Json> "its policy"):
  * \snippet{trimleft} anch-codec/examples/codec.cpp model
  * - codecs without limit of their own read contents with \ref anch::codec::readBody "readBody", bounded by
  *   \ref anch::codec::maxBodySize "maxBodySize" (2 MiB for \c SERVER by default): larger contents raise
@@ -59,9 +71,9 @@ target_link_libraries(my-app PRIVATE anch::codec-json)
  * \snippet{trimleft} anch-codec/examples/codec.cpp codecs
  *
  * \c codec/all.hpp (target \c anch::codec-all ) is generated with the plugins built: it includes their headers,
- * defines \c ANCH_CODEC_JSON_ENABLED , \c ANCH_CODEC_PROTOBUF_ENABLED and \c ANCH_CODEC_THRIFT_ENABLED , and declares
- * \c anch::codec::Available , the list of their codecs (Json, Protobuf, ProtobufJson, ThriftBinary, ThriftCompact,
- * ThriftJson, then Text). Types described by an external schema ( \ref anch::codec::ExternalSchema "ExternalSchema":
+ * defines \c ANCH_CODEC_JSON_ENABLED , \c ANCH_CODEC_CSV_ENABLED , \c ANCH_CODEC_PROTOBUF_ENABLED and \c ANCH_CODEC_THRIFT_ENABLED , and declares
+ * \c anch::codec::Available , the list of their codecs (Json, Csv, Protobuf, ProtobufJson, ThriftBinary,
+ * ThriftCompact, ThriftJson, then Text). Types described by an external schema ( \ref anch::codec::ExternalSchema "ExternalSchema":
  * Protobuf messages, Thrift structures) are not handled by Json, so the list selects the codecs of their format.
  * Each plugin registers its format when its library is loaded ( \ref anch::codec::formats "formats", for
  * introspection: accepted media types, startup logs, ...):

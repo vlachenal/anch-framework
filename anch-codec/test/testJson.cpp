@@ -155,7 +155,8 @@ testFormats() {
   }
   anch::ut::assertThat(std::find(names.begin(), names.end(), "json") != names.end()
 		       && std::find(names.begin(), names.end(), "text") != names.end(), "json and text formats expected");
-  anch::ut::assertThat(formats[0].name == "json" && formats[0].mediaTypes == std::vector<std::string>{"application/json"},
+  auto json = std::find_if(formats.begin(), formats.end(), [](const anch::codec::Format& format) { return format.name == "json"; });
+  anch::ut::assertThat(json != formats.end() && json->mediaTypes == std::vector<std::string>{"application/json"},
 		       "Unexpected json media types");
 }
 

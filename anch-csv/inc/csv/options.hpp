@@ -51,6 +51,9 @@ namespace anch::csv {
     /*! Maximum size of a read record in bytes, \c 0 for no limit */
     std::size_t maxRecordSize = 1024 * 1024;
 
+    /*! Maximum size of the read input in bytes, \c 0 for no limit (server side bodies) */
+    std::size_t maxSize = 0;
+
     /*! Maximum number of columns of a read record, \c 0 for no limit */
     std::size_t maxColumns = 1024;
 

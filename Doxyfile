@@ -2491,6 +2491,7 @@ PREDEFINED             = ANCH_POSIX \
                          ANCH_CLI_EXPORT= \
                          ANCH_CODEC_EXPORT= \
                          ANCH_CODEC_JSON_EXPORT= \
+                         ANCH_CODEC_CSV_EXPORT= \
                          ANCH_CODEC_PROTOBUF_EXPORT= \
                          ANCH_CODEC_THRIFT_EXPORT= \
                          ANCH_CONF_EXPORT= \

@@ -36,7 +36,8 @@ namespace anch::csv {
     /*! Invalid CSV: quote in an unquoted field, character after a closing quote, unterminated quoted field, CR
         without LF */
     INVALID_FORMAT,
-    /*! Record larger than \c Options::maxRecordSize or with more than \c Options::maxColumns columns */
+    /*! Input larger than \c Options::maxSize , record larger than \c Options::maxRecordSize or with more than
+        \c Options::maxColumns columns */
     TOO_LARGE,
     /*! Record without the number of columns of the first record (\c Options::sameColumnCount ) */
     COLUMN_COUNT,

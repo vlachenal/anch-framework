@@ -81,7 +81,7 @@ and `\deprecated` in its documentation, which give its replacement, and it is re
   refused, required columns, conversion and anch-val constraints errors with line and column) and `ObjectWriter<T>`
   (header, absent values as empty fields, empty strings as `""`); fields are strings, booleans, numbers, UUID, dates
   or `std::optional` of them. `records<T>(input)` reads objects one by one (input range), `deserialize` and
-  `serialize` read and write vectors (and ranges). anch-csv depends on anch-utils and anch-val (anch-uuid and anch-date with `ANCH_UUID`
+  `serialize` read and write vectors (and ranges). `Options::maxSize` bounds the read input. anch-csv depends on anch-utils and anch-val (anch-uuid and anch-date with `ANCH_UUID`
   and `ANCH_DATE`).
 - anch-codec: codecs shared by anch-rest and future libraries (messaging), out of anch-rest. The core
   (`anch::codec`) has no format dependency: codec concepts, `MediaType` and `Accept` negotiation, limits, `Side`
@@ -91,6 +91,12 @@ and `\deprecated` in its documentation, which give its replacement, and it is re
   `ANCH_CODEC_PROTOBUF`) and anch-codec-thrift (`ThriftBinary`, `ThriftCompact`, `ThriftJson`, `ANCH_CODEC_THRIFT`).
   `codec/all.hpp` (target `anch::codec-all`) is generated with the plugins built and declares
   `anch::codec::Available`; `ExternalSchema<T>` excludes Protobuf messages and Thrift structures from `Json`.
+  Data formats (`DataFormat`, `FormatSerializer`, `FormatDeserializer` concepts) get a generic codec,
+  `FormatCodec<F>`, whose side options are configured by `FormatPolicy<F>` (specialized by plugins, which also
+  translate errors): `anch::codec::Json` is `FormatCodec<anch::json::Json>` (format type `anch::json::Json`,
+  `json/format.hpp`), and the new anch-codec-csv plugin (`ANCH_CODEC_CSV`) provides `anch::codec::Csv`,
+  `FormatCodec<anch::csv::Csv>` (`text/csv`, lists of described objects, format type `anch::csv::Csv`,
+  `csv/format.hpp`).
 - anch-codec: `anch::codec::maxBodySize(Side)` and `readBody` (bodies read in memory by Protobuf and Thrift codecs,
   `0` for no limit) and `Protobuf::read(message, std::string_view)`.
 - anch-utils: `anch::tryConvert<N>(std::string_view)` converts a string to a number without exception

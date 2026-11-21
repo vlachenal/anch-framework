@@ -190,7 +190,7 @@ namespace anch::csv {
    *
    * \since 0.3
    */
-  template<typename T>
+  template<anch::Described T>
   void deserialize(std::vector<T>& values, std::istream& input, const anch::csv::Options& options = anch::csv::Options());
 
   /*!
@@ -207,6 +207,7 @@ namespace anch::csv {
    * \since 0.3
    */
   template<std::ranges::input_range R>
+  requires anch::Described<std::remove_cvref_t<std::ranges::range_value_t<R>>>
   void serialize(const R& values, std::ostream& out, const anch::csv::Options& options = anch::csv::Options());
 
 }

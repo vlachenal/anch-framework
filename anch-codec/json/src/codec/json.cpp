@@ -21,38 +21,40 @@
 
 #include "codec/format.hpp"
 
+#include "json/mappingError.hpp"
+
+using anch::codec::FormatPolicy;
 using anch::codec::Json;
+
+template struct anch::codec::FormatCodec<anch::json::Json>;
 
 namespace {
 
-  // Registered when the library is loaded: a program which uses Json links this file (mediaType, options)
+  // Registered when the library is loaded: a program which uses Json links this file (options)
   [[maybe_unused]] const bool REGISTERED = anch::codec::registerFormat(anch::codec::Format{"json", {std::string(Json::mediaType())}});
 
 }
 
-std::string_view
-Json::mediaType() noexcept {
-  return "application/json";
-}
-
-anch::json::MappingOptions&
-Json::options(anch::codec::Side side) {
-  static anch::json::MappingOptions server = []() {
-    anch::json::MappingOptions options = anch::json::DEFAULT_MAPPING_OPTIONS;
+void
+FormatPolicy<anch::json::Json>::configure(anch::json::MappingOptions& options, anch::codec::Side side) {
+  if(side == anch::codec::Side::SERVER) {
     options.deserialize_check_constraints = true;
     options.serialize_check_constraints = false;
     if(options.max_payload == 0) {
-	options.max_payload = 2 * 1024 * 1024; // request bodies are bounded, as application/x-www-form-urlencoded ones
+      options.max_payload = 2 * 1024 * 1024; // request bodies are bounded, as application/x-www-form-urlencoded ones
     }
-    return options;
-  }();
-  static anch::json::MappingOptions client = []() {
-    anch::json::MappingOptions options = anch::json::DEFAULT_MAPPING_OPTIONS;
+  } else {
     options.deserialize_check_constraints = false;
     options.serialize_check_constraints = true;
     options.deserialize_ignore_unknown_field = true; // server responses are trusted: newer fields are ignored
     options.deserialize_max_discard_char = -1;       // indented responses are accepted
-    return options;
-  }();
-  return (side == anch::codec::Side::SERVER) ? server : client;
+  }
+}
+
+void
+FormatPolicy<anch::json::Json>::translate(const std::exception& error) {
+  const auto* mapping = dynamic_cast<const anch::json::MappingError*>(&error);
+  if(mapping != nullptr && mapping->getErrorCode() == anch::json::ErrorCode::PAYLOAD_TOO_LARGE) {
+    throw anch::codec::ContentTooLarge(mapping->what());
+  }
 }
