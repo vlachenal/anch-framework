@@ -1,9 +1,0 @@
-<map id="anch::rest::ContentTooLarge" name="anch::rest::ContentTooLarge">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,357,181,427"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="41,240,146,309"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="95,322,96,358,91,357,92,327"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="45,123,142,192"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="94,205,96,241,91,240,92,210"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="47,5,140,75"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="94,87,96,123,91,123,93,92"/>
-</map>

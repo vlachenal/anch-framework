@@ -253,6 +253,10 @@ Correction (décidée le 2026-11-21 : ne plus les installer) : les deux en-tête
 `std::tolower` dépend de la locale C globale : une application qui change de locale (`setlocale`) peut obtenir d'autres conversions que l'ASCII (locales turques mono-octet pour `I`, non vérifié). `<cctype>` n'est pas inclus. Aucun utilisateur dans le framework.
 Décidé le 2026-11-21 : comportement conservé et documenté dans `stringUtils.hpp` (locale C globale, ASCII seulement avec la locale `"C"`, multi-octets non convertis) ; `<cctype>` inclus.
 
+## Industrialisation, point 5 : documentation publiée sans être versionnée (2026-11-21)
+
+`docs/` (HTML Doxygen, 46 Mo, 6 749 fichiers, modifié par 94 commits) n'est plus dans le dépôt : `OUTPUT_DIRECTORY = build/docs`, `/docs/` ignoré. Le workflow `docs` génère la documentation (Doxygen d'Arch Linux, comme en développement ; `WARN_AS_ERROR = FAIL_ON_WARNINGS` ajouté en CI seulement) sur chaque PR et chaque push, et la déploie sur GitHub Pages depuis `master` (`upload-pages-artifact`, `deploy-pages`). Les anciens fichiers restent dans l'historique (réécriture écartée). Les 2 avertissements restants venaient de `CHANGELOG.md` : `` `\\` `` suivi d'un backtick est lu par Doxygen comme un backtick échappé, le bloc de code restait ouvert jusqu'à la fin du fichier (entrée reformulée).
+
 ## Divers
 
 - L'en-tête de licence indique encore « based on C++11 standard ».

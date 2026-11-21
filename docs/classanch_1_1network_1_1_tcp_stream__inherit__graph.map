@@ -1,9 +1,0 @@
-<map id="anch::network::TcpStream" name="anch::network::TcpStream">
-<area shape="rect" id="Node000001" title="TCP connection as a std::iostream." alt="" coords="99,304,280,501"/>
-<area shape="rect" id="Node000002" href="$structanch_1_1network_1_1_socket_holder.html" title="Socket owner base class of TcpStream." alt="" coords="5,155,185,224"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="117,235,149,304,143,304,115,240"/>
-<area shape="rect" id="Node000003" href="$classanch_1_1cutils_1_1_c_i_o_stream.html" title=" " alt="" coords="209,123,360,256"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="251,267,236,306,231,303,247,272"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="241,5,328,75"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="285,87,287,124,282,122,284,92"/>
-</map>

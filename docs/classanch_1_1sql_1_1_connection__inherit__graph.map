@@ -1,9 +1,0 @@
-<map id="anch::sql::Connection" name="anch::sql::Connection">
-<area shape="rect" id="Node000001" title="SQL connection virtual class." alt="" coords="237,5,393,608"/>
-<area shape="rect" id="Node000002" href="$classanch_1_1sql_1_1_my_s_q_l_connection.html" title="MySQL connection." alt="" coords="5,677,187,917"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="232,493,152,679,147,676,229,498"/>
-<area shape="rect" id="Node000003" href="$classanch_1_1sql_1_1_postgre_s_q_l_connection.html" title="PostgreSQL connection." alt="" coords="210,656,419,939"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="316,620,317,657,312,656,314,625"/>
-<area shape="rect" id="Node000004" href="$classanch_1_1sql_1_1_s_q_lite3_connection.html" title="SQLite3 connection." alt="" coords="444,667,628,928"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="400,491,480,667,475,667,398,496"/>
-</map>

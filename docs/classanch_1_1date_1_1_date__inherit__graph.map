@@ -1,9 +1,0 @@
-<map id="anch::date::Date" name="anch::date::Date">
-<area shape="rect" id="Node000001" title="Date and time utility class." alt="" coords="98,5,260,640"/>
-<area shape="rect" id="Node000002" href="$classanch_1_1sql_1_1_date.html" title="SQL date type." alt="" coords="5,688,105,843"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="95,623,79,689,74,687,93,628"/>
-<area shape="rect" id="Node000003" href="$classanch_1_1sql_1_1_time.html" title="SQL time type." alt="" coords="129,688,230,843"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="180,652,182,689,177,687,178,657"/>
-<area shape="rect" id="Node000004" href="$classanch_1_1sql_1_1_timestamp.html" title="SQL timestamp type." alt="" coords="254,688,390,843"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="266,586,300,689,295,688,263,590"/>
-</map>

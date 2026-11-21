@@ -1,0 +1,59 @@
+# Generate Doxygen documentation (warnings are errors) and deploy it to GitHub Pages from master.
+# Generated HTML is not kept in the repository: it is only an artifact of this workflow.
+name: docs
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  # A deployment in progress is never cancelled
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  build:
+    name: Doxygen
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    # Arch Linux: same Doxygen as development environment
+    container:
+      image: archlinux:base-devel
+    steps:
+      - name: Install dependencies
+        # graphviz: class and include graphs (HAVE_DOT)
+        run: pacman -Syu --noconfirm --needed git doxygen graphviz
+
+      - uses: actions/checkout@v7
+
+      - name: Generate documentation
+        # Doxyfile writes in build/docs ; warnings fail the build in CI only (Doxygen versions differ locally)
+        run: |
+          doxygen --version
+          { cat Doxyfile; echo "WARN_AS_ERROR = FAIL_ON_WARNINGS"; } | doxygen -
+
+      - name: Upload documentation
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: build/docs
+
+  deploy:
+    name: Deploy to GitHub Pages
+    if: github.ref == 'refs/heads/master' && github.event_name != 'pull_request'
+    needs: build
+    runs-on: ubuntu-24.04
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v5

@@ -1,9 +1,0 @@
-var namespaceanch_1_1events =
-[
-    [ "Event", "structanch_1_1events_1_1_event.html", "structanch_1_1events_1_1_event" ],
-    [ "EventBus", "classanch_1_1events_1_1_event_bus.html", "classanch_1_1events_1_1_event_bus" ],
-    [ "EventHandler", "classanch_1_1events_1_1_event_handler.html", "classanch_1_1events_1_1_event_handler" ],
-    [ "Observable", "classanch_1_1events_1_1_observable.html", "classanch_1_1events_1_1_observable" ],
-    [ "Observer", "classanch_1_1events_1_1_observer.html", "classanch_1_1events_1_1_observer" ],
-    [ "ObserverList", "classanch_1_1events_1_1_observer_list.html", "classanch_1_1events_1_1_observer_list" ]
-];

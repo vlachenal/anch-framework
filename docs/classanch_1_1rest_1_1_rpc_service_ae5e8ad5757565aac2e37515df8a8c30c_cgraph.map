@@ -1,7 +1,0 @@
-<map id="anch::rest::RpcService::setMaxMessageSize" name="anch::rest::RpcService::setMaxMessageSize">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,29,161,72"/>
-<area shape="poly" id="edge3_Node000001_Node000001" title=" " alt="" coords="48,28,46,19,52,10,65,5,83,3,103,5,116,13,111,14,101,10,83,8,66,10,56,14,51,21,53,29"/>
-<area shape="rect" id="Node000002" href="$namespaceanch_1_1rest.html#ad5b33b499064b915e80272936f41add9" title=" " alt="" coords="209,37,324,64"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="161,48,196,50,191,51,161,53"/>
-<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="235,36,229,29,233,19,246,13,266,11,288,13,301,22,296,22,287,18,266,16,247,18,237,23,235,28,240,38"/>
-</map>

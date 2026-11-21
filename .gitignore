@@ -8,5 +8,6 @@
 # Editors backup files
 **/*~
 
-# Documentation directory
+# Documentation directory (Doxygen writes in build/docs, deployed by the docs workflow)
 documentation/
+/docs/

@@ -1,7 +1,0 @@
-<map id="anch::crypto::ECB::decipherBlock" name="anch::crypto::ECB::decipherBlock">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,51,143,93"/>
-<area shape="rect" id="Node000002" href="$classanch_1_1crypto_1_1_block_cipher_mode_of_operation.html#a91402866dbf181ed1377e1ab89510e72" title=" " alt="" coords="191,5,408,64"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="142,58,177,54,172,56,143,63"/>
-<area shape="rect" id="Node000003" href="$classanch_1_1crypto_1_1_invalid_block_exception.html#ab31b0e655736f2c5a94f26fd13511d4f" title=" " alt="" coords="191,88,408,131"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="143,81,178,88,173,89,143,86"/>
-</map>
