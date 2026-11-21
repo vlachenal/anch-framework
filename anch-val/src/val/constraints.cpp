@@ -20,6 +20,7 @@
 #include "val/constraints.hpp"
 
 #include <algorithm>
+#include <ostream>
 #include <map>
 #include <mutex>
 #include <regex>
@@ -430,3 +431,49 @@ anch::val::detail::decimalDigits(std::string_view decimal) {
   const std::size_t total = integer.size() + fraction.size();
   return std::make_pair(total == 0 ? std::size_t{1} : total, fraction.size());
 }
+
+// Path +
+anch::val::Path::Path(std::vector<Segment> segments): _segments(std::move(segments)) {
+  // Nothing to do
+}
+
+const std::vector<anch::val::Path::Segment>&
+anch::val::Path::segments() const noexcept {
+  return _segments;
+}
+
+bool
+anch::val::Path::empty() const noexcept {
+  return _segments.empty();
+}
+
+std::string
+anch::val::Path::pointer() const {
+  std::string res;
+  for(const Segment& segment : _segments) {
+    res += '/';
+    if(const std::size_t* index = std::get_if<std::size_t>(&segment)) {
+      res += std::to_string(*index);
+      continue;
+    }
+    for(char c : std::get<std::string>(segment)) {
+      switch(c) {
+      case '~':
+	res += "~0";
+	break;
+      case '/':
+	res += "~1";
+	break;
+      default:
+	res += c;
+      }
+    }
+  }
+  return res;
+}
+
+std::ostream&
+anch::val::operator<<(std::ostream& out, const anch::val::Path& path) {
+  return out << path.pointer();
+}
+// Path -

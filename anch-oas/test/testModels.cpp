@@ -385,7 +385,7 @@ testValidate() {
   }
   std::vector<std::string> paths;
   for(const anch::val::Violation& violation : violations) {
-    paths.push_back(violation.path);
+    paths.push_back(violation.path.pointer());
   }
   std::vector<std::string> expected = {"/codes", "/codes/2", "/codes/2", "/count", "/name", "/weights/a"};
   anch::ut::assertThat(paths == expected, "Unexpected violations paths");

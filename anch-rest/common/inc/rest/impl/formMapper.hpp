@@ -158,7 +158,7 @@ namespace anch::rest {
     }
     std::vector<anch::val::Violation> violations = anch::val::validate(value);
     if(!violations.empty()) {
-      throw std::invalid_argument(violations.front().path + ": " + violations.front().message);
+      throw std::invalid_argument(violations.front().path.pointer() + ": " + violations.front().message);
     }
   }
 

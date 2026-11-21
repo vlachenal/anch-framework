@@ -14,6 +14,9 @@ and `\deprecated` in its documentation, which give its replacement, and it is re
 
 ### Breaking changes
 
+- anch-val: `Violation::path` is an `anch::val::Path` (segments: field names, map keys and items indexes) instead of a
+  JSON Pointer string: `path.pointer()` formats it as a JSON Pointer (also written by `operator<<`), other formats
+  (XML) will format the segments their way.
 - anch-val: `validate` refuses at compile time fields whose class is neither described nor a scalar (their
   description is probably not visible: it was silently not validated); `anch::val::IsScalar<T>` declares value types
   (numbers, enumerations, strings, UUID, dates and `std::chrono` types are scalars), `anch::val::Validatable<T>` tells

@@ -171,7 +171,8 @@ namespace anch::val {
 
   /*!
    * Validate value without serializing it: constraints of the fields of described objects ( \c anch::Mapping ) and
-   * of their nested values. Every violation is returned with its path (JSON Pointer), in fields registration order.
+   * of their nested values. Every violation is returned with its path ( \ref anch::val::Path , JSON Pointer with
+   * \c pointer() ), in fields registration order.
    * \snippet{trimleft} anch-val/examples/val.cpp validate
    *
    * \tparam T the value type (described object, collection, map, \c std::optional , ...)
