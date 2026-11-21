@@ -29,7 +29,7 @@
 
 using anch::rest::Form;
 using anch::rest::Headers;
-using anch::rest::MediaType;
+using anch::codec::MediaType;
 using anch::rest::Part;
 
 // File content +

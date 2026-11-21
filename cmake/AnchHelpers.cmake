@@ -41,7 +41,8 @@ endfunction()
 #   [HEADER_ONLY]
 #   [OUTPUT_NAME <name>]              library file name (default: <target>)
 #   [EXPORT_NAME <name>]              name in the anch:: namespace (default: <target> without 'anch-' prefix)
-#   [INCLUDE_DIRS <dir>...]           public include directories (default: inc)
+#   [INCLUDE_DIRS <dir>...]           public include directories (default: inc ; relative to the current source
+#                                     directory, or absolute for generated headers)
 #   [SOURCES <file>...]               sources (default: every src/*.cpp)
 #   [PUBLIC_DEPS <target>...]         dependencies exposed by public headers
 #   [PRIVATE_DEPS <target>...]        implementation-only dependencies
@@ -68,8 +69,11 @@ function(anch_add_library target)
   endif()
 
   set(build_includes)
+  set(include_dirs)
   foreach(dir IN LISTS ARG_INCLUDE_DIRS)
-    list(APPEND build_includes $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/${dir}>)
+    cmake_path(ABSOLUTE_PATH dir BASE_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} OUTPUT_VARIABLE dir)
+    list(APPEND include_dirs ${dir})
+    list(APPEND build_includes $<BUILD_INTERFACE:${dir}>)
   endforeach()
 
   if(ARG_HEADER_ONLY)
@@ -130,7 +134,7 @@ function(anch_add_library target)
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
-  foreach(dir IN LISTS ARG_INCLUDE_DIRS)
+  foreach(dir IN LISTS include_dirs)
     install(DIRECTORY ${dir}/
       DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/anch
       FILES_MATCHING PATTERN "*.hpp")

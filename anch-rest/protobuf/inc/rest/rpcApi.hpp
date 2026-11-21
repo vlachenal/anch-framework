@@ -23,8 +23,9 @@
 #include <string>
 #include <string_view>
 
+#include "codec/codec.hpp"
+
 #include "rest/api.hpp"
-#include "rest/codec.hpp"
 #include "rest/httpException.hpp"
 #include "rest/request.hpp"
 #include "rest/response.hpp"

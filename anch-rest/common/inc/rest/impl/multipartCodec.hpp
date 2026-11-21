@@ -22,16 +22,16 @@
 namespace anch::rest {
 
   template<anch::rest::FormMapped T>
-  anch::rest::MediaType
+  anch::codec::MediaType
   Multipart::contentType(const T&) {
-    anch::rest::MediaType res("multipart", "form-data");
+    anch::codec::MediaType res("multipart", "form-data");
     res.setParameter("boundary", Multipart::randomBoundary());
     return res;
   }
 
   template<anch::rest::FormMapped T>
   void
-  Multipart::serialize(const T& value, std::ostream& out, const anch::rest::MediaType& contentType, anch::rest::Side side) {
+  Multipart::serialize(const T& value, std::ostream& out, const anch::codec::MediaType& contentType, anch::codec::Side side) {
     anch::rest::Form form;
     anch::rest::FormMapper<T>::toForm(value, form, side);
     Multipart::serialize(form, out, contentType, side);
@@ -39,7 +39,7 @@ namespace anch::rest {
 
   template<anch::rest::FormMapped T>
   anch::rest::BodyStream
-  Multipart::stream(const T& value, const anch::rest::MediaType& contentType, anch::rest::Side side) {
+  Multipart::stream(const T& value, const anch::codec::MediaType& contentType, anch::codec::Side side) {
     anch::rest::Form form;
     anch::rest::FormMapper<T>::toForm(value, form, side);
     return Multipart::stream(form, contentType, side);
@@ -47,7 +47,7 @@ namespace anch::rest {
 
   template<anch::rest::FormMapped T>
   void
-  Multipart::deserialize(T& value, std::istream& input, const anch::rest::MediaType& contentType, anch::rest::Side side) {
+  Multipart::deserialize(T& value, std::istream& input, const anch::codec::MediaType& contentType, anch::codec::Side side) {
     anch::rest::Form form;
     Multipart::deserialize(form, input, contentType, side);
     anch::rest::FormMapper<T>::fromForm(value, form, side);

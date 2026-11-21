@@ -19,6 +19,8 @@
 */
 #include "rest/api.hpp"
 
+#include "codec/text.hpp"
+
 #include <algorithm>
 #include <map>
 #include <ostream>
@@ -314,7 +316,7 @@ Api::error(const Request& request, Status status, const char* message) const noe
   try {
     Response response(status);
     if(*message != '\0') {
-      response.contentType(anch::rest::Text::mediaType()).body(message);
+      response.contentType(anch::codec::Text::mediaType()).body(message);
     }
     addCorsHeaders(request, response);
     return response;

@@ -18,10 +18,13 @@
   along with ANCH Framework.  If not, see <https://www.gnu.org/licenses/>.
 */
 #include "rest/api.hpp"
+
+#include "codec/json.hpp"
+#include "codec/text.hpp"
+
 #include "rest/formCodec.hpp"
 #include "rest/multipartCodec.hpp"
 #include "rest/httpException.hpp"
-#include "rest/jsonCodec.hpp"
 
 #include <chrono>
 #include <iterator>
@@ -42,12 +45,12 @@
 using anch::rest::Api;
 using anch::rest::Body;
 using anch::rest::HttpException;
-using anch::rest::Json;
+using anch::codec::Json;
 using anch::rest::Method;
 using anch::rest::Request;
 using anch::rest::Response;
 using anch::rest::Status;
-using anch::rest::Text;
+using anch::codec::Text;
 
 // Model +
 struct Pet {
@@ -86,30 +89,30 @@ struct Bounded {
     return "multipart/x-test";
   }
 
-  static anch::rest::MediaType
+  static anch::codec::MediaType
   contentType(const std::string& value) {
-    anch::rest::MediaType type("multipart", "x-test");
+    anch::codec::MediaType type("multipart", "x-test");
     type.setParameter("boundary", "b" + std::to_string(value.size()));
     return type;
   }
 
   static void
-  serialize(const std::string& value, std::ostream& out, const anch::rest::MediaType& contentType, anch::rest::Side side) {
-    out << "--" << contentType.getParameter("boundary").value_or("") << ' ' << (side == anch::rest::Side::SERVER ? "server" : "client")
+  serialize(const std::string& value, std::ostream& out, const anch::codec::MediaType& contentType, anch::codec::Side side) {
+    out << "--" << contentType.getParameter("boundary").value_or("") << ' ' << (side == anch::codec::Side::SERVER ? "server" : "client")
 	<< ' ' << value;
   }
 
   static void
-  deserialize(std::string& value, std::istream& input, const anch::rest::MediaType& contentType, anch::rest::Side side) {
+  deserialize(std::string& value, std::istream& input, const anch::codec::MediaType& contentType, anch::codec::Side side) {
     std::optional<std::string_view> boundary = contentType.getParameter("boundary");
     if(!boundary) {
       throw std::invalid_argument("missing boundary");
     }
-    value = std::string(*boundary) + ' ' + (side == anch::rest::Side::SERVER ? "server" : "client") + ' '
+    value = std::string(*boundary) + ' ' + (side == anch::codec::Side::SERVER ? "server" : "client") + ' '
       + std::string(std::istreambuf_iterator<char>(input), std::istreambuf_iterator<char>());
   }
 };
-static_assert(!anch::rest::Serializer<Bounded, int> && !anch::rest::Deserializer<Bounded, int>);
+static_assert(!anch::codec::Serializer<Bounded, int> && !anch::codec::Deserializer<Bounded, int>);
 // Codec with media type parameters -
 
 // Form mapping +
@@ -124,7 +127,7 @@ struct UploadPhoto {
 template<>
 struct anch::rest::FormMapper<UploadPhoto> {
   static void
-  toForm(const UploadPhoto& value, anch::rest::Form& form, anch::rest::Side side) {
+  toForm(const UploadPhoto& value, anch::rest::Form& form, anch::codec::Side side) {
     anch::rest::addFormField(form, "description", value.description);
     anch::rest::addFormField(form, "age", value.age);
     anch::rest::addFormField(form, "tags", value.tags);
@@ -135,7 +138,7 @@ struct anch::rest::FormMapper<UploadPhoto> {
   }
 
   static void
-  fromForm(UploadPhoto& value, const anch::rest::Form& form, anch::rest::Side side) {
+  fromForm(UploadPhoto& value, const anch::rest::Form& form, anch::codec::Side side) {
     value.description = anch::rest::requiredFormField<std::string>(form, "description");
     value.age = anch::rest::formField<uint32_t>(form, "age");
     value.tags = anch::rest::formFields<std::string>(form, "tags");
@@ -148,13 +151,13 @@ struct anch::rest::FormMapper<UploadPhoto> {
 template<>
 struct anch::rest::FormMapper<Owner> {
   static void
-  toForm(const Owner& value, anch::rest::Form& form, anch::rest::Side) {
+  toForm(const Owner& value, anch::rest::Form& form, anch::codec::Side) {
     anch::rest::addFormField(form, "name", value.name);
     anch::rest::addFormField(form, "email", value.email);
   }
 
   static void
-  fromForm(Owner& value, const anch::rest::Form& form, anch::rest::Side side) {
+  fromForm(Owner& value, const anch::rest::Form& form, anch::codec::Side side) {
     value.name = anch::rest::requiredFormField<std::string>(form, "name");
     value.email = anch::rest::formField<std::string>(form, "email");
     anch::rest::checkFormConstraints(value, side);
@@ -312,13 +315,13 @@ testBody() {
   // Data after the JSON value is refused
   expectStatus(call(api, Method::POST, "/pets", "", "application/json", "{\"id\":7,\"name\":\"Rex\"}{}"), Status::BAD_REQUEST);
   // Request bodies are limited to 2 MiB by default
-  anch::ut::assertThat(Json::options(anch::rest::Side::SERVER).max_payload == 2 * 1024 * 1024, "Unexpected server max_payload {}",
-		       Json::options(anch::rest::Side::SERVER).max_payload);
+  anch::ut::assertThat(Json::options(anch::codec::Side::SERVER).max_payload == 2 * 1024 * 1024, "Unexpected server max_payload {}",
+		       Json::options(anch::codec::Side::SERVER).max_payload);
   std::string name(2 * 1024 * 1024, 'a');
   expectStatus(call(api, Method::POST, "/pets", "", "application/json", "{\"id\":7,\"name\":\"" + name + "\"}"), Status::CONTENT_TOO_LARGE);
-  Json::options(anch::rest::Side::SERVER).max_payload = 0;
+  Json::options(anch::codec::Side::SERVER).max_payload = 0;
   expectStatus(call(api, Method::POST, "/pets", "", "application/json", "{\"id\":7,\"name\":\"" + name + "\"}"), Status::CREATED);
-  Json::options(anch::rest::Side::SERVER).max_payload = 2 * 1024 * 1024;
+  Json::options(anch::codec::Side::SERVER).max_payload = 2 * 1024 * 1024;
 }
 
 void
@@ -344,9 +347,9 @@ testConstraints() {
   expectStatus(call(api, Method::POST, "/owners", "", "application/json", R"({"name":"Rex","age":3})"), Status::BAD_REQUEST);
   expectStatus(call(api, Method::POST, "/owners", "", "application/json", R"({ "name": "Rex" })"), Status::BAD_REQUEST);
   // Server options can be changed
-  Json::options(anch::rest::Side::SERVER).deserialize_check_constraints = false;
+  Json::options(anch::codec::Side::SERVER).deserialize_check_constraints = false;
   expectStatus(call(api, Method::POST, "/owners", "", "application/json", R"({"name":""})"), Status::CREATED);
-  Json::options(anch::rest::Side::SERVER).deserialize_check_constraints = true;
+  Json::options(anch::codec::Side::SERVER).deserialize_check_constraints = true;
 }
 
 void
@@ -565,7 +568,7 @@ testCodecMediaType() {
   Response response = call(api, Method::POST, "/echo", "multipart/x-test", "multipart/x-test; boundary=xyz", "hello");
   expectStatus(response, Status::OK);
   // Deserialized value is "xyz server hello" (16 characters): its content type is computed before it is written
-  std::optional<anch::rest::MediaType> type = anch::rest::MediaType::parse(headerOf(response, "Content-Type"));
+  std::optional<anch::codec::MediaType> type = anch::codec::MediaType::parse(headerOf(response, "Content-Type"));
   anch::ut::assertThat(type && type->essence() == "multipart/x-test" && type->getParameter("boundary") == "b16",
 		       "Unexpected content type '{}'", headerOf(response, "Content-Type"));
   anch::ut::assertThat(bodyOf(response) == "--b16 server xyz server hello", "Unexpected body '{}'", bodyOf(response));
@@ -614,7 +617,7 @@ testMultipart() {
       + photo->getMediaType().essence() + ' ' + std::to_string(photo->size());
   }).consumes<anch::rest::Multipart>().consumes<anch::rest::FormUrlEncoded>().produces<Text>();
   api.get("/pets/{id}/card", [](uint64_t id) {
-    return anch::rest::Form().add("id", std::to_string(id)).addFile("card", "card.txt", anch::rest::MediaType("text", "plain"), "Rex");
+    return anch::rest::Form().add("id", std::to_string(id)).addFile("card", "card.txt", anch::codec::MediaType("text", "plain"), "Rex");
   }).produces<anch::rest::Multipart>();
   api.validate();
   const std::string body = "--b\r\nContent-Disposition: form-data; name=\"description\"\r\n\r\nRex\r\n"
@@ -628,7 +631,7 @@ testMultipart() {
   expectStatus(call(api, Method::POST, "/pets/1/photo", "", "application/x-www-form-urlencoded", "description=Rex"), Status::BAD_REQUEST);
 
   // Limits: 413
-  anch::rest::FormLimits& limits = anch::rest::Multipart::limits(anch::rest::Side::SERVER);
+  anch::rest::FormLimits& limits = anch::rest::Multipart::limits(anch::codec::Side::SERVER);
   const anch::rest::FormLimits saved = limits;
   limits.maxPartSize = 4;
   Response tooLarge = call(api, Method::POST, "/pets/1/photo", "", "multipart/form-data; boundary=b", body);
@@ -638,12 +641,12 @@ testMultipart() {
 
   // Multipart response: boundary of Content-Type is the one of the body
   Response card = call(api, Method::GET, "/pets/7/card");
-  std::optional<anch::rest::MediaType> type = anch::rest::MediaType::parse(headerOf(card, "Content-Type"));
+  std::optional<anch::codec::MediaType> type = anch::codec::MediaType::parse(headerOf(card, "Content-Type"));
   anch::ut::assertThat(type && type->essence() == "multipart/form-data" && type->getParameter("boundary"), "Unexpected content type '{}'",
 		       headerOf(card, "Content-Type"));
   std::istringstream input(bodyOf(card));
   anch::rest::Form form;
-  anch::rest::Multipart::deserialize(form, input, *type, anch::rest::Side::CLIENT);
+  anch::rest::Multipart::deserialize(form, input, *type, anch::codec::Side::CLIENT);
   anch::ut::assertThat(form.field("id") == "7" && form.part("card")->getFilename() == "card.txt", "Unexpected multipart response");
 }
 
@@ -657,7 +660,7 @@ testFormMapper() {
   }).consumes<anch::rest::Multipart>().consumes<anch::rest::FormUrlEncoded>().produces<Text>();
   api.post("/owners", [](Body<Owner> owner) { return owner->name; }).consumes<anch::rest::FormUrlEncoded>().produces<Text>();
   api.get("/photo", []() {
-    return UploadPhoto{"Rex", 3, {"a", "b"}, anch::rest::Part("ignored", "rex.png", anch::rest::MediaType("image", "png"), "PNG"), Pet{1, "Rex"}};
+    return UploadPhoto{"Rex", 3, {"a", "b"}, anch::rest::Part("ignored", "rex.png", anch::codec::MediaType("image", "png"), "PNG"), Pet{1, "Rex"}};
   }).produces<anch::rest::Multipart>();
   api.validate();
   const std::string body = "--b\r\nContent-Disposition: form-data; name=\"description\"\r\n\r\nRex\r\n"
@@ -686,11 +689,11 @@ testFormMapper() {
 
   // Mapped response
   Response photo = call(api, Method::GET, "/photo");
-  std::optional<anch::rest::MediaType> type = anch::rest::MediaType::parse(headerOf(photo, "Content-Type"));
+  std::optional<anch::codec::MediaType> type = anch::codec::MediaType::parse(headerOf(photo, "Content-Type"));
   anch::ut::assertThat(type && type->getParameter("boundary"), "Unexpected content type '{}'", headerOf(photo, "Content-Type"));
   std::istringstream input(bodyOf(photo));
   UploadPhoto back;
-  anch::rest::Multipart::deserialize(back, input, *type, anch::rest::Side::CLIENT);
+  anch::rest::Multipart::deserialize(back, input, *type, anch::codec::Side::CLIENT);
   anch::ut::assertThat(back.description == "Rex" && back.age == 3u && back.tags == std::vector<std::string>({"a", "b"})
 		       && back.photo.getName() == "photo" && back.photo.getFilename() == "rex.png" && back.pet && back.pet->id == 1,
 		       "Unexpected mapped response");

@@ -28,9 +28,9 @@
 
 using anch::rest::Form;
 using anch::rest::FormUrlEncoded;
-using anch::rest::MediaType;
+using anch::codec::MediaType;
 using anch::rest::Part;
-using anch::rest::Side;
+using anch::codec::Side;
 
 namespace {
 
@@ -47,7 +47,7 @@ namespace {
 
 std::string_view
 FormUrlEncoded::mediaType() noexcept {
-  return anch::rest::media::APP_FORM_URLENCODED;
+  return anch::codec::media::APP_FORM_URLENCODED;
 }
 
 std::string
@@ -102,7 +102,7 @@ FormUrlEncoded::deserialize(Form& form, std::istream& input, const MediaType& co
   if(charset && (less(*charset, "utf-8") || less("utf-8", *charset))) {
     throw std::invalid_argument("Unsupported form charset '" + std::string(*charset) + "'");
   }
-  const std::string content = anch::rest::readContent(input, limits.maxSize);
+  const std::string content = anch::codec::readContent(input, limits.maxSize);
   std::string_view rest = content;
   while(!rest.empty()) {
     const std::size_t amp = rest.find('&');
@@ -112,10 +112,10 @@ FormUrlEncoded::deserialize(Form& form, std::istream& input, const MediaType& co
       continue;
     }
     if(form.size() == limits.maxParts) {
-      throw anch::rest::ContentTooLarge("Form has more than " + std::to_string(limits.maxParts) + " fields");
+      throw anch::codec::ContentTooLarge("Form has more than " + std::to_string(limits.maxParts) + " fields");
     }
     if(pair.size() > limits.maxPartSize) {
-      throw anch::rest::ContentTooLarge("Form field is larger than " + std::to_string(limits.maxPartSize) + " bytes");
+      throw anch::codec::ContentTooLarge("Form field is larger than " + std::to_string(limits.maxPartSize) + " bytes");
     }
     const std::size_t equal = pair.find('=');
     std::string name = decode(pair.substr(0, equal));

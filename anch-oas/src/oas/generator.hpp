@@ -702,7 +702,7 @@ namespace anch::oas::detail {
     std::optional<Type> body;
     /*! Request body argument name */
     std::string bodyArg;
-    /*! Request body codecs ( \c anch::rest::Json , \c anch::rest::Text ) */
+    /*! Request body codecs ( \c anch::codec::Json , \c anch::codec::Text ) */
     std::vector<std::string> consumes;
     /*! Request body description */
     std::string bodyDescription;

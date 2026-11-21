@@ -23,7 +23,7 @@
 #include "pets.pb.h"
 #include "rest/api.hpp"
 #include "rest/client.hpp"
-#include "rest/protobufCodec.hpp"
+#include "codec/protobuf.hpp"
 #include "rest/request.hpp"
 #include "rest/rpcApi.hpp"
 #include "rest/rpcClient.hpp"
@@ -48,7 +48,7 @@ server() {
   anch::rest::Api api;
   //! [protobuf codec]
   api.post("/pets", [](anch::rest::Body<pets::Pet> pet) { return save(*pet); })
-    .consumes<anch::rest::Protobuf>().produces<anch::rest::Protobuf>();
+    .consumes<anch::codec::Protobuf>().produces<anch::codec::Protobuf>();
   //! [protobuf codec]
   //! [rpc service]
   anch::rest::RpcService service("pets.PetStore");
@@ -76,7 +76,7 @@ void
 client(anch::rest::Client& client) {
   {
     //! [protobuf client]
-    pets::Pet pet = client.get("/pets/{id}", 1).accept<anch::rest::Protobuf>().as<pets::Pet>();
+    pets::Pet pet = client.get("/pets/{id}", 1).accept<anch::codec::Protobuf>().as<pets::Pet>();
     //! [protobuf client]
     static_cast<void>(pet);
   }

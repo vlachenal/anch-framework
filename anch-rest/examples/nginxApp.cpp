@@ -23,9 +23,10 @@
 #include <string>
 #include <string_view>
 
+#include "codec/json.hpp"
+
 #include "json/json.hpp"
 #include "rest/api.hpp"
-#include "rest/jsonCodec.hpp"
 #include "rest/nginxApplication.hpp"
 
 struct Pet {
@@ -56,7 +57,7 @@ findPet(uint64_t id) {
 std::unique_ptr<anch::rest::Api>
 createApi(std::string_view config) { // config: second anch_rest_app argument
   auto api = std::make_unique<anch::rest::Api>();
-  api->get("/api/pets/{id}", findPet).produces<anch::rest::Json>(); // routes see the whole URI
+  api->get("/api/pets/{id}", findPet).produces<anch::codec::Json>(); // routes see the whole URI
   return api;
 }
 ANCH_REST_APPLICATION(createApi)

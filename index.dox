@@ -31,6 +31,7 @@
  * | \ref page_json "anch-json" | JSON serialization and deserialization |
  * | \ref page_crypto "anch-crypto" | Hashes, HMAC, Base64, AES and block cipher modes (not audited) |
  * | \ref page_sql "anch-sql" | SQL abstraction layer and connection pools for MySQL/MariaDB, PostgreSQL and SQLite |
+ * | \ref page_codec "anch-codec" | Codecs (media types, negotiation) and format plugins: JSON, Protocol Buffers, Thrift |
  * | \ref page_rest "anch-rest" | REST API declaration (nginx module), HTTP client (libcurl), Protobuf / gRPC / Connect and Thrift RPC |
  * | \ref page_oas "anch-oas" | OpenAPI 3.0 models generator (\c anch-oas-gen ) |
  *

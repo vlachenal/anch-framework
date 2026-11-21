@@ -19,8 +19,6 @@
 */
 #pragma once
 
-#include "anch-rest-thrift-export.hpp"
-
 #include <algorithm>
 #include <cstdint>
 #include <cstring>
@@ -31,7 +29,7 @@
 
 #include "rest/client.hpp"
 #include "rest/httpError.hpp"
-#include "rest/thriftCodec.hpp"
+#include "codec/thrift.hpp"
 
 namespace anch::rest {
 
@@ -49,7 +47,7 @@ namespace anch::rest {
    *
    * \since 0.2
    */
-  class ANCH_REST_THRIFT_EXPORT ThriftTransport: public apache::thrift::transport::TVirtualTransport<ThriftTransport> {
+  class ThriftTransport: public apache::thrift::transport::TVirtualTransport<ThriftTransport> {
 
     // Attributes +
   private:
@@ -81,7 +79,7 @@ namespace anch::rest {
      * \param path the service path
      * \param protocol the protocol of the Thrift client (request content type)
      */
-    ThriftTransport(anch::rest::Client& client, std::string path, anch::rest::ThriftProtocol protocol = anch::rest::ThriftProtocol::BINARY);
+    ThriftTransport(anch::rest::Client& client, std::string path, anch::codec::ThriftProtocol protocol = anch::codec::ThriftProtocol::BINARY);
     // Constructors -
 
     // Methods +

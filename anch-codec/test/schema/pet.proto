@@ -1,0 +1,9 @@
+// anch-codec tests: Protocol Buffers message
+syntax = "proto3";
+
+package anch.test.protobuf;
+
+message Pet {
+  int64 id = 1;
+  string name = 2;
+}

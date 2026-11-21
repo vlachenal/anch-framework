@@ -19,198 +19,64 @@
 */
 #pragma once
 
-#include "anch-rest-common-export.hpp"
-
-#include <map>
+#include <cstddef>
 #include <optional>
-#include <string>
 #include <string_view>
 #include <vector>
 
+#include "codec/mediaType.hpp"
+
+/*!
+ * \file rest/mediaType.hpp
+ * \deprecated removed in 0.4: media types have moved to anch-codec, use \c codec/mediaType.hpp
+ */
+
 namespace anch::rest {
 
-  /*!
-   * Media type (RFC 9110): \c type/subtype with parameters.\n
-   * Type, subtype and parameter names are stored in lower case. In \c Accept header, the \c q
-   * parameter is the quality and is not kept in parameters.
-   *
-   * \author Vincent Lachenal
-   *
-   * \since 0.2
-   */
-  class ANCH_REST_COMMON_EXPORT MediaType {
-
-    // Attributes +
-  private:
-    /*! Type (\c application , \c * , ...) */
-    std::string _type;
-
-    /*! Subtype (\c json , \c * , ...) */
-    std::string _subtype;
-
-    /*! Parameters (\c charset , ...) */
-    std::map<std::string, std::string> _parameters;
-
-    /*! Quality (\c Accept header), between \c 0 and \c 1 */
-    double _quality;
-    // Attributes -
-
-    // Constructors +
-  public:
-    /*!
-     * \ref MediaType constructor
-     *
-     * \param type the type
-     * \param subtype the subtype
-     */
-    MediaType(std::string_view type, std::string_view subtype);
-    // Constructors -
-
-    // Methods +
-  public:
-    /*!
-     * Parse media type (\c Content-Type header value)
-     *
-     * \param value the value to parse
-     *
-     * \return the media type, empty when value is invalid
-     */
-    static std::optional<anch::rest::MediaType> parse(std::string_view value);
-
-    /*!
-     * Parse \c Accept header value.\n
-     * Media ranges are sorted by quality (highest first, stable). Invalid media ranges are ignored.
-     * Media ranges with \c q=0 are kept: they exclude the media types they include (see \ref anch::rest::negotiate "negotiate").
-     *
-     * \param value the value to parse
-     *
-     * \return the media ranges
-     */
-    static std::vector<anch::rest::MediaType> parseAccept(std::string_view value);
-
-    /*!
-     * Check if this media range includes a media type (wildcards are supported, parameters are
-     * ignored)
-     *
-     * \param other the media type
-     *
-     * \return \c true when \c other is included in this media range
-     */
-    bool includes(const anch::rest::MediaType& other) const noexcept;
-
-    /*!
-     * Get media type specificity: \c 0 for any type, \c 1 for any subtype of a type, \c 2 otherwise
-     *
-     * \return the specificity
-     */
-    int specificity() const noexcept;
-
-    /*!
-     * Get \c type/subtype without parameters
-     *
-     * \return the essence
-     */
-    std::string essence() const;
-
-    /*!
-     * Format media type with its parameters (without quality)
-     *
-     * \return the formatted media type
-     */
-    std::string toString() const;
-
-    /*!
-     * Compare media types (essence and parameters, quality is ignored)
-     *
-     * \param other the media type to compare
-     *
-     * \return \c true when media types are equal
-     */
-    bool operator==(const anch::rest::MediaType& other) const noexcept;
-    // Methods -
-
-    // Accessors +
-  public:
-    /*!
-     * Type getter
-     *
-     * \return the type
-     */
-    const std::string& getType() const noexcept;
-
-    /*!
-     * Subtype getter
-     *
-     * \return the subtype
-     */
-    const std::string& getSubtype() const noexcept;
-
-    /*!
-     * Parameters getter
-     *
-     * \return the parameters
-     */
-    const std::map<std::string, std::string>& getParameters() const noexcept;
-
-    /*!
-     * Get parameter value
-     *
-     * \param name the parameter name (lower case)
-     *
-     * \return the value, empty when parameter is not set
-     */
-    std::optional<std::string_view> getParameter(std::string_view name) const;
-
-    /*!
-     * Set parameter value
-     *
-     * \param name the parameter name
-     * \param value the parameter value
-     */
-    void setParameter(std::string_view name, std::string_view value);
-
-    /*!
-     * Quality getter
-     *
-     * \return the quality
-     */
-    double getQuality() const noexcept;
-    // Accessors -
-
-  };
+  /*! \deprecated removed in 0.4, use \ref anch::codec::MediaType */
+  using MediaType [[deprecated("removed in 0.4, use anch::codec::MediaType")]] = anch::codec::MediaType;
 
   /*!
-   * Select the best available media type for \c Accept media ranges (RFC 9110 proactive
-   * negotiation): the quality of an available media type is the quality of the most specific
-   * media range which includes it. On equal quality, the first available media type is selected.
+   * \deprecated removed in 0.4, use \ref anch::codec::negotiate
    *
-   * \param accept the \c Accept media ranges ; empty means that every media type is accepted
+   * \param accept the \c Accept media ranges
    * \param available the available media types
    *
    * \return the selected media type index, empty when no media type is acceptable
    */
-  ANCH_REST_COMMON_EXPORT std::optional<std::size_t> negotiate(const std::vector<anch::rest::MediaType>& accept,
-				       const std::vector<anch::rest::MediaType>& available);
+  [[deprecated("removed in 0.4, use anch::codec::negotiate")]]
+  inline std::optional<std::size_t>
+  negotiate(const std::vector<anch::codec::MediaType>& accept, const std::vector<anch::codec::MediaType>& available) {
+    return anch::codec::negotiate(accept, available);
+  }
 
 }
 
 namespace anch::rest::media {
 
-  /*! \c application/json */
-  inline constexpr std::string_view APP_JSON = "application/json";
-  /*! \c application/octet-stream */
-  inline constexpr std::string_view APP_OCTET_STREAM = "application/octet-stream";
-  /*! \c application/x-www-form-urlencoded */
-  inline constexpr std::string_view APP_FORM_URLENCODED = "application/x-www-form-urlencoded";
-  /*! \c application/xml */
-  inline constexpr std::string_view APP_XML = "application/xml";
-  /*! \c multipart/form-data */
-  inline constexpr std::string_view MULTIPART_FORM_DATA = "multipart/form-data";
-  /*! \c text/csv */
-  inline constexpr std::string_view TEXT_CSV = "text/csv";
-  /*! \c text/html */
-  inline constexpr std::string_view TEXT_HTML = "text/html";
-  /*! \c text/plain */
-  inline constexpr std::string_view TEXT_PLAIN = "text/plain";
+  /*! \deprecated removed in 0.4, use \c anch::codec::media::APP_JSON */
+  [[deprecated("removed in 0.4, use anch::codec::media::APP_JSON")]]
+  inline constexpr std::string_view APP_JSON = anch::codec::media::APP_JSON;
+  /*! \deprecated removed in 0.4, use \c anch::codec::media::APP_OCTET_STREAM */
+  [[deprecated("removed in 0.4, use anch::codec::media::APP_OCTET_STREAM")]]
+  inline constexpr std::string_view APP_OCTET_STREAM = anch::codec::media::APP_OCTET_STREAM;
+  /*! \deprecated removed in 0.4, use \c anch::codec::media::APP_FORM_URLENCODED */
+  [[deprecated("removed in 0.4, use anch::codec::media::APP_FORM_URLENCODED")]]
+  inline constexpr std::string_view APP_FORM_URLENCODED = anch::codec::media::APP_FORM_URLENCODED;
+  /*! \deprecated removed in 0.4, use \c anch::codec::media::APP_XML */
+  [[deprecated("removed in 0.4, use anch::codec::media::APP_XML")]]
+  inline constexpr std::string_view APP_XML = anch::codec::media::APP_XML;
+  /*! \deprecated removed in 0.4, use \c anch::codec::media::MULTIPART_FORM_DATA */
+  [[deprecated("removed in 0.4, use anch::codec::media::MULTIPART_FORM_DATA")]]
+  inline constexpr std::string_view MULTIPART_FORM_DATA = anch::codec::media::MULTIPART_FORM_DATA;
+  /*! \deprecated removed in 0.4, use \c anch::codec::media::TEXT_CSV */
+  [[deprecated("removed in 0.4, use anch::codec::media::TEXT_CSV")]]
+  inline constexpr std::string_view TEXT_CSV = anch::codec::media::TEXT_CSV;
+  /*! \deprecated removed in 0.4, use \c anch::codec::media::TEXT_HTML */
+  [[deprecated("removed in 0.4, use anch::codec::media::TEXT_HTML")]]
+  inline constexpr std::string_view TEXT_HTML = anch::codec::media::TEXT_HTML;
+  /*! \deprecated removed in 0.4, use \c anch::codec::media::TEXT_PLAIN */
+  [[deprecated("removed in 0.4, use anch::codec::media::TEXT_PLAIN")]]
+  inline constexpr std::string_view TEXT_PLAIN = anch::codec::media::TEXT_PLAIN;
 
 }

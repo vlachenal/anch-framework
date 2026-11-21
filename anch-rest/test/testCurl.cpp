@@ -18,12 +18,15 @@
   along with ANCH Framework.  If not, see <https://www.gnu.org/licenses/>.
 */
 #include "rest/api.hpp"
+
+#include "codec/json.hpp"
+#include "codec/text.hpp"
+
 #include "rest/auth.hpp"
 #include "rest/client.hpp"
 #include "rest/multipartCodec.hpp"
 #include "rest/curlTransport.hpp"
 #include "rest/httpException.hpp"
-#include "rest/jsonCodec.hpp"
 
 #include <chrono>
 #include <filesystem>
@@ -50,11 +53,11 @@ using anch::rest::Client;
 using anch::rest::CurlTransport;
 using anch::rest::HttpError;
 using anch::rest::HttpException;
-using anch::rest::Json;
+using anch::codec::Json;
 using anch::rest::Request;
 using anch::rest::Response;
 using anch::rest::Status;
-using anch::rest::Text;
+using anch::codec::Text;
 using anch::rest::TransportConfig;
 using anch::rest::TransportError;
 
@@ -125,7 +128,7 @@ namespace {
 	sum = sum * 31 + static_cast<unsigned char>(c);
       }
       return std::to_string(part->size()) + ' ' + std::to_string(sum) + ' ' + (part->isInMemory() ? "memory" : "file");
-    }).consumes<anch::rest::Multipart>().produces<anch::rest::Text>();
+    }).consumes<anch::rest::Multipart>().produces<anch::codec::Text>();
     api->del("/pets/{id}", [](uint64_t id) {
       if(id != 1) {
 	throw HttpException(Status::NOT_FOUND, "no pet " + std::to_string(id));
@@ -221,7 +224,7 @@ testMultipart() {
     binary[i] = static_cast<char>(i);
   }
   anch::rest::Form form;
-  form.add("description", "Médor").addFile("photo", "médor.png", anch::rest::MediaType("image", "png"), binary);
+  form.add("description", "Médor").addFile("photo", "médor.png", anch::codec::MediaType("image", "png"), binary);
   anch::rest::Form res = client.post("/upload").body<anch::rest::Multipart>(form).accept<anch::rest::Multipart>().as<anch::rest::Form>();
   anch::ut::assertThat(res.field("description") == "- 6" && res.field("photo") == "médor.png 256", "Unexpected response '{}' '{}'",
 		       res.field("description").value_or(""), res.field("photo").value_or(""));
@@ -240,13 +243,13 @@ testMultipartLarge() {
       out.put(c);
     }
   }
-  anch::rest::FormLimits& limits = anch::rest::Multipart::limits(anch::rest::Side::SERVER);
+  anch::rest::FormLimits& limits = anch::rest::Multipart::limits(anch::codec::Side::SERVER);
   const anch::rest::FormLimits saved = limits;
   limits.maxSize = 32 * 1024 * 1024;
   limits.maxPartSize = 32 * 1024 * 1024;
   Client client = makeClient();
   anch::rest::Form form;
-  form.add(anch::rest::Part::fromFile("file", path, anch::rest::MediaType("application", "octet-stream")));
+  form.add(anch::rest::Part::fromFile("file", path, anch::codec::MediaType("application", "octet-stream")));
   std::string res = client.post("/checksum").body<anch::rest::Multipart>(form).accept<Text>().as<std::string>();
   limits = saved;
   std::filesystem::remove(path);

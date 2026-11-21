@@ -19,252 +19,103 @@
 */
 #pragma once
 
-#include "anch-rest-common-export.hpp"
-
-#include <concepts>
-#include <cstdint>
-#include <limits>
-#include <memory>
-#include <optional>
+#include <cstddef>
 #include <istream>
 #include <ostream>
-#include <stdexcept>
 #include <string>
-#include <string_view>
 
+#include "codec/codec.hpp"
+#include "codec/text.hpp"
+
+#include "rest/bodyStream.hpp"
 #include "rest/mediaType.hpp"
+
+/*!
+ * \file rest/codec.hpp
+ * \deprecated removed in 0.4: codecs have moved to anch-codec, use \c codec/codec.hpp , \c codec/text.hpp and
+ *             \c rest/bodyStream.hpp
+ */
 
 namespace anch::rest {
 
-  /*!
-   * Side which uses a codec. Codecs can behave according to it: \ref anch::rest::Json checks constraints of values
-   * the server receives and of values the client sends.
-   *
-   * \since 0.2
-   */
-  enum class Side {
-    /*! Server: request bodies are read, responses bodies are written */
-    SERVER,
-    /*! Client: request bodies are written, responses bodies are read */
-    CLIENT
-  };
+  /*! \deprecated removed in 0.4, use \ref anch::codec::Side */
+  using Side [[deprecated("removed in 0.4, use anch::codec::Side")]] = anch::codec::Side;
+
+  /*! \deprecated removed in 0.4, use \ref anch::codec::ContentTooLarge */
+  using ContentTooLarge [[deprecated("removed in 0.4, use anch::codec::ContentTooLarge")]] = anch::codec::ContentTooLarge;
+
+  /*! \deprecated removed in 0.4, use \ref anch::codec::Text */
+  using Text [[deprecated("removed in 0.4, use anch::codec::Text")]] = anch::codec::Text;
+
+  /*! \deprecated removed in 0.4, use \ref anch::codec::Serializer */
+  template<typename C, typename T>
+  concept Serializer [[deprecated("removed in 0.4, use anch::codec::Serializer")]] = anch::codec::Serializer<C, T>;
+
+  /*! \deprecated removed in 0.4, use \ref anch::codec::Deserializer */
+  template<typename C, typename T>
+  concept Deserializer [[deprecated("removed in 0.4, use anch::codec::Deserializer")]] = anch::codec::Deserializer<C, T>;
 
   /*!
-   * Content is larger than a codec limit. Server answers \c 413 (Content Too Large) when it is
-   * raised by a request body deserialization.
-   *
-   * \author Vincent Lachenal
-   *
-   * \since 0.2
-   */
-  class ANCH_REST_COMMON_EXPORT ContentTooLarge: public std::length_error {
-  public:
-    /*! Use \c std::length_error constructors */
-    using std::length_error::length_error;
-  };
-
-  /*!
-   * Body read as a stream: codecs which define
-   * <tt>stream(const T&, const anch::rest::MediaType&, anch::rest::Side) -> anch::rest::BodyStream</tt> let the
-   * client send large bodies without building them in memory (see \ref Multipart ).
-   *
-   * \author Vincent Lachenal
-   *
-   * \since 0.2
-   */
-  struct ANCH_REST_COMMON_EXPORT BodyStream {
-    /*! Body stream */
-    std::unique_ptr<std::istream> input;
-
-    /*! Body size ( \c Content-Length ), empty when unknown */
-    std::optional<std::uint64_t> size;
-  };
-
-  /*!
-   * Read whole content
+   * \deprecated removed in 0.4, use \ref anch::codec::readContent
    *
    * \param input the input stream
    * \param maxSize the maximum content size in bytes
    *
    * \return the content
-   *
-   * \throw ContentTooLarge when content is larger than \c maxSize
-   *
-   * \since 0.2
    */
-  std::string readContent(std::istream& input, std::size_t maxSize);
+  [[deprecated("removed in 0.4, use anch::codec::readContent")]]
+  inline std::string
+  readContent(std::istream& input, std::size_t maxSize) {
+    return anch::codec::readContent(input, maxSize);
+  }
+
+
 
   /*!
-   * Maximum size of bodies read in memory by codecs which have no limit of their own (Protobuf, Protobuf JSON,
-   * Thrift), to change before handling requests (\c 0 for no limit).\n
-   * Default: 2 MiB on server side, as JSON and form bodies ; no limit on client side (responses are bounded by
-   * transports: \c TransportConfig::maxResponseSize ).
-   *
-   * \param side the side
-   *
-   * \return the maximum size in bytes
-   *
-   * \since 0.3
-   */
-  ANCH_REST_COMMON_EXPORT std::size_t& maxBodySize(anch::rest::Side side);
-
-  /*!
-   * Read whole body with the limit of a side (\ref maxBodySize )
-   *
-   * \param input the input stream
-   * \param side the side
-   *
-   * \return the content
-   *
-   * \throw ContentTooLarge when content is larger than \ref maxBodySize
-   *
-   * \since 0.3
-   */
-  std::string readBody(std::istream& input, anch::rest::Side side);
-
-  /*!
-   * Codec which serializes \c T values.\n
-   * A codec is a type with static functions:
-   * - \c mediaType() : the media type it handles
-   * - \c serialize(const T&, std::ostream&) : write value
-   * - \c deserialize(T&, std::istream&) : read value (\ref anch::rest::Deserializer "Deserializer" ). Errors are reported with exceptions.
-   *
-   * Codecs can also have richer functions (one \c serialize / \c deserialize form is enough), which server and
-   * client use when they are defined (see
-   * \ref anch::rest::contentTypeOf , \ref anch::rest::serializeBody and \ref anch::rest::deserializeBody ):
-   * - \c contentType(const T&) -> \ref anch::rest::MediaType "MediaType" : \c Content-Type of the serialized
-   *   value, computed before serialization (a multipart codec adds its \c boundary parameter) ;
-   * - \c serialize(const T&, std::ostream&, anch::rest::Side) or
-   *   \c serialize(const T&, std::ostream&, const anch::rest::MediaType&, anch::rest::Side) : the media type is
-   *   the one returned by \c contentType() ;
-   * - \c deserialize(T&, std::istream&, anch::rest::Side) or
-   *   \c deserialize(T&, std::istream&, const anch::rest::MediaType&, anch::rest::Side) : the media type is the
-   *   \c Content-Type of the body, with its parameters ( \c charset , \c boundary , ...) ;
-   * - \c stream(const T&, const anch::rest::MediaType&, anch::rest::Side) -> \ref anch::rest::BodyStream "BodyStream" :
-   *   client sends the stream instead of serializing the value in memory.
-   *
-   * \tparam C the codec type
-   * \tparam T the value type
-   *
-   * \since 0.2
-   */
-  template<typename C, typename T>
-  concept Serializer = requires {
-    { C::mediaType() } -> std::convertible_to<std::string_view>;
-  } && (requires(const T& value, std::ostream& out) { C::serialize(value, out); }
-	|| requires(const T& value, std::ostream& out, anch::rest::Side side) { C::serialize(value, out, side); }
-	|| requires(const T& value, std::ostream& out, const anch::rest::MediaType& contentType, anch::rest::Side side) {
-	  C::serialize(value, out, contentType, side);
-	});
-
-  /*!
-   * Codec which deserializes \c T values (see \ref anch::rest::Serializer "Serializer" )
-   *
-   * \tparam C the codec type
-   * \tparam T the value type
-   *
-   * \since 0.2
-   */
-  template<typename C, typename T>
-  concept Deserializer = requires {
-    { C::mediaType() } -> std::convertible_to<std::string_view>;
-  } && (requires(T& value, std::istream& input) { C::deserialize(value, input); }
-	|| requires(T& value, std::istream& input, anch::rest::Side side) { C::deserialize(value, input, side); }
-	|| requires(T& value, std::istream& input, const anch::rest::MediaType& contentType, anch::rest::Side side) {
-	  C::deserialize(value, input, contentType, side);
-	});
-
-  /*!
-   * Get \c Content-Type of a value serialized with codec: its \c contentType(value) function is used when it is
-   * defined, \c mediaType() otherwise
-   *
-   * \tparam C the codec type
-   * \tparam T the value type
+   * \deprecated removed in 0.4, use \ref anch::codec::contentTypeOf
    *
    * \param value the value
    *
    * \return the media type
-   *
-   * \throw std::invalid_argument when codec media type is invalid
-   *
-   * \since 0.2
    */
   template<typename C, typename T>
-  requires anch::rest::Serializer<C, T>
-  anch::rest::MediaType contentTypeOf(const T& value);
+  requires anch::codec::Serializer<C, T>
+  [[deprecated("removed in 0.4, use anch::codec::contentTypeOf")]]
+  anch::codec::MediaType
+  contentTypeOf(const T& value) {
+    return anch::codec::contentTypeOf<C>(value);
+  }
 
   /*!
-   * Serialize value with codec: its \c serialize(value, out, contentType, side) function is used when it is
-   * defined, then \c serialize(value, out, side) , then \c serialize(value, out)
-   *
-   * \tparam C the codec type
-   * \tparam T the value type
+   * \deprecated removed in 0.4, use \ref anch::codec::serialize
    *
    * \param value the value
    * \param out the output stream
-   * \param contentType the body media type (from \ref contentTypeOf )
+   * \param contentType the content media type
    * \param side the side which serializes value
-   *
-   * \since 0.2
    */
   template<typename C, typename T>
-  requires anch::rest::Serializer<C, T>
-  void serializeBody(const T& value, std::ostream& out, const anch::rest::MediaType& contentType, anch::rest::Side side);
+  requires anch::codec::Serializer<C, T>
+  [[deprecated("removed in 0.4, use anch::codec::serialize")]]
+  void
+  serializeBody(const T& value, std::ostream& out, const anch::codec::MediaType& contentType, anch::codec::Side side) {
+    anch::codec::serialize<C>(value, out, contentType, side);
+  }
 
   /*!
-   * Deserialize value with codec: its \c deserialize(value, input, contentType, side) function is used when it is
-   * defined, then \c deserialize(value, input, side) , then \c deserialize(value, input)
-   *
-   * \tparam C the codec type
-   * \tparam T the value type
+   * \deprecated removed in 0.4, use \ref anch::codec::deserialize
    *
    * \param value the value to fill
    * \param input the input stream
-   * \param contentType the body media type ( \c Content-Type with its parameters)
+   * \param contentType the content media type
    * \param side the side which deserializes value
-   *
-   * \since 0.2
    */
   template<typename C, typename T>
-  requires anch::rest::Deserializer<C, T>
-  void deserializeBody(T& value, std::istream& input, const anch::rest::MediaType& contentType, anch::rest::Side side);
-
-  /*!
-   * \c text/plain codec: serializes values with stream injection operator, deserializes strings.
-   *
-   * \author Vincent Lachenal
-   *
-   * \since 0.2
-   */
-  struct ANCH_REST_COMMON_EXPORT Text {
-
-    /*!
-     * Media type
-     *
-     * \return \c text/plain
-     */
-    static std::string_view mediaType() noexcept;
-
-    /*!
-     * Write value
-     *
-     * \param value the value
-     * \param out the output stream
-     */
-    template<typename T>
-    requires requires(std::ostream& out, const T& value) { out << value; }
-    static void serialize(const T& value, std::ostream& out);
-
-    /*!
-     * Read the whole input
-     *
-     * \param value the value to fill
-     * \param input the input stream
-     */
-    static void deserialize(std::string& value, std::istream& input);
-
-  };
+  requires anch::codec::Deserializer<C, T>
+  [[deprecated("removed in 0.4, use anch::codec::deserialize")]]
+  void
+  deserializeBody(T& value, std::istream& input, const anch::codec::MediaType& contentType, anch::codec::Side side) {
+    anch::codec::deserialize<C>(value, input, contentType, side);
+  }
 
 }
-
-#include "rest/impl/codec.hpp"

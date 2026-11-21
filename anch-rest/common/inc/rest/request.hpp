@@ -30,8 +30,9 @@
 #include <utility>
 #include <vector>
 
+#include "codec/mediaType.hpp"
+
 #include "rest/headers.hpp"
-#include "rest/mediaType.hpp"
 #include "rest/method.hpp"
 
 namespace anch::rest {
@@ -125,14 +126,14 @@ namespace anch::rest {
      *
      * \return the content type, empty when header is not set or invalid
      */
-    std::optional<anch::rest::MediaType> getContentType() const;
+    std::optional<anch::codec::MediaType> getContentType() const;
 
     /*!
      * Get \c Accept header media ranges (see \ref MediaType::parseAccept )
      *
      * \return the media ranges, empty when header is not set
      */
-    std::vector<anch::rest::MediaType> getAccept() const;
+    std::vector<anch::codec::MediaType> getAccept() const;
 
     /*!
      * Check if request has a body

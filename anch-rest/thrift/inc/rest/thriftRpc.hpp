@@ -30,12 +30,13 @@
 #include <thrift/Thrift.h>
 #include <thrift/transport/TBufferTransports.h>
 
+#include "codec/codec.hpp"
+
 #include "rest/api.hpp"
-#include "rest/codec.hpp"
 #include "rest/httpException.hpp"
 #include "rest/request.hpp"
 #include "rest/response.hpp"
-#include "rest/thriftCodec.hpp"
+#include "codec/thrift.hpp"
 
 namespace anch::rest {
 

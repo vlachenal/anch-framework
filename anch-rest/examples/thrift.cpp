@@ -22,7 +22,7 @@
 #include "PetStore.h"
 #include "rest/api.hpp"
 #include "rest/client.hpp"
-#include "rest/thriftCodec.hpp"
+#include "codec/thrift.hpp"
 #include "rest/thriftRpc.hpp"
 #include "rest/thriftTransport.hpp"
 
@@ -50,7 +50,7 @@ server() {
   anch::rest::Api api;
   //! [thrift codec]
   api.post("/pets", [](anch::rest::Body<pets::Pet> pet) { return save(*pet); })
-    .consumes<anch::rest::ThriftBinary>().produces<anch::rest::ThriftBinary>();
+    .consumes<anch::codec::ThriftBinary>().produces<anch::codec::ThriftBinary>();
   //! [thrift codec]
   //! [thrift rpc]
   auto handler = std::make_shared<PetStoreHandler>();          // implements generated PetStoreIf
@@ -65,7 +65,7 @@ void
 client(anch::rest::Client& client) {
   //! [thrift client]
   auto transport = std::make_shared<anch::rest::ThriftTransport>(client, "/thrift/pets");            // rest/thriftTransport.hpp
-  pets::PetStoreClient pets(anch::rest::thriftProtocol(anch::rest::ThriftProtocol::BINARY, transport));
+  pets::PetStoreClient pets(anch::codec::thriftProtocol(anch::codec::ThriftProtocol::BINARY, transport));
   pets::Pet pet;
   pets.getPet(pet, 1); // declared exceptions are raised by the generated client
   //! [thrift client]

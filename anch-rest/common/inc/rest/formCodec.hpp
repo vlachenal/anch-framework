@@ -26,10 +26,11 @@
 #include <string>
 #include <string_view>
 
-#include "rest/codec.hpp"
+#include "codec/codec.hpp"
+#include "codec/mediaType.hpp"
+
 #include "rest/form.hpp"
 #include "rest/formMapper.hpp"
-#include "rest/mediaType.hpp"
 
 namespace anch::rest {
 
@@ -65,7 +66,7 @@ namespace anch::rest {
      *
      * \return the limits
      */
-    static anch::rest::FormLimits& limits(anch::rest::Side side);
+    static anch::rest::FormLimits& limits(anch::codec::Side side);
 
     /*!
      * Write form
@@ -88,8 +89,8 @@ namespace anch::rest {
      * \throw std::invalid_argument when encoding is invalid or when charset is not UTF-8
      * \throw ContentTooLarge when body is over \ref limits
      */
-    static void deserialize(anch::rest::Form& form, std::istream& input, const anch::rest::MediaType& contentType,
-			    anch::rest::Side side);
+    static void deserialize(anch::rest::Form& form, std::istream& input, const anch::codec::MediaType& contentType,
+			    anch::codec::Side side);
 
     /*!
      * Write value mapped with its \ref FormMapper
@@ -103,7 +104,7 @@ namespace anch::rest {
      * \throw std::invalid_argument when form has a file part
      */
     template<anch::rest::FormMapped T>
-    static void serialize(const T& value, std::ostream& out, anch::rest::Side side);
+    static void serialize(const T& value, std::ostream& out, anch::codec::Side side);
 
     /*!
      * Read value mapped with its \ref FormMapper
@@ -116,7 +117,7 @@ namespace anch::rest {
      * \param side the side which reads value
      */
     template<anch::rest::FormMapped T>
-    static void deserialize(T& value, std::istream& input, const anch::rest::MediaType& contentType, anch::rest::Side side);
+    static void deserialize(T& value, std::istream& input, const anch::codec::MediaType& contentType, anch::codec::Side side);
 
     /*!
      * Encode value with the WHATWG URL-encoded serializer: ASCII alphanumeric characters and

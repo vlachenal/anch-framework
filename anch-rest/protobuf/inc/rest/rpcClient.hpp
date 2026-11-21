@@ -51,7 +51,7 @@ namespace anch::rest {
    *
    * \since 0.2
    */
-  template<anch::rest::ProtobufMessage Res, anch::rest::ProtobufMessage Req>
+  template<anch::codec::ProtobufMessage Res, anch::codec::ProtobufMessage Req>
   Res callRpc(anch::rest::Client& client, std::string_view service, std::string_view method, const Req& request,
 	      anch::rest::RpcFormat format = anch::rest::RpcFormat::BINARY);
 
