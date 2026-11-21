@@ -166,13 +166,13 @@ namespace anch::oas {
    *  - string enumerations → <tt>enum class</tt> (unknown values are rejected on deserialization) ;
    *  - \c array → \c std::vector , objects with \c additionalProperties schema only → <tt>std::map<std::string,T></tt> ;
    *  - optional and \c nullable properties → \c std::optional , arrays and maps are empty when absent ;
-   *  - required properties are registered with \c anch::json::required (absent or not nullable \c null value is
+   *  - required properties are registered with \c anch::val::required (absent or not nullable \c null value is
    *    refused on deserialization) ;
    *  - \c minLength , \c maxLength , \c minimum , \c maximum (exclusive or not), \c multipleOf , \c minItems ,
    *    \c maxItems , \c uniqueItems , \c minProperties , \c maxProperties and non string \c enum → anch-json value
-   *    constraints (array items and map values constraints with \c anch::json::items ) ;
-   *  - \c pattern → \c anch::json::pattern (invalid ECMAScript patterns are ignored with a warning), string
-   *    \c format (which is not mapped to a type) → \c anch::json::format ;
+   *    constraints (array items and map values constraints with \c anch::val::items ) ;
+   *  - \c pattern → \c anch::val::pattern (invalid ECMAScript patterns are ignored with a warning), string
+   *    \c format (which is not mapped to a type) → \c anch::val::format ;
    *  - models have a default \c operator== ;
    *  - recursive references → \c std::shared_ptr ;
    *  - other schemas (primitives, arrays, maps) → aliases ( \c using ).

@@ -153,8 +153,8 @@ template<>
 void
 anch::json::registerObject(anch::json::ObjectMapper<Owner>& mapper) {
   mapper
-    .registerField("name", &Owner::name, anch::json::required, anch::json::minLength(1), anch::json::maxLength(10))
-    .registerField<std::string>("email", &Owner::email, anch::json::format("email"))
+    .registerField("name", &Owner::name, anch::val::required, anch::val::minLength(1), anch::val::maxLength(10))
+    .registerField<std::string>("email", &Owner::email, anch::val::format("email"))
     ;
 }
 

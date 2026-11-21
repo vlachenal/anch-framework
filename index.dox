@@ -28,6 +28,7 @@
  * | \ref page_res "anch-conf" | Configuration cascade (includes, profiles) and placeholders resolution |
  * | \ref page_logger "anch-log" | Configurable loggers and writers, stream API with compile-time levels |
  * | \ref page_device "anch-device" | Network interfaces and CPU features |
+ * | \ref page_val "anch-val" | Fields constraints and validation, shared by formats (JSON, ...) |
  * | \ref page_json "anch-json" | JSON serialization and deserialization |
  * | \ref page_crypto "anch-crypto" | Hashes, HMAC, Base64, AES and block cipher modes (not audited) |
  * | \ref page_sql "anch-sql" | SQL abstraction layer and connection pools for MySQL/MariaDB, PostgreSQL and SQLite |

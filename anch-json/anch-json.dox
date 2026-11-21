@@ -43,7 +43,7 @@ Médor Vincent
  *
  * \section json_required_sec Required fields and error path
  *
- * Constraints can be given when a field is registered. \ref anch::json::required checks on deserialization that
+ * Constraints can be given when a field is registered. \ref anch::val::required checks on deserialization that
  * the field is present (error code \c MISSING_FIELD , every missing field is listed in the message) and that its
  * value is not \c null , unless the field can hold \c null ( \c std::optional , \c std::shared_ptr ,
  * \c std::unique_ptr or pointer ; error code \c CONSTRAINT_VIOLATION ). Fields which are not required are not
@@ -62,29 +62,11 @@ Médor Vincent
  *
  * \section json_constraints_sec Value constraints
  *
- * Value constraints are given at registration too (header \c json/constraints.hpp ). They are checked after
- * the field value has been read and raise \ref anch::json::MappingError with \c CONSTRAINT_VIOLATION error code.
- * \c null and absent values are not checked ( \ref anch::json::required checks presence). Constraints are checked
- * at compile time against the field type: \c minLength on an integer field does not compile.
- *
- * | Constraint | Field type | JSON Schema keyword |
- * |------------|------------|---------------------|
- * | \c anch::json::minLength(n) , \c anch::json::maxLength(n) | string (length in Unicode code points) | \c minLength , \c maxLength |
- * | \c anch::json::pattern(regex) | string (searched, not anchored) | \c pattern |
- * | \c anch::json::format(name) | string (registered formats only) | \c format |
- * | \c anch::json::minimum(v) , \c anch::json::maximum(v) , \c anch::json::exclusiveMinimum(v) , \c anch::json::exclusiveMaximum(v) | number | \c minimum , \c maximum , \c exclusiveMinimum , \c exclusiveMaximum |
- * | \c anch::json::multipleOf(v) | number (exact for integers, relative tolerance for floating point numbers) | \c multipleOf |
- * | \c anch::json::minItems(n) , \c anch::json::maxItems(n) , \c anch::json::uniqueItems | collection | \c minItems , \c maxItems , \c uniqueItems |
- * | \c anch::json::minProperties(n) , \c anch::json::maxProperties(n) | map | \c minProperties , \c maxProperties |
- * | \c anch::json::allowed({...}) | any comparable type | \c enum |
- * | \c anch::json::items(constraints...) | collection or map: constraints are checked on every item | \c items , \c additionalProperties |
- * | \c anch::json::custom<T>(predicate, message) | \c T | |
- *
- * Patterns use \c std::regex (ECMAScript grammar, on bytes: no UTF-8 character classes) by default:
- * \ref anch::json::setPatternCompiler plugs another engine. Formats are checked by validators registered with
- * \ref anch::json::registerFormat ( \c email , \c hostname , \c ipv4 , \c ipv6 , \c uri , \c byte , and \c uuid ,
- * \c date-time , \c date with \c ANCH_UUID / \c ANCH_DATE are built-in) ; unknown formats are not checked.\n
- * Integers bounds are compared without conversion (an \c uint64_t field accepts \c minimum(-1) ).
+ * Value constraints of anch-val (see \ref page_val , header \c val/constraints.hpp ) are given at registration too.
+ * They are checked after the field value has been read and raise \ref anch::json::MappingError with
+ * \c CONSTRAINT_VIOLATION error code. \c null and absent values are not checked ( \ref anch::val::required checks
+ * presence). Constraints are checked at compile time against the field type: \c minLength on an integer field does
+ * not compile.
  *
  * \snippet{trimleft} anch-json/examples/constraints.cpp example
  *
@@ -98,7 +80,7 @@ Médor Vincent
  *
  * \section json_check_sec Constraints checks on deserialization and serialization
  *
- * Constraints ( \ref anch::json::required and value constraints) are checked according to mapping options:
+ * Constraints ( \ref anch::val::required and value constraints) are checked according to mapping options:
  * - \c deserialize_check_constraints (default \c true ): after values have been read ;
  * - \c serialize_check_constraints (default \c false ): before values are written. The error has no input
  *   excerpt (message is \c "<path>: <constraint message>" ) and the output contains the JSON written before the

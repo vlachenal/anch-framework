@@ -1,0 +1,13 @@
+/*!
+ * \namespace anch::val
+ *
+ * \brief AnCH validation library namespace.
+ *
+ * Fields constraints shared by formats. See \ref page_val "AnCH validation library documentation".
+ */
+
+/*!
+ * \namespace anch::val::detail
+ *
+ * \brief AnCH validation implementation details.
+ */

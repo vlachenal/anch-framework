@@ -1,0 +1,19 @@
+set_property(DIRECTORY PROPERTY LABELS val)
+
+anch_add_executable(anch-val-test SOURCES testConstraints.cpp LIBS anch::val anch::ut)
+# uuid and date formats are registered when anch-val is built with them
+if(ANCH_UUID)
+  target_compile_definitions(anch-val-test PRIVATE ANCH_TEST_UUID)
+endif()
+if(ANCH_DATE)
+  target_compile_definitions(anch-val-test PRIVATE ANCH_TEST_DATE)
+endif()
+
+add_test(NAME anch-val-strings COMMAND anch-val-test -t strings)
+add_test(NAME anch-val-numbers COMMAND anch-val-test -t numbers)
+add_test(NAME anch-val-collections COMMAND anch-val-test -t collections)
+add_test(NAME anch-val-others COMMAND anch-val-test -t others)
+add_test(NAME anch-val-formats COMMAND anch-val-test -t formats)
+add_test(NAME anch-val-pattern-compiler COMMAND anch-val-test -t pattern-compiler)
+add_test(NAME anch-val-validation-context COMMAND anch-val-test -t validation-context)
+add_test(NAME anch-val-check-context COMMAND anch-val-test -t check-context)

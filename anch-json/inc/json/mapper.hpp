@@ -67,8 +67,8 @@ namespace anch::json {
    *
    * This is a generic template header implementation.\n
    * Type has to be a class or a structure. The fields have to be registered through the registerObject function implementation for the specific type.\n
-   * Field constraints ( \ref anch::json::Required , value constraints like \ref anch::json::MinLength , see
-   * \c json/constraints.hpp ) can be given at registration. They are checked on deserialization
+   * Field constraints ( \ref anch::val::Required , value constraints like \ref anch::val::MinLength , see
+   * anch-val, \c val/constraints.hpp ) can be given at registration. They are checked on deserialization
    * ( \c deserialize_check_constraints option, enabled by default) and on serialization
    * ( \c serialize_check_constraints option, disabled by default).\n
    * Errors raised while deserializing or serializing a field value have this field in their path
@@ -119,7 +119,7 @@ namespace anch::json {
     std::vector<FieldWriter> _writers;
 
     /*! Fields validators (fields which can be read: member or getter) */
-    std::vector<std::function<void(const T&, anch::json::ValidationContext&)>> _validators;
+    std::vector<std::function<void(const T&, anch::val::ValidationContext&)>> _validators;
 
     /*! Field names comparison (inlined: it is called for each node of each field lookup) */
     struct FieldLess {
@@ -199,7 +199,7 @@ namespace anch::json {
      *
      * \since 0.2
      */
-    void validateValue(const T& value, anch::json::ValidationContext& context) const;
+    void validateValue(const T& value, anch::val::ValidationContext& context) const;
 
   private:
     /*!
@@ -277,12 +277,12 @@ namespace anch::json {
      *
      * \param key the JSON key
      * \param value the JSON value in object
-     * \param constraints the field constraints ( \ref anch::json::required , \ref anch::json::minLength , ...)
+     * \param constraints the field constraints ( \ref anch::val::required , \ref anch::val::minLength , ...)
      *
      * \return \c this
      */
     template<typename P, typename... C>
-    requires (anch::json::FieldConstraint<C,P> && ...)
+    requires (anch::val::FieldConstraint<C,P> && ...)
     ObjectMapper<T>& registerField(const std::string& key, P T::* value, C&&... constraints);
 
     /*!
@@ -294,12 +294,12 @@ namespace anch::json {
      *
      * \param key the JSON key
      * \param value the JSON value in object
-     * \param constraints the field constraints ( \ref anch::json::required , \ref anch::json::minLength , ...)
+     * \param constraints the field constraints ( \ref anch::val::required , \ref anch::val::minLength , ...)
      *
      * \return \c this
      */
     template<typename MT, typename P, typename... C>
-    requires (anch::json::FieldConstraint<C,P> && ...)
+    requires (anch::val::FieldConstraint<C,P> && ...)
     ObjectMapper<T>& registerField(const std::string& key, P T::* value, C&&... constraints);
 
     /*!
@@ -316,7 +316,7 @@ namespace anch::json {
      * \return \c this
      */
     template<typename P, typename MT = P, typename... C>
-    requires (anch::json::FieldConstraint<C,P> && ...)
+    requires (anch::val::FieldConstraint<C,P> && ...)
     ObjectMapper<T>& registerField(const std::string& key, std::function<P(const T&)> getter, const C&... constraints);
 
     /*!
@@ -328,12 +328,12 @@ namespace anch::json {
      *
      * \param key the JSON key
      * \param setter the JSON value setter function
-     * \param constraints the field constraints ( \ref anch::json::required , \ref anch::json::minLength , ...)
+     * \param constraints the field constraints ( \ref anch::val::required , \ref anch::val::minLength , ...)
      *
      * \return \c this
      */
     template<typename P, typename MT = P, typename... C>
-    requires (anch::json::FieldConstraint<C,P> && ...)
+    requires (anch::val::FieldConstraint<C,P> && ...)
     ObjectMapper<T>& registerField(const std::string& key, std::function<void(T&, const P&)> setter, C&&... constraints);
 
     /*!
@@ -346,12 +346,12 @@ namespace anch::json {
      * \param key the JSON key
      * \param getter the JSON value getter function
      * \param setter the JSON value setter function
-     * \param constraints the field constraints ( \ref anch::json::required , \ref anch::json::minLength , ...), checked on deserialization
+     * \param constraints the field constraints ( \ref anch::val::required , \ref anch::val::minLength , ...), checked on deserialization
      *
      * \return \c this
      */
     template<typename P, typename MT = P, typename... C>
-    requires (anch::json::FieldConstraint<C,P> && ...)
+    requires (anch::val::FieldConstraint<C,P> && ...)
     ObjectMapper<T>& registerField(const std::string& key, std::function<P(const T&)> getter, std::function<void(T&, const P&)> setter, C&&... constraints);
     // Methods -
 

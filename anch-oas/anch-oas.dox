@@ -82,7 +82,7 @@ target_link_libraries(petstore PRIVATE anch::json anch::uuid)
  * | other component schema | alias ( \c using ) |
  *
  * - Optional and \c nullable properties are \c std::optional ; arrays and maps are empty when absent.
- * - Required properties are registered with \c anch::json::required : deserialization fails when they are absent
+ * - Required properties are registered with \c anch::val::required : deserialization fails when they are absent
  *   ( \c MISSING_FIELD ) or \c null while they are not \c nullable ( \c CONSTRAINT_VIOLATION ).
  * - Inline objects and enumerations are named after their path: \c \<Model\>\<Property\> , \c \<Model\>\<Property\>Item for
  *   array items and \c \<Model\>\<Property\>Value for map values.
@@ -108,15 +108,15 @@ target_link_libraries(petstore PRIVATE anch::json anch::uuid)
  *
  * | OpenAPI keyword | Generated constraint |
  * |-----------------|----------------------|
- * | \c minLength , \c maxLength (strings) | \c anch::json::minLength , \c anch::json::maxLength (Unicode code points) |
- * | \c minimum , \c maximum , \c exclusiveMinimum , \c exclusiveMaximum (numbers) | \c anch::json::minimum , \c anch::json::maximum , \c anch::json::exclusiveMinimum , \c anch::json::exclusiveMaximum |
- * | \c multipleOf (numbers) | \c anch::json::multipleOf |
- * | \c minItems , \c maxItems , \c uniqueItems (arrays) | \c anch::json::minItems , \c anch::json::maxItems , \c anch::json::uniqueItems |
- * | \c minProperties , \c maxProperties (maps) | \c anch::json::minProperties , \c anch::json::maxProperties |
- * | non string \c enum (numbers, booleans) | <tt>anch::json::allowed<T>({...})</tt> |
- * | \c pattern (strings) | \c anch::json::pattern ( \c std::regex ECMAScript by default, see \c anch::json::setPatternCompiler ) |
- * | \c format (strings which are not mapped to a C++ type) | \c anch::json::format : registered formats ( \c email , \c hostname , \c ipv4 , \c ipv6 , \c uri , \c byte , ...) are checked, other formats are not |
- * | array \c items and map \c additionalProperties constraints | \c anch::json::items(...) |
+ * | \c minLength , \c maxLength (strings) | \c anch::val::minLength , \c anch::val::maxLength (Unicode code points) |
+ * | \c minimum , \c maximum , \c exclusiveMinimum , \c exclusiveMaximum (numbers) | \c anch::val::minimum , \c anch::val::maximum , \c anch::val::exclusiveMinimum , \c anch::val::exclusiveMaximum |
+ * | \c multipleOf (numbers) | \c anch::val::multipleOf |
+ * | \c minItems , \c maxItems , \c uniqueItems (arrays) | \c anch::val::minItems , \c anch::val::maxItems , \c anch::val::uniqueItems |
+ * | \c minProperties , \c maxProperties (maps) | \c anch::val::minProperties , \c anch::val::maxProperties |
+ * | non string \c enum (numbers, booleans) | <tt>anch::val::allowed<T>({...})</tt> |
+ * | \c pattern (strings) | \c anch::val::pattern ( \c std::regex ECMAScript by default, see \c anch::val::setPatternCompiler ) |
+ * | \c format (strings which are not mapped to a C++ type) | \c anch::val::format : registered formats ( \c email , \c hostname , \c ipv4 , \c ipv6 , \c uri , \c byte , ...) are checked, other formats are not |
+ * | array \c items and map \c additionalProperties constraints | \c anch::val::items(...) |
  *
  * - Numbers are written as in the document (no conversion: integers bounds can be greater than 2^53). A bound
  *   outside the range of the C++ integer type is reported with a warning.
@@ -138,7 +138,7 @@ target_link_libraries(petstore PRIVATE anch::json anch::uuid)
  *
  * Properties which have not been generated are unknown fields for anch-json: use
  * \c deserialize_ignore_unknown_field to accept them. Formats without registered validator ( \c password , ...) are
- * not checked: validators can be added with \c anch::json::registerFormat . Constraints of component schemas which are deserialized directly
+ * not checked: validators can be added with \c anch::val::registerFormat . Constraints of component schemas which are deserialized directly
  * (alias of array deserialized as root value) are not checked: only properties constraints are.
  *
  * \section oas_endpoints_sec Endpoints

@@ -36,11 +36,11 @@ void
 anch::json::registerObject(anch::json::ObjectMapper<Pet>& mapper) {
   //! [required]
   mapper
-    .registerField("id", &Pet::id, anch::json::required)
-    .registerField<std::string>("owner", &Pet::owner, anch::json::required); // std::optional: present, can be null
+    .registerField("id", &Pet::id, anch::val::required)
+    .registerField<std::string>("owner", &Pet::owner, anch::val::required); // std::optional: present, can be null
   //! [required]
   //! [items]
-  mapper.registerField<std::string>("tags", &Pet::tags, anch::json::maxItems(10), anch::json::items(anch::json::minLength(1)));
+  mapper.registerField<std::string>("tags", &Pet::tags, anch::val::maxItems(10), anch::val::items(anch::val::minLength(1)));
   //! [items]
 }
 
@@ -55,11 +55,11 @@ main() {
   Pet pet{2, "Vincent", {"cat", ""}};
   std::size_t nb = 0;
   //! [validate]
-  for(const anch::json::Violation& violation : anch::json::validate(pet)) {
+  for(const anch::val::Violation& violation : anch::json::validate(pet)) {
     std::cout << violation.path << ": " << violation.message << std::endl;
   }
   //! [validate]
-  for([[maybe_unused]] const anch::json::Violation& violation : anch::json::validate(pet)) {
+  for([[maybe_unused]] const anch::val::Violation& violation : anch::json::validate(pet)) {
     ++nb;
   }
   return nb == 1 ? 0 : 1; // empty tag

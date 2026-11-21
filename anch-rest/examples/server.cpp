@@ -49,7 +49,7 @@ void
 anch::json::registerObject(anch::json::ObjectMapper<Pet>& mapper) {
   mapper
     .registerField("id", &Pet::id)
-    .registerField("name", &Pet::name, anch::json::minLength(1));
+    .registerField("name", &Pet::name, anch::val::minLength(1));
 }
 
 struct UploadPhoto {
@@ -60,7 +60,7 @@ struct UploadPhoto {
 template<>
 void
 anch::json::registerObject(anch::json::ObjectMapper<UploadPhoto>& mapper) {
-  mapper.registerField("description", &UploadPhoto::description, anch::json::minLength(1));
+  mapper.registerField("description", &UploadPhoto::description, anch::val::minLength(1));
 }
 
 std::optional<Pet>

@@ -37,7 +37,7 @@ namespace anch::codec {
    * an anch-json mapper (\c anch::json::registerObject ).\n
    * \n
    * anch-rest servers and clients use mapping options of their side ( \ref options ): fields constraints (
-   * \c anch::json::required , \c anch::json::minLength , ...) are checked on values the server receives (invalid
+   * \c anch::val::required , \c anch::val::minLength , ...) are checked on values the server receives (invalid
    * request body: \c 400 response with the path of the invalid value) and on values the client sends (invalid
    * request is not sent: \c anch::json::MappingError is raised by \c Call::body ). Server responses are not
    * checked by the server (a response which violates constraints is still sent) nor by the client (server responses

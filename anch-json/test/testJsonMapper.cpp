@@ -1207,7 +1207,7 @@ template<>
 void
 anch::json::registerObject(ObjectMapper<TestRequiredChild>& mapper) {
   mapper
-    .registerField("id", &TestRequiredChild::_id, anch::json::required)
+    .registerField("id", &TestRequiredChild::_id, anch::val::required)
     .registerField<std::string>("name", &TestRequiredChild::_name)
     ;
 }
@@ -1227,10 +1227,10 @@ template<>
 void
 anch::json::registerObject(ObjectMapper<TestRequired>& mapper) {
   mapper
-    .registerField("id", &TestRequired::_id, anch::json::required)
-    .registerField("name", &TestRequired::_name, anch::json::required)
-    .registerField<std::string>("owner", &TestRequired::_owner, anch::json::required) // can be null
-    .registerField<std::string>("tags", &TestRequired::_tags, anch::json::required) // can not be null
+    .registerField("id", &TestRequired::_id, anch::val::required)
+    .registerField("name", &TestRequired::_name, anch::val::required)
+    .registerField<std::string>("owner", &TestRequired::_owner, anch::val::required) // can be null
+    .registerField<std::string>("tags", &TestRequired::_tags, anch::val::required) // can not be null
     .registerField("count", &TestRequired::_count)
     .registerField<TestRequiredChild>("children", &TestRequired::_children)
     .registerField<TestRequiredChild>("byName", &TestRequired::_byName)
@@ -1241,7 +1241,7 @@ anch::json::registerObject(ObjectMapper<TestRequired>& mapper) {
 				std::function<void(TestRequired&, const std::string&)>([](TestRequired& obj, const std::string& label) {
 				  obj._label = label;
 				}),
-				anch::json::required)
+				anch::val::required)
     ;
 }
 
@@ -1338,7 +1338,7 @@ anch::json::registerObject(ObjectMapper<TestManyRequired>& mapper) {
 				  std::function<void(TestManyRequired&, const int64_t&)>([i](TestManyRequired& obj, const int64_t& value) {
 				    obj._values[i] = value;
 				  }),
-				  anch::json::required);
+				  anch::val::required);
   }
 }
 
@@ -1404,43 +1404,43 @@ template<>
 void
 anch::json::registerObject(ObjectMapper<TestConstraints>& mapper) {
   mapper
-    .registerField("name", &TestConstraints::_name, anch::json::required, anch::json::minLength(2), anch::json::maxLength(5))
-    .registerField("age", &TestConstraints::_age, anch::json::minimum(0), anch::json::maximum(150))
-    .registerField("level", &TestConstraints::_level, anch::json::exclusiveMinimum(0), anch::json::exclusiveMaximum(10))
-    .registerField("even", &TestConstraints::_even, anch::json::multipleOf(2))
-    .registerField("price", &TestConstraints::_price, anch::json::minimum(0.0), anch::json::multipleOf(0.01))
-    .registerField<std::string>("tags", &TestConstraints::_tags, anch::json::minItems(1), anch::json::maxItems(3),
-				anch::json::uniqueItems, anch::json::items(anch::json::minLength(1)))
-    .registerField<int64_t>("scores", &TestConstraints::_scores, anch::json::minProperties(1), anch::json::maxProperties(2),
-			    anch::json::items(anch::json::minimum(0)))
-    .registerField<std::string>("color", &TestConstraints::_color, anch::json::allowed({"red", "green"}))
-    .registerField<int64_t>("grade", &TestConstraints::_grade, anch::json::allowed({1, 2, 3}))
-    .registerField<TestPoint>("points", &TestConstraints::_points, anch::json::uniqueItems)
-    .registerField<int64_t>("ids", &TestConstraints::_ids, anch::json::maxItems(2))
+    .registerField("name", &TestConstraints::_name, anch::val::required, anch::val::minLength(2), anch::val::maxLength(5))
+    .registerField("age", &TestConstraints::_age, anch::val::minimum(0), anch::val::maximum(150))
+    .registerField("level", &TestConstraints::_level, anch::val::exclusiveMinimum(0), anch::val::exclusiveMaximum(10))
+    .registerField("even", &TestConstraints::_even, anch::val::multipleOf(2))
+    .registerField("price", &TestConstraints::_price, anch::val::minimum(0.0), anch::val::multipleOf(0.01))
+    .registerField<std::string>("tags", &TestConstraints::_tags, anch::val::minItems(1), anch::val::maxItems(3),
+				anch::val::uniqueItems, anch::val::items(anch::val::minLength(1)))
+    .registerField<int64_t>("scores", &TestConstraints::_scores, anch::val::minProperties(1), anch::val::maxProperties(2),
+			    anch::val::items(anch::val::minimum(0)))
+    .registerField<std::string>("color", &TestConstraints::_color, anch::val::allowed({"red", "green"}))
+    .registerField<int64_t>("grade", &TestConstraints::_grade, anch::val::allowed({1, 2, 3}))
+    .registerField<TestPoint>("points", &TestConstraints::_points, anch::val::uniqueItems)
+    .registerField<int64_t>("ids", &TestConstraints::_ids, anch::val::maxItems(2))
     .registerField<std::string>("code",
 				std::function<void(TestConstraints&, const std::string&)>([](TestConstraints& obj, const std::string& code) {
 				  obj._code = code;
 				}),
-				anch::json::custom<std::string>([](const std::string& code) -> bool {
+				anch::val::custom<std::string>([](const std::string& code) -> bool {
 				  return code.starts_with('C');
 				}, "Code has to start with 'C'"))
     ;
 }
 
 // Constraints are checked at compile time against field types
-static_assert(anch::json::FieldConstraint<anch::json::MinLength, std::string>);
-static_assert(anch::json::FieldConstraint<anch::json::MinLength, std::optional<std::string>>);
-static_assert(!anch::json::FieldConstraint<anch::json::MinLength, int32_t>);
-static_assert(!anch::json::FieldConstraint<anch::json::MinLength, std::vector<std::string>>);
-static_assert(anch::json::FieldConstraint<anch::json::Minimum<int>, std::shared_ptr<uint64_t>>);
-static_assert(!anch::json::FieldConstraint<anch::json::Minimum<int>, bool>);
-static_assert(!anch::json::FieldConstraint<anch::json::MinItems, std::string>);
-static_assert(!anch::json::FieldConstraint<anch::json::MinItems, std::map<std::string,int>>);
-static_assert(anch::json::FieldConstraint<anch::json::MinProperties, std::map<std::string,int>>);
-static_assert(anch::json::FieldConstraint<anch::json::Items<anch::json::MinLength>, std::vector<std::string>>);
-static_assert(!anch::json::FieldConstraint<anch::json::Items<anch::json::MinLength>, std::vector<int64_t>>);
-static_assert(anch::json::FieldConstraint<anch::json::Items<anch::json::Minimum<int>>, std::map<std::string,std::optional<int64_t>>>);
-static_assert(!anch::json::FieldConstraint<anch::json::Items<anch::json::Required>, std::vector<std::string>>);
+static_assert(anch::val::FieldConstraint<anch::val::MinLength, std::string>);
+static_assert(anch::val::FieldConstraint<anch::val::MinLength, std::optional<std::string>>);
+static_assert(!anch::val::FieldConstraint<anch::val::MinLength, int32_t>);
+static_assert(!anch::val::FieldConstraint<anch::val::MinLength, std::vector<std::string>>);
+static_assert(anch::val::FieldConstraint<anch::val::Minimum<int>, std::shared_ptr<uint64_t>>);
+static_assert(!anch::val::FieldConstraint<anch::val::Minimum<int>, bool>);
+static_assert(!anch::val::FieldConstraint<anch::val::MinItems, std::string>);
+static_assert(!anch::val::FieldConstraint<anch::val::MinItems, std::map<std::string,int>>);
+static_assert(anch::val::FieldConstraint<anch::val::MinProperties, std::map<std::string,int>>);
+static_assert(anch::val::FieldConstraint<anch::val::Items<anch::val::MinLength>, std::vector<std::string>>);
+static_assert(!anch::val::FieldConstraint<anch::val::Items<anch::val::MinLength>, std::vector<int64_t>>);
+static_assert(anch::val::FieldConstraint<anch::val::Items<anch::val::Minimum<int>>, std::map<std::string,std::optional<int64_t>>>);
+static_assert(!anch::val::FieldConstraint<anch::val::Items<anch::val::Required>, std::vector<std::string>>);
 
 const std::string CONSTRAINTS_BASE = R"({"name":"abc")";
 
@@ -1541,17 +1541,17 @@ void
 testConstraintsFactory() {
   for(double divisor : {0.0, -1.0, std::numeric_limits<double>::quiet_NaN()}) {
     try {
-      [[maybe_unused]] auto constraint = anch::json::multipleOf(divisor);
+      [[maybe_unused]] auto constraint = anch::val::multipleOf(divisor);
       anch::ut::fail("multipleOf should refuse divisor");
     } catch(const std::invalid_argument& e) {
       std::cout << e.what() << std::endl;
     }
   }
   std::string message;
-  anch::ut::assertThat(anch::json::minimum(-1).check(uint64_t{0}, message), "0 should be greater than -1");
-  anch::ut::assertThat(!anch::json::maximum(uint64_t{1}).check(int64_t{2}, message), "2 should be greater than 1");
-  anch::ut::assertThat(anch::json::maximum(uint64_t{1}).check(int64_t{-1}, message), "-1 should be lower than 1");
-  anch::ut::assertThat(anch::json::multipleOf(3).check(std::numeric_limits<int64_t>::min() + 2, message), "-2^63 + 2 should be a multiple of 3");
+  anch::ut::assertThat(anch::val::minimum(-1).check(uint64_t{0}, message), "0 should be greater than -1");
+  anch::ut::assertThat(!anch::val::maximum(uint64_t{1}).check(int64_t{2}, message), "2 should be greater than 1");
+  anch::ut::assertThat(anch::val::maximum(uint64_t{1}).check(int64_t{-1}, message), "-1 should be lower than 1");
+  anch::ut::assertThat(anch::val::multipleOf(3).check(std::numeric_limits<int64_t>::min() + 2, message), "-2^63 + 2 should be a multiple of 3");
 }
 // Value constraints -
 
@@ -1569,12 +1569,12 @@ template<>
 void
 anch::json::registerObject(ObjectMapper<TestFormats>& mapper) {
   mapper
-    .registerField("code", &TestFormats::_code, anch::json::pattern("^[A-Z]{2}[0-9]+$"))
-    .registerField<std::string>("word", &TestFormats::_word, anch::json::pattern("b"))
-    .registerField<std::string>("email", &TestFormats::_email, anch::json::format("email"))
-    .registerField<std::string>("ips", &TestFormats::_ips, anch::json::items(anch::json::format("ipv4")))
-    .registerField<std::string>("secret", &TestFormats::_secret, anch::json::format("password"))
-    .registerField<std::string>("even", &TestFormats::_even, anch::json::format("even-length"))
+    .registerField("code", &TestFormats::_code, anch::val::pattern("^[A-Z]{2}[0-9]+$"))
+    .registerField<std::string>("word", &TestFormats::_word, anch::val::pattern("b"))
+    .registerField<std::string>("email", &TestFormats::_email, anch::val::format("email"))
+    .registerField<std::string>("ips", &TestFormats::_ips, anch::val::items(anch::val::format("ipv4")))
+    .registerField<std::string>("secret", &TestFormats::_secret, anch::val::format("password"))
+    .registerField<std::string>("even", &TestFormats::_even, anch::val::format("even-length"))
     ;
 }
 
@@ -1599,7 +1599,7 @@ void
 testDeserPatternInvalid() {
   for(const char* source : {"(", "[a-", "a{2,1}"}) {
     try {
-      [[maybe_unused]] anch::json::Pattern constraint = anch::json::pattern(source);
+      [[maybe_unused]] anch::val::Pattern constraint = anch::val::pattern(source);
       anch::ut::fail(std::string("Invalid pattern should be refused: ") + source);
     } catch(const std::regex_error& e) {
       std::cout << source << ": " << e.what() << std::endl;
@@ -1611,14 +1611,14 @@ void
 testDeserPatternCompiler() {
   std::string message;
   // Compiler which matches values starting with the pattern
-  anch::json::setPatternCompiler([](std::string_view source) -> anch::json::PatternMatcher {
+  anch::val::setPatternCompiler([](std::string_view source) -> anch::val::PatternMatcher {
     return [prefix = std::string(source)](std::string_view value) -> bool { return value.starts_with(prefix); };
   });
-  anch::json::Pattern prefix = anch::json::pattern("(");
+  anch::val::Pattern prefix = anch::val::pattern("(");
   anch::ut::assertThat(prefix.check(std::string("(a"), message) && !prefix.check(std::string("a("), message), "Custom compiler should be used");
   // Default compiler is restored
-  anch::json::setPatternCompiler(nullptr);
-  anch::json::Pattern regex = anch::json::pattern("^a+$");
+  anch::val::setPatternCompiler(nullptr);
+  anch::val::Pattern regex = anch::val::pattern("^a+$");
   anch::ut::assertThat(regex.check(std::string("aaa"), message) && !regex.check(std::string("ab"), message), "Default compiler should be used");
   // Patterns built before keep their matcher
   anch::ut::assertThat(prefix.check(std::string("(b"), message), "Matcher should not change");
@@ -1626,7 +1626,7 @@ testDeserPatternCompiler() {
 
 void
 checkFormatValues(const std::string& name, std::initializer_list<const char*> valid, std::initializer_list<const char*> invalid) {
-  anch::json::Format constraint = anch::json::format(name);
+  anch::val::Format constraint = anch::val::format(name);
   std::string message;
   for(const char* value : valid) {
     anch::ut::assertThat(constraint.check(std::string(value), message), "'{}' should be a valid {}", value, name);
@@ -1671,20 +1671,20 @@ testDeserFormatMapper() {
 void
 testDeserFormatRegister() {
   // Registered after mapper creation: validators are found when values are checked
-  anch::json::registerFormat("even-length", [](std::string_view value) -> bool { return value.size() % 2 == 0; });
+  anch::val::registerFormat("even-length", [](std::string_view value) -> bool { return value.size() % 2 == 0; });
   anch::json::JSONMapper mapper(anch::json::DEFAULT_MAPPING_OPTIONS);
   auto iss = std::istringstream(R"({"code":"AB1","even":"ab"})");
   [[maybe_unused]] TestFormats res = mapper.deserialize<TestFormats>(iss);
   checkFormatError(R"({"code":"AB1","even":"abc"})", "/even", "Value is not a valid even-length (format)");
   // Replace
-  anch::json::registerFormat("even-length", [](std::string_view value) -> bool { return value.size() % 2 == 1; });
+  anch::val::registerFormat("even-length", [](std::string_view value) -> bool { return value.size() % 2 == 1; });
   checkFormatError(R"({"code":"AB1","even":"ab"})", "/even", "Value is not a valid even-length (format)");
   // Remove: unknown format again
-  anch::json::registerFormat("even-length", nullptr);
+  anch::val::registerFormat("even-length", nullptr);
   auto removed = std::istringstream(R"({"code":"AB1","even":"ab"})");
   res = mapper.deserialize<TestFormats>(removed);
   // Built-in format can be replaced
-  anch::json::registerFormat("email", [](std::string_view value) -> bool { return value.ends_with("@anch"); });
+  anch::val::registerFormat("email", [](std::string_view value) -> bool { return value.ends_with("@anch"); });
   checkFormatError(R"({"code":"AB1","email":"a@b.c"})", "/email", "Value is not a valid email (format)");
 }
 // Patterns and formats -
@@ -1701,7 +1701,7 @@ anch::json::registerObject(ObjectMapper<TestGetter>& mapper) {
     .registerField<int64_t>("value",
 			    std::function<int64_t(const TestGetter&)>([](const TestGetter& obj) -> int64_t { return obj._value; }),
 			    std::function<void(TestGetter&, const int64_t&)>([](TestGetter& obj, const int64_t& value) { obj._value = value; }),
-			    anch::json::minimum(0))
+			    anch::val::minimum(0))
     ;
 }
 
@@ -1718,10 +1718,10 @@ template<>
 void
 anch::json::registerObject(ObjectMapper<TestSerRequired>& mapper) {
   mapper
-    .registerField<int64_t>("map", &TestSerRequired::_map, anch::json::required)
-    .registerField<std::string>("opt", &TestSerRequired::_opt, anch::json::required)
-    .registerField<int64_t>("list", &TestSerRequired::_list, anch::json::required)
-    .registerField<TestPoint>("point", &TestSerRequired::_point, anch::json::required)
+    .registerField<int64_t>("map", &TestSerRequired::_map, anch::val::required)
+    .registerField<std::string>("opt", &TestSerRequired::_opt, anch::val::required)
+    .registerField<int64_t>("list", &TestSerRequired::_list, anch::val::required)
+    .registerField<TestPoint>("point", &TestSerRequired::_point, anch::val::required)
     .registerField<int64_t>("other", &TestSerRequired::_other)
     .registerField<std::string>("none", &TestSerRequired::_none)
     ;
@@ -1828,14 +1828,14 @@ anch::json::registerObject(ObjectMapper<TestNested>& mapper) {
     .registerField("main", &TestNested::_main)
     .registerField<TestConstraints>("opt", &TestNested::_opt)
     .registerField<TestConstraints>("ptr", &TestNested::_ptr)
-    .registerField<TestConstraints>("map", &TestNested::_map, anch::json::maxProperties(1))
+    .registerField<TestConstraints>("map", &TestNested::_map, anch::val::maxProperties(1))
     .registerField<TestConstraints>("list", &TestNested::_list)
     ;
 }
 
 void
-checkViolations(const std::vector<anch::json::Violation>& violations, const std::vector<std::pair<std::string,std::string>>& expected) {
-  for(const anch::json::Violation& violation : violations) {
+checkViolations(const std::vector<anch::val::Violation>& violations, const std::vector<std::pair<std::string,std::string>>& expected) {
+  for(const anch::val::Violation& violation : violations) {
     std::cout << violation.path << ": " << violation.message << std::endl;
   }
   anch::ut::assertThat(violations.size() == expected.size(), "{} violations expected ; found {}", expected.size(), violations.size());

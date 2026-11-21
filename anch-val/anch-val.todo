@@ -1,0 +1,98 @@
+anch-val : conception (2026-11-21)
+==================================
+
+Validée le 2026-11-21 (décisions en fin de fichier) ; étape 1 faite le 2026-11-21.
+
+Demande (2026-11-21) : en vue d'un codec XML / XSD (et d'autres formats), externaliser la validation des champs dans
+une bibliothèque spécialisée, anch-val. Remplace la décision 3 de anch-utils/mapping.todo (contraintes et
+validation dans anch-utils).
+
+État actuel (anch-json, json/constraints.hpp, json/validation.hpp, constraints.cpp)
+--------------------------------------------------------------------------------
+Indépendant du format :
+- contraintes : Required, MinLength / MaxLength (points de code UTF-8), Minimum / Maximum (exclusifs), MultipleOf,
+  MinItems / MaxItems, UniqueItems, MinProperties / MaxProperties, Allowed, Items (contraintes des éléments),
+  Pattern (compilateur remplaçable, std::regex ECMAScript par défaut), Format (validateurs enregistrés : email,
+  uuid, date-time, ipv4, uri, ...), Custom ; chacune a check(valeur, message) ;
+- fonctions de construction (anch::json::minLength(1), ...), concepts StringLike / MapLike / Collection / Number,
+  traits IsNullable / Unwrap, ValueConstraint / FieldConstraint, codePoints, formatValue ;
+- Violation { path, message }, ValidationContext (chemin JSON Pointer, violations).
+Propre à anch-json :
+- application pendant la lecture / l'écriture (ReaderContext / WriterContext, options
+  (de)serialize_check_constraints, MappingError CONSTRAINT_VIOLATION avec le chemin), checkRequired (MISSING_FIELD),
+  writeEmptyRequired ;
+- validate(value) / isValid(value) : parcours des objets par la description anch-json (Factory<T>::validateValue).
+Utilisateurs : anch-json, anch-rest (formMapper : checkFormConstraints), anch-oas (code généré : anch::json::required,
+minLength, pattern, format, allowed<...>, ...), tests et exemples.
+
+Proposition
+-----------
+
+1. Module anch-val (anch::val, en-têtes val/*.hpp)
+- Contraintes, fonctions de construction, concepts et traits, formats et motifs (registerFormat,
+  setPatternCompiler), Violation, ValidationContext : déplacés d'anch-json (git mv), anch::json -> anch::val.
+- Dépendances : anch-utils ; anch-uuid et anch-date optionnelles pour les formats uuid et date-time (ANCH_UUID,
+  ANCH_DATE, comme anch-json aujourd'hui). Option ANCH_BUILD_VAL (ON) ; anch-json en dépend.
+- Contraintes introspectables : chaque contrainte reste un type avec ses valeurs publiques (MinLength::value, ...),
+  pour que des générateurs de schémas (XSD, JSON Schema, OpenAPI) les lisent, en plus de check(valeur, message).
+- Résultat neutre : check(valeur, message) ; chaque format choisit comment signaler une violation (anch-json :
+  MappingError CONSTRAINT_VIOLATION ; XML : son erreur avec le chemin XPath) ; ValidationContext garde le chemin
+  sous forme de segments (nom / index), mis en forme par le format (JSON Pointer, XPath).
+
+2. Validation des objets
+- Étape A (avec le déplacement) : anch::json::validate / isValid restent dans anch-json (parcours de la description
+  anch-json), sur les contraintes d'anch-val.
+- Étape B (avec anch::Mapping<T>, mapping.todo étape 1) : anch::val::validate(value) / isValid(value) parcourent la
+  description commune avec un mapper de validation qui satisfait le concept anch::ObjectMapper ; anch::json::validate
+  devient un alias. Les formats (JSON, CSV, XML) vérifient les mêmes contraintes à la lecture.
+
+3. Contraintes pour XSD (facettes)
+- Déjà couvertes : minLength / maxLength, pattern, enumeration (allowed), minInclusive / maxInclusive /
+  minExclusive / maxExclusive (minimum / maximum), minOccurs / maxOccurs (required, minItems / maxItems).
+- Ajoutées : length(n) (longueur exacte), totalDigits(n), fractionDigits(n).
+- Motifs : les expressions XSD sont implicitement ancrées (tout le texte) et ont leur propre syntaxe (\i, \c,
+  \p{...}), JSON Schema non (recherche) : Pattern porte sa syntaxe (anch::val::pattern(source) pour ECMAScript,
+  anch::val::xsdPattern(source) ancrée), compilée par le compilateur de motifs (remplaçable, voir question 3).
+- whiteSpace (normalisation, pas validation) : hors anch-val, option du format XML.
+
+4. Compatibilité : changement direct (question 4), pas d'alias dépréciés.
+- anch-oas génère anch::val::* ; anch-rest (formMapper), exemples et documentation passent aux nouveaux noms.
+- CHANGELOG : Added (anch-val), Breaking changes (anch::json::required, minLength, ... -> anch::val).
+
+5. Liens
+- anch-utils/mapping.todo : décision 3 remplacée (contraintes dans anch-val) ; registerField(nom, membre,
+  contraintes...) de anch::Mapping prend des contraintes anch::val.
+- anch-codec : une violation à la lecture reste une erreur du format ; anch-rest répond 400 avec le chemin.
+- Futur codec XML / XSD : facettes du §3, chemin XPath, génération de XSD à partir des descriptions (introspection
+  des contraintes).
+
+Implémentation de l'étape 1 (2026-11-21)
+----------------------------------------
+- Pas d'option ANCH_BUILD_VAL : anch-json en dépend, anch-val est toujours construit. anch-uuid et anch-date sont
+  des dépendances privées (formats enregistrés dans constraints.cpp), avec ANCH_UUID / ANCH_DATE privées.
+- Trait anch::val::CheckContext<X> (enabled, violation, item) à la place des surcharges checkEnabled / violation
+  d'anch-json : anch-val le spécialise pour ValidationContext, anch-json pour ReaderContext et WriterContext
+  (json/constraints.hpp garde ce qui est propre à JSON : checkRequired, rejectNull, writeEmptyRequired, ...).
+- Concepts StringLike, MapLike, Collection, Number et traits IsNullable / Unwrap déplacés aussi (anch-json les
+  utilise depuis anch::val).
+- Violation::path reste un JSON Pointer ; le chemin par segments (XPath pour XML) viendra avec le codec XML.
+- Les tests des contraintes à travers la lecture JSON restent dans anch-json ; anch-val/test teste les contraintes,
+  ValidationContext et un CheckContext de format.
+
+Étapes
+------
+1. Faite le 2026-11-21. Module anch-val : déplacement des contraintes, formats, motifs, Violation, ValidationContext et de leurs tests ;
+   anch-json, anch-rest, anch-oas (code généré), exemples et documentation passent
+   aux nouveaux noms.
+2. Facettes XSD : length, totalDigits, fractionDigits, motifs XSD.
+3. Avec anch::Mapping<T> : anch::val::validate sur la description commune.
+
+Questions (tranchées le 2026-11-21)
+-----------------------------------
+1. anch-val / anch::val.
+2. Formats uuid et date-time dans anch-val, avec anch-uuid et anch-date en dépendances optionnelles (ANCH_UUID,
+   ANCH_DATE).
+3. Motifs : la syntaxe est portée par Pattern, avec un compilateur par syntaxe (proposition retenue).
+4. Changement direct, sans alias dépréciés (version inférieure à 1.0) : anch::json::required, minLength, ... et
+   json/constraints.hpp disparaissent ; le §4 « Compatibilité » est remplacé par ce choix.
+5. Étape 1 maintenant, indépendante de anch::Mapping.

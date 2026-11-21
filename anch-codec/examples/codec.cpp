@@ -68,7 +68,7 @@ void
 anch::json::registerObject(anch::json::ObjectMapper<Pet>& mapper) {
   mapper
     .registerField("id", &Pet::id)
-    .registerField("name", &Pet::name, anch::json::required, anch::json::minLength(1));
+    .registerField("name", &Pet::name, anch::val::required, anch::val::minLength(1));
 }
 //! [model]
 

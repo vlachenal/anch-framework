@@ -46,7 +46,7 @@ template<>
 void
 anch::json::registerObject(anch::json::ObjectMapper<Owner>& mapper) {
   mapper
-    .registerField("name", &Owner::name, anch::json::required, anch::json::minLength(1))
+    .registerField("name", &Owner::name, anch::val::required, anch::val::minLength(1))
     .registerField("age", &Owner::age)
     ;
 }

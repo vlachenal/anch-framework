@@ -28,13 +28,13 @@ namespace anch::json::detail {
   template<typename P>
   constexpr bool
   hasNestedObjects() {
-    if constexpr (anch::json::isNullable<P>()) {
-      return hasNestedObjects<anch::json::detail::Unwrap<P>>();
-    } else if constexpr (anch::json::StringLike<P> || anch::json::isPrimitive<P>() || std::is_enum_v<P> || !std::is_class_v<P>) {
+    if constexpr (anch::val::isNullable<P>()) {
+      return hasNestedObjects<anch::val::detail::Unwrap<P>>();
+    } else if constexpr (anch::val::StringLike<P> || anch::json::isPrimitive<P>() || std::is_enum_v<P> || !std::is_class_v<P>) {
       return false;
-    } else if constexpr (anch::json::MapLike<P>) {
+    } else if constexpr (anch::val::MapLike<P>) {
       return hasNestedObjects<std::remove_cvref_t<typename P::mapped_type>>();
-    } else if constexpr (anch::json::Collection<P>) {
+    } else if constexpr (anch::val::Collection<P>) {
       return hasNestedObjects<std::remove_cvref_t<std::ranges::range_value_t<P>>>();
     } else {
       return true;
@@ -43,10 +43,10 @@ namespace anch::json::detail {
 
   template<typename P, typename... C>
   [[gnu::cold]] void
-  validateField(const std::string& key, const P& value, anch::json::ValidationContext& context, const C&... constraints) {
+  validateField(const std::string& key, const P& value, anch::val::ValidationContext& context, const C&... constraints) {
     context.enter(key);
-    if constexpr (anch::json::hasValueConstraints<C...>()) {
-      anch::json::detail::checkConstraints(value, context, constraints...);
+    if constexpr (anch::val::hasValueConstraints<C...>()) {
+      anch::val::detail::checkConstraints(value, context, constraints...);
     } else {
       ((void)constraints, ...);
     }
@@ -58,20 +58,20 @@ namespace anch::json::detail {
 
   template<typename P>
   [[gnu::cold]] void
-  validateNested(const P& value, anch::json::ValidationContext& context) {
-    if constexpr (anch::json::isNullable<P>()) {
+  validateNested(const P& value, anch::val::ValidationContext& context) {
+    if constexpr (anch::val::isNullable<P>()) {
       if(value) {
 	validateNested(*value, context);
       }
-    } else if constexpr (anch::json::StringLike<P> || anch::json::isPrimitive<P>() || std::is_enum_v<P> || !std::is_class_v<P>) {
+    } else if constexpr (anch::val::StringLike<P> || anch::json::isPrimitive<P>() || std::is_enum_v<P> || !std::is_class_v<P>) {
       // Primitive values have no nested value
-    } else if constexpr (anch::json::MapLike<P>) {
+    } else if constexpr (anch::val::MapLike<P>) {
       for(const auto& [key, item] : value) {
 	context.enter(key);
 	validateNested(item, context);
 	context.leave();
       }
-    } else if constexpr (anch::json::Collection<P>) {
+    } else if constexpr (anch::val::Collection<P>) {
       std::size_t index = 0;
       for(const auto& item : value) {
 	context.enter(index++);
@@ -88,9 +88,9 @@ namespace anch::json::detail {
 namespace anch::json {
 
   template<typename T>
-  std::vector<anch::json::Violation>
+  std::vector<anch::val::Violation>
   validate(const T& value) {
-    anch::json::ValidationContext context;
+    anch::val::ValidationContext context;
     anch::json::detail::validateNested(value, context);
     return std::move(context.violations());
   }

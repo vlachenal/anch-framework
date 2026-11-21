@@ -1,0 +1,63 @@
+/*! \page page_val AnCH validation library documentation
+ *
+ * \tableofcontents
+ *
+ * \section val_intro_seq Introduction
+ *
+ * AnCH validation library defines fields constraints independently of formats: anch-json checks them when it reads
+ * and writes values, and validates objects ( \c anch::json::validate ) ; other formats (CSV, XML) and schema
+ * generators (JSON Schema, XSD) use the same constraints (see \c anch-val.todo ).
+ *
+ * \section val_install_sec Installation
+ *
+ * CMake target \c anch::val (built with anch-json, which depends on it). \c uuid , \c date-time and \c date
+ * formats are built with \c ANCH_UUID and \c ANCH_DATE (anch-uuid and anch-date are optional dependencies):
+ * \code{.cmake}
+find_package(Anch REQUIRED)
+target_link_libraries(my-app PRIVATE anch::val)
+\endcode
+ * See \ref install_sec "installation".
+ *
+ * \section val_constraints_sec Constraints
+ *
+ * Constraints are checked at compile time against the value type: \c minLength on an integer does not compile.
+ * \c null and absent values are not checked ( \ref anch::val::required is a field constraint, checked by formats).
+ *
+ * | Constraint | Field type | JSON Schema keyword |
+ * |------------|------------|---------------------|
+ * | \c anch::val::minLength(n) , \c anch::val::maxLength(n) | string (length in Unicode code points) | \c minLength , \c maxLength |
+ * | \c anch::val::pattern(regex) | string (searched, not anchored) | \c pattern |
+ * | \c anch::val::format(name) | string (registered formats only) | \c format |
+ * | \c anch::val::minimum(v) , \c anch::val::maximum(v) , \c anch::val::exclusiveMinimum(v) , \c anch::val::exclusiveMaximum(v) | number | \c minimum , \c maximum , \c exclusiveMinimum , \c exclusiveMaximum |
+ * | \c anch::val::multipleOf(v) | number (exact for integers, relative tolerance for floating point numbers) | \c multipleOf |
+ * | \c anch::val::minItems(n) , \c anch::val::maxItems(n) , \c anch::val::uniqueItems | collection | \c minItems , \c maxItems , \c uniqueItems |
+ * | \c anch::val::minProperties(n) , \c anch::val::maxProperties(n) | map | \c minProperties , \c maxProperties |
+ * | \c anch::val::allowed({...}) | any comparable type | \c enum |
+ * | \c anch::val::items(constraints...) | collection or map: constraints are checked on every item | \c items , \c additionalProperties |
+ * | \c anch::val::custom<T>(predicate, message) | \c T | |
+ *
+ * Patterns use \c std::regex (ECMAScript grammar, on bytes: no UTF-8 character classes) by default:
+ * \ref anch::val::setPatternCompiler plugs another engine. Formats are checked by validators registered with
+ * \ref anch::val::registerFormat ( \c email , \c hostname , \c ipv4 , \c ipv6 , \c uri , \c byte , and \c uuid ,
+ * \c date-time , \c date with \c ANCH_UUID / \c ANCH_DATE are built-in) ; unknown formats are not checked.\n
+ * Integers bounds are compared without conversion (an \c uint64_t field accepts \c minimum(-1) ).
+ *
+ * A constraint is a value with a \c check(value, message) function ; its parameters are public, for schema
+ * generators:
+ * \snippet{trimleft} anch-val/examples/val.cpp check
+ *
+ * Usage with anch-json:
+ * \snippet{trimleft} anch-json/examples/constraints.cpp example
+ *
+ * \section val_context_sec Contexts
+ *
+ * Constraints are checked in a context ( \ref anch::val::CheckContext ): it enables or disables checks and reports
+ * violations. \ref anch::val::ValidationContext collects every violation with its path:
+ * \snippet{trimleft} anch-val/examples/val.cpp validation
+ *
+ * A format specializes \ref anch::val::CheckContext for its contexts (anch-json: reader and writer contexts, which
+ * raise \c anch::json::MappingError ):
+ * \snippet{trimleft} anch-val/examples/val.cpp context
+ *
+ * \snippet{trimleft} anch-val/examples/val.cpp format
+ */

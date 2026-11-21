@@ -82,7 +82,7 @@ template<>
 void
 anch::json::registerObject(anch::json::ObjectMapper<ConnectError>& mapper) {
   mapper
-    .registerField("code", &ConnectError::code, anch::json::required)
+    .registerField("code", &ConnectError::code, anch::val::required)
     .registerField<std::string>("message", &ConnectError::message)
     ;
 }
