@@ -95,5 +95,16 @@ main() {
     std::cout << error.what() << std::endl; // /1: Length 0 is lower than minLength 1
   }
   //! [format]
-  return validation.violations().size() == 2 ? 0 : 1;
+  //! [xsd]
+  // XSD facets: whole value patterns, exact length, digits of decimals
+  anch::val::ValidationContext xsd;
+  anch::val::detail::checkConstraints(std::string("75001"), xsd, anch::val::xsdPattern("\\d{5}"), anch::val::length(5));
+  anch::val::detail::checkConstraints(19.999, xsd, anch::val::totalDigits(4), anch::val::fractionDigits(2));
+  for(const anch::val::Violation& violation : xsd.violations()) {
+    std::cout << violation.message << std::endl;
+  }
+  // Value 19.999 has 5 digits, more than totalDigits 4
+  // Value 19.999 has 3 fraction digits, more than fractionDigits 2
+  //! [xsd]
+  return (validation.violations().size() == 2 && xsd.violations().size() == 2) ? 0 : 1;
 }

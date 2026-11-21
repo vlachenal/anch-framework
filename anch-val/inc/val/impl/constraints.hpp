@@ -20,6 +20,7 @@
 #pragma once
 
 #include <algorithm>
+#include <charconv>
 #include <cmath>
 #include <format>
 #include <limits>
@@ -64,6 +65,29 @@ namespace anch::val::detail {
       return std::cmp_equal(a, b);
     } else {
       return a == b;
+    }
+  }
+
+  template<typename V>
+  std::string
+  decimalOf(const V& value) {
+    if constexpr (anch::val::StringLike<V>) {
+      return std::string(std::string_view(value));
+    } else if constexpr (std::integral<V>) {
+      char buffer[48];
+      const std::to_chars_result res = std::to_chars(buffer, buffer + sizeof(buffer), value);
+      return std::string(buffer, res.ptr);
+    } else {
+      if(!std::isfinite(value)) {
+	return std::string();
+      }
+      std::string buffer(std::numeric_limits<V>::max_exponent10 + std::numeric_limits<V>::max_digits10 + 8, '\0');
+      const std::to_chars_result res = std::to_chars(buffer.data(), buffer.data() + buffer.size(), value, std::chars_format::fixed);
+      if(res.ec != std::errc()) {
+	return std::string();
+      }
+      buffer.resize(static_cast<std::size_t>(res.ptr - buffer.data()));
+      return buffer;
     }
   }
 
@@ -250,6 +274,62 @@ namespace anch::val {
     }
     return true;
   }
+  template<anch::val::StringLike V>
+  bool
+  Length::check(const V& str, std::string& message) const {
+    const std::size_t length = anch::val::detail::codePoints(std::string_view(str));
+    if(length != value) {
+      message = std::format("Length {} is not length {}", length, value);
+      return false;
+    }
+    return true;
+  }
+
+  template<anch::val::Collection V>
+  bool
+  Length::check(const V& items, std::string& message) const {
+    const std::size_t size = static_cast<std::size_t>(std::ranges::size(items));
+    if(size != value) {
+      message = std::format("Item count {} is not length {}", size, value);
+      return false;
+    }
+    return true;
+  }
+
+  template<typename V>
+  requires (anch::val::Number<V> || anch::val::StringLike<V>)
+  bool
+  TotalDigits::check(const V& decimal, std::string& message) const {
+    const std::string text = anch::val::detail::decimalOf(decimal);
+    const auto digits = anch::val::detail::decimalDigits(text);
+    if(!digits) {
+      message = "Value " + anch::val::detail::formatValue(decimal) + " is not a decimal";
+      return false;
+    }
+    if(digits->first > value) {
+      message = std::format("Value {} has {} digits, more than totalDigits {}", text, digits->first, value);
+      return false;
+    }
+    return true;
+  }
+
+  template<typename V>
+  requires (anch::val::Number<V> || anch::val::StringLike<V>)
+  bool
+  FractionDigits::check(const V& decimal, std::string& message) const {
+    const std::string text = anch::val::detail::decimalOf(decimal);
+    const auto digits = anch::val::detail::decimalDigits(text);
+    if(!digits) {
+      message = "Value " + anch::val::detail::formatValue(decimal) + " is not a decimal";
+      return false;
+    }
+    if(digits->second > value) {
+      message = std::format("Value {} has {} fraction digits, more than fractionDigits {}", text, digits->second, value);
+      return false;
+    }
+    return true;
+  }
+
   template<anch::val::StringLike V>
   bool
   Pattern::check(const V& str, std::string& message) const {
@@ -474,6 +554,21 @@ namespace anch::val {
   constexpr anch::val::MaxLength
   maxLength(std::size_t length) {
     return anch::val::MaxLength{length};
+  }
+
+  constexpr anch::val::Length
+  length(std::size_t length) {
+    return anch::val::Length{length};
+  }
+
+  constexpr anch::val::TotalDigits
+  totalDigits(std::size_t digits) {
+    return anch::val::TotalDigits{digits};
+  }
+
+  constexpr anch::val::FractionDigits
+  fractionDigits(std::size_t digits) {
+    return anch::val::FractionDigits{digits};
   }
 
   template<anch::val::Number N>

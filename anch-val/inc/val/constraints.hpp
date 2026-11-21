@@ -32,6 +32,7 @@
 #include <string>
 #include <string_view>
 #include <tuple>
+#include <utility>
 #include <type_traits>
 #include <vector>
 
@@ -290,6 +291,29 @@ namespace anch::val::detail {
    * \return the number of code points
    */
   ANCH_VAL_EXPORT std::size_t codePoints(std::string_view str);
+
+  /*!
+   * Count digits of a decimal ( <tt>[+-]?[0-9]*(.[0-9]*)?</tt> with at least one digit): leading zeros of the integer
+   * part and trailing zeros of the fraction part are not counted (\c 0 has one digit)
+   *
+   * \param decimal the decimal
+   *
+   * \return the number of digits and of fraction digits, empty when the value is not a decimal
+   */
+  ANCH_VAL_EXPORT std::optional<std::pair<std::size_t, std::size_t>> decimalDigits(std::string_view decimal);
+
+  /*!
+   * Decimal representation of a value: string as is, integer, or shortest decimal representation of a floating point
+   * number ( \c std::to_chars , fixed notation)
+   *
+   * \tparam V the value type
+   *
+   * \param value the value
+   *
+   * \return the representation, empty for infinite and NaN values
+   */
+  template<typename V>
+  std::string decimalOf(const V& value);
 
   /*!
    * Format value for error message: quoted string, number, or empty string when value can not be formatted
@@ -698,6 +722,106 @@ namespace anch::val {
   };
 
   /*!
+   * \brief Exact length constraint (XSD \c length facet)
+   *
+   * Length of a string is its number of Unicode code points (UTF-8), length of a collection its number of items
+   * (XSD lists).
+   *
+   * \author Vincent Lachenal
+   *
+   * \since 0.3
+   */
+  struct ANCH_VAL_EXPORT Length {
+    /*! Length */
+    std::size_t value;
+
+    /*!
+     * Check string length
+     *
+     * \tparam V the value type
+     *
+     * \param str the value
+     * \param message the error message (set when value is invalid)
+     *
+     * \return \c true when value is valid
+     */
+    template<anch::val::StringLike V>
+    bool check(const V& str, std::string& message) const;
+
+    /*!
+     * Check number of items
+     *
+     * \tparam V the collection type
+     *
+     * \param items the collection
+     * \param message the error message (set when value is invalid)
+     *
+     * \return \c true when value is valid
+     */
+    template<anch::val::Collection V>
+    bool check(const V& items, std::string& message) const;
+  };
+
+  /*!
+   * \brief Maximum number of digits constraint (XSD \c totalDigits facet)
+   *
+   * Digits are counted on the decimal value: leading zeros of the integer part and trailing zeros of the fraction
+   * part are not counted. Floating point numbers are counted on their shortest decimal representation
+   * ( \c std::to_chars ). Strings have to be decimals ( <tt>[+-]?[0-9]*(.[0-9]*)?</tt> with at least one digit, as
+   * \c xs:decimal ).
+   *
+   * \author Vincent Lachenal
+   *
+   * \since 0.3
+   */
+  struct ANCH_VAL_EXPORT TotalDigits {
+    /*! Maximum number of digits */
+    std::size_t value;
+
+    /*!
+     * Check value
+     *
+     * \tparam V the value type (number or decimal string)
+     *
+     * \param decimal the value
+     * \param message the error message (set when value is invalid)
+     *
+     * \return \c true when value is valid
+     */
+    template<typename V>
+    requires (anch::val::Number<V> || anch::val::StringLike<V>)
+    bool check(const V& decimal, std::string& message) const;
+  };
+
+  /*!
+   * \brief Maximum number of fraction digits constraint (XSD \c fractionDigits facet)
+   *
+   * Digits are counted as \ref TotalDigits does (trailing zeros are not counted): integers have no fraction digit.
+   *
+   * \author Vincent Lachenal
+   *
+   * \since 0.3
+   */
+  struct ANCH_VAL_EXPORT FractionDigits {
+    /*! Maximum number of fraction digits */
+    std::size_t value;
+
+    /*!
+     * Check value
+     *
+     * \tparam V the value type (number or decimal string)
+     *
+     * \param decimal the value
+     * \param message the error message (set when value is invalid)
+     *
+     * \return \c true when value is valid
+     */
+    template<typename V>
+    requires (anch::val::Number<V> || anch::val::StringLike<V>)
+    bool check(const V& decimal, std::string& message) const;
+  };
+
+  /*!
    * Pattern matcher: returns \c true when the value matches the pattern
    *
    * \since 0.2
@@ -710,6 +834,18 @@ namespace anch::val {
    * \since 0.2
    */
   using PatternCompiler = std::function<anch::val::PatternMatcher(std::string_view)>;
+
+  /*!
+   * Pattern syntax
+   *
+   * \since 0.3
+   */
+  enum class PatternSyntax {
+    /*! ECMA-262 regular expression (JSON Schema): the pattern is searched in the value */
+    ECMASCRIPT,
+    /*! XML Schema regular expression (XSD \c pattern facet): the pattern matches the whole value */
+    XSD
+  };
 
   /*!
    * Set the pattern compiler used by \ref anch::val::pattern . The default compiler uses \c std::regex
@@ -726,10 +862,27 @@ namespace anch::val {
   ANCH_VAL_EXPORT void setPatternCompiler(anch::val::PatternCompiler compiler);
 
   /*!
+   * Set the pattern compiler of a syntax (see \ref setPatternCompiler(anch::val::PatternCompiler) "setPatternCompiler").
+   * The default XSD compiler translates XSD patterns to \c std::regex , matched on the whole value
+   * ( \c std::regex_match ), when the translation keeps their meaning: \c ^ and \c $ are ordinary characters,
+   * \c \\s is <tt>[ \\t\\n\\r]</tt> , \c \\d is <tt>[0-9]</tt> (ASCII digits only). Constructs which need
+   * Unicode properties ( \c \\p{..} , \c \\P{..} , \c \\i , \c \\I , \c \\c , \c \\C , \c \\w , \c \\W ) and
+   * character class subtractions ( <tt>[a-z-[aeiou]]</tt> ) are refused ( \c std::invalid_argument ): another
+   * compiler (ICU, PCRE2, ...) can be plugged for them.
+   *
+   * \param syntax the pattern syntax
+   * \param compiler the compiler, \c nullptr to restore the default compiler
+   *
+   * \since 0.3
+   */
+  ANCH_VAL_EXPORT void setPatternCompiler(anch::val::PatternSyntax syntax, anch::val::PatternCompiler compiler);
+
+  /*!
    * \brief String pattern constraint ( \c pattern )
    *
-   * The pattern is searched in the value (it is not anchored: use \c ^ and \c $ to match the whole value), as in
-   * JSON Schema.
+   * With ECMAScript syntax ( \ref anch::val::pattern ), the pattern is searched in the value (it is not anchored: use
+   * \c ^ and \c $ to match the whole value), as in JSON Schema. With XSD syntax ( \ref anch::val::xsdPattern ), it
+   * matches the whole value.
    *
    * \author Vincent Lachenal
    *
@@ -741,6 +894,9 @@ namespace anch::val {
 
     /*! Pattern */
     std::string source;
+
+    /*! Pattern syntax */
+    anch::val::PatternSyntax syntax = anch::val::PatternSyntax::ECMASCRIPT;
 
     /*!
      * Check value
@@ -1057,6 +1213,54 @@ namespace anch::val {
    * \since 0.2
    */
   ANCH_VAL_EXPORT anch::val::Pattern pattern(std::string_view source);
+
+  /*!
+   * XSD \c pattern facet: the pattern matches the whole value
+   *
+   * \param source the pattern (XML Schema regular expression)
+   *
+   * \return the constraint
+   *
+   * \throw std::invalid_argument pattern not supported by the default compiler (see
+   *        \ref setPatternCompiler(anch::val::PatternSyntax, anch::val::PatternCompiler) "setPatternCompiler")
+   * \throw std::regex_error invalid pattern (default compiler)
+   *
+   * \since 0.3
+   */
+  ANCH_VAL_EXPORT anch::val::Pattern xsdPattern(std::string_view source);
+
+  /*!
+   * XSD \c length facet
+   *
+   * \param length the length (code points of a string, items of a collection)
+   *
+   * \return the constraint
+   *
+   * \since 0.3
+   */
+  constexpr anch::val::Length length(std::size_t length);
+
+  /*!
+   * XSD \c totalDigits facet
+   *
+   * \param digits the maximum number of digits
+   *
+   * \return the constraint
+   *
+   * \since 0.3
+   */
+  constexpr anch::val::TotalDigits totalDigits(std::size_t digits);
+
+  /*!
+   * XSD \c fractionDigits facet
+   *
+   * \param digits the maximum number of fraction digits
+   *
+   * \return the constraint
+   *
+   * \since 0.3
+   */
+  constexpr anch::val::FractionDigits fractionDigits(std::size_t digits);
 
   /*!
    * \c format constraint

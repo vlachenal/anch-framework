@@ -42,6 +42,24 @@ target_link_libraries(my-app PRIVATE anch::val)
  * \c date-time , \c date with \c ANCH_UUID / \c ANCH_DATE are built-in) ; unknown formats are not checked.\n
  * Integers bounds are compared without conversion (an \c uint64_t field accepts \c minimum(-1) ).
  *
+ * \section val_xsd_sec XSD facets
+ *
+ * | XSD facet | Constraint |
+ * |-----------|------------|
+ * | \c length , \c minLength , \c maxLength | \c anch::val::length(n) , \c anch::val::minLength(n) , \c anch::val::maxLength(n) (strings: code points ; \c length also counts list items) |
+ * | \c pattern | \c anch::val::xsdPattern(regex) (matches the whole value) |
+ * | \c enumeration | \c anch::val::allowed({...}) |
+ * | \c minInclusive , \c maxInclusive , \c minExclusive , \c maxExclusive | \c anch::val::minimum(v) , \c anch::val::maximum(v) , \c anch::val::exclusiveMinimum(v) , \c anch::val::exclusiveMaximum(v) |
+ * | \c totalDigits , \c fractionDigits | \c anch::val::totalDigits(n) , \c anch::val::fractionDigits(n) (numbers and decimal strings) |
+ * | \c minOccurs , \c maxOccurs | \c anch::val::required , \c anch::val::minItems(n) , \c anch::val::maxItems(n) |
+ *
+ * \c whiteSpace is a normalization, applied by formats. XSD patterns have their own compiler
+ * ( \ref anch::val::setPatternCompiler(anch::val::PatternSyntax, anch::val::PatternCompiler) "setPatternCompiler"):
+ * the default one translates them to \c std::regex when the translation keeps their meaning ( \c ^ and \c $ are
+ * ordinary characters, \c \\d is ASCII digits) and refuses Unicode properties ( \c \\p{..} , \c \\i , \c \\c ,
+ * \c \\w ) and character class subtractions:
+ * \snippet{trimleft} anch-val/examples/val.cpp xsd
+ *
  * A constraint is a value with a \c check(value, message) function ; its parameters are public, for schema
  * generators:
  * \snippet{trimleft} anch-val/examples/val.cpp check
