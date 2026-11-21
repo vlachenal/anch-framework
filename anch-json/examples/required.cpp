@@ -42,16 +42,16 @@ template<>
 void
 anch::json::registerObject(anch::json::ObjectMapper<Pet>& mapper) {
   mapper
-    .registerField("id", &Pet::id, anch::json::required)
-    .registerField("name", &Pet::name, anch::json::required)
-    .registerField<std::string>("owner", &Pet::owner, anch::json::required); // has to be present, can be null
+    .registerField("id", &Pet::id, anch::val::required)
+    .registerField("name", &Pet::name, anch::val::required)
+    .registerField<std::string>("owner", &Pet::owner, anch::val::required); // has to be present, can be null
 }
 
 template<>
 void
 anch::json::registerObject(anch::json::ObjectMapper<Shelter>& mapper) {
   mapper
-    .registerField<Pet>("pets", &Shelter::pets, anch::json::required);
+    .registerField<Pet>("pets", &Shelter::pets, anch::val::required);
 }
 
 int

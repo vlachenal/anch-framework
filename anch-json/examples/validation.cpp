@@ -42,22 +42,22 @@ template<>
 void
 anch::json::registerObject(anch::json::ObjectMapper<Pet>& mapper) {
   mapper
-    .registerField("name", &Pet::name, anch::json::required, anch::json::minLength(1))
-    .registerField("age", &Pet::age, anch::json::minimum(0))
-    .registerField<std::string>("tags", &Pet::tags, anch::json::items(anch::json::minLength(1)));
+    .registerField("name", &Pet::name, anch::val::required, anch::val::minLength(1))
+    .registerField("age", &Pet::age, anch::val::minimum(0))
+    .registerField<std::string>("tags", &Pet::tags, anch::val::items(anch::val::minLength(1)));
 }
 
 template<>
 void
 anch::json::registerObject(anch::json::ObjectMapper<Shelter>& mapper) {
   mapper
-    .registerField<Pet>("pets", &Shelter::pets, anch::json::maxItems(10));
+    .registerField<Pet>("pets", &Shelter::pets, anch::val::maxItems(10));
 }
 
 int
 main() {
   Shelter shelter{{Pet{"Rex", 3, {"dog"}}, Pet{"", -1, {"cat", ""}}}};
-  for(const anch::json::Violation& violation : anch::json::validate(shelter)) { // every violation
+  for(const anch::val::Violation& violation : anch::json::validate(shelter)) { // every violation
     std::cout << violation.path << ": " << violation.message << std::endl;
   }
   return 0;

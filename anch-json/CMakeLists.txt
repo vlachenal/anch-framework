@@ -1,5 +1,5 @@
 # AnCH JSON: JSON serialization and deserialization
-set(json_public_deps anch::events anch::utils)
+set(json_public_deps anch::events anch::utils anch::val)
 set(json_public_definitions)
 if(ANCH_UUID)
   list(APPEND json_public_deps anch::uuid)

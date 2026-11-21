@@ -151,7 +151,7 @@ testMemberNames() {
   contains(models.header, "std::optional<std::string> NULL_;");
   contains(models.header, "std::optional<std::string> errno_;");
   contains(models.header, "std::optional<std::string> B_;");
-  contains(models.source, ".registerField(\"class\", &::model::A::class_, anch::json::required)");
+  contains(models.source, ".registerField(\"class\", &::model::A::class_, anch::val::required)");
   contains(models.source, ".registerField<std::string>(\"$id\", &::model::A::_id)");
 }
 
@@ -256,14 +256,14 @@ testRequired() {
     "B":{"allOf":[{"$ref":"#/components/schemas/A"},{"type":"object","required":["b"],"properties":{"b":{"type":"boolean"}}}]}})"));
   contains(models.header, "std::string a;");
   contains(models.header, "std::optional<std::string> n;");
-  contains(models.source, ".registerField(\"a\", &::model::A::a, anch::json::required)");
-  contains(models.source, ".registerField<std::string>(\"n\", &::model::A::n, anch::json::required)");
-  contains(models.source, ".registerField<int64_t>(\"l\", &::model::A::l, anch::json::required)");
-  contains(models.source, ".registerField<::model::A>(\"r\", &::model::A::r, anch::json::required)");
+  contains(models.source, ".registerField(\"a\", &::model::A::a, anch::val::required)");
+  contains(models.source, ".registerField<std::string>(\"n\", &::model::A::n, anch::val::required)");
+  contains(models.source, ".registerField<int64_t>(\"l\", &::model::A::l, anch::val::required)");
+  contains(models.source, ".registerField<::model::A>(\"r\", &::model::A::r, anch::val::required)");
   contains(models.source, ".registerField<std::string>(\"o\", &::model::A::o)\n");
   // allOf: inherited and own required properties
-  contains(models.source, ".registerField(\"a\", &::model::B::a, anch::json::required)");
-  contains(models.source, ".registerField(\"b\", &::model::B::b, anch::json::required)");
+  contains(models.source, ".registerField(\"a\", &::model::B::a, anch::val::required)");
+  contains(models.source, ".registerField(\"b\", &::model::B::b, anch::val::required)");
 }
 
 void
@@ -279,31 +279,31 @@ testConstraints() {
   GeneratedModels models = generate(document);
   anch::ut::assertThat(models.warnings.size() == 1, "1 warning expected (u maximum outside int64_t range) ; found {}", models.warnings.size());
   contains(models.warnings[0], "A.u: maximum 18446744073709551615 is outside int64_t range");
-  contains(models.source, ".registerField<std::string>(\"s\", &::model::A::s, anch::json::minLength(1), anch::json::maxLength(64), "
-	   "anch::json::pattern(\"^a+$\"))\n");
+  contains(models.source, ".registerField<std::string>(\"s\", &::model::A::s, anch::val::minLength(1), anch::val::maxLength(64), "
+	   "anch::val::pattern(\"^a+$\"))\n");
   contains(models.header, "Constraints: minLength 1, maxLength 64, pattern ^a+$");
-  contains(models.source, ".registerField<std::string>(\"mail\", &::model::A::mail, anch::json::format(\"email\"))\n");
-  contains(models.source, ".registerField<std::string>(\"esc\", &::model::A::esc, anch::json::pattern(\"^\\\\d+\\\"$\"))\n");
-  contains(models.source, ".registerField<std::string>(\"id\", &::model::A::id, anch::json::minLength(1))\n");
-  contains(models.source, ".registerField<int32_t>(\"i\", &::model::A::i, anch::json::minimum(0), anch::json::exclusiveMaximum(100))\n");
-  contains(models.source, ".registerField<int64_t>(\"u\", &::model::A::u, anch::json::minimum((-9223372036854775807 - 1)), anch::json::maximum(18446744073709551615u))\n");
-  contains(models.source, ".registerField<double>(\"d\", &::model::A::d, anch::json::minimum(1e3), anch::json::multipleOf(0.01))\n");
-  contains(models.source, ".registerField<std::string>(\"l\", &::model::A::l, anch::json::minItems(1), anch::json::maxItems(5), "
-	   "anch::json::uniqueItems, anch::json::items(anch::json::minLength(1)))\n");
+  contains(models.source, ".registerField<std::string>(\"mail\", &::model::A::mail, anch::val::format(\"email\"))\n");
+  contains(models.source, ".registerField<std::string>(\"esc\", &::model::A::esc, anch::val::pattern(\"^\\\\d+\\\"$\"))\n");
+  contains(models.source, ".registerField<std::string>(\"id\", &::model::A::id, anch::val::minLength(1))\n");
+  contains(models.source, ".registerField<int32_t>(\"i\", &::model::A::i, anch::val::minimum(0), anch::val::exclusiveMaximum(100))\n");
+  contains(models.source, ".registerField<int64_t>(\"u\", &::model::A::u, anch::val::minimum((-9223372036854775807 - 1)), anch::val::maximum(18446744073709551615u))\n");
+  contains(models.source, ".registerField<double>(\"d\", &::model::A::d, anch::val::minimum(1e3), anch::val::multipleOf(0.01))\n");
+  contains(models.source, ".registerField<std::string>(\"l\", &::model::A::l, anch::val::minItems(1), anch::val::maxItems(5), "
+	   "anch::val::uniqueItems, anch::val::items(anch::val::minLength(1)))\n");
   contains(models.header, "Constraints: minItems 1, maxItems 5, uniqueItems, items: minLength 1");
-  contains(models.source, ".registerField<int64_t>(\"m\", &::model::A::m, anch::json::minProperties(1), anch::json::maxProperties(3), "
-	   "anch::json::items(anch::json::minimum(0)))\n");
-  contains(models.source, ".registerField<int64_t>(\"e\", &::model::A::e, anch::json::allowed<int64_t>({1, 2, 9007199254740993}))\n");
+  contains(models.source, ".registerField<int64_t>(\"m\", &::model::A::m, anch::val::minProperties(1), anch::val::maxProperties(3), "
+	   "anch::val::items(anch::val::minimum(0)))\n");
+  contains(models.source, ".registerField<int64_t>(\"e\", &::model::A::e, anch::val::allowed<int64_t>({1, 2, 9007199254740993}))\n");
   contains(models.header, "Allowed values: 1, 2, 9007199254740993");
-  contains(models.source, ".registerField<bool>(\"b\", &::model::A::b, anch::json::allowed<bool>({true}))\n");
+  contains(models.source, ".registerField<bool>(\"b\", &::model::A::b, anch::val::allowed<bool>({true}))\n");
   contains(models.source, ".registerField<anch::UUID>(\"uid\", &::model::A::uid)\n");
   contains(models.header, "bool operator==(const A&) const = default;");
   // No constraints option
   ModelOptions options;
   options.constraints = false;
   models = generate(document, options);
-  anch::ut::assertThat(models.source.find("anch::json::m") == std::string::npos && models.source.find("anch::json::items") == std::string::npos
-		       && models.source.find("anch::json::allowed") == std::string::npos, "No constraint expected:\n{}", models.source);
+  anch::ut::assertThat(models.source.find("anch::json::m") == std::string::npos && models.source.find("anch::val::items") == std::string::npos
+		       && models.source.find("anch::val::allowed") == std::string::npos, "No constraint expected:\n{}", models.source);
   anch::ut::assertThat(models.header.find("Constraints:") == std::string::npos, "No constraint documentation expected");
 }
 
@@ -364,7 +364,7 @@ testConstraintsInconsistent() {
       }) != models.warnings.end(), "Warning for A.huge not found");
   anch::ut::assertThat(models.warnings.size() == 11, "11 warnings expected ; found {}", models.warnings.size());
   anch::ut::assertThat(models.source.find("e400") == std::string::npos, "Bounds outside double range must not be generated:\n{}", models.source);
-  contains(models.source, "anch::json::minLength(5), anch::json::maxLength(2)");
+  contains(models.source, "anch::val::minLength(5), anch::val::maxLength(2)");
   ModelOptions options;
   options.strict = true;
   checkError<GeneratorError>([&]() { generate(document, options); }, "A: required property 'missing' is not defined in properties");
@@ -378,7 +378,7 @@ testTrigraphs() {
   anch::ut::assertThat(models.header.find("??") == std::string::npos, "Trigraph in header:\n{}", models.header);
   anch::ut::assertThat(models.source.find("??") == std::string::npos, "Trigraph in source:\n{}", models.source);
   contains(models.header, "Line ending with ? ?/");
-  contains(models.source, R"(anch::json::pattern("^a?\?/$"))");
+  contains(models.source, R"(anch::val::pattern("^a?\?/$"))");
   contains(models.source, R"(text = "x?\?=y";)");
 }
 

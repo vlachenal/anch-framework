@@ -165,7 +165,7 @@ namespace anch::oas::detail {
     bool pointer = false;
     /*! File ( \c anch::rest::Part ) of a \c multipart/form-data body model: not mapped in JSON */
     bool part = false;
-    /*! Required property ( \c anch::json::required ) */
+    /*! Required property ( \c anch::val::required ) */
     bool required = false;
     /*! Value constraints (C++ expressions) */
     std::vector<std::string> constraints;
@@ -485,7 +485,7 @@ namespace anch::oas::detail {
    * Field constraints
    */
   struct Constraints {
-    /*! C++ expressions ( \c anch::json::minLength(1) , ...) */
+    /*! C++ expressions ( \c anch::val::minLength(1) , ...) */
     std::vector<std::string> code;
     /*! Documentation ( \c minLength \c 1 , ...) */
     std::vector<std::string> doc;
@@ -1343,7 +1343,7 @@ namespace anch::oas::detail {
 	  return;
 	}
 	if(string) {
-	  res.code.push_back("anch::json::" + keyword + "(" + std::to_string(value.value()) + ")");
+	  res.code.push_back("anch::val::" + keyword + "(" + std::to_string(value.value()) + ")");
 	  res.doc.push_back(keyword + " " + std::to_string(value.value()));
 	} else if(!formatted) { // formatted strings are checked by their own parser
 	  ignored(keyword);
@@ -1358,14 +1358,14 @@ namespace anch::oas::detail {
 	const std::string& pattern = schema->pattern.value();
 	try { // pattern is checked here: an invalid pattern would raise an error when mapper is registered
 	  std::regex check(pattern, std::regex::ECMAScript);
-	  res.code.push_back("anch::json::pattern(" + literal(pattern) + ")");
+	  res.code.push_back("anch::val::pattern(" + literal(pattern) + ")");
 	  res.doc.push_back("pattern " + pattern);
 	} catch(const std::regex_error& error) {
 	  constraintWarning(path, "pattern " + pattern + " is not a valid ECMAScript regular expression (" + error.what() + "): ignored");
 	}
       }
       if(schema->format.has_value() && string) { // unknown formats are not checked by anch-json
-	res.code.push_back("anch::json::format(" + literal(schema->format.value()) + ")");
+	res.code.push_back("anch::val::format(" + literal(schema->format.value()) + ")");
       }
       // Strings -
       // Numbers +
@@ -1389,7 +1389,7 @@ namespace anch::oas::detail {
 	  constraintWarning(path, keyword + " " + value->text + " is outside " + cpp + " range");
 	}
 	const std::string& name = exclusive ? exclusiveKeyword : keyword;
-	res.code.push_back("anch::json::" + name + "(" + numberLiteral(value->text) + ")");
+	res.code.push_back("anch::val::" + name + "(" + numberLiteral(value->text) + ")");
 	res.doc.push_back(name + " " + value->text);
       };
       bound(schema->minimum, schema->exclusiveMinimum.value_or(false), "minimum", "exclusiveMinimum");
@@ -1412,7 +1412,7 @@ namespace anch::oas::detail {
 	} else if(divisor.kind != Scalar::Kind::NUMBER || !(numberValue(divisor.text) > 0.0L) || !representable(divisor.text)) {
 	  constraintWarning(path, "multipleOf has to be a strictly positive number: ignored");
 	} else {
-	  res.code.push_back("anch::json::multipleOf(" + numberLiteral(divisor.text) + ")");
+	  res.code.push_back("anch::val::multipleOf(" + numberLiteral(divisor.text) + ")");
 	  res.doc.push_back("multipleOf " + divisor.text);
 	}
       }
@@ -1442,7 +1442,7 @@ namespace anch::oas::detail {
 	  values.push_back(value.kind == Scalar::Kind::STRING ? literal(value.text) : (number ? numberLiteral(value.text) : value.text));
 	}
 	if(!values.empty()) {
-	  res.code.push_back("anch::json::allowed<" + cpp + ">({" + join(values, ", ") + "})");
+	  res.code.push_back("anch::val::allowed<" + cpp + ">({" + join(values, ", ") + "})");
 	}
       }
       // Enumeration -
@@ -1470,7 +1470,7 @@ namespace anch::oas::detail {
       }
       auto size = [&](const std::optional<uint64_t>& value, const std::string& keyword) {
 	if(value.has_value()) {
-	  res.code.push_back("anch::json::" + keyword + "(" + std::to_string(value.value()) + ")");
+	  res.code.push_back("anch::val::" + keyword + "(" + std::to_string(value.value()) + ")");
 	  res.doc.push_back(keyword + " " + std::to_string(value.value()));
 	}
       };
@@ -1484,7 +1484,7 @@ namespace anch::oas::detail {
 	  if(type.cpp == "bool") { // std::vector<bool> items are not references
 	    constraintWarning(path, "uniqueItems is not supported for boolean arrays: ignored");
 	  } else {
-	    res.code.push_back("anch::json::uniqueItems");
+	    res.code.push_back("anch::val::uniqueItems");
 	    res.doc.push_back("uniqueItems");
 	  }
 	}
@@ -1505,7 +1505,7 @@ namespace anch::oas::detail {
 	Constraints itemsConstraints;
 	valueConstraints(items, type, path + (type.container == Container::VECTOR ? "[]" : "{}"), itemsConstraints);
 	if(!itemsConstraints.code.empty()) {
-	  res.code.push_back("anch::json::items(" + join(itemsConstraints.code, ", ") + ")");
+	  res.code.push_back("anch::val::items(" + join(itemsConstraints.code, ", ") + ")");
 	}
 	if(!itemsConstraints.doc.empty()) {
 	  res.doc.push_back("items: " + join(itemsConstraints.doc, ", "));
@@ -1887,7 +1887,7 @@ namespace anch::oas::detail {
 	      bool exact = !field.optional && !field.pointer && field.type.container == Container::NONE;
 	      out << "    .registerField" << (exact ? "" : "<" + qualified(field.type) + ">")
 		  << '(' << literal(field.json) << ", &" << type << "::" << field.member
-		  << (field.required ? ", anch::json::required" : "");
+		  << (field.required ? ", anch::val::required" : "");
 	      for(const std::string& constraint : field.constraints) {
 		out << ", " << constraint;
 	      }

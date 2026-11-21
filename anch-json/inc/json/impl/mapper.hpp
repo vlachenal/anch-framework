@@ -58,21 +58,21 @@ namespace anch::json {
   ObjectMapper<T>::addWriter(const std::string& key, G get, W write, const C&... constraints) {
     // Validator is registered only when there is something to check (it keeps mappers code small) +
     using V = std::remove_cvref_t<std::invoke_result_t<G, const T&>>;
-    if constexpr (anch::json::hasValueConstraints<C...>() || anch::json::detail::hasNestedObjects<V>()) {
-      _validators.push_back([key, get, ...cts = constraints](const T& obj, anch::json::ValidationContext& context) -> void {
+    if constexpr (anch::val::hasValueConstraints<C...>() || anch::json::detail::hasNestedObjects<V>()) {
+      _validators.push_back([key, get, ...cts = constraints](const T& obj, anch::val::ValidationContext& context) -> void {
 	anch::json::detail::validateField(key, std::invoke(get, obj), context, cts...);
       });
     }
     // Validator is registered only when there is something to check (it keeps mappers code small) -
-    if constexpr (anch::json::hasValueConstraints<C...>() || anch::json::isRequired<C...>()) {
+    if constexpr (anch::val::hasValueConstraints<C...>() || anch::val::isRequired<C...>()) {
       _writers.push_back(FieldWriter{key, WriteFn([key, get, write, ...cts = constraints](const T& obj, anch::json::WriterContext& context) -> bool {
 	decltype(auto) val = std::invoke(get, obj);
-	if constexpr (anch::json::hasValueConstraints<C...>()) {
-	  anch::json::detail::checkConstraints(val, context, cts...);
+	if constexpr (anch::val::hasValueConstraints<C...>()) {
+	  anch::val::detail::checkConstraints(val, context, cts...);
 	} else {
 	  ((void)cts, ...);
 	}
-	if constexpr (anch::json::isRequired<C...>()) {
+	if constexpr (anch::val::isRequired<C...>()) {
 	  if(anch::json::detail::writeEmptyRequired(key, val, context)) {
 	    return true;
 	  }
@@ -104,7 +104,7 @@ namespace anch::json {
 
   template<typename T>
   template<typename P, typename... C>
-  requires (anch::json::FieldConstraint<C,P> && ...)
+  requires (anch::val::FieldConstraint<C,P> && ...)
   ObjectMapper<T>&
   ObjectMapper<T>::registerField(const std::string& key, P T::* value, [[maybe_unused]] C&&... constraints) {
     static_assert(!std::is_reference<P>::value, "Can not deserialize reference value"); // raise compile-time error if value is a reference
@@ -152,13 +152,13 @@ namespace anch::json {
 	}
       }
     };
-    addReader(key, withConstraints(read, value, std::forward<C>(constraints)...), anch::json::isRequired<C...>(), anch::json::isNullable<P>());
+    addReader(key, withConstraints(read, value, std::forward<C>(constraints)...), anch::val::isRequired<C...>(), anch::val::isNullable<P>());
     return *this;
   }
 
   template<typename T>
   template<typename MT, typename P, typename... C>
-  requires (anch::json::FieldConstraint<C,P> && ...)
+  requires (anch::val::FieldConstraint<C,P> && ...)
   ObjectMapper<T>&
   ObjectMapper<T>::registerField(const std::string& key, P T::* value, [[maybe_unused]] C&&... constraints) {
     auto write = [=, this](const auto& val, anch::json::WriterContext& context) -> bool {
@@ -178,13 +178,13 @@ namespace anch::json {
 	return anch::json::Factory<MT>::getInstance().deserialize(obj.*value, context);
       }
     };
-    addReader(key, withConstraints(read, value, std::forward<C>(constraints)...), anch::json::isRequired<C...>(), anch::json::isNullable<P>());
+    addReader(key, withConstraints(read, value, std::forward<C>(constraints)...), anch::val::isRequired<C...>(), anch::val::isNullable<P>());
     return *this;
   }
 
   template<typename T>
   template<typename P, typename MT, typename... C>
-  requires (anch::json::FieldConstraint<C,P> && ...)
+  requires (anch::val::FieldConstraint<C,P> && ...)
   ObjectMapper<T>&
   ObjectMapper<T>::registerField(const std::string& key, std::function<P(const T&)> getter, const C&... constraints) {
     auto write = [=, this](const auto& val, anch::json::WriterContext& context) -> bool {
@@ -227,14 +227,14 @@ namespace anch::json {
 
   template<typename T>
   template<typename P, typename MT, typename... C>
-  requires (anch::json::FieldConstraint<C,P> && ...)
+  requires (anch::val::FieldConstraint<C,P> && ...)
   ObjectMapper<T>&
   ObjectMapper<T>::registerField(const std::string& key, std::function<void(T&, const P&)> setter, [[maybe_unused]] C&&... constraints) {
     static_assert(!std::is_reference<P>::value, "Can not deserialize reference value"); // raise compile-time error if value is a reference
     // Check value constraints before calling setter +
     auto set = [setter, ...cts = std::forward<C>(constraints)](T& obj, const auto& inst, anch::json::ReaderContext& context) -> void {
-      if constexpr (anch::json::hasValueConstraints<C...>()) {
-	anch::json::detail::checkConstraints(inst, context, cts...);
+      if constexpr (anch::val::hasValueConstraints<C...>()) {
+	anch::val::detail::checkConstraints(inst, context, cts...);
       } else {
 	((void)cts, ...);
 	(void)context;
@@ -298,13 +298,13 @@ namespace anch::json {
 	  return false;
 	}
       }
-    }), anch::json::isRequired<C...>(), anch::json::isNullable<P>());
+    }), anch::val::isRequired<C...>(), anch::val::isNullable<P>());
     return *this;
   }
 
   template<typename T>
   template<typename P, typename MT, typename... C>
-  requires (anch::json::FieldConstraint<C,P> && ...)
+  requires (anch::val::FieldConstraint<C,P> && ...)
   ObjectMapper<T>&
   ObjectMapper<T>::registerField(const std::string& key, std::function<P(const T&)> getter, std::function<void(T&, const P&)> setter, C&&... constraints) {
     registerField<P,MT>(key, getter, std::as_const(constraints)...);
@@ -314,12 +314,12 @@ namespace anch::json {
   template<typename R, typename P, typename... C>
   anch::json::DeserializeFn<T>
   ObjectMapper<T>::withConstraints(R& read, [[maybe_unused]] P T::* value, [[maybe_unused]] C&&... constraints) {
-    if constexpr (anch::json::hasValueConstraints<C...>()) {
+    if constexpr (anch::val::hasValueConstraints<C...>()) {
       return anch::json::DeserializeFn<T>([read, value, ...cts = std::forward<C>(constraints)](T& obj, anch::json::ReaderContext& context) -> bool {
 	if(!read(obj, context)) {
 	  return false;
 	}
-	anch::json::detail::checkConstraints(obj.*value, context, cts...);
+	anch::val::detail::checkConstraints(obj.*value, context, cts...);
 	return true;
       });
     } else {
@@ -346,7 +346,7 @@ namespace anch::json {
 
   template<typename T>
   [[gnu::cold]] void
-  ObjectMapper<T>::validateValue(const T& value, anch::json::ValidationContext& context) const {
+  ObjectMapper<T>::validateValue(const T& value, anch::val::ValidationContext& context) const {
     for(const auto& validator : _validators) {
       std::invoke(validator, value, context);
     }

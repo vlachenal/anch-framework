@@ -378,12 +378,12 @@ testValidate() {
   value.count = 10;
   value.codes = {"AB", "AB", "x"};
   value.weights = {{"a", -1.0}};
-  std::vector<anch::json::Violation> violations = anch::json::validate(value);
-  for(const anch::json::Violation& violation : violations) {
+  std::vector<anch::val::Violation> violations = anch::json::validate(value);
+  for(const anch::val::Violation& violation : violations) {
     std::cout << violation.path << ": " << violation.message << std::endl;
   }
   std::vector<std::string> paths;
-  for(const anch::json::Violation& violation : violations) {
+  for(const anch::val::Violation& violation : violations) {
     paths.push_back(violation.path);
   }
   std::vector<std::string> expected = {"/codes", "/codes/2", "/codes/2", "/count", "/name", "/weights/a"};

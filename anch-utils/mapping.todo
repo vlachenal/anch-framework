@@ -117,7 +117,8 @@ Questions (toutes tranchées)
    libre trouvée par ADL (son nom entre en conflit avec anch::json::registerObject lors de la recherche dépendante
    des arguments, et elle ne permet pas de décrire les types de std ou de bibliothèques tierces).
 2. Tranchée le 2026-11-21 : anch::json::registerObject déprécié en 0.3, supprimé en 0.4.
-3. Tranchée le 2026-11-21 : contraintes et validation dans anch-utils.
+3. Tranchée le 2026-11-21 : contraintes et validation dans anch-utils ; remplacée le même jour : bibliothèque
+   anch-val (anch::val, voir anch-val/anch-val.todo).
 4. Tranchée le 2026-11-21 : options de champ ignorées par les autres formats (anch::json::name("..."),
    anch::csv::ignore).
 5. Tranchée le 2026-11-21 : anch::ScalarMapping<T> commun aux formats pour les énumérations et types simples.

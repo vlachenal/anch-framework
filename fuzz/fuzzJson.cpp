@@ -58,8 +58,8 @@ template<>
 void
 anch::json::registerObject(anch::json::ObjectMapper<Child>& mapper) {
   mapper
-    .registerField("id", &Child::id, anch::json::required)
-    .registerField<std::string>("name", &Child::name, anch::json::maxLength(16))
+    .registerField("id", &Child::id, anch::val::required)
+    .registerField<std::string>("name", &Child::name, anch::val::maxLength(16))
     ;
 }
 
@@ -69,7 +69,7 @@ anch::json::registerObject(anch::json::ObjectMapper<Document>& mapper) {
   mapper
     .registerField("text", &Document::text)
     .registerField("integer", &Document::integer)
-    .registerField("small", &Document::small, anch::json::minimum(1))
+    .registerField("small", &Document::small, anch::val::minimum(1))
     .registerField("real", &Document::real)
     .registerField("flag", &Document::flag)
     .registerField<std::string>("optional", &Document::optional)

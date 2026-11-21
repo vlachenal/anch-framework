@@ -109,7 +109,7 @@
  *
  * \section rest_constraints_sec Fields constraints
  *
- * anch-json fields constraints ( \c anch::json::required , \c anch::json::minLength , ...) are checked by the
+ * anch-json fields constraints ( \c anch::val::required , \c anch::val::minLength , ...) are checked by the
  * \ref anch::codec::Json "Json" codec according to the side which uses it ( \ref anch::codec::Side "Side" ):
  * - server: request bodies are checked (invalid body: \c 400 response, its body is the error message with the
  *   path of the invalid value, such as <tt>/name: Length 0 is lower than minLength 1</tt>), responses are not ;

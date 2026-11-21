@@ -47,7 +47,7 @@ namespace anch::json {
    * \since 0.2
    */
   template<typename T>
-  std::vector<anch::json::Violation> validate(const T& value);
+  std::vector<anch::val::Violation> validate(const T& value);
 
   /*!
    * Check if value is valid ( \ref anch::json::validate returns no violation)
