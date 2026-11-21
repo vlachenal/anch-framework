@@ -105,7 +105,7 @@ target_link_libraries(petstore PRIVATE anch::json anch::uuid)
  * ( \c CONSTRAINT_VIOLATION error with the path of the value, see \ref json_check_sec "anch-json" for client and
  * server recommended options). They are listed in the generated
  * documentation of each member. \c --no-constraints disables them (required properties are still checked).
- * Generated models can be checked without serialization with \c anch::json::validate (every violation is
+ * Generated models can be checked without serialization with \c anch::val::validate (every violation is
  * returned, see \ref json_validate_sec "anch-json").
  *
  * | OpenAPI keyword | Generated constraint |

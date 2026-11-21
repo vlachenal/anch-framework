@@ -24,6 +24,7 @@
 #include <vector>
 
 #include "json/json.hpp"
+#include "val/validation.hpp"
 
 struct Pet {
   uint64_t id;
@@ -57,11 +58,11 @@ main() {
   Pet pet{2, "Vincent", {"cat", ""}};
   std::size_t nb = 0;
   //! [validate]
-  for(const anch::val::Violation& violation : anch::json::validate(pet)) {
+  for(const anch::val::Violation& violation : anch::val::validate(pet)) {
     std::cout << violation.path << ": " << violation.message << std::endl;
   }
   //! [validate]
-  for([[maybe_unused]] const anch::val::Violation& violation : anch::json::validate(pet)) {
+  for([[maybe_unused]] const anch::val::Violation& violation : anch::val::validate(pet)) {
     ++nb;
   }
   return nb == 1 ? 0 : 1; // empty tag

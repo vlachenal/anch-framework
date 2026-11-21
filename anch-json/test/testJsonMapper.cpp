@@ -33,6 +33,7 @@
 #include <utility>
 
 #include "json/json.hpp"
+#include "val/validation.hpp"
 #include "mapping.hpp"
 
 #ifdef ANCH_UUID
@@ -1885,8 +1886,8 @@ checkViolations(const std::vector<anch::val::Violation>& violations, const std::
 
 void
 testValidate() {
-  anch::ut::assertThat(anch::json::validate(validConstraints()).empty(), "Valid object should not have violation");
-  anch::ut::assertThat(anch::json::isValid(validConstraints()), "Valid object should be valid");
+  anch::ut::assertThat(anch::val::validate(validConstraints()).empty(), "Valid object should not have violation");
+  anch::ut::assertThat(anch::val::isValid(validConstraints()), "Valid object should be valid");
   // Every violation is reported, in fields registration order
   TestConstraints value = validConstraints();
   value._name = "a";
@@ -1894,8 +1895,8 @@ testValidate() {
   value._tags = {"a", "", "a"};
   value._scores = {{"a", -1}, {"b", -2}};
   value._color = "blue";
-  anch::ut::assertThat(!anch::json::isValid(value), "Invalid object should not be valid");
-  checkViolations(anch::json::validate(value), {
+  anch::ut::assertThat(!anch::val::isValid(value), "Invalid object should not be valid");
+  checkViolations(anch::val::validate(value), {
       {"/name", "Length 1 is lower than minLength 2"},
       {"/age", "Value -1 is lower than minimum 0"},
       {"/tags", "Items 0 and 2 are equal (uniqueItems)"},
@@ -1904,8 +1905,8 @@ testValidate() {
       {"/scores/b", "Value -2 is lower than minimum 0"},
       {"/color", "Value 'blue' is not allowed (allowed: 'red', 'green')"}});
   // Getter, required fields are not checked
-  checkViolations(anch::json::validate(TestGetter{-1}), {{"/value", "Value -1 is lower than minimum 0"}});
-  checkViolations(anch::json::validate(TestSerRequired{}), {});
+  checkViolations(anch::val::validate(TestGetter{-1}), {{"/value", "Value -1 is lower than minimum 0"}});
+  checkViolations(anch::val::validate(TestSerRequired{}), {});
 }
 
 void
@@ -1913,7 +1914,7 @@ testValidateNested() {
   TestNested value;
   value._main = validConstraints();
   value._main._name = "a";
-  checkViolations(anch::json::validate(value), {{"/main/name", "Length 1 is lower than minLength 2"}});
+  checkViolations(anch::val::validate(value), {{"/main/name", "Length 1 is lower than minLength 2"}});
   value._opt = validConstraints();
   value._opt->_age = 200;
   value._ptr = std::make_shared<TestConstraints>(validConstraints());
@@ -1922,7 +1923,7 @@ testValidateNested() {
   value._map["a/b"]._level = 0;
   value._list = {validConstraints(), validConstraints()};
   value._list[1]._tags = {};
-  checkViolations(anch::json::validate(value), {
+  checkViolations(anch::val::validate(value), {
       {"/main/name", "Length 1 is lower than minLength 2"},
       {"/opt/age", "Value 200 is greater than maximum 150"},
       {"/ptr/color", "Value 'blue' is not allowed (allowed: 'red', 'green')"},
@@ -1932,12 +1933,12 @@ testValidateNested() {
   // Root containers
   std::vector<TestConstraints> values = {validConstraints(), validConstraints()};
   values[0]._name = "toolong";
-  checkViolations(anch::json::validate(values), {{"/0/name", "Length 7 is greater than maxLength 5"}});
+  checkViolations(anch::val::validate(values), {{"/0/name", "Length 7 is greater than maxLength 5"}});
   std::map<std::string,TestConstraints> map = {{"k", validConstraints()}};
   map["k"]._even = 3;
-  checkViolations(anch::json::validate(map), {{"/k/even", "Value 3 is not a multiple of 2"}});
+  checkViolations(anch::val::validate(map), {{"/k/even", "Value 3 is not a multiple of 2"}});
   // Primitive values have no constraint
-  anch::ut::assertThat(anch::json::validate(std::string("a")).empty() && anch::json::validate(42).empty(), "Primitives are valid");
+  anch::ut::assertThat(anch::val::validate(std::string("a")).empty() && anch::val::validate(42).empty(), "Primitives are valid");
 }
 // Validation -
 

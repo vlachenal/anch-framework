@@ -97,11 +97,9 @@ Médor Vincent
  *
  * \section json_validate_sec Validation
  *
- * \ref anch::json::validate checks an object without serializing it: constraints of its fields and of its nested
- * values (objects, collections items, maps values, \c std::optional and pointers values). Unlike serialization and
- * deserialization checks, it does not stop on the first violation: every violation is returned with its path.
- * Mapping options are not used. Fields registered with a setter only are not checked, and required fields are not
- * checked (an object always has its fields). \ref anch::json::isValid returns \c true when there is no violation.
+ * \c anch::val::validate (anch-val, \c val/validation.hpp , see \ref page_val ) checks an object without serializing it:
+ * constraints of its fields and of its nested values, every violation is returned with its path. Mapping options are
+ * not used.
  *
  * \snippet{trimleft} anch-json/examples/validation.cpp example
  *

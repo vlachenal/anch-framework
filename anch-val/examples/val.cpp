@@ -19,6 +19,7 @@
 */
 // anch-val documentation examples (anch-val.dox)
 #include "val/constraints.hpp"
+#include "val/validation.hpp"
 
 #include <iostream>
 #include <stdexcept>
@@ -64,6 +65,24 @@ struct anch::val::CheckContext<ReadContext> {
 };
 //! [context]
 
+//! [mapping]
+struct Pet {
+  std::string name;
+  std::vector<std::string> tags;
+};
+
+// Description shared by formats (anch-utils): constraints are anch-val ones
+template<>
+struct anch::Mapping<Pet> {
+  static void
+  registerObject(anch::ObjectMapper<Pet> auto& mapper) {
+    mapper
+      .registerField("name", &Pet::name, anch::val::required, anch::val::minLength(1))
+      .registerField("tags", &Pet::tags, anch::val::items(anch::val::minLength(1)));
+  }
+};
+//! [mapping]
+
 int
 main() {
   //! [check]
@@ -95,6 +114,16 @@ main() {
     std::cout << error.what() << std::endl; // /1: Length 0 is lower than minLength 1
   }
   //! [format]
+  //! [validate]
+  // Every violation of a described object, without serialization
+  const std::vector<Pet> pets{{"Rex", {"dog"}}, {"", {"cat", ""}}};
+  for(const anch::val::Violation& violation : anch::val::validate(pets)) {
+    std::cout << violation.path << ": " << violation.message << std::endl;
+  }
+  // /1/name: Length 0 is lower than minLength 1
+  // /1/tags/1: Length 0 is lower than minLength 1
+  //! [validate]
+
   //! [xsd]
   // XSD facets: whole value patterns, exact length, digits of decimals
   anch::val::ValidationContext xsd;
@@ -106,5 +135,5 @@ main() {
   // Value 19.999 has 5 digits, more than totalDigits 4
   // Value 19.999 has 3 fraction digits, more than fractionDigits 2
   //! [xsd]
-  return (validation.violations().size() == 2 && xsd.violations().size() == 2) ? 0 : 1;
+  return (validation.violations().size() == 2 && xsd.violations().size() == 2 && anch::val::validate(pets).size() == 2) ? 0 : 1;
 }

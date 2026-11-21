@@ -14,6 +14,8 @@ and `\deprecated` in its documentation, which give its replacement, and it is re
 
 ### Breaking changes
 
+- anch-json: `anch::json::validate` and `isValid` are replaced by `anch::val::validate` and `isValid` (anch-val,
+  `val/validation.hpp`), which validate the common description of objects (`anch::Mapping`) without format.
 - anch-json: `anch::json::registerObject` is removed: types are described by an `anch::Mapping<T>` specialization
   (anch-utils, `mapping.hpp`), shared by formats, whose `registerObject(anch::ObjectMapper<T> auto& mapper)` function
   registers the fields. Fields of `std::optional`, pointers, collections and maps are mapped with the mapper of their
@@ -63,7 +65,8 @@ and `\deprecated` in its documentation, which give its replacement, and it is re
   registered with a member pointer, a getter, a setter or both), `anch::Described<T>` and `anch::describe<T>(mapper)`.
   anch-json reads it (its mappers satisfy `anch::ObjectMapper`, their `registerField` functions are public).
 - anch-val: fields constraints shared by formats (out of anch-json) and their checks in a context
-  (`CheckContext<X>`, specialized by formats: anch-json reader and writer contexts, `ValidationContext`); `uuid`,
+  (`CheckContext<X>`, specialized by formats: anch-json reader and writer contexts, `ValidationContext`); objects
+  validation on their description (`validate`, `isValid`, `ValidationMapper<T>`); `uuid`,
   `date-time` and `date` formats with anch-uuid and anch-date as optional dependencies (`ANCH_UUID`, `ANCH_DATE`).
   XSD facets: `length` (code points of strings, items of lists), `totalDigits` and `fractionDigits` (numbers and
   decimal strings), `xsdPattern` (XSD patterns, matched on the whole value) with a pattern compiler by syntax

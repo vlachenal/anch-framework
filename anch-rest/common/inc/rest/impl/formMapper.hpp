@@ -24,7 +24,7 @@
 #include <string>
 #include <utility>
 
-#include "json/validation.hpp"
+#include "val/validation.hpp"
 
 #include "codec/json.hpp"
 
@@ -156,7 +156,7 @@ namespace anch::rest {
     if(side != anch::codec::Side::SERVER) {
       return;
     }
-    std::vector<anch::val::Violation> violations = anch::json::validate(value);
+    std::vector<anch::val::Violation> violations = anch::val::validate(value);
     if(!violations.empty()) {
       throw std::invalid_argument(violations.front().path + ": " + violations.front().message);
     }

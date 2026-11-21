@@ -31,6 +31,7 @@
 #include "date/rfc3339.hpp"
 
 #include "json/json.hpp"
+#include "val/validation.hpp"
 #include "json/mappingError.hpp"
 
 #include "ut/assert.hpp"
@@ -378,7 +379,7 @@ testValidate() {
   value.count = 10;
   value.codes = {"AB", "AB", "x"};
   value.weights = {{"a", -1.0}};
-  std::vector<anch::val::Violation> violations = anch::json::validate(value);
+  std::vector<anch::val::Violation> violations = anch::val::validate(value);
   for(const anch::val::Violation& violation : violations) {
     std::cout << violation.path << ": " << violation.message << std::endl;
   }
