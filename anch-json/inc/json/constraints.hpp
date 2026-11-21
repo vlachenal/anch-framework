@@ -81,44 +81,6 @@ namespace anch::json::detail {
   [[noreturn]] ANCH_JSON_EXPORT void violation(anch::json::WriterContext& context, const std::string& message);
 
   /*!
-   * Validate nested values: objects (fields constraints), \c std::optional and pointers values, collections items
-   * and maps values. Primitive values have no nested values.
-   *
-   * \tparam P the value type
-   *
-   * \param value the value
-   * \param context the validation context
-   */
-  template<typename P>
-  [[gnu::cold]] void validateNested(const P& value, anch::val::ValidationContext& context);
-
-  /*!
-   * Check if values of type \c P can contain objects (directly or in \c std::optional , pointers, collections or
-   * maps): these values have to be validated
-   *
-   * \tparam P the value type
-   *
-   * \return \c true when values can contain objects
-   */
-  template<typename P>
-  constexpr bool hasNestedObjects();
-
-  /*!
-   * Validate field: value constraints and nested values. It is cold code (not used by serialization and
-   * deserialization): it does not use the inlining budget of mappers.
-   *
-   * \tparam P the value type
-   * \tparam C the constraints types
-   *
-   * \param key the field name
-   * \param value the field value
-   * \param context the validation context
-   * \param constraints the field constraints
-   */
-  template<typename P, typename... C>
-  [[gnu::cold]] void validateField(const std::string& key, const P& value, anch::val::ValidationContext& context, const C&... constraints);
-
-  /*!
    * Write empty required field: \c null for nullable values ( \c std::optional , smart pointers and pointers),
    * \c [] or \c {} for empty containers, whatever \c serialize_null and \c serialize_empty_col options are
    *

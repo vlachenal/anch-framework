@@ -57,7 +57,7 @@ namespace anch::val {
   /*!
    * \brief Validation context
    *
-   * Context used by validations ( \c anch::json::validate ) : it keeps the path of the checked value and collects violations.
+   * Context used by validations ( \c anch::val::validate ) : it keeps the path of the checked value and collects violations.
    *
    * \author Vincent Lachenal
    *

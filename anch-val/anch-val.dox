@@ -4,8 +4,9 @@
  *
  * \section val_intro_seq Introduction
  *
- * AnCH validation library defines fields constraints independently of formats: anch-json checks them when it reads
- * and writes values, and validates objects ( \c anch::json::validate ) ; other formats (CSV, XML) and schema
+ * AnCH validation library defines fields constraints independently of formats, and validates described objects
+ * ( \c anch::Mapping , anch-utils) without serializing them. anch-json checks the constraints when it reads and writes
+ * values ; other formats (CSV, XML) and schema
  * generators (JSON Schema, XSD) use the same constraints (see \c anch-val.todo ).
  *
  * \section val_install_sec Installation
@@ -66,6 +67,17 @@ target_link_libraries(my-app PRIVATE anch::val)
  *
  * Usage with anch-json:
  * \snippet{trimleft} anch-json/examples/constraints.cpp example
+ *
+ * \section val_validate_sec Validation
+ *
+ * \ref anch::val::validate checks a value without serializing it: constraints of the fields of described objects
+ * and of their nested values (objects, collections items, maps values, \c std::optional and pointers values). It
+ * does not stop on the first violation: every violation is returned with its path (JSON Pointer), in fields
+ * registration order. Fields registered with a setter only are not checked, and required fields are not checked (an
+ * object always has its fields). \ref anch::val::isValid returns \c true when there is no violation.
+ * \snippet{trimleft} anch-val/examples/val.cpp mapping
+ *
+ * \snippet{trimleft} anch-val/examples/val.cpp validate
  *
  * \section val_context_sec Contexts
  *

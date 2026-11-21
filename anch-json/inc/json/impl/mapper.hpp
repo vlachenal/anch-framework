@@ -37,11 +37,10 @@ namespace anch::json {
   // Generic implementations +
   // Constructors +
   template<typename T>
-  ObjectMapper<T>::ObjectMapper(): anch::json::GenericMapper<ObjectMapper<T>, T>(), _writers(), _validators(), _readers(), _required() {
+  ObjectMapper<T>::ObjectMapper(): anch::json::GenericMapper<ObjectMapper<T>, T>(), _writers(), _readers(), _required() {
     static_assert(anch::Described<T>, "T has to be described by an anch::Mapping<T> specialization (mapping.hpp)");
     anch::describe<T>(*this);
     _writers.shrink_to_fit();
-    _validators.shrink_to_fit();
   }
   // Constructors -
 
@@ -57,14 +56,6 @@ namespace anch::json {
   template<typename G, typename W, typename... C>
   void
   ObjectMapper<T>::addWriter(const std::string& key, G get, W write, const C&... constraints) {
-    // Validator is registered only when there is something to check (it keeps mappers code small) +
-    using V = std::remove_cvref_t<std::invoke_result_t<G, const T&>>;
-    if constexpr (anch::val::hasValueConstraints<C...>() || anch::json::detail::hasNestedObjects<V>()) {
-      _validators.push_back([key, get, ...cts = constraints](const T& obj, anch::val::ValidationContext& context) -> void {
-	anch::json::detail::validateField(key, std::invoke(get, obj), context, cts...);
-      });
-    }
-    // Validator is registered only when there is something to check (it keeps mappers code small) -
     if constexpr (anch::val::hasValueConstraints<C...>() || anch::val::isRequired<C...>()) {
       _writers.push_back(FieldWriter{key, WriteFn([key, get, write, ...cts = constraints](const T& obj, anch::json::WriterContext& context) -> bool {
 	decltype(auto) val = std::invoke(get, obj);
@@ -348,14 +339,6 @@ namespace anch::json {
       }
     }
     context.endObject();
-  }
-
-  template<typename T>
-  [[gnu::cold]] void
-  ObjectMapper<T>::validateValue(const T& value, anch::val::ValidationContext& context) const {
-    for(const auto& validator : _validators) {
-      std::invoke(validator, value, context);
-    }
   }
 
   template<typename T>

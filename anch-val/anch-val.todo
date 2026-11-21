@@ -1,7 +1,7 @@
 anch-val : conception (2026-11-21)
 ==================================
 
-Validée le 2026-11-21 (décisions en fin de fichier) ; étapes 1 et 2 faites le 2026-11-21.
+Validée le 2026-11-21 (décisions en fin de fichier) ; étapes 1 à 3 faites le 2026-11-21.
 
 Demande (2026-11-21) : en vue d'un codec XML / XSD (et d'autres formats), externaliser la validation des champs dans
 une bibliothèque spécialisée, anch-val. Remplace la décision 3 de anch-utils/mapping.todo (contraintes et
@@ -95,7 +95,10 @@ Implémentation de l'étape 1 (2026-11-21)
    - length : points de code des chaînes, nombre d'éléments des collections (listes XSD).
    - totalDigits / fractionDigits : nombres (représentation décimale la plus courte, std::to_chars fixe) et chaînes
      décimales (xs:decimal) ; zéros de tête et zéros de fin de fraction non comptés ; infini et NaN refusés.
-3. Avec anch::Mapping<T> : anch::val::validate sur la description commune.
+3. Faite le 2026-11-21. anch::val::validate / isValid (val/validation.hpp) sur la description commune, avec
+   ValidationMapper<T> (concept anch::ObjectMapper, une instance par type) ; objets imbriqués = types décrits
+   (anch::Described) directement ou dans std::optional, pointeurs, collections, maps. anch::json::validate et
+   isValid supprimés (changement direct) ; anch-json ne garde aucun validateur (mappers plus petits).
 
 Questions (tranchées le 2026-11-21)
 -----------------------------------

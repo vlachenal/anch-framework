@@ -12,6 +12,7 @@ if(ANCH_DATE)
 endif()
 
 anch_add_library(anch-val
+  PUBLIC_DEPS anch::utils # objects description (val/validation.hpp)
   PRIVATE_DEPS ${val_private_deps}
   PRIVATE_DEFINITIONS ${val_private_definitions})
 

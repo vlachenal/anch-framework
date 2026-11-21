@@ -18,6 +18,7 @@
   along with ANCH Framework.  If not, see <https://www.gnu.org/licenses/>.
 */
 #include "val/constraints.hpp"
+#include "val/validation.hpp"
 
 #include <cstdint>
 #include <limits>
@@ -312,6 +313,80 @@ testXsdPattern() {
   anch::ut::assertThat(violation(literal, std::string("\\p{L}")).empty() && violation(ecma, std::string("abc")).empty(), "Compiler by syntax");
 }
 
+// Described types (anch::Mapping, without format) +
+namespace {
+
+  struct Tag {
+    std::string name;
+  };
+
+  struct Pet {
+    std::string name;
+    int age = 0;
+    std::vector<Tag> tags;
+    std::optional<Tag> main;
+    std::map<int, Tag> byRank;
+    Pet* parent = nullptr;
+    int computed() const { return -age; }
+  };
+
+}
+
+template<>
+struct anch::Mapping<Tag> {
+  static void
+  registerObject(anch::ObjectMapper<Tag> auto& mapper) {
+    mapper.registerField("name", &Tag::name, anch::val::required, anch::val::minLength(1));
+  }
+};
+
+template<>
+struct anch::Mapping<Pet> {
+  static void
+  registerObject(anch::ObjectMapper<Pet> auto& mapper) {
+    mapper
+      .registerField("name", &Pet::name, anch::val::required, anch::val::minLength(2))
+      .registerField("age", &Pet::age, anch::val::minimum(0))
+      .registerField("tags", &Pet::tags, anch::val::maxItems(2))
+      .registerField("main", &Pet::main)
+      .registerField("byRank", &Pet::byRank)
+      .registerField("parent", &Pet::parent)
+      .registerField("computed", std::function<int(const Pet&)>(&Pet::computed), anch::val::maximum(0))
+      .registerField("written", std::function<void(Pet&, const int&)>([](Pet& pet, const int& value) { pet.age = value; }),
+		     anch::val::minimum(100))
+      ;
+  }
+};
+static_assert(anch::ObjectMapper<anch::val::ValidationMapper<Pet>, Pet>);
+// Described types -
+
+void
+testValidate() {
+  Pet parent{"P", 3, {}, std::nullopt, {}, nullptr};
+  Pet pet{"Rex", 2, {{"dog"}, {""}, {"a"}}, Tag{""}, {{7, Tag{""}}}, &parent};
+  const std::vector<Violation> violations = anch::val::validate(pet);
+  const std::vector<std::pair<std::string, std::string>> expected{
+    {"/tags", "Item count 3 is greater than maxItems 2"},
+    {"/tags/1/name", "Length 0 is lower than minLength 1"},
+    {"/main/name", "Length 0 is lower than minLength 1"},
+    {"/byRank/7/name", "Length 0 is lower than minLength 1"},
+    {"/parent/name", "Length 1 is lower than minLength 2"}};
+  anch::ut::assertThat(violations.size() == expected.size(), "{} violations expected, found {}", expected.size(), violations.size());
+  for(std::size_t i = 0; i < expected.size() && i < violations.size(); ++i) {
+    anch::ut::assertThat(violations[i].path == expected[i].first && violations[i].message == expected[i].second,
+			 "Violation {}: '{}' {}", i, violations[i].path, violations[i].message);
+  }
+  // Getter value is checked, setter only field is not, required is not checked
+  Pet invalid{"Médor", -1, {}, std::nullopt, {}, nullptr};
+  const std::vector<Violation> getter = anch::val::validate(invalid);
+  anch::ut::assertThat(getter.size() == 2 && getter[0].path == "/age" && getter[1].path == "/computed", "age and computed violations expected");
+  anch::ut::assertThat(anch::val::isValid(Pet{"Médor", 1, {}, std::nullopt, {}, nullptr}), "Valid pet");
+  // Collections of described objects and primitives
+  anch::ut::assertThat(anch::val::validate(std::vector<Tag>{{"a"}, {""}}).size() == 1
+		       && anch::val::validate(std::vector<Tag>{{"a"}, {""}})[0].path == "/1/name", "Collection of objects");
+  anch::ut::assertThat(anch::val::isValid(42) && anch::val::isValid(std::string()), "Primitive values are valid");
+}
+
 void
 anch::ut::setup(anch::ut::UnitTests& tests) {
   tests
@@ -328,5 +403,6 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("length", testLength)
     .add("digits", testDigits)
     .add("xsd-pattern", testXsdPattern)
+    .add("validate", testValidate)
     ;
 }

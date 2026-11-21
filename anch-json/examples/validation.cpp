@@ -26,6 +26,7 @@
 #include <vector>
 
 #include "json/json.hpp"
+#include "val/validation.hpp"
 
 //! [example]
 struct Pet {
@@ -61,7 +62,7 @@ struct anch::Mapping<Shelter> {
 int
 main() {
   Shelter shelter{{Pet{"Rex", 3, {"dog"}}, Pet{"", -1, {"cat", ""}}}};
-  for(const anch::val::Violation& violation : anch::json::validate(shelter)) { // every violation
+  for(const anch::val::Violation& violation : anch::val::validate(shelter)) { // every violation
     std::cout << violation.path << ": " << violation.message << std::endl;
   }
   return 0;

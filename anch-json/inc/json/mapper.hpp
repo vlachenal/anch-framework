@@ -148,9 +148,6 @@ namespace anch::json {
     /*! JSON writer functions registry */
     std::vector<FieldWriter> _writers;
 
-    /*! Fields validators (fields which can be read: member or getter) */
-    std::vector<std::function<void(const T&, anch::val::ValidationContext&)>> _validators;
-
     /*! Field names comparison (inlined: it is called for each node of each field lookup) */
     struct FieldLess {
       /*!
@@ -221,16 +218,6 @@ namespace anch::json {
      */
     bool deserializeValue(T& value, anch::json::ReaderContext& context) const;
 
-    /*!
-     * Validate object fields: fields constraints and nested values (used by \ref anch::json::validate )
-     *
-     * \param value the object to validate
-     * \param context the validation context
-     *
-     * \since 0.2
-     */
-    void validateValue(const T& value, anch::val::ValidationContext& context) const;
-
   private:
     /*!
      * Deserialize field value
@@ -267,8 +254,7 @@ namespace anch::json {
      * \param get the value getter (from object)
      * \param write the value writer
      * \param constraints the field constraints: checked before writing value (when \c serialize_check_constraints
-     *        option is \c true ), required fields are always written. The field validator
-     *        ( \ref anch::json::validate ) is registered too.
+     *        option is \c true ), required fields are always written
      */
     template<typename G, typename W, typename... C>
     void addWriter(const std::string& key, G get, W write, const C&... constraints);
