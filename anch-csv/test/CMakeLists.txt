@@ -19,3 +19,5 @@ add_test(NAME anch-csv-read-by-position COMMAND anch-csv-mapper-test -t read-by-
 add_test(NAME anch-csv-read-errors COMMAND anch-csv-mapper-test -t read-errors)
 add_test(NAME anch-csv-write COMMAND anch-csv-mapper-test -t write)
 add_test(NAME anch-csv-write-constraints COMMAND anch-csv-mapper-test -t write-constraints)
+add_test(NAME anch-csv-records COMMAND anch-csv-mapper-test -t records)
+add_test(NAME anch-csv-vectors COMMAND anch-csv-mapper-test -t vectors)

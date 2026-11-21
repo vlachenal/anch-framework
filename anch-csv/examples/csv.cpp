@@ -18,6 +18,7 @@
   along with ANCH Framework.  If not, see <https://www.gnu.org/licenses/>.
 */
 // anch-csv documentation examples (anch-csv.dox)
+#include "csv/csv.hpp"
 #include "csv/csvError.hpp"
 #include "csv/mapper.hpp"
 #include "csv/reader.hpp"
@@ -28,6 +29,7 @@
 #include <optional>
 #include <sstream>
 #include <string>
+#include <vector>
 
 //! [mapping]
 struct Pet {
@@ -90,6 +92,23 @@ main() {
   }
   //! [objects reader]
 
+  //! [records]
+  // Objects read one by one, without loading the whole input
+  std::stringstream input("id,name\n1,Rex\n2,Médor\n");
+  std::size_t count = 0;
+  for(const Pet& record : anch::csv::records<Pet>(input)) {
+    std::cout << record.name << std::endl;
+    ++count;
+  }
+
+  // Small volumes: vectors
+  std::vector<Pet> all;
+  std::stringstream again("id,name\n1,Rex\n2,Médor\n");
+  anch::csv::deserialize(all, again);
+  std::ostringstream written;
+  anch::csv::serialize(all, written); // header, then one record per object
+  //! [records]
+
   //! [options]
   anch::csv::Options options;
   options.separator = ';';     // spreadsheets with a comma as decimal separator
@@ -99,5 +118,5 @@ main() {
   std::ostringstream out;
   anch::csv::Writer(out, options).writeRow("1,5", true);
   //! [options]
-  return out.str() == "\xEF\xBB\xBF" "1,5;true\n" ? 0 : 1;
+  return (out.str() == "\xEF\xBB\xBF" "1,5;true\n" && count == 2 && all.size() == 2) ? 0 : 1;
 }

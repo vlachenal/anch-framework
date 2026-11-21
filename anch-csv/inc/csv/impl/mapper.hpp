@@ -316,6 +316,9 @@ namespace anch::csv {
   template<typename T>
   void
   ObjectWriter<T>::writeHeader() {
+    if(!_header) {
+      return;
+    }
     std::vector<std::string_view> names;
     for(const auto& field : _mapper.fields()) {
       if(field.write) {

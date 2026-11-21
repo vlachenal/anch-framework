@@ -1,7 +1,7 @@
 anch-csv : conception (2026-11-19)
 ==================================
 
-Validée le 2026-11-21 (décisions en fin de fichier) ; étapes 1 et 2 faites le 2026-11-21.
+Validée le 2026-11-21 (décisions en fin de fichier) ; étapes 1 à 3 faites le 2026-11-21.
 
 Objectif
 --------
@@ -97,7 +97,10 @@ Construction
    colonne obligatoire absente : MISSING_COLUMN ; contraintes anch-val à la lecture (Options::readCheckConstraints,
    CONSTRAINT_VIOLATION, nouveau code) et à l'écriture (Options::writeCheckConstraints). Énumérations : avec
    anch::ScalarMapping (mapping.todo étape 5).
-3. Lecture en flux.
+3. Faite le 2026-11-21. csv/csv.hpp : records<T>(input, options) (Records<T>, input range lu une fois : objet
+   courant valable jusqu'à l'itération suivante, erreurs levées pendant l'itération, erreurs d'en-tête levées par
+   records), deserialize(vector<T>&, input, options) (valeurs remplacées) et serialize(range, out, options) (en-tête
+   écrit même sans objet ; ObjectWriter::writeHeader public).
 4. Codec anch-rest, puis lecteur / écrivain anch-batch.
 
 Questions (toutes tranchées)

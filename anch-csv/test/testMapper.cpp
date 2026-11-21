@@ -17,11 +17,14 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ANCH Framework.  If not, see <https://www.gnu.org/licenses/>.
 */
+#include "csv/csv.hpp"
 #include "csv/mapper.hpp"
 
 #include <chrono>
 #include <cstdint>
 #include <functional>
+#include <list>
+#include <ranges>
 #include <optional>
 #include <sstream>
 #include <string>
@@ -246,6 +249,84 @@ testWriteConstraints() {
   anch::ut::assertThat(raised, "Constraint violation on line 2 (after the header) expected");
 }
 
+static_assert(std::ranges::input_range<anch::csv::Records<Pet>&>);
+
+void
+testRecords() {
+  std::istringstream input("id,name,age\n1,Rex,3\n2,Médor,\n3,Félix,5\n");
+  std::vector<std::string> names;
+  int ages = 0;
+  for(const Pet& pet : anch::csv::records<Pet>(input)) {
+    names.push_back(pet.name);
+    ages += pet.age.value_or(0);
+  }
+  anch::ut::assertThat(names == std::vector<std::string>{"Rex", "Médor", "Félix"} && ages == 8, "Unexpected records");
+  // Range algorithms
+  std::istringstream second("id,name\n1,Rex\n2,Médor\n");
+  auto records = anch::csv::records<Pet>(second);
+  auto ids = records | std::views::transform([](const Pet& pet) { return pet.id; });
+  uint64_t sum = 0;
+  for(uint64_t id : ids) {
+    sum += id;
+  }
+  anch::ut::assertThat(sum == 3, "Range adaptors");
+  // Errors are raised while iterating, with the line of the record
+  std::istringstream invalid("id,name\n1,Rex\nx,Médor\n");
+  std::size_t read = 0;
+  bool raised = false;
+  try {
+    for([[maybe_unused]] const Pet& pet : anch::csv::records<Pet>(invalid)) {
+      ++read;
+    }
+  } catch(const CsvError& error) {
+    raised = error.getErrorCode() == ErrorCode::CONVERSION && error.getLine() == 3;
+  }
+  anch::ut::assertThat(raised && read == 1, "Conversion error on line 3 after 1 record");
+  // Header errors are raised by records()
+  std::istringstream noId("name\nRex\n");
+  raised = false;
+  try {
+    [[maybe_unused]] auto missing = anch::csv::records<Pet>(noId);
+  } catch(const CsvError& error) {
+    raised = error.getErrorCode() == ErrorCode::MISSING_COLUMN;
+  }
+  anch::ut::assertThat(raised, "Missing column raised by records()");
+  std::istringstream empty("");
+  for([[maybe_unused]] const Pet& pet : anch::csv::records<Pet>(empty)) {
+    anch::ut::assertThat(false, "No record expected");
+  }
+}
+
+void
+testVectors() {
+  Pet rex;
+  rex.id = 1;
+  rex.name = "Rex";
+  Pet medor;
+  medor.id = 2;
+  medor.name = "Médor";
+  medor.nickname = "Mémé";
+  Options options;
+  options.separator = ';';
+  std::ostringstream out;
+  anch::csv::serialize(std::list<Pet>{rex, medor}, out, options);
+  std::vector<Pet> pets{Pet()};
+  std::istringstream input(out.str());
+  anch::csv::deserialize(pets, input, options);
+  anch::ut::assertThat(pets.size() == 2 && pets[0].name == "Rex" && !pets[0].nickname && pets[1].nickname == "Mémé",
+		       "Round trip of a list (values are replaced)");
+  // Header is written without object
+  std::ostringstream header;
+  anch::csv::serialize(std::vector<Pet>(), header);
+  anch::ut::assertThat(header.str().starts_with("id,name,nickname,") && header.str().ends_with(",upper\r\n"),
+		       "Header expected: '{}'", header.str());
+  Options noHeader;
+  noHeader.header = false;
+  std::ostringstream none;
+  anch::csv::serialize(std::vector<Pet>(), none, noHeader);
+  anch::ut::assertThat(none.str().empty(), "Nothing written without header and object");
+}
+
 void
 anch::ut::setup(anch::ut::UnitTests& tests) {
   tests
@@ -256,5 +337,7 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("read-errors", testReadErrors)
     .add("write", testWrite)
     .add("write-constraints", testWriteConstraints)
+    .add("records", testRecords)
+    .add("vectors", testVectors)
     ;
 }
