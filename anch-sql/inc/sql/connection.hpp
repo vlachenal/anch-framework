@@ -251,42 +251,36 @@ namespace anch::sql {
     /*!
      * Execute SQL prepared statement query
      *
-     * \param query the SQL query to execute
-     * \param value the first value to bind
-     * \param values the other values
+     * \param query the SQL query to execute (with named parameters: \c :name )
+     * \param parameters the parameters (every parameter of the query has to be given)
      *
      * \return the result set which has to be deleted after use
      *
-     * \throw SqlException any error
+     * \throw SqlException any error (missing or unknown parameter: non fatal)
      */
-    template<typename T, typename... Q>
-    ResultSet* query(const std::string& query, const T& value, const Q&... values);
+    ResultSet* query(const std::string& query, const anch::sql::Parameters& parameters);
 
     /*!
      * Execute query and treat each row of result set
      *
-     * \param query the SQL query to execute
+     * \param query the SQL query to execute (with named parameters: \c :name )
      * \param rowMapper the row mapper function
-     * \param value the first value to bind
-     * \param values the other values
+     * \param parameters the parameters (every parameter of the query has to be given)
      *
      * \throw SqlException any error
      */
-    template<typename T, typename... Q>
-    void queryMapRow(const std::string& query, std::function<void(ResultSet&)> rowMapper, const T& value, const Q&... values);
+    void queryMapRow(const std::string& query, std::function<void(ResultSet&)> rowMapper, const anch::sql::Parameters& parameters);
 
     /*!
      * Execute query and extract result set
      *
-     * \param query the SQL query to execute
+     * \param query the SQL query to execute (with named parameters: \c :name )
      * \param resExtractor the result set extractor function
-     * \param value the first value to bind
-     * \param values the other values
+     * \param parameters the parameters (every parameter of the query has to be given)
      *
      * \throw SqlException any error
      */
-    template<typename T, typename... Q>
-    void queryExtract(const std::string& query, std::function<void(ResultSet&)> resExtractor, const T& value, const Q&... values);
+    void queryExtract(const std::string& query, std::function<void(ResultSet&)> resExtractor, const anch::sql::Parameters& parameters);
 
     /*!
      * Execute update (INSERT, UPDATE or DELETE) SQL query.
@@ -302,16 +296,14 @@ namespace anch::sql {
     /*!
      * Execute update (INSERT, UPDATE or DELETE) SQL prepared statement.
      *
-     * \param query the SQL query
-     * \param value the first value to bind
-     * \param values the other values
+     * \param query the SQL query (with named parameters: \c :name )
+     * \param parameters the parameters (every parameter of the query has to be given)
      *
      * \return the number of affected rows
      *
      * \throw SqlException any error
      */
-    template<typename T, typename... Q>
-    uint64_t update(const std::string& query, const T& value, const Q&... values);
+    uint64_t update(const std::string& query, const anch::sql::Parameters& parameters);
 
     /*!
      * Execute batch prepared statement
@@ -402,31 +394,6 @@ namespace anch::sql {
      * \throw SqlException any error
      */
     static void mapRow(ResultSet* res, std::function<void(ResultSet&)> rowMapper);
-
-    /*!
-     * Bind parameters to prepared statement
-     *
-     * \param stmt the prepared statement
-     * \param idx the current index
-     * \param value the value to bind for index
-     * \param values the other values to bind
-     *
-     * \throw SqlException any error
-     */
-    template<typename T, typename... Q>
-    static void bindParameters(PreparedStatement& stmt, std::size_t& idx, const T& value, const Q&... values);
-
-    /*!
-     * Bind parameters to prepared statement
-     *
-     * \param stmt the prepared statement
-     * \param idx the current index
-     * \param value the value to bind for index
-     *
-     * \throw SqlException any error
-     */
-    template<typename T>
-    static void bindParameters(PreparedStatement& stmt, std::size_t& idx, const T& value);
 
   protected:
     /*!

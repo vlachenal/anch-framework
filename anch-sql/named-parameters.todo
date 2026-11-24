@@ -177,6 +177,20 @@ SqlSyntax ajoutés : questionMarkOperator, arraySlice, dollarParameters (Postgre
 @name et $name refusés, sinon liés à NULL en silence). findPlaceholders / numberPlaceholders restent jusqu'à
 l'étape 2 (pilote PostgreSQL). Tests : anch-named-parameters-test (names, repeated, ignored, positional-refused,
 lists).
+Étape 2 faite le 2026-11-24 (branche sql-named-statements) : PreparedStatement::parse(query, syntaxe, style)
+appelé par chaque pilote avant la préparation (NamedQuery + render sans liste ; listes à l'étape 5),
+set(nom, valeur) pour tout Bindable (sql/parameters.hpp : ParameterValue, toParameter, Bindable), setNull(nom),
+set(Parameters) (paramètres effacés d'abord : pas de valeur d'une exécution précédente), checkBindings avec tous les
+noms manquants, getParameterNames, getQuery, getBindingCount / getBindingValue (valeur de chaque paramètre du
+pilote : MySQL pointe sur la même valeur pour les ? d'un même nom) ; nombre de paramètres du serveur vérifié
+(MySQL, SQLite), PQdescribePrepared supprimé (PostgreSQL) ; Parameters (liste d'initialisation {{"id", 3}} ou
+add / addNull) et Connection::query / queryMapRow / queryExtract / update avec Parameters (étape 3 avancée pour
+remplacer les formes positionnelles supprimées) ; batchUpdate garde son mapper PreparedStatement& (set(nom, ...)).
+findPlaceholders / numberPlaceholders et testPrepareStatementWildCards.cpp supprimés (cas portés dans
+testNamedParameters.cpp : literals, dialects). Tests par base : stmt-named (valeur répétée, paramètres manquants
+et inconnus, positionnels refusés ; PostgreSQL : casts, opérateur jsonb ?, tranches). PostgreSQL déduit le type
+d'un paramètre de sa première utilisation (:name IS NULL seul : erreur), documenté.
+Reste pour l'étape 3 : constructeur de requêtes (noms générés), batchUpdate avec Parameters (à décider).
 CHANGELOG ([Unreleased], Breaking changes : '?' et formes positionnelles supprimés ; Added : paramètres nommés,
 Parameters, listes) à chaque étape.
 

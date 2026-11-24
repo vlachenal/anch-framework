@@ -71,15 +71,21 @@ main(void) {
     PostgreSQLConnection dbCon(config);
     std::cout << "Connected to database" << std::endl;
 
-    // Without transaction, each query is committed by the database (auto-commit mode)
-    dbCon.update("UPDATE T_Test SET email = ? WHERE first_name = ?", "john@anch.org", "John");
+    // Without transaction, each query is committed by the database (auto-commit mode). Parameters are named
+    // (':name'): each one has to be given, a name used several times is bound once
+    //! [parameters]
+    dbCon.update("UPDATE T_Test SET email = :email WHERE first_name = :first", {{"email", "john@anch.org"}, {"first", "John"}});
+    dbCon.update("UPDATE T_Test SET email = :email WHERE first_name = :first",
+		 anch::sql::Parameters().add("first", "Jane").addNull("email"));
+    //! [parameters]
 
     // A transaction is committed only by commit(): an unfinished transaction is rolled back when the connection is
     // released (returned to its pool or destroyed), even without SQL error
     dbCon.begin();
     try {
-      dbCon.update("INSERT INTO T_Test (first_name,last_name,birth_date) VALUES (?,?,?)", "Jane", "Doe", "1971-01-01");
-      dbCon.update("INSERT INTO T_Test (first_name,last_name,birth_date) VALUES (?,?,?)", "Jack", "Doe", "1972-01-01");
+      const std::string insert = "INSERT INTO T_Test (first_name,last_name,birth_date) VALUES (:first,:last,:birth)";
+      dbCon.update(insert, {{"first", "Jane"}, {"last", "Doe"}, {"birth", "1971-01-01"}});
+      dbCon.update(insert, {{"first", "Jack"}, {"last", "Doe"}, {"birth", "1972-01-01"}});
       dbCon.commit();
     } catch(...) {
       dbCon.rollback();

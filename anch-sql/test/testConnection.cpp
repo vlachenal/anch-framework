@@ -94,14 +94,11 @@ class MockStatement: public PreparedStatement {
 public:
   Failure& _failure;
   MockStatement(const std::string& query, Failure& failure): PreparedStatement(), _failure(failure) {
-    setParameterCount(anch::sql::findPlaceholders(query, anch::sql::SqlSyntax::STANDARD).size());
+    parse(query, anch::sql::SqlSyntax::STANDARD, anch::sql::ParameterStyle::POSITIONAL);
     ++calls.prepared;
   }
   virtual ~MockStatement() noexcept {
     ++calls.deleted;
-  }
-  const std::vector<std::optional<std::string>>& values() const {
-    return _values;
   }
   void markInvalid() noexcept {
     invalidate();
@@ -186,6 +183,20 @@ expectError(F func, const std::string& msg) {
   anch::ut::fail(msg);
 }
 
+template<typename F>
+void
+expectMessage(F func, const std::string& expected) {
+  try {
+    func();
+  } catch(const SqlException& error) {
+    anch::ut::assertThat(std::string(error.what()).find(expected) != std::string::npos, "Unexpected error '{}' instead of '{}'", error.what(),
+			 expected);
+    anch::ut::assertTrue(error.isOK(), "Parameters errors should not be fatal");
+    return;
+  }
+  anch::ut::fail("Error '" + expected + "' expected");
+}
+
 void
 resetCalls() {
   calls = Calls();
@@ -244,17 +255,30 @@ testReleaseUnknownState() {
 void
 testPreparedStatementErrors() {
   MockConnection conn;
-  PreparedStatement& stmt = conn.prepareStatement("UPDATE t SET a = ? WHERE b = ?");
-  anch::ut::assertThat(stmt.getParameterCount() == 2, "{} parameters", stmt.getParameterCount());
-  expectError([&stmt]() { stmt.set(0, 1); }, "Index 0 should be refused");
-  expectError([&stmt]() { stmt.set(3, 1); }, "Index 3 should be refused");
-  stmt.set(1, 1);
-  expectError([&stmt]() { stmt.executeUpdate(); }, "Unbound parameter 2 should be refused");
+  PreparedStatement& stmt = conn.prepareStatement("UPDATE t SET a = :a, c = :c WHERE b = :b OR d = :b");
+  anch::ut::assertThat(stmt.getParameterCount() == 3 && stmt.getParameterNames() == std::vector<std::string>{"a", "c", "b"},
+		       "{} parameters", stmt.getParameterCount());
+  expectMessage([&stmt]() { stmt.set("other", 1); }, "no parameter 'other' in query (parameters: a, c, b): UPDATE t SET a = :a");
+  stmt.set("a", 1);
+  expectMessage([&stmt]() { stmt.executeUpdate(); }, "parameters 'c', 'b' have not been bound: UPDATE t SET");
+  stmt.set("c", std::optional<int32_t>(2));
+  expectMessage([&stmt]() { stmt.executeUpdate(); }, "parameter 'b' has not been bound");
   anch::ut::assertTrue(conn.isValid(), "Binding errors should not invalidate connection");
-  stmt.setNull(2);
-  const auto& values = static_cast<MockStatement&>(stmt).values();
-  anch::ut::assertTrue(values[0] == "1" && !values[1].has_value(), "Values should be '1' and NULL");
+  stmt.setNull("b");
+  // MySQL style: one value for each '?', a name used several times gives the same value (no copy)
+  anch::ut::assertThat(stmt.getBindingCount() == 4, "{} bindings", stmt.getBindingCount());
+  anch::ut::assertTrue(stmt.getBindingValue(0) == "1" && stmt.getBindingValue(1) == "2" && !stmt.getBindingValue(2).has_value()
+		       && &stmt.getBindingValue(2) == &stmt.getBindingValue(3), "Values should be '1', '2', NULL and NULL");
   anch::ut::assertThat(stmt.executeUpdate() == 1, "Update should succeed");
+  // Parameters: values of previous executions are not reused, unknown names are refused
+  const std::string query = "UPDATE t SET a = :a, c = :c WHERE b = :b OR d = :b";
+  anch::ut::assertThat(conn.update(query, {{"a", 1}, {"c", "x"}, {"b", std::nullopt}}) == 1, "Update with parameters should succeed");
+  expectMessage([&conn, &query]() { conn.update(query, {{"a", 1}, {"c", "x"}}); }, "parameter 'b' has not been bound");
+  expectMessage([&conn, &query]() { conn.update(query, anch::sql::Parameters().add("a", 1).add("c", "x").addNull("b").add("e", 2)); },
+		"no parameter 'e' in query");
+  // Positional parameters are refused
+  expectMessage([&conn]() { conn.prepareStatement("UPDATE t SET a = ? WHERE b = ?"); }, "positional parameters ('?') are not supported");
+  anch::ut::assertTrue(conn.isValid(), "Binding errors should not invalidate connection");
   conn._failure = Failure::FATAL;
   expectError([&stmt]() { stmt.executeUpdate(); }, "Execution should fail");
   anch::ut::assertFalse(conn.isValid(), "Fatal error of prepared statement should invalidate connection");
@@ -324,15 +348,15 @@ testPoolReleasesTransaction() {
 void
 testStatementCacheLru() {
   MockConnection conn(2);
-  PreparedStatement* a = &conn.prepareStatement("SELECT a FROM t WHERE id = ?");
-  PreparedStatement* b = &conn.prepareStatement("SELECT b FROM t WHERE id = ?");
-  anch::ut::assertTrue(&conn.prepareStatement("SELECT a FROM t WHERE id = ?") == a, "Cached statement should be reused");
+  PreparedStatement* a = &conn.prepareStatement("SELECT a FROM t WHERE id = :id");
+  PreparedStatement* b = &conn.prepareStatement("SELECT b FROM t WHERE id = :id");
+  anch::ut::assertTrue(&conn.prepareStatement("SELECT a FROM t WHERE id = :id") == a, "Cached statement should be reused");
   anch::ut::assertThat(calls.prepared == 2, "Cached statement should not be prepared again: {} prepared", calls.prepared);
-  conn.prepareStatement("SELECT c FROM t WHERE id = ?"); // 'b' is the least recently used statement
+  conn.prepareStatement("SELECT c FROM t WHERE id = :id"); // 'b' is the least recently used statement
   anch::ut::assertThat(conn.getCachedStatementCount() == 2, "Cache should be bounded: {} statements", conn.getCachedStatementCount());
   anch::ut::assertThat(calls.deallocated == 1 && calls.deleted == 1, "Evicted statement should be deallocated and deleted: {} deallocated, {} deleted", calls.deallocated, calls.deleted);
-  anch::ut::assertTrue(&conn.prepareStatement("SELECT a FROM t WHERE id = ?") == a, "Recently used statement should be kept");
-  anch::ut::assertThat(conn.update("UPDATE t SET b = ? WHERE id = ?", 1, 2) == 1, "Update should succeed");
+  anch::ut::assertTrue(&conn.prepareStatement("SELECT a FROM t WHERE id = :id") == a, "Recently used statement should be kept");
+  anch::ut::assertThat(conn.update("UPDATE t SET b = :b WHERE id = :id", {{"b", 1}, {"id", 2}}) == 1, "Update should succeed");
   anch::ut::assertThat(calls.prepared == 4, "Evicted statement should be prepared again: {} prepared", calls.prepared);
   (void)b;
 }
@@ -340,8 +364,8 @@ testStatementCacheLru() {
 void
 testStatementCacheBusy() {
   MockConnection conn(1);
-  ResultSet* res = conn.query("SELECT a FROM t WHERE id = ?", 1);
-  conn.prepareStatement("SELECT b FROM t WHERE id = ?");
+  ResultSet* res = conn.query("SELECT a FROM t WHERE id = :id", {{"id", 1}});
+  conn.prepareStatement("SELECT b FROM t WHERE id = :id");
   anch::ut::assertThat(conn.getCachedStatementCount() == 2, "Statement with an alive result set should not be evicted: {} statements", conn.getCachedStatementCount());
   anch::ut::assertThat(calls.deleted == 0, "No statement should be deleted: {} deleted", calls.deleted);
   int rows = 0;
@@ -350,14 +374,14 @@ testStatementCacheBusy() {
   }
   anch::ut::assertThat(rows == 2, "Result set should still be readable: {} rows", rows);
   delete res;
-  conn.prepareStatement("SELECT c FROM t WHERE id = ?");
+  conn.prepareStatement("SELECT c FROM t WHERE id = :id");
   anch::ut::assertThat(conn.getCachedStatementCount() == 1, "Cache should come back to its size: {} statements", conn.getCachedStatementCount());
   anch::ut::assertThat(calls.deallocated == 2, "Both statements should be evicted: {} deallocated", calls.deallocated);
   // Nested queries: the outer statement is kept while its rows are read +
   rows = 0;
-  conn.queryMapRow("SELECT a FROM t WHERE id = ?", [&conn, &rows](ResultSet&) {
-    conn.queryMapRow("SELECT d FROM t WHERE id = ?", [&rows](ResultSet&) { ++rows; }, 2);
-  }, 1);
+  conn.queryMapRow("SELECT a FROM t WHERE id = :id", [&conn, &rows](ResultSet&) {
+    conn.queryMapRow("SELECT d FROM t WHERE id = :id", [&rows](ResultSet&) { ++rows; }, {{"id", 2}});
+  }, {{"id", 1}});
   anch::ut::assertThat(rows == 4, "Nested queries should read every row: {} rows", rows);
   // Nested queries: the outer statement is kept while its rows are read -
 }
@@ -367,43 +391,43 @@ testStatementCacheNestedSameQuery() {
   // A statement is not executed again while its result set is read: an other one is prepared
   MockConnection conn(4);
   int rows = 0;
-  PreparedStatement* outer = &conn.prepareStatement("SELECT a FROM t WHERE id = ?"); // used by queryMapRow
-  conn.queryMapRow("SELECT a FROM t WHERE id = ?", [&conn, &rows, &outer](ResultSet&) {
-    PreparedStatement& inner = conn.prepareStatement("SELECT a FROM t WHERE id = ?");
+  PreparedStatement* outer = &conn.prepareStatement("SELECT a FROM t WHERE id = :id"); // used by queryMapRow
+  conn.queryMapRow("SELECT a FROM t WHERE id = :id", [&conn, &rows, &outer](ResultSet&) {
+    PreparedStatement& inner = conn.prepareStatement("SELECT a FROM t WHERE id = :id");
     anch::ut::assertTrue(&inner != outer, "Busy statement should not be returned");
-    conn.queryMapRow("SELECT a FROM t WHERE id = ?", [&rows](ResultSet&) { ++rows; }, 2);
-  }, 1);
+    conn.queryMapRow("SELECT a FROM t WHERE id = :id", [&rows](ResultSet&) { ++rows; }, {{"id", 2}});
+  }, {{"id", 1}});
   anch::ut::assertThat(rows == 4, "Nested queries should read every row: {} rows", rows);
   anch::ut::assertThat(calls.prepared == 2, "Inner statement should be reused for each outer row: {} prepared", calls.prepared);
   anch::ut::assertThat(conn.getCachedStatementCount() == 2, "Both statements should be cached: {} statements", conn.getCachedStatementCount());
-  PreparedStatement& again = conn.prepareStatement("SELECT a FROM t WHERE id = ?");
+  PreparedStatement& again = conn.prepareStatement("SELECT a FROM t WHERE id = :id");
   anch::ut::assertThat(calls.prepared == 2, "Free statement should be reused: {} prepared", calls.prepared);
   // Busy statement replaced by an other one is evicted as any statement
   conn.setStatementCacheSize(1);
   anch::ut::assertThat(conn.getCachedStatementCount() == 1 && calls.deleted == 1, "{} statements, {} deleted", conn.getCachedStatementCount(), calls.deleted);
-  anch::ut::assertTrue(&conn.prepareStatement("SELECT a FROM t WHERE id = ?") == &again, "Indexed statement should be kept");
+  anch::ut::assertTrue(&conn.prepareStatement("SELECT a FROM t WHERE id = :id") == &again, "Indexed statement should be kept");
 }
 
 void
 testStatementCacheInvalidated() {
   MockConnection conn(4);
-  dynamic_cast<MockStatement&>(conn.prepareStatement("SELECT a FROM t WHERE id = ?")).markInvalid();
-  conn.prepareStatement("SELECT a FROM t WHERE id = ?");
+  dynamic_cast<MockStatement&>(conn.prepareStatement("SELECT a FROM t WHERE id = :id")).markInvalid();
+  conn.prepareStatement("SELECT a FROM t WHERE id = :id");
   anch::ut::assertThat(calls.prepared == 2 && calls.deallocated == 1 && calls.deleted == 1,
 		       "Invalidated statement should be replaced: {} prepared, {} deallocated, {} deleted", calls.prepared, calls.deallocated, calls.deleted);
   anch::ut::assertThat(conn.getCachedStatementCount() == 1, "{} statements", conn.getCachedStatementCount());
   // Invalidated statement used by a result set: replaced, kept until the result set is destroyed
-  PreparedStatement& busy = conn.prepareStatement("SELECT a FROM t WHERE id = ?");
-  busy.set(1, 1);
+  PreparedStatement& busy = conn.prepareStatement("SELECT a FROM t WHERE id = :id");
+  busy.set("id", 1);
   ResultSet* res = busy.executeQuery();
   dynamic_cast<MockStatement&>(busy).markInvalid();
   calls = Calls();
-  PreparedStatement& other = conn.prepareStatement("SELECT a FROM t WHERE id = ?");
+  PreparedStatement& other = conn.prepareStatement("SELECT a FROM t WHERE id = :id");
   anch::ut::assertTrue(&other != &busy && calls.prepared == 1 && calls.deleted == 0,
 		       "Busy invalidated statement should be replaced and kept");
   // Replacement invalidated too (free): prepared again
   dynamic_cast<MockStatement&>(other).markInvalid();
-  conn.prepareStatement("SELECT a FROM t WHERE id = ?");
+  conn.prepareStatement("SELECT a FROM t WHERE id = :id");
   anch::ut::assertThat(calls.prepared == 2 && calls.deleted == 1, "{} prepared, {} deleted", calls.prepared, calls.deleted);
   int rows = 0;
   while(res->next()) {

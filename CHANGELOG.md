@@ -14,6 +14,14 @@ and `\deprecated` in its documentation, which give its replacement, and it is re
 
 ### Breaking changes
 
+- anch-sql: prepared statements use named parameters (`:name`) instead of `?`: `?` (and PostgreSQL `$1`, SQLite
+  `?1`, `@name`, `$name`) are refused. `PreparedStatement::set(name, value)` and `setNull(name)` replace
+  `set(idx, value)` and `setNull(idx)`; `set(Parameters)`, `getParameterNames()` and `getQuery()` are added; every
+  missing parameter is reported by name before execution, an unknown name when it is bound. `Connection::query`,
+  `queryMapRow`, `queryExtract` and `update` take `Parameters` instead of positional values (the parameters of
+  previous executions of a cached statement are not reused). A name used several times is bound once (MySQL: each
+  `?` points to the same value). PostgreSQL `jsonb` `?` operators can be used in prepared statements;
+  `PQdescribePrepared` is no longer called. `findPlaceholders` and `numberPlaceholders` are removed.
 - anch-json: `Factory<T>::getInstance()` returns a constant mapper: fields are registered once, when the mapper is
   built from the description of the type (`registerField` could change the shared mapper of a type afterwards).
 - anch-val: `Violation::path` is an `anch::val::Path` (segments: field names, map keys and items indexes) instead of a
@@ -76,8 +84,10 @@ and `\deprecated` in its documentation, which give its replacement, and it is re
   parameters) and rendered in the parameters style of a driver (`ParameterStyle`: PostgreSQL `$1`, SQLite `?1`,
   MySQL `?`); a name used several times is bound once, a list bound to `IN (:ids)` is a PostgreSQL array
   (`= ANY($1)`, `<> ALL($1)` for `NOT IN`) or is expanded (`IN (?, ?, ?)`, an empty list is an empty subquery);
-  positional parameters (`?`, `$1`, SQLite `@name` and `$name`) are refused. Drivers use it in a next step
-  (design in `anch-sql/named-parameters.todo`).
+  positional parameters (`?`, `$1`, SQLite `@name` and `$name`) are refused. Prepared statements of every driver
+  use it (design in `anch-sql/named-parameters.todo`). `anch::sql::Parameters` gives the named parameters of a
+  query (`{{"id", 3}, {"name", "Rex"}}` or `Parameters().add("id", 3).addNull("email")`), `toParameter` converts
+  values and `Bindable` tells which values can be bound.
 - anch-utils: common description of objects for every format (`mapping.hpp`): `anch::Mapping<T>` (specialized with
   a `registerObject(anch::ObjectMapper<T> auto& mapper)` function), `anch::ObjectMapper<M, T>` concept (fields
   registered with a member pointer, a getter, a setter or both), `anch::Described<T>` and `anch::describe<T>(mapper)`.

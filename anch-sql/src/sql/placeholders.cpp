@@ -376,27 +376,6 @@ namespace {
 
 }
 
-std::vector<std::size_t>
-anch::sql::findPlaceholders(std::string_view query, const SqlSyntax& syntax) {
-  return Scanner(query, syntax).scan().questions;
-}
-
-std::string
-anch::sql::numberPlaceholders(std::string_view query, const std::vector<std::size_t>& positions, char prefix) {
-  std::string result;
-  result.reserve(query.size() + positions.size() * 2);
-  std::size_t offset = 0;
-  std::size_t idx = 0;
-  for(std::size_t pos : positions) {
-    result.append(query.substr(offset, pos - offset));
-    result += prefix;
-    result += std::to_string(++idx);
-    offset = pos + 1;
-  }
-  result.append(query.substr(offset));
-  return result;
-}
-
 // Named query +
 namespace {
 

@@ -39,22 +39,14 @@ std::atomic<std::uint64_t> PostgreSQLPreparedStatement::_counter(0);
 
 // Constructors +
 PostgreSQLPreparedStatement::PostgreSQLPreparedStatement(PGconn* dbCon, const std::string& query): PreparedStatement(), _conn(dbCon) {
-  // PostgreSQL uses numbered placeholders: '?' (outside literals, quoted identifiers and comments) are replaced by $n
-  std::string pgQuery = anch::sql::numberPlaceholders(query, anch::sql::findPlaceholders(query, anch::sql::SqlSyntax::POSTGRESQL));
+  // PostgreSQL uses numbered parameters: ':name' -> $n, repeated for each use of a name
+  const std::string pgQuery = parse(query, anch::sql::SqlSyntax::POSTGRESQL, anch::sql::ParameterStyle::DOLLAR);
   _stmtId = "anch_stmt_" + std::to_string(_counter.fetch_add(1));
   PGresult* res = PQprepare(dbCon, _stmtId.data(), pgQuery.data(), 0, NULL); // parameter types are inferred
   if(PQresultStatus(res) != PGRES_COMMAND_OK) {
     throw anch::sql::postgresql::error("Fail to prepare PostgreSQL statement " + pgQuery, _conn, res);
   }
   PQclear(res);
-  // Number of parameters is given by the server +
-  res = PQdescribePrepared(dbCon, _stmtId.data());
-  if(PQresultStatus(res) != PGRES_COMMAND_OK) {
-    throw anch::sql::postgresql::error("Fail to describe PostgreSQL statement " + pgQuery, _conn, res);
-  }
-  setParameterCount(static_cast<std::size_t>(PQnparams(res)));
-  PQclear(res);
-  // Number of parameters is given by the server -
 }
 // Constructors -
 
@@ -70,18 +62,19 @@ PostgreSQLPreparedStatement::~PostgreSQLPreparedStatement() noexcept {
  *
  * \param conn the PostgreSQL connection
  * \param stmtId the prepared statement identifier
- * \param paramValues the values to bind (\c std::nullopt for \c NULL )
+ * \param statement the statement ( \c $n values)
  *
  * \throw SqlException any error
  */
 static void
-bindParamsAndSend(PGconn* conn, const std::string& stmtId, const std::vector<std::optional<std::string>>& paramValues) {
-  std::vector<const char*> values(paramValues.size(), NULL);
-  std::vector<int> lengths(paramValues.size(), 0);
-  for(std::size_t i = 0 ; i < paramValues.size() ; ++i) {
-    if(paramValues[i].has_value()) {
-      values[i] = paramValues[i]->data();
-      lengths[i] = static_cast<int>(paramValues[i]->size());
+bindParamsAndSend(PGconn* conn, const std::string& stmtId, const PostgreSQLPreparedStatement& statement) {
+  std::vector<const char*> values(statement.getBindingCount(), NULL);
+  std::vector<int> lengths(values.size(), 0);
+  for(std::size_t i = 0 ; i < values.size() ; ++i) {
+    const anch::sql::ParameterValue& value = statement.getBindingValue(i);
+    if(value.has_value()) {
+      values[i] = value->data();
+      lengths[i] = static_cast<int>(value->size());
     }
   }
   if(PQsendQueryPrepared(conn, stmtId.data(), static_cast<int>(values.size()), values.data(), lengths.data(), NULL, 0) == 0) {
@@ -93,13 +86,13 @@ bindParamsAndSend(PGconn* conn, const std::string& stmtId, const std::vector<std
 // Methods +
 ResultSet*
 PostgreSQLPreparedStatement::doExecuteQuery() {
-  bindParamsAndSend(_conn, _stmtId, _values);
+  bindParamsAndSend(_conn, _stmtId, *this);
   return new PostgreSQLResultSet(_conn);
 }
 
 uint64_t
 PostgreSQLPreparedStatement::doExecuteUpdate() {
-  bindParamsAndSend(_conn, _stmtId, _values);
+  bindParamsAndSend(_conn, _stmtId, *this);
   // Read every result (the connection can not be used until the last one has been read) +
   PGresult* res = PQgetResult(_conn);
   PGresult* next = NULL;

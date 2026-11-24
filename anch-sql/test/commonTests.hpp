@@ -31,13 +31,12 @@
 /*!
  * Count rows of a query with parameters
  */
-template<typename... T>
-int64_t
-countRows(anch::sql::Connection& conn, const std::string& query, const T&... values) {
+inline int64_t
+countRows(anch::sql::Connection& conn, const std::string& query, const anch::sql::Parameters& parameters = {}) {
   int64_t count = -1;
   conn.queryMapRow(query, [&count](anch::sql::ResultSet& res) {
     count = res.get<int64_t>(0).value_or(-1);
-  }, values...);
+  }, parameters);
   return count;
 }
 
@@ -46,8 +45,9 @@ countRows(anch::sql::Connection& conn, const std::string& query, const T&... val
  */
 inline void
 testStmtOperators(anch::sql::Connection& conn) {
-  int64_t count = countRows(conn, "SELECT COUNT(*) FROM T_Test WHERE id > ? AND id <= ? AND last_name LIKE ? AND id BETWEEN ? AND ? AND id <> ?",
-			    0, 4, "%", 1, 4, 5);
+  int64_t count = countRows(conn, "SELECT COUNT(*) FROM T_Test WHERE id > :min AND id <= :max AND last_name LIKE :name"
+			    " AND id BETWEEN :low AND :max AND id <> :other",
+			    {{"min", 0}, {"max", 4}, {"name", "%"}, {"low", 1}, {"other", 5}});
   anch::ut::assertThat(count == 4, "Found {} rows instead of 4", count);
 }
 
@@ -56,11 +56,43 @@ testStmtOperators(anch::sql::Connection& conn) {
  */
 inline void
 testStmtNull(anch::sql::Connection& conn) {
-  uint64_t nbRows = conn.update("INSERT INTO T_Test (first_name,last_name,birth_date,email) VALUES(?,?,?,?)",
-				"NullEmail", "Test", "2016-03-22", std::optional<std::string>());
+  uint64_t nbRows = conn.update("INSERT INTO T_Test (first_name,last_name,birth_date,email) VALUES(:first,:last,:birth,:email)",
+				{{"first", "NullEmail"}, {"last", "Test"}, {"birth", "2016-03-22"}, {"email", std::optional<std::string>()}});
   anch::ut::assertThat(nbRows == 1, "{} inserted rows", nbRows);
-  int64_t count = countRows(conn, "SELECT COUNT(*) FROM T_Test WHERE first_name = ? AND email IS NULL", "NullEmail");
+  int64_t count = countRows(conn, "SELECT COUNT(*) FROM T_Test WHERE first_name = :first AND email IS NULL", {{"first", "NullEmail"}});
   anch::ut::assertThat(count == 1, "Found {} rows with NULL email instead of 1", count);
+}
+
+/*!
+ * Named parameters: a name used several times is bound once (PostgreSQL infers the type of a parameter from its first
+ * use: 'column = :name' before ':name IS NULL') (MySQL: each '?' points to the same value), missing and
+ * unknown parameters are reported with their names, positional parameters are refused
+ *
+ * \param conn the connection
+ * \param positional a query with a positional parameter of the database ('?' is a jsonb operator in PostgreSQL: '$1')
+ */
+inline void
+testStmtNamed(anch::sql::Connection& conn, const std::string& positional = "SELECT COUNT(*) FROM T_Test WHERE id = ?") {
+  int64_t count = countRows(conn, "SELECT COUNT(*) FROM T_Test WHERE (last_name = :name OR :name IS NULL) AND (id >= :id OR :name IS NULL)",
+			    {{"id", 1}, {"name", std::optional<std::string>()}});
+  anch::ut::assertThat(count >= 4, "Found {} rows with NULL name", count);
+  count = countRows(conn, "SELECT COUNT(*) FROM T_Test WHERE (id = :id OR id = :id + 1) AND (last_name <> :name OR :name IS NULL)",
+		    {{"id", 1}, {"name", "Unknown"}});
+  anch::ut::assertThat(count == 2, "Found {} rows instead of 2", count);
+  auto expectMessage = [](std::function<void()> func, const std::string& expected) {
+    try {
+      func();
+    } catch(const anch::sql::SqlException& e) {
+      anch::ut::assertThat(std::string(e.what()).find(expected) != std::string::npos && e.isOK(), "Unexpected error '{}'", e.what());
+      return;
+    }
+    anch::ut::fail("Error '" + expected + "' expected");
+  };
+  const std::string query = "SELECT COUNT(*) FROM T_Test WHERE id = :id AND last_name = :name AND email = :email";
+  expectMessage([&conn, &query]() { countRows(conn, query, {{"id", 1}}); }, "parameters 'name', 'email' have not been bound");
+  expectMessage([&conn, &query]() { countRows(conn, query, {{"id", 1}, {"mail", "x"}}); }, "no parameter 'mail' in query (parameters: id, name, email)");
+  expectMessage([&conn, &positional]() { countRows(conn, positional); }, "positional parameters (");
+  anch::ut::assertTrue(conn.isValid(), "Parameters errors should not invalidate connection");
 }
 
 /*!
@@ -78,14 +110,14 @@ testSqlErrorKeepsConnection(anch::sql::Connection& conn) {
   anch::ut::assertTrue(raised, "Unknown table should raise SqlException");
   raised = false;
   try {
-    conn.prepareStatement("SELECT * FROM T_Unknown WHERE a = ?");
+    conn.prepareStatement("SELECT * FROM T_Unknown WHERE a = :a");
   } catch(const anch::sql::SqlException& e) {
     raised = true;
     anch::ut::assertThat(e.isOK(), "Invalid prepared statement should not be a fatal error: {}", e.what());
   }
   anch::ut::assertTrue(raised, "Invalid prepared statement should raise SqlException");
   anch::ut::assertTrue(conn.isValid(), "SQL errors should not invalidate connection");
-  anch::ut::assertThat(countRows(conn, "SELECT COUNT(*) FROM T_Test WHERE id <= ?", 4) == 4, "Connection should still work");
+  anch::ut::assertThat(countRows(conn, "SELECT COUNT(*) FROM T_Test WHERE id <= :id", {{"id", 4}}) == 4, "Connection should still work");
 }
 
 /*!
@@ -103,7 +135,7 @@ testFatalError(anch::sql::Connection& conn, std::function<void(anch::sql::Connec
     std::cout << "Kill: " << e.what() << std::endl;
   }
   try {
-    countRows(conn, "SELECT COUNT(*) FROM T_Test WHERE id = ?", 1);
+    countRows(conn, "SELECT COUNT(*) FROM T_Test WHERE id = :id", {{"id", 1}});
   } catch(const anch::sql::SqlException& e) {
     std::cout << "Query after kill: " << e.what() << std::endl;
   }
@@ -123,29 +155,29 @@ testStatementCache(anch::sql::Connection& conn, bool nested) {
   conn.setStatementCacheSize(2);
   try {
     for(int i = 1 ; i <= 4 ; ++i) { // distinct queries: each one evicts the least recently used statement
-      int64_t count = countRows(conn, "SELECT COUNT(*) FROM T_Test WHERE id <= ? AND " + std::to_string(i) + " = " + std::to_string(i), i);
+      int64_t count = countRows(conn, "SELECT COUNT(*) FROM T_Test WHERE id <= :id AND " + std::to_string(i) + " = " + std::to_string(i), {{"id", i}});
       anch::ut::assertThat(count == i, "Found {} rows instead of {}", count, i);
     }
     anch::ut::assertThat(conn.getCachedStatementCount() == 2, "{} cached statements instead of 2", conn.getCachedStatementCount());
-    int64_t count = countRows(conn, "SELECT COUNT(*) FROM T_Test WHERE id <= ? AND 1 = 1", 3); // evicted: prepared again
+    int64_t count = countRows(conn, "SELECT COUNT(*) FROM T_Test WHERE id <= :id AND 1 = 1", {{"id", 3}}); // evicted: prepared again
     anch::ut::assertThat(count == 3, "Found {} rows instead of 3", count);
     if(nested) {
       int64_t rows = 0;
       int64_t sum = 0;
-      conn.queryMapRow("SELECT id FROM T_Test WHERE id <= ? ORDER BY id", [&conn, &rows, &sum](anch::sql::ResultSet& row) {
+      conn.queryMapRow("SELECT id FROM T_Test WHERE id <= :id ORDER BY id", [&conn, &rows, &sum](anch::sql::ResultSet& row) {
 	int64_t id = row.get<int64_t>(0).value_or(0);
 	++rows;
-	sum += countRows(conn, "SELECT COUNT(*) FROM T_Test WHERE id = ? AND " + std::to_string(id) + " = " + std::to_string(id), id);
-      }, 4);
+	sum += countRows(conn, "SELECT COUNT(*) FROM T_Test WHERE id = :id AND " + std::to_string(id) + " = " + std::to_string(id), {{"id", id}});
+      }, {{"id", 4}});
       anch::ut::assertThat(rows == 4 && sum == 4, "Nested queries: {} rows and {} sub-query rows instead of 4 and 4", rows, sum);
       // Same SQL text in nested query: the outer statement is not executed again (its cursor would be reset)
       rows = 0;
       sum = 0;
-      conn.queryMapRow("SELECT id FROM T_Test WHERE id <= ? ORDER BY id", [&conn, &rows, &sum](anch::sql::ResultSet& row) {
+      conn.queryMapRow("SELECT id FROM T_Test WHERE id <= :id ORDER BY id", [&conn, &rows, &sum](anch::sql::ResultSet& row) {
 	++rows;
 	int64_t id = row.get<int64_t>(0).value_or(0);
-	conn.queryMapRow("SELECT id FROM T_Test WHERE id <= ? ORDER BY id", [&sum](anch::sql::ResultSet&) { ++sum; }, id);
-      }, 4);
+	conn.queryMapRow("SELECT id FROM T_Test WHERE id <= :id ORDER BY id", [&sum](anch::sql::ResultSet&) { ++sum; }, {{"id", id}});
+      }, {{"id", 4}});
       anch::ut::assertThat(rows == 4 && sum == 10, "Nested same query: {} rows and {} sub-query rows instead of 4 and 10", rows, sum);
     }
   } catch(...) {
