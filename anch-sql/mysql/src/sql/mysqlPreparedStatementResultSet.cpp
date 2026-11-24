@@ -66,7 +66,9 @@ MySQLPreparedStatementResultSet::MySQLPreparedStatementResultSet(MYSQL_STMT* stm
   _nulls.assign(nbFields, 0);
   _errors.assign(nbFields, 0);
   _binds.resize(nbFields);
-  std::memset(_binds.data(), 0, _binds.size() * sizeof(MYSQL_BIND));
+  if(!_binds.empty()) { // memset of a null pointer (no column) is undefined
+    std::memset(_binds.data(), 0, _binds.size() * sizeof(MYSQL_BIND));
+  }
   for(unsigned int i = 0 ; i < nbFields ; ++i) {
     MYSQL_FIELD* field = mysql_fetch_field(result);
     _fields[field->name] = i;

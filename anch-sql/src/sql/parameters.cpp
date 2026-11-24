@@ -102,19 +102,48 @@ anch::sql::toParameter(const anch::sql::Timestamp& value) {
   formatter.format(value, str);
   return str;
 }
+std::string
+anch::sql::arrayLiteral(const anch::sql::ParameterList& elements) {
+  std::string literal("{");
+  for(std::size_t i = 0 ; i < elements.size() ; ++i) {
+    if(i > 0) {
+      literal += ',';
+    }
+    if(!elements[i].has_value()) {
+      literal += "NULL";
+      continue;
+    }
+    literal += '"';
+    for(char c : *elements[i]) {
+      if(c == '"' || c == '\\') {
+	literal += '\\';
+      }
+      literal += c;
+    }
+    literal += '"';
+  }
+  literal += '}';
+  return literal;
+}
 // Values conversion -
 
 // Parameters +
 Parameters::Parameters(std::initializer_list<Parameter> parameters): _parameters() {
   _parameters.reserve(parameters.size());
   for(const Parameter& parameter : parameters) {
-    put(parameter.name, parameter.value);
+    put(parameter.name, anch::sql::BoundValue{parameter.value, parameter.list});
   }
 }
 
 Parameters&
 Parameters::addNull(std::string_view name) {
-  put(name, std::nullopt);
+  put(name, anch::sql::BoundValue{std::nullopt, std::nullopt});
+  return *this;
+}
+
+Parameters&
+Parameters::add(Parameter parameter) {
+  put(parameter.name, anch::sql::BoundValue{std::move(parameter.value), std::move(parameter.list)});
   return *this;
 }
 
@@ -124,13 +153,13 @@ Parameters::values() const noexcept {
 }
 
 void
-Parameters::put(std::string_view name, ParameterValue value) {
+Parameters::put(std::string_view name, anch::sql::BoundValue value) {
   auto iter = std::find_if(_parameters.begin(), _parameters.end(), [name](const Parameter& parameter) { return parameter.name == name; });
-  if(iter != _parameters.end()) {
-    iter->value = std::move(value);
-  } else {
+  if(iter == _parameters.end()) {
     _parameters.push_back(Parameter(std::string(name), std::nullopt));
-    _parameters.back().value = std::move(value);
+    iter = _parameters.end() - 1;
   }
+  iter->value = std::move(value.value);
+  iter->list = std::move(value.list);
 }
 // Parameters -

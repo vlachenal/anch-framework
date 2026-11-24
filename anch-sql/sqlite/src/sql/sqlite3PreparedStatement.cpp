@@ -38,16 +38,25 @@ std::atomic<std::uint64_t> SQLite3PreparedStatement::_counter(0);
 // Constructors +
 SQLite3PreparedStatement::SQLite3PreparedStatement(sqlite3* dbCon, const std::string& query): PreparedStatement(), _conn(dbCon), _stmt() {
   const std::string liteQuery = parse(query, anch::sql::SqlSyntax::SQLITE, anch::sql::ParameterStyle::NUMBERED); // ':name' -> ?n
-  int res = sqlite3_prepare_v2(_conn, liteQuery.data(), static_cast<int>(liteQuery.size()), &_stmt, NULL);
+  doPrepare(liteQuery);
+}
+
+void
+SQLite3PreparedStatement::doPrepare(const std::string& query) {
+  sqlite3_stmt* stmt = NULL;
+  int res = sqlite3_prepare_v2(_conn, query.data(), static_cast<int>(query.size()), &stmt, NULL);
   if(res != SQLITE_OK) {
-    throw anch::sql::sqlite::error("Error while preparing statement " + liteQuery, _conn, res);
+    throw anch::sql::sqlite::error("Error while preparing statement " + query, _conn, res);
   }
-  if(static_cast<std::size_t>(sqlite3_bind_parameter_count(_stmt)) != getBindingCount()) { // counted by SQLite parser
-    const std::string count = std::to_string(sqlite3_bind_parameter_count(_stmt));
+  if(static_cast<std::size_t>(sqlite3_bind_parameter_count(stmt)) != getBindingCount()) { // counted by SQLite parser
+    const std::string count = std::to_string(sqlite3_bind_parameter_count(stmt));
+    sqlite3_finalize(stmt);
+    throw SqlException("SQLite statement has " + count + " parameters instead of " + std::to_string(getBindingCount()) + ": " + query, true);
+  }
+  if(_stmt != NULL) { // previous query (bound lists have changed the query)
     sqlite3_finalize(_stmt);
-    _stmt = NULL;
-    throw SqlException("SQLite statement has " + count + " parameters instead of " + std::to_string(getBindingCount()) + ": " + liteQuery, true);
   }
+  _stmt = stmt;
 }
 // Constructors -
 

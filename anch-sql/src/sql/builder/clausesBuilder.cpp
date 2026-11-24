@@ -228,9 +228,12 @@ ClausesBuilder::checkAndAddClauses(const std::string& boolAgg, ClausesProvider c
 }
 
 std::string
-ClausesBuilder::addParameter(const std::string& column, std::string_view suffix, anch::sql::ParameterValue value) {
+ClausesBuilder::addParameter(const std::string& column, std::string_view suffix, anch::sql::BoundValue value) {
   std::string name = anch::sql::detail::parameterName(_parameters, column, suffix);
-  _parameters.add(name, value);
+  anch::sql::Parameter parameter(name, std::nullopt);
+  parameter.value = std::move(value.value);
+  parameter.list = std::move(value.list);
+  _parameters.add(std::move(parameter));
   return name;
 }
 

@@ -25,6 +25,7 @@
 #include <cstdint>
 #include <initializer_list>
 #include <optional>
+#include <ranges>
 #include <string>
 #include <string_view>
 #include <utility>
@@ -204,16 +205,85 @@ namespace anch::sql {
   // Values conversion -
 
   /*!
-   * Value which can be bound to a prepared statement parameter ( \c anch::sql::toParameter )
+   * Value which can be bound to a prepared statement parameter ( \c anch::sql::toParameter : integers, floating point
+   * numbers, strings, SQL dates, \c std::optional of them)
    *
    * \tparam T the value type
    *
    * \since 0.3
    */
   template<typename T>
-  concept Bindable = requires(const T& value) {
+  concept BindableScalar = requires(const T& value) {
     { anch::sql::toParameter(value) } -> std::same_as<anch::sql::ParameterValue>;
   };
+
+  /*!
+   * List of values ( \c std::vector , \c std::list , \c std::set , ... of \c BindableScalar values ; strings are
+   * not lists) bound to a single parameter: a PostgreSQL array, an expanded list for other databases
+   * ( \c IN (:ids) , see \c anch::sql::NamedQuery )
+   *
+   * \tparam T the list type
+   *
+   * \since 0.3
+   */
+  template<typename T>
+  concept BindableList = std::ranges::input_range<const T> && !std::convertible_to<const T&, std::string_view>
+    && anch::sql::BindableScalar<std::ranges::range_value_t<const T>>;
+
+  /*!
+   * Value or list of values which can be bound to a prepared statement parameter
+   *
+   * \tparam T the value type
+   *
+   * \since 0.3
+   */
+  template<typename T>
+  concept Bindable = anch::sql::BindableScalar<T> || anch::sql::BindableList<T>;
+
+  /*!
+   * Values of a list parameter
+   *
+   * \since 0.3
+   */
+  using ParameterList = std::vector<anch::sql::ParameterValue>;
+
+  /*!
+   * PostgreSQL array literal of a list ( \c {"1","2",NULL} : elements are quoted, \c '\\' and \c '"' are escaped)
+   *
+   * \param elements the list values
+   *
+   * \return the array literal
+   *
+   * \since 0.3
+   */
+  ANCH_SQL_EXPORT std::string arrayLiteral(const anch::sql::ParameterList& elements);
+
+  /*!
+   * \brief Value bound to a parameter: value, or list of values
+   *
+   * \since 0.3
+   */
+  struct ANCH_SQL_EXPORT BoundValue {
+    /*! The value ( \c std::nullopt for \c NULL ; PostgreSQL array literal of a list) */
+    anch::sql::ParameterValue value;
+
+    /*! The values of a list, \c std::nullopt for a value which is not a list */
+    std::optional<anch::sql::ParameterList> list;
+  };
+
+  /*!
+   * Convert value or list of values to bound value
+   *
+   * \tparam T the value type
+   *
+   * \param value the value
+   *
+   * \return the bound value
+   *
+   * \since 0.3
+   */
+  template<anch::sql::Bindable T>
+  anch::sql::BoundValue toBound(const T& value);
 
   /*!
    * \brief Named parameter value ( \ref Parameters item)
@@ -224,8 +294,11 @@ namespace anch::sql {
     /*! Parameter name (without \c ':' ) */
     std::string name;
 
-    /*! Parameter value */
+    /*! Parameter value ( \c std::nullopt for \c NULL ; PostgreSQL array literal of a list) */
     anch::sql::ParameterValue value;
+
+    /*! The values of a list, \c std::nullopt for a value which is not a list */
+    std::optional<anch::sql::ParameterList> list;
 
     /*!
      * \ref Parameter constructor
@@ -292,6 +365,15 @@ namespace anch::sql {
     Parameters& addNull(std::string_view name);
 
     /*!
+     * Add parameter (or replace parameter of the same name)
+     *
+     * \param parameter the parameter
+     *
+     * \return \c this
+     */
+    Parameters& add(anch::sql::Parameter parameter);
+
+    /*!
      * Parameters getter
      *
      * \return the parameters, in order of addition
@@ -305,7 +387,7 @@ namespace anch::sql {
      * \param name the parameter name
      * \param value the value
      */
-    void put(std::string_view name, anch::sql::ParameterValue value);
+    void put(std::string_view name, anch::sql::BoundValue value);
     // Methods -
 
   };
@@ -324,15 +406,31 @@ namespace anch::sql {
   }
 
   template<anch::sql::Bindable T>
-  Parameter::Parameter(std::string parameterName, const T& parameterValue):
-    name(std::move(parameterName)), value(anch::sql::toParameter(parameterValue)) {
-    // Nothing to do
+  anch::sql::BoundValue
+  toBound(const T& value) {
+    if constexpr (anch::sql::BindableScalar<T>) {
+      return anch::sql::BoundValue{anch::sql::toParameter(value), std::nullopt};
+    } else {
+      anch::sql::ParameterList elements;
+      for(const auto& element : value) {
+	elements.push_back(anch::sql::toParameter(element));
+      }
+      std::string literal = anch::sql::arrayLiteral(elements);
+      return anch::sql::BoundValue{std::move(literal), std::move(elements)};
+    }
+  }
+
+  template<anch::sql::Bindable T>
+  Parameter::Parameter(std::string parameterName, const T& parameterValue): name(std::move(parameterName)), value(), list() {
+    anch::sql::BoundValue bound = anch::sql::toBound(parameterValue);
+    value = std::move(bound.value);
+    list = std::move(bound.list);
   }
 
   template<anch::sql::Bindable T>
   Parameters&
   Parameters::add(std::string_view name, const T& value) {
-    put(name, anch::sql::toParameter(value));
+    put(name, anch::sql::toBound(value));
     return *this;
   }
 

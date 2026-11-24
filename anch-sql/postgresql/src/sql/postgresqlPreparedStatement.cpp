@@ -40,13 +40,7 @@ std::atomic<std::uint64_t> PostgreSQLPreparedStatement::_counter(0);
 // Constructors +
 PostgreSQLPreparedStatement::PostgreSQLPreparedStatement(PGconn* dbCon, const std::string& query): PreparedStatement(), _conn(dbCon) {
   // PostgreSQL uses numbered parameters: ':name' -> $n, repeated for each use of a name
-  const std::string pgQuery = parse(query, anch::sql::SqlSyntax::POSTGRESQL, anch::sql::ParameterStyle::DOLLAR);
-  _stmtId = "anch_stmt_" + std::to_string(_counter.fetch_add(1));
-  PGresult* res = PQprepare(dbCon, _stmtId.data(), pgQuery.data(), 0, NULL); // parameter types are inferred
-  if(PQresultStatus(res) != PGRES_COMMAND_OK) {
-    throw anch::sql::postgresql::error("Fail to prepare PostgreSQL statement " + pgQuery, _conn, res);
-  }
-  PQclear(res);
+  doPrepare(parse(query, anch::sql::SqlSyntax::POSTGRESQL, anch::sql::ParameterStyle::DOLLAR));
 }
 // Constructors -
 
@@ -57,6 +51,28 @@ PostgreSQLPreparedStatement::~PostgreSQLPreparedStatement() noexcept {
 // Destructor -
 
 // Functions +
+/*!
+ * Deallocate statement on the server side (best effort: the statement is deallocated with the session)
+ *
+ * \param conn the PostgreSQL connection
+ * \param stmtId the prepared statement identifier
+ */
+static void
+closeStatement(PGconn* conn, const std::string& stmtId) noexcept {
+#ifdef LIBPQ_HAS_CLOSE_PREPARED
+  PQclear(PQclosePrepared(conn, stmtId.data()));
+#else
+  if(PQtransactionStatus(conn) != PQTRANS_IDLE && PQtransactionStatus(conn) != PQTRANS_INTRANS) {
+    return; // aborted transaction or connection busy: DEALLOCATE would fail
+  }
+  try {
+    PQclear(PQexec(conn, ("DEALLOCATE " + stmtId).data())); // identifier is generated: no quoting needed
+  } catch(...) {
+    // Statement is deallocated with the session
+  }
+#endif
+}
+
 /*!
  * Bind prepared statement parameters and send query to server
  *
@@ -114,18 +130,22 @@ PostgreSQLPreparedStatement::doExecuteUpdate() {
 
 void
 PostgreSQLPreparedStatement::deallocate() noexcept {
-#ifdef LIBPQ_HAS_CLOSE_PREPARED
-  PQclear(PQclosePrepared(_conn, _stmtId.data()));
-#else
-  if(PQtransactionStatus(_conn) != PQTRANS_IDLE && PQtransactionStatus(_conn) != PQTRANS_INTRANS) {
-    return; // aborted transaction or connection busy: DEALLOCATE would fail
+  closeStatement(_conn, _stmtId);
+}
+
+void
+PostgreSQLPreparedStatement::doPrepare(const std::string& query) {
+  // A new statement replaces the previous one (bound lists have changed the query)
+  std::string stmtId = "anch_stmt_" + std::to_string(_counter.fetch_add(1));
+  PGresult* res = PQprepare(_conn, stmtId.data(), query.data(), 0, NULL); // parameter types are inferred
+  if(PQresultStatus(res) != PGRES_COMMAND_OK) {
+    throw anch::sql::postgresql::error("Fail to prepare PostgreSQL statement " + query, _conn, res);
   }
-  try {
-    PQclear(PQexec(_conn, ("DEALLOCATE " + _stmtId).data())); // identifier is generated: no quoting needed
-  } catch(...) {
-    // Statement is deallocated with the session
+  PQclear(res);
+  if(!_stmtId.empty()) {
+    closeStatement(_conn, _stmtId);
   }
-#endif
+  _stmtId = std::move(stmtId);
 }
 // Methods -
 

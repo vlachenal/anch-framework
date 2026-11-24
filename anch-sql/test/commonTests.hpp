@@ -23,6 +23,7 @@
 #include <functional>
 #include <iostream>
 #include <optional>
+#include <set>
 #include <string>
 #include <vector>
 
@@ -163,6 +164,39 @@ testStmtFields(anch::sql::Connection& conn) {
   anch::ut::assertThat(count == 3, "Found {} persons instead of 3", count);
   count = countRows(conn, "SELECT COUNT(*) FROM T_Test WHERE last_name = :last AND email IS NULL", {{"last", "Fields"}});
   anch::ut::assertThat(count == 2, "Found {} persons without email instead of 2", count);
+}
+
+/*!
+ * Lists: PostgreSQL arrays (IN rewritten in = ANY / <> ALL), expanded IN lists for other databases ; the statement is
+ * prepared again when the bound lists change the query
+ */
+inline void
+testStmtLists(anch::sql::Connection& conn) {
+  const int64_t total = countRows(conn, "SELECT COUNT(*) FROM T_Test");
+  const std::string in = "SELECT COUNT(*) FROM T_Test WHERE id IN (:ids)";
+  const std::string notIn = "SELECT COUNT(*) FROM T_Test WHERE id NOT IN (:ids)";
+  int64_t count = countRows(conn, in, {{"ids", std::vector<int64_t>{1, 2, 3}}});
+  anch::ut::assertThat(count == 3, "IN: found {} rows instead of 3", count);
+  count = countRows(conn, in, {{"ids", std::vector<int64_t>{1, 2}}});
+  anch::ut::assertThat(count == 2, "IN (other size): found {} rows instead of 2", count);
+  count = countRows(conn, in, {{"ids", std::vector<int64_t>()}});
+  anch::ut::assertThat(count == 0, "IN (empty list): found {} rows instead of 0", count);
+  count = countRows(conn, in, {{"ids", 1}});
+  anch::ut::assertThat(count == 1, "IN (value): found {} rows instead of 1", count);
+  count = countRows(conn, notIn, {{"ids", std::vector<int64_t>{1, 2}}});
+  anch::ut::assertThat(count == total - 2, "NOT IN: found {} rows instead of {}", count, total - 2);
+  count = countRows(conn, notIn, {{"ids", std::vector<int64_t>()}});
+  anch::ut::assertThat(count == total, "NOT IN (empty list): found {} rows instead of {}", count, total);
+  // Strings (quoted in PostgreSQL arrays) and builder
+  conn.update("INSERT INTO T_Test (first_name,last_name,birth_date) VALUES (:first,:last,'2016-03-22')",
+	      {{"first", "List\"Quote"}, {"last", "Back\\slash"}});
+  count = countRows(conn, "SELECT COUNT(*) FROM T_Test WHERE first_name IN (:names) AND last_name IN (:last)",
+		    {{"names", std::set<std::string>{"List\"Quote", "Nobody"}}, {"last", std::vector<std::string>{"Back\\slash"}}});
+  anch::ut::assertThat(count == 1, "IN (strings): found {} rows instead of 1", count);
+  anch::sql::SQLQuery query = anch::sql::select().field("COUNT(*)").from("T_Test")
+    .where(anch::sql::clauses().AND("id", anch::sql::in, std::vector<int32_t>{1, 2, 3, 4})).build();
+  count = countRows(conn, query.getQuery(), query.getParameters());
+  anch::ut::assertThat(count == 4, "Builder IN: found {} rows instead of 4", count);
 }
 
 /*!

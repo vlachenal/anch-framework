@@ -208,6 +208,20 @@ update avec FieldsOf, batchUpdate(requête, range d'objets décrits) ; toParamet
 std::to_chars). Tests : fields-of (connexion factice), stmt-fields sur les trois bases ; exemple connection.cpp
 (snippets description et fields). Limite : UUID et std::chrono::year_month_day ne sont pas liables (anch-sql ne
 dépend pas d'anch-uuid), à ajouter si besoin.
+Étape 5 faite le 2026-11-24 (branche sql-lists) : BindableScalar / BindableList / Bindable, ParameterList,
+BoundValue (valeur ou littéral de tableau PostgreSQL + éléments), toBound, arrayLiteral ({"1","a\"b",NULL}) ;
+Parameter et FieldsMapper gardent les listes ; PreparedStatement::reshape avant chaque exécution : forme des valeurs
+liées (liste ou non, taille hors PostgreSQL) comparée à celle de la requête préparée, requête rendue à nouveau et
+préparée par le pilote (doPrepare, virtuel pur : constructeur et changement de forme ; PostgreSQL : nouvel
+identifiant puis ancien désalloué ; SQLite : nouveau sqlite3_stmt ; MySQL : mysql_stmt_prepare sur le même handle)
+seulement quand le texte change. Écart avec la proposition : pas de clé de cache par taille de liste (une requête
+préparée par PreparedStatement, préparée à nouveau quand la taille change en MySQL / SQLite ; PostgreSQL ne dépend
+pas de la taille) ; à revoir si des tailles alternent souvent. Constructeur : in / notIn avec listes (liste vide :
+clause sautée). Tests : lists (connexion factice : développement, tailles, vide, retour à une valeur, Parameters,
+constructeur, liste hors IN refusée), stmt-lists sur les trois bases (IN / NOT IN, tailles, vide, valeur seule,
+chaînes avec " et \, constructeur).
+Corrigé au passage : memset d'un pointeur nul dans le pilote MySQL (requête sans paramètre, liste vide ; résultat
+sans colonne), plantage des builds Clang optimisés.
 CHANGELOG ([Unreleased], Breaking changes : '?' et formes positionnelles supprimés ; Added : paramètres nommés,
 Parameters, listes) à chaque étape.
 

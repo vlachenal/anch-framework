@@ -476,6 +476,11 @@ testFields() {
 }
 
 void
+testLists() {
+  testStmtLists(*dbCon);
+}
+
+void
 testSqlError() {
   testSqlErrorKeepsConnection(*dbCon);
 }
@@ -529,5 +534,6 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("16-stmt-named", testNamed)
     .add("17-builder-query", testBuilder)
     .add("18-stmt-fields", testFields)
+    .add("19-stmt-lists", testLists)
     ;
 }

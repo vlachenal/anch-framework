@@ -18,11 +18,15 @@
   along with ANCH Framework.  If not, see <https://www.gnu.org/licenses/>.
 */
 #include "sql/connection.hpp"
+#include "sql/builder/clauses.hpp"
+#include "sql/builder/sqlFunctions.hpp"
 #include "sql/placeholders.hpp"
 
 #include <functional>
+#include <list>
 #include <memory>
 #include <optional>
+#include <set>
 #include <string>
 #include <vector>
 
@@ -133,7 +137,7 @@ class MockStatement: public PreparedStatement {
 public:
   Failure& _failure;
   MockStatement(const std::string& query, Failure& failure): PreparedStatement(), _failure(failure) {
-    parse(query, anch::sql::SqlSyntax::STANDARD, anch::sql::ParameterStyle::POSITIONAL);
+    doPrepare(parse(query, anch::sql::SqlSyntax::STANDARD, anch::sql::ParameterStyle::POSITIONAL));
     ++calls.prepared;
   }
   virtual ~MockStatement() noexcept {
@@ -142,7 +146,12 @@ public:
   void markInvalid() noexcept {
     invalidate();
   }
+  /*! Prepared queries (constructor: first one) */
+  std::vector<std::string> _prepared;
 protected:
+  virtual void doPrepare(const std::string& query) override {
+    _prepared.push_back(query);
+  }
   virtual ResultSet* doExecuteQuery() override {
     raise(_failure);
     return new MockResultSet(Failure::NONE);
@@ -351,6 +360,49 @@ testFieldsOf() {
 }
 
 void
+testLists() {
+  // Lists: PostgreSQL arrays, expanded IN lists for other databases (MySQL style here) ; strings are not lists
+  static_assert(anch::sql::BindableList<std::vector<int32_t>> && anch::sql::BindableList<std::set<std::string>>
+		&& !anch::sql::BindableList<std::string> && !anch::sql::BindableList<std::vector<std::vector<int32_t>>>
+		&& anch::sql::Bindable<std::list<std::optional<int64_t>>>);
+  anch::ut::assertThat(anch::sql::arrayLiteral({"1", "a\"b", "c\\d", std::nullopt}) == "{\"1\",\"a\\\"b\",\"c\\\\d\",NULL}" && anch::sql::arrayLiteral({}) == "{}",
+		       "Unexpected array literal '{}'", anch::sql::arrayLiteral({"1", "a\"b", "c\\d", std::nullopt}));
+  MockConnection conn;
+  const std::string query = "SELECT a FROM t WHERE id IN (:ids) AND b = :b AND c NOT IN (:ids)";
+  MockStatement& stmt = dynamic_cast<MockStatement&>(conn.prepareStatement(query));
+  stmt.set("ids", std::vector<int32_t>{1, 2, 3});
+  stmt.set("b", "x");
+  delete stmt.executeQuery();
+  anch::ut::assertThat(stmt._prepared.back() == "SELECT a FROM t WHERE id IN (?, ?, ?) AND b = ? AND c NOT IN (?, ?, ?)",
+		       "Unexpected expanded query '{}'", stmt._prepared.back());
+  anch::ut::assertTrue(stmt.getBindingCount() == 7 && stmt.getBindingValue(0) == "1" && stmt.getBindingValue(2) == "3"
+		       && stmt.getBindingValue(3) == "x" && stmt.getBindingValue(6) == "3", "Unexpected expanded values");
+  // Same size: not prepared again ; other size and empty list: prepared again
+  stmt.set("ids", std::list<int32_t>{4, 5, 6});
+  delete stmt.executeQuery();
+  anch::ut::assertThat(stmt._prepared.size() == 2 && stmt.getBindingValue(0) == "4", "{} prepared queries instead of 2", stmt._prepared.size());
+  stmt.set("ids", std::vector<int32_t>());
+  delete stmt.executeQuery();
+  anch::ut::assertThat(stmt._prepared.back() == "SELECT a FROM t WHERE id IN (SELECT NULL FROM (SELECT 1) AS anch_empty WHERE 1 = 0)"
+		       " AND b = ? AND c NOT IN (SELECT NULL FROM (SELECT 1) AS anch_empty WHERE 1 = 0)", "Unexpected query '{}'", stmt._prepared.back());
+  // Value which is not a list: first query again
+  stmt.set("ids", 7);
+  delete stmt.executeQuery();
+  anch::ut::assertThat(stmt._prepared.back() == "SELECT a FROM t WHERE id IN (?) AND b = ? AND c NOT IN (?)", "Unexpected query '{}'",
+		       stmt._prepared.back());
+  // Parameters, described objects and builder with lists
+  anch::ut::assertThat(conn.update("UPDATE t SET a = 1 WHERE id IN (:ids)", {{"ids", std::vector<int64_t>{1, 2}}}) == 1, "Update with list");
+  anch::sql::SQLQuery built = anch::sql::select().field("a").from("t")
+    .where(anch::sql::clauses().AND("id", anch::sql::in, std::vector<int32_t>{1, 2}).AND("b", anch::sql::in, std::vector<int32_t>())).build();
+  anch::ut::assertThat(built.getQuery() == "SELECT a FROM t WHERE id IN (:id)" && built.getParameters().values()[0].list->size() == 2,
+		       "Unexpected built query '{}' (empty lists skip their clause)", built.getQuery());
+  // Expanded list has to be the only item of an IN list
+  expectMessage([&conn]() { conn.query("SELECT a FROM t WHERE id = ANY(:ids)", {{"ids", std::vector<int32_t>{1}}}); },
+		"list parameter 'ids' has to be the only item of an IN list");
+  anch::ut::assertTrue(conn.isValid(), "List errors should not invalidate connection");
+}
+
+void
 testResultSetErrors() {
   MockConnection conn;
   int rows = 0;
@@ -532,6 +584,7 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("release-unknown-state", testReleaseUnknownState)
     .add("prepared-statement-errors", testPreparedStatementErrors)
     .add("fields-of", testFieldsOf)
+    .add("lists", testLists)
     .add("result-set-errors", testResultSetErrors)
     .add("pool-discards-invalid", testPoolDiscardsInvalid)
     .add("pool-releases-transaction", testPoolReleasesTransaction)

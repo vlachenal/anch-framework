@@ -64,14 +64,29 @@ namespace anch::sql {
     /*! Parameters names, in order of first use */
     std::vector<std::string> _names;
 
-    /*! Value of each name ( \c std::nullopt for \c NULL ) */
+    /*! Value of each name ( \c std::nullopt for \c NULL ; PostgreSQL array literal of a list) */
     std::vector<anch::sql::ParameterValue> _values;
+
+    /*! Values of each name bound to a list */
+    std::vector<std::optional<anch::sql::ParameterList>> _lists;
 
     /*! Bound names */
     std::vector<bool> _bound;
 
     /*! Name of each parameter of the query prepared by the driver ( \c $1 , \c ?1 or each \c ? ) */
     std::vector<anch::sql::NamedQuery::Binding> _bindings;
+
+    /*! The parsed query */
+    std::optional<anch::sql::NamedQuery> _named;
+
+    /*! Parameters style of the driver */
+    anch::sql::ParameterStyle _style;
+
+    /*! The query prepared by the driver */
+    std::string _prepared;
+
+    /*! List size of each name of the prepared query ( \c NamedQuery::SCALAR for a value which is not a list) */
+    std::vector<std::size_t> _shape;
 
   private:
     /*! Connection which has prepared this statement (errors are reported to it) */
@@ -126,8 +141,10 @@ namespace anch::sql {
     uint64_t executeUpdate();
 
     /*!
-     * Bind value to a parameter ( \c toParameter : integers, strings, SQL dates, \c std::optional of them ;
-     * \c std::nullopt and \c NULL character arrays bind SQL \c NULL )
+     * Bind value to a parameter ( \c toParameter : integers, floating point numbers, strings, SQL dates,
+     * \c std::optional of them ; \c std::nullopt and \c NULL character arrays bind SQL \c NULL ), or a list of
+     * values ( \ref BindableList : PostgreSQL array, expanded \c IN (:name) list for other databases ; the query is
+     * prepared again when the list sizes change its text)
      *
      * \tparam T the value type
      *
@@ -224,6 +241,17 @@ namespace anch::sql {
      */
     std::string parse(const std::string& query, const anch::sql::SqlSyntax& syntax, anch::sql::ParameterStyle style);
 
+    /*!
+     * Prepare the query rendered for the driver (driver implementation: called by its constructor with the query given
+     * by \ref parse , and before execution when bound lists change the rendered query: the new query replaces the
+     * previous one)
+     *
+     * \param query the query to prepare
+     *
+     * \throw SqlException any error (with connection status)
+     */
+    virtual void doPrepare(const std::string& query) = 0;
+
   public:
     /*!
      * Number of parameters of the query prepared by the driver ( \c $1 , \c ?1 or each \c ? )
@@ -288,7 +316,14 @@ namespace anch::sql {
      *
      * \throw SqlException unknown parameter
      */
-    void bind(std::string_view name, anch::sql::ParameterValue value);
+    void bind(std::string_view name, anch::sql::BoundValue value);
+
+    /*!
+     * Render and prepare the query again when the bound lists change it (see \ref doPrepare )
+     *
+     * \throw SqlException list which is not the only item of an \c IN list (non fatal), driver error
+     */
+    void reshape();
 
     /*!
      * Check that every parameter has been bound
@@ -303,7 +338,7 @@ namespace anch::sql {
   template<anch::sql::Bindable T>
   void
   PreparedStatement::set(std::string_view name, const T& value) {
-    bind(name, anch::sql::toParameter(value));
+    bind(name, anch::sql::toBound(value));
   }
 
   template<anch::Described T>
@@ -314,7 +349,9 @@ namespace anch::sql {
     for(std::size_t slot = 0 ; slot < _names.size() ; ++slot) {
       const typename anch::sql::FieldsMapper<T>::Field* field = mapper.find(_names[slot]);
       if(field != nullptr) {
-	_values[slot] = field->read(fields.object());
+	anch::sql::BoundValue bound = field->read(fields.object());
+	_values[slot] = std::move(bound.value);
+	_lists[slot] = std::move(bound.list);
 	_bound[slot] = true;
       }
     }
