@@ -71,6 +71,13 @@ and `\deprecated` in its documentation, which give its replacement, and it is re
 
 ### Added
 
+- anch-sql: named parameters (`:name`) analysis, `anch::sql::NamedQuery`: a query is parsed once (string literals,
+  quoted identifiers, comments, PostgreSQL casts `::`, array slices and `jsonb` `?` operators, MySQL `:=` are not
+  parameters) and rendered in the parameters style of a driver (`ParameterStyle`: PostgreSQL `$1`, SQLite `?1`,
+  MySQL `?`); a name used several times is bound once, a list bound to `IN (:ids)` is a PostgreSQL array
+  (`= ANY($1)`, `<> ALL($1)` for `NOT IN`) or is expanded (`IN (?, ?, ?)`, an empty list is an empty subquery);
+  positional parameters (`?`, `$1`, SQLite `@name` and `$name`) are refused. Drivers use it in a next step
+  (design in `anch-sql/named-parameters.todo`).
 - anch-utils: common description of objects for every format (`mapping.hpp`): `anch::Mapping<T>` (specialized with
   a `registerObject(anch::ObjectMapper<T> auto& mapper)` function), `anch::ObjectMapper<M, T>` concept (fields
   registered with a member pointer, a getter, a setter or both), `anch::Described<T>` and `anch::describe<T>(mapper)`.

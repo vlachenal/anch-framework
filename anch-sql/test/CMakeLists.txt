@@ -125,6 +125,15 @@ add_test(NAME SqlStmtWC-dollar-quotes COMMAND anch-placeholders-test -t dollar-q
 add_test(NAME SqlStmtWC-unterminated COMMAND anch-placeholders-test -t unterminated)
 # Prepared statement placeholders -
 
+# Named parameters +
+anch_add_executable(anch-named-parameters-test SOURCES testNamedParameters.cpp LIBS anch::sql anch::ut)
+add_test(NAME SqlNamedParameters-names COMMAND anch-named-parameters-test -t names)
+add_test(NAME SqlNamedParameters-repeated COMMAND anch-named-parameters-test -t repeated)
+add_test(NAME SqlNamedParameters-ignored COMMAND anch-named-parameters-test -t ignored)
+add_test(NAME SqlNamedParameters-positional-refused COMMAND anch-named-parameters-test -t positional-refused)
+add_test(NAME SqlNamedParameters-lists COMMAND anch-named-parameters-test -t lists)
+# Named parameters -
+
 # Connection errors and pool (without database) +
 anch_add_executable(anch-sql-connection-test SOURCES testConnection.cpp LIBS anch::sql anch::ut)
 add_test(NAME SqlConnection-fatal-invalidates COMMAND anch-sql-connection-test -t fatal-invalidates)

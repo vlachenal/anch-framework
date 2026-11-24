@@ -106,7 +106,8 @@ Proposition
      colonne ; un cast explicite reste possible (:ids::bigint[]).
    - MySQL et SQLite (pas de tableaux) : IN (:ids) est développé en IN (?, ?, ?) (MySQL) ou IN (?2, ?3, ?4)
      (SQLite) à l'exécution ; la requête préparée dépend de la taille : clé de cache = requête + tailles des
-     listes ; liste vide : IN (NULL) (aucune ligne, comme ANY('{}')) plutôt qu'une erreur de syntaxe.
+     listes ; liste vide : sous-requête vide (SELECT NULL FROM (SELECT 1) AS anch_empty WHERE 1 = 0) : IN est
+     faux et NOT IN vrai, comme ANY('{}') et ALL('{}') (IN (NULL) aurait rendu NOT IN faux aussi).
    - Forme portable (Q8) : IN (:liste) s'écrit de la même façon pour toutes les bases ; l'analyseur reconnaît
      [NOT] IN, '(', un seul paramètre, ')' (hors zones ignorées, mots-clés insensibles à la casse) et le pilote
      PostgreSQL le réécrit en = ANY($n) / <> ALL($n) quand le paramètre est lié à une liste ; = ANY(:liste) écrit
@@ -167,6 +168,15 @@ Décidé (Q3) : étape 4, après les noms (elle utilise set(name, ...)).
    ignorés, paramètre absent de l'objet, optional, dates, setters seuls).
 5. Listes : tableaux PostgreSQL (littéral, échappement, NULL, réécriture de [NOT] IN (:liste) en = ANY / <> ALL),
    développement MySQL / SQLite (clé de cache avec tailles, liste vide) ; tests par pilote.
+Étape 1 faite le 2026-11-24 (branche sql-named-parameters) : l'analyse et la réécriture sont séparées,
+anch::sql::NamedQuery (placeholders.hpp) au lieu de parseParameters / ParsedQuery : le constructeur analyse la
+requête une fois (noms, usages, listes IN), render(ParameterStyle, tailles des listes) produit la requête du pilote
+et ses Binding (slot, élément : SCALAR pour une valeur entière ou un tableau PostgreSQL) ; la requête rendue dépend
+des listes liées (étape 2 : préparation à la première exécution, clé de cache avec les tailles). Indicateurs de
+SqlSyntax ajoutés : questionMarkOperator, arraySlice, dollarParameters (PostgreSQL), prefixedParameters (SQLite :
+@name et $name refusés, sinon liés à NULL en silence). findPlaceholders / numberPlaceholders restent jusqu'à
+l'étape 2 (pilote PostgreSQL). Tests : anch-named-parameters-test (names, repeated, ignored, positional-refused,
+lists).
 CHANGELOG ([Unreleased], Breaking changes : '?' et formes positionnelles supprimés ; Added : paramètres nommés,
 Parameters, listes) à chaque étape.
 
