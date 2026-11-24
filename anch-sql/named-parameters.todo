@@ -1,0 +1,178 @@
+Paramètres nommés des requêtes préparées (anch-sql)
+===================================================
+
+Demande (2026-11-24) : remplacer les '?' des requêtes préparées par des paramètres nommés, à la manière de
+NamedParameterJdbcTemplate (Spring), pour la lisibilité, des messages d'erreur clairs quand une valeur n'est pas
+renseignée, une empreinte mémoire réduite sur les requêtes complexes, et l'expansion des listes (en s'appuyant sur
+les tableaux de PostgreSQL).
+
+Décisions (2026-11-24)
+----------------------
+- Q1 : les '?' sont remplacés complètement (utilisation homogène dans tous les cas) : rupture directe, sans
+  dépréciation (version < 1.0). set(idx, ...), setNull(idx), les surcharges variadiques positionnelles de
+  Connection (query / queryMapRow / queryExtract / update(query, valeur, valeurs...)) et
+  batchUpdate(query, mapper(PreparedStatement&, const T&), valeurs) sont remplacés par leurs formes nommées.
+- Q2 : syntaxe :nom.
+- Q5 : un seul mode : plus d'indice du tout (conséquence de Q1).
+- Q6 : le constructeur de requêtes génère des noms.
+- Q7 : expansion des listes, en utilisant les tableaux de PostgreSQL.
+- Q3 : liaison depuis anch::Mapping<T> (fieldsOf, batchUpdate d'objets décrits) : oui (étape 4).
+- Q4 : PostgreSQL : les ':' entre '[' et ']' sont ignorés (tranches de tableaux arr[1:n]).
+- Q8 : listes : IN (:liste) portable, réécrit en = ANY / <> ALL par le pilote PostgreSQL ; = ANY(:liste) écrit
+  directement reste possible en PostgreSQL.
+
+État actuel
+-----------
+- PreparedStatement (inc/sql/preparedStatement.hpp) : paramètres numérotés à partir de 1, set(idx, valeur) pour
+  les entiers, chaînes, char*, std::optional, Date, Time, Timestamp, setNull(idx). Les valeurs sont converties en
+  texte (std::to_string, dates formatées) et gardées dans _values (std::vector<std::optional<std::string>>, une
+  case par '?'), _bound marque les paramètres liés ; checkBindings lève "Parameter 3 has not been bound" pour le
+  premier manquant seulement ; bind lève une erreur d'indice hors de [1..n].
+- Nombre de paramètres donné par le pilote : MySQL (mysql_stmt_param_count) et SQLite
+  (sqlite3_bind_parameter_count) les comptent ; PostgreSQL trouve les '?' (findPlaceholders, placeholders.hpp,
+  analyse lexicale par dialecte : SqlSyntax, littéraux, identifiants entre guillemets, commentaires ignorés) et les
+  remplace par $n (numberPlaceholders).
+- Liaison par pilote : MySQL un MYSQL_BIND par '?' (texte), PostgreSQL PQexecPrepared en texte (types inférés :
+  PQprepare sans types), SQLite sqlite3_bind_text64 (SQLITE_TRANSIENT).
+- Connection : cache LRU des requêtes préparées (clé : texte SQL), query / queryMapRow / queryExtract / update avec
+  valeurs variadiques positionnelles (bindParameters), batchUpdate(query, mapper, valeurs).
+- Constructeur de requêtes (inc/sql/builder, src/sql/builder/clauses.cpp) : génère des '?' (column = ?,
+  BETWEEN ? AND ?, ...) et garde les valeurs dans SQLQuery::_values (std::list<std::string>, dans l'ordre).
+
+Gains attendus
+--------------
+- Lisibilité : plus de comptage de positions ; ajouter une condition au milieu d'une requête ne décale plus les
+  indices suivants (erreur silencieuse : valeurs interverties).
+- Erreurs :
+  * avant exécution, tous les paramètres manquants en une fois : "parameters 'status', 'since' have not been
+    bound (query: ...)" ;
+  * à la liaison, nom inconnu signalé immédiatement avec les noms de la requête : "no parameter 'custId' in query
+    (parameters: customerId, status)".
+- Mémoire : une valeur utilisée plusieurs fois (owner = :id OR creator = :id, filtres optionnels
+  (:status IS NULL OR status = :status)) n'est convertie et gardée qu'une fois, au lieu d'une copie par '?'.
+  Hors de ce cas, le coût vient de la conversion de toutes les valeurs en texte : une liaison typée serait le vrai
+  gain mémoire (voir « Hors périmètre »).
+- Listes : une liste liée à un seul paramètre ; avec PostgreSQL, une seule requête préparée quelle que soit sa
+  taille.
+
+Proposition
+-----------
+1. Syntaxe : :nom (Spring, Hibernate, Oracle, SQLite). Nom : [A-Za-z_][A-Za-z0-9_]*, sensible à la casse.
+   Règles lexicales (scanner de placeholders.cpp, mêmes zones ignorées qu'aujourd'hui pour '?' : littéraux,
+   identifiants entre guillemets, commentaires, dollar quotes PostgreSQL) :
+   - ':' suivi d'un début d'identifiant ;
+   - '::' n'est pas un paramètre (cast PostgreSQL x::int) : ni le premier ni le second ':' ;
+   - ':=' (affectation MySQL) n'est pas un paramètre (= n'est pas un début d'identifiant) ;
+   - ':' précédé d'un caractère d'identifiant n'est pas un paramètre (a:b) ;
+   - PostgreSQL : les ':' entre '[' et ']' ne sont pas des paramètres (tranches de tableaux arr[1:n], Q4) ;
+     les crochets sont comptés (imbriqués) hors des zones ignorées ; un indice paramétré s'écrit arr[(:i)] ;
+   - '?' hors des zones ignorées : refusé à la préparation ("positional parameters ('?') are not supported: use
+     named parameters (':name')"), sauf opérateurs jsonb de PostgreSQL ('?', '?|', '?&') qui restent des
+     opérateurs : '?' n'est plus jamais un paramètre en PostgreSQL (ce qui corrige le conflit actuel avec ces
+     opérateurs) ; pour MySQL et SQLite, un '?' est une erreur.
+2. Analyse à la préparation (une fois : les requêtes préparées sont en cache, clé = texte SQL d'origine, plus la
+   taille des listes développées, voir 6) :
+     struct ParsedQuery {
+       std::string query;                              // requête réécrite dans la syntaxe du pilote
+       std::vector<std::string> names;                 // noms dans l'ordre de première apparition (slots)
+       std::vector<std::size_t> slots;                 // slot de chaque marque (MySQL : une marque par position)
+     };
+     ANCH_SQL_EXPORT ParsedQuery parseParameters(std::string_view query, const SqlSyntax& syntax, ParameterStyle style);
+   ParameterStyle : DOLLAR ($1, PostgreSQL), NUMBERED (?1, SQLite), POSITIONAL (?, MySQL).
+   findPlaceholders / numberPlaceholders sont remplacés.
+3. Réécriture par pilote, une valeur liée une seule fois :
+     PostgreSQL : :id -> $1, répété tel quel (natif) ;
+     SQLite     : :id -> ?1, répété tel quel (natif ; sqlite3_bind_parameter_count = nombre de noms) ;
+     MySQL      : :id -> ?, un MYSQL_BIND par position, tous ceux d'un même nom pointent sur le même tampon
+                  (pas de copie) ; mysql_stmt_param_count = nombre de positions (vérifié contre slots).
+4. PreparedStatement :
+   - set(std::string_view name, valeur) pour chaque type actuel (entiers, chaînes, char*, std::optional, Date,
+     Time, Timestamp), setNull(name), et les listes (6) ; set(idx, ...) et setNull(idx) supprimés ;
+   - _values et _bound indexés par slot (nom) ; _names ; _slots pour MySQL ;
+   - nom inconnu : SqlException non fatale avec la liste des noms de la requête ;
+   - checkBindings : liste tous les paramètres manquants ;
+   - getParameterNames() (introspection, tests, messages) ; getParameterCount() = nombre de noms.
+5. Connection, haut niveau (les surcharges variadiques positionnelles sont supprimées) :
+     class Parameters { add(name, valeur) fluent ; valeurs converties à l'ajout, comme set } ;
+     conn.update("UPDATE pet SET name = :name WHERE id = :id", Parameters().add("id", 3).add("name", "Rex"));
+     query / queryMapRow / queryExtract avec Parameters ;
+     batchUpdate(query, std::function<void(Parameters&, const T&)>, valeurs) ;
+   et les objets décrits (fieldsOf, batchUpdate sans fonction : étape 4).
+6. Listes (std::vector, std::list, std::set, ranges de valeurs liables) :
+   - PostgreSQL : une liste est un tableau, lié comme un seul paramètre (littéral texte '{1,2,3}', éléments
+     chaînes entre guillemets avec \ et " échappés, NULL pour std::nullopt) : la requête s'écrit
+     id = ANY(:ids) (et id <> ALL(:ids) pour NOT IN) ; une seule requête préparée quelle que soit la taille, liste
+     vide sans cas particulier (ANY('{}') est faux). Le type du tableau est inféré par le serveur depuis la
+     colonne ; un cast explicite reste possible (:ids::bigint[]).
+   - MySQL et SQLite (pas de tableaux) : IN (:ids) est développé en IN (?, ?, ?) (MySQL) ou IN (?2, ?3, ?4)
+     (SQLite) à l'exécution ; la requête préparée dépend de la taille : clé de cache = requête + tailles des
+     listes ; liste vide : IN (NULL) (aucune ligne, comme ANY('{}')) plutôt qu'une erreur de syntaxe.
+   - Forme portable (Q8) : IN (:liste) s'écrit de la même façon pour toutes les bases ; l'analyseur reconnaît
+     [NOT] IN, '(', un seul paramètre, ')' (hors zones ignorées, mots-clés insensibles à la casse) et le pilote
+     PostgreSQL le réécrit en = ANY($n) / <> ALL($n) quand le paramètre est lié à une liste ; = ANY(:liste) écrit
+     directement reste possible en PostgreSQL. Un paramètre IN (:x) lié à une valeur seule reste IN ($n).
+     La réécriture dépend du type lié (liste ou non) : elle est faite à la première exécution, la requête préparée
+     est mise en cache avec ce mode (clé = requête + mode, et tailles des listes pour MySQL / SQLite).
+7. Constructeur de requêtes : génère des noms à partir des colonnes (column = :column, BETWEEN :column_min AND
+   :column_max ; suffixe _2, _3 si une colonne apparaît plusieurs fois) ; SQLQuery garde ses valeurs dans des
+   Parameters (au lieu de std::list<std::string>).
+
+Liaison depuis anch::Mapping<T> (Q3, explicitée et retenue le 2026-11-24)
+-------------------------------------------------------------------------
+Idée : les paramètres d'une requête sont lus sur un objet décrit par sa description commune (anch::Mapping<T>,
+anch-utils), comme BeanPropertySqlParameterSource lit les propriétés d'un bean :
+  conn.update("INSERT INTO pet(id, name, birth) VALUES (:id, :name, :birth)", anch::sql::fieldsOf(pet));
+  conn.batchUpdate("UPDATE pet SET name = :name WHERE id = :id", pets);   // liste d'objets décrits, sans fonction
+Fonctionnement :
+- anch-sql fournit un mapper (anch::ObjectMapper<M, T>, comme anch-json, anch-csv et anch-val) : registerObject est
+  appelé une fois par type, le mapper garde pour chaque champ son nom et la façon de lire sa valeur (membre ou
+  getter) ; les setters seuls sont ignorés (rien à lire) ;
+- à l'exécution : pour chaque nom de la requête, la valeur du champ de même nom est liée (set(name, valeur)) ;
+  les champs qui ne sont pas des paramètres de la requête sont ignorés ; un paramètre qui n'est pas un champ reste
+  non lié : erreur claire avant exécution (checkBindings) ;
+- types des champs : ceux de set (entiers, chaînes, std::optional -> NULL, dates SQL, listes pour IN / ANY) ;
+  un champ d'un autre type (objet imbriqué, map) est refusé à la compilation, comme anch-csv ;
+- contraintes anch-val non vérifiées (anch::val::validate avant, si besoin) ;
+- batchUpdate(query, objets) : une requête préparée, liée pour chaque objet.
+Ce que ça apporte : plus de code de liaison pour les entités (insert / update / batch) ; SQL devient un format de
+plus de la description commune, sans API propre (règle des sérialiseurs unifiés) ; une seule description pour
+JSON, CSV, validation et SQL.
+Limites :
+- noms des paramètres = noms des champs de la description (les noms JSON : birth_date, pas birthDate si la
+  description utilise birth_date) : la requête s'écrit avec ces noms, les colonnes peuvent avoir d'autres noms
+  (INSERT INTO pet(date_naissance) VALUES (:birth_date)) ; pas de renommage propre à SQL (sinon la description
+  ne serait plus commune) : Parameters reste pour les autres cas ;
+- liaison seulement (écriture) : la lecture des résultats en objets décrits (RowMapper) est symétrique mais à part
+  (voir « Hors périmètre »).
+Dépendance : anch-sql dépendrait d'anch-utils (déjà le cas) seulement : la description et le concept
+ObjectMapper sont dans anch-utils.
+Décidé (Q3) : étape 4, après les noms (elle utilise set(name, ...)).
+
+Étapes
+------
+1. Analyse et réécriture : parseParameters (placeholders.hpp / .cpp, règles lexicales par dialecte, '?' refusé),
+   ParsedQuery, ParameterStyle ; tests unitaires sans base (testPrepareStatementWildCards.cpp remplacé par
+   testNamedParameters.cpp) : répétitions, '::', ':=', a:b, opérateurs jsonb, littéraux / commentaires / dollar
+   quotes / identifiants entre guillemets par dialecte, '?' refusé, noms invalides, arr[1:n] et arr[(:i)]
+   (PostgreSQL), reconnaissance de [NOT] IN (:liste).
+2. PreparedStatement et pilotes : set(name, ...), slots, checkBindings complet, réécriture PostgreSQL / SQLite /
+   MySQL (tampon partagé) ; suppression des formes positionnelles ; conversion des tests et exemples existants ;
+   tests par pilote (SQLite toujours ; MySQL et PostgreSQL avec serveur) : insert / update / select nommés, valeur
+   répétée liée une fois, paramètre manquant (message), nom inconnu (message), NULL et optional, réutilisation
+   depuis le cache.
+3. Connection : Parameters, query / queryMapRow / queryExtract / update / batchUpdate avec Parameters ;
+   constructeur de requêtes (noms générés, SQLQuery avec Parameters) ; exemples (anch-sql/examples, \snippet) et
+   anch-sql.dox.
+4. Mapper SQL sur anch::Mapping<T> : fieldsOf(objet), batchUpdate d'objets décrits ; tests (champs
+   ignorés, paramètre absent de l'objet, optional, dates, setters seuls).
+5. Listes : tableaux PostgreSQL (littéral, échappement, NULL, réécriture de [NOT] IN (:liste) en = ANY / <> ALL),
+   développement MySQL / SQLite (clé de cache avec tailles, liste vide) ; tests par pilote.
+CHANGELOG ([Unreleased], Breaking changes : '?' et formes positionnelles supprimés ; Added : paramètres nommés,
+Parameters, listes) à chaque étape.
+
+Hors périmètre
+--------------
+- Liaison typée (valeurs binaires au lieu de texte : MYSQL_BIND typés, sqlite3_bind_int64 / double, format binaire
+  PostgreSQL) : vrai gain mémoire et CPU, indépendant des noms (les slots le rendent plus simple ensuite).
+- Lecture des résultats par description anch::Mapping<T> (RowMapper d'objets décrits) : symétrique de l'étape 4,
+  à concevoir à part.
