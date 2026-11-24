@@ -1,0 +1,36 @@
+Jours calendaires et instants (anch-date)
+==========================================
+
+Demande (2026-11-24) : ne plus exposer std::chrono::year_month_day (lisibilité, utilisation, comparaisons) ;
+transformer anch::date::Date (un instant) en anch::date::DateTime et créer un anch::date::Date jour calendaire qui
+enveloppe std::chrono::year_month_day. Propositions validées le 2026-11-24 : noms DateTime / Date (vocabulaire de
+RFC 3339, JSON schema, XSD) ; year_month_day remplacé partout dans les formats ; anch::sql::Date et Timestamp
+remplacés (Time plus tard avec anch::date::Time) ; allègement de DateTime.
+
+Conception
+----------
+- anch::date::DateTime : instant (ancien anch::date::Date, date/dateTime.hpp), nanosecondes depuis epoch (années 1678
+  à 2261), champs en heure locale.
+- anch::date::Date (date/date.hpp) : jour du calendrier grégorien proleptique, 0000-01-01 à 9999-12-31, toujours
+  valide (dates impossibles refusées à la construction : formatage infaillible), enveloppe d'un year_month_day.
+  Date(année, mois, jour), Date(year_month_day), Date(sys_days) explicites ; défaut 1970-01-01 ; today(Zone) ;
+  parse / format (RFC 3339 full-date) ; year / month / day, weekday (ISO 1 = lundi), dayOfYear, isLeapYear ;
+  plusDays / plusMonths (dernier jour du mois si plus court) / plusYears (29 février -> 28) ; daysUntil ;
+  operator<=> / == (constexpr) ; conversions explicites vers year_month_day et sys_days ; operator<<.
+- Pas d'héritage : un jour n'est pas un instant. Passages explicites avec le fuseau (anch::date::Zone UTC / LOCAL) :
+  DateTime::date(Zone), Date::startOfDay(Zone).
+
+Étapes
+------
+1. Faite le 2026-11-24 (branche date-datetime) : renommage Date -> DateTime (fichiers dateTime.hpp, impl/dateTime.hpp,
+   dateTime.cpp), nouveau Date, Zone, DateTime::date, RFC 3339 full-date sur Date (formatDate noexcept) ;
+   propagation : anch-json (PrimitiveMapper<Date>), anch-csv, anch-val (IsScalar), anch-oas (format date ->
+   anch::date::Date, date-time -> DateTime), anch-log, fuzz ; anch-sql : anch::sql::Date et Timestamp supprimés
+   (anch::date::Date et DateTime : ResultSet::get, toParameter, listes), getDateFormatter supprimé des pilotes,
+   sql::Time hérite de DateTime. Tests : anch-date-test (construction, comparaisons, champs, arithmétique,
+   conversions avec DateTime), stmt-dates sur les trois bases (colonne DATE de l'an 0 / 1, hors de portée de
+   l'ancien type ; paramètre et liste de dates).
+2. Allègement de DateTime : seulement sys_time<nanoseconds>, champs calculés à la demande (plus de 12 champs ni de
+   destructeur virtuel), DateTime::now() au lieu du constructeur par défaut qui prend l'heure courante ;
+   DateFormatter / IDatePartFormatter lisent des champs calculés et construisent le résultat de parse.
+3. anch::date::Time : heure du jour (RFC 3339 partial-time, XSD xs:time), remplace anch::sql::Time.

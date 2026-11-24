@@ -25,17 +25,17 @@
 #include <ostream>
 #include <string>
 
-#include "date/date.hpp"
+#include "date/dateTime.hpp"
 
 
 namespace anch::date {
 
   /*!
-   * \brief Date part formatter interface
+   * \brief Date and time part formatter interface
    *
    * Implement this interface to add a pattern to \ref DateFormatter (\ref DateFormatter::registerFormatterPart ).
-   * Protected accessors give access to \ref Date fields.\n
-   * A part has a fixed size: \ref setValue receives exactly \ref getSize characters. When a \ref Date is parsed, its
+   * Protected accessors give access to \ref DateTime fields.\n
+   * A part has a fixed size: \ref setValue receives exactly \ref getSize characters. When a \ref DateTime is parsed, its
    * fields are set to 1970-01-01 00:00:00.000 before parts are called, and the timestamp is computed afterwards.
    *
    * \author Vincent Lachenal
@@ -52,10 +52,10 @@ namespace anch::date {
     /*!
      * Format date
      *
-     * \param date The \ref Date to format
+     * \param date The \ref DateTime to format
      * \param output The output stream to write in
      */
-    virtual void format(const anch::date::Date& date, std::ostream& output) const noexcept = 0;
+    virtual void format(const anch::date::DateTime& date, std::ostream& output) const noexcept = 0;
 
     /*!
      * Get size of formatter part
@@ -65,14 +65,14 @@ namespace anch::date {
     virtual std::size_t getSize() const noexcept = 0;
 
     /*!
-     * Set value to \ref Date
+     * Set value to \ref DateTime
      *
-     * \param date The \ref Date to modify
+     * \param date The \ref DateTime to modify
      * \param value The value to set
      *
      * \return \c true when value is valid, \c false otherwise
      */
-    virtual bool setValue(anch::date::Date& date, const std::string& value) const noexcept = 0;
+    virtual bool setValue(anch::date::DateTime& date, const std::string& value) const noexcept = 0;
 
     /*!
      * Get formatter part pattern
@@ -84,139 +84,139 @@ namespace anch::date {
     // Accessors +
   protected:
     /*!
-     * \ref Date year getter
+     * \ref DateTime year getter
      *
      * \return The year
      */
-    static int32_t getYear(const anch::date::Date& date);
+    static int32_t getYear(const anch::date::DateTime& date);
 
     /*!
-     * \ref Date year setter
+     * \ref DateTime year setter
      *
-     * \param date The \ref Date to modify
+     * \param date The \ref DateTime to modify
      * \param year The year value to set
      */
-    static void setYear(anch::date::Date& date, int32_t year);
+    static void setYear(anch::date::DateTime& date, int32_t year);
 
     /*!
-     * \ref Date month getter
+     * \ref DateTime month getter
      *
      * \return The month
      */
-    static uint16_t getMonth(const anch::date::Date& date);
+    static uint16_t getMonth(const anch::date::DateTime& date);
 
     /*!
-     * \ref Date month setter
+     * \ref DateTime month setter
      *
-     * \param date The \ref Date to modify
+     * \param date The \ref DateTime to modify
      * \param month The month value to set
      */
-    static void setMonth(anch::date::Date& date, uint16_t month);
+    static void setMonth(anch::date::DateTime& date, uint16_t month);
 
     /*!
-     * \ref Date day getter
+     * \ref DateTime day getter
      *
      * \return The day
      */
-    static uint16_t getDay(const anch::date::Date& date);
+    static uint16_t getDay(const anch::date::DateTime& date);
 
     /*!
-     * \ref Date day setter
+     * \ref DateTime day setter
      *
-     * \param date The \ref Date to modify
+     * \param date The \ref DateTime to modify
      * \param mday The day value to set
      */
-    static void setDay(anch::date::Date& date, uint16_t mday);
+    static void setDay(anch::date::DateTime& date, uint16_t mday);
 
     /*!
-     * \ref Date hour getter
+     * \ref DateTime hour getter
      *
      * \return The hour
      */
-    static uint16_t getHour(const anch::date::Date& date);
+    static uint16_t getHour(const anch::date::DateTime& date);
 
     /*!
-     * \ref Date hour setter
+     * \ref DateTime hour setter
      *
-     * \param date The \ref Date to modify
+     * \param date The \ref DateTime to modify
      * \param hour The hour value to set
      */
-    static void setHour(anch::date::Date& date, uint16_t hour);
+    static void setHour(anch::date::DateTime& date, uint16_t hour);
 
     /*!
-     * \ref Date minute getter
+     * \ref DateTime minute getter
      *
      * \return The minute
      */
-    static uint16_t getMinute(const anch::date::Date& date);
+    static uint16_t getMinute(const anch::date::DateTime& date);
 
     /*!
-     * \ref Date minute setter
+     * \ref DateTime minute setter
      *
-     * \param date The \ref Date to modify
+     * \param date The \ref DateTime to modify
      * \param minute The minute value to set
      */
-    static void setMinute(anch::date::Date& date, uint16_t minute);
+    static void setMinute(anch::date::DateTime& date, uint16_t minute);
 
     /*!
-     * \ref Date second getter
+     * \ref DateTime second getter
      *
      * \return The second
      */
-    static uint16_t getSecond(const anch::date::Date& date);
+    static uint16_t getSecond(const anch::date::DateTime& date);
 
     /*!
-     * \ref Date second setter
+     * \ref DateTime second setter
      *
-     * \param date The \ref Date to modify
+     * \param date The \ref DateTime to modify
      * \param second The second value to set
      */
-    static void setSecond(anch::date::Date& date, uint16_t second);
+    static void setSecond(anch::date::DateTime& date, uint16_t second);
 
     /*!
-     * \ref Date millisecond getter
+     * \ref DateTime millisecond getter
      *
      * \return The millisecond
      */
-    static uint16_t getMillisecond(const anch::date::Date& date);
+    static uint16_t getMillisecond(const anch::date::DateTime& date);
 
     /*!
-     * \ref Date millisecond setter
+     * \ref DateTime millisecond setter
      *
-     * \param date The \ref Date to modify
+     * \param date The \ref DateTime to modify
      * \param milli The millisecond value to set
      */
-    static void setMillisecond(anch::date::Date& date, uint16_t milli);
+    static void setMillisecond(anch::date::DateTime& date, uint16_t milli);
 
     /*!
-     * \ref Date microsecond getter
+     * \ref DateTime microsecond getter
      *
      * \return The microsecond
      */
-    static uint16_t getMicrosecond(const anch::date::Date& date);
+    static uint16_t getMicrosecond(const anch::date::DateTime& date);
 
     /*!
-     * \ref Date microsecond setter
+     * \ref DateTime microsecond setter
      *
-     * \param date The \ref Date to modify
+     * \param date The \ref DateTime to modify
      * \param micro The microsecond value to set
      */
-    static void setMicrosecond(anch::date::Date& date, uint16_t micro);
+    static void setMicrosecond(anch::date::DateTime& date, uint16_t micro);
 
     /*!
-     * \ref Date nanosecond getter
+     * \ref DateTime nanosecond getter
      *
      * \return The nanosecond
      */
-    static uint16_t getNanosecond(const anch::date::Date& date);
+    static uint16_t getNanosecond(const anch::date::DateTime& date);
 
     /*!
-     * \ref Date nanosecond setter
+     * \ref DateTime nanosecond setter
      *
-     * \param date The \ref Date to modify
+     * \param date The \ref DateTime to modify
      * \param nano The nanosecond value to set
      */
-    static void setNanosecond(anch::date::Date& date, uint16_t nano);
+    static void setNanosecond(anch::date::DateTime& date, uint16_t nano);
     // Accessors -
   };
 

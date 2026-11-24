@@ -23,7 +23,7 @@ using anch::sql::Time;
 
 
 // Constructors +
-Time::Time(bool init): anch::date::Date(init) {
+Time::Time(bool init): anch::date::DateTime(init) {
   _years = 0;
   _months = 0;
   _ydays = 0;
@@ -31,7 +31,7 @@ Time::Time(bool init): anch::date::Date(init) {
   _wdays = 0;
 }
 
-Time::Time(const anch::date::Date& date): anch::date::Date(date) {
+Time::Time(const anch::date::DateTime& date): anch::date::DateTime(date) {
   _years = 0;
   _months = 0;
   _ydays = 0;
@@ -39,7 +39,7 @@ Time::Time(const anch::date::Date& date): anch::date::Date(date) {
   _wdays = 0;
 }
 
-Time::Time(const std::time_t& time): anch::date::Date(time) {
+Time::Time(const std::time_t& time): anch::date::DateTime(time) {
   _years = 0;
   _months = 0;
   _ydays = 0;
@@ -47,7 +47,7 @@ Time::Time(const std::time_t& time): anch::date::Date(time) {
   _wdays = 0;
 }
 
-Time::Time(const std::tm* const time): anch::date::Date(time) {
+Time::Time(const std::tm* const time): anch::date::DateTime(time) {
   _years = 0;
   _months = 0;
   _ydays = 0;

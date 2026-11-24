@@ -37,3 +37,12 @@ add_test(NAME rfc3339-parse-invalid COMMAND anch-date-rfc3339-test -t rfc3339-pa
 add_test(NAME rfc3339-date COMMAND anch-date-rfc3339-test -t rfc3339-date)
 set_tests_properties(rfc3339-format-local PROPERTIES ENVIRONMENT "TZ=Europe/Paris")
 # RFC 3339 -
+
+# Calendar days +
+anch_add_executable(anch-date-test SOURCES testDate.cpp LIBS anch::date anch::ut)
+add_test(NAME date-day-construction COMMAND anch-date-test -t date-construction)
+add_test(NAME date-day-comparison COMMAND anch-date-test -t date-comparison)
+add_test(NAME date-day-fields COMMAND anch-date-test -t date-fields)
+add_test(NAME date-day-arithmetic COMMAND anch-date-test -t date-arithmetic)
+add_test(NAME date-day-datetime COMMAND anch-date-test -t date-datetime)
+# Calendar days -

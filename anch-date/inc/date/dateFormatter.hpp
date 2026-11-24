@@ -26,7 +26,7 @@
 #include <string>
 #include <vector>
 
-#include "date/date.hpp"
+#include "date/dateTime.hpp"
 
 
 namespace anch::date {
@@ -36,7 +36,7 @@ namespace anch::date {
   typedef anch::date::IDatePartFormatter* (*getInstance)();
 
   /*!
-   * \brief \ref Date string formatter and parser
+   * \brief \ref DateTime string formatter and parser
    *
    * Patterns are:
    * - \%Y: 4 digits year
@@ -114,7 +114,7 @@ namespace anch::date {
      * \param date the date to format
      * \param output the output string
      */
-    void format(const anch::date::Date& date, std::string& output) const noexcept;
+    void format(const anch::date::DateTime& date, std::string& output) const noexcept;
 
     /*!
      * Format date
@@ -122,7 +122,7 @@ namespace anch::date {
      * \param date the date to format
      * \param output the output stream
      */
-    void format(const anch::date::Date& date, std::ostream& output) const noexcept;
+    void format(const anch::date::DateTime& date, std::ostream& output) const noexcept;
 
     /*!
      * Build date from string
@@ -132,7 +132,7 @@ namespace anch::date {
      *
      * \throw std::invalid_argument invalid format, impossible date or date out of range (years 1678 to 2261)
      */
-    void parse(const std::string& strDate, anch::date::Date& date) const;
+    void parse(const std::string& strDate, anch::date::DateTime& date) const;
 
     /*!
      * Build date from string
@@ -143,7 +143,7 @@ namespace anch::date {
      *
      * \throw std::invalid_argument invalid format, impossible date or date out of range (years 1678 to 2261)
      */
-    anch::date::Date parse(const std::string& strDate) const;
+    anch::date::DateTime parse(const std::string& strDate) const;
 
   private:
     /*!

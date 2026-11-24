@@ -14,6 +14,17 @@ and `\deprecated` in its documentation, which give its replacement, and it is re
 
 ### Breaking changes
 
+- anch-date: `anch::date::Date` (a point in time) is renamed `anch::date::DateTime` (`date/dateTime.hpp`);
+  `anch::date::Date` (`date/date.hpp`) is a calendar day (0000-01-01 to 9999-12-31, always valid) which replaces
+  `std::chrono::year_month_day`: RFC 3339 `full-date` (`rfc3339::parseDate`, `formatDate`), anch-json, anch-csv,
+  anch-val scalars and anch-oas `date` format use it. It is ordered, days, months and years can be added
+  (`plusDays`, `plusMonths`, `plusYears`, `daysUntil`), it is parsed and formatted (`parse`, `format`,
+  `operator<<`) and explicitly converted from and to `year_month_day` and `sys_days`; conversions with points in
+  time give the time zone (`anch::date::Zone`: `DateTime::date(zone)`, `Date::startOfDay(zone)`, `Date::today`).
+- anch-sql: `anch::sql::Date` and `anch::sql::Timestamp` are removed: DATE columns and parameters are
+  `anch::date::Date` (years before 1678 can be read), timestamps are `anch::date::DateTime`
+  (`ResultSet::get<anch::date::Date>`, `get<anch::date::DateTime>`); `ResultSet::getDateFormatter` and
+  `getDefaultDateFormatter` are removed.
 - anch-sql: the `SELECT` builder generates named parameters from columns (`t.id = :t_id`, `BETWEEN :t_id_min AND
   :t_id_max`, `_2`, `_3`, ... for a name already used); merged clauses, subqueries and unions rename their
   colliding names and keep their parameters (`UNION` and `IN` / `EXISTS` subqueries lost them). `SQLQuery` holds

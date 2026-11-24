@@ -41,7 +41,7 @@
 #endif
 
 #ifdef ANCH_DATE
-#include "date/date.hpp"
+#include "date/dateTime.hpp"
 #endif
 
 #include "ut/assert.hpp"
@@ -2042,10 +2042,10 @@ testDeserUuidKO() {
 // Dates +
 #ifdef ANCH_DATE
 struct TestDate {
-  anch::date::Date _timestamp{false};
-  std::optional<anch::date::Date> _updated;
-  std::chrono::year_month_day _birth{};
-  std::vector<std::chrono::year_month_day> _days;
+  anch::date::DateTime _timestamp{false};
+  std::optional<anch::date::DateTime> _updated;
+  anch::date::Date _birth{};
+  std::vector<anch::date::Date> _days;
 };
 
 template<>
@@ -2070,18 +2070,18 @@ testDeserDate() {
   auto nanos = duration_cast<nanoseconds>(static_cast<system_clock::time_point>(res._timestamp).time_since_epoch()).count();
   anch::ut::assertThat(nanos == 1751364000500000000, "Invalid timestamp: {}", nanos);
   anch::ut::assertThat(!res._updated.has_value(), "updated should be empty");
-  anch::ut::assertThat(res._birth == 2024y/February/29d, "Invalid birth");
-  anch::ut::assertThat((res._days == std::vector<year_month_day>{2025y/January/1d, 2025y/December/31d}), "Invalid days");
+  anch::ut::assertThat(res._birth == anch::date::Date(2024, 2, 29), "Invalid birth");
+  anch::ut::assertThat((res._days == std::vector<anch::date::Date>{anch::date::Date(2025, 1, 1), anch::date::Date(2025, 12, 31)}), "Invalid days");
 }
 
 void
 testSerDate() {
   using namespace std::chrono;
   TestDate value;
-  value._timestamp = anch::date::Date(system_clock::time_point(nanoseconds(1751364000123000000)));
-  value._updated = anch::date::Date(static_cast<std::time_t>(0));
-  value._birth = 2024y/February/29d;
-  value._days = {2025y/January/1d};
+  value._timestamp = anch::date::DateTime(system_clock::time_point(nanoseconds(1751364000123000000)));
+  value._updated = anch::date::DateTime(static_cast<std::time_t>(0));
+  value._birth = anch::date::Date(2024, 2, 29);
+  value._days = {anch::date::Date(2025, 1, 1)};
   anch::json::JSONMapper mapper(anch::json::DEFAULT_MAPPING_OPTIONS);
   std::string json = mapper.serialize(value);
   std::string expected = R"({"timestamp":"2025-07-01T10:00:00.123Z","updated":"1970-01-01T00:00:00Z","birth":"2024-02-29","days":["2025-01-01"]})";
@@ -2090,15 +2090,7 @@ testSerDate() {
   TestDate copy = mapper.deserialize<TestDate>(iss);
   anch::ut::assertThat(copy._timestamp == value._timestamp && copy._updated == value._updated
                        && copy._birth == value._birth && copy._days == value._days, "Round trip failed");
-  // Invalid full-date is not serialized +
-  value._birth = year_month_day{};
-  try {
-    json = mapper.serialize(value);
-    anch::ut::fail("Invalid date should not be serialized");
-  } catch(const std::invalid_argument& e) {
-    std::cout << e.what() << std::endl;
-  }
-  // Invalid full-date is not serialized -
+  // Invalid full-date can not be built (anch::date::Date is always valid): nothing to serialize
 }
 
 void

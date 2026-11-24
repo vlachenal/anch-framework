@@ -60,14 +60,14 @@ namespace anch::csv::detail {
       }
 #endif
 #ifdef ANCH_DATE
-    } else if constexpr (std::same_as<V, anch::date::Date>) {
+    } else if constexpr (std::same_as<V, anch::date::DateTime>) {
       try {
 	value = anch::date::rfc3339::parseDateTime(text);
 	return true;
       } catch(const std::invalid_argument&) {
 	return false;
       }
-    } else if constexpr (std::same_as<V, std::chrono::year_month_day>) {
+    } else if constexpr (std::same_as<V, anch::date::Date>) {
       try {
 	value = anch::date::rfc3339::parseDate(text);
 	return true;
@@ -96,9 +96,9 @@ namespace anch::csv::detail {
       return value.toString();
 #endif
 #ifdef ANCH_DATE
-    } else if constexpr (std::same_as<V, anch::date::Date>) {
+    } else if constexpr (std::same_as<V, anch::date::DateTime>) {
       return anch::date::rfc3339::formatDateTime(value);
-    } else if constexpr (std::same_as<V, std::chrono::year_month_day>) {
+    } else if constexpr (std::same_as<V, anch::date::Date>) {
       return anch::date::rfc3339::formatDate(value);
 #endif
     } else {

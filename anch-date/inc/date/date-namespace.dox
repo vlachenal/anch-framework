@@ -1,9 +1,9 @@
 /*!
  * \namespace anch::date
  *
- * \brief Date namespace.
+ * \brief Dates namespace.
  *
  * It contains utilities for date and time management.\n
- * \ref anch::date::Date is based on \c std::chrono (nanosecond precision) and on \c localtime_r for local time. \ref anch::date::DateFormatter
+ * \ref anch::date::DateTime is based on \c std::chrono (nanosecond precision) and on \c localtime_r for local time. \ref anch::date::DateFormatter
  * provides a date parser and formatter with a syntax close to \c strftime .
  */

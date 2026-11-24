@@ -124,13 +124,6 @@ namespace anch::sql {
     virtual std::optional<std::string> getValue(std::size_t idx) override;
 
     /*!
-     * Retrieve SQL date formatter
-     *
-     * \return the SQL date formatter
-     */
-    virtual const anch::date::DateFormatter& getDateFormatter() override;
-
-    /*!
      * Retrieve SQL time formatter
      *
      * \return the SQL time formatter

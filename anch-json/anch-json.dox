@@ -29,8 +29,8 @@ target_link_libraries(my-app PRIVATE anch::json)
  * \c anch::json::serialize writes JSON in a stream or returns a string ; \c anch::json::deserialize reads a
  * stream and raises \ref anch::json::MappingError on invalid JSON (with its position). Mapping options
  * (\ref anch::json::MappingOptions ) control unknown fields, \c null values and limits (depth, payload size).\n
- * With \c ANCH_UUID and \c ANCH_DATE options, \c anch::UUID , \c anch::date::Date and
- * \c std::chrono::year_month_day are mapped as strings (RFC 3339 for dates).
+ * With \c ANCH_UUID and \c ANCH_DATE options, \c anch::UUID , \c anch::date::DateTime and
+ * \c anch::date::Date are mapped as strings (RFC 3339 for dates).
  *
  * \section json_example_sec Examples
  *

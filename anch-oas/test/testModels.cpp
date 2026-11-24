@@ -75,7 +75,7 @@ testPet() {
   anch::ut::assertThat(pet.id == 42 && pet.name == "Rex", "id / name: {} / {}", pet.id, pet.name);
   anch::ut::assertThat(pet.uuid.has_value() && pet.uuid->toString() == "deb94ebc-be28-4899-981a-29199b7a487d", "Invalid UUID");
   anch::ut::assertThat(pet.birth.has_value() && anch::date::rfc3339::formatDateTime(*pet.birth) == "2020-01-02T03:04:05Z", "Invalid birth");
-  anch::ut::assertThat(pet.birthday == std::chrono::year_month_day(std::chrono::year(2020), std::chrono::January, std::chrono::day(2)), "Invalid birthday");
+  anch::ut::assertThat(pet.birthday == anch::date::Date(2020, 1, 2), "Invalid birthday");
   anch::ut::assertThat(pet.visits.size() == 2 && anch::date::rfc3339::formatDateTime(pet.visits[0]) == "2021-03-04T04:06:07.890Z", "Invalid visits");
   anch::ut::assertThat(pet.age == 6 && pet.weight == 12.5f && pet.price == 99.99 && pet.vaccinated == true, "Invalid primitives");
   anch::ut::assertThat(pet.status == Status::IN_STOCK, "status should be IN_STOCK");

@@ -407,7 +407,7 @@ struct anch::Mapping<Wallet> {
 static_assert(anch::val::Validatable<Pet> && anch::val::Validatable<std::vector<std::optional<Tag>>>
 	      && anch::val::Validatable<std::map<std::string, Pet*>>);
 static_assert(anch::val::Validatable<int> && anch::val::Validatable<std::string> && anch::val::Validatable<anch::UUID>
-	      && anch::val::Validatable<std::chrono::year_month_day> && anch::val::Validatable<std::chrono::system_clock::time_point>);
+	      && anch::val::Validatable<anch::date::Date> && anch::val::Validatable<std::chrono::system_clock::time_point>);
 static_assert(!anch::val::Validatable<Undescribed> && !anch::val::Validatable<std::vector<Undescribed>>
 	      && !anch::val::Validatable<std::optional<Undescribed>> && !anch::val::Validatable<std::map<std::string, Undescribed>>);
 static_assert(anch::val::Validatable<Money> && anch::val::Validatable<Wallet>, "Declared scalars are validated as a whole");

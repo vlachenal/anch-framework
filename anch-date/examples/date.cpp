@@ -18,11 +18,12 @@
   along with ANCH Framework.  If not, see <https://www.gnu.org/licenses/>.
 */
 #include <chrono>
+#include <cstdint>
 #include <ctime>
 #include <iostream>
 #include <string>
 
-#include "date/date.hpp"
+#include "date/dateTime.hpp"
 
 //! [formatter]
 #include "date/dateFormatter.hpp"
@@ -31,8 +32,8 @@ void
 formatterExample() {
   anch::date::DateFormatter formatter("%Y-%m-%d %H:%M:%S.%s");
   std::string str;
-  formatter.format(anch::date::Date(), str);                     // now
-  anch::date::Date date = formatter.parse("2012-10-23 10:02:59.998");
+  formatter.format(anch::date::DateTime(), str);                     // now
+  anch::date::DateTime date = formatter.parse("2012-10-23 10:02:59.998");
   std::time_t time = static_cast<std::time_t>(date);
   std::cout << str << " " << time << std::endl;
 }
@@ -43,17 +44,33 @@ formatterExample() {
 
 bool
 rfc3339Example() {
-  anch::date::Date date = anch::date::rfc3339::parseDateTime("2025-07-01T12:00:00.5+02:00");
+  anch::date::DateTime date = anch::date::rfc3339::parseDateTime("2025-07-01T12:00:00.5+02:00");
   std::string utc = anch::date::rfc3339::formatDateTime(date);                                  // 2025-07-01T10:00:00.500Z
   std::string local = anch::date::rfc3339::formatDateTime(date, anch::date::rfc3339::Offset::LOCAL);
-  std::chrono::year_month_day day = anch::date::rfc3339::parseDate("2024-02-29");
-  std::cout << local << " " << static_cast<int>(day.year()) << std::endl;
+  anch::date::Date day = anch::date::rfc3339::parseDate("2024-02-29");
+  std::cout << local << " " << day.year() << std::endl;
   return utc == "2025-07-01T10:00:00.500Z";
 }
 //! [rfc3339]
 
+//! [date]
+#include "date/date.hpp"
+
+bool
+dateExample() {
+  anch::date::Date birth(2024, 2, 29);                                  // impossible dates are refused
+  anch::date::Date today = anch::date::Date::today();                    // local day
+  anch::date::Date end = birth.plusMonths(1).plusDays(-1);               // 2024-03-28
+  bool past = birth < today;                                             // dates are ordered
+  int64_t days = birth.daysUntil(anch::date::Date::parse("2025-02-28")); // 365
+  anch::date::DateTime midnight = birth.startOfDay(anch::date::Zone::UTC);
+  std::cout << end << " " << past << " " << days << std::endl;           // 2024-03-28 1 365
+  return end.format() == "2024-03-28" && days == 365 && midnight.date(anch::date::Zone::UTC) == birth;
+}
+//! [date]
+
 int
 main() {
   formatterExample();
-  return rfc3339Example() ? 0 : 1;
+  return (rfc3339Example() && dateExample()) ? 0 : 1;
 }

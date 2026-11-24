@@ -123,11 +123,6 @@ PostgreSQLResultSet::fetchNext() {
 }
 
 const anch::date::DateFormatter&
-PostgreSQLResultSet::getDateFormatter() {
-  return getDefaultDateFormatter();
-}
-
-const anch::date::DateFormatter&
 PostgreSQLResultSet::getTimeFormatter() {
   return getDefaultTimeFormatter();
 }

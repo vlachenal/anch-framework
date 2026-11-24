@@ -25,7 +25,7 @@
 #include <limits>
 #include <stdexcept>
 
-using anch::date::Date;
+using anch::date::DateTime;
 using anch::date::rfc3339::Offset;
 using std::chrono::days;
 using std::chrono::nanoseconds;
@@ -43,7 +43,7 @@ namespace {
   /*! Seconds in one day */
   constexpr std::int64_t DAY_SECONDS = 86'400;
 
-  /*! Bound (excluded) of the seconds since epoch which can be stored in a \ref Date (nanoseconds on 64 bits) */
+  /*! Bound (excluded) of the seconds since epoch which can be stored in a \ref DateTime (nanoseconds on 64 bits) */
   constexpr std::int64_t MAX_SECONDS = std::numeric_limits<std::int64_t>::max() / NANOS;
 
   /*!
@@ -128,7 +128,7 @@ namespace {
 
 // date-time +
 std::size_t
-anch::date::rfc3339::formatDateTime(const Date& date, char* output, Offset offset) noexcept {
+anch::date::rfc3339::formatDateTime(const DateTime& date, char* output, Offset offset) noexcept {
   auto time = std::chrono::time_point_cast<nanoseconds>(static_cast<system_clock::time_point>(date));
   std::int64_t shift = 0; // seconds
   if(offset == Offset::LOCAL) {
@@ -165,12 +165,12 @@ anch::date::rfc3339::formatDateTime(const Date& date, char* output, Offset offse
 }
 
 std::string
-anch::date::rfc3339::formatDateTime(const Date& date, Offset offset) {
+anch::date::rfc3339::formatDateTime(const DateTime& date, Offset offset) {
   char buffer[DATE_TIME_MAX_SIZE];
   return std::string(buffer, formatDateTime(date, buffer, offset));
 }
 
-Date
+DateTime
 anch::date::rfc3339::parseDateTime(std::string_view text) {
   constexpr std::string_view KIND = "date-time";
   year_month_day ymd;
@@ -231,35 +231,30 @@ anch::date::rfc3339::parseDateTime(std::string_view text) {
     invalid(KIND, text, ": out of range (years 1678 to 2261)");
   }
   sys_time<nanoseconds> time{nanoseconds(utc * NANOS + subsec)};
-  return Date(std::chrono::time_point_cast<system_clock::duration>(time));
+  return DateTime(std::chrono::time_point_cast<system_clock::duration>(time));
 }
 // date-time -
 
 // full-date +
 std::size_t
-anch::date::rfc3339::formatDate(const year_month_day& date, char* output) {
-  int year = static_cast<int>(date.year());
-  unsigned month = static_cast<unsigned>(date.month());
-  unsigned day = static_cast<unsigned>(date.day());
-  if(!date.ok() || year < 0 || year > 9999) {
-    throw std::invalid_argument(std::format("Invalid RFC 3339 full-date {:04}-{:02}-{:02}", year, month, day));
-  }
-  std::format_to(output, "{:04}-{:02}-{:02}", year, month, day);
+anch::date::rfc3339::formatDate(const anch::date::Date& date, char* output) noexcept {
+  // Dates are possible days from 0000-01-01 to 9999-12-31
+  std::format_to(output, "{:04}-{:02}-{:02}", date.year(), date.month(), date.day());
   return DATE_SIZE;
 }
 
 std::string
-anch::date::rfc3339::formatDate(const year_month_day& date) {
+anch::date::rfc3339::formatDate(const anch::date::Date& date) {
   char buffer[DATE_SIZE];
   return std::string(buffer, formatDate(date, buffer));
 }
 
-year_month_day
+anch::date::Date
 anch::date::rfc3339::parseDate(std::string_view text) {
   year_month_day date;
   if(text.size() != DATE_SIZE || !readDate(text, date)) {
     invalid("full-date", text);
   }
-  return date;
+  return anch::date::Date(date); // 4 digits years: in range
 }
 // full-date -

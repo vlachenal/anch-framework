@@ -124,6 +124,6 @@ Test `17-connection-parameters` (`PostgreSQL-connection-parameters`), qui échou
 ## À approfondir
 - [x] Gestion des erreurs fatales et pool (S10, S11) ; reste : messages et codes d'erreur structurés (`SqlException` n'a qu'un message et un booléen).
 - [ ] Validation à l'emprunt : une connexion restée longtemps dans le pool peut avoir été fermée par le serveur (`wait_timeout` MySQL) ; elle n'est invalidée qu'à sa première utilisation, qui échoue.
-- [ ] Remarque de S8 : `anch::sql::Date` / `Time` modifient des champs sans recalculer le timestamp.
+- [x] Remarque de S8 : `anch::sql::Date` / `Time` modifient des champs sans recalculer le timestamp. `anch::sql::Date` est remplacé par `anch::date::Date` (jour calendaire, 2026-11-24) et `Timestamp` par `anch::date::DateTime` ; reste `Time` (futur `anch::date::Time`).
 - [ ] Fermeture des pilotes (`dlclose` dans le destructeur du singleton) alors que des connexions issues de ces pilotes peuvent encore exister dans les pools.
 - [ ] Batch (`anch-batch.todo` : schéma par défaut).

@@ -95,11 +95,6 @@ SQLite3ResultSet::fetchNext() {
 }
 
 const anch::date::DateFormatter&
-SQLite3ResultSet::getDateFormatter() {
-  return getDefaultDateFormatter();
-}
-
-const anch::date::DateFormatter&
 SQLite3ResultSet::getTimeFormatter() {
   return getDefaultTimeFormatter();
 }

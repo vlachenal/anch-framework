@@ -27,6 +27,7 @@
 #include <string_view>
 
 #include "date/date.hpp"
+#include "date/dateTime.hpp"
 
 
 /*!
@@ -34,9 +35,9 @@
  *
  * RFC 3339 (https://www.rfc-editor.org/rfc/rfc3339#section-5.6) defines:
  * - \c date-time : <tt>YYYY-MM-DDTHH:MM:SS[.fraction](Z|+HH:MM|-HH:MM)</tt> (a point in time), mapped to
- *   \ref anch::date::Date ;
+ *   \ref anch::date::DateTime ;
  * - \c full-date : <tt>YYYY-MM-DD</tt> (a calendar day without time zone), mapped to
- *   \c std::chrono::year_month_day .
+ *   \ref anch::date::Date .
  *
  * These are the \c date-time and \c date formats of JSON schema and OpenAPI.\n
  * Parsing follows the RFC grammar: \c T and \c Z can be lower case ; the space separator allowed by the RFC note is
@@ -81,7 +82,7 @@ namespace anch::date::rfc3339 {
    *
    * \return the number of characters written
    */
-  ANCH_DATE_EXPORT std::size_t formatDateTime(const anch::date::Date& date, char* output, Offset offset = Offset::UTC) noexcept;
+  ANCH_DATE_EXPORT std::size_t formatDateTime(const anch::date::DateTime& date, char* output, Offset offset = Offset::UTC) noexcept;
 
   /*!
    * Format \c date-time
@@ -91,7 +92,7 @@ namespace anch::date::rfc3339 {
    *
    * \return the formatted date
    */
-  ANCH_DATE_EXPORT std::string formatDateTime(const anch::date::Date& date, Offset offset = Offset::UTC);
+  ANCH_DATE_EXPORT std::string formatDateTime(const anch::date::DateTime& date, Offset offset = Offset::UTC);
 
   /*!
    * Parse \c date-time
@@ -100,10 +101,10 @@ namespace anch::date::rfc3339 {
    *
    * \return the date
    *
-   * \throw std::invalid_argument invalid format, impossible date or point in time out of \ref anch::date::Date
+   * \throw std::invalid_argument invalid format, impossible date or point in time out of \ref anch::date::DateTime
    *        range (years 1678 to 2261)
    */
-  ANCH_DATE_EXPORT anch::date::Date parseDateTime(std::string_view text);
+  ANCH_DATE_EXPORT anch::date::DateTime parseDateTime(std::string_view text);
 
   /*!
    * Format \c full-date
@@ -112,10 +113,8 @@ namespace anch::date::rfc3339 {
    * \param output the output buffer (at least \ref DATE_SIZE characters ; not \c '\0' terminated)
    *
    * \return the number of characters written (\ref DATE_SIZE )
-   *
-   * \throw std::invalid_argument invalid date (\c ok() is \c false ) or year out of 0000-9999
    */
-  ANCH_DATE_EXPORT std::size_t formatDate(const std::chrono::year_month_day& date, char* output);
+  ANCH_DATE_EXPORT std::size_t formatDate(const anch::date::Date& date, char* output) noexcept;
 
   /*!
    * Format \c full-date
@@ -123,10 +122,8 @@ namespace anch::date::rfc3339 {
    * \param date the date to format
    *
    * \return the formatted date
-   *
-   * \throw std::invalid_argument invalid date (\c ok() is \c false ) or year out of 0000-9999
    */
-  ANCH_DATE_EXPORT std::string formatDate(const std::chrono::year_month_day& date);
+  ANCH_DATE_EXPORT std::string formatDate(const anch::date::Date& date);
 
   /*!
    * Parse \c full-date
@@ -137,6 +134,6 @@ namespace anch::date::rfc3339 {
    *
    * \throw std::invalid_argument invalid format or impossible date
    */
-  ANCH_DATE_EXPORT std::chrono::year_month_day parseDate(std::string_view text);
+  ANCH_DATE_EXPORT anch::date::Date parseDate(std::string_view text);
 
 }  // anch::date::rfc3339

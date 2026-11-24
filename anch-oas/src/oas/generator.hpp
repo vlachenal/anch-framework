@@ -761,7 +761,7 @@ namespace anch::oas::detail {
     std::set<std::string> _operationNames;
     /*! \c anch::UUID is used */
     bool _uuid = false;
-    /*! \c anch::date::Date or \c std::chrono::year_month_day is used */
+    /*! \c anch::date::DateTime or \c anch::date::Date is used */
     bool _date = false;
     /*! Models used as form bodies: their form mapping */
     std::map<std::string,FormMapping> _forms;
@@ -1198,10 +1198,10 @@ namespace anch::oas::detail {
 	  type.cpp = "anch::UUID";
 	  _uuid = true;
 	} else if(format == "date-time" && _options.date) {
-	  type.cpp = "anch::date::Date";
+	  type.cpp = "anch::date::DateTime";
 	  _date = true;
 	} else if(format == "date" && _options.date) {
-	  type.cpp = "std::chrono::year_month_day";
+	  type.cpp = "anch::date::Date";
 	  _date = true;
 	} else {
 	  type.cpp = "std::string";
@@ -1331,7 +1331,7 @@ namespace anch::oas::detail {
       }
       const std::string& cpp = type.cpp;
       bool string = (cpp == "std::string");
-      bool formatted = (cpp == "anch::UUID" || cpp == "anch::date::Date" || cpp == "std::chrono::year_month_day");
+      bool formatted = (cpp == "anch::UUID" || cpp == "anch::date::DateTime" || cpp == "anch::date::Date");
       bool integer = (cpp == "int32_t" || cpp == "int64_t");
       bool number = integer || cpp == "float" || cpp == "double";
       auto ignored = [&](const std::string& keyword) {
@@ -1648,7 +1648,7 @@ namespace anch::oas::detail {
     }
 
     /*!
-     * Member initializer: value types are initialized (\c anch::date::Date to epoch instead of now)
+     * Member initializer: value types are initialized (\c anch::date::DateTime to epoch instead of now)
      */
     static std::string
     initializer(const Field& field) {
@@ -1656,7 +1656,7 @@ namespace anch::oas::detail {
 	 || field.type.cpp == "std::string" || field.type.cpp == "anch::UUID") {
 	return "";
       }
-      return (field.type.cpp == "anch::date::Date") ? "{false}" : "{}";
+      return (field.type.cpp == "anch::date::DateTime") ? "{false}" : "{}";
     }
 
     static std::string
@@ -1706,7 +1706,7 @@ namespace anch::oas::detail {
 	  << "#include \"mapping.hpp\"\n"
 	  << "#include \"val/constraints.hpp\"\n";
       if(_date) {
-	out << "#include \"date/date.hpp\"\n";
+	out << "#include \"date/dateTime.hpp\"\n";
       }
       if(_uuid) {
 	out << "#include \"uuid.hpp\"\n";

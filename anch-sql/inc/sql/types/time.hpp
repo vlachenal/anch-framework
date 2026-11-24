@@ -21,7 +21,7 @@
 
 #include "anch-sql-export.hpp"
 
-#include "date/date.hpp"
+#include "date/dateTime.hpp"
 
 
 namespace anch::sql {
@@ -36,7 +36,7 @@ namespace anch::sql {
    *
    * \author Vincent Lachenal
    */
-  class ANCH_SQL_EXPORT Time: public anch::date::Date {
+  class ANCH_SQL_EXPORT Time: public anch::date::DateTime {
 
     // Constructors +
   public:
@@ -50,9 +50,9 @@ namespace anch::sql {
     /*!
      * \ref Time private copy constructor
      *
-     * \param date The \ref Date to copy
+     * \param date The point in time ( \ref anch::date::DateTime ) whose time is kept
      */
-    Time(const anch::date::Date& date);
+    Time(const anch::date::DateTime& date);
 
     /*!
      * \ref Time constructor.

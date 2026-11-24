@@ -21,7 +21,7 @@ target_link_libraries(my-app PRIVATE anch::date)
  *
  * \section date_concept_sec Usage
  *
- * \ref anch::date::Date stores a point in time (nanoseconds since epoch) and its local time fields. It can be built
+ * \ref anch::date::DateTime stores a point in time (nanoseconds since epoch) and its local time fields. It can be built
  * from now (default constructor), \c std::chrono::system_clock::time_point , \c std::time_t , \c std::tm (local time)
  * and \c std::timespec , and explicitly converted to these types. Dates are compared with their timestamp.\n
  * Local time follows the \c TZ environment variable, daylight saving time included.\n
@@ -35,8 +35,13 @@ target_link_libraries(my-app PRIVATE anch::date)
  * For simple formatting, \c std::format with \c std::chrono specifiers can also be used on the converted time point.\n
  *\n
  * \ref anch::date::rfc3339 formats and parses RFC 3339 dates (JSON schema and OpenAPI \c date-time and \c date
- * formats): \c date-time is a \ref anch::date::Date (written in UTC or with the local offset), \c full-date is a
- * \c std::chrono::year_month_day . anch-json uses them for these types when \c ANCH_DATE is \c ON .
+ * formats): \c date-time is a \ref anch::date::DateTime (written in UTC or with the local offset), \c full-date is a
+ * \ref anch::date::Date . anch-json uses them for these types when \c ANCH_DATE is \c ON .
+ *\n
+ * \ref anch::date::Date is a calendar day (0000-01-01 to 9999-12-31, always valid): it is not a point in time, its
+ * conversions to and from \ref anch::date::DateTime give the time zone ( \ref anch::date::Zone ). Dates are ordered,
+ * days, months and years can be added:
+ * \snippet{trimleft} anch-date/examples/date.cpp date
  *
  * \section date_example_sec Example
  *

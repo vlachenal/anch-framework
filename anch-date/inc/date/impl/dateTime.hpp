@@ -17,31 +17,33 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ANCH Framework.  If not, see <https://www.gnu.org/licenses/>.
 */
-#include "sql/types/timestamp.hpp"
+#pragma once
 
-using anch::sql::Timestamp;
+namespace anch::date {
 
+  inline bool
+  DateTime::after(const DateTime& date) const noexcept {
+    return _timestamp > date._timestamp;
+  }
 
-// Constructors +
-Timestamp::Timestamp(bool init): anch::date::Date(init) {
-  // Nothing to do
-}
+  inline bool
+  DateTime::before(const DateTime& date) const noexcept {
+    return _timestamp < date._timestamp;
+  }
 
-Timestamp::Timestamp(const anch::date::Date& date): anch::date::Date(date) {
-  // Nothing to do
-}
+  inline bool
+  DateTime::equals(const DateTime& date) const noexcept {
+    return _timestamp == date._timestamp;
+  }
 
-Timestamp::Timestamp(const std::time_t& time): anch::date::Date(time) {
-  // Nothing to do
-}
+  inline std::strong_ordering
+  DateTime::operator<=>(const DateTime& date) const noexcept {
+    return _timestamp <=> date._timestamp;
+  }
 
-Timestamp::Timestamp(const std::tm* const time): anch::date::Date(time) {
-  // Nothing to do
-}
-// Constructors -
+  inline bool
+  DateTime::operator==(const DateTime& date) const noexcept {
+    return _timestamp == date._timestamp;
+  }
 
-// Destructor +
-Timestamp::~Timestamp() {
-  // Nothing to do
-}
-// Destructor -
+}  // anch::date

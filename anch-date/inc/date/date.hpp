@@ -1,6 +1,6 @@
 /*
   ANCH Framework: ANother C++ Hack is a C++ framework based on C++23 standard
-  Copyright (C) 2012 Vincent Lachenal
+  Copyright (C) 2026 Vincent Lachenal
 
   This file is part of ANCH Framework.
 
@@ -24,224 +24,259 @@
 #include <chrono>
 #include <compare>
 #include <cstdint>
-#include <ctime>
-
+#include <ostream>
+#include <string>
+#include <string_view>
 
 namespace anch::date {
 
-  class DateFormatter;
-  class IDatePartFormatter;
+  class DateTime;
 
   /*!
-   * \brief Date and time utility class
+   * \brief Time zone of conversions between days and points in time
    *
-   * A \ref Date is a point in time with a nanosecond precision (stored as a number of nanoseconds since epoch, which
-   * covers years 1678 to 2261), and its broken down representation in local time (year, month, day, hour, minute,
-   * second, millisecond, microsecond and nanosecond).\n
-   * Local time is computed with \c localtime_r (\c std::chrono time zones are not available with GCC 13): it is thread
-   * safe and follows the \c TZ environment variable.\n
-   * \ref Date can be converted from and to \c std::chrono::system_clock::time_point , \c std::time_t , \c std::tm and
-   * \c std::timespec .
+   * \since 0.3
+   */
+  enum class Zone {
+    /*! UTC */
+    UTC,
+    /*! Local time (follows \c TZ environment variable) */
+    LOCAL
+  };
+
+  /*!
+   * \brief Calendar day (RFC 3339 \c full-date , JSON schema and OpenAPI \c date format, XSD \c xs:date )
+   *
+   * A \ref Date is a day of the proleptic Gregorian calendar, without time zone, from 0000-01-01 to 9999-12-31: it is
+   * always valid (impossible dates are refused when it is built), so that formatting can not fail. It is not a point in
+   * time ( \ref DateTime ): conversions between them give the time zone ( \ref DateTime::date , \ref startOfDay ).\n
+   * Dates are ordered (comparison operators), days, months and years can be added, and dates are converted from and to
+   * \c std::chrono::year_month_day and \c std::chrono::sys_days :
+   * \snippet{trimleft} anch-date/examples/date.cpp date
    *
    * \author Vincent Lachenal
+   *
+   * \since 0.3
    */
   class ANCH_DATE_EXPORT Date {
 
-    friend class IDatePartFormatter;
-    friend class DateFormatter;
-
     // Attributes +
-  protected:
-    /*! The timestamp (nanoseconds since epoch) */
-    std::int64_t _timestamp = 0;
-
-    /*! The years */
-    int32_t _years = 0;
-
-    /*! The months (0-11) */
-    uint16_t _months = 0;
-
-    /*! The days of the year (0-365) */
-    uint16_t _ydays = 0;
-
-    /*! The days of the month (1-31) */
-    uint16_t _mdays = 0;
-
-    /*! The days of the week (0-6, 0 is sunday) */
-    uint16_t _wdays = 0;
-
-    /*! The hours (0-23) */
-    uint16_t _hours = 0;
-
-    /*! The minutes (0-59) */
-    uint16_t _minutes = 0;
-
-    /*! The seconds (0-60) */
-    uint16_t _seconds = 0;
-
-    /*! The milliseconds (0-999) */
-    uint16_t _milliseconds = 0;
-
-    /*! The microseconds (0-999) */
-    uint16_t _microseconds = 0;
-
-    /*! The nanoseconds (0-999) */
-    uint16_t _nanoseconds = 0;
+  private:
+    /*! The day */
+    std::chrono::year_month_day _date;
     // Attributes -
 
     // Constructors +
   public:
     /*!
-     * \ref Date default constructor
-     *
-     * \param init initialize the \ref Date to now (default \c true ) ; epoch otherwise
+     * \ref Date default constructor: 1970-01-01
      */
-    explicit Date(bool init = true);
+    constexpr Date() noexcept;
 
     /*!
      * \ref Date constructor
      *
-     * \param time the time point to set
+     * \param year the year (0 to 9999)
+     * \param month the month (1 to 12)
+     * \param day the day of the month (1 to 31)
      *
-     * \since 0.2
+     * \throw std::invalid_argument impossible date or year out of range
      */
-    explicit Date(const std::chrono::system_clock::time_point& time);
+    Date(int32_t year, unsigned month, unsigned day);
 
     /*!
      * \ref Date constructor
      *
-     * \param time the time to set
+     * \param date the day
      *
-     * \throw std::invalid_argument date out of range (years 1678 to 2261: timestamps are stored in nanoseconds)
+     * \throw std::invalid_argument impossible date ( \c ok() is \c false ) or year out of range
      */
-    explicit Date(const std::time_t& time);
+    explicit Date(const std::chrono::year_month_day& date);
 
     /*!
      * \ref Date constructor
      *
-     * \param time the local time to set (\c tm_isdst has to be \c -1 when daylight saving time is unknown ; \c tm_wday
-     *        and \c tm_yday are ignored ; out of range fields are normalized as \c std::mktime does)
+     * \param days the days since epoch
      *
-     * \throw std::invalid_argument date out of range (years 1678 to 2261)
+     * \throw std::invalid_argument year out of range
      */
-    explicit Date(const std::tm* const time);
-
-    /*!
-     * \ref Date constructor
-     *
-     * \param time the time to set (\c tv_nsec in [0, 999999999])
-     *
-     * \throw std::invalid_argument date out of range (years 1678 to 2261) or invalid \c tv_nsec
-     */
-    explicit Date(const std::timespec& time);
+    explicit Date(const std::chrono::sys_days& days);
     // Constructors -
 
-    // Destructor +
-  public:
-    /*!
-     * \ref Date destructor
-     */
-    virtual ~Date();
-    // Destructor -
-
     // Methods +
-  private:
-    /*!
-     * Initialize timestamp and local time fields
-     *
-     * \param time the time point
-     */
-    void initialize(const std::chrono::sys_time<std::chrono::nanoseconds>& time);
-
-    /*!
-     * Compute timestamp from local time fields (and normalize fields)
-     *
-     * \throw std::invalid_argument date out of range (years 1678 to 2261)
-     */
-    void computeTimestamp();
-
   public:
     /*!
-     * Check if current \ref Date is after another one.
+     * Current day
      *
-     * \param date the other \ref Date
+     * \param zone the time zone of the day (default local time)
      *
-     * \return \c true if current \ref Date is after the other one, \c false otherwise.
+     * \return the current day
      */
-    bool after(const Date& date) const noexcept;
+    static Date today(anch::date::Zone zone = anch::date::Zone::LOCAL);
 
     /*!
-     * Check if current \ref Date is before another one.
+     * Parse RFC 3339 \c full-date ( \c YYYY-MM-DD )
      *
-     * \param date the other \ref Date
+     * \param text the text to parse
      *
-     * \return \c true if current \ref Date is before the other one, \c false otherwise.
+     * \return the date
+     *
+     * \throw std::invalid_argument invalid format or impossible date
      */
-    bool before(const Date& date) const noexcept;
+    static Date parse(std::string_view text);
 
     /*!
-     * Check if current \ref Date is equals to another one.
+     * Format RFC 3339 \c full-date ( \c YYYY-MM-DD )
      *
-     * \param date the other \ref Date
-     *
-     * \return \c true if current \ref Date is equals to the other one, \c false otherwise.
+     * \return the formatted date
      */
-    bool equals(const Date& date) const noexcept;
+    std::string format() const;
+
+    /*!
+     * Year getter
+     *
+     * \return the year (0 to 9999)
+     */
+    constexpr int32_t year() const noexcept;
+
+    /*!
+     * Month getter
+     *
+     * \return the month (1 to 12)
+     */
+    constexpr unsigned month() const noexcept;
+
+    /*!
+     * Day of the month getter
+     *
+     * \return the day of the month (1 to 31)
+     */
+    constexpr unsigned day() const noexcept;
+
+    /*!
+     * Day of the week (ISO 8601)
+     *
+     * \return the day of the week (1 is monday, 7 is sunday)
+     */
+    unsigned weekday() const noexcept;
+
+    /*!
+     * Day of the year
+     *
+     * \return the day of the year (1 to 366)
+     */
+    unsigned dayOfYear() const noexcept;
+
+    /*!
+     * Check leap year
+     *
+     * \return \c true when the year of the date is a leap year
+     */
+    constexpr bool isLeapYear() const noexcept;
+
+    /*!
+     * Add days
+     *
+     * \param days the number of days (negative to subtract)
+     *
+     * \return the new date
+     *
+     * \throw std::invalid_argument year out of range
+     */
+    Date plusDays(int64_t days) const;
+
+    /*!
+     * Add months: the day is the last day of the new month when the month is shorter (2024-01-31 plus 1 month is
+     * 2024-02-29)
+     *
+     * \param months the number of months (negative to subtract)
+     *
+     * \return the new date
+     *
+     * \throw std::invalid_argument year out of range
+     */
+    Date plusMonths(int64_t months) const;
+
+    /*!
+     * Add years: February 29 is February 28 when the new year is not a leap year
+     *
+     * \param years the number of years (negative to subtract)
+     *
+     * \return the new date
+     *
+     * \throw std::invalid_argument year out of range
+     */
+    Date plusYears(int64_t years) const;
+
+    /*!
+     * Number of days to another date
+     *
+     * \param other the other date
+     *
+     * \return the number of days from this date to \c other (negative when \c other is before)
+     */
+    int64_t daysUntil(const Date& other) const noexcept;
+
+    /*!
+     * Point in time of the start of the day (midnight ; the first existing time when a daylight saving time change
+     * skips midnight)
+     *
+     * \param zone the time zone (default local time)
+     *
+     * \return the point in time
+     */
+    anch::date::DateTime startOfDay(anch::date::Zone zone = anch::date::Zone::LOCAL) const;
     // Methods -
 
     // Operators +
   public:
     /*!
-     * Compare dates (with nanosecond precision)
+     * Compare dates
      *
-     * \param date the date to compare to
+     * \param other the other date
      *
-     * \return the comparison result
+     * \return the chronological order
      */
-    std::strong_ordering operator<=>(const Date& date) const noexcept;
+    constexpr std::strong_ordering operator<=>(const Date& other) const noexcept;
 
     /*!
-     * Check if dates are equals (with nanosecond precision)
+     * Check dates equality
      *
-     * \param date the date to compare to
+     * \param other the other date
      *
-     * \return \c true when dates are equals, \c false otherwise
+     * \return \c true when dates are the same day
      */
-    bool operator==(const Date& date) const noexcept;
+    constexpr bool operator==(const Date& other) const noexcept;
 
     /*!
-     * Cast operator to \c std::chrono::system_clock::time_point
+     * Convert to \c std::chrono::year_month_day
      *
-     * \return the time point
-     *
-     * \since 0.2
+     * \return the day
      */
-    explicit operator std::chrono::system_clock::time_point() const noexcept;
+    constexpr explicit operator std::chrono::year_month_day() const noexcept;
 
     /*!
-     * Cast operator to \c std::time_t (sub-second part is truncated toward the past)
+     * Convert to \c std::chrono::sys_days
      *
-     * \return the converted \c std::time_t
+     * \return the days since epoch
      */
-    explicit operator std::time_t() const noexcept;
-
-    /*!
-     * Cast operator to \c std::tm (local time, with \c tm_wday , \c tm_yday and \c tm_isdst )
-     *
-     * \return the converted \c std::tm
-     */
-    explicit operator std::tm() const noexcept;
-
-    /*!
-     * Cast operator to \c std::timespec
-     *
-     * \return the converted \c std::timespec
-     */
-    explicit operator std::timespec() const noexcept;
+    explicit operator std::chrono::sys_days() const noexcept;
     // Operators -
 
   };
 
-} // anch::date
+  /*!
+   * Write RFC 3339 \c full-date
+   *
+   * \param out the output stream
+   * \param date the date
+   *
+   * \return the output stream
+   *
+   * \since 0.3
+   */
+  ANCH_DATE_EXPORT std::ostream& operator<<(std::ostream& out, const anch::date::Date& date);
+
+}  // anch::date
 
 #include "date/impl/date.hpp"
