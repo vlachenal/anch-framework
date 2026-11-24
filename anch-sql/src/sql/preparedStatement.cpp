@@ -19,9 +19,10 @@
 */
 #include "sql/preparedStatement.hpp"
 
+#include <algorithm>
+
 #include <string>
 
-#include "date/dateFormatter.hpp"
 #include "sql/connection.hpp"
 
 using anch::sql::PreparedStatement;
@@ -29,7 +30,8 @@ using anch::sql::ResultSet;
 using anch::sql::SqlException;
 
 
-PreparedStatement::PreparedStatement() noexcept: _values(), _bound(), _nbPlaceholders(0), _connection(NULL), _openResults(0), _invalid(false) {
+PreparedStatement::PreparedStatement() noexcept:
+  _query(), _names(), _values(), _bound(), _bindings(), _connection(NULL), _openResults(0), _invalid(false) {
   // Nothing to do
 }
 
@@ -61,16 +63,40 @@ PreparedStatement::executeUpdate() {
   return _connection->guard([this]() { return doExecuteUpdate(); });
 }
 
-void
-PreparedStatement::setParameterCount(std::size_t count) {
-  _nbPlaceholders = count;
-  _values.assign(count, std::nullopt);
-  _bound.assign(count, false);
+std::string
+PreparedStatement::parse(const std::string& query, const anch::sql::SqlSyntax& syntax, anch::sql::ParameterStyle style) {
+  anch::sql::NamedQuery named(query, syntax);
+  anch::sql::NamedQuery::Rendered rendered = named.render(style);
+  _query = query;
+  _names = named.names();
+  _bindings = std::move(rendered.bindings);
+  clearParameters();
+  return std::move(rendered.query);
 }
 
 std::size_t
 PreparedStatement::getParameterCount() const noexcept {
-  return _nbPlaceholders;
+  return _names.size();
+}
+
+const std::vector<std::string>&
+PreparedStatement::getParameterNames() const noexcept {
+  return _names;
+}
+
+const std::string&
+PreparedStatement::getQuery() const noexcept {
+  return _query;
+}
+
+std::size_t
+PreparedStatement::getBindingCount() const noexcept {
+  return _bindings.size();
+}
+
+const anch::sql::ParameterValue&
+PreparedStatement::getBindingValue(std::size_t idx) const {
+  return _values[_bindings[idx].slot];
 }
 
 void
@@ -85,97 +111,50 @@ PreparedStatement::invalidate() noexcept {
 
 void
 PreparedStatement::clearParameters() noexcept {
-  _values.assign(_nbPlaceholders, std::nullopt);
-  _bound.assign(_nbPlaceholders, false);
+  _values.assign(_names.size(), std::nullopt);
+  _bound.assign(_names.size(), false);
 }
 
 void
-PreparedStatement::bind(std::size_t idx, std::optional<std::string> value) {
-  if(idx == 0 || idx > _nbPlaceholders) {
-    throw SqlException("Parameter index " + std::to_string(idx) + " is out of range [1.." + std::to_string(_nbPlaceholders) + "]", true);
+PreparedStatement::bind(std::string_view name, anch::sql::ParameterValue value) {
+  auto iter = std::find(_names.begin(), _names.end(), name);
+  if(iter == _names.end()) {
+    std::string names;
+    for(const std::string& known : _names) {
+      names += (names.empty() ? "" : ", ") + known;
+    }
+    throw SqlException("no parameter '" + std::string(name) + "' in query (parameters: " + (names.empty() ? std::string("none") : names)
+		       + "): " + _query, true);
   }
-  _values[idx - 1] = std::move(value);
-  _bound[idx - 1] = true;
+  const std::size_t slot = static_cast<std::size_t>(iter - _names.begin());
+  _values[slot] = std::move(value);
+  _bound[slot] = true;
 }
 
 void
 PreparedStatement::checkBindings() const {
-  for(std::size_t i = 0 ; i < _nbPlaceholders ; ++i) {
+  std::string missing;
+  std::size_t count = 0;
+  for(std::size_t i = 0 ; i < _names.size() ; ++i) {
     if(!_bound[i]) {
-      throw SqlException("Parameter " + std::to_string(i + 1) + " has not been bound", true);
+      missing += (count++ == 0 ? "'" : ", '") + _names[i] + "'";
     }
   }
-}
-
-void
-PreparedStatement::set(std::size_t idx, int16_t value) {
-  bind(idx, std::to_string(value));
-}
-
-void
-PreparedStatement::set(std::size_t idx, uint16_t value) {
-  bind(idx, std::to_string(value));
-}
-
-void
-PreparedStatement::set(std::size_t idx, int32_t value) {
-  bind(idx, std::to_string(value));
-}
-
-void
-PreparedStatement::set(std::size_t idx, uint32_t value) {
-  bind(idx, std::to_string(value));
-}
-
-void
-PreparedStatement::set(std::size_t idx, int64_t value) {
-  bind(idx, std::to_string(value));
-}
-
-void
-PreparedStatement::set(std::size_t idx, uint64_t value) {
-  bind(idx, std::to_string(value));
-}
-
-void
-PreparedStatement::set(std::size_t idx, const std::string& value) {
-  bind(idx, value);
-}
-
-void
-PreparedStatement::set(std::size_t idx, const char* const value) {
-  if(value == NULL) {
-    bind(idx, std::nullopt);
-  } else {
-    bind(idx, std::string(value));
+  if(count > 0) {
+    throw SqlException((count == 1 ? "parameter " : "parameters ") + missing + (count == 1 ? " has" : " have")
+		       + " not been bound: " + _query, true);
   }
 }
 
 void
-PreparedStatement::setNull(std::size_t idx) {
-  bind(idx, std::nullopt);
+PreparedStatement::setNull(std::string_view name) {
+  bind(name, std::nullopt);
 }
 
 void
-PreparedStatement::set(std::size_t idx, const anch::sql::Date& value) {
-  static const anch::date::DateFormatter formatter("%Y-%m-%d");
-  std::string str;
-  formatter.format(value, str);
-  bind(idx, std::move(str));
-}
-
-void
-PreparedStatement::set(std::size_t idx, const anch::sql::Time& value) {
-  static const anch::date::DateFormatter formatter("%H:%M:%S.%s");
-  std::string str;
-  formatter.format(value, str);
-  bind(idx, std::move(str));
-}
-
-void
-PreparedStatement::set(std::size_t idx, const anch::sql::Timestamp& value) {
-  static const anch::date::DateFormatter formatter("%Y-%m-%d %H:%M:%S.%s");
-  std::string str;
-  formatter.format(value, str);
-  bind(idx, std::move(str));
+PreparedStatement::set(const anch::sql::Parameters& parameters) {
+  clearParameters();
+  for(const anch::sql::Parameter& parameter : parameters.values()) {
+    bind(parameter.name, parameter.value);
+  }
 }

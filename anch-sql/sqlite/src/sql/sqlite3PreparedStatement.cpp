@@ -37,11 +37,17 @@ std::atomic<std::uint64_t> SQLite3PreparedStatement::_counter(0);
 
 // Constructors +
 SQLite3PreparedStatement::SQLite3PreparedStatement(sqlite3* dbCon, const std::string& query): PreparedStatement(), _conn(dbCon), _stmt() {
-  int res = sqlite3_prepare_v2(_conn, query.data(), static_cast<int>(query.size()), &_stmt, NULL);
+  const std::string liteQuery = parse(query, anch::sql::SqlSyntax::SQLITE, anch::sql::ParameterStyle::NUMBERED); // ':name' -> ?n
+  int res = sqlite3_prepare_v2(_conn, liteQuery.data(), static_cast<int>(liteQuery.size()), &_stmt, NULL);
   if(res != SQLITE_OK) {
-    throw anch::sql::sqlite::error("Error while preparing statement " + query, _conn, res);
+    throw anch::sql::sqlite::error("Error while preparing statement " + liteQuery, _conn, res);
   }
-  setParameterCount(static_cast<std::size_t>(sqlite3_bind_parameter_count(_stmt))); // counted by SQLite parser
+  if(static_cast<std::size_t>(sqlite3_bind_parameter_count(_stmt)) != getBindingCount()) { // counted by SQLite parser
+    const std::string count = std::to_string(sqlite3_bind_parameter_count(_stmt));
+    sqlite3_finalize(_stmt);
+    _stmt = NULL;
+    throw SqlException("SQLite statement has " + count + " parameters instead of " + std::to_string(getBindingCount()) + ": " + liteQuery, true);
+  }
 }
 // Constructors -
 
@@ -59,19 +65,20 @@ SQLite3PreparedStatement::~SQLite3PreparedStatement() noexcept {
  *
  * \param conn the SQLite3 connection
  * \param stmt the prepared statement
- * \param paramValues the values to bind (\c std::nullopt for \c NULL )
+ * \param statement the statement ( \c ?n values)
  *
  * \throw SqlException any error
  */
 static void
-bindParams(sqlite3* conn, sqlite3_stmt* stmt, const std::vector<std::optional<std::string>>& paramValues) {
+bindParams(sqlite3* conn, sqlite3_stmt* stmt, const SQLite3PreparedStatement& statement) {
   sqlite3_reset(stmt);
   sqlite3_clear_bindings(stmt);
-  for(std::size_t i = 0 ; i < paramValues.size() ; ++i) {
+  for(std::size_t i = 0 ; i < statement.getBindingCount() ; ++i) {
     int idx = static_cast<int>(i + 1);
     int res = SQLITE_OK;
-    if(paramValues[i].has_value()) {
-      res = sqlite3_bind_text64(stmt, idx, paramValues[i]->data(), paramValues[i]->size(), SQLITE_TRANSIENT, SQLITE_UTF8);
+    const anch::sql::ParameterValue& value = statement.getBindingValue(i);
+    if(value.has_value()) {
+      res = sqlite3_bind_text64(stmt, idx, value->data(), value->size(), SQLITE_TRANSIENT, SQLITE_UTF8);
     } else {
       res = sqlite3_bind_null(stmt, idx);
     }
@@ -85,13 +92,13 @@ bindParams(sqlite3* conn, sqlite3_stmt* stmt, const std::vector<std::optional<st
 // Methods +
 ResultSet*
 SQLite3PreparedStatement::doExecuteQuery() {
-  bindParams(_conn, _stmt, _values);
+  bindParams(_conn, _stmt, *this);
   return new SQLite3ResultSet(_stmt, true);
 }
 
 uint64_t
 SQLite3PreparedStatement::doExecuteUpdate() {
-  bindParams(_conn, _stmt, _values);
+  bindParams(_conn, _stmt, *this);
   int res = SQLITE_ROW;
   while((res = sqlite3_step(_stmt)) == SQLITE_ROW) {
     // Ignore rows

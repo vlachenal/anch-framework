@@ -32,12 +32,17 @@ target_link_libraries(my-app PRIVATE anch::sql)
  *
  * \subsection sql_conception_stmt_sec Prepared statements
  *
- * Prepared statements use \c '?' placeholders, numbered from \c 1 . Their number is given by the database (MySQL and
- * SQLite count them on the server side) ; for PostgreSQL, \c '?' outside string literals, quoted identifiers and
- * comments are replaced by \c $n (see \ref anch::sql::findPlaceholders ). PostgreSQL \c '?' operators (\c jsonb )
- * can not be used in prepared statements: use their functions (\c jsonb_exists , ...) instead.\n
- * Every parameter has to be bound before execution ; \c NULL is bound with \c setNull , a \c NULL pointer or an empty
- * \c std::optional .
+ * Prepared statements use named parameters ( \c :name , see \ref anch::sql::NamedQuery "NamedQuery"): a name used
+ * several times is bound once. Parameters in string literals, quoted identifiers and comments are ignored, as
+ * PostgreSQL casts ( \c x::int ), array slices ( \c arr[1:n] ) and \c jsonb \c ? operators, and MySQL assignments
+ * ( \c := ). Positional parameters ( \c ? , PostgreSQL \c $1 , SQLite \c ?1 , \c \@name , \c $name ) are refused.
+ * Values are given with \c PreparedStatement::set(name, value) or with \ref anch::sql::Parameters "Parameters":
+ * \snippet{trimleft} anch-sql/examples/connection.cpp parameters
+ * Every parameter has to be bound before execution (missing parameters are reported with their names, unknown names
+ * are refused) ; \c NULL is bound with \c setNull , \c std::nullopt , a \c NULL pointer or an empty
+ * \c std::optional .\n
+ * PostgreSQL infers the type of a parameter from its first use: a parameter whose first use does not give its type
+ * ( \c :name \c IS \c NULL ) is written with a cast ( \c :name::text ) or after a comparison with a column.
  *
  * \subsection sql_conception_errors_sec Errors
  *
@@ -64,7 +69,7 @@ target_link_libraries(my-app PRIVATE anch::sql)
  * section, \c 256 by default, \c Connection::setStatementCacheSize ). The least recently used statement is evicted
  * and deallocated on the server side when the cache is full ; a statement is not evicted while one of its result sets
  * is alive. Queries built with literal values (\c IN lists of the builder for example) are distinct cache entries:
- * bind values with \c ? placeholders whenever possible.
+ * bind values with named parameters whenever possible.
  *
  * \section sql_example_sec Example
  *

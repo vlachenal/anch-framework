@@ -33,7 +33,7 @@ namespace anch::sql {
   /*!
    * \brief Lexical rules of an SQL dialect
    *
-   * Used to find \c '?' placeholders outside string literals, quoted identifiers and comments.
+   * Used to find named parameters ( \ref NamedQuery ) outside string literals, quoted identifiers and comments.
    *
    * \author Vincent Lachenal
    *
@@ -93,32 +93,6 @@ namespace anch::sql {
     static const SqlSyntax SQLITE;
 
   };
-
-  /*!
-   * Find \c '?' placeholders in SQL query. Placeholders in string literals, quoted identifiers and comments are
-   * ignored. An unterminated literal or comment hides the rest of the query (the database reports the syntax error).
-   *
-   * \param query the SQL query
-   * \param syntax the SQL dialect lexical rules
-   *
-   * \return the placeholders positions
-   *
-   * \since 0.2
-   */
-  ANCH_SQL_EXPORT std::vector<std::size_t> findPlaceholders(std::string_view query, const anch::sql::SqlSyntax& syntax);
-
-  /*!
-   * Replace \c '?' placeholders by numbered placeholders (\c $1 , \c $2 , ... for PostgreSQL)
-   *
-   * \param query the SQL query
-   * \param positions the placeholders positions (from \ref findPlaceholders )
-   * \param prefix the numbered placeholder prefix
-   *
-   * \return the query with numbered placeholders
-   *
-   * \since 0.2
-   */
-  ANCH_SQL_EXPORT std::string numberPlaceholders(std::string_view query, const std::vector<std::size_t>& positions, char prefix = '$');
 
   /*!
    * \brief Parameters style of a database driver ( \ref NamedQuery::render )

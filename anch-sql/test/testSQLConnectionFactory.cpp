@@ -144,9 +144,9 @@ testSQLFactory(const std::string& db) {
     std::cout << std::endl;
 
     persons.clear();
-    pool.borrowResource().get().queryMapRow("SELECT id,first_name,last_name,birth_date,email FROM T_Test WHERE id IN (?,?,?)",
+    pool.borrowResource().get().queryMapRow("SELECT id,first_name,last_name,birth_date,email FROM T_Test WHERE id IN (:a, :b, :c)",
 					    func, // Row mapping function
-					    1, 2, 3); // Parameters to bind to statement
+					    {{"a", 1}, {"b", 2}, {"c", 3}}); // Parameters to bind to statement
     std::cout << "Found " << persons.size() << " persons." << std::endl;
     for(const Person& pers : persons) {
       std::cout << "Person " << pers._id << ":" << std::endl;
@@ -158,11 +158,11 @@ testSQLFactory(const std::string& db) {
 
     std::cout << std::endl;
 
-    pool.borrowResource().get().batchUpdate<Person>("INSERT INTO T_Test (first_name,last_name,birth_date,email) VALUES (?,?,?,?)", [](PreparedStatement& stmt, const Person& pers) {
-      stmt.set(1, pers._firstName);
-      stmt.set(2, pers._lastName);
-      stmt.set(3, pers._birthDate);
-      stmt.set(4, pers._email);
+    pool.borrowResource().get().batchUpdate<Person>("INSERT INTO T_Test (first_name,last_name,birth_date,email) VALUES (:first,:last,:birth,:email)", [](PreparedStatement& stmt, const Person& pers) {
+      stmt.set("first", pers._firstName);
+      stmt.set("last", pers._lastName);
+      stmt.set("birth", pers._birthDate);
+      stmt.set("email", pers._email);
     }, values);
 
     std::cout << std::endl;
@@ -180,14 +180,14 @@ testSQLFactory(const std::string& db) {
 
     std::cout << std::endl;
 
-    pool.borrowResource().get().batchUpdate<Person>("UPDATE T_Test SET first_name = ?, last_name = ? WHERE id = ?", [](PreparedStatement& stmt, const Person& pers) {
+    pool.borrowResource().get().batchUpdate<Person>("UPDATE T_Test SET first_name = :first, last_name = :last WHERE id = :id", [](PreparedStatement& stmt, const Person& pers) {
       Person p;
       p._id = pers._id;
       p._firstName = pers._firstName;
       p._lastName = pers._lastName;
-      stmt.set(1, p._firstName.replace(p._firstName.find_first_of(std::string("I")), 6, "Update"));
-      stmt.set(2, p._lastName.replace(p._lastName.find_first_of(std::string("I")), 6, "UPDATE"));
-      stmt.set(3, p._id);
+      stmt.set("first", p._firstName.replace(p._firstName.find_first_of(std::string("I")), 6, "Update"));
+      stmt.set("last", p._lastName.replace(p._lastName.find_first_of(std::string("I")), 6, "UPDATE"));
+      stmt.set("id", p._id);
     }, persons);
 
     std::cout << std::endl;
@@ -205,8 +205,8 @@ testSQLFactory(const std::string& db) {
 
     std::cout << std::endl;
 
-    pool.borrowResource().get().batchUpdate<Person>("DELETE FROM T_Test WHERE id = ?", [](PreparedStatement& stmt, const Person& pers) {
-      stmt.set(1, pers._id);
+    pool.borrowResource().get().batchUpdate<Person>("DELETE FROM T_Test WHERE id = :id", [](PreparedStatement& stmt, const Person& pers) {
+      stmt.set("id", pers._id);
     }, persons);
 
     std::cout << std::endl;
@@ -264,7 +264,7 @@ testPool(const std::string& db,
   }
   {
     auto res = pool.borrowResource();
-    int64_t count = countRows(res.get(), "SELECT COUNT(*) FROM T_Test WHERE first_name = ?", "PoolRollback");
+    int64_t count = countRows(res.get(), "SELECT COUNT(*) FROM T_Test WHERE first_name = :first", {{"first", "PoolRollback"}});
     anch::ut::assertThat(count == 0, "Transaction with error should be rolled back on return: {} rows", count);
   }
   // Error in transaction: rolled back when connection is returned -
@@ -276,7 +276,7 @@ testPool(const std::string& db,
   }
   {
     auto res = pool.borrowResource();
-    int64_t count = countRows(res.get(), "SELECT COUNT(*) FROM T_Test WHERE first_name = ?", "PoolRollback");
+    int64_t count = countRows(res.get(), "SELECT COUNT(*) FROM T_Test WHERE first_name = :first", {{"first", "PoolRollback"}});
     anch::ut::assertThat(count == 0, "Transaction without commit should be rolled back on return: {} rows", count);
   }
   // Transaction without error and without commit: rolled back when connection is returned -
@@ -290,7 +290,7 @@ testPool(const std::string& db,
   }
   {
     auto res = pool.borrowResource();
-    int64_t count = countRows(res.get(), "SELECT COUNT(*) FROM T_Test WHERE first_name = ?", "PoolCommit");
+    int64_t count = countRows(res.get(), "SELECT COUNT(*) FROM T_Test WHERE first_name = :first", {{"first", "PoolCommit"}});
     anch::ut::assertThat(count == 2, "Committed transaction and auto-committed query should be kept: {} rows", count);
     res.get().update("DELETE FROM T_Test WHERE first_name = 'PoolCommit'");
   }
@@ -309,7 +309,7 @@ testPool(const std::string& db,
       std::cout << "Kill: " << e.what() << std::endl;
     }
     try {
-      countRows(res.get(), "SELECT COUNT(*) FROM T_Test WHERE id = ?", 1);
+      countRows(res.get(), "SELECT COUNT(*) FROM T_Test WHERE id = :id", {{"id", 1}});
     } catch(const SqlException& e) {
       std::cout << "Query after kill: " << e.what() << std::endl;
     }
@@ -320,7 +320,7 @@ testPool(const std::string& db,
     anch::ut::assertTrue(res.get().isValid(), "Pool should provide a valid connection");
     std::string current = sessionId(res.get());
     anch::ut::assertThat(current != killed, "Killed connection {} should have been replaced", killed);
-    anch::ut::assertThat(countRows(res.get(), "SELECT COUNT(*) FROM T_Test WHERE id = ?", 1) == 1, "New connection should work");
+    anch::ut::assertThat(countRows(res.get(), "SELECT COUNT(*) FROM T_Test WHERE id = :id", {{"id", 1}}) == 1, "New connection should work");
   }
   // Killed connection: replaced by a new one -
 }

@@ -259,11 +259,11 @@ testDelete() {
 
 void
 testQueryStmtRowHandling() {
-  std::cout << "Prepare and execute statement 'SELECT id,first_name,last_name,birth_date,email FROM T_Test WHERE id = ?' with per row result handling" << std::endl;
+  std::cout << "Prepare and execute statement 'SELECT id,first_name,last_name,birth_date,email FROM T_Test WHERE id = :id' with per row result handling" << std::endl;
   ResultSet* res = NULL;
   try {
-    PreparedStatement& stmtS = dbCon->prepareStatement("SELECT id,first_name,last_name,birth_date,email FROM T_Test WHERE id = ?");
-    stmtS.set(1, 1);
+    PreparedStatement& stmtS = dbCon->prepareStatement("SELECT id,first_name,last_name,birth_date,email FROM T_Test WHERE id = :id");
+    stmtS.set("id", 1);
     res = stmtS.executeQuery();
     int row = 0;
     while(res->next()) {
@@ -300,13 +300,13 @@ testQueryStmtRowHandling() {
 
 void
 testStmtInsert() {
-  std::cout << "Execute 'INSERT INTO T_Test (first_name,last_name,birth_date,email) VALUES(?,?,?,?)'" << std::endl;
+  std::cout << "Execute 'INSERT INTO T_Test (first_name,last_name,birth_date,email) VALUES(:first,:last,:birth,:email)'" << std::endl;
   try {
-    PreparedStatement& stmtI = dbCon->prepareStatement("INSERT INTO T_Test (first_name,last_name,birth_date,email) VALUES(?,?,?,?)");
-    stmtI.set(1,"Insert");
-    stmtI.set(2, "Test");
-    stmtI.set(3, "2016-03-22");
-    stmtI.set(4, "insert.test@yopmail.com");
+    PreparedStatement& stmtI = dbCon->prepareStatement("INSERT INTO T_Test (first_name,last_name,birth_date,email) VALUES(:first,:last,:birth,:email)");
+    stmtI.set("first", "Insert");
+    stmtI.set("last", "Test");
+    stmtI.set("birth", "2016-03-22");
+    stmtI.set("email", "insert.test@yopmail.com");
     auto nbRow = stmtI.executeUpdate();
     if(nbRow != 1) {
       std::ostringstream oss;
@@ -324,13 +324,13 @@ testStmtInsert() {
 void
 testStmtUpdate() {
   insertTestPerson("Insert");
-  std::cout << "Execute 'UPDATE T_Test SET first_name = ?, email = ? WHERE first_name = ? AND last_name = ?'" << std::endl;
+  std::cout << "Execute 'UPDATE T_Test SET first_name = :newFirst, email = :email WHERE first_name = :first AND last_name = :last'" << std::endl;
   try {
-    PreparedStatement& stmtU = dbCon->prepareStatement("UPDATE T_Test SET first_name = ?, email = ? WHERE first_name = ? AND last_name = ?");
-    stmtU.set(1,"Update");
-    stmtU.set(2, "update.test@yopmail.com");
-    stmtU.set(3, "Insert");
-    stmtU.set(4, "Test");
+    PreparedStatement& stmtU = dbCon->prepareStatement("UPDATE T_Test SET first_name = :newFirst, email = :email WHERE first_name = :first AND last_name = :last");
+    stmtU.set("newFirst", "Update");
+    stmtU.set("email", "update.test@yopmail.com");
+    stmtU.set("first", "Insert");
+    stmtU.set("last", "Test");
     auto nbRow = stmtU.executeUpdate();
     if(nbRow != 1) {
       std::ostringstream oss;
@@ -462,6 +462,15 @@ testNull() {
 }
 
 void
+testNamed() {
+  testStmtNamed(*dbCon, "SELECT COUNT(*) FROM T_Test WHERE id = $1");
+  // Casts and jsonb '?' operator are not parameters
+  int64_t count = countRows(*dbCon, "SELECT COUNT(*) FROM T_Test WHERE id = :id::integer AND '{\"a\": 1}'::jsonb ? 'a'"
+			    " AND (ARRAY[1, 2, 3])[1:2] = ARRAY[1, 2]", {{"id", 1}});
+  anch::ut::assertThat(count == 1, "Found {} rows instead of 1", count);
+}
+
+void
 testSqlError() {
   testSqlErrorKeepsConnection(*dbCon);
 }
@@ -512,7 +521,7 @@ testCacheDeallocate() {
       .statementCacheSize = 2
     });
   for(int i = 1 ; i <= 5 ; ++i) {
-    countRows(conn, "SELECT COUNT(*) FROM T_Test WHERE id <= ? AND " + std::to_string(i) + " = " + std::to_string(i), i);
+    countRows(conn, "SELECT COUNT(*) FROM T_Test WHERE id <= :id AND " + std::to_string(i) + " = " + std::to_string(i), {{"id", i}});
   }
   int64_t count = serverStatements(conn);
   anch::ut::assertThat(count == 2, "Evicted statements should be deallocated on the server: {} prepared statements instead of 2", count);
@@ -548,9 +557,9 @@ testStatementInvalidated() {
   // Number of columns of the first row of 'SELECT *' (prepared statement)
   auto columns = [&conn]() {
     std::size_t nb = 0;
-    conn.queryMapRow("SELECT * FROM T_Invalidated WHERE a = ?", [&nb](ResultSet& row) {
+    conn.queryMapRow("SELECT * FROM T_Invalidated WHERE a = :a", [&nb](ResultSet& row) {
       nb = row.get<int32_t>(1).has_value() ? 2 : 1;
-    }, 1);
+    }, {{"a", 1}});
     return nb;
   };
   auto failsOnce = [&conn, &columns](const std::string& sqlstate) {
@@ -564,7 +573,7 @@ testStatementInvalidated() {
   };
   try {
     std::size_t nb = 0;
-    conn.queryMapRow("SELECT * FROM T_Invalidated WHERE a = ?", [&nb](ResultSet&) { ++nb; }, 1);
+    conn.queryMapRow("SELECT * FROM T_Invalidated WHERE a = :a", [&nb](ResultSet&) { ++nb; }, {{"a", 1}});
     anch::ut::assertThat(nb == 1, "{} rows instead of 1", nb);
     // Result type changed by a schema change: 'cached plan must not change result type' (0A000) +
     conn.update("ALTER TABLE T_Invalidated ADD COLUMN b INTEGER DEFAULT 2");
@@ -653,5 +662,6 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("16-statement-cache-deallocate", testCacheDeallocate)
     .add("17-connection-parameters", testConnectionParameters)
     .add("18-statement-invalidated", testStatementInvalidated)
+    .add("19-stmt-named", testNamed)
     ;
 }

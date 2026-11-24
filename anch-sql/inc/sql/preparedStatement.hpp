@@ -24,13 +24,13 @@
 #include <cstdint>
 #include <optional>
 #include <string>
+#include <string_view>
 #include <vector>
 
 #include "sql/sqlException.hpp"
 #include "sql/resultSet.hpp"
-#include "sql/types/date.hpp"
-#include "sql/types/time.hpp"
-#include "sql/types/timestamp.hpp"
+#include "sql/parameters.hpp"
+#include "sql/placeholders.hpp"
 
 
 namespace anch::sql {
@@ -40,10 +40,10 @@ namespace anch::sql {
   /*!
    * \brief SQL prepared statement
    *
-   * Prepared statements are created and cached by \ref Connection::prepareStatement . Parameters are numbered from
-   * \c 1 ; every parameter has to be bound before execution (values are kept between executions).\n
-   * The number of parameters is given by the database driver (MySQL and SQLite count them on the server side,
-   * PostgreSQL \c '?' placeholders are found with \ref findPlaceholders and replaced by \c $n ).\n
+   * Prepared statements are created and cached by \ref Connection::prepareStatement . Parameters are named
+   * ( \c :name , see \ref NamedQuery ): a name used several times in the query is bound once. Every parameter has to
+   * be bound before execution (values are kept between executions): the missing ones are reported together.
+   * Positional parameters ( \c ? ) are refused.\n
    * Errors are reported to the connection: a fatal error invalidates it (see \ref Connection::isValid ).
    *
    * \author Vincent Lachenal
@@ -57,14 +57,20 @@ namespace anch::sql {
 
     // Attributes +
   protected:
-    /*! Statement values (index \c 0 is parameter \c 1 ; \c std::nullopt for \c NULL ) */
-    std::vector<std::optional<std::string>> _values;
+    /*! The query (with named parameters) */
+    std::string _query;
 
-    /*! Bound parameters */
+    /*! Parameters names, in order of first use */
+    std::vector<std::string> _names;
+
+    /*! Value of each name ( \c std::nullopt for \c NULL ) */
+    std::vector<anch::sql::ParameterValue> _values;
+
+    /*! Bound names */
     std::vector<bool> _bound;
 
-    /*! Number of placeholders in SQL query */
-    std::size_t _nbPlaceholders;
+    /*! Name of each parameter of the query prepared by the driver ( \c $1 , \c ?1 or each \c ? ) */
+    std::vector<anch::sql::NamedQuery::Binding> _bindings;
 
   private:
     /*! Connection which has prepared this statement (errors are reported to it) */
@@ -119,140 +125,42 @@ namespace anch::sql {
     uint64_t executeUpdate();
 
     /*!
-     * Bind 16 bits signed integer value to prepared statement
-     *
-     * \param idx the prepared statement index parameter (from \c 1 )
-     * \param value the value to bind
-     *
-     * \throw SqlException invalid index
-     */
-    void set(std::size_t idx, int16_t value);
-
-    /*!
-     * Bind 16 bits unsigned integer value to prepared statement
-     *
-     * \param idx the prepared statement index parameter (from \c 1 )
-     * \param value the value to bind
-     *
-     * \throw SqlException invalid index
-     */
-    void set(std::size_t idx, uint16_t value);
-
-    /*!
-     * Bind 32 bits signed integer value to prepared statement
-     *
-     * \param idx the prepared statement index parameter (from \c 1 )
-     * \param value the value to bind
-     *
-     * \throw SqlException invalid index
-     */
-    void set(std::size_t idx, int32_t value);
-
-    /*!
-     * Bind 32 bits unsigned integer value to prepared statement
-     *
-     * \param idx the prepared statement index parameter (from \c 1 )
-     * \param value the value to bind
-     *
-     * \throw SqlException invalid index
-     */
-    void set(std::size_t idx, uint32_t value);
-
-    /*!
-     * Bind 64 bits signed integer value to prepared statement
-     *
-     * \param idx the prepared statement index parameter (from \c 1 )
-     * \param value the value to bind
-     *
-     * \throw SqlException invalid index
-     */
-    void set(std::size_t idx, int64_t value);
-
-    /*!
-     * Bind 64 bits unsigned integer value to prepared statement
-     *
-     * \param idx the prepared statement index parameter (from \c 1 )
-     * \param value the value to bind
-     *
-     * \throw SqlException invalid index
-     */
-    void set(std::size_t idx, uint64_t value);
-
-    /*!
-     * Bind string value to prepared statement
-     *
-     * \param idx the prepared statement index parameter (from \c 1 )
-     * \param value the value to bind
-     *
-     * \throw SqlException invalid index
-     */
-    void set(std::size_t idx, const std::string& value);
-
-    /*!
-     * Bind character array value to prepared statement (\c NULL pointer binds SQL \c NULL )
-     *
-     * \param idx the prepared statement index parameter (from \c 1 )
-     * \param value the value to bind
-     *
-     * \throw SqlException invalid index
-     */
-    void set(std::size_t idx, const char* const value);
-
-    /*!
-     * Bind optional value to prepared statement (\c std::nullopt binds SQL \c NULL )
+     * Bind value to a parameter ( \c toParameter : integers, strings, SQL dates, \c std::optional of them ;
+     * \c std::nullopt and \c NULL character arrays bind SQL \c NULL )
      *
      * \tparam T the value type
      *
-     * \param idx the prepared statement index parameter (from \c 1 )
+     * \param name the parameter name (without \c ':' )
      * \param value the value to bind
      *
-     * \throw SqlException invalid index
+     * \throw SqlException unknown parameter (non fatal, with the parameters of the query)
      *
-     * \since 0.2
+     * \since 0.3
      */
-    template<typename T>
-    void set(std::size_t idx, const std::optional<T>& value);
+    template<anch::sql::Bindable T>
+    void set(std::string_view name, const T& value);
 
     /*!
-     * Bind SQL \c NULL to prepared statement
+     * Bind SQL \c NULL to a parameter
      *
-     * \param idx the prepared statement index parameter (from \c 1 )
+     * \param name the parameter name (without \c ':' )
      *
-     * \throw SqlException invalid index
+     * \throw SqlException unknown parameter (non fatal)
      *
-     * \since 0.2
+     * \since 0.3
      */
-    void setNull(std::size_t idx);
+    void setNull(std::string_view name);
 
     /*!
-     * Bind SQL date value to prepared statement
+     * Bind parameters (the parameters of the query which are not in \c parameters are unbound)
      *
-     * \param idx the prepared statement index parameter (from \c 1 )
-     * \param value the value to bind
+     * \param parameters the parameters
      *
-     * \throw SqlException invalid index
+     * \throw SqlException unknown parameter (non fatal)
+     *
+     * \since 0.3
      */
-    virtual void set(std::size_t idx, const anch::sql::Date& value);
-
-    /*!
-     * Bind SQL time value to prepared statement
-     *
-     * \param idx the prepared statement index parameter (from \c 1 )
-     * \param value the value to bind
-     *
-     * \throw SqlException invalid index
-     */
-    virtual void set(std::size_t idx, const anch::sql::Time& value);
-
-    /*!
-     * Bind SQL timestamp value to prepared statement
-     *
-     * \param idx the prepared statement index parameter (from \c 1 )
-     * \param value the value to bind
-     *
-     * \throw SqlException invalid index
-     */
-    virtual void set(std::size_t idx, const anch::sql::Timestamp& value);
+    void set(const anch::sql::Parameters& parameters);
 
     /*!
      * Unbind every parameter
@@ -264,20 +172,63 @@ namespace anch::sql {
     /*!
      * Number of parameters getter
      *
-     * \return the number of parameters
+     * \return the number of parameters names
      *
      * \since 0.2
      */
     std::size_t getParameterCount() const noexcept;
 
+    /*!
+     * Parameters names getter
+     *
+     * \return the parameters names, in order of first use
+     *
+     * \since 0.3
+     */
+    const std::vector<std::string>& getParameterNames() const noexcept;
+
+    /*!
+     * Query getter
+     *
+     * \return the query (with named parameters)
+     *
+     * \since 0.3
+     */
+    const std::string& getQuery() const noexcept;
+
   protected:
     /*!
-     * Set number of parameters (called by drivers once statement has been prepared)
+     * Parse query and render it for the driver (called by drivers before preparing the statement)
      *
-     * \param count the number of parameters
+     * \param query the query (with named parameters)
+     * \param syntax the SQL dialect lexical rules
+     * \param style the parameters style of the driver
+     *
+     * \return the query to prepare
+     *
+     * \throw SqlException positional parameter in query (non fatal)
      */
-    void setParameterCount(std::size_t count);
+    std::string parse(const std::string& query, const anch::sql::SqlSyntax& syntax, anch::sql::ParameterStyle style);
 
+  public:
+    /*!
+     * Number of parameters of the query prepared by the driver ( \c $1 , \c ?1 or each \c ? )
+     *
+     * \return the number of parameters
+     */
+    std::size_t getBindingCount() const noexcept;
+
+    /*!
+     * Value of a parameter of the query prepared by the driver
+     *
+     * \param idx the parameter index (from \c 0 : \c $1 , \c ?1 or the first \c ? ; a name used several times by
+     *        MySQL gives the same value)
+     *
+     * \return the value ( \c std::nullopt for \c NULL )
+     */
+    const anch::sql::ParameterValue& getBindingValue(std::size_t idx) const;
+
+  protected:
     /*!
      * Execute prepared statement for SELECT statement (driver implementation: parameters are bound)
      *
@@ -318,12 +269,12 @@ namespace anch::sql {
     /*!
      * Bind value
      *
-     * \param idx the parameter index (from \c 1 )
+     * \param name the parameter name
      * \param value the value (\c std::nullopt for \c NULL )
      *
-     * \throw SqlException invalid index
+     * \throw SqlException unknown parameter
      */
-    void bind(std::size_t idx, std::optional<std::string> value);
+    void bind(std::string_view name, anch::sql::ParameterValue value);
 
     /*!
      * Check that every parameter has been bound
@@ -335,14 +286,10 @@ namespace anch::sql {
 
   };
 
-  template<typename T>
+  template<anch::sql::Bindable T>
   void
-  PreparedStatement::set(std::size_t idx, const std::optional<T>& value) {
-    if(value.has_value()) {
-      set(idx, value.value());
-    } else {
-      setNull(idx);
-    }
+  PreparedStatement::set(std::string_view name, const T& value) {
+    bind(name, anch::sql::toParameter(value));
   }
 
 }

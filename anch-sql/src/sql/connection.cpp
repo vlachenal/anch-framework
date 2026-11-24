@@ -145,6 +145,30 @@ Connection::update(const std::string& query) {
   return guard([this, &query]() { return executeUpdate(query); });
 }
 
+ResultSet*
+Connection::query(const std::string& query, const anch::sql::Parameters& parameters) {
+  PreparedStatement& stmt = prepareStatement(query);
+  stmt.set(parameters);
+  return stmt.executeQuery();
+}
+
+void
+Connection::queryMapRow(const std::string& query, std::function<void(ResultSet&)> rowMapper, const anch::sql::Parameters& parameters) {
+  mapRow(this->query(query, parameters), rowMapper);
+}
+
+void
+Connection::queryExtract(const std::string& query, std::function<void(ResultSet&)> resExtractor, const anch::sql::Parameters& parameters) {
+  extract(this->query(query, parameters), resExtractor);
+}
+
+uint64_t
+Connection::update(const std::string& query, const anch::sql::Parameters& parameters) {
+  PreparedStatement& stmt = prepareStatement(query);
+  stmt.set(parameters);
+  return stmt.executeUpdate();
+}
+
 PreparedStatement&
 Connection::prepareStatement(const std::string& query) {
   auto found = _stmtsIndex.find(std::string_view(query));
