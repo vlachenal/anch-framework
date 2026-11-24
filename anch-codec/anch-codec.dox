@@ -42,12 +42,12 @@ target_link_libraries(my-app PRIVATE anch::codec-json)
  *
  * \section codec_format_sec Data formats
  *
- * A data format ( \ref anch::codec::DataFormat "DataFormat": \c anch::json::Json , \c anch::csv::Csv ) serializes
+ * A data format ( \ref anch::codec::DataFormat "DataFormat": \c anch::json::JsonFormat , \c anch::csv::CsvFormat ) serializes
  * values with options, without depending on anch-codec. \ref anch::codec::FormatCodec "FormatCodec" makes a codec of
  * it: media type, options of each side copied from the format default options and configured by the format
  * \ref anch::codec::FormatPolicy "FormatPolicy" (specialized by its plugin, which also translates errors into
  * \ref anch::codec::ContentTooLarge "ContentTooLarge"). \ref anch::codec::Json "Json" is
- * \c FormatCodec<anch::json::Json> and \ref anch::codec::Csv "Csv" \c FormatCodec<anch::csv::Csv> ; a new text
+ * \c FormatCodec<anch::json::JsonFormat> and \ref anch::codec::Csv "Csv" \c FormatCodec<anch::csv::CsvFormat> ; a new text
  * format gets its codec without code of its own.
  *
  * \section codec_side_sec Trust policy
@@ -58,7 +58,7 @@ target_link_libraries(my-app PRIVATE anch::codec-json)
  * writes with \c CLIENT .
  * - \ref anch::codec::Json "Json" checks anch-json fields constraints on values read with \c SERVER and on values
  *   written with \c CLIENT , and has mapping options per side ( \ref anch::codec::FormatCodec::options "options" ,
- *   configured by \ref anch::codec::FormatPolicy<anch::json::Json> "its policy"):
+ *   configured by \ref anch::codec::FormatPolicy<anch::json::JsonFormat> "its policy"):
  * \snippet{trimleft} anch-codec/examples/codec.cpp model
  * - codecs without limit of their own read contents with \ref anch::codec::readBody "readBody", bounded by
  *   \ref anch::codec::maxBodySize "maxBodySize" (2 MiB for \c SERVER by default): larger contents raise

@@ -104,9 +104,9 @@ and `\deprecated` in its documentation, which give its replacement, and it is re
   codecs.
   Data formats (`DataFormat`, `FormatSerializer`, `FormatDeserializer` concepts) get a generic codec,
   `FormatCodec<F>`, whose side options are configured by `FormatPolicy<F>` (specialized by plugins, which also
-  translate errors): `anch::codec::Json` is `FormatCodec<anch::json::Json>` (format type `anch::json::Json`,
+  translate errors): `anch::codec::Json` is `FormatCodec<anch::json::JsonFormat>` (format type `anch::json::JsonFormat`,
   `json/format.hpp`), and the new anch-codec-csv plugin (`ANCH_CODEC_CSV`) provides `anch::codec::Csv`,
-  `FormatCodec<anch::csv::Csv>` (`text/csv`, lists of described objects, format type `anch::csv::Csv`,
+  `FormatCodec<anch::csv::CsvFormat>` (`text/csv`, lists of described objects, format type `anch::csv::CsvFormat`,
   `csv/format.hpp`).
 - anch-codec: `anch::codec::maxBodySize(Side)` and `readBody` (bodies read in memory by Protobuf and Thrift codecs,
   `0` for no limit) and `Protobuf::read(message, std::string_view)`.

@@ -59,7 +59,7 @@ namespace anch::json {
    *
    * \since 0.3
    */
-  struct Json {
+  struct JsonFormat {
 
     /*! Format options */
     using Options = anch::json::MappingOptions;
@@ -104,14 +104,14 @@ namespace anch::json {
 
 namespace anch::json {
 
-  inline const Json::Options&
-  Json::defaultOptions() noexcept {
+  inline const JsonFormat::Options&
+  JsonFormat::defaultOptions() noexcept {
     return anch::json::DEFAULT_MAPPING_OPTIONS;
   }
 
   template<anch::json::Mappable T>
   void
-  Json::serialize(const T& value, std::ostream& out, const Options& options) {
+  JsonFormat::serialize(const T& value, std::ostream& out, const Options& options) {
     if constexpr (std::is_same_v<T, std::string>) {
       // std::string would match anch-json container overload (C<T> with T = char)
       anch::json::serialize<std::string>(value, out, options);
@@ -122,7 +122,7 @@ namespace anch::json {
 
   template<anch::json::Mappable T>
   void
-  Json::deserialize(T& value, std::istream& input, const Options& options) {
+  JsonFormat::deserialize(T& value, std::istream& input, const Options& options) {
     if constexpr (std::is_same_v<T, std::string>) {
       anch::json::deserialize<std::string>(value, input, options);
     } else {

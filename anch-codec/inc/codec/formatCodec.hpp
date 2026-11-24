@@ -32,8 +32,8 @@
 namespace anch::codec {
 
   /*!
-   * \brief Data format which serializes values with options (anch-json \c anch::json::Json , anch-csv
-   * \c anch::csv::Csv , ...)
+   * \brief Data format which serializes values with options (anch-json \c anch::json::JsonFormat , anch-csv
+   * \c anch::csv::CsvFormat , ...)
    *
    * A format defines \c Options , \c MEDIA_TYPE and \c defaultOptions() ; it serializes values with
    * <tt>serialize(value, out, options)</tt> and deserializes them with <tt>deserialize(value, input, options)</tt>
@@ -117,8 +117,8 @@ namespace anch::codec {
    * Values are handled when the format handles them ( \ref FormatSerializer , \ref FormatDeserializer ): formats
    * constrain their types (described objects for anch-json and anch-csv), so that values described by an external
    * schema (Protobuf messages, Thrift structures) are left to the codecs of their format. Options of each side are shared by the program: a codec plugin instantiates its \c FormatCodec in its
-   * library ( \c anch::codec::Json is \c FormatCodec<anch::json::Json> , \c anch::codec::Csv is
-   * \c FormatCodec<anch::csv::Csv> ).
+   * library ( \c anch::codec::Json is \c FormatCodec<anch::json::JsonFormat> , \c anch::codec::Csv is
+   * \c FormatCodec<anch::csv::CsvFormat> ).
    *
    * \tparam F the format type
    *

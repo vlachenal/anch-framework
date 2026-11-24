@@ -42,7 +42,7 @@ namespace anch::codec {
    * \since 0.3
    */
   template<>
-  struct ANCH_CODEC_CSV_EXPORT FormatPolicy<anch::csv::Csv> {
+  struct ANCH_CODEC_CSV_EXPORT FormatPolicy<anch::csv::CsvFormat> {
     /*!
      * Configure the options of a side
      *
@@ -62,13 +62,13 @@ namespace anch::codec {
   /*!
    * \c text/csv codec based on anch-csv (anch-codec-csv plugin, option \c ANCH_CODEC_CSV ): values are lists of
    * described objects ( \c anch::Mapping , anch-utils), one record per object. Options of each side: see
-   * \ref FormatPolicy<anch::csv::Csv> "FormatPolicy".
+   * \ref FormatPolicy<anch::csv::CsvFormat> "FormatPolicy".
    *
    * \since 0.3
    */
-  using Csv = anch::codec::FormatCodec<anch::csv::Csv>;
+  using Csv = anch::codec::FormatCodec<anch::csv::CsvFormat>;
 
 }
 
 // Options of each side are instantiated in anch-codec-csv (unique in the program)
-extern template struct ANCH_CODEC_CSV_EXPORT anch::codec::FormatCodec<anch::csv::Csv>;
+extern template struct ANCH_CODEC_CSV_EXPORT anch::codec::FormatCodec<anch::csv::CsvFormat>;

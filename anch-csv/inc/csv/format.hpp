@@ -43,7 +43,7 @@ namespace anch::csv {
    *
    * \since 0.3
    */
-  struct Csv {
+  struct CsvFormat {
 
     /*! Format options */
     using Options = anch::csv::Options;
@@ -89,8 +89,8 @@ namespace anch::csv {
 
 namespace anch::csv {
 
-  inline const Csv::Options&
-  Csv::defaultOptions() noexcept {
+  inline const CsvFormat::Options&
+  CsvFormat::defaultOptions() noexcept {
     static const Options options;
     return options;
   }
@@ -98,13 +98,13 @@ namespace anch::csv {
   template<std::ranges::input_range R>
   requires anch::Described<std::remove_cvref_t<std::ranges::range_value_t<R>>>
   void
-  Csv::serialize(const R& values, std::ostream& out, const Options& options) {
+  CsvFormat::serialize(const R& values, std::ostream& out, const Options& options) {
     anch::csv::serialize(values, out, options);
   }
 
   template<anch::Described T>
   void
-  Csv::deserialize(std::vector<T>& values, std::istream& input, const Options& options) {
+  CsvFormat::deserialize(std::vector<T>& values, std::istream& input, const Options& options) {
     anch::csv::deserialize(values, input, options);
   }
 
