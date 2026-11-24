@@ -375,7 +375,8 @@ namespace anch::csv {
    *
    * With a header, columns are associated with fields by name (columns which are not fields are ignored, or refused
    * with \c Options::ignoreUnknownColumns ; required fields columns have to be present: \c MISSING_COLUMN ) ;
-   * without header, by position (fields registration order). An empty field is an absent value ( \c std::nullopt ),
+   * without header, by position: each registered field is a column, in registration order (columns of fields which
+   * are not read, getter only, are skipped), as \ref ObjectWriter writes them. An empty field is an absent value ( \c std::nullopt ),
    * an empty quoted field ( \c "" ) an empty string. Conversion errors ( \c CONVERSION ) and constraints violations
    * ( \c CONSTRAINT_VIOLATION ) give the line and the column of the field.
    * \snippet{trimleft} anch-csv/examples/csv.cpp objects reader
@@ -436,7 +437,9 @@ namespace anch::csv {
   /*!
    * \brief Objects writer: \c T objects are written as records of a \ref Writer
    *
-   * The header (fields which have a value: member or getter) is written before the first object. Absent values
+   * The header (fields which have a value: member or getter) is written before the first object. Without header,
+   * records are read by position: each registered field is a column, in registration order (fields without value,
+   * setter only, are empty), as \ref ObjectReader reads them. Absent values
    * ( \c std::nullopt ) are empty fields, empty strings empty quoted fields ( \c "" ).
    * \snippet{trimleft} anch-csv/examples/csv.cpp objects writer
    *
@@ -459,6 +462,9 @@ namespace anch::csv {
 
     /*! Header has to be written before the first object */
     bool _header;
+
+    /*! Records are written without header: each registered field is a column */
+    bool _positional;
 
     /*! Written records (header included) */
     std::size_t _records;

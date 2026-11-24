@@ -57,9 +57,10 @@ namespace anch::json {
     /*!
      * Get JSON mapper unique instance
      *
-     * \return the \ref JSONMapper or the \ref PrimitiveMapper unique instance according to type
+     * \return the \ref JSONMapper or the \ref PrimitiveMapper unique instance according to type (constant: fields
+     *         are registered once, when the mapper is built from the description of the type)
      */
-    static auto& getInstance();
+    static const auto& getInstance();
 
   };
 

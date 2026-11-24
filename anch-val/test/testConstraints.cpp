@@ -202,6 +202,11 @@ testPatternCompiler() {
   anch::ut::assertThat(violation(prefix, std::string("abc")).empty() && !violation(prefix, std::string("cab")).empty(), "Custom pattern compiler");
   anch::val::Pattern regex = anch::val::pattern("ab");
   anch::ut::assertThat(violation(regex, std::string("cab")).empty(), "Default compiler restored");
+  // A pattern is compiled once (each format registers the description of a type), until its compiler is changed
+  anch::ut::assertThat(anch::val::pattern("ab").matcher == regex.matcher && anch::val::xsdPattern("ab").matcher != regex.matcher,
+		       "Compiled pattern has to be shared by syntax");
+  anch::val::setPatternCompiler(anch::val::PatternCompiler());
+  anch::ut::assertThat(anch::val::pattern("ab").matcher != regex.matcher, "Pattern has to be compiled by the new compiler");
 }
 
 void

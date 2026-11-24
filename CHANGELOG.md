@@ -14,6 +14,8 @@ and `\deprecated` in its documentation, which give its replacement, and it is re
 
 ### Breaking changes
 
+- anch-json: `Factory<T>::getInstance()` returns a constant mapper: fields are registered once, when the mapper is
+  built from the description of the type (`registerField` could change the shared mapper of a type afterwards).
 - anch-val: `Violation::path` is an `anch::val::Path` (segments: field names, map keys and items indexes) instead of a
   JSON Pointer string: `path.pointer()` formats it as a JSON Pointer (also written by `operator<<`), other formats
   (XML) will format the segments their way.
@@ -86,7 +88,8 @@ and `\deprecated` in its documentation, which give its replacement, and it is re
   skipped, limits of record size and columns count), `Writer` quotes fields when needed (`writeRow` formats numbers
   with `std::to_chars`), `Options` (separator, quote, line ending, header, BOM), `CsvError` (code, line and column).
   libFuzzer target `csv`. The former CMake files (out of the build) are removed. Objects mapping on their common
-  description (`anch::Mapping`): `ObjectReader<T>` (columns by name or by position, unknown columns ignored or
+  description (`anch::Mapping`): `ObjectReader<T>` (columns by name or by position: without header, each registered
+  field is a column for reading and writing, getter only and setter only fields included; unknown columns ignored or
   refused, required columns, conversion and anch-val constraints errors with line and column) and `ObjectWriter<T>`
   (header, absent values as empty fields, empty strings as `""`); fields are strings, booleans, numbers, UUID, dates
   or `std::optional` of them. `records<T>(input)` reads objects one by one (input range), `deserialize` and
@@ -117,6 +120,9 @@ and `\deprecated` in its documentation, which give its replacement, and it is re
 
 ### Changed
 
+- anch-val: a pattern (`pattern`, `xsdPattern`) is compiled once for every format (each format registers the
+  description of a type: JSON, CSV and validation compiled it each time); its matcher is shared until the compiler of
+  its syntax is changed (`setPatternCompiler`).
 - anch-oas: inconsistent constraints (`minLength` greater than `maxLength`, `minItems` greater than `maxItems`,
   `minProperties` greater than `maxProperties`, `minimum` greater than `maximum`) and required properties missing from
   `properties` are reported with a warning (error with `--strict`).
