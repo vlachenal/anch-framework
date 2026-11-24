@@ -19,13 +19,73 @@
 */
 #include "sql/builder/sqlQuery.hpp"
 
+#include <algorithm>
+#include <vector>
+
+#include "sql/placeholders.hpp"
+
+#include "parametersMerge.hpp"
+
+using anch::sql::Parameter;
+using anch::sql::Parameters;
 using anch::sql::SQLQuery;
 
-
-SQLQuery::SQLQuery(const SQLQuery& other): _query(other._query), _values(other._values) {
+SQLQuery::SQLQuery(const SQLQuery& other): _query(other._query), _parameters(other._parameters) {
   // Nothing to do
 }
 
-SQLQuery::SQLQuery(const std::string& query, const std::list<std::string>& values): _query(query), _values(values) {
+SQLQuery::SQLQuery(const std::string& query, const Parameters& parameters): _query(query), _parameters(parameters) {
   // Nothing to do
+}
+
+namespace {
+
+  bool
+  used(const Parameters& parameters, std::string_view name) {
+    const std::vector<Parameter>& values = parameters.values();
+    return std::any_of(values.begin(), values.end(), [name](const Parameter& parameter) { return parameter.name == name; });
+  }
+
+}
+
+std::string
+anch::sql::detail::parameterName(const Parameters& parameters, const std::string& column, std::string_view suffix) {
+  std::string base;
+  base.reserve(column.size() + suffix.size());
+  for(char c : column) {
+    const bool valid = (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') || c == '_';
+    base += valid ? c : '_';
+  }
+  if(base.empty() || (base[0] >= '0' && base[0] <= '9')) {
+    base.insert(0, "p");
+  }
+  base += suffix;
+  std::string name = base;
+  for(std::size_t i = 2 ; used(parameters, name) ; ++i) {
+    name = base + '_' + std::to_string(i);
+  }
+  return name;
+}
+
+std::string
+anch::sql::detail::mergeParameters(Parameters& target, const std::string& part, const Parameters& parameters) {
+  if(parameters.values().empty()) {
+    return part;
+  }
+  anch::sql::NamedQuery named(part, anch::sql::SqlSyntax::STANDARD);
+  std::vector<std::string> names = named.names();
+  bool renamed = false;
+  for(std::string& name : names) {
+    auto iter = std::find_if(parameters.values().begin(), parameters.values().end(),
+			     [&name](const Parameter& parameter) { return parameter.name == name; });
+    if(iter == parameters.values().end()) {
+      continue; // not a parameter of the part
+    }
+    if(used(target, name)) {
+      name = parameterName(target, name);
+      renamed = true;
+    }
+    target.add(name, iter->value);
+  }
+  return renamed ? named.rename(names) : part;
 }

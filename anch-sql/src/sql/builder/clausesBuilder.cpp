@@ -22,7 +22,8 @@
 #include "sql/builder/selectBuilder.hpp"
 #include "sql/builder/fromBuilder.hpp"
 
-#include "fluent.hpp"
+#include "parametersMerge.hpp"
+
 
 
 using anch::sql::ClausesBuilder;
@@ -33,11 +34,11 @@ using anch::sql::ClausesProvider;
 using anch::sql::ValueChecker;
 
 
-ClausesBuilder::ClausesBuilder(): _buffer(), _values(), _firstClause(true) {
+ClausesBuilder::ClausesBuilder(): _buffer(), _parameters(), _firstClause(true) {
   // Nothing to do
 }
 
-ClausesBuilder::ClausesBuilder(const ClausesBuilder& other): _buffer(), _values(other._values), _firstClause(other._firstClause) {
+ClausesBuilder::ClausesBuilder(const ClausesBuilder& other): _buffer(), _parameters(other._parameters), _firstClause(other._firstClause) {
   _buffer << other._buffer.str();
 }
 
@@ -85,37 +86,37 @@ ClausesBuilder::equals() {
 
 ClausesBuilder&
 ClausesBuilder::notExists(const SelectBuilder& query) {
-  _buffer << "NOT EXISTS(" << query << ')';
+  _buffer << "NOT EXISTS(" << anch::sql::detail::mergeParameters(_parameters, query._buffer.str(), query._parameters) << ')';
   return *this;
 }
 
 ClausesBuilder&
 ClausesBuilder::exists(const SelectBuilder& query) {
-  _buffer << "EXISTS(" << query << ')';
+  _buffer << "EXISTS(" << anch::sql::detail::mergeParameters(_parameters, query._buffer.str(), query._parameters) << ')';
   return *this;
 }
 
 ClausesBuilder&
 ClausesBuilder::in(const SQLQuery& query) {
-  _buffer << " IN(" << query.getQuery() << ')';
+  _buffer << " IN(" << anch::sql::detail::mergeParameters(_parameters, query.getQuery(), query.getParameters()) << ')';
   return *this;
 }
 
 ClausesBuilder&
 ClausesBuilder::notIn(const SQLQuery& query) {
-  _buffer << " NOT IN(" << query.getQuery() << ')';
+  _buffer << " NOT IN(" << anch::sql::detail::mergeParameters(_parameters, query.getQuery(), query.getParameters()) << ')';
   return *this;
 }
 
 ClausesBuilder&
 ClausesBuilder::in(const SelectBuilder& query) {
-  _buffer << " IN(" << query << ')';
+  _buffer << " IN(" << anch::sql::detail::mergeParameters(_parameters, query._buffer.str(), query._parameters) << ')';
   return *this;
 }
 
 ClausesBuilder&
 ClausesBuilder::notIn(const SelectBuilder& query) {
-  _buffer << " NOT IN(" << query << ')';
+  _buffer << " NOT IN(" << anch::sql::detail::mergeParameters(_parameters, query._buffer.str(), query._parameters) << ')';
   return *this;
 }
 
@@ -208,10 +209,7 @@ ClausesBuilder&
 ClausesBuilder::checkAndAddClauses(const std::string& boolAgg, const ClausesBuilder& other) {
   if(!other._firstClause) {
     addBooleanAggregator(boolAgg);
-    _buffer << '(' << other._buffer.str() << ')';
-    for(const std::string& val : other._values) {
-      _values.push_back(val);
-    }
+    _buffer << '(' << anch::sql::detail::mergeParameters(_parameters, other._buffer.str(), other._parameters) << ')';
     _firstClause = false;
   }
   return *this;
@@ -229,38 +227,15 @@ ClausesBuilder::checkAndAddClauses(const std::string& boolAgg, ClausesProvider c
   return checkAndAddClauses(boolAgg, clauses());
 }
 
-template<>
-std::optional<std::string>
-anch::sql::isValidValue<anch::sql::SelectBuilder>(anch::sql::SelectBuilder& value) {
-  std::ostringstream oss;
-  oss << '(' << value << ')';
-  return std::optional(oss.str());
+std::string
+ClausesBuilder::addParameter(const std::string& column, std::string_view suffix, anch::sql::ParameterValue value) {
+  std::string name = anch::sql::detail::parameterName(_parameters, column, suffix);
+  _parameters.add(name, value);
+  return name;
 }
 
 template<>
 std::optional<std::string>
-anch::sql::isValidValue<anch::sql::SQLQuery>(anch::sql::SQLQuery& value) {
-  std::ostringstream oss;
-  oss << '(' << value.getQuery() << ')';
-  return std::optional(oss.str());
-}
-
-template<>
-std::optional<std::string>
-anch::sql::isValidValue<std::string>(std::string& value) {
+anch::sql::isValidValue<std::string>(const std::string& value) {
   return value.empty() ? std::optional<std::string>() : std::optional(value);
-}
-
-template<>
-std::optional<std::string>
-anch::sql::isValidValue<std::optional<std::string>>(std::optional<std::string>& value) {
-  return value;
-}
-
-template<>
-std::optional<std::string>
-anch::sql::isValidValue<anch::Fluent<std::string, std::list>>(anch::Fluent<std::string, std::list>& value) {
-  std::ostringstream oss;
-  value.forEach([&oss](std::string& val) { oss << ',' << val; });
-  return std::optional(oss.str());
 }

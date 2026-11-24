@@ -19,6 +19,8 @@
 */
 #include "sql/builder/selectBuilder.hpp"
 
+#include "parametersMerge.hpp"
+
 using anch::sql::SelectBuilder;
 using anch::sql::FieldsBuilder;
 using anch::sql::ClausesBuilder;
@@ -26,7 +28,7 @@ using anch::sql::SQLQuery;
 
 
 // Constructors +
-SelectBuilder::SelectBuilder(): _buffer(), _values() {
+SelectBuilder::SelectBuilder(): _buffer(), _parameters() {
   _buffer << "SELECT ";
 }
 // Constructors -
@@ -64,23 +66,20 @@ SelectBuilder::orderBy(const std::string& column) {
 SelectBuilder&
 SelectBuilder::having(ClausesBuilder& clauses) {
   if(!clauses._firstClause) {
-    _buffer << " HAVING " << clauses._buffer.str();
-    for(const std::string& value : clauses._values) {
-      _values.push_back(value);
-    }
+    _buffer << " HAVING " << anch::sql::detail::mergeParameters(_parameters, clauses._buffer.str(), clauses._parameters);
   }
   return *this;
 }
 
 SelectBuilder&
 SelectBuilder::unionOnce(SelectBuilder& other) {
-  _buffer << " UNION " << other;
+  _buffer << " UNION " << anch::sql::detail::mergeParameters(_parameters, other._buffer.str(), other._parameters);
   return *this;
 }
 
 SelectBuilder&
 SelectBuilder::unionAll(SelectBuilder& other) {
-  _buffer << " UNION ALL " << other;
+  _buffer << " UNION ALL " << anch::sql::detail::mergeParameters(_parameters, other._buffer.str(), other._parameters);
   return *this;
 }
 
@@ -120,7 +119,7 @@ SelectBuilder::windowByRank(const std::string& alias,
 // Methods +
 SQLQuery
 SelectBuilder::build() {
-  return SQLQuery(_buffer.str(), _values);
+  return SQLQuery(_buffer.str(), _parameters);
 }
 
 void
@@ -139,8 +138,9 @@ SelectBuilder::window(const std::string& function,
   _buffer.str(query);
   _buffer << ") AS " << alias << " WHERE";
   if(min > 0) {
-    _buffer << ' ' << rowColumn << " >= ?";
-    _values.push_back(std::to_string(min));
+    const std::string name = anch::sql::detail::parameterName(_parameters, rowColumn, "_min");
+    _parameters.add(name, min);
+    _buffer << ' ' << rowColumn << " >= :" << name;
   }
   if(max > 1) {
     if(min > 0) {
@@ -148,8 +148,9 @@ SelectBuilder::window(const std::string& function,
     } else {
       _buffer << ' ';
     }
-    _buffer << rowColumn << " < ?";
-    _values.push_back(std::to_string(max));
+    const std::string name = anch::sql::detail::parameterName(_parameters, rowColumn, "_max");
+    _parameters.add(name, max);
+    _buffer << rowColumn << " < :" << name;
   }
 }
 // Methods -

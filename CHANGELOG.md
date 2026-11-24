@@ -14,6 +14,14 @@ and `\deprecated` in its documentation, which give its replacement, and it is re
 
 ### Breaking changes
 
+- anch-sql: the `SELECT` builder generates named parameters from columns (`t.id = :t_id`, `BETWEEN :t_id_min AND
+  :t_id_max`, `_2`, `_3`, ... for a name already used); merged clauses, subqueries and unions rename their
+  colliding names and keep their parameters (`UNION` and `IN` / `EXISTS` subqueries lost them). `SQLQuery` holds
+  `Parameters` (`getParameters()` replaces `getValues()`). `ClauseMaker` receives the parameters names
+  (`equals(column, names)`, ...); the `exists` and `notExists` clause makers and the `isValidValue` specializations
+  of `SelectBuilder`, `SQLQuery` and `Fluent` (which bound SQL text as values) are removed: `isValidValue` accepts
+  every `Bindable` value (an empty `std::optional` or string skips the clause) and values are `const`.
+  `Connection::batchUpdate` maps each value to `Parameters` (`std::function<void(Parameters&, const T&)>`).
 - anch-sql: prepared statements use named parameters (`:name`) instead of `?`: `?` (and PostgreSQL `$1`, SQLite
   `?1`, `@name`, `$name`) are refused. `PreparedStatement::set(name, value)` and `setNull(name)` replace
   `set(idx, value)` and `setNull(idx)`; `set(Parameters)`, `getParameterNames()` and `getQuery()` are added; every

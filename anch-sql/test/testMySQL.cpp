@@ -466,6 +466,11 @@ testNamed() {
 }
 
 void
+testBuilder() {
+  testBuilderQuery(*dbCon);
+}
+
+void
 testSqlError() {
   testSqlErrorKeepsConnection(*dbCon);
 }
@@ -517,5 +522,6 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("14-fatal-error", testFatal)
     .add("15-statement-cache", testCache)
     .add("16-stmt-named", testNamed)
+    .add("17-builder-query", testBuilder)
     ;
 }

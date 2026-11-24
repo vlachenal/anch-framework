@@ -22,60 +22,64 @@
 
 namespace anch::sql {
 
-  std::string notEquals(const std::string& column) {
-    return column + " <> ?";
+  std::string
+  notEquals(const std::string& column, std::span<const std::string> names) {
+    return column + " <> :" + names[0];
   }
 
-  std::string equals(const std::string& column) {
-    return column + " = ?";
+  std::string
+  equals(const std::string& column, std::span<const std::string> names) {
+    return column + " = :" + names[0];
   }
 
-  std::string greater(const std::string& column) {
-    return column + " > ?";
+  std::string
+  greater(const std::string& column, std::span<const std::string> names) {
+    return column + " > :" + names[0];
   }
 
-  std::string greaterEquals(const std::string& column) {
-    return column + " >= ?";
+  std::string
+  greaterEquals(const std::string& column, std::span<const std::string> names) {
+    return column + " >= :" + names[0];
   }
 
-  std::string lesser(const std::string& column) {
-    return column + " < ?";
+  std::string
+  lesser(const std::string& column, std::span<const std::string> names) {
+    return column + " < :" + names[0];
   }
 
-  std::string lesserEquals(const std::string& column) {
-    return column + " <= ?";
+  std::string
+  lesserEquals(const std::string& column, std::span<const std::string> names) {
+    return column + " <= :" + names[0];
   }
 
-  std::string like(const std::string& column) {
-    return column + " LIKE ?";
+  std::string
+  like(const std::string& column, std::span<const std::string> names) {
+    return column + " LIKE :" + names[0];
   }
 
-  std::string notLike(const std::string& column) {
-    return column + " NOT LIKE ?";
+  std::string
+  notLike(const std::string& column, std::span<const std::string> names) {
+    return column + " NOT LIKE :" + names[0];
   }
 
-  std::string between(const std::string& column) {
-    return column + " BETWEEN ? AND ?";
+  std::string
+  between(const std::string& column, std::span<const std::string> names) {
+    return column + " BETWEEN :" + names[0] + " AND :" + names[1];
   }
 
-  std::string notBetween(const std::string& column) {
-    return column + " NOT BETWEEN ? AND ?";
+  std::string
+  notBetween(const std::string& column, std::span<const std::string> names) {
+    return column + " NOT BETWEEN :" + names[0] + " AND :" + names[1];
   }
 
-  std::string in(const std::string& column) {
-    return column + " IN ";
+  std::string
+  in(const std::string& column, std::span<const std::string> names) {
+    return column + " IN (:" + names[0] + ")";
   }
 
-  std::string notIn(const std::string& column) {
-    return column + " NOT IN ";
-  }
-
-  std::string exists(const std::string&) {
-    return "EXISTS ";
-  }
-
-  std::string notExists(const std::string&) {
-    return "NOT EXISTS ";
+  std::string
+  notIn(const std::string& column, std::span<const std::string> names) {
+    return column + " NOT IN (:" + names[0] + ")";
   }
 
 }  // anch::sql

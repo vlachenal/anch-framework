@@ -37,6 +37,7 @@ using anch::sql::SqlConnectionFactory;
 using anch::sql::SqlConnectionPool;
 using anch::sql::SqlException;
 using anch::sql::ResultSet;
+using anch::sql::Parameters;
 using anch::sql::PreparedStatement;
 using anch::sql::SQLSharedLibraries;
 
@@ -158,11 +159,8 @@ testSQLFactory(const std::string& db) {
 
     std::cout << std::endl;
 
-    pool.borrowResource().get().batchUpdate<Person>("INSERT INTO T_Test (first_name,last_name,birth_date,email) VALUES (:first,:last,:birth,:email)", [](PreparedStatement& stmt, const Person& pers) {
-      stmt.set("first", pers._firstName);
-      stmt.set("last", pers._lastName);
-      stmt.set("birth", pers._birthDate);
-      stmt.set("email", pers._email);
+    pool.borrowResource().get().batchUpdate<Person>("INSERT INTO T_Test (first_name,last_name,birth_date,email) VALUES (:first,:last,:birth,:email)", [](Parameters& params, const Person& pers) {
+      params.add("first", pers._firstName).add("last", pers._lastName).add("birth", pers._birthDate).add("email", pers._email);
     }, values);
 
     std::cout << std::endl;
@@ -180,14 +178,14 @@ testSQLFactory(const std::string& db) {
 
     std::cout << std::endl;
 
-    pool.borrowResource().get().batchUpdate<Person>("UPDATE T_Test SET first_name = :first, last_name = :last WHERE id = :id", [](PreparedStatement& stmt, const Person& pers) {
+    pool.borrowResource().get().batchUpdate<Person>("UPDATE T_Test SET first_name = :first, last_name = :last WHERE id = :id", [](Parameters& params, const Person& pers) {
       Person p;
       p._id = pers._id;
       p._firstName = pers._firstName;
       p._lastName = pers._lastName;
-      stmt.set("first", p._firstName.replace(p._firstName.find_first_of(std::string("I")), 6, "Update"));
-      stmt.set("last", p._lastName.replace(p._lastName.find_first_of(std::string("I")), 6, "UPDATE"));
-      stmt.set("id", p._id);
+      params.add("first", p._firstName.replace(p._firstName.find_first_of(std::string("I")), 6, "Update"));
+      params.add("last", p._lastName.replace(p._lastName.find_first_of(std::string("I")), 6, "UPDATE"));
+      params.add("id", p._id);
     }, persons);
 
     std::cout << std::endl;
@@ -205,8 +203,8 @@ testSQLFactory(const std::string& db) {
 
     std::cout << std::endl;
 
-    pool.borrowResource().get().batchUpdate<Person>("DELETE FROM T_Test WHERE id = :id", [](PreparedStatement& stmt, const Person& pers) {
-      stmt.set("id", pers._id);
+    pool.borrowResource().get().batchUpdate<Person>("DELETE FROM T_Test WHERE id = :id", [](Parameters& params, const Person& pers) {
+      params.add("id", pers._id);
     }, persons);
 
     std::cout << std::endl;

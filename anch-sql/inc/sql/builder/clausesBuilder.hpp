@@ -27,6 +27,8 @@
 #include <functional>
 #include <vector>
 #include <optional>
+#include <span>
+#include <string_view>
 
 
 #include "sql/builder/sqlQuery.hpp"
@@ -40,10 +42,11 @@ namespace anch::sql {
   extern ClausesBuilder clauses();
 
   /*!
-   * Clause maker function.\n
-   * The first (and only) parameter is the column (and the first operand). It returns the clause.
+   * Clause maker function ( \ref equals , \ref between , ...).\n
+   * The first parameter is the column (and the first operand), the second one the names of the clause parameters
+   * (generated from the column by \ref ClausesBuilder : one name for each value). It returns the clause.
    */
-  using ClauseMaker = std::function<std::string(const std::string&)>;
+  using ClauseMaker = std::function<std::string(const std::string&, std::span<const std::string>)>;
 
   /*! Check if value is valid to add a clause */
   template<typename T>
@@ -53,14 +56,24 @@ namespace anch::sql {
   using ClausesProvider = std::function<const anch::sql::ClausesBuilder&()>;
 
   /*!
-   * Default value checker
+   * Default value checker: the clause is added when the value is set (an empty \c std::optional skips the clause)
    *
    * \param value the value to check
    *
-   * \return \c true if value is valid, \c false otherwise
+   * \return the parameter value, \c std::nullopt to skip the clause
    */
-  template<typename T>
-  std::optional<std::string> isValidValue(T& value);
+  template<anch::sql::Bindable T>
+  std::optional<std::string> isValidValue(const T& value);
+
+  /*!
+   * Default value checker of strings: an empty string skips the clause
+   *
+   * \param value the value to check
+   *
+   * \return the parameter value, \c std::nullopt to skip the clause
+   */
+  template<>
+  ANCH_SQL_EXPORT std::optional<std::string> isValidValue<std::string>(const std::string& value);
 
   /*!
    * \brief SQL clauses builder
@@ -82,7 +95,7 @@ namespace anch::sql {
     std::ostringstream _buffer;
 
     /*! Clauses' values */
-    std::list<std::string> _values;
+    anch::sql::Parameters _parameters;
 
     /*! At least one clause has been added to this builder */
     bool _firstClause;
@@ -400,7 +413,7 @@ namespace anch::sql {
      * \return \c this
      */
     template<typename T>
-    ClausesBuilder& AND(anch::sql::ClauseMaker clause, T& value, anch::sql::ValueChecker<T> checker = anch::sql::isValidValue<T>);
+    ClausesBuilder& AND(anch::sql::ClauseMaker clause, const T& value, anch::sql::ValueChecker<T> checker = anch::sql::isValidValue<T>);
 
     /*!
      * Add \c AND clause if value is valid
@@ -415,7 +428,7 @@ namespace anch::sql {
      * \return \c this
      */
     template<typename T>
-    ClausesBuilder& AND(const std::string& column, anch::sql::ClauseMaker clause, T& value, ValueChecker<T> checker = anch::sql::isValidValue<T>);
+    ClausesBuilder& AND(const std::string& column, anch::sql::ClauseMaker clause, const T& value, ValueChecker<T> checker = anch::sql::isValidValue<T>);
 
     /*!
      * Add \c AND clause if value is valid
@@ -431,7 +444,7 @@ namespace anch::sql {
      * \return \c this
      */
     template<typename T>
-    ClausesBuilder& AND(const std::string& column, ClauseMaker clause, T& value1, T& value2, ValueChecker<T> checker = anch::sql::isValidValue<T>);
+    ClausesBuilder& AND(const std::string& column, ClauseMaker clause, const T& value1, const T& value2, ValueChecker<T> checker = anch::sql::isValidValue<T>);
 
     /*!
      * Add \c OR clause if value is valid
@@ -445,7 +458,7 @@ namespace anch::sql {
      * \return \c this
      */
     template<typename T>
-    ClausesBuilder& OR(ClauseMaker clause, T& value, ValueChecker<T> checker = anch::sql::isValidValue<T>);
+    ClausesBuilder& OR(ClauseMaker clause, const T& value, ValueChecker<T> checker = anch::sql::isValidValue<T>);
 
     /*!
      * Add \c OR clause if value is valid
@@ -460,7 +473,7 @@ namespace anch::sql {
      * \return \c this
      */
     template<typename T>
-    ClausesBuilder& OR(const std::string& column, ClauseMaker clause, T& value, ValueChecker<T> checker = anch::sql::isValidValue<T>);
+    ClausesBuilder& OR(const std::string& column, ClauseMaker clause, const T& value, ValueChecker<T> checker = anch::sql::isValidValue<T>);
 
     /*!
      * Add \c OR clause if value is valid
@@ -476,7 +489,7 @@ namespace anch::sql {
      * \return \c this
      */
     template<typename T>
-    ClausesBuilder& OR(const std::string& column, ClauseMaker clause, T& value1, T& value2, ValueChecker<T> checker = anch::sql::isValidValue<T>);
+    ClausesBuilder& OR(const std::string& column, ClauseMaker clause, const T& value1, const T& value2, ValueChecker<T> checker = anch::sql::isValidValue<T>);
 
     /*!
      * Add \c AND} other clauses if clauses are not \c NULL or empty.
@@ -533,6 +546,17 @@ namespace anch::sql {
     ClausesBuilder& checkAndAddClauses(const std::string& boolAgg, const ClausesBuilder& other);
 
     /*!
+     * Add parameter of a clause, named from its column (see \ref ClauseMaker )
+     *
+     * \param column the column
+     * \param suffix the name suffix ( \c _min , \c _max for 2 values clauses)
+     * \param value the parameter value
+     *
+     * \return the parameter name
+     */
+    std::string addParameter(const std::string& column, std::string_view suffix, anch::sql::ParameterValue value);
+
+    /*!
      * Add boolean clauses aggregator
      *
      * \param boolAgg the aggregator to use
@@ -563,7 +587,7 @@ namespace anch::sql {
      * \return \c this
      */
     template<typename T>
-    ClausesBuilder& checkAndAddClause(const std::string& boolAgg, const std::string& column, ClauseMaker clause, T& value, ValueChecker<T> checker);
+    ClausesBuilder& checkAndAddClause(const std::string& boolAgg, const std::string& column, ClauseMaker clause, const T& value, ValueChecker<T> checker);
 
     /*!
      * Check and add clause
@@ -580,56 +604,62 @@ namespace anch::sql {
      * \return \c this
      */
     template<typename T>
-    ClausesBuilder& checkAndAddClause(const std::string& boolAgg, const std::string& column, ClauseMaker clause, T& value1, T& value2, ValueChecker<T> checker);
+    ClausesBuilder& checkAndAddClause(const std::string& boolAgg, const std::string& column, ClauseMaker clause, const T& value1, const T& value2, ValueChecker<T> checker);
     // Methods -
 
   };
 
   // Implementations +
-  template<typename T>
-  ClausesBuilder&
-  ClausesBuilder::AND(anch::sql::ClauseMaker clause, T& value, const anch::sql::ValueChecker<T> checker) {
-    return checkAndAddClause("AND", NULL, clause, value, checker);
+  template<anch::sql::Bindable T>
+  std::optional<std::string>
+  isValidValue(const T& value) {
+    return anch::sql::toParameter(value);
   }
 
   template<typename T>
   ClausesBuilder&
-  ClausesBuilder::AND(const std::string& column, anch::sql::ClauseMaker clause, T& value, ValueChecker<T> checker) {
+  ClausesBuilder::AND(anch::sql::ClauseMaker clause, const T& value, const anch::sql::ValueChecker<T> checker) {
+    return checkAndAddClause("AND", "", clause, value, checker);
+  }
+
+  template<typename T>
+  ClausesBuilder&
+  ClausesBuilder::AND(const std::string& column, anch::sql::ClauseMaker clause, const T& value, ValueChecker<T> checker) {
     return checkAndAddClause("AND", column, clause, value, checker);
   }
 
   template<typename T>
   ClausesBuilder&
-  ClausesBuilder::AND(const std::string& column, ClauseMaker clause, T& value1, T& value2, ValueChecker<T> checker) {
+  ClausesBuilder::AND(const std::string& column, ClauseMaker clause, const T& value1, const T& value2, ValueChecker<T> checker) {
     return checkAndAddClause("AND", column, clause, value1, value2, checker);
   }
 
   template<typename T>
   ClausesBuilder&
-  ClausesBuilder::OR(ClauseMaker clause, T& value, ValueChecker<T> checker) {
-    return checkAndAddClause("OR", NULL, clause, value, checker);
+  ClausesBuilder::OR(ClauseMaker clause, const T& value, ValueChecker<T> checker) {
+    return checkAndAddClause("OR", "", clause, value, checker);
   }
 
   template<typename T>
   ClausesBuilder&
-  ClausesBuilder::OR(const std::string& column, ClauseMaker clause, T& value, ValueChecker<T> checker) {
+  ClausesBuilder::OR(const std::string& column, ClauseMaker clause, const T& value, ValueChecker<T> checker) {
     return checkAndAddClause("OR", column, clause, value, checker);
   }
 
   template<typename T>
   ClausesBuilder&
-  ClausesBuilder::OR(const std::string& column, ClauseMaker clause, T& value1, T& value2, ValueChecker<T> checker) {
+  ClausesBuilder::OR(const std::string& column, ClauseMaker clause, const T& value1, const T& value2, ValueChecker<T> checker) {
     return checkAndAddClause("OR", column, clause, value1, value2, checker);
   }
 
   template<typename T>
   ClausesBuilder&
-  ClausesBuilder::checkAndAddClause(const std::string& boolAgg, const std::string& column, ClauseMaker clause, T& value, ValueChecker<T> checker) {
+  ClausesBuilder::checkAndAddClause(const std::string& boolAgg, const std::string& column, ClauseMaker clause, const T& value, ValueChecker<T> checker) {
     auto optVal = checker(value);
     if(optVal) {
       addBooleanAggregator(boolAgg);
-      _buffer << clause(column);
-      _values.push_back(optVal.value());
+      const std::string names[] = {addParameter(column, "", std::move(optVal))};
+      _buffer << clause(column, names);
       // if(value instanceof Optional<?>) {
       //   // Optional value has already been check at his point
       //   values.add(((Optional<?>)value).get());
@@ -652,14 +682,13 @@ namespace anch::sql {
 
   template<typename T>
   ClausesBuilder&
-  ClausesBuilder::checkAndAddClause(const std::string& boolAgg, const std::string& column, ClauseMaker clause, T& value1, T& value2, ValueChecker<T> checker) {
+  ClausesBuilder::checkAndAddClause(const std::string& boolAgg, const std::string& column, ClauseMaker clause, const T& value1, const T& value2, ValueChecker<T> checker) {
     auto optVal1 = checker(value1);
     auto optVal2 = checker(value2);
     if(optVal1 && optVal2) {
       addBooleanAggregator(boolAgg);
-      _buffer << clause(column);
-      _values.push_back(optVal1.value());
-      _values.push_back(optVal2.value());
+      const std::string names[] = {addParameter(column, "_min", std::move(optVal1)), addParameter(column, "_max", std::move(optVal2))};
+      _buffer << clause(column, names);
       // if(value1 instanceof Optional<?>) {
       //   // Optional value has already been check at his point
       //   values.add(((Optional<?>)value1).get());

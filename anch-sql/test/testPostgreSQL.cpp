@@ -471,6 +471,11 @@ testNamed() {
 }
 
 void
+testBuilder() {
+  testBuilderQuery(*dbCon);
+}
+
+void
 testSqlError() {
   testSqlErrorKeepsConnection(*dbCon);
 }
@@ -663,5 +668,6 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("17-connection-parameters", testConnectionParameters)
     .add("18-statement-invalidated", testStatementInvalidated)
     .add("19-stmt-named", testNamed)
+    .add("20-builder-query", testBuilder)
     ;
 }

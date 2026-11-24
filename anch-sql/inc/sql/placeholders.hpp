@@ -248,6 +248,17 @@ namespace anch::sql {
      *        used anywhere as a PostgreSQL array), or \c sizes does not have a size for each name (non fatal)
      */
     Rendered render(anch::sql::ParameterStyle style, std::span<const std::size_t> sizes = {}) const;
+
+    /*!
+     * Render query with other parameters names (queries built from parts whose names collide)
+     *
+     * \param names the new name of each name (see \ref names )
+     *
+     * \return the query with the new names
+     *
+     * \throw SqlException \c names does not have a name for each name (non fatal)
+     */
+    std::string rename(std::span<const std::string> names) const;
     // Methods -
 
   };
