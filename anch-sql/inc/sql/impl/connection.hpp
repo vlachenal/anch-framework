@@ -39,11 +39,13 @@ namespace anch::sql {
 
   template<typename T, typename Iterable>
   uint64_t
-  Connection::batchUpdate(const std::string& query, std::function<void(PreparedStatement&, const T&)> mapper, const Iterable& values) {
+  Connection::batchUpdate(const std::string& query, std::function<void(anch::sql::Parameters&, const T&)> mapper, const Iterable& values) {
     PreparedStatement& stmt = prepareStatement(query);
     uint64_t nbRows = 0;
     for(auto iter = values.cbegin() ; iter != values.cend() ; ++iter) {
-      mapper(stmt, *iter);
+      anch::sql::Parameters parameters;
+      mapper(parameters, *iter);
+      stmt.set(parameters);
       nbRows += stmt.executeUpdate();
     }
     return nbRows;

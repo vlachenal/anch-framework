@@ -49,6 +49,7 @@ namespace anch::sql {
     friend SelectBuilder anch::sql::select();
     friend class anch::sql::FieldsBuilder;
     friend class anch::sql::FromBuilder;
+    friend class anch::sql::ClausesBuilder;
 
     /*!
      * \ref SelectBuilder stream insertion operator
@@ -65,8 +66,8 @@ namespace anch::sql {
     /*! SQL request string buffer */
     std::ostringstream _buffer;
 
-    /*! Clauses' values */
-    std::list<std::string> _values;
+    /*! Named parameters of the query */
+    anch::sql::Parameters _parameters;
     // Attributes -
 
     // Constructors +

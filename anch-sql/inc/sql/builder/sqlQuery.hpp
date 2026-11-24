@@ -22,7 +22,8 @@
 #include "anch-sql-export.hpp"
 
 #include <string>
-#include <list>
+
+#include "sql/parameters.hpp"
 
 
 namespace anch::sql {
@@ -33,7 +34,7 @@ namespace anch::sql {
    * This is the result of the builders. It provides:
    * <ul>
    * <li>query to send to database</li>
-   * <li>values to add to prepared statement</li>
+   * <li>named parameters of the prepared statement ( \c :name , see \ref Connection::query )</li>
    * </ul>
    *
    * \since 0.1
@@ -47,8 +48,8 @@ namespace anch::sql {
     /*! SQL query */
     std::string _query;
 
-    /*! Prepared statement values */
-    std::list<std::string> _values;
+    /*! Prepared statement parameters (named parameters of the query) */
+    anch::sql::Parameters _parameters;
     // Attributes -
 
 
@@ -68,10 +69,22 @@ namespace anch::sql {
      * \ref SQLQuery constructor
      *
      * \param query the SQL query
-     * \param values the prepared statement values
+     * \param parameters the prepared statement parameters (named parameters of the query)
      */
-    SQLQuery(const std::string& query, const std::list<std::string>& values);
+    SQLQuery(const std::string& query, const anch::sql::Parameters& parameters);
     // Constructors -
+
+    // Operators +
+  public:
+    /*!
+     * \ref SQLQuery copy assignment
+     *
+     * \param other the query to copy
+     *
+     * \return \c this
+     */
+    SQLQuery& operator=(const SQLQuery& other) = default;
+    // Operators -
 
 
     // Accessors +
@@ -84,11 +97,11 @@ namespace anch::sql {
     inline const std::string& getQuery() const;
 
     /*!
-     * Prepared statement values getter
+     * Prepared statement parameters getter
      *
-     * \return the values
+     * \return the parameters
      */
-    inline const std::list<std::string>& getValues() const;
+    inline const anch::sql::Parameters& getParameters() const;
     // Accessors -
 
   };
@@ -98,9 +111,9 @@ namespace anch::sql {
     return _query;
   }
 
-  const std::list<std::string>&
-  SQLQuery::getValues() const {
-    return _values;
+  const anch::sql::Parameters&
+  SQLQuery::getParameters() const {
+    return _parameters;
   }
 
 }  // anch::sql

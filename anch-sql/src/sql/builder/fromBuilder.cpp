@@ -19,6 +19,8 @@
 */
 #include "sql/builder/fromBuilder.hpp"
 
+#include "parametersMerge.hpp"
+
 #include "sql/builder/selectBuilder.hpp"
 #include "sql/builder/clausesBuilder.hpp"
 #include "sql/builder/sqlQuery.hpp"
@@ -35,31 +37,19 @@ FromBuilder::FromBuilder(anch::sql::SelectBuilder& select, const std::string& ta
 }
 
 FromBuilder::FromBuilder(anch::sql::SelectBuilder& select, const anch::sql::SelectBuilder& subquery): SelectBuilderPart(select) {
-  select._buffer << " FROM (" << subquery << ')';
-  for(const std::string& value : subquery._values) {
-    select._values.push_back(value);
-  }
+  select._buffer << " FROM (" << anch::sql::detail::mergeParameters(select._parameters, subquery._buffer.str(), subquery._parameters) << ')';
 }
 
 FromBuilder::FromBuilder(anch::sql::SelectBuilder& select, const anch::sql::SQLQuery& subquery): SelectBuilderPart(select) {
-  select._buffer << " FROM (" << subquery.getQuery() << ')';
-  for(const std::string& value : subquery.getValues()) {
-    select._values.push_back(value);
-  }
+  select._buffer << " FROM (" << anch::sql::detail::mergeParameters(select._parameters, subquery.getQuery(), subquery.getParameters()) << ')';
 }
 
 FromBuilder::FromBuilder(anch::sql::SelectBuilder& select, const anch::sql::SelectBuilder& subquery, const std::string& alias): SelectBuilderPart(select) {
-  select._buffer << " FROM (" << subquery << ") " << alias;
-  for(const std::string& value : subquery._values) {
-    select._values.push_back(value);
-  }
+  select._buffer << " FROM (" << anch::sql::detail::mergeParameters(select._parameters, subquery._buffer.str(), subquery._parameters) << ") " << alias;
 }
 
 FromBuilder::FromBuilder(anch::sql::SelectBuilder& select, const anch::sql::SQLQuery& subquery, const std::string& alias): SelectBuilderPart(select) {
-  select._buffer << " FROM (" << subquery.getQuery() << ") " << alias;
-  for(const std::string& value : subquery.getValues()) {
-    select._values.push_back(value);
-  }
+  select._buffer << " FROM (" << anch::sql::detail::mergeParameters(select._parameters, subquery.getQuery(), subquery.getParameters()) << ") " << alias;
 }
 // Constructors -
 
@@ -199,10 +189,7 @@ FromBuilder::crossJoin(const SelectBuilder& subquery, const std::string& alias) 
 SelectBuilder&
 FromBuilder::where(const ClausesBuilder& clauses) {
   if(!clauses._firstClause) { // which means that at least one clause has been added
-    _select._buffer << " WHERE " << clauses._buffer.str();
-    for(const std::string& value : clauses._values) {
-      _select._values.push_back(value);
-    }
+    _select._buffer << " WHERE " << anch::sql::detail::mergeParameters(_select._parameters, clauses._buffer.str(), clauses._parameters);
   }
   return _select;
 }
@@ -212,53 +199,34 @@ FromBuilder::where(const ClausesBuilder& clauses) {
 // Methods +
 void
 FromBuilder::addJoin(const std::string& join, const SelectBuilder& subquery, const std::string& alias) {
-  _select._buffer << join << '(' << subquery << ") " << alias;
-  for(const std::string& value : subquery._values) {
-    _select._values.push_back(value);
-  }
+  _select._buffer << join << '(' << anch::sql::detail::mergeParameters(_select._parameters, subquery._buffer.str(), subquery._parameters) << ") " << alias;
 }
 
 void
 FromBuilder::addJoin(const std::string& join, const SQLQuery& subquery, const std::string& alias) {
-  _select._buffer << join << '(' << subquery.getQuery() << ") " << alias;
-  for(const std::string& value : subquery.getValues()) {
-    _select._values.push_back(value);
-  }
+  _select._buffer << join << '(' << anch::sql::detail::mergeParameters(_select._parameters, subquery.getQuery(), subquery.getParameters()) << ") " << alias;
 }
 
 void
 FromBuilder::addJoin(const std::string& join, const std::string& table, const anch::sql::ClausesBuilder& clauses) {
   if(!clauses._firstClause) {
-    _select._buffer << join << table << " ON " << clauses._buffer.str();
-    for(const std::string& value : clauses._values) {
-      _select._values.push_back(value);
-    }
+    _select._buffer << join << table << " ON " << anch::sql::detail::mergeParameters(_select._parameters, clauses._buffer.str(), clauses._parameters);
   }
 }
 
 void
 FromBuilder::addJoin(const std::string& join, const SelectBuilder& subquery, const std::string& alias, const ClausesBuilder& clauses) {
   if(!clauses._firstClause) {
-    _select._buffer << join << '(' << subquery << ") " << alias << " ON " << clauses._buffer.str();
-    for(const std::string& value : subquery._values) {
-      _select._values.push_back(value);
-    }
-    for(const std::string& value : clauses._values) {
-      _select._values.push_back(value);
-    }
+    _select._buffer << join << '(' << anch::sql::detail::mergeParameters(_select._parameters, subquery._buffer.str(), subquery._parameters) << ") " << alias << " ON ";
+    _select._buffer << anch::sql::detail::mergeParameters(_select._parameters, clauses._buffer.str(), clauses._parameters);
   }
 }
 
 void
 FromBuilder::addJoin(const std::string& join, const SQLQuery& subquery, const std::string& alias, const ClausesBuilder& clauses) {
   if(!clauses._firstClause) {
-    _select._buffer << join << '(' << subquery.getQuery() << ") " << alias << " ON " << clauses._buffer.str();
-    for(const std::string& value : subquery.getValues()) {
-      _select._values.push_back(value);
-    }
-    for(const std::string& value : clauses._values) {
-      _select._values.push_back(value);
-    }
+    _select._buffer << join << '(' << anch::sql::detail::mergeParameters(_select._parameters, subquery.getQuery(), subquery.getParameters()) << ") " << alias << " ON ";
+    _select._buffer << anch::sql::detail::mergeParameters(_select._parameters, clauses._buffer.str(), clauses._parameters);
   }
 }
 // Methods -

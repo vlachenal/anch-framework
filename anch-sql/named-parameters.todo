@@ -190,7 +190,15 @@ findPlaceholders / numberPlaceholders et testPrepareStatementWildCards.cpp suppr
 testNamedParameters.cpp : literals, dialects). Tests par base : stmt-named (valeur répétée, paramètres manquants
 et inconnus, positionnels refusés ; PostgreSQL : casts, opérateur jsonb ?, tranches). PostgreSQL déduit le type
 d'un paramètre de sa première utilisation (:name IS NULL seul : erreur), documenté.
-Reste pour l'étape 3 : constructeur de requêtes (noms générés), batchUpdate avec Parameters (à décider).
+Étape 3 faite le 2026-11-24 (branche sql-builder-names) : batchUpdate(query, std::function<void(Parameters&,
+const T&)>, valeurs) (décision : avec Parameters) ; constructeur de requêtes : ClauseMaker(colonne, noms), noms tirés
+des colonnes (t.id -> :t_id, _min / _max pour BETWEEN, _2, _3 si déjà utilisé), SQLQuery / SelectBuilder /
+ClausesBuilder avec Parameters ; les parties fusionnées (clauses imbriquées, WHERE, HAVING, jointures, sous-requêtes,
+UNION) renomment leurs noms déjà utilisés (NamedQuery::rename) ; corrections : valeurs des UNION et des sous-requêtes
+IN / EXISTS perdues, isValidValue<SelectBuilder / SQLQuery / Fluent> qui liaient du texte SQL comme valeur
+(supprimés, ainsi que les makers exists / notExists), isValidValue défini pour tout Bindable (non défini hors
+chaînes : clause sur un entier impossible), AND(maker, valeur) qui passait NULL à une std::string. Tests :
+where_values, merged_names (sans base), builder-query exécuté sur les trois bases.
 CHANGELOG ([Unreleased], Breaking changes : '?' et formes positionnelles supprimés ; Added : paramètres nommés,
 Parameters, listes) à chaque étape.
 

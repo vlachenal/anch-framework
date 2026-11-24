@@ -458,6 +458,11 @@ testNamed() {
 }
 
 void
+testBuilder() {
+  testBuilderQuery(*dbCon);
+}
+
+void
 testSqlError() {
   testSqlErrorKeepsConnection(*dbCon);
 }
@@ -488,6 +493,7 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("stmt-operators", testOperators)
     .add("stmt-null", testNull)
     .add("stmt-named", testNamed)
+    .add("builder-query", testBuilder)
     .add("sql-error", testSqlError)
     .add("statement-cache", testCache)
     ;

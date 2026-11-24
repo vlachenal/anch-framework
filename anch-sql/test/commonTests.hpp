@@ -26,6 +26,8 @@
 #include <string>
 
 #include "sql/connection.hpp"
+#include "sql/builder/clauses.hpp"
+#include "sql/builder/sqlFunctions.hpp"
 #include "ut/assert.hpp"
 
 /*!
@@ -93,6 +95,25 @@ testStmtNamed(anch::sql::Connection& conn, const std::string& positional = "SELE
   expectMessage([&conn, &query]() { countRows(conn, query, {{"id", 1}, {"mail", "x"}}); }, "no parameter 'mail' in query (parameters: id, name, email)");
   expectMessage([&conn, &positional]() { countRows(conn, positional); }, "positional parameters (");
   anch::ut::assertTrue(conn.isValid(), "Parameters errors should not invalidate connection");
+}
+
+/*!
+ * Query built with named parameters (generated from columns) is executed
+ */
+inline void
+testBuilderQuery(anch::sql::Connection& conn) {
+  std::optional<std::string> email;
+  anch::sql::SQLQuery query = anch::sql::select()
+    .field("COUNT(*)")
+    .from("T_Test")
+    .where(anch::sql::clauses()
+	   .AND("id", anch::sql::greater, 0)
+	   .AND("id", anch::sql::between, 1, 4)
+	   .AND("email", anch::sql::equals, email) // skipped
+	   .AND(anch::sql::clauses().AND("last_name", anch::sql::like, std::string("%")).OR("id", anch::sql::lesser, 1)))
+    .build();
+  int64_t count = countRows(conn, query.getQuery(), query.getParameters());
+  anch::ut::assertThat(count == 4, "Found {} rows instead of 4 with query '{}'", count, query.getQuery());
 }
 
 /*!

@@ -566,4 +566,22 @@ NamedQuery::render(ParameterStyle style, std::span<const std::size_t> sizes) con
   rendered.query.append(_query, offset);
   return rendered;
 }
+std::string
+NamedQuery::rename(std::span<const std::string> names) const {
+  if(names.size() != _names.size()) {
+    throw SqlException("parameters names count (" + std::to_string(names.size()) + ") is not the parameters count ("
+		       + std::to_string(_names.size()) + ")", true);
+  }
+  std::string query;
+  query.reserve(_query.size());
+  std::size_t offset = 0;
+  for(const Occurrence& occurrence : _occurrences) {
+    query.append(_query, offset, occurrence.begin - offset);
+    query += ':';
+    query += names[occurrence.slot];
+    offset = occurrence.end;
+  }
+  query.append(_query, offset);
+  return query;
+}
 // Named query -

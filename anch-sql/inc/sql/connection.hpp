@@ -308,8 +308,9 @@ namespace anch::sql {
     /*!
      * Execute batch prepared statement
      *
-     * \param query the SQL query
-     * \param mapper the single value prepared statement mapper
+     * \param query the SQL query (with named parameters: \c :name )
+     * \param mapper the function which gives the parameters of a value (every parameter of the query has to be given
+     *        for each value: parameters of the previous value are not reused)
      * \param values the values as structure or class
      *
      * \return the number of affected rows
@@ -317,7 +318,7 @@ namespace anch::sql {
      * \throw SqlException any error
      */
     template<typename T, typename Iterable>
-    uint64_t batchUpdate(const std::string& query, std::function<void(PreparedStatement&, const T&)> mapper, const Iterable& values);
+    uint64_t batchUpdate(const std::string& query, std::function<void(anch::sql::Parameters&, const T&)> mapper, const Iterable& values);
 
   protected:
     /*!

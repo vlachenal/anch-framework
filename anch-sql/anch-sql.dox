@@ -41,6 +41,10 @@ target_link_libraries(my-app PRIVATE anch::sql)
  * Every parameter has to be bound before execution (missing parameters are reported with their names, unknown names
  * are refused) ; \c NULL is bound with \c setNull , \c std::nullopt , a \c NULL pointer or an empty
  * \c std::optional .\n
+ * Queries built by the \c SELECT builder ( \c anch::sql::select , \c anch::sql::clauses ) have named parameters
+ * generated from their columns ( \c t.id gives \c :t_id , \c _min and \c _max for \c BETWEEN , \c _2 , ... when a
+ * name is already used, also by merged clauses and subqueries): \c SQLQuery::getParameters gives them to
+ * \c Connection::query . A clause whose value is absent (empty \c std::optional or string) is skipped.\n
  * PostgreSQL infers the type of a parameter from its first use: a parameter whose first use does not give its type
  * ( \c :name \c IS \c NULL ) is written with a cast ( \c :name::text ) or after a comparison with a column.
  *
