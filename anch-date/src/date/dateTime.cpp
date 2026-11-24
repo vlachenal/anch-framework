@@ -156,6 +156,15 @@ DateTime::date(anch::date::Zone zone) const {
   const anch::date::DateFields local = fields(zone);
   return anch::date::Date(local.year, local.month, local.day);
 }
+anch::date::Time
+DateTime::time(anch::date::Zone zone) const {
+  if(zone == anch::date::Zone::UTC) {
+    return anch::date::Time(_time - std::chrono::floor<std::chrono::days>(_time));
+  }
+  const anch::date::DateFields local = fields(zone);
+  return anch::date::Time(local.hour, local.minute, local.second % 60u,
+			  static_cast<uint32_t>(local.millisecond) * 1'000'000 + static_cast<uint32_t>(local.microsecond) * 1'000 + local.nanosecond);
+}
 // Methods -
 
 // Operators +

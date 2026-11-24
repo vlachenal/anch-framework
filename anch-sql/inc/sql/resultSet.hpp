@@ -32,7 +32,7 @@
 #include "date/dateFormatter.hpp"
 #include "date/date.hpp"
 #include "date/dateTime.hpp"
-#include "sql/types/time.hpp"
+#include "date/time.hpp"
 
 
 namespace anch::sql {
@@ -226,25 +226,11 @@ namespace anch::sql {
     virtual std::optional<std::string> getValue(std::size_t idx) = 0;
 
     /*!
-     * Retrieve SQL time formatter
-     *
-     * \return the SQL time formatter
-     */
-    virtual const anch::date::DateFormatter& getTimeFormatter() = 0;
-
-    /*!
      * Retrieve SQL timestamp formatter
      *
      * \return the SQL timestamp formatter
      */
     virtual const anch::date::DateFormatter& getTimestampFormatter() = 0;
-
-    /*!
-     * Retrieve SQL time formatter
-     *
-     * \return the SQL time formatter
-     */
-    const anch::date::DateFormatter& getDefaultTimeFormatter();
 
     /*!
      * Retrieve SQL timestamp formatter

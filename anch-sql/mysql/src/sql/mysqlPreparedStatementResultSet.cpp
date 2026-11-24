@@ -149,11 +149,6 @@ MySQLPreparedStatementResultSet::fetchNext() {
 }
 
 const anch::date::DateFormatter&
-MySQLPreparedStatementResultSet::getTimeFormatter() {
-  return getDefaultTimeFormatter();
-}
-
-const anch::date::DateFormatter&
 MySQLPreparedStatementResultSet::getTimestampFormatter() {
   return getDefaultTimestampFormatter();
 }

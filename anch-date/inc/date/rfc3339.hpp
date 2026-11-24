@@ -28,6 +28,7 @@
 
 #include "date/date.hpp"
 #include "date/dateTime.hpp"
+#include "date/time.hpp"
 
 
 /*!
@@ -37,7 +38,9 @@
  * - \c date-time : <tt>YYYY-MM-DDTHH:MM:SS[.fraction](Z|+HH:MM|-HH:MM)</tt> (a point in time), mapped to
  *   \ref anch::date::DateTime ;
  * - \c full-date : <tt>YYYY-MM-DD</tt> (a calendar day without time zone), mapped to
- *   \ref anch::date::Date .
+ *   \ref anch::date::Date ;
+ * - \c partial-time : <tt>HH:MM:SS[.fraction]</tt> (a time of day without time zone), mapped to
+ *   \ref anch::date::Time (leap seconds are refused: a time of day without day can not hold them).
  *
  * These are the \c date-time and \c date formats of JSON schema and OpenAPI.\n
  * Parsing follows the RFC grammar: \c T and \c Z can be lower case ; the space separator allowed by the RFC note is
@@ -71,6 +74,9 @@ namespace anch::date::rfc3339 {
 
   /*! \c full-date string size: <tt>YYYY-MM-DD</tt> */
   constexpr std::size_t DATE_SIZE = 10;
+
+  /*! Maximum \c partial-time string size: <tt>HH:MM:SS.nnnnnnnnn</tt> */
+  constexpr std::size_t TIME_MAX_SIZE = 18;
 
   /*!
    * Format \c date-time .\n
@@ -135,5 +141,42 @@ namespace anch::date::rfc3339 {
    * \throw std::invalid_argument invalid format or impossible date
    */
   ANCH_DATE_EXPORT anch::date::Date parseDate(std::string_view text);
+
+  /*!
+   * Format \c partial-time .\n
+   * Fraction is written with the number of digits needed by the time: none, 3, 6 or 9.
+   *
+   * \param time the time to format
+   * \param output the output buffer (at least \ref TIME_MAX_SIZE characters ; not \c '\0' terminated)
+   *
+   * \return the number of characters written
+   *
+   * \since 0.3
+   */
+  ANCH_DATE_EXPORT std::size_t formatTime(const anch::date::Time& time, char* output) noexcept;
+
+  /*!
+   * Format \c partial-time
+   *
+   * \param time the time to format
+   *
+   * \return the formatted time
+   *
+   * \since 0.3
+   */
+  ANCH_DATE_EXPORT std::string formatTime(const anch::date::Time& time);
+
+  /*!
+   * Parse \c partial-time (fraction can have any number of digits: digits after the nanosecond are truncated)
+   *
+   * \param text the text to parse
+   *
+   * \return the time
+   *
+   * \throw std::invalid_argument invalid format, impossible time or leap second
+   *
+   * \since 0.3
+   */
+  ANCH_DATE_EXPORT anch::date::Time parseTime(std::string_view text);
 
 }  // anch::date::rfc3339

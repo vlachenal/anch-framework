@@ -27,6 +27,7 @@
 #include <ctime>
 
 #include "date/date.hpp"
+#include "date/time.hpp"
 
 
 namespace anch::date {
@@ -208,6 +209,17 @@ namespace anch::date {
      * \since 0.3
      */
     anch::date::Date date(anch::date::Zone zone = anch::date::Zone::LOCAL) const;
+
+    /*!
+     * Time of day of this point in time
+     *
+     * \param zone the time zone (default local time)
+     *
+     * \return the time of day
+     *
+     * \since 0.3
+     */
+    anch::date::Time time(anch::date::Zone zone = anch::date::Zone::LOCAL) const;
     // Methods -
 
     // Operators +

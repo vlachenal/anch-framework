@@ -31,6 +31,7 @@
 namespace anch::date {
 
   class DateTime;
+  class Time;
 
   /*!
    * \brief Time zone of conversions between days and points in time
@@ -224,8 +225,25 @@ namespace anch::date {
      * \param zone the time zone (default local time)
      *
      * \return the point in time
+     *
+     * \throw std::invalid_argument point in time out of \ref DateTime range (years 1678 to 2261)
      */
     anch::date::DateTime startOfDay(anch::date::Zone zone = anch::date::Zone::LOCAL) const;
+
+    /*!
+     * Point in time of a time of this day
+     *
+     * \param time the time of day
+     * \param zone the time zone (default local time ; a local time which does not exist because of a daylight saving
+     *        time change is normalized as \c std::mktime does)
+     *
+     * \return the point in time
+     *
+     * \throw std::invalid_argument point in time out of \ref DateTime range (years 1678 to 2261)
+     *
+     * \since 0.3
+     */
+    anch::date::DateTime at(const anch::date::Time& time, anch::date::Zone zone = anch::date::Zone::LOCAL) const;
     // Methods -
 
     // Operators +

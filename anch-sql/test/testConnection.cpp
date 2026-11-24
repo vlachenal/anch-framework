@@ -122,9 +122,6 @@ protected:
   virtual std::optional<std::string> getValue(std::size_t) override {
     return "1";
   }
-  virtual const anch::date::DateFormatter& getTimeFormatter() override {
-    return getDefaultTimeFormatter();
-  }
   virtual const anch::date::DateFormatter& getTimestampFormatter() override {
     return getDefaultTimestampFormatter();
   }

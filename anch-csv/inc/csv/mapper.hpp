@@ -47,7 +47,7 @@ namespace anch::csv {
 
   /*!
    * \brief Type of a CSV field value: string, boolean, integer, floating point number, \c anch::UUID (with
-   * \c ANCH_UUID ), \c anch::date::DateTime and \c anch::date::Date (RFC 3339, with \c ANCH_DATE )
+   * \c ANCH_UUID ), \c anch::date::DateTime , \c anch::date::Date and \c anch::date::Time (RFC 3339, with \c ANCH_DATE )
    *
    * Fields hold such a value or a \c std::optional of it (an empty field is an absent value). Objects are flat:
    * nested objects and collections are refused at compile time.
@@ -65,7 +65,7 @@ namespace anch::csv {
     || std::same_as<V, anch::UUID>
 #endif
 #ifdef ANCH_DATE
-    || std::same_as<V, anch::date::DateTime> || std::same_as<V, anch::date::Date>
+    || std::same_as<V, anch::date::DateTime> || std::same_as<V, anch::date::Date> || std::same_as<V, anch::date::Time>
 #endif
     ;
 

@@ -26,7 +26,14 @@ and `\deprecated` in its documentation, which give its replacement, and it is re
   weekday). The default constructor is epoch (`DateTime(bool init = true)` is removed: `DateTime::now()` gives the
   current time) and `DateTime(const DateFields&)` builds a point in time from local fields. `IDatePartFormatter`
   formats and parses `DateFields` (its protected accessors are removed): `DateFormatter` computes them once.
-  `anch::sql::Time` keeps the time of day of a point in time.
+- anch-date: `anch::date::Time` (`date/time.hpp`) is a time of day (00:00:00 to 23:59:59.999999999, without time
+  zone, always valid): RFC 3339 `partial-time` (`rfc3339::parseTime`, `formatTime`, `Time::parse`, `format`,
+  `operator<<`), ordered, `plus` (wraps around midnight), `now(zone)`, explicit conversion to the duration since
+  midnight; conversions with points in time give the time zone (`DateTime::time(zone)`, `Date::at(time, zone)`).
+  anch-json, anch-csv and anch-val (scalar) map it. `Date::startOfDay(Zone::UTC)` checks the range of points in
+  time (an out of range day overflowed).
+- anch-sql: `anch::sql::Time` is removed: TIME columns and parameters are `anch::date::Time`
+  (`ResultSet::get<anch::date::Time>`); `ResultSet::getTimeFormatter` and `getDefaultTimeFormatter` are removed.
 - anch-sql: `anch::sql::Date` and `anch::sql::Timestamp` are removed: DATE columns and parameters are
   `anch::date::Date` (years before 1678 can be read), timestamps are `anch::date::DateTime`
   (`ResultSet::get<anch::date::Date>`, `get<anch::date::DateTime>`); `ResultSet::getDateFormatter` and

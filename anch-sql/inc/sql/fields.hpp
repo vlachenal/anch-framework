@@ -36,7 +36,7 @@ namespace anch::sql {
    *
    * Each field which has a value (member or getter) is a parameter named as the field: fields which are only
    * written (setter) are ignored. Fields values have to be bindable ( \ref Bindable : integers, floating point
-   * numbers, strings, dates (\c anch::date::Date , \c anch::date::DateTime , \c anch::sql::Time ), \c std::optional and lists of them): a field of another type is refused at compile
+   * numbers, strings, dates (\c anch::date::Date , \c anch::date::DateTime , \c anch::date::Time ), \c std::optional and lists of them): a field of another type is refused at compile
    * time.
    * Constraints are not checked (validate objects with \c anch::val::validate ).
    *

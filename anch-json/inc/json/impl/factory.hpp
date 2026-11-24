@@ -94,6 +94,11 @@ namespace anch::json {
   constexpr bool isPrimitive<anch::date::Date>() {
     return true;
   }
+
+  template<>
+  constexpr bool isPrimitive<anch::date::Time>() {
+    return true;
+  }
 #endif
   // isPrimitive string specialization -
 

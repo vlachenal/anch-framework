@@ -116,4 +116,44 @@ PrimitiveMapper<Date>::deserializeValue(Date& value, anch::json::ReaderContext& 
 template class anch::json::PrimitiveMapper<Date>;
 // PrimitiveMapper specialization for anch::date::Date (RFC 3339 full-date) -
 
+// PrimitiveMapper specialization for anch::date::Time (RFC 3339 partial-time) +
+template<>
+PrimitiveMapper<anch::date::Time>::PrimitiveMapper():
+  anch::json::GenericMapper<PrimitiveMapper<anch::date::Time>,anch::date::Time>() {
+  // Nothing to do
+}
+
+template<>
+PrimitiveMapper<anch::date::Time>::~PrimitiveMapper() {
+  // Nothing to do
+}
+
+template<>
+void
+PrimitiveMapper<anch::date::Time>::serializeValue(const anch::date::Time& value, anch::json::WriterContext& context) const {
+  char time[anch::date::rfc3339::TIME_MAX_SIZE + 2]; // '"' + time + '"' (no allocation)
+  time[0] = anch::json::STRING_DELIMITER;
+  std::size_t size = anch::date::rfc3339::formatTime(value, time + 1) + 1;
+  time[size++] = anch::json::STRING_DELIMITER;
+  context.write(std::string_view(time, size));
+}
+
+template<>
+bool
+PrimitiveMapper<anch::date::Time>::deserializeValue(anch::date::Time& value, anch::json::ReaderContext& context) const {
+  std::string time;
+  if(!anch::json::lexString(time, context)) {
+    return false;
+  }
+  try {
+    value = anch::date::rfc3339::parseTime(time);
+  } catch(const std::invalid_argument& e) {
+    throw anch::json::MappingError(anch::json::ErrorCode::INVALID_FORMAT, context, e.what());
+  }
+  return true;
+}
+
+template class anch::json::PrimitiveMapper<anch::date::Time>;
+// PrimitiveMapper specialization for anch::date::Time (RFC 3339 partial-time) -
+
 #endif

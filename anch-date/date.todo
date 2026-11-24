@@ -36,4 +36,13 @@ Conception
    (heure locale) ; IDatePartFormatter sur DateFields (accesseurs protégés supprimés, DateFormatter calcule les
    champs une fois et construit le résultat de parse) ; anch::sql::Time garde l'heure du jour (le 1970-01-01).
    Tests : datetime-fields (UTC / local, construction depuis les champs, epoch, now, sizeof).
-3. anch::date::Time : heure du jour (RFC 3339 partial-time, XSD xs:time), remplace anch::sql::Time.
+3. Faite le 2026-11-24 (branche date-time-of-day) : anch::date::Time (date/time.hpp), heure du jour sans fuseau
+   (nanosecondes depuis minuit, toujours valide ; seconde intercalaire refusée), parse / format (RFC 3339
+   partial-time : rfc3339::parseTime / formatTime), comparaisons constexpr, plus (modulo minuit), now(Zone),
+   conversion explicite en durée depuis minuit ; DateTime::time(Zone), Date::at(Time, Zone) ; startOfDay et at
+   en UTC vérifient la plage des instants (débordement en nanosecondes sinon). anch-json, anch-csv, anch-val
+   (scalaire) ; pas d'OpenAPI : le format time de JSON schema est un full-time (avec décalage). anch-sql :
+   anch::sql::Time supprimé (et le répertoire sql/types), colonnes et paramètres TIME en anch::date::Time,
+   getTimeFormatter supprimé. Tests : time (anch-date), JSON, CSV, stmt-dates (aller-retour TIME sur les trois
+   bases).
+Pistes : full-time (Time avec décalage) pour le format time de JSON schema / OpenAPI et xs:time avec fuseau.

@@ -20,6 +20,10 @@
 #include "csv/csv.hpp"
 #include "csv/mapper.hpp"
 
+#ifdef ANCH_DATE
+#include "date/time.hpp"
+#endif
+
 #include <chrono>
 #include <cstdint>
 #include <functional>
@@ -56,6 +60,7 @@ namespace {
 #endif
 #ifdef ANCH_DATE
     std::optional<anch::date::Date> birth;
+    std::optional<anch::date::Time> walk;
 #endif
     std::string upperName() const {
       std::string res(name);
@@ -84,6 +89,7 @@ struct anch::Mapping<Pet> {
 #endif
 #ifdef ANCH_DATE
       .registerField("birth", &Pet::birth)
+      .registerField("walk", &Pet::walk)
 #endif
       .registerField("upper", std::function<std::string(const Pet&)>(&Pet::upperName))
       ;
@@ -163,9 +169,9 @@ testReadByName() {
   anch::ut::assertThat(pets.size() == 1 && pets[0].chip && pets[0].chip->toString() == "4a1b5c2d-3e4f-4a5b-8c6d-7e8f9a0b1c2d", "UUID");
 #endif
 #ifdef ANCH_DATE
-  pets = readPets("id,name,birth\n4,Garfield,2020-02-29\n");
-  anch::ut::assertThat(pets.size() == 1 && pets[0].birth == anch::date::Date(2020, 2, 29),
-		       "Date");
+  pets = readPets("id,name,birth,walk\n4,Garfield,2020-02-29,07:30:00.5\n");
+  anch::ut::assertThat(pets.size() == 1 && pets[0].birth == anch::date::Date(2020, 2, 29) && pets[0].walk == anch::date::Time(7, 30, 0, 500'000'000),
+		       "Date and time");
 #endif
 }
 
@@ -255,7 +261,7 @@ testWrite() {
   expected += ",chip";
 #endif
 #ifdef ANCH_DATE
-  expected += ",birth";
+  expected += ",birth,walk";
 #endif
   expected += ",upper\n";
   std::string extra;
@@ -263,7 +269,7 @@ testWrite() {
   extra += ",";
 #endif
 #ifdef ANCH_DATE
-  extra += ",";
+  extra += ",,";
 #endif
   expected += "1,\"Rex, the dog\",\"\",12.5,yes," + extra + ",\"REX, THE DOG\"\n";
   expected += "2,Médor,,0,no,3" + extra + ",MéDOR\n";

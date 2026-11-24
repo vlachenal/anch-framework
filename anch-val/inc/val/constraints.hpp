@@ -252,6 +252,7 @@ namespace anch {
 namespace anch::date {
   class Date;
   class DateTime;
+  class Time;
 }
 // Value types of other libraries -
 
@@ -260,7 +261,7 @@ namespace anch::val {
   /*!
    * \brief Scalar type: value type checked as a whole, without fields (it is not described by \c anch::Mapping )
    *
-   * Numbers, enumerations, strings, \c anch::UUID , \c anch::date::DateTime , \c anch::date::Date and \c std::chrono
+   * Numbers, enumerations, strings, \c anch::UUID , \c anch::date::DateTime , \c anch::date::Date , \c anch::date::Time and \c std::chrono
    * time points and durations are scalars. Specialize it for other value types (a class mapped as a string by a format, ...): a
    * validation refuses at compile time classes which are neither scalars nor described, as a description which is
    * not visible would be silently skipped.
@@ -283,6 +284,10 @@ namespace anch::val {
   /*! \c anch::date::Date is a scalar */
   template<>
   struct IsScalar<anch::date::Date>: std::true_type {};
+
+  /*! \c anch::date::Time is a scalar */
+  template<>
+  struct IsScalar<anch::date::Time>: std::true_type {};
 
   /*! \c std::chrono::time_point is a scalar */
   template<typename C, typename D>

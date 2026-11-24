@@ -29,6 +29,7 @@
 #include <string>
 
 #include "date/dateTime.hpp"
+#include "date/time.hpp"
 
 #include "ut/assert.hpp"
 #include "ut/unit.hpp"
@@ -147,6 +148,41 @@ testDateTimeFields() {
 }
 
 void
+testTime() {
+  using namespace std::chrono_literals;
+  anch::date::Time time(13, 45, 30, 120'000'000);
+  anch::ut::assertThat(time.hour() == 13 && time.minute() == 45 && time.second() == 30 && time.nanosecond() == 120'000'000, "Unexpected fields");
+  anch::ut::assertThat(anch::date::Time() == anch::date::Time(0, 0) && time.format() == "13:45:30.120" && anch::date::Time(1, 2, 3).format() == "01:02:03"
+		       && anch::date::Time(1, 2, 3, 4).format() == "01:02:03.000000004", "Format: {}", time.format());
+  anch::ut::assertTrue(anch::date::Time::parse("13:45:30.12") == time && anch::date::Time::parse("23:59:59.9999999999") == anch::date::Time(23, 59, 59, 999'999'999),
+		       "Parse");
+  for(const char* text : {"24:00:00", "12:60:00", "12:00:60", "12:00", "12:00:00Z", "12:00:00+01:00", "12:00:00.", " 12:00:00"}) {
+    checkRefused([text]() { anch::date::Time::parse(text); }, std::string("Invalid time ") + text + " has to be refused");
+  }
+  checkRefused([]() { anch::date::Time(24, 0); }, "Hour 24 has to be refused");
+  checkRefused([]() { anch::date::Time(std::chrono::nanoseconds(24h)); }, "24 hours has to be refused");
+  anch::ut::assertTrue(anch::date::Time(23, 0).plus(2h) == anch::date::Time(1, 0) && anch::date::Time(1, 0).plus(-2h) == anch::date::Time(23, 0)
+		       && anch::date::Time(1, 0).plus(-50h) == anch::date::Time(23, 0) && anch::date::Time(1, 0) < time, "Arithmetic and order");
+  anch::ut::assertTrue(static_cast<std::chrono::nanoseconds>(anch::date::Time(0, 1)) == 60s, "Duration since midnight");
+  std::ostringstream out;
+  out << anch::date::Time(7, 8, 9);
+  anch::ut::assertThat(out.str() == "07:08:09", "Stream: {}", out.str());
+  // Conversions with points in time give the time zone
+  ::setenv("TZ", "Asia/Tokyo", 1);
+  ::tzset();
+  DateTime point(std::chrono::system_clock::time_point(std::chrono::nanoseconds(1735689600123456789))); // 2025-01-01T00:00:00.123456789Z
+  anch::ut::assertThat(point.time(Zone::UTC) == anch::date::Time(0, 0, 0, 123456789) && point.time() == anch::date::Time(9, 0, 0, 123456789),
+		       "Time of day of a point in time: {} / {}", point.time(Zone::UTC).format(), point.time().format());
+  Date day(2025, 1, 1);
+  anch::ut::assertTrue(day.at(anch::date::Time(0, 0, 0, 123456789), Zone::UTC) == point && day.at(anch::date::Time(9, 0, 0, 123456789)) == point,
+		       "Point in time of a time of day");
+  checkRefused([]() { Date(9999, 12, 31).at(anch::date::Time(), Zone::UTC); }, "Point in time out of range has to be refused");
+  checkRefused([]() { Date(1, 1, 1).startOfDay(Zone::UTC); }, "Point in time out of range has to be refused");
+  ::unsetenv("TZ");
+  ::tzset();
+}
+
+void
 anch::ut::setup(anch::ut::UnitTests& tests) {
   tests
     .name("AnCH date unit tests")
@@ -157,5 +193,6 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("date-arithmetic", testArithmetic)
     .add("date-datetime", testDateTime)
     .add("datetime-fields", testDateTimeFields)
+    .add("time", testTime)
     ;
 }
