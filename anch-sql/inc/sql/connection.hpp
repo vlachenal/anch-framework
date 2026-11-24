@@ -23,6 +23,7 @@
 #include <cstddef>
 #include <functional>
 #include <list>
+#include <ranges>
 #include <string>
 #include <string_view>
 #include <unordered_map>
@@ -319,6 +320,81 @@ namespace anch::sql {
      */
     template<typename T, typename Iterable>
     uint64_t batchUpdate(const std::string& query, std::function<void(anch::sql::Parameters&, const T&)> mapper, const Iterable& values);
+
+    /*!
+     * Execute batch prepared statement with described objects: the parameters of each object are its fields
+     * ( \ref fieldsOf )
+     *
+     * \param query the SQL query (with named parameters: \c :name )
+     * \param values the described objects
+     *
+     * \return the number of affected rows
+     *
+     * \throw SqlException any error (a parameter which is not a field is not bound: non fatal)
+     *
+     * \since 0.3
+     */
+    template<std::ranges::input_range Iterable>
+    requires anch::Described<std::ranges::range_value_t<Iterable>>
+    uint64_t batchUpdate(const std::string& query, const Iterable& values);
+
+    /*!
+     * Execute SQL prepared statement query with the fields of an object as parameters ( \ref fieldsOf )
+     *
+     * \param query the SQL query to execute (with named parameters: \c :name )
+     * \param fields the fields of the object
+     *
+     * \return the result set which has to be deleted after use
+     *
+     * \throw SqlException any error (a parameter which is not a field is not bound: non fatal)
+     *
+     * \since 0.3
+     */
+    template<anch::Described T>
+    ResultSet* query(const std::string& query, const anch::sql::FieldsOf<T>& fields);
+
+    /*!
+     * Execute query with the fields of an object as parameters and treat each row of result set
+     *
+     * \param query the SQL query to execute (with named parameters: \c :name )
+     * \param rowMapper the row mapper function
+     * \param fields the fields of the object ( \ref fieldsOf )
+     *
+     * \throw SqlException any error
+     *
+     * \since 0.3
+     */
+    template<anch::Described T>
+    void queryMapRow(const std::string& query, std::function<void(ResultSet&)> rowMapper, const anch::sql::FieldsOf<T>& fields);
+
+    /*!
+     * Execute query with the fields of an object as parameters and extract result set
+     *
+     * \param query the SQL query to execute (with named parameters: \c :name )
+     * \param resExtractor the result set extractor function
+     * \param fields the fields of the object ( \ref fieldsOf )
+     *
+     * \throw SqlException any error
+     *
+     * \since 0.3
+     */
+    template<anch::Described T>
+    void queryExtract(const std::string& query, std::function<void(ResultSet&)> resExtractor, const anch::sql::FieldsOf<T>& fields);
+
+    /*!
+     * Execute update (INSERT, UPDATE or DELETE) SQL prepared statement with the fields of an object as parameters
+     *
+     * \param query the SQL query (with named parameters: \c :name )
+     * \param fields the fields of the object ( \ref fieldsOf )
+     *
+     * \return the number of affected rows
+     *
+     * \throw SqlException any error
+     *
+     * \since 0.3
+     */
+    template<anch::Described T>
+    uint64_t update(const std::string& query, const anch::sql::FieldsOf<T>& fields);
 
   protected:
     /*!

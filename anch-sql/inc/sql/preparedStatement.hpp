@@ -30,6 +30,7 @@
 #include "sql/sqlException.hpp"
 #include "sql/resultSet.hpp"
 #include "sql/parameters.hpp"
+#include "sql/fields.hpp"
 #include "sql/placeholders.hpp"
 
 
@@ -163,6 +164,19 @@ namespace anch::sql {
     void set(const anch::sql::Parameters& parameters);
 
     /*!
+     * Bind the fields of an object to the parameters of the same names (the other fields are ignored, the parameters
+     * which are not fields are unbound)
+     *
+     * \tparam T the described type
+     *
+     * \param fields the fields of the object ( \ref fieldsOf )
+     *
+     * \since 0.3
+     */
+    template<anch::Described T>
+    void set(const anch::sql::FieldsOf<T>& fields);
+
+    /*!
      * Unbind every parameter
      *
      * \since 0.2
@@ -290,6 +304,20 @@ namespace anch::sql {
   void
   PreparedStatement::set(std::string_view name, const T& value) {
     bind(name, anch::sql::toParameter(value));
+  }
+
+  template<anch::Described T>
+  void
+  PreparedStatement::set(const anch::sql::FieldsOf<T>& fields) {
+    clearParameters();
+    const anch::sql::FieldsMapper<T>& mapper = anch::sql::FieldsMapper<T>::instance();
+    for(std::size_t slot = 0 ; slot < _names.size() ; ++slot) {
+      const typename anch::sql::FieldsMapper<T>::Field* field = mapper.find(_names[slot]);
+      if(field != nullptr) {
+	_values[slot] = field->read(fields.object());
+	_bound[slot] = true;
+      }
+    }
   }
 
 }

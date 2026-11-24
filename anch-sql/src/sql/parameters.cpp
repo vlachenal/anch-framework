@@ -20,6 +20,7 @@
 #include "sql/parameters.hpp"
 
 #include <algorithm>
+#include <charconv>
 
 #include "date/dateFormatter.hpp"
 
@@ -56,6 +57,13 @@ anch::sql::toParameter(int64_t value) {
 ParameterValue
 anch::sql::toParameter(uint64_t value) {
   return std::to_string(value);
+}
+
+ParameterValue
+anch::sql::toParameter(double value) {
+  char buffer[32];
+  auto result = std::to_chars(buffer, buffer + sizeof(buffer), value);
+  return std::string(buffer, result.ptr);
 }
 
 ParameterValue

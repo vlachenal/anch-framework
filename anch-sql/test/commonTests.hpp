@@ -24,7 +24,9 @@
 #include <iostream>
 #include <optional>
 #include <string>
+#include <vector>
 
+#include "mapping.hpp"
 #include "sql/connection.hpp"
 #include "sql/builder/clauses.hpp"
 #include "sql/builder/sqlFunctions.hpp"
@@ -114,6 +116,53 @@ testBuilderQuery(anch::sql::Connection& conn) {
     .build();
   int64_t count = countRows(conn, query.getQuery(), query.getParameters());
   anch::ut::assertThat(count == 4, "Found {} rows instead of 4 with query '{}'", count, query.getQuery());
+}
+
+namespace sqltest {
+
+  /*! Described type (anch::Mapping) bound with fieldsOf */
+  struct Person {
+    std::string firstName;
+    std::string lastName;
+    std::string birthDate;
+    std::optional<std::string> email;
+  };
+
+}
+
+template<>
+struct anch::Mapping<sqltest::Person> {
+  static void
+  registerObject(anch::ObjectMapper<sqltest::Person> auto& mapper) {
+    mapper
+      .registerField("first_name", &sqltest::Person::firstName)
+      .registerField("last_name", &sqltest::Person::lastName)
+      .registerField("birth_date", &sqltest::Person::birthDate)
+      .registerField("email", &sqltest::Person::email)
+      ;
+  }
+};
+
+/*!
+ * Fields of described objects as parameters (fieldsOf, batchUpdate of objects)
+ */
+inline void
+testStmtFields(anch::sql::Connection& conn) {
+  const std::string insert = "INSERT INTO T_Test (first_name,last_name,birth_date,email) VALUES (:first_name,:last_name,:birth_date,:email)";
+  sqltest::Person jane{"Jane", "Fields", "1971-01-01", std::nullopt};
+  uint64_t nbRows = conn.update(insert, anch::sql::fieldsOf(jane));
+  anch::ut::assertThat(nbRows == 1, "{} inserted rows", nbRows);
+  std::vector<sqltest::Person> persons{{"Jack", "Fields", "1972-01-01", "jack@anch.org"}, {"Joe", "Fields", "1973-01-01", std::nullopt}};
+  nbRows = conn.batchUpdate(insert, persons);
+  anch::ut::assertThat(nbRows == 2, "{} batch inserted rows", nbRows);
+  // Fields which are not parameters (first name, birth date, email) are ignored
+  int64_t count = -1;
+  conn.queryMapRow("SELECT COUNT(*) FROM T_Test WHERE last_name = :last_name", [&count](anch::sql::ResultSet& res) {
+    count = res.get<int64_t>(0).value_or(-1);
+  }, anch::sql::fieldsOf(jane));
+  anch::ut::assertThat(count == 3, "Found {} persons instead of 3", count);
+  count = countRows(conn, "SELECT COUNT(*) FROM T_Test WHERE last_name = :last AND email IS NULL", {{"last", "Fields"}});
+  anch::ut::assertThat(count == 2, "Found {} persons without email instead of 2", count);
 }
 
 /*!

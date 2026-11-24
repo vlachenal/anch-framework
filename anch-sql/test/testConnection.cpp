@@ -20,6 +20,7 @@
 #include "sql/connection.hpp"
 #include "sql/placeholders.hpp"
 
+#include <functional>
 #include <memory>
 #include <optional>
 #include <string>
@@ -33,6 +34,44 @@ using anch::sql::Connection;
 using anch::sql::PreparedStatement;
 using anch::sql::ResultSet;
 using anch::sql::SqlException;
+
+// Described type (anch::Mapping) bound by fieldsOf +
+namespace {
+
+  struct Pet {
+    int64_t id = 0;
+    std::string name;
+    std::optional<std::string> nickname;
+    double weight = 0.;
+    std::string code;
+
+    std::string upperName() const {
+      std::string res(name);
+      for(char& c : res) {
+	c = (c >= 'a' && c <= 'z') ? static_cast<char>(c - 'a' + 'A') : c;
+      }
+      return res;
+    }
+  };
+
+}
+
+template<>
+struct anch::Mapping<Pet> {
+  static void
+  registerObject(anch::ObjectMapper<Pet> auto& mapper) {
+    mapper
+      .registerField("id", &Pet::id)
+      .registerField("name", &Pet::name)
+      .registerField("nickname", &Pet::nickname)
+      .registerField("weight", &Pet::weight)
+      .registerField("upper", std::function<std::string(const Pet&)>(&Pet::upperName))
+      .registerField("legacy", std::function<void(Pet&, const std::string&)>([](Pet& pet, const std::string& code) { pet.code = code; }))
+      ;
+  }
+};
+static_assert(anch::ObjectMapper<anch::sql::FieldsMapper<Pet>, Pet>);
+// Described type (anch::Mapping) bound by fieldsOf -
 
 /*! Failure to raise by mock operations */
 enum class Failure {
@@ -285,6 +324,33 @@ testPreparedStatementErrors() {
 }
 
 void
+testFieldsOf() {
+  MockConnection conn;
+  Pet pet;
+  pet.id = 3;
+  pet.name = "rex";
+  pet.weight = 1.5;
+  // Parameters are the fields of the same names (other fields are ignored), getters give values, setters are ignored
+  const std::string query = "UPDATE pet SET name = :name, upper = :upper, nickname = :nickname, weight = :weight WHERE id = :id";
+  anch::ut::assertThat(conn.update(query, anch::sql::fieldsOf(pet)) == 1, "Update with fields should succeed");
+  PreparedStatement& stmt = conn.prepareStatement(query);
+  anch::ut::assertTrue(stmt.getBindingValue(0) == "rex" && stmt.getBindingValue(1) == "REX" && !stmt.getBindingValue(2).has_value()
+		       && stmt.getBindingValue(3) == "1.5" && stmt.getBindingValue(4) == "3", "Unexpected fields values");
+  // A parameter which is not a field (or which is only written) is not bound
+  expectMessage([&conn, &pet]() { conn.update("UPDATE pet SET code = :legacy WHERE id = :id AND owner = :owner", anch::sql::fieldsOf(pet)); },
+		"parameters 'legacy', 'owner' have not been bound");
+  // Batch of described objects
+  Pet other = pet;
+  other.id = 4;
+  other.nickname = "Bob";
+  std::vector<Pet> pets{pet, other};
+  anch::ut::assertThat(conn.batchUpdate("UPDATE pet SET nickname = :nickname WHERE id = :id", pets) == 2, "Batch should update 2 rows");
+  PreparedStatement& batch = conn.prepareStatement("UPDATE pet SET nickname = :nickname WHERE id = :id");
+  anch::ut::assertTrue(batch.getBindingValue(0) == "Bob" && batch.getBindingValue(1) == "4", "Last object values expected");
+  anch::ut::assertTrue(conn.isValid(), "Binding errors should not invalidate connection");
+}
+
+void
 testResultSetErrors() {
   MockConnection conn;
   int rows = 0;
@@ -465,6 +531,7 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("release-rolls-back", testReleaseRollsBack)
     .add("release-unknown-state", testReleaseUnknownState)
     .add("prepared-statement-errors", testPreparedStatementErrors)
+    .add("fields-of", testFieldsOf)
     .add("result-set-errors", testResultSetErrors)
     .add("pool-discards-invalid", testPoolDiscardsInvalid)
     .add("pool-releases-transaction", testPoolReleasesTransaction)

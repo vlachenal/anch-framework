@@ -95,7 +95,12 @@ and `\deprecated` in its documentation, which give its replacement, and it is re
   positional parameters (`?`, `$1`, SQLite `@name` and `$name`) are refused. Prepared statements of every driver
   use it (design in `anch-sql/named-parameters.todo`). `anch::sql::Parameters` gives the named parameters of a
   query (`{{"id", 3}, {"name", "Rex"}}` or `Parameters().add("id", 3).addNull("email")`), `toParameter` converts
-  values and `Bindable` tells which values can be bound.
+  values and `Bindable` tells which values can be bound (integers, floating point numbers, strings, SQL dates and
+  `std::optional` of them). Objects described by their common description (`anch::Mapping<T>`) are SQL parameters:
+  `fieldsOf(object)` binds each parameter of a query to the field of the same name (`FieldsMapper<T>`: members and
+  getters ; the other fields are ignored, fields which can not be bound are refused at compile time), taken by
+  `Connection::query`, `queryMapRow`, `queryExtract`, `update`, and `batchUpdate(query, objects)` binds each
+  described object of a range.
 - anch-utils: common description of objects for every format (`mapping.hpp`): `anch::Mapping<T>` (specialized with
   a `registerObject(anch::ObjectMapper<T> auto& mapper)` function), `anch::ObjectMapper<M, T>` concept (fields
   registered with a member pointer, a getter, a setter or both), `anch::Described<T>` and `anch::describe<T>(mapper)`.
