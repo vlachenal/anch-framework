@@ -74,9 +74,10 @@ namespace anch {
    * - a setter: <tt>registerField(name, std::function<void(T&, const P&)>, constraints...)</tt> (read only) ;
    * - a getter and a setter.
    *
-   * Each function returns the mapper (fluent registration). Formats can provide more (anch-json mappers of a field:
-   * \c registerField<MT> ). Constraints are anch-val ones ; a format which does not support one of them refuses it
-   * at compile time.
+   * Each function returns the mapper (fluent registration). Descriptions only use these forms, common to formats: a
+   * format deduces how it maps a field from its type (anch-json maps fields of \c std::optional , pointers,
+   * collections and maps with the mapper of their value type). Constraints are anch-val ones ; a format which does
+   * not support one of them refuses it at compile time.
    *
    * \tparam M the mapper type
    * \tparam T the object type

@@ -103,7 +103,7 @@ namespace anch::json {
     static_assert(!std::is_reference<P>::value, "Can not deserialize reference value"); // raise compile-time error if value is a reference
     if constexpr (!std::is_same_v<anch::json::detail::MapperType<P>, P>) {
       // std::optional, pointers, collections and maps: mapper of the value type
-      return this->template registerField<anch::json::detail::MapperType<P>>(key, value, std::forward<C>(constraints)...);
+      return this->template registerMapped<anch::json::detail::MapperType<P>>(key, value, std::forward<C>(constraints)...);
     } else {
       auto write = [=, this](const auto& val, anch::json::WriterContext& context) -> bool {
 	static_cast<void>(this); // used by some instantiations only
@@ -156,9 +156,8 @@ namespace anch::json {
 
   template<typename T>
   template<typename MT, typename P, typename... C>
-  requires (anch::val::FieldConstraint<C,P> && ...)
   ObjectMapper<T>&
-  ObjectMapper<T>::registerField(const std::string& key, P T::* value, [[maybe_unused]] C&&... constraints) {
+  ObjectMapper<T>::registerMapped(const std::string& key, P T::* value, [[maybe_unused]] C&&... constraints) {
     auto write = [=, this](const auto& val, anch::json::WriterContext& context) -> bool {
       static_cast<void>(this); // used by some instantiations only
       if constexpr (std::is_same<MT, T>::value) { // if same, use direct call to avoid recursive instanciation
@@ -181,13 +180,14 @@ namespace anch::json {
   }
 
   template<typename T>
-  template<typename P, typename MT, typename... C>
+  template<typename P, typename... C>
   requires (anch::val::FieldConstraint<C,P> && ...)
   ObjectMapper<T>&
   ObjectMapper<T>::registerField(const std::string& key, std::function<P(const T&)> getter, const C&... constraints) {
+    using MT = anch::json::detail::MapperType<P>;
     auto write = [=, this](const auto& val, anch::json::WriterContext& context) -> bool {
       static_cast<void>(this); // used by some instantiations only
-      if constexpr (std::is_same<MT, P>::value) { // Mapper type has not been specified
+      if constexpr (std::is_same<MT, P>::value) { // Field of its value type
 
 	if constexpr (std::is_pointer<P>::value) { // Remove pointer on parameter type to check the main type
 	  if constexpr (std::is_same<T, typename std::remove_pointer<P>>::value) { // if same, use direct call to avoid recursive instanciation
@@ -211,7 +211,7 @@ namespace anch::json {
 	  }
 	}
 
-      } else { // Parameter type has to be correctly set by caller when specified
+      } else { // std::optional, pointers, collections and maps: mapper of the value type
 	if constexpr (std::is_same<MT, T>::value) {
 	  return this->serialize(key, val, context);
 	} else {
@@ -224,10 +224,11 @@ namespace anch::json {
   }
 
   template<typename T>
-  template<typename P, typename MT, typename... C>
+  template<typename P, typename... C>
   requires (anch::val::FieldConstraint<C,P> && ...)
   ObjectMapper<T>&
   ObjectMapper<T>::registerField(const std::string& key, std::function<void(T&, const P&)> setter, [[maybe_unused]] C&&... constraints) {
+    using MT = anch::json::detail::MapperType<P>;
     static_assert(!std::is_reference<P>::value, "Can not deserialize reference value"); // raise compile-time error if value is a reference
     // Check value constraints before calling setter +
     auto set = [setter, ...cts = std::forward<C>(constraints)](T& obj, const auto& inst, anch::json::ReaderContext& context) -> void {
@@ -242,7 +243,7 @@ namespace anch::json {
     // Check value constraints before calling setter -
     addReader(key, anch::json::DeserializeFn<T>([=, this](T& obj, anch::json::ReaderContext& context) -> bool {
       static_cast<void>(this); // used by some instantiations only
-      if constexpr (std::is_same<MT, P>::value) { // Mapper type has not been specified
+      if constexpr (std::is_same<MT, P>::value) { // Field of its value type
 
 	if constexpr (std::is_pointer<P>::value) { // Remove pointer on parameter type to check the main type
 	  if constexpr (std::is_same<T, typename std::remove_pointer<P>>::value) { // if same, use direct call to avoid recursive instanciation
@@ -279,7 +280,7 @@ namespace anch::json {
 	  }
 	}
 
-      } else { // Parameter type has to be correctly set by caller when specified
+      } else { // std::optional, pointers, collections and maps: mapper of the value type
 	if constexpr (std::is_same<MT, T>::value) {
 	  T inst;
 	  if(this->deserialize(inst, context)) {
@@ -301,12 +302,12 @@ namespace anch::json {
   }
 
   template<typename T>
-  template<typename P, typename MT, typename... C>
+  template<typename P, typename... C>
   requires (anch::val::FieldConstraint<C,P> && ...)
   ObjectMapper<T>&
   ObjectMapper<T>::registerField(const std::string& key, std::function<P(const T&)> getter, std::function<void(T&, const P&)> setter, C&&... constraints) {
-    registerField<P,MT>(key, getter, std::as_const(constraints)...);
-    return registerField<P,MT>(key, setter, std::forward<C>(constraints)...);
+    registerField<P>(key, getter, std::as_const(constraints)...);
+    return registerField<P>(key, setter, std::forward<C>(constraints)...);
   }
   template<typename T>
   template<typename R, typename P, typename... C>
