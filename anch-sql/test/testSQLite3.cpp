@@ -468,6 +468,11 @@ testFields() {
 }
 
 void
+testLists() {
+  testStmtLists(*dbCon);
+}
+
+void
 testSqlError() {
   testSqlErrorKeepsConnection(*dbCon);
 }
@@ -500,6 +505,7 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("stmt-named", testNamed)
     .add("builder-query", testBuilder)
     .add("stmt-fields", testFields)
+    .add("stmt-lists", testLists)
     .add("sql-error", testSqlError)
     .add("statement-cache", testCache)
     ;

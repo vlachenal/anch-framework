@@ -36,7 +36,8 @@ namespace anch::sql {
    *
    * Each field which has a value (member or getter) is a parameter named as the field: fields which are only
    * written (setter) are ignored. Fields values have to be bindable ( \ref Bindable : integers, floating point
-   * numbers, strings, SQL dates, \c std::optional of them): a field of another type is refused at compile time.
+   * numbers, strings, SQL dates, \c std::optional and lists of them): a field of another type is refused at compile
+   * time.
    * Constraints are not checked (validate objects with \c anch::val::validate ).
    *
    * \tparam T the described type
@@ -57,7 +58,7 @@ namespace anch::sql {
       std::string name;
 
       /*! Field value reader */
-      std::function<anch::sql::ParameterValue(const T&)> read;
+      std::function<anch::sql::BoundValue(const T&)> read;
     };
 
     // Attributes +
@@ -250,9 +251,9 @@ namespace anch::sql {
   template<typename P, typename... C>
   FieldsMapper<T>&
   FieldsMapper<T>::registerField(const std::string& name, P T::* member, C&&...) {
-    static_assert(anch::sql::Bindable<std::remove_cvref_t<P>>, "SQL parameters are integers, floating point numbers, strings, SQL dates"
-		  " and std::optional of them: this field of the description can not be bound");
-    _fields.push_back(Field{name, [member](const T& object) { return anch::sql::toParameter(object.*member); }});
+    static_assert(anch::sql::Bindable<std::remove_cvref_t<P>>, "SQL parameters are integers, floating point numbers, strings, SQL dates,"
+		  " std::optional and lists of them: this field of the description can not be bound");
+    _fields.push_back(Field{name, [member](const T& object) { return anch::sql::toBound(object.*member); }});
     return *this;
   }
 
@@ -260,9 +261,9 @@ namespace anch::sql {
   template<typename P, typename... C>
   FieldsMapper<T>&
   FieldsMapper<T>::registerField(const std::string& name, std::function<P(const T&)> getter, C&&...) {
-    static_assert(anch::sql::Bindable<std::remove_cvref_t<P>>, "SQL parameters are integers, floating point numbers, strings, SQL dates"
-		  " and std::optional of them: this field of the description can not be bound");
-    _fields.push_back(Field{name, [getter](const T& object) { return anch::sql::toParameter(getter(object)); }});
+    static_assert(anch::sql::Bindable<std::remove_cvref_t<P>>, "SQL parameters are integers, floating point numbers, strings, SQL dates,"
+		  " std::optional and lists of them: this field of the description can not be bound");
+    _fields.push_back(Field{name, [getter](const T& object) { return anch::sql::toBound(getter(object)); }});
     return *this;
   }
 

@@ -100,7 +100,11 @@ and `\deprecated` in its documentation, which give its replacement, and it is re
   `fieldsOf(object)` binds each parameter of a query to the field of the same name (`FieldsMapper<T>`: members and
   getters ; the other fields are ignored, fields which can not be bound are refused at compile time), taken by
   `Connection::query`, `queryMapRow`, `queryExtract`, `update`, and `batchUpdate(query, objects)` binds each
-  described object of a range.
+  described object of a range. Lists of values (`std::vector`, `std::list`, `std::set`, ...: `BindableList`) can be
+  bound: `IN (:ids)` is rewritten in `= ANY($1)` (`<> ALL($1)` for `NOT IN`) with a PostgreSQL array (one prepared
+  statement whatever the list size), and is expanded (`IN (?, ?, ?)`, the statement is prepared again when the size
+  changes, an empty list is an empty subquery) for MySQL and SQLite; the builder `in` and `notIn` clauses take lists
+  (an empty list skips the clause).
 - anch-utils: common description of objects for every format (`mapping.hpp`): `anch::Mapping<T>` (specialized with
   a `registerObject(anch::ObjectMapper<T> auto& mapper)` function), `anch::ObjectMapper<M, T>` concept (fields
   registered with a member pointer, a getter, a setter or both), `anch::Described<T>` and `anch::describe<T>(mapper)`.
@@ -177,6 +181,8 @@ and `\deprecated` in its documentation, which give its replacement, and it is re
 
 ### Fixed
 
+- anch-sql: MySQL prepared statements without parameter (and result sets without column) called `memset` on a null
+  pointer (undefined behavior: crash of optimized Clang builds).
 - anch-sql: a prepared statement used by an alive result set is no longer executed again by a nested query with the
   same SQL text (with SQLite, the outer result set was reset at each row and the loop never ended): an other
   statement is prepared. A PostgreSQL statement

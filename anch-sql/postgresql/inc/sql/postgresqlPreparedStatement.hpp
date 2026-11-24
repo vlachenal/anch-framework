@@ -81,6 +81,15 @@ namespace anch::sql {
     // Methods +
   protected:
     /*!
+     * Prepare query (statement prepared again when bound lists change the query)
+     *
+     * \param query the query to prepare
+     *
+     * \throw SqlException any error
+     */
+    virtual void doPrepare(const std::string& query) override;
+
+    /*!
      * Execute prepared statement for SELECT statement
      *
      * \return the result set

@@ -41,6 +41,12 @@ target_link_libraries(my-app PRIVATE anch::sql)
  * Every parameter has to be bound before execution (missing parameters are reported with their names, unknown names
  * are refused) ; \c NULL is bound with \c setNull , \c std::nullopt , a \c NULL pointer or an empty
  * \c std::optional .\n
+ * A list of values ( \c std::vector , \c std::list , \c std::set , ... ; strings are not lists) bound to the only
+ * item of an \c IN list ( \c IN (:ids) , \c NOT IN (:ids) ) is a PostgreSQL array: the query is rewritten in
+ * \c = ANY($1) ( \c <> ALL($1) ), one prepared statement whatever the list size ; other databases expand the list
+ * ( \c IN (?, ?, ?) : the statement is prepared again when the list size changes ; an empty list is an empty
+ * subquery: \c IN is false and \c NOT IN true). In PostgreSQL, a list can also be used as an array anywhere
+ * ( \c = ANY(:ids) , \c :ids::int[] ).\n
  * The fields of an object described by its common description ( \c anch::Mapping<T> , anch-utils, shared with JSON,
  * CSV and validation) are bound to the parameters of the same names with \ref anch::sql::fieldsOf "fieldsOf" (the other
  * fields are ignored ; fields which are only written are not parameters), and \c Connection::batchUpdate takes a

@@ -56,7 +56,8 @@ namespace anch::sql {
   using ClausesProvider = std::function<const anch::sql::ClausesBuilder&()>;
 
   /*!
-   * Default value checker: the clause is added when the value is set (an empty \c std::optional skips the clause)
+   * Default value checker: the clause is added when the value is set (an empty \c std::optional or list skips the
+   * clause)
    *
    * \param value the value to check
    *
@@ -554,7 +555,20 @@ namespace anch::sql {
      *
      * \return the parameter name
      */
-    std::string addParameter(const std::string& column, std::string_view suffix, anch::sql::ParameterValue value);
+    std::string addParameter(const std::string& column, std::string_view suffix, anch::sql::BoundValue value);
+
+    /*!
+     * Bound value of a checked value (lists keep their values: they are expanded for databases without arrays)
+     *
+     * \tparam T the value type
+     *
+     * \param value the value
+     * \param checked the checked value
+     *
+     * \return the bound value
+     */
+    template<typename T>
+    static anch::sql::BoundValue bound(const T& value, std::optional<std::string>&& checked);
 
     /*!
      * Add boolean clauses aggregator
@@ -613,7 +627,14 @@ namespace anch::sql {
   template<anch::sql::Bindable T>
   std::optional<std::string>
   isValidValue(const T& value) {
-    return anch::sql::toParameter(value);
+    if constexpr (anch::sql::BindableList<T>) {
+      if(std::ranges::empty(value)) {
+	return std::nullopt;
+      }
+      return anch::sql::toBound(value).value;
+    } else {
+      return anch::sql::toParameter(value);
+    }
   }
 
   template<typename T>
@@ -658,7 +679,7 @@ namespace anch::sql {
     auto optVal = checker(value);
     if(optVal) {
       addBooleanAggregator(boolAgg);
-      const std::string names[] = {addParameter(column, "", std::move(optVal))};
+      const std::string names[] = {addParameter(column, "", bound(value, std::move(optVal)))};
       _buffer << clause(column, names);
       // if(value instanceof Optional<?>) {
       //   // Optional value has already been check at his point
@@ -687,7 +708,8 @@ namespace anch::sql {
     auto optVal2 = checker(value2);
     if(optVal1 && optVal2) {
       addBooleanAggregator(boolAgg);
-      const std::string names[] = {addParameter(column, "_min", std::move(optVal1)), addParameter(column, "_max", std::move(optVal2))};
+      const std::string names[] = {addParameter(column, "_min", bound(value1, std::move(optVal1))),
+				   addParameter(column, "_max", bound(value2, std::move(optVal2)))};
       _buffer << clause(column, names);
       // if(value1 instanceof Optional<?>) {
       //   // Optional value has already been check at his point
@@ -704,6 +726,15 @@ namespace anch::sql {
       _firstClause = false;
     }
     return *this;
+  }
+  template<typename T>
+  anch::sql::BoundValue
+  ClausesBuilder::bound(const T& value, std::optional<std::string>&& checked) {
+    if constexpr (anch::sql::BindableList<T>) {
+      return anch::sql::toBound(value);
+    } else {
+      return anch::sql::BoundValue{std::move(checked), std::nullopt};
+    }
   }
   // Implementations -
 

@@ -85,7 +85,9 @@ anch::sql::detail::mergeParameters(Parameters& target, const std::string& part, 
       name = parameterName(target, name);
       renamed = true;
     }
-    target.add(name, iter->value);
+    anch::sql::Parameter parameter = *iter;
+    parameter.name = name;
+    target.add(std::move(parameter));
   }
   return renamed ? named.rename(names) : part;
 }
