@@ -67,19 +67,6 @@ namespace anch::codec {
   };
 
   /*!
-   * Types described by an external schema, serialized by the code their tool generates (Protobuf messages, Thrift
-   * structures): generic codecs ( \ref anch::codec::Json ) do not handle them, so that a list of codecs
-   * ( \ref anch::codec::Codecs ) selects the codecs of their format. Format plugins specialize it (\c codec/protobuf.hpp
-   * for \c google::protobuf::Message , \c codec/thrift.hpp for Thrift structures).
-   *
-   * \tparam T the value type
-   *
-   * \since 0.3
-   */
-  template<typename T>
-  struct ExternalSchema: std::false_type {};
-
-  /*!
    * Read whole content
    *
    * \param input the input stream

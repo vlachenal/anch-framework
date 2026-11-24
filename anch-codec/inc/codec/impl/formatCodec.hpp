@@ -45,7 +45,7 @@ namespace anch::codec {
 
   template<anch::codec::DataFormat F>
   template<typename T>
-  requires (!anch::codec::ExternalSchema<T>::value && anch::codec::FormatSerializer<F, T>)
+  requires anch::codec::FormatSerializer<F, T>
   void
   FormatCodec<F>::serialize(const T& value, std::ostream& out) {
     F::serialize(value, out, F::defaultOptions());
@@ -53,7 +53,7 @@ namespace anch::codec {
 
   template<anch::codec::DataFormat F>
   template<typename T>
-  requires (!anch::codec::ExternalSchema<T>::value && anch::codec::FormatSerializer<F, T>)
+  requires anch::codec::FormatSerializer<F, T>
   void
   FormatCodec<F>::serialize(const T& value, std::ostream& out, anch::codec::Side side) {
     F::serialize(value, out, FormatCodec<F>::options(side));
@@ -73,7 +73,7 @@ namespace anch::codec {
 
   template<anch::codec::DataFormat F>
   template<typename T>
-  requires (!anch::codec::ExternalSchema<T>::value && anch::codec::FormatDeserializer<F, T>)
+  requires anch::codec::FormatDeserializer<F, T>
   void
   FormatCodec<F>::deserialize(T& value, std::istream& input) {
     FormatCodec<F>::read(value, input, F::defaultOptions());
@@ -81,7 +81,7 @@ namespace anch::codec {
 
   template<anch::codec::DataFormat F>
   template<typename T>
-  requires (!anch::codec::ExternalSchema<T>::value && anch::codec::FormatDeserializer<F, T>)
+  requires anch::codec::FormatDeserializer<F, T>
   void
   FormatCodec<F>::deserialize(T& value, std::istream& input, anch::codec::Side side) {
     FormatCodec<F>::read(value, input, FormatCodec<F>::options(side));

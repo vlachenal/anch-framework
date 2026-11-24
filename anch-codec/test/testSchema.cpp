@@ -54,7 +54,6 @@ namespace {
 #ifdef ANCH_CODEC_PROTOBUF_ENABLED
 using ProtoPet = anch::test::protobuf::Pet;
 // Json does not handle Protobuf messages: Available selects Protobuf codecs
-static_assert(anch::codec::ExternalSchema<ProtoPet>::value);
 static_assert(!anch::codec::Serializer<anch::codec::Json, ProtoPet> && anch::codec::Serializer<anch::codec::ProtobufJson, ProtoPet>);
 static_assert(Available::SERIALIZES<ProtoPet> && Available::DESERIALIZES<ProtoPet>);
 
@@ -90,7 +89,6 @@ testProtobuf() {
 
 #if defined(ANCH_CODEC_THRIFT_ENABLED) && !defined(ANCH_CODEC_TEST_NO_THRIFT_COMPILER)
 using ThriftPet = anch::test::thrift::Pet;
-static_assert(anch::codec::ExternalSchema<ThriftPet>::value);
 static_assert(!anch::codec::Serializer<anch::codec::Json, ThriftPet> && Available::SERIALIZES<ThriftPet>
 	      && Available::DESERIALIZES<ThriftPet>);
 

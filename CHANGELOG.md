@@ -97,7 +97,9 @@ and `\deprecated` in its documentation, which give its replacement, and it is re
   anch-codec-json (`Json`, `ANCH_CODEC_JSON`), anch-codec-protobuf (`Protobuf`, `ProtobufJson`,
   `ANCH_CODEC_PROTOBUF`) and anch-codec-thrift (`ThriftBinary`, `ThriftCompact`, `ThriftJson`, `ANCH_CODEC_THRIFT`).
   `codec/all.hpp` (target `anch::codec-all`) is generated with the plugins built and declares
-  `anch::codec::Available`; `ExternalSchema<T>` excludes Protobuf messages and Thrift structures from `Json`.
+  `anch::codec::Available`; `Json` handles the types the format maps (`anch::json::Mappable<T>`: primitives,
+  enumerations, described types and their containers), Protobuf messages and Thrift structures are left to their
+  codecs.
   Data formats (`DataFormat`, `FormatSerializer`, `FormatDeserializer` concepts) get a generic codec,
   `FormatCodec<F>`, whose side options are configured by `FormatPolicy<F>` (specialized by plugins, which also
   translate errors): `anch::codec::Json` is `FormatCodec<anch::json::Json>` (format type `anch::json::Json`,

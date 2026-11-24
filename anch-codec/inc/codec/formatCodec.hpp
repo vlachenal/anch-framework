@@ -114,8 +114,9 @@ namespace anch::codec {
    * \brief Codec of a data format: media type, options of each side ( \ref FormatPolicy ), serialization and
    * deserialization ( \ref Serializer , \ref Deserializer concepts)
    *
-   * Values described by an external schema ( \ref ExternalSchema : Protobuf messages, Thrift structures) are not
-   * handled. Options of each side are shared by the program: a codec plugin instantiates its \c FormatCodec in its
+   * Values are handled when the format handles them ( \ref FormatSerializer , \ref FormatDeserializer ): formats
+   * constrain their types (described objects for anch-json and anch-csv), so that values described by an external
+   * schema (Protobuf messages, Thrift structures) are left to the codecs of their format. Options of each side are shared by the program: a codec plugin instantiates its \c FormatCodec in its
    * library ( \c anch::codec::Json is \c FormatCodec<anch::json::Json> , \c anch::codec::Csv is
    * \c FormatCodec<anch::csv::Csv> ).
    *
@@ -155,7 +156,7 @@ namespace anch::codec {
      * \param out the output stream
      */
     template<typename T>
-    requires (!anch::codec::ExternalSchema<T>::value && anch::codec::FormatSerializer<F, T>)
+    requires anch::codec::FormatSerializer<F, T>
     static void serialize(const T& value, std::ostream& out);
 
     /*!
@@ -166,7 +167,7 @@ namespace anch::codec {
      * \param side the side
      */
     template<typename T>
-    requires (!anch::codec::ExternalSchema<T>::value && anch::codec::FormatSerializer<F, T>)
+    requires anch::codec::FormatSerializer<F, T>
     static void serialize(const T& value, std::ostream& out, anch::codec::Side side);
 
     /*!
@@ -176,7 +177,7 @@ namespace anch::codec {
      * \param input the input stream
      */
     template<typename T>
-    requires (!anch::codec::ExternalSchema<T>::value && anch::codec::FormatDeserializer<F, T>)
+    requires anch::codec::FormatDeserializer<F, T>
     static void deserialize(T& value, std::istream& input);
 
     /*!
@@ -189,7 +190,7 @@ namespace anch::codec {
      * \throw ContentTooLarge input is larger than a limit (translated by \ref FormatPolicy )
      */
     template<typename T>
-    requires (!anch::codec::ExternalSchema<T>::value && anch::codec::FormatDeserializer<F, T>)
+    requires anch::codec::FormatDeserializer<F, T>
     static void deserialize(T& value, std::istream& input, anch::codec::Side side);
 
   private:

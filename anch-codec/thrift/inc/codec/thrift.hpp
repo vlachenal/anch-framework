@@ -54,16 +54,6 @@ namespace anch::codec {
   };
 
   /*!
-   * Thrift structures are serialized by \c thrift generated code: generic codecs do not handle them
-   *
-   * \tparam T the structure type
-   *
-   * \since 0.3
-   */
-  template<anch::codec::ThriftStruct T>
-  struct ExternalSchema<T>: std::true_type {};
-
-  /*!
    * Thrift protocols
    *
    * \since 0.2
