@@ -48,6 +48,9 @@ Proposition
 - anch::ObjectMapper<M, T> : concept que le mapper de chaque format satisfait :
   registerField(nom, P T::*, contraintes...) qui renvoie le mapper ; getter, setter et getter + setter aussi
   (std::function, comme anch-json). Chaque format peut proposer plus (registerField<MT> d'anch-json).
+  Remplacé (2026-11-24, diagnostic des interfaces, point 2) : une description n'utilise que les formes du concept,
+  sinon elle ne sert qu'à un format ; registerField<MT> d'anch-json est supprimé (le type de mapper est déduit,
+  méthode privée registerMapped<MT>).
 - anch::Described<T> : concept vrai quand anch::Mapping<T> est spécialisé.
 - Forme décidée le 2026-11-19 (question 1) : spécialisation de anch::Mapping<T> avec une fonction registerObject
   générique sur le mapper. La fonction étant un template, elle est définie dans un en-tête (ou dans un .cpp avec
@@ -112,7 +115,7 @@ Compatibilité et dépréciation
    anch::json::registerObject supprimé sans dépréciation (version < 1.0, décision 2 remplacée) : tous les usages
    (tests, exemples, anch-rest, anch-codec, anch-oas/spec.cpp, fuzzing, test d'installation) convertis. Le type de
    mapper d'un champ est déduit (anch::json::detail::MapperType : std::optional, pointeurs, collections, maps -> type
-   de valeur) : la description n'a plus besoin de registerField<T> (forme propre à JSON, gardée). anch-oas génère
+   de valeur) : la description n'a plus besoin de registerField<T> (forme propre à JSON, supprimée le 2026-11-24). anch-oas génère
    les descriptions dans l'en-tête des modèles (le source garde les mappers d'énumérations).
 3. anch-csv : Reader / Writer (anch-csv/anch-csv.todo), puis mapper sur anch::Mapping<T>.
 4. Faite le 2026-11-21 (anch-codec étape 5) : concepts DataFormat / FormatSerializer / FormatDeserializer, formats

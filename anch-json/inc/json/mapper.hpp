@@ -285,6 +285,23 @@ namespace anch::json {
     template<typename R, typename P, typename... C>
     static anch::json::DeserializeFn<T> withConstraints(R& read, P T::* value, C&&... constraints);
 
+    /*!
+     * Register mapping by field with the mapper of its value type (fields of \c std::optional , pointers,
+     * collections and maps are mapped with the mapper of their value type, \c anch::json::detail::MapperType )
+     *
+     * \tparam MT the mapper type to use for this field
+     * \tparam P the field type
+     * \tparam C the constraints types
+     *
+     * \param key the JSON key
+     * \param value the JSON value in object
+     * \param constraints the field constraints
+     *
+     * \return \c this
+     */
+    template<typename MT, typename P, typename... C>
+    ObjectMapper<T>& registerMapped(const std::string& key, P T::* value, C&&... constraints);
+
   public:
     // Fields registration (public: the common description anch::Mapping<T> registers fields through the
     // anch::ObjectMapper concept ; fields are registered once, when the mapper is built) +
@@ -305,27 +322,9 @@ namespace anch::json {
     ObjectMapper<T>& registerField(const std::string& key, P T::* value, C&&... constraints);
 
     /*!
-     * Register mapping by field specifying the mapper to use
-     *
-     * \tparam P the parameter type
-     * \tparam MT the mapper type to use for this parameter
-     * \tparam C the constraints types
-     *
-     * \param key the JSON key
-     * \param value the JSON value in object
-     * \param constraints the field constraints ( \ref anch::val::required , \ref anch::val::minLength , ...)
-     *
-     * \return \c this
-     */
-    template<typename MT, typename P, typename... C>
-    requires (anch::val::FieldConstraint<C,P> && ...)
-    ObjectMapper<T>& registerField(const std::string& key, P T::* value, C&&... constraints);
-
-    /*!
      * Register mapping by field
      *
      * \tparam P the parameter type
-     * \tparam MT the mapper type to use for this parameter (default to parameter type)
      * \tparam C the constraints types
      *
      * \param key the JSON key
@@ -334,7 +333,7 @@ namespace anch::json {
      *
      * \return \c this
      */
-    template<typename P, typename MT = anch::json::detail::MapperType<P>, typename... C>
+    template<typename P, typename... C>
     requires (anch::val::FieldConstraint<C,P> && ...)
     ObjectMapper<T>& registerField(const std::string& key, std::function<P(const T&)> getter, const C&... constraints);
 
@@ -342,7 +341,6 @@ namespace anch::json {
      * Register mapping by field
      *
      * \tparam P the parameter type
-     * \tparam MT the mapper type to use for this parameter (default to parameter type)
      * \tparam C the constraints types
      *
      * \param key the JSON key
@@ -351,7 +349,7 @@ namespace anch::json {
      *
      * \return \c this
      */
-    template<typename P, typename MT = anch::json::detail::MapperType<P>, typename... C>
+    template<typename P, typename... C>
     requires (anch::val::FieldConstraint<C,P> && ...)
     ObjectMapper<T>& registerField(const std::string& key, std::function<void(T&, const P&)> setter, C&&... constraints);
 
@@ -359,7 +357,6 @@ namespace anch::json {
      * Register mapping by field
      *
      * \tparam P the parameter type
-     * \tparam MT the mapper type to use for this parameter (default to parameter type)
      * \tparam C the constraints types
      *
      * \param key the JSON key
@@ -369,7 +366,7 @@ namespace anch::json {
      *
      * \return \c this
      */
-    template<typename P, typename MT = anch::json::detail::MapperType<P>, typename... C>
+    template<typename P, typename... C>
     requires (anch::val::FieldConstraint<C,P> && ...)
     ObjectMapper<T>& registerField(const std::string& key, std::function<P(const T&)> getter, std::function<void(T&, const P&)> setter, C&&... constraints);
     // Fields registration -
