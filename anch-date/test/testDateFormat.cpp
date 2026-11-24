@@ -42,20 +42,20 @@ public:
   static const std::string PATTERN;
   MicroFormatter() {}
   virtual ~MicroFormatter() {}
-  void format(const DateTime& date, std::ostream& output) const noexcept {
-    output << std::setfill('0') << std::setw(3) << getMicrosecond(date);
+  void format(const anch::date::DateFields& date, std::ostream& output) const noexcept {
+    output << std::setfill('0') << std::setw(3) << date.microsecond;
   }
   size_t getSize() const noexcept {
     return 3;
   }
-  bool setValue(DateTime& date, const std::string& value) const noexcept {
+  bool setValue(anch::date::DateFields& date, const std::string& value) const noexcept {
     std::istringstream iss(value);
     uint16_t val;
     iss >> std::dec >> val;
     if(iss.fail()) {
       return false;
     } else {
-      setMicrosecond(date, val);
+      date.microsecond = val;
       return true;
     }
   }
@@ -73,20 +73,20 @@ public:
   static const std::string PATTERN;
   NanoFormatter() {}
   virtual ~NanoFormatter() {}
-  void format(const DateTime& date, std::ostream& output) const noexcept {
-    output << std::setfill('0') << std::setw(3) << getNanosecond(date);
+  void format(const anch::date::DateFields& date, std::ostream& output) const noexcept {
+    output << std::setfill('0') << std::setw(3) << date.nanosecond;
   }
   size_t getSize() const noexcept {
     return 3;
   }
-  bool setValue(DateTime& date, const std::string& value) const noexcept {
+  bool setValue(anch::date::DateFields& date, const std::string& value) const noexcept {
     std::istringstream iss(value);
     uint16_t val;
     iss >> std::dec >> val;
     if(iss.fail()) {
       return false;
     } else {
-      setNanosecond(date, val);
+      date.nanosecond = val;
       return true;
     }
   }
@@ -107,7 +107,7 @@ testFormatDate() {
   std::cout << "Enter in test date format" << std::endl;
 
   std::string nowStr;
-  DateTime now = DateTime();
+  DateTime now = DateTime::now();
   formatter.format(now, nowStr);
   std::cout << "DateTime from scratch: " << nowStr << std::endl;
 
@@ -150,7 +150,7 @@ void
 testComparison() {
   std::cout << "Enter in test comparison" << std::endl;
 
-  DateTime now = DateTime();
+  DateTime now = DateTime::now();
   std::string nowStr;
   formatter.format(now, nowStr);
   std::string strDate = "2012-10-23 10:02:59.998";
@@ -166,7 +166,7 @@ testFormatDateCustom() {
   std::cout << "Enter in custom formatter test" << std::endl;
 
   std::string nowStr;
-  DateTime now = DateTime();
+  DateTime now = DateTime::now();
   DateFormatter formatter2("%Y-%m-%d %H:%M:%S.%s.%v.%N");
   formatter2.format(now, nowStr);
   std::cout << "DateTime from custom parser: " << nowStr << std::endl;
@@ -226,8 +226,8 @@ testConversions() {
   input.tm_hour = 12;
   input.tm_isdst = -1;
   anch::ut::assertThat(static_cast<std::time_t>(DateTime(&input)) == SUMMER_NOON, "tm date is {}", format(formatter, DateTime(&input)));
-  DateTime epoch(false);
-  anch::ut::assertThat(static_cast<std::time_t>(epoch) == 0, "DateTime(false) should be epoch: {}", format(formatter, epoch));
+  DateTime epoch;
+  anch::ut::assertThat(static_cast<std::time_t>(epoch) == 0, "DateTime() should be epoch: {}", format(formatter, epoch));
 }
 
 void
@@ -262,9 +262,9 @@ testHour12() {
 
 void
 testParseReset() {
-  // Fields which are not in pattern were kept from the parsed date (current time for DateTime())
+  // Fields which are not in pattern were kept from the parsed date (current time)
   DateFormatter fmt("%Y-%m-%d");
-  DateTime date; // now
+  DateTime date = DateTime::now();
   fmt.parse("2012-10-23", date);
   std::string str = format(formatter, date);
   anch::ut::assertThat(str == "2012-10-23 00:00:00.000", "Parsed date is {}", str);

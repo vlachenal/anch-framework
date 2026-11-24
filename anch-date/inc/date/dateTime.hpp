@@ -31,74 +31,73 @@
 
 namespace anch::date {
 
-  class DateFormatter;
-  class IDatePartFormatter;
+  /*!
+   * \brief Broken down date and time ( \ref DateTime::fields ): local time or UTC
+   *
+   * \since 0.3
+   */
+  struct ANCH_DATE_EXPORT DateFields {
+    /*! The year */
+    int32_t year = 1970;
+
+    /*! The month (1-12) */
+    uint16_t month = 1;
+
+    /*! The day of the month (1-31) */
+    uint16_t day = 1;
+
+    /*! The hour (0-23) */
+    uint16_t hour = 0;
+
+    /*! The minute (0-59) */
+    uint16_t minute = 0;
+
+    /*! The second (0-60) */
+    uint16_t second = 0;
+
+    /*! The millisecond (0-999) */
+    uint16_t millisecond = 0;
+
+    /*! The microsecond (0-999) */
+    uint16_t microsecond = 0;
+
+    /*! The nanosecond (0-999) */
+    uint16_t nanosecond = 0;
+
+    /*! The day of the week (ISO 8601: 1 is monday, 7 is sunday ; ignored to build a \ref DateTime ) */
+    uint16_t weekday = 4;
+
+    /*! The day of the year (1-366 ; ignored to build a \ref DateTime ) */
+    uint16_t yearday = 1;
+  };
 
   /*!
-   * \brief DateTime and time utility class
+   * \brief Point in time
    *
-   * A \ref DateTime is a point in time with a nanosecond precision (stored as a number of nanoseconds since epoch, which
-   * covers years 1678 to 2261), and its broken down representation in local time (year, month, day, hour, minute,
-   * second, millisecond, microsecond and nanosecond).\n
-   * Local time is computed with \c localtime_r (\c std::chrono time zones are not available with GCC 13): it is thread
-   * safe and follows the \c TZ environment variable.\n
-   * \ref DateTime can be converted from and to \c std::chrono::system_clock::time_point , \c std::time_t , \c std::tm and
-   * \c std::timespec .
+   * A \ref DateTime is a point in time with a nanosecond precision, stored as a number of nanoseconds since epoch (which
+   * covers years 1678 to 2261). Its broken down representation ( \ref fields ) is computed in local time or UTC: local
+   * time is computed with \c localtime_r (\c std::chrono time zones are not available with GCC 13): it is thread safe
+   * and follows the \c TZ environment variable.\n
+   * A default \ref DateTime is epoch: the current time is \ref now . \ref DateTime can be converted from and to
+   * \c std::chrono::system_clock::time_point , \c std::time_t , \c std::tm and \c std::timespec . Its day is a
+   * \ref Date ( \ref date ).
    *
    * \author Vincent Lachenal
    */
   class ANCH_DATE_EXPORT DateTime {
 
-    friend class IDatePartFormatter;
-    friend class DateFormatter;
-
     // Attributes +
-  protected:
-    /*! The timestamp (nanoseconds since epoch) */
-    std::int64_t _timestamp = 0;
-
-    /*! The years */
-    int32_t _years = 0;
-
-    /*! The months (0-11) */
-    uint16_t _months = 0;
-
-    /*! The days of the year (0-365) */
-    uint16_t _ydays = 0;
-
-    /*! The days of the month (1-31) */
-    uint16_t _mdays = 0;
-
-    /*! The days of the week (0-6, 0 is sunday) */
-    uint16_t _wdays = 0;
-
-    /*! The hours (0-23) */
-    uint16_t _hours = 0;
-
-    /*! The minutes (0-59) */
-    uint16_t _minutes = 0;
-
-    /*! The seconds (0-60) */
-    uint16_t _seconds = 0;
-
-    /*! The milliseconds (0-999) */
-    uint16_t _milliseconds = 0;
-
-    /*! The microseconds (0-999) */
-    uint16_t _microseconds = 0;
-
-    /*! The nanoseconds (0-999) */
-    uint16_t _nanoseconds = 0;
+  private:
+    /*! The point in time */
+    std::chrono::sys_time<std::chrono::nanoseconds> _time;
     // Attributes -
 
     // Constructors +
   public:
     /*!
-     * \ref DateTime default constructor
-     *
-     * \param init initialize the \ref DateTime to now (default \c true ) ; epoch otherwise
+     * \ref DateTime default constructor: epoch (the current time is \ref now )
      */
-    explicit DateTime(bool init = true);
+    constexpr DateTime() noexcept;
 
     /*!
      * \ref DateTime constructor
@@ -136,33 +135,42 @@ namespace anch::date {
      * \throw std::invalid_argument date out of range (years 1678 to 2261) or invalid \c tv_nsec
      */
     explicit DateTime(const std::timespec& time);
-    // Constructors -
 
-    // Destructor +
-  public:
     /*!
-     * \ref DateTime destructor
-     */
-    virtual ~DateTime();
-    // Destructor -
-
-    // Methods +
-  private:
-    /*!
-     * Initialize timestamp and local time fields
+     * \ref DateTime constructor
      *
-     * \param time the time point
-     */
-    void initialize(const std::chrono::sys_time<std::chrono::nanoseconds>& time);
-
-    /*!
-     * Compute timestamp from local time fields (and normalize fields)
+     * \param fields the local time (out of range fields are normalized as \c std::mktime does ; \c weekday and
+     *        \c yearday are ignored)
      *
      * \throw std::invalid_argument date out of range (years 1678 to 2261)
+     *
+     * \since 0.3
      */
-    void computeTimestamp();
+    explicit DateTime(const anch::date::DateFields& fields);
+    // Constructors -
 
+    // Methods +
   public:
+    /*!
+     * Current point in time
+     *
+     * \return now
+     *
+     * \since 0.3
+     */
+    static DateTime now();
+
+    /*!
+     * Broken down date and time
+     *
+     * \param zone the time zone (default local time)
+     *
+     * \return the fields
+     *
+     * \since 0.3
+     */
+    anch::date::DateFields fields(anch::date::Zone zone = anch::date::Zone::LOCAL) const;
+
     /*!
      * Check if current \ref DateTime is after another one.
      *
@@ -193,7 +201,7 @@ namespace anch::date {
     /*!
      * Day of this point in time
      *
-     * \param zone the time zone of the day (default local time, as the fields of the date)
+     * \param zone the time zone of the day (default local time)
      *
      * \return the day
      *

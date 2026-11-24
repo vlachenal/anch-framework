@@ -22,42 +22,40 @@
 using anch::sql::Time;
 
 
+namespace {
+
+  /*!
+   * Time of day of a point in time (local time), on 1970-01-01
+   *
+   * \param date the point in time
+   *
+   * \return the time of day
+   */
+  anch::date::DateTime
+  timeOfDay(const anch::date::DateTime& date) {
+    anch::date::DateFields fields = date.fields();
+    fields.year = 1970;
+    fields.month = 1;
+    fields.day = 1;
+    return anch::date::DateTime(fields);
+  }
+
+}
+
 // Constructors +
-Time::Time(bool init): anch::date::DateTime(init) {
-  _years = 0;
-  _months = 0;
-  _ydays = 0;
-  _mdays = 0;
-  _wdays = 0;
-}
-
-Time::Time(const anch::date::DateTime& date): anch::date::DateTime(date) {
-  _years = 0;
-  _months = 0;
-  _ydays = 0;
-  _mdays = 0;
-  _wdays = 0;
-}
-
-Time::Time(const std::time_t& time): anch::date::DateTime(time) {
-  _years = 0;
-  _months = 0;
-  _ydays = 0;
-  _mdays = 0;
-  _wdays = 0;
-}
-
-Time::Time(const std::tm* const time): anch::date::DateTime(time) {
-  _years = 0;
-  _months = 0;
-  _ydays = 0;
-  _mdays = 0;
-  _wdays = 0;
-}
-// Constructors -
-
-// Destructor +
-Time::~Time() {
+Time::Time(bool init): anch::date::DateTime(timeOfDay(init ? anch::date::DateTime::now() : anch::date::DateTime())) {
   // Nothing to do
 }
-// Destructor -
+
+Time::Time(const anch::date::DateTime& date): anch::date::DateTime(timeOfDay(date)) {
+  // Nothing to do
+}
+
+Time::Time(const std::time_t& time): anch::date::DateTime(timeOfDay(anch::date::DateTime(time))) {
+  // Nothing to do
+}
+
+Time::Time(const std::tm* const time): anch::date::DateTime(timeOfDay(anch::date::DateTime(time))) {
+  // Nothing to do
+}
+// Constructors -

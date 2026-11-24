@@ -31,6 +31,8 @@
 
 namespace anch::date {
 
+  class IDatePartFormatter;
+
   /*! \ref anch::date::IDatePartFormatter instance getter function prototype (the instance is deleted by
    * \ref DateFormatter ) */
   typedef anch::date::IDatePartFormatter* (*getInstance)();

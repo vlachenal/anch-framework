@@ -1648,7 +1648,7 @@ namespace anch::oas::detail {
     }
 
     /*!
-     * Member initializer: value types are initialized (\c anch::date::DateTime to epoch instead of now)
+     * Member initializer: value types are initialized (\c anch::date::DateTime default is epoch)
      */
     static std::string
     initializer(const Field& field) {
@@ -1656,7 +1656,7 @@ namespace anch::oas::detail {
 	 || field.type.cpp == "std::string" || field.type.cpp == "anch::UUID") {
 	return "";
       }
-      return (field.type.cpp == "anch::date::DateTime") ? "{false}" : "{}";
+      return "{}"; // anch::date::DateTime is epoch
     }
 
     static std::string
