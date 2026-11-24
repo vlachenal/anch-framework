@@ -41,6 +41,12 @@ target_link_libraries(my-app PRIVATE anch::sql)
  * Every parameter has to be bound before execution (missing parameters are reported with their names, unknown names
  * are refused) ; \c NULL is bound with \c setNull , \c std::nullopt , a \c NULL pointer or an empty
  * \c std::optional .\n
+ * The fields of an object described by its common description ( \c anch::Mapping<T> , anch-utils, shared with JSON,
+ * CSV and validation) are bound to the parameters of the same names with \ref anch::sql::fieldsOf "fieldsOf" (the other
+ * fields are ignored ; fields which are only written are not parameters), and \c Connection::batchUpdate takes a
+ * range of described objects:
+ * \snippet{trimleft} anch-sql/examples/connection.cpp description
+ * \snippet{trimleft} anch-sql/examples/connection.cpp fields
  * Queries built by the \c SELECT builder ( \c anch::sql::select , \c anch::sql::clauses ) have named parameters
  * generated from their columns ( \c t.id gives \c :t_id , \c _min and \c _max for \c BETWEEN , \c _2 , ... when a
  * name is already used, also by merged clauses and subqueries): \c SQLQuery::getParameters gives them to

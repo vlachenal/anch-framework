@@ -55,6 +55,24 @@ public:
   inline void setEmail(const std::string& email) {_email = email;}
 };
 
+//! [description]
+// Common description of Person (JSON, CSV, validation, SQL parameters, ...): fields are SQL parameters of the same
+// names with anch::sql::fieldsOf
+template<>
+struct anch::Mapping<Person> {
+  static void
+  registerObject(anch::ObjectMapper<Person> auto& mapper) {
+    mapper
+      .registerField("id", &Person::_id)
+      .registerField("first_name", &Person::_firstName)
+      .registerField("last_name", &Person::_lastName)
+      .registerField("birth_date", &Person::_birthDate)
+      .registerField("email", &Person::_email)
+      ;
+  }
+};
+//! [description]
+
 
 int
 main(void) {
@@ -91,6 +109,17 @@ main(void) {
       dbCon.rollback();
       throw;
     }
+
+    // Parameters from the fields of a described object (the other fields are ignored)
+    //! [fields]
+    Person joe;
+    joe.setFirstName("Joe");
+    joe.setLastName("Doe");
+    joe.setBirthDate("1973-01-01");
+    joe.setEmail("joe@anch.org");
+    dbCon.update("INSERT INTO T_Test (first_name,last_name,birth_date,email) VALUES (:first_name,:last_name,:birth_date,:email)",
+		 anch::sql::fieldsOf(joe));
+    //! [fields]
 
     std::cout << std::endl;
 

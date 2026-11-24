@@ -111,6 +111,18 @@ namespace anch::sql {
   ANCH_SQL_EXPORT anch::sql::ParameterValue toParameter(uint64_t value);
 
   /*!
+   * Convert floating point number to parameter value (shortest representation which reads back the same value ;
+   * \c float values are converted as \c double )
+   *
+   * \param value the value
+   *
+   * \return the parameter value
+   *
+   * \since 0.3
+   */
+  ANCH_SQL_EXPORT anch::sql::ParameterValue toParameter(double value);
+
+  /*!
    * Convert string to parameter value
    *
    * \param value the value

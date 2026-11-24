@@ -51,6 +51,47 @@ namespace anch::sql {
     return nbRows;
   }
 
+  template<std::ranges::input_range Iterable>
+  requires anch::Described<std::ranges::range_value_t<Iterable>>
+  uint64_t
+  Connection::batchUpdate(const std::string& query, const Iterable& values) {
+    PreparedStatement& stmt = prepareStatement(query);
+    uint64_t nbRows = 0;
+    for(const auto& value : values) {
+      stmt.set(anch::sql::fieldsOf(value));
+      nbRows += stmt.executeUpdate();
+    }
+    return nbRows;
+  }
+
+  template<anch::Described T>
+  ResultSet*
+  Connection::query(const std::string& query, const anch::sql::FieldsOf<T>& fields) {
+    PreparedStatement& stmt = prepareStatement(query);
+    stmt.set(fields);
+    return stmt.executeQuery();
+  }
+
+  template<anch::Described T>
+  void
+  Connection::queryMapRow(const std::string& query, std::function<void(ResultSet&)> rowMapper, const anch::sql::FieldsOf<T>& fields) {
+    Connection::mapRow(this->query(query, fields), rowMapper);
+  }
+
+  template<anch::Described T>
+  void
+  Connection::queryExtract(const std::string& query, std::function<void(ResultSet&)> resExtractor, const anch::sql::FieldsOf<T>& fields) {
+    Connection::extract(this->query(query, fields), resExtractor);
+  }
+
+  template<anch::Described T>
+  uint64_t
+  Connection::update(const std::string& query, const anch::sql::FieldsOf<T>& fields) {
+    PreparedStatement& stmt = prepareStatement(query);
+    stmt.set(fields);
+    return stmt.executeUpdate();
+  }
+
   inline
   bool
   Connection::isValid() const noexcept {

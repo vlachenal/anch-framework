@@ -42,13 +42,14 @@ if(ANCH_SQL_MYSQL)
   add_test(NAME MySQL-statement-cache COMMAND anch-mysql-test -t 15-statement-cache)
   add_test(NAME MySQL-stmt-named COMMAND anch-mysql-test -t 16-stmt-named)
   add_test(NAME MySQL-builder-query COMMAND anch-mysql-test -t 17-builder-query)
+  add_test(NAME MySQL-stmt-fields COMMAND anch-mysql-test -t 18-stmt-fields)
   add_test(NAME SQLConnectionFactoryMySQL COMMAND anch-sql-connection-factory-test -t sql-factory-mysql)
   add_test(NAME SQLConnectionPoolMySQL COMMAND anch-sql-connection-factory-test -t sql-pool-mysql)
   set_tests_properties(SQLConnectionFactoryMySQL SQLConnectionPoolMySQL PROPERTIES ENVIRONMENT "${driver_env}")
   # Tests share the database: they are not run in parallel (each test resets data before running)
   set_tests_properties(MySQL-query-manual-handling MySQL-query-row-result-handling MySQL-query-result-set-handling
     MySQL-insert MySQL-update MySQL-delete MySQL-query-stmt-row-result-handling MySQL-insert-stmt MySQL-update-stmt
-    MySQL-transactions MySQL-stmt-operators MySQL-stmt-null MySQL-sql-error MySQL-fatal-error MySQL-statement-cache MySQL-stmt-named MySQL-builder-query SQLConnectionFactoryMySQL
+    MySQL-transactions MySQL-stmt-operators MySQL-stmt-null MySQL-sql-error MySQL-fatal-error MySQL-statement-cache MySQL-stmt-named MySQL-builder-query MySQL-stmt-fields SQLConnectionFactoryMySQL
     SQLConnectionPoolMySQL
     PROPERTIES RESOURCE_LOCK anch_mysql)
 endif()
@@ -77,6 +78,7 @@ if(ANCH_SQL_POSTGRESQL)
   add_test(NAME PostgreSQL-connection-parameters COMMAND anch-postgresql-test -t 17-connection-parameters)
   add_test(NAME PostgreSQL-stmt-named COMMAND anch-postgresql-test -t 19-stmt-named)
   add_test(NAME PostgreSQL-builder-query COMMAND anch-postgresql-test -t 20-builder-query)
+  add_test(NAME PostgreSQL-stmt-fields COMMAND anch-postgresql-test -t 21-stmt-fields)
   add_test(NAME SQLConnectionFactoryPostgreSQL COMMAND anch-sql-connection-factory-test -t sql-factory-postgresql)
   add_test(NAME SQLConnectionPoolPostgreSQL COMMAND anch-sql-connection-factory-test -t sql-pool-postgresql)
   set_tests_properties(SQLConnectionFactoryPostgreSQL SQLConnectionPoolPostgreSQL PROPERTIES ENVIRONMENT "${driver_env}")
@@ -84,7 +86,7 @@ if(ANCH_SQL_POSTGRESQL)
   set_tests_properties(PostgreSQL-query-manual-handling PostgreSQL-query-row-result-handling PostgreSQL-query-result-set-handling
     PostgreSQL-insert PostgreSQL-update PostgreSQL-delete PostgreSQL-query-stmt-row-result-handling PostgreSQL-insert-stmt
     PostgreSQL-update-stmt PostgreSQL-transactions PostgreSQL-stmt-operators PostgreSQL-stmt-null PostgreSQL-sql-error
-    PostgreSQL-fatal-error PostgreSQL-statement-cache PostgreSQL-statement-cache-deallocate PostgreSQL-statement-invalidated PostgreSQL-stmt-named PostgreSQL-builder-query SQLConnectionFactoryPostgreSQL SQLConnectionPoolPostgreSQL
+    PostgreSQL-fatal-error PostgreSQL-statement-cache PostgreSQL-statement-cache-deallocate PostgreSQL-statement-invalidated PostgreSQL-stmt-named PostgreSQL-builder-query PostgreSQL-stmt-fields SQLConnectionFactoryPostgreSQL SQLConnectionPoolPostgreSQL
     PROPERTIES RESOURCE_LOCK anch_pgsql)
 endif()
 
@@ -106,6 +108,7 @@ if(ANCH_SQL_SQLITE3)
   add_test(NAME SQLite3-stmt-null COMMAND anch-sqlite3-test -t stmt-null)
   add_test(NAME SQLite3-stmt-named COMMAND anch-sqlite3-test -t stmt-named)
   add_test(NAME SQLite3-builder-query COMMAND anch-sqlite3-test -t builder-query)
+  add_test(NAME SQLite3-stmt-fields COMMAND anch-sqlite3-test -t stmt-fields)
   add_test(NAME SQLite3-sql-error COMMAND anch-sqlite3-test -t sql-error)
   add_test(NAME SQLite3-statement-cache COMMAND anch-sqlite3-test -t statement-cache)
   add_test(NAME SQLConnectionFactorySQLite COMMAND anch-sql-connection-factory-test -t sql-factory-sqlite3)
@@ -115,7 +118,7 @@ if(ANCH_SQL_SQLITE3)
   # Tests share anch.db: they are not run in parallel (each test resets data before running)
   set_tests_properties(SQLite3-query-manual-handling SQLite3-query-row-result-handling SQLite3-query-result-set-handling
     SQLite3-insert SQLite3-update SQLite3-delete SQLite3-query-stmt-row-result-handling SQLite3-insert-stmt
-    SQLite3-update-stmt SQLite3-transactions SQLite3-stmt-operators SQLite3-stmt-null SQLite3-stmt-named SQLite3-builder-query SQLite3-sql-error SQLite3-statement-cache
+    SQLite3-update-stmt SQLite3-transactions SQLite3-stmt-operators SQLite3-stmt-null SQLite3-stmt-named SQLite3-builder-query SQLite3-stmt-fields SQLite3-sql-error SQLite3-statement-cache
     SQLConnectionFactorySQLite SQLConnectionPoolSQLite SQLConnectionFactoryStatementCacheSize
     PROPERTIES RESOURCE_LOCK anch_sqlite)
 endif()
@@ -138,6 +141,7 @@ add_test(NAME SqlConnection-sql-error-keeps-valid COMMAND anch-sql-connection-te
 add_test(NAME SqlConnection-release-rolls-back COMMAND anch-sql-connection-test -t release-rolls-back)
 add_test(NAME SqlConnection-release-unknown-state COMMAND anch-sql-connection-test -t release-unknown-state)
 add_test(NAME SqlConnection-prepared-statement-errors COMMAND anch-sql-connection-test -t prepared-statement-errors)
+add_test(NAME SqlConnection-fields-of COMMAND anch-sql-connection-test -t fields-of)
 add_test(NAME SqlConnection-result-set-errors COMMAND anch-sql-connection-test -t result-set-errors)
 add_test(NAME SqlConnection-pool-discards-invalid COMMAND anch-sql-connection-test -t pool-discards-invalid)
 add_test(NAME SqlConnection-pool-releases-transaction COMMAND anch-sql-connection-test -t pool-releases-transaction)

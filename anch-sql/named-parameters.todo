@@ -199,6 +199,15 @@ IN / EXISTS perdues, isValidValue<SelectBuilder / SQLQuery / Fluent> qui liaient
 (supprimés, ainsi que les makers exists / notExists), isValidValue défini pour tout Bindable (non défini hors
 chaînes : clause sur un entier impossible), AND(maker, valeur) qui passait NULL à une std::string. Tests :
 where_values, merged_names (sans base), builder-query exécuté sur les trois bases.
+Étape 4 faite le 2026-11-24 (branche sql-fields-of) : sql/fields.hpp, FieldsMapper<T> (mapper anch::ObjectMapper
+de la description commune, construit une fois : nom -> lecture du membre ou du getter ; setters seuls ignorés ;
+champ non liable refusé à la compilation par static_assert ; contraintes ignorées), FieldsOf<T> / fieldsOf(objet),
+PreparedStatement::set(FieldsOf<T>) (chaque paramètre de la requête lié au champ de même nom, les autres champs
+ignorés, paramètre sans champ non lié : erreur avant exécution), Connection::query / queryMapRow / queryExtract /
+update avec FieldsOf, batchUpdate(requête, range d'objets décrits) ; toParameter(double) ajouté (champs flottants,
+std::to_chars). Tests : fields-of (connexion factice), stmt-fields sur les trois bases ; exemple connection.cpp
+(snippets description et fields). Limite : UUID et std::chrono::year_month_day ne sont pas liables (anch-sql ne
+dépend pas d'anch-uuid), à ajouter si besoin.
 CHANGELOG ([Unreleased], Breaking changes : '?' et formes positionnelles supprimés ; Added : paramètres nommés,
 Parameters, listes) à chaque étape.
 
