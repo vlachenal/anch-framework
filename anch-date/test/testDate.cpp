@@ -123,7 +123,25 @@ testDateTime() {
   anch::ut::assertThat(static_cast<std::time_t>(day.startOfDay(Zone::UTC)) == 1735689600, "UTC start of day");
   anch::ut::assertThat(static_cast<std::time_t>(day.startOfDay(Zone::LOCAL)) == 1735689600 - 9 * 3600, "Local start of day");
   Date today = Date::today(Zone::UTC);
-  anch::ut::assertTrue(today == DateTime().date(Zone::UTC) || today.plusDays(1) == DateTime().date(Zone::UTC), "Today");
+  anch::ut::assertTrue(today == DateTime::now().date(Zone::UTC) || today.plusDays(1) == DateTime::now().date(Zone::UTC), "Today");
+  ::unsetenv("TZ");
+  ::tzset();
+}
+
+void
+testDateTimeFields() {
+  // A point in time is only a number of nanoseconds since epoch: fields are computed on demand
+  static_assert(sizeof(DateTime) == sizeof(int64_t), "DateTime holds a time point only");
+  ::setenv("TZ", "Asia/Tokyo", 1);
+  ::tzset();
+  DateTime time(std::chrono::system_clock::time_point(std::chrono::nanoseconds(1735689600123456789))); // 2025-01-01T00:00:00.123456789Z
+  anch::date::DateFields utc = time.fields(Zone::UTC);
+  anch::date::DateFields local = time.fields();
+  anch::ut::assertThat(utc.year == 2025 && utc.month == 1 && utc.day == 1 && utc.hour == 0 && utc.millisecond == 123 && utc.microsecond == 456
+		       && utc.nanosecond == 789 && utc.weekday == 3 && utc.yearday == 1, "Unexpected UTC fields {}-{}-{} {}h", utc.year, utc.month, utc.day, utc.hour);
+  anch::ut::assertThat(local.hour == 9 && local.day == 1 && local.nanosecond == 789, "Unexpected local fields {}h", local.hour);
+  anch::ut::assertTrue(DateTime(local) == time, "Point in time has to be built from its local fields");
+  anch::ut::assertThat(static_cast<std::time_t>(DateTime()) == 0 && DateTime::now() > DateTime(static_cast<std::time_t>(1735689600)), "Epoch and now");
   ::unsetenv("TZ");
   ::tzset();
 }
@@ -138,5 +156,6 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("date-fields", testFields)
     .add("date-arithmetic", testArithmetic)
     .add("date-datetime", testDateTime)
+    .add("datetime-fields", testDateTimeFields)
     ;
 }

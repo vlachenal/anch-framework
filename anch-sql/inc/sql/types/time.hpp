@@ -29,8 +29,8 @@ namespace anch::sql {
   /*!
    * \brief SQL time type
    *
-   * SQL time type.\n
-   * It will only take into from hours to microseconds
+   * SQL time type: time of day (local time) of a point in time, on 1970-01-01 (it is replaced by a time of day type
+   * in a next version: see \c anch-date/date.todo ).
    *
    * \since 0.1
    *
@@ -43,7 +43,7 @@ namespace anch::sql {
     /*!
      * \ref Time default constructor.
      *
-     * \param init Initialize the \ref Time to now (default true)
+     * \param init Initialize the \ref Time to the current time of day (default true), to the time of day of epoch otherwise
      */
     explicit Time(bool init = true);
 
@@ -68,14 +68,6 @@ namespace anch::sql {
      */
     Time(const std::tm* const time);
     // Constructors -
-
-    // Destructor +
-  public:
-    /*!
-     * \ref Time destructor
-     */
-    virtual ~Time();
-    // Destructor -
 
   };
 

@@ -30,7 +30,10 @@ Conception
    sql::Time hérite de DateTime. Tests : anch-date-test (construction, comparaisons, champs, arithmétique,
    conversions avec DateTime), stmt-dates sur les trois bases (colonne DATE de l'an 0 / 1, hors de portée de
    l'ancien type ; paramètre et liste de dates).
-2. Allègement de DateTime : seulement sys_time<nanoseconds>, champs calculés à la demande (plus de 12 champs ni de
-   destructeur virtuel), DateTime::now() au lieu du constructeur par défaut qui prend l'heure courante ;
-   DateFormatter / IDatePartFormatter lisent des champs calculés et construisent le résultat de parse.
+2. Faite le 2026-11-24 (branche date-datetime) : DateTime ne garde que sys_time<nanoseconds> (8 octets, plus de
+   destructeur virtuel) ; DateFields (public : année, mois 1-12, jour, heure ... nanoseconde, jour ISO de la
+   semaine, jour de l'année) calculé par fields(Zone) ; DateTime() = epoch, DateTime::now(), DateTime(DateFields)
+   (heure locale) ; IDatePartFormatter sur DateFields (accesseurs protégés supprimés, DateFormatter calcule les
+   champs une fois et construit le résultat de parse) ; anch::sql::Time garde l'heure du jour (le 1970-01-01).
+   Tests : datetime-fields (UTC / local, construction depuis les champs, epoch, now, sizeof).
 3. anch::date::Time : heure du jour (RFC 3339 partial-time, XSD xs:time), remplace anch::sql::Time.

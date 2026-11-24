@@ -40,7 +40,7 @@ AnchDateFormatter::~AnchDateFormatter() {
 
 void
 AnchDateFormatter::formatValue(const void* const, ostream& out) const noexcept {
-  _dateFormat.format(DateTime(), out);
+  _dateFormat.format(DateTime::now(), out);
 }
 
 FormatterType

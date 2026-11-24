@@ -107,18 +107,18 @@ namespace {
       return FIELDS[static_cast<std::size_t>(_field)];
     }
 
-    virtual void format(const DateTime& date, std::ostream& output) const noexcept override {
+    virtual void format(const anch::date::DateFields& date, std::ostream& output) const noexcept override {
       int value = 0;
       switch(_field) {
-      case Field::YEAR4: value = getYear(date); break;
-      case Field::YEAR2: value = ((getYear(date) % 100) + 100) % 100; break;
-      case Field::MONTH: value = getMonth(date) + 1; break;
-      case Field::DAY: value = getDay(date); break;
-      case Field::HOUR24: value = getHour(date); break;
-      case Field::HOUR12: value = getHour(date) % 12 == 0 ? 12 : getHour(date) % 12; break;
-      case Field::MINUTE: value = getMinute(date); break;
-      case Field::SECOND: value = getSecond(date); break;
-      case Field::MILLISECOND: value = getMillisecond(date); break;
+      case Field::YEAR4: value = date.year; break;
+      case Field::YEAR2: value = ((date.year % 100) + 100) % 100; break;
+      case Field::MONTH: value = date.month; break;
+      case Field::DAY: value = date.day; break;
+      case Field::HOUR24: value = date.hour; break;
+      case Field::HOUR12: value = date.hour % 12 == 0 ? 12 : date.hour % 12; break;
+      case Field::MINUTE: value = date.minute; break;
+      case Field::SECOND: value = date.second; break;
+      case Field::MILLISECOND: value = date.millisecond; break;
       }
       // std::format does not change stream state (fill character)
       std::format_to(std::ostreambuf_iterator<char>(output), "{:0{}}", value, desc().size);
@@ -128,7 +128,7 @@ namespace {
       return desc().size;
     }
 
-    virtual bool setValue(DateTime& date, const std::string& str) const noexcept override {
+    virtual bool setValue(anch::date::DateFields& date, const std::string& str) const noexcept override {
       int value = 0;
       const char* last = str.data() + str.size();
       if(str.empty() || str.front() < '0' || str.front() > '9') { // from_chars accepts '-'
@@ -139,15 +139,15 @@ namespace {
 	return false;
       }
       switch(_field) {
-      case Field::YEAR4: setYear(date, value); break;
-      case Field::YEAR2: setYear(date, value < 69 ? 2000 + value : 1900 + value); break; // as strptime
-      case Field::MONTH: setMonth(date, static_cast<uint16_t>(value - 1)); break;
-      case Field::DAY: setDay(date, static_cast<uint16_t>(value)); break;
-      case Field::HOUR24: setHour(date, static_cast<uint16_t>(value)); break;
-      case Field::HOUR12: setHour(date, static_cast<uint16_t>(getHour(date) + value % 12)); break; // marker adds 12
-      case Field::MINUTE: setMinute(date, static_cast<uint16_t>(value)); break;
-      case Field::SECOND: setSecond(date, static_cast<uint16_t>(value)); break;
-      case Field::MILLISECOND: setMillisecond(date, static_cast<uint16_t>(value)); break;
+      case Field::YEAR4: date.year = value; break;
+      case Field::YEAR2: date.year = value < 69 ? 2000 + value : 1900 + value; break; // as strptime
+      case Field::MONTH: date.month = static_cast<uint16_t>(value); break;
+      case Field::DAY: date.day = static_cast<uint16_t>(value); break;
+      case Field::HOUR24: date.hour = static_cast<uint16_t>(value); break;
+      case Field::HOUR12: date.hour = static_cast<uint16_t>(date.hour + value % 12); break; // marker adds 12
+      case Field::MINUTE: date.minute = static_cast<uint16_t>(value); break;
+      case Field::SECOND: date.second = static_cast<uint16_t>(value); break;
+      case Field::MILLISECOND: date.millisecond = static_cast<uint16_t>(value); break;
       }
       return true;
     }
@@ -165,18 +165,18 @@ namespace {
     /*! Pattern */
     static const std::string PATTERN;
 
-    virtual void format(const DateTime& date, std::ostream& output) const noexcept override {
-      output << (getHour(date) < 12 ? "a.m." : "p.m.");
+    virtual void format(const anch::date::DateFields& date, std::ostream& output) const noexcept override {
+      output << (date.hour < 12 ? "a.m." : "p.m.");
     }
 
     virtual std::size_t getSize() const noexcept override {
       return 4;
     }
 
-    virtual bool setValue(DateTime& date, const std::string& value) const noexcept override {
+    virtual bool setValue(anch::date::DateFields& date, const std::string& value) const noexcept override {
       if(value == "p.m.") {
-	if(getHour(date) < 12) { // %h value is added to (or by) marker value
-	  setHour(date, static_cast<uint16_t>(getHour(date) + 12));
+	if(date.hour < 12) { // %h value is added to (or by) marker value
+	  date.hour = static_cast<uint16_t>(date.hour + 12);
 	}
 	return true;
       }
@@ -207,7 +207,7 @@ namespace {
       // Nothing to do
     }
 
-    virtual void format(const DateTime&, std::ostream& output) const noexcept override {
+    virtual void format(const anch::date::DateFields&, std::ostream& output) const noexcept override {
       output << _message;
     }
 
@@ -215,7 +215,7 @@ namespace {
       return _message.size();
     }
 
-    virtual bool setValue(DateTime&, const std::string& value) const noexcept override {
+    virtual bool setValue(anch::date::DateFields&, const std::string& value) const noexcept override {
       return value == _message;
     }
 
@@ -332,8 +332,9 @@ DateFormatter::format(const DateTime& date, std::string& output) const noexcept 
 
 void
 DateFormatter::format(const DateTime& date, std::ostream& output) const noexcept {
+  const anch::date::DateFields fields = date.fields(); // local time, computed once
   for(const auto& part : _formatters) {
-    part->format(date, output);
+    part->format(fields, output);
   }
 }
 
@@ -344,36 +345,24 @@ DateFormatter::parse(const std::string& strDate, DateTime& date) const {
     oss << "Found " << strDate.size() << " characters instead of " << _size << " in " << strDate;
     throw std::invalid_argument(oss.str());
   }
-  // Fields which are not in pattern: 1970-01-01 00:00:00.000 +
-  date._years = 1970;
-  date._months = 0;
-  date._mdays = 1;
-  date._hours = 0;
-  date._minutes = 0;
-  date._seconds = 0;
-  date._milliseconds = 0;
-  date._microseconds = 0;
-  date._nanoseconds = 0;
-  // Fields which are not in pattern: 1970-01-01 00:00:00.000 -
+  anch::date::DateFields fields; // fields which are not in pattern: 1970-01-01 00:00:00.000
   std::size_t offset = 0;
   for(const auto& part : _formatters) {
-    if(!part->setValue(date, strDate.substr(offset, part->getSize()))) {
+    if(!part->setValue(fields, strDate.substr(offset, part->getSize()))) {
       throw std::invalid_argument("Fail to parse " + strDate);
     }
     offset += part->getSize();
   }
-  std::chrono::year_month_day ymd{std::chrono::year(date._years),
-				  std::chrono::month(static_cast<unsigned>(date._months + 1)),
-				  std::chrono::day(date._mdays)};
+  std::chrono::year_month_day ymd{std::chrono::year(fields.year), std::chrono::month(fields.month), std::chrono::day(fields.day)};
   if(!ymd.ok()) {
     throw std::invalid_argument("Invalid date " + strDate);
   }
-  date.computeTimestamp();
+  date = DateTime(fields);
 }
 
 DateTime
 DateFormatter::parse(const std::string& strDate) const {
-  DateTime date(false);
+  DateTime date;
   parse(strDate, date);
   return date;
 }

@@ -21,29 +21,34 @@
 
 namespace anch::date {
 
+  constexpr
+  DateTime::DateTime() noexcept: _time() {
+    // Nothing to do
+  }
+
   inline bool
   DateTime::after(const DateTime& date) const noexcept {
-    return _timestamp > date._timestamp;
+    return _time > date._time;
   }
 
   inline bool
   DateTime::before(const DateTime& date) const noexcept {
-    return _timestamp < date._timestamp;
+    return _time < date._time;
   }
 
   inline bool
   DateTime::equals(const DateTime& date) const noexcept {
-    return _timestamp == date._timestamp;
+    return _time == date._time;
   }
 
   inline std::strong_ordering
   DateTime::operator<=>(const DateTime& date) const noexcept {
-    return _timestamp <=> date._timestamp;
+    return _time <=> date._time;
   }
 
   inline bool
   DateTime::operator==(const DateTime& date) const noexcept {
-    return _timestamp == date._timestamp;
+    return _time == date._time;
   }
 
 }  // anch::date

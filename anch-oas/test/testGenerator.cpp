@@ -221,7 +221,7 @@ testNoDate() {
   GeneratedModels models = generate(document);
   contains(models.header, "#include <chrono>");
   contains(models.header, "#include \"date/dateTime.hpp\"");
-  contains(models.header, "anch::date::DateTime at{false};");
+  contains(models.header, "anch::date::DateTime at{};");
   contains(models.header, "anch::date::Date day{};");
   contains(models.header, "std::optional<anch::date::DateTime> when;");
   contains(models.header, "std::vector<anch::date::Date> days;");

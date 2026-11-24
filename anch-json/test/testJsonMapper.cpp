@@ -2042,7 +2042,7 @@ testDeserUuidKO() {
 // Dates +
 #ifdef ANCH_DATE
 struct TestDate {
-  anch::date::DateTime _timestamp{false};
+  anch::date::DateTime _timestamp;
   std::optional<anch::date::DateTime> _updated;
   anch::date::Date _birth{};
   std::vector<anch::date::Date> _days;

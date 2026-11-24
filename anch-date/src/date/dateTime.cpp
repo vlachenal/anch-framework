@@ -31,18 +31,6 @@ using std::chrono::system_clock;
 namespace {
 
   /*!
-   * Convert timestamp to time point
-   *
-   * \param timestamp the number of nanoseconds since epoch
-   *
-   * \return the time point
-   */
-  inline sys_time<nanoseconds>
-  toTimePoint(std::int64_t timestamp) {
-    return sys_time<nanoseconds>(nanoseconds(timestamp));
-  }
-
-  /*!
    * Convert time point to local time
    *
    * \param time the time point (truncated toward the past to the second)
@@ -95,100 +83,99 @@ namespace {
 }
 
 // Constructors +
-DateTime::DateTime(bool init) {
-  initialize(init ? std::chrono::time_point_cast<nanoseconds>(system_clock::now()) : sys_time<nanoseconds>());
+DateTime::DateTime(const system_clock::time_point& time): _time(std::chrono::time_point_cast<nanoseconds>(time)) {
+  // Nothing to do
 }
 
-DateTime::DateTime(const system_clock::time_point& time) {
-  initialize(std::chrono::time_point_cast<nanoseconds>(time));
+DateTime::DateTime(const std::time_t& time): _time(fromSeconds(time)) {
+  // Nothing to do
 }
 
-DateTime::DateTime(const std::time_t& time) {
-  initialize(fromSeconds(time));
-}
-
-DateTime::DateTime(const std::tm* const time) {
+DateTime::DateTime(const std::tm* const time): _time() {
   std::tm local = *time; // mktime normalizes its argument
-  initialize(fromLocalTime(local));
+  _time = fromLocalTime(local);
 }
 
-DateTime::DateTime(const std::timespec& time) {
+DateTime::DateTime(const std::timespec& time): _time() {
   if(time.tv_nsec < 0 || time.tv_nsec > 999'999'999) {
     throw std::invalid_argument("Invalid timespec: tv_nsec has to be in [0, 999999999]");
   }
-  initialize(fromSeconds(time.tv_sec) + nanoseconds(time.tv_nsec));
+  _time = fromSeconds(time.tv_sec) + nanoseconds(time.tv_nsec);
+}
+
+DateTime::DateTime(const anch::date::DateFields& fields): _time() {
+  std::tm local{};
+  local.tm_year = fields.year - 1900;
+  local.tm_mon = fields.month - 1;
+  local.tm_mday = fields.day;
+  local.tm_hour = fields.hour;
+  local.tm_min = fields.minute;
+  local.tm_sec = fields.second;
+  local.tm_isdst = -1; // let mktime determine daylight saving time
+  _time = fromLocalTime(local) + std::chrono::milliseconds(fields.millisecond) + std::chrono::microseconds(fields.microsecond)
+    + nanoseconds(fields.nanosecond);
 }
 // Constructors -
 
-// Destructor +
-DateTime::~DateTime() {
-  // Nothing to do
-}
-// Destructor -
-
 // Methods +
+DateTime
+DateTime::now() {
+  return DateTime(system_clock::now());
+}
+
+anch::date::DateFields
+DateTime::fields(anch::date::Zone zone) const {
+  std::time_t secs = system_clock::to_time_t(std::chrono::floor<seconds>(_time));
+  std::tm broken{};
+  if(zone == anch::date::Zone::UTC) {
+    ::gmtime_r(&secs, &broken);
+  } else {
+    ::localtime_r(&secs, &broken);
+  }
+  auto subsec = (_time - std::chrono::floor<seconds>(_time)).count(); // [0, 999999999]
+  anch::date::DateFields fields;
+  fields.year = broken.tm_year + 1900;
+  fields.month = static_cast<uint16_t>(broken.tm_mon + 1);
+  fields.day = static_cast<uint16_t>(broken.tm_mday);
+  fields.hour = static_cast<uint16_t>(broken.tm_hour);
+  fields.minute = static_cast<uint16_t>(broken.tm_min);
+  fields.second = static_cast<uint16_t>(broken.tm_sec);
+  fields.millisecond = static_cast<uint16_t>(subsec / 1000000);
+  fields.microsecond = static_cast<uint16_t>(subsec / 1000 % 1000);
+  fields.nanosecond = static_cast<uint16_t>(subsec % 1000);
+  fields.weekday = static_cast<uint16_t>(broken.tm_wday == 0 ? 7 : broken.tm_wday);
+  fields.yearday = static_cast<uint16_t>(broken.tm_yday + 1);
+  return fields;
+}
+
 anch::date::Date
 DateTime::date(anch::date::Zone zone) const {
   if(zone == anch::date::Zone::UTC) {
-    return anch::date::Date(std::chrono::floor<std::chrono::days>(toTimePoint(_timestamp)));
+    return anch::date::Date(std::chrono::floor<std::chrono::days>(_time));
   }
-  return anch::date::Date(_years, static_cast<unsigned>(_months + 1), _mdays);
-}
-
-void
-DateTime::initialize(const sys_time<nanoseconds>& time) {
-  _timestamp = time.time_since_epoch().count();
-  std::tm local = toLocalTime(time);
-  _years = local.tm_year + 1900;
-  _months = static_cast<uint16_t>(local.tm_mon);
-  _ydays = static_cast<uint16_t>(local.tm_yday);
-  _mdays = static_cast<uint16_t>(local.tm_mday);
-  _wdays = static_cast<uint16_t>(local.tm_wday);
-  _hours = static_cast<uint16_t>(local.tm_hour);
-  _minutes = static_cast<uint16_t>(local.tm_min);
-  _seconds = static_cast<uint16_t>(local.tm_sec);
-  auto subsec = (time - std::chrono::floor<seconds>(time)).count(); // [0, 999999999]
-  _milliseconds = static_cast<uint16_t>(subsec / 1000000);
-  _microseconds = static_cast<uint16_t>(subsec / 1000 % 1000);
-  _nanoseconds = static_cast<uint16_t>(subsec % 1000);
-}
-
-void
-DateTime::computeTimestamp() {
-  std::tm local{};
-  local.tm_year = _years - 1900;
-  local.tm_mon = _months;
-  local.tm_mday = _mdays;
-  local.tm_hour = _hours;
-  local.tm_min = _minutes;
-  local.tm_sec = _seconds;
-  local.tm_isdst = -1; // let mktime determine daylight saving time
-  initialize(fromLocalTime(local)
-	     + std::chrono::milliseconds(_milliseconds)
-	     + std::chrono::microseconds(_microseconds)
-	     + nanoseconds(_nanoseconds));
+  const anch::date::DateFields local = fields(zone);
+  return anch::date::Date(local.year, local.month, local.day);
 }
 // Methods -
 
 // Operators +
 DateTime::operator system_clock::time_point() const noexcept {
-  return std::chrono::time_point_cast<system_clock::duration>(toTimePoint(_timestamp));
+  return std::chrono::time_point_cast<system_clock::duration>(_time);
 }
 
 DateTime::operator std::time_t() const noexcept {
-  return system_clock::to_time_t(std::chrono::floor<seconds>(toTimePoint(_timestamp)));
+  return system_clock::to_time_t(std::chrono::floor<seconds>(_time));
 }
 
 DateTime::operator std::tm() const noexcept {
-  return toLocalTime(toTimePoint(_timestamp));
+  return toLocalTime(_time);
 }
 
 DateTime::operator std::timespec() const noexcept {
-  auto time = toTimePoint(_timestamp);
-  auto secs = std::chrono::floor<seconds>(time);
+  auto secs = std::chrono::floor<seconds>(_time);
   std::timespec spec{};
   spec.tv_sec = system_clock::to_time_t(secs);
-  spec.tv_nsec = static_cast<long>((time - secs).count());
+  spec.tv_nsec = static_cast<long>((_time - secs).count());
   return spec;
 }
 // Operators -

@@ -32,7 +32,7 @@ void
 formatterExample() {
   anch::date::DateFormatter formatter("%Y-%m-%d %H:%M:%S.%s");
   std::string str;
-  formatter.format(anch::date::DateTime(), str);                     // now
+  formatter.format(anch::date::DateTime::now(), str);
   anch::date::DateTime date = formatter.parse("2012-10-23 10:02:59.998");
   std::time_t time = static_cast<std::time_t>(date);
   std::cout << str << " " << time << std::endl;

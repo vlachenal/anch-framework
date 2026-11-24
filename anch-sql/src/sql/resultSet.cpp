@@ -585,7 +585,7 @@ namespace anch::sql {
     std::optional<anch::date::DateTime> res;
     std::optional<std::string> strRes = get<std::string>(idx);
     if(strRes) {
-      anch::date::DateTime date(false);
+      anch::date::DateTime date;
       getTimestampFormatter().parse(strRes.value(), date);
       res = date;
     }

@@ -21,6 +21,12 @@ and `\deprecated` in its documentation, which give its replacement, and it is re
   (`plusDays`, `plusMonths`, `plusYears`, `daysUntil`), it is parsed and formatted (`parse`, `format`,
   `operator<<`) and explicitly converted from and to `year_month_day` and `sys_days`; conversions with points in
   time give the time zone (`anch::date::Zone`: `DateTime::date(zone)`, `Date::startOfDay(zone)`, `Date::today`).
+- anch-date: `DateTime` only holds its point in time (8 bytes instead of 12 fields and a virtual destructor): its
+  broken down representation is computed by `fields(zone)` (`DateFields`: local time or UTC, months 1-12, ISO
+  weekday). The default constructor is epoch (`DateTime(bool init = true)` is removed: `DateTime::now()` gives the
+  current time) and `DateTime(const DateFields&)` builds a point in time from local fields. `IDatePartFormatter`
+  formats and parses `DateFields` (its protected accessors are removed): `DateFormatter` computes them once.
+  `anch::sql::Time` keeps the time of day of a point in time.
 - anch-sql: `anch::sql::Date` and `anch::sql::Timestamp` are removed: DATE columns and parameters are
   `anch::date::Date` (years before 1678 can be read), timestamps are `anch::date::DateTime`
   (`ResultSet::get<anch::date::Date>`, `get<anch::date::DateTime>`); `ResultSet::getDateFormatter` and
