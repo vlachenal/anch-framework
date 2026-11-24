@@ -48,7 +48,7 @@ namespace anch::codec {
    * \since 0.3
    */
   template<>
-  struct ANCH_CODEC_JSON_EXPORT FormatPolicy<anch::json::Json> {
+  struct ANCH_CODEC_JSON_EXPORT FormatPolicy<anch::json::JsonFormat> {
     /*!
      * Configure the options of a side
      *
@@ -68,13 +68,13 @@ namespace anch::codec {
   /*!
    * \c application/json codec based on anch-json (anch-codec-json plugin, option \c ANCH_CODEC_JSON ): values need
    * a description ( \c anch::Mapping , anch-utils). Options of each side: see
-   * \ref FormatPolicy<anch::json::Json> "FormatPolicy".
+   * \ref FormatPolicy<anch::json::JsonFormat> "FormatPolicy".
    *
    * \since 0.3 (\c anch::rest::Json in 0.2)
    */
-  using Json = anch::codec::FormatCodec<anch::json::Json>;
+  using Json = anch::codec::FormatCodec<anch::json::JsonFormat>;
 
 }
 
 // Options of each side are instantiated in anch-codec-json (unique in the program)
-extern template struct ANCH_CODEC_JSON_EXPORT anch::codec::FormatCodec<anch::json::Json>;
+extern template struct ANCH_CODEC_JSON_EXPORT anch::codec::FormatCodec<anch::json::JsonFormat>;

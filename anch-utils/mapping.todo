@@ -87,9 +87,9 @@ Proposition
   F::serialize(const T&, std::ostream&, const F::Options&) et F::deserialize(T&, std::istream&, const F::Options&),
   pour les objets décrits, les collections et les valeurs simples ; formes en flux (lecture élément par élément)
   quand le format le permet (tableau JSON, enregistrements CSV).
-- anch::json::Json et anch::csv::Csv les implémentent (les fonctions libres actuelles d'anch-json restent).
+- anch::json::JsonFormat et anch::csv::CsvFormat les implémentent (les fonctions libres actuelles d'anch-json restent).
 - anch-rest : un codec générique anch::rest::FormatCodec<F> (media type, options par côté Side) construit sur ces
-  concepts ; le codec Json actuel devient FormatCodec<anch::json::Json>, Csv est obtenu sans code propre.
+  concepts ; le codec Json actuel devient FormatCodec<anch::json::JsonFormat>, Csv est obtenu sans code propre.
   Protobuf et Thrift (code généré par leurs outils) gardent leurs codecs mais satisfont les mêmes concepts.
 
 5. anch-oas
@@ -119,7 +119,7 @@ Compatibilité et dépréciation
    les descriptions dans l'en-tête des modèles (le source garde les mappers d'énumérations).
 3. anch-csv : Reader / Writer (anch-csv/anch-csv.todo), puis mapper sur anch::Mapping<T>.
 4. Faite le 2026-11-21 (anch-codec étape 5) : concepts DataFormat / FormatSerializer / FormatDeserializer, formats
-   anch::json::Json et anch::csv::Csv, codec générique FormatCodec<F> dans anch-codec.
+   anch::json::JsonFormat et anch::csv::CsvFormat, codec générique FormatCodec<F> dans anch-codec.
 5. ScalarMapping pour les énumérations et types simples (anch-json, anch-csv, anch-oas).
 
 Questions (toutes tranchées)

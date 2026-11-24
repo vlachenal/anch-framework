@@ -26,7 +26,7 @@
 using anch::codec::FormatPolicy;
 using anch::codec::Json;
 
-template struct anch::codec::FormatCodec<anch::json::Json>;
+template struct anch::codec::FormatCodec<anch::json::JsonFormat>;
 
 namespace {
 
@@ -36,7 +36,7 @@ namespace {
 }
 
 void
-FormatPolicy<anch::json::Json>::configure(anch::json::MappingOptions& options, anch::codec::Side side) {
+FormatPolicy<anch::json::JsonFormat>::configure(anch::json::MappingOptions& options, anch::codec::Side side) {
   if(side == anch::codec::Side::SERVER) {
     options.deserialize_check_constraints = true;
     options.serialize_check_constraints = false;
@@ -52,7 +52,7 @@ FormatPolicy<anch::json::Json>::configure(anch::json::MappingOptions& options, a
 }
 
 void
-FormatPolicy<anch::json::Json>::translate(const std::exception& error) {
+FormatPolicy<anch::json::JsonFormat>::translate(const std::exception& error) {
   const auto* mapping = dynamic_cast<const anch::json::MappingError*>(&error);
   if(mapping != nullptr && mapping->getErrorCode() == anch::json::ErrorCode::PAYLOAD_TOO_LARGE) {
     throw anch::codec::ContentTooLarge(mapping->what());

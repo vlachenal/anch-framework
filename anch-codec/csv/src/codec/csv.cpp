@@ -26,7 +26,7 @@
 using anch::codec::Csv;
 using anch::codec::FormatPolicy;
 
-template struct anch::codec::FormatCodec<anch::csv::Csv>;
+template struct anch::codec::FormatCodec<anch::csv::CsvFormat>;
 
 namespace {
 
@@ -36,7 +36,7 @@ namespace {
 }
 
 void
-FormatPolicy<anch::csv::Csv>::configure(anch::csv::Options& options, anch::codec::Side side) {
+FormatPolicy<anch::csv::CsvFormat>::configure(anch::csv::Options& options, anch::codec::Side side) {
   if(side == anch::codec::Side::SERVER) {
     options.readCheckConstraints = true;
     options.writeCheckConstraints = false;
@@ -51,7 +51,7 @@ FormatPolicy<anch::csv::Csv>::configure(anch::csv::Options& options, anch::codec
 }
 
 void
-FormatPolicy<anch::csv::Csv>::translate(const std::exception& error) {
+FormatPolicy<anch::csv::CsvFormat>::translate(const std::exception& error) {
   const auto* csv = dynamic_cast<const anch::csv::CsvError*>(&error);
   if(csv != nullptr && csv->getErrorCode() == anch::csv::ErrorCode::TOO_LARGE) {
     throw anch::codec::ContentTooLarge(csv->what());
