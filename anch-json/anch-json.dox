@@ -30,7 +30,7 @@ target_link_libraries(my-app PRIVATE anch::json)
  * stream and raises \ref anch::json::MappingError on invalid JSON (with its position). Mapping options
  * (\ref anch::json::MappingOptions ) control unknown fields, \c null values and limits (depth, payload size).\n
  * With \c ANCH_UUID and \c ANCH_DATE options, \c anch::UUID , \c anch::date::DateTime and
- * \c anch::date::Date are mapped as strings (RFC 3339 for dates).
+ * \c anch::date::Date and \c anch::date::Time are mapped as strings (RFC 3339 for dates and times).
  *
  * \section json_example_sec Examples
  *

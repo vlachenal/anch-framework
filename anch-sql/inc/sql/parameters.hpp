@@ -33,7 +33,7 @@
 
 #include "date/date.hpp"
 #include "date/dateTime.hpp"
-#include "sql/types/time.hpp"
+#include "date/time.hpp"
 
 namespace anch::sql {
 
@@ -157,7 +157,7 @@ namespace anch::sql {
   ANCH_SQL_EXPORT anch::sql::ParameterValue toParameter(const anch::date::Date& value);
 
   /*!
-   * Convert SQL time to parameter value ( \c HH:MM:SS.mmm )
+   * Convert time of day to parameter value ( \c HH:MM:SS[.fraction] , RFC 3339 \c partial-time )
    *
    * \param value the value
    *
@@ -165,7 +165,7 @@ namespace anch::sql {
    *
    * \since 0.3
    */
-  ANCH_SQL_EXPORT anch::sql::ParameterValue toParameter(const anch::sql::Time& value);
+  ANCH_SQL_EXPORT anch::sql::ParameterValue toParameter(const anch::date::Time& value);
 
   /*!
    * Convert point in time to parameter value ( \c YYYY-MM-DD HH:MM:SS.mmm , local time)
@@ -206,7 +206,7 @@ namespace anch::sql {
 
   /*!
    * Value which can be bound to a prepared statement parameter ( \c anch::sql::toParameter : integers, floating point
-   * numbers, strings, dates (\c anch::date::Date , \c anch::date::DateTime , \c anch::sql::Time ), \c std::optional of them)
+   * numbers, strings, dates (\c anch::date::Date , \c anch::date::DateTime , \c anch::date::Time ), \c std::optional of them)
    *
    * \tparam T the value type
    *

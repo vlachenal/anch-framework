@@ -44,6 +44,10 @@ target_link_libraries(my-app PRIVATE anch::date)
  * conversions to and from \ref anch::date::DateTime give the time zone ( \ref anch::date::Zone ). Dates are ordered,
  * days, months and years can be added:
  * \snippet{trimleft} anch-date/examples/date.cpp date
+ *\n
+ * \ref anch::date::Time is a time of day (00:00:00 to 23:59:59.999999999, RFC 3339 \c partial-time , SQL \c TIME ),
+ * without time zone either:
+ * \snippet{trimleft} anch-date/examples/date.cpp time
  *
  * \section date_example_sec Example
  *

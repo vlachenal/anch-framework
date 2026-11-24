@@ -474,7 +474,7 @@ testLists() {
 
 void
 testDates() {
-  testStmtDates(*dbCon);
+  testStmtDates(*dbCon, 1, "SELECT :t");
 }
 
 void

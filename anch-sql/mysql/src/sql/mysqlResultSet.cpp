@@ -85,11 +85,6 @@ MySQLResultSet::fetchNext() {
 }
 
 const anch::date::DateFormatter&
-MySQLResultSet::getTimeFormatter() {
-  return getDefaultTimeFormatter();
-}
-
-const anch::date::DateFormatter&
 MySQLResultSet::getTimestampFormatter() {
   return getDefaultTimestampFormatter();
 }

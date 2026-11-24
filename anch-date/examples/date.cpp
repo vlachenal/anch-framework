@@ -69,8 +69,23 @@ dateExample() {
 }
 //! [date]
 
+//! [time]
+#include "date/time.hpp"
+
+bool
+timeExample() {
+  using namespace std::chrono_literals;
+  anch::date::Time opening(9, 30);                                        // impossible times are refused
+  anch::date::Time closing = opening.plus(9h);                            // 18:30:00 (wraps around midnight)
+  bool open = opening <= anch::date::Time::now() && anch::date::Time::now() < closing;
+  anch::date::DateTime meeting = anch::date::Date(2025, 7, 1).at(anch::date::Time::parse("14:00:00"), anch::date::Zone::UTC);
+  std::cout << closing << " " << open << std::endl;                       // 18:30:00 ...
+  return closing.format() == "18:30:00" && meeting.time(anch::date::Zone::UTC) == anch::date::Time(14, 0);
+}
+//! [time]
+
 int
 main() {
   formatterExample();
-  return (rfc3339Example() && dateExample()) ? 0 : 1;
+  return (rfc3339Example() && dateExample() && timeExample()) ? 0 : 1;
 }

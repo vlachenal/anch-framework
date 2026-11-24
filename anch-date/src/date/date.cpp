@@ -26,6 +26,7 @@
 
 #include "date/dateTime.hpp"
 #include "date/rfc3339.hpp"
+#include "date/time.hpp"
 
 using anch::date::Date;
 using anch::date::DateTime;
@@ -152,8 +153,8 @@ Date::daysUntil(const Date& other) const noexcept {
 
 DateTime
 Date::startOfDay(Zone zone) const {
-  if(zone == Zone::UTC) {
-    return DateTime(std::chrono::time_point_cast<std::chrono::system_clock::duration>(sys_days(_date)));
+  if(zone == Zone::UTC) { // std::time_t constructor checks the range of points in time
+    return DateTime(static_cast<std::time_t>(sys_days(_date).time_since_epoch().count()) * 86'400);
   }
   std::tm local{};
   local.tm_year = year() - 1900;
@@ -161,6 +162,28 @@ Date::startOfDay(Zone zone) const {
   local.tm_mday = static_cast<int>(day());
   local.tm_isdst = -1; // let mktime determine daylight saving time
   return DateTime(&local);
+}
+DateTime
+Date::at(const anch::date::Time& time, Zone zone) const {
+  const std::chrono::nanoseconds sinceMidnight(time);
+  if(zone == Zone::UTC) { // std::timespec constructor checks the range of points in time
+    const int64_t secs = std::chrono::duration_cast<std::chrono::seconds>(sinceMidnight).count();
+    std::timespec spec{};
+    spec.tv_sec = static_cast<std::time_t>(sys_days(_date).time_since_epoch().count()) * 86'400 + static_cast<std::time_t>(secs);
+    spec.tv_nsec = static_cast<long>(time.nanosecond());
+    return DateTime(spec);
+  }
+  anch::date::DateFields fields;
+  fields.year = year();
+  fields.month = static_cast<uint16_t>(month());
+  fields.day = static_cast<uint16_t>(day());
+  fields.hour = static_cast<uint16_t>(time.hour());
+  fields.minute = static_cast<uint16_t>(time.minute());
+  fields.second = static_cast<uint16_t>(time.second());
+  fields.millisecond = static_cast<uint16_t>(time.nanosecond() / 1'000'000);
+  fields.microsecond = static_cast<uint16_t>(time.nanosecond() / 1'000 % 1'000);
+  fields.nanosecond = static_cast<uint16_t>(time.nanosecond() % 1'000);
+  return DateTime(fields);
 }
 // Methods -
 

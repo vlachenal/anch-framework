@@ -46,4 +46,5 @@ add_test(NAME date-day-fields COMMAND anch-date-test -t date-fields)
 add_test(NAME date-day-arithmetic COMMAND anch-date-test -t date-arithmetic)
 add_test(NAME date-day-datetime COMMAND anch-date-test -t date-datetime)
 add_test(NAME date-datetime-fields COMMAND anch-date-test -t datetime-fields)
+add_test(NAME date-time-of-day COMMAND anch-date-test -t time)
 # Calendar days -

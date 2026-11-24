@@ -28,6 +28,7 @@
 #include <vector>
 
 #include "date/date.hpp"
+#include "date/time.hpp"
 #include "mapping.hpp"
 #include "sql/connection.hpp"
 #include "sql/builder/clauses.hpp"
@@ -205,9 +206,10 @@ testStmtLists(anch::sql::Connection& conn) {
  *
  * \param conn the connection
  * \param christ the birth year of 'Christ' in the database fixture (0 with MySQL, 1 otherwise)
+ * \param timeQuery query which gives back its time parameter ':t' as a TIME (SQLite has no TIME type)
  */
 inline void
-testStmtDates(anch::sql::Connection& conn, int32_t christ = 1) {
+testStmtDates(anch::sql::Connection& conn, int32_t christ = 1, const std::string& timeQuery = "SELECT CAST(:t AS TIME)") {
   std::optional<anch::date::Date> birth;
   conn.queryMapRow("SELECT birth_date FROM T_Test WHERE last_name = :last", [&birth](anch::sql::ResultSet& res) {
     birth = res.get<anch::date::Date>(0);
@@ -218,6 +220,10 @@ testStmtDates(anch::sql::Connection& conn, int32_t christ = 1) {
   count = countRows(conn, "SELECT COUNT(*) FROM T_Test WHERE birth_date IN (:days)",
 		    {{"days", std::vector<anch::date::Date>{anch::date::Date(1970, 1, 1), anch::date::Date(1993, 1, 1)}}});
   anch::ut::assertThat(count == 2, "Found {} rows born on 1970-01-01 or 1993-01-01 instead of 2", count);
+  // Times of day
+  std::optional<anch::date::Time> time;
+  conn.queryMapRow(timeQuery, [&time](anch::sql::ResultSet& res) { time = res.get<anch::date::Time>(0); }, {{"t", anch::date::Time(13, 45, 30)}});
+  anch::ut::assertThat(time == anch::date::Time(13, 45, 30), "Unexpected time {}", time ? time->format() : std::string("NULL"));
 }
 
 /*!

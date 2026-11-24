@@ -42,6 +42,7 @@
 
 #ifdef ANCH_DATE
 #include "date/dateTime.hpp"
+#include "date/time.hpp"
 #endif
 
 #include "ut/assert.hpp"
@@ -2046,6 +2047,7 @@ struct TestDate {
   std::optional<anch::date::DateTime> _updated;
   anch::date::Date _birth{};
   std::vector<anch::date::Date> _days;
+  std::optional<anch::date::Time> _alarm;
 };
 
 template<>
@@ -2057,6 +2059,7 @@ struct anch::Mapping<TestDate> {
       .registerField("updated", &TestDate::_updated)
       .registerField("birth", &TestDate::_birth)
       .registerField("days", &TestDate::_days)
+      .registerField("alarm", &TestDate::_alarm)
       ;
   }
 };
@@ -2065,13 +2068,14 @@ void
 testDeserDate() {
   using namespace std::chrono;
   anch::json::JSONMapper mapper(anch::json::DEFAULT_MAPPING_OPTIONS);
-  auto iss = std::istringstream(R"({"timestamp":"2025-07-01T12:00:00.5+02:00","updated":null,"birth":"2024-02-29","days":["2025-01-01","2025-12-31"]})");
+  auto iss = std::istringstream(R"({"timestamp":"2025-07-01T12:00:00.5+02:00","updated":null,"birth":"2024-02-29","days":["2025-01-01","2025-12-31"],"alarm":"06:45:00.25"})");
   TestDate res = mapper.deserialize<TestDate>(iss);
   auto nanos = duration_cast<nanoseconds>(static_cast<system_clock::time_point>(res._timestamp).time_since_epoch()).count();
   anch::ut::assertThat(nanos == 1751364000500000000, "Invalid timestamp: {}", nanos);
   anch::ut::assertThat(!res._updated.has_value(), "updated should be empty");
   anch::ut::assertThat(res._birth == anch::date::Date(2024, 2, 29), "Invalid birth");
   anch::ut::assertThat((res._days == std::vector<anch::date::Date>{anch::date::Date(2025, 1, 1), anch::date::Date(2025, 12, 31)}), "Invalid days");
+  anch::ut::assertThat(res._alarm == anch::date::Time(6, 45, 0, 250'000'000), "Invalid alarm");
 }
 
 void
@@ -2082,14 +2086,15 @@ testSerDate() {
   value._updated = anch::date::DateTime(static_cast<std::time_t>(0));
   value._birth = anch::date::Date(2024, 2, 29);
   value._days = {anch::date::Date(2025, 1, 1)};
+  value._alarm = anch::date::Time(23, 59, 59);
   anch::json::JSONMapper mapper(anch::json::DEFAULT_MAPPING_OPTIONS);
   std::string json = mapper.serialize(value);
-  std::string expected = R"({"timestamp":"2025-07-01T10:00:00.123Z","updated":"1970-01-01T00:00:00Z","birth":"2024-02-29","days":["2025-01-01"]})";
+  std::string expected = R"({"timestamp":"2025-07-01T10:00:00.123Z","updated":"1970-01-01T00:00:00Z","birth":"2024-02-29","days":["2025-01-01"],"alarm":"23:59:59"})";
   anch::ut::assertThat(json == expected, "Expected {} ; found {}", expected, json);
   auto iss = std::istringstream(json);
   TestDate copy = mapper.deserialize<TestDate>(iss);
   anch::ut::assertThat(copy._timestamp == value._timestamp && copy._updated == value._updated
-                       && copy._birth == value._birth && copy._days == value._days, "Round trip failed");
+                       && copy._birth == value._birth && copy._days == value._days && copy._alarm == value._alarm, "Round trip failed");
   // Invalid full-date can not be built (anch::date::Date is always valid): nothing to serialize
 }
 

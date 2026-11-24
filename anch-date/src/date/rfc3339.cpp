@@ -258,3 +258,62 @@ anch::date::rfc3339::parseDate(std::string_view text) {
   return anch::date::Date(date); // 4 digits years: in range
 }
 // full-date -
+
+// partial-time +
+std::size_t
+anch::date::rfc3339::formatTime(const anch::date::Time& time, char* output) noexcept {
+  char* out = std::format_to(output, "{:02}:{:02}:{:02}", time.hour(), time.minute(), time.second());
+  const uint32_t subsec = time.nanosecond();
+  if(subsec != 0) {
+    if(subsec % 1'000'000 == 0) {
+      out = std::format_to(out, ".{:03}", subsec / 1'000'000);
+    } else if(subsec % 1'000 == 0) {
+      out = std::format_to(out, ".{:06}", subsec / 1'000);
+    } else {
+      out = std::format_to(out, ".{:09}", subsec);
+    }
+  }
+  return static_cast<std::size_t>(out - output);
+}
+
+std::string
+anch::date::rfc3339::formatTime(const anch::date::Time& time) {
+  char buffer[TIME_MAX_SIZE];
+  return std::string(buffer, formatTime(time, buffer));
+}
+
+anch::date::Time
+anch::date::rfc3339::parseTime(std::string_view text) {
+  constexpr std::string_view KIND = "partial-time";
+  int hours = 0;
+  int minutes = 0;
+  int secs = 0;
+  if(!readNumber(text, 0, 2, hours) || !isChar(text, 2, ':') || !readNumber(text, 3, 2, minutes) || !isChar(text, 5, ':')
+     || !readNumber(text, 6, 2, secs) || hours > 23 || minutes > 59 || secs > 60) {
+    invalid(KIND, text);
+  }
+  if(secs == 60) {
+    invalid(KIND, text, ": leap second can not be a time of day without day");
+  }
+  std::size_t pos = 8;
+  uint32_t subsec = 0;
+  if(isChar(text, pos, '.')) {
+    std::size_t start = ++pos;
+    uint32_t scale = static_cast<uint32_t>(NANOS);
+    while(pos < text.size() && text[pos] >= '0' && text[pos] <= '9') {
+      if(scale > 1) {
+	scale /= 10;
+	subsec += static_cast<uint32_t>(text[pos] - '0') * scale;
+      }
+      ++pos;
+    }
+    if(pos == start) {
+      invalid(KIND, text);
+    }
+  }
+  if(pos != text.size()) {
+    invalid(KIND, text);
+  }
+  return anch::date::Time(static_cast<unsigned>(hours), static_cast<unsigned>(minutes), static_cast<unsigned>(secs), subsec);
+}
+// partial-time -

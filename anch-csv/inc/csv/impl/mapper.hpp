@@ -74,6 +74,13 @@ namespace anch::csv::detail {
       } catch(const std::invalid_argument&) {
 	return false;
       }
+    } else if constexpr (std::same_as<V, anch::date::Time>) {
+      try {
+	value = anch::date::rfc3339::parseTime(text);
+	return true;
+      } catch(const std::invalid_argument&) {
+	return false;
+      }
 #endif
     } else {
       static_assert(sizeof(V) == 0, "Unsupported CSV value type");
@@ -100,6 +107,8 @@ namespace anch::csv::detail {
       return anch::date::rfc3339::formatDateTime(value);
     } else if constexpr (std::same_as<V, anch::date::Date>) {
       return anch::date::rfc3339::formatDate(value);
+    } else if constexpr (std::same_as<V, anch::date::Time>) {
+      return anch::date::rfc3339::formatTime(value);
 #endif
     } else {
       static_assert(sizeof(V) == 0, "Unsupported CSV value type");
