@@ -27,8 +27,27 @@
 
 #include "json/json.hpp"
 #include "json/mappingOptions.hpp"
+#include "mapping.hpp"
 
 namespace anch::json {
+
+  /*!
+   * \brief Type which the JSON format maps
+   *
+   * Its value type (the type itself, or the value type of \c std::optional , smart pointers, collections and maps,
+   * as for fields) is a primitive ( \c anch::json::isPrimitive ), an enumeration or a type
+   * described by an \c anch::Mapping<T> specialization ( \c anch::Described ). Types described by an external
+   * schema (Protobuf messages, Thrift structures) are not mapped: lists of codecs (anch-codec) select the codecs of
+   * their format.
+   *
+   * \tparam T the type
+   *
+   * \since 0.3
+   */
+  template<typename T>
+  concept Mappable = anch::json::isPrimitive<anch::json::detail::MapperType<T>>()
+    || std::is_enum_v<anch::json::detail::MapperType<T>>
+    || anch::Described<anch::json::detail::MapperType<T>>;
 
   /*!
    * \brief JSON format: serialization and deserialization of values with options
@@ -64,7 +83,7 @@ namespace anch::json {
      *
      * \throw anch::json::MappingError on constraint violation (when constraints are checked on serialization)
      */
-    template<typename T>
+    template<anch::json::Mappable T>
     static void serialize(const T& value, std::ostream& out, const Options& options);
 
     /*!
@@ -76,7 +95,7 @@ namespace anch::json {
      *
      * \throw anch::json::MappingError on invalid JSON or constraint violation
      */
-    template<typename T>
+    template<anch::json::Mappable T>
     static void deserialize(T& value, std::istream& input, const Options& options);
 
   };
@@ -90,7 +109,7 @@ namespace anch::json {
     return anch::json::DEFAULT_MAPPING_OPTIONS;
   }
 
-  template<typename T>
+  template<anch::json::Mappable T>
   void
   Json::serialize(const T& value, std::ostream& out, const Options& options) {
     if constexpr (std::is_same_v<T, std::string>) {
@@ -101,7 +120,7 @@ namespace anch::json {
     }
   }
 
-  template<typename T>
+  template<anch::json::Mappable T>
   void
   Json::deserialize(T& value, std::istream& input, const Options& options) {
     if constexpr (std::is_same_v<T, std::string>) {

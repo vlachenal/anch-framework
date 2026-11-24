@@ -22,6 +22,8 @@
 
 #include <algorithm>
 #include <cstdint>
+#include <map>
+#include <optional>
 #include <sstream>
 #include <string>
 #include <type_traits>
@@ -55,6 +57,16 @@ struct anch::Mapping<Owner> {
 // Model -
 
 static_assert(anch::codec::Serializer<Json, Owner> && anch::codec::Deserializer<Json, Owner>);
+// Json handles the types the format maps: primitives, enumerations, described types and their containers
+enum class Color { RED };
+struct Undescribed {
+  int value;
+};
+static_assert(anch::json::Mappable<Owner> && anch::json::Mappable<std::vector<Owner>> && anch::json::Mappable<std::string>
+	      && anch::json::Mappable<std::optional<int32_t>> && anch::json::Mappable<std::map<std::string, Owner>>
+	      && anch::json::Mappable<Color>);
+static_assert(!anch::json::Mappable<Undescribed> && !anch::json::Mappable<std::vector<Undescribed>>
+	      && !anch::codec::Serializer<Json, Undescribed> && !anch::codec::Deserializer<Json, Undescribed>);
 // Json is the first available codec, Text the last one
 template<typename L>
 struct Ends;

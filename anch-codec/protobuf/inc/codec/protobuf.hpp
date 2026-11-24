@@ -46,16 +46,6 @@ namespace anch::codec {
   concept ProtobufMessage = std::derived_from<T, google::protobuf::Message>;
 
   /*!
-   * Protocol Buffers messages are serialized by \c protoc generated code: generic codecs do not handle them
-   *
-   * \tparam T the message type
-   *
-   * \since 0.3
-   */
-  template<anch::codec::ProtobufMessage T>
-  struct ExternalSchema<T>: std::true_type {};
-
-  /*!
    * \c application/x-protobuf codec: Protocol Buffers binary encoding of \c protoc messages.
    * Invalid messages raise \c std::invalid_argument ( \c 400 on server side).
    * \snippet{trimleft} anch-rest/examples/protobuf.cpp protobuf codec

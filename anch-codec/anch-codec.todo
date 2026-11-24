@@ -126,6 +126,10 @@ Implémentation (2026-11-21, étapes 1 à 4)
 - anch::codec::ExternalSchema<T> (noyau) : Json n'est pas contraint (anch-json ne permet pas de savoir à la
   compilation si un type est décrit), il serait instancié pour un message Protobuf dans Available ; les plugins
   Protobuf et Thrift spécialisent ExternalSchema pour leurs types générés et Json les exclut.
+  Remplacé (2026-11-24, diagnostic des interfaces, point 5) : depuis que les descriptions sont vérifiées à la
+  compilation (anch::Described), anch::json::Json est contraint par anch::json::Mappable<T> (type de valeur primitif,
+  énumération ou décrit) ; FormatSerializer<Json, Message> est faux, ExternalSchema et ses spécialisations sont
+  supprimés.
 - Enregistrement : objet statique du .cpp de chaque plugin, avec mediaType() (et options() pour Json) définis dans
   ce même fichier : une bibliothèque statique liée pour un codec est donc aussi enregistrée. Registre trié par nom,
   sans doublon (même format chargé par plusieurs bibliothèques partagées).
@@ -181,7 +185,7 @@ qu'à JSON ; il prépare CSV (Csv sans code propre dans anch-codec, quand anch-c
     static std::string_view mediaType() noexcept;             // F::MEDIA_TYPE
     static typename F::Options& options(anch::codec::Side);   // options par côté, modifiables à l'initialisation
     serialize(value, out) / serialize(value, out, side) ; deserialize(value, in) / deserialize(value, in, side)
-  };                                                          // T exclu quand ExternalSchema<T>
+  };                                                          // T géré quand F le gère (FormatSerializer)
 - Politique de chaque côté et traduction des erreurs : trait anch::codec::FormatPolicy<F>, spécialisé par le plugin
   (le format ne connaît pas Side) :
     static void configure(typename F::Options&, anch::codec::Side);  // défaut : rien
@@ -205,7 +209,7 @@ Implémentation de l'étape 5 (2026-11-21)
 - codec/formatCodec.hpp (noyau) : concepts DataFormat (Options, MEDIA_TYPE, defaultOptions()), FormatSerializer,
   FormatDeserializer ; FormatPolicy<F> (configure(options, side), translate(error) ; défaut : rien) ;
   FormatCodec<F> (ANCH_CODEC_EXPORT) : mediaType, options(side) (copie de defaultOptions puis configure),
-  serialize / deserialize avec et sans Side, types ExternalSchema exclus, erreurs de lecture passées à translate.
+  serialize / deserialize avec et sans Side (types contraints par le format), erreurs de lecture passées à translate.
 - anch-json : json/format.hpp, anch::json::Json (cas std::string compris) ; anch-codec-json : FormatPolicy<Json>
   (options de chaque côté et PAYLOAD_TOO_LARGE -> ContentTooLarge), using Json = FormatCodec<anch::json::Json>,
   instanciation explicite dans json.cpp et extern template dans l'en-tête (options uniques).
