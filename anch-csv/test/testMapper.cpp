@@ -89,6 +89,31 @@ struct anch::Mapping<Pet> {
       ;
   }
 };
+// Getter only and setter only fields: columns by position are the same for reading and writing
+namespace {
+  struct Item {
+    uint64_t id = 0;
+    std::string label;
+    std::string code;
+    std::string upper() const {
+      return "U" + label;
+    }
+  };
+}
+
+template<>
+struct anch::Mapping<Item> {
+  static void
+  registerObject(anch::ObjectMapper<Item> auto& mapper) {
+    mapper
+      .registerField("id", &Item::id)
+      .registerField("upper", std::function<std::string(const Item&)>(&Item::upper))
+      .registerField("label", &Item::label)
+      .registerField("legacy", std::function<void(Item&, const std::string&)>([](Item& item, const std::string& code) { item.code = code; }))
+      ;
+  }
+};
+
 static_assert(anch::ObjectMapper<anch::csv::ObjectMapper<Pet>, Pet>);
 static_assert(anch::csv::FieldType<std::optional<std::string>> && !anch::csv::FieldType<std::vector<int>>
 	      && !anch::csv::FieldType<std::optional<std::vector<int>>> && !anch::csv::FieldType<Pet>);
@@ -154,6 +179,28 @@ testReadByPosition() {
 		       && pets[1].id == 6 && pets[1].name == "Boule" && pets[1].weight == 0., "Fields by position");
   CsvError error = readError("7\n", options);
   anch::ut::assertThat(error.getErrorCode() == ErrorCode::MISSING_COLUMN && error.getColumn() == 2, "Required name: {}", error.what());
+}
+
+void
+testPositionRoundTrip() {
+  Options options;
+  options.header = false;
+  Item item;
+  item.id = 1;
+  item.label = "box";
+  std::ostringstream out;
+  anch::csv::serialize(std::vector<Item>{item}, out, options);
+  anch::ut::assertThat(out.str() == "1,Ubox,box,\r\n", "Setter only field column has to be written: '{}'", out.str());
+  std::vector<Item> items;
+  std::istringstream input(out.str() + "2,Ucan,can,old\r\n");
+  anch::csv::deserialize(items, input, options);
+  anch::ut::assertThat(items.size() == 2 && items[0].id == 1 && items[0].label == "box" && items[0].code.empty()
+		       && items[1].id == 2 && items[1].label == "can" && items[1].code == "old",
+		       "Getter only field column has to be skipped");
+  // With a header, only fields which have a value are written
+  std::ostringstream named;
+  anch::csv::serialize(std::vector<Item>{item}, named);
+  anch::ut::assertThat(named.str() == "id,upper,label\r\n1,Ubox,box\r\n", "Unexpected CSV '{}'", named.str());
 }
 
 void
@@ -334,6 +381,7 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .description("Test AnCH CSV objects reader and writer")
     .add("read-by-name", testReadByName)
     .add("read-by-position", testReadByPosition)
+    .add("position-round-trip", testPositionRoundTrip)
     .add("read-errors", testReadErrors)
     .add("write", testWrite)
     .add("write-constraints", testWriteConstraints)

@@ -53,7 +53,7 @@ target_link_libraries(my-app PRIVATE anch::csv)
  * \snippet{trimleft} anch-csv/examples/csv.cpp objects writer
  *
  * \ref anch::csv::ObjectReader "ObjectReader" associates columns with fields by name (or by position without
- * header). Columns which are not fields are ignored ( \c Options::ignoreUnknownColumns ), required fields
+ * header: each registered field is a column, in registration order, for reading and writing). Columns which are not fields are ignored ( \c Options::ignoreUnknownColumns ), required fields
  * ( \c anch::val::required ) columns have to be present. Conversion errors and anch-val constraints violations
  * ( \c Options::readCheckConstraints ) raise \ref anch::csv::CsvError "CsvError" with the line and the column:
  * \snippet{trimleft} anch-csv/examples/csv.cpp objects reader

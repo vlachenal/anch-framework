@@ -22,6 +22,7 @@
 #include <algorithm>
 #include <ostream>
 #include <map>
+#include <memory>
 #include <mutex>
 #include <regex>
 #include <shared_mutex>
@@ -149,20 +150,27 @@ namespace {
   /*! Pattern compilers by syntax (default compiler when empty) */
   PatternCompiler PATTERN_COMPILERS[2];
 
-  /*! Compile pattern */
+  /*! Compiled patterns by syntax: a description is registered by each format (JSON, CSV, validation, ...), its
+   *  patterns are compiled once (patterns come from descriptions: their number is bounded) */
+  std::map<std::string, std::shared_ptr<const PatternMatcher>, std::less<>> PATTERN_MATCHERS[2];
+
+  /*! Compile pattern (or get its compiled matcher) */
   anch::val::Pattern
   compile(std::string_view source, anch::val::PatternSyntax syntax) {
-    PatternMatcher matcher;
-    {
-      std::lock_guard<std::mutex> lock(PATTERN_MUTEX);
-      const PatternCompiler& compiler = PATTERN_COMPILERS[static_cast<std::size_t>(syntax)];
+    std::lock_guard<std::mutex> lock(PATTERN_MUTEX);
+    const std::size_t index = static_cast<std::size_t>(syntax);
+    auto iter = PATTERN_MATCHERS[index].find(source);
+    if(iter == PATTERN_MATCHERS[index].end()) {
+      const PatternCompiler& compiler = PATTERN_COMPILERS[index];
+      PatternMatcher matcher;
       if(compiler) {
 	matcher = compiler(source);
       } else {
 	matcher = (syntax == anch::val::PatternSyntax::XSD) ? compileXsd(source) : compileRegex(source);
       }
+      iter = PATTERN_MATCHERS[index].emplace(std::string(source), std::make_shared<const PatternMatcher>(std::move(matcher))).first;
     }
-    return anch::val::Pattern{std::make_shared<const PatternMatcher>(std::move(matcher)), std::string(source), syntax};
+    return anch::val::Pattern{iter->second, std::string(source), syntax};
   }
   // Patterns -
 
@@ -352,6 +360,7 @@ void
 anch::val::setPatternCompiler(anch::val::PatternSyntax syntax, PatternCompiler compiler) {
   std::lock_guard<std::mutex> lock(PATTERN_MUTEX);
   PATTERN_COMPILERS[static_cast<std::size_t>(syntax)] = std::move(compiler);
+  PATTERN_MATCHERS[static_cast<std::size_t>(syntax)].clear(); // next patterns are compiled by the new compiler
 }
 
 anch::val::Pattern

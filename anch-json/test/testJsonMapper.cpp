@@ -262,6 +262,12 @@ struct anch::Mapping<Tata> {
   }
 };
 
+// Fields are registered once, when the mapper is built: the shared mapper is constant
+template<typename M>
+concept FieldsRegistrable = requires(M mapper, std::string Tata::* member) { mapper.registerField("other", member); };
+static_assert(FieldsRegistrable<anch::json::ObjectMapper<Tata>&>
+	      && !FieldsRegistrable<decltype(anch::json::Factory<Tata>::getInstance())>);
+
 struct Test {
   std::string _id;
   std::string _value;

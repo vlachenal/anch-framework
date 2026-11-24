@@ -247,11 +247,11 @@ namespace anch::csv {
     const std::vector<std::string>& header = _reader.header();
     _columns.assign(fields.size(), NONE);
     if(!_reader.options().header) {
-      // By position: fields which are read, in registration order
-      std::size_t column = 0;
+      // By position: each registered field is a column (as ObjectWriter writes them), columns of fields which are not
+      // read are skipped
       for(std::size_t i = 0; i < fields.size(); ++i) {
 	if(fields[i].read) {
-	  _columns[i] = column++;
+	  _columns[i] = i;
 	}
       }
       return;
@@ -311,7 +311,7 @@ namespace anch::csv {
   // Object writer +
   template<typename T>
   ObjectWriter<T>::ObjectWriter(anch::csv::Writer& writer, bool header):
-    _writer(writer), _mapper(anch::csv::ObjectMapper<T>::instance()), _header(header), _records(0) {
+    _writer(writer), _mapper(anch::csv::ObjectMapper<T>::instance()), _header(header), _positional(!header), _records(0) {
     // Nothing to do
   }
 
@@ -343,6 +343,10 @@ namespace anch::csv {
     std::vector<bool> quoted;
     for(const auto& field : _mapper.fields()) {
       if(!field.write) {
+	if(_positional) { // the column of the field is kept: records are read by position
+	  quoted.push_back(false);
+	  texts.emplace_back();
+	}
 	continue;
       }
       anch::csv::detail::WriteContext context{options.writeCheckConstraints, field.name, _records + 1, texts.size() + 1};

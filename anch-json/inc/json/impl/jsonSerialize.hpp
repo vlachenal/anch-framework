@@ -50,7 +50,7 @@ namespace anch::json {
   void
   serialize(anch::Flux<T>& value, std::ostream& out, const anch::json::MappingOptions& options) {
     anch::json::WriterContext context(out, options);
-    auto& mapper = anch::json::Factory<T>::getInstance();
+    const auto& mapper = anch::json::Factory<T>::getInstance();
     std::mutex m;
     std::condition_variable cv;
     bool finished = false;

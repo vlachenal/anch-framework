@@ -992,7 +992,8 @@ namespace anch::val {
    * for UTF-8 support: \c std::regex works on bytes ( \c . matches one byte, character classes do not contain
    * multi-bytes characters).\n
    * The compiler is used when patterns are built: it has to be set before mappers registration (mappers are
-   * registered on their first use).
+   * registered on their first use). A pattern is compiled once for every format (each format registers the
+   * description of a type): its matcher is shared until the compiler of its syntax is changed.
    *
    * \param compiler the compiler, \c nullptr to restore the default compiler
    *
