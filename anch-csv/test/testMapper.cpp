@@ -55,7 +55,7 @@ namespace {
     std::optional<anch::UUID> chip;
 #endif
 #ifdef ANCH_DATE
-    std::optional<std::chrono::year_month_day> birth;
+    std::optional<anch::date::Date> birth;
 #endif
     std::string upperName() const {
       std::string res(name);
@@ -164,7 +164,7 @@ testReadByName() {
 #endif
 #ifdef ANCH_DATE
   pets = readPets("id,name,birth\n4,Garfield,2020-02-29\n");
-  anch::ut::assertThat(pets.size() == 1 && pets[0].birth == std::chrono::year_month_day(std::chrono::year(2020), std::chrono::February, std::chrono::day(29)),
+  anch::ut::assertThat(pets.size() == 1 && pets[0].birth == anch::date::Date(2020, 2, 29),
 		       "Date");
 #endif
 }

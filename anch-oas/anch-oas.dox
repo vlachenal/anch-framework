@@ -37,8 +37,8 @@ cat petstore.json | anch-oas-gen -o gen                              # document 
  * - \c -n / \c --namespace : models namespace (default to \c model ) ;
  * - \c -f / \c --file : generated files base name (default to \c models ) ;
  * - \c --no-uuid : \c uuid format is mapped to \c std::string instead of \c anch::UUID ;
- * - \c --no-date : \c date-time and \c date formats are mapped to \c std::string instead of \c anch::date::Date and
- *   \c std::chrono::year_month_day ;
+ * - \c --no-date : \c date-time and \c date formats are mapped to \c std::string instead of \c anch::date::DateTime and
+ *   \c anch::date::Date ;
  * - \c --server : generates the service interface and its endpoints registration ( \c NAME-server.hpp and
  *   \c NAME-server.cpp ) ;
  * - \c --client : generates the typed client ( \c NAME-client.hpp and \c NAME-client.cpp ) ;
@@ -72,8 +72,8 @@ target_link_libraries(petstore PRIVATE anch::json anch::uuid)
  * | OpenAPI schema | C++ type |
  * |----------------|----------|
  * | \c string ( \c uuid format) | \c std::string ( \c anch::UUID ) |
- * | \c string ( \c date-time format) | \c anch::date::Date (RFC 3339, written in UTC) |
- * | \c string ( \c date format) | \c std::chrono::year_month_day (RFC 3339 \c full-date ) |
+ * | \c string ( \c date-time format) | \c anch::date::DateTime (RFC 3339, written in UTC) |
+ * | \c string ( \c date format) | \c anch::date::Date (RFC 3339 \c full-date ) |
  * | \c integer ( \c int32 format) | \c int64_t ( \c int32_t ) |
  * | \c number ( \c float format) | \c double ( \c float ) |
  * | \c boolean | \c bool |

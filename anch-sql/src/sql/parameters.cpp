@@ -80,11 +80,8 @@ anch::sql::toParameter(const char* value) {
 }
 
 ParameterValue
-anch::sql::toParameter(const anch::sql::Date& value) {
-  static const anch::date::DateFormatter formatter("%Y-%m-%d");
-  std::string str;
-  formatter.format(value, str);
-  return str;
+anch::sql::toParameter(const anch::date::Date& value) {
+  return value.format();
 }
 
 ParameterValue
@@ -96,7 +93,7 @@ anch::sql::toParameter(const anch::sql::Time& value) {
 }
 
 ParameterValue
-anch::sql::toParameter(const anch::sql::Timestamp& value) {
+anch::sql::toParameter(const anch::date::DateTime& value) {
   static const anch::date::DateFormatter formatter("%Y-%m-%d %H:%M:%S.%s");
   std::string str;
   formatter.format(value, str);

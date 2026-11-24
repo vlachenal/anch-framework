@@ -22,6 +22,8 @@
 
 #include "convert.hpp"
 
+#include <stdexcept>
+
 
 using anch::sql::ResultSet;
 
@@ -52,12 +54,6 @@ ResultSet::~ResultSet() noexcept {
 }
 
 const anch::date::DateFormatter&
-ResultSet::getDefaultDateFormatter() {
-  static anch::date::DateFormatter formatter("%Y-%m-%d");
-  return formatter;
-}
-
-const anch::date::DateFormatter&
 ResultSet::getDefaultTimeFormatter() {
   static anch::date::DateFormatter formatter("%H:%M:%S.%s");
   return formatter;
@@ -67,6 +63,28 @@ const anch::date::DateFormatter&
 ResultSet::getDefaultTimestampFormatter() {
   static anch::date::DateFormatter formatter("%Y-%m-%d %H:%M:%S.%s");
   return formatter;
+}
+
+namespace {
+
+  /*!
+   * Parse SQL date ( \c YYYY-MM-DD )
+   *
+   * \param value the value
+   *
+   * \return the date
+   *
+   * \throw anch::sql::SqlException invalid date (non fatal)
+   */
+  anch::date::Date
+  parseDate(const std::string& value) {
+    try {
+      return anch::date::Date::parse(value);
+    } catch(const std::invalid_argument& error) {
+      throw anch::sql::SqlException(std::string("Invalid SQL date: ") + error.what(), true);
+    }
+  }
+
 }
 
 // SQL field conversion specializations +
@@ -270,7 +288,7 @@ namespace anch::sql {
   }
 
   /*!
-   * Get field \ref Date value by index.
+   * Get field \c anch::date::Date value by index.
    *
    * \param idx the index
    * \param out the result
@@ -279,15 +297,12 @@ namespace anch::sql {
    */
   template<>
   bool
-  ResultSet::get<anch::sql::Date>(std::size_t idx, anch::sql::Date& out) {
+  ResultSet::get<anch::date::Date>(std::size_t idx, anch::date::Date& out) {
     bool null = true;
     std::string strVal;
     if(!get(idx, strVal)) {
       null = false;
-      const anch::date::DateFormatter& formatter = getDateFormatter();
-      anch::date::Date date;
-      formatter.parse(strVal, date);
-      out = anch::sql::Date(date);
+      out = parseDate(strVal);
     }
     return null;
   }
@@ -308,7 +323,7 @@ namespace anch::sql {
     if(!get(idx, strVal)) {
       null = false;
       const anch::date::DateFormatter& formatter = getTimeFormatter();
-      anch::date::Date date;
+      anch::date::DateTime date;
       formatter.parse(strVal, date);
       out = anch::sql::Time(date);
     }
@@ -316,7 +331,7 @@ namespace anch::sql {
   }
 
   /*!
-   * Get field \ref Timestamp value by index.
+   * Get field \c anch::date::DateTime value by index.
    *
    * \param idx the index
    * \param out the result
@@ -325,15 +340,12 @@ namespace anch::sql {
    */
   template<>
   bool
-  ResultSet::get<anch::sql::Timestamp>(std::size_t idx, anch::sql::Timestamp& out) {
+  ResultSet::get<anch::date::DateTime>(std::size_t idx, anch::date::DateTime& out) {
     bool null = true;
     std::string strVal;
     if(!get(idx, strVal)) {
       null = false;
-      const anch::date::DateFormatter& formatter = getTimestampFormatter();
-      anch::date::Date date;
-      formatter.parse(strVal, date);
-      out = anch::sql::Timestamp(date);
+      getTimestampFormatter().parse(strVal, out);
     }
     return null;
   }
@@ -516,7 +528,7 @@ namespace anch::sql {
   }
 
   /*!
-   * Get field \ref Date value by index.
+   * Get field \c anch::date::Date value by index.
    *
    * \param idx the index
    *
@@ -525,15 +537,12 @@ namespace anch::sql {
    * \throw SqlException any error
    */
   template<>
-  std::optional<anch::sql::Date>
-  ResultSet::get<anch::sql::Date>(std::size_t idx) {
-    std::optional<anch::sql::Date> res;
+  std::optional<anch::date::Date>
+  ResultSet::get<anch::date::Date>(std::size_t idx) {
+    std::optional<anch::date::Date> res;
     std::optional<std::string> strRes = get<std::string>(idx);
     if(strRes) {
-      const anch::date::DateFormatter& formatter = getDateFormatter();
-      anch::date::Date date;
-      formatter.parse(strRes.value(), date);
-      res = anch::sql::Date(date);
+      res = parseDate(*strRes);
     }
     return res;
   }
@@ -550,11 +559,11 @@ namespace anch::sql {
   template<>
   std::optional<anch::sql::Time>
   ResultSet::get<anch::sql::Time>(std::size_t idx) {
-    std::optional<anch::sql::Date> res;
+    std::optional<anch::sql::Time> res;
     std::optional<std::string> strRes = get<std::string>(idx);
     if(strRes) {
       const anch::date::DateFormatter& formatter = getTimeFormatter();
-      anch::date::Date date;
+      anch::date::DateTime date;
       formatter.parse(strRes.value(), date);
       res = anch::sql::Time(date);
     }
@@ -562,7 +571,7 @@ namespace anch::sql {
   }
 
   /*!
-   * Get field \ref Timestamp value by index.
+   * Get field \c anch::date::DateTime value by index.
    *
    * \param idx the index
    *
@@ -571,15 +580,14 @@ namespace anch::sql {
    * \throw SqlException any error
    */
   template<>
-  std::optional<anch::sql::Timestamp>
-  ResultSet::get<anch::sql::Timestamp>(std::size_t idx) {
-    std::optional<anch::sql::Date> res;
+  std::optional<anch::date::DateTime>
+  ResultSet::get<anch::date::DateTime>(std::size_t idx) {
+    std::optional<anch::date::DateTime> res;
     std::optional<std::string> strRes = get<std::string>(idx);
     if(strRes) {
-      const anch::date::DateFormatter& formatter = getTimestampFormatter();
-      anch::date::Date date;
-      formatter.parse(strRes.value(), date);
-      res = anch::sql::Timestamp(date);
+      anch::date::DateTime date(false);
+      getTimestampFormatter().parse(strRes.value(), date);
+      res = date;
     }
     return res;
   }

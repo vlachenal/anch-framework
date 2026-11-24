@@ -25,7 +25,7 @@
 #include <string>
 #include <string_view>
 
-#include "date/date.hpp"
+#include "date/dateTime.hpp"
 #include "date/rfc3339.hpp"
 
 #include "json/lexer.hpp"
@@ -33,24 +33,24 @@
 
 
 using anch::json::PrimitiveMapper;
-using std::chrono::year_month_day;
+using anch::date::Date;
 
 
-// PrimitiveMapper specialization for anch::date::Date (RFC 3339 date-time) +
+// PrimitiveMapper specialization for anch::date::DateTime (RFC 3339 date-time) +
 template<>
-PrimitiveMapper<anch::date::Date>::PrimitiveMapper():
-  anch::json::GenericMapper<PrimitiveMapper<anch::date::Date>,anch::date::Date>() {
+PrimitiveMapper<anch::date::DateTime>::PrimitiveMapper():
+  anch::json::GenericMapper<PrimitiveMapper<anch::date::DateTime>,anch::date::DateTime>() {
   // Nothing to do
 }
 
 template<>
-PrimitiveMapper<anch::date::Date>::~PrimitiveMapper() {
+PrimitiveMapper<anch::date::DateTime>::~PrimitiveMapper() {
   // Nothing to do
 }
 
 template<>
 void
-PrimitiveMapper<anch::date::Date>::serializeValue(const anch::date::Date& value, anch::json::WriterContext& context) const {
+PrimitiveMapper<anch::date::DateTime>::serializeValue(const anch::date::DateTime& value, anch::json::WriterContext& context) const {
   char date[anch::date::rfc3339::DATE_TIME_MAX_SIZE + 2]; // '"' + date + '"' (no allocation)
   date[0] = anch::json::STRING_DELIMITER;
   std::size_t size = anch::date::rfc3339::formatDateTime(value, date + 1) + 1;
@@ -60,7 +60,7 @@ PrimitiveMapper<anch::date::Date>::serializeValue(const anch::date::Date& value,
 
 template<>
 bool
-PrimitiveMapper<anch::date::Date>::deserializeValue(anch::date::Date& value, anch::json::ReaderContext& context) const {
+PrimitiveMapper<anch::date::DateTime>::deserializeValue(anch::date::DateTime& value, anch::json::ReaderContext& context) const {
   std::string date;
   if(!anch::json::lexString(date, context)) {
     return false;
@@ -73,24 +73,24 @@ PrimitiveMapper<anch::date::Date>::deserializeValue(anch::date::Date& value, anc
   return true;
 }
 
-template class anch::json::PrimitiveMapper<anch::date::Date>;
-// PrimitiveMapper specialization for anch::date::Date (RFC 3339 date-time) -
+template class anch::json::PrimitiveMapper<anch::date::DateTime>;
+// PrimitiveMapper specialization for anch::date::DateTime (RFC 3339 date-time) -
 
-// PrimitiveMapper specialization for std::chrono::year_month_day (RFC 3339 full-date) +
+// PrimitiveMapper specialization for anch::date::Date (RFC 3339 full-date) +
 template<>
-PrimitiveMapper<year_month_day>::PrimitiveMapper():
-  anch::json::GenericMapper<PrimitiveMapper<year_month_day>,year_month_day>() {
+PrimitiveMapper<Date>::PrimitiveMapper():
+  anch::json::GenericMapper<PrimitiveMapper<Date>,Date>() {
   // Nothing to do
 }
 
 template<>
-PrimitiveMapper<year_month_day>::~PrimitiveMapper() {
+PrimitiveMapper<Date>::~PrimitiveMapper() {
   // Nothing to do
 }
 
 template<>
 void
-PrimitiveMapper<year_month_day>::serializeValue(const year_month_day& value, anch::json::WriterContext& context) const {
+PrimitiveMapper<Date>::serializeValue(const Date& value, anch::json::WriterContext& context) const {
   char date[anch::date::rfc3339::DATE_SIZE + 2]; // '"' + date + '"' (no allocation)
   date[0] = anch::json::STRING_DELIMITER;
   anch::date::rfc3339::formatDate(value, date + 1);
@@ -100,7 +100,7 @@ PrimitiveMapper<year_month_day>::serializeValue(const year_month_day& value, anc
 
 template<>
 bool
-PrimitiveMapper<year_month_day>::deserializeValue(year_month_day& value, anch::json::ReaderContext& context) const {
+PrimitiveMapper<Date>::deserializeValue(Date& value, anch::json::ReaderContext& context) const {
   std::string date;
   if(!anch::json::lexString(date, context)) {
     return false;
@@ -113,7 +113,7 @@ PrimitiveMapper<year_month_day>::deserializeValue(year_month_day& value, anch::j
   return true;
 }
 
-template class anch::json::PrimitiveMapper<year_month_day>;
-// PrimitiveMapper specialization for std::chrono::year_month_day (RFC 3339 full-date) -
+template class anch::json::PrimitiveMapper<Date>;
+// PrimitiveMapper specialization for anch::date::Date (RFC 3339 full-date) -
 
 #endif

@@ -31,9 +31,9 @@
 #include <utility>
 #include <vector>
 
-#include "sql/types/date.hpp"
+#include "date/date.hpp"
+#include "date/dateTime.hpp"
 #include "sql/types/time.hpp"
-#include "sql/types/timestamp.hpp"
 
 namespace anch::sql {
 
@@ -146,7 +146,7 @@ namespace anch::sql {
   ANCH_SQL_EXPORT anch::sql::ParameterValue toParameter(const char* value);
 
   /*!
-   * Convert SQL date to parameter value ( \c YYYY-MM-DD )
+   * Convert date to parameter value ( \c YYYY-MM-DD )
    *
    * \param value the value
    *
@@ -154,7 +154,7 @@ namespace anch::sql {
    *
    * \since 0.3
    */
-  ANCH_SQL_EXPORT anch::sql::ParameterValue toParameter(const anch::sql::Date& value);
+  ANCH_SQL_EXPORT anch::sql::ParameterValue toParameter(const anch::date::Date& value);
 
   /*!
    * Convert SQL time to parameter value ( \c HH:MM:SS.mmm )
@@ -168,7 +168,7 @@ namespace anch::sql {
   ANCH_SQL_EXPORT anch::sql::ParameterValue toParameter(const anch::sql::Time& value);
 
   /*!
-   * Convert SQL timestamp to parameter value ( \c YYYY-MM-DD HH:MM:SS.mmm )
+   * Convert point in time to parameter value ( \c YYYY-MM-DD HH:MM:SS.mmm , local time)
    *
    * \param value the value
    *
@@ -176,7 +176,7 @@ namespace anch::sql {
    *
    * \since 0.3
    */
-  ANCH_SQL_EXPORT anch::sql::ParameterValue toParameter(const anch::sql::Timestamp& value);
+  ANCH_SQL_EXPORT anch::sql::ParameterValue toParameter(const anch::date::DateTime& value);
 
   /*!
    * SQL \c NULL parameter value
@@ -206,7 +206,7 @@ namespace anch::sql {
 
   /*!
    * Value which can be bound to a prepared statement parameter ( \c anch::sql::toParameter : integers, floating point
-   * numbers, strings, SQL dates, \c std::optional of them)
+   * numbers, strings, dates (\c anch::date::Date , \c anch::date::DateTime , \c anch::sql::Time ), \c std::optional of them)
    *
    * \tparam T the value type
    *

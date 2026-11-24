@@ -220,16 +220,16 @@ testNoDate() {
     "when":{"type":"string","format":"date-time"},"days":{"type":"array","items":{"type":"string","format":"date"}}}}})");
   GeneratedModels models = generate(document);
   contains(models.header, "#include <chrono>");
-  contains(models.header, "#include \"date/date.hpp\"");
-  contains(models.header, "anch::date::Date at{false};");
-  contains(models.header, "std::chrono::year_month_day day{};");
-  contains(models.header, "std::optional<anch::date::Date> when;");
-  contains(models.header, "std::vector<std::chrono::year_month_day> days;");
+  contains(models.header, "#include \"date/dateTime.hpp\"");
+  contains(models.header, "anch::date::DateTime at{false};");
+  contains(models.header, "anch::date::Date day{};");
+  contains(models.header, "std::optional<anch::date::DateTime> when;");
+  contains(models.header, "std::vector<anch::date::Date> days;");
   contains(models.header, ".registerField(\"days\", &::model::A::days)");
   ModelOptions options;
   options.date = false;
   models = generate(document, options);
-  anch::ut::assertThat(models.header.find("date/date.hpp") == std::string::npos, "date/date.hpp should not be included");
+  anch::ut::assertThat(models.header.find("date/dateTime.hpp") == std::string::npos, "date/dateTime.hpp should not be included");
   contains(models.header, "std::string at;");
   contains(models.header, "std::optional<std::string> when;");
 }

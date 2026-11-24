@@ -31,14 +31,14 @@
 
 #include "date/fmt/iDatePartFormatter.hpp"
 
-using anch::date::Date;
+using anch::date::DateTime;
 using anch::date::DateFormatter;
 using anch::date::IDatePartFormatter;
 using anch::date::getInstance;
 
 namespace {
 
-  /*! Date fields managed by \c FieldFormatter */
+  /*! Date and time fields managed by \c FieldFormatter */
   enum class Field {
     YEAR4 = 0,
     YEAR2,
@@ -107,7 +107,7 @@ namespace {
       return FIELDS[static_cast<std::size_t>(_field)];
     }
 
-    virtual void format(const Date& date, std::ostream& output) const noexcept override {
+    virtual void format(const DateTime& date, std::ostream& output) const noexcept override {
       int value = 0;
       switch(_field) {
       case Field::YEAR4: value = getYear(date); break;
@@ -128,7 +128,7 @@ namespace {
       return desc().size;
     }
 
-    virtual bool setValue(Date& date, const std::string& str) const noexcept override {
+    virtual bool setValue(DateTime& date, const std::string& str) const noexcept override {
       int value = 0;
       const char* last = str.data() + str.size();
       if(str.empty() || str.front() < '0' || str.front() > '9') { // from_chars accepts '-'
@@ -165,7 +165,7 @@ namespace {
     /*! Pattern */
     static const std::string PATTERN;
 
-    virtual void format(const Date& date, std::ostream& output) const noexcept override {
+    virtual void format(const DateTime& date, std::ostream& output) const noexcept override {
       output << (getHour(date) < 12 ? "a.m." : "p.m.");
     }
 
@@ -173,7 +173,7 @@ namespace {
       return 4;
     }
 
-    virtual bool setValue(Date& date, const std::string& value) const noexcept override {
+    virtual bool setValue(DateTime& date, const std::string& value) const noexcept override {
       if(value == "p.m.") {
 	if(getHour(date) < 12) { // %h value is added to (or by) marker value
 	  setHour(date, static_cast<uint16_t>(getHour(date) + 12));
@@ -207,7 +207,7 @@ namespace {
       // Nothing to do
     }
 
-    virtual void format(const Date&, std::ostream& output) const noexcept override {
+    virtual void format(const DateTime&, std::ostream& output) const noexcept override {
       output << _message;
     }
 
@@ -215,7 +215,7 @@ namespace {
       return _message.size();
     }
 
-    virtual bool setValue(Date&, const std::string& value) const noexcept override {
+    virtual bool setValue(DateTime&, const std::string& value) const noexcept override {
       return value == _message;
     }
 
@@ -324,21 +324,21 @@ DateFormatter::registerFormatterPart(const std::string& pattern, getInstance ins
 }
 
 void
-DateFormatter::format(const Date& date, std::string& output) const noexcept {
+DateFormatter::format(const DateTime& date, std::string& output) const noexcept {
   std::ostringstream oss;
   format(date, oss);
   output = oss.str();
 }
 
 void
-DateFormatter::format(const Date& date, std::ostream& output) const noexcept {
+DateFormatter::format(const DateTime& date, std::ostream& output) const noexcept {
   for(const auto& part : _formatters) {
     part->format(date, output);
   }
 }
 
 void
-DateFormatter::parse(const std::string& strDate, Date& date) const {
+DateFormatter::parse(const std::string& strDate, DateTime& date) const {
   if(strDate.size() != _size) {
     std::ostringstream oss;
     oss << "Found " << strDate.size() << " characters instead of " << _size << " in " << strDate;
@@ -371,9 +371,9 @@ DateFormatter::parse(const std::string& strDate, Date& date) const {
   date.computeTimestamp();
 }
 
-Date
+DateTime
 DateFormatter::parse(const std::string& strDate) const {
-  Date date(false);
+  DateTime date(false);
   parse(strDate, date);
   return date;
 }

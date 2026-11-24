@@ -27,6 +27,7 @@
 #include <string>
 #include <vector>
 
+#include "date/date.hpp"
 #include "mapping.hpp"
 #include "sql/connection.hpp"
 #include "sql/builder/clauses.hpp"
@@ -197,6 +198,26 @@ testStmtLists(anch::sql::Connection& conn) {
     .where(anch::sql::clauses().AND("id", anch::sql::in, std::vector<int32_t>{1, 2, 3, 4})).build();
   count = countRows(conn, query.getQuery(), query.getParameters());
   anch::ut::assertThat(count == 4, "Builder IN: found {} rows instead of 4", count);
+}
+
+/*!
+ * Dates: DATE columns read as anch::date::Date (calendar days, years 0 and 1 included), bound as parameters and lists
+ *
+ * \param conn the connection
+ * \param christ the birth year of 'Christ' in the database fixture (0 with MySQL, 1 otherwise)
+ */
+inline void
+testStmtDates(anch::sql::Connection& conn, int32_t christ = 1) {
+  std::optional<anch::date::Date> birth;
+  conn.queryMapRow("SELECT birth_date FROM T_Test WHERE last_name = :last", [&birth](anch::sql::ResultSet& res) {
+    birth = res.get<anch::date::Date>(0);
+  }, {{"last", "Christ"}});
+  anch::ut::assertThat(birth == anch::date::Date(christ, 12, 24), "Unexpected birth date {}", birth ? birth->format() : std::string("NULL"));
+  int64_t count = countRows(conn, "SELECT COUNT(*) FROM T_Test WHERE birth_date = :birth", {{"birth", anch::date::Date(1993, 1, 1)}});
+  anch::ut::assertThat(count == 1, "Found {} rows born on 1993-01-01 instead of 1", count);
+  count = countRows(conn, "SELECT COUNT(*) FROM T_Test WHERE birth_date IN (:days)",
+		    {{"days", std::vector<anch::date::Date>{anch::date::Date(1970, 1, 1), anch::date::Date(1993, 1, 1)}}});
+  anch::ut::assertThat(count == 2, "Found {} rows born on 1970-01-01 or 1993-01-01 instead of 2", count);
 }
 
 /*!

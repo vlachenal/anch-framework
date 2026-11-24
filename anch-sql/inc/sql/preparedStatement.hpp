@@ -141,7 +141,7 @@ namespace anch::sql {
     uint64_t executeUpdate();
 
     /*!
-     * Bind value to a parameter ( \c toParameter : integers, floating point numbers, strings, SQL dates,
+     * Bind value to a parameter ( \c toParameter : integers, floating point numbers, strings, dates (\c anch::date::Date , \c anch::date::DateTime , \c anch::sql::Time ),
      * \c std::optional of them ; \c std::nullopt and \c NULL character arrays bind SQL \c NULL ), or a list of
      * values ( \ref BindableList : PostgreSQL array, expanded \c IN (:name) list for other databases ; the query is
      * prepared again when the list sizes change its text)

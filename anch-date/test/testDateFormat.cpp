@@ -31,7 +31,7 @@
 #include "ut/assert.hpp"
 #include "ut/unit.hpp"
 
-using anch::date::Date;
+using anch::date::DateTime;
 using anch::date::DateFormatter;
 using anch::date::IDatePartFormatter;
 
@@ -42,13 +42,13 @@ public:
   static const std::string PATTERN;
   MicroFormatter() {}
   virtual ~MicroFormatter() {}
-  void format(const Date& date, std::ostream& output) const noexcept {
+  void format(const DateTime& date, std::ostream& output) const noexcept {
     output << std::setfill('0') << std::setw(3) << getMicrosecond(date);
   }
   size_t getSize() const noexcept {
     return 3;
   }
-  bool setValue(Date& date, const std::string& value) const noexcept {
+  bool setValue(DateTime& date, const std::string& value) const noexcept {
     std::istringstream iss(value);
     uint16_t val;
     iss >> std::dec >> val;
@@ -73,13 +73,13 @@ public:
   static const std::string PATTERN;
   NanoFormatter() {}
   virtual ~NanoFormatter() {}
-  void format(const Date& date, std::ostream& output) const noexcept {
+  void format(const DateTime& date, std::ostream& output) const noexcept {
     output << std::setfill('0') << std::setw(3) << getNanosecond(date);
   }
   size_t getSize() const noexcept {
     return 3;
   }
-  bool setValue(Date& date, const std::string& value) const noexcept {
+  bool setValue(DateTime& date, const std::string& value) const noexcept {
     std::istringstream iss(value);
     uint16_t val;
     iss >> std::dec >> val;
@@ -107,9 +107,9 @@ testFormatDate() {
   std::cout << "Enter in test date format" << std::endl;
 
   std::string nowStr;
-  Date now = Date();
+  DateTime now = DateTime();
   formatter.format(now, nowStr);
-  std::cout << "Date from scratch: " << nowStr << std::endl;
+  std::cout << "DateTime from scratch: " << nowStr << std::endl;
 
   std::cout << "Exit test date format" << std::endl;
 }
@@ -119,15 +119,15 @@ testFormatDateTimeT() {
   std::cout << "Enter in test date format from std::time_t" << std::endl;
 
   std::string timetStr;
-  formatter.format(Date(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now())), timetStr);
-  std::cout << "Date from time_t: " << timetStr << std::endl;
+  formatter.format(DateTime(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now())), timetStr);
+  std::cout << "DateTime from time_t: " << timetStr << std::endl;
 
   std::cout << "Exit test date format from std::time_t" << std::endl;
 }
 
-Date
+DateTime
 parseDate(const std::string& strDate) {
-  Date parsedDate(false);
+  DateTime parsedDate(false);
   formatter.parse(strDate, parsedDate);
   return parsedDate;
 }
@@ -137,7 +137,7 @@ testParseDate() {
   std::cout << "Enter in test date parse" << std::endl;
 
   std::string strDate = "2012-10-23 10:02:59.998";
-  Date parsedDate = parseDate(strDate);
+  DateTime parsedDate = parseDate(strDate);
   std::string parsedDateStr;
   formatter.format(parsedDate, parsedDateStr);
   anch::ut::assertThat(strDate == parsedDateStr, "Parse {} instrad of {}", parsedDateStr, strDate);
@@ -150,11 +150,11 @@ void
 testComparison() {
   std::cout << "Enter in test comparison" << std::endl;
 
-  Date now = Date();
+  DateTime now = DateTime();
   std::string nowStr;
   formatter.format(now, nowStr);
   std::string strDate = "2012-10-23 10:02:59.998";
-  Date parsedDate = parseDate(strDate);
+  DateTime parsedDate = parseDate(strDate);
   anch::ut::assertThat(now > parsedDate, "{} should be after {}", nowStr, strDate);
   std::cout << nowStr << " is after " << strDate << std::endl;
 
@@ -166,10 +166,10 @@ testFormatDateCustom() {
   std::cout << "Enter in custom formatter test" << std::endl;
 
   std::string nowStr;
-  Date now = Date();
+  DateTime now = DateTime();
   DateFormatter formatter2("%Y-%m-%d %H:%M:%S.%s.%v.%N");
   formatter2.format(now, nowStr);
-  std::cout << "Date from custom parser: " << nowStr << std::endl;
+  std::cout << "DateTime from custom parser: " << nowStr << std::endl;
 
   std::cout << "Exit custom formatter test" << std::endl;
 }
@@ -180,7 +180,7 @@ const std::time_t WINTER = 1735725600;      // 2025-01-01 10:00:00 UTC = 11:00 C
 const std::time_t SUMMER_MIDNIGHT = 1751320800; // 2025-06-30 22:00:00 UTC = 2025-07-01 00:00 CEST
 
 std::string
-format(const DateFormatter& fmt, const Date& date) {
+format(const DateFormatter& fmt, const DateTime& date) {
   std::string str;
   fmt.format(date, str);
   return str;
@@ -189,11 +189,11 @@ format(const DateFormatter& fmt, const Date& date) {
 void
 testDaylightSavingTime() {
   // D3: daylight saving time was added twice
-  std::string str = format(formatter, Date(SUMMER_NOON));
+  std::string str = format(formatter, DateTime(SUMMER_NOON));
   anch::ut::assertThat(str == "2025-07-01 12:00:00.000", "Summer date is {}", str);
-  str = format(formatter, Date(WINTER));
+  str = format(formatter, DateTime(WINTER));
   anch::ut::assertThat(str == "2025-01-01 11:00:00.000", "Winter date is {}", str);
-  str = format(formatter, Date(std::chrono::system_clock::from_time_t(SUMMER_MIDNIGHT)));
+  str = format(formatter, DateTime(std::chrono::system_clock::from_time_t(SUMMER_MIDNIGHT)));
   anch::ut::assertThat(str == "2025-07-01 00:00:00.000", "Summer midnight is {}", str);
 }
 
@@ -202,19 +202,19 @@ testTimespec() {
   // D4: milliseconds were computed with a modulo
   DateFormatter fmt("%Y-%m-%d %H:%M:%S.%s.%v.%N");
   std::timespec spec{SUMMER_NOON, 123456789};
-  Date date(spec);
+  DateTime date(spec);
   std::string str = format(fmt, date);
   anch::ut::assertThat(str == "2025-07-01 12:00:00.123.456.789", "timespec date is {}", str);
   std::timespec back = static_cast<std::timespec>(date);
   anch::ut::assertThat(back.tv_sec == spec.tv_sec && back.tv_nsec == spec.tv_nsec, "timespec is {}.{}", back.tv_sec, back.tv_nsec);
   anch::ut::assertThat(static_cast<std::time_t>(date) == SUMMER_NOON, "time_t is {}", static_cast<std::time_t>(date));
   auto tp = static_cast<std::chrono::system_clock::time_point>(date);
-  anch::ut::assertTrue(Date(tp) == date, "time_point round trip");
+  anch::ut::assertTrue(DateTime(tp) == date, "time_point round trip");
 }
 
 void
 testConversions() {
-  Date date(SUMMER_NOON);
+  DateTime date(SUMMER_NOON);
   std::tm local = static_cast<std::tm>(date);
   anch::ut::assertThat(local.tm_hour == 12 && local.tm_isdst > 0 && local.tm_wday == 2 && local.tm_yday == 181,
 		       "tm: {}h isdst={} wday={} yday={}", local.tm_hour, local.tm_isdst, local.tm_wday, local.tm_yday);
@@ -225,18 +225,18 @@ testConversions() {
   input.tm_mday = 1;
   input.tm_hour = 12;
   input.tm_isdst = -1;
-  anch::ut::assertThat(static_cast<std::time_t>(Date(&input)) == SUMMER_NOON, "tm date is {}", format(formatter, Date(&input)));
-  Date epoch(false);
-  anch::ut::assertThat(static_cast<std::time_t>(epoch) == 0, "Date(false) should be epoch: {}", format(formatter, epoch));
+  anch::ut::assertThat(static_cast<std::time_t>(DateTime(&input)) == SUMMER_NOON, "tm date is {}", format(formatter, DateTime(&input)));
+  DateTime epoch(false);
+  anch::ut::assertThat(static_cast<std::time_t>(epoch) == 0, "DateTime(false) should be epoch: {}", format(formatter, epoch));
 }
 
 void
 testYear2Digits() {
   // D5: %y was written with 4 digits
   DateFormatter fmt("%y-%m-%d");
-  std::string str = format(fmt, Date(SUMMER_NOON));
+  std::string str = format(fmt, DateTime(SUMMER_NOON));
   anch::ut::assertThat(str == "25-07-01", "%y date is {}", str);
-  Date date = fmt.parse("25-07-01");
+  DateTime date = fmt.parse("25-07-01");
   anch::ut::assertThat(format(formatter, date) == "2025-07-01 00:00:00.000", "25 parsed as {}", format(formatter, date));
   date = fmt.parse("70-01-02");
   anch::ut::assertThat(format(formatter, date) == "1970-01-02 00:00:00.000", "70 parsed as {}", format(formatter, date));
@@ -246,15 +246,15 @@ void
 testHour12() {
   // D6: noon and midnight were written 00
   DateFormatter fmt("%h:%M %p");
-  std::string str = format(fmt, Date(SUMMER_NOON));
+  std::string str = format(fmt, DateTime(SUMMER_NOON));
   anch::ut::assertThat(str == "12:00 p.m.", "Noon is {}", str);
-  str = format(fmt, Date(SUMMER_MIDNIGHT));
+  str = format(fmt, DateTime(SUMMER_MIDNIGHT));
   anch::ut::assertThat(str == "12:00 a.m.", "Midnight is {}", str);
-  str = format(fmt, Date(SUMMER_NOON + 3600 + 60));
+  str = format(fmt, DateTime(SUMMER_NOON + 3600 + 60));
   anch::ut::assertThat(str == "01:01 p.m.", "13:01 is {}", str);
   DateFormatter full("%Y-%m-%d %h:%M:%S %p");
   for(const char* value : {"2025-07-01 12:00:00 a.m.", "2025-07-01 12:00:00 p.m.", "2025-07-01 01:30:00 p.m.", "2025-07-01 11:59:59 p.m."}) {
-    Date date = full.parse(value);
+    DateTime date = full.parse(value);
     anch::ut::assertThat(format(full, date) == value, "{} parsed as {}", value, format(full, date));
   }
   anch::ut::assertThat(format(formatter, full.parse("2025-07-01 12:00:00 a.m.")) == "2025-07-01 00:00:00.000", "12 a.m. should be midnight");
@@ -262,9 +262,9 @@ testHour12() {
 
 void
 testParseReset() {
-  // Fields which are not in pattern were kept from the parsed date (current time for Date())
+  // Fields which are not in pattern were kept from the parsed date (current time for DateTime())
   DateFormatter fmt("%Y-%m-%d");
-  Date date; // now
+  DateTime date; // now
   fmt.parse("2012-10-23", date);
   std::string str = format(formatter, date);
   anch::ut::assertThat(str == "2012-10-23 00:00:00.000", "Parsed date is {}", str);
@@ -273,8 +273,8 @@ testParseReset() {
 void
 testParseMilliseconds() {
   // Milliseconds were ignored in timestamp
-  Date first = formatter.parse("2012-10-23 10:02:59.001");
-  Date second = formatter.parse("2012-10-23 10:02:59.999");
+  DateTime first = formatter.parse("2012-10-23 10:02:59.001");
+  DateTime second = formatter.parse("2012-10-23 10:02:59.999");
   anch::ut::assertTrue(first < second && first != second, "Milliseconds should be compared");
   anch::ut::assertThat(static_cast<std::time_t>(first) == 1350979379, "Parsed time_t is {}", static_cast<std::time_t>(first));
 }
@@ -306,13 +306,13 @@ testFormatterOwnership() {
   static_assert(!std::is_copy_constructible_v<DateFormatter>, "DateFormatter has to be non copyable");
   DateFormatter fmt("%Y");
   DateFormatter moved(std::move(fmt));
-  anch::ut::assertThat(format(moved, Date(SUMMER_NOON)) == "2025", "Moved formatter result is {}", format(moved, Date(SUMMER_NOON)));
+  anch::ut::assertThat(format(moved, DateTime(SUMMER_NOON)) == "2025", "Moved formatter result is {}", format(moved, DateTime(SUMMER_NOON)));
 }
 
 void
 testUnknownPattern() {
   DateFormatter fmt("100%% %Q %Y%");
-  std::string str = format(fmt, Date(SUMMER_NOON));
+  std::string str = format(fmt, DateTime(SUMMER_NOON));
   anch::ut::assertThat(str == "100%% %Q 2025%", "Unknown pattern is written as is: {}", str);
 }
 
@@ -321,13 +321,13 @@ testOutOfRange() {
   // Timestamps are stored in nanoseconds: dates out of years 1678 to 2261 are refused instead of aborting (-ftrapv)
   for(std::time_t secs : {static_cast<std::time_t>(20'000'000'000LL), static_cast<std::time_t>(-20'000'000'000LL)}) {
     try {
-      Date date(secs);
+      DateTime date(secs);
       anch::ut::fail("time_t out of range should be refused");
     } catch(const std::invalid_argument& e) {
       std::cout << e.what() << std::endl;
     }
     try {
-      Date date(std::timespec{secs, 0});
+      DateTime date(std::timespec{secs, 0});
       anch::ut::fail("timespec out of range should be refused");
     } catch(const std::invalid_argument& e) {
       std::cout << e.what() << std::endl;
@@ -335,15 +335,15 @@ testOutOfRange() {
   }
   for(long nsec : {-1L, 1'000'000'000L}) {
     try {
-      Date date(std::timespec{0, nsec});
+      DateTime date(std::timespec{0, nsec});
       anch::ut::fail("Invalid tv_nsec should be refused");
     } catch(const std::invalid_argument& e) {
       std::cout << e.what() << std::endl;
     }
   }
   // Bounds are accepted
-  Date max(static_cast<std::time_t>(9'223'372'035LL));
-  Date min(std::timespec{static_cast<std::time_t>(-9'223'372'035LL), 999'999'999L});
+  DateTime max(static_cast<std::time_t>(9'223'372'035LL));
+  DateTime min(std::timespec{static_cast<std::time_t>(-9'223'372'035LL), 999'999'999L});
   anch::ut::assertThat(static_cast<std::time_t>(max) == 9'223'372'035LL, "Maximum date should be kept");
 }
 

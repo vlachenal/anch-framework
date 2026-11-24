@@ -24,14 +24,15 @@
 #include <string>
 
 #include "date/date.hpp"
+#include "date/dateTime.hpp"
 #include "date/rfc3339.hpp"
 
 #include "ut/assert.hpp"
 #include "ut/unit.hpp"
 
 using anch::date::Date;
+using anch::date::DateTime;
 using anch::date::rfc3339::Offset;
-using std::chrono::year_month_day;
 
 namespace rfc = anch::date::rfc3339;
 
@@ -39,16 +40,16 @@ namespace rfc = anch::date::rfc3339;
 /*!
  * Build date from nanoseconds since epoch
  */
-Date
+DateTime
 fromNanos(std::int64_t nanos) {
-  return Date(std::chrono::system_clock::time_point(std::chrono::nanoseconds(nanos)));
+  return DateTime(std::chrono::system_clock::time_point(std::chrono::nanoseconds(nanos)));
 }
 
 /*!
  * Nanoseconds since epoch of date
  */
 std::int64_t
-toNanos(const Date& date) {
+toNanos(const DateTime& date) {
   return std::chrono::duration_cast<std::chrono::nanoseconds>(
     static_cast<std::chrono::system_clock::time_point>(date).time_since_epoch()).count();
 }
@@ -95,7 +96,7 @@ testFormatLocal() {
     {-2208988800, "1900-01-01T00:09:00+00:09"}, // Paris mean time (+00:09:21): offset truncated to the minute
   };
   for(const auto& [secs, text] : expected) {
-    Date date(static_cast<std::time_t>(secs));
+    DateTime date(static_cast<std::time_t>(secs));
     std::string res = rfc::formatDateTime(date, Offset::LOCAL);
     anch::ut::assertThat(res == text, "Expected {} ; found {}", text, res);
     anch::ut::assertThat(rfc::parseDateTime(res) == date, "{} should be parsed to the same point in time", res);
@@ -123,7 +124,7 @@ testParse() {
   }
   // Round trip +
   for(std::int64_t nanos : std::initializer_list<std::int64_t>{base, base + 7, -1, 4'102'444'799'999'999'999}) {
-    Date date = fromNanos(nanos);
+    DateTime date = fromNanos(nanos);
     std::string text = rfc::formatDateTime(date);
     anch::ut::assertThat(rfc::parseDateTime(text) == date, "Round trip failed for {}", text);
   }
@@ -152,32 +153,24 @@ testParseInvalid() {
       "2025-07-01T1a:00:00Z", "2025-07-01T10:00:00.12a3Z"}) {
     checkInvalid(rfc::parseDateTime, text);
   }
-  // Out of Date range (nanoseconds on 64 bits) +
+  // Out of DateTime range (nanoseconds on 64 bits) +
   checkInvalid(rfc::parseDateTime, "1677-01-01T00:00:00Z");
   checkInvalid(rfc::parseDateTime, "2262-12-31T00:00:00Z");
   checkInvalid(rfc::parseDateTime, "9999-12-31T23:59:59Z");
-  // Out of Date range (nanoseconds on 64 bits) -
+  // Out of DateTime range (nanoseconds on 64 bits) -
   rfc::parseDateTime("2024-02-29T10:00:00Z");
 }
 
 void
 testDate() {
   using namespace std::chrono;
-  year_month_day date = rfc::parseDate("2024-02-29");
-  anch::ut::assertThat(date == 2024y/February/29d, "Invalid date");
+  Date date = rfc::parseDate("2024-02-29");
+  anch::ut::assertThat(date == Date(2024, 2, 29), "Invalid date");
   anch::ut::assertThat(rfc::formatDate(date) == "2024-02-29", "Invalid format: {}", rfc::formatDate(date));
-  anch::ut::assertThat(rfc::formatDate(0y/January/1d) == "0000-01-01", "Year 0 should be formatted");
-  anch::ut::assertThat(rfc::parseDate("9999-12-31") == 9999y/December/31d, "Year 9999 should be parsed");
+  anch::ut::assertThat(rfc::formatDate(Date(0, 1, 1)) == "0000-01-01", "Year 0 should be formatted");
+  anch::ut::assertThat(rfc::parseDate("9999-12-31") == Date(9999, 12, 31), "Year 9999 should be parsed");
   for(const char* text : {"", "2025-02-29", "2025-13-01", "2025-1-01", "2025-01-01T00:00:00Z", "2025/01/01", "20250101", " 2025-01-01"}) {
     checkInvalid(rfc::parseDate, text);
-  }
-  for(year_month_day invalid : {year_month_day{}, 2025y/February/29d, year_month_day(year(10000), January, day(1)), year_month_day(year(-1), January, day(1))}) {
-    try {
-      rfc::formatDate(invalid);
-      anch::ut::fail("Invalid date should not be formatted");
-    } catch(const std::invalid_argument& e) {
-      std::cout << e.what() << std::endl;
-    }
   }
 }
 

@@ -1,6 +1,6 @@
 /*
   ANCH Framework: ANother C++ Hack is a C++ framework based on C++23 standard
-  Copyright (C) 2012 Vincent Lachenal
+  Copyright (C) 2026 Vincent Lachenal
 
   This file is part of ANCH Framework.
 
@@ -19,168 +19,159 @@
 */
 #include "date/date.hpp"
 
-#include <limits>
+#include <algorithm>
+#include <ctime>
+#include <format>
 #include <stdexcept>
 
+#include "date/dateTime.hpp"
+#include "date/rfc3339.hpp"
+
 using anch::date::Date;
-using std::chrono::nanoseconds;
-using std::chrono::seconds;
-using std::chrono::sys_time;
-using std::chrono::system_clock;
+using anch::date::DateTime;
+using anch::date::Zone;
+using std::chrono::sys_days;
+using std::chrono::year_month_day;
 
 namespace {
 
-  /*!
-   * Convert timestamp to time point
-   *
-   * \param timestamp the number of nanoseconds since epoch
-   *
-   * \return the time point
-   */
-  inline sys_time<nanoseconds>
-  toTimePoint(std::int64_t timestamp) {
-    return sys_time<nanoseconds>(nanoseconds(timestamp));
-  }
+  /*! First day ( 0000-01-01 ) */
+  const sys_days MIN_DAY = sys_days(year_month_day(std::chrono::year(0), std::chrono::January, std::chrono::day(1)));
 
-  /*!
-   * Convert time point to local time
-   *
-   * \param time the time point (truncated toward the past to the second)
-   *
-   * \return the local time
-   */
-  std::tm
-  toLocalTime(const sys_time<nanoseconds>& time) {
-    std::time_t secs = system_clock::to_time_t(std::chrono::floor<seconds>(time));
-    std::tm local{};
-    ::localtime_r(&secs, &local);
-    return local;
-  }
+  /*! Last day ( 9999-12-31 ) */
+  const sys_days MAX_DAY = sys_days(year_month_day(std::chrono::year(9999), std::chrono::December, std::chrono::day(31)));
 
-  /*!
-   * Convert local time to time point
-   *
-   * \param local the local time (normalized by \c std::mktime )
-   *
-   * \return the time point
-   *
-   * \throw std::invalid_argument date can not be stored in nanoseconds since epoch on 64 bits (about 1678 to 2261)
-   */
-  /*! Maximum number of seconds from epoch which can be stored in nanoseconds (years 1678 to 2261) */
-  constexpr std::time_t MAX_SECONDS = std::numeric_limits<std::int64_t>::max() / 1'000'000'000 - 1;
-
-  /*!
-   * Convert seconds from epoch to time point in nanoseconds
-   *
-   * \param secs the seconds from epoch
-   *
-   * \return the time point
-   *
-   * \throw std::invalid_argument date out of range
-   */
-  sys_time<nanoseconds>
-  fromSeconds(std::time_t secs) {
-    if(secs < -MAX_SECONDS || secs > MAX_SECONDS) {
-      throw std::invalid_argument("Date out of range (years 1678 to 2261)");
+  /*! Check date: possible date from 0000-01-01 to 9999-12-31 */
+  year_month_day
+  checked(const year_month_day& date) {
+    const int year = static_cast<int>(date.year());
+    if(!date.ok() || year < 0 || year > 9999) {
+      throw std::invalid_argument(std::format("Invalid date {:04}-{:02}-{:02} (dates are possible days from 0000-01-01 to 9999-12-31)", year,
+					      static_cast<unsigned>(date.month()), static_cast<unsigned>(date.day())));
     }
-    return sys_time<nanoseconds>(std::chrono::duration_cast<nanoseconds>(std::chrono::seconds(secs)));
+    return date;
   }
 
-  sys_time<nanoseconds>
-  fromLocalTime(std::tm& local) {
-    // Seconds whose nanoseconds (and sub-second fields) fit in 64 bits
-    return fromSeconds(std::mktime(&local));
+  /*! Out of range error */
+  [[noreturn]] void
+  outOfRange() {
+    throw std::invalid_argument("Date out of range (0000-01-01 to 9999-12-31)");
   }
 
 }
 
 // Constructors +
-Date::Date(bool init) {
-  initialize(init ? std::chrono::time_point_cast<nanoseconds>(system_clock::now()) : sys_time<nanoseconds>());
+Date::Date(int32_t year, unsigned month, unsigned day):
+  _date(checked(year_month_day(std::chrono::year(year), std::chrono::month(month), std::chrono::day(day)))) {
+  // Nothing to do
 }
 
-Date::Date(const system_clock::time_point& time) {
-  initialize(std::chrono::time_point_cast<nanoseconds>(time));
+Date::Date(const year_month_day& date): _date(checked(date)) {
+  // Nothing to do
 }
 
-Date::Date(const std::time_t& time) {
-  initialize(fromSeconds(time));
-}
-
-Date::Date(const std::tm* const time) {
-  std::tm local = *time; // mktime normalizes its argument
-  initialize(fromLocalTime(local));
-}
-
-Date::Date(const std::timespec& time) {
-  if(time.tv_nsec < 0 || time.tv_nsec > 999'999'999) {
-    throw std::invalid_argument("Invalid timespec: tv_nsec has to be in [0, 999999999]");
+Date::Date(const sys_days& days): _date() {
+  if(days < MIN_DAY || days > MAX_DAY) {
+    outOfRange();
   }
-  initialize(fromSeconds(time.tv_sec) + nanoseconds(time.tv_nsec));
+  _date = year_month_day(days);
 }
 // Constructors -
 
-// Destructor +
-Date::~Date() {
-  // Nothing to do
-}
-// Destructor -
-
 // Methods +
-void
-Date::initialize(const sys_time<nanoseconds>& time) {
-  _timestamp = time.time_since_epoch().count();
-  std::tm local = toLocalTime(time);
-  _years = local.tm_year + 1900;
-  _months = static_cast<uint16_t>(local.tm_mon);
-  _ydays = static_cast<uint16_t>(local.tm_yday);
-  _mdays = static_cast<uint16_t>(local.tm_mday);
-  _wdays = static_cast<uint16_t>(local.tm_wday);
-  _hours = static_cast<uint16_t>(local.tm_hour);
-  _minutes = static_cast<uint16_t>(local.tm_min);
-  _seconds = static_cast<uint16_t>(local.tm_sec);
-  auto subsec = (time - std::chrono::floor<seconds>(time)).count(); // [0, 999999999]
-  _milliseconds = static_cast<uint16_t>(subsec / 1000000);
-  _microseconds = static_cast<uint16_t>(subsec / 1000 % 1000);
-  _nanoseconds = static_cast<uint16_t>(subsec % 1000);
+Date
+Date::today(Zone zone) {
+  const auto now = std::chrono::system_clock::now();
+  if(zone == Zone::UTC) {
+    return Date(std::chrono::floor<std::chrono::days>(now));
+  }
+  std::time_t secs = std::chrono::system_clock::to_time_t(now);
+  std::tm local{};
+  ::localtime_r(&secs, &local);
+  return Date(local.tm_year + 1900, static_cast<unsigned>(local.tm_mon + 1), static_cast<unsigned>(local.tm_mday));
 }
 
-void
-Date::computeTimestamp() {
+Date
+Date::parse(std::string_view text) {
+  return anch::date::rfc3339::parseDate(text);
+}
+
+std::string
+Date::format() const {
+  return anch::date::rfc3339::formatDate(*this);
+}
+
+unsigned
+Date::weekday() const noexcept {
+  return std::chrono::weekday(sys_days(_date)).iso_encoding();
+}
+
+unsigned
+Date::dayOfYear() const noexcept {
+  const sys_days first(year_month_day(_date.year(), std::chrono::January, std::chrono::day(1)));
+  return static_cast<unsigned>((sys_days(_date) - first).count() + 1);
+}
+
+Date
+Date::plusDays(int64_t days) const {
+  const int64_t current = sys_days(_date).time_since_epoch().count();
+  if(days < MIN_DAY.time_since_epoch().count() - current || days > MAX_DAY.time_since_epoch().count() - current) {
+    outOfRange();
+  }
+  return Date(sys_days(std::chrono::days(static_cast<int>(current + days))));
+}
+
+Date
+Date::plusMonths(int64_t months) const {
+  const int64_t current = static_cast<int64_t>(year()) * 12 + month() - 1;
+  if(months < -current || months > 9999 * 12 + 11 - current) {
+    outOfRange();
+  }
+  const int64_t total = current + months;
+  const std::chrono::year_month newMonth(std::chrono::year(static_cast<int>(total / 12)), std::chrono::month(static_cast<unsigned>(total % 12 + 1)));
+  const std::chrono::day last = std::chrono::year_month_day_last(newMonth.year(), std::chrono::month_day_last(newMonth.month())).day();
+  return Date(year_month_day(newMonth.year(), newMonth.month(), std::min(_date.day(), last)));
+}
+
+Date
+Date::plusYears(int64_t years) const {
+  if(years < -static_cast<int64_t>(year()) || years > 9999 - static_cast<int64_t>(year())) {
+    outOfRange();
+  }
+  const std::chrono::year newYear(static_cast<int>(year() + years));
+  if(_date.month() == std::chrono::February && _date.day() == std::chrono::day(29) && !newYear.is_leap()) {
+    return Date(year_month_day(newYear, std::chrono::February, std::chrono::day(28)));
+  }
+  return Date(year_month_day(newYear, _date.month(), _date.day()));
+}
+
+int64_t
+Date::daysUntil(const Date& other) const noexcept {
+  return (sys_days(other._date) - sys_days(_date)).count();
+}
+
+DateTime
+Date::startOfDay(Zone zone) const {
+  if(zone == Zone::UTC) {
+    return DateTime(std::chrono::time_point_cast<std::chrono::system_clock::duration>(sys_days(_date)));
+  }
   std::tm local{};
-  local.tm_year = _years - 1900;
-  local.tm_mon = _months;
-  local.tm_mday = _mdays;
-  local.tm_hour = _hours;
-  local.tm_min = _minutes;
-  local.tm_sec = _seconds;
+  local.tm_year = year() - 1900;
+  local.tm_mon = static_cast<int>(month()) - 1;
+  local.tm_mday = static_cast<int>(day());
   local.tm_isdst = -1; // let mktime determine daylight saving time
-  initialize(fromLocalTime(local)
-	     + std::chrono::milliseconds(_milliseconds)
-	     + std::chrono::microseconds(_microseconds)
-	     + nanoseconds(_nanoseconds));
+  return DateTime(&local);
 }
 // Methods -
 
 // Operators +
-Date::operator system_clock::time_point() const noexcept {
-  return std::chrono::time_point_cast<system_clock::duration>(toTimePoint(_timestamp));
+Date::operator sys_days() const noexcept {
+  return sys_days(_date);
 }
 
-Date::operator std::time_t() const noexcept {
-  return system_clock::to_time_t(std::chrono::floor<seconds>(toTimePoint(_timestamp)));
-}
-
-Date::operator std::tm() const noexcept {
-  return toLocalTime(toTimePoint(_timestamp));
-}
-
-Date::operator std::timespec() const noexcept {
-  auto time = toTimePoint(_timestamp);
-  auto secs = std::chrono::floor<seconds>(time);
-  std::timespec spec{};
-  spec.tv_sec = system_clock::to_time_t(secs);
-  spec.tv_nsec = static_cast<long>((time - secs).count());
-  return spec;
+std::ostream&
+anch::date::operator<<(std::ostream& out, const Date& date) {
+  char buffer[anch::date::rfc3339::DATE_SIZE];
+  return out.write(buffer, static_cast<std::streamsize>(anch::date::rfc3339::formatDate(date, buffer)));
 }
 // Operators -

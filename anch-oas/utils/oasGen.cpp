@@ -89,7 +89,7 @@ parseArgs(int argc, char** argv, GeneratorOptions& opts) {
     {.handler = anch::cli::bindFalse(opts.models.uuid), .lopt = "no-uuid",
      .description = "Map uuid format to std::string instead of anch::UUID"},
     {.handler = anch::cli::bindFalse(opts.models.date), .lopt = "no-date",
-     .description = "Map date-time and date formats to std::string instead of anch::date::Date and std::chrono::year_month_day"},
+     .description = "Map date-time and date formats to std::string instead of anch::date::DateTime and anch::date::Date"},
     {.handler = anch::cli::bindFalse(opts.models.constraints), .lopt = "no-constraints",
      .description = "Do not generate value constraints (minLength, minimum, minItems, ...): required properties are still checked"},
     {.handler = anch::cli::bindTrue(opts.models.strict), .lopt = "strict",

@@ -46,7 +46,7 @@ namespace anch::oas {
     /*! Map \c uuid string format to \c anch::UUID (needs \c ANCH_UUID in anch-json), \c std::string otherwise */
     bool uuid = true;
 
-    /*! Map \c date-time string format to \c anch::date::Date and \c date format to \c std::chrono::year_month_day
+    /*! Map \c date-time string format to \c anch::date::DateTime and \c date format to \c anch::date::Date
      * (RFC 3339, needs \c ANCH_DATE in anch-json), \c std::string otherwise */
     bool date = true;
 
@@ -158,8 +158,8 @@ namespace anch::oas {
    * Generate C++ models and their anch-json mappers from the document schemas ( \c components.schemas ).\n
    * \n
    * Mapping:
-   *  - \c string → \c std::string ( \c anch::UUID for \c uuid format, \c anch::date::Date for \c date-time format,
-   *    \c std::chrono::year_month_day for \c date format), \c integer → \c int32_t / \c int64_t ,
+   *  - \c string → \c std::string ( \c anch::UUID for \c uuid format, \c anch::date::DateTime for \c date-time format,
+   *    \c anch::date::Date for \c date format), \c integer → \c int32_t / \c int64_t ,
    *    \c number → \c float / \c double , \c boolean → \c bool ;
    *  - objects with properties and \c allOf compositions → structures, inline objects get a name built from their
    *    path (\<Model\>\<Property\>) ;

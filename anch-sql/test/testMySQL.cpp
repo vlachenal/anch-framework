@@ -481,6 +481,11 @@ testLists() {
 }
 
 void
+testDates() {
+  testStmtDates(*dbCon, 0);
+}
+
+void
 testSqlError() {
   testSqlErrorKeepsConnection(*dbCon);
 }
@@ -535,5 +540,6 @@ anch::ut::setup(anch::ut::UnitTests& tests) {
     .add("17-builder-query", testBuilder)
     .add("18-stmt-fields", testFields)
     .add("19-stmt-lists", testLists)
+    .add("20-stmt-dates", testDates)
     ;
 }

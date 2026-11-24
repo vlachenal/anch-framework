@@ -43,7 +43,7 @@ LLVMFuzzerTestOneInput(const uint8_t* data, std::size_t size) {
   const anch::date::DateFormatter& formatter = formatters[data[0] % formatters.size()];
   const std::string input(reinterpret_cast<const char*>(data) + 1, size - 1);
   try {
-    const anch::date::Date date = formatter.parse(input);
+    const anch::date::DateTime date = formatter.parse(input);
     std::string output;
     formatter.format(date, output);
   } catch(const std::invalid_argument&) {

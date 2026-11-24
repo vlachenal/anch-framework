@@ -27,7 +27,7 @@ using std::ostream;
 using anch::log::fmt::AnchDateFormatter;
 using anch::log::fmt::FormatterType;
 
-using anch::date::Date;
+using anch::date::DateTime;
 
 
 AnchDateFormatter::AnchDateFormatter(const string& dateFormat): _dateFormat(dateFormat) {
@@ -40,7 +40,7 @@ AnchDateFormatter::~AnchDateFormatter() {
 
 void
 AnchDateFormatter::formatValue(const void* const, ostream& out) const noexcept {
-  _dateFormat.format(Date(), out);
+  _dateFormat.format(DateTime(), out);
 }
 
 FormatterType
